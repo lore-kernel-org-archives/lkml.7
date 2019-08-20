@@ -2,113 +2,88 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350C9C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFE2C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5AC22DD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31C722DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:22:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AB7uQPTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbfHTMVr (ORCPT
+        id S1729651AbfHTMWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:21:47 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:50187 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729409AbfHTMVq (ORCPT
+        Tue, 20 Aug 2019 08:22:48 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:36050 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728248AbfHTMWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:21:46 -0400
-Received: from [192.168.1.110] ([95.117.23.32]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M9nAB-1hwUEe3tHp-005rTd; Tue, 20 Aug 2019 14:21:38 +0200
-Subject: Re: [PATCH 2/2] drivers: input: mouse: alps: drop unneeded likely()
- call around IS_ERR()
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net
-References: <1566298572-12409-1-git-send-email-info@metux.net>
- <1566298572-12409-2-git-send-email-info@metux.net>
- <20190820111719.7blyk5jstgwde2ae@pali>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <02f5b546-5c30-4998-19b2-76b816a35371@metux.net>
-Date:   Tue, 20 Aug 2019 14:21:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 20 Aug 2019 08:22:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ao7gt5KDV0ONoTC0rFw7t2x/1w81a5HjQybBH7126vg=; b=AB7uQPTC2CEakdf7eAwGXLP28
+        aDwACv/x1leJU6OwOGwBPPu5fR+Guyg2LNJinEJRErZLkrEhInBv2AhqV3+De0MjRLstaoiuE+xAG
+        /AB6IiMp8m2a2dQSMNpLar1ddu4ty0b7uKxvEavWsdQCnpD6BSr5iRAjDV8BTs1qFKqyXu5EJSdIV
+        KRgtK3GyDmcgK3MEc3wX/VKxpzJKoYsIBrh3j9qZWI9khfjnDpuWAP+TjhBLGP5nyUz7hvOM81BjN
+        dPU2TIoWjPYW9Ehuw8lwPi9D6t685ZctxzRwvRtuGZ4vD68puRcDlDAtIVk009j2+J13qd7FpczAt
+        DP7y3dNgA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i039o-0007Tw-Cc; Tue, 20 Aug 2019 12:22:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1F0B1307603;
+        Tue, 20 Aug 2019 14:22:02 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5DF9B20A999E3; Tue, 20 Aug 2019 14:22:33 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 14:22:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        tony.luck@intel.com, x86@kernel.org, andriy.shevchenko@intel.com,
+        alan@linux.intel.com, ricardo.neri-calderon@linux.intel.com,
+        rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
+        rahul.tanwar@intel.com
+Subject: Re: [PATCH v2 2/3] x86/cpu: Add new Intel Atom CPU model name
+Message-ID: <20190820122233.GN2332@hirez.programming.kicks-ass.net>
+References: <cover.1565940653.git.rahul.tanwar@linux.intel.com>
+ <83345984845d24b6ce97a32bef21cd0bbdffc86d.1565940653.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190820111719.7blyk5jstgwde2ae@pali>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:w2EFLBTJ6lqCF1cRxaNsgtU4Ayhs7iamqxZJGE8EtE5RjwoNC4t
- 1wMHvKMvxJH7423duGgD6HfvMlQ5fOv9CxInJuDzD8b6Foay2URD9yM9ELRgAIiaqJ+RAlw
- 3WZwlZ7Q2wnBdNZYvV8CtXbfSGpG1jO5ArUonHAYhqaFB5/k8Kpe6AxVlKldbotTp3Z8sjL
- a2YGl877B7l4bGQbSgKHg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:q+pbJQtMiq8=:Htz0JavxsTOY8vnc9v0Lm5
- OdgzGccyeXqXgjZf3yuQdVvnhcJsIPWu4CbYJLEdX2AjKwAFsCobEV9s+EmkLqmd1uBIkf33B
- +gQOdZxLEEmuf5e93AdRd437V3pEH0B59PVQtPC3LFvbd1xYUoCow+nCRzjD1oPkddoXhcryb
- Yx1/Kc1vProXPxGkA+U6KIYu3pntb2Em62zrsoS4VsWBRsv/oAknqN+zs/DOOiBEleN/g5Ovm
- lpDuzANXb+24QcBmAV3hIzlh6jlBUve7eJpKp/qBDPin8fieHAo91eE22YpkLckH9GCK5f/Nr
- /l2qpLDZaN++SvkVJhPHU/WFURGDAIimwOEhPzZu5TL0oXadOwfoZ+paOTSx0B5phPTjs2GHU
- tiY6km7tEwSB0KD5EBaRxL2dWrHNt748Oex3YOWMAJcv3rUSAZgvZ24viA5Vj9A1sbe5h/DM4
- rC2cBM1qeIxgu7z4HstQ1OgsOgb5OaF3UgYaYBWJikDW/wWfmugs8wuTPk+XAvx2EflPGBcfz
- CdCKs6M4rCrVWwGgpHx0WqlJIAiQStg/0V/Yr1rOrxVvw1UEp7s/FBsLmzK/wq6CvXshUTPgX
- 9Sh9T6FveDv/RZvEghHejPMQrT6GUlxS46mdB94Dpqxc92rO7K8wXqsROUo7qrY/CpipHZbcN
- BD5Bc1khMsEGH17+CWJI37OGeCDth88l6g+Y0sYWwvDDSYIZ4CCWg6i81DZuilyCLWQEqJrss
- IVvVKEDSqjAVwHF8Oj0SFsmM7VyW6n1L/HdtfDNXbR+3pZwVihUwZ6PW/+tJDLv4HzI8oTTBc
- SGA3fLE/zLs0QKODQf2dSDVvP71kw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <83345984845d24b6ce97a32bef21cd0bbdffc86d.1565940653.git.rahul.tanwar@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.08.19 13:17, Pali Rohár wrote:
-> On Tuesday 20 August 2019 12:56:12 Enrico Weigelt, metux IT consult wrote:
->> From: Enrico Weigelt <info@metux.net>
->>
->> IS_ERR() already calls unlikely(), so this extra unlikely() call
->> around IS_ERR() is not needed.
->>
->> Signed-off-by: Enrico Weigelt <info@metux.net>
->> ---
->>   drivers/input/mouse/alps.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
->> index 34700ed..ed16614 100644
->> --- a/drivers/input/mouse/alps.c
->> +++ b/drivers/input/mouse/alps.c
->> @@ -1476,7 +1476,7 @@ static void alps_report_bare_ps2_packet(struct psmouse *psmouse,
->>   		/* On V2 devices the DualPoint Stick reports bare packets */
->>   		dev = priv->dev2;
->>   		dev2 = psmouse->dev;
->> -	} else if (unlikely(IS_ERR_OR_NULL(priv->dev3))) {
->> +	} else if (IS_ERR_OR_NULL(priv->dev3)) {
->>   		/* Register dev3 mouse if we received PS/2 packet first time */
->>   		if (!IS_ERR(priv->dev3))
->>   			psmouse_queue_work(psmouse, &priv->dev3_register_work,
+On Fri, Aug 16, 2019 at 04:18:58PM +0800, Rahul Tanwar wrote:
+> Add a new variant of Intel Atom Airmont CPU model.
 > 
-> Hello! Two months ago I already saw this patch. See discussion:
-> https://patchwork.kernel.org/patch/10977099/
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  arch/x86/include/asm/intel-family.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+> index 0278aa66ef62..cbbb8250370f 100644
+> --- a/arch/x86/include/asm/intel-family.h
+> +++ b/arch/x86/include/asm/intel-family.h
+> @@ -73,6 +73,7 @@
+>  
+>  #define INTEL_FAM6_ATOM_AIRMONT		0x4C /* Cherry Trail, Braswell */
+>  #define INTEL_FAM6_ATOM_AIRMONT_MID	0x5A /* Moorefield */
+> +#define INTEL_FAM6_ATOM_AIRMONT_NP	0x75 /* Lightning Mountain */
 
-phuh, that's long chain of links to folow ;-)
-
-So, your primary argument is just *documenting* that this supposed to
-be a rare condition ?
-
-In that case, wouldn't a comment be more suitable for that ?
-
-It seems that this issue is coming up again and again ... when people
-run cocci scans (like I didn't), I'd suspect this to happen even more
-in the future.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+What's _NP ?
