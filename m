@@ -2,198 +2,201 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795CAC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F9CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501BF22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566294034;
-	bh=uQVsEV87rvpBFU1J/Cofx8lDu0ZRe62qsYfucG0g9uM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=YbYZKAk6m0mfvrHz6FBG+xV02zVE3o45njROSevy8AI9yNk/orc1jsCxXEXbjRPC5
-	 0Khswi3wW4k+OBycga/WYhCTGGi6z5oOtyWDO8YjkON6SJogahVAHuA7wlrsBbs3ZU
-	 MRw8nqkDgu8t3YHelmwJwG/8bftticixuFa/BQpc=
+	by mail.kernel.org (Postfix) with ESMTP id A296022CF9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbfHTJkd (ORCPT
+        id S1729682AbfHTJkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:40:33 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46598 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbfHTJkc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:40:32 -0400
-Received: by mail-ed1-f68.google.com with SMTP id z51so5550983edz.13;
-        Tue, 20 Aug 2019 02:40:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=k8VTLUSMPpJlERrTrCZkEPzdT4RCL143ZsVe+wpx+3E=;
-        b=smjvbONfMCtWrgRO4aRRdOKmD36mprIOh3qF3Mgr+ca4orIth6foYaBrFCCMGPgdhV
-         jJGArt6MP87/qEPx5brOonKqLmUn1ZL1ePJKlLdonSA8avK6gX7afR9qqvF7bIpjAU98
-         Pwe90Mx9I/w5F+KbZIOhIbNk0N5umRufyT0mF+FQ85El72Bj4Kr/JFK/mGlvitLg6Ir4
-         /sda3K3z0mkX7BUMKSIpouqoZsFb/VXHYhrLjnc/hB+E4iSgt0QIObIT06Sv+Cz+gsHg
-         LpBzeudeSks+UE8uqUEgwA0FthodXi7wpNqVM1+4HwZB1vZYYdCgHhI0hF+/ewW8Wb3p
-         H8iQ==
-X-Gm-Message-State: APjAAAUo9nSSomjc/27GZpYU0wpgCAJWjrhL6Rs2TWxkY7N9BgIDogvp
-        4I1UngZ9ahBs2PFaHlrK2Xo=
-X-Google-Smtp-Source: APXvYqxQfc1FHosZmGZPEXyfGaCgaDxmTrJrsE15LSyDty9Eyjf412FvnXCL93RcBHCUH4RbDKGF6A==
-X-Received: by 2002:aa7:c552:: with SMTP id s18mr17429600edr.0.1566294029934;
-        Tue, 20 Aug 2019 02:40:29 -0700 (PDT)
-Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id j37sm3354259ede.23.2019.08.20.02.40.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 02:40:28 -0700 (PDT)
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: [PATCH v2 1/3] media: add V4L2_CID_UNIT_CELL_SIZE control
-Date:   Tue, 20 Aug 2019 11:40:25 +0200
-Message-Id: <20190820094027.4144-1-ribalda@kernel.org>
-X-Mailer: git-send-email 2.23.0.rc1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 20 Aug 2019 05:40:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:25400 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729651AbfHTJkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:40:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 02:40:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
+   d="scan'208";a="329655996"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga004.jf.intel.com with ESMTP; 20 Aug 2019 02:40:31 -0700
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v2 2/3] dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller
+Date:   Tue, 20 Aug 2019 17:39:36 +0800
+Message-Id: <5e6ee1245ee53a7726103a8de7c11a37ad99fbd6.1566208109.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <cover.1566208109.git.eswara.kota@linux.intel.com>
+References: <cover.1566208109.git.eswara.kota@linux.intel.com>
+In-Reply-To: <cover.1566208109.git.eswara.kota@linux.intel.com>
+References: <cover.1566208109.git.eswara.kota@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This control returns the unit cell size in nanometres. The struct provides
-the width and the height in separated fields to take into consideration
-asymmetric pixels and/or hardware binning.
-This control is required for automatic calibration of sensors/cameras.
+The Intel PCIe RC controller is Synopsys Designware
+based PCIe core. Add YAML schemas for PCIe in RC mode
+present in Intel Universal Gateway soc.
 
-Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
 ---
- drivers/media/v4l2-core/v4l2-ctrls.c | 11 +++++++++++
- include/media/v4l2-ctrls.h           |  2 ++
- include/uapi/linux/v4l2-controls.h   |  3 +++
- include/uapi/linux/videodev2.h       | 11 +++++++++++
- 4 files changed, 27 insertions(+)
+ .../devicetree/bindings/pci/intel-pcie.yaml        | 133 +++++++++++++++++++++
+ 1 file changed, 133 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/intel-pcie.yaml
 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index cd1ae016706f..ec949453a081 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -978,6 +978,7 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
- 	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
- 	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
-+	case V4L2_CID_UNIT_CELL_SIZE:		return "Unit Cell Size";
- 
- 	/* FM Radio Modulator controls */
- 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-@@ -1357,6 +1358,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
- 	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
- 		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
- 		break;
-+	case V4L2_CID_UNIT_CELL_SIZE:
-+		*type = V4L2_CTRL_TYPE_AREA;
-+		break;
- 	default:
- 		*type = V4L2_CTRL_TYPE_INTEGER;
- 		break;
-@@ -1423,6 +1427,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
- 	case V4L2_CID_RDS_RX_TRAFFIC_ANNOUNCEMENT:
- 	case V4L2_CID_RDS_RX_TRAFFIC_PROGRAM:
- 	case V4L2_CID_RDS_RX_MUSIC_SPEECH:
-+	case V4L2_CID_UNIT_CELL_SIZE:
- 		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
- 		break;
- 	case V4L2_CID_RF_TUNER_PLL_LOCK:
-@@ -1705,6 +1710,9 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
- 	case V4L2_CTRL_TYPE_FWHT_PARAMS:
- 		break;
- 
-+	case V4L2_CTRL_TYPE_AREA:
-+		break;
+diff --git a/Documentation/devicetree/bindings/pci/intel-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
+new file mode 100644
+index 000000000000..80caaaba5e2c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
+@@ -0,0 +1,133 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	case V4L2_CTRL_TYPE_H264_SPS:
- 	case V4L2_CTRL_TYPE_H264_PPS:
- 	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
-@@ -2403,6 +2411,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
- 	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
- 		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
- 		break;
-+	case V4L2_CTRL_TYPE_AREA:
-+		elem_size = sizeof(struct v4l2_area);
-+		break;
- 	default:
- 		if (type < V4L2_CTRL_COMPOUND_TYPES)
- 			elem_size = sizeof(s32);
-diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-index 570ff4b0205a..9a3d11350e67 100644
---- a/include/media/v4l2-ctrls.h
-+++ b/include/media/v4l2-ctrls.h
-@@ -50,6 +50,7 @@ struct poll_table_struct;
-  * @p_h264_slice_params:	Pointer to a struct v4l2_ctrl_h264_slice_params.
-  * @p_h264_decode_params:	Pointer to a struct v4l2_ctrl_h264_decode_params.
-  * @p_vp8_frame_header:		Pointer to a VP8 frame header structure.
-+ * @p_area:			Pointer to an area.
-  * @p:				Pointer to a compound value.
-  */
- union v4l2_ctrl_ptr {
-@@ -68,6 +69,7 @@ union v4l2_ctrl_ptr {
- 	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
- 	struct v4l2_ctrl_h264_decode_params *p_h264_decode_params;
- 	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
-+	struct v4l2_area *p_area;
- 	void *p;
- };
- 
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index a2669b79b294..1332eabd27b1 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -912,6 +912,9 @@ enum v4l2_auto_focus_range {
- #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
- #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
- 
-+#define V4L2_CID_UNIT_CELL_SIZE			(V4L2_CID_CAMERA_CLASS_BASE+34)
++title: Intel AXI bus based PCI express root complex
 +
++maintainers:
++  - Dilip Kota <eswara.kota@linux.intel.com>
 +
- /* FM Modulator class control IDs */
- 
- #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 2427bc4d8eba..751e2065ac02 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -422,6 +422,11 @@ struct v4l2_fract {
- 	__u32   denominator;
- };
- 
-+struct v4l2_area {
-+	__u32   width;
-+	__u32   height;
-+};
++properties:
++  compatible:
++    const: intel,lgm-pcie
 +
- /**
-   * struct v4l2_capability - Describes V4L2 device caps returned by VIDIOC_QUERYCAP
-   *
-@@ -1718,6 +1723,12 @@ enum v4l2_ctrl_type {
- 	V4L2_CTRL_TYPE_U8	     = 0x0100,
- 	V4L2_CTRL_TYPE_U16	     = 0x0101,
- 	V4L2_CTRL_TYPE_U32	     = 0x0102,
-+	/*
-+	 * V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS = 0x0103,
-+	 * V4L2_CTRL_TYPE_MPEG2_QUANTIZATION = 0x0104,
-+	 * V4L2_CTRL_TYPE_FWHT_PARAMS = 0x0105,
-+	 */
-+	V4L2_CTRL_TYPE_AREA    = 0x0106,
- };
- 
- /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
++  device_type:
++    const: pci
++
++  "#address-cells":
++    const: 3
++
++  "#size-cells":
++    const: 2
++
++  reg:
++    items:
++      - description: Controller control and status registers.
++      - description: PCIe configuration registers.
++      - description: Controller application registers.
++
++  reg-names:
++    items:
++      - const: dbi
++      - const: config
++      - const: app
++
++  ranges:
++    description: Ranges for the PCI memory and I/O regions.
++
++  resets:
++    maxItems: 1
++
++  clocks:
++    description: PCIe registers interface clock.
++
++  phys:
++    maxItems: 1
++
++  phy-names:
++    const: phy
++
++  reset-gpios:
++    maxItems: 1
++
++  num-lanes:
++    description: Number of lanes to use for this port.
++
++  linux,pci-domain:
++    description: PCI domain ID.
++
++  interrupts:
++    description: PCIe core integrated miscellaneous interrupt.
++
++  interrupt-map-mask:
++    description: Standard PCI IRQ mapping properties.
++
++  interrupt-map:
++    description: Standard PCI IRQ mapping properties.
++
++  max-link-speed:
++    description: Specify PCI Gen for link capability.
++
++  bus-range:
++    description: Range of bus numbers associated with this controller.
++
++  intel,rst-interval:
++    description: |
++      Device reset interval in ms. Some devices need an interval upto 500ms.
++      By default it is 100ms.
++
++required:
++  - compatible
++  - device_type
++  - reg
++  - reg-names
++  - ranges
++  - resets
++  - clocks
++  - phys
++  - phy-names
++  - reset-gpios
++  - num-lanes
++  - linux,pci-domain
++  - interrupts
++  - interrupt-map
++  - interrupt-map-mask
++
++examples:
++  - |
++    pcie10:pcie@d0e00000 {
++      compatible = "intel,lgm-pcie";
++      device_type = "pci";
++      #address-cells = <3>;
++      #size-cells = <2>;
++      reg = <
++            0xd0e00000 0x1000
++            0xd2000000 0x800000
++            0xd0a41000 0x1000
++            >;
++      reg-names = "dbi", "config", "app";
++      linux,pci-domain = <0>;
++      max-link-speed = <4>;
++      bus-range = <0x00 0x08>;
++      interrupt-parent = <&ioapic1>;
++      interrupts = <67 1>;
++      interrupt-map-mask = <0 0 0 0x7>;
++      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
++                      <0 0 0 2 &ioapic1 28 1>,
++                      <0 0 0 3 &ioapic1 29 1>,
++                      <0 0 0 4 &ioapic1 30 1>;
++      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
++      resets = <&rcu0 0x50 0>;
++      clocks = <&cgu0 LGM_GCLK_PCIE10>;
++      phys = <&cb0phy0>;
++      phy-names = "phy";
++    };
++
++    &pcie10 {
++      status = "okay";
++      intel,rst-interval = <100>;
++      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
++      num-lanes = <2>;
++    };
 -- 
-2.23.0.rc1
+2.11.0
 
