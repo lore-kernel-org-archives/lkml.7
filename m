@@ -2,81 +2,237 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340CDC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C15C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0331722DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DDBA22DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566308677;
+	bh=uOe278BjeSCVm0Yvei9g6yy3Td/QVwv+YDoMYSyE7WI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bp/2YTsUMAzw7HEVUZxdNAkoH42/zmltgSj85yJxhpvr9Ns5Gtv7UijJJDFNXPTgU
+	 OQfoJKGtj+JH0lsNYwoBoUVn6cJA70KXSRQ2QxU3NXfwkUMdW99yONKJFcRcQT/ur5
+	 3/mRlWmsbvXmDEr/Qk1BFCx19CathZFOJlvHEelg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbfHTNoa (ORCPT
+        id S1730935AbfHTNof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:44:30 -0400
-Received: from mga03.intel.com ([134.134.136.65]:8998 "EHLO mga03.intel.com"
+        Tue, 20 Aug 2019 09:44:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730789AbfHTNnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:43:08 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 06:43:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="172453032"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga008.jf.intel.com with ESMTP; 20 Aug 2019 06:43:05 -0700
-Date:   Tue, 20 Aug 2019 21:44:35 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
-        mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        yu.c.zhang@intel.com, alazar@bitdefender.com
-Subject: Re: [PATCH RESEND v4 7/9] KVM: VMX: Handle SPP induced vmexit and
- page fault
-Message-ID: <20190820134435.GE4828@local-michael-cet-test.sh.intel.com>
-References: <20190814070403.6588-1-weijiang.yang@intel.com>
- <20190814070403.6588-8-weijiang.yang@intel.com>
- <5f6ba406-17c4-a552-2352-2ff50569aac0@redhat.com>
- <fb6cd8b4-eee9-6e58-4047-550811bffd58@redhat.com>
+        id S1730770AbfHTNnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:43:05 -0400
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 813CC22DD6;
+        Tue, 20 Aug 2019 13:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566308583;
+        bh=uOe278BjeSCVm0Yvei9g6yy3Td/QVwv+YDoMYSyE7WI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lSKbMSq0zejsWFJB1YSbXkWt+wsyx6hcibSOB+QrXjLDEZe3NefjzgvbnvtzXva5i
+         r+3h/HqS1Z1FhE29o+ORgaO9bsvYJH0IlyWcY+v6KOmbra+KbIzZHeOf4nZTD7ctNA
+         /Ed6ObdmQCBjAU4kWIwbyzEVCPsUUQpDMT81DJMU=
+Received: by mail-qk1-f172.google.com with SMTP id w18so4502334qki.0;
+        Tue, 20 Aug 2019 06:43:03 -0700 (PDT)
+X-Gm-Message-State: APjAAAWPwI11cDuSS5vWVLFLUfrKFeWFZ9zWwQdzEgg40HvCX8lRCwzC
+        CeSs0oyYadUAZzZcYsD1yuJ+Sj2qHiqU8EXBBA==
+X-Google-Smtp-Source: APXvYqxwnJs7OpFe00kgqK1JKcgVrR8tZM4OnOWTaEasRUoo9hbARCNCIplqORq2OIAVk3yZ6vHkZYPL4FHNsyPWpMQ=
+X-Received: by 2002:a37:6944:: with SMTP id e65mr23792510qkc.119.1566308582630;
+ Tue, 20 Aug 2019 06:43:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb6cd8b4-eee9-6e58-4047-550811bffd58@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <cover.1566208109.git.eswara.kota@linux.intel.com> <5e6ee1245ee53a7726103a8de7c11a37ad99fbd6.1566208109.git.eswara.kota@linux.intel.com>
+In-Reply-To: <5e6ee1245ee53a7726103a8de7c11a37ad99fbd6.1566208109.git.eswara.kota@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 20 Aug 2019 08:42:51 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+pvKHtw-ARRbNW-xReQ2MVNan8z3tfJbx4taGDCvEr5g@mail.gmail.com>
+Message-ID: <CAL_Jsq+pvKHtw-ARRbNW-xReQ2MVNan8z3tfJbx4taGDCvEr5g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 05:04:23PM +0200, Paolo Bonzini wrote:
-> On 19/08/19 16:43, Paolo Bonzini wrote:
-> >> +			/*
-> >> +			 * Record write protect fault caused by
-> >> +			 * Sub-page Protection, let VMI decide
-> >> +			 * the next step.
-> >> +			 */
-> >> +			if (spte & PT_SPP_MASK) {
-> > Should this be "if (spte & PT_WRITABLE_MASK)" instead?  That is, if the
-> > page is already writable, the fault must be an SPP fault.
-> 
-> Hmm, no I forgot how SPP works; still, this is *not* correct.  For
-> example, if SPP marks part of a page as read-write, but KVM wants to
-> write-protect the whole page for access or dirty tracking, that should
-> not cause an SPP exit.
-> 
-> So I think that when KVM wants to write-protect the whole page
-> (wrprot_ad_disabled_spte) it must also clear PT_SPP_MASK; for example it
-> could save it in bit 53 (PT64_SECOND_AVAIL_BITS_SHIFT + 1).  If the
-> saved bit is set, fast_page_fault must then set PT_SPP_MASK instead of
-> PT_WRITABLE_MASK.
-Sure, will change the processing flow.
+On Tue, Aug 20, 2019 at 4:40 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
+>
+> The Intel PCIe RC controller is Synopsys Designware
+> based PCIe core. Add YAML schemas for PCIe in RC mode
+> present in Intel Universal Gateway soc.
 
-> On re-entry this will cause an SPP vmexit;
-> fast_page_fault should never trigger an SPP userspace exit on its own,
-> all the SPP handling should go through handle_spp.
-> 
-> Paolo
+Run 'make dt_binding_check' and fix all the warnings.
+
+>
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> ---
+>  .../devicetree/bindings/pci/intel-pcie.yaml        | 133 +++++++++++++++++++++
+>  1 file changed, 133 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/intel-pcie.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/pci/intel-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
+> new file mode 100644
+> index 000000000000..80caaaba5e2c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/intel-pcie.yaml
+> @@ -0,0 +1,133 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+(GPL-2.0-only OR BSD-2-Clause) is preferred for new bindings.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel AXI bus based PCI express root complex
+> +
+> +maintainers:
+> +  - Dilip Kota <eswara.kota@linux.intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-pcie
+> +
+> +  device_type:
+> +    const: pci
+> +
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  reg:
+> +    items:
+> +      - description: Controller control and status registers.
+> +      - description: PCIe configuration registers.
+> +      - description: Controller application registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: config
+> +      - const: app
+> +
+> +  ranges:
+> +    description: Ranges for the PCI memory and I/O regions.
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: PCIe registers interface clock.
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: phy
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  num-lanes:
+> +    description: Number of lanes to use for this port.
+> +
+> +  linux,pci-domain:
+> +    description: PCI domain ID.
+> +
+> +  interrupts:
+> +    description: PCIe core integrated miscellaneous interrupt.
+> +
+> +  interrupt-map-mask:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  interrupt-map:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  max-link-speed:
+> +    description: Specify PCI Gen for link capability.
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller.
+> +
+> +  intel,rst-interval:
+
+Use 'reset-assert-us'
+
+> +    description: |
+> +      Device reset interval in ms. Some devices need an interval upto 500ms.
+> +      By default it is 100ms.
+> +
+> +required:
+> +  - compatible
+> +  - device_type
+> +  - reg
+> +  - reg-names
+> +  - ranges
+> +  - resets
+> +  - clocks
+> +  - phys
+> +  - phy-names
+> +  - reset-gpios
+> +  - num-lanes
+> +  - linux,pci-domain
+> +  - interrupts
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +
+> +examples:
+> +  - |
+> +    pcie10:pcie@d0e00000 {
+> +      compatible = "intel,lgm-pcie";
+> +      device_type = "pci";
+> +      #address-cells = <3>;
+> +      #size-cells = <2>;
+> +      reg = <
+> +            0xd0e00000 0x1000
+> +            0xd2000000 0x800000
+> +            0xd0a41000 0x1000
+> +            >;
+> +      reg-names = "dbi", "config", "app";
+> +      linux,pci-domain = <0>;
+> +      max-link-speed = <4>;
+> +      bus-range = <0x00 0x08>;
+> +      interrupt-parent = <&ioapic1>;
+> +      interrupts = <67 1>;
+> +      interrupt-map-mask = <0 0 0 0x7>;
+> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+> +                      <0 0 0 2 &ioapic1 28 1>,
+> +                      <0 0 0 3 &ioapic1 29 1>,
+> +                      <0 0 0 4 &ioapic1 30 1>;
+> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+> +      resets = <&rcu0 0x50 0>;
+> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
+> +      phys = <&cb0phy0>;
+> +      phy-names = "phy";
+> +    };
+> +
+> +    &pcie10 {
+
+Don't show this soc/board split in examples. Just combine to one node.
+
+> +      status = "okay";
+> +      intel,rst-interval = <100>;
+> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+> +      num-lanes = <2>;
+> +    };
+> --
+> 2.11.0
+>
