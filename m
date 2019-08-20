@@ -2,116 +2,136 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20221C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB617C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EADAE22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566325349;
-	bh=NR2PNGTBj2Ayh7JYEBW6jlJcbOTazJsR2jdieZr7OKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A4GXCtAjw6RgYF6lf9iLiGrguB6ula8tDEYTC5n9Q2k7g8Og0T/WLEg9ibO2TraJT
-	 FC/cCFVWkv22mzOlu1yQboyevo2XidJ0XoV5ncgF4SPj9Z7Mz8qvgnv8FepmjnWfFR
-	 HMmm/r7CEU4KhmBZ8qT8/GJFbGVOYpmVmVnAMz+s=
+	by mail.kernel.org (Postfix) with ESMTP id A994D22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:23:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RTgt2WBF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730605AbfHTSW1 (ORCPT
+        id S1730628AbfHTSX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 14:22:27 -0400
-Received: from mail-ed1-f97.google.com ([209.85.208.97]:41411 "EHLO
-        mail-ed1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729351AbfHTSW1 (ORCPT
+        Tue, 20 Aug 2019 14:23:29 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34226 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728185AbfHTSX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 14:22:27 -0400
-Received: by mail-ed1-f97.google.com with SMTP id w5so7404709edl.8
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 11:22:26 -0700 (PDT)
+        Tue, 20 Aug 2019 14:23:29 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b24so3884686pfp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 11:23:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zOFyNsed5rJiYxQ0MTC7KZVSzKzfGGoAHwsINBTkR8c=;
+        b=RTgt2WBFYErhRUqHnDQpEac6HHvi9lJ/Y7KdUeeE6iLFn22BZvfnis5Y2t0G0k5QIv
+         wfBfc9ypmkXQjiMGC7/xV0BwM/EldJ7OfcZMyjDWBlhyXPTlXoT9M7CT5shi3knBfzRR
+         g0QOcAYoHouObhmxCgJOKRH3AHyLXaptg/qIW60hqCGCVLcB3FC/G8UMPkMKZDBRsjmV
+         J2j2x1rdz3vofl0JvNYwnMx7XrZHZR7hwJO96VWMcsi6QI+Q77v06FO4llseMH3rg1yM
+         b8WSEtd0HbvlTK1HyuHDjqy4IlwbP4Z97SYn10skLY5AvpckPs56c/a/yALL3+ZEjjkQ
+         7LVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NR2PNGTBj2Ayh7JYEBW6jlJcbOTazJsR2jdieZr7OKM=;
-        b=VDklawTzrZuZDEHpI+FBbsV9XHYJ4Fsb2PTMV5RtwmOvrEF/8YX0tCg2E0WAGtP1fk
-         HcqEYdymOuRCPbjZ3DuA7ZOhCRbB6p48+plzrQXyNbDWfFQGwK+qYhT7tw3tXi2eP2vo
-         dHIKJZs0SAUUU1nTwrlr5mR6BH/ucH7FogqMvmbvpc8zUu1rdzZUs9TSIr5qIoMDjQoc
-         vUDK1K8ZwA6J8rThH/+Gc3XZVNG+cu5Ng2cMaeVZeA052Y3MJH78XYebvbzhu13DgKbT
-         t29ufxEDi5qG2oZLkpCx1B8YOb1lDtJBid5YkrsOlvUihiEzWz5LnPLUySUpms0yKntU
-         Nr5w==
-X-Gm-Message-State: APjAAAWO8T8/WIJSF+9rtJOBbHAZkAgJCNlukRJkj0+X5IINkFZrUb2V
-        XQRxGZyIcDa2YrSadTV18OLpQp+bDpuZFw7gN/lrLYcximj9X3PdBrVz4lUp5xeVkw==
-X-Google-Smtp-Source: APXvYqx+CTiwFr1QwQk7cRBWMES9QXV0lxv8/m4Eyo9SNeMlbU7AuoA5rNcbBKrLCRF1Crb1fdQUZsoIV+E7
-X-Received: by 2002:a50:b875:: with SMTP id k50mr32683032ede.232.1566325345649;
-        Tue, 20 Aug 2019 11:22:25 -0700 (PDT)
-Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id me6sm122372ejb.79.2019.08.20.11.22.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 11:22:25 -0700 (PDT)
-X-Relaying-Domain: sirena.org.uk
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i08m0-0003Br-UB; Tue, 20 Aug 2019 18:22:24 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3470D2742B4A; Tue, 20 Aug 2019 19:22:24 +0100 (BST)
-Date:   Tue, 20 Aug 2019 19:22:24 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Li Yang <leoyang.li@nxp.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        nandor.han@vaisala.com, Biwen Li <biwen.li@nxp.com>,
-        a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [v2] rtc: pcf85363/pcf85263: fix error that failed to run
- hwclock -w
-Message-ID: <20190820182224.GI4738@sirena.co.uk>
-References: <20190816024636.34738-1-biwen.li@nxp.com>
- <20190816080417.GB3545@piout.net>
- <CADRPPNRkqbWzGEvUJyi0Qff3oS6biO0v7BTrK1Jiz9AMnOYF=Q@mail.gmail.com>
- <20190816162825.GE3545@piout.net>
- <CADRPPNQwcGrVXLm8eHbXKmyecMhT6Mt9rNGnspJA1+MnV4K8oQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zOFyNsed5rJiYxQ0MTC7KZVSzKzfGGoAHwsINBTkR8c=;
+        b=DHAxEQlVSQh7zbaQqskU5ZpNnaeoh9iK1eZikJbIAypfz6vobQkSC617yybyJ/GF9w
+         0vDmoBx7d2cbweGVm0IosBalDc96t/5ghX8zixMr7mBPNTizHgbqRZJ9/9I45VhlJL6X
+         ktKTkp13c4JRE7TFXHRFeBCXSOYq1RX6xNh5MiIY+ZQvrYaNVSHYCckSO342ouSK+IPA
+         ftXtr803BfKbNv53FGYXFKb+fU+cu3OCd9NdXRm2nHDd/fO9CtVkwjjSK4VjOfmGNSqM
+         5GMSUCV+EQqL6DMmPW8WlVU1ofpxyjx63OhxXyUvP2syDrfU04tiYCyYwpL2ceNXBOco
+         xCVg==
+X-Gm-Message-State: APjAAAW/5maXtiNN1ltub2gnslFyJy+ljwYjxAhwbLH58iMY5Qw8OhCe
+        8F4oIszVOVz3X12Q6QR7X+MR6Lu7njnOln2CUKQkYg==
+X-Google-Smtp-Source: APXvYqy8PLQYCo/xr+i9cPe8QscCmqNqVsHsPH7Fdu4ulHy26e9hF6RpbHf3y2AMkzxyGBDXSUMgQLMfwvvKkdaTDpc=
+X-Received: by 2002:a17:90a:6581:: with SMTP id k1mr1293058pjj.47.1566325408133;
+ Tue, 20 Aug 2019 11:23:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6lCXDTVICvIQMz0h"
-Content-Disposition: inline
-In-Reply-To: <CADRPPNQwcGrVXLm8eHbXKmyecMhT6Mt9rNGnspJA1+MnV4K8oQ@mail.gmail.com>
-X-Cookie: It's the thought, if any, that counts!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190819172540.19581-1-aryabinin@virtuozzo.com>
+In-Reply-To: <20190819172540.19581-1-aryabinin@virtuozzo.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 20 Aug 2019 20:23:17 +0200
+Message-ID: <CAAeHK+yhaZ07ojK4v-=iVTBiEunXOu=V3f9zvTr9P2wZzAq3Zw@mail.gmail.com>
+Subject: Re: [PATCH] mm/kasan: Fix false positive invalid-free reports with CONFIG_KASAN_SW_TAGS=y
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 19, 2019 at 7:26 PM Andrey Ryabinin <aryabinin@virtuozzo.com> wrote:
+>
+> The code like this:
+>
+>         ptr = kmalloc(size, GFP_KERNEL);
+>         page = virt_to_page(ptr);
+>         offset = offset_in_page(ptr);
+>         kfree(page_address(page) + offset);
+>
+> may produce false-positive invalid-free reports on the kernel with
+> CONFIG_KASAN_SW_TAGS=y.
+>
+> In the example above we loose the original tag assigned to 'ptr',
+> so kfree() gets the pointer with 0xFF tag. In kfree() we check that
+> 0xFF tag is different from the tag in shadow hence print false report.
+>
+> Instead of just comparing tags, do the following:
+>  1) Check that shadow doesn't contain KASAN_TAG_INVALID. Otherwise it's
+>     double-free and it doesn't matter what tag the pointer have.
+>
+>  2) If pointer tag is different from 0xFF, make sure that tag in the shadow
+>     is the same as in the pointer.
+>
+> Fixes: 7f94ffbc4c6a ("kasan: add hooks implementation for tag-based mode")
+> Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Reported-by: Walter Wu <walter-zh.wu@mediatek.com>
+> Reported-by: Mark Rutland <mark.rutland@arm.com>
+> Cc: <stable@vger.kernel.org>
 
---6lCXDTVICvIQMz0h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
 
-On Fri, Aug 16, 2019 at 02:40:47PM -0500, Li Yang wrote:
-> On Fri, Aug 16, 2019 at 11:30 AM Alexandre Belloni
-
-> > Most of the i2c RTCs do address wrapping which is sometimes the only way
-> > to properly set the time.
-
-> Adding Mark and Nandor to the loop.
-
-Is there a specific question or something here?
-
---6lCXDTVICvIQMz0h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1cOl8ACgkQJNaLcl1U
-h9BjnAf+JasBDezU/5IgpHDFc80ChLOoHUNgI9IyaopUZvdSwEi/QerwIKVw//Vw
-gXezgpTsalSWbdyBhWEozA7guXOovO1uX4BRN9+81S8e6/RdZ7RUuv7/QX2fSgW6
-Wz0Jvxx4NgnVb2qXRCpqIKsbHWVRZmGDAuSP61kqfFd+ih0BrZbOjiK3nq2TQ1at
-lCu6WwCwdUEicVBKQbHNAelujZNNjaW8R0KnKa4OwwVU0KNDC/TCMVbcnpUaZ43O
-PLWvbgHWJ0wJgEFmQkOiIV362ogz+iBM6LUcXwDJAmqYRy17Ec3OOuwO167heevO
-nyXbEur1lhluFlhHZmH9GFKXOHrFiQ==
-=sZs9
------END PGP SIGNATURE-----
-
---6lCXDTVICvIQMz0h--
+> ---
+>  mm/kasan/common.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 895dc5e2b3d5..3b8cde0cb5b2 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -406,8 +406,14 @@ static inline bool shadow_invalid(u8 tag, s8 shadow_byte)
+>         if (IS_ENABLED(CONFIG_KASAN_GENERIC))
+>                 return shadow_byte < 0 ||
+>                         shadow_byte >= KASAN_SHADOW_SCALE_SIZE;
+> -       else
+> -               return tag != (u8)shadow_byte;
+> +
+> +       /* else CONFIG_KASAN_SW_TAGS: */
+> +       if ((u8)shadow_byte == KASAN_TAG_INVALID)
+> +               return true;
+> +       if ((tag != KASAN_TAG_KERNEL) && (tag != (u8)shadow_byte))
+> +               return true;
+> +
+> +       return false;
+>  }
+>
+>  static bool __kasan_slab_free(struct kmem_cache *cache, void *object,
+> --
+> 2.21.0
+>
