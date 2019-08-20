@@ -2,123 +2,124 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F87BC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D46C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6589420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:01:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q4kYVlD4"
+	by mail.kernel.org (Postfix) with ESMTP id BD1B320679
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:01:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbfHTKBD (ORCPT
+        id S1729699AbfHTKBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:01:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47754 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728426AbfHTKBD (ORCPT
+        Tue, 20 Aug 2019 06:01:44 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:59105 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729580AbfHTKBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:01:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=K3x1PYKs8uoQSVAJgrYEuHNsKolkNQhJU7kFblu2V0E=; b=Q4kYVlD4BsdOrsy6IouqImCJa
-        EK429go2B9/u0U0rNTx0piIVJSNUZZNKe+0NnTL0/tyClAOSczTcjv8lPOh/Jl1191EgomV/E+QCt
-        fXZweSdGiLk2tu0PlQ6YAclkOboKULH7q/G9RFXqGAG2y02Vyz7I/HewOST1XjMjEAPnj2Xj5wPBn
-        P0UnkhiHqtOFg+5jJmXOixjKCxij0w6On7vgTFonz2pRsh4cgcBenze9hvRlpLT615N4KgjU7h0gj
-        ix5hhX9L0wF/CnLfT19yH6JDe2LeJhnXR2hIlvANXGj9MQn7lR+l4qFTIHFKbh04DJ13zph7x77OC
-        iyugOAEIA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i00wk-0000kK-7O; Tue, 20 Aug 2019 10:00:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9A03F307765;
-        Tue, 20 Aug 2019 12:00:24 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C842320CE7744; Tue, 20 Aug 2019 12:00:55 +0200 (CEST)
-Date:   Tue, 20 Aug 2019 12:00:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        kernel-team@fb.com, stable@vger.kernel.org,
-        Joerg Roedel <jroedel@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH] x86/mm/pti: in pti_clone_pgtable() don't increase addr
- by PUD_SIZE
-Message-ID: <20190820100055.GI2332@hirez.programming.kicks-ass.net>
-References: <20190820075128.2912224-1-songliubraving@fb.com>
+        Tue, 20 Aug 2019 06:01:44 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B714DFF808;
+        Tue, 20 Aug 2019 10:01:40 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 12:01:40 +0200
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Sabrina Dubroca <sd@queasysnail.net>
+Cc:     Igor Russkikh <Igor.Russkikh@aquantia.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
+        Pavel Belous <Pavel.Belous@aquantia.com>
+Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
+ infrastructure
+Message-ID: <20190820100140.GA3292@kwain>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-7-antoine.tenart@bootlin.com>
+ <e96fa4ae-1f2c-c1be-b2d8-060217d8e151@aquantia.com>
+ <20190813085817.GA3200@kwain>
+ <20190813131706.GE15047@lunn.ch>
+ <2e3c2307-d414-a531-26cb-064e05fa01fc@aquantia.com>
+ <20190816132959.GC8697@bistromath.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190820075128.2912224-1-songliubraving@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190816132959.GC8697@bistromath.localdomain>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 12:51:28AM -0700, Song Liu wrote:
-> pti_clone_pgtable() increases addr by PUD_SIZE for pud_none(*pud) case.
-> This is not accurate because addr may not be PUD_SIZE aligned.
+Hi Sabrina,
+
+On Fri, Aug 16, 2019 at 03:29:59PM +0200, Sabrina Dubroca wrote:
+> 2019-08-13, 16:18:40 +0000, Igor Russkikh wrote:
+> > On 13.08.2019 16:17, Andrew Lunn wrote:
 > 
-> In our x86_64 kernel, pti_clone_pgtable() fails to clone 7 PMDs because
-> of this issuse, including PMD for the irq entry table. For a memcache
-> like workload, this introduces about 4.5x more iTLB-load and about 2.5x
-> more iTLB-load-misses on a Skylake CPU.
+> > That could be a strong limitation in
+> > cases when user sees HW macsec offload is broken or work differently, and he/she
+> > wants to replace it with SW one.
 > 
-> This patch fixes this issue by adding PMD_SIZE to addr for pud_none()
-> case.
+> Agreed, I think an offload that cannot be disabled is quite problematic.
+> 
+> > MACSec is a complex feature, and it may happen something is missing in HW.
+> > Trivial example is 256bit encryption, which is not always a musthave in HW
+> > implementations.
+> 
+> +1
+> 
+> > 2) I think, Antoine, its not totally true that otherwise the user macsec API
+> > will be broken/changed. netlink api is the same, the only thing we may want to
+> > add is an optional parameter to force selection of SW macsec engine.
+> 
+> Yes, I think we need an offload on/off parameter (and IMO it should
+> probably be off by default). Then, if offloading is requested but
+> cannot be satisfied (unsupported key length, too many SAs, etc), or if
+> incompatible settings are requested (mixing offloaded and
+> non-offloaded SCs on a device that cannot do it), return an error.
+> 
+> If we also export that offload parameter during netlink dumps, we can
+> inspect the state of the system, which helps for debugging.
 
-> diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-> index b196524759ec..5a67c3015f59 100644
-> --- a/arch/x86/mm/pti.c
-> +++ b/arch/x86/mm/pti.c
-> @@ -330,7 +330,7 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
->  
->  		pud = pud_offset(p4d, addr);
->  		if (pud_none(*pud)) {
-> -			addr += PUD_SIZE;
-> +			addr += PMD_SIZE;
->  			continue;
->  		}
+So it seems the ability to enable or disable the offloading on a given
+interface is the main missing feature. I'll add that, however I'll
+probably (at least at first):
 
-I'm thinking you're right in that there's a bug here, but I'm also
-thinking your patch is both incomplete and broken.
+- Have the interface to be fully offloaded or fully handled in s/w (with
+  errors being thrown if a given configuration isn't supported). Having
+  both at the same time on a given interface would be tricky because of
+  the MACsec validation parameter.
 
-What that code wants to do is skip to the end of the pud, a pmd_size
-increase will not do that. And right below this, there's a second
-instance of this exact pattern.
+- Won't allow to enable/disable the offloading of there are rules in
+  place, as we're not sure the same rules would be accepted by the other
+  implementation.
 
-Did I get the below right?
+I'm not sure if we should allow to mix the implementations on a given
+physical interface (by having two MACsec interfaces attached) as the
+validation would be impossible to do (we would have no idea if a
+packet was correctly handled by the offloading part or just not being
+a MACsec packet in the first place, in Rx).
 
----
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index b196524759ec..32b20b3cb227 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -330,12 +330,14 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
- 
- 		pud = pud_offset(p4d, addr);
- 		if (pud_none(*pud)) {
-+			addr &= PUD_MASK;
- 			addr += PUD_SIZE;
- 			continue;
- 		}
- 
- 		pmd = pmd_offset(pud, addr);
- 		if (pmd_none(*pmd)) {
-+			addr &= PMD_MASK;
- 			addr += PMD_SIZE;
- 			continue;
- 		}
+I agree the offloading should be disabled by default, and only enabled
+by an user explicitly.
+
+Thanks,
+Antoine
+
+-- 
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
