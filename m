@@ -2,163 +2,78 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D40C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE466C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB3122DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="i1IGA7In"
+	by mail.kernel.org (Postfix) with ESMTP id BEA6622DCB
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbfHTM3z (ORCPT
+        id S1729710AbfHTMbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:29:55 -0400
-Received: from nbd.name ([46.4.11.11]:44652 "EHLO nbd.name"
+        Tue, 20 Aug 2019 08:31:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:40643 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfHTM3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:29:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9cTelYKzCY4h/VMut/PrWo6Y/INNu9ufCmzyunzn+tc=; b=i1IGA7InYEtcB2AWFiHcBNQSJs
-        IsTsUfRXEOZ2SuqMoJ+qc/2Zlchknim5JLYjtfoUvDrwdk1LNySnasSIKbpV0UhSKVEXmua2++LW8
-        xCSaXLhGdCtI+kbZ1tjL488DSGl7L/4PgfR+xco9tAd3CZEVzXgRJENprduwNvT93waw=;
-Received: from p54ae9443.dip0.t-ipconnect.de ([84.174.148.67] helo=nf.local)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1i03Gq-0005YG-1E; Tue, 20 Aug 2019 14:29:52 +0200
-Subject: Re: [PATCH v1 5/6] mt76: fix some checkpatch warnings
-To:     Ryder Lee <ryder.lee@mediatek.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Cc:     Roy Luo <royluo@google.com>, YF Luo <yf.luo@mediatek.com>,
-        Yiwei Chung <yiwei.chung@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-wireless@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1563944758.git.ryder.lee@mediatek.com>
- <0afa87cc70b34ee17d6c2247dfc8dac92c36852f.1563944758.git.ryder.lee@mediatek.com>
-From:   Felix Fietkau <nbd@nbd.name>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
- mQGiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwbQcRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPohgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQuQINBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabiEkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
- RjMaxwtSdaCKMw3j33ZbsWS4
-Message-ID: <29c75c5f-6e75-3de4-4e4a-a66f72844733@nbd.name>
-Date:   Tue, 20 Aug 2019 14:29:51 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        id S1728248AbfHTMbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:31:34 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 05:31:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
+   d="scan'208";a="377765048"
+Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
+  by fmsmga005.fm.intel.com with ESMTP; 20 Aug 2019 05:31:31 -0700
+Date:   Tue, 20 Aug 2019 20:33:02 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        yu.c.zhang@intel.com, alazar@bitdefender.com
+Subject: Re: [PATCH RESEND v4 5/9] KVM: VMX: Add init/set/get functions for
+ SPP
+Message-ID: <20190820123301.GA4828@local-michael-cet-test.sh.intel.com>
+References: <20190814070403.6588-1-weijiang.yang@intel.com>
+ <20190814070403.6588-6-weijiang.yang@intel.com>
+ <87a7cbapdw.fsf@vitty.brq.redhat.com>
+ <20190815134329.GA11449@local-michael-cet-test>
+ <CALMp9eTGXDDfVspFwFyEhagg9sdnqZqzSQhDksT0bkKzVNGSqw@mail.gmail.com>
+ <20190815163844.GD27076@linux.intel.com>
+ <20190816133130.GA14380@local-michael-cet-test.sh.intel.com>
+ <CALMp9eRDhbxkFNqY-+GOMtfg+guafdKcCNq1OJt9UgnyFVvSGw@mail.gmail.com>
+ <20190819020829.GA27450@local-michael-cet-test>
+ <e9a269d8-b410-2489-aaa3-24b487ffd1e2@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <0afa87cc70b34ee17d6c2247dfc8dac92c36852f.1563944758.git.ryder.lee@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9a269d8-b410-2489-aaa3-24b487ffd1e2@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-24 10:58, Ryder Lee wrote:
-> --- a/drivers/net/wireless/mediatek/mt76/mt76.h
-> +++ b/drivers/net/wireless/mediatek/mt76/mt76.h
-> @@ -537,25 +537,25 @@ struct mt76_rx_status {
->  	s8 chain_signal[IEEE80211_MAX_CHAINS];
->  };
->  
-> -#define __mt76_rr(dev, ...)	(dev)->bus->rr((dev), __VA_ARGS__)
-> -#define __mt76_wr(dev, ...)	(dev)->bus->wr((dev), __VA_ARGS__)
-> -#define __mt76_rmw(dev, ...)	(dev)->bus->rmw((dev), __VA_ARGS__)
-> -#define __mt76_wr_copy(dev, ...)	(dev)->bus->copy((dev), __VA_ARGS__)
-> +#define __mt76_rr(dev, ...)	((dev)->bus->rr((dev), __VA_ARGS__))
-> +#define __mt76_wr(dev, ...)	((dev)->bus->wr((dev), __VA_ARGS__))
-> +#define __mt76_rmw(dev, ...)	((dev)->bus->rmw((dev), __VA_ARGS__))
-> +#define __mt76_wr_copy(dev, ...)	((dev)->bus->copy((dev), __VA_ARGS__))
->  
->  #define __mt76_set(dev, offset, val)	__mt76_rmw(dev, offset, 0, val)
->  #define __mt76_clear(dev, offset, val)	__mt76_rmw(dev, offset, val, 0)
->  
-> -#define mt76_rr(dev, ...)	(dev)->mt76.bus->rr(&((dev)->mt76), __VA_ARGS__)
-> -#define mt76_wr(dev, ...)	(dev)->mt76.bus->wr(&((dev)->mt76), __VA_ARGS__)
-> -#define mt76_rmw(dev, ...)	(dev)->mt76.bus->rmw(&((dev)->mt76), __VA_ARGS__)
-> -#define mt76_wr_copy(dev, ...)	(dev)->mt76.bus->copy(&((dev)->mt76), __VA_ARGS__)
-> -#define mt76_wr_rp(dev, ...)	(dev)->mt76.bus->wr_rp(&((dev)->mt76), __VA_ARGS__)
-> -#define mt76_rd_rp(dev, ...)	(dev)->mt76.bus->rd_rp(&((dev)->mt76), __VA_ARGS__)
-> +#define mt76_rr(dev, ...)	((dev)->mt76.bus->rr(&((dev)->mt76), __VA_ARGS__))
-> +#define mt76_wr(dev, ...)	((dev)->mt76.bus->wr(&((dev)->mt76), __VA_ARGS__))
-> +#define mt76_rmw(dev, ...)	((dev)->mt76.bus->rmw(&((dev)->mt76), __VA_ARGS__))
-> +#define mt76_wr_copy(dev, ...)	((dev)->mt76.bus->copy(&((dev)->mt76), __VA_ARGS__))
-> +#define mt76_wr_rp(dev, ...)	((dev)->mt76.bus->wr_rp(&((dev)->mt76), __VA_ARGS__))
-> +#define mt76_rd_rp(dev, ...)	((dev)->mt76.bus->rd_rp(&((dev)->mt76), __VA_ARGS__))
->  
-> -#define mt76_mcu_send_msg(dev, ...)	(dev)->mt76.mcu_ops->mcu_send_msg(&((dev)->mt76), __VA_ARGS__)
-> -#define __mt76_mcu_send_msg(dev, ...)	(dev)->mcu_ops->mcu_send_msg((dev), __VA_ARGS__)
-> -#define mt76_mcu_restart(dev, ...)	(dev)->mt76.mcu_ops->mcu_restart(&((dev)->mt76))
-> -#define __mt76_mcu_restart(dev, ...)	(dev)->mcu_ops->mcu_restart((dev))
-> +#define mt76_mcu_send_msg(dev, ...)	((dev)->mt76.mcu_ops->mcu_send_msg(&((dev)->mt76), __VA_ARGS__))
-> +#define __mt76_mcu_send_msg(dev, ...)	((dev)->mcu_ops->mcu_send_msg((dev), __VA_ARGS__))
-> +#define mt76_mcu_restart(dev, ...)	((dev)->mt76.mcu_ops->mcu_restart(&((dev)->mt76)))
-> +#define __mt76_mcu_restart(dev, ...)	((dev)->mcu_ops->mcu_restart((dev)))
->  
->  #define mt76_set(dev, offset, val)	mt76_rmw(dev, offset, 0, val)
->  #define mt76_clear(dev, offset, val)	mt76_rmw(dev, offset, val, 0)
-> @@ -569,7 +569,7 @@ struct mt76_rx_status {
->  #define __mt76_rmw_field(_dev, _reg, _field, _val)	\
->  	__mt76_rmw(_dev, _reg, _field, FIELD_PREP(_field, _val))
->  
-> -#define mt76_hw(dev) (dev)->mt76.hw
-> +#define mt76_hw(dev) ((dev)->mt76.hw)
->  
->  bool __mt76_poll(struct mt76_dev *dev, u32 offset, u32 mask, u32 val,
->  		 int timeout);
-> @@ -596,13 +596,13 @@ static inline u16 mt76_rev(struct mt76_dev *dev)
->  #define mt76xx_chip(dev) mt76_chip(&((dev)->mt76))
->  #define mt76xx_rev(dev) mt76_rev(&((dev)->mt76))
->  
-> -#define mt76_init_queues(dev)		(dev)->mt76.queue_ops->init(&((dev)->mt76))
-> -#define mt76_queue_alloc(dev, ...)	(dev)->mt76.queue_ops->alloc(&((dev)->mt76), __VA_ARGS__)
-> -#define mt76_tx_queue_skb_raw(dev, ...)	(dev)->mt76.queue_ops->tx_queue_skb_raw(&((dev)->mt76), __VA_ARGS__)
-> -#define mt76_tx_queue_skb(dev, ...)	(dev)->mt76.queue_ops->tx_queue_skb(&((dev)->mt76), __VA_ARGS__)
-> -#define mt76_queue_rx_reset(dev, ...)	(dev)->mt76.queue_ops->rx_reset(&((dev)->mt76), __VA_ARGS__)
-> -#define mt76_queue_tx_cleanup(dev, ...)	(dev)->mt76.queue_ops->tx_cleanup(&((dev)->mt76), __VA_ARGS__)
-> -#define mt76_queue_kick(dev, ...)	(dev)->mt76.queue_ops->kick(&((dev)->mt76), __VA_ARGS__)
-> +#define mt76_init_queues(dev)		((dev)->mt76.queue_ops->init(&((dev)->mt76)))
-> +#define mt76_queue_alloc(dev, ...)	((dev)->mt76.queue_ops->alloc(&((dev)->mt76), __VA_ARGS__))
-> +#define mt76_tx_queue_skb_raw(dev, ...)	((dev)->mt76.queue_ops->tx_queue_skb_raw(&((dev)->mt76), __VA_ARGS__))
-> +#define mt76_tx_queue_skb(dev, ...)	((dev)->mt76.queue_ops->tx_queue_skb(&((dev)->mt76), __VA_ARGS__))
-> +#define mt76_queue_rx_reset(dev, ...)	((dev)->mt76.queue_ops->rx_reset(&((dev)->mt76), __VA_ARGS__))
-> +#define mt76_queue_tx_cleanup(dev, ...)	((dev)->mt76.queue_ops->tx_cleanup(&((dev)->mt76), __VA_ARGS__))
-> +#define mt76_queue_kick(dev, ...)	((dev)->mt76.queue_ops->kick(&((dev)->mt76), __VA_ARGS__))
->  
->  static inline struct mt76_channel_state *
->  mt76_channel_state(struct mt76_dev *dev, struct ieee80211_channel *c)
-
-I don't think these changes are making the code any better. The
-corresponding checkpatch warnings might be a false positive.
-
-- Felix
+On Mon, Aug 19, 2019 at 05:15:01PM +0200, Paolo Bonzini wrote:
+> On 19/08/19 04:08, Yang Weijiang wrote:
+> >> KVM_GET_NESTED_STATE has the requested information. If
+> >> data.vmx.vmxon_pa is anything other than -1, then the vCPU is in VMX
+> >> operation. If (flags & KVM_STATE_NESTED_GUEST_MODE), then L2 is
+> >> active.
+> > Thanks Jim, I'll reference the code and make necessary change in next
+> > SPP patch release.
+> 
+> Since SPP will not be used very much in the beginning, it would be
+> simplest to enable it only if nested==0.
+> 
+> Paolo
+Thanks Paolo! Sure, will make the change and document it.
