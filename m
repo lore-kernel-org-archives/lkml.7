@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D852C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C469FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18D6222DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90BB122DCC
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:41:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fhOQYci3"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CmcrB9ui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730358AbfHTOlF (ORCPT
+        id S1730397AbfHTOlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:41:05 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33277 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730223AbfHTOlB (ORCPT
+        Tue, 20 Aug 2019 10:41:08 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55469 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730286AbfHTOlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:41:01 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p77so2571978wme.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 07:40:59 -0700 (PDT)
+        Tue, 20 Aug 2019 10:41:04 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f72so2843600wmf.5
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 07:41:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jEcCxLSmgTSFx3ThyMxbNKwmPy3h7MyfaKIL/tuCs+o=;
-        b=fhOQYci3oJMJzxCSo05SuNeRhlgenJy4unwnPSN63ArX7CN9qx/wAb6gxBMgmaK3Ma
-         2nIuQ5SyGSqUBqQ9VnUlfrLKGS4qFVEkREcThm8KtrlS5fSncDd1YEvq+GDdz1lItcVF
-         r4EM58t2Ksqx3MVKG4g5BpZFm45exUVruF4kFQXsjnilq80IOg4xAKcRgKZZrs7Ay05k
-         ke9zv+H2sDBRJ3+qEePepPCIZatrgU0OkgTPcZbuUoptyN0OSuRYeKT1kV3NHzkWt0HQ
-         bmb/ZjBTOcw6dx6waSscjub0inQZ5+FqaRfobvkq2ySrOvD0/y5FWJl+6nkv3LPrERrk
-         3CWQ==
+        bh=hkyCmmALp09LgyfzPKG7zyXxpn4Vp2Gtq8noIIEOGls=;
+        b=CmcrB9uin8EfyBZRLXA131OjGURvTTniB88LvhaxXWmne1raEW/V8XBgXqb8gBcFnN
+         voDrqW6B+XiJSkDUf6UDCFeYTUJIsQFXkklLJb/29c+P1Y2iKQA//5tMf1Vf37jTgcMi
+         5YM5A+mRqbf1D7TbFauFN0ZR6s6DLJd3shJXz79hVSHZ8fDJoQQQNzauJBXq8fLZDKRI
+         cdaH+Px80OJNcWCskaEi5HUCuu/O+XPB109VFsh3jofx/0rmcJtEdt0Kv2zlkI95e0mA
+         d8zE7VJu7DlXLB9IgiM2AZV0ojSjGGbOUIJGZgaZ3MR/MsyZozBZxfMRgPyHZFUV2wJS
+         O/rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jEcCxLSmgTSFx3ThyMxbNKwmPy3h7MyfaKIL/tuCs+o=;
-        b=Zelaj4InYA53QMyGsZchAjw8Na2J76FcfqXrR9o0mpLJpxtMj5QmXGsiCDTq58VmvN
-         DDnglwfQSEIpoj8BqapAnlaidVLQsI+s3XbZMN14RJ4FdDIy91ir3Je4UpaLpZQtxlI6
-         1QqksFHR40NVHXN4yyns+GlMxkf7P+NZeuAPbskRvSiF2mr4erYI11mYQEBEwq7DfPVX
-         8P+TYrGkL5A/Gba2z1ZsLQB9RPd0ahbDttLioL8IE89o/RQ9itYwdrdJzuG76Ss4MlE7
-         G2D3w68XfBySNmBKKVe7yGcsPV226lSJiagkcVepJq/DBOWx9UJTndBupncCFvKqxNLi
-         Ig4Q==
-X-Gm-Message-State: APjAAAUBiNsW30i9aEjEHTKeTvHyL8JVOwezHFlyBTfbjmPeS9Qw7RrM
-        CCgw/zDZLtlliZ6cyQq5zlsFNQ==
-X-Google-Smtp-Source: APXvYqwucYPtb93vwY6IWRK5P1gDI2t3TNyhd8gYdj7YKMSGJWxg816WtltHGhNIE/b7WgxQHbcFmA==
-X-Received: by 2002:a1c:f103:: with SMTP id p3mr378195wmh.18.1566312058745;
-        Tue, 20 Aug 2019 07:40:58 -0700 (PDT)
+        bh=hkyCmmALp09LgyfzPKG7zyXxpn4Vp2Gtq8noIIEOGls=;
+        b=bITVE68dhO/FqARGeBrTJXfO79Enie/HyaZt2iCxQ+v2D9JJXoBpnjNqn4RBy0d6mT
+         LzRLXF6cKr8HaIL597+8rsEdd9aBH+gdRKaCVbVV4I1RRRvdZB7MqQvZBBUtoHEJF35L
+         56qh0VdsAl7xBqtbIWvsCRrK+kKWnaSgf5j9rMAeP3vxw8lwaLCMRBzc8eS6s92sSf1E
+         JBwXEjVmlvQY7M3pfAi49szXzdTyHzz6jbwegjJGteDNgH9tZHBlvNoLRXhZy8wWQ4ug
+         9HiF1HZRCOSY/Tz3i0vzVvpPHC2N+uUcC5NzVfg2mHSZXDoaJc+ox+UP+O5rlx0djuzw
+         5jYw==
+X-Gm-Message-State: APjAAAUxPWKgQzMfcuzD2B7Mdu2LIrqdjXfmoIDiVurYhpbk4lILh8A9
+        aHpOAAyRHwWT7fRO1M4owwfQUQ==
+X-Google-Smtp-Source: APXvYqxE1UocLLJIGj+qa121b1J1P2Z7TFTsdeLiYhSC8aPtfjpP2T2/VhNf3pAQR82l3L5H3plJmg==
+X-Received: by 2002:a1c:d185:: with SMTP id i127mr361632wmg.63.1566312061423;
+        Tue, 20 Aug 2019 07:41:01 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a18sm21826750wrt.18.2019.08.20.07.40.57
+        by smtp.gmail.com with ESMTPSA id a18sm21826750wrt.18.2019.08.20.07.41.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 07:40:57 -0700 (PDT)
+        Tue, 20 Aug 2019 07:41:00 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] soc: amlogic: clk-measure: Add support for SM1
-Date:   Tue, 20 Aug 2019 16:40:49 +0200
-Message-Id: <20190820144052.18269-4-narmstrong@baylibre.com>
+Subject: [PATCH 6/6] arm64: dts: add support for SM1 based SEI Robotics SEI610
+Date:   Tue, 20 Aug 2019 16:40:52 +0200
+Message-Id: <20190820144052.18269-7-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190820144052.18269-1-narmstrong@baylibre.com>
 References: <20190820144052.18269-1-narmstrong@baylibre.com>
@@ -74,165 +74,422 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the clk-measurer clocks IDs for the Amlogic SM1 SoC family.
+Add support for the Amlogic SM1 Based SEI610 board.
+
+The SM1 SoC is a derivative of the G12A SoC Family with :
+- Cortex-A55 core instead of A53
+- more power domains, including USB & PCIe
+- a neural network co-processor (NNA)
+- a CSI input and image processor
+- some changes in the audio complex, thus not yet enabled
+
+The SEI610 board is a derivative of the SEI510 board with :
+- removed ADC based touch button, replaced with 3x GPIO buttons
+- physical switch disabling on-board MICs
+- USB-C port for USB 2.0 OTG
+- On-board FTDI USB2SERIAL port for Linux console
+
+Audio, Display and USB support will be added later when support of the
+corresponding power domains will be added, for now they are kept disabled.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/soc/amlogic/meson-clk-measure.c | 134 ++++++++++++++++++++++++
- 1 file changed, 134 insertions(+)
+ arch/arm64/boot/dts/amlogic/Makefile          |   1 +
+ .../boot/dts/amlogic/meson-sm1-sei610.dts     | 300 ++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |  68 ++++
+ 3 files changed, 369 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
 
-diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
-index f09b404b39d3..0fa47d77577d 100644
---- a/drivers/soc/amlogic/meson-clk-measure.c
-+++ b/drivers/soc/amlogic/meson-clk-measure.c
-@@ -357,6 +357,136 @@ static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
- 	CLK_MSR_ID(122, "audio_pdm_dclk"),
- };
- 
-+static struct meson_msr_id clk_msr_sm1[CLK_MSR_MAX] = {
-+	CLK_MSR_ID(0, "ring_osc_out_ee_0"),
-+	CLK_MSR_ID(1, "ring_osc_out_ee_1"),
-+	CLK_MSR_ID(2, "ring_osc_out_ee_2"),
-+	CLK_MSR_ID(3, "ring_osc_out_ee_3"),
-+	CLK_MSR_ID(4, "gp0_pll"),
-+	CLK_MSR_ID(5, "gp1_pll"),
-+	CLK_MSR_ID(6, "enci"),
-+	CLK_MSR_ID(7, "clk81"),
-+	CLK_MSR_ID(8, "encp"),
-+	CLK_MSR_ID(9, "encl"),
-+	CLK_MSR_ID(10, "vdac"),
-+	CLK_MSR_ID(11, "eth_tx"),
-+	CLK_MSR_ID(12, "hifi_pll"),
-+	CLK_MSR_ID(13, "mod_tcon"),
-+	CLK_MSR_ID(14, "fec_0"),
-+	CLK_MSR_ID(15, "fec_1"),
-+	CLK_MSR_ID(16, "fec_2"),
-+	CLK_MSR_ID(17, "sys_pll_div16"),
-+	CLK_MSR_ID(18, "sys_cpu_div16"),
-+	CLK_MSR_ID(19, "lcd_an_ph2"),
-+	CLK_MSR_ID(20, "rtc_osc_out"),
-+	CLK_MSR_ID(21, "lcd_an_ph3"),
-+	CLK_MSR_ID(22, "eth_phy_ref"),
-+	CLK_MSR_ID(23, "mpll_50m"),
-+	CLK_MSR_ID(24, "eth_125m"),
-+	CLK_MSR_ID(25, "eth_rmii"),
-+	CLK_MSR_ID(26, "sc_int"),
-+	CLK_MSR_ID(27, "in_mac"),
-+	CLK_MSR_ID(28, "sar_adc"),
-+	CLK_MSR_ID(29, "pcie_inp"),
-+	CLK_MSR_ID(30, "pcie_inn"),
-+	CLK_MSR_ID(31, "mpll_test_out"),
-+	CLK_MSR_ID(32, "vdec"),
-+	CLK_MSR_ID(34, "eth_mpll_50m"),
-+	CLK_MSR_ID(35, "mali"),
-+	CLK_MSR_ID(36, "hdmi_tx_pixel"),
-+	CLK_MSR_ID(37, "cdac"),
-+	CLK_MSR_ID(38, "vdin_meas"),
-+	CLK_MSR_ID(39, "bt656"),
-+	CLK_MSR_ID(40, "arm_ring_osc_out_4"),
-+	CLK_MSR_ID(41, "eth_rx_or_rmii"),
-+	CLK_MSR_ID(42, "mp0_out"),
-+	CLK_MSR_ID(43, "fclk_div5"),
-+	CLK_MSR_ID(44, "pwm_b"),
-+	CLK_MSR_ID(45, "pwm_a"),
-+	CLK_MSR_ID(46, "vpu"),
-+	CLK_MSR_ID(47, "ddr_dpll_pt"),
-+	CLK_MSR_ID(48, "mp1_out"),
-+	CLK_MSR_ID(49, "mp2_out"),
-+	CLK_MSR_ID(50, "mp3_out"),
-+	CLK_MSR_ID(51, "sd_emmc_c"),
-+	CLK_MSR_ID(52, "sd_emmc_b"),
-+	CLK_MSR_ID(53, "sd_emmc_a"),
-+	CLK_MSR_ID(54, "vpu_clkc"),
-+	CLK_MSR_ID(55, "vid_pll_div_out"),
-+	CLK_MSR_ID(56, "wave420l_a"),
-+	CLK_MSR_ID(57, "wave420l_c"),
-+	CLK_MSR_ID(58, "wave420l_b"),
-+	CLK_MSR_ID(59, "hcodec"),
-+	CLK_MSR_ID(60, "arm_ring_osc_out_5"),
-+	CLK_MSR_ID(61, "gpio_msr"),
-+	CLK_MSR_ID(62, "hevcb"),
-+	CLK_MSR_ID(63, "dsi_meas"),
-+	CLK_MSR_ID(64, "spicc_1"),
-+	CLK_MSR_ID(65, "spicc_0"),
-+	CLK_MSR_ID(66, "vid_lock"),
-+	CLK_MSR_ID(67, "dsi_phy"),
-+	CLK_MSR_ID(68, "hdcp22_esm"),
-+	CLK_MSR_ID(69, "hdcp22_skp"),
-+	CLK_MSR_ID(70, "pwm_f"),
-+	CLK_MSR_ID(71, "pwm_e"),
-+	CLK_MSR_ID(72, "pwm_d"),
-+	CLK_MSR_ID(73, "pwm_c"),
-+	CLK_MSR_ID(74, "arm_ring_osc_out_6"),
-+	CLK_MSR_ID(75, "hevcf"),
-+	CLK_MSR_ID(76, "arm_ring_osc_out_7"),
-+	CLK_MSR_ID(77, "rng_ring_osc_0"),
-+	CLK_MSR_ID(78, "rng_ring_osc_1"),
-+	CLK_MSR_ID(79, "rng_ring_osc_2"),
-+	CLK_MSR_ID(80, "rng_ring_osc_3"),
-+	CLK_MSR_ID(81, "vapb"),
-+	CLK_MSR_ID(82, "ge2d"),
-+	CLK_MSR_ID(83, "co_rx"),
-+	CLK_MSR_ID(84, "co_tx"),
-+	CLK_MSR_ID(85, "arm_ring_osc_out_8"),
-+	CLK_MSR_ID(86, "arm_ring_osc_out_9"),
-+	CLK_MSR_ID(87, "mipi_dsi_phy"),
-+	CLK_MSR_ID(88, "cis2_adapt"),
-+	CLK_MSR_ID(89, "hdmi_todig"),
-+	CLK_MSR_ID(90, "hdmitx_sys"),
-+	CLK_MSR_ID(91, "nna_core"),
-+	CLK_MSR_ID(92, "nna_axi"),
-+	CLK_MSR_ID(93, "vad"),
-+	CLK_MSR_ID(94, "eth_phy_rx"),
-+	CLK_MSR_ID(95, "eth_phy_pll"),
-+	CLK_MSR_ID(96, "vpu_b"),
-+	CLK_MSR_ID(97, "cpu_b_tmp"),
-+	CLK_MSR_ID(98, "ts"),
-+	CLK_MSR_ID(99, "arm_ring_osc_out_10"),
-+	CLK_MSR_ID(100, "arm_ring_osc_out_11"),
-+	CLK_MSR_ID(101, "arm_ring_osc_out_12"),
-+	CLK_MSR_ID(102, "arm_ring_osc_out_13"),
-+	CLK_MSR_ID(103, "arm_ring_osc_out_14"),
-+	CLK_MSR_ID(104, "arm_ring_osc_out_15"),
-+	CLK_MSR_ID(105, "arm_ring_osc_out_16"),
-+	CLK_MSR_ID(106, "ephy_test"),
-+	CLK_MSR_ID(107, "au_dac_g128x"),
-+	CLK_MSR_ID(108, "audio_locker_out"),
-+	CLK_MSR_ID(109, "audio_locker_in"),
-+	CLK_MSR_ID(110, "audio_tdmout_c_sclk"),
-+	CLK_MSR_ID(111, "audio_tdmout_b_sclk"),
-+	CLK_MSR_ID(112, "audio_tdmout_a_sclk"),
-+	CLK_MSR_ID(113, "audio_tdmin_lb_sclk"),
-+	CLK_MSR_ID(114, "audio_tdmin_c_sclk"),
-+	CLK_MSR_ID(115, "audio_tdmin_b_sclk"),
-+	CLK_MSR_ID(116, "audio_tdmin_a_sclk"),
-+	CLK_MSR_ID(117, "audio_resample"),
-+	CLK_MSR_ID(118, "audio_pdm_sys"),
-+	CLK_MSR_ID(119, "audio_spdifout_b"),
-+	CLK_MSR_ID(120, "audio_spdifout"),
-+	CLK_MSR_ID(121, "audio_spdifin"),
-+	CLK_MSR_ID(122, "audio_pdm_dclk"),
-+	CLK_MSR_ID(123, "audio_resampled"),
-+	CLK_MSR_ID(124, "earcrx_pll"),
-+	CLK_MSR_ID(125, "earcrx_pll_test"),
-+	CLK_MSR_ID(126, "csi_phy0"),
-+	CLK_MSR_ID(127, "csi2_data"),
+diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+index ae5e8d0c08da..edbf128e7707 100644
+--- a/arch/arm64/boot/dts/amlogic/Makefile
++++ b/arch/arm64/boot/dts/amlogic/Makefile
+@@ -34,3 +34,4 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-sm1-sei610.dtb
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+new file mode 100644
+index 000000000000..12dab0ba2f26
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
+@@ -0,0 +1,300 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 BayLibre SAS. All rights reserved.
++ */
++
++/dts-v1/;
++
++#include "meson-sm1.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/meson-g12a-gpio.h>
++
++/ {
++	compatible = "seirobotics,sei610", "amlogic,sm1";
++	model = "SEI Robotics SEI610";
++
++	aliases {
++		serial0 = &uart_AO;
++		ethernet0 = &ethmac;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_12 GPIO_ACTIVE_LOW>;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys-polled";
++		poll-interval = <100>;
++
++		key1 {
++			label = "A";
++			linux,code = <BTN_0>;
++			gpios = <&gpio GPIOH_6 GPIO_ACTIVE_LOW>;
++		};
++
++		key2 {
++			label = "B";
++			linux,code = <BTN_1>;
++			gpios = <&gpio GPIOH_7 GPIO_ACTIVE_LOW>;
++		};
++
++		key3 {
++			label = "C";
++			linux,code = <BTN_2>;
++			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		bluetooth {
++			label = "sei610:blue:bt";
++			gpios = <&gpio GPIOC_7 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
++			default-state = "off";
++		};
++	};
++
++	pwmleds {
++		compatible = "pwm-leds";
++
++		power {
++			label = "sei610:red:power";
++			pwms = <&pwm_AO_ab 0 30518 0>;
++			max-brightness = <255>;
++			linux,default-trigger = "default-on";
++			active-low;
++		};
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x40000000>;
++	};
++
++	ao_5v: regulator-ao_5v {
++		compatible = "regulator-fixed";
++		regulator-name = "AO_5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&dc_in>;
++		regulator-always-on;
++	};
++
++	dc_in: regulator-dc_in {
++		compatible = "regulator-fixed";
++		regulator-name = "DC_IN";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	emmc_1v8: regulator-emmc_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "EMMC_1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
++	};
++
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&dc_in>;
++		regulator-always-on;
++	};
++
++	/* Used by Tuner, RGB Led & IR Emitter LED array */
++	vddao_3v3_t: regultor-vddao_3v3_t {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3_T";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vddao_3v3>;
++		gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
++		enable-active-low;
++		regulator-always-on;
++	};
++
++	vddio_ao1v8: regulator-vddio_ao1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_AO1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
++	};
++
++	reserved-memory {
++		/* TEE Reserved Memory */
++		bl32_reserved: bl32@5000000 {
++			reg = <0x0 0x05300000 0x0 0x2000000>;
++			no-map;
++		};
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
++		clocks = <&wifi32k>;
++		clock-names = "ext_clock";
++	};
++
++	wifi32k: wifi32k {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
++	};
 +};
 +
- static int meson_measure_id(struct meson_msr_id *clk_msr_id,
- 			       unsigned int duration)
- {
-@@ -545,6 +675,10 @@ static const struct of_device_id meson_msr_match_table[] = {
- 		.compatible = "amlogic,meson-g12a-clk-measure",
- 		.data = (void *)clk_msr_g12a,
- 	},
-+	{
-+		.compatible = "amlogic,meson-sm1-clk-measure",
-+		.data = (void *)clk_msr_sm1,
-+	},
- 	{ /* sentinel */ }
- };
- 
++&cec_AO {
++	pinctrl-0 = <&cec_ao_a_h_pins>;
++	pinctrl-names = "default";
++	status = "disabled";
++	hdmi-phandle = <&hdmi_tx>;
++};
++
++&cecb_AO {
++	pinctrl-0 = <&cec_ao_b_h_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++	hdmi-phandle = <&hdmi_tx>;
++};
++
++&ethmac {
++	status = "okay";
++	phy-handle = <&internal_ephy>;
++	phy-mode = "rmii";
++};
++
++&i2c3 {
++	status = "okay";
++	pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
++	pinctrl-names = "default";
++};
++
++&ir {
++	status = "okay";
++	pinctrl-0 = <&remote_input_ao_pins>;
++	pinctrl-names = "default";
++};
++
++&pwm_AO_ab {
++	status = "okay";
++	pinctrl-0 = <&pwm_ao_a_pins>;
++	pinctrl-names = "default";
++	clocks = <&xtal>;
++	clock-names = "clkin0";
++};
++
++&pwm_ef {
++	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&xtal>;
++	clock-names = "clkin0";
++};
++
++&saradc {
++	status = "okay";
++	vref-supply = <&vddio_ao1v8>;
++};
++
++/* SDIO */
++&sd_emmc_a {
++	status = "okay";
++	pinctrl-0 = <&sdio_pins>;
++	pinctrl-1 = <&sdio_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	sd-uhs-sdr50;
++	max-frequency = <100000000>;
++
++	non-removable;
++	disable-wp;
++
++	mmc-pwrseq = <&sdio_pwrseq>;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_ao1v8>;
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++/* SD card */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_c_pins>;
++	pinctrl-1 = <&sdcard_clk_gate_c_pins>;
++	pinctrl-names = "default", "clk-gate";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <50000000>;
++	disable-wp;
++
++	cd-gpios = <&gpio GPIOC_6 GPIO_ACTIVE_LOW>;
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddao_3v3>;
++};
++
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>, <&emmc_ds_pins>;
++	pinctrl-1 = <&emmc_clk_gate_pins>;
++	pinctrl-names = "default", "clk-gate";
++
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++	max-frequency = <200000000>;
++	non-removable;
++	disable-wp;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&emmc_1v8>;
++};
++
++&uart_A {
++	status = "okay";
++	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
++	pinctrl-names = "default";
++	uart-has-rtscts;
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
++		max-speed = <2000000>;
++		clocks = <&wifi32k>;
++		clock-names = "lpo";
++		vbat-supply = <&vddao_3v3>;
++		vddio-supply = <&vddio_ao1v8>;
++	};
++};
++
++/* Exposed via the on-board USB to Serial FT232RL IC */
++&uart_AO {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+new file mode 100644
+index 000000000000..e902d4f9165f
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+@@ -0,0 +1,68 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ */
++
++#include "meson-g12-common.dtsi"
++
++/ {
++	compatible = "amlogic,sm1";
++
++	cpus {
++		#address-cells = <0x2>;
++		#size-cells = <0x0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x0 0x0>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x0 0x1>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++
++		cpu2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x0 0x2>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++
++		cpu3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x0 0x3>;
++			enable-method = "psci";
++			next-level-cache = <&l2>;
++		};
++
++		l2: l2-cache0 {
++			compatible = "cache";
++		};
++	};
++};
++
++&cecb_AO {
++	compatible = "amlogic,meson-sm1-ao-cec";
++};
++
++&clk_msr {
++	compatible = "amlogic,meson-sm1-clk-measure";
++};
++
++&pwrc_vpu {
++	status = "disabled";
++};
++
++&vpu {
++	status = "disabled";
++};
 -- 
 2.22.0
 
