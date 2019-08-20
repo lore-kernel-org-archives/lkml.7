@@ -2,97 +2,113 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9F3C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 350C9C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F96D22DA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:20:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566303654;
-	bh=G5xwXtXC6eKSccjeQBgi5kYARnoflqjoRRwzQum4r2E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jL0ZosGGkhK42l2ezprptP2LKgv+q8WQgro/CghPQhLrweTiIjDmComcce6KrcpMz
-	 +leIij8SsyD+uyNuNwIqQ4A5dF4Is+x488f+oQ0Di4TBzXaq3n0n/oVxcCzibLUUI7
-	 Icc+NhxLUcq2PhYNldEtnY5znsCL3JrADcoVyOKM=
+	by mail.kernel.org (Postfix) with ESMTP id 0E5AC22DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbfHTMUx (ORCPT
+        id S1729742AbfHTMVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:20:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbfHTMUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:20:53 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C54EA22CE3;
-        Tue, 20 Aug 2019 12:20:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566303652;
-        bh=G5xwXtXC6eKSccjeQBgi5kYARnoflqjoRRwzQum4r2E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U98zb5kYCZL5UIJpBwBFu63Pis+PAk6FYfIHxPHQ7bMubLguLBKzwRjH9xyn8a7ub
-         O99g9etExoI5qQGDYngsmJx6OtZHGEHFkz5Ko/D0r2BoUrU51ZKGt5v56z45rXcEKI
-         1HO405m3sW5FZLLB//ihdQMIiP0oA9Pg1Hs7TOfw=
-Date:   Tue, 20 Aug 2019 14:20:50 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: Re: [patch 01/44] posix-timers: Cleanup forward declarations and
- includes
-Message-ID: <20190820122049.GB2093@lenoir>
-References: <20190819143141.221906747@linutronix.de>
- <20190819143801.472005793@linutronix.de>
+        Tue, 20 Aug 2019 08:21:47 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:50187 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729409AbfHTMVq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:21:46 -0400
+Received: from [192.168.1.110] ([95.117.23.32]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M9nAB-1hwUEe3tHp-005rTd; Tue, 20 Aug 2019 14:21:38 +0200
+Subject: Re: [PATCH 2/2] drivers: input: mouse: alps: drop unneeded likely()
+ call around IS_ERR()
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com,
+        linux-input@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net
+References: <1566298572-12409-1-git-send-email-info@metux.net>
+ <1566298572-12409-2-git-send-email-info@metux.net>
+ <20190820111719.7blyk5jstgwde2ae@pali>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <02f5b546-5c30-4998-19b2-76b816a35371@metux.net>
+Date:   Tue, 20 Aug 2019 14:21:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819143801.472005793@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190820111719.7blyk5jstgwde2ae@pali>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:w2EFLBTJ6lqCF1cRxaNsgtU4Ayhs7iamqxZJGE8EtE5RjwoNC4t
+ 1wMHvKMvxJH7423duGgD6HfvMlQ5fOv9CxInJuDzD8b6Foay2URD9yM9ELRgAIiaqJ+RAlw
+ 3WZwlZ7Q2wnBdNZYvV8CtXbfSGpG1jO5ArUonHAYhqaFB5/k8Kpe6AxVlKldbotTp3Z8sjL
+ a2YGl877B7l4bGQbSgKHg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:q+pbJQtMiq8=:Htz0JavxsTOY8vnc9v0Lm5
+ OdgzGccyeXqXgjZf3yuQdVvnhcJsIPWu4CbYJLEdX2AjKwAFsCobEV9s+EmkLqmd1uBIkf33B
+ +gQOdZxLEEmuf5e93AdRd437V3pEH0B59PVQtPC3LFvbd1xYUoCow+nCRzjD1oPkddoXhcryb
+ Yx1/Kc1vProXPxGkA+U6KIYu3pntb2Em62zrsoS4VsWBRsv/oAknqN+zs/DOOiBEleN/g5Ovm
+ lpDuzANXb+24QcBmAV3hIzlh6jlBUve7eJpKp/qBDPin8fieHAo91eE22YpkLckH9GCK5f/Nr
+ /l2qpLDZaN++SvkVJhPHU/WFURGDAIimwOEhPzZu5TL0oXadOwfoZ+paOTSx0B5phPTjs2GHU
+ tiY6km7tEwSB0KD5EBaRxL2dWrHNt748Oex3YOWMAJcv3rUSAZgvZ24viA5Vj9A1sbe5h/DM4
+ rC2cBM1qeIxgu7z4HstQ1OgsOgb5OaF3UgYaYBWJikDW/wWfmugs8wuTPk+XAvx2EflPGBcfz
+ CdCKs6M4rCrVWwGgpHx0WqlJIAiQStg/0V/Yr1rOrxVvw1UEp7s/FBsLmzK/wq6CvXshUTPgX
+ 9Sh9T6FveDv/RZvEghHejPMQrT6GUlxS46mdB94Dpqxc92rO7K8wXqsROUo7qrY/CpipHZbcN
+ BD5Bc1khMsEGH17+CWJI37OGeCDth88l6g+Y0sYWwvDDSYIZ4CCWg6i81DZuilyCLWQEqJrss
+ IVvVKEDSqjAVwHF8Oj0SFsmM7VyW6n1L/HdtfDNXbR+3pZwVihUwZ6PW/+tJDLv4HzI8oTTBc
+ SGA3fLE/zLs0QKODQf2dSDVvP71kw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 04:31:42PM +0200, Thomas Gleixner wrote:
->  - Rename struct siginfo to kernel_siginfo
+On 20.08.19 13:17, Pali Rohár wrote:
+> On Tuesday 20 August 2019 12:56:12 Enrico Weigelt, metux IT consult wrote:
+>> From: Enrico Weigelt <info@metux.net>
+>>
+>> IS_ERR() already calls unlikely(), so this extra unlikely() call
+>> around IS_ERR() is not needed.
+>>
+>> Signed-off-by: Enrico Weigelt <info@metux.net>
+>> ---
+>>   drivers/input/mouse/alps.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/input/mouse/alps.c b/drivers/input/mouse/alps.c
+>> index 34700ed..ed16614 100644
+>> --- a/drivers/input/mouse/alps.c
+>> +++ b/drivers/input/mouse/alps.c
+>> @@ -1476,7 +1476,7 @@ static void alps_report_bare_ps2_packet(struct psmouse *psmouse,
+>>   		/* On V2 devices the DualPoint Stick reports bare packets */
+>>   		dev = priv->dev2;
+>>   		dev2 = psmouse->dev;
+>> -	} else if (unlikely(IS_ERR_OR_NULL(priv->dev3))) {
+>> +	} else if (IS_ERR_OR_NULL(priv->dev3)) {
+>>   		/* Register dev3 mouse if we received PS/2 packet first time */
+>>   		if (!IS_ERR(priv->dev3))
+>>   			psmouse_queue_work(psmouse, &priv->dev3_register_work,
+> 
+> Hello! Two months ago I already saw this patch. See discussion:
+> https://patchwork.kernel.org/patch/10977099/
 
-That's fine because struct siginfo isn't actually used in that
-header, right?
+phuh, that's long chain of links to folow ;-)
 
->  - Add a forward declaration for task_struct and remove sched.h include
->  - Remove timex.h include as it is not needed
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  include/linux/posix-timers.h |    5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> --- a/include/linux/posix-timers.h
-> +++ b/include/linux/posix-timers.h
-> @@ -4,11 +4,10 @@
->  
->  #include <linux/spinlock.h>
->  #include <linux/list.h>
-> -#include <linux/sched.h>
-> -#include <linux/timex.h>
->  #include <linux/alarmtimer.h>
->  
-> -struct siginfo;
-> +struct kernel_siginfo;
-> +struct task_struct;
->  
->  struct cpu_timer_list {
->  	struct list_head entry;
-> 
-> 
+So, your primary argument is just *documenting* that this supposed to
+be a rare condition ?
+
+In that case, wouldn't a comment be more suitable for that ?
+
+It seems that this issue is coming up again and again ... when people
+run cocci scans (like I didn't), I'd suspect this to happen even more
+in the future.
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
