@@ -2,130 +2,120 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A330C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C92C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D5E22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A014F22DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730667AbfHTO7l (ORCPT
+        id S1729810AbfHTPDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:59:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59720 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726717AbfHTO6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:58:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8A0C7AE6D;
-        Tue, 20 Aug 2019 14:58:31 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
-        marc.zyngier@arm.com, robh+dt@kernel.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arch@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org,
-        nsaenzjulienne@suse.de, eric@anholt.net, mbrugger@suse.com,
-        linux-rpi-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        frowand.list@gmail.com, m.szyprowski@samsung.com,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v2 02/11] arm: use generic dma_zone_size
-Date:   Tue, 20 Aug 2019 16:58:10 +0200
-Message-Id: <20190820145821.27214-3-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190820145821.27214-1-nsaenzjulienne@suse.de>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+        Tue, 20 Aug 2019 11:03:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45830 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbfHTPDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:03:31 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D8662C047B6E;
+        Tue, 20 Aug 2019 15:03:30 +0000 (UTC)
+Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F05118220;
+        Tue, 20 Aug 2019 15:03:27 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 09:03:27 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "kraxel@redhat.com" <kraxel@redhat.com>
+Cc:     "Zhang, Tina" <tina.zhang@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>
+Subject: Re: [PATCH v5 2/6] vfio: Introduce vGPU display irq type
+Message-ID: <20190820090327.27cfb414@x1.home>
+In-Reply-To: <20190820072030.kgjjiysxgs3yj25j@sirius.home.kraxel.org>
+References: <20190816023528.30210-1-tina.zhang@intel.com>
+        <20190816023528.30210-3-tina.zhang@intel.com>
+        <20190816145148.307408dc@x1.home>
+        <237F54289DF84E4997F34151298ABEBC876F9AD3@SHSMSX101.ccr.corp.intel.com>
+        <20190820072030.kgjjiysxgs3yj25j@sirius.home.kraxel.org>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 20 Aug 2019 15:03:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'dma_zone_size' was created as a generic replacement to
-'arm_dma_zone_size'. Use it accordingly.
+On Tue, 20 Aug 2019 09:20:30 +0200
+"kraxel@redhat.com" <kraxel@redhat.com> wrote:
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
+> > > > +#define VFIO_IRQ_TYPE_GFX				(1)
+> > > > +/*
+> > > > + * vGPU vendor sub-type
+> > > > + * vGPU device display related interrupts e.g. vblank/pageflip  */
+> > > > +#define VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ		(1)  
+> > > 
+> > > If this is a GFX/DISPLAY IRQ, why are we talking about a "vGPU" in the
+> > > description?  It's not specific to a vGPU implementation, right?  Is this
+> > > related to a physical display or a virtual display?  If it's related to the GFX
+> > > PLANE ioctls, it should state that.  It's not well specified what this interrupt
+> > > signals.  Is it vblank?  Is it pageflip?
+> > > Is it both?  Neither?  Something else?  
+> > 
+> > Sorry for the confusion caused here. 
+> > 
+> > The original idea here was to use VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ to
+> > notify user space with the display refresh event. The display refresh
+> > event is general. When notified, user space can use
+> > VFIO_DEVICE_QUERY_GFX_PLANE and VFIO_DEVICE_GET_GFX_DMABUF to get the
+> > updated framebuffer, instead of polling them all the time.
+> > 
+> > In order to give user space more choice to do the optimization,
+> > vfio_irq_info_cap_display_plane_events is proposed to tell user space
+> > the different plane refresh event values. So when notified by
+> > VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ, user space can get the value of the
+> > eventfd counter and understand which plane the event refresh event
+> > comes from and choose to get the framebuffer on that plane instead of
+> > all the planes.
+> > 
+> > So, from the VFIO user point of view, there is only the display
+> > refresh event (i.e. no other events like vblank, pageflip ...). For
+> > GTV-g, this display refresh event is implemented by both vblank and
+> > pageflip, which is only the implementation thing and can be
+> > transparent to the user space. Again sorry about the confusion cased
+> > here, I'll correct the comments in the next version.  
+> 
+> All this should be explained in a comment for the IRQ in the header file.
 
-Changes in v2: None
+Yes, Tina's update and your clarification all make sense to me, but it
+needs to be specified in the header how this is supposed to work, what
+events get signaled and what the user is intended to do in response to
+that signal.  The information is all here, it just needs to be included
+in the uapi definition.  Thanks,
 
- arch/arm/include/asm/dma.h |  8 +++++---
- arch/arm/mm/init.c         | 12 ++++--------
- 2 files changed, 9 insertions(+), 11 deletions(-)
+Alex
 
-diff --git a/arch/arm/include/asm/dma.h b/arch/arm/include/asm/dma.h
-index a81dda65c576..52d19ffd92b4 100644
---- a/arch/arm/include/asm/dma.h
-+++ b/arch/arm/include/asm/dma.h
-@@ -2,16 +2,18 @@
- #ifndef __ASM_ARM_DMA_H
- #define __ASM_ARM_DMA_H
- 
-+#include <asm-generic/dma.h>
-+
- /*
-  * This is the maximum virtual address which can be DMA'd from.
-  */
-+#undef MAX_DMA_ADDRESS
- #ifndef CONFIG_ZONE_DMA
- #define MAX_DMA_ADDRESS	0xffffffffUL
- #else
- #define MAX_DMA_ADDRESS	({ \
--	extern phys_addr_t arm_dma_zone_size; \
--	arm_dma_zone_size && arm_dma_zone_size < (0x10000000 - PAGE_OFFSET) ? \
--		(PAGE_OFFSET + arm_dma_zone_size) : 0xffffffffUL; })
-+	dma_zone_size && dma_zone_size < (0x10000000 - PAGE_OFFSET) ? \
-+		(PAGE_OFFSET + dma_zone_size) : 0xffffffffUL; })
- #endif
- 
- #ifdef CONFIG_ISA_DMA_API
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 16d373d587c4..95680bad245a 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -79,10 +79,6 @@ static void __init find_limits(unsigned long *min, unsigned long *max_low,
- }
- 
- #ifdef CONFIG_ZONE_DMA
--
--phys_addr_t arm_dma_zone_size __read_mostly;
--EXPORT_SYMBOL(arm_dma_zone_size);
--
- /*
-  * The DMA mask corresponding to the maximum bus address allocatable
-  * using GFP_DMA.  The default here places no restriction on DMA
-@@ -109,8 +105,8 @@ void __init setup_dma_zone(const struct machine_desc *mdesc)
- {
- #ifdef CONFIG_ZONE_DMA
- 	if (mdesc->dma_zone_size) {
--		arm_dma_zone_size = mdesc->dma_zone_size;
--		arm_dma_limit = PHYS_OFFSET + arm_dma_zone_size - 1;
-+		dma_zone_size = mdesc->dma_zone_size;
-+		arm_dma_limit = PHYS_OFFSET + dma_zone_size - 1;
- 	} else
- 		arm_dma_limit = 0xffffffff;
- 	arm_dma_pfn_limit = arm_dma_limit >> PAGE_SHIFT;
-@@ -164,9 +160,9 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
- 	 * Adjust the sizes according to any special requirements for
- 	 * this machine type.
- 	 */
--	if (arm_dma_zone_size)
-+	if (dma_zone_size)
- 		arm_adjust_dma_zone(zone_size, zhole_size,
--			arm_dma_zone_size >> PAGE_SHIFT);
-+			dma_zone_size >> PAGE_SHIFT);
- #endif
- 
- 	free_area_init_node(0, zone_size, min, zhole_size);
--- 
-2.22.0
+> Key point for the API is that (a) this is a "the display should be
+> updated" event and (b) this covers all display updates, i.e. user space
+> can stop the display update timer and fully depend on getting
+> notifications if an update is needed.
+> 
+> That GTV-g watches guest pageflips is an implementation detail.  Should
+> nvidia support this they will probably do something completely
+> different.  As far I know they render the guest display to some
+> framebuffer at something like 10fps, so it would make sense for them to
+> send an event each time they refreshed the framebuffer.
+> 
+> Also note the relationships (cur_event_val is for DRM_PLANE_TYPE_CURSOR
+> updates and pri_event_val for DRM_PLANE_TYPE_PRIMARY).
 
