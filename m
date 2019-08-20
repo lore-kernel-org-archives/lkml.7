@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D1CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FF8C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4D122DCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B182722DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308842;
-	bh=uUiyTOYTGJTtIk3PtX7pyYoHvRoI1mjuDgQV82cdJwk=;
+	s=default; t=1566308845;
+	bh=bsiCW9RVMi7rzQxs3g0Ad67RNfT4DgoSU933epG+8Lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HLgtIVD6qQNEeGoU4U1vIHuQfARiol5mmhG5ZIPpCX2NT6cHQF0l7qgCtUEi6cXip
-	 7IJSQlILHJwdYUP0viknHnJr0GSlyNJq4MW+Q1ndv1LAMzS+Sqwm5nsFqEA0ew+eqn
-	 n2c9zk6XLcVoAFcCl9Vl5y4XptOJOUFy4rNyLnCk=
+	b=MXzXnwqfg3GWZD+aCkaQW7/r9NuNOFsDp5GJzBTMcuXOA2Ubq39w0BuzIg5XNFKij
+	 fhFD6KL8nU2njuSaLG3GkVVk5TetL9q8sMrSR7r6tW1lJ9VY4SZ6fu1zAagq/ssNT5
+	 GKdz+auf/Ynw7VwBwoFAp9ricROPSY3ew/OYVpC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbfHTNrV (ORCPT
+        id S1730659AbfHTNrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:47:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35650 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:47:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730205AbfHTNkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:40:46 -0400
+        id S1730202AbfHTNkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:40:45 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19ABD233FF;
+        by mail.kernel.org (Postfix) with ESMTPSA id 253A8233A0;
         Tue, 20 Aug 2019 13:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308445;
-        bh=uUiyTOYTGJTtIk3PtX7pyYoHvRoI1mjuDgQV82cdJwk=;
+        s=default; t=1566308444;
+        bh=bsiCW9RVMi7rzQxs3g0Ad67RNfT4DgoSU933epG+8Lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qwQ2Ai1APoszcX2qOdg5ews/GfCixn/Pt5LIPxVLhVDIqVhoLlaYf0aHsOQvabP5p
-         5EjNY1gXnmwQa7PdClfrIPXJAbDJx5tSf77OZrM+J1LwTtAgbOrsKjLTDAPPZu4M4c
-         B+JPCNnAfD2rRWU35vjhQkhsTW8s7fgQUTXMIPdo=
+        b=UwYCOm1Udb+yudZWswxZwIGa5qEqVu9xiZhsCI+/4dvGgqcEARlkCz3tu0CHWrvlP
+         HBpgfacay5Cj8bEBdRFFbNmzB4zNMy6eIFulznnSSMG4LHzZ4eXWC5g0ORNqUoHDWj
+         E7lkLlb8aqaohRVorLhU/ZcOQ2hmpYL9E1Kkdd7c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 18/44] soundwire: cadence_master: fix register definition for SLAVE_STATE
-Date:   Tue, 20 Aug 2019 09:40:02 -0400
-Message-Id: <20190820134028.10829-18-sashal@kernel.org>
+Cc:     Keith Busch <kbusch@kernel.org>, Li Zhong <lizhongfs@gmail.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 17/44] nvme-pci: Fix async probe remove race
+Date:   Tue, 20 Aug 2019 09:40:01 -0400
+Message-Id: <20190820134028.10829-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
@@ -58,35 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit b07dd9b400981f487940a4d84292d3a0e7cd9362 ]
+[ Upstream commit bd46a90634302bfe791e93ad5496f98f165f7ae0 ]
 
-wrong prefix and wrong macro.
+Ensure the controller is not in the NEW state when nvme_probe() exits.
+This will always allow a subsequent nvme_remove() to set the state to
+DELETING, fixing a potential race between the initial asynchronous probe
+and device removal.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190725234032.21152-14-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reported-by: Li Zhong <lizhongfs@gmail.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soundwire/cadence_master.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvme/host/pci.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-index 682789bb8ab30..18afb2e21dc9a 100644
---- a/drivers/soundwire/cadence_master.c
-+++ b/drivers/soundwire/cadence_master.c
-@@ -80,8 +80,8 @@
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index f9959eaaa185e..09ffd21d18096 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2712,7 +2712,7 @@ static void nvme_async_probe(void *data, async_cookie_t cookie)
+ {
+ 	struct nvme_dev *dev = data;
  
- #define CDNS_MCP_INTSET				0x4C
+-	nvme_reset_ctrl_sync(&dev->ctrl);
++	flush_work(&dev->ctrl.reset_work);
+ 	flush_work(&dev->ctrl.scan_work);
+ 	nvme_put_ctrl(&dev->ctrl);
+ }
+@@ -2778,6 +2778,7 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
  
--#define CDNS_SDW_SLAVE_STAT			0x50
--#define CDNS_MCP_SLAVE_STAT_MASK		BIT(1, 0)
-+#define CDNS_MCP_SLAVE_STAT			0x50
-+#define CDNS_MCP_SLAVE_STAT_MASK		GENMASK(1, 0)
+ 	dev_info(dev->ctrl.device, "pci function %s\n", dev_name(&pdev->dev));
  
- #define CDNS_MCP_SLAVE_INTSTAT0			0x54
- #define CDNS_MCP_SLAVE_INTSTAT1			0x58
++	nvme_reset_ctrl(&dev->ctrl);
+ 	nvme_get_ctrl(&dev->ctrl);
+ 	async_schedule(nvme_async_probe, dev);
+ 
 -- 
 2.20.1
 
