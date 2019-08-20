@@ -2,58 +2,58 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCF6C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0453FC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F395D20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D59C122CE8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbfHTCQs (ORCPT
+        id S1729089AbfHTCQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:16:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50702 "EHLO
+        Mon, 19 Aug 2019 22:16:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33870 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728719AbfHTCQq (ORCPT
+        by vger.kernel.org with ESMTP id S1728719AbfHTCQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:16:46 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7K2CbKL017670;
-        Mon, 19 Aug 2019 22:14:30 -0400
+        Mon, 19 Aug 2019 22:16:54 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7K2D2c9013822;
+        Mon, 19 Aug 2019 22:14:38 -0400
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ug63dkfga-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ug4kcx2yt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Aug 2019 22:14:30 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7K2CdHW017770;
-        Mon, 19 Aug 2019 22:14:29 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ug63dkffw-1
+        Mon, 19 Aug 2019 22:14:38 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7K2Eb6C017504;
+        Mon, 19 Aug 2019 22:14:37 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ug4kcx2y9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Aug 2019 22:14:29 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7K29uaQ016374;
-        Tue, 20 Aug 2019 02:14:28 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02dal.us.ibm.com with ESMTP id 2ue9764wp8-1
+        Mon, 19 Aug 2019 22:14:37 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7K29pRM012657;
+        Tue, 20 Aug 2019 02:14:36 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03wdc.us.ibm.com with ESMTP id 2ug0ck2067-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Aug 2019 02:14:28 +0000
+        Tue, 20 Aug 2019 02:14:36 +0000
 Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7K2ER0f54198586
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7K2EYje45547874
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Aug 2019 02:14:27 GMT
+        Tue, 20 Aug 2019 02:14:34 GMT
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 06B69C6059;
-        Tue, 20 Aug 2019 02:14:27 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C37BFC6059;
+        Tue, 20 Aug 2019 02:14:34 +0000 (GMT)
 Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9FA2FC6057;
-        Tue, 20 Aug 2019 02:14:23 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id B237BC6055;
+        Tue, 20 Aug 2019 02:14:31 +0000 (GMT)
 Received: from morokweng.localdomain.com (unknown [9.85.220.248])
         by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 20 Aug 2019 02:14:23 +0000 (GMT)
+        Tue, 20 Aug 2019 02:14:31 +0000 (GMT)
 From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
@@ -65,11 +65,10 @@ Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
         Paul Mackerras <paulus@samba.org>,
         Ram Pai <linuxram@us.ibm.com>,
         Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Ryan Grimm <grimm@linux.vnet.ibm.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [RFC PATCH v4 11/16] powerpc/pseries/svm: Export guest SVM status to user space via sysfs
-Date:   Mon, 19 Aug 2019 23:13:21 -0300
-Message-Id: <20190820021326.6884-12-bauerman@linux.ibm.com>
+Subject: [PATCH v4 13/16] powerpc/pseries/iommu: Don't use dma_iommu_ops on secure guests
+Date:   Mon, 19 Aug 2019 23:13:23 -0300
+Message-Id: <20190820021326.6884-14-bauerman@linux.ibm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190820021326.6884-1-bauerman@linux.ibm.com>
 References: <20190820021326.6884-1-bauerman@linux.ibm.com>
@@ -81,91 +80,50 @@ X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=627 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1908200018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryan Grimm <grimm@linux.vnet.ibm.com>
+Secure guest memory is inacessible to devices so regular DMA isn't
+possible.
 
-User space might want to know it's running in a secure VM.  It can't do
-a mfmsr because mfmsr is a privileged instruction.
+In that case set devices' dma_map_ops to NULL so that the generic
+DMA code path will use SWIOTLB to bounce buffers for DMA.
 
-The solution here is to create a cpu attribute:
-
-/sys/devices/system/cpu/svm
-
-which will read 0 or 1 based on the S bit of the current CPU.
-
-Signed-off-by: Ryan Grimm <grimm@linux.vnet.ibm.com>
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 ---
- .../ABI/testing/sysfs-devices-system-cpu      | 10 ++++++++++
- arch/powerpc/kernel/sysfs.c                   | 20 +++++++++++++++++++
- 2 files changed, 30 insertions(+)
+ arch/powerpc/platforms/pseries/iommu.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-index 5f7d7b14fa44..06d0931119cc 100644
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -562,3 +562,13 @@ Description:	Umwait control
- 			  or C0.2 state. The time is an unsigned 32-bit number.
- 			  Note that a value of zero means there is no limit.
- 			  Low order two bits must be zero.
-+
-+What:		/sys/devices/system/cpu/svm
-+Date:		August 2019
-+Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-+		Linux for PowerPC mailing list <linuxppc-dev@ozlabs.org>
-+Description:	Secure Virtual Machine
-+
-+		If 1, it means the system is using the Protected Execution
-+		Facility in POWER9 and newer processors. i.e., it is a Secure
-+		Virtual Machine.
-diff --git a/arch/powerpc/kernel/sysfs.c b/arch/powerpc/kernel/sysfs.c
-index e2147d7c9e72..80a676da11cb 100644
---- a/arch/powerpc/kernel/sysfs.c
-+++ b/arch/powerpc/kernel/sysfs.c
-@@ -19,6 +19,7 @@
- #include <asm/smp.h>
- #include <asm/pmc.h>
- #include <asm/firmware.h>
+diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+index 889dc2e44b89..8d9c2b17ad54 100644
+--- a/arch/powerpc/platforms/pseries/iommu.c
++++ b/arch/powerpc/platforms/pseries/iommu.c
+@@ -36,6 +36,7 @@
+ #include <asm/udbg.h>
+ #include <asm/mmzone.h>
+ #include <asm/plpar_wrappers.h>
 +#include <asm/svm.h>
  
- #include "cacheinfo.h"
- #include "setup.h"
-@@ -715,6 +716,23 @@ static struct device_attribute pa6t_attrs[] = {
- #endif /* HAS_PPC_PMC_PA6T */
- #endif /* HAS_PPC_PMC_CLASSIC */
+ #include "pseries.h"
  
-+#ifdef CONFIG_PPC_SVM
-+static ssize_t show_svm(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "%u\n", is_secure_guest());
-+}
-+static DEVICE_ATTR(svm, 0444, show_svm, NULL);
-+
-+static void create_svm_file(void)
-+{
-+	device_create_file(cpu_subsys.dev_root, &dev_attr_svm);
-+}
-+#else
-+static void create_svm_file(void)
-+{
-+}
-+#endif /* CONFIG_PPC_SVM */
-+
- static int register_cpu_online(unsigned int cpu)
- {
- 	struct cpu *c = &per_cpu(cpu_devices, cpu);
-@@ -1058,6 +1076,8 @@ static int __init topology_init(void)
- 	sysfs_create_dscr_default();
- #endif /* CONFIG_PPC64 */
+@@ -1318,7 +1319,15 @@ void iommu_init_early_pSeries(void)
+ 	of_reconfig_notifier_register(&iommu_reconfig_nb);
+ 	register_memory_notifier(&iommu_mem_nb);
  
-+	create_svm_file();
-+
- 	return 0;
+-	set_pci_dma_ops(&dma_iommu_ops);
++	/*
++	 * Secure guest memory is inacessible to devices so regular DMA isn't
++	 * possible.
++	 *
++	 * In that case keep devices' dma_map_ops as NULL so that the generic
++	 * DMA code path will use SWIOTLB to bounce buffers for DMA.
++	 */
++	if (!is_secure_guest())
++		set_pci_dma_ops(&dma_iommu_ops);
  }
- subsys_initcall(topology_init);
+ 
+ static int __init disable_multitce(char *str)
