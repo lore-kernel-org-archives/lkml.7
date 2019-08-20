@@ -2,110 +2,119 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40906C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E33C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA2722DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 657AC22DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:37:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q8KfdDMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfHTXhc (ORCPT
+        id S1726406AbfHTXhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 19:37:32 -0400
-Received: from smtprelay0178.hostedemail.com ([216.40.44.178]:44955 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726248AbfHTXhc (ORCPT
+        Tue, 20 Aug 2019 19:37:38 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42397 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfHTXhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:37:32 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 6DB2F180A8151;
-        Tue, 20 Aug 2019 23:37:30 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: scene35_2441a800be623
-X-Filterd-Recvd-Size: 3565
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 20 Aug 2019 23:37:29 +0000 (UTC)
-Message-ID: <9d12995c5e7e41fc5d8ba202f76a2cf854183245.camel@perches.com>
-Subject: Re: rfc: treewide scripted patch mechanism? (was: Re: [PATCH]
- Makefile: Convert -Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough
- for clang)QUILT
-From:   Joe Perches <joe@perches.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Date:   Tue, 20 Aug 2019 16:37:27 -0700
-In-Reply-To: <CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com>
-References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
-         <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
-         <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
-         <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
-         <4398924f28a58fca296d101dae11e7accce80656.camel@perches.com>
-         <ad42da450ccafcb571cca9289dcf52840dbb53d3.camel@perches.com>
-         <20190820092451.791c85e5@canb.auug.org.au>
-         <14723fccc2c3362cc045df17fc8554f37c8a8529.camel@perches.com>
-         <CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Tue, 20 Aug 2019 19:37:38 -0400
+Received: by mail-qt1-f193.google.com with SMTP id t12so812989qtp.9;
+        Tue, 20 Aug 2019 16:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vA+qIYGtmiBVWFKNi042FkOFNwyhlELwadf0fyR1JvM=;
+        b=q8KfdDMmqOpQNfQYc54DepOLtv3/x230eoAoDkznTLT3U2MHcHfVmumg1W0ZxYZJBV
+         Zgno3LwZ7CLZIiaSoGmp1z+vzHOVBBuIj6yX/mJydyZYJXa54NMaDcPyyukTNE2rDiXH
+         hu5/RK/jOYm1BmAG20Tuv/2MBS8Jxxqw5RslsI/bhor0bmAsqS1bcb7NaCOWa9jtOK4J
+         vwJTH0kAMaapIqnXklZvvx5Md3Y7cCSPWLyZF240pscAw9uYWbFqOsTfXYNmcRxnXuDG
+         5rKuSlUsMQ2pbMy4npHjKnR6Vb+XgZh6tKwTBEbAL+JeJ0LOz4Z75A7M4TD9CwMK3ctI
+         VKPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vA+qIYGtmiBVWFKNi042FkOFNwyhlELwadf0fyR1JvM=;
+        b=ogrUTZ7Ap6M6UEB5Ls2mmRw+h6fxQyICcGG11JqCkkKPQrtik4y8/mN9xuQHNG5WNI
+         zgUdzf//AtFoQADncA0QvKYY4lMVIepDYI5qkFYY2xhSkrjCVKVteJWDqaQI5UY5yU2q
+         tSzWSeiz9wkuDmbdevqCxYq3NlflYVxnrdYKgm9LAZs3ykLhP0UCaUv+GiVUWtYvzq5s
+         ydtXDPkhX1/s6YipT/YF7wi1TJApYxbduxkqPgT6MYfyGz3QrkAV6tSkPJ6goAirq+81
+         K1Yghpglx2OmI02uq0xf6yw6TmvkvRvneaOlw4K5rMQDwcu7WgoaghiZyh8fZQsTs644
+         syMQ==
+X-Gm-Message-State: APjAAAXRiwVORq5pN1WckCNsWMH/m0QdDwNsmEvNgHe75uFayB5Qd67O
+        87Ye0zL24qCZM+HvBCrCOXQ=
+X-Google-Smtp-Source: APXvYqylevPFkTKrNgzNE1LJCY3y/vdr8E4JkE/U92z7RMRMnmuxVtiy4pqwa5jfSfIPv47Tt7GgFg==
+X-Received: by 2002:ac8:65d4:: with SMTP id t20mr29166718qto.249.1566344257034;
+        Tue, 20 Aug 2019 16:37:37 -0700 (PDT)
+Received: from chirva-slack.chirva-slack (pool-68-133-6-220.bflony.fios.verizon.net. [68.133.6.220])
+        by smtp.gmail.com with ESMTPSA id q29sm10724740qtf.74.2019.08.20.16.37.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 16:37:36 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 19:37:34 -0400
+From:   Stuart Little <achirvasub@gmail.com>
+To:     Luciano Coelho <luciano.coelho@intel.com>
+Cc:     Serge Belyshev <belyshev@depni.sinp.msu.ru>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-wireless@vger.kernel.org,
+        Haim Dreyfuss <haim.dreyfuss@intel.com>
+Subject: Re: PROBLEM: 5.3.0-rc* causes iwlwifi failure
+Message-ID: <20190820233734.GA1406@chirva-slack.chirva-slack>
+References: <20190817041258.GA1641@chirva-slack.chirva-slack>
+ <87y2zsf9ps.fsf@depni.sinp.msu.ru>
+ <20190817214448.GB1070@chirva-slack.chirva-slack>
+ <1b1e573e6502c97851838a3b27ac0b272198926c.camel@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1b1e573e6502c97851838a3b27ac0b272198926c.camel@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-20 at 16:28 -0700, Linus Torvalds wrote:
-> On Mon, Aug 19, 2019 at 5:08 PM Joe Perches <joe@perches.com> wrote:
-> > 2: would be Julia Lawall's stracpy change done
-> > with coccinelle: (attached)
-> 
-> I'm not actually convinced about stracpy() and friends.
-> 
-> It seems to be yet another badly thought out string interface, and
-> there are now so many of them that no human being can keep track of
-> them.
-> 
-> The "badly thought out" part is that it (like the original strlcpy
-> garbage from BSD) thinks that there is only one size that matters -
-> the destination.
-> 
-> Yes, we fixed part of the "source is also limited" with strscpy(). It
-> didn't fix the problem with different size limits, but at least it
-> fixed the fundamentally broken assumption that the source has no size
-> limit at all.
-> 
-> Honestly, I really really REALLY don't want yet another broken string
-> handling function, when we still have a lot of the old strlcpy() stuff
-> in the tree from previous broken garbage.
-> 
-> The fact is, when you copy strings, both the destination *AND* the
-> source may have size limits. They may be the same. Or they may not be.
-> 
-> This is particularly noticeable in the "str*_pad()" versions. It's
-> simply absolutely and purely wrong. I will note that we currently have
-> not a single user or strscpy_pad() in the whole kernel outside of the
-> testing code.
-> 
-> And yes, we actually *do* have real and present cases of "source and
-> destination have different sizes". They aren't common, but they do
-> exist.
-> 
-> So I'm putting my foot down on yet another broken string copy
-> interface from people who do not understand this fundamental issue.
+On Tue, Aug 20, 2019 at 01:45:37PM +0300, Luciano Coelho wrote:
+> I'll have to look into all NIC/FW-version combinations that we have and
+> update the iwl_mvm_sar_geo_support() function accordingly, which is,
+> BTW, the easier place for you to change if you want to workaround the
+> issue.
 
-I think you are mistaken about the stracpy limits as
-the only limit is not the source size but the dest.
+Thanks!
 
-Why should the source be size limited?
+I didn't quite know how to interpret this suggestion (i.e. what the change should be), so I was poking around in there out of curiosity. One simple-minded thing that worked was to just pretend that that function always returns false:
 
-btw: I also think str.cpy_pad is horrible.
+--- cut here ---
 
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+index 5de54d1559dd..8c0160e5588f 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+@@ -925,7 +925,7 @@ int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm)
+                .data = { data },
+        };
+ 
+-       if (!iwl_mvm_sar_geo_support(mvm))
++       /*if (!iwl_mvm_sar_geo_support(mvm))*/
+                return -EOPNOTSUPP;
+ 
+        ret = iwl_mvm_send_cmd(mvm, &cmd);
+@@ -953,7 +953,7 @@ static int iwl_mvm_sar_geo_init(struct iwl_mvm *mvm)
+        int ret, i, j;
+        u16 cmd_wide_id =  WIDE_ID(PHY_OPS_GROUP, GEO_TX_POWER_LIMIT);
+ 
+-       if (!iwl_mvm_sar_geo_support(mvm))
++       /*if (!iwl_mvm_sar_geo_support(mvm))*/
+                return 0;
+ 
+        ret = iwl_mvm_sar_get_wgds_table(mvm);
 
+--- cut here ---
