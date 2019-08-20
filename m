@@ -2,133 +2,136 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21189C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF622C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E475B206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5D0206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:08:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIXbVJYA"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="r0JTMtwS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730247AbfHTPHj (ORCPT
+        id S1730203AbfHTPIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:07:39 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41343 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726879AbfHTPHi (ORCPT
+        Tue, 20 Aug 2019 11:08:06 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:25580 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbfHTPIG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:07:38 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 196so3553394pfz.8;
-        Tue, 20 Aug 2019 08:07:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DkiWz4/oUykcz3CetsHvj+ZTvSgZaShwRg/roqjAoG4=;
-        b=HIXbVJYAVa5CP6gWHuzx0/dC7fVXrTw9zU2MSb9Uljz0aYDrQkF8YZJkyQTfoxoJoO
-         xqh2J+CXJbD0MsoWMpdj/lzFwUkvfVJi5jDbhk3Vc9S/caL5/v1OR2L8HjXNeALPawek
-         JEZFFPYwgMFfQvnIOk26blf2uCN9jYLeoFjB2rjcSYPJczyWdG10RE8noegOBQTMAWwX
-         W6zvFiu+A7iqcdyPDQtFfLm04AGKIyikl+ofJWNCpZ5f4D6HoTqB109VtO0jrzvpJYiF
-         R3HMMfJr0C3Iqo62FrfwawgGcv92LvnnrSvYS/4edJZFSQSGu+ODPpd2dhtSP5E6DjvB
-         z6tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DkiWz4/oUykcz3CetsHvj+ZTvSgZaShwRg/roqjAoG4=;
-        b=O6SpVI7Gk7ejOZhag0Y8EJaXi/FoARYkRukd1bPbSmSGtUWN5OD0ULG6X6nqSFP+re
-         35+pL1NsAdULn4ZhKXYcSeaQwRrGguKFfUEG7M4eWIpaN49wxyOHJYvNz1ma6jPr2LQO
-         QwBoK/cS9P0ALgW+RCbkVADNK68/aONsfSuB/PdljmUKnmgWCD+yeDfBUo9HIdSVZrlV
-         VoXbCjq4tJ0SZav/tR5uM0APiHZrlOCCPt5az5sp6Wv4MF1C2jYmKhLLZBupp43At02r
-         483BJLC8Ga/1oG04OsF9lyvx2aEBcckZJDmuBuW/om0N5pZAkzIQTi4RUe2l54LfyikS
-         mtiA==
-X-Gm-Message-State: APjAAAW3u+FPdew4c7wnjYpK2AOM95Y61DhjCYM3LRvzD9jW2/BWClxi
-        7NxQCm0VQpi69NJyhcLwdjU=
-X-Google-Smtp-Source: APXvYqx2VWYq4vASDoVbLStGzwIfVULSF3O6sguAYmaT68iESPnwHBaAPOSOJ/5iDyDdCQRwrnQSYw==
-X-Received: by 2002:a65:5cca:: with SMTP id b10mr25855788pgt.365.1566313656771;
-        Tue, 20 Aug 2019 08:07:36 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k5sm16575860pgo.45.2019.08.20.08.07.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 08:07:36 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 08:07:35 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Max Staudt <max@enpas.org>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-m68k@vger.kernel.org,
-        linux-kernel@vger.kernel.org, glaubitz@physik.fu-berlin.de
-Subject: Re: [PATCH v5 2/3] hwmon/ltc2990: Generalise DT to fwnode support
-Message-ID: <20190820150735.GA12198@roeck-us.net>
-References: <20190819121618.16557-1-max@enpas.org>
- <20190819121618.16557-2-max@enpas.org>
+        Tue, 20 Aug 2019 11:08:06 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x7KF7iEI015081;
+        Wed, 21 Aug 2019 00:07:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x7KF7iEI015081
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566313664;
+        bh=K8iJaWgwlMDK+OlU7YLfgIi/89fs2wcwIBbyV/ut3Xg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=r0JTMtwS7bXGKh0LzSQe2B6bAJ9gURESWM7orh3U+SJLO/4fBgaO+aiE87pwUbqht
+         pEN6GgSqsHb97mwe0arR1MyTAskOZSNVIgrPcuNiG0s5y0GuAFsU3PTbZknvO9xaCt
+         YiyRCAoINDbpn7NWr3/QUFBZZ4+1Rr6yrvAmk/kdXxYqsJQLGGjuYnQFra1GiU/rsO
+         sKuAl2xCDsFbqb+H2bCKnSxw+XAkJ3+h7mDxPu94D9yqW/YxZbE62ZaTW9n2Nw2a44
+         FNO6p8UWA2D7t1NcMoM5vCbX9RzG7HR2jqa96tNUW1E2DuOSRZ8za98Dusi0fe8ib3
+         K8ml+Ni8Zq2xA==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id q16so3757413vsm.2;
+        Tue, 20 Aug 2019 08:07:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAUEHaXha+MPlTu1aaiYNOe6V6hyBqaoPGIIpwdCXLoKupZIgp6J
+        NH1Wgrw/X9sSwpHz2msmSGjca2LGLcVKMpdKaB4=
+X-Google-Smtp-Source: APXvYqzVwIl5c0/FMcWNBbgpHsdWNZyxfvEzTsj5F0N9FyZ7bYyO0hEfQILwoAU1YRJRG5XvsHvtQFt5cgur+TrHfbI=
+X-Received: by 2002:a67:e401:: with SMTP id d1mr7143023vsf.215.1566313663086;
+ Tue, 20 Aug 2019 08:07:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819121618.16557-2-max@enpas.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190819200650.18156-1-broonie@kernel.org>
+In-Reply-To: <20190819200650.18156-1-broonie@kernel.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 21 Aug 2019 00:07:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARaVoxWVi679JkR1w+m-RRH1PLdvfJc1ba4n2N2bZR_5g@mail.gmail.com>
+Message-ID: <CAK7LNARaVoxWVi679JkR1w+m-RRH1PLdvfJc1ba4n2N2bZR_5g@mail.gmail.com>
+Subject: Re: [PATCH v2] merge_config.sh: Check error codes from make
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 02:16:17PM +0200, Max Staudt wrote:
-> ltc2990 will now use device_property_read_u32_array() instead of
-> of_property_read_u32_array() - allowing the use of software nodes
-> via fwnode_create_software_node().
-> 
-> This allows code using i2c_new_device() to specify a default
-> measurement mode for the LTC2990 via fwnode_create_software_node().
-> 
-> Signed-off-by: Max Staudt <max@enpas.org>
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Applied to hwmon-next.
-
-Thanks,
-Guenter
-
+On Tue, Aug 20, 2019 at 5:07 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> When we execute make after merging the configurations we ignore any
+> errors it produces causing whatever is running merge_config.sh to be
+> unaware of any failures.  This issue was noticed by Guillaume Tucker
+> while looking at problems with testing of clang only builds in KernelCI
+> which caused Kbuild to be unable to find a working host compiler.
+>
+> This implementation was suggested by Yamada-san.
+>
+> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Reported-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 > ---
->  drivers/hwmon/ltc2990.c | 10 +++++-----
+
+Applied to linux-kbuild.
+Thanks.
+
+>  scripts/kconfig/merge_config.sh | 10 +++++-----
 >  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
-> index f9431ad43..53ff50517 100644
-> --- a/drivers/hwmon/ltc2990.c
-> +++ b/drivers/hwmon/ltc2990.c
-> @@ -13,7 +13,7 @@
->  #include <linux/i2c.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> -#include <linux/of.h>
-> +#include <linux/property.h>
->  
->  #define LTC2990_STATUS	0x00
->  #define LTC2990_CONTROL	0x01
-> @@ -206,7 +206,6 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->  	int ret;
->  	struct device *hwmon_dev;
->  	struct ltc2990_data *data;
-> -	struct device_node *of_node = i2c->dev.of_node;
->  
->  	if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
->  				     I2C_FUNC_SMBUS_WORD_DATA))
-> @@ -218,9 +217,10 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->  
->  	data->i2c = i2c;
->  
-> -	if (of_node) {
-> -		ret = of_property_read_u32_array(of_node, "lltc,meas-mode",
-> -						 data->mode, 2);
-> +	if (dev_fwnode(&i2c->dev)) {
-> +		ret = device_property_read_u32_array(&i2c->dev,
-> +						     "lltc,meas-mode",
-> +						     data->mode, 2);
->  		if (ret < 0)
->  			return ret;
->  
+>
+> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+> index d924c51d28b7..bec246719aea 100755
+> --- a/scripts/kconfig/merge_config.sh
+> +++ b/scripts/kconfig/merge_config.sh
+> @@ -13,12 +13,12 @@
+>  #  Copyright (c) 2009-2010 Wind River Systems, Inc.
+>  #  Copyright 2011 Linaro
+>
+> +set -e
+> +
+>  clean_up() {
+>         rm -f $TMP_FILE
+>         rm -f $MERGE_FILE
+> -       exit
+>  }
+> -trap clean_up HUP INT TERM
+>
+>  usage() {
+>         echo "Usage: $0 [OPTIONS] [CONFIG [...]]"
+> @@ -110,6 +110,9 @@ TMP_FILE=$(mktemp ./.tmp.config.XXXXXXXXXX)
+>  MERGE_FILE=$(mktemp ./.merge_tmp.config.XXXXXXXXXX)
+>
+>  echo "Using $INITFILE as base"
+> +
+> +trap clean_up EXIT
+> +
+>  cat $INITFILE > $TMP_FILE
+>
+>  # Merge files, printing warnings on overridden values
+> @@ -155,7 +158,6 @@ if [ "$RUNMAKE" = "false" ]; then
+>         echo "#"
+>         echo "# merged configuration written to $KCONFIG_CONFIG (needs make)"
+>         echo "#"
+> -       clean_up
+>         exit
+>  fi
+>
+> @@ -185,5 +187,3 @@ for CFG in $(sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" $TMP_FILE); do
+>                 echo ""
+>         fi
+>  done
+> -
+> -clean_up
+> --
+> 2.20.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
