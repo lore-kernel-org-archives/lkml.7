@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D31CC3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3875C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E96DE22DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2C022DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308621;
-	bh=+GpJ6hCkPxj3nzmJ3U386dLprsd+bv2NsXfze3k/pao=;
+	s=default; t=1566308627;
+	bh=9OlZB1SIM25pkJE3ga0tEXXnJrGZCPZFO/05WK6Pi9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K77bvT0uUxalqWOYBSVOEQjQFM6cW5Nl2UFxXpd1iuQ5zf1TTPos1jgEOizfe2VC0
-	 F3PgiuEVnljojIGwJ5XsX9uu76HfS1wT74mKLzo1mfgq7g6UB50ZBtMrAZwlcDnaa+
-	 bx6+YHJvaDoMhCqUBbltFU7+J6wfdiGUhQFqWhnM=
+	b=fe7kRgJL9/igSW0yz4F2t6jL7rJQWYsxRQpm75JjbI4X265cN/tgqztl1ia2pd4PL
+	 VJrRrg1FShf3vnzrEpffHPqxbhZMvNWCOAamtT7mO1qRUwlIU1Ro9ubcJcsHkyJxWH
+	 aGevjyszZfq9/5zcQjKRsftkQ275Qxq7ChHC1bMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730897AbfHTNnj (ORCPT
+        id S1730905AbfHTNnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39352 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:43:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730875AbfHTNnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:43:32 -0400
+        id S1730861AbfHTNn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:43:29 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C3A52087E;
-        Tue, 20 Aug 2019 13:43:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D55A22DBF;
+        Tue, 20 Aug 2019 13:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308611;
-        bh=+GpJ6hCkPxj3nzmJ3U386dLprsd+bv2NsXfze3k/pao=;
+        s=default; t=1566308608;
+        bh=9OlZB1SIM25pkJE3ga0tEXXnJrGZCPZFO/05WK6Pi9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oY8jktVMQRPSJFoH0HNr+qv8zz2+nH56vbOJYZUzuL5MLUKq7yYCeiHh2+Y68Wagn
-         mxx60y1EIIrNOGBpaXXvT+vqbU5cnB9I5s5btRirAze4h5V7Gv7CHBDqNugObToIQn
-         YYdbV5hd5TWRD3H7ZgjyIA1IMnih1ZIYK9z3it5s=
+        b=HCTmKqQXu5D1KyBhSmrNH8JYtvEcFdXllv4EEJtVwhirMzqX+MvWZWAP6g1oefIsH
+         ZAOS88iD7IMheAhh1sY9jHbnLDYo89rW1nIcXfB/YFy5GOtzjyWo2oR8DPETyDbCb7
+         t0wIDYv/fLIdxzEjk9+3DzIY181ABv9jRnz6BojU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adrian Vladu <avladu@cloudbasesolutions.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Alessandro Pilotti <apilotti@cloudbasesolutions.com>,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 4/4] tools: hv: fix KVP and VSS daemons exit code
-Date:   Tue, 20 Aug 2019 09:43:25 -0400
-Message-Id: <20190820134325.11825-4-sashal@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 2/4] usb: gadget: composite: Clear "suspended" on reset/disconnect
+Date:   Tue, 20 Aug 2019 09:43:23 -0400
+Message-Id: <20190820134325.11825-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134325.11825-1-sashal@kernel.org>
 References: <20190820134325.11825-1-sashal@kernel.org>
@@ -63,52 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Vladu <avladu@cloudbasesolutions.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-[ Upstream commit b0995156071b0ff29a5902964a9dc8cfad6f81c0 ]
+[ Upstream commit 602fda17c7356bb7ae98467d93549057481d11dd ]
 
-HyperV KVP and VSS daemons should exit with 0 when the '--help'
-or '-h' flags are used.
+In some cases, one can get out of suspend with a reset or
+a disconnect followed by a reconnect. Previously we would
+leave a stale suspended flag set.
 
-Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
-
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/hv/hv_kvp_daemon.c | 2 ++
- tools/hv/hv_vss_daemon.c | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/usb/gadget/composite.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index 1774800668168..fffc7c4184599 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -1379,6 +1379,8 @@ int main(int argc, char *argv[])
- 			daemonize = 0;
- 			break;
- 		case 'h':
-+			print_usage(argv);
-+			exit(0);
- 		default:
- 			print_usage(argv);
- 			exit(EXIT_FAILURE);
-diff --git a/tools/hv/hv_vss_daemon.c b/tools/hv/hv_vss_daemon.c
-index 5d51d6ff08e6a..b5465f92ed50e 100644
---- a/tools/hv/hv_vss_daemon.c
-+++ b/tools/hv/hv_vss_daemon.c
-@@ -164,6 +164,8 @@ int main(int argc, char *argv[])
- 			daemonize = 0;
- 			break;
- 		case 'h':
-+			print_usage(argv);
-+			exit(0);
- 		default:
- 			print_usage(argv);
- 			exit(EXIT_FAILURE);
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index 8bf54477f4724..351a406b97af7 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -1889,6 +1889,7 @@ void composite_disconnect(struct usb_gadget *gadget)
+ 	 * disconnect callbacks?
+ 	 */
+ 	spin_lock_irqsave(&cdev->lock, flags);
++	cdev->suspended = 0;
+ 	if (cdev->config)
+ 		reset_config(cdev);
+ 	if (cdev->driver->disconnect)
 -- 
 2.20.1
 
