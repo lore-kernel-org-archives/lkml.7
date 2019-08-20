@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF190C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CC3C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD9D22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C709A22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:47:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308823;
-	bh=xDZTjVoZvCxRb8ybEkwNFnJ33mOFuIrB+A1ci7N1Izg=;
+	s=default; t=1566308825;
+	bh=70PthrKPcAjH6fz4sj3+ihFqgk5baALMdE+eUNFhEGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ndDmiXMZ10WAwEtVHDeKjW9KeYCcqaYOKOTv821DKJmd5bWK1YLOZtB3rbCWfHNAb
-	 cxUBOVS7XBr8VpTogjcZmSPo+/HIEIP/Zs8Jsluvy9+r1eoLDCKnUwLL+cI/rVBHVv
-	 f05kQzwQbq9APiLOPGjAyJZ5fj1YrwbyZkoR7UsA=
+	b=vnZ1KWNSXGetVGnUW3hQH1rTw784cowKZy/u5U3dvgK48MRpgola/1cqQCsq2KbWq
+	 hvNR4BFYUKm8UE/allJ1smhjl882ujj99B3mbohUR781JI383ZKKPsinbCTsSOC+qD
+	 Z3xTg3gM0cvfLtkvyxdlQZ9bD3DKnsda7Gtz1WEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbfHTNrC (ORCPT
+        id S1730286AbfHTNlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:47:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36010 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:41:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730297AbfHTNlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:41:04 -0400
+        id S1729879AbfHTNk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:40:57 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DD702339E;
-        Tue, 20 Aug 2019 13:41:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8019522DA9;
+        Tue, 20 Aug 2019 13:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308463;
-        bh=xDZTjVoZvCxRb8ybEkwNFnJ33mOFuIrB+A1ci7N1Izg=;
+        s=default; t=1566308456;
+        bh=70PthrKPcAjH6fz4sj3+ihFqgk5baALMdE+eUNFhEGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Su9UAqdjURdyJ739zQeWYkm3uiEWc4rmvcOhRPRjRy4+d0Xur+3RaMSbF07vg9Vmx
-         XBMEeujy9OksFBYjDpnJ9yZJo7O72dYEDmersSDV1vEYO3Sg+iY3zRJ4TT+5Lo0iLX
-         QeUTPZu5YQkz3MDiBdpEM6peGcDh/nSbXkXZEMhQ=
+        b=ejggrZ6AGRN4CDZ/KSgKXORvVCMParKoUkE/qi8Vbb80dqSc/GPgUg0QzljCn7xeO
+         pmoEhfrle5V4Tbh/00q6sB+FuyOLWlGHm/TfH5L79XObPnpRPjRSN3Mz74dy0wSstT
+         /jbi51zzPxJpJ7+6RLmMHPDj3XChFQeBmMQ+1Od4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.2 27/44] dma-direct: don't truncate dma_required_mask to bus addressing capabilities
-Date:   Tue, 20 Aug 2019 09:40:11 -0400
-Message-Id: <20190820134028.10829-27-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 24/44] dmaengine: stm32-mdma: Fix a possible null-pointer dereference in stm32_mdma_irq_handler()
+Date:   Tue, 20 Aug 2019 09:40:08 -0400
+Message-Id: <20190820134028.10829-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
@@ -61,37 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit d8ad55538abe443919e20e0bb996561bca9cad84 ]
+[ Upstream commit 39c71a5b8212f4b502d9a630c6706ac723abd422 ]
 
-The dma required_mask needs to reflect the actual addressing capabilities
-needed to handle the whole system RAM. When truncated down to the bus
-addressing capabilities dma_addressing_limited() will incorrectly signal
-no limitations for devices which are restricted by the bus_dma_mask.
+In stm32_mdma_irq_handler(), chan is checked on line 1368.
+When chan is NULL, it is still used on line 1369:
+    dev_err(chan2dev(chan), "MDMA channel not initialized\n");
 
-Fixes: b4ebe6063204 (dma-direct: implement complete bus_dma_mask handling)
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Tested-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, "dev_dbg(mdma2dev(dmadev), ...)" is used instead.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Fixes: a4ffb13c8946 ("dmaengine: Add STM32 MDMA driver")
+Link: https://lore.kernel.org/r/20190729020849.17971-1-baijiaju1990@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/dma/direct.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/dma/stm32-mdma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 2c2772e9702ab..9912be7a970de 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -55,9 +55,6 @@ u64 dma_direct_get_required_mask(struct device *dev)
- {
- 	u64 max_dma = phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
+diff --git a/drivers/dma/stm32-mdma.c b/drivers/dma/stm32-mdma.c
+index d6e919d3936a2..1311de74bfdde 100644
+--- a/drivers/dma/stm32-mdma.c
++++ b/drivers/dma/stm32-mdma.c
+@@ -1366,7 +1366,7 @@ static irqreturn_t stm32_mdma_irq_handler(int irq, void *devid)
  
--	if (dev->bus_dma_mask && dev->bus_dma_mask < max_dma)
--		max_dma = dev->bus_dma_mask;
--
- 	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
- }
+ 	chan = &dmadev->chan[id];
+ 	if (!chan) {
+-		dev_err(chan2dev(chan), "MDMA channel not initialized\n");
++		dev_dbg(mdma2dev(dmadev), "MDMA channel not initialized\n");
+ 		goto exit;
+ 	}
  
 -- 
 2.20.1
