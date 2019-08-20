@@ -2,191 +2,77 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B122FC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3B1C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 863852082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:44:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566283482;
-	bh=avgQr0nAKi9Nm14cJjqVKLyuHxantFYztUHzrSX7h0w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oPKOYM3iMmRKxfOVV4EU1f4P/6Q7ebW0PHccYDn05jV1FtAOvQuX3oUvoyGtaoLna
-	 1f6Z/4mPKgjSGG2VX/9p/lzxEzm8dYJYovSuj8IcFmCakWg/DQXpaaeVOB+EsvuAgL
-	 RsfqjXhOGMEw8DrYO7YIm/NEgDmJFFROpSLhJ+W8=
+	by mail.kernel.org (Postfix) with ESMTP id B91C02082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbfHTGol (ORCPT
+        id S1729247AbfHTGpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 02:44:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40302 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 02:45:32 -0400
+Received: from mga18.intel.com ([134.134.136.126]:54610 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729273AbfHTGok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 02:44:40 -0400
-Received: from localhost.localdomain (unknown [106.201.62.126])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F29AF2082F;
-        Tue, 20 Aug 2019 06:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566283479;
-        bh=avgQr0nAKi9Nm14cJjqVKLyuHxantFYztUHzrSX7h0w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjS884YCr3suQERr1OV2u+BcFisAgMI5L9RPSlPLLDrmPAmCmW1gvfuXeiqg/Bomx
-         A1huOWd9tzGWaI4PPyZIFtw1hWHaMDZcb39CDPT0xCUZlKidksbXDhhahKWnCzU/Dw
-         dI2mhyK1p6TUgkYZFxNGfifLwT3cpnlD4iQ72ENs=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 8/8] arm64: dts: qcom: sm8150: Add apps shared nodes
-Date:   Tue, 20 Aug 2019 12:12:16 +0530
-Message-Id: <20190820064216.8629-9-vkoul@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820064216.8629-1-vkoul@kernel.org>
-References: <20190820064216.8629-1-vkoul@kernel.org>
+        id S1729024AbfHTGpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 02:45:32 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 23:45:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,407,1559545200"; 
+   d="scan'208";a="262072785"
+Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.13.128])
+  by orsmga001.jf.intel.com with ESMTP; 19 Aug 2019 23:45:27 -0700
+Date:   Tue, 20 Aug 2019 14:49:34 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Raphael Gault <raphael.gault@arm.com>
+Cc:     kbuild test robot <lkp@intel.com>, mark.rutland@arm.com,
+        raph.gault+kdev@gmail.com, peterz@infradead.org,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        linux-kernel@vger.kernel.org, acme@kernel.org, mingo@redhat.com,
+        kbuild-all@01.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [kbuild-all] [PATCH v3 4/5] arm64: perf: Enable pmu counter
+ direct access for perf event on armv8
+Message-ID: <20190820064934.GF4479@intel.com>
+References: <20190816125934.18509-5-raphael.gault@arm.com>
+ <201908182002.KAH4UW2w%lkp@intel.com>
+ <a41e1a4b-b082-725a-b24e-9c92f66d174a@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a41e1a4b-b082-725a-b24e-9c92f66d174a@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add apss_shared and apps_rsc including the rpmhcc child node, pmu, SMEM
-nodes
+On Mon, Aug 19, 2019 at 08:59:33AM +0100, Raphael Gault wrote:
+> Hi,
+> 
+> On 8/18/19 1:37 PM, kbuild test robot wrote:
+> > Hi Raphael,
+> > 
+> > Thank you for the patch! Yet something to improve:
+> > 
+> > [auto build test ERROR on linus/master]
+> > [cannot apply to v5.3-rc4 next-20190816]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> This patchset was based on linux-next/master and note linus
+thanks for the input, we will look for how to find better base to test.
 
-Co-developed-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- arch/arm64/boot/dts/qcom/sm8150.dtsi | 63 ++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-index 8bf4b4c17ae0..cf58b367df28 100644
---- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-@@ -142,12 +142,23 @@
- 		};
- 	};
- 
-+	tcsr_mutex: hwlock {
-+		compatible = "qcom,tcsr-mutex";
-+		syscon = <&tcsr_mutex_regs 0 0x1000>;
-+		#hwlock-cells = <1>;
-+	};
-+
- 	memory@80000000 {
- 		device_type = "memory";
- 		/* We expect the bootloader to fill in the size */
- 		reg = <0 0x80000000 0 0>;
- 	};
- 
-+	pmu {
-+		compatible = "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
-@@ -264,6 +275,12 @@
- 		};
- 	};
- 
-+	smem {
-+		compatible = "qcom,smem";
-+		memory-region = <&smem_mem>;
-+		hwlocks = <&tcsr_mutex 3>;
-+	};
-+
- 	soc: soc@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -303,6 +320,11 @@
- 			};
- 		};
- 
-+		tcsr_mutex_regs: syscon@1f40000 {
-+			compatible = "syscon";
-+			reg = <0x01f40000 0x40000>;
-+		};
-+
- 		tlmm: pinctrl@3100000 {
- 			compatible = "qcom,sm8150-pinctrl";
- 			reg = <0x03100000 0x300000>,
-@@ -318,6 +340,16 @@
- 			#interrupt-cells = <2>;
- 		};
- 
-+		aoss_qmp: power-controller@c300000 {
-+			compatible = "qcom,sm8150-aoss-qmp";
-+			reg = <0x0c300000 0x100000>;
-+			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
-+			mboxes = <&apss_shared 0>;
-+
-+			#clock-cells = <0>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		intc: interrupt-controller@17a00000 {
- 			compatible = "arm,gic-v3";
- 			interrupt-controller;
-@@ -327,6 +359,12 @@
- 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		apss_shared: mailbox@17c00000 {
-+			compatible = "qcom,sm8150-apss-shared";
-+			reg = <0x17c00000 0x1000>;
-+			#mbox-cells = <1>;
-+		};
-+
- 		timer@17c20000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -386,6 +424,31 @@
- 			};
- 		};
- 
-+		apps_rsc: rsc@18200000 {
-+			label = "apps_rsc";
-+			compatible = "qcom,rpmh-rsc";
-+			reg = <0x18200000 0x10000>,
-+			      <0x18210000 0x10000>,
-+			      <0x18220000 0x10000>;
-+			reg-names = "drv-0", "drv-1", "drv-2";
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			qcom,tcs-offset = <0xd00>;
-+			qcom,drv-id = <2>;
-+			qcom,tcs-config = <ACTIVE_TCS  2>,
-+					  <SLEEP_TCS   1>,
-+					  <WAKE_TCS    1>,
-+					  <CONTROL_TCS 0>;
-+
-+			rpmhcc: clock-controller {
-+				compatible = "qcom,sm8150-rpmh-clk";
-+				#clock-cells = <1>;
-+				clock-names = "xo";
-+				clocks = <&xo_board>;
-+			};
-+		};
-+
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
- 			reg = <0x0c440000 0x0001100>,
--- 
-2.20.1
-
+> 
+> Thanks,
+> 
+> -- 
+> Raphael Gault
+> _______________________________________________
+> kbuild-all mailing list
+> kbuild-all@lists.01.org
+> https://lists.01.org/mailman/listinfo/kbuild-all
