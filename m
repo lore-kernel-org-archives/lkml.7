@@ -2,172 +2,271 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0C6C41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E63C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAAA722DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D91792070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:49:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="cpJh5We0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbfHTOtC (ORCPT
+        id S1730322AbfHTOtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:49:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43998 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729260AbfHTOtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:49:01 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6926CECB419C95654477;
-        Tue, 20 Aug 2019 22:47:58 +0800 (CST)
-Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 20 Aug 2019 22:47:49 +0800
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-edac@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-efi@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>, <james.morse@arm.com>
-CC:     <rjw@rjwysocki.net>, <tony.luck@intel.com>, <linuxarm@huawei.com>,
-        <ard.biesheuvel@linaro.org>, <nariman.poushin@linaro.org>,
-        <jcm@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <peter.maydell@linaro.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 0/6 V2] CCIX Protocol error reporting.
-Date:   Tue, 20 Aug 2019 22:47:26 +0800
-Message-ID: <20190820144732.2370-1-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 20 Aug 2019 10:49:35 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33354 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729900AbfHTOte (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:49:34 -0400
+Received: by mail-oi1-f195.google.com with SMTP id q10so4282267oij.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 07:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=InJwoaapV4AnIQzati3KHt1tSp1I3wIb1tislbP8+E8=;
+        b=cpJh5We0ZtOLvr8NkxWDVbL/PTd9rMZFg/5Bo56jZRiJc3+qwo7P6fPEONlHoL7HJs
+         IxTxyYE8HZygC+6TypSUbRHHu3S0Zy7r+sHdXM1bZUksi98BFoCHQpD6JsxbhSeGFAHy
+         rgt5c3yOg6ipzlt9nXmANI/H7HKTwc1kJPEq8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=InJwoaapV4AnIQzati3KHt1tSp1I3wIb1tislbP8+E8=;
+        b=Gp1P5xXhefZV2F3sLaP6zHjyqtsQK8Eowi++ZstvAQLzZ+hNg6L8prF6pkEsxQVaz9
+         8WKzGR5FQ1cYIFwVB/PM8fqvl+RnFtzdj8WZafo91aiWqwyCQxqjyMLDqDYHBR3tbHaS
+         4WVbx+PyOxkX76ItX4xiyWem1MQK+g+XTabgjv9nevRao2My39Q4Wwi8cNuKoGCgPJe4
+         MVL9x2nYOdn5tR+rArIT0pWzzMZNZy+wI0n3FlV5v2sab3unyCsntPzG49bjFz1Vld/t
+         f+bAuQjeyp2jYX4Rn0NswKTP6XkssWu9QHlXzXv0Do16d71p2/KpkjYBsIUotO/NWSl0
+         TMmw==
+X-Gm-Message-State: APjAAAVry0ALGWlT7cnfN4BvR8AY8ThWy0OTgSEQsEZwnZcUrUQr1qpj
+        7chR/FH2tyfn1yabs76ykHscAlTG7KATa9p5REo4/A==
+X-Google-Smtp-Source: APXvYqw/s9CBGCO0WFBZWSeYTJMXMw51fD6PR8ON2kv0QkiaSO5NoMNSmSSRvyDxaeFaIpJO4MeaXcjfESFWlLUWais=
+X-Received: by 2002:aca:b104:: with SMTP id a4mr316560oif.14.1566312573423;
+ Tue, 20 Aug 2019 07:49:33 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190709190007.91260-1-mka@chromium.org> <20190709190007.91260-3-mka@chromium.org>
+ <20190816165148.7keg45fmlndr22fl@pengutronix.de> <20190816175157.GT250418@google.com>
+ <20190816194754.ldzjqy2yjonfvaat@pengutronix.de> <20190816211051.GV250418@google.com>
+ <20190819054628.asw3cxp46w3rpml7@pengutronix.de> <20190819095037.h3gig3quyhnzshm7@holly.lan>
+In-Reply-To: <20190819095037.h3gig3quyhnzshm7@holly.lan>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 20 Aug 2019 16:49:21 +0200
+Message-ID: <CAKMK7uEJptKgoAwTO+OuN0HrBiMMG21w0QAdgD=pHBLoKLi38Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] backlight: Expose brightness curve type through sysfs
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        linux-pwm <linux-pwm@vger.kernel.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.123.41.22]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Note this will clash with:
-[PATCH RFC 0/4] ACPI: APEI: Add support to notify the vendor specific HW errors
-so a rebase will be needed.
+On Mon, Aug 19, 2019 at 11:50 AM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Mon, Aug 19, 2019 at 07:46:28AM +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > Hello Matthias,
+> >
+> > On Fri, Aug 16, 2019 at 02:10:51PM -0700, Matthias Kaehlcke wrote:
+> > > On Fri, Aug 16, 2019 at 09:47:54PM +0200, Uwe Kleine-K=C3=B6nig wrote=
+:
+> > > > On Fri, Aug 16, 2019 at 10:51:57AM -0700, Matthias Kaehlcke wrote:
+> > > > > Hi Uwe,
+> > > > >
+> > > > > On Fri, Aug 16, 2019 at 06:51:48PM +0200, Uwe Kleine-K=C3=B6nig w=
+rote:
+> > > > > > On Tue, Jul 09, 2019 at 12:00:05PM -0700, Matthias Kaehlcke wro=
+te:
+> > > > > > > Backlight brightness curves can have different shapes. The tw=
+o main
+> > > > > > > types are linear and non-linear curves. The human eye doesn't
+> > > > > > > perceive linearly increasing/decreasing brightness as linear =
+(see
+> > > > > > > also 88ba95bedb79 "backlight: pwm_bl: Compute brightness of L=
+ED
+> > > > > > > linearly to human eye"), hence many backlights use non-linear=
+ (often
+> > > > > > > logarithmic) brightness curves. The type of curve currently i=
+s opaque
+> > > > > > > to userspace, so userspace often uses more or less reliable h=
+euristics
+> > > > > > > (like the number of brightness levels) to decide whether to t=
+reat a
+> > > > > > > backlight device as linear or non-linear.
+> > > > > > >
+> > > > > > > Export the type of the brightness curve via the new sysfs att=
+ribute
+> > > > > > > 'scale'. The value of the attribute can be 'linear', 'non-lin=
+ear' or
+> > > > > > > 'unknown'. For devices that don't provide information about t=
+he scale
+> > > > > > > of their brightness curve the value of the 'scale' attribute =
+is 'unknown'.
+> > > > > > >
+> > > > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > > > >
+> > > > > > I wonder what kind of problem you are solving here. Can you des=
+cribe
+> > > > > > that in a few words?
+> > > > >
+> > > > > The human eye perceives brightness in a logarithmic manner. For
+> > > > > backlights with a linear brightness curve brightness controls lik=
+e
+> > > > > sliders need to use a mapping to achieve a behavior that is perce=
+ived
+> > > > > as linear-ish (more details: http://www.pathwaylighting.com/produ=
+cts/downloads/brochure/technical_materials_1466797044_Linear+vs+Logarithmic=
++Dimming+White+Paper.pdf)
+> > > > >
+> > > > > As of now userspace doesn't have information about the type of th=
+e
+> > > > > brightness curve, and often uses heuristics to make a guess, whic=
+h may
+> > > > > be right most of the time, but not always. The new attribute elim=
+inates
+> > > > > the need to guess.
+> > > >
+> > > > This is about backlights right? So the kernel provides to userspace=
+ an
+> > > > interval [0, x] for some x and depending on the physics of the the
+> > > > backlight configuring x/2 (probably?) either means 50% measured lig=
+ht or
+> > > > 50% perceived light, right?
+> > >
+> > > correct
+> > >
+> > > > I wonder if it would be possible instead of giving different backli=
+ght
+> > > > implementations the freedom to use either linear or logarithmic (or
+> > > > quadratic?) scaling and tell userspace which of the options were pi=
+cked
+> > > > require the drivers to provide a (say) linear scaling and then user=
+space
+> > > > wouldn't need to care about the exact physics.
+> > >
+> > > In an ideal world the backlight interface would be consistent as you
+> > > suggest, however there are plenty of existing devices which use the
+> > > 'other' scaling (regardless of which is chosen as the 'correct'
+> > > one). Userspace still has to deal with these. And changing previously
+> > > 'logarithmic' drivers to linear (or viceversa) may 'break' userspace,
+> > > when it keeps using its 'old' scaling, which now isn't correct anymor=
+e.
+> >
+> > It might be subjective, or maybe I'm just too optimistic, but I think i=
+f
+> > there was no policy before about the meaning of
+> >
+> >       echo 17 > brightness
+> >
+> > other than "brighter than lower values and darker than higher ones"
+> > introducing (say) the scale is intended to represent a linear brightnes=
+s
+> > curve is ok.
+> >
+> > Unless userspace jumps through hoops and tries to identify the actual
+> > device it is running on it is wrong on some machines anyhow and we're
+> > only shifting the set of affected machines with a tighter policy (until
+> > that userspace application is fixed).
+>
+> I believe that there are two common approaches by userspace at present:
+>
+> 1. Assume the scale is perceptual and we can directly map a slider
+>    to the backlight value. This is common simply because most ACPI
+>    backlights are perceptual and therefore when tested in a laptop
+>    it works OK.
+>
+> 2. Assume that is max brightness is small (e.g. ACPI) then the
+>    scale is perceptual and if the max brightness is large (e.g.
+>    a PWM) then the scale is linear and apply a correction
+>    function between the slider and the control.
+>
+> That historic baggage makes is diffcult to "just define a standardized
+> scale"... especially given that if we selected a standardized scale we
+> would probably want a perceptual scale with lots of steps (e.g. break
+> the heuristic).
+>
+>
+> > And the big upside is that in the end (i.e. when all kernel drivers and
+> > userspace applications are adapted to provide/consume the "correct"
+> > curve) the result is simpler.
+>
+> My view is that this convergence will eventually be achieved but it will
+> happen through the obsolescence of the backlight sysfs interface. The
+> sysfs interface has other flaws, in particular no integration with the
+> DRM connector API.
+>
+> Thus I would expect an alternative interface to emerge, most likely as
+> part of the DRM connector API. I'd expect such a new API to a
+> perceptual scale and to have a fixed max brightness with enough
+> steps to support animated backlight effects (IIRC 0..100 has been
+> proposed in the past)
+>
+> In the mean time getting the existing collection of backlight drivers
+> marked up as linear/logarithmic/etc will ease the introduction of that
+> API because, within the kernel, we might have gathered enough knowledge
+> to have some hope of correctly mapping each backlight onto a
+> standardized scale.
 
-Changes since V1:
+In case people wonder why the drm connector based backlight interface
+hasn't happened ages ago, some more context:
 
-Addressed comments from James Morse
-- Dropped kernel logging of vendor data. We just push it to the tracepoints.
-- Tidied up this cover letter and added information to address questions
-  raised. Includes removing questions where James and I agreed ;)
+- userspace (well libbacklight) selects the right backlight, using
+some priority search. Plus blacklists in drivers to make sure they're
+not overriding the real backlight driver (e.g. acpi has higher
+priority in libbacklight, but on modern system it's not the backlight
+driver you want. If we move that into the kernel it's going to be
+somewhat a mess, since defacto you never know when loading is complete
+and you actually have the right backlight driver.
 
-Note, this initial series attempts no 'handling' of errors.
-That will follow later.
+This isn't a problem on DT platforms, but really just for x86/acpi
+platforms. But if we don't fix them, then userspace adoption of these
+new interfaces will likely be too low to matter.
 
-EFI 2.8 defines a new CPER record Appendix N for CCIX Protocol Error Records
-(PER). www.uefi.org
+- second issue is that right now the kms client is supposed to handle
+backlight around modeset, like fbdev does through the fb notifier.
+Except for drivers which do handle the backlight across modesets, but
+maybe not the right backlight. If we move the backlight interface to
+drm connectors then the right thing would be for the drm driver to
+handle backlight enable/disable across modesets. But to make that
+work, userspace needs to stop touching it (otherwise userspace first
+disables, then the kernel and then on restore the two fight and
+usually black screen wins), and that's a bit a tricky uapi problem of
+not breaking existing userspace.
 
-These include Protocol Error Record logs which are defined in the
-CCIX 1.0 Base Specification www.ccixconsortium.com.  A public evaluation
-version is now available.
+- finally there's some userspace which assumes the lowest backlight
+setting is actually off, and uses that to do fast modesets. This
+doesn't work on most ACPI backlights, so I think that problem isn't
+widespread.
 
-Handling of coherency protocol errors is complex and how Linux does this
-will take some time to evolve.  For now, fatal errors are handled via the
-usual means and everything else is reported.
-
-There are 6 types of error defined, covering:
-* Memory errors
-* Cache errors
-* Address translation unit errors
-* CCIX port errors
-* CCIX link errors
-* Agent internal errors.
-
-These errors are concerned (mostly) wth things happening in the CCIX
-protocol layer.  They are parallel to AER errors which should be only
-concerned with the PCIe layer (which is underneath CCIX).
-The ATS errors break this rule slightly. You may get an error
-occurring that results in problems at both layers of the protocol
-stack and hence have to handle AER and PER errors simultaneously.
-
-Some of these errors can 'almost' be mapped onto standard existing error
-types but only at the loss of information specific to CCIX such as
-where in the topology they occurred.
-
-The set includes tracepoints to report the errors to RAS Daemon and a patch
-set for RAS Daemon will follow shortly.
-
-Several design decisions that people may disagree with.
-1. Reporting of vendor data.  We have little choice but to do this via a
-   dynamic array as these blocks can take arbitrary size. I had hoped
-   no one would actually use these given the odd mismatch between a
-   standard error structure and non standard element, but there are
-   already designs out there that do use it. James suggested that
-   it made sense to put these in the tracepoints, but we shouldn't spam
-   the kernel log with them (done in V2).
-2. The trade off between explicit tracepoint fields, on which we might
-   want to filter in kernel, and the simplicity of a blob.
-   I have gone for having the whole of the block specific to the PER
-   error type in an opaque blob.
-   The key elements that may be filtered on are the physical address
-   and the source and component fields which allow you to identify
-   faulty devices. Note that you have to know how the devices were
-   enumerated to be able to do so.
-3. Defined 6 new tracepoints rather than cramming everything into one.
-   * They are all defined by the CCIX specification as independent error
-     classes.
-   * Many of them can only be generated by particular types of agent.
-   * The handling required will vary widely depending on types.
-     In the kernel some map cleanly onto existing handling. Keeping the
-     whole flow separate will aide this. They vary by a similar amount
-     in scope to the RAS errors found on an existing system which have
-     independent tracepoints.
-   * Separating them out allows for filtering on the tracepoints by
-     elements that are not shared between them.
-   * Muxing the lot into one record type can lead to ugly code both in
-     kernel and in userspace.
-
-Rasdaemon patches posted.
-https://www.spinics.net/lists/linux-edac/msg10616.html
-
-The following boilerplate is granting rights to the kernel.
-Note that I haven't applied the CCIX copyright notice anywhere in this
-series because we aren't quoting from the specification.  That is
-much more likely to happen in documentation patches than in code.
-
-Like anything else in this series it is open to comment.
-
-This patch is being distributed by the CCIX Consortium, Inc. (CCIX) to
-you and other parties that are participating (the "participants") in the
-Linux kernel with the understanding that the participants will use CCIX's
-name and trademark only when this patch is used in association with the
-Linux kernel and associated user space.
-
-CCIX is also distributing this patch to these participants with the
-understanding that if any portion of the CCIX specification will be
-used or referenced in the Linux kernel, the participants will not modify
-the cited portion of the CCIX specification and will give CCIX proper
-copyright attribution by including the following copyright notice with
-the cited part of the CCIX specification:
-"© 2019 CCIX CONSORTIUM, INC. ALL RIGHTS RESERVED."
-
-Jonathan Cameron (6):
-  efi / ras: CCIX Memory error reporting
-  efi / ras: CCIX Cache error reporting
-  efi / ras: CCIX Address Translation Cache error reporting
-  efi / ras: CCIX Port error reporting
-  efi / ras: CCIX Link error reporting
-  efi / ras: CCIX Agent internal error reporting
-
- drivers/acpi/apei/Kconfig        |   8 +
- drivers/acpi/apei/ghes.c         |  59 +++
- drivers/firmware/efi/Kconfig     |   5 +
- drivers/firmware/efi/Makefile    |   1 +
- drivers/firmware/efi/cper-ccix.c | 817 +++++++++++++++++++++++++++++++
- drivers/firmware/efi/cper.c      |   6 +
- include/linux/cper.h             | 333 +++++++++++++
- include/ras/ras_event.h          | 405 +++++++++++++++
- 8 files changed, 1634 insertions(+)
- create mode 100644 drivers/firmware/efi/cper-ccix.c
-
--- 
-2.20.1
-
+Anyway from watching from afar, I think this clarification on what the
+backlight scale means internally should at least help us somewhat in
+the long term. But the long term solution itself needs someone with
+way too much time I fear, so lets not hold up anything on that.
+-Daniel
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
