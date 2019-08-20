@@ -2,120 +2,137 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A33C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAA5C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79706206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F6F4206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:55:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rR94uEkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfHTKyy (ORCPT
+        id S1729710AbfHTKzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:54:54 -0400
-Received: from foss.arm.com ([217.140.110.172]:38598 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728545AbfHTKyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:54:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C08F344;
-        Tue, 20 Aug 2019 03:54:53 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E647E3F706;
-        Tue, 20 Aug 2019 03:54:51 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@kernel.org, peterz@infradead.org,
-        liangyan.peng@linux.alibaba.com, shanpeic@linux.alibaba.com,
-        xlpang@linux.alibaba.com, pjt@google.com, stable@vger.kernel.org
-Subject: [PATCH] sched/fair: Add missing unthrottle_cfs_rq()
-Date:   Tue, 20 Aug 2019 11:54:20 +0100
-Message-Id: <20190820105420.7547-1-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <0004fb54-cdee-2197-1cbf-6e2111d39ed9@arm.com>
-References: <0004fb54-cdee-2197-1cbf-6e2111d39ed9@arm.com>
+        Tue, 20 Aug 2019 06:55:20 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:55460 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbfHTKzT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 06:55:19 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7KAsPxD060128;
+        Tue, 20 Aug 2019 05:54:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566298465;
+        bh=bpcY5wifZty9jijmJU2k4dWWpDJaZNKUQLEAWp7YByQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=rR94uEkQPE+7AALBFWAn0eGFJA9a44v/MqfcieqW673uIk1GEpQLsu2MrzMckN35V
+         m4SsX5eaNEoixsxdDh+Gd2ES31N2PIWGvz+6MFb3YLttqjBmVY3SoOdicqoCO+3qBh
+         d/iCZzTs1YzciJo9SqA3iwdXYSj5uikjuJ0hdRQg=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7KAsPt9042225
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 20 Aug 2019 05:54:25 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 20
+ Aug 2019 05:54:24 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 20 Aug 2019 05:54:24 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7KAsMrx083814;
+        Tue, 20 Aug 2019 05:54:23 -0500
+Subject: Re: [kbuild-all] [PATCH] fix odd_ptr_err.cocci warnings
+To:     Rong Chen <rong.a.chen@intel.com>
+CC:     Julia Lawall <julia.lawall@lip6.fr>, <alsa-devel@alsa-project.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Brown <broonie@kernel.org>, <kbuild-all@01.org>
+References: <alpine.DEB.2.21.1908091229140.2946@hadrien>
+ <20190809123112.GC3963@sirena.co.uk>
+ <88ac4c79-5ce3-3f1a-5f6e-3928a30a1ef5@ti.com>
+ <alpine.DEB.2.21.1908091519400.2946@hadrien>
+ <297e44a8-e08d-ddf2-e5e8-b532965b4a8d@intel.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <c3779fa2-3aab-3ba2-518d-9675591787af@ti.com>
+Date:   Tue, 20 Aug 2019 13:54:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <297e44a8-e08d-ddf2-e5e8-b532965b4a8d@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Turns out a cfs_rq->runtime_remaining can become positive in
-assign_cfs_rq_runtime(), but this codepath has no call to
-unthrottle_cfs_rq().
+Hi Chen,
 
-This can leave us in a situation where we have a throttled cfs_rq with
-positive ->runtime_remaining, which breaks the math in
-distribute_cfs_runtime(): this function expects a negative value so that
-it may safely negate it into a positive value.
+On 20/08/2019 11.41, Rong Chen wrote:
+> Hi Peter,
+> 
+> We have updated to only send the reports to you, please see
+> https://github.com/intel/lkp-tests/blob/master/repo/linux/omap-audio
 
-Add the missing unthrottle_cfs_rq(). While at it, add a WARN_ON where
-we expect negative values, and pull in a comment from the mailing list
-that didn't make it in [1].
+Thank you very much!
 
-[1]: https://lkml.kernel.org/r/BANLkTi=NmCxKX6EbDQcJYDJ5kKyG2N1ssw@mail.gmail.com
+> 
+> Best Regards,
+> Rong Chen
+> 
+> On 8/9/19 9:21 PM, Julia Lawall wrote:
+>>
+>> On Fri, 9 Aug 2019, Peter Ujfalusi wrote:
+>>
+>>>
+>>> On 09/08/2019 15.31, Mark Brown wrote:
+>>>> On Fri, Aug 09, 2019 at 12:30:46PM +0200, Julia Lawall wrote:
+>>>>
+>>>>> tree:   https://github.com/omap-audio/linux-audio
+>>>>> peter/ti-linux-4.19.y/wip
+>>>>> head:   62c9c1442c8f61ca93e62e1a9d8318be0abd9d9a
+>>>>> commit: 62c9c1442c8f61ca93e62e1a9d8318be0abd9d9a [34/34] j721e new
+>>>>> machine driver wip
+>>>>> :::::: branch date: 20 hours ago
+>>>>> :::::: commit date: 20 hours ago
+>>>>>
+>>>>>   j721e-evm.c |    4 ++--
+>>>>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> --- a/sound/soc/ti/j721e-evm.c
+>>>>> +++ b/sound/soc/ti/j721e-evm.c
+>>>>> @@ -283,7 +283,7 @@ static int j721e_get_clocks(struct platf
+>>>> This file isn't upstream, it's only in the TI BSP.
+>>> Yes, it is not upstream, but the fix is valid.
+>>>
+>>> Julia: is it possible to direct these notifications only to me from
+>>> https://github.com/omap-audio/linux-audio.git ?
+>>>
+>>> It mostly carries TI BSP stuff and my various for upstream branches
+>>> nowdays.
+>> Please discuss it with the kbuild people.  They should be able to set it
+>> up as you want.
+>>
+>> You can try lkp@intel.com
+>>
+>> julia
+>> _______________________________________________
+>> kbuild-all mailing list
+>> kbuild-all@lists.01.org
+>> https://lists.01.org/mailman/listinfo/kbuild-all
+> 
 
-Cc: <stable@vger.kernel.org>
-Fixes: ec12cb7f31e2 ("sched: Accumulate per-cfs_rq cpu usage and charge against bandwidth")
-Reported-by: Liangyan <liangyan.peng@linux.alibaba.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
----
- kernel/sched/fair.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+- Péter
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1054d2cf6aaa..219ff3f328e5 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4385,6 +4385,11 @@ static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq)
- 	return rq_clock_task(rq_of(cfs_rq)) - cfs_rq->throttled_clock_task_time;
- }
- 
-+static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
-+{
-+	return cfs_bandwidth_used() && cfs_rq->throttled;
-+}
-+
- /* returns 0 on failure to allocate runtime */
- static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- {
-@@ -4411,6 +4416,9 @@ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- 
- 	cfs_rq->runtime_remaining += amount;
- 
-+	if (cfs_rq->runtime_remaining > 0 && cfs_rq_throttled(cfs_rq))
-+		unthrottle_cfs_rq(cfs_rq);
-+
- 	return cfs_rq->runtime_remaining > 0;
- }
- 
-@@ -4439,11 +4447,6 @@ void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
- 	__account_cfs_rq_runtime(cfs_rq, delta_exec);
- }
- 
--static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
--{
--	return cfs_bandwidth_used() && cfs_rq->throttled;
--}
--
- /* check whether cfs_rq, or any parent, is throttled */
- static inline int throttled_hierarchy(struct cfs_rq *cfs_rq)
- {
-@@ -4628,6 +4631,10 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
- 		if (!cfs_rq_throttled(cfs_rq))
- 			goto next;
- 
-+		/* By the above check, this should never be true */
-+		WARN_ON(cfs_rq->runtime_remaining > 0);
-+
-+		/* Pick the minimum amount to return to a positive quota state */
- 		runtime = -cfs_rq->runtime_remaining + 1;
- 		if (runtime > remaining)
- 			runtime = remaining;
--- 
-2.22.0
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
