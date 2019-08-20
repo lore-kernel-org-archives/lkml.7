@@ -1,76 +1,90 @@
 Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DDDC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BE4C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1CE22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:30:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=cardgift.eu header.i=@cardgift.eu header.b="KefPXxeZ"
+	by mail.kernel.org (Postfix) with ESMTP id BA357239B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbfHTIaz (ORCPT
+        id S1729452AbfHTIcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:30:55 -0400
-Received: from mail.cardgift.eu ([217.61.57.7]:33281 "EHLO mail.cardgift.eu"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728842AbfHTIay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:30:54 -0400
-X-Greylist: delayed 325 seconds by postgrey-1.27 at vger.kernel.org; Tue, 20 Aug 2019 04:30:53 EDT
-Received: by mail.cardgift.eu (Postfix, from userid 1001)
-        id B8B1487B8D; Tue, 20 Aug 2019 10:25:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=cardgift.eu; s=mail;
-        t=1566289523; bh=NvdtL1dBFig1+H0qRt4WCoWu0+iuLnPXzzkVYrHGJ3Y=;
-        h=Date:From:To:Subject:From;
-        b=KefPXxeZqk2Ypaeb4q6YkQQIb0MZ2D/yUDiqKJGVLc5t68suBXzk7zLJAyH5aLDni
-         LQeO+Glj3KSflnfv73oW8WIsnRf0NfqDjYUpVVBzRTGouXnLbQCbBimjFQDM/w37BU
-         r0/G4SCE/W1Gl5AYTtXdVTzkRlzCL4A5oMCLgub4=
-Received: by mail.cardgift.eu.cardgift.eu for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 08:25:20 GMT
-Message-ID: <20190820084500-0.1.t.1k5x.0.dq8ijc64cd@cardgift.eu>
-Date:   Tue, 20 Aug 2019 08:25:20 GMT
-From:   =?UTF-8?Q? "Kapolcs_M=C3=A1ty=C3=A1s" ?= 
-        <kapolcs.matyas@cardgift.eu>
-To:     <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?Csapat_motiv=C3=A1ci=C3=B3?=
-X-Mailer: mail.cardgift.eu
+        Tue, 20 Aug 2019 04:32:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55168 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728842AbfHTIcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 04:32:05 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E947B300CB24;
+        Tue, 20 Aug 2019 08:32:04 +0000 (UTC)
+Received: from localhost (ovpn-117-123.ams2.redhat.com [10.36.117.123])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 63E448CBE6;
+        Tue, 20 Aug 2019 08:32:04 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 09:32:03 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
+        Dexuan Cui <decui@microsoft.com>,
+        virtualization@lists.linux-foundation.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 10/11] vsock_test: skip read() in test_stream*close
+ tests on a VMCI host
+Message-ID: <20190820083203.GB9855@stefanha-x1.localdomain>
+References: <20190801152541.245833-1-sgarzare@redhat.com>
+ <20190801152541.245833-11-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
+Content-Disposition: inline
+In-Reply-To: <20190801152541.245833-11-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 20 Aug 2019 08:32:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C3=9Cdv=C3=B6zl=C3=B6m!=20
 
-Ahogyan az =C3=BCzleti gyakorlat mutatja, a nem anyagi juttat=C3=A1sok sa=
-jnos nem a leghat=C3=A9konyabb m=C3=B3djai annak, hogy n=C3=B6velj=C3=BCk=
- az alkalmazottak motiv=C3=A1ci=C3=B3j=C3=A1t vagy a munka ir=C3=A1nti el=
-k=C3=B6telez=C5=91d=C3=A9s=C3=BCket!=20
+--qlTNgmc+xy1dBmNv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Az alkalmazottakkal szemben tan=C3=BAs=C3=ADtott lojalit=C3=A1s jelenleg =
-a legnagyobb kih=C3=ADv=C3=A1s a v=C3=A1llalkoz=C3=A1sok sz=C3=A1m=C3=A1r=
-a orsz=C3=A1gunkban.
+On Thu, Aug 01, 2019 at 05:25:40PM +0200, Stefano Garzarella wrote:
+> When VMCI transport is used, if the guest closes a connection,
+> all data is gone and EOF is returned, so we should skip the read
+> of data written by the peer before closing the connection.
 
-Az foglalkoztat=C3=B3k rendelkez=C3=A9sre bocs=C3=A1jtanak, t=C3=B6bbek k=
-=C3=B6z=C3=B6tt, =C3=A9tkez=C3=A9si jegyeket, amelyek felhaszn=C3=A1lhat=C3=
-=B3k b=C3=A1rmilyen jelleg=C5=B1 =C3=A9lelmiszer v=C3=A1s=C3=A1rl=C3=A1sa=
- eset=C3=A9n, valamint az internetes v=C3=A1s=C3=A1rl=C3=A1sok alkalm=C3=A1=
-val is.
+All transports should aim for identical semantics.  I think virtio-vsock
+should behave the same as VMCI since userspace applications should be
+transport-independent.
 
-El tudja =C3=A9rni nem csup=C3=A1n a jobban motvi=C3=A1lt dolgoz=C3=B3i c=
-sapatot, de ugyanakkor ad=C3=B3befizet=C3=A9s=C3=A9t is cs=C3=B6kkentheti=
-!=20
+Let's view this as a vsock bug.  Is it feasible to change the VMCI
+behavior so it's more like TCP sockets?  If not, let's change the
+virtio-vsock behavior to be compatible with VMCI.
 
-Szeretne t=C3=B6bbet tudni a lehet=C5=91s=C3=A9gr=C5=91l amely megold=C3=A1=
-sk=C3=A9nt szolg=C3=A1lhat =C3=96n =C3=A9s koll=C3=A9g=C3=A1i sz=C3=A1m=C3=
-=A1ra?
+--qlTNgmc+xy1dBmNv
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-Kapolcs M=C3=A1ty=C3=A1s
-Hungary Team Leader
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1bsAIACgkQnKSrs4Gr
+c8iy2wf9Hf2RT30SVoJTzJ+hX0eVKck7gc8yFdT08PLyaZW9ND3d2J7oYGhT3/kF
+3IneL017fwh3nVZ9rcWcVH2ntn7Mq8+I0mTBH24UP0UMLMz/Ieq/6oRj3ySm/UbA
+7/RZHJ2+he0dBgOPggnmNBPDTqAytUBaDouuIWJiXYnVX8g82C1qhcckeuIrxbc5
+5hQPmjQnSmRVcclubheU+QAqqQbAySFDYbJp36sRGiAyJR31vQJGQWqk+r0uZvlt
+DT1YTMdU7EfmWoVp4nW2dDMnN+WlZA0qFZ2gv/7/ZiZ0etvXTPN8/owaW3HxTQOJ
+PPVwBTXGU+LNuAHvJOt9METVQX4+oQ==
+=YtHX
+-----END PGP SIGNATURE-----
+
+--qlTNgmc+xy1dBmNv--
