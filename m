@@ -2,149 +2,173 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BA3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5CAC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2108C2332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E131622DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 21:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbfHTVV1 (ORCPT
+        id S1730839AbfHTVXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 17:21:27 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:52925 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728283AbfHTVV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 17:21:27 -0400
-Received: from [141.14.220.194] (unknown [141.14.220.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: buczek)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 084AA201A3C3E;
-        Tue, 20 Aug 2019 23:21:24 +0200 (CEST)
-From:   Donald Buczek <buczek@molgen.mpg.de>
-Subject: /proc/vmcore and wrong PAGE_OFFSET
-To:     iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
-        x86@kernel.org, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <c42060b0-12ae-d170-9ad4-03d85919948c@molgen.mpg.de>
-Date:   Tue, 20 Aug 2019 23:21:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 20 Aug 2019 17:23:07 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42203 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbfHTVXG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 17:23:06 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i0Bap-0003EB-OR; Tue, 20 Aug 2019 23:23:03 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i0Bap-0001UJ-3l; Tue, 20 Aug 2019 23:23:03 +0200
+Date:   Tue, 20 Aug 2019 23:23:03 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH RFC] dt-bindings: regulator: define a mux regulator
+Message-ID: <20190820212303.dhdo7g7kvisgeb3h@pengutronix.de>
+References: <20190820152511.15307-1-u.kleine-koenig@pengutronix.de>
+ <CAL_JsqLg19883syn66P6zUkLPpQ8FYpeFj2QYvSp1UsWOhVKyQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqLg19883syn66P6zUkLPpQ8FYpeFj2QYvSp1UsWOhVKyQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Linux folks,
+Hello Rob,
 
-I'm investigating a problem, that the crash utility fails to work with our crash dumps:
+On Tue, Aug 20, 2019 at 11:39:27AM -0500, Rob Herring wrote:
+> On Tue, Aug 20, 2019 at 10:25 AM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > A mux regulator is used to provide current on one of several outputs. It
+> > might look as follows:
+> >
+> >       ,------------.
+> >     --<OUT0     A0 <--
+> >     --<OUT1     A1 <--
+> >     --<OUT2     A2 <--
+> >     --<OUT3        |
+> >     --<OUT4     EN <--
+> >     --<OUT5        |
+> >     --<OUT6     IN <--
+> >     --<OUT7        |
+> >       `------------'
+> >
+> > Depending on which address is encoded on the three address inputs A0, A1
+> > and A2 the current provided on IN is provided on one of the eight
+> > outputs.
+> >
+> > What is new here is that the binding makes use of a #regulator-cells
+> > property. This uses the approach known from other bindings (e.g. gpio)
+> > to allow referencing all eight outputs with phandle arguments. This
+> > requires an extention in of_get_regulator to use a new variant of
+> > of_parse_phandle_with_args that has a cell_count_default parameter that
+> > is used in absence of a $cell_name property. Even if we'd choose to
+> > update all regulator-bindings to add #regulator-cells = <0>; we still
+> > needed something to implement compatibility to the currently defined
+> > bindings.
+> >
+> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > ---
+> > Hello,
+> >
+> > the obvious alternative is to add (here) eight subnodes to represent the
+> > eight outputs. This is IMHO less pretty, but wouldn't need to introduce
+> > #regulator-cells.
+> 
+> I'm okay with #regulator-cells approach.
 
-     buczek@kreios:/mnt$ crash vmlinux crash.vmcore
-     
-     crash 7.2.6
-     Copyright (C) 2002-2019  Red Hat, Inc.
-     Copyright (C) 2004, 2005, 2006, 2010  IBM Corporation
-     Copyright (C) 1999-2006  Hewlett-Packard Co
-     Copyright (C) 2005, 2006, 2011, 2012  Fujitsu Limited
-     Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
-     Copyright (C) 2005, 2011  NEC Corporation
-     Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
-     Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
-     This program is free software, covered by the GNU General Public License,
-     and you are welcome to change it and/or distribute copies of it under
-     certain conditions.  Enter "help copying" to see the conditions.
-     This program has absolutely no warranty.  Enter "help warranty" for details.
-      
-     GNU gdb (GDB) 7.6
-     Copyright (C) 2013 Free Software Foundation, Inc.
-     License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-     This is free software: you are free to change and redistribute it.
-     There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
-     and "show warranty" for details.
-     This GDB was configured as "x86_64-unknown-linux-gnu"...
-     
-     crash: read error: kernel virtual address: ffff89807ff77000  type: "memory section root table"
+OK, then I will look into that in more detail; unless the regulator guys
+don't agree with this approach of course.
 
-The crash file is a copy of /dev/vmcore taken by a crashkernel after a sysctl-forced panic.
+> > Apart from reg = <..> and a phandle there is (I think) nothing that
+> > needs to be specified in the subnodes because all properties of an
+> > output (apart from the address) apply to all outputs.
+> >
+> > What do you think?
+> >
+> > Best regards
+> > Uwe
+> >
+> >  .../bindings/regulator/mux-regulator.yaml     | 52 +++++++++++++++++++
+> >  1 file changed, 52 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/regulator/mux-regulator.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/regulator/mux-regulator.yaml b/Documentation/devicetree/bindings/regulator/mux-regulator.yaml
+> > new file mode 100644
+> > index 000000000000..f06dbb969090
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/regulator/mux-regulator.yaml
+> > @@ -0,0 +1,52 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> 
+> (GPL-2.0-only OR BSD-2-Clause) is preferred.
 
-It looks to me, that  0xffff89807ff77000 is not readable, because the virtual addresses stored in the elf header of the dump file are off by 0x0000008000000000:
+OK.
 
-     buczek@kreios:/mnt$ readelf -a crash.vmcore | grep LOAD | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
-       LOAD           0x000000000000d000 0xffffffff81000000 0x000001007d000000 (fffffeff04000000)
-       LOAD           0x0000000001c33000 0xffff880000001000 0x0000000000001000 (ffff880000000000)
-       LOAD           0x0000000001cc1000 0xffff880000090000 0x0000000000090000 (ffff880000000000)
-       LOAD           0x0000000001cd1000 0xffff880000100000 0x0000000000100000 (ffff880000000000)
-       LOAD           0x0000000001cd2070 0xffff880000100070 0x0000000000100070 (ffff880000000000)
-       LOAD           0x0000000019bd2000 0xffff880038000000 0x0000000038000000 (ffff880000000000)
-       LOAD           0x000000004e6a1000 0xffff88006ffff000 0x000000006ffff000 (ffff880000000000)
-       LOAD           0x000000004e6a2000 0xffff880100000000 0x0000000100000000 (ffff880000000000)
-       LOAD           0x0000001fcda22000 0xffff882080000000 0x0000002080000000 (ffff880000000000)
-       LOAD           0x0000003fcd9a2000 0xffff884080000000 0x0000004080000000 (ffff880000000000)
-       LOAD           0x0000005fcd922000 0xffff886080000000 0x0000006080000000 (ffff880000000000)
-       LOAD           0x0000007fcd8a2000 0xffff888080000000 0x0000008080000000 (ffff880000000000)
-       LOAD           0x0000009fcd822000 0xffff88a080000000 0x000000a080000000 (ffff880000000000)
-       LOAD           0x000000bfcd7a2000 0xffff88c080000000 0x000000c080000000 (ffff880000000000)
-       LOAD           0x000000dfcd722000 0xffff88e080000000 0x000000e080000000 (ffff880000000000)
-       LOAD           0x000000fc4d722000 0xffff88fe00000000 0x000000fe00000000 (ffff880000000000)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/regulator/mux-regulator.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: MUX regulators
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: XXX,adb708
+> 
+> ? I assume you will split this into a common and specific schemas. I
+> suppose there could be differing ways to control the mux just like all
+> other muxes.
 
-(Columns are File offset, Virtual Address, Physical Address and computed offset).
+Not sure if a specific schema is necessary. I wrote XXX because I was
+offline while I authored the binding and so couldn't determine the right
+vendor to use.
 
-I would expect the offset between the virtual and the physical address to be PAGE_OFFSET, which is 0xffff88800000000 on x86_64, not 0xffff880000000000. Unlike /proc/vmcore, /proc/kcore shows the same physical memory (of the last memory section above) with a correct offset:
+> > +  enable-gpios:
+> > +    maxItems: 1
+> > +
+> > +  address-gpios:
+> > +    description: Array of typically three GPIO pins used to select the
+> > +      regulator's output. The least significant address GPIO must be listed
+> > +      first. The others follow in order of significance.
+> > +    minItems: 1
+> > +
+> > +  "#regulator-cells":
+> 
+> How is this not required?
 
-     buczek@kreios:/mnt$ sudo readelf -a /proc/kcore | grep 0x000000fe00000000 | perl -lane 'printf "%s (%016x)\n",$_,hex($F[2])-hex($F[3])'
-       LOAD           0x0000097e00004000 0xffff897e00000000 0x000000fe00000000 (ffff888000000000)
+It should. For the RFC patch I didn't took the time to iron all the
+details. My main concern was/is how the binding should look like and if
+an #regulator-cells with a default would be acceptable.
+ 
+Best regards and thanks for your feedback,
+Uwe
 
-The failing address 0xffff89807ff77000 happens to be at the end of the last memory section. It is the mem_section array, which crash wants to load and which is visible in the running system:
-
-     buczek@kreios:/mnt$ sudo gdb vmlinux /proc/kcore
-     [...]
-     (gdb) print mem_section
-     $1 = (struct mem_section **) 0xffff89807ff77000
-     (gdb) print *mem_section
-     $2 = (struct mem_section *) 0xffff88a07f37b000
-     (gdb) print **mem_section
-     $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
-
-I can read the same information from the crash dump, if I account for the 0x0000008000000000 error:
-
-     buczek@kreios:/mnt$ gdb vmlinux crash.vmcore
-     [...]
-     (gdb) print mem_section
-     $1 = (struct mem_section **) 0xffff89807ff77000
-     (gdb) print *mem_section
-     Cannot access memory at address 0xffff89807ff77000
-     (gdb) set $t=(struct mem_section **) ((char *)mem_section - 0x0000008000000000)
-     (gdb) print *$t
-     $2 = (struct mem_section *) 0xffff88a07f37b000
-     (gdb) set $s=(struct mem_section *)((char *)*$t - 0x0000008000000000 )
-     (gdb) print *$s
-     $3 = {section_mem_map = 18446719884453740551, pageblock_flags = 0xffff88a07f36f040}
-
-In the above example, the running kernel, the crashed kernel and the crashkernel are all the same 4.19.57 compilation. But I've tried with several other versions ( crashkernel 4.4, running kernel from 4.0 to linux master) with the same result.
-
-The machine in the above example has several numa nodes (this is why there are so many LOAD headers). But I've tried this with a small kvm virtual machine and got the same result.
-
-     buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep RANDOMIZE_BASE .config
-     # CONFIG_RANDOMIZE_BASE is not set
-     buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep SPARSEMEM .config
-     CONFIG_ARCH_SPARSEMEM_ENABLE=y
-     CONFIG_ARCH_SPARSEMEM_DEFAULT=y
-     CONFIG_SPARSEMEM_MANUAL=y
-     CONFIG_SPARSEMEM=y
-     CONFIG_SPARSEMEM_EXTREME=y
-     CONFIG_SPARSEMEM_VMEMMAP_ENABLE=y
-     CONFIG_SPARSEMEM_VMEMMAP=y
-     buczek@kreios:/mnt/linux-4.19.57-286.x86_64/build$ grep PAGE_TABLE_ISOLATION .config
-     CONFIG_PAGE_TABLE_ISOLATION=y
-
-Any ideas?
-
-Donald
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
