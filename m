@@ -2,173 +2,88 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E30C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF1AC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8267822CE3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:42:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A45D22CE3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:42:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730202AbfHTPmx (ORCPT
+        id S1730305AbfHTPm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:42:53 -0400
-Received: from sauhun.de ([88.99.104.3]:37548 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729810AbfHTPms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:42:48 -0400
-Received: from localhost (p54B333DC.dip0.t-ipconnect.de [84.179.51.220])
-        by pokefinder.org (Postfix) with ESMTPSA id 360BA2E3540;
-        Tue, 20 Aug 2019 17:42:46 +0200 (CEST)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] rtc: s35390a: convert to devm_i2c_new_dummy_device()
-Date:   Tue, 20 Aug 2019 17:42:38 +0200
-Message-Id: <20190820154239.8230-3-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820154239.8230-1-wsa+renesas@sang-engineering.com>
-References: <20190820154239.8230-1-wsa+renesas@sang-engineering.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 20 Aug 2019 11:42:57 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45993 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730203AbfHTPm4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:42:56 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i06HZ-0002QY-82; Tue, 20 Aug 2019 17:42:49 +0200
+Message-ID: <1566315769.3030.20.camel@pengutronix.de>
+Subject: Re: [PATCH v2 2/3] Documentation: media: Describe
+ V4L2_CID_UNIT_CELL_SIZE
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 20 Aug 2019 17:42:49 +0200
+In-Reply-To: <20190820094027.4144-2-ribalda@kernel.org>
+References: <20190820094027.4144-1-ribalda@kernel.org>
+         <20190820094027.4144-2-ribalda@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I was about to simplify the call to i2c_unregister_device() when I
-realized that converting to devm_i2c_new_dummy_device() will simplify
-the driver a lot. So I took this approach.
+On Tue, 2019-08-20 at 11:40 +0200, Ricardo Ribalda Delgado wrote:
+> New control to pass to userspace the width/height of a pixel. Which is
+> needed for calibration and lens selection.
+> 
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> ---
+>  Documentation/media/uapi/v4l/ext-ctrls-camera.rst | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> index 51c1d5c9eb00..b43047d4e7a1 100644
+> --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
+> @@ -510,6 +510,14 @@ enum v4l2_scene_mode -
+>      value down. A value of zero stops the motion if one is in progress
+>      and has no effect otherwise.
+>  
+> +``V4L2_CID_UNIT_CELL_SIZE (struct)``
+> +    This control returns the unit cell size in nanometres. The struct provides
+> +    the width and the height in separated fields to take into consideration
+> +    asymmetric pixels and/or hardware binning.
+> +    The unit cell consist on the whole area of the pixel, sensitive and
+> +    non-sensitive.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
-Build tested only, buildbot is happy, too.
+"consists of", otherwise this looks unambiguous to me.
 
-Please apply to your tree.
+I'm not sure if it is required to add a table for struct v4l2_area,
+similarly to the other compound controls.
 
- drivers/rtc/rtc-s35390a.c | 54 ++++++++++-----------------------------
- 1 file changed, 13 insertions(+), 41 deletions(-)
+> +    This control is required for automatic calibration sensors/cameras.
+> +
+>  .. [#f1]
+>     This control may be changed to a menu control in the future, if more
+>     options are required.
 
-diff --git a/drivers/rtc/rtc-s35390a.c b/drivers/rtc/rtc-s35390a.c
-index 5826209a3f30..da34cfd70f95 100644
---- a/drivers/rtc/rtc-s35390a.c
-+++ b/drivers/rtc/rtc-s35390a.c
-@@ -434,37 +434,32 @@ static int s35390a_probe(struct i2c_client *client,
- 	char buf, status1;
- 	struct device *dev = &client->dev;
- 
--	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
--		err = -ENODEV;
--		goto exit;
--	}
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
-+		return -ENODEV;
- 
- 	s35390a = devm_kzalloc(dev, sizeof(struct s35390a), GFP_KERNEL);
--	if (!s35390a) {
--		err = -ENOMEM;
--		goto exit;
--	}
-+	if (!s35390a)
-+		return -ENOMEM;
- 
- 	s35390a->client[0] = client;
- 	i2c_set_clientdata(client, s35390a);
- 
- 	/* This chip uses multiple addresses, use dummy devices for them */
- 	for (i = 1; i < 8; ++i) {
--		s35390a->client[i] = i2c_new_dummy_device(client->adapter,
--					client->addr + i);
-+		s35390a->client[i] = devm_i2c_new_dummy_device(dev,
-+							       client->adapter,
-+							       client->addr + i);
- 		if (IS_ERR(s35390a->client[i])) {
- 			dev_err(dev, "Address %02x unavailable\n",
- 				client->addr + i);
--			err = PTR_ERR(s35390a->client[i]);
--			goto exit_dummy;
-+			return PTR_ERR(s35390a->client[i]);
- 		}
- 	}
- 
- 	err_read = s35390a_read_status(s35390a, &status1);
- 	if (err_read < 0) {
--		err = err_read;
- 		dev_err(dev, "error resetting chip\n");
--		goto exit_dummy;
-+		return err_read;
- 	}
- 
- 	if (status1 & S35390A_FLAG_24H)
-@@ -478,13 +473,13 @@ static int s35390a_probe(struct i2c_client *client,
- 		err = s35390a_set_reg(s35390a, S35390A_CMD_STATUS2, &buf, 1);
- 		if (err < 0) {
- 			dev_err(dev, "error disabling alarm");
--			goto exit_dummy;
-+			return err;
- 		}
- 	} else {
- 		err = s35390a_disable_test_mode(s35390a);
- 		if (err < 0) {
- 			dev_err(dev, "error disabling test mode\n");
--			goto exit_dummy;
-+			return err;
- 		}
- 	}
- 
-@@ -493,10 +488,8 @@ static int s35390a_probe(struct i2c_client *client,
- 	s35390a->rtc = devm_rtc_device_register(dev, s35390a_driver.driver.name,
- 						&s35390a_rtc_ops, THIS_MODULE);
- 
--	if (IS_ERR(s35390a->rtc)) {
--		err = PTR_ERR(s35390a->rtc);
--		goto exit_dummy;
--	}
-+	if (IS_ERR(s35390a->rtc))
-+		return PTR_ERR(s35390a->rtc);
- 
- 	/* supports per-minute alarms only, therefore set uie_unsupported */
- 	s35390a->rtc->uie_unsupported = 1;
-@@ -505,26 +498,6 @@ static int s35390a_probe(struct i2c_client *client,
- 		rtc_update_irq(s35390a->rtc, 1, RTC_AF);
- 
- 	return 0;
--
--exit_dummy:
--	for (i = 1; i < 8; ++i)
--		if (s35390a->client[i])
--			i2c_unregister_device(s35390a->client[i]);
--
--exit:
--	return err;
--}
--
--static int s35390a_remove(struct i2c_client *client)
--{
--	unsigned int i;
--	struct s35390a *s35390a = i2c_get_clientdata(client);
--
--	for (i = 1; i < 8; ++i)
--		if (s35390a->client[i])
--			i2c_unregister_device(s35390a->client[i]);
--
--	return 0;
- }
- 
- static struct i2c_driver s35390a_driver = {
-@@ -533,7 +506,6 @@ static struct i2c_driver s35390a_driver = {
- 		.of_match_table = of_match_ptr(s35390a_of_match),
- 	},
- 	.probe		= s35390a_probe,
--	.remove		= s35390a_remove,
- 	.id_table	= s35390a_id,
- };
- 
--- 
-2.20.1
-
+regards
+Philipp
