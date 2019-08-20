@@ -2,89 +2,78 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43869C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F42C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086DF22DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566318039;
-	bh=MhrM+wnpo98DgCvfrw9p71rUiiQM/sQQEu+zF5hCEp8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KnGMqdkhI5Lplho0qjP1Viuv78jKKg88kqMPqRN+80fwPzMIkMbbxuExhzBmwWwJo
-	 axiNu0ZCi4vB78MUs+DiuS17y4w3+hX0PpNs+CEeNwQ3JVGLy2Pw+qYF9/jvywIG7K
-	 OY3Iw/1ZT17MNwQtJET7rY4kaf4I8cThhNUtOrvI=
+	by mail.kernel.org (Postfix) with ESMTP id 293EB22CE3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:22:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbfHTQUh (ORCPT
+        id S1730272AbfHTQWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:20:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49718 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 12:22:19 -0400
+Received: from gofer.mess.org ([88.97.38.141]:50407 "EHLO gofer.mess.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726742AbfHTQUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:20:35 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A059233FF;
-        Tue, 20 Aug 2019 16:20:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566318034;
-        bh=MhrM+wnpo98DgCvfrw9p71rUiiQM/sQQEu+zF5hCEp8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tbPSe22P0yz80TXNq+TmiToY5Gbdd0QxeDFmQRKu5Ab/jv0rBQmWVmx5VHcyohU9E
-         hqStg44RSY2kOyVylH5IMtvL8hTYXAs6XgqvTgi7+HXsdEoe5B9ToOJwko/jiNU7ul
-         Wvz6OTpFY1A7xSXjAko24tJBv7z2fLHTP8z84w20=
-Received: by mail-qt1-f181.google.com with SMTP id b11so6668603qtp.10;
-        Tue, 20 Aug 2019 09:20:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAWa9UuQ+aGIXfwN70WOqcpw9CDgXP0m1H66fd/8XECkGxdjZGo8
-        EKjaGGXL2nQNJkdUqLGP8CbtwBFmUwpOGK1VGw==
-X-Google-Smtp-Source: APXvYqxQulqOuuzJ0nzppEZjKqYQUJ1LWIXaKSrDPdDKV1V49e8+VUYVdf8eB0g9VTWSMt7oK6gWHJ7swc+TgOoIpDE=
-X-Received: by 2002:a0c:eb92:: with SMTP id x18mr15088587qvo.39.1566318033661;
- Tue, 20 Aug 2019 09:20:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190820145343.29108-1-megous@megous.com> <20190820145343.29108-3-megous@megous.com>
-In-Reply-To: <20190820145343.29108-3-megous@megous.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 20 Aug 2019 11:20:22 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLHeA6A_+ZgmCzC42Y6yJrEq6+D3vKn8ETh2D7LJ+1_-g@mail.gmail.com>
-Message-ID: <CAL_JsqLHeA6A_+ZgmCzC42Y6yJrEq6+D3vKn8ETh2D7LJ+1_-g@mail.gmail.com>
-Subject: Re: [PATCH 2/6] dt-bindings: net: sun8i-a83t-emac: Add phy-io-supply property
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
+        id S1726742AbfHTQWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:22:19 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id AA2A961074; Tue, 20 Aug 2019 17:22:16 +0100 (BST)
+Date:   Tue, 20 Aug 2019 17:22:16 +0100
+From:   Sean Young <sean@mess.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+        Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: media: Add YAML schemas for the
+ generic RC bindings
+Message-ID: <20190820162216.7uol2jy5i3swhxi5@gofer.mess.org>
+References: <20190819182619.29065-1-mripard@kernel.org>
+ <20190820081525.celdosrgcvwoq6e7@gofer.mess.org>
+ <20190820095028.l74sfvipwjjla6kq@flea>
+ <CAL_JsqJaH5wWCHScNZwN4jxqY5Q_UDZLnq+fghecBgYY752Lnw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJaH5wWCHScNZwN4jxqY5Q_UDZLnq+fghecBgYY752Lnw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 9:53 AM <megous@megous.com> wrote:
->
-> From: Ondrej Jirman <megous@megous.com>
->
-> Some PHYs require separate power supply for I/O pins in some modes
-> of operation. Add phy-io-supply property, to allow enabling this
-> power supply.
+On Tue, Aug 20, 2019 at 10:52:29AM -0500, Rob Herring wrote:
+> On Tue, Aug 20, 2019 at 4:50 AM Maxime Ripard <mripard@kernel.org> wrote:
+> > On Tue, Aug 20, 2019 at 09:15:26AM +0100, Sean Young wrote:
+> > > On Mon, Aug 19, 2019 at 08:26:18PM +0200, Maxime Ripard wrote:
+> > > > From: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > >
+> > > > The RC controllers have a bunch of generic properties that are needed in a
+> > > > device tree. Add a YAML schemas for those.
+> > > >
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > >
+> > > For the series (both 1/2 and 2.2):
+> > >
+> > > Reviewed-by: Sean Young <sean@mess.org>
+> > >
+> > > How's tree should this go through?
+> >
+> > Either yours or Rob's, I guess?
+> 
+> Sean's because there are other changes to
+> Documentation/devicetree/bindings/media/sunxi-ir.txt in -next.
 
-Perhaps since this is new, such phys should have *-supply in their nodes.
+Good point, I'll take them.
 
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml    | 4 ++++
->  1 file changed, 4 insertions(+)
+Thanks
+Sean
