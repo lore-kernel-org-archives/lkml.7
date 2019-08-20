@@ -2,145 +2,208 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326B0C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FB0C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0E020644
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:16:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="RSdXzZbH"
+	by mail.kernel.org (Postfix) with ESMTP id E62AE20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbfHTCQc (ORCPT
+        id S1729024AbfHTCQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:16:32 -0400
-Received: from mail-eopbgr730056.outbound.protection.outlook.com ([40.107.73.56]:23259
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728719AbfHTCQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:16:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xdy38XKCmZ6tBeV7NhsA7mEjAYjuletA+Ps2BJbc/5rFEp0ueb8cP9YiOZkyaLZ9yWCy0VZl0jQ0GoBo/+AMg4Pmnk4XR2w+x9EUzn7rJ2PTPN0bwqRfYUsVy8JQoC5ZnJYdOxrpoUPIlqrVb0ubqv9nU+yWK/Yl/WHZnGGgqegwzd++ikbYMpzoEUwWzJ56JZkat2UYlkOHDuNBvITkyyp5MA3WVfITXHAeGV9KHSFqlIyjuxGK8G1/5uyVdfs+M8YkQZ7CpfCy1PtfNMXb9NzcBtCl1AFhNLHBLz0Mo61r4cxA5lvgBIgN5PjS4ifTugAOfyLSJW76AS8Ji8z/hQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+fWn5ZVY+Buvu57kcoMarviNFMpCfcENGk0jXt8qfXw=;
- b=PF/5QxwraYGCsMAMPXt6scaFWurwFr/DDFAhbLZ5Q7umJ4g/FF5JS9qGNRX3GwDony+iX1H76qcwiq3JRFvzhvB68K6jLlYASMPcatXpUsdOfNR112XYXm+NCje3LGm2maqVFLKxtFvC/zM+S3WKJoXxf6nMnSGmKZ3xuPhklf5kofAqKdE+jfXWWrvscHseboQ7ZM3HmcDYGn8F4gNKDhF43Wmrzf4oTgAqqt6yAGW5jaIa/rTOgmSvvBk7uXMi1JVxP9uLQ6BDTKpq9T8JTd9PB4dswDfBfMZMLolWsWqEWxORdJ1MlIzZxen/01TQAarKURTm1TaUv6hLjf78tw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+fWn5ZVY+Buvu57kcoMarviNFMpCfcENGk0jXt8qfXw=;
- b=RSdXzZbH9JdiJvR5tvsJTsMfndFs+JhKDbSOh83PEdlW7al6a7QRcHc9jRjhGD4D/RurWjTYLiuSrii9b5ECTvLu88eq6EOKWqrS8Pn4bJ4meXxcZjkm2cDD+NZrbTNrjyEJWBUFyfhTQ/bpL0MF0+mESDL58EHbk4J5pz/nN4o=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
- BYAPR03MB3896.namprd03.prod.outlook.com (20.177.124.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Tue, 20 Aug 2019 02:16:28 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::a517:3578:67bf:6c88]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::a517:3578:67bf:6c88%7]) with mapi id 15.20.2157.022; Tue, 20 Aug 2019
- 02:16:28 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-CC:     Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 4/4] arm64: implement KPROBES_ON_FTRACE
-Thread-Topic: [PATCH 4/4] arm64: implement KPROBES_ON_FTRACE
-Thread-Index: AQHVVoKNUq/zpqtyiEKe+wuBFBglYqcCr98AgACajgA=
-Date:   Tue, 20 Aug 2019 02:16:28 +0000
-Message-ID: <20190820100522.55bc3f42@xhacker.debian>
-References: <20190819192422.5ed79702@xhacker.debian>
-        <20190819192706.46ce2c1d@xhacker.debian>
-        <1566232996.v8nlwmnjqa.naveen@linux.ibm.com>
-In-Reply-To: <1566232996.v8nlwmnjqa.naveen@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TYAPR01CA0125.jpnprd01.prod.outlook.com
- (2603:1096:404:2d::17) To BYAPR03MB4773.namprd03.prod.outlook.com
- (2603:10b6:a03:134::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 566d4848-98f9-405c-5850-08d7251468a7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR03MB3896;
-x-ms-traffictypediagnostic: BYAPR03MB3896:
-x-microsoft-antispam-prvs: <BYAPR03MB38960943AD7B44F0486F98D2EDAB0@BYAPR03MB3896.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(376002)(39850400004)(346002)(189003)(199004)(6506007)(386003)(316002)(7416002)(229853002)(71200400001)(71190400001)(102836004)(26005)(14454004)(6916009)(6486002)(76176011)(6436002)(1076003)(6512007)(486006)(476003)(9686003)(14444005)(52116002)(256004)(4744005)(7736002)(11346002)(54906003)(186003)(5660300002)(99286004)(305945005)(446003)(478600001)(66066001)(8936002)(25786009)(4326008)(3846002)(6116002)(81166006)(81156014)(8676002)(6246003)(2906002)(53936002)(50226002)(66476007)(64756008)(66446008)(66556008)(66946007)(86362001)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3896;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 50xz/V+MdxuhdU8rdQ0+VCbgWlydRVZbPL66Tmdqq7Eo/oXA/Kq26lSMh8//f7RwCLaAagMAdxkfL2ZAejM9Bc2refH6DA4RIQK8uELpq9P8EDIzI4ynXYVfjs2gEWHBEhPl/Y97pfLFbhayquCJf4qFnhj3sEgNuRz46JkQqxcr/W+9xCNEh0YshTn6H0godBe6XYNS0en4+v84kXLYm5z+XnsRGxNNSqK4H34+3RYxT6qQo484YAsyr3QWHs1cTnfmK/kSmlXPkskc/6vQuOkIu2UYlTYJNBRxzFLHoxiZxn7vjYnkIEKmCjQ6cpiRDc56CBaFSCFk/i6yeB2vQ/FuACM/Tmxx0BsD2NmTAffO/yJa/p97iOAciTfJbrMx7pDj++aqsTDcaKLau4v9JsOyw2Rtl2qcbj/aqhLcdGs=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D513D93F6612794EA8269E652E4FC9F8@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 19 Aug 2019 22:16:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12912 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728719AbfHTCQp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 22:16:45 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7K2Cdfv018888;
+        Mon, 19 Aug 2019 22:14:21 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ug7cd10b1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 22:14:21 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7K2CwvG019224;
+        Mon, 19 Aug 2019 22:14:21 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ug7cd10an-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Aug 2019 22:14:21 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7K29qN2014635;
+        Tue, 20 Aug 2019 02:14:20 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma05wdc.us.ibm.com with ESMTP id 2ue975v0n4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Aug 2019 02:14:20 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7K2EJ9Z39715280
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Aug 2019 02:14:19 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 41BA8C6055;
+        Tue, 20 Aug 2019 02:14:19 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5447FC6057;
+        Tue, 20 Aug 2019 02:14:15 +0000 (GMT)
+Received: from morokweng.localdomain.com (unknown [9.85.220.248])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 20 Aug 2019 02:14:15 +0000 (GMT)
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: [PATCH v4 09/16] powerpc/pseries/svm: Use shared memory for Debug Trace Log (DTL)
+Date:   Mon, 19 Aug 2019 23:13:19 -0300
+Message-Id: <20190820021326.6884-10-bauerman@linux.ibm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190820021326.6884-1-bauerman@linux.ibm.com>
+References: <20190820021326.6884-1-bauerman@linux.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 566d4848-98f9-405c-5850-08d7251468a7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 02:16:28.3654
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XvQOFQFDQin6lhSGmujrZnU7giJKF37UMb5vghHNu0AbuS/zbWra/9IKT3ga+876XJvKRaj6ZaXR1lACuvEcDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3896
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908200018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 19 Aug 2019 22:22:12 +0530 "Naveen N. Rao" wrote:
+From: Anshuman Khandual <khandual@linux.vnet.ibm.com>
 
+Secure guests need to share the DTL buffers with the hypervisor. To that
+end, use a kmem_cache constructor which converts the underlying buddy
+allocated SLUB cache pages into shared memory.
 
->=20
->=20
-> Jisheng Zhang wrote:
-> > This patch implements KPROBES_ON_FTRACE for arm64.
-> >
-> > ~ # mount -t debugfs debugfs /sys/kernel/debug/
-> > ~ # cd /sys/kernel/debug/
-> > /sys/kernel/debug # echo 'p _do_fork' > tracing/kprobe_events
-> >
-> > before the patch:
-> >
-> > /sys/kernel/debug # cat kprobes/list
-> > ffffff801009ff7c  k  _do_fork+0x4    [DISABLED] =20
->=20
-> This looks wrong -- we should not be allowing kprobe to be registered on
+Signed-off-by: Anshuman Khandual <khandual@linux.vnet.ibm.com>
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+---
+ arch/powerpc/include/asm/svm.h          |  5 ++++
+ arch/powerpc/platforms/pseries/Makefile |  1 +
+ arch/powerpc/platforms/pseries/setup.c  |  5 +++-
+ arch/powerpc/platforms/pseries/svm.c    | 40 +++++++++++++++++++++++++
+ 4 files changed, 50 insertions(+), 1 deletion(-)
 
-Yes. I made a mistake when dumping this log. The kernel isn't as clean
-as "before the patch".
-
-
-> ftrace address without KPROBES_ON_FTRACE. Is _do_fork+0x4 the location
-> of ftrace entry on arm64?
-
-Indeed, w/o KPROBES_ON_FTRACE, it should be _do_fork+0x0
-
-Thanks
-
-
+diff --git a/arch/powerpc/include/asm/svm.h b/arch/powerpc/include/asm/svm.h
+index 2689d8d841f8..85580b30aba4 100644
+--- a/arch/powerpc/include/asm/svm.h
++++ b/arch/powerpc/include/asm/svm.h
+@@ -15,6 +15,9 @@ static inline bool is_secure_guest(void)
+ 	return mfmsr() & MSR_S;
+ }
+ 
++void dtl_cache_ctor(void *addr);
++#define get_dtl_cache_ctor()	(is_secure_guest() ? dtl_cache_ctor : NULL)
++
+ #else /* CONFIG_PPC_SVM */
+ 
+ static inline bool is_secure_guest(void)
+@@ -22,5 +25,7 @@ static inline bool is_secure_guest(void)
+ 	return false;
+ }
+ 
++#define get_dtl_cache_ctor() NULL
++
+ #endif /* CONFIG_PPC_SVM */
+ #endif /* _ASM_POWERPC_SVM_H */
+diff --git a/arch/powerpc/platforms/pseries/Makefile b/arch/powerpc/platforms/pseries/Makefile
+index ab3d59aeacca..a420ef4c9d8e 100644
+--- a/arch/powerpc/platforms/pseries/Makefile
++++ b/arch/powerpc/platforms/pseries/Makefile
+@@ -26,6 +26,7 @@ obj-$(CONFIG_IBMVIO)		+= vio.o
+ obj-$(CONFIG_IBMEBUS)		+= ibmebus.o
+ obj-$(CONFIG_PAPR_SCM)		+= papr_scm.o
+ obj-$(CONFIG_PPC_SPLPAR)	+= vphn.o
++obj-$(CONFIG_PPC_SVM)		+= svm.o
+ 
+ ifdef CONFIG_PPC_PSERIES
+ obj-$(CONFIG_SUSPEND)		+= suspend.o
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index f5940cc71c37..d8930c3a8a11 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -69,6 +69,7 @@
+ #include <asm/security_features.h>
+ #include <asm/asm-const.h>
+ #include <asm/swiotlb.h>
++#include <asm/svm.h>
+ 
+ #include "pseries.h"
+ #include "../../../../drivers/pci/pci.h"
+@@ -297,8 +298,10 @@ static inline int alloc_dispatch_logs(void)
+ 
+ static int alloc_dispatch_log_kmem_cache(void)
+ {
++	void (*ctor)(void *) = get_dtl_cache_ctor();
++
+ 	dtl_cache = kmem_cache_create("dtl", DISPATCH_LOG_BYTES,
+-						DISPATCH_LOG_BYTES, 0, NULL);
++						DISPATCH_LOG_BYTES, 0, ctor);
+ 	if (!dtl_cache) {
+ 		pr_warn("Failed to create dispatch trace log buffer cache\n");
+ 		pr_warn("Stolen time statistics will be unreliable\n");
+diff --git a/arch/powerpc/platforms/pseries/svm.c b/arch/powerpc/platforms/pseries/svm.c
+new file mode 100644
+index 000000000000..2b2b1a77ca1e
+--- /dev/null
++++ b/arch/powerpc/platforms/pseries/svm.c
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Secure VM platform
++ *
++ * Copyright 2018 IBM Corporation
++ * Author: Anshuman Khandual <khandual@linux.vnet.ibm.com>
++ */
++
++#include <linux/mm.h>
++#include <asm/ultravisor.h>
++
++/* There's one dispatch log per CPU. */
++#define NR_DTL_PAGE (DISPATCH_LOG_BYTES * CONFIG_NR_CPUS / PAGE_SIZE)
++
++static struct page *dtl_page_store[NR_DTL_PAGE];
++static long dtl_nr_pages;
++
++static bool is_dtl_page_shared(struct page *page)
++{
++	long i;
++
++	for (i = 0; i < dtl_nr_pages; i++)
++		if (dtl_page_store[i] == page)
++			return true;
++
++	return false;
++}
++
++void dtl_cache_ctor(void *addr)
++{
++	unsigned long pfn = PHYS_PFN(__pa(addr));
++	struct page *page = pfn_to_page(pfn);
++
++	if (!is_dtl_page_shared(page)) {
++		dtl_page_store[dtl_nr_pages] = page;
++		dtl_nr_pages++;
++		WARN_ON(dtl_nr_pages >= NR_DTL_PAGE);
++		uv_share_page(pfn, 1);
++	}
++}
