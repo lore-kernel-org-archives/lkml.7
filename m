@@ -2,146 +2,120 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF39C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C4CC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4422342F
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B4D22DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:26:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNpmXbZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfHTBVg (ORCPT
+        id S1728876AbfHTB0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 21:21:36 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:35324 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728627AbfHTBVf (ORCPT
+        Mon, 19 Aug 2019 21:26:23 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:32894 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728647AbfHTB0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 21:21:35 -0400
-Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 484EE362204;
-        Tue, 20 Aug 2019 11:21:31 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hzsov-0001Ym-Er; Tue, 20 Aug 2019 11:20:21 +1000
-Date:   Tue, 20 Aug 2019 11:20:21 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
-        linux-xfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190820012021.GQ7777@dread.disaster.area>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
- <20190814101714.GA26273@quack2.suse.cz>
- <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
- <20190815130558.GF14313@quack2.suse.cz>
- <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190817022603.GW6129@dread.disaster.area>
- <20190819063412.GA20455@quack2.suse.cz>
- <20190819092409.GM7777@dread.disaster.area>
- <ae64491b-85f8-eeca-14e8-2f09caf8abd2@nvidia.com>
+        Mon, 19 Aug 2019 21:26:23 -0400
+Received: by mail-lj1-f193.google.com with SMTP id z17so3522218ljz.0;
+        Mon, 19 Aug 2019 18:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nIUbOMmJ/E0/oxoqpCDRKKZSlsVwBIRmIfZMOXNreVE=;
+        b=FNpmXbZ1lx/YCyO+nTSN7Qo/7qg1MM89bnr70fjrzymPENeBcOICjeJMcFkkgXo5UN
+         99nDxSYp7P79RZp2sP/akN1J8yzP85m7joZMHJcVh3c3bOymor3nQCsmsLpuULw/WSFI
+         aF3KXevj+HDEH8LZKni4dh7O49aWotJZwRwOqjQdreFFsKq++QZduGyLYKajQZStXBng
+         84uVJ3H5LvsB6clrLmSrE9hxrmdvi7KTJTQqdR3T1ShnWHwUnEkQDMcJXrF4g6MUBatO
+         jRenCyz5oQ0JQL5J/xpvdrJHwI/ABdmB6BSglQJzF4EXulgiiatyJuT94XzJE6mqo4OU
+         Hk+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nIUbOMmJ/E0/oxoqpCDRKKZSlsVwBIRmIfZMOXNreVE=;
+        b=bC4Meyca6iMS5fj7/zS2VkpfEhglC0ar/bLTeeC4lntDD8YVm2vXvCf559kfXpaVoe
+         43GD5YDxFgON1SNAGcvrMHyCZqZaFe7SGv2AKcfh204JMkG9KOiA8y4nlCO30PmFzf5c
+         c9U4fO+Qbwr8gVoMOFmpTA4Yyr1WefjVZbQAunMApl8V2wHDJ2IBYuMZ6WAPVGABA4em
+         LN5oVOddBm8gXejksajidnFdmxKA7Qx03VDrPC5np95/qBZpaoc/FBwzCZzW9wF/NRgK
+         BnAcELwjNRPvoaSw8DcgAyMYBBDC2Sm/cr1EYeGTMhK6Xv/ertRpiqRL0+Yk5pehni+n
+         bkXA==
+X-Gm-Message-State: APjAAAU0jV7Y4vzHGPeS6IchkrG4grn8eZ24vLFtRdVw2bIRsGd9bU0D
+        WGIh6XHgUVLs8HhUl6IeBGihtTkXsVAQH4/5Xrk=
+X-Google-Smtp-Source: APXvYqypNqtw8gx1UvZs3VXty59BJkONiznthKWuc9ViOhnoMBfXElleSyreYerN3b2hpModMB6obOF3Ye2CGHnBq9Q=
+X-Received: by 2002:a2e:89da:: with SMTP id c26mr850927ljk.214.1566264381062;
+ Mon, 19 Aug 2019 18:26:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae64491b-85f8-eeca-14e8-2f09caf8abd2@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
-        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=rV-TrcAmjTgZ-WCYr6sA:9 a=T_cMid2Q6N9PW1nF:21
-        a=ZVtkOv0JeXpnhdDN:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20190816223149.5714-1-dxu@dxuuu.xyz> <20190816223149.5714-2-dxu@dxuuu.xyz>
+In-Reply-To: <20190816223149.5714-2-dxu@dxuuu.xyz>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 19 Aug 2019 18:26:09 -0700
+Message-ID: <CAADnVQ+RKuJB5G+-1fjsE2xLp8CxJMmidd6Qobi_4dXQOWjrow@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add PERF_EVENT_IOC_QUERY_PROBE
+ ioctl
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     bpf <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 05:05:53PM -0700, John Hubbard wrote:
-> On 8/19/19 2:24 AM, Dave Chinner wrote:
-> > On Mon, Aug 19, 2019 at 08:34:12AM +0200, Jan Kara wrote:
-> > > On Sat 17-08-19 12:26:03, Dave Chinner wrote:
-> > > > On Fri, Aug 16, 2019 at 12:05:28PM -0700, Ira Weiny wrote:
-> > > > > On Thu, Aug 15, 2019 at 03:05:58PM +0200, Jan Kara wrote:
-> > > > > > On Wed 14-08-19 11:08:49, Ira Weiny wrote:
-> > > > > > > On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
-> ...
-> > The last close is an interesting case because the __fput() call
-> > actually runs from task_work() context, not where the last reference
-> > is actually dropped. So it already has certain specific interactions
-> > with signals and task exit processing via task_add_work() and
-> > task_work_run().
-> > 
-> > task_add_work() calls set_notify_resume(task), so if nothing else
-> > triggers when returning to userspace we run this path:
-> > 
-> > exit_to_usermode_loop()
-> >    tracehook_notify_resume()
-> >      task_work_run()
-> >        __fput()
-> > 	locks_remove_file()
-> > 	  locks_remove_lease()
-> > 	    ....
-> > 
-> > It's worth noting that locks_remove_lease() does a
-> > percpu_down_read() which means we can already block in this context
-> > removing leases....
-> > 
-> > If there is a signal pending, the task work is run this way (before
-> > the above notify path):
-> > 
-> > exit_to_usermode_loop()
-> >    do_signal()
-> >      get_signal()
-> >        task_work_run()
-> >          __fput()
-> > 
-> > We can detect this case via signal_pending() and even SIGKILL via
-> > fatal_signal_pending(), and so we can decide not to block based on
-> > the fact the process is about to be reaped and so the lease largely
-> > doesn't matter anymore. I'd argue that it is close and we can't
-> > easily back out, so we'd only break the block on a fatal signal....
-> > 
-> > And then, of course, is the call path through do_exit(), which has
-> > the PF_EXITING task flag set:
-> > 
-> > do_exit()
-> >    exit_task_work()
-> >      task_work_run()
-> >        __fput()
-> > 
-> > and so it's easy to avoid blocking in this case, too.
-> 
-> Any thoughts about sockets? I'm looking at net/xdp/xdp_umem.c which pins
-> memory with FOLL_LONGTERM, and wondering how to make that work here.
+On Fri, Aug 16, 2019 at 3:33 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> It's useful to know [uk]probe's nmissed and nhit stats. For example with
+> tracing tools, it's important to know when events may have been lost.
+> debugfs currently exposes a control file to get this information, but
+> it is not compatible with probes registered with the perf API.
+>
+> While bpf programs may be able to manually count nhit, there is no way
+> to gather nmissed. In other words, it is currently not possible to
+> retrieve information about FD-based probes.
+>
+> This patch adds a new ioctl that lets users query nmissed (as well as
+> nhit for completeness). We currently only add support for [uk]probes
+> but leave the possibility open for other probes like tracepoint.
+>
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+...
+> +int perf_kprobe_event_query(struct perf_event *event, void __user *info)
+> +{
+> +       struct perf_event_query_probe __user *uquery = info;
+> +       struct perf_event_query_probe query = {};
+> +       struct trace_event_call *call = event->tp_event;
+> +       struct trace_kprobe *tk = (struct trace_kprobe *)call->data;
+> +       u64 ncopy;
+> +
+> +       if (!capable(CAP_SYS_ADMIN))
+> +               return -EPERM;
+> +       if (copy_from_user(&query, uquery,
+> +                          offsetofend(struct perf_event_query_probe, size)))
+> +               return -EFAULT;
+> +
+> +       ncopy = min_t(u64, query.size, sizeof(query));
+> +       query.nhit = trace_kprobe_nhit(tk);
+> +       query.nmissed = tk->rp.kp.nmissed;
+> +
+> +       if (copy_to_user(uquery, &query, ncopy))
+> +               return -EFAULT;
 
-I'm not sure how this interacts with file mappings? I mean, this
-is just pinning anonymous pages for direct data placement into
-userspace, right?
-
-Are you asking "what if this pinned memory was a file mapping?",
-or something else?
-
-> These are close to files, in how they're handled, but just different
-> enough that it's not clear to me how to make work with this system.
-
-I'm guessing that if they are pinning a file backed mapping, they
-are trying to dma direct to the file (zero copy into page cache?)
-and so they'll need to either play by ODP rules or take layout
-leases, too....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+shouldn't kernel update query.size before copying back?
+Otherwise how user space would know which fields
+were populated?
