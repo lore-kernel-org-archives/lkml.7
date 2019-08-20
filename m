@@ -2,124 +2,138 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CC3C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D4FC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF3322DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950B922DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:37:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Fvf87/Fx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kBjaFwfo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbfHTMgs (ORCPT
+        id S1730054AbfHTMhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:36:48 -0400
-Received: from mail-eopbgr150078.outbound.protection.outlook.com ([40.107.15.78]:55719
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730055AbfHTMgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:36:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d49TK6e1Y9OWSQ5sFW7eMZmx8DofYOInqZc3pD2vYwjznKTv2t7Ab4QIU6+IKnqdVJGiH5CHX6HZs1sr+/O9mocg8PgN/+21uILU0PWHyprlxw9dx4xqJHB8hiZA6/dMiYkxVAs17FdkRbCcyHQXCbbJd15tuNR19c/zyAQvp99U9ZL7kqinYRf8nhjrXpayWVp0lSDsKQddAgcdAvhmCyuJX9z2AGl4pbthzHE7Ah+C9ep3RrihJ+zMdzGvP7kW7yyCRzCSMNT7eF5G66fQ3dkKU8SIZRY+gNpD7cScf/KazXe8nPiCzzfSn4JJNlpMIHAncl0Lg/STJII/s6R30g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G5lW6ZVJMifvtjp+A6LbX1tQh/oG5NkB6LjiBbFbcgA=;
- b=P25vby3rIO67weB+fYNBkPjjaDipDo3JXkbH6gf4aPByBQM7/umClskaj9P+eIjvjA1zr/5tq6B5SfuOWHMPmu+cx07iMHCmetWtk4iJ4hxpLdDkH56mE46kUq9jf6vNWgsLDD2Vw1eoXQKsXP0rhU9KkLqWepMOvvFjLgPVVEnvJCXx9QqbIbXQe1Di27z4K0y6F3maDLc8iEjCuHE7RFTy4TjNIm3CM/6eHtLvZqfa075Uscsrkh8pmlDGHeyhdSgtVcvAGsIUZZRuXM3yJcK+asH6/AB2LMCZH3idiDze3YnOHK+40Lczn+96V6IyAwHUSHhW0/xsinkNnuOryA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G5lW6ZVJMifvtjp+A6LbX1tQh/oG5NkB6LjiBbFbcgA=;
- b=Fvf87/FxuhC1NjhNOWkEPQMv2VuCFQELwbtjp7wBrdK3fgg86cibRG3BxtK2yol/5Bmof8JGu8pQYD+CBN5BLHryDGLysP7gfh1pprYleLKIzKIPCaLtuZE2chyrIHGWb/d9PyLJI3y2pb9IDD96ZSshK4QcTRMSWO3D+6Sr8YQ=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6462.eurprd05.prod.outlook.com (20.179.24.214) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Tue, 20 Aug 2019 12:36:43 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
- 12:36:43 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: linux-next: Tree for Aug 19 (amdgpu)
-Thread-Topic: linux-next: Tree for Aug 19 (amdgpu)
-Thread-Index: AQHVVvkFv70F6uhlHE+MpL/A8Ss0j6cD+d6A
-Date:   Tue, 20 Aug 2019 12:36:43 +0000
-Message-ID: <20190820123637.GB29225@mellanox.com>
-References: <20190819191832.03f1a579@canb.auug.org.au>
- <ba3cde82-6163-12e5-2e77-36834454113a@infradead.org>
- <20190820114554.0e522651@canb.auug.org.au>
-In-Reply-To: <20190820114554.0e522651@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQBPR0101CA0053.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:1::30) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9a27219f-e288-40ed-58a1-08d7256b0eb9
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR05MB6462;
-x-ms-traffictypediagnostic: VI1PR05MB6462:
-x-microsoft-antispam-prvs: <VI1PR05MB646288B7F984E7ED815EB2D1CFAB0@VI1PR05MB6462.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:397;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(189003)(199004)(53754006)(478600001)(71190400001)(5024004)(256004)(71200400001)(99286004)(14454004)(76176011)(66476007)(66946007)(6486002)(8676002)(66556008)(81156014)(8936002)(81166006)(25786009)(4326008)(64756008)(66446008)(229853002)(6512007)(6436002)(102836004)(186003)(486006)(5660300002)(6916009)(6246003)(53936002)(66066001)(6116002)(3846002)(6506007)(53546011)(386003)(2616005)(446003)(476003)(1076003)(4744005)(11346002)(2906002)(52116002)(36756003)(54906003)(7736002)(305945005)(316002)(86362001)(26005)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6462;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: uhlLIvyV3SABRR+DF5pjB70gqsH70+slsdGH8U1GWtO5cGhuHKgeMkV0wGWltYwnVEHz6P2R28eRYv5A4cFyY5iuMpHUcsm8OcE8CaDlYUakwdQRorsza7iHgC7LMoEY/EDMOYRdvAquuTYmRdkwTwvY6npPTscv/8UBrRBFlUvDZD0swtkcHDEByuHzNUKBIDIje8qpM9Gv0NDMxnu9HaI5sziQu1kkwIlUqAhToPwt+oXA/bBdlL+eYuuePXdpNiCjFX9OxmqleInU5gH6n30YQHbqIZfNQY+0T0jdlnfeiD+BvGF8I/sSbVfP982sRGNk9eSU5a5KQRK8NEgqnaQ5c/oBkmxrA3tMMBeWlIU2R8xX8Foma0BvW4Na2AJJ5bN0nqLGPpX15a+T4U2zjmWK9iyX6ZZFITllf0bkr3U=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <146AD0307B5F9244BBC8DDA184B159E7@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 20 Aug 2019 08:37:04 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37867 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729820AbfHTMhE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:37:04 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 129so3315602pfa.4
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 05:37:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=jGa90KjCZLs3XQF8pYGAfTFC9htf4pf+TqK+4kgZQIM=;
+        b=kBjaFwfoUoCB5Mgv3/qjghfztD3vuU7t5h3A5nPvIRx8xJeTQu8x+6uEeB7foPImSj
+         qB1KhbPIqKCz0YtDFfJzEJ58IyRwVom4nC2bFO07DEiIs4zp3+v42TkEHyTez4mYQzeo
+         bUkTfnKhXPPXx2MJs2F3Rwl0alO48up7wHAia478XdcbRDFGbB91rHxrRfI5OI6M62MV
+         iyt284s+mo2k4nmYrUnCWGRKfQytVHYMf6OiE4WhzOFyyxuemVNowJ5K4FzhtbfrlwGP
+         U2b0+VVyqqE9CTCQt7V1bpYSlsAWuONWvJesNhfszFNs7qiyb93pnkdeuJnLpc62xYiy
+         YPzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=jGa90KjCZLs3XQF8pYGAfTFC9htf4pf+TqK+4kgZQIM=;
+        b=CEaZbs1GzfFyFlucO9fcT6iyIw+nzLnnuMN2ACaGG3eNIlL2llXzkc37Kb1xzqToaD
+         JqthW5Bne1gGxEFWz0mg8tUiPg50lE3FL0Rk36LYh5c8k6eYfkXxC7vwA/PHsZHYFXA2
+         GNC/8R7+zSSGUUGbARALViz0ws9tG8EVwQy7SKY3lXEnZlmFy+yl+bKPUVbd1Kt8VQLJ
+         voQHg4KzA3uRKJUbVerWy2ES8DkAT4kpKltl3RuIVdca+8yL2uAAnVDGmt+k9Zj+30ji
+         GEZnhFtAW07VUXHS7Idrs6JK1SSU3vT1DHK1NjvK/H79NVZl0uFL3OavmByjk9pq3tYY
+         uRxw==
+X-Gm-Message-State: APjAAAVxV8ZBz4abMH0l5PzCWfaFQOzctPg7OOYQds193IiEpEYPf2ah
+        VITotY00oQmQD9te2kyBlFGVpg==
+X-Google-Smtp-Source: APXvYqyliPX6/Lu+qHN+gc8VFBswmjP0GCsqg4InvNqBQ2jmCFNKc3NVnFxjCnND0TUP4kDaPpIc2A==
+X-Received: by 2002:a17:90a:b014:: with SMTP id x20mr6833014pjq.60.1566304623451;
+        Tue, 20 Aug 2019 05:37:03 -0700 (PDT)
+Received: from ?IPv6:240e:362:43e:2200:6d55:ae74:3a5b:9669? ([240e:362:43e:2200:6d55:ae74:3a5b:9669])
+        by smtp.gmail.com with ESMTPSA id a142sm23797497pfd.147.2019.08.20.05.36.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 05:37:02 -0700 (PDT)
+Subject: Re: [PATCH 2/2] uacce: add uacce module
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "zhangfei.gao@foxmail.com" <zhangfei.gao@foxmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-accelerators@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+References: <1565775265-21212-1-git-send-email-zhangfei.gao@linaro.org>
+ <1565775265-21212-3-git-send-email-zhangfei.gao@linaro.org>
+ <20190815142021.GE23267@kroah.com>
+ <5d5a6f5b.1c69fb81.9d35e.5303SMTPIN_ADDED_BROKEN@mx.google.com>
+ <20190819102413.GB2030@kroah.com>
+From:   zhangfei <zhangfei.gao@linaro.org>
+Message-ID: <0f7c6241-2028-76e7-0314-8b99cd353bd6@linaro.org>
+Date:   Tue, 20 Aug 2019 20:36:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a27219f-e288-40ed-58a1-08d7256b0eb9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 12:36:43.7009
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v3esOl9TUoOBUT+lZNM3sgVnetHnHqU17rO7Z+sPONv4wwgSfwxT+95rBolR+Cawb4F7uJS/ri+f1hdfIN3bxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6462
+In-Reply-To: <20190819102413.GB2030@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCBBdWcgMjAsIDIwMTkgYXQgMTE6NDU6NTRBTSArMTAwMCwgU3RlcGhlbiBSb3Rod2Vs
-bCB3cm90ZToNCj4gSGkgYWxsLA0KPiANCj4gT24gTW9uLCAxOSBBdWcgMjAxOSAxODozNDo0MSAt
-MDcwMCBSYW5keSBEdW5sYXAgPHJkdW5sYXBAaW5mcmFkZWFkLm9yZz4gd3JvdGU6DQo+ID4NCj4g
-PiBPbiA4LzE5LzE5IDI6MTggQU0sIFN0ZXBoZW4gUm90aHdlbGwgd3JvdGU6DQo+ID4gPiBIaSBh
-bGwsDQo+ID4gPiANCj4gPiA+IENoYW5nZXMgc2luY2UgMjAxOTA4MTY6DQo+ID4gPiAgIA0KPiA+
-IA0KPiA+IG9uIHg4Nl82NDoNCj4gPiANCj4gPiAuLi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdw
-dS9hbWRncHVfZHJ2LmM6IEluIGZ1bmN0aW9uIOKAmGFtZGdwdV9leGl04oCZOg0KPiA+IC4uL2Ry
-aXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9kcnYuYzoxNDcxOjI6IGVycm9yOiBpbXBs
-aWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhtbXVfbm90aWZpZXJfc3luY2hyb25pemXi
-gJk7IGRpZCB5b3UgbWVhbiDigJhfX3N5bmNfc3luY2hyb25pemXigJk/IFstV2Vycm9yPWltcGxp
-Y2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0KPiA+ICAgbW11X25vdGlmaWVyX3N5bmNocm9uaXpl
-KCk7DQo+ID4gICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4NCj4gPiAgIF9fc3luY19zeW5jaHJv
-bml6ZQ0KPiA+IA0KPiA+IA0KPiA+IEZ1bGwgcmFuZGNvbmZpZyBmaWxlIGlzIGF0dGFjaGVkLg0K
-PiANCj4gQ2F1c2VkIGJ5IGNvbW1pdA0KPiANCj4gICA2ODMyYzlkYzgzNTggKCJobW06IHVzZSBt
-bXVfbm90aWZpZXJfZ2V0L3B1dCBmb3IgJ3N0cnVjdCBobW0nIikNCj4gDQo+IGZyb20gdGhlIGht
-bSB0cmVlLg0KPiANCj4gZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2Rydi5jIG5l
-ZWQgdG8gaW5jbHVkZSBsaW51eC9tbXVfbm90aWZpZXIuaA0KDQpBaCB5ZXMsIHRoYW5rcywgaXQg
-aXMgYmVjYXVzZSBvZiAhQ09ORklHX0hNTV9NSVJST1IgaW4gdGhpcw0KcmFuZGNvbmZpZy4gSSd2
-ZSBmaXhlZCBpdCB1cC4NCg0KUmVnYXJkcywNCkphc29uDQoNCg==
+Hi, Greg
+
+On 2019/8/19 下午6:24, Greg Kroah-Hartman wrote:
+>>>> +static int uacce_create_chrdev(struct uacce *uacce)
+>>>> +{
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = idr_alloc(&uacce_idr, uacce, 0, 0, GFP_KERNEL);
+>>>> +	if (ret < 0)
+>>>> +		return ret;
+>>>> +
+>>> Shouldn't this function create the memory needed for this structure?
+>>> You are relying ont he caller to do it for you, why?
+>> I think you mean uacce structure here.
+>> Yes, currently we count on caller to prepare uacce structure and call
+>> uacce_register(uacce).
+>> We still think this method is simpler, prepare uacce, register uacce.
+>> And there are other system using the same method, like crypto
+>> (crypto_register_acomp), nand, etc.
+> crypto is not a subsystem to ever try to emulate :)
+>
+> You are creating a structure with a lifetime that you control, don't
+> have someone else create your memory, that's almost never what you want
+> to do.  Most all driver subsystems create their own memory chunks for
+> what they need to do, it's a much better pattern.
+>
+> Especially when you get into pointer lifetime issues...
+OK, understand now, thanks for your patience.
+will use this instead.
+struct uacce_interface {
+         char name[32];
+         unsigned int flags;
+         struct uacce_ops *ops;
+};
+struct uacce *uacce_register(struct device *dev, struct uacce_interface 
+*interface);
+>>>> +}
+>>>> +
+>>>> +static int uacce_dev_match(struct device *dev, void *data)
+>>>> +{
+>>>> +	if (dev->parent == data)
+>>>> +		return -EBUSY;
+>>> There should be in-kernel functions for this now, no need for you to
+>>> roll your own.
+>> Sorry, do not find this function.
+>> Only find class_find_device, which still require match.
+> It is in linux-next, look there...
+>
+Suppose you mean the funcs: device_match_name, 
+device_match_of_node,device_match_devt etc.
+Here we need dev->parent, there still no such func.
+
+Thanks
+
