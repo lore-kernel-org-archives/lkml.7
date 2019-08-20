@@ -2,134 +2,128 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85435C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B98C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E99206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94056206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:58:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="py++hLu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbfHTK4Y (ORCPT
+        id S1729525AbfHTK6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:56:24 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:50147 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729726AbfHTK4W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:56:22 -0400
-Received: from orion.localdomain ([95.117.23.32]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MG9c4-1i3MGm2nIi-00GX5c; Tue, 20 Aug 2019 12:56:12 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     pali.rohar@gmail.com, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net
-Subject: [PATCH 1/2] fs: ntfs: drop unneeded likely() call around IS_ERR()
-Date:   Tue, 20 Aug 2019 12:56:11 +0200
-Message-Id: <1566298572-12409-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:X0bL9kCI73MtDlPdTq2uEsLqyQMLuaPrFjP/C6b4lIR5Z/L0S5C
- AY5OLqdWdxHFXZd+4Qown7BcrfbDwmY64obA51lAQz/MEbVxmhAmacfvsOFnrmNNGsiYVaS
- tBdCnOLL5E1cqSM22KQ+xm8yuxgl9qzumMJ5pVbIYXgirXKuU5OcDEXYIibfxykbJij5I89
- 2Ll9OPUhe19o2y2M+mwtA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gskhGNcCx2o=:wLmfQXmK0M8LYxKWg7Jf8T
- gK+5tQlYzBITYMavumo+LftMpKxvcaXO+XoEe4Fw94t17B1zhpzL84f/oJCWz4RctllOfGn5l
- dEaGQU3O+N3VyuiTUEbw/HG3z+2rilnqpAOMPu3GzDoQj9aolbQXzAFrPicWBOliIW3JKwdrl
- S7BjrHSXMURRacfM+e+7hP0O+ott1okZEaRyPMg41a+uPiugb2OCa4/keOW2YIaaI8hrDb5yK
- m4uywVsDjw/6o9RGWE4hYR92dq2mobJTrShS2NoasQXyqcQZwG1FEbCXf+xDyAv5AajgNwhHo
- 1bO5Ynrsa09v0u5SimM3Ybrd8XbJrEX51pIenksgmID7ArfU1MZZE8qptsVNQ91A4Nod9bi6u
- Z0ZEksWOWBA2g7zwHtBcqteposaulclr2zJApH9RmybgwYO7mOEaBv2umUh8Sk1CbrXxUmpz9
- /SC5+acIGKAvyIXXsfm9JIioJQrc2xWknf3sac21e4rcZkarbh+zaknvnanb6zYu6khU9wkCC
- I7yAKJqfrH6N2JSoD/WV9sEv3Q7tDfJr7nGpW5eaQZWBNOp52wqfNr/AGOKsM6F/10L44q1TE
- XOWl+eKCcm2CUdQ7DHCf5sEMW5CLSi0sqQa9U0X6GyIv7FNTN2F7ldhMvHzSZ5EE+YRpOSjUq
- rtloPtUsASfwbmAfN1IwysVkgTtewuOZyjRr9jrG8Mv4fG0fAlxTsbFd9SUgorkj32FzA+Gms
- xITCZCvNCJf+YhDVPEmNt7O7/5RhetptLlQyBw==
+        Tue, 20 Aug 2019 06:58:52 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:12038 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728827AbfHTK6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 06:58:52 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46CSTQ0Zgxz9txp2;
+        Tue, 20 Aug 2019 12:58:50 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=py++hLu3; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ZCMVk9dK4XBO; Tue, 20 Aug 2019 12:58:50 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46CSTP6W6Qz9txp1;
+        Tue, 20 Aug 2019 12:58:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566298729; bh=93S6Dka44nxQx5aZdH+CWdQtCJ9cdu687LVNRtGXjjE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=py++hLu3TbllQP+C39mWQA8ivu5kzam28poShnKkxaKoF/4JBT4G2NBKunuzJE0UN
+         SK8dhqVgXiM+5fxOzDkLhdhWkHoCOHR6HivQA718hGagmRpBgtXW3oj6072HDluSNR
+         cx9564rnMjZd6vW4HETSds0qskue/a12GuhvlYpk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 04A378B7C5;
+        Tue, 20 Aug 2019 12:58:50 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id qOLzVHvVWXrT; Tue, 20 Aug 2019 12:58:49 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5E51B8B756;
+        Tue, 20 Aug 2019 12:58:49 +0200 (CEST)
+Subject: Re: [PATCH 7/7] bug: Move WARN_ON() "cut here" into exception handler
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Feng Tang <feng.tang@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190819234111.9019-1-keescook@chromium.org>
+ <20190819234111.9019-8-keescook@chromium.org>
+ <20190820100638.GK2332@hirez.programming.kicks-ass.net>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <06ba33fd-27cc-3816-1cdf-70616b1782dd@c-s.fr>
+Date:   Tue, 20 Aug 2019 12:58:49 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190820100638.GK2332@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
 
-IS_ERR() already calls unlikely(), so this extra likely() call
-around the !IS_ERR() is not needed.
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- fs/ntfs/mft.c     | 8 ++++----
- fs/ntfs/namei.c   | 2 +-
- fs/ntfs/runlist.c | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+Le 20/08/2019 à 12:06, Peter Zijlstra a écrit :
+> On Mon, Aug 19, 2019 at 04:41:11PM -0700, Kees Cook wrote:
+> 
+>> diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
+>> index 588dd59a5b72..da471fcc5487 100644
+>> --- a/include/asm-generic/bug.h
+>> +++ b/include/asm-generic/bug.h
+>> @@ -10,6 +10,7 @@
+>>   #define BUGFLAG_WARNING		(1 << 0)
+>>   #define BUGFLAG_ONCE		(1 << 1)
+>>   #define BUGFLAG_DONE		(1 << 2)
+>> +#define BUGFLAG_PRINTK		(1 << 3)
+>>   #define BUGFLAG_TAINT(taint)	((taint) << 8)
+>>   #define BUG_GET_TAINT(bug)	((bug)->flags >> 8)
+>>   #endif
+> 
+>> diff --git a/lib/bug.c b/lib/bug.c
+>> index 1077366f496b..6c22e8a6f9de 100644
+>> --- a/lib/bug.c
+>> +++ b/lib/bug.c
+>> @@ -181,6 +181,15 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
+>>   		}
+>>   	}
+>>   
+>> +	/*
+>> +	 * BUG() and WARN_ON() families don't print a custom debug message
+>> +	 * before triggering the exception handler, so we must add the
+>> +	 * "cut here" line now. WARN() issues its own "cut here" before the
+>> +	 * extra debugging message it writes before triggering the handler.
+>> +	 */
+>> +	if ((bug->flags & BUGFLAG_PRINTK) == 0)
+>> +		printk(KERN_DEFAULT CUT_HERE);
+> 
+> I'm not loving that BUGFLAG_PRINTK name, BUGFLAG_CUT_HERE makes more
+> sense to me.
+> 
 
-diff --git a/fs/ntfs/mft.c b/fs/ntfs/mft.c
-index 20c841a..06f706b 100644
---- a/fs/ntfs/mft.c
-+++ b/fs/ntfs/mft.c
-@@ -71,7 +71,7 @@ static inline MFT_RECORD *map_mft_record_page(ntfs_inode *ni)
- 	}
- 	/* Read, map, and pin the page. */
- 	page = ntfs_map_page(mft_vi->i_mapping, index);
--	if (likely(!IS_ERR(page))) {
-+	if (!IS_ERR(page)) {
- 		/* Catch multi sector transfer fixup errors. */
- 		if (likely(ntfs_is_mft_recordp((le32*)(page_address(page) +
- 				ofs)))) {
-@@ -154,7 +154,7 @@ MFT_RECORD *map_mft_record(ntfs_inode *ni)
- 	mutex_lock(&ni->mrec_lock);
- 
- 	m = map_mft_record_page(ni);
--	if (likely(!IS_ERR(m)))
-+	if (!IS_ERR(m))
- 		return m;
- 
- 	mutex_unlock(&ni->mrec_lock);
-@@ -271,7 +271,7 @@ MFT_RECORD *map_extent_mft_record(ntfs_inode *base_ni, MFT_REF mref,
- 		m = map_mft_record(ni);
- 		/* map_mft_record() has incremented this on success. */
- 		atomic_dec(&ni->count);
--		if (likely(!IS_ERR(m))) {
-+		if (!IS_ERR(m)) {
- 			/* Verify the sequence number. */
- 			if (likely(le16_to_cpu(m->sequence_number) == seq_no)) {
- 				ntfs_debug("Done 1.");
-@@ -1776,7 +1776,7 @@ static int ntfs_mft_data_extend_allocation_nolock(ntfs_volume *vol)
- 	do {
- 		rl2 = ntfs_cluster_alloc(vol, old_last_vcn, nr, lcn, MFT_ZONE,
- 				true);
--		if (likely(!IS_ERR(rl2)))
-+		if (!IS_ERR(rl2))
- 			break;
- 		if (PTR_ERR(rl2) != -ENOSPC || nr == min_nr) {
- 			ntfs_error(vol->sb, "Failed to allocate the minimal "
-diff --git a/fs/ntfs/namei.c b/fs/ntfs/namei.c
-index 2d3cc9e..4e6a44b 100644
---- a/fs/ntfs/namei.c
-+++ b/fs/ntfs/namei.c
-@@ -115,7 +115,7 @@ static struct dentry *ntfs_lookup(struct inode *dir_ino, struct dentry *dent,
- 		dent_ino = MREF(mref);
- 		ntfs_debug("Found inode 0x%lx. Calling ntfs_iget.", dent_ino);
- 		dent_inode = ntfs_iget(vol->sb, dent_ino);
--		if (likely(!IS_ERR(dent_inode))) {
-+		if (!IS_ERR(dent_inode)) {
- 			/* Consistency check. */
- 			if (is_bad_inode(dent_inode) || MSEQNO(mref) ==
- 					NTFS_I(dent_inode)->seq_no ||
-diff --git a/fs/ntfs/runlist.c b/fs/ntfs/runlist.c
-index 508744a..97932fb 100644
---- a/fs/ntfs/runlist.c
-+++ b/fs/ntfs/runlist.c
-@@ -951,7 +951,7 @@ runlist_element *ntfs_mapping_pairs_decompress(const ntfs_volume *vol,
- 	}
- 	/* Now combine the new and old runlists checking for overlaps. */
- 	old_rl = ntfs_runlists_merge(old_rl, rl);
--	if (likely(!IS_ERR(old_rl)))
-+	if (!IS_ERR(old_rl))
- 		return old_rl;
- 	ntfs_free(rl);
- 	ntfs_error(vol->sb, "Failed to merge runlists.");
--- 
-1.9.1
+Actually it would be BUGFLAG_NO_CUT_HERE then, otherwise all arches not 
+using the generic macros will have to add the flag to get the "cut here" 
+line.
 
+Christophe
