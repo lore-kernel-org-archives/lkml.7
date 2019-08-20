@@ -2,78 +2,290 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4227AC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C1CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15BDE20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:39:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vc/J2w7/"
+	by mail.kernel.org (Postfix) with ESMTP id 9D14122CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729548AbfHTJjV (ORCPT
+        id S1729582AbfHTJjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:39:21 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:34862 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbfHTJjV (ORCPT
+        Tue, 20 Aug 2019 05:39:36 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:18829 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728414AbfHTJjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:39:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=C87H0XKexdsL+UWE1aJ+2v1FBCvDZI+oD03Bgb6sB1g=; b=vc/J2w7/Zao+JUHDIHCUlQgWC
-        /MUBJQsP63C2BIxsbEOyobu5zs8bSjJu7u1PSLlYC4CpD5bKc2kvUhGqAWawVtv1QCp92gmCNGNnT
-        5ZBAkBeYAH1l7ctbmjHe90+AHIthekpURhPv2odHoLl67X19ZLHOrLWQJs12E3684UzTZOB0skukk
-        J0YvA9wuducCpGzBW2ubBX3LiRIU17hJNetnuDILBGbBGzoUOLaQbyssp9z3iqOAz67v2acf6pjkN
-        yr0IhYbXZsF/vHjRGdbuFaWOvTDuA6yxShpHjMNzJcbh3oYP2Ia2jySEcIOtvzMlx9BBRCOxT3OBf
-        CJbWUN3FQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i00bd-0005x7-OE; Tue, 20 Aug 2019 09:39:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BC07330768C;
-        Tue, 20 Aug 2019 11:38:36 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id ED96420CE7743; Tue, 20 Aug 2019 11:39:07 +0200 (CEST)
-Date:   Tue, 20 Aug 2019 11:39:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     longli@linuxonhyperv.com
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Long Li <longli@microsoft.com>
-Subject: Re: [PATCH 1/3] sched: define a function to report the number of
- context switches on a CPU
-Message-ID: <20190820093907.GG2332@hirez.programming.kicks-ass.net>
-References: <1566281669-48212-1-git-send-email-longli@linuxonhyperv.com>
- <1566281669-48212-2-git-send-email-longli@linuxonhyperv.com>
+        Tue, 20 Aug 2019 05:39:36 -0400
+X-UUID: e5088bfa7d764a0eb5d29b73d7911f1a-20190820
+X-UUID: e5088bfa7d764a0eb5d29b73d7911f1a-20190820
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <houlong.wei@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 896387558; Tue, 20 Aug 2019 17:39:23 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 20 Aug
+ 2019 17:39:19 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 20 Aug 2019 17:39:18 +0800
+Message-ID: <1566293960.24117.15.camel@mhfsdcap03>
+Subject: Re: [RESEND, PATCH v13 09/12] soc: mediatek: cmdq: define the
+ instruction struct
+From:   houlong wei <houlong.wei@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= 
+        <ck.hu@mediatek.com>, "Daniel Kurtz" <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Nicolas Boichat" <drinkcat@chromium.org>,
+        YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= 
+        <Yt.Shen@mediatek.com>,
+        Daoyuan Huang =?UTF-8?Q?=28=E9=BB=83=E9=81=93=E5=8E=9F=29?= 
+        <Daoyuan.Huang@mediatek.com>,
+        Jiaguang Zhang =?UTF-8?Q?=28=E5=BC=A0=E5=8A=A0=E5=B9=BF=29?= 
+        <Jiaguang.Zhang@mediatek.com>,
+        Dennis-YC Hsieh =?UTF-8?Q?=28=E8=AC=9D=E5=AE=87=E5=93=B2=29?= 
+        <Dennis-YC.Hsieh@mediatek.com>,
+        Ginny Chen =?UTF-8?Q?=28=E9=99=B3=E6=B2=BB=E5=82=91=29?= 
+        <ginny.chen@mediatek.com>, <houlong.wei@mediatek.com>
+Date:   Tue, 20 Aug 2019 17:39:20 +0800
+In-Reply-To: <20190820084932.22282-10-bibby.hsieh@mediatek.com>
+References: <20190820084932.22282-1-bibby.hsieh@mediatek.com>
+         <20190820084932.22282-10-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566281669-48212-2-git-send-email-longli@linuxonhyperv.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: B4619989EB352A1B8A5F8EB5540139F5CF2D4A6FD1B4D2D2171F2AB67D784E172000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 11:14:27PM -0700, longli@linuxonhyperv.com wrote:
+Reviewed-by: Houlong Wei <houlong.wei@mediatek.com>
 
-> +u64 get_cpu_rq_switches(int cpu)
-> +{
-> +	return cpu_rq(cpu)->nr_switches;
-> +}
-> +EXPORT_SYMBOL_GPL(get_cpu_rq_switches);
+On Tue, 2019-08-20 at 16:49 +0800, Bibby Hsieh wrote:
+> Define an instruction structure for gce driver to append command.
+> This structure can make the client's code more readability.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 106 +++++++++++++++--------
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
+>  2 files changed, 74 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 7aa0517ff2f3..e3d5b0be8e79 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -9,12 +9,24 @@
+>  #include <linux/mailbox_controller.h>
+>  #include <linux/soc/mediatek/mtk-cmdq.h>
+>  
+> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
+>  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+>  #define CMDQ_EOC_IRQ_EN		BIT(0)
+>  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+>  				<< 32 | CMDQ_EOC_IRQ_EN)
+>  
+> +struct cmdq_instruction {
+> +	union {
+> +		u32 value;
+> +		u32 mask;
+> +	};
+> +	union {
+> +		u16 offset;
+> +		u16 event;
+> +	};
+> +	u8 subsys;
+> +	u8 op;
+> +};
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> @@ -110,10 +122,8 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_destroy);
+>  
+> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+> -				   u32 arg_a, u32 arg_b)
+> +static struct cmdq_instruction *cmdq_pkt_append_command(struct cmdq_pkt *pkt)
+>  {
+> -	u64 *cmd_ptr;
+>  
+>  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+>  		/*
+> @@ -127,81 +137,109 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  		pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>  		WARN_ONCE(1, "%s: buffer size %u is too small !\n",
+>  			__func__, (u32)pkt->buf_size);
+> -		return -ENOMEM;
+> +		return NULL;
+>  	}
+> -	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
+> +
+> +	*(u64 *)(pkt->va_base + pkt->cmd_buf_size) = 0;
+>  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>  
+> -	return 0;
+> +	return pkt->va_base + pkt->cmd_buf_size - CMDQ_INST_SIZE;
+>  }
+>  
+>  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+>  {
+> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+> -		    (subsys << CMDQ_SUBSYS_SHIFT);
+> +	struct cmdq_instruction *inst;
+> +
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WRITE;
+> +	inst->value = value;
+> +	inst->offset = offset;
+> +	inst->subsys = subsys;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write);
+>  
+>  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+>  			u16 offset, u32 value, u32 mask)
+>  {
+> -	u32 offset_mask = offset;
+> -	int err = 0;
+> +	struct cmdq_instruction *inst;
+> +	u16 offset_mask = offset;
+>  
+>  	if (mask != 0xffffffff) {
+> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
+> +		inst = cmdq_pkt_append_command(pkt);
+> +		if (!inst)
+> +			return -ENOMEM;
+> +
+> +		inst->op = CMDQ_CODE_MASK;
+> +		inst->mask = ~mask;
+>  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+>  	}
+> -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
+>  
+> -	return err;
+> +	return cmdq_pkt_write(pkt, subsys, offset_mask, value);
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write_mask);
+>  
+>  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
+>  {
+> -	u32 arg_b;
+> +	struct cmdq_instruction *inst;
+>  
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * WFE arg_b
+> -	 * bit 0-11: wait value
+> -	 * bit 15: 1 - wait, 0 - no wait
+> -	 * bit 16-27: update value
+> -	 * bit 31: 1 - update, 0 - no update
+> -	 */
+> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WFE;
+> +	inst->value = CMDQ_WFE_OPTION;
+> +	inst->event = event;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_wfe);
+>  
+>  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
+>  {
+> +	struct cmdq_instruction *inst;
+> +
+>  	if (event >= CMDQ_MAX_EVENT)
+>  		return -EINVAL;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+> -				       CMDQ_WFE_UPDATE);
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WFE;
+> +	inst->value = CMDQ_WFE_UPDATE;
+> +	inst->event = event;
+> +
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>  
+>  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  {
+> -	int err;
+> +	struct cmdq_instruction *inst;
+> +
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+>  
+> -	/* insert EOC and generate IRQ for each command iteration */
+> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+> +	inst->op = CMDQ_CODE_EOC;
+> +	inst->value = CMDQ_EOC_IRQ_EN;
+>  
+> -	/* JUMP to end */
+> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+> +	inst = cmdq_pkt_append_command(pkt);
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_JUMP;
+> +	inst->value = CMDQ_JUMP_PASS;
+>  
+> -	return err;
+> +	return 0;
+>  }
+>  
+>  static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index 911475da7a53..c8adedefaf42 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -19,6 +19,8 @@
+>  #define CMDQ_WFE_UPDATE			BIT(31)
+>  #define CMDQ_WFE_WAIT			BIT(15)
+>  #define CMDQ_WFE_WAIT_VALUE		0x1
+> +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
+> +					CMDQ_WFE_WAIT_VALUE)
+>  /** cmdq event maximum */
+>  #define CMDQ_MAX_EVENT			0x3ff
+>  
 
-Also, that is broken on 32bit.
+
