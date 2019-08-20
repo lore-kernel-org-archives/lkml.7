@@ -2,145 +2,93 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AC2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D2DC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF482087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:42:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="MAWfdcwc"
+	by mail.kernel.org (Postfix) with ESMTP id D90D922DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730589AbfHTSmd (ORCPT
+        id S1730575AbfHTSqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 14:42:33 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:43150 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729639AbfHTSmc (ORCPT
+        Tue, 20 Aug 2019 14:46:02 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:52193 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730006AbfHTSqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 14:42:32 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A723733D;
-        Tue, 20 Aug 2019 20:42:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566326549;
-        bh=qnHKygeaJ9A0XAoozrBOjxGmEytvfP0jm/X5BCRjLp0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MAWfdcwcAgjoBUaXHzVBE0A6Ec6DftcMis8aesD/XPHUGtwrBTzGS+OKryBBrowca
-         GiIgDGzRLaypz7zrvQCMumgM4n0mJDbH425Mi065YaItcMmjDa/A2bAMsZPFUVXqEj
-         hCyS8qTzvQljT9nj3/Z9O5anfLHkBHkQKGHakawg=
-Date:   Tue, 20 Aug 2019 21:42:15 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 19/19] drm: rcar-du: kms: Update CMM in atomic commit
- tail
-Message-ID: <20190820184215.GM10820@pendragon.ideasonboard.com>
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
- <20190706140746.29132-20-jacopo+renesas@jmondi.org>
+        Tue, 20 Aug 2019 14:46:02 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 1347560003;
+        Tue, 20 Aug 2019 18:45:57 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 20:45:57 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Karel Zak <kzak@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        GNU C Library <libc-alpha@sourceware.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Subject: Re: New kernel interface for sys_tz and timewarp?
+Message-ID: <20190820184557.GO3545@piout.net>
+References: <CAK8P3a0VxM1BkjY1D2FfHi6L-ho_NH3v3+gBu45EfpjLF5NU5w@mail.gmail.com>
+ <CAHk-=wiO2CWONDBud4nxoPgUJN1JEewFWhHa5wAqY8G5rrTXRQ@mail.gmail.com>
+ <20190814000622.GB20365@mit.edu>
+ <CAK8P3a1CXRETxn6Gh_cOxM3rZ-wUwVDu-7=yEwjqOY=uEdC6OQ@mail.gmail.com>
+ <20190814090936.GB10516@gardel-login>
+ <20190814093208.GG3600@piout.net>
+ <20190819110903.if3dzhvfnlqutn6s@ws.net.home>
+ <alpine.DEB.2.21.1908191541340.2147@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1908191548150.2147@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190706140746.29132-20-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.1908191548150.2147@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-Thank you for the patch.
-
-On Sat, Jul 06, 2019 at 04:07:46PM +0200, Jacopo Mondi wrote:
-> Update CMM settings at in the atomic commit tail helper method.
+On 19/08/2019 15:49:24+0200, Thomas Gleixner wrote:
+> On Mon, 19 Aug 2019, Thomas Gleixner wrote:
+> > On Mon, 19 Aug 2019, Karel Zak wrote:
+> > > On Wed, Aug 14, 2019 at 11:32:08AM +0200, Alexandre Belloni wrote:
+> > > > On 14/08/2019 11:09:36+0200, Lennart Poettering wrote:
+> > > > > On Mi, 14.08.19 10:31, Arnd Bergmann (arnd@arndb.de) wrote:
+> > > > > 
+> > > > > > - glibc stops passing the caller timezone argument to the kernel
+> > > > > > - the distro kernel disables CONFIG_RTC_HCTOSYS,
+> > > > > >   CONFIG_RTC_SYSTOHC  and CONFIG_GENERIC_CMOS_UPDATE
+> > > > > 
+> > > > > What's the benefit of letting userspace do this? It sounds a lot more
+> > > > > fragile to leave this syncing to userspace if the kernel can do this
+> > > > > trivially on its own.
+> > > 
+> > > Good point, why CONFIG_RTC_SYSTOHC has been added to the kernel? 
+> > 
+> > 023f333a99ce ("NTP: Add a CONFIG_RTC_SYSTOHC configuration")
 > 
-> The CMM is updated with new gamma values provided to the driver
-> in the GAMMA_LUT blob property.
+> Just for the record. Not a single defconfig enables, but it's selected by
+> SPARC for whatever reason.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 35 +++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> index b79cda2f5531..f9aece78ca5f 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> @@ -21,6 +21,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/wait.h>
->  
-> +#include "rcar_cmm.h"
->  #include "rcar_du_crtc.h"
->  #include "rcar_du_drv.h"
->  #include "rcar_du_encoder.h"
-> @@ -287,6 +288,37 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
->   * Atomic Check and Update
->   */
->  
-> +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
-> +					     struct drm_crtc_state *old_state)
-> +{
-> +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> +	struct rcar_cmm_config cmm_config = {};
-> +
-> +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
-> +		return;
-> +
-> +	if (!crtc->state->gamma_lut) {
-> +		cmm_config.lut.enable = false;
-> +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> +
-> +		return;
-> +	}
-> +
-> +	cmm_config.lut.enable = true;
-> +	cmm_config.lut.table = (struct drm_color_lut *)
-> +			       crtc->state->gamma_lut->data;
-> +
-> +	/* Set LUT table size to 0 if entries should not be updated. */
-> +	if (!old_state->gamma_lut ||
-> +	    old_state->gamma_lut->base.id != crtc->state->gamma_lut->base.id)
-> +		cmm_config.lut.size = crtc->state->gamma_lut->length
-> +				    / sizeof(cmm_config.lut.table[0]);
-> +	else
-> +		cmm_config.lut.size = 0;
-> +
-> +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> +}
-> +
->  static int rcar_du_atomic_check(struct drm_device *dev,
->  				struct drm_atomic_state *state)
->  {
-> @@ -329,6 +361,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
->  			rcdu->dpad1_source = rcrtc->index;
->  	}
->  
-> +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
-> +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
-> +
 
-I think this looks good overall, but I wonder if we couldn't simplify
-the CMM driver suspend/resume and LUT caching due to config while not
-enabled by handling it on the DU side. I have a rework on the commit
-tail handler in progress, I'll think how this could be done. For now I
-think you can leave it as is.
-
->  	/* Apply the atomic update. */
->  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
->  	drm_atomic_helper_commit_planes(dev, old_state,
+I think the issue is that most of the common distributions enable it.
 
 -- 
-Regards,
-
-Laurent Pinchart
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
