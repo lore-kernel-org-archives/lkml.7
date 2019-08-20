@@ -2,59 +2,36 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C074AC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A113C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9340922DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566317907;
-	bh=vSKsKdK9IvnILRtQlA/Vlb4e7VL6KyuijFf6Qr77Vyo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C2MIj46nAjh8uKqBeyl0Ieiat0c/ULgOlwFpJfpa4DEDyyDxIlXGhPHRilchUt+NW
-	 IYpg+JGwU0im9gXR3DbnU/gyBuEi8mQfkdaQaPml/HQQEK3EVNq0Hha4X+fHM5qWXr
-	 B+MW/+DGFaGC2lRI3srG1LZ9r3NnwyvJRY9HtsMU=
+	by mail.kernel.org (Postfix) with ESMTP id ECA9522DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:20:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="tvP41V/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbfHTQS0 (ORCPT
+        id S1730292AbfHTQUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47208 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 12:20:31 -0400
+Received: from vps.xff.cz ([195.181.215.36]:35352 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbfHTQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:18:26 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D55552339E;
-        Tue, 20 Aug 2019 16:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566317905;
-        bh=vSKsKdK9IvnILRtQlA/Vlb4e7VL6KyuijFf6Qr77Vyo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rRV0pwJXloEA2wNuxVron9horY8auSq1BuVfOvOfOJOzq16YPdKwyCVAqcu741qWd
-         pAcXdP6ctMpLOsa/Yw24IZGOwNDXfnOuP6zZH0C3+NpHKNVUH9JSre1teubo59ATJS
-         1Oohlb7ZuWpnYUulw9Y00xF1uDgKA/YqNNr5VNE4=
-Received: by mail-qt1-f182.google.com with SMTP id y26so6687743qto.4;
-        Tue, 20 Aug 2019 09:18:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAXAOwDMIu7XoaEfwbihkZw2j/zHC88foqRVF8TxiG18yqiggtCJ
-        uBcYD5HLDfwmnBlMNn77SLojrRA4+9P8VM/Veg==
-X-Google-Smtp-Source: APXvYqycMaa214ptNayJBYSEm7y6VToBsSlNqtP2In+5+f5juo9lDSmILxM4UZrWQJSIt7mf+ihWQZGtHJECipi/vbw=
-X-Received: by 2002:a0c:9782:: with SMTP id l2mr15058937qvd.72.1566317903978;
- Tue, 20 Aug 2019 09:18:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190820145343.29108-1-megous@megous.com> <20190820145343.29108-2-megous@megous.com>
-In-Reply-To: <20190820145343.29108-2-megous@megous.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 20 Aug 2019 11:18:12 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL-fBA5fV=AwegyGpCKAEHtU1C6MZQX9dNYs0tpL9EbVw@mail.gmail.com>
-Message-ID: <CAL_JsqL-fBA5fV=AwegyGpCKAEHtU1C6MZQX9dNYs0tpL9EbVw@mail.gmail.com>
-Subject: Re: [PATCH 1/6] dt-bindings: net: sun8i-a83t-emac: Add phy-supply property
-To:     Ondrej Jirman <megous@megous.com>
+        id S1726742AbfHTQUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:20:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1566318027; bh=Ur31+ewkQP7gvbR5TMeGYZky/kMp62NibJGT1/dfqKM=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=tvP41V/NpdED1yBnNgPzOZVg4qYsZcKimpIlQTgnpQzjxMVWbq9EcgYLJwdSCNp3R
+         G2IRR2dUZG4NS44OINYR/oi3IypT/0iBxlISdDmcj28OTZIRbOmsPaccwz/39979EX
+         jAjJK5Me4SuNhwsSo9OvUspxepr4iBchNOmp2WlM=
+Date:   Tue, 20 Aug 2019 18:20:27 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Andrew Lunn <andrew@lunn.ch>
 Cc:     "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Maxime Ripard <mripard@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
@@ -62,30 +39,96 @@ Cc:     "David S. Miller" <davem@davemloft.net>,
         Alexandre Torgue <alexandre.torgue@st.com>,
         Jose Abreu <joabreu@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/6] net: stmmac: sun8i: Use devm_regulator_get for PHY
+ regulator
+Message-ID: <20190820162027.7erc2rlvoqasfjk7@core.my.home>
+Mail-Followup-To: Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20190820145343.29108-1-megous@megous.com>
+ <20190820145343.29108-4-megous@megous.com>
+ <20190820153939.GL29991@lunn.ch>
+ <20190820154714.2rt4ctovil5ol3u2@core.my.home>
+ <20190820155744.GN29991@lunn.ch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190820155744.GN29991@lunn.ch>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 9:53 AM <megous@megous.com> wrote:
->
-> From: Ondrej Jirman <megous@megous.com>
->
-> This is already supported by the driver, but is missing from the
-> bindings.
+Hi,
 
-Really, the supply for the phy should be in the phy's node...
+On Tue, Aug 20, 2019 at 05:57:44PM +0200, Andrew Lunn wrote:
+> On Tue, Aug 20, 2019 at 05:47:14PM +0200, Ondřej Jirman wrote:
+> > Hi Andrew,
+> > 
+> > On Tue, Aug 20, 2019 at 05:39:39PM +0200, Andrew Lunn wrote:
+> > > On Tue, Aug 20, 2019 at 04:53:40PM +0200, megous@megous.com wrote:
+> > > > From: Ondrej Jirman <megous@megous.com>
+> > > > 
+> > > > Use devm_regulator_get instead of devm_regulator_get_optional and rely
+> > > > on dummy supply. This avoids NULL checks before regulator_enable/disable
+> > > > calls.
+> > > 
+> > > Hi Ondrej
+> > > 
+> > > What do you mean by a dummy supply? I'm just trying to make sure you
+> > > are not breaking backwards compatibility.
+> > 
+> > Sorry, I mean dummy regulator. See:
+> > 
+> > https://elixir.bootlin.com/linux/latest/source/drivers/regulator/core.c#L1874
+> > 
+> > On systems that use DT (i.e. have_full_constraints() == true), when the
+> > regulator is not found (ENODEV, not specified in DT), regulator_get will return
+> > a fake dummy regulator that can be enabled/disabled, but doesn't do anything
+> > real.
+> 
+> Hi Ondrej
+> 
+> But we also gain a new warning:
+> 
+> 	dev_warn(dev,
+> 		 "%s supply %s not found, using dummy regulator\n",
+> 	         devname, id);
+> 
+> This regulator is clearly optional, so there should not be a warning.
+> 
+> Maybe you can add a new get_type, OPTIONAL_GET, which does not issue
+> the warning, but does give back a dummy regulator.
 
->
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml    | 4 ++++
->  1 file changed, 4 insertions(+)
+We already had a info message. See my other e-mail with the dmesg output.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+IMO, that warning is useful during development, and more informative than the
+previous one.
+
+regards,
+	o.
+
+> Thanks
+> 	Andrew
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
