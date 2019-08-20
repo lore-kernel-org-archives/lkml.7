@@ -2,106 +2,97 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F5AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9F3C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C5122CE3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F96D22DA8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:20:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566303654;
+	bh=G5xwXtXC6eKSccjeQBgi5kYARnoflqjoRRwzQum4r2E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jL0ZosGGkhK42l2ezprptP2LKgv+q8WQgro/CghPQhLrweTiIjDmComcce6KrcpMz
+	 +leIij8SsyD+uyNuNwIqQ4A5dF4Is+x488f+oQ0Di4TBzXaq3n0n/oVxcCzibLUUI7
+	 Icc+NhxLUcq2PhYNldEtnY5znsCL3JrADcoVyOKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729771AbfHTMQr (ORCPT
+        id S1729298AbfHTMUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:16:47 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34324 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728731AbfHTMQq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:16:46 -0400
-Received: by mail-ed1-f66.google.com with SMTP id s49so6080477edb.1;
-        Tue, 20 Aug 2019 05:16:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Aqrj4c9BMm607WKqADj4tux8jrP64CdYozdKcQKpxRs=;
-        b=ewASI7ty6m5g4yCE06rRZV2auDuRwCy39jW0oXYCPKGv30T2Dc4KcIoNIZlKfq05eJ
-         2YiIcshEGNT4u00GEcYjbhahowM4Zc60PJojDj3FUYR99L+dRKL7s/mG8eI4TV/DTPxN
-         3wgSn6Qp7T1A4fI1yddxSa9jIih5i42/SRZzLEPDfGEdTN/CUwuv6GogxFZ+a6pc6rCj
-         2+/JC7MdceNGTQxOT/wGGH4QmP3Evb1G2moFXrTPGaSNbHilycMJVT29U6PCSYhzKnRc
-         kPeIDpEW+RU5DA1UJPH7uuDmMtbF+FfnGHKRkgt2JI1G3S2xQFyB12osRKjbTu9bwW4r
-         eO3g==
-X-Gm-Message-State: APjAAAX3g+jmaAXGTtxZ4Pc/rKL11mBg0Um7v1gidi3fI/oghXEKpG6V
-        nZVruMjrpwZJ3u0yLJYFeGEm4I0S
-X-Google-Smtp-Source: APXvYqzEd+H40vyJ3xfj6d0RW5tR1qxm3lLFbeoBzqkYsyCyK2sntwu/nyVS1WkdzhdS9Gav5Hnmew==
-X-Received: by 2002:a17:906:a2cd:: with SMTP id by13mr18136971ejb.182.1566303404755;
-        Tue, 20 Aug 2019 05:16:44 -0700 (PDT)
-Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
-        by smtp.gmail.com with ESMTPSA id ks7sm2584431ejb.83.2019.08.20.05.16.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Aug 2019 05:16:44 -0700 (PDT)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH v3 0/4] Simplify PCIe hotplug indicator control
-To:     Lukas Wunner <lukas@wunner.de>,
-        sathyanarayanan kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190819160643.27998-1-efremov@linux.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <2f4c857e-a7cc-58da-8be5-cba581c56d9f@linux.com>
-Date:   Tue, 20 Aug 2019 15:16:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 20 Aug 2019 08:20:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60338 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727006AbfHTMUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:20:53 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C54EA22CE3;
+        Tue, 20 Aug 2019 12:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566303652;
+        bh=G5xwXtXC6eKSccjeQBgi5kYARnoflqjoRRwzQum4r2E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U98zb5kYCZL5UIJpBwBFu63Pis+PAk6FYfIHxPHQ7bMubLguLBKzwRjH9xyn8a7ub
+         O99g9etExoI5qQGDYngsmJx6OtZHGEHFkz5Ko/D0r2BoUrU51ZKGt5v56z45rXcEKI
+         1HO405m3sW5FZLLB//ihdQMIiP0oA9Pg1Hs7TOfw=
+Date:   Tue, 20 Aug 2019 14:20:50 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: Re: [patch 01/44] posix-timers: Cleanup forward declarations and
+ includes
+Message-ID: <20190820122049.GB2093@lenoir>
+References: <20190819143141.221906747@linutronix.de>
+ <20190819143801.472005793@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190819160643.27998-1-efremov@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819143801.472005793@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 7:06 PM, Denis Efremov wrote:
-> PCIe defines two optional hotplug indicators: a Power indicator and an
-> Attention indicator. Both are controlled by the same register, and each
-> can be on, off or blinking. The current interfaces
-> (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
-> non-uniform and require two register writes in many cases where we could
-> do one.
-> 
-> This patchset introduces the new function pciehp_set_indicators(). It
-> allows one to set two indicators with a single register write. All
-> calls to previous interfaces (pciehp_green_led_* and
-> pciehp_set_attention_status()) are replaced with a new one. Thus,
-> the amount of duplicated code for setting indicators is reduced.
-> 
-> Changes in v3:
->   - Changed pciehp_set_indicators() to work with existing
->     PCI_EXP_SLTCTL_* macros
->   - Reworked the inputs validation in pciehp_set_indicators()
->   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
->     completely
-> 
-> Denis Efremov (4):
->   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
->   PCI: pciehp: Switch LED indicators with a single write
->   PCI: pciehp: Remove pciehp_set_attention_status()
->   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
+On Mon, Aug 19, 2019 at 04:31:42PM +0200, Thomas Gleixner wrote:
+>  - Rename struct siginfo to kernel_siginfo
 
-Lukas, Sathyanarayanan, sorry that I've dropped most of yours "Reviewed-by".
-The changes in the last 2 patches were significant.
+That's fine because struct siginfo isn't actually used in that
+header, right?
 
+>  - Add a forward declaration for task_struct and remove sched.h include
+>  - Remove timex.h include as it is not needed
 > 
->  drivers/pci/hotplug/pciehp.h      |  5 +-
->  drivers/pci/hotplug/pciehp_core.c |  7 ++-
->  drivers/pci/hotplug/pciehp_ctrl.c | 31 +++++++-----
->  drivers/pci/hotplug/pciehp_hpc.c  | 82 ++++++++++---------------------
->  include/uapi/linux/pci_regs.h     |  3 ++
->  5 files changed, 54 insertions(+), 74 deletions(-)
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  include/linux/posix-timers.h |    5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-
+> --- a/include/linux/posix-timers.h
+> +++ b/include/linux/posix-timers.h
+> @@ -4,11 +4,10 @@
+>  
+>  #include <linux/spinlock.h>
+>  #include <linux/list.h>
+> -#include <linux/sched.h>
+> -#include <linux/timex.h>
+>  #include <linux/alarmtimer.h>
+>  
+> -struct siginfo;
+> +struct kernel_siginfo;
+> +struct task_struct;
+>  
+>  struct cpu_timer_list {
+>  	struct list_head entry;
+> 
+> 
