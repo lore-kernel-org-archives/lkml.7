@@ -2,122 +2,108 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA30C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184FCC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBD322DA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:40:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Ped8gofm"
+	by mail.kernel.org (Postfix) with ESMTP id E888822CE8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbfHTBkd (ORCPT
+        id S1728924AbfHTBkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 21:40:33 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38286 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728627AbfHTBkd (ORCPT
+        Mon, 19 Aug 2019 21:40:55 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:8543 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728627AbfHTBkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 21:40:33 -0400
-Received: by mail-pl1-f193.google.com with SMTP id m12so1863173plt.5
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 18:40:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VO+RstRa5u4AZu2WUEqYKpmwxXdX1i3TaxyPX2rlHR0=;
-        b=Ped8gofmbEt2IuVEAadFWuFWmOHcGKJL186QhfAPfKtA1wk0nIHG2vtwmuNB0pANo9
-         9VUtCCm/XGAtfFtuEbUcqnaEpO5KiB0yeRbZpi6PYCx9QlB2P+E8XGA9mzdqJTQLhUq8
-         boQxvZ8aFbcIDC6AVhr5HONeNUN6G2S0QAPnc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VO+RstRa5u4AZu2WUEqYKpmwxXdX1i3TaxyPX2rlHR0=;
-        b=iLuKQc/4C8TZ6AtW45EWr4lDVGT8Tt3pMcUAj5wjw8XS38N0hA000Fadg9zWqcwwsm
-         XNV+OOSkdFs6S/4RyRvBlhCnGx0pv0ZOLO93WTpQC1Ew1r+weDExNdf/sJIals5R0c9O
-         E5wBxzFn8IQNMZ8nrxDFzCUulJZt9WCs72Zld4k7LjkhkkB6RV5hAthF/7ErHKY/2VpQ
-         gCCjNx5so7f08K2t1n3cTHy5qFBP8WArUKVh52xkliN62KjE2QSLfofaSi/qQP+4aYvH
-         9S9rufCKJOlJVYb0FoJjThBRF4hiGdG9TLdlK9TLASDLFS7N6y12azRBuWjKTAMy9ilI
-         lPPA==
-X-Gm-Message-State: APjAAAW5LfCx7ypEMHyRqdPrFbCcc52z3RylAvWgm+O6GXktbTg81ca5
-        HyFfU9/SE7GseytUTh1KzpV3qw==
-X-Google-Smtp-Source: APXvYqyZ7UDxlZP3LbgDlpY/VYbPkx3Q03uAIKSdq9hEwTrEVKKMCLB1QizGD0Nvqysc5GQuGsvAkA==
-X-Received: by 2002:a17:902:a607:: with SMTP id u7mr25775304plq.43.1566265232650;
-        Mon, 19 Aug 2019 18:40:32 -0700 (PDT)
-Received: from localhost ([172.19.216.18])
-        by smtp.gmail.com with ESMTPSA id a16sm5765809pfo.33.2019.08.19.18.40.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 18:40:31 -0700 (PDT)
-Date:   Mon, 19 Aug 2019 21:40:15 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Scott Wood <swood@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC v2] rcu/tree: Try to invoke_rcu_core() if in_irq() during
- unlock
-Message-ID: <20190820014015.GA199862@google.com>
-References: <20190818214948.GA134430@google.com>
- <b12aa6442bd12c725beb8e381083e6880dbd9206.camel@redhat.com>
+        Mon, 19 Aug 2019 21:40:55 -0400
+X-UUID: b5b28cb1873b4c70bc178178f04a9a94-20190820
+X-UUID: b5b28cb1873b4c70bc178178f04a9a94-20190820
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1464914703; Tue, 20 Aug 2019 09:40:47 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 20 Aug 2019 09:40:46 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 20 Aug 2019 09:40:44 +0800
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        sam shih <sam.shih@mediatek.com>
+Subject: [PATCH v4 0/10] Add mt7629 and fix mt7628 pwm
+Date:   Tue, 20 Aug 2019 09:40:15 +0800
+Message-ID: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b12aa6442bd12c725beb8e381083e6880dbd9206.camel@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-TM-SNTS-SMTP: ED3387D8F7DE73AC5566392D3F826B33B8E936E381F4CE54C56FB2ECCDD154A12000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 07:14:38PM -0500, Scott Wood wrote:
-> On Sun, 2019-08-18 at 17:49 -0400, Joel Fernandes (Google) wrote:
-> > When we're in hard interrupt context in rcu_read_unlock_special(), we
-> > can still benefit from invoke_rcu_core() doing wake ups of rcuc
-> > threads when the !use_softirq parameter is passed.  This is safe
-> > to do so because:
-> 
-> What is the benefit, beyond skipping the irq work overhead?  Is there some
-> reason to specifically want the rcuc thread woken rather than just getting
-> into the scheduler (and thus rcu_note_context_switch) as soon as possible?
+From: sam shih <sam.shih@mediatek.com>
 
-Isn't skipping irq work overhead enough of a benefit?
+Changes since v4:
+- Follow reviewer's comments (v3: pwm: mediatek: add a property "num-pwms")
+  Move the changes of droping the check for of_device_get_match_data
+  returning non-NULL to next patch
+- Follow reviewers's comments 
+  (v3: pwm: mediatek: allocate the clks array dynamically)
+  1. use pc->soc->has_clks to check clocks exist or not.
+  2. Add error message when probe() unable to get clks
+- Fixes bug when SoC is old mips which has no complex clock tree.
+if clocks not exist, use the new property from DT to apply period caculation;
+otherwise, use clk_get_rate to get clock frequency and apply period caculation.
 
-Anyway, I think it is useful in this scenario:
- Consider exp==true when the rcu_read_unlock() is done on a nohz_full CPU.
+Changes since v3:
+- add a new property "clock-frequency" and fix mt7628 pwm
+- add mt7629 pwm support
 
- If you simply 'get into the scheduler' as you pointed, that is not enough to
- end the grace period. The quiescent state has to be reported up the tree and
- propagated to the root node in the tree. This happens only in 2 places:
- 	1. The scheduler tick raising softirq, the end of which will execute the
-	   RCU core from the softirq or do the invoke_rcu_core().
-	2. The FQS loop which needs to see a dyntick idle transition on the
-	   CPU (usermode/idle to kernel or viceversa).
+Changes since v2:
+- use num-pwms instead of mediatek,num-pwms.
+- rename the member from num_pwms to fallback_num_pwms to make it 
+  more obvious that it doesn't represent the actually used value.
+- add a dev_warn and a expressive comment to help other developers 
+  to not start adding num_pwms in the compatible_data.
 
-Case 1. is unlikely since the tick may be turned off but I worked last week
-        with Paul on turning it on and is doing better.
-Case 2. is not happening if we're looping in kernel mode.
+Changes since v1:
+- add some checks for backwards compatibility.
 
-In this scenario, calling invoke_rcu_core() directly is better than
-scheduling the IRQ work. I don't think the IRQ work will do anything for
-nohz_full CPU but I am not sure about that.
 
-To give more background about why I arrived at this patch, I noticed that
-this call to invoke_rcu_core() was already being done but it was removed
-because the commit removing it said that it is pointless as it does not do
-anything. But I think it does do something, that's why I introduced it back.
-The rcu_read_unlock_special() is a slow path anyway so one more branch should
-be harmless and actually could be beneficial. However, this is just RFC,
-please treat it as such. I am running more tests on it based on Paul's
-suggestions and looking more closely at it tomorrow.
+Ryder Lee (6):
+  pwm: mediatek: add a property "num-pwms"
+  pwm: mediatek: allocate the clks array dynamically and fix mt7628 pwm
+  dt-bindings: pwm: add a property "num-pwms"
+  arm64: dts: mt7622: add a property "num-pwms" for PWM node
+  arm: dts: mt7623: add a property "num-pwms" for PWM node
+  dt-bindings: pwm: update bindings for MT7629 SoC
 
-Thanks!
+sam shih (4):
+  pwm: mediatek: droping the check for of_device_get_match_data
+  pwm: mediatek: use pwm_mediatek as common prefix
+  dt-bindings: pwm: update bindings for MT7628 SoC
+  arm: dts: mediatek: add mt7629 pwm support
 
- - Joel
+ .../devicetree/bindings/pwm/pwm-mediatek.txt  |  11 +-
+ arch/arm/boot/dts/mt7623.dtsi                 |   1 +
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi      |   1 +
+ drivers/pwm/pwm-mediatek.c                    | 242 ++++++++++--------
+ arch/arm/boot/dts/mt7629.dtsi                 |  16 ++++++++++++++++
+ 5 files changed, 160 insertions(+), 111 deletions(-)
+-- 
+2.17.1
 
