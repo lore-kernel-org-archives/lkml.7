@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4F4C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB836C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A652087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4CB2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308808;
-	bh=iDD40kvBDaWUwYrHhhS3QcnGpCBQmHUNgN2uM+gM11M=;
+	s=default; t=1566308815;
+	bh=CW0fdWzuaHLNwLtqpCegbXwrhmZZS0mqwjt64HYGBtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kDMjlHJhUa0wv7pQuaIJ9IOAq5k8v4phkECA0RRboR2LbpIvzwAwZ394RyHS+tMmG
-	 akgsIxUaE4Fhp6PvPd2GJjMM/smiTncZvVfgtnCzAGX/0ERkKrI8MsdwjGNY+LvS+U
-	 J6eGQcGYm4K2d6L2TQfWFM7G/eVz6J1F1IzG3uuQ=
+	b=xpcabdEpghI7UO296TmPZIT+8Tx/kYMC46JrQkyQY7YIhXGpkHkr8LhyrAvrIdzb6
+	 Q6FCoAYp60Inf+tTc2jkMSbOkILN2eGaMGkC0euj1iw6dlYOj7Sck26B6j13A8tW3K
+	 9S1Ceu0663tBcfFRMVCgs6uzhgJWC0A6+26tP4pY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730655AbfHTNqr (ORCPT
+        id S1730422AbfHTNli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:46:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36858 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:41:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730453AbfHTNlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:41:45 -0400
+        id S1730326AbfHTNl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:41:27 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB73B2087E;
-        Tue, 20 Aug 2019 13:41:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A81B2332A;
+        Tue, 20 Aug 2019 13:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308504;
-        bh=iDD40kvBDaWUwYrHhhS3QcnGpCBQmHUNgN2uM+gM11M=;
+        s=default; t=1566308485;
+        bh=CW0fdWzuaHLNwLtqpCegbXwrhmZZS0mqwjt64HYGBtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EbWwRaudrgbm2Lbh0Z7UQlx4X6ked7rscRfAi88XGMYzu/u7sDCgncnkNdTWtB726
-         sta/vNhDCcsbtjUAkD3mWizbou0Cld6VWuXRyIhRfWbX5oh/0AB8AIlo2NnuDP7n7O
-         yGvoGk2bOWuYhJg85jY4nXtS3PMipzqeSY6xQtX4=
+        b=IcAsQZY9BAnRNNBut67WUl1ltUIVw72rSiIyeVEOrdq4OgmSr8Z9iicxki3D2vB+1
+         N6KgeZS79GG3HnxzVJyILecoIFpRDJgZdfHnZTfLAUcq2c552SG+VNEkHhBOWWaRoW
+         RlZoqaPHuer0VKB/ox4kuD53wz98NhoOUHXCTE/s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 35/44] xen/blkback: fix memory leaks
-Date:   Tue, 20 Aug 2019 09:40:19 -0400
-Message-Id: <20190820134028.10829-35-sashal@kernel.org>
+Cc:     Ben Segal <bpsegal20@gmail.com>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 32/44] habanalabs: fix completion queue handling when host is BE
+Date:   Tue, 20 Aug 2019 09:40:16 -0400
+Message-Id: <20190820134028.10829-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,56 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Ben Segal <bpsegal20@gmail.com>
 
-[ Upstream commit ae78ca3cf3d9e9f914bfcd0bc5c389ff18b9c2e0 ]
+[ Upstream commit 4e87334a0ef43663019dbaf3638ad10fd8c3320c ]
 
-In read_per_ring_refs(), after 'req' and related memory regions are
-allocated, xen_blkif_map() is invoked to map the shared frame, irq, and
-etc. However, if this mapping process fails, no cleanup is performed,
-leading to memory leaks. To fix this issue, invoke the cleanup before
-returning the error.
+This patch fix the CQ irq handler to work in hosts with BE architecture.
+It adds the correct endian-swapping macros around the relevant memory
+accesses.
 
-Acked-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Ben Segal <bpsegal20@gmail.com>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/xen-blkback/xenbus.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/misc/habanalabs/irq.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index 3ac6a5d180717..b90dbcd99c03e 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -965,6 +965,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+diff --git a/drivers/misc/habanalabs/irq.c b/drivers/misc/habanalabs/irq.c
+index ea9f72ff456cf..199791b57caf2 100644
+--- a/drivers/misc/habanalabs/irq.c
++++ b/drivers/misc/habanalabs/irq.c
+@@ -80,8 +80,7 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 	struct hl_cs_job *job;
+ 	bool shadow_index_valid;
+ 	u16 shadow_index;
+-	u32 *cq_entry;
+-	u32 *cq_base;
++	struct hl_cq_entry *cq_entry, *cq_base;
+ 
+ 	if (hdev->disabled) {
+ 		dev_dbg(hdev->dev,
+@@ -90,29 +89,29 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 		return IRQ_HANDLED;
+ 	}
+ 
+-	cq_base = (u32 *) (uintptr_t) cq->kernel_address;
++	cq_base = (struct hl_cq_entry *) (uintptr_t) cq->kernel_address;
+ 
+ 	while (1) {
+-		bool entry_ready = ((cq_base[cq->ci] & CQ_ENTRY_READY_MASK)
++		bool entry_ready = ((le32_to_cpu(cq_base[cq->ci].data) &
++					CQ_ENTRY_READY_MASK)
+ 						>> CQ_ENTRY_READY_SHIFT);
+ 
+ 		if (!entry_ready)
+ 			break;
+ 
+-		cq_entry = (u32 *) &cq_base[cq->ci];
++		cq_entry = (struct hl_cq_entry *) &cq_base[cq->ci];
+ 
+-		/*
+-		 * Make sure we read CQ entry contents after we've
++		/* Make sure we read CQ entry contents after we've
+ 		 * checked the ownership bit.
+ 		 */
+ 		dma_rmb();
+ 
+-		shadow_index_valid =
+-			((*cq_entry & CQ_ENTRY_SHADOW_INDEX_VALID_MASK)
++		shadow_index_valid = ((le32_to_cpu(cq_entry->data) &
++					CQ_ENTRY_SHADOW_INDEX_VALID_MASK)
+ 					>> CQ_ENTRY_SHADOW_INDEX_VALID_SHIFT);
+ 
+-		shadow_index = (u16)
+-			((*cq_entry & CQ_ENTRY_SHADOW_INDEX_MASK)
++		shadow_index = (u16) ((le32_to_cpu(cq_entry->data) &
++					CQ_ENTRY_SHADOW_INDEX_MASK)
+ 					>> CQ_ENTRY_SHADOW_INDEX_SHIFT);
+ 
+ 		queue = &hdev->kernel_queues[cq->hw_queue_id];
+@@ -122,8 +121,7 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 			queue_work(hdev->cq_wq, &job->finish_work);
  		}
- 	}
  
-+	err = -ENOMEM;
- 	for (i = 0; i < nr_grefs * XEN_BLKIF_REQS_PER_PAGE; i++) {
- 		req = kzalloc(sizeof(*req), GFP_KERNEL);
- 		if (!req)
-@@ -987,7 +988,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
- 	err = xen_blkif_map(ring, ring_ref, nr_grefs, evtchn);
- 	if (err) {
- 		xenbus_dev_fatal(dev, err, "mapping ring-ref port %u", evtchn);
--		return err;
-+		goto fail;
- 	}
+-		/*
+-		 * Update ci of the context's queue. There is no
++		/* Update ci of the context's queue. There is no
+ 		 * need to protect it with spinlock because this update is
+ 		 * done only inside IRQ and there is a different IRQ per
+ 		 * queue
+@@ -131,7 +129,8 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 		queue->ci = hl_queue_inc_ptr(queue->ci);
  
- 	return 0;
-@@ -1007,8 +1008,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
- 		}
- 		kfree(req);
- 	}
--	return -ENOMEM;
--
-+	return err;
- }
+ 		/* Clear CQ entry ready bit */
+-		cq_base[cq->ci] &= ~CQ_ENTRY_READY_MASK;
++		cq_entry->data = cpu_to_le32(le32_to_cpu(cq_entry->data) &
++						~CQ_ENTRY_READY_MASK);
  
- static int connect_ring(struct backend_info *be)
+ 		cq->ci = hl_cq_inc_ptr(cq->ci);
+ 
 -- 
 2.20.1
 
