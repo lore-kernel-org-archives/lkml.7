@@ -2,207 +2,59 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B295CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ACAC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8A422D6D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407A022DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbfHTLs4 (ORCPT
+        id S1729582AbfHTLtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:48:56 -0400
-Received: from mga11.intel.com ([192.55.52.93]:6862 "EHLO mga11.intel.com"
+        Tue, 20 Aug 2019 07:49:45 -0400
+Received: from nautica.notk.org ([91.121.71.147]:42261 "EHLO nautica.notk.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729421AbfHTLs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:48:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 04:48:55 -0700
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="189841322"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 04:48:51 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 6A86820928; Tue, 20 Aug 2019 14:48:49 +0300 (EEST)
-Date:   Tue, 20 Aug 2019 14:48:49 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
-Message-ID: <20190820114849.GD5123@paasikivi.fi.intel.com>
-References: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
- <f490b35e62c5fd15174b5241ce1653e991c8fc9e.1566300265.git-series.maxime.ripard@bootlin.com>
+        id S1729741AbfHTLto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:49:44 -0400
+Received: by nautica.notk.org (Postfix, from userid 1001)
+        id E2887C009; Tue, 20 Aug 2019 13:49:42 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 13:49:27 +0200
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Chengguang Xu <cgxu519@zoho.com.cn>
+Cc:     ericvh@gmail.com, lucho@ionkov.net,
+        v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] 9p: avoid attaching writeback_fid on mmap with type
+ PRIVATE
+Message-ID: <20190820114927.GA12715@nautica>
+References: <20190820100325.10313-1-cgxu519@zoho.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f490b35e62c5fd15174b5241ce1653e991c8fc9e.1566300265.git-series.maxime.ripard@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190820100325.10313-1-cgxu519@zoho.com.cn>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+Chengguang Xu wrote on Tue, Aug 20, 2019:
+> Currently on mmap cache policy, we always attach writeback_fid
+> whether mmap type is SHARED or PRIVATE. However, in the use case
+> of kata-container which combines 9p(Guest OS) with overlayfs(Host OS),
+> this behavior will trigger overlayfs' copy-up when excute command
+> inside container.
 
-On Tue, Aug 20, 2019 at 01:24:32PM +0200, Maxime Ripard wrote:
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
-> 
-> The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
-> used in later (A10s, A13, A20, R8 and GR8) SoCs.
-> 
-> On some SoCs, like the A10, there's multiple instances of that controller,
-> with one instance supporting more channels and having an ISP.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 107 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 107 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> new file mode 100644
-> index 000000000000..9000bca344f9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> @@ -0,0 +1,107 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
-> +
-> +maintainers:
-> +  - Chen-Yu Tsai <wens@csie.org>
-> +  - Maxime Ripard <maxime.ripard@bootlin.com>
-> +
-> +description: |-
-> +  The Allwinner A10 and later has a CMOS Sensor Interface to retrieve
-> +  frames from a parallel or BT656 sensor.
-> +
-> +properties:
-> +  compatible:
-> +    const: allwinner,sun7i-a20-csi0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: The CSI interface clock
-> +      - description: The CSI module clock
-> +      - description: The CSI ISP clock
-> +      - description: The CSI DRAM clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bus
-> +      - const: mod
-> +      - const: isp
-> +      - const: ram
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  port:
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      endpoint:
-> +        properties:
-> +          bus-width:
-> +            const: 8
-> +            description: Number of data lines actively used.
+hmm, I guess this just works for non-ovl cases because sync_inode()
+realizes there is nothing to sync, but the fsync at the end still
+triggers the copy-up ?
 
-Are other values supported? If not, you could omit this.
+Well, I guess there really is no need to flush for private mappings,
+so might as well go for this; sparing an extra useless clone walk cannot
+hurt.
 
-> +
-> +          data-active: true
-> +          hsync-active: true
-> +          pclk-sample: true
-> +          remote-endpoint: true
-> +          vsync-active: true
-> +
-> +        required:
-> +          - bus-width
-> +          - data-active
-> +          - hsync-active
-> +          - pclk-sample
-> +          - remote-endpoint
-> +          - vsync-active
-
-Some of these are not allowed in the Bt.656 mode (vsync-active and
-hsync-active) while they're required in Bt.601 mode. Is there a way to tell
-that in YAML-based bindings?
-
-Similarly, video-interfaces.txt should be referenced from here, shouldn't
-it?
-
-> +
-> +    required:
-> +      - endpoint
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/sun7i-a20-ccu.h>
-> +    #include <dt-bindings/reset/sun4i-a10-ccu.h>
-> +
-> +    csi0: csi@1c09000 {
-> +        compatible = "allwinner,sun7i-a20-csi0";
-> +        reg = <0x01c09000 0x1000>;
-> +        interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
-> +                 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
-> +        clock-names = "bus", "mod", "isp", "ram";
-> +        resets = <&ccu RST_CSI0>;
-> +
-> +        port {
-> +            csi_from_ov5640: endpoint {
-> +                remote-endpoint = <&ov5640_to_csi>;
-> +                bus-width = <8>;
-> +                hsync-active = <1>; /* Active high */
-> +                vsync-active = <0>; /* Active low */
-> +                data-active = <1>;  /* Active high */
-> +                pclk-sample = <1>;  /* Rising */
-> +            };
-> +        };
-> +    };
-> +
-> +...
-
+I'll queue this up after tests, no promise on delay sorry :/
 -- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Dominique
