@@ -2,126 +2,73 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87DAC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B722C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF9C2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16BCF22DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308907;
-	bh=OgpBk28+OrnHvqPeqzMYl2oZPOYiCQY87GIAvglBGk8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ev4RXYfb0t8VZzEsl2rLiKaHkzgdYwyHkSmmKYxsapcKquNnZx87A9O8DDcqS962I
-	 QdPssrY1nznKGKTOEAEGtMDeOE0b3H8nF7hIvBpkoqu6I2snMYcKMuyJWeYMPXtY6H
-	 EweVDr5OBGeaHqO6UJpMtBd5g9fzfe6YAKYh/qzU=
+	s=default; t=1566308931;
+	bh=t8fy6w3wYr+VsVEY4fDmv6C2ARiBO6J32fRoc4rxhh0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xIIeUW/5rpgIWOVzQJF1aIwNBgQElwW7dN3V4/rRln3YuDihCF5o5WEQWSOBTzxkj
+	 hbgUHqmzqhbPm7ltHhXcBvc5rmfBC00KVQ5qjFPP//yvLVpJ/bAGz+F0NoY7MlJusC
+	 5xKVXwj5SPSwnIqKvaNtRygjTYt0vh4WUJWyUxfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730567AbfHTNs0 (ORCPT
+        id S1730310AbfHTNsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:48:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35218 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:48:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730098AbfHTNkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:40:33 -0400
-Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729833AbfHTNst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:48:49 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6938E22DD6;
-        Tue, 20 Aug 2019 13:40:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52F062087E;
+        Tue, 20 Aug 2019 13:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308433;
-        bh=OgpBk28+OrnHvqPeqzMYl2oZPOYiCQY87GIAvglBGk8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HYToLJxMYU/ARhFt7MMADO7EDBfxUSojHPJK14U3CcjXq77EwHgmYn+GEYwKnEpa1
-         YvL30qJBXJ8TYarB96IzTZ047qvZ4vIHGcSg0vIqDMdhBz864eobkxTTzZnNaXYJbU
-         Cj764B9NKU7XZDRvaEpDi2nkO7OAZB+JRXr0yy0c=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Dionne <marc.dionne@auristor.com>,
-        David Howells <dhowells@redhat.com>,
-        Jeffrey Altman <jaltman@auristor.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 04/44] afs: Fix loop index mixup in afs_deliver_vl_get_entry_by_name_u()
-Date:   Tue, 20 Aug 2019 09:39:48 -0400
-Message-Id: <20190820134028.10829-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
-References: <20190820134028.10829-1-sashal@kernel.org>
+        s=default; t=1566308928;
+        bh=t8fy6w3wYr+VsVEY4fDmv6C2ARiBO6J32fRoc4rxhh0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N17Z5BV0r5SK9N1g5HhyznCv9cz9nSOIGjDSM/uIMHTpuUztLZ8QTH8zGD5qul66u
+         7ckOgJv3VaFlSCr/AhgCSCB69pa/S9oQfGAVLYBdCVvE3HF8BTxSObsPwd/x7RTyj3
+         KieTgMg4l4QQir1d3pV30kjIPQkpxSKctnbW39R0=
+Date:   Tue, 20 Aug 2019 15:48:46 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: Re: [patch 01/44] posix-timers: Cleanup forward declarations and
+ includes
+Message-ID: <20190820134845.GD2093@lenoir>
+References: <20190819143141.221906747@linutronix.de>
+ <20190819143801.472005793@linutronix.de>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819143801.472005793@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Dionne <marc.dionne@auristor.com>
+On Mon, Aug 19, 2019 at 04:31:42PM +0200, Thomas Gleixner wrote:
+>  - Rename struct siginfo to kernel_siginfo
+>  - Add a forward declaration for task_struct and remove sched.h include
+>  - Remove timex.h include as it is not needed
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 4a46fdba449a5cd890271df5a9e23927d519ed00 ]
-
-afs_deliver_vl_get_entry_by_name_u() scans through the vl entry
-received from the volume location server and builds a return list
-containing the sites that are currently valid.  When assigning
-values for the return list, the index into the vl entry (i) is used
-rather than the one for the new list (entry->nr_server).  If all
-sites are usable, this works out fine as the indices will match.
-If some sites are not valid, for example if AFS_VLSF_DONTUSE is
-set, fs_mask and the uuid will be set for the wrong return site.
-
-Fix this by using entry->nr_server as the index into the arrays
-being filled in rather than i.
-
-This can lead to EDESTADDRREQ errors if none of the returned sites
-have a valid fs_mask.
-
-Fixes: d2ddc776a458 ("afs: Overhaul volume and server record caching and fileserver rotation")
-Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/afs/vlclient.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/fs/afs/vlclient.c b/fs/afs/vlclient.c
-index d7e0fd3c00df9..cfb0ac4bd039e 100644
---- a/fs/afs/vlclient.c
-+++ b/fs/afs/vlclient.c
-@@ -56,23 +56,24 @@ static int afs_deliver_vl_get_entry_by_name_u(struct afs_call *call)
- 		struct afs_uuid__xdr *xdr;
- 		struct afs_uuid *uuid;
- 		int j;
-+		int n = entry->nr_servers;
- 
- 		tmp = ntohl(uvldb->serverFlags[i]);
- 		if (tmp & AFS_VLSF_DONTUSE ||
- 		    (new_only && !(tmp & AFS_VLSF_NEWREPSITE)))
- 			continue;
- 		if (tmp & AFS_VLSF_RWVOL) {
--			entry->fs_mask[i] |= AFS_VOL_VTM_RW;
-+			entry->fs_mask[n] |= AFS_VOL_VTM_RW;
- 			if (vlflags & AFS_VLF_BACKEXISTS)
--				entry->fs_mask[i] |= AFS_VOL_VTM_BAK;
-+				entry->fs_mask[n] |= AFS_VOL_VTM_BAK;
- 		}
- 		if (tmp & AFS_VLSF_ROVOL)
--			entry->fs_mask[i] |= AFS_VOL_VTM_RO;
--		if (!entry->fs_mask[i])
-+			entry->fs_mask[n] |= AFS_VOL_VTM_RO;
-+		if (!entry->fs_mask[n])
- 			continue;
- 
- 		xdr = &uvldb->serverNumber[i];
--		uuid = (struct afs_uuid *)&entry->fs_server[i];
-+		uuid = (struct afs_uuid *)&entry->fs_server[n];
- 		uuid->time_low			= xdr->time_low;
- 		uuid->time_mid			= htons(ntohl(xdr->time_mid));
- 		uuid->time_hi_and_version	= htons(ntohl(xdr->time_hi_and_version));
--- 
-2.20.1
-
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
