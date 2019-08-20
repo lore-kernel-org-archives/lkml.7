@@ -5,69 +5,74 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E12CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9AFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60FAE218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61981218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdcZaaaD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iMbBm1t2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfHTDNJ (ORCPT
+        id S1729057AbfHTDOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 23:13:09 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34448 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728719AbfHTDNJ (ORCPT
+        Mon, 19 Aug 2019 23:14:14 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44358 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728719AbfHTDOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 23:13:09 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so2347693pgc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 20:13:08 -0700 (PDT)
+        Mon, 19 Aug 2019 23:14:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c81so2428145pfc.11;
+        Mon, 19 Aug 2019 20:14:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=XFH5jva/OE203un4N8xBzjPDuYVpmA9pAoQ7Ehj/aec=;
-        b=EdcZaaaDZaM2VztWA+t44FMuIL/ZIR+uyq3NMxQprjpw9xRFXNpnVYCld8dWHVj75k
-         S8M0f+VRMyE/mQ9DpDuIEV4ZtVdL2uIdGuAnYp+EdQjeYsvksObGWGKsEIZ1eX8BXKxM
-         /VO8XxU3xoA0g1i4hE4LK3S6ITaaFZwD09Zq6SCfNU9LYVRklCok9hkypMHkM4dQvk9+
-         qab71+2iRARRUIDefd9czxoeSkG9njKwcLVXvMyCyQa1akHUJBf4nbv+6+CSaKliJ+u/
-         yBY5iFv/z3uFMkbu7tswRU9RkP7AO+QMFHoZxK2xBdhpu9xtfxfQnFWZIo9pbrbSTzA8
-         fjvg==
+        bh=mQPEFXG5NaLlLl7jM/5xQz0mHSvpnN8IjBBA+T4iEGI=;
+        b=iMbBm1t2dofey1/BjH/Eg1cEpum8t/m7wE9e1cyHBXL7q/vtT2D5LiAGnel49NAZs1
+         5xEy/yW7jwaNHsZBbu4hLW12egjPaBs8gj+opFvWOgSEI+IoO5M7FnuLR62+5rwGctpd
+         fAF/+nTqyGVGFDiMY1Q8FoP4W943aNDB1YdRAIEnT8fxcz2Z1GmDOaHMe3odEyqYu6SF
+         iDTmdXEByZOoQtpCS3yJj5EgnHmdAEboGvyme0iHZcnR3FQfO0LrJ6wNChu9iZhNeOwu
+         u6nxe7f2/gL0cvp2pSMeLllYTe/nkEWWN77pGqjtqyGV4QCOPp3ybAxjRxkwm0Xsht/8
+         lH4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=XFH5jva/OE203un4N8xBzjPDuYVpmA9pAoQ7Ehj/aec=;
-        b=WVZgbvkNkv4qJ9nzpJTnwhvm9DdX5rcKiPogw1un7OgiYm86N7i53Yxbl0ZwdQcHX8
-         GVVmlzinfxhdHRKnbcHGObk6yKL3LAAzItskV4Mkos+hyDT4q5tcXHZMdmfPRK6iiHKs
-         mG2TE5gqCffRMpI9ic8ZVkPp2qL5qygaBDifleEsPgjx+aoNCruax4GqNiGvthBfiXUy
-         Dd9Z7Mw+wfTnE3p4nL85UwyXqqI/dsz9odyy7byIBfSEUtzCj7WxnfmOF75jxR32Ak6V
-         Wzsdl4QpoXVog71OuLMLftGCyXXJDZE/t5TK7Blb+L0dpg+kSv+xd++OubmcYeuHwLST
-         EeaQ==
-X-Gm-Message-State: APjAAAVec7mJuhtCVN9SMavFDXtGoMZhr21GfsJIO4pcdI6suq/uczMI
-        uqlI/hk/2Joz+qRoF/ceen4=
-X-Google-Smtp-Source: APXvYqwBieQOotgQYt2lM+Bx7jMH5oINwpP51n4NcZYPXJz9H6HYkAX8V4XrBWh/od2dSrmz0N4g9Q==
-X-Received: by 2002:a17:90a:bf82:: with SMTP id d2mr13508669pjs.121.1566270788098;
-        Mon, 19 Aug 2019 20:13:08 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id x10sm15100884pjo.4.2019.08.19.20.13.07
+        bh=mQPEFXG5NaLlLl7jM/5xQz0mHSvpnN8IjBBA+T4iEGI=;
+        b=pMTlPet/nly6zn946zHjUSmt+EuJBFKLbyn6JLQ6Hs6oKjaBFyQ/Wu9S0Z0ZGAjOX/
+         V7tGxF4QfluP1Eob3dBK0IhQAYJnjjoGxNuwTgmpyjKaHAo+wY9vx348o5Jpm9pAVVn8
+         NdGqaV9vu/FqP42qVq2Bsen2xHluO2MoogAhc1q23umK9BrrlAb0CtkRToWpv7gcz0XL
+         uXw9ZCFD6b9iev15NW3AID3vZG0m7AOp255J7IFAUczwXEmeHqDv7g0hhsGtN+T1iX5s
+         o+tRSUijuupckjXKRol5dubBuo7M4jrrJDjxFdZ0EMNYoEgW8Xipy2zXl0AGyv2XdFOD
+         S5jw==
+X-Gm-Message-State: APjAAAU9xLxCFYrHRmsf1QwwkJhe6qT8xsD24ObaFoVELiy+M6LqJMOv
+        7a8M/lVp8AmFN+thAkQFSp4=
+X-Google-Smtp-Source: APXvYqzTyrvm8j5S2KopDYOUCwWLbYjSfCB/F2McmAtf80ofjPkVHJavNFhSAmrdz0MFXxcGSNfoFA==
+X-Received: by 2002:aa7:8dd2:: with SMTP id j18mr27375110pfr.88.1566270853683;
+        Mon, 19 Aug 2019 20:14:13 -0700 (PDT)
+Received: from localhost.localdomain ([175.223.16.125])
+        by smtp.gmail.com with ESMTPSA id y16sm22979651pfc.36.2019.08.19.20.14.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 20:13:07 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: vf610-zii-scu4-aib: Drop "rs485-rts-delay" property
-Date:   Mon, 19 Aug 2019 20:13:01 -0700
-Message-Id: <20190820031301.11172-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 19 Aug 2019 20:14:12 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCHv2 1/2] fs: export put_filesystem()
+Date:   Tue, 20 Aug 2019 12:13:58 +0900
+Message-Id: <20190820031359.11717-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,39 +80,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LPUART driver does not support specifying "rs485-rts-delay"
-property. Drop it.
+Modules, e.g. i915, can use exported get_fs_type(), but are
+unable to put_filesystem(). Export it and let modules to
+decrement file systems' reference counters.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 ---
- arch/arm/boot/dts/vf610-zii-scu4-aib.dts | 2 --
- 1 file changed, 2 deletions(-)
+ fs/filesystems.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-index 666ec27a73e3..d8c38ef6a98a 100644
---- a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-+++ b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-@@ -685,7 +685,6 @@
- 	linux,rs485-enabled-at-boot-time;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
--	rs485-rts-delay = <0 200>;
- 	status = "okay";
- };
+diff --git a/fs/filesystems.c b/fs/filesystems.c
+index 9135646e41ac..02669839b584 100644
+--- a/fs/filesystems.c
++++ b/fs/filesystems.c
+@@ -45,6 +45,7 @@ void put_filesystem(struct file_system_type *fs)
+ {
+ 	module_put(fs->owner);
+ }
++EXPORT_SYMBOL(put_filesystem);
  
-@@ -693,7 +692,6 @@
- 	linux,rs485-enabled-at-boot-time;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart2>;
--	rs485-rts-delay = <0 200>;
- 	status = "okay";
- };
- 
+ static struct file_system_type **find_filesystem(const char *name, unsigned len)
+ {
 -- 
-2.21.0
+2.23.0
 
