@@ -2,141 +2,92 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A07C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BB3C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E332054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F772054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:07:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbfHTNHx (ORCPT
+        id S1729975AbfHTNH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:07:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51348 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728595AbfHTNHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:07:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 58808AFBE;
-        Tue, 20 Aug 2019 13:07:51 +0000 (UTC)
-Message-ID: <1566306470.11678.16.camel@suse.com>
-Subject: Re: WARNING in kmem_cache_alloc_trace
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        syzbot <syzbot+0e7b6b6001ca8ed655f6@syzkaller.appspotmail.com>
-Cc:     syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        chunfeng.yun@mediatek.com, Alan Stern <stern@rowland.harvard.edu>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Date:   Tue, 20 Aug 2019 15:07:50 +0200
-In-Reply-To: <CAAeHK+zOQLEcHesUzKHT2U59DpHtR3PnZXdTMv=1PNLD-evqtA@mail.gmail.com>
-References: <000000000000621bc305907aaf02@google.com>
-         <CAAeHK+zOQLEcHesUzKHT2U59DpHtR3PnZXdTMv=1PNLD-evqtA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 20 Aug 2019 09:07:58 -0400
+Received: from mga12.intel.com ([192.55.52.136]:59853 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729948AbfHTNH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:07:57 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 06:07:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
+   d="scan'208";a="180689683"
+Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
+  by orsmga003.jf.intel.com with ESMTP; 20 Aug 2019 06:07:54 -0700
+Date:   Tue, 20 Aug 2019 21:09:24 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
+        mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        yu.c.zhang@intel.com, alazar@bitdefender.com
+Subject: Re: [PATCH RESEND v4 5/9] KVM: VMX: Add init/set/get functions for
+ SPP
+Message-ID: <20190820130924.GC4828@local-michael-cet-test.sh.intel.com>
+References: <20190814070403.6588-1-weijiang.yang@intel.com>
+ <20190814070403.6588-6-weijiang.yang@intel.com>
+ <16b32cb7-9719-5744-d6c0-2846d3d5591c@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16b32cb7-9719-5744-d6c0-2846d3d5591c@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, den 19.08.2019, 18:59 +0200 schrieb Andrey Konovalov:
-> On Mon, Aug 19, 2019 at 6:18 PM syzbot
-> <syzbot+0e7b6b6001ca8ed655f6@syzkaller.appspotmail.com> wrote:
-> > 
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    d0847550 usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16947fce600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=dbc9c80cc095da19
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=0e7b6b6001ca8ed655f6
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1141c5ba600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ed91d2600000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+0e7b6b6001ca8ed655f6@syzkaller.appspotmail.com
-> > 
+On Mon, Aug 19, 2019 at 05:13:47PM +0200, Paolo Bonzini wrote:
+> On 14/08/19 09:03, Yang Weijiang wrote:
+> >  static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+> >  	.cpu_has_kvm_support = cpu_has_kvm_support,
+> >  	.disabled_by_bios = vmx_disabled_by_bios,
+> > @@ -7740,6 +7783,11 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+> >  	.get_vmcs12_pages = NULL,
+> >  	.nested_enable_evmcs = NULL,
+> >  	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
+> > +
+> > +	.get_spp_status = vmx_get_spp_status,
+> > +	.get_subpages = vmx_get_subpages,
+> > +	.set_subpages = vmx_set_subpages,
+> > +	.init_spp = vmx_init_spp,
+> >  };
+> 
+> There's no need for the get_subpages kvm_x86_ops.  You do need init_spp
+> of course, but you do not need get_spp_status either; instead you can
+> check if init_spp is NULL (if NULL, SPP is not supported).
+So first set .init_spp = NULL, then if all SPP preconditions meet, set
+.init_spp = vmx_init_spp?
 
-#syz test: https://github.com/google/kasan.git d0847550
+> In addition, kvm_mmu_set_subpages should not set up the SPP pages.  This
+> should be handled entirely by handle_spp when the processor reports an
+> SPPT miss, so you do not need that callback either.  You may need a
+> flush_subpages callback, called by kvm_mmu_set_subpages to clear the SPP
+> page tables for a given GPA range.  The next access then will cause an
+> SPPT miss.
+Good suggestion, thanks! Will do change.
 
-From eeb920819e1d98e631fb78fe849649dc8dd6eb1b Mon Sep 17 00:00:00 2001
-From: Oliver Neukum <oneukum@suse.com>
-Date: Tue, 20 Aug 2019 15:04:00 +0200
-Subject: [PATCH] USB: yurex: fix failure to wait for control message
+> Finally, please move all SPP-related code to arch/x86/kvm/vmx/{spp.c,spp.h}.
+>
+Sure.
 
-Using usb_submit_urb() after prepare_to_wait() won't work, because
-it may reset the task state to TASK_RUNNING. Replacing it with
-a completion.
-
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
----
- drivers/usb/misc/yurex.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/usb/misc/yurex.c b/drivers/usb/misc/yurex.c
-index 6715a128e6c8..519bb53993aa 100644
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -62,6 +62,7 @@ struct usb_yurex {
- 	struct mutex		io_mutex;
- 	struct fasync_struct	*async_queue;
- 	wait_queue_head_t	waitq;
-+	struct completion	cntl_cpl;
+> Thanks,
+> 
+> Paolo
+> 
  
- 	spinlock_t		lock;
- 	__s64			bbu;		/* BBU from device */
-@@ -80,7 +81,7 @@ static void yurex_control_callback(struct urb *urb)
- 	if (status) {
- 		dev_err(&urb->dev->dev, "%s - control failed: %d\n",
- 			__func__, status);
--		wake_up_interruptible(&dev->waitq);
-+		complete(&dev->cntl_cpl);
- 		return;
- 	}
- 	/* on success, sender woken up by CMD_ACK int in, or timeout */
-@@ -202,6 +203,7 @@ static int yurex_probe(struct usb_interface *interface, const struct usb_device_
- 	mutex_init(&dev->io_mutex);
- 	spin_lock_init(&dev->lock);
- 	init_waitqueue_head(&dev->waitq);
-+	init_completion(&dev->cntl_cpl);
- 
- 	dev->udev = usb_get_dev(interface_to_usbdev(interface));
- 	dev->interface = interface;
-@@ -322,6 +324,7 @@ static void yurex_disconnect(struct usb_interface *interface)
- 	/* wakeup waiters */
- 	kill_fasync(&dev->async_queue, SIGIO, POLL_IN);
- 	wake_up_interruptible(&dev->waitq);
-+	complete(&dev->cntl_cpl);
- 
- 	/* decrement our usage count */
- 	kref_put(&dev->kref, yurex_delete);
-@@ -485,13 +488,10 @@ static ssize_t yurex_write(struct file *file, const char __user *user_buffer,
- 	}
- 
- 	/* send the data as the control msg */
--	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
- 	dev_dbg(&dev->interface->dev, "%s - submit %c\n", __func__,
- 		dev->cntl_buffer[0]);
- 	retval = usb_submit_urb(dev->cntl_urb, GFP_KERNEL);
--	if (retval >= 0)
--		timeout = schedule_timeout(YUREX_WRITE_TIMEOUT);
--	finish_wait(&dev->waitq, &wait);
-+	timeout = wait_for_completion_interruptible__timeout(&dev->cntl_cpl, YUREX_WRITE_TIMEOUT);
- 
- 	mutex_unlock(&dev->io_mutex);
- 
--- 
-2.16.4
-
