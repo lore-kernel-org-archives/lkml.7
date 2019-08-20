@@ -2,127 +2,108 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAACC3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F7AC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300D4214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F02CE214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:31:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566311498;
+	bh=q6ApkqrORc0Qj1HNl3Ml+CcXr6NCqdWtGJ0QH0Ets6Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O0FMcEOkpBuCt/4+2PV6EcDFeaOkMtWo8feKrblpCZozhvG3u+Ch41yx1131QZrKs
+	 3oD89uS6EU/ZgE6gyj9xPjlmwnqv0ZBlN1yj5m7pT1EwywCaxw8PHHfBqy8eMxzgUw
+	 21mssHfb9/nvxXMvBJTHfkndq+xKR2W1uM7Na3QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbfHTOag (ORCPT
+        id S1730174AbfHTObg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:30:36 -0400
-Received: from www62.your-server.de ([213.133.104.62]:48460 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728770AbfHTOaf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:30:35 -0400
-Received: from sslproxy01.your-server.de ([88.198.220.130])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1i059Z-0005CZ-DM; Tue, 20 Aug 2019 16:30:29 +0200
-Received: from [178.197.249.40] (helo=pc-63.home)
-        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1i059Y-0003x3-U5; Tue, 20 Aug 2019 16:30:29 +0200
-Subject: Re: [PATCH bpf-next] xsk: proper socket state check in xsk_poll
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        syzbot+c82697e3043781e08802@syzkaller.appspotmail.com,
-        ast@kernel.org, netdev@vger.kernel.org
-Cc:     bjorn.topel@intel.com, bpf@vger.kernel.org, davem@davemloft.net,
-        hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, jonathan.lemon@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, magnus.karlsson@intel.com,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        xdp-newbies@vger.kernel.org, yhs@fb.com, hdanton@sina.com
-References: <0000000000009167320590823a8c@google.com>
- <20190820100405.25564-1-bjorn.topel@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <beef16bb-a09b-40f1-7dd0-c323b4b89b17@iogearbox.net>
-Date:   Tue, 20 Aug 2019 16:30:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 20 Aug 2019 10:31:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37262 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728993AbfHTObg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:31:36 -0400
+Received: from localhost (unknown [12.166.174.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B751A20673;
+        Tue, 20 Aug 2019 14:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566311495;
+        bh=q6ApkqrORc0Qj1HNl3Ml+CcXr6NCqdWtGJ0QH0Ets6Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IZsPdsj64+vKrGtB/bwng7b12mo+kcvukl54znKMByUPPLfmRpo8QNT5SMfSkHGhd
+         a2bdNs6sxIxh7o5IqlLZSXMFy9ZZySGL9LxndASOLJDNk1Qk24VUv3n24DusXsKkqS
+         s3pnTIN4ip4yzvRHXR6vi2UtVEQ29QgRNfpReAjM=
+Date:   Tue, 20 Aug 2019 07:31:35 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     zhangfei <zhangfei.gao@linaro.org>
+Cc:     "zhangfei.gao@foxmail.com" <zhangfei.gao@foxmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>
+Subject: Re: [PATCH 2/2] uacce: add uacce module
+Message-ID: <20190820143135.GA1536@kroah.com>
+References: <1565775265-21212-1-git-send-email-zhangfei.gao@linaro.org>
+ <1565775265-21212-3-git-send-email-zhangfei.gao@linaro.org>
+ <20190815141225.GC23267@kroah.com>
+ <5d5a6757.1c69fb81.e0678.2ab2SMTPIN_ADDED_BROKEN@mx.google.com>
+ <20190819102250.GA2030@kroah.com>
+ <350c937f-faee-f74a-ad76-03532c8648bd@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190820100405.25564-1-bjorn.topel@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25547/Tue Aug 20 10:27:49 2019)
+In-Reply-To: <350c937f-faee-f74a-ad76-03532c8648bd@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/19 12:04 PM, Björn Töpel wrote:
-> From: Björn Töpel <bjorn.topel@intel.com>
+On Tue, Aug 20, 2019 at 08:38:46PM +0800, zhangfei wrote:
 > 
-> The poll() implementation for AF_XDP sockets did not perform the
-> proper state checks, prior accessing the socket umem. This patch fixes
-> that by performing a xsk_is_bound() check.
 > 
-> Suggested-by: Hillf Danton <hdanton@sina.com>
-> Reported-by: syzbot+c82697e3043781e08802@syzkaller.appspotmail.com
-> Fixes: 77cd0d7b3f25 ("xsk: add support for need_wakeup flag in AF_XDP rings")
-> Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
-> ---
->   net/xdp/xsk.c | 14 ++++++++++++--
->   1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-> index ee4428a892fa..08bed5e92af4 100644
-> --- a/net/xdp/xsk.c
-> +++ b/net/xdp/xsk.c
-> @@ -356,13 +356,20 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
->   	return err;
->   }
->   
-> +static bool xsk_is_bound(struct xdp_sock *xs)
-> +{
-> +	struct net_device *dev = READ_ONCE(xs->dev);
-> +
-> +	return dev && xs->state == XSK_BOUND;
-> +}
-> +
->   static int xsk_sendmsg(struct socket *sock, struct msghdr *m, size_t total_len)
->   {
->   	bool need_wait = !(m->msg_flags & MSG_DONTWAIT);
->   	struct sock *sk = sock->sk;
->   	struct xdp_sock *xs = xdp_sk(sk);
->   
-> -	if (unlikely(!xs->dev))
-> +	if (unlikely(!xsk_is_bound(xs)))
->   		return -ENXIO;
->   	if (unlikely(!(xs->dev->flags & IFF_UP)))
->   		return -ENETDOWN;
-> @@ -383,6 +390,9 @@ static unsigned int xsk_poll(struct file *file, struct socket *sock,
->   	struct net_device *dev = xs->dev;
->   	struct xdp_umem *umem = xs->umem;
->   
-> +	if (unlikely(!xsk_is_bound(xs)))
-> +		return mask;
-> +
->   	if (umem->need_wakeup)
->   		dev->netdev_ops->ndo_xsk_wakeup(dev, xs->queue_id,
->   						umem->need_wakeup);
-> @@ -417,7 +427,7 @@ static void xsk_unbind_dev(struct xdp_sock *xs)
->   {
->   	struct net_device *dev = xs->dev;
->   
-> -	if (!dev || xs->state != XSK_BOUND)
-> +	if (!xsk_is_bound(xs))
->   		return;
+> On 2019/8/19 下午6:22, Greg Kroah-Hartman wrote:
+> > On Mon, Aug 19, 2019 at 05:09:23PM +0800, zhangfei.gao@foxmail.com wrote:
+> > > Hi, Greg
+> > > 
+> > > Thanks for your kind suggestion.
+> > > 
+> > > On 2019/8/15 下午10:12, Greg Kroah-Hartman wrote:
+> > > > On Wed, Aug 14, 2019 at 05:34:25PM +0800, Zhangfei Gao wrote:
+> > > > > diff --git a/include/uapi/misc/uacce.h b/include/uapi/misc/uacce.h
+> > > > > new file mode 100644
+> > > > > index 0000000..44a0a5d
+> > > > > --- /dev/null
+> > > > > +++ b/include/uapi/misc/uacce.h
+> > > > > @@ -0,0 +1,44 @@
+> > > > > +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> > > > > +#ifndef _UAPIUUACCE_H
+> > > > > +#define _UAPIUUACCE_H
+> > > > > +
+> > > > > +#include <linux/types.h>
+> > > > > +#include <linux/ioctl.h>
+> > > > > +
+> > > > > +#define UACCE_CLASS_NAME	"uacce"
+> > > > Why is this in a uapi file?
+> > > User app need get attribute from /sys/class,
+> > > For example: /sys/class/uacce/hisi_zip-0/xxx
+> > > UACCE_CLASS_NAME here tells app which subsystem to open,
+> > > /sys/class/subsystem/
+> > But that never comes from a uapi file.  No other subsystem does this.
+> OK, got it
+> Maybe the entry info can come from Documentation/ABI/entries
 
-I think I'm a bit confused by your READ_ONCE() usage. ;-/ I can see why you're
-using it in xsk_is_bound() above, but then at the same time all the other callbacks
-like xsk_poll() or xsk_unbind_dev() above have a struct net_device *dev = xs->dev
-right before the test. Could you elaborate?
+Yes it can, we now have a tool in the tree that automatically parses
+those entries and outputs it in a variety of different formats.
 
-Thanks,
-Daniel
+thanks,
+
+greg k-h
