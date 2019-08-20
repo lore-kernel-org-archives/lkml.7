@@ -2,136 +2,131 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D514C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92776C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0094922D6D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:52:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RRPZh68H"
+	by mail.kernel.org (Postfix) with ESMTP id 6D21922D6D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730810AbfHTUwN (ORCPT
+        id S1730782AbfHTUxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 16:52:13 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:14833 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729833AbfHTUwM (ORCPT
+        Tue, 20 Aug 2019 16:53:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25324 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727358AbfHTUxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 16:52:12 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5c5d7b0000>; Tue, 20 Aug 2019 13:52:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 20 Aug 2019 13:52:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 20 Aug 2019 13:52:11 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Aug
- 2019 20:52:11 +0000
-Received: from [10.2.161.11] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Aug
- 2019 20:52:11 +0000
-Subject: Re: [Linux-kernel-mentees][PATCH v6 1/2] sgi-gru: Convert put_page()
- to put_user_page*()
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Bharath Vedartham <linux.bhar@gmail.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <jglisse@redhat.com>, <ira.weiny@intel.com>,
-        <gregkh@linuxfoundation.org>, <arnd@arndb.de>,
-        <william.kucharski@oracle.com>, <hch@lst.de>,
-        <inux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1566157135-9423-1-git-send-email-linux.bhar@gmail.com>
- <1566157135-9423-2-git-send-email-linux.bhar@gmail.com>
- <20190819125611.GA5808@hpe.com>
- <20190819190647.GA6261@bharath12345-Inspiron-5559>
- <0c2ad29b-934c-ec30-66c3-b153baf1fba5@nvidia.com>
- <20190820081820.GI3111@dhcp22.suse.cz>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <2971c5ea-88f2-0f07-e6f5-ad4108f62816@nvidia.com>
-Date:   Tue, 20 Aug 2019 13:50:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 20 Aug 2019 16:53:36 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KKpoXw144999;
+        Tue, 20 Aug 2019 16:52:53 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ugms59bcv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Aug 2019 16:52:53 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7KKpvbe146132;
+        Tue, 20 Aug 2019 16:52:53 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ugms59bcb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Aug 2019 16:52:53 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7KKnWIY004191;
+        Tue, 20 Aug 2019 20:52:52 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma02dal.us.ibm.com with ESMTP id 2ue976a9kn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 20 Aug 2019 20:52:52 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7KKqpYa51708406
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Aug 2019 20:52:51 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 489A9B205F;
+        Tue, 20 Aug 2019 20:52:51 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2AD64B2066;
+        Tue, 20 Aug 2019 20:52:51 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 20 Aug 2019 20:52:51 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 61F8016C246B; Tue, 20 Aug 2019 13:52:52 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 13:52:52 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rostedt <rostedt@goodmis.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+Message-ID: <20190820205252.GY28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
+ <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
+ <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
+ <20190816205740.GF10481@google.com>
+ <3c0cb8a2-eba2-7bea-8523-b948253a6804@arm.com>
+ <CAHk-=wi_KeD1M-_-_SU_H92vJ-yNkDnAGhAS=RR1yNNGWKW+aA@mail.gmail.com>
+ <20190817045217.GZ28441@linux.ibm.com>
+ <20190820140116.GT2332@hirez.programming.kicks-ass.net>
+ <20190820203135.GX28441@linux.ibm.com>
+ <20190820203939.GV2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190820081820.GI3111@dhcp22.suse.cz>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566334332; bh=U2KQiCj4JLeIQcZ2lUEsNC+lc/DGVG6Kl/YzkvUbakA=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=RRPZh68HK0DqwjIsnJkt7tPRqljVf2slouND6w1LNdDc9znsw46Ls/TkIOVAAtfn4
-         FJqVWnrLJmykzlc241YG7ssQdFE9U3bahyz96+nuP90lxk+MyONdGFJUacAIus0arh
-         X4rXYnxWK1S1bN8P9ZAaf5GMI2F2tk4/TSvgv9FWPQV/MFV1FtA+QBkjlTDKErIOFn
-         MoPkjtJloH0xdk0Gyl3FgirR+77bJ8fgnPj3v307kjTpmVS0ftaeaIeU1lq9iKZw0j
-         eZjVyM6leBWtnB7hltloYIp6rCnjszrTzcf71kiFGX97cPs4tkKSSg5sGq3DV6uTFt
-         mEv0D/jx0fbsQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820203939.GV2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908200188
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/19 1:18 AM, Michal Hocko wrote:
-> On Mon 19-08-19 12:30:18, John Hubbard wrote:
->> On 8/19/19 12:06 PM, Bharath Vedartham wrote:
->>> On Mon, Aug 19, 2019 at 07:56:11AM -0500, Dimitri Sivanich wrote:
-...
->> Conversion of gup/put_page sites:
->>
->> Before:
->>
->> 	get_user_pages(...);
->> 	...
->> 	for each page:
->> 		put_page();
->>
->> After:
->> 	
->> 	gup_flags |= FOLL_PIN; (maybe FOLL_LONGTERM in some cases)
->> 	vaddr_pin_user_pages(...gup_flags...)
+On Tue, Aug 20, 2019 at 10:39:39PM +0200, Peter Zijlstra wrote:
+> On Tue, Aug 20, 2019 at 01:31:35PM -0700, Paul E. McKenney wrote:
+> > On Tue, Aug 20, 2019 at 04:01:16PM +0200, Peter Zijlstra wrote:
 > 
-> I was hoping that FOLL_PIN would be handled by vaddr_pin_user_pages.
+> > > We really should get the compiler folks to give us a
+> > > -fno-pointer-provenance. Waiting on the standards committee to get their
+> > > act together seems unlikely, esp. given that some people actually seem
+> > > to _want_ this nonsense :/
+> > 
+> > The reason that they want it is to enable some significant optimizations
+> > in numerical code on the one hand and in heavily templated C++ code on
+> > the other.  Neither of which has much bearing on kernel code.
+> > 
+> > Interested in coming to the next C standards committee meeting in October
+> > to help me push for this?  ;-)
 > 
+> How about we try and get some compiler folks together at plumbers and
+> bribe them with beer? Once we have our compiler knob, we happy :-)
 
-Good point: now that we've got the 4 cases summarized, it turns out
-that either FOLL_PIN is required, or there is no need to call
-vaddr_pin_user_pages() at all.  So we can go back to setting FOLL_PIN
-inside it, which is of course much better for maintenance. Great!
+C'mon, Peter!  Where is your sense of self-destruction???  ;-)
 
+But yes, if nothing else there is a Toolchains MC [1].  Which happens to
+have a topic entitled "Potential impact/benefit/detriment of recently
+developed GCC optimizations on the kernel", now that you mention it.
+Looking forward to seeing you in Lisbon!
 
->> 	...
->> 	vaddr_unpin_user_pages(); /* which invokes put_user_page() */
->>
->> Fortunately, it's not harmful for the simpler conversion from put_page()
->> to put_user_page() to happen first, and in fact those have usually led
->> to simplifications, paving the way to make it easier to call
->> vaddr_unpin_user_pages(), once it's ready. (And showing exactly what
->> to convert, too.)
-> 
-> If that makes the later conversion easier then no real objections from
-> me. Assuming that the current put_user_page conversions are correct of
-> course (I have the mlock one and potentials that falls into the same
-> category in mind).
-> 
+						Thanx, Paul
 
-Agreed: only correct conversions should be done. Not the incorrect
-ones. ahem.  :)
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+[1] https://linuxplumbersconf.org/event/4/sessions/45/#20190909
