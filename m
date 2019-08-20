@@ -2,134 +2,146 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBDCC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2D7C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B200722CF4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:27:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WRmbYOSu"
+	by mail.kernel.org (Postfix) with ESMTP id 0B5D322CE3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbfHTK1F (ORCPT
+        id S1729582AbfHTKbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:27:05 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34556 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729392AbfHTK1F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:27:05 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x18so4612940ljh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 03:27:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e/WL7mt//GAgzwpdMZbthxuFg+kLsllf6TCIqq5cm4k=;
-        b=WRmbYOSuUZTNI+VHX1CcRM/fsEMSBDx0RvKKzmF0CBEnfGFQy4jwdRNLy7jlnI71Jx
-         vpVfv1RUwcWCx6BY0Ww4yUiLIZW59Ks6mcyBJ/34UhiYcaCJMg0H2VxEQ4C77ZKH7OwI
-         e1SvT7JJBct7l227/+DWqKgkSjG2K/bPFJGXSqOqyc5Z/GHZs7xizq/yrtYTa6vdpiBw
-         vA3CPiGHNyD/M6Mx1CZtmQUaQ76xIgOYo2G5FmdW5bYPaMkF86DVU+QXZY26Hjj5yoKb
-         077WUHbNXzbP2drPoIpP83IgyXznGU7ZNCatF/K1XShzcm8Cfj2hr5QISGBqHSCZt91P
-         xkYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e/WL7mt//GAgzwpdMZbthxuFg+kLsllf6TCIqq5cm4k=;
-        b=Px3StGE4tCr/ITQ1S4u46cOdW3QZy/wVg3CvtP/0mXEfTcMCQJTSYa0+nZIC45sBNo
-         EpRNTY41UsR8mkS/MkrHrPSQnnonea2hkRZKlsgBruD0E9e78xd+dbUUVkxJD45RtDRL
-         Rit8U/N9t/4NzuSgA8CtEqOIjdvC+ArV0Gd2JYtE2ccTgwd5cZqscNzmSF6eah7iFGl5
-         zS7yoQcl0/5cx7LsWYCBeNVDHP2ig3fkFphuPHmQtN+yOLlN2cuaWAGUXp33JQCZPbcy
-         Z8UFrcONqXZlh2YXBi9COr9V0QMbynlhXW/PoRe9lEuwf7GIPzUkcgDSVJF1hFTfOUHb
-         7rWg==
-X-Gm-Message-State: APjAAAX97Gzd/zsG9Oy1Cd+OJtLTPF1I7E6RuegEw410F7vnvEy8ykuz
-        QtVOScB9Hw8xm8zoZwrCeEQYI78oszVzO8v7y4z8Pg==
-X-Google-Smtp-Source: APXvYqy9d7CgQvy0ZM0/DSmtHyrZ+R2wFU3tRkdCwr+9kjsIgtuwE4FW7X7VWI/cj5Incxd0Z4l1OHqEHETZ6NI0BN8=
-X-Received: by 2002:a2e:781a:: with SMTP id t26mr10426093ljc.28.1566296822942;
- Tue, 20 Aug 2019 03:27:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <1566221225-5170-1-git-send-email-xuwei5@hisilicon.com>
- <CAHp75Vct3qtR5bDF6iALmduKEEq+gNL-btmzQVuWq_hYsmxKhw@mail.gmail.com>
- <CACRpkdbRZ=88+ooW5jb5vu4Dwsaj7Ce+V5Ked2-bGn0JWpTHfQ@mail.gmail.com> <CAHp75VcwDZdOwFsT4Gf-1a4tNGQdowK-RKRvSif2m7oTsVQNbw@mail.gmail.com>
-In-Reply-To: <CAHp75VcwDZdOwFsT4Gf-1a4tNGQdowK-RKRvSif2m7oTsVQNbw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 20 Aug 2019 12:26:51 +0200
-Message-ID: <CACRpkdZMHqppyzVQCLSR8yv1owZ71eDAduL9JGkCawjFvZ2U+A@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: pl061: Fix the issue failed to register the ACPI interrtupion
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <treding@nvidia.com>, Wei Xu <xuwei5@hisilicon.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Shameerali Kolothum Thodi 
-        <shameerali.kolothum.thodi@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Shiju Jose <shiju.jose@huawei.com>, jinying@hisilicon.com,
-        Zhangyi ac <zhangyi.ac@huawei.com>,
-        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>,
-        Tangkunshan <tangkunshan@huawei.com>,
-        huangdaode <huangdaode@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 20 Aug 2019 06:31:39 -0400
+Received: from mga05.intel.com ([192.55.52.43]:35241 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729181AbfHTKbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 06:31:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 03:31:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
+   d="scan'208";a="183159415"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga006.jf.intel.com with ESMTP; 20 Aug 2019 03:31:36 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     kishon@ti.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, peter.harliman.liem@intel.com,
+        vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: [PATCH v2 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+Date:   Tue, 20 Aug 2019 18:31:32 +0800
+Message-Id: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:51 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, Aug 20, 2019 at 10:12 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Mon, Aug 19, 2019 at 5:07 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-> > Exactly what do you refer to when you want me to
-> > "re-do the approach for IRQ handling"? Do you mean
-> > this driver or are you referring to:
-> >
-> > commit e0d89728981393b7d694bd3419b7794b9882c92d
-> > Author: Thierry Reding <treding@nvidia.com>
-> > Date:   Tue Nov 7 19:15:54 2017 +0100
-> >
-> >     gpio: Implement tighter IRQ chip integration
-> >
-> >     Currently GPIO drivers are required to add the GPIO chip and its
-> >     corresponding IRQ chip separately, which can result in a lot of
-> >     boilerplate. Use the newly introduced struct gpio_irq_chip, embedded in
-> >     struct gpio_chip, that drivers can fill in if they want the GPIO core
-> >     to automatically register the IRQ chip associated with a GPIO chip.
-> >
-> >     Signed-off-by: Thierry Reding <treding@nvidia.com>
-> >     Acked-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> >     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Yes.
+Add a YAML schema to use the host controller driver with the
+eMMC PHY on Intel's Lightning Mountain SoC.
 
-OK let's fix this mess, it shouldn't be too hard, I've sent a first
-few patches.
+Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+---
+changes in v2:
+  As per Rob Herring review comments, the following updates
+ - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+ - filename is the compatible string plus .yaml
+ - LGM: Lightning Mountain
+ - update maintainer
+ - add intel,syscon under property list
+ - keep one example instead of two
+---
+ .../bindings/phy/intel,lgm-emmc-phy.yaml           | 72 ++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
 
-> > The problem comes from the problem/mess I am trying to
-> > clean up in the first place. So if the new way of registering GPIO
-> > irqchips is not working for ACPI, then we have to fix that instead
-> > of reverting all attempts to use the new API IMO.
->
-> Sorry for me being impatient and asking for a groundless requests.
-> I'll help you with cleaning this.
+diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+new file mode 100644
+index 000000000000..ec177573aca6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
++
++maintainers:
++  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
++
++
++description:
++  -  Add a new compatible to use the host controller driver with the
++     eMMC PHY on Intel's Lightning Mountain SoC.
++
++$ref: /schemas/types.yaml#definitions/phandle
++  description:
++    - It also requires a "syscon" node with compatible = "intel,lgm-chiptop",
++      "syscon" to access the eMMC PHY register.
++
++properties:
++  "#phy-cells":
++    const: 0
++
++  compatible:
++    const: intel,lgm-emmc-phy
++
++  reg:
++    maxItems: 1
++
++  intel,syscon:
++    items:
++      - description:
++         - |
++           e-MMC phy module should include the following properties
++           * reg, Access the e-MMC, get the base address from syscon.
++           * reset, reset the e-MMC module.
++
++  clocks:
++    items:
++      - description: e-MMC phy module clock
++
++  clock-names:
++    items:
++      - const: emmcclk
++
++  resets:
++    maxItems: 1
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    emmc_phy: emmc_phy {
++        compatible = "intel,lgm-emmc-phy";
++        reg = <0xe0020000 0x100>;
++        intel,syscon = <&sysconf>;
++        clocks = <&emmc>;
++        clock-names = "emmcclk";
++        #phy-cells = <0>;
++    };
++
++...
+-- 
+2.11.0
 
-Sorry if I sounded harsh :( I just have a bit of panic.
-
-I am sure we can fix this, I only recently realized what a headache
-the new API is going to be if I can't straighten it out and have to
-keep the old stuff around forever in parallel.
-
-Yours,
-Linus Walleij
