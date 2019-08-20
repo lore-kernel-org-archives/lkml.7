@@ -2,135 +2,120 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5251FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A33C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3040822D6D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79706206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729707AbfHTKxr (ORCPT
+        id S1729693AbfHTKyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:53:47 -0400
-Received: from relay.sw.ru ([185.231.240.75]:40122 "EHLO relay.sw.ru"
+        Tue, 20 Aug 2019 06:54:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:38598 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728827AbfHTKxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:53:47 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1i01lo-0004mL-Ik; Tue, 20 Aug 2019 13:53:44 +0300
-Subject: Re: [v5 PATCH 2/4] mm: move mem_cgroup_uncharge out of
- __page_cache_release()
-To:     Yang Shi <yang.shi@linux.alibaba.com>,
-        kirill.shutemov@linux.intel.com, hannes@cmpxchg.org,
-        mhocko@suse.com, hughd@google.com, shakeelb@google.com,
-        rientjes@google.com, cai@lca.pw, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1565144277-36240-1-git-send-email-yang.shi@linux.alibaba.com>
- <1565144277-36240-3-git-send-email-yang.shi@linux.alibaba.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <8444f6e3-e628-3d64-fd20-4ae26f1c761b@virtuozzo.com>
-Date:   Tue, 20 Aug 2019 13:53:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1728545AbfHTKyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 06:54:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C08F344;
+        Tue, 20 Aug 2019 03:54:53 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E647E3F706;
+        Tue, 20 Aug 2019 03:54:51 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@kernel.org, peterz@infradead.org,
+        liangyan.peng@linux.alibaba.com, shanpeic@linux.alibaba.com,
+        xlpang@linux.alibaba.com, pjt@google.com, stable@vger.kernel.org
+Subject: [PATCH] sched/fair: Add missing unthrottle_cfs_rq()
+Date:   Tue, 20 Aug 2019 11:54:20 +0100
+Message-Id: <20190820105420.7547-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <0004fb54-cdee-2197-1cbf-6e2111d39ed9@arm.com>
+References: <0004fb54-cdee-2197-1cbf-6e2111d39ed9@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1565144277-36240-3-git-send-email-yang.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.08.2019 05:17, Yang Shi wrote:
-> The later patch would make THP deferred split shrinker memcg aware, but
-> it needs page->mem_cgroup information in THP destructor, which is called
-> after mem_cgroup_uncharge() now.
-> 
-> So, move mem_cgroup_uncharge() from __page_cache_release() to compound
-> page destructor, which is called by both THP and other compound pages
-> except HugeTLB.  And call it in __put_single_page() for single order
-> page.
-> 
-> Suggested-by: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Turns out a cfs_rq->runtime_remaining can become positive in
+assign_cfs_rq_runtime(), but this codepath has no call to
+unthrottle_cfs_rq().
 
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+This can leave us in a situation where we have a throttled cfs_rq with
+positive ->runtime_remaining, which breaks the math in
+distribute_cfs_runtime(): this function expects a negative value so that
+it may safely negate it into a positive value.
 
-> ---
->  mm/page_alloc.c | 1 +
->  mm/swap.c       | 2 +-
->  mm/vmscan.c     | 6 ++----
->  3 files changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index df02a88..1d1c5d3 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -670,6 +670,7 @@ static void bad_page(struct page *page, const char *reason,
->  
->  void free_compound_page(struct page *page)
->  {
-> +	mem_cgroup_uncharge(page);
->  	__free_pages_ok(page, compound_order(page));
->  }
->  
-> diff --git a/mm/swap.c b/mm/swap.c
-> index ae30039..d4242c8 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -71,12 +71,12 @@ static void __page_cache_release(struct page *page)
->  		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
->  	}
->  	__ClearPageWaiters(page);
-> -	mem_cgroup_uncharge(page);
->  }
->  
->  static void __put_single_page(struct page *page)
->  {
->  	__page_cache_release(page);
-> +	mem_cgroup_uncharge(page);
->  	free_unref_page(page);
->  }
->  
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index dbdc46a..b1b5e5f 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1490,10 +1490,9 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->  		 * Is there need to periodically free_page_list? It would
->  		 * appear not as the counts should be low
->  		 */
-> -		if (unlikely(PageTransHuge(page))) {
-> -			mem_cgroup_uncharge(page);
-> +		if (unlikely(PageTransHuge(page)))
->  			(*get_compound_page_dtor(page))(page);
-> -		} else
-> +		else
->  			list_add(&page->lru, &free_pages);
->  		continue;
->  
-> @@ -1914,7 +1913,6 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
->  
->  			if (unlikely(PageCompound(page))) {
->  				spin_unlock_irq(&pgdat->lru_lock);
-> -				mem_cgroup_uncharge(page);
->  				(*get_compound_page_dtor(page))(page);
->  				spin_lock_irq(&pgdat->lru_lock);
->  			} else
-> 
+Add the missing unthrottle_cfs_rq(). While at it, add a WARN_ON where
+we expect negative values, and pull in a comment from the mailing list
+that didn't make it in [1].
+
+[1]: https://lkml.kernel.org/r/BANLkTi=NmCxKX6EbDQcJYDJ5kKyG2N1ssw@mail.gmail.com
+
+Cc: <stable@vger.kernel.org>
+Fixes: ec12cb7f31e2 ("sched: Accumulate per-cfs_rq cpu usage and charge against bandwidth")
+Reported-by: Liangyan <liangyan.peng@linux.alibaba.com>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+---
+ kernel/sched/fair.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1054d2cf6aaa..219ff3f328e5 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4385,6 +4385,11 @@ static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq)
+ 	return rq_clock_task(rq_of(cfs_rq)) - cfs_rq->throttled_clock_task_time;
+ }
+ 
++static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
++{
++	return cfs_bandwidth_used() && cfs_rq->throttled;
++}
++
+ /* returns 0 on failure to allocate runtime */
+ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ {
+@@ -4411,6 +4416,9 @@ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ 
+ 	cfs_rq->runtime_remaining += amount;
+ 
++	if (cfs_rq->runtime_remaining > 0 && cfs_rq_throttled(cfs_rq))
++		unthrottle_cfs_rq(cfs_rq);
++
+ 	return cfs_rq->runtime_remaining > 0;
+ }
+ 
+@@ -4439,11 +4447,6 @@ void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
+ 	__account_cfs_rq_runtime(cfs_rq, delta_exec);
+ }
+ 
+-static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
+-{
+-	return cfs_bandwidth_used() && cfs_rq->throttled;
+-}
+-
+ /* check whether cfs_rq, or any parent, is throttled */
+ static inline int throttled_hierarchy(struct cfs_rq *cfs_rq)
+ {
+@@ -4628,6 +4631,10 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+ 		if (!cfs_rq_throttled(cfs_rq))
+ 			goto next;
+ 
++		/* By the above check, this should never be true */
++		WARN_ON(cfs_rq->runtime_remaining > 0);
++
++		/* Pick the minimum amount to return to a positive quota state */
+ 		runtime = -cfs_rq->runtime_remaining + 1;
+ 		if (runtime > remaining)
+ 			runtime = remaining;
+-- 
+2.22.0
 
