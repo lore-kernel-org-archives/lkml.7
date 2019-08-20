@@ -2,89 +2,105 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BE4C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5694EC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA357239B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D18239BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbfHTIcF (ORCPT
+        id S1729392AbfHTIev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:32:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55168 "EHLO mx1.redhat.com"
+        Tue, 20 Aug 2019 04:34:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60232 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728842AbfHTIcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:32:05 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1728545AbfHTIeu (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 04:34:50 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E947B300CB24;
-        Tue, 20 Aug 2019 08:32:04 +0000 (UTC)
-Received: from localhost (ovpn-117-123.ams2.redhat.com [10.36.117.123])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 63E448CBE6;
-        Tue, 20 Aug 2019 08:32:04 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 09:32:03 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
-        Dexuan Cui <decui@microsoft.com>,
-        virtualization@lists.linux-foundation.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/11] vsock_test: skip read() in test_stream*close
- tests on a VMCI host
-Message-ID: <20190820083203.GB9855@stefanha-x1.localdomain>
-References: <20190801152541.245833-1-sgarzare@redhat.com>
- <20190801152541.245833-11-sgarzare@redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 5DAA61FAA6C;
+        Tue, 20 Aug 2019 08:34:50 +0000 (UTC)
+Received: from krava (unknown [10.43.17.33])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 65FBA39C8;
+        Tue, 20 Aug 2019 08:34:48 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 10:34:47 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v5] perf diff: Report noisy for cycles diff
+Message-ID: <20190820083447.GA19265@krava>
+References: <20190816021343.27160-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190801152541.245833-11-sgarzare@redhat.com>
+In-Reply-To: <20190816021343.27160-1-yao.jin@linux.intel.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 20 Aug 2019 08:32:05 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Tue, 20 Aug 2019 08:34:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 16, 2019 at 10:13:43AM +0800, Jin Yao wrote:
 
---qlTNgmc+xy1dBmNv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+SNIP
 
-On Thu, Aug 01, 2019 at 05:25:40PM +0200, Stefano Garzarella wrote:
-> When VMCI transport is used, if the guest closes a connection,
-> all data is gone and EOF is returned, so we should skip the read
-> of data written by the peer before closing the connection.
+>  static void
+>  hpp__entry_unpair(struct hist_entry *he, int idx, char *buf, size_t size)
+>  {
+> @@ -1662,6 +1794,10 @@ static void data__hpp_register(struct data__file *d, int idx)
+>  		fmt->color = hpp__color_cycles;
+>  		fmt->sort  = hist_entry__cmp_nop;
+>  		break;
+> +	case PERF_HPP_DIFF__CYCLES_HIST:
+> +		fmt->color = hpp__color_cycles_hist;
+> +		fmt->sort  = hist_entry__cmp_nop;
+> +		break;
+>  	default:
+>  		fmt->sort  = hist_entry__cmp_nop;
+>  		break;
+> @@ -1688,8 +1824,13 @@ static int ui_init(void)
+>  		 *   PERF_HPP_DIFF__RATIO
+>  		 *   PERF_HPP_DIFF__WEIGHTED_DIFF
+>  		 */
+> -		data__hpp_register(d, i ? compute_2_hpp[compute] :
+> -					  PERF_HPP_DIFF__BASELINE);
+> +		if (cycles_hist && i && (compute == COMPUTE_CYCLES)) {
+> +			data__hpp_register(d, PERF_HPP_DIFF__CYCLES);
+> +			data__hpp_register(d, PERF_HPP_DIFF__CYCLES_HIST);
+> +		} else {
+> +			data__hpp_register(d, i ? compute_2_hpp[compute] :
+> +						  PERF_HPP_DIFF__BASELINE);
+> +		}
 
-All transports should aim for identical semantics.  I think virtio-vsock
-should behave the same as VMCI since userspace applications should be
-transport-independent.
 
-Let's view this as a vsock bug.  Is it feasible to change the VMCI
-behavior so it's more like TCP sockets?  If not, let's change the
-virtio-vsock behavior to be compatible with VMCI.
+hum, why can't it be just like we treat other extra columns:
 
---qlTNgmc+xy1dBmNv
-Content-Type: application/pgp-signature; name="signature.asc"
+---
+@@ -1687,6 +1823,7 @@ static int ui_init(void)
+ 		 *   PERF_HPP_DIFF__DELTA
+ 		 *   PERF_HPP_DIFF__RATIO
+ 		 *   PERF_HPP_DIFF__WEIGHTED_DIFF
++		 *   PERF_HPP_DIFF__CYCLES
+ 		 */
+ 		data__hpp_register(d, i ? compute_2_hpp[compute] :
+ 					  PERF_HPP_DIFF__BASELINE);
+@@ -1704,6 +1841,9 @@ static int ui_init(void)
+ 		if (show_period)
+ 			data__hpp_register(d, i ? PERF_HPP_DIFF__PERIOD :
+ 						  PERF_HPP_DIFF__PERIOD_BASELINE);
++
++		if (cycles_hist && i)
++			data__hpp_register(d, PERF_HPP_DIFF__CYCLES_HIST);
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1bsAIACgkQnKSrs4Gr
-c8iy2wf9Hf2RT30SVoJTzJ+hX0eVKck7gc8yFdT08PLyaZW9ND3d2J7oYGhT3/kF
-3IneL017fwh3nVZ9rcWcVH2ntn7Mq8+I0mTBH24UP0UMLMz/Ieq/6oRj3ySm/UbA
-7/RZHJ2+he0dBgOPggnmNBPDTqAytUBaDouuIWJiXYnVX8g82C1qhcckeuIrxbc5
-5hQPmjQnSmRVcclubheU+QAqqQbAySFDYbJp36sRGiAyJR31vQJGQWqk+r0uZvlt
-DT1YTMdU7EfmWoVp4nW2dDMnN+WlZA0qFZ2gv/7/ZiZ0etvXTPN8/owaW3HxTQOJ
-PPVwBTXGU+LNuAHvJOt9METVQX4+oQ==
-=YtHX
------END PGP SIGNATURE-----
-
---qlTNgmc+xy1dBmNv--
+thanks,
+jirka
