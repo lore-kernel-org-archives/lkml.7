@@ -2,82 +2,105 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63548C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B04FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422CB214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8DA922D6D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:02:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gNI3MgZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbfHTSBW (ORCPT
+        id S1730619AbfHTSCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 14:01:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52791 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfHTSBW (ORCPT
+        Tue, 20 Aug 2019 14:02:13 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42522 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbfHTSCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 14:01:22 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i08RX-0004FB-JJ; Tue, 20 Aug 2019 20:01:15 +0200
-Date:   Tue, 20 Aug 2019 20:01:14 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Matthew Wilcox <willy@infradead.org>
-cc:     Sebastian Siewior <bigeasy@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Joel Becker <jlbec@evilplan.org>
-Subject: Re: [PATCH] fs/buffer: Make BH_Uptodate_Lock bit_spin_lock a regular
- spinlock_t
-In-Reply-To: <20190820171721.GA4949@bombadil.infradead.org>
-Message-ID: <alpine.DEB.2.21.1908201959240.2223@nanos.tec.linutronix.de>
-References: <20190820170818.oldsdoumzashhcgh@linutronix.de> <20190820171721.GA4949@bombadil.infradead.org>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 20 Aug 2019 14:02:13 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DF9C733D;
+        Tue, 20 Aug 2019 20:02:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1566324131;
+        bh=RwxPZkVAe/4kQHs4ulwNUErBint7sN5+Gpu2PLkQQxo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gNI3MgZxcG5L0dKoVa9vkhJgPckR996yAEfVijwv7B4a2ez1nJuOPlAlGL8lC5Rbc
+         lUI2y8xv2PCEsrWbNjdyC6sP1tb9jhn8V3s5Gw9RH8MEIQtJmXzthF+wldhowtc4qO
+         TfSamiIIfPuu8yU0fk5C6DAQuGaDyQ1ZGrpZC+iA=
+Date:   Tue, 20 Aug 2019 21:02:05 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 18/19] drm: rcar-du: crtc: Register GAMMA_LUT
+ properties
+Message-ID: <20190820180205.GL10820@pendragon.ideasonboard.com>
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+ <20190706140746.29132-19-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190706140746.29132-19-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019, Matthew Wilcox wrote:
-> On Tue, Aug 20, 2019 at 07:08:18PM +0200, Sebastian Siewior wrote:
-> > Bit spinlocks are problematic if PREEMPT_RT is enabled, because they
-> > disable preemption, which is undesired for latency reasons and breaks when
-> > regular spinlocks are taken within the bit_spinlock locked region because
-> > regular spinlocks are converted to 'sleeping spinlocks' on RT. So RT
-> > replaces the bit spinlocks with regular spinlocks to avoid this problem.
-> > Bit spinlocks are also not covered by lock debugging, e.g. lockdep.
-> > 
-> > Substitute the BH_Uptodate_Lock bit spinlock with a regular spinlock.
-> > 
-> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> > [bigeasy: remove the wrapper and use always spinlock_t]
+Hi Jacopo,
+
+Thank you for the patch.
+
+On Sat, Jul 06, 2019 at 04:07:45PM +0200, Jacopo Mondi wrote:
+> Enable the GAMMA_LUT KMS property using the framework helpers to
+> register the proeprty and the associated gamma table size maximum size.
+
+s/proeprty/property/
+"and set the associated gamme table maximum size" ?
+
 > 
-> Uhh ... always grow the buffer_head, even for non-PREEMPT_RT?  Why?
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Christoph requested that:
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-  https://lkml.kernel.org/r/20190802075612.GA20962@infradead.org
+> ---
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 3dac605c3a67..222ccc20d6d8 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -1082,6 +1082,7 @@ static const struct drm_crtc_funcs crtc_funcs_gen3 = {
+>  	.set_crc_source = rcar_du_crtc_set_crc_source,
+>  	.verify_crc_source = rcar_du_crtc_verify_crc_source,
+>  	.get_crc_sources = rcar_du_crtc_get_crc_sources,
+> +	.gamma_set = drm_atomic_helper_legacy_gamma_set,
+>  };
+>  
+>  /* -----------------------------------------------------------------------------
+> @@ -1205,6 +1206,9 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
+>  	if (rcdu->cmms[swindex]) {
+>  		rcrtc->cmm = rcdu->cmms[swindex];
+>  		rgrp->cmms_mask |= BIT(hwindex % 2);
+> +
+> +		drm_mode_crtc_set_gamma_size(crtc, CMM_GAMMA_LUT_SIZE);
+> +		drm_crtc_enable_color_mgmt(crtc, 0, false, CMM_GAMMA_LUT_SIZE);
+>  	}
+>  
+>  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
 
-Thanks,
+-- 
+Regards,
 
-	tglx
+Laurent Pinchart
