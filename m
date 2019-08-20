@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FBFC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A96EC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80EE822DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00B4D22DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308895;
-	bh=B/hLYc7cxxyJ07aBCg1qJhDQzflRg5gX4K4s5PkaqLQ=;
+	s=default; t=1566308902;
+	bh=Ojf029T/GINdDfJhgOlTarSq5bSruD2ny86RKaBuS60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=diyZyyUv1OHuTXFdklClql/VqKENnRJ9P2dXdv1VsCG1lBrrITnRjpVPG9mnGIKkf
-	 TBedPpaDg9WfmIlaYCnsgRpy+1hXhRhqDPKTcszfnhaeeXwm8FC+4nhA3YLCmBS9Y8
-	 BAvUhMbs0FeMDUc2CA1qz+2337aRBnV+TTLmiGmM=
+	b=yyDDMRg4HDhD75c73EIuVYlRcSFYTzV8QueIvBeqc6CeUmW9pTaTFTyeRQqvCq2U3
+	 pxmhPXC2Dci4W440e1iH/gzweyrmUai3WtIatJcdu+Vp/l9w8VmJtvMCem7NsY41e7
+	 Tpu1DAx3Q/O6hHpagkS7V6n0D6NoV9OHrWM3kmag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbfHTNsO (ORCPT
+        id S1730110AbfHTNke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:48:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35300 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbfHTNkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:40:36 -0400
+        id S1729858AbfHTNkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:40:32 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FEAE230F2;
-        Tue, 20 Aug 2019 13:40:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE48422DD3;
+        Tue, 20 Aug 2019 13:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308435;
-        bh=B/hLYc7cxxyJ07aBCg1qJhDQzflRg5gX4K4s5PkaqLQ=;
+        s=default; t=1566308431;
+        bh=Ojf029T/GINdDfJhgOlTarSq5bSruD2ny86RKaBuS60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fzUqS5DmbY3mSkYW32zqkfshDdDxiSpWaWtZ1SoeLxaOngchoE+SiY8eD1t7TDGnr
-         V8rKQRtijMV5sqLrjOTT4XhhUEiR3KF4AdMZgpzbINbuiYdZqpSuTPwYAXjiSaDzuI
-         hoNl58xwGi9vs8AvD/i1KFRtpV5ykY4Sk7wlIWWo=
+        b=O3iIHskuxQbrSitGI1/KHpzh3mjV8DnhVIEQfkzYRXueovHtC7jODnvhGdC6/v/Kv
+         vudAMxVTmcZeTpUZd1Q3NE3wpAjgrIZ7kfjkDIlsE0u/EB9+nUnzeIrnY/25DmpBWb
+         rSzM9uyOnRpO24KKnc0xqd6SWZ+rvxx+o+f/Ij24=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 07/44] afs: Only update d_fsdata if different in afs_d_revalidate()
-Date:   Tue, 20 Aug 2019 09:39:51 -0400
-Message-Id: <20190820134028.10829-7-sashal@kernel.org>
+Cc:     Anthony Iliopoulos <ailiopoulos@suse.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.2 02/44] nvme-multipath: revalidate nvme_ns_head gendisk in nvme_validate_ns
+Date:   Tue, 20 Aug 2019 09:39:46 -0400
+Message-Id: <20190820134028.10829-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
@@ -58,46 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Anthony Iliopoulos <ailiopoulos@suse.com>
 
-[ Upstream commit 5dc84855b0fc7e1db182b55c5564fd539d6eff92 ]
+[ Upstream commit fab7772bfbcfe8fb8e3e352a6a8fcaf044cded17 ]
 
-In the in-kernel afs filesystem, d_fsdata is set with the data version of
-the parent directory.  afs_d_revalidate() will update this to the current
-directory version, but it shouldn't do this if it the value it read from
-d_fsdata is the same as no lock is held and cmpxchg() is not used.
+When CONFIG_NVME_MULTIPATH is set, only the hidden gendisk associated
+with the per-controller ns is run through revalidate_disk when a
+rescan is triggered, while the visible blockdev never gets its size
+(bdev->bd_inode->i_size) updated to reflect any capacity changes that
+may have occurred.
 
-Fix the code to only change the value if it is different from the current
-directory version.
+This prevents online resizing of nvme block devices and in extension of
+any filesystems atop that will are unable to expand while mounted, as
+userspace relies on the blockdev size for obtaining the disk capacity
+(via BLKGETSIZE/64 ioctls).
 
-Fixes: 260a980317da ("[AFS]: Add "directory write" support.")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fix this by explicitly revalidating the actual namespace gendisk in
+addition to the per-controller gendisk, when multipath is enabled.
+
+Signed-off-by: Anthony Iliopoulos <ailiopoulos@suse.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/dir.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 9750ac70f8ffb..b87b41721eaa8 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -1018,7 +1018,7 @@ static int afs_d_revalidate(struct dentry *dentry, unsigned int flags)
- 	dir_version = (long)dir->status.data_version;
- 	de_version = (long)dentry->d_fsdata;
- 	if (de_version == dir_version)
--		goto out_valid;
-+		goto out_valid_noupdate;
- 
- 	dir_version = (long)dir->invalid_before;
- 	if (de_version - dir_version >= 0)
-@@ -1082,6 +1082,7 @@ static int afs_d_revalidate(struct dentry *dentry, unsigned int flags)
- 
- out_valid:
- 	dentry->d_fsdata = (void *)dir_version;
-+out_valid_noupdate:
- 	dput(parent);
- 	key_put(key);
- 	_leave(" = 1 [valid]");
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 5deb4deb38209..ab1a2b1ec3637 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1668,6 +1668,7 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
+ 	if (ns->head->disk) {
+ 		nvme_update_disk_info(ns->head->disk, ns, id);
+ 		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
++		revalidate_disk(ns->head->disk);
+ 	}
+ #endif
+ }
 -- 
 2.20.1
 
