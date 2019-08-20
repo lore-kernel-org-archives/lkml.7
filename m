@@ -2,96 +2,71 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38F1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76945C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9618022DA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46E3A2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729564AbfHTJWz (ORCPT
+        id S1729508AbfHTJXk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:22:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:37246 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729291AbfHTJWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:22:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D302344;
-        Tue, 20 Aug 2019 02:22:54 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1C893F706;
-        Tue, 20 Aug 2019 02:22:53 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 10:22:52 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>
-Subject: Re: [PATCHv2 1/4] dt-bindings: PCI: designware: Remove the num-lanes
- from Required properties
-Message-ID: <20190820092251.GE23903@e119886-lin.cambridge.arm.com>
-References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
- <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
+        Tue, 20 Aug 2019 05:23:40 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41692 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729210AbfHTJXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:23:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BEFE9AE9A;
+        Tue, 20 Aug 2019 09:23:38 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 11:23:37 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH v4 4/9] printk-rb: initialize new descriptors as
+ invalid
+Message-ID: <20190820092337.cudkfdfhsu44vlhh@pathway.suse.cz>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190807222634.1723-5-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820073022.24217-2-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190807222634.1723-5-john.ogness@linutronix.de>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 07:28:43AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> The num-lanes is not a mandatory property, e.g. on FSL
-> Layerscape SoCs, the PCIe link training is completed
-> automatically base on the selected SerDes protocol, it
-> doesn't need the num-lanes to set-up the link width.
-> 
-> It is previously in both Required and Optional properties,
-> let's remove it from the Required properties.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
+On Thu 2019-08-08 00:32:29, John Ogness wrote:
+> Initialize never-used descriptors as permanently invalid so there
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+The word "permanently" is confusing. It suggests that it will
+never ever be valid again. I would just remove the word.
 
+> is no risk of the descriptor unexpectedly being determined as
+> valid due to dataring head overflowing/wrapping.
 
-> V2:
->  - Reworded the change log and subject.
->  - Fixed a typo in subject.
-> 
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 5561a1c060d0..bd880df39a79 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -11,7 +11,6 @@ Required properties:
->  	     the ATU address space.
->      (The old way of getting the configuration address space from "ranges"
->      is deprecated and should be avoided.)
-> -- num-lanes: number of lanes to use
->  RC mode:
->  - #address-cells: set to <3>
->  - #size-cells: set to <2>
-> -- 
-> 2.17.1
-> 
+Please, provide more details about the solved race. Is it because
+some reader could have reference to an invalid (reused) descriptor?
+Can be these invalid descriptors be member of the list?
+
+Also it might be worth to mention where is the check that might
+detect such invalid descriptors and what will be the consequences.
+Well, this might be clear from the race description.
+
+Best Regards,
+Petr
