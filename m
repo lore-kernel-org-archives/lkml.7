@@ -2,167 +2,132 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F6AC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D44ABC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF752339E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rni4clsu"
+	by mail.kernel.org (Postfix) with ESMTP id A6BAC206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566343737;
+	bh=spRwrFE/mHSDWJVaA2nwyU/Ql66pRt+Ixez2Gn9Q2cI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=v4+YuuT7y0Cqif2q53pLF0UpzYEyRjAFDocRLcCBHhCJmJMgmRqhxq49bglqF5dPs
+	 dhkV/gkq8qfGqO3NXucDw328VQfQlKS3nBlTaW8pauchZEDu4xPCMg1R98ZhpYy2sl
+	 kYad9tv2jWhSSpLy9v6NtGv3XPwHiXP4K54IDqY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfHTXXi (ORCPT
+        id S1726303AbfHTX24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 19:23:38 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36197 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfHTXXi (ORCPT
+        Tue, 20 Aug 2019 19:28:56 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:37955 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfHTX24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:23:38 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f19so248709plr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:23:37 -0700 (PDT)
+        Tue, 20 Aug 2019 19:28:56 -0400
+Received: by mail-lf1-f65.google.com with SMTP id h28so351131lfj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:28:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BgeboBXYdH2mwUYNdA3OBv6wqHBTlo9IT3Q8RNantq8=;
-        b=Rni4clsu++7h96C43S+JbBXXkW3gKlVOYt85WpUO9PVUNOQAyZoV9ZeqzedJ1OVMFx
-         8rIO1yErMiuPpLQ9sjtVMHG1jFX4fJklQ/PjHt12vwHBikcFbmL+JH4XebCtdX0yR6Ne
-         /Ku/wtLkEaRcfVrBLNhoOWWl506znCj2wEM8/+jrC4flwkKt3STFQoP7x3bxbt5r7719
-         hdp/sy/7uU7ZgdFgwJ1AO9EAvZQT6mQ9FyOhMFksTEDFwGUKQRR3mFtVrfEUr8Q5ksgi
-         nF8kmhxSBCnQuM25k/D9rldBfN5XmkaaeL1KNxMPXXyinqbNL7GUBH09SVaM/WlOuE59
-         VQIw==
+        bh=XMlMUEKr5XRMEcS7O2CjglWq7iJta7ZlUj0ydKdkNX0=;
+        b=iHh8YbqJQq/qqg3MN7n649EblEqXoT6lv/jNvF13p1Io12yotnNW5VDOJQVPXyJ/w1
+         JaSOZsSrO52CAp1T+Wotk0juqAvaieKA809jbwzdvgdw+gNCyA/AE5ttYg9tcWp2I3XA
+         9/R87UNQ/J+HKwDYreUrt6rqcLPdnyTqkY9kI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BgeboBXYdH2mwUYNdA3OBv6wqHBTlo9IT3Q8RNantq8=;
-        b=W+q0BpCZsAVWlRiRxmQ7HwK2/Zt30bCT/5g+1FBKzk5nQjdU9fOMzB/fzl7ieMqWLU
-         ws+lTBjxLHb8jpaj1OLFbSeGkkbVFqiJBtF4AqAoh82LPB71m9YGSimMEbG/PAcXN7ck
-         u+3U//y3eKR1XEXxUa9MDv0JqQFNrWZYHEuPGdx1UvMMqfLDpBjaTten9bue+V9x9fnB
-         us4mGiasvGIQM1E1hHmtYa76Cqr5IpMVpHMGIV4ONBUeSN/wgj9xkDeKaZzoLrOY/O2i
-         tsuDgSJ+ytmKXx6Vk6Hn24RD8wW4nhAj/NuV7g2EgEKcEOMnyTZ5NWfVODBuz+7Yt7LB
-         PUpQ==
-X-Gm-Message-State: APjAAAUHV6tPhs2ssP9pa9m4LGZqc3MmREBaRx/AHpCX46XTWEDFvre9
-        N1xKk/8p/sh/kDjAr1JxAJ/vE+wrIQ5C3TfMpxtD0w==
-X-Google-Smtp-Source: APXvYqxXREKtyoSmqThzifpm0xupcZJncgCG4zF1cdnP+ZHsoxUg77sjBGnyRvdHt5/5lrCrktItt1lg4/mEcxF/N4g=
-X-Received: by 2002:a17:902:7049:: with SMTP id h9mr31488817plt.232.1566343416854;
- Tue, 20 Aug 2019 16:23:36 -0700 (PDT)
+        bh=XMlMUEKr5XRMEcS7O2CjglWq7iJta7ZlUj0ydKdkNX0=;
+        b=eZekWbr+NXKeEiFApYItqURKf4ZhRY01VJlrseo1/Fps7ls/BmRhCk3UqIuPacYFz0
+         RGML0axbnqVgFhkC3A4K2cuxOjFW+UEuU4q1OejZJO70LFupoFBWK91x+8yg6Aph1UeT
+         /+xJPuS7v04GSA0MCH8QwkjLOuV1/0JK0g0NaUdvn/7Kzu2fqPIryBm0/mdKubMEV45N
+         gFDAgi+Rpy9ueXxXLmE7+WEciMOV7EVKG3cek1ID/dCgaBsQXTe6UsVcbdgKajtbcxRJ
+         0pVw45zigBv7Xh3EE+oLVQnbq7Z8Ebh8k9CLHnTu0/KH+79kHs9vhPNiUsEBfktSoY75
+         EJsQ==
+X-Gm-Message-State: APjAAAU6Espwufn7dYzAUjRWZ0Zt88z77vZ5OlxRELX8pnbx6Qw20t4X
+        2AsNKE6sBcEw9Uozu//xnM+54BRW8A0=
+X-Google-Smtp-Source: APXvYqw6NFxt51uNwMEs8rFVM+sgRvHj1s98r+ncgAl+6v8yhDqWj3S69h+c439r7nXEa955MceXPw==
+X-Received: by 2002:ac2:5b49:: with SMTP id i9mr16487055lfp.116.1566343733271;
+        Tue, 20 Aug 2019 16:28:53 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id j22sm3021281ljg.17.2019.08.20.16.28.52
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Aug 2019 16:28:52 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id m24so358521ljg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:28:52 -0700 (PDT)
+X-Received: by 2002:a2e:9a84:: with SMTP id p4mr5487770lji.52.1566343731704;
+ Tue, 20 Aug 2019 16:28:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190814055108.214253-1-brendanhiggins@google.com>
- <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org> <20190820182450.GA38078@google.com>
- <e8eaf28e-75df-c966-809a-2e3631353cc9@kernel.org> <CAFd5g44JT_KQ+OxjVdG0qMWuaEB0Zq5x=r6tLsqJdncwZ_zbGA@mail.gmail.com>
-In-Reply-To: <CAFd5g44JT_KQ+OxjVdG0qMWuaEB0Zq5x=r6tLsqJdncwZ_zbGA@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 20 Aug 2019 16:23:25 -0700
-Message-ID: <CAFd5g44aO40G7Wc-51EPyhWZgosN4ZHwwSjKe7CU_vi2OD7eKA@mail.gmail.com>
-Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     shuah <shuah@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
+References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
+ <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
+ <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
+ <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
+ <4398924f28a58fca296d101dae11e7accce80656.camel@perches.com>
+ <ad42da450ccafcb571cca9289dcf52840dbb53d3.camel@perches.com>
+ <20190820092451.791c85e5@canb.auug.org.au> <14723fccc2c3362cc045df17fc8554f37c8a8529.camel@perches.com>
+In-Reply-To: <14723fccc2c3362cc045df17fc8554f37c8a8529.camel@perches.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 20 Aug 2019 16:28:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com>
+Message-ID: <CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com>
+Subject: Re: rfc: treewide scripted patch mechanism? (was: Re: [PATCH]
+ Makefile: Convert -Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough for clang)QUILT
+To:     Joe Perches <joe@perches.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
         Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
-        Bjorn Helgaas <bhelgaas@google.com>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 2:26 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
+On Mon, Aug 19, 2019 at 5:08 PM Joe Perches <joe@perches.com> wrote:
 >
-> On Tue, Aug 20, 2019 at 12:08 PM shuah <shuah@kernel.org> wrote:
-> >
-> > On 8/20/19 12:24 PM, Brendan Higgins wrote:
-> > > On Tue, Aug 20, 2019 at 11:24:45AM -0600, shuah wrote:
-> > >> On 8/13/19 11:50 PM, Brendan Higgins wrote:
-> > >>> ## TL;DR
-> > >>>
-> > >>> This revision addresses comments from Stephen and Bjorn Helgaas. Most
-> > >>> changes are pretty minor stuff that doesn't affect the API in anyway.
-> > >>> One significant change, however, is that I added support for freeing
-> > >>> kunit_resource managed resources before the test case is finished via
-> > >>> kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
-> > >>> KUnit on certain configurations (like the default one for x86, whoops).
-> > >>>
-> > >>> Based on Stephen's feedback on the previous change, I think we are
-> > >>> pretty close. I am not expecting any significant changes from here on
-> > >>> out.
-> > >>>
-> > >>
-> > >> Hi Brendan,
-> > >>
-> > >> I found checkpatch errors in one or two patches. Can you fix those and
-> > >> send v14.
-> > >
-> > > Hi Shuah,
-> > >
-> > > Are you refering to the following errors?
-> > >
-> > > ERROR: Macros with complex values should be enclosed in parentheses
-> > > #144: FILE: include/kunit/test.h:456:
-> > > +#define KUNIT_BINARY_CLASS \
-> > > +       kunit_binary_assert, KUNIT_INIT_BINARY_ASSERT_STRUCT
-> > >
-> > > ERROR: Macros with complex values should be enclosed in parentheses
-> > > #146: FILE: include/kunit/test.h:458:
-> > > +#define KUNIT_BINARY_PTR_CLASS \
-> > > +       kunit_binary_ptr_assert, KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT
-> > >
-> > > These values should *not* be in parentheses. I am guessing checkpatch is
-> > > getting confused and thinks that these are complex expressions, when
-> > > they are not.
-> > >
-> > > I ignored the errors since I figured checkpatch was complaining
-> > > erroneously.
-> > >
-> > > I could refactor the code to remove these macros entirely, but I think
-> > > the code is cleaner with them.
-> > >
-> >
-> > Please do. I am not veru sure what value these macros add.
->
-> Alright, I will have something for you later today.
+> 2: would be Julia Lawall's stracpy change done
+> with coccinelle: (attached)
 
-I just sent a new revision with the fix.
+I'm not actually convinced about stracpy() and friends.
 
-Cheers
+It seems to be yet another badly thought out string interface, and
+there are now so many of them that no human being can keep track of
+them.
+
+The "badly thought out" part is that it (like the original strlcpy
+garbage from BSD) thinks that there is only one size that matters -
+the destination.
+
+Yes, we fixed part of the "source is also limited" with strscpy(). It
+didn't fix the problem with different size limits, but at least it
+fixed the fundamentally broken assumption that the source has no size
+limit at all.
+
+Honestly, I really really REALLY don't want yet another broken string
+handling function, when we still have a lot of the old strlcpy() stuff
+in the tree from previous broken garbage.
+
+The fact is, when you copy strings, both the destination *AND* the
+source may have size limits. They may be the same. Or they may not be.
+
+This is particularly noticeable in the "str*_pad()" versions. It's
+simply absolutely and purely wrong. I will note that we currently have
+not a single user or strscpy_pad() in the whole kernel outside of the
+testing code.
+
+And yes, we actually *do* have real and present cases of "source and
+destination have different sizes". They aren't common, but they do
+exist.
+
+So I'm putting my foot down on yet another broken string copy
+interface from people who do not understand this fundamental issue.
+
+              Linus
