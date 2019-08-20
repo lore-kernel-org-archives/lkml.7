@@ -7,54 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D188C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90F1C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F11DC22DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B490C22DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308558;
-	bh=jo2OaElzij4WqL7QcwC9Oto8b3h1wNr7KwstU2QAYl8=;
+	s=default; t=1566308563;
+	bh=V581wTsLKMtFtMR2oTBYW0l+2Swk69Zfs3/wGLPhHn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PsonydRZh9oq3gQZMGbC5yQ+QklO2rqLKpNEnX5VmZTB4y9eevY7hJM6jqBRaKCUq
-	 5KlqxGAQh1/5tUpTl3yVNfH2/1iKSy8Kh1spy75Sc47z4tGSMCjPNNfYziP649F7mx
-	 sIht03aUXTbDCJTq6CAWqi/Wfjb2WJTkK7Pj+W18=
+	b=mFKvl5LLQDqpDoK9hVmxiP8nH3P0EYfsU9+vhxXqfaYx+8ajVpLgACnKGY8DzqvJC
+	 9U40BqMpKgWbnUMMHLrCoob/Aqc9vzdKLPnKmCLV3FKWxv5ItWehySh2YneeCuqGPr
+	 E6zsMYI3F0lq29HgJrZEpoYhwo6+rVaNPzJxhgnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbfHTNmh (ORCPT
+        id S1730712AbfHTNmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:42:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37912 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:42:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730240AbfHTNme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:42:34 -0400
+        id S1730686AbfHTNmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:42:39 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F3AC2339F;
-        Tue, 20 Aug 2019 13:42:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9ECF22DBF;
+        Tue, 20 Aug 2019 13:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308552;
-        bh=jo2OaElzij4WqL7QcwC9Oto8b3h1wNr7KwstU2QAYl8=;
+        s=default; t=1566308558;
+        bh=V581wTsLKMtFtMR2oTBYW0l+2Swk69Zfs3/wGLPhHn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2j5LEWvfnO0NlqziH5wrynotvUOby5uXadZyosVQjM4yUXesDtr92Bd6zFDZRl7d3
-         Ox2UTQuRvThsbzXYi21t59+J2PetBWDT/2deZ4cMZaEpGQy/JGjpBUf/FI4pKH2EH+
-         iug+9cA917Euw9QydjmELgV5uhyBu/CsfmUEIyVk=
+        b=wPYmgq4H86f4ELuSVX379qd4Ar4UbF02x6L/gG4mI4CQ3EVZbYUgPoFgbEjiJDLYJ
+         umeBnCLWdrIsNHXnNtFSE7kfieCk3cOYsG7VxT7uR/RTEZdpmuC7MAiAQ3n1gc6/Wx
+         vYcSn5gkJBJXzIfv5X7cnhdAduAnktb3eXm1eYcI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/27] omap-dma/omap_vout_vrfb: fix off-by-one fi value
-Date:   Tue, 20 Aug 2019 09:42:02 -0400
-Message-Id: <20190820134213.11279-16-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 20/27] xen/blkback: fix memory leaks
+Date:   Tue, 20 Aug 2019 09:42:06 -0400
+Message-Id: <20190820134213.11279-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134213.11279-1-sashal@kernel.org>
 References: <20190820134213.11279-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,78 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil@xs4all.nl>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit d555c34338cae844b207564c482e5a3fb089d25e ]
+[ Upstream commit ae78ca3cf3d9e9f914bfcd0bc5c389ff18b9c2e0 ]
 
-The OMAP 4 TRM specifies that when using double-index addressing
-the address increases by the ES plus the EI value minus 1 within
-a frame. When a full frame is transferred, the address increases
-by the ES plus the frame index (FI) value minus 1.
+In read_per_ring_refs(), after 'req' and related memory regions are
+allocated, xen_blkif_map() is invoked to map the shared frame, irq, and
+etc. However, if this mapping process fails, no cleanup is performed,
+leading to memory leaks. To fix this issue, invoke the cleanup before
+returning the error.
 
-The omap-dma code didn't account for the 'minus 1' in the FI register.
-To get correct addressing, add 1 to the src_icg value.
-
-This was found when testing a hacked version of the media m2m-deinterlace.c
-driver on a Pandaboard.
-
-The only other source that uses this feature is omap_vout_vrfb.c,
-and that adds a + 1 when setting the dst_icg. This is a workaround
-for the broken omap-dma.c behavior. So remove the workaround at the
-same time that we fix omap-dma.c.
-
-I tested the omap_vout driver with a Beagle XM board to check that
-the '+ 1' in omap_vout_vrfb.c was indeed a workaround for the omap-dma
-bug.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Link: https://lore.kernel.org/r/952e7f51-f208-9333-6f58-b7ed20d2ea0b@xs4all.nl
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Acked-by: Roger Pau Monné <roger.pau@citrix.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti/omap-dma.c                    | 4 ++--
- drivers/media/platform/omap/omap_vout_vrfb.c | 3 +--
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/block/xen-blkback/xenbus.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index a4a931ddf6f69..aeb9c29e52554 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1237,7 +1237,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
- 	if (src_icg) {
- 		d->ccr |= CCR_SRC_AMODE_DBLIDX;
- 		d->ei = 1;
--		d->fi = src_icg;
-+		d->fi = src_icg + 1;
- 	} else if (xt->src_inc) {
- 		d->ccr |= CCR_SRC_AMODE_POSTINC;
- 		d->fi = 0;
-@@ -1252,7 +1252,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
- 	if (dst_icg) {
- 		d->ccr |= CCR_DST_AMODE_DBLIDX;
- 		sg->ei = 1;
--		sg->fi = dst_icg;
-+		sg->fi = dst_icg + 1;
- 	} else if (xt->dst_inc) {
- 		d->ccr |= CCR_DST_AMODE_POSTINC;
- 		sg->fi = 0;
-diff --git a/drivers/media/platform/omap/omap_vout_vrfb.c b/drivers/media/platform/omap/omap_vout_vrfb.c
-index 29e3f5da59c1f..11ec048929e80 100644
---- a/drivers/media/platform/omap/omap_vout_vrfb.c
-+++ b/drivers/media/platform/omap/omap_vout_vrfb.c
-@@ -253,8 +253,7 @@ int omap_vout_prepare_vrfb(struct omap_vout_device *vout,
- 	 */
+diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
+index a4bc74e72c394..55869b362fdfb 100644
+--- a/drivers/block/xen-blkback/xenbus.c
++++ b/drivers/block/xen-blkback/xenbus.c
+@@ -974,6 +974,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 	}
+ 	blkif->nr_ring_pages = nr_grefs;
  
- 	pixsize = vout->bpp * vout->vrfb_bpp;
--	dst_icg = ((MAX_PIXELS_PER_LINE * pixsize) -
--		  (vout->pix.width * vout->bpp)) + 1;
-+	dst_icg = MAX_PIXELS_PER_LINE * pixsize - vout->pix.width * vout->bpp;
++	err = -ENOMEM;
+ 	for (i = 0; i < nr_grefs * XEN_BLKIF_REQS_PER_PAGE; i++) {
+ 		req = kzalloc(sizeof(*req), GFP_KERNEL);
+ 		if (!req)
+@@ -996,7 +997,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 	err = xen_blkif_map(ring, ring_ref, nr_grefs, evtchn);
+ 	if (err) {
+ 		xenbus_dev_fatal(dev, err, "mapping ring-ref port %u", evtchn);
+-		return err;
++		goto fail;
+ 	}
  
- 	xt->src_start = vout->buf_phy_addr[vb->i];
- 	xt->dst_start = vout->vrfb_context[vb->i].paddr[0];
+ 	return 0;
+@@ -1016,8 +1017,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
+ 		}
+ 		kfree(req);
+ 	}
+-	return -ENOMEM;
+-
++	return err;
+ }
+ 
+ static int connect_ring(struct backend_info *be)
 -- 
 2.20.1
 
