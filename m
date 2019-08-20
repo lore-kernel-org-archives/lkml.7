@@ -2,95 +2,96 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B763DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64888C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828AE2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZXaNsEL"
+	by mail.kernel.org (Postfix) with ESMTP id 34AC622CF5
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566283448;
+	bh=Jd2ZX4IRBSlGCuFa51BCoCuCBXEaAFKnv7QFFL4FX8I=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=AKjdNkLg/SvpBDhUxSiJTWJLbEQp6WEOiD2mAqVY2BcdF3fF8sYvLMTNy5pQcKupD
+	 vCo1mHCHpZV8wM6u34pJ8LNdGLJumMBsioGlm9GctjepVkSAxkFvCMi8FACm2xGokA
+	 qu4o12lXkmntdrLPOVpny0vULiDrJG5LqrqJzKVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbfHTGnT (ORCPT
+        id S1729283AbfHTGoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 02:43:19 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52522 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfHTGnT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 02:43:19 -0400
-Received: by mail-wm1-f65.google.com with SMTP id o4so1566912wmh.2;
-        Mon, 19 Aug 2019 23:43:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0XAzeGSJHGOFWxURHAOeVeqy4oMuwXyuhlisAQdgna0=;
-        b=HZXaNsEL8FCCPpoPnqPTf47Mly0iJP3FPoxn1xkOIV0e+NDUZZzSP6md8ZoMl3t7XF
-         iDya0/hf8f6Dbe1S75noAW0jeq1omgFaD23GJ9sSotnQu1C5Jki6ZOvoY6qEcTh0p5G9
-         KBGjgcpcIjE/YeklbegBZpp8+c7WoXIiwDmHzNiIDkvN57ZQkRbGeVLSpXsSYnn60ekH
-         v7gpqjNk2zH9CPCfnhN5qqtzH45rT1W3btLlMqJBR48ouSajV4Y68sbSh6hym1HbjwK2
-         1mpOb+wMfwKvYSsAP5sa8UiywXEU1WDg6xzsqg4HDDZe6VnrCryrJVpGGzvKNsjbhtyP
-         1utg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0XAzeGSJHGOFWxURHAOeVeqy4oMuwXyuhlisAQdgna0=;
-        b=WnlWuipd1HaafnAkDwzYzBR8Xda479tyOUe/AUZ/pL3mz38rftYoId6JX8HAGgUrR5
-         ACo4ULSWn3Q35MHX85wKT07+sNraDHKkhBCnVMnDE/PaSxX+LxMj2eUKFqdGMZD75otJ
-         dBirnbaxJzlOgNJnjZ7rjPV2fW/byD49TRw83EmsO4T73LGpDjkQdIrxX0I+1Z6zhbsz
-         f7wDu7aNENolOruGuq4jxij2O75nvnTLtVUjJ7n51Z3f/i0TbE3ERZAOWlcvpFaU0D/u
-         CkDNXVbtMABYFSseHKUA12trwgz1wh4PZ5XmPzplA1X8+JK3JVEtHWcL/QUMfFNg9DO/
-         hDdQ==
-X-Gm-Message-State: APjAAAUABXeS+qU78DmKM2gWYPmKvxbIT3TuuDeamCrALj6ZmPb1asjB
-        EHwNVCXsJ8rnppBoTF1JVDg=
-X-Google-Smtp-Source: APXvYqx9jTVPh7Q3QPN80Pj0XZW1XRowf0FTlGCKaCIZGil7Xt976TZ4+5X7yd1NLmm5g7rpOQmHTA==
-X-Received: by 2002:a05:600c:2192:: with SMTP id e18mr1970515wme.83.1566283397357;
-        Mon, 19 Aug 2019 23:43:17 -0700 (PDT)
-Received: from localhost.localdomain ([151.29.237.107])
-        by smtp.gmail.com with ESMTPSA id c15sm48432264wrb.80.2019.08.19.23.43.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 19 Aug 2019 23:43:16 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 08:43:14 +0200
-From:   Juri Lelli <juri.lelli@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Juri Lelli <juri.lelli@redhat.com>, tglx@linutronix.de,
-        bigeasy@linutronix.de, linux-rt-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, williams@redhat.com
-Subject: Re: [RT PATCH v2] net/xfrm/xfrm_ipcomp: Protect scratch buffer with
- local_lock
-Message-ID: <20190820064314.GC6860@localhost.localdomain>
-References: <20190819122731.6600-1-juri.lelli@redhat.com>
- <20190819155721.05c878f8@oasis.local.home>
+        Tue, 20 Aug 2019 02:44:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727006AbfHTGoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 02:44:06 -0400
+Received: from localhost.localdomain (unknown [106.201.62.126])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EFD42082F;
+        Tue, 20 Aug 2019 06:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566283445;
+        bh=Jd2ZX4IRBSlGCuFa51BCoCuCBXEaAFKnv7QFFL4FX8I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ft1oAu5WDUvfv7JjmfnxRggHcfadNIUAuw0yowy1m5npVAv+7f5OSfiw60tMSRDEV
+         nBmz5LXx0DGwECcK+fjFiS/EQeKXLq/IU0ikWIAxz5uFRqmJ9LZxLmbKIltjy3PCJz
+         3JqfIH/2iE1jngiAAxBwIUY8v/js53MfjvhrdCvc=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/8] arm64: dts: qcom: sm8150: Add SM8150 DTS
+Date:   Tue, 20 Aug 2019 12:12:08 +0530
+Message-Id: <20190820064216.8629-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819155721.05c878f8@oasis.local.home>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/08/19 15:57, Steven Rostedt wrote:
-> On Mon, 19 Aug 2019 14:27:31 +0200
-> Juri Lelli <juri.lelli@redhat.com> wrote:
-> 
-> > The following BUG has been reported while running ipsec tests.
-> 
-> Thanks!
-> 
-> I'm still in the process of backporting patches to fix some bugs that
-> showed up with the latest merge of upstream stable. I'll add this to
-> the queue to add.
+This series adds DTS for SM8150, PMIC PM8150, PM8150B, PM8150L and
+the MTP for SM8150.
 
-Great, thank you!
+Changes in v2:
+ - Squash patches
+ - Fix comments given by Stephen namely, lowercase for hext numbers,
+   making rpmhcc have xo_board as parent, rename pon controller to
+   power-on controller, make pmic nodes as disabled etc.
+ - removed the dependency on clk defines and use raw numbers
 
-Best,
+Vinod Koul (8):
+  arm64: dts: qcom: sm8150: add base dts file
+  arm64: dts: qcom: pm8150: Add Base DTS file
+  arm64: dts: qcom: pm8150b: Add Base DTS file
+  arm64: dts: qcom: pm8150l: Add Base DTS file
+  arm64: dts: qcom: sm8150-mtp: add base dts file
+  arm64: dts: qcom: sm8150-mtp: Add regulators
+  arm64: dts: qcom: sm8150: Add reserved-memory regions
+  arm64: dts: qcom: sm8150: Add apps shared nodes
 
-Juri
+ arch/arm64/boot/dts/qcom/Makefile       |   1 +
+ arch/arm64/boot/dts/qcom/pm8150.dtsi    |  95 +++++
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi   |  84 +++++
+ arch/arm64/boot/dts/qcom/pm8150l.dtsi   |  78 ++++
+ arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 375 +++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8150.dtsi    | 479 ++++++++++++++++++++++++
+ 6 files changed, 1112 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150b.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150l.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
+
+-- 
+2.20.1
+
