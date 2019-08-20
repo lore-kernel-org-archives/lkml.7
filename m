@@ -2,114 +2,68 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB88C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5760DC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC442082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NC7ZXBDy"
+	by mail.kernel.org (Postfix) with ESMTP id 253E620C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbfHTGv0 (ORCPT
+        id S1729269AbfHTG5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 02:51:26 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36733 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfHTGv0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 02:51:26 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g67so1581020wme.1;
-        Mon, 19 Aug 2019 23:51:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dHMvwwjCFDHUoBdNporEs9m3cfxy8SuBzzm+vPiCqbY=;
-        b=NC7ZXBDyj0zacep+JRrl9D5/vlSG8B+pwH/fsEfZLTkbP+HuPvrXhqakmMfUY/aVaq
-         7lIczetA3vOjVPflQUHyxbr6Df/7NjRh9dIQnseOIYgIpiSGCZR7wlVMoJAvJkjywmOs
-         qSGvfWT7rFEomqVhIwrrGyWmmz37k3cIJ6dzMPzGLI0DT3N5P07HtxiUkdKY9W8mhi4B
-         +g/KYHNUpCyFtO9E6uTaWvK0dOFGb/fFnXJvB2zWownHGrXbP+JZJSvBiLi32szQzTCp
-         cs5Qwi7HAAflPCAQF3WBKm0lA8axUkNlfkeK9zuLQiX5lKznYOPzW1YKAOocJeAtQf/Y
-         xeCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=dHMvwwjCFDHUoBdNporEs9m3cfxy8SuBzzm+vPiCqbY=;
-        b=bfAz6mEmgzG14714pVJYNyatazAYc6Uaoa/xcOaWXme+94wEJJbtJfdfJ1rdICera1
-         NubhdDK2A7rjUliisyv+qZpF6gORVoh7PHngX5JhO9yg1D+6dzBAMsTR7GoERuu3Igu/
-         T44xptPIBTobXLH7AjKbomm9CQTTQ+KUj2h8kQDk+GmY2VMVH8x3ak7wgM811ceAtNdQ
-         5ANMjhhgj5HgYtUgpCMwnCN0ItgDC3vzOAuXf4LHg3w/otQ3IgY2XgnRQM1xeiPin6zS
-         HIi5SItEpkuOBS5pRYO4lxXS699ukJRBXh5ZrmAML5tE6AES5iX01lbnrut3iRoxOYuC
-         /V6Q==
-X-Gm-Message-State: APjAAAWpae3uakIq26Yp2rqst2aNpo5qRuZBHa7Ls7JIyT4+NQ2T5n9D
-        3U6hs7BRKN8Wo/DHj+ymSgsXdNFp0aZ9Eg==
-X-Google-Smtp-Source: APXvYqyMokm8ag/bbYBCT0yDvXeSG7eRaXpoQxvGmAIcyLtDP58UFmdThS8EV/NVLkXY8+KKTX+4nA==
-X-Received: by 2002:a1c:2dcf:: with SMTP id t198mr22753202wmt.147.1566283883732;
-        Mon, 19 Aug 2019 23:51:23 -0700 (PDT)
-Received: from localhost.localdomain (ip5f5aef41.dynamic.kabel-deutschland.de. [95.90.239.65])
-        by smtp.gmail.com with ESMTPSA id p10sm13922257wma.8.2019.08.19.23.51.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 23:51:23 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/PCI: Remove surplus return from a void function
-Date:   Tue, 20 Aug 2019 08:51:21 +0200
-Message-Id: <20190820065121.16594-1-kw@linux.com>
-X-Mailer: git-send-email 2.22.1
+        Tue, 20 Aug 2019 02:57:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43878 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726049AbfHTG5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 02:57:25 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7565BA38186;
+        Tue, 20 Aug 2019 06:57:25 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-60.ams2.redhat.com [10.36.116.60])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 107E45D9CD;
+        Tue, 20 Aug 2019 06:57:25 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 4A2B011AAF; Tue, 20 Aug 2019 08:57:24 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 08:57:24 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Dave Airlie <airlied@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <spice-devel@lists.freedesktop.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/qxl: fix a memory leak bug
+Message-ID: <20190820065724.mc3anvne2sf356x3@sirius.home.kraxel.org>
+References: <1566238098-3962-1-git-send-email-wenwen@cs.uga.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566238098-3962-1-git-send-email-wenwen@cs.uga.edu>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Tue, 20 Aug 2019 06:57:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unnecessary empty return statement at the end of a void
-function in the arch/x86/kernel/quirks.c.
+On Mon, Aug 19, 2019 at 01:08:18PM -0500, Wenwen Wang wrote:
+> In qxl_bo_create(), the temporary 'bo' is allocated through kzalloc().
+> However, it is not deallocated in the following execution if ttm_bo_init()
+> fails, leading to a memory leak bug. To fix this issue, free 'bo' before
+> returning the error.
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
- arch/x86/kernel/quirks.c | 4 ----
- 1 file changed, 4 deletions(-)
+No.  ttm_bo_init() calls the destroy callback (qxl_ttm_bo_destroy for
+qxl) on failure, which will properly cleanup 'bo' and also free it.
 
-diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
-index 8451f38ad399..1daf8f2aa21f 100644
---- a/arch/x86/kernel/quirks.c
-+++ b/arch/x86/kernel/quirks.c
-@@ -90,8 +90,6 @@ static void ich_force_hpet_resume(void)
- 		BUG();
- 	else
- 		printk(KERN_DEBUG "Force enabled HPET at resume\n");
--
--	return;
- }
- 
- static void ich_force_enable_hpet(struct pci_dev *dev)
-@@ -448,7 +446,6 @@ static void nvidia_force_enable_hpet(struct pci_dev *dev)
- 	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at 0x%lx\n",
- 		force_hpet_address);
- 	cached_dev = dev;
--	return;
- }
- 
- /* ISA Bridges */
-@@ -513,7 +510,6 @@ static void e6xx_force_enable_hpet(struct pci_dev *dev)
- 	force_hpet_resume_type = NONE_FORCE_HPET_RESUME;
- 	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at "
- 		"0x%lx\n", force_hpet_address);
--	return;
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_E6XX_CU,
- 			 e6xx_force_enable_hpet);
--- 
-2.22.1
+cheers,
+  Gerd
 
