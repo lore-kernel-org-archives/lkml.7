@@ -2,61 +2,69 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBB6C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54C1C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D84A20C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C198122DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbfHTPO0 (ORCPT
+        id S1730252AbfHTPPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:14:26 -0400
-Received: from mga03.intel.com ([134.134.136.65]:16415 "EHLO mga03.intel.com"
+        Tue, 20 Aug 2019 11:15:55 -0400
+Received: from fieldses.org ([173.255.197.46]:40282 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727304AbfHTPOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:14:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 08:14:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="180727123"
-Received: from um.fi.intel.com (HELO localhost) ([10.237.72.183])
-  by orsmga003.jf.intel.com with ESMTP; 20 Aug 2019 08:14:23 -0700
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com
-Subject: Re: [GIT PULL 3/4] intel_th: pci: Add support for another Lewisburg PCH
-In-Reply-To: <20190820114426.GB15112@kroah.com>
-References: <20190820101653.74738-1-alexander.shishkin@linux.intel.com> <20190820101653.74738-4-alexander.shishkin@linux.intel.com> <20190820114426.GB15112@kroah.com>
-Date:   Tue, 20 Aug 2019 18:14:22 +0300
-Message-ID: <877e773m41.fsf@ashishki-desk.ger.corp.intel.com>
+        id S1728277AbfHTPPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:15:55 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C2A631C20; Tue, 20 Aug 2019 11:15:54 -0400 (EDT)
+Date:   Tue, 20 Aug 2019 11:15:54 -0400
+From:   "J . Bruce Fields" <bfields@fieldses.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Jeff Layton <jeff.layton@primarydata.com>,
+        Weston Andros Adamson <dros@primarydata.com>,
+        Richard Sharpe <richard.sharpe@primarydata.com>,
+        Trond Myklebust <trond.myklebust@primarydata.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] nfsd: remove duplicated include from filecache.c
+Message-ID: <20190820151554.GA7026@fieldses.org>
+References: <20190820013243.129865-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820013243.129865-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+Thanks, applied.--b.
 
-> On Tue, Aug 20, 2019 at 01:16:52PM +0300, Alexander Shishkin wrote:
->> Add support for the Trace Hub in another Lewisburg PCH.
->> 
->> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->> ---
->>  drivers/hwtracing/intel_th/pci.c | 5 +++++
->>  1 file changed, 5 insertions(+)
->
-> same here, ok for stable?
-
-Yes for both. Should I resend?
-
-Regards,
---
-Alex
+On Tue, Aug 20, 2019 at 01:32:43AM +0000, YueHaibing wrote:
+> Remove duplicated include.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  fs/nfsd/filecache.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 4759fdc8a07e..07939f4834e8 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -6,7 +6,6 @@
+>  
+>  #include <linux/hash.h>
+>  #include <linux/slab.h>
+> -#include <linux/hash.h>
+>  #include <linux/file.h>
+>  #include <linux/sched.h>
+>  #include <linux/list_lru.h>
+> 
+> 
