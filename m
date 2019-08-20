@@ -2,93 +2,123 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C32C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5578BC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAB2920644
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:11:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m0wbJYW+"
+	by mail.kernel.org (Postfix) with ESMTP id 366A320644
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbfHTSLN (ORCPT
+        id S1730552AbfHTSMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 14:11:13 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:60835 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727358AbfHTSLN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 14:11:13 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id DD21D21443;
-        Tue, 20 Aug 2019 14:11:11 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 20 Aug 2019 14:11:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=wIvSUF
-        SxBtKrLx7QW6izXj5arwDQX+RuLbQJMChRUnQ=; b=m0wbJYW+y0sMPQSHCjrZwg
-        SQfdBzqc4G9vlAj4sIhdJ8yeReIPGWHJGROL4WecWDVhUdIz//euBTr6BQxvEMSH
-        OD/PPC+QMZ3Jcqnzk6kJLDK3/Ti5fle09KBGF1+rgi1ykEkSBiXLF3AC/UOXXFXt
-        Bgj7P4smZm0bxUgeHmTD57qSVfEeHDzDqJ3VjtulJdKLAxtEVweEY8S8YMSFxuj/
-        EGszuc6EDo+A9+Q+ZVeXZ6h+uqeP1+mmuWJQgj5TW4tgrtLIB45nnxaibjTMgI8g
-        EtJ1G4txAeI+Juxa0Qm28DRPbF+aCWl33LYOy0q1ugeEyhEOg8deX8+BZnkld8lQ
-        ==
-X-ME-Sender: <xms:vjdcXV9c8qRWICIwwh0VqL408lqLf8JOhWfX8mDPNDD7qPnoCiABuQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudeguddguddulecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjfgesth
-    dtredttdervdenucfhrhhomhepkfguohcuufgthhhimhhmvghluceoihguohhstghhsehi
-    ughoshgthhdrohhrgheqnecukfhppeejjedrudefkedrvdegledrvddtleenucfrrghrrg
-    hmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrghenucevlhhushht
-    vghrufhiiigvpedt
-X-ME-Proxy: <xmx:vjdcXbTrcLZFW3TabmV5FSYQMMS0a8O77UPxp1G4Rwx-pJxXz4Byhg>
-    <xmx:vjdcXSSqUsoey59RfOgUgilPQEdJPad7jxkUTPBapiyrtse4C8wKbg>
-    <xmx:vjdcXf6aPaYRyXduAh2NYx2NKNW-aFZeqzGI-WY3avpI0e0QMnKXVg>
-    <xmx:vzdcXfxxYihdycGB_jQWZXyTLl-MGuJiYvPTV4g2Be58zie7RzTdjw>
-Received: from localhost (unknown [77.138.249.209])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D3E82380089;
-        Tue, 20 Aug 2019 14:11:09 -0400 (EDT)
-Date:   Tue, 20 Aug 2019 21:10:55 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     davem@davemloft.net, idosch@mellanox.com, jiri@mellanox.com,
-        mcroce@redhat.com, jakub.kicinski@netronome.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 net-next] netdevsim: Fix build error without
- CONFIG_INET
-Message-ID: <20190820181055.GA6054@splinter>
-References: <20190819120825.74460-1-yuehaibing@huawei.com>
- <20190820141446.71604-1-yuehaibing@huawei.com>
+        Tue, 20 Aug 2019 14:12:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53754 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727358AbfHTSMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 14:12:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 54DEFAEF5;
+        Tue, 20 Aug 2019 18:12:14 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.vnet.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH rebased] powerpc/fadump: when fadump is supported register the fadump sysfs files.
+Date:   Tue, 20 Aug 2019 20:12:11 +0200
+Message-Id: <20190820181211.14694-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820141446.71604-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:14:46PM +0800, YueHaibing wrote:
-> If CONFIG_INET is not set, building fails:
-> 
-> drivers/net/netdevsim/dev.o: In function `nsim_dev_trap_report_work':
-> dev.c:(.text+0x67b): undefined reference to `ip_send_check'
-> 
-> Use ip_fast_csum instead of ip_send_check to avoid
-> dependencies on CONFIG_INET.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: da58f90f11f5 ("netdevsim: Add devlink-trap support")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Currently it is not possible to distinguish the case when fadump is
+supported by firmware and disabled in kernel and completely unsupported
+using the kernel sysfs interface. User can investigate the devicetree
+but it is more reasonable to provide sysfs files in case we get some
+fadumpv2 in the future.
 
-Reviewed-by: Ido Schimmel <idosch@mellanox.com>
-Tested-by: Ido Schimmel <idosch@mellanox.com>
+With this patch sysfs files are available whenever fadump is supported
+by firmware.
 
-Thanks for fixing this in my stead!
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+Rebase on top of http://patchwork.ozlabs.org/patch/1150160/
+[v5,31/31] powernv/fadump: support holes in kernel boot memory area
+---
+ arch/powerpc/kernel/fadump.c | 33 ++++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
+
+diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+index 4b1bb3c55cf9..7ad424729e9c 100644
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -1319,13 +1319,9 @@ static void fadump_init_files(void)
+  */
+ int __init setup_fadump(void)
+ {
+-	if (!fw_dump.fadump_enabled)
+-		return 0;
+-
+-	if (!fw_dump.fadump_supported) {
++	if (!fw_dump.fadump_supported && fw_dump.fadump_enabled) {
+ 		printk(KERN_ERR "Firmware-assisted dump is not supported on"
+ 			" this hardware\n");
+-		return 0;
+ 	}
+ 
+ 	fadump_show_config();
+@@ -1333,19 +1329,26 @@ int __init setup_fadump(void)
+ 	 * If dump data is available then see if it is valid and prepare for
+ 	 * saving it to the disk.
+ 	 */
+-	if (fw_dump.dump_active) {
++	if (fw_dump.fadump_enabled) {
++		if (fw_dump.dump_active) {
++			/*
++			 * if dump process fails then invalidate the
++			 * registration and release memory before proceeding
++			 * for re-registration.
++			 */
++			if (fw_dump.ops->fadump_process(&fw_dump) < 0)
++				fadump_invalidate_release_mem();
++		}
+ 		/*
+-		 * if dump process fails then invalidate the registration
+-		 * and release memory before proceeding for re-registration.
++		 * Initialize the kernel dump memory structure for FAD
++		 * registration.
+ 		 */
+-		if (fw_dump.ops->fadump_process(&fw_dump) < 0)
+-			fadump_invalidate_release_mem();
+-	}
+-	/* Initialize the kernel dump memory structure for FAD registration. */
+-	else if (fw_dump.reserve_dump_area_size)
+-		fw_dump.ops->fadump_init_mem_struct(&fw_dump);
++		else if (fw_dump.reserve_dump_area_size)
++			fw_dump.ops->fadump_init_mem_struct(&fw_dump);
+ 
+-	fadump_init_files();
++	}
++	if (fw_dump.fadump_supported)
++		fadump_init_files();
+ 
+ 	return 1;
+ }
+-- 
+2.22.0
+
