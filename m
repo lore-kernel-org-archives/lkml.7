@@ -2,133 +2,179 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DFFC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346F4C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2C82332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2531233A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:06:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="p+vl6bqw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SpmUoFqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfHTXGz (ORCPT
+        id S1726652AbfHTXG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 19:06:55 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35763 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfHTXGt (ORCPT
+        Tue, 20 Aug 2019 19:06:56 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43450 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726571AbfHTXGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:06:49 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d85so100721pfd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:06:49 -0700 (PDT)
+        Tue, 20 Aug 2019 19:06:52 -0400
+Received: by mail-pl1-f193.google.com with SMTP id 4so211187pld.10
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:06:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=3ZdYND6Wl1bRQZobvgDGilBtsFiFe5f8MwN/RoglplU=;
-        b=p+vl6bqwnZBpeaHiyriodr3YU5vPNi6dgqkRp3GiaA9JczUyoLile77Dj2B+BZggDJ
-         NzlvH7CyYBerZlpjYj15RbbWMyJGouIgFI2T2IMOh0Aye5krAxOLBcXbXZaO3fM5C0/h
-         hUUGR5wuWOwGkH10sOSgrfyyEGNPU8PX1FsNAGfHSISAOMQM/dR20jKpSyidDWMVnYU3
-         gEqghkvroFGIBsJ9s+b3i/1R0ZbvMjdA3YSrdWgQJh2pU3bdRUNrB6vTH/T6Y0N7Mt/d
-         /stEefEeTo4i0TNewxUdzqaM15UhIX5rWx63ufnkwEr7MaZcPeaYBa9JWg+w9N+xuwMz
-         VEmQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=NvRBTkEpcrR5Rep8edui09Pbrs4gwjsFcJ1vUHe92C8=;
+        b=SpmUoFqTQ+QJ0g9hL7qgwe495wxUfIF5aJWDRv8mSGtUIbWZzEoSG+rlz9UkFpecSy
+         /0C7WUsQ44Y05xaq68bMfODCQWQ124ezsD9PsPxx8LQvOKarjb1trxJuayJiEJG4Ds8X
+         eVCL3EiK8jPXMqsNg1hln1fi116iayO8WR21flpsPW9o9Dvb9h4kX6d1OMYPbxjt1Jb3
+         PvD30Eb2rT0BAkR2GNDkO7kuW7tdX2G3epYPLwPZ2+TY9gmuvxa8xO/VrzdyvOVN4Bxm
+         3LlBwM03+GBOB/X/kGUx4hvq/zCruqoIM3dTxfX+4MT9ka2Q3BjWShFP8pE4+WB5JGpv
+         X47Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=3ZdYND6Wl1bRQZobvgDGilBtsFiFe5f8MwN/RoglplU=;
-        b=PwynGOp8xrB7mGSASDOe+AMQLJkKDhWcYnv9tYsLrmbkwuIPUsCg58riPKis2nhEYF
-         cyIuGh9G4kjQxqRB/98B+OYNJ/LMG98pJGgwd0swwtfDKTNAjXy7e7cD9Hg2SfZUfyVH
-         vx03EWRelstSowJANJU2z87lVXidWY6/qii6koDpQbFBmMCzZbO6C5/KiPS7MTT6Hn2E
-         uVFTGWFoDMApvPhxljze+p6tyGxlgGxWzvjttxktZgyflZOJKUN70vHZDBdpMCD/b0+F
-         OOggowZOkthLhoXeZqqsKMsbHwIE+vomxLh3yOTDHzvSOcoBSbPIsYENwUHQC3hP7Y9P
-         91Sw==
-X-Gm-Message-State: APjAAAUbcxeGOPo4tE7gtlFsBd++YdwoGBxMooVTbL0iTRAXAw/oQqkK
-        XpTPPUP7t+ruHojW4G6W82c/Yw==
-X-Google-Smtp-Source: APXvYqxALtnddgGMFc2X2U+yCFu2yJS7dzJAjVYSdhFC5iity/GwPzH8lvuhFKcFPxyXSfOTqNZTzg==
-X-Received: by 2002:a17:90b:8ca:: with SMTP id ds10mr2269923pjb.139.1566342408736;
-        Tue, 20 Aug 2019 16:06:48 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id d18sm17691015pgi.40.2019.08.20.16.06.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 20 Aug 2019 16:06:48 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/6] arm64: Add support for Amlogic SM1 SoC Family
-In-Reply-To: <7h4l2bej1c.fsf@baylibre.com>
-References: <20190820144052.18269-1-narmstrong@baylibre.com> <7h4l2bej1c.fsf@baylibre.com>
-Date:   Tue, 20 Aug 2019 16:06:45 -0700
-Message-ID: <7ho90jbfne.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=NvRBTkEpcrR5Rep8edui09Pbrs4gwjsFcJ1vUHe92C8=;
+        b=NuqPuS76h4BWWm4ayV4xJ1PaqbGuao0MxJ5reX5fRJ56+flxAfy+e0U1vKI9ooHkn0
+         N7kPPL1RlY8gRV7fblj6uebPNni0tuLg0tACMzat3Xpjj6e9RK8xESfgTqc5KhAMTNJx
+         UEItZvPChm0hk5CNM6z7EuSlYTknqProSXQstjTemjntIcHBoDXwkV0/+Oximv/G+axY
+         ma1id9svHl1b+qeUGQj5ilcLD5Ebghoo4vLK+r7ELk82nYJDH/rNbrLawgVU0HU+8rlL
+         P9F13qnUf67yn31troccvfqy/M2I+fsCqulAyk3D80rDVVmtbQnzPWTEPMG05TzNhtVY
+         gyDg==
+X-Gm-Message-State: APjAAAVdFXyvNmvJvt77Us3RvPAXXHRFtZwZR8MfBJBqXl633Gm8F4vN
+        r56FXP0ed3K6kIvbzgcfBTBR2oQFVNI=
+X-Google-Smtp-Source: APXvYqxk1+RpZrPxlzUTPywKtSA/GrnBztJYlBYhotscSB7kHX9LZWOXAZRnLh+wBMuGbZ8bR4CLNw==
+X-Received: by 2002:a17:902:41:: with SMTP id 59mr8508124pla.268.1566342411457;
+        Tue, 20 Aug 2019 16:06:51 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id q4sm27564747pff.183.2019.08.20.16.06.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 16:06:50 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     Xu YiPing <xuyiping@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Xinliang Liu <z.liuxinliang@hisilicon.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH v5 15/25] drm: kirin: Move mode config function to driver_data
+Date:   Tue, 20 Aug 2019 23:06:16 +0000
+Message-Id: <20190820230626.23253-16-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190820230626.23253-1-john.stultz@linaro.org>
+References: <20190820230626.23253-1-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
+From: Xu YiPing <xuyiping@hisilicon.com>
 
-> Neil Armstrong <narmstrong@baylibre.com> writes:
->
->> The new Amlogic SM1 SoC Family is a derivative of the Amlogic G12A
->> SoC Family, with the following changes :
->> - Cortex-A55 cores instead of A53
->> - more power domains, including USB & PCIe
->> - a neural network co-processor (NNA)
->> - a CSI input and image processor
->> - some changes in the audio complex, thus not yet enabled
->> - new clocks, for NNA, CSI and a clock tree for each CPU Core
->>
->> This serie does not add support for NNA, CSI, Audio, USB, Display
->> or DVFS, it only aligns with the current G12A Support.
->>
->> With this serie, the SEI610 Board has supported :
->> - Default-boot CPU frequency
->> - Ethernet
->> - LEDs
->> - IR
->> - GPIO Buttons
->> - eMMC
->> - SDCard
->> - SDIO WiFi
->> - UART Bluetooth
->>
->> Audio (HDMI, Embedded HP, MIcs), USB, HDMI, IR Output, & RGB Led
->> would be supported in following patchsets.
->>
->> Dependencies:
->> - g12-common.dtsi from the DVFS patchset at [1]
->>
->> Changes from rfc at [2]:
->> - Removed Power domain patches & display/USB support, will resend separately
->> - Removed applied AO-CEC patches
->> - Fixed clk-measure IDs
->> - Collected reviewed-by tags
->>
->> [1] https://patchwork.kernel.org/cover/11025309/
->> [2] https://patchwork.kernel.org/cover/11025511/
->
-> Series queued for v5.4...
->> Neil Armstrong (6):
->>   soc: amlogic: meson-gx-socinfo: Add SM1 and S905X3 IDs
->>   dt-bindings: soc: amlogic: clk-measure: Add SM1 compatible
->>   soc: amlogic: clk-measure: Add support for SM1
->
-> ... these 3 in v5.4/drivers ...
->
->>   dt-bindings: arm: amlogic: add SM1 bindings
->>   dt-bindings: arm: amlogic: add SEI Robotics SEI610 bindings
->>   arm64: dts: add support for SM1 based SEI Robotics SEI610
->
-> ... and these 3 in v5.4/dt64 with Rob's tag.
+As part of refactoring the kirin driver to better support
+different hardware revisions, this patch moves the mode config
+initialization values into the kirin_drm_data structure.
 
-And I forgot to add that I boot-tested this on an SEI610 as well.
+This will make it easier to add support for new devices
+via a new kirin_drm_data structure.
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
+Cc: Rongrong Zou <zourongrong@gmail.com>
+Cc: Xinliang Liu <z.liuxinliang@hisilicon.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Acked-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Xu YiPing <xuyiping@hisilicon.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 10 ++++++++++
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c |  8 +-------
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h |  2 +-
+ 3 files changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+index 0489b6378e01..94d74c467a81 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
+@@ -30,6 +30,7 @@
+ #include <drm/drm_plane_helper.h>
+ #include <drm/drm_probe_helper.h>
+ #include <drm/drm_vblank.h>
++#include <drm/drm_gem_framebuffer_helper.h>
+ 
+ #include "kirin_drm_drv.h"
+ #include "kirin_ade_reg.h"
+@@ -1038,6 +1039,13 @@ static void ade_drm_cleanup(struct platform_device *pdev)
+ {
+ }
+ 
++static const struct drm_mode_config_funcs ade_mode_config_funcs = {
++	.fb_create = drm_gem_fb_create,
++	.atomic_check = drm_atomic_helper_check,
++	.atomic_commit = drm_atomic_helper_commit,
++
++};
++
+ struct kirin_drm_data ade_driver_data = {
+ 	.channel_formats = channel_formats,
+ 	.channel_formats_cnt = ARRAY_SIZE(channel_formats),
+@@ -1045,6 +1053,8 @@ struct kirin_drm_data ade_driver_data = {
+ 	.crtc_funcs = &ade_crtc_funcs,
+ 	.plane_helper_funcs = &ade_plane_helper_funcs,
+ 	.plane_funcs = &ade_plane_funcs,
++	.mode_config_funcs = &ade_mode_config_funcs,
++
+ 	.init = ade_drm_init,
+ 	.cleanup = ade_drm_cleanup
+ };
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+index 3d22f944a840..25191824b64e 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+@@ -40,12 +40,6 @@ static int kirin_drm_kms_cleanup(struct drm_device *dev)
+ 	return 0;
+ }
+ 
+-static const struct drm_mode_config_funcs kirin_drm_mode_config_funcs = {
+-	.fb_create = drm_gem_fb_create,
+-	.atomic_check = drm_atomic_helper_check,
+-	.atomic_commit = drm_atomic_helper_commit,
+-};
+-
+ static void kirin_drm_mode_config_init(struct drm_device *dev)
+ {
+ 	dev->mode_config.min_width = 0;
+@@ -54,7 +48,7 @@ static void kirin_drm_mode_config_init(struct drm_device *dev)
+ 	dev->mode_config.max_width = 2048;
+ 	dev->mode_config.max_height = 2048;
+ 
+-	dev->mode_config.funcs = &kirin_drm_mode_config_funcs;
++	dev->mode_config.funcs = driver_data->mode_config_funcs;
+ }
+ 
+ static int kirin_drm_kms_init(struct drm_device *dev)
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+index 66916502a9e6..ce9ddccc67a8 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+@@ -42,7 +42,7 @@ struct kirin_drm_data {
+ 	const struct drm_crtc_funcs *crtc_funcs;
+ 	const struct drm_plane_helper_funcs *plane_helper_funcs;
+ 	const struct drm_plane_funcs  *plane_funcs;
+-
++	const struct drm_mode_config_funcs *mode_config_funcs;
+ 	int (*init)(struct platform_device *pdev);
+ 	void (*cleanup)(struct platform_device *pdev);
+ };
+-- 
+2.17.1
 
