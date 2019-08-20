@@ -2,417 +2,528 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15CDBC3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81360C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F1622DCB
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29AF222DCB
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:58:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="llEv6mRY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbfHTI5i (ORCPT
+        id S1729609AbfHTI6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:57:38 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:56916 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729384AbfHTI5d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:57:33 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.25575-0.00953499-0.734715;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03292;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=8;RT=8;SR=0;TI=SMTPD_---.FF9YHrM_1566291448;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.FF9YHrM_1566291448)
-          by smtp.aliyun-inc.com(10.147.42.198);
-          Tue, 20 Aug 2019 16:57:28 +0800
-From:   Mao Han <han_mao@c-sky.com>
-To:     linux-riscv@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Mao Han <han_mao@c-sky.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Christoph Hellwig <hch@lst.de>, Guo Ren <guoren@kernel.org>
-Subject: [PATCH V4 3/3] riscv: Add support for libdw
-Date:   Tue, 20 Aug 2019 16:57:18 +0800
-Message-Id: <a67beecc3cbbbd675cdeb50cab24c481e9fc0292.1566290744.git.han_mao@c-sky.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1566290744.git.han_mao@c-sky.com>
-References: <cover.1566290744.git.han_mao@c-sky.com>
-In-Reply-To: <cover.1566290744.git.han_mao@c-sky.com>
-References: <cover.1566290744.git.han_mao@c-sky.com>
+        Tue, 20 Aug 2019 04:58:14 -0400
+Received: from mail-eopbgr10085.outbound.protection.outlook.com ([40.107.1.85]:50830
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728545AbfHTI6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 04:58:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e0gCe9uEejnRZdLWstAT3lzufpbbw9oSK3AincxJg3wkS8mMroeNuVuLN28mR8EIMFY1V1Td16h7gL7lK5Tk7k3VVLWPf159ch376iyCazNfYe/+OnDMX0H0kQrwDf6TYh+xngJH9+qDymg5gQKfvpUoedL5C4ZuSKqnh7yCM1E/jQ1JiF0Fg/zDGRrp3DR+3om0cTkkj7Awkmo1EcMuDxGj8usixtY6WvGow0zw6p0jWQNIpUXBO91LwnwwYRiKlQeMJzzbnDR6GfZISccPcLcQfW5T/ce8NPytZKdwBXAOaZrRrURf3h775BoQMPe+Gy6qEznZAQoipQRYrE1FLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=85bQhWw+oG2z5LNphI8+rTtQJ+c/eg8pcGpJoWaw1T0=;
+ b=MgoF5PO/VhC+j53e4F90cRPsRjNFWl4aFfbod06TE0ioOP2TuqYcuqn1OHwP248FKCzL49K7QRZNWQ3BSvPFjOsKFCmTt0QFNTnrD+/1GUb+SF5zzkrAmjITNYCgqjy72ajf+r0NhlRFXEAE3osD74hvXBou1EEcoMzj6JxxiHKzvToQj9NHub2QZCy0o+YCZXfzae5zxIOKdlfs3+YHkKLU5CYuNHO1f6QO0IfPer8UjnYPjDvYc4t179wvlO9zLnK68nM09nk+C8Y4R5WhhDiBqnegPgJNpWa97b4nBGfKoqCfr40Ns0uBvmYdDk26DaVHmqXIZ40riiOXtROsLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=85bQhWw+oG2z5LNphI8+rTtQJ+c/eg8pcGpJoWaw1T0=;
+ b=llEv6mRYzRKYZPrAtomRoWvdpk/+87SR6CPMky4xN5r0JaXZz54IsEo01ZETEGYVWccQ6FcN2GcY2JWr7bOnI+21g6E830RS/H2SVSH5vp+JLkw5vLl7Hftyk+BmX/1B//H2GmFLUfvp5zwrN4n60XKvqXiUVZTbn0xuERaezc8=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB5908.eurprd05.prod.outlook.com (20.178.117.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Tue, 20 Aug 2019 08:58:03 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
+ 08:58:03 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Parav Pandit <parav@mellanox.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Thread-Topic: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Thread-Index: AQHVTfNxjgfwJJG2ZUiuOAmKCwQvf6bx3uKAgAWJU4CAAcVCEIAABCsAgAAWVtCAABCDgIAAzoewgAAqE4CAAECFQIAAFWyAgAAGbNCAABfqAIAAErcwgAjpulA=
+Date:   Tue, 20 Aug 2019 08:58:02 +0000
+Message-ID: <AM0PR05MB48668B6221E477A873688CDBD1AB0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190802065905.45239-1-parav@mellanox.com>
+        <20190808141255.45236-1-parav@mellanox.com>
+     <20190808170247.1fc2c4c4@x1.home>
+        <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
+        <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190813085246.1d642ae5@x1.home>
+        <AM0PR05MB48663579A340E6597B3D01BCD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190813111149.027c6a3c@x1.home>
+        <AM0PR05MB4866D40F8EBB382C78193C91D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190814100135.1f60aa42.cohuck@redhat.com>
+        <AM0PR05MB4866ABFDDD9DDCBC01F6CA90D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+        <20190814150911.296da78c.cohuck@redhat.com>
+        <AM0PR05MB48666CCDFE985A25F42A0259D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <20190814085746.26b5f2a3@x1.home>
+ <AM0PR05MB4866148ABA3C4E48E73E95FCD1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+In-Reply-To: <AM0PR05MB4866148ABA3C4E48E73E95FCD1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [106.51.22.188]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ccc1dcb1-fe28-423e-a29b-08d7254c8296
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5908;
+x-ms-traffictypediagnostic: AM0PR05MB5908:
+x-ms-exchange-purlcount: 7
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR05MB59088A363086B4CEF7A30D16D1AB0@AM0PR05MB5908.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 013568035E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(346002)(366004)(13464003)(199004)(189003)(51444003)(229853002)(6436002)(478600001)(5660300002)(66446008)(64756008)(52536014)(110136005)(66476007)(54906003)(33656002)(66556008)(25786009)(2906002)(9686003)(6306002)(53946003)(14454004)(71200400001)(316002)(6116002)(71190400001)(3846002)(30864003)(256004)(86362001)(476003)(446003)(66066001)(966005)(55016002)(14444005)(11346002)(5024004)(76116006)(486006)(74316002)(305945005)(53546011)(6506007)(7736002)(186003)(102836004)(55236004)(26005)(6246003)(99286004)(7696005)(4326008)(8936002)(81166006)(81156014)(8676002)(9456002)(53376002)(76176011)(53936002)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5908;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: F+BzJJdVh6fP7VIljuQbSVJUwyNNpQbKblwTn3W17nQcZwbYvfGlmN3q3iKrwKHP7yceFV6n/BgDQMEZVon9zWPt93mfkEIKu7+IE+nnUcts/UoaBsiWlZ/BWcpozrL2icrs3PEVIz82VnPdKLawafnIX4Mgwb7evUSJeNCiSnoI3AjYEHbt2xwHeBLBfgVTyvglQSV8VGD7xt/CD6HtL2CqJxW4PV4FUXRUKpE+IILqeyEBoM/GORCveeJWiOnM7X9ViKJxoVU+hdnap0SOmwcbThQOFzajscos3ZBbNryv92SS2a+t6I0KE6jhjqDttvMsf0z9p9IFZR4lV7g7rXuIcxCKtOIoMTMgZeunoT51+BpIUFlNHKO2KsiJm/xHv0MBOpCAmhk2gCTIYibHHppt9hvSrNWMX1iCcFWWzYY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ccc1dcb1-fe28-423e-a29b-08d7254c8296
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 08:58:03.3477
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4+VUwXzbZ9DMjOCQm90NXdpLvIpmI/svSMgMSCB/YNLl8mL1gIDwKa6gTPv+BQDaq8WndKO/IBGgsVJvftODnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5908
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support for DWARF register mappings and libdw registers
-initialization, which is used by perf callchain analyzing when
---call-graph=dwarf is given.
++ Dave.
 
-Signed-off-by: Mao Han <han_mao@c-sky.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: linux-riscv <linux-riscv@lists.infradead.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Guo Ren <guoren@kernel.org>
----
- tools/arch/riscv/include/uapi/asm/perf_regs.h | 42 ++++++++++++
- tools/perf/Makefile.config                    |  6 +-
- tools/perf/arch/riscv/Build                   |  1 +
- tools/perf/arch/riscv/Makefile                |  3 +
- tools/perf/arch/riscv/include/perf_regs.h     | 96 +++++++++++++++++++++++++++
- tools/perf/arch/riscv/util/Build              |  2 +
- tools/perf/arch/riscv/util/dwarf-regs.c       | 72 ++++++++++++++++++++
- tools/perf/arch/riscv/util/unwind-libdw.c     | 57 ++++++++++++++++
- 8 files changed, 278 insertions(+), 1 deletion(-)
- create mode 100644 tools/arch/riscv/include/uapi/asm/perf_regs.h
- create mode 100644 tools/perf/arch/riscv/Build
- create mode 100644 tools/perf/arch/riscv/Makefile
- create mode 100644 tools/perf/arch/riscv/include/perf_regs.h
- create mode 100644 tools/perf/arch/riscv/util/Build
- create mode 100644 tools/perf/arch/riscv/util/dwarf-regs.c
- create mode 100644 tools/perf/arch/riscv/util/unwind-libdw.c
+Hi Jiri, Dave, Alex, Kirti, Cornelia,
 
-diff --git a/tools/arch/riscv/include/uapi/asm/perf_regs.h b/tools/arch/riscv/include/uapi/asm/perf_regs.h
-new file mode 100644
-index 0000000..df1a581
---- /dev/null
-+++ b/tools/arch/riscv/include/uapi/asm/perf_regs.h
-@@ -0,0 +1,42 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
-+
-+#ifndef _ASM_RISCV_PERF_REGS_H
-+#define _ASM_RISCV_PERF_REGS_H
-+
-+enum perf_event_riscv_regs {
-+	PERF_REG_RISCV_PC,
-+	PERF_REG_RISCV_RA,
-+	PERF_REG_RISCV_SP,
-+	PERF_REG_RISCV_GP,
-+	PERF_REG_RISCV_TP,
-+	PERF_REG_RISCV_T0,
-+	PERF_REG_RISCV_T1,
-+	PERF_REG_RISCV_T2,
-+	PERF_REG_RISCV_S0,
-+	PERF_REG_RISCV_S1,
-+	PERF_REG_RISCV_A0,
-+	PERF_REG_RISCV_A1,
-+	PERF_REG_RISCV_A2,
-+	PERF_REG_RISCV_A3,
-+	PERF_REG_RISCV_A4,
-+	PERF_REG_RISCV_A5,
-+	PERF_REG_RISCV_A6,
-+	PERF_REG_RISCV_A7,
-+	PERF_REG_RISCV_S2,
-+	PERF_REG_RISCV_S3,
-+	PERF_REG_RISCV_S4,
-+	PERF_REG_RISCV_S5,
-+	PERF_REG_RISCV_S6,
-+	PERF_REG_RISCV_S7,
-+	PERF_REG_RISCV_S8,
-+	PERF_REG_RISCV_S9,
-+	PERF_REG_RISCV_S10,
-+	PERF_REG_RISCV_S11,
-+	PERF_REG_RISCV_T3,
-+	PERF_REG_RISCV_T4,
-+	PERF_REG_RISCV_T5,
-+	PERF_REG_RISCV_T6,
-+	PERF_REG_RISCV_MAX,
-+};
-+#endif /* _ASM_RISCV_PERF_REGS_H */
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 89ac5a1..eaf25ee 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -60,6 +60,10 @@ ifeq ($(SRCARCH),arm64)
-   LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
- endif
- 
-+ifeq ($(SRCARCH),riscv)
-+  NO_PERF_REGS := 0
-+endif
-+
- ifeq ($(SRCARCH),csky)
-   NO_PERF_REGS := 0
- endif
-@@ -82,7 +86,7 @@ endif
- # Disable it on all other architectures in case libdw unwind
- # support is detected in system. Add supported architectures
- # to the check.
--ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390 csky))
-+ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390 csky riscv))
-   NO_LIBDW_DWARF_UNWIND := 1
- endif
- 
-diff --git a/tools/perf/arch/riscv/Build b/tools/perf/arch/riscv/Build
-new file mode 100644
-index 0000000..e4e5f33
---- /dev/null
-+++ b/tools/perf/arch/riscv/Build
-@@ -0,0 +1 @@
-+perf-y += util/
-diff --git a/tools/perf/arch/riscv/Makefile b/tools/perf/arch/riscv/Makefile
-new file mode 100644
-index 0000000..7fbca17
---- /dev/null
-+++ b/tools/perf/arch/riscv/Makefile
-@@ -0,0 +1,3 @@
-+ifndef NO_DWARF
-+PERF_HAVE_DWARF_REGS := 1
-+endif
-diff --git a/tools/perf/arch/riscv/include/perf_regs.h b/tools/perf/arch/riscv/include/perf_regs.h
-new file mode 100644
-index 0000000..7a8bcde
---- /dev/null
-+++ b/tools/perf/arch/riscv/include/perf_regs.h
-@@ -0,0 +1,96 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
-+
-+#ifndef ARCH_PERF_REGS_H
-+#define ARCH_PERF_REGS_H
-+
-+#include <stdlib.h>
-+#include <linux/types.h>
-+#include <asm/perf_regs.h>
-+
-+#define PERF_REGS_MASK	((1ULL << PERF_REG_RISCV_MAX) - 1)
-+#define PERF_REGS_MAX	PERF_REG_RISCV_MAX
-+#if __riscv_xlen == 64
-+#define PERF_SAMPLE_REGS_ABI    PERF_SAMPLE_REGS_ABI_64
-+#else
-+#define PERF_SAMPLE_REGS_ABI	PERF_SAMPLE_REGS_ABI_32
-+#endif
-+
-+#define PERF_REG_IP	PERF_REG_RISCV_PC
-+#define PERF_REG_SP	PERF_REG_RISCV_SP
-+
-+static inline const char *perf_reg_name(int id)
-+{
-+	switch (id) {
-+	case PERF_REG_RISCV_PC:
-+		return "pc";
-+	case PERF_REG_RISCV_RA:
-+		return "ra";
-+	case PERF_REG_RISCV_SP:
-+		return "sp";
-+	case PERF_REG_RISCV_GP:
-+		return "gp";
-+	case PERF_REG_RISCV_TP:
-+		return "tp";
-+	case PERF_REG_RISCV_T0:
-+		return "t0";
-+	case PERF_REG_RISCV_T1:
-+		return "t1";
-+	case PERF_REG_RISCV_T2:
-+		return "t2";
-+	case PERF_REG_RISCV_S0:
-+		return "s0";
-+	case PERF_REG_RISCV_S1:
-+		return "s1";
-+	case PERF_REG_RISCV_A0:
-+		return "a0";
-+	case PERF_REG_RISCV_A1:
-+		return "a1";
-+	case PERF_REG_RISCV_A2:
-+		return "a2";
-+	case PERF_REG_RISCV_A3:
-+		return "a3";
-+	case PERF_REG_RISCV_A4:
-+		return "a4";
-+	case PERF_REG_RISCV_A5:
-+		return "a5";
-+	case PERF_REG_RISCV_A6:
-+		return "a6";
-+	case PERF_REG_RISCV_A7:
-+		return "a7";
-+	case PERF_REG_RISCV_S2:
-+		return "s2";
-+	case PERF_REG_RISCV_S3:
-+		return "s3";
-+	case PERF_REG_RISCV_S4:
-+		return "s4";
-+	case PERF_REG_RISCV_S5:
-+		return "s5";
-+	case PERF_REG_RISCV_S6:
-+		return "s6";
-+	case PERF_REG_RISCV_S7:
-+		return "s7";
-+	case PERF_REG_RISCV_S8:
-+		return "s8";
-+	case PERF_REG_RISCV_S9:
-+		return "s9";
-+	case PERF_REG_RISCV_S10:
-+		return "s10";
-+	case PERF_REG_RISCV_S11:
-+		return "s11";
-+	case PERF_REG_RISCV_T3:
-+		return "t3";
-+	case PERF_REG_RISCV_T4:
-+		return "t4";
-+	case PERF_REG_RISCV_T5:
-+		return "t5";
-+	case PERF_REG_RISCV_T6:
-+		return "t6";
-+	default:
-+		return NULL;
-+	}
-+
-+	return NULL;
-+}
-+
-+#endif /* ARCH_PERF_REGS_H */
-diff --git a/tools/perf/arch/riscv/util/Build b/tools/perf/arch/riscv/util/Build
-new file mode 100644
-index 0000000..1160bb2
---- /dev/null
-+++ b/tools/perf/arch/riscv/util/Build
-@@ -0,0 +1,2 @@
-+perf-$(CONFIG_DWARF) += dwarf-regs.o
-+perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/riscv/util/dwarf-regs.c b/tools/perf/arch/riscv/util/dwarf-regs.c
-new file mode 100644
-index 0000000..f3555f6
---- /dev/null
-+++ b/tools/perf/arch/riscv/util/dwarf-regs.c
-@@ -0,0 +1,72 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
-+ * Mapping of DWARF debug register numbers into register names.
-+ */
-+
-+#include <stddef.h>
-+#include <errno.h> /* for EINVAL */
-+#include <string.h> /* for strcmp */
-+#include <dwarf-regs.h>
-+
-+struct pt_regs_dwarfnum {
-+	const char *name;
-+	unsigned int dwarfnum;
-+};
-+
-+#define REG_DWARFNUM_NAME(r, num) {.name = r, .dwarfnum = num}
-+#define REG_DWARFNUM_END {.name = NULL, .dwarfnum = 0}
-+
-+struct pt_regs_dwarfnum riscv_dwarf_regs_table[] = {
-+	REG_DWARFNUM_NAME("%zero", 0),
-+	REG_DWARFNUM_NAME("%ra", 1),
-+	REG_DWARFNUM_NAME("%sp", 2),
-+	REG_DWARFNUM_NAME("%gp", 3),
-+	REG_DWARFNUM_NAME("%tp", 4),
-+	REG_DWARFNUM_NAME("%t0", 5),
-+	REG_DWARFNUM_NAME("%t1", 6),
-+	REG_DWARFNUM_NAME("%t2", 7),
-+	REG_DWARFNUM_NAME("%s0", 8),
-+	REG_DWARFNUM_NAME("%s1", 9),
-+	REG_DWARFNUM_NAME("%a0", 10),
-+	REG_DWARFNUM_NAME("%a1", 11),
-+	REG_DWARFNUM_NAME("%a2", 12),
-+	REG_DWARFNUM_NAME("%a3", 13),
-+	REG_DWARFNUM_NAME("%a4", 14),
-+	REG_DWARFNUM_NAME("%a5", 15),
-+	REG_DWARFNUM_NAME("%a6", 16),
-+	REG_DWARFNUM_NAME("%a7", 17),
-+	REG_DWARFNUM_NAME("%s2", 18),
-+	REG_DWARFNUM_NAME("%s3", 19),
-+	REG_DWARFNUM_NAME("%s4", 20),
-+	REG_DWARFNUM_NAME("%s5", 21),
-+	REG_DWARFNUM_NAME("%s6", 22),
-+	REG_DWARFNUM_NAME("%s7", 23),
-+	REG_DWARFNUM_NAME("%s8", 24),
-+	REG_DWARFNUM_NAME("%s9", 25),
-+	REG_DWARFNUM_NAME("%s10", 26),
-+	REG_DWARFNUM_NAME("%s11", 27),
-+	REG_DWARFNUM_NAME("%t3", 28),
-+	REG_DWARFNUM_NAME("%t4", 29),
-+	REG_DWARFNUM_NAME("%t5", 30),
-+	REG_DWARFNUM_NAME("%t6", 31),
-+	REG_DWARFNUM_END,
-+};
-+
-+#define RISCV_MAX_REGS ((sizeof(riscv_dwarf_regs_table) / \
-+		 sizeof(riscv_dwarf_regs_table[0])) - 1)
-+
-+const char *get_arch_regstr(unsigned int n)
-+{
-+	return (n < RISCV_MAX_REGS) ? riscv_dwarf_regs_table[n].name : NULL;
-+}
-+
-+int regs_query_register_offset(const char *name)
-+{
-+	const struct pt_regs_dwarfnum *roff;
-+
-+	for (roff = riscv_dwarf_regs_table; roff->name != NULL; roff++)
-+		if (!strcmp(roff->name, name))
-+			return roff->dwarfnum;
-+	return -EINVAL;
-+}
-diff --git a/tools/perf/arch/riscv/util/unwind-libdw.c b/tools/perf/arch/riscv/util/unwind-libdw.c
-new file mode 100644
-index 0000000..19536e1
---- /dev/null
-+++ b/tools/perf/arch/riscv/util/unwind-libdw.c
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
-+
-+#include <elfutils/libdwfl.h>
-+#include "../../util/unwind-libdw.h"
-+#include "../../util/perf_regs.h"
-+#include "../../util/event.h"
-+
-+bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-+{
-+	struct unwind_info *ui = arg;
-+	struct regs_dump *user_regs = &ui->sample->user_regs;
-+	Dwarf_Word dwarf_regs[32];
-+
-+#define REG(r) ({						\
-+	Dwarf_Word val = 0;					\
-+	perf_reg_value(&val, user_regs, PERF_REG_RISCV_##r);	\
-+	val;							\
-+})
-+
-+	dwarf_regs[0]  = 0;
-+	dwarf_regs[1]  = REG(RA);
-+	dwarf_regs[2]  = REG(SP);
-+	dwarf_regs[3]  = REG(GP);
-+	dwarf_regs[4]  = REG(TP);
-+	dwarf_regs[5]  = REG(T0);
-+	dwarf_regs[6]  = REG(T1);
-+	dwarf_regs[7]  = REG(T2);
-+	dwarf_regs[8]  = REG(S0);
-+	dwarf_regs[9]  = REG(S1);
-+	dwarf_regs[10] = REG(A0);
-+	dwarf_regs[11] = REG(A1);
-+	dwarf_regs[12] = REG(A2);
-+	dwarf_regs[13] = REG(A3);
-+	dwarf_regs[14] = REG(A4);
-+	dwarf_regs[15] = REG(A5);
-+	dwarf_regs[16] = REG(A6);
-+	dwarf_regs[17] = REG(A7);
-+	dwarf_regs[18] = REG(S2);
-+	dwarf_regs[19] = REG(S3);
-+	dwarf_regs[20] = REG(S4);
-+	dwarf_regs[21] = REG(S5);
-+	dwarf_regs[22] = REG(S6);
-+	dwarf_regs[23] = REG(S7);
-+	dwarf_regs[24] = REG(S8);
-+	dwarf_regs[25] = REG(S9);
-+	dwarf_regs[26] = REG(S10);
-+	dwarf_regs[27] = REG(S11);
-+	dwarf_regs[28] = REG(T3);
-+	dwarf_regs[29] = REG(T4);
-+	dwarf_regs[30] = REG(T5);
-+	dwarf_regs[31] = REG(T6);
-+	dwfl_thread_state_register_pc(thread, REG(PC));
-+
-+	return dwfl_thread_state_registers(thread, 0, PERF_REG_RISCV_MAX,
-+					   dwarf_regs);
-+}
--- 
-2.7.4
+Please provide your feedback on it, how shall we proceed?
+
+Short summary of requirements.
+For a given mdev (mediated device [1]), there is one representor netdevice =
+and devlink port in switchdev mode (similar to SR-IOV VF),
+And there is one netdevice for the actual mdev when mdev is probed.
+
+(a) representor netdev and devlink port should be able derive phys_port_nam=
+e().
+So that representor netdev name can be built deterministically across reboo=
+ts.
+
+(b) for mdev's netdevice, mdev's device should have an attribute.
+This attribute can be used by udev rules/systemd or something else to renam=
+e netdev name deterministically.
+
+(c) IFNAMSIZ of 16 bytes is too small to fit whole UUID.
+A simple grep IFNAMSIZ in stack hints hundreds of users of IFNAMSIZ in driv=
+ers, uapi, netlink, boot config area and more.
+Changing IFNAMSIZ for a mdev bus doesn't really look reasonable option to m=
+e.
+
+Hence, I would like to discuss below options.
+
+Option-1: mdev index
+Introduce an optional mdev index/handle as u32 during mdev create time.
+User passes mdev index/handle as input.
+
+phys_port_name=3DmIndex=3Dm%u
+mdev_index will be available in sysfs as mdev attribute for udev to name th=
+e mdev's netdev.
+
+example mdev create command:
+UUID=3D$(uuidgen)
+echo $UUID index=3D10 > /sys/class/net/ens2f0/mdev_supported_types/mlx5_cor=
+e_mdev/create
+example netdevs:
+repnetdev=3Dens2f0_m10	/*ens2f0 is parent PF's netdevice */
+mdev_netdev=3Denm10
+
+Pros:
+1. mdevctl and any other existing tools are unaffected.
+2. netdev stack, ovs and other switching platforms are unaffected.
+3. achieves unique phys_port_name for representor netdev
+4. achieves unique mdev eth netdev name for the mdev using udev/systemd ext=
+ension.
+5. Aligns well with mdev and netdev subsystem and similar to existing sriov=
+ bdf's.
+
+Option-2: shorter mdev name
+Extend mdev to have shorter mdev device name in addition to UUID.
+such as 'foo', 'bar'.
+Mdev will continue to have UUID.
+phys_port_name=3Dmdev_name
+
+Pros:
+1. All same as option-1, except mdevctl needs upgrade for newer usage.
+It is common practice to upgrade iproute2 package along with the kernel.
+Similar practice to be done with mdevctl.
+2. Newer users of mdevctl who wants to work with non_UUID names, will use n=
+ewer mdevctl/tools.
+Cons:
+1. Dual naming scheme of mdev might affect some of the existing tools.
+It's unclear how/if it actually affects.
+mdevctl [2] is very recently developed and can be enhanced for dual naming =
+scheme.
+
+Option-3: mdev uuid alias
+Instead of shorter mdev name or mdev index, have alpha-numeric name alias.
+Alias is an optional mdev sysfs attribute such as 'foo', 'bar'.
+example mdev create command:
+UUID=3D$(uuidgen)
+echo $UUID alias=3Dfoo > /sys/class/net/ens2f0/mdev_supported_types/mlx5_co=
+re_mdev/create
+example netdevs:
+examle netdevs:
+repnetdev =3D ens2f0_mfoo
+mdev_netdev=3Denmfoo
+
+Pros:
+1. All same as option-1.
+2. Doesn't affect existing mdev naming scheme.
+Cons:
+1. Index scheme of option-1 is better which can number large number of mdev=
+s with fewer characters, simplifying the management tool.
+
+Option-4: extend IFNAMESZ to be 64 bytes Extended IFNAMESZ from 16 to 64 by=
+tes phys_port_name=3Dmdev_UUID_string mdev_netdev_name=3DenmUUID
+
+Pros:
+1. Doesn't require mdev extension
+Cons:
+1. netdev stack, driver, uapi, user space, boot config wide changes
+2. Possible user space extensions who assumed name size being 16 characters
+3. Single device type demands namesize change for all netdev types
+
+[1] https://www.kernel.org/doc/Documentation/vfio-mediated-device.txt
+[2] https://github.com/mdevctl/mdevctl
+
+Regards,
+Parav Pandit
+
+> -----Original Message-----
+> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> owner@vger.kernel.org> On Behalf Of Parav Pandit
+> Sent: Wednesday, August 14, 2019 9:51 PM
+> To: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>; Kirti Wankhede
+> <kwankhede@nvidia.com>; kvm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; cjia@nvidia.com; Jiri Pirko <jiri@mellanox.com>;
+> netdev@vger.kernel.org
+> Subject: RE: [PATCH v2 0/2] Simplify mtty driver and mdev core
+>=20
+>=20
+>=20
+> > -----Original Message-----
+> > From: Alex Williamson <alex.williamson@redhat.com>
+> > Sent: Wednesday, August 14, 2019 8:28 PM
+> > To: Parav Pandit <parav@mellanox.com>
+> > Cc: Cornelia Huck <cohuck@redhat.com>; Kirti Wankhede
+> > <kwankhede@nvidia.com>; kvm@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; cjia@nvidia.com; Jiri Pirko
+> > <jiri@mellanox.com>; netdev@vger.kernel.org
+> > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> >
+> > On Wed, 14 Aug 2019 13:45:49 +0000
+> > Parav Pandit <parav@mellanox.com> wrote:
+> >
+> > > > -----Original Message-----
+> > > > From: Cornelia Huck <cohuck@redhat.com>
+> > > > Sent: Wednesday, August 14, 2019 6:39 PM
+> > > > To: Parav Pandit <parav@mellanox.com>
+> > > > Cc: Alex Williamson <alex.williamson@redhat.com>; Kirti Wankhede
+> > > > <kwankhede@nvidia.com>; kvm@vger.kernel.org; linux-
+> > > > kernel@vger.kernel.org; cjia@nvidia.com; Jiri Pirko
+> > > > <jiri@mellanox.com>; netdev@vger.kernel.org
+> > > > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> > > >
+> > > > On Wed, 14 Aug 2019 12:27:01 +0000 Parav Pandit
+> > > > <parav@mellanox.com> wrote:
+> > > >
+> > > > > + Jiri, + netdev
+> > > > > To get perspective on the ndo->phys_port_name for the
+> > > > > representor netdev
+> > > > of mdev.
+> > > > >
+> > > > > Hi Cornelia,
+> > > > >
+> > > > > > -----Original Message-----
+> > > > > > From: Cornelia Huck <cohuck@redhat.com>
+> > > > > > Sent: Wednesday, August 14, 2019 1:32 PM
+> > > > > > To: Parav Pandit <parav@mellanox.com>
+> > > > > > Cc: Alex Williamson <alex.williamson@redhat.com>; Kirti
+> > > > > > Wankhede <kwankhede@nvidia.com>; kvm@vger.kernel.org; linux-
+> > > > > > kernel@vger.kernel.org; cjia@nvidia.com
+> > > > > > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+> > > > > >
+> > > > > > On Wed, 14 Aug 2019 05:54:36 +0000 Parav Pandit
+> > > > > > <parav@mellanox.com> wrote:
+> > > > > >
+> > > > > > > > > I get that part. I prefer to remove the UUID itself from
+> > > > > > > > > the structure and therefore removing this API makes lot
+> > > > > > > > > more
+> > sense?
+> > > > > > > >
+> > > > > > > > Mdev and support tools around mdev are based on UUIDs
+> > > > > > > > because it's
+> > > > > > defined
+> > > > > > > > in the documentation.
+> > > > > > > When we introduce newer device naming scheme, it will update
+> > > > > > > the
+> > > > > > documentation also.
+> > > > > > > May be that is the time to move to .rst format too.
+> > > > > >
+> > > > > > You are aware that there are existing tools that expect a uuid
+> > > > > > naming scheme, right?
+> > > > > >
+> > > > > Yes, Alex mentioned too.
+> > > > > The good tool that I am aware of is [1], which is 4 months old.
+> > > > > Not sure if it is
+> > > > part of any distros yet.
+> > > > >
+> > > > > README also says, that it is in 'early in development. So we
+> > > > > have scope to
+> > > > improve it for non UUID names, but lets discuss that more below.
+> > > >
+> > > > The up-to-date reference for mdevctl is
+> > > > https://github.com/mdevctl/mdevctl. There is currently an effort
+> > > > to get this packaged in Fedora.
+> > > >
+> > > Awesome.
+> > >
+> > > > >
+> > > > > > >
+> > > > > > > > I don't think it's as simple as saying "voila, UUID
+> > > > > > > > dependencies are removed, users are free to use arbitrary
+> > > > > > > > strings".  We'd need to create some kind of naming policy,
+> > > > > > > > what characters are allows so that we can potentially
+> > > > > > > > expand the creation parameters as has been proposed a
+> > > > > > > > couple times, how do we deal with collisions and races,
+> > > > > > > > and why should we make such a change when a UUID is a
+> > > > > > > > perfectly reasonable devices name.  Thanks,
+> > > > > > > >
+> > > > > > > Sure, we should define a policy on device naming to be more
+> relaxed.
+> > > > > > > We have enough examples in-kernel.
+> > > > > > > Few that I am aware of are netdev (vxlan, macvlan, ipvlan,
+> > > > > > > lot more), rdma
+> > > > > > etc which has arbitrary device names and ID based device names.
+> > > > > > >
+> > > > > > > Collisions and race is already taken care today in the mdev c=
+ore.
+> > > > > > > Same
+> > > > > > unique device names continue.
+> > > > > >
+> > > > > > I'm still completely missing a rationale _why_ uuids are
+> > > > > > supposedly bad/restricting/etc.
+> > > > > There is nothing bad about uuid based naming.
+> > > > > Its just too long name to derive phys_port_name of a netdev.
+> > > > > In details below.
+> > > > >
+> > > > > For a given mdev of networking type, we would like to have
+> > > > > (a) representor netdevice [2]
+> > > > > (b) associated devlink port [3]
+> > > > >
+> > > > > Currently these representor netdevice exist only for the PCIe SR-=
+IOV
+> VFs.
+> > > > > It is further getting extended for mdev without SR-IOV.
+> > > > >
+> > > > > Each of the devlink port is attached to representor netdevice [4]=
+.
+> > > > >
+> > > > > This netdevice phys_port_name should be a unique derived from
+> > > > > some
+> > > > property of mdev.
+> > > > > Udev/systemd uses phys_port_name to derive unique representor
+> > > > > netdev
+> > > > name.
+> > > > > This netdev name is further use by orchestration and switching
+> > > > > software in
+> > > > user space.
+> > > > > One such distro supported switching software is ovs [4], which
+> > > > > relies on the
+> > > > persistent device name of the representor netdevice.
+> > > >
+> > > > Ok, let me rephrase this to check that I understand this correctly.
+> > > > I'm not sure about some of the terms you use here (even after
+> > > > looking at the linked doc/code), but that's probably still ok.
+> > > >
+> > > > We want to derive an unique (and probably persistent?) netdev name
+> > > > so that userspace can refer to a representor netdevice. Makes sense=
+.
+> > > > For generating that name, udev uses the phys_port_name (which
+> > > > represents the devlink port, IIUC). Also makes sense.
+> > > >
+> > > You understood it correctly.
+> > >
+> > > > >
+> > > > > phys_port_name has limitation to be only 15 characters long.
+> > > > > UUID doesn't fit in phys_port_name.
+> > > >
+> > > > Understood. But why do we need to derive the phys_port_name from
+> > > > the mdev device name? This netdevice use case seems to be just one
+> > > > use case for using mdev devices? If this is a specialized mdev
+> > > > type for this setup, why not just expose a shorter identifier via a=
+n extra
+> attribute?
+> > > >
+> > > Representor netdev, represents mdev's switch port (like PCI SRIOV
+> > > VF's switch
+> > port).
+> > > So user must be able to relate this two objects in similar manner as
+> > > SRIOV
+> > VFs.
+> > > Phys_port_name is derived from the PCI PF and VF numbering scheme.
+> > > Similarly mdev's such port should be derived from mdev's
+> id/name/attribute.
+> > >
+> > > > > Longer UUID names are creating snow ball effect, not just in
+> > > > > networking stack
+> > > > but many user space tools too.
+> > > >
+> > > > This snowball effect mainly comes from the device name ->
+> > > > phys_port_name setup, IIUC.
+> > > >
+> > > Right.
+> > >
+> > > > > (as opposed to recently introduced mdevctl, are they more mdev
+> > > > > tools which has dependency on UUID name?)
+> > > >
+> > > > I am aware that people have written scripts etc. to manage their md=
+evs.
+> > > > Given that the mdev infrastructure has been around for quite some
+> > > > time, I'd say the chance of some of those scripts relying on uuid
+> > > > names is
+> > non-zero.
+> > > >
+> > > Ok. but those scripts have never managed networking devices.
+> > > So those scripts won't break because they will always create mdev
+> > > devices
+> > using UUID.
+> > > When they use these new networking devices, they need more things
+> > > than
+> > their scripts.
+> > > So user space upgrade for such mixed mode case is reasonable.
+> >
+> > Tools like mdevctl are agnostic of the type of mdev device they're
+> > managing, it shouldn't matter than they've never managed a networking
+> > mdev previously, it follows the standards of mdev management.
+> >
+> > > > >
+> > > > > Instead of mdev subsystem creating such effect, one option we
+> > > > > are
+> > > > considering is to have shorter mdev names.
+> > > > > (Similar to netdev, rdma, nvme devices).
+> > > > > Such as mdev1, mdev2000 etc.
+> >
+> > Note that these are kernel generated names, as are the other examples.
+> No. I probably gave the wrong examples.
+> Mdev user provided names can be 'foo', 'bar', 'foo1'.
+>=20
+> > In the case of mdev, the user is providing the UUID, which becomes the
+> > device name.  When a user writes to the create attribute, there needs
+> > to be determinism that the user can identify the device they created
+> > vs another that may have been created concurrently.  I don't see that
+> > we can put users in the path of managing device instance numbers.
+> No. Its just user provided names.
+>=20
+> >
+> > > > > Second option I was considering is to have an optional alias for
+> > > > > UUID based
+> > > > mdev.
+> > > > > This name alias is given at time of mdev creation.
+> > > > > Devlink port's phys_port_name is derived out of this shorter
+> > > > > mdev name
+> > > > alias.
+> > > > > This way, mdev remains to be UUID based with optional extension.
+> > > > > However, I prefer first option to relax mdev naming scheme.
+> > > >
+> > > > Actually, I think that second option makes much more sense, as you
+> > > > avoid potentially breaking existing tooling.
+> > > Let's first understand of what exactly will break with existing tool
+> > > if they see non_uuid based device.
+> >
+> > Do we really want a mixed namespace of device names, some UUID, some...
+> > something else?  That seems like a mess.
+> >
+> So you prefer alias as an attribute? If so, it should be an optional addi=
+tional
+> parameter during create time, because it is desired to not invent new cal=
+lbacks
+> for such attributes setting and (and rewrite them).
+>=20
+> > > Existing tooling continue to work with UUID devices.
+> > > Do you have example of what can break if they see non_uuid based
+> > > device name? I think you are clear, but to be sure, UUID based
+> > > creation will continue to be there. Optionally mdev will be created
+> > > with alpha-numeric string, if we don't it as additional attribute.
+> >
+> > I'm not onboard with a UUID being just one of the possible naming
+> > strings via which we can create mdev devices.  I think that becomes
+> > untenable for userspace.  I don't think a sufficient argument has been
+> > made against the alias approach, which seems to keep the UUID as a
+> > canonical name, providing a consistent namespace, augmented with user o=
+r
+> kernel provided short alias.
+> > Thanks,
+> >
+> If I understand you correctly, you prefer alias name approach to keep UUI=
+D
+> naming scheme intact in mdev?
+>=20
+> > Alex
+> >
+> > > > >
+> > > > > > We want to uniquely identify a device, across different types
+> > > > > > of vendor drivers. An uuid is a unique identifier and even a
+> > > > > > well-defined one. Tools (e.g. mdevctl) are relying on it for
+> > > > > > mdev devices
+> > > > today.
+> > > > > >
+> > > > > > What is the problem you're trying to solve?
+> > > > > Unique device naming is still achieved without UUID scheme by
+> > > > > various
+> > > > subsystems in kernel using alpha-numeric string.
+> > > > > Having such string based continue to provide unique names.
+> > > > >
+> > > > > I hope I described the problem and two solutions above.
+> > > > >
+> > > > > [1] https://github.com/awilliam/mdevctl
+> > > > > [2]
+> > > > > https://elixir.bootlin.com/linux/v5.3-rc4/source/drivers/net/eth
+> > > > > er
+> > > > > net/
+> > > > > mellanox/mlx5/core/en_rep.c [3]
+> > > > > http://man7.org/linux/man-pages/man8/devlink-port.8.html
+> > > > > [4]
+> > > > > https://elixir.bootlin.com/linux/v5.3-rc4/source/net/core/devlink=
+.
+> > > > > c#L6
+> > > > > 921
+> > > > > [5] https://www.openvswitch.org/
+> > > > >
+> > >
 
