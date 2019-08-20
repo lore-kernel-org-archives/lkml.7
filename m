@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4CEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C87C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF262087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDBEB2087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308649;
-	bh=+WDn8oAOmEByojJPlcQ4S36KY7Q1Vx3gD+XTkN2jkiY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMIDyJGc5aKWsm4sMzUyKFADhQ44sbRh/u72YHWIir2wD189MsQkUGCVo7NuQZ1Hy
-	 GCjGpiGvFDthb+02ZpxG5yTgTHhI3CFNWXOtwRAMx3UNAqqrNyrHR+XLLX82mHG/NJ
-	 ylT4C5i+OqL7F2j4iuPnGn77KXoJzcIRBXO2zLjE=
+	s=default; t=1566308653;
+	bh=0Am0qtdNwSQg3Bskun8I7pWCiq0uX0Ute1NE12kHESs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BHyQ4nrjNkYgpRfN6zT5cZj/g9Mc+b9PhamB/0wi1jmsQvHDIAixNNqqfxgNouF9K
+	 QDLcUIIAzXd0y1HUbsQheKt5W+00g1C7M/XY6UAErlQsjqGo8rfWZKxC4oXDo6Nky6
+	 c5AhzVrIBLsz4XD/5ZL/Xi6n9LZal0Jxe6uDORaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730830AbfHTNnS (ORCPT
+        id S1730303AbfHTNoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:43:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38904 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:44:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730805AbfHTNnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:43:13 -0400
+        id S1730826AbfHTNnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:43:18 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2AB522DD3;
-        Tue, 20 Aug 2019 13:43:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DBCE22DA7;
+        Tue, 20 Aug 2019 13:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308593;
-        bh=+WDn8oAOmEByojJPlcQ4S36KY7Q1Vx3gD+XTkN2jkiY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DWA2rGnkzqFtQzHcxGZA0WQZ6Oj3e2SnrFMOdDlnh4evcCxIWyDppWt5KkV+mMU7j
-         XCNcq/d+xJpSWFfyAYc1VqRShDMJkjfz7OOjZsEW2d/vLlYo7bQHPwdsW+tua7durS
-         U1EWbutujzM4sGSc7cQ3CPi57JDRzA0pI8SdBHmI=
+        s=default; t=1566308597;
+        bh=0Am0qtdNwSQg3Bskun8I7pWCiq0uX0Ute1NE12kHESs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=raDt/mLxCZACRJPbLPpOkg8bg71QTxKg2hK3N98UPJhwB56ls4f2LxZ0fW02cHJwo
+         gI8xSKR724JR0rP8VzMwN/62fGXwg8cRZQGfxbGzDt6p13lj3kYhupJsaKiTa48aUV
+         WK+R2XeV5EiU4RXpQHxUt13D3PuX8sLqpxwkaieQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/12] usb: host: fotg2: restart hcd after port reset
-Date:   Tue, 20 Aug 2019 09:42:52 -0400
-Message-Id: <20190820134253.11562-11-sashal@kernel.org>
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.9 1/7] dmaengine: ste_dma40: fix unneeded variable warning
+Date:   Tue, 20 Aug 2019 09:43:09 -0400
+Message-Id: <20190820134315.11720-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820134253.11562-1-sashal@kernel.org>
-References: <20190820134253.11562-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,37 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 777758888ffe59ef754cc39ab2f275dc277732f4 ]
+[ Upstream commit 5d6fb560729a5d5554e23db8d00eb57cd0021083 ]
 
-On the Gemini SoC the FOTG2 stalls after port reset
-so restart the HCD after each port reset.
+clang-9 points out that there are two variables that depending on the
+configuration may only be used in an ARRAY_SIZE() expression but not
+referenced:
 
-Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20190810150458.817-1-linus.walleij@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+static u32 d40_backup_regs[] = {
+           ^
+drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+static u32 d40_backup_regs_chan[] = {
+
+Mark these __maybe_unused to shut up the warning.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20190712091357.744515-1-arnd@arndb.de
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/fotg210-hcd.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/dma/ste_dma40.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
-index 457cc6525abd6..aa21036828084 100644
---- a/drivers/usb/host/fotg210-hcd.c
-+++ b/drivers/usb/host/fotg210-hcd.c
-@@ -1652,6 +1652,10 @@ static int fotg210_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 			/* see what we found out */
- 			temp = check_reset_complete(fotg210, wIndex, status_reg,
- 					fotg210_readl(fotg210, status_reg));
-+
-+			/* restart schedule */
-+			fotg210->command |= CMD_RUN;
-+			fotg210_writel(fotg210, fotg210->command, &fotg210->regs->command);
- 		}
+diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
+index 8684d11b29bba..68b41daab3a8f 100644
+--- a/drivers/dma/ste_dma40.c
++++ b/drivers/dma/ste_dma40.c
+@@ -142,7 +142,7 @@ enum d40_events {
+  * when the DMA hw is powered off.
+  * TODO: Add save/restore of D40_DREG_GCC on dma40 v3 or later, if that works.
+  */
+-static u32 d40_backup_regs[] = {
++static __maybe_unused u32 d40_backup_regs[] = {
+ 	D40_DREG_LCPA,
+ 	D40_DREG_LCLA,
+ 	D40_DREG_PRMSE,
+@@ -211,7 +211,7 @@ static u32 d40_backup_regs_v4b[] = {
  
- 		if (!(temp & (PORT_RESUME|PORT_RESET))) {
+ #define BACKUP_REGS_SZ_V4B ARRAY_SIZE(d40_backup_regs_v4b)
+ 
+-static u32 d40_backup_regs_chan[] = {
++static __maybe_unused u32 d40_backup_regs_chan[] = {
+ 	D40_CHAN_REG_SSCFG,
+ 	D40_CHAN_REG_SSELT,
+ 	D40_CHAN_REG_SSPTR,
 -- 
 2.20.1
 
