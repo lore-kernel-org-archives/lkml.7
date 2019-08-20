@@ -2,176 +2,99 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D2EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97694C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D9023A45
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 687EF23A45
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:29:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="cqzZrIti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbfHTI3M (ORCPT
+        id S1729537AbfHTI3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:29:12 -0400
-Received: from mga14.intel.com ([192.55.52.115]:27343 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfHTI3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:29:12 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 01:29:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="329638795"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 20 Aug 2019 01:29:08 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        gregkh@linuxfoundation.org, mark.rutland@arm.com,
-        linux-serial@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
-        rahul.tanwar@intel.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v2 1/2] dt-bindings: serial: lantiq: Convert to YAML schema
-Date:   Tue, 20 Aug 2019 16:29:01 +0800
-Message-Id: <772527bd87da45eeef905d9b9d46a8d99915a116.1566288689.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
-References: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
-References: <cover.1566288689.git.rahul.tanwar@linux.intel.com>
+        Tue, 20 Aug 2019 04:29:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54938 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729522AbfHTI3O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 04:29:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p74so1813755wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 01:29:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=VTSW2R99Gpp3ZPuegti+Wid5K/Ptbn+GS7fhEV9UB7Y=;
+        b=cqzZrIti0K7HA+zzORNM1a5F39EziABl3E0hTYPlPqI3ybHQpJaCNrNBOTdVnl2vMu
+         MX8DAAES0sDR74dKpZ27uihKiKzuJ4sNU8pNRLO8rvgcJSwwrThZvOUCE6xCFan1D+Es
+         McQTtGKFtuyhkLxfoebyo2k1yKJHI9/PJva5Bv4Sxj18fZ1GWcRrpfy4i9haC++P0uSR
+         1KBorCQcQWyk6ypOVGf+IKBRSty0NYf9ew5kHWajbuoZMhDa9Q0Ymy219G3AflS+kv0f
+         KqU9ytL8FItys3tnFX+IY3RiW/xoeczCPwplZQBokkZtm0AmRvQtBkC4cMl+EdqMMoGB
+         l4iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VTSW2R99Gpp3ZPuegti+Wid5K/Ptbn+GS7fhEV9UB7Y=;
+        b=tR85wxFyjm1dfzpEIP/e0WFT38rpXAxmP0X428VOqxxk7sXIh5wK2X1QPtaOpHNgVO
+         Khw2HytSVlcgOE7As6oKJwTOjQGT/qBZXSHkkGfRoayGhMDldGN0E4cehwZ9QGxQlX94
+         yoYT+I6w3xBhCvecqaasp8OSSvzvesoCy13vOxrR29Z+za/XTHRk22Wnbk155/F6rj5q
+         FkuLQsGhQMM39rQIHn5EIFSauw6poBf8nUYxQhgksYGJud2EIlObZNgosSxazCZ8sqgN
+         rE/kXspxVYDJsNcP2+9YmWozdeRCSZFSRThoCTc0F0CVX9E4veXidlOVo0EvkaxoKkma
+         JeKA==
+X-Gm-Message-State: APjAAAVUhQEzy8c6JbHFCjhQBYDJgo9Ol4wa59heknNjtlIjahOc7qWr
+        u0T1EHlxHTjnfFRbzNulg03R1jdb
+X-Google-Smtp-Source: APXvYqzUD+QBkNWh3KVOat2VCtREXWcnmRQSg/BfK4O9ZeWpEgdWlJUoObWNQrzxrgwZs82GN2Jz1w==
+X-Received: by 2002:a1c:a615:: with SMTP id p21mr24487519wme.121.1566289751650;
+        Tue, 20 Aug 2019 01:29:11 -0700 (PDT)
+Received: from [192.168.1.20] (host109-153-59-46.range109-153.btcentralplus.com. [109.153.59.46])
+        by smtp.googlemail.com with ESMTPSA id o129sm1838587wmb.41.2019.08.20.01.29.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Aug 2019 01:29:10 -0700 (PDT)
+Subject: Re: iwlwifi: microcode SW error detected
+From:   Chris Clayton <chris2553@googlemail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+References: <42e782e0-78be-b3d4-d222-1a75df35b078@googlemail.com>
+ <cdf38da2-def1-cf0d-2d35-f31cc8fe122a@googlemail.com>
+Message-ID: <39c672d9-a95e-65d0-82a4-60fa71317f24@googlemail.com>
+Date:   Tue, 20 Aug 2019 09:29:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <cdf38da2-def1-cf0d-2d35-f31cc8fe122a@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the existing DT binding document for Lantiq SoC ASC serial controller
-from txt format to YAML format.
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- .../devicetree/bindings/serial/lantiq_asc.txt      | 31 ----------
- .../devicetree/bindings/serial/lantiq_asc.yaml     | 70 ++++++++++++++++++++++
- 2 files changed, 70 insertions(+), 31 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/serial/lantiq_asc.txt
- create mode 100644 Documentation/devicetree/bindings/serial/lantiq_asc.yaml
 
-diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.txt b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
-deleted file mode 100644
-index 40e81a5818f6..000000000000
---- a/Documentation/devicetree/bindings/serial/lantiq_asc.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--Lantiq SoC ASC serial controller
--
--Required properties:
--- compatible : Should be "lantiq,asc"
--- reg : Address and length of the register set for the device
--- interrupts: the 3 (tx rx err) interrupt numbers. The interrupt specifier
--  depends on the interrupt-parent interrupt controller.
--
--Optional properties:
--- clocks: Should contain frequency clock and gate clock
--- clock-names: Should be "freq" and "asc"
--
--Example:
--
--asc0: serial@16600000 {
--	compatible = "lantiq,asc";
--	reg = <0x16600000 0x100000>;
--	interrupt-parent = <&gic>;
--	interrupts = <GIC_SHARED 103 IRQ_TYPE_LEVEL_HIGH>,
--		<GIC_SHARED 105 IRQ_TYPE_LEVEL_HIGH>,
--		<GIC_SHARED 106 IRQ_TYPE_LEVEL_HIGH>;
--	clocks = <&cgu CLK_SSX4>, <&cgu GCLK_UART>;
--	clock-names = "freq", "asc";
--};
--
--asc1: serial@e100c00 {
--	compatible = "lantiq,asc";
--	reg = <0xE100C00 0x400>;
--	interrupt-parent = <&icu0>;
--	interrupts = <112 113 114>;
--};
-diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.yaml b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-new file mode 100644
-index 000000000000..54b90490f4fb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/lantiq_asc.yaml
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/serial/lantiq_asc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Lantiq SoC ASC serial controller
-+
-+maintainers:
-+  - Rahul Tanwar <rahul.tanwar@intel.com>
-+
-+allOf:
-+  - $ref: /schemas/serial.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      items:
-+        - const: lantiq,asc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 3
-+    items:
-+      - description: tx or combined interrupt
-+      - description: rx interrupt
-+      - description: err interrupt
-+
-+  clocks:
-+    description:
-+      When present, first entry listed should contain phandle
-+      to the frequency clock and second entry should contain
-+      phandle to the gate clock.
-+
-+  clock-names:
-+    items:
-+      - const: freq
-+      - const: asc
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+
-+examples:
-+  - |
-+    asc0: serial@16600000 {
-+            compatible = "lantiq,asc";
-+            reg = <0x16600000 0x100000>;
-+            interrupt-parent = <&gic>;
-+            interrupts = <GIC_SHARED 103 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SHARED 105 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SHARED 106 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&cgu CLK_SSX4>, <&cgu GCLK_UART>;
-+            clock-names = "freq", "asc";
-+    };
-+
-+  - |
-+    asc1: serial@e100c00 {
-+            compatible = "lantiq,asc";
-+            reg = <0xE100C00 0x400>;
-+            interrupt-parent = <&icu0>;
-+            interrupts = <112 113 114>;
-+    };
-+
-+...
--- 
-2.11.0
+On 18/08/2019 09:21, Chris Clayton wrote:
+> 
+> 
+> On 17/08/2019 08:19, Chris Clayton wrote:
+>> Hi.
+>>
+>> I just found the following error in the output from dmesg.
+>>
+>> [ 4023.460058] iwlwifi 0000:02:00.0: Microcode SW error detected. Restarting 0x0.
+> 
+> Since reporting, I've found that this problem is being explored in the thread that starts at
+> https://marc.info/?l=linux-kernel&m=156601519111113.
 
+Mmm, that's a dead link. Don't knwo what happened there but the real link is
+https://marc.info/?l=linux-kernel&m=156265244614126
+
+> 
+> Chris
+> 
