@@ -2,130 +2,72 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5B9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3457C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9F9218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:32:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BUHKFxn7"
+	by mail.kernel.org (Postfix) with ESMTP id AE4C5218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 02:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbfHTCcb (ORCPT
+        id S1729106AbfHTCcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 22:32:31 -0400
-Received: from mail-eopbgr130073.outbound.protection.outlook.com ([40.107.13.73]:28548
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728719AbfHTCca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 22:32:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lj2VUxGZ4KuyGsBKyvp4g9vuj0uAbhWJzNr3B8DK6e58Xmms+0hbwvD42Fvuv18fluMmaLmxKRKMR+WNE1fGUNLPdV8Jcl/Ow4q6zamrr1FQzezAanUdlzL8jZ6dF3juivLKWnh0nNJAlapNB6XkoKop2jl++LaL9hpVfugT7uySjFSVNCmzJXBEbU++sIS+s98tK2GmfRoAISXkhdVUNTpLD5zhdkFAJ0fzyrKmdpx/2mu1UiD5VNYC69GadqzVO0yNJbb5Vuh6XBRQ+Wu9KAxIN9bAOmDxJ2zAj7YGZrPbhD9oQcM8HtO3xbgQtwE+ObkCOeMMd2YmxHtK/d0lag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tmmw/7RzIjidk3HJdAgvM64Mcbhsj+8O66Ws1WVw7IY=;
- b=mtLNWD5W7Ycszg3G3atnaxeFbXHiA5HLW6jtozTKWInSUO5cfS2O3zKBsvIDt2eZyupUpbJuQ+E1vjD4vAv568Xk3nuEffqkCtiI4MK4B88WncVdgsxwD3JLPEHAgpng+Ddc/PxQbKTY4NX29vIrEWhZ0/Nb7ocvrs6r1gIqA2UZdqFaVjyI6R7F6dud7x0b/1WL9bHq91Tp3SbyBEh4PPeTZrFupaoAlsVNVVXeajPE9PCFo6/qGNJdUUWUbgFuAx4wO/T3QIU2ySHc6os7nhvYsH5PcN0QGFKBZ33WBo/tPnIOTOXxPfrurgoyKk5Ys0wrzS3IU5JM2r/MLtJB9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tmmw/7RzIjidk3HJdAgvM64Mcbhsj+8O66Ws1WVw7IY=;
- b=BUHKFxn7WveAG3aF3gG3FrFRG4sHnQlRxo+9mnmVAD7yy6e/XIH1w3zuCPnxLrPok9ZGhdWZjMJjz7qK5qB/2pKQ69Bkf+7TRLJihDvgYkrYikldxcKF1ydasdMALjGwHJ73/YBFnLu3NedxAGRFe0kVYHEabb4LVeKynMEwwYg=
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.5.23) by
- VI1PR0402MB3952.eurprd04.prod.outlook.com (52.134.17.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Tue, 20 Aug 2019 02:32:26 +0000
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::8026:902c:16d9:699d]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::8026:902c:16d9:699d%7]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
- 02:32:26 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Marco Hartmann <marco.hartmann@nxp.com>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: RE: [EXT] Re: [PATCH net-next 0/1] net: fec: add C45 MDIO read/write
- support
-Thread-Topic: [EXT] Re: [PATCH net-next 0/1] net: fec: add C45 MDIO read/write
- support
-Thread-Index: AQHVVrEbaaUHZXnfyUWEGTy4sTss5acDFLIAgAA3lHA=
-Date:   Tue, 20 Aug 2019 02:32:26 +0000
-Message-ID: <VI1PR0402MB360079EAAE7042048B2F5AC8FFAB0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <1566234659-7164-1-git-send-email-marco.hartmann@nxp.com>
- <20190819225422.GD29991@lunn.ch>
-In-Reply-To: <20190819225422.GD29991@lunn.ch>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fugang.duan@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f52e6b7a-76e5-479e-cf09-08d72516a3eb
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3952;
-x-ms-traffictypediagnostic: VI1PR0402MB3952:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB39527B4D4ABE470311963679FFAB0@VI1PR0402MB3952.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(189003)(199004)(3846002)(6116002)(66066001)(2906002)(476003)(446003)(102836004)(4744005)(11346002)(6506007)(486006)(52536014)(5660300002)(186003)(6246003)(53936002)(6636002)(7736002)(74316002)(26005)(33656002)(110136005)(54906003)(316002)(305945005)(7696005)(86362001)(71200400001)(71190400001)(478600001)(99286004)(76176011)(14444005)(14454004)(256004)(229853002)(66446008)(64756008)(4326008)(6436002)(9686003)(76116006)(55016002)(66476007)(66946007)(81156014)(66556008)(25786009)(81166006)(8936002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3952;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +HnLp/BrebltwPjhgoD5zy8DZx1ogOynY3WprbvoIqpmsvqJPQiZXHWsK7cTLSTDGzilZLF2gBlvh05uMz0rvm0r6tM11QknJsgjRBPEnj8jSZfVovf5d4kgSH/f2En9zIjBWYUH5JXUn56RVeFRlApRupJFFLDXIC6MM/G6CpPf1PB/Sig5Q9P57Fo/cCkiDFZGidO1q9wp7QWbo5xu1eSKJIb6oz6VEwdjrzOnR2ys6INr2QNjchOZBJVQLV7t+N7F6/p1S7cJihHPULhggakTmcjIqt+/+vHz3sDoxejLAfe5zM/Jd3LujaX17xpkdnH1F5Bqv+A+cLKMIndHctogsxajDLw/X2ZRXfXh+hJueO/b/IKcQUL+JcF0CFs8xt1sQFB0Eum7m9ZN+2a5VY2gJNQWuUQyrYgMpXMCvrM=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 19 Aug 2019 22:32:53 -0400
+Received: from mga07.intel.com ([134.134.136.100]:61411 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728719AbfHTCcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 22:32:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 19:32:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,407,1559545200"; 
+   d="scan'208";a="178050985"
+Received: from genxtest-ykzhao.sh.intel.com (HELO [10.239.143.71]) ([10.239.143.71])
+  by fmsmga008.fm.intel.com with ESMTP; 19 Aug 2019 19:32:51 -0700
+Subject: Re: [RFC PATCH 08/15] drivers/acrn: add VM memory management for ACRN
+ char device
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+References: <1565922356-4488-1-git-send-email-yakui.zhao@intel.com>
+ <1565922356-4488-9-git-send-email-yakui.zhao@intel.com>
+ <20190816124757.GW1974@kadam>
+ <8b909c22-3873-2b5d-4845-1fee1a5d81ce@intel.com>
+ <20190819073958.GC4451@kadam>
+From:   "Zhao, Yakui" <yakui.zhao@intel.com>
+Message-ID: <1896e9f8-7947-3c7a-4328-ddbdeee892e3@intel.com>
+Date:   Tue, 20 Aug 2019 10:25:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f52e6b7a-76e5-479e-cf09-08d72516a3eb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 02:32:26.4843
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: t4nQtvg+0LbpR8GaIVX1OwxS8zpFBnfWv9Ks6usODFkJ/4v5AMGtQTwQYUuN3mWTBVaY1W1uTz32n22OIRtHyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3952
+In-Reply-To: <20190819073958.GC4451@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
-> On Mon, Aug 19, 2019 at 05:11:14PM +0000, Marco Hartmann wrote:
-> > As of yet, the Fast Ethernet Controller (FEC) driver only supports
-> > Clause 22 conform MDIO transactions. IEEE 802.3ae Clause 45 defines a
-> > modified MDIO protocol that uses a two staged access model in order to
-> > increase the address space.
-> >
-> > This patch adds support for Clause 45 conform MDIO read and write
-> > operations to the FEC driver.
->=20
-> Hi Marco
->=20
-> Do all versions of the FEC hardware support C45? Or do we need to make us=
-e
-> of the quirk support in this driver to just enable it for some revisions =
-of FEC?
->=20
-> Thanks
->         Andrew
 
-i.MX legacy platforms like i.MX6/7 series, they doesn't support Write & Rea=
-d Increment.
-But for i.MX8MQ/MM series, it support C45 full features like Write & Read I=
-ncrement.
 
-For the patch itself, it doesn't support Write & Read Increment, so I think=
- the patch doesn't
-need to add quirk support.
+On 2019年08月19日 15:39, Dan Carpenter wrote:
+> On Mon, Aug 19, 2019 at 01:32:54PM +0800, Zhao, Yakui wrote:
+>> In fact as this driver is mainly used for embedded IOT usage, it doesn't
+>> handle the complex cleanup when such error is encountered. Instead the clean
+>> up is handled in free_guest_vm.
+> 
+> A use after free here seems like a potential security problem.  Security
+> matters for IoT...  :(
 
-Andy
+Thanks for pointing out the issue.
+The cleanup will be considered carefully.
+
+> 
+> regards,
+> dan carpenter
+> 
