@@ -2,171 +2,118 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1E1C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BEFC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D991F22CEC
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:47:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="o3erKTMo"
+	by mail.kernel.org (Postfix) with ESMTP id A7B6722CEC
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:50:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbfHTArf (ORCPT
+        id S1728838AbfHTAuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 20:47:35 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:9732 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728580AbfHTArf (ORCPT
+        Mon, 19 Aug 2019 20:50:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:51231 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728772AbfHTAuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 20:47:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1566262056; x=1597798056;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=K72wUoRoiZYo201g6jH46rLjKbp7qhzsddIk/Fsw3jQ=;
-  b=o3erKTMoFWIat89ceJeggGkDCtOqbKLBS4bbOO+5dKiLnAQuxj1QSfhC
-   +4Z9DEJukM/psn84rOOtOMdNkg6RMRRcixyORJp6vODnaEPaYMt9UqIZR
-   S74GswVSR+U3Q7TrIhVKXtEhVm16esUx6omXLoV1V+yoD63PUfiuvHWU9
-   F8c63/x745CWjrMjGj3sBAzwLVleEMzMfyAl8AkDE9ww4HfzfflkqYD2S
-   c5sLvZDvN+FdASXko+QcdeXdvE2sgml5dlI5bXJCnQQ8sBKWQKi5+Kh5v
-   rXL5nMlSQygT44OiROEw5qpqV7t1NXlinX+k0vwD2uR9L0kLe9t5fXJHh
-   w==;
-IronPort-SDR: P9RY2wxIImsWl95EXzEaX/4eVxQ1hkjGtZD9A70WFIz7fOBVQeOvPsGWZ1WAlcPHv2yWtFEnwC
- p4BIP3qDBk3HwbA8rckWbMRNdXewM+e7JDU/p6YZfeUwzWdao7u79/Q81LauAl58Hp5ZhS2WbW
- 9k8ezoAS6q+ollyPZVCcTU7DuVdg6RIMgZI2cdDDzB6jnSbHW23YMsP/CPQG3Wbvh7ILskFkgH
- kZjL/xgNVkmnadOEXjS1Fvil31RO+9e0mFwb8Tee1vVYlxd5zRwu7PIy3n4s+8H0nqoFTsuOD/
- iug=
-X-IronPort-AV: E=Sophos;i="5.64,406,1559491200"; 
-   d="scan'208";a="120780482"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Aug 2019 08:47:35 +0800
-IronPort-SDR: 5nS99llAu88XxqlHGdN1T0iUUBC4todiWifbW1yVhPLmjEYoRICbyjt1wrF/HE98By+3IFr+e9
- Xu9m1bLGMJaoSZx/9vFOwdUq6wob9xC7XLtEL4A0F6Uit294eI8mf5mjBwApd5rVw2yhvVuyOs
- 3hWolbuvlB1aYBS9jAPPUBHVlTdHa0+F3HfJNmVfqDLCAkuxk9+61T1GQYHxRrJXTPxCogIuwK
- xI5aHXfvm3SJCqODxuA1Q3LtQgEMUGVgNmBqtrzC2QUvzGoWxQHwVqw9WWz4b2nn2Uhizf68ll
- GFYAOWqpZZ8dysZP2neH3/kE
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 17:44:58 -0700
-IronPort-SDR: QUGX6k+unjABn9xPyz6wOgy7JlhI2PTBquwhT+WcUUrHHUCjrc6UH7ZC1m4QWhHBegR2fG1KcJ
- q+dCZBr1btcfDxqHePphKryzHyKAJFrUyfc58C2a18MN1Xan3qlYGclN3daB4FmUYmFaUr6YNG
- wiba5lVIp6CT8RxMyisHZkzGp3PPQDVoYx09EzcFVLmwLxw+s03Uqzw7+n1sVVlZ8QWwj7TxL1
- 0mo4dgELx9Wa7YG5zH18uTxNGNQqtiCYTCUwvuzMssNyTyi+tLNzgsK1w41Af/LyQ83VLSzsHC
- kW8=
-Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip01.wdc.com with ESMTP; 19 Aug 2019 17:47:35 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Atish Patra <atish.patra@wdc.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Allison Randal <allison@lohutok.net>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        "hch@infradead.org" <hch@infradead.org>
-Subject: [v2 PATCH] RISC-V: Optimize tlb flush path.
-Date:   Mon, 19 Aug 2019 17:47:35 -0700
-Message-Id: <20190820004735.18518-1-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 19 Aug 2019 20:50:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id a13so5904372ioh.18
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 17:50:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=ayISk8pRIZ3fvLz0q0dseQ9S0ykGRFj0hmMBya3EZZY=;
+        b=OYGDY335Zl/pro5/dWrs71N2XOlrOpHBdHYrXgUYlTZM1qDdjWw7megXV8kAgO9CKg
+         diSS+tsIp+sKVkwa4snwevBWe6piAgnEDa+LEjyO8sF3JZJsHx4VHHqduqovFMy8W0J4
+         Y/s4Fr/bLmADoL3/ZttbOa2Dedu0p5/v0eSurOJDagKUcmZKcpZgSqPpagsLb/6W3rAc
+         8iyRP2wmFZfW/+qP3fqAL4qg7rK9JsskJkT9+Gt8CZyLUq1icPjaN+lAPvI8AkxozXM7
+         57PzU73oRaqngREyMByA6UYoTykGi3H/F5lkLESxbJ57hjfoXplSCJxvSPVxEZZzsGLA
+         lfWA==
+X-Gm-Message-State: APjAAAUY1Ep71Kg6zLQ+VdZQytSfJ+SiZXH+VFm7qQyq4dLgN38Fbs+5
+        imKQeE8PHghBY+YgZIqiTOfJA+auLXl+k10FWVBLJ80R6OJC
+X-Google-Smtp-Source: APXvYqx0McsdF+sn6ssiL6gFDgRhemyAQaQFGH6OYx2mD5Ykw68jfXazglGGJcCFqkfi9F3gqRDGnQIg3wGPL2mU8sH7oDhWqQXf
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:ee12:: with SMTP id i18mr28234407ioh.172.1566262206499;
+ Mon, 19 Aug 2019 17:50:06 -0700 (PDT)
+Date:   Mon, 19 Aug 2019 17:50:06 -0700
+In-Reply-To: <00000000000098afd80590796d14@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000719222059081d6f2@google.com>
+Subject: Re: WARNING in wdm_write/usb_submit_urb
+From:   syzbot <syzbot+d232cca6ec42c2edb3fc@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In RISC-V, tlb flush happens via SBI which is expensive.
-If the target cpumask contains a local hartid, some cost
-can be saved by issuing a local tlb flush as we do that
-in OpenSBI anyways. There is also no need of SBI call if
-cpumask is empty.
+syzbot has found a reproducer for the following crash on:
 
-Do a local flush first if current cpu is present in cpumask.
-Invoke SBI call only if target cpumask contains any cpus
-other than local cpu.
+HEAD commit:    e06ce4da usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=14a8c0b6600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
+dashboard link: https://syzkaller.appspot.com/bug?extid=d232cca6ec42c2edb3fc
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12b6dfba600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15f63a4c600000
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/include/asm/tlbflush.h | 37 ++++++++++++++++++++++++++-----
- 1 file changed, 31 insertions(+), 6 deletions(-)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d232cca6ec42c2edb3fc@syzkaller.appspotmail.com
 
-diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
-index b5e64dc19b9e..3f9cd17b5402 100644
---- a/arch/riscv/include/asm/tlbflush.h
-+++ b/arch/riscv/include/asm/tlbflush.h
-@@ -8,6 +8,7 @@
- #define _ASM_RISCV_TLBFLUSH_H
- 
- #include <linux/mm_types.h>
-+#include <linux/sched.h>
- #include <asm/smp.h>
- 
- /*
-@@ -42,20 +43,44 @@ static inline void flush_tlb_range(struct vm_area_struct *vma,
- 
- #include <asm/sbi.h>
- 
--static inline void remote_sfence_vma(struct cpumask *cmask, unsigned long start,
--				     unsigned long size)
-+static void __riscv_flush_tlb(struct cpumask *cmask, unsigned long start,
-+			      unsigned long size)
- {
- 	struct cpumask hmask;
-+	unsigned int hartid;
-+	unsigned int cpuid;
- 
- 	cpumask_clear(&hmask);
-+
-+	if (!cmask) {
-+		riscv_cpuid_to_hartid_mask(cpu_online_mask, &hmask);
-+		goto issue_sfence;
-+	}
-+
-+	cpuid = get_cpu();
-+	if (cpumask_test_cpu(cpuid, cmask)) {
-+		/* Save trap cost by issuing a local tlb flush here */
-+		if ((start == 0 && size == -1) || (size > PAGE_SIZE))
-+			local_flush_tlb_all();
-+		else if (size == PAGE_SIZE)
-+			local_flush_tlb_page(start);
-+	}
-+	if (cpumask_any_but(cmask, cpuid) >= nr_cpu_ids)
-+		goto done;
-+
- 	riscv_cpuid_to_hartid_mask(cmask, &hmask);
-+	hartid = cpuid_to_hartid_map(cpuid);
-+	cpumask_clear_cpu(hartid, &hmask);
-+
-+issue_sfence:
- 	sbi_remote_sfence_vma(hmask.bits, start, size);
-+done:
-+	put_cpu();
- }
- 
--#define flush_tlb_all() sbi_remote_sfence_vma(NULL, 0, -1)
--
-+#define flush_tlb_all() __riscv_flush_tlb(NULL, 0, -1)
- #define flush_tlb_range(vma, start, end) \
--	remote_sfence_vma(mm_cpumask((vma)->vm_mm), start, (end) - (start))
-+	__riscv_flush_tlb(mm_cpumask((vma)->vm_mm), start, (end) - (start))
- 
- static inline void flush_tlb_page(struct vm_area_struct *vma,
- 				  unsigned long addr) {
-@@ -63,7 +88,7 @@ static inline void flush_tlb_page(struct vm_area_struct *vma,
- }
- 
- #define flush_tlb_mm(mm)				\
--	remote_sfence_vma(mm_cpumask(mm), 0, -1)
-+	__riscv_flush_tlb(mm_cpumask(mm), 0, -1)
- 
- #endif /* CONFIG_SMP */
- 
--- 
-2.21.0
+------------[ cut here ]------------
+URB 000000005fab893a submitted while active
+WARNING: CPU: 1 PID: 1788 at drivers/usb/core/urb.c:362  
+usb_submit_urb+0x10c1/0x13b0 drivers/usb/core/urb.c:362
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 1788 Comm: syz-executor522 Not tainted 5.3.0-rc5+ #27
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x2a3/0x6da kernel/panic.c:219
+  __warn.cold+0x20/0x4a kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:usb_submit_urb+0x10c1/0x13b0 drivers/usb/core/urb.c:362
+Code: 89 de e8 82 bc ef fd 84 db 0f 85 42 f6 ff ff e8 45 bb ef fd 4c 89 fe  
+48 c7 c7 80 68 18 86 c6 05 27 30 3a 04 01 e8 34 a1 c5 fd <0f> 0b e9 20 f6  
+ff ff c7 44 24 14 01 00 00 00 e9 d7 f6 ff ff 41 bd
+RSP: 0018:ffff8881d036fc98 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff81288cfd RDI: ffffed103a06df85
+RBP: ffff8881cfce56a0 R08: ffff8881d1ce4800 R09: ffffed103b663ee7
+R10: ffffed103b663ee6 R11: ffff8881db31f737 R12: 1ffff1103a06dfa7
+R13: 00000000fffffff0 R14: ffff8881cfce5688 R15: ffff8881d8106d00
+  wdm_write+0x828/0xd87 drivers/usb/class/cdc-wdm.c:423
+  __vfs_write+0x76/0x100 fs/read_write.c:494
+  vfs_write+0x262/0x5c0 fs/read_write.c:558
+  ksys_write+0x127/0x250 fs/read_write.c:611
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x447029
+Code: e8 ec e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 3b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f1e9e0a4da8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000006dcc28 RCX: 0000000000447029
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 00000000006dcc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dcc2c
+R13: 0000000020000000 R14: 00000000004af170 R15: 00000000000003e8
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
