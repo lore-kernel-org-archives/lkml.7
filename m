@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6113C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545E2C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB38233A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256682339E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:22:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q/77uMAC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r5ZJTMKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfHTXVz (ORCPT
+        id S1727070AbfHTXWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 19:21:55 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:56307 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbfHTXVn (ORCPT
+        Tue, 20 Aug 2019 19:22:02 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:40404 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726943AbfHTXVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:21:43 -0400
-Received: by mail-qt1-f202.google.com with SMTP id z93so565977qtc.22
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:21:42 -0700 (PDT)
+        Tue, 20 Aug 2019 19:21:34 -0400
+Received: by mail-pf1-f201.google.com with SMTP id e18so249425pfj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 16:21:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=tkCfSiy4b5qRvmQQFJy8V77mN5PoF0IOrQeRy2ua5uQ=;
-        b=Q/77uMAC1TZsAHqXrxdHlqhl30+jOg1uOthDAQFEp3n4XXeOV6Li20J8huWjE+Nq42
-         mlOU3LU63iXRJ1HBtrLtI0omTPtO9XjqS725ZVfmUWEDqS2P0rywnTfOdItmL+kLeEtc
-         cBeBAERSRF/biotvG4lP5QTn161Y7B8sDaoIba1OhcO1IF9jWQfBhiswM7oI0TRssC+9
-         wdhaqJcwRD5EneR+mIdNHTwZw2xtcp2U7nuRZ6nyo5TD57TQuPkj3me2K6pRTUGEnZIA
-         a/wsceq+3BIKUlJd2ow6nFvEF5HpTRQc2R5n2SGHT7zuGIpQZSZxcniykX8rn8AKK4gv
-         y29g==
+        bh=uBcARV0cPSl7/cntg6ECT6mZe848CkAy7l/6lcXc0Y8=;
+        b=r5ZJTMKGXmLGE8Ofq+PPiRCm+GnyqMvnTUSId4vAinYPSxdYLaAswI4vvYCHitiEs2
+         w+n+toNwsPdDYyiatHMhuJ8mEbQyPFMwHgjZ7LWuQkKLI3w+RM6E5nK7+zY4PivXxfBU
+         7yShryWq4l4Lh1jO6GgxQmiw7M/eI4uQYeaEofwi36adZbjxB1e9eUQBHYzOWJj50Eo9
+         BU7miFy5aAES6gT8c/PJIzmOYx+q60WZWnIYWWhTQUo8ixwIs7DpLNI3c8uI9CElIaUm
+         zdQ+pksEY8dS0QkD6kGiyuJRK1FOSOMAioNnDHGRHCkScVoOf4PN5PyB5XRs//IMSfqa
+         20cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=tkCfSiy4b5qRvmQQFJy8V77mN5PoF0IOrQeRy2ua5uQ=;
-        b=XkmWnHAU9yCn8+c7LLzDiIujkI6CCCkXv47wg1vYgflib02BXLNEW3ueAeU7PdBLQS
-         wXhI9EkLTdOi5UT2ZNBbSW7O0yLOIZtNSpm975w4fYTX99wWq+/u0vgcZwU2M9cC9Z1m
-         gIc/t/7Pn1syTKBZD6mQR/MubQlcz0svJ58N3GKEXx/Xrm62yA+apZ4RrLLen8kZJVJx
-         XKsK8iTHcu0brGOhMPE25MYo0mNAp7QeOtn7ipIZ4TMZqj2xzdkf4a/x8uiRRvUB1OhA
-         Of0adzBHjtT1Oop4dTZeASOiIXKQcugtVTqHS5OUFQt7hXPEafVjiwtjxBpddBwhR+QN
-         rN5g==
-X-Gm-Message-State: APjAAAVtS82BjpzV9PXv+Dui4ISylVvzqMo+4JXFAb8NMjRtlXJsJVc1
-        NTFILe8PCHWS9k5LvRhVBQUqU67XkZpIKu3leTXCVA==
-X-Google-Smtp-Source: APXvYqyXdT9h6Ykg2jVNk/Jza+Qt0Werwpo3z9jK/nhGy41eGtI+Icc+Ud5zURqLyLnShM/kprj1tanjl8c2OFoLz0TFSw==
-X-Received: by 2002:ae9:e313:: with SMTP id v19mr28437688qkf.22.1566343301943;
- Tue, 20 Aug 2019 16:21:41 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 16:20:45 -0700
+        bh=uBcARV0cPSl7/cntg6ECT6mZe848CkAy7l/6lcXc0Y8=;
+        b=BNljnR10HUOOyHR3RLIGfqMEM4SGnGKebJOVmUCUkpG68xWSkLoVtlp0yTjyA9tr4g
+         n6J1UHpXbR3lkuUBE8iwkhVtG4kxzdIgoxuApHFgRgoHH7qXeaoyxAmCAEBnGXbd1ku4
+         S94M4Ts48M8QiiVoXg7eEjAaNEtt0NW4oH0pyphBniOiBm0uZjK5vNprtTWuvNFdql/T
+         3hy0frik+Q2v/apC+6kAkl7MAyRXek/BgWxGmzd1DEqizT+CBtB8XvnV0EPqlDHookwo
+         od+MmS3H2UYFGgIX8TuIRAobEoe8jr8jOx5Y/NrKOe1ulGxwC/EAhwUx+Nfd0F43TKFg
+         CQYg==
+X-Gm-Message-State: APjAAAUsb5UmsJEAOh5bz5pi1lxWIeZpHB+Hx+YtVXXikeh/sjyAB+44
+        G16gKehxW+9Z4UPubFmTT4jIPWY3x2Q3IaZrSE+Vtg==
+X-Google-Smtp-Source: APXvYqwKtwVEp1nNzNYYJv6XEEV7UeWzYvVjDNSpfIa+jGsU7d9B1Qk2B3PfLMsh/AVH1c3ykddNIYEK8CI47ftjaRCFGw==
+X-Received: by 2002:a63:1743:: with SMTP id 3mr26050654pgx.435.1566343292882;
+ Tue, 20 Aug 2019 16:21:32 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 16:20:42 -0700
 In-Reply-To: <20190820232046.50175-1-brendanhiggins@google.com>
-Message-Id: <20190820232046.50175-18-brendanhiggins@google.com>
+Message-Id: <20190820232046.50175-15-brendanhiggins@google.com>
 Mime-Version: 1.0
 References: <20190820232046.50175-1-brendanhiggins@google.com>
 X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
-Subject: [PATCH v14 17/18] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+Subject: [PATCH v14 14/18] kunit: defconfig: add defconfigs for building KUnit tests
 From:   Brendan Higgins <brendanhiggins@google.com>
 To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
         jpoimboe@redhat.com, keescook@google.com,
@@ -77,466 +77,148 @@ Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
         khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
         mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
         richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Iurii Zaikin <yzaikin@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Iurii Zaikin <yzaikin@google.com>
+Add defconfig for UML and a fragment that can be used to configure other
+architectures for building KUnit tests. Add option to kunit_tool to use
+a defconfig to create the kunitconfig.
 
-KUnit tests for initialized data behavior of proc_dointvec that is
-explicitly checked in the code. Includes basic parsing tests including
-int min/max overflow.
-
-Signed-off-by: Iurii Zaikin <yzaikin@google.com>
 Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 ---
- kernel/Makefile      |   2 +
- kernel/sysctl-test.c | 392 +++++++++++++++++++++++++++++++++++++++++++
- lib/Kconfig.debug    |  11 ++
- 3 files changed, 405 insertions(+)
- create mode 100644 kernel/sysctl-test.c
+ arch/um/configs/kunit_defconfig              |  3 +++
+ tools/testing/kunit/configs/all_tests.config |  3 +++
+ tools/testing/kunit/kunit.py                 | 28 +++++++++++++++++---
+ tools/testing/kunit/kunit_kernel.py          |  3 ++-
+ 4 files changed, 32 insertions(+), 5 deletions(-)
+ create mode 100644 arch/um/configs/kunit_defconfig
+ create mode 100644 tools/testing/kunit/configs/all_tests.config
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index ef0d95a190b41..63e9ea6122c2c 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -113,6 +113,8 @@ obj-$(CONFIG_TORTURE_TEST) += torture.o
- obj-$(CONFIG_HAS_IOMEM) += iomem.o
- obj-$(CONFIG_RSEQ) += rseq.o
- 
-+obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
-+
- obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
- KASAN_SANITIZE_stackleak.o := n
- KCOV_INSTRUMENT_stackleak.o := n
-diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+diff --git a/arch/um/configs/kunit_defconfig b/arch/um/configs/kunit_defconfig
 new file mode 100644
-index 0000000000000..2a63241a8453b
+index 0000000000000..9235b7d42d389
 --- /dev/null
-+++ b/kernel/sysctl-test.c
-@@ -0,0 +1,392 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * KUnit test of proc sysctl.
-+ */
-+
-+#include <kunit/test.h>
-+#include <linux/sysctl.h>
-+
-+#define KUNIT_PROC_READ 0
-+#define KUNIT_PROC_WRITE 1
-+
-+static int i_zero;
-+static int i_one_hundred = 100;
-+
-+/*
-+ * Test that proc_dointvec will not try to use a NULL .data field even when the
-+ * length is non-zero.
-+ */
-+static void sysctl_test_api_dointvec_null_tbl_data(struct kunit *test)
-+{
-+	struct ctl_table null_data_table = {
-+		.procname = "foo",
-+		/*
-+		 * Here we are testing that proc_dointvec behaves correctly when
-+		 * we give it a NULL .data field. Normally this would point to a
-+		 * piece of memory where the value would be stored.
-+		 */
-+		.data		= NULL,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
-+	};
-+	/*
-+	 * proc_dointvec expects a buffer in user space, so we allocate one. We
-+	 * also need to cast it to __user so sparse doesn't get mad.
-+	 */
-+	void __user *buffer = (void __user *)kunit_kzalloc(test, sizeof(int),
-+							   GFP_USER);
-+	size_t len;
-+	loff_t pos;
-+
-+	/*
-+	 * We don't care what the starting length is since proc_dointvec should
-+	 * not try to read because .data is NULL.
-+	 */
-+	len = 1234;
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&null_data_table,
-+					       KUNIT_PROC_READ, buffer, &len,
-+					       &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+
-+	/*
-+	 * See above.
-+	 */
-+	len = 1234;
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&null_data_table,
-+					       KUNIT_PROC_WRITE, buffer, &len,
-+					       &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+}
-+
-+/*
-+ * Similar to the previous test, we create a struct ctrl_table that has a .data
-+ * field that proc_dointvec cannot do anything with; however, this time it is
-+ * because we tell proc_dointvec that the size is 0.
-+ */
-+static void sysctl_test_api_dointvec_table_maxlen_unset(struct kunit *test)
-+{
-+	int data = 0;
-+	struct ctl_table data_maxlen_unset_table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		/*
-+		 * So .data is no longer NULL, but we tell proc_dointvec its
-+		 * length is 0, so it still shouldn't try to use it.
-+		 */
-+		.maxlen		= 0,
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
-+	};
-+	void __user *buffer = (void __user *)kunit_kzalloc(test, sizeof(int),
-+							   GFP_USER);
-+	size_t len;
-+	loff_t pos;
-+
-+	/*
-+	 * As before, we don't care what buffer length is because proc_dointvec
-+	 * cannot do anything because its internal .data buffer has zero length.
-+	 */
-+	len = 1234;
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&data_maxlen_unset_table,
-+					       KUNIT_PROC_READ, buffer, &len,
-+					       &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+
-+	/*
-+	 * See previous comment.
-+	 */
-+	len = 1234;
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&data_maxlen_unset_table,
-+					       KUNIT_PROC_WRITE, buffer, &len,
-+					       &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+}
-+
-+/*
-+ * Here we provide a valid struct ctl_table, but we try to read and write from
-+ * it using a buffer of zero length, so it should still fail in a similar way as
-+ * before.
-+ */
-+static void sysctl_test_api_dointvec_table_len_is_zero(struct kunit *test)
-+{
-+	int data = 0;
-+	/* Good table. */
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
-+	};
-+	void __user *buffer = (void __user *)kunit_kzalloc(test, sizeof(int),
-+							   GFP_USER);
-+	/*
-+	 * However, now our read/write buffer has zero length.
-+	 */
-+	size_t len = 0;
-+	loff_t pos;
-+
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_READ, buffer,
-+					       &len, &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_WRITE, buffer,
-+					       &len, &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+}
-+
-+/*
-+ * Test that proc_dointvec refuses to read when the file position is non-zero.
-+ */
-+static void sysctl_test_api_dointvec_table_read_but_position_set(
-+		struct kunit *test)
-+{
-+	int data = 0;
-+	/* Good table. */
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
-+	};
-+	void __user *buffer = (void __user *)kunit_kzalloc(test, sizeof(int),
-+							   GFP_USER);
-+	/*
-+	 * We don't care about our buffer length because we start off with a
-+	 * non-zero file position.
-+	 */
-+	size_t len = 1234;
-+	/*
-+	 * proc_dointvec should refuse to read into the buffer since the file
-+	 * pos is non-zero.
-+	 */
-+	loff_t pos = 1;
-+
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_READ, buffer,
-+					       &len, &pos));
-+	KUNIT_EXPECT_EQ(test, (size_t)0, len);
-+}
-+
-+/*
-+ * Test that we can read a two digit number in a sufficiently size buffer.
-+ * Nothing fancy.
-+ */
-+static void sysctl_test_dointvec_read_happy_single_positive(struct kunit *test)
-+{
-+	int data = 0;
-+	/* Good table. */
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
-+	};
-+	size_t len = 4;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
-+	/* Store 13 in the data field. */
-+	*((int *)table.data) = 13;
-+
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_READ,
-+					       user_buffer, &len, &pos));
-+	KUNIT_ASSERT_EQ(test, (size_t)3, len);
-+	buffer[len] = '\0';
-+	/* And we read 13 back out. */
-+	KUNIT_EXPECT_STREQ(test, "13\n", buffer);
-+}
-+
-+/*
-+ * Same as previous test, just now with negative numbers.
-+ */
-+static void sysctl_test_dointvec_read_happy_single_negative(struct kunit *test)
-+{
-+	int data = 0;
-+	/* Good table. */
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
-+	};
-+	size_t len = 5;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
-+	*((int *)table.data) = -16;
-+
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_READ,
-+					       user_buffer, &len, &pos));
-+	KUNIT_ASSERT_EQ(test, (size_t)4, len);
-+	buffer[len] = '\0';
-+	KUNIT_EXPECT_STREQ(test, "-16\n", (char *)buffer);
-+}
-+
-+/*
-+ * Test that a simple positive write works.
-+ */
-+static void sysctl_test_dointvec_write_happy_single_positive(struct kunit *test)
-+{
-+	int data = 0;
-+	/* Good table. */
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
-+	};
-+	char input[] = "9";
-+	size_t len = sizeof(input) - 1;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
-+
-+	memcpy(buffer, input, len);
-+
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_WRITE,
-+					       user_buffer, &len, &pos));
-+	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
-+	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, (size_t)pos);
-+	KUNIT_EXPECT_EQ(test, 9, *((int *)table.data));
-+}
-+
-+/*
-+ * Same as previous test, but now with negative numbers.
-+ */
-+static void sysctl_test_dointvec_write_happy_single_negative(struct kunit *test)
-+{
-+	int data = 0;
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
-+	};
-+	char input[] = "-9";
-+	size_t len = sizeof(input) - 1;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
-+
-+	memcpy(buffer, input, len);
-+
-+	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, KUNIT_PROC_WRITE,
-+					       user_buffer, &len, &pos));
-+	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
-+	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, (size_t)pos);
-+	KUNIT_EXPECT_EQ(test, -9, *((int *)table.data));
-+}
-+
-+/*
-+ * Test that writing a value smaller than the minimum possible value is not
-+ * allowed.
-+ */
-+static void sysctl_test_api_dointvec_write_single_less_int_min(
-+		struct kunit *test)
-+{
-+	int data = 0;
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
-+	};
-+	size_t max_len = 32, len = max_len;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
-+	unsigned long abs_of_less_than_min = (unsigned long)INT_MAX
-+					     - (INT_MAX + INT_MIN) + 1;
-+
-+	/*
-+	 * We use this rigmarole to create a string that contains a value one
-+	 * less than the minimum accepted value.
-+	 */
-+	KUNIT_ASSERT_LT(test,
-+			(size_t)snprintf(buffer, max_len, "-%lu",
-+					 abs_of_less_than_min),
-+			max_len);
-+
-+	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dointvec(&table, KUNIT_PROC_WRITE,
-+						     user_buffer, &len, &pos));
-+	KUNIT_EXPECT_EQ(test, max_len, len);
-+	KUNIT_EXPECT_EQ(test, 0, *((int *)table.data));
-+}
-+
-+/*
-+ * Test that writing the maximum possible value works.
-+ */
-+static void sysctl_test_api_dointvec_write_single_greater_int_max(
-+		struct kunit *test)
-+{
-+	int data = 0;
-+	struct ctl_table table = {
-+		.procname = "foo",
-+		.data		= &data,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &i_zero,
-+		.extra2         = &i_one_hundred,
-+	};
-+	size_t max_len = 32, len = max_len;
-+	loff_t pos = 0;
-+	char *buffer = kunit_kzalloc(test, max_len, GFP_USER);
-+	char __user *user_buffer = (char __user *)buffer;
-+	unsigned long greater_than_max = (unsigned long)INT_MAX + 1;
-+
-+	KUNIT_ASSERT_GT(test, greater_than_max, (unsigned long)INT_MAX);
-+	KUNIT_ASSERT_LT(test, (size_t)snprintf(buffer, max_len, "%lu",
-+					       greater_than_max),
-+			max_len);
-+	KUNIT_EXPECT_EQ(test, -EINVAL, proc_dointvec(&table, KUNIT_PROC_WRITE,
-+						     user_buffer, &len, &pos));
-+	KUNIT_ASSERT_EQ(test, max_len, len);
-+	KUNIT_EXPECT_EQ(test, 0, *((int *)table.data));
-+}
-+
-+static struct kunit_case sysctl_test_cases[] = {
-+	KUNIT_CASE(sysctl_test_api_dointvec_null_tbl_data),
-+	KUNIT_CASE(sysctl_test_api_dointvec_table_maxlen_unset),
-+	KUNIT_CASE(sysctl_test_api_dointvec_table_len_is_zero),
-+	KUNIT_CASE(sysctl_test_api_dointvec_table_read_but_position_set),
-+	KUNIT_CASE(sysctl_test_dointvec_read_happy_single_positive),
-+	KUNIT_CASE(sysctl_test_dointvec_read_happy_single_negative),
-+	KUNIT_CASE(sysctl_test_dointvec_write_happy_single_positive),
-+	KUNIT_CASE(sysctl_test_dointvec_write_happy_single_negative),
-+	KUNIT_CASE(sysctl_test_api_dointvec_write_single_less_int_min),
-+	KUNIT_CASE(sysctl_test_api_dointvec_write_single_greater_int_max),
-+	{}
-+};
-+
-+static struct kunit_suite sysctl_test_suite = {
-+	.name = "sysctl_test",
-+	.test_cases = sysctl_test_cases,
-+};
-+
-+kunit_test_suite(sysctl_test_suite);
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 5960e2980a8a0..a425741907b0d 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1965,6 +1965,17 @@ config TEST_SYSCTL
++++ b/arch/um/configs/kunit_defconfig
+@@ -0,0 +1,3 @@
++CONFIG_KUNIT=y
++CONFIG_KUNIT_TEST=y
++CONFIG_KUNIT_EXAMPLE_TEST=y
+diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing/kunit/configs/all_tests.config
+new file mode 100644
+index 0000000000000..9235b7d42d389
+--- /dev/null
++++ b/tools/testing/kunit/configs/all_tests.config
+@@ -0,0 +1,3 @@
++CONFIG_KUNIT=y
++CONFIG_KUNIT_TEST=y
++CONFIG_KUNIT_EXAMPLE_TEST=y
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index da11bd62a4b82..0944dea5c3211 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -11,6 +11,7 @@ import argparse
+ import sys
+ import os
+ import time
++import shutil
  
- 	  If unsure, say N.
+ from collections import namedtuple
+ from enum import Enum, auto
+@@ -21,7 +22,7 @@ import kunit_parser
  
-+config SYSCTL_KUNIT_TEST
-+	bool "KUnit test for sysctl"
-+	depends on KUNIT
-+	help
-+	  This builds the proc sysctl unit test, which runs on boot.
-+	  Tests the API contract and implementation correctness of sysctl.
-+	  For more information on KUnit and unit tests in general please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
+ KunitResult = namedtuple('KunitResult', ['status','result'])
+ 
+-KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir'])
++KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs', 'build_dir', 'defconfig'])
+ 
+ class KunitStatus(Enum):
+ 	SUCCESS = auto()
+@@ -29,8 +30,16 @@ class KunitStatus(Enum):
+ 	BUILD_FAILURE = auto()
+ 	TEST_FAILURE = auto()
+ 
++def create_default_kunitconfig():
++	if not os.path.exists(kunit_kernel.KUNITCONFIG_PATH):
++		shutil.copyfile('arch/um/configs/kunit_defconfig',
++				kunit_kernel.KUNITCONFIG_PATH)
 +
-+	  If unsure, say N.
+ def run_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	      request: KunitRequest) -> KunitResult:
++	if request.defconfig:
++		create_default_kunitconfig()
 +
- config TEST_UDELAY
- 	tristate "udelay test driver"
- 	help
+ 	config_start = time.time()
+ 	success = linux.build_reconfig(request.build_dir)
+ 	config_end = time.time()
+@@ -72,7 +81,7 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	else:
+ 		return KunitResult(KunitStatus.SUCCESS, test_result)
+ 
+-def main(argv, linux):
++def main(argv, linux=None):
+ 	parser = argparse.ArgumentParser(
+ 			description='Helps writing and running KUnit tests.')
+ 	subparser = parser.add_subparsers(dest='subcommand')
+@@ -99,13 +108,24 @@ def main(argv, linux):
+ 				'directory.',
+ 				type=str, default=None, metavar='build_dir')
+ 
++	run_parser.add_argument('--defconfig',
++				help='Uses a default kunitconfig.',
++				action='store_true')
++
+ 	cli_args = parser.parse_args(argv)
+ 
+ 	if cli_args.subcommand == 'run':
++		if cli_args.defconfig:
++			create_default_kunitconfig()
++
++		if not linux:
++			linux = kunit_kernel.LinuxSourceTree()
++
+ 		request = KunitRequest(cli_args.raw_output,
+ 				       cli_args.timeout,
+ 				       cli_args.jobs,
+-				       cli_args.build_dir)
++				       cli_args.build_dir,
++				       cli_args.defconfig)
+ 		result = run_tests(linux, request)
+ 		if result.status != KunitStatus.SUCCESS:
+ 			sys.exit(1)
+@@ -113,4 +133,4 @@ def main(argv, linux):
+ 		parser.print_help()
+ 
+ if __name__ == '__main__':
+-	main(sys.argv[1:], kunit_kernel.LinuxSourceTree())
++	main(sys.argv[1:])
+diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
+index 07c0abf2f47df..bf38768353313 100644
+--- a/tools/testing/kunit/kunit_kernel.py
++++ b/tools/testing/kunit/kunit_kernel.py
+@@ -14,6 +14,7 @@ import os
+ import kunit_config
+ 
+ KCONFIG_PATH = '.config'
++KUNITCONFIG_PATH = 'kunitconfig'
+ 
+ class ConfigError(Exception):
+ 	"""Represents an error trying to configure the Linux kernel."""
+@@ -81,7 +82,7 @@ class LinuxSourceTree(object):
+ 
+ 	def __init__(self):
+ 		self._kconfig = kunit_config.Kconfig()
+-		self._kconfig.read_from_file('kunitconfig')
++		self._kconfig.read_from_file(KUNITCONFIG_PATH)
+ 		self._ops = LinuxSourceTreeOperations()
+ 
+ 	def clean(self):
 -- 
 2.23.0.rc1.153.gdeed80330f-goog
 
