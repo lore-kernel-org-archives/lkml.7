@@ -2,98 +2,132 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94413C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D1BC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 723F1233FC
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637D922DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:59:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566313143;
+	bh=5au+uySpHKMUgQfB6f0HCtqCGXnnNO/toEwWtCgwQRU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=t+/1kOg8w/7lRFgNGK98AV3XmCEwNWJPcZXajFHh6o9+4lTGMaJwJRj7Fk2GCKyhh
+	 F+2XdHBKcRMQd/YtZgtPm4tEgAGrAR0RaZIawTGlUppcXj9I93MQG1aVJ+A71y9IqG
+	 i8L7T/8woHMxSYJvwaUfB96uXdP2/WrgxuEpMq+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbfHTO66 (ORCPT
+        id S1730622AbfHTO7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:58:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49006 "EHLO mx1.redhat.com"
+        Tue, 20 Aug 2019 10:59:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730554AbfHTO6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:58:53 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1730582AbfHTO64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:58:56 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 955B110576D8;
-        Tue, 20 Aug 2019 14:58:53 +0000 (UTC)
-Received: from treble (ovpn-120-159.rdu2.redhat.com [10.10.120.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3C87917F23;
-        Tue, 20 Aug 2019 14:58:52 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 09:58:50 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        security@kernel.org, linux-doc@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Kosina <jkosina@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: Re: [PATCH v2] Documentation/admin-guide: Embargoed hardware
- security issues
-Message-ID: <20190820145850.x445rw4uoqz6n4hw@treble>
-References: <20190725130113.GA12932@kroah.com>
- <20190815212505.GC12041@kroah.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id E6FBC2339E;
+        Tue, 20 Aug 2019 14:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566313136;
+        bh=5au+uySpHKMUgQfB6f0HCtqCGXnnNO/toEwWtCgwQRU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Elx0d63ofvknVaHHM1m3EBtPbefELcg0n3vF+T4OsO7EWe2obiob7hBXk34t8DXgX
+         /deiwyMkNRRojaOHdjBUgvAmPYJsQlgR/ggamqiW/EdmVZ/NOiFZPauXKUMKL5VDar
+         337mhbwmYMfLpXYOpuzq/e/sIXYbvJmJvJ9o6yMg=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org, robh@kernel.org,
+        linux@armlinux.org.uk, frowand.list@gmail.com,
+        keescook@chromium.org, anton@enomsg.org, ccross@android.com,
+        tony.luck@intel.com, daniel.thompson@linaro.org,
+        linus.walleij@linaro.org, manivannan.sadhasivam@linaro.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [RESEND PATCHv4 1/1] drivers/amba: add reset control to amba bus probe
+Date:   Tue, 20 Aug 2019 09:58:34 -0500
+Message-Id: <20190820145834.7301-2-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190820145834.7301-1-dinguyen@kernel.org>
+References: <20190820145834.7301-1-dinguyen@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190815212505.GC12041@kroah.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Tue, 20 Aug 2019 14:58:53 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 11:25:05PM +0200, Greg Kroah-Hartman wrote:
-> +Contact
-> +-------
-> +
-> +The Linux kernel hardware security team is separate from the regular Linux
-> +kernel security team.
-> +
-> +The team only handles the coordination of embargoed hardware security
-> +issues.  Reports of pure software security bugs in the Linux kernel are not
-> +handled by this team and the reporter will be guided to contact the regular
-> +Linux kernel security team (:ref:`Documentation/admin-guide/
-> +<securitybugs>`) instead.
-> +
-> +The team can be contacted by email at <hardware-security@kernel.org>. This
-> +is a private list of security officers who will help you to coordinate an
-> +issue according to our documented process.
-> +
-> +The list is encrypted and email to the list can be sent by either PGP or
-> +S/MIME encrypted and must be signed with the reporter's PGP key or S/MIME
-> +certificate. The list's PGP key and S/MIME certificate are available from
-> +https://www.kernel.org/....
+The primecell controller on some SoCs, i.e. SoCFPGA, is held in reset by
+default. Until recently, the DMA controller was brought out of reset by the
+bootloader(i.e. U-Boot). But a recent change in U-Boot, the peripherals
+that are not used are held in reset and are left to Linux to bring them
+out of reset.
 
-This link needs to be filled in?
+Add a mechanism for getting the reset property and de-assert the primecell
+module from reset if found. This is a not a hard fail if the reset properti
+is not present in the device tree node, so the driver will continue to
+probe.
 
-> +Encrypted mailing-lists
-> +-----------------------
-> +
-> +We use encrypted mailing-lists for communication. The operating principle
-> +of these lists is that email sent to the list is encrypted either with the
-> +list's PGP key or with the list's S/MIME certificate. The mailing-list
-> +software decrypts the email and re-encrypts it individually for each
-> +subscriber with the subscriber's PGP key or S/MIME certificate. Details
-> +about the mailing-list software and the setup which is used to ensure the
-> +security of the lists and protection of the data can be found here:
-> +https://www.kernel.org/....
+Because there are different variants of the controller that may have
+multiple reset signals, the code will find all reset(s) specified and
+de-assert them.
 
-Ditto?
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v4: cleaned up indentation in loop
+    fix up a few checkpatch warnings
+    add Reviewed-by:
+v3: add a reset_control_put()
+    add error handling
+v2: move reset control to bus code
+    find all reset properties and de-assert them
+---
+ drivers/amba/bus.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
+diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+index 100e798a5c82..76a1cd56a1ab 100644
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -18,6 +18,7 @@
+ #include <linux/limits.h>
+ #include <linux/clk/clk-conf.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -401,6 +402,26 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
+ 	ret = amba_get_enable_pclk(dev);
+ 	if (ret == 0) {
+ 		u32 pid, cid;
++		int count;
++		struct reset_control *rstc;
++
++		/*
++		 * Find reset control(s) of the amba bus and de-assert them.
++		 */
++		count = reset_control_get_count(&dev->dev);
++		while (count > 0) {
++			rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
++			if (IS_ERR(rstc)) {
++				if (PTR_ERR(rstc) == -EPROBE_DEFER)
++					ret = -EPROBE_DEFER;
++				else
++					dev_err(&dev->dev, "Can't get amba reset!\n");
++				break;
++			}
++			reset_control_deassert(rstc);
++			reset_control_put(rstc);
++			count--;
++		}
+ 
+ 		/*
+ 		 * Read pid and cid based on size of resource
 -- 
-Josh
+2.20.0
+
