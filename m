@@ -2,170 +2,127 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C1EC41514
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C490C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819832332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:18:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aYdoPW4M"
+	by mail.kernel.org (Postfix) with ESMTP id F1823216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566314337;
+	bh=4g2+aX3eD3+4CJWSIyuirqp/mSdK6BbK4d0vGYiQL8Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=st740erteLE73j57sKCM4L/SUQWV5vAs54ihDjzvkil6mSgO9LoeGk59wwgUHBqXl
+	 Nnk9z8s8VHg1RSrU2Tvy8SRBm5HT1Ymawr3jtEluQpFgFAvHPSbk8qB4wc1XstGPC6
+	 jsXm3vxYAj+JT4WUS2qwb/FlxG3MiRUJ3ozKt12g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbfHTPSQ (ORCPT
+        id S1730344AbfHTPS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:18:16 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37985 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729956AbfHTPSQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:18:16 -0400
-Received: by mail-ed1-f66.google.com with SMTP id r12so6735222edo.5
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 08:18:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=WWDlGa28vuh6oyYZfImriVv5lKQQ+IIy5I7j/w5T4Gg=;
-        b=aYdoPW4Mvo6YtazOhtnc4ypyhm+qnjOhOXk3ZP2Z58IiJkGhlIoOoy4vFST6kEbhnd
-         V1wp+g3K8u0R1/NnJLA6jmPSQTsJFvmcgGqg9sx+I4Ybv+Atic0BqKdJYciuXoPn4GTu
-         MVJmP+fAaX12IxRXdt8Yz7aCXLWYef4u5coho=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=WWDlGa28vuh6oyYZfImriVv5lKQQ+IIy5I7j/w5T4Gg=;
-        b=Irj58nLHp37R5tBangVXBP2qFolYm4WBxSFJq+tpQ5neAAXjMY9HiCXApvp0bHuTHp
-         60B/CSmmpF3Lh72OKX2QA5LH02thAN31kjV4CoFBFQflSBD7XCUYcl1iICVKScXS+Uwt
-         UkFOlJyxZDHyqrJszNXyQhC2Te+QdPTf34kx9qAwUIwWuAB7f+pXinn1Ew3oXX2NHnAW
-         RjT8tOXI07P3TRGWNOhmLYxltpdYKyulpoLn1+sCPqYLdWMdqjn1EO/glqZ88p3TVMoZ
-         41jFxdDpcOmLSfUpGbD4LqTJgt+med+pD7SvOPwCk/FHtz1bvoOHH9lR4DuNY0Q3mZj9
-         g8zg==
-X-Gm-Message-State: APjAAAUXpInyQ3qq9Sak/q1cwrBTLxE4KWP7TvEXFYhEnC/IPPHwgvU1
-        jYHBHjDuQEmaNYEli+jU+v7n7A==
-X-Google-Smtp-Source: APXvYqwfJ8KGQhdIP9dJFoc5GtYy4qaMCSLIJx0+QTRiFkwBVEZaoyD3Z4vkA0GYiSFo+zVsSSDxmA==
-X-Received: by 2002:a17:906:cc81:: with SMTP id oq1mr26923934ejb.124.1566314293557;
-        Tue, 20 Aug 2019 08:18:13 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id oa21sm2669585ejb.60.2019.08.20.08.18.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 08:18:12 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 17:18:10 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: Re: [PATCH 4/4] mm, notifier: Catch sleeping/blocking for !blockable
-Message-ID: <20190820151810.GG11147@phenom.ffwll.local>
-Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
-        LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-References: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
- <20190820081902.24815-5-daniel.vetter@ffwll.ch>
- <20190820133418.GG29246@ziepe.ca>
+        Tue, 20 Aug 2019 11:18:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729137AbfHTPSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:18:55 -0400
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 291B822DD6;
+        Tue, 20 Aug 2019 15:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566314334;
+        bh=4g2+aX3eD3+4CJWSIyuirqp/mSdK6BbK4d0vGYiQL8Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jje+bS2QRZhlNrEMcmQpztZthSiK/BSOgxTaupyUDC+ZiTGcIUrG5cubMWCYgal75
+         ffqLLHv31yuz//Q/cTmfwCSzmP9NelQ58qQ2lTRYSq617kHwBZ64w1k5UYIIHXkVef
+         fcxY70lDBKvx0czPwITE5ZAfiSjKYpGwdLqKrSAI=
+Received: by mail-qt1-f182.google.com with SMTP id q4so6447804qtp.1;
+        Tue, 20 Aug 2019 08:18:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAV0vDJH0Zu0npL+OXoxSW00tLdAnQNbbATy7WDJT/GGdl9qzpz2
+        cNqI8+jsfmhn4BKBtVhrwv37iC8mDihADnDHGg==
+X-Google-Smtp-Source: APXvYqwI8MbWsEoN6+B2x3wldzD/RbdVhOKqOd44O2Pi9UjWB8xzwz+yQBkw84t97EUZBfi7kdvPeR7mgfUNMe3lawQ=
+X-Received: by 2002:ac8:368a:: with SMTP id a10mr26470061qtc.143.1566314333309;
+ Tue, 20 Aug 2019 08:18:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190820133418.GG29246@ziepe.ca>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190806192654.138605-1-saravanak@google.com> <20190806192654.138605-2-saravanak@google.com>
+ <CAL_Jsq+BwHSj1XUNp_eY362XnNoOqVTNHqAkvnbgece8ZQE3Qw@mail.gmail.com>
+ <CAGETcx8+EETv6nSu+BEBStKvbmBs+tZZgo1u_Pw8SNu+7Urq1Q@mail.gmail.com>
+ <CAL_JsqLdcn5aZdenLs3RSVCOE1PRNK_qYNmQR=fXPV+ZOQ9+PQ@mail.gmail.com> <CAGETcx8K2Ob7f7wchP6Z7Y=XGgX3h535ty62x6b-13-giGyZgA@mail.gmail.com>
+In-Reply-To: <CAGETcx8K2Ob7f7wchP6Z7Y=XGgX3h535ty62x6b-13-giGyZgA@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 20 Aug 2019 10:18:41 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLdh41o2cQfG=spa_1HkPUgeyvVm2r0f=5OZiGP6Fw29g@mail.gmail.com>
+Message-ID: <CAL_JsqLdh41o2cQfG=spa_1HkPUgeyvVm2r0f=5OZiGP6Fw29g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] of/platform: Disable generic device linking code for PowerPC
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:34:18AM -0300, Jason Gunthorpe wrote:
-> On Tue, Aug 20, 2019 at 10:19:02AM +0200, Daniel Vetter wrote:
-> > We need to make sure implementations don't cheat and don't have a
-> > possible schedule/blocking point deeply burried where review can't
-> > catch it.
-> > 
-> > I'm not sure whether this is the best way to make sure all the
-> > might_sleep() callsites trigger, and it's a bit ugly in the code flow.
-> > But it gets the job done.
-> > 
-> > Inspired by an i915 patch series which did exactly that, because the
-> > rules haven't been entirely clear to us.
-> > 
-> > v2: Use the shiny new non_block_start/end annotations instead of
-> > abusing preempt_disable/enable.
-> > 
-> > v3: Rebase on top of Glisse's arg rework.
-> > 
-> > v4: Rebase on top of more Glisse rework.
-> > 
-> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Michal Hocko <mhocko@suse.com>
-> > Cc: David Rientjes <rientjes@google.com>
-> > Cc: "Christian König" <christian.koenig@amd.com>
-> > Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> > Cc: linux-mm@kvack.org
-> > Reviewed-by: Christian König <christian.koenig@amd.com>
-> > Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> >  mm/mmu_notifier.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-> > index 538d3bb87f9b..856636d06ee0 100644
-> > +++ b/mm/mmu_notifier.c
-> > @@ -181,7 +181,13 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
-> >  	id = srcu_read_lock(&srcu);
-> >  	hlist_for_each_entry_rcu(mn, &range->mm->mmu_notifier_mm->list, hlist) {
-> >  		if (mn->ops->invalidate_range_start) {
-> > -			int _ret = mn->ops->invalidate_range_start(mn, range);
-> > +			int _ret;
-> > +
-> > +			if (!mmu_notifier_range_blockable(range))
-> > +				non_block_start();
-> > +			_ret = mn->ops->invalidate_range_start(mn, range);
-> > +			if (!mmu_notifier_range_blockable(range))
-> > +				non_block_end();
-> 
-> If someone Acks all the sched changes then I can pick this for
-> hmm.git, but I still think the existing pre-emption debugging is fine
-> for this use case.
+On Thu, Aug 15, 2019 at 9:04 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Wed, Aug 14, 2019 at 4:41 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Tue, Aug 6, 2019 at 4:04 PM Saravana Kannan <saravanak@google.com> wrote:
+> > >
+> > > On Tue, Aug 6, 2019 at 2:27 PM Rob Herring <robh+dt@kernel.org> wrote:
+> > > >
+> > > > On Tue, Aug 6, 2019 at 1:27 PM Saravana Kannan <saravanak@google.com> wrote:
+> > > > >
+> > > > > PowerPC platforms don't use the generic of/platform code to populate the
+> > > > > devices from DT.
+> > > >
+> > > > Yes, they do.
+> > >
+> > > No they don't. My wording could be better, but they don't use
+> > > of_platform_default_populate_init()
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/of/platform.c#n511
+> >
+> > Right, but the rest of the of/platform code is used (guess where it
+> > got moved here from?).
+> >
+> > > > > Therefore the generic device linking code is never used
+> > > > > in PowerPC.  Compile it out to avoid warning about unused functions.
+> > > >
+> > > > I'd prefer this get disabled on PPC using 'if (IS_ENABLED(CONFIG_PPC))
+> > > > return' rather than #ifdefs.
+> > >
+> > > I'm just moving the existing ifndef some lines above. I don't want to
+> > > go change existing #ifndef in this patch. Maybe that should be a
+> > > separate patch series that goes and fixes all such code in drivers/of/
+> > > or driver/
+> >
+> > So the initcall was originally just supposed to call
+> > of_platform_default_populate(), but it's grown beyond that. That could
+> > make things fragile as it is possible for platforms to call
+> > of_platform_populate() (directly or indirectly) before
+> > of_platform_default_populate_init(). That was supposed to work, but
+> > now I think it's getting more fragile.
+>
+> Can you clarify what's wrong with of_platfrom_populate() being called
+> before of_platform_default_populate_init()? If that's what a platform
+> wants to do, they can do it? I have some thoughts of my own, but I
+> want to hear yours.
 
-Ok, I'll ping Peter Z. for an ack, iirc he was involved.
+Really, I'd like to get rid of platforms doing their own calls. That's
+mostly an arm32 issue. Most of what's left are either platforms using
+auxdata which was supposed to be a transition thing or ones that set a
+parent device (soc_device). The former takes work to finish converting
+platforms to DT and I don't know what to do for the latter other than
+always or never set a parent device. Also, I know there's an issue on
+atmel where we can't remove their of_platform_populate call because it
+changes the probe order and breaks their pinctrl and gpio driver (I
+started a patch for that...).
 
-> Also, same comment as for the lockdep map, this needs to apply to the
-> non-blocking range_end also.
-
-Hm, I thought the page table locks we're holding there already prevent any
-sleeping, so would be redundant? But reading through code I think that's
-not guaranteed, so yeah makes sense to add it for invalidate_range_end
-too. I'll respin once I have the ack/nack from scheduler people.
-
-> Anyhow, since this series has conflicts with hmm.git it would be best
-> to flow through the whole thing through that tree. If there are no
-> remarks on the first two patches I'll grab them in a few days.
-
-Thanks, Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Rob
