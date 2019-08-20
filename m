@@ -2,77 +2,98 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499E8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E7AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D412064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NLMiPJMw"
+	by mail.kernel.org (Postfix) with ESMTP id 986B72064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730727AbfHTR0e (ORCPT
+        id S1730423AbfHTR0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:26:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57626 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbfHTR0d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:26:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PeDiA2PJoiVzWMd8z0SSPQVZ1TUnorKfJ5pi4QQ5XHA=; b=NLMiPJMwoo1sgK07WC6S4AT3n
-        BSQEFtSik6WtzPk16YY7ml01GFKIZV13XUbnlKXIIZOrRox6n8FoDRmZ4+pRNV2+XJ3aEYWthRAic
-        SvIoNHa5ZX8UjUNg7osTsC/e9VSPqeInLNYi3cVTGuGuKoUNN66X9aiaPmreE2J0tt8IpvIzEBoDN
-        NtZApH+De7jPQIDaS/XGjsbErclA9QIpbBUuSDl22z/6DhKrzF86czfskWc18jZYi7IYOTpNcEO1u
-        T1G4dvI1Ft4obl2l7Z2WYUKRFKmSiDTMwAimJANn1d2YHqfHmkESiQlNJyknqJrq66WYAHyYrSPdk
-        0X4MV+EQg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i07tt-0004yW-EF; Tue, 20 Aug 2019 17:26:29 +0000
-Date:   Tue, 20 Aug 2019 10:26:29 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        osalvador@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mm/mmap.c: extract __vma_unlink_list as counter part
- for __vma_link_list
-Message-ID: <20190820172629.GB4949@bombadil.infradead.org>
-References: <20190814021755.1977-1-richardw.yang@linux.intel.com>
- <20190814021755.1977-3-richardw.yang@linux.intel.com>
- <20190814051611.GA1958@infradead.org>
- <20190814065703.GA6433@richard>
- <2c5cdffd-f405-23b8-98f5-37b95ca9b027@suse.cz>
+        Tue, 20 Aug 2019 13:26:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42582 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728770AbfHTR0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 13:26:48 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CDA2DC06511B;
+        Tue, 20 Aug 2019 17:26:47 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-63.rdu2.redhat.com [10.10.112.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B5C2818398;
+        Tue, 20 Aug 2019 17:26:46 +0000 (UTC)
+Message-ID: <07b4dc9dc8e7c6f63d9b291cc6b65b60279d8878.camel@redhat.com>
+Subject: Re: [PATCH] infiniband: hfi1: fix memory leaks
+From:   Doug Ledford <dledford@redhat.com>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Tue, 20 Aug 2019 13:26:44 -0400
+In-Reply-To: <1566154486-3713-1-git-send-email-wenwen@cs.uga.edu>
+References: <1566154486-3713-1-git-send-email-wenwen@cs.uga.edu>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-sSFn/1mFmw9WT7aLHt6k"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2c5cdffd-f405-23b8-98f5-37b95ca9b027@suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 20 Aug 2019 17:26:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 11:19:37AM +0200, Vlastimil Babka wrote:
-> On 8/14/19 8:57 AM, Wei Yang wrote:
-> > On Tue, Aug 13, 2019 at 10:16:11PM -0700, Christoph Hellwig wrote:
-> >>Btw, is there any good reason we don't use a list_head for vma linkage?
-> > 
-> > Not sure, maybe there is some historical reason?
-> 
-> Seems it was single-linked until 2010 commit 297c5eee3724 ("mm: make the vma
-> list be doubly linked") and I guess it was just simpler to add the vm_prev link.
-> 
-> Conversion to list_head might be an interesting project for some "advanced
-> beginner" in the kernel :)
 
-I'm working to get rid of vm_prev and vm_next, so it would probably be
-wasted effort.
+--=-sSFn/1mFmw9WT7aLHt6k
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, 2019-08-18 at 13:54 -0500, Wenwen Wang wrote:
+> In fault_opcodes_write(), 'data' is allocated through kcalloc().
+> However,
+> it is not deallocated in the following execution if an error occurs,
+> leading to memory leaks. To fix this issue, introduce the 'free_data'
+> label
+> to free 'data' before returning the error.
+>=20
+> Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+
+Applied to for-rc, thanks.
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-sSFn/1mFmw9WT7aLHt6k
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1cLVQACgkQuCajMw5X
+L93jZg/+MxcKvHb+QXykPs2/eT8ONmImDf0YevpfmiDJd0ViT1vPW5hHHk63HtOc
+NWRS2O2M0PJWVq/JPfIrxgA/B9QwtyNOIh3E7B4WZRgXNT2yWsMO+UFTNIHY4VNH
+Sxm1NCsSgcswoZszkkxg8x8m5OLeiCtpzWw4svDEVGsnveqLRebvhG49K+KuuZnF
+naktESmo/3IW+kMIPiY/a7PPCeXcPXDjLaZO4L0IZUrDnOQlJMfN5SxptHTTkegg
+jPnWMaY5IEzU7s6xcqTaov6AdF8LXUwFP5UhIvlYa6gj5jkkBcDddo9ArHU4pJZ/
+Ci+qm5wdLNbKW/CUt3wStnjWA0twy/OuS+adAG+0myDiUya2T7k1mJVOUNNnjxpi
+4bQxtnn52nL3wUfWhr+fhm1w++hKCufmR8x4o4+7WpiamYC+MYxjKPRijYKI2wq6
+bvMhw7NE0lA+p0V7eCqvY2fRcnJDVvejogNTZkQZLZtvk1y0NMg1PARwkEZA6a4F
+mpJNwWjwR5UWFUzy7xO1wC4PY0tH2pDMVukbQ4iViigNPAff6Cf6XP2wRoYiTWlI
+9ZN9uonhOIZ1OSNpqA+SnysPl1KbOTSUfadYljKkRIDQ2ieuCqaws1xbZWmosQol
+o/ZuMNlo1cD0n0iwuDo/mq+NzKzrD21+Ceh94kc+0S5pROVl16w=
+=xI7k
+-----END PGP SIGNATURE-----
+
+--=-sSFn/1mFmw9WT7aLHt6k--
+
