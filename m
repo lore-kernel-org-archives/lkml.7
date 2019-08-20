@@ -2,103 +2,112 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B76B4C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3350EC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89DCD216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0477722CF4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:19:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566292742;
+	bh=xeNEOZnUt5zaYWcXGaptvNgXhbFBLiPJu8hVdC8dkcY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=BMXLTbrxH7oOR2SP8WQqx0AlcdajotzC9NXJdf4Uy5va0KGVkVIlEVpFy/lDvXh7A
+	 44RlwkOvOyZiwnc315Q2QgGAUwxN660Qr5+2wxW0CfVrhtXmtNYW3uez1bQTH73Nx+
+	 6BFqUaUJBomAvoQyp88teB7Q4zbU/kruHuhLe2kQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729544AbfHTJSz (ORCPT
+        id S1729574AbfHTJTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:18:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37204 "EHLO mx1.redhat.com"
+        Tue, 20 Aug 2019 05:19:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:37114 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbfHTJSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:18:55 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0CF931801D5A;
-        Tue, 20 Aug 2019 09:18:55 +0000 (UTC)
-Received: from krava (unknown [10.43.17.33])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4567D50;
-        Tue, 20 Aug 2019 09:18:53 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 11:18:52 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kyle Meyer <meyerk@hpe.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        id S1728414AbfHTJTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:19:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5821344;
+        Tue, 20 Aug 2019 02:18:59 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 57B3B3F706;
+        Tue, 20 Aug 2019 02:18:58 -0700 (PDT)
+Subject: Re: [PATCH v2 04/12] irqchip/gic-v3: Add ESPI range support
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        John Garry <john.garry@huawei.com>,
         linux-kernel@vger.kernel.org,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Kyle Meyer <kyle.meyer@hpe.com>
-Subject: Re: [PATCH v3 4/6] perf/util/session: Replace MAX_NR_CPUS with
- nr_cpus_online
-Message-ID: <20190820091852.GC24105@krava>
-References: <20190819202333.88032-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190806100121.240767-1-maz@kernel.org>
+ <20190806100121.240767-5-maz@kernel.org>
+ <9cbd6fc8-3fe9-39fc-10ca-724a1ec06e8d@huawei.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <30fe07e9-0670-d755-2173-dc71549a797b@kernel.org>
+Date:   Tue, 20 Aug 2019 10:18:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819202333.88032-1-meyerk@stormcage.eag.rdlabs.hpecorp.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Tue, 20 Aug 2019 09:18:55 +0000 (UTC)
+In-Reply-To: <9cbd6fc8-3fe9-39fc-10ca-724a1ec06e8d@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 03:23:33PM -0500, Kyle Meyer wrote:
-> nr_cpus_online, the number of CPUs online during a record session, can be
-> used as a dynamic alternative for MAX_NR_CPUS in perf_session__cpu_bitmap.
+On 19/08/2019 15:25, Zenghui Yu wrote:
+> Hi Marc,
 > 
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Russ Anderson <russ.anderson@hpe.com>
-> Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
-> ---
->  tools/perf/util/session.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> On 2019/8/6 18:01, Marc Zyngier wrote:
+>> Add the required support for the ESPI range, which behave exactly like
+>> the SPIs of old, only with new funky INTIDs.
+>>
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>   drivers/irqchip/irq-gic-v3.c       | 85 ++++++++++++++++++++++++------
+>>   include/linux/irqchip/arm-gic-v3.h | 17 +++++-
+>>   2 files changed, 85 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+>> index db3bdedd7241..1ca4dde32034 100644
+>> --- a/drivers/irqchip/irq-gic-v3.c
+>> +++ b/drivers/irqchip/irq-gic-v3.c
+>> @@ -51,13 +51,16 @@ struct gic_chip_data {
+>>   	u32			nr_redist_regions;
+>>   	u64			flags;
+>>   	bool			has_rss;
+>> -	unsigned int		irq_nr;
+>>   	struct partition_desc	*ppi_descs[16];
+>>   };
+>>   
+>>   static struct gic_chip_data gic_data __read_mostly;
+>>   static DEFINE_STATIC_KEY_TRUE(supports_deactivate_key);
+>>   
+>> +#define GIC_ID_NR	(1U << GICD_TYPER_ID_BITS(gic_data.rdists.gicd_typer))
+>> +#define GIC_LINE_NR	GICD_TYPER_SPIS(gic_data.rdists.gicd_typer)
 > 
-> Index: tip/tools/perf/util/session.c
-> ===================================================================
-> --- tip.orig/tools/perf/util/session.c
-> +++ tip/tools/perf/util/session.c
-> @@ -2284,6 +2284,7 @@ int perf_session__cpu_bitmap(struct perf
->  {
->  	int i, err = -1;
->  	struct perf_cpu_map *map;
-> +	int nr_cpus_online = session->header.env.nr_cpus_online;
+> This indicates the maximum SPI INTID that the GIC implementation
+> supports, should we restrict it to no more than 1020?
 
-so all those bitmaps that use this function are initialized with
-MAX_NR_CPUS length, are we sure that session->header.env.nr_cpus_online
-is always smaller than MAX_NR_CPUS?
+I guess we could write it as max(GICD_TYPER_SPIS(...), 1020), but that's
+not a material change (the registers backing the special range do exist).
 
-jirka
+> ITLinesNumber can be '11111', and I saw the following info on my host:
+>      "GICv3: 992 SPIs implemented"
 
->  
->  	for (i = 0; i < PERF_TYPE_MAX; ++i) {
->  		struct evsel *evsel;
-> @@ -2308,9 +2309,8 @@ int perf_session__cpu_bitmap(struct perf
->  	for (i = 0; i < map->nr; i++) {
->  		int cpu = map->map[i];
->  
-> -		if (cpu >= MAX_NR_CPUS) {
-> -			pr_err("Requested CPU %d too large. "
-> -			       "Consider raising MAX_NR_CPUS\n", cpu);
-> +		if (cpu >= nr_cpus_online) {
-> +			pr_err("Requested CPU %d too large\n", cpu);
->  			goto out_delete_map;
->  		}
->  
+Yeah, the above should fix the print.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead, it just smells funny...
