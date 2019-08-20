@@ -2,218 +2,161 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF16C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB30BC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF13206BB
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB9E22CE3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:26:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKsStw5X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730256AbfHTPZ6 (ORCPT
+        id S1730372AbfHTP0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:25:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:43184 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbfHTPZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:25:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E4D328;
-        Tue, 20 Aug 2019 08:25:57 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B6AF3F246;
-        Tue, 20 Aug 2019 08:25:56 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 16:25:55 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     "Chocron, Jonathan" <jonnyc@amazon.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "Wasserstrom, Barak" <barakw@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Subject: Re: [PATCH v3 4/8] PCI: Add quirk to disable MSI-X support for
- Amazon's Annapurna Labs Root Port
-Message-ID: <20190820152554.GG23903@e119886-lin.cambridge.arm.com>
-References: <20190723092529.11310-1-jonnyc@amazon.com>
- <20190723092529.11310-5-jonnyc@amazon.com>
- <20190819182339.GD23903@e119886-lin.cambridge.arm.com>
- <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
+        Tue, 20 Aug 2019 11:26:48 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40476 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730023AbfHTP0s (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:26:48 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w16so3590657pfn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 08:26:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=isVxC+LqE13didJdqthpVRTTgRW7g4nRsrXi7yOH4Pk=;
+        b=cKsStw5Xd2pIv4RcrR/6UC56gZWS3ZDioBMmOhAppzgwfdGqEeYlofGZqivtLH6ViU
+         V1cXapEaw+qBoF54hRMO5HhvzvODvh2SO/JTbOeq9qIzGvi4eJQ7V7yrRJoJ7BhVe3+0
+         rXQKaU5pQ6WUqApPcCzM4E+n8FcQO6wgt9NaXP01Xejl1Lr+7LvXWYrn9NLTl5yC5jyh
+         4ULhYHDFYFZea+fEmOm+BfFj4/BgDNkc6vWLcoGQ/C5E/Gcj7mCtlgsDu1bZBYrqN5yY
+         AJVPHZpENhKHOTE3cIPWNLKLJECpZkIUyDaqu7N02iPGdEO8ttd54XiA/z27Kh0ZHOuF
+         NlcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=isVxC+LqE13didJdqthpVRTTgRW7g4nRsrXi7yOH4Pk=;
+        b=Qoeo5FS1lt96ZMH1MtZYCd0KGyl1Ql8DYZF2x0g2AjbkQQ4g2Ba74zuHlKlqt7YKs8
+         lqAIKM5RVFzyBzpL9xMeEnNM4HG1VAvyfcDPG22Eby2pa36TAsGiRbSo+nAP1/fB2SND
+         16dndngSECnsZiY+RUC60vHK9pITJFlARLYQXt72/yMlxnlSwcQgqdoLIDAU179E3qyB
+         mw/KVXH5OSGOihyteJvPj2CExlrbJoA/pvEZ7DtrfY1W1UKcEYs2GJrhWolYgrOyM1/v
+         qEBVbnlgOgQiMqLeC99pA/eq6CjieYtBmUQQad9CNCihqkLAuVzoRVm5S+lU2hOO1sYS
+         NwNA==
+X-Gm-Message-State: APjAAAXL/OdY7y2E+oNJcc57rb55+GrLMmHwCtEUNDThrdS3BfAw93CM
+        /1bBQw9PwvGtjxKDk7MTXQg=
+X-Google-Smtp-Source: APXvYqy6ul/Wi5Gn2+2W3whya9FdpyGGtyqDD0GT3VRIge56nEzTOFeiPBCfGW5faixwfukVWAZtng==
+X-Received: by 2002:aa7:9254:: with SMTP id 20mr31677417pfp.212.1566314807634;
+        Tue, 20 Aug 2019 08:26:47 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e185sm9246747pfa.119.2019.08.20.08.26.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 08:26:46 -0700 (PDT)
+Subject: Re: [PATCH] libperf: Fix arch include paths
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+References: <20190721112506.12306-1-jolsa@kernel.org>
+ <20190721112506.12306-29-jolsa@kernel.org>
+ <20190818140436.GA21854@roeck-us.net> <20190818194032.GA10666@krava>
+ <20190818212816.GA23921@roeck-us.net> <20190819082137.GA9637@krava>
+ <20190820124624.GG24105@krava>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <8e018cb7-db37-45cc-832a-1f3b499895fb@roeck-us.net>
+Date:   Tue, 20 Aug 2019 08:26:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5a079a466f74a866f1b17447eacb15d396478902.camel@amazon.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190820124624.GG24105@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 02:52:30PM +0000, Chocron, Jonathan wrote:
-> On Mon, 2019-08-19 at 19:23 +0100, Andrew Murray wrote:
-> > On Tue, Jul 23, 2019 at 12:25:29PM +0300, Jonathan Chocron wrote:
-> > > The Root Port (identified by [1c36:0032]) doesn't support MSI-X. On
-> > > some
-> > 
-> > Shouldn't this read [1c36:0031]?
-> > 
-> Indeed. Thanks for catching this.
+On 8/20/19 5:46 AM, Jiri Olsa wrote:
+> On Mon, Aug 19, 2019 at 10:21:37AM +0200, Jiri Olsa wrote:
 > 
-> > 
-> > > platforms it is configured to not advertise the capability at all,
-> > > while
-> > > on others it (mistakenly) does. This causes a panic during
-> > > initialization by the pcieport driver, since it tries to configure
-> > > the
-> > > MSI-X capability. Specifically, when trying to access the MSI-X
-> > > table
-> > > a "non-existing addr" exception occurs.
-> > > 
-> > > Example stacktrace snippet:
-> > > 
-> > > [    1.632363] SError Interrupt on CPU2, code 0xbf000000 -- SError
-> > > [    1.632364] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-
-> > > Jonny-14847-ge76f1d4a1828-dirty #33
-> > > [    1.632365] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
-> > > [    1.632365] pstate: 80000005 (Nzcv daif -PAN -UAO)
-> > > [    1.632366] pc : __pci_enable_msix_range+0x4e4/0x608
-> > > [    1.632367] lr : __pci_enable_msix_range+0x498/0x608
-> > > [    1.632367] sp : ffffff80117db700
-> > > [    1.632368] x29: ffffff80117db700 x28: 0000000000000001
-> > > [    1.632370] x27: 0000000000000001 x26: 0000000000000000
-> > > [    1.632372] x25: ffffffd3e9d8c0b0 x24: 0000000000000000
-> > > [    1.632373] x23: 0000000000000000 x22: 0000000000000000
-> > > [    1.632375] x21: 0000000000000001 x20: 0000000000000000
-> > > [    1.632376] x19: ffffffd3e9d8c000 x18: ffffffffffffffff
-> > > [    1.632378] x17: 0000000000000000 x16: 0000000000000000
-> > > [    1.632379] x15: ffffff80116496c8 x14: ffffffd3e9844503
-> > > [    1.632380] x13: ffffffd3e9844502 x12: 0000000000000038
-> > > [    1.632382] x11: ffffffffffffff00 x10: 0000000000000040
-> > > [    1.632384] x9 : ffffff801165e270 x8 : ffffff801165e268
-> > > [    1.632385] x7 : 0000000000000002 x6 : 00000000000000b2
-> > > [    1.632387] x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
-> > > [    1.632388] x3 : 0000000000000000 x2 : 0000000000000000
-> > > [    1.632390] x1 : 0000000000000000 x0 : ffffffd3e9844680
-> > > [    1.632392] Kernel panic - not syncing: Asynchronous SError
-> > > Interrupt
-> > > [    1.632393] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-
-> > > Jonny-14847-ge76f1d4a1828-dirty #33
-> > > [    1.632394] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
-> > > [    1.632394] Call trace:
-> > > [    1.632395]  dump_backtrace+0x0/0x140
-> > > [    1.632395]  show_stack+0x14/0x20
-> > > [    1.632396]  dump_stack+0xa8/0xcc
-> > > [    1.632396]  panic+0x140/0x334
-> > > [    1.632397]  nmi_panic+0x6c/0x70
-> > > [    1.632398]  arm64_serror_panic+0x74/0x88
-> > > [    1.632398]  __pte_error+0x0/0x28
-> > > [    1.632399]  el1_error+0x84/0xf8
-> > > [    1.632400]  __pci_enable_msix_range+0x4e4/0x608
-> > > [    1.632400]  pci_alloc_irq_vectors_affinity+0xdc/0x150
-> > > [    1.632401]  pcie_port_device_register+0x2b8/0x4e0
-> > > [    1.632402]  pcie_portdrv_probe+0x34/0xf0
-> > > 
-> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> > > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> > > ---
-> > >  drivers/pci/quirks.c | 15 +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > > index 23672680dba7..11f843aa96b3 100644
-> > > --- a/drivers/pci/quirks.c
-> > > +++ b/drivers/pci/quirks.c
-> > > @@ -2925,6 +2925,21 @@
-> > > DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
-> > >  			quirk_msi_intx_disable_qca_bug);
-> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
-> > >  			quirk_msi_intx_disable_qca_bug);
-> > > +
-> > > +/*
-> > > + * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-
-> > > X, so it
-> > > + * should be disabled on platforms where the device (mistakenly)
-> > > advertises it.
-> > > + *
-> > > + * The 0031 device id is reused for other non Root Port device
-> > > types,
-> > > + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI
-> > > class.
-> > > + */
-> > > +static void quirk_al_msi_disable(struct pci_dev *dev)
-> > > +{
-> > > +	dev->no_msi = 1;
-> > > +	pci_warn(dev, "Disabling MSI-X\n");
-> > 
-> > This will disable both MSI and MSI-X support - is this really the
-> > intention
-> > here? Do the root ports support MSI and legacy, or just legacy?
-> > 
-> The HW should support MSI, but we currently don't have a use case for
-> it so it hasn't been tested and therefore we are okay with disabling
-> it.
-
-OK - then the commit message and comment (for quirk_al_msi_disable) should
-probably be updated to reflect this. Especially given that the device id
-may be used on other device types - implying that a use-case for this
-may later arise.
-
+> SNIP
 > 
-> For future knowledge, how can just MSI-X be disabled?
-> I see that in pcie_port_enable_irq_vec(), the pcieport driver calls
-> pci_alloc_irq_vectors() with PCI_IRQ_MSIX | PCI_IRQ_MSI. And
-> internally, both __pci_enable_msix_range() and __pci_enable_msi_range()
-> use pci_msi_supported() which doesn't differentiate between MSI and
-> MSI-x.
-
-The documentation [1] would suggest that once upon a time pci_disable_msix
-was used - but now should let pci_alloc_irq_vectors cap the max number
-of vectors. However in your case it's the PCIe port driver that is attempting
-to allocate MSI-X's and so the solution isn't an obvious one.
-
-Setting dev->msix_enabled to false (i.e. through pci_disable_msix) would
-result in an un-necessary WARN_ON_ONCE. I think you'd need to ensure
-devi->msix_cap is NULL (which makes sense as your hardware shouldn't be
-exposing this capability).
-
-I guess the right way of achieving this would be through a quirk, though you'd
-be the first to do this and you'd have to ensure the quirk runs before
-anyone tests for msix_cap.
-
-That's my view, though others may have different suggestions.
-
-[1] Documentation/PCI/msi-howto.rst
-
-Thanks,
-
-Andrew Murray
-
+>>> next-20190816, though the problem has been seen since at least
+>>> next-20190801. Mainline builds fine.
+>>>
+>>> Here is the script I used to bisect the problem:
+>>>
+>>> make mrproper
+>>> rm -rf /tmp/linux
+>>> mkdir /tmp/linux
+>>> make ARCH=x86_64 O=/tmp/linux defconfig
+>>> make -j40 ARCH=x86_64 O=/tmp/linux tools/perf
+>>>
+>>> It looks like the problem is related to "ARCH=x86_64". In mainline,
+>>> x86_64 is replaced in the build command with x86. This is no longer
+>>> the case, and make now tries to include from tools/arch/x86_64/include/,
+>>> which doesn't exist. As it turns out, O=<destdir> is not needed to
+>>> reproduce the problem, only ARCH=x86_64 (or ARCH=i386).
+>>
+>> aaargh.. you're right ;-) it's the SRCARCH, which should
+>> be used in libperf instead of ARCH
+>>
+>> change below fixes that for me
 > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > > +}
-> > > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS,
-> > > 0x0031,
-> > > +			      PCI_CLASS_BRIDGE_PCI, 8,
-> > > quirk_al_msi_disable);
-> > >  #endif /* CONFIG_PCI_MSI */
-> > >  
-> > >  /*
-> > > -- 
-> > > 2.17.1
-> > > 
+> attaching the full patch
+> 
+> jirka
+> 
+> 
+> ---
+> Guenter Roeck reported problem with compilation
+> when the ARCH is specified:
+> 
+>    $ make ARCH=x86_64
+>    In file included from tools/include/asm/atomic.h:6:0,
+>                     from include/linux/atomic.h:5,
+>                     from tools/include/linux/refcount.h:41,
+>                     from cpumap.c:4: tools/include/asm/../../arch/x86/include/asm/atomic.h:11:10:
+>    fatal error: asm/cmpxchg.h: No such file or directory
+> 
+> The problem is that we don't use SRCARCH (the sanitized ARCH
+> version) and we don't get the proper include path.
+> 
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Link: http://lkml.kernel.org/n/tip-408wq8mtajlvs9iir7qo9c84@git.kernel.org
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>   tools/perf/lib/Makefile | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
+> index 8a9ae50818e4..a67efb8d9d39 100644
+> --- a/tools/perf/lib/Makefile
+> +++ b/tools/perf/lib/Makefile
+> @@ -59,7 +59,7 @@ else
+>     CFLAGS := -g -Wall
+>   endif
+>   
+> -INCLUDES = -I$(srctree)/tools/perf/lib/include -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(ARCH)/include/ -I$(srctree)/tools/arch/$(ARCH)/include/uapi -I$(srctree)/tools/include/uapi
+> +INCLUDES = -I$(srctree)/tools/perf/lib/include -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/ -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
+>   
+>   # Append required CFLAGS
+>   override CFLAGS += $(EXTRA_WARNINGS)
+> 
+
