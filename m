@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D87C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B612C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1F222DD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FBC422DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308546;
-	bh=bX09ssadu/1oiVKOYAUmOwBp8D46nwwxLq1K/JTtefE=;
+	s=default; t=1566308550;
+	bh=0dwwIdgtH7PjozajHkNaCBqCl7gFLOz9X/wet3Fyk8s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rj2MqmqLyJyJ0fXX/BnuLVtGEbfCjl8zXTiK87vj22Nwgy/pxnHOGrHipCY1fOyvk
-	 nnQFKNrOWQ4R6mrvNoxaO9LYDnDBB37jTWaPgThDDgFGvBRjvKT4N1mAv8C+kO4o1t
-	 2ucPEkYx61bgQjf6h0kZA5O7Aegufq2h0Om+Ho2I=
+	b=r7Nt+V1zJRPHxE4M8X5yAp7JSU2CfzpJCyPPnqjstaUM5GkKVeUVY31UbHgAwWhkz
+	 6TYqx7Au8cCfIfF2MlidPF+hiM/G9diUJLNE7wasHSSCUxgnq7UTAh4KYbhLWHhE70
+	 SvETzpbN5iNPbjNNjeqDTQ8UbkoeNZYkyVXNVAa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbfHTNmZ (ORCPT
+        id S1730642AbfHTNm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:42:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37608 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:42:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730586AbfHTNmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:42:21 -0400
+        id S1730212AbfHTNm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:42:28 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8571C233FF;
-        Tue, 20 Aug 2019 13:42:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5ED42339F;
+        Tue, 20 Aug 2019 13:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308541;
-        bh=bX09ssadu/1oiVKOYAUmOwBp8D46nwwxLq1K/JTtefE=;
+        s=default; t=1566308547;
+        bh=0dwwIdgtH7PjozajHkNaCBqCl7gFLOz9X/wet3Fyk8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DmjiS6ymZ/eONc7JdxujGyllCBx7/8HZSB+6fmv0aVYPGnZHQQcQl1b85i66G2/fX
-         +3zfu5cv4lSPJGihoFieCxAIfWyMWJuMLW+ASjscel586a4Ig/hX9PJ3TIfPzDv+b2
-         3Y098y0JitYbXwLfIN0dige3i+GFL8doUlvlwj7w=
+        b=P7/2Mj50JkiALmkRY+X4KLo/gIKjau8tq/bPk8OSR95Z8+VaEJBiB9ZFLFIAO45/W
+         OLlowelJFS+9nqOfzu7RmrPL9LQM+3XtPTkLaAxrtflMJaYnYqWLs57ZSYwtZWEwJm
+         z/8G83UNdvlR30R9FEjO7o2X2DQi9Cy870CJlDKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 08/27] nvmet-loop: Flush nvme_delete_wq when removing the port
-Date:   Tue, 20 Aug 2019 09:41:54 -0400
-Message-Id: <20190820134213.11279-8-sashal@kernel.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 13/27] iio: adc: max9611: Fix temperature reading in probe
+Date:   Tue, 20 Aug 2019 09:41:59 -0400
+Message-Id: <20190820134213.11279-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134213.11279-1-sashal@kernel.org>
 References: <20190820134213.11279-1-sashal@kernel.org>
@@ -60,50 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-[ Upstream commit 86b9a63e595ff03f9d0a7b92b6acc231fecefc29 ]
+[ Upstream commit b9ddd5091160793ee9fac10da765cf3f53d2aaf0 ]
 
-After calling nvme_loop_delete_ctrl(), the controllers will not
-yet be deleted because nvme_delete_ctrl() only schedules work
-to do the delete.
+The max9611 driver reads the die temperature at probe time to validate
+the communication channel. Use the actual read value to perform the test
+instead of the read function return value, which was mistakenly used so
+far.
 
-This means a race can occur if a port is removed but there
-are still active controllers trying to access that memory.
+The temperature reading test was only successful because the 0 return
+value is in the range of supported temperatures.
 
-To fix this, flush the nvme_delete_wq before returning from
-nvme_loop_remove_port() so that any controllers that might
-be in the process of being deleted won't access a freed port.
-
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by : Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Fixes: 69780a3bbc0b ("iio: adc: Add Maxim max9611 ADC driver")
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/loop.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/iio/adc/max9611.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/target/loop.c b/drivers/nvme/target/loop.c
-index 9908082b32c4b..137a27fa369cb 100644
---- a/drivers/nvme/target/loop.c
-+++ b/drivers/nvme/target/loop.c
-@@ -678,6 +678,14 @@ static void nvme_loop_remove_port(struct nvmet_port *port)
- 	mutex_lock(&nvme_loop_ports_mutex);
- 	list_del_init(&port->entry);
- 	mutex_unlock(&nvme_loop_ports_mutex);
-+
-+	/*
-+	 * Ensure any ctrls that are in the process of being
-+	 * deleted are in fact deleted before we return
-+	 * and free the port. This is to prevent active
-+	 * ctrls from using a port after it's freed.
-+	 */
-+	flush_workqueue(nvme_delete_wq);
- }
+diff --git a/drivers/iio/adc/max9611.c b/drivers/iio/adc/max9611.c
+index ce9af43fa2de7..49c1956e6a674 100644
+--- a/drivers/iio/adc/max9611.c
++++ b/drivers/iio/adc/max9611.c
+@@ -483,7 +483,7 @@ static int max9611_init(struct max9611_dev *max9611)
+ 	if (ret)
+ 		return ret;
  
- static const struct nvmet_fabrics_ops nvme_loop_ops = {
+-	regval = ret & MAX9611_TEMP_MASK;
++	regval &= MAX9611_TEMP_MASK;
+ 
+ 	if ((regval > MAX9611_TEMP_MAX_POS &&
+ 	     regval < MAX9611_TEMP_MIN_NEG) ||
 -- 
 2.20.1
 
