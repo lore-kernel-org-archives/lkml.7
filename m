@@ -2,242 +2,162 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3E0C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75A3C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B12214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7979D214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:36:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="R2/YxrBi"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VjuVMDMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbfHTNgS (ORCPT
+        id S1730024AbfHTNgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:36:18 -0400
-Received: from mail-eopbgr150072.outbound.protection.outlook.com ([40.107.15.72]:19009
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728682AbfHTNgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:36:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oJo1ePUWe03p8rFGi8AwOM8qX2nPMZl5B+CoUF1fQZzzEzYRhz6ayy/mz9fZzrxkcggjPovnGg2kx+Nh9rvO7jttO+C2qYVowQs1OKkAu+1Ts71A+67w+6qkM8BUy3VOM0IUDK+6MWQVXWzLWAE8TYCWCxIstBjRCbHeEGt3Gg9720HDLhPi5CnslBAZG1iMvCDks6DRq/sBQyD0XMhzhkGx99bg897TPkxW6ivtNrBfeelfegQ6Mlp6aSGw1Vur9H6Vjl0nGQjldVOpsTE9nXfqHbQNr+BIGvyjSQiMXWYtmmj+OUuOPbD91VLU76lXwIzLzPeKnZx7ySYiw73gww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IbfvC7Gy6a5jMJm5qHD1Ktdcx8lzMmE5vVOtmdYjkVY=;
- b=JEspPKfnZtY/mBBzf1IwHl1GUDg4NuNMfZch2TbP0Z3oYAVujttBRYqdkDH1fCZLRDR4LfrNofohX+7UWWR2tMEMlnDGtttguRJuvXzGMoPeqgV2z1YnQVDhygR+Y1+fnQnaTba5Z+JfgGK/M3Fs/A8x/SHe6JVrajJwRT5KY71ImPhzqBrZRAjHitotBzv1avslfxQttoEt4i5gF757oscSyDDHfVSDZ1+vHIsBQV/05F4iLMjVgvzjTyZxJzqLAYgn79Mu45d9i8B7bv1nlFC3XmYinLEt01SvzNu0zTL2NFaDXSiyfW25k7EAoN4LGCq2v3hvvXPARAPC3yhiGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IbfvC7Gy6a5jMJm5qHD1Ktdcx8lzMmE5vVOtmdYjkVY=;
- b=R2/YxrBi0PFZKsltJfxo6WNmHeEHoYXefcmtgkEQN4hjE1RV5tMpssdo6f5BGLy/ovOIcOyZS9wmxAObRaHyHxoxP21z85wKcfEuUz7yJ7SQElJf8dQcVgNsA3JZjwTwoSFvhBLfGAZQzO+5rR+MfGaLFqyeeN4hgh33LbhtJ2Q=
-Received: from AM6PR0402MB3798.eurprd04.prod.outlook.com (52.133.29.29) by
- AM6PR0402MB3591.eurprd04.prod.outlook.com (52.133.20.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Tue, 20 Aug 2019 13:36:09 +0000
-Received: from AM6PR0402MB3798.eurprd04.prod.outlook.com
- ([fe80::9de1:26ec:59e5:32fc]) by AM6PR0402MB3798.eurprd04.prod.outlook.com
- ([fe80::9de1:26ec:59e5:32fc%5]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
- 13:36:09 +0000
-From:   Christian Herber <christian.herber@nxp.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH net-next 0/1] Add BASE-T1 PHY support
-Thread-Topic: [EXT] Re: [PATCH net-next 0/1] Add BASE-T1 PHY support
-Thread-Index: AQHVVlfh9z1APBIvVEOf3Cz5T4N+yg==
-Date:   Tue, 20 Aug 2019 13:36:09 +0000
-Message-ID: <AM6PR0402MB3798FCBF1EE592687B13A3C386AB0@AM6PR0402MB3798.eurprd04.prod.outlook.com>
-References: <20190815153209.21529-1-christian.herber@nxp.com>
- <8c15b855-6947-9930-c3df-71a64fbff33b@gmail.com>
- <AM6PR0402MB379864B810F08D3698618B5F86A80@AM6PR0402MB3798.eurprd04.prod.outlook.com>
- <13e65051-fe4f-5964-30b3-75285e6d2eee@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=christian.herber@nxp.com; 
-x-originating-ip: [217.111.68.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d9cd241c-3f18-461a-ad84-08d725735c69
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR0402MB3591;
-x-ms-traffictypediagnostic: AM6PR0402MB3591:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <AM6PR0402MB3591C26642F178ED28287F5B86AB0@AM6PR0402MB3591.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 013568035E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(136003)(376002)(346002)(199004)(189003)(446003)(486006)(54906003)(8676002)(476003)(33656002)(91956017)(229853002)(76176011)(76116006)(186003)(14444005)(256004)(102836004)(6506007)(53546011)(55236004)(26005)(25786009)(7736002)(110136005)(6246003)(81156014)(81166006)(9686003)(305945005)(5660300002)(6436002)(4326008)(7696005)(74316002)(86362001)(53936002)(966005)(14454004)(99286004)(2501003)(316002)(71200400001)(71190400001)(66066001)(3846002)(6116002)(2906002)(66556008)(6306002)(478600001)(44832011)(66476007)(64756008)(66446008)(55016002)(66946007)(8936002)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3591;H:AM6PR0402MB3798.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: D7bzG4ERQ2PjDXIxnPa89dsZbHkUOitpeon6mE9Fj/q/rwl5Ve35KlWBvfJSPSwXBuovX8L8B68wpZ5fzMnMoH1y+zDMkBgEzU1Hs+B5kz8aCIH8IZO6sbKaJLCVijkcSQp/hlInm4NUt6MDTseRqDAAcOWfs/2C4ZnJ31knQzKrHYCl3Ww/bBAO+S+dEGEc4VayKPQk7beh2QIBJHPi4zJUzzzHUuaaftJxz9qq/1OQZj+1vrkomat4Z6NiFIYz/2xhPL+8vw0AFdNIjMS1F+N1849/IWDdrUMZrs07CXPJoFOPdevVdd3A2uEWy/KIjOvHgR3qhkc7bZ/6OW0UbPg1gk3Xs02A+UhbkrcoxqpGYnENuSqm+quZnHApsiSZCJrx3mgqMGRYQTr7S2+kmwkYGw8dsCefJ4bB/6FYkrI=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 20 Aug 2019 09:36:40 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:52736 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728947AbfHTNgk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:36:40 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190820133639euoutp02e7d8ccb35446dd6040795f8a92e1fab4~8pQIjiS7u1105011050euoutp02e
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:36:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190820133639euoutp02e7d8ccb35446dd6040795f8a92e1fab4~8pQIjiS7u1105011050euoutp02e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566308199;
+        bh=D4upNy5Z/FI8rlnFYgHOUDS4ndyqbVNBQ89eAaMZD+4=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=VjuVMDMufblxA+qrNpMAqUCnLS0YJpmrPCmQvsOD79hShHUg4IsS6Mkedwl2N9Mo0
+         ngNeeFKmx4w9xwk65ltnBA0wdRMjf7m3NMvCxK6AOy7xleP14IRI0w2wQvSqwivkzc
+         MAg/Hm6UW4kVuJ8eC2Jr3R/F6/2HBahmC1sr/tdg=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190820133638eucas1p27a672e609f7e3fe3a3b55c892833fb5d~8pQIPIYOy0313803138eucas1p2I;
+        Tue, 20 Aug 2019 13:36:38 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id E3.6F.04374.667FB5D5; Tue, 20
+        Aug 2019 14:36:38 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190820133637eucas1p13c8129a8dbc1987fd71cb93bbff0bce9~8pQHYbFDU0444104441eucas1p1Q;
+        Tue, 20 Aug 2019 13:36:37 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190820133637eusmtrp1d31805f2abdeb827060d053120dad483~8pQHKAdLR2051720517eusmtrp1E;
+        Tue, 20 Aug 2019 13:36:37 +0000 (GMT)
+X-AuditID: cbfec7f5-4f7ff70000001116-e1-5d5bf766f7db
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id AE.B7.04117.567FB5D5; Tue, 20
+        Aug 2019 14:36:37 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190820133637eusmtip240264164b9de8a150dcdc08acf90588d~8pQG0N3kI1713817138eusmtip2O;
+        Tue, 20 Aug 2019 13:36:37 +0000 (GMT)
+Subject: Re: [PATCH 8/9] drivers: ata: sata_gemini: use
+ devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, axboe@kernel.dk, hdegoede@redhat.com,
+        linus.walleij@linaro.org, linux-ide@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <f7a9d877-e437-e22e-f9f8-d8da62273aa5@samsung.com>
+Date:   Tue, 20 Aug 2019 15:36:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9cd241c-3f18-461a-ad84-08d725735c69
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 13:36:09.6501
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HX7RQ/4M1KGF9+oO0KgaDpQkjJaaF6qPE2evR8/5d4oZvOgOWF9ib8OqWxnH4rkQ258STZi1To6GkGEQelVA1m/zNORyFu3rbC1xUrDPDnk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3591
+In-Reply-To: <1566304548-19972-8-git-send-email-info@metux.net>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7djP87pp36NjDe51S1qsvtvPZvHm+HQm
+        i5uNu5kspvxZzmRxbMcjJovLu+awWXR+mcXmwO5x+Wypx51re9g8Jnx4y+bxft9VNo/Pm+QC
+        WKO4bFJSczLLUov07RK4Mr5sf8lY8I674t+x1SwNjDc4uxg5OSQETCTWrVjPDmILCaxglLj+
+        UhfC/sIoceSHQxcjF5D9mVFi78s/zF2MHGANf5arQsSXM0q83H2SCcJ5yyhx4cMKZpBuYYEo
+        iRMvN4JNFREwl3j8ZCErSBGzwBxGiY9/t7GAJNgErCQmtq9iBLF5BewkWhf8YQOxWQRUJaY8
+        u8cKYosKREjcP7aBFaJGUOLkzCcsIFdwCthLzHhXDxJmFhCXuPVkPhOELS+x/e0cZpBdEgK7
+        2CXOTX3KCHG1i8T5X4IQHwtLvDq+hR3ClpE4PbmHBaJ+HaPE344XUM3bGSWWT/7HBlFlLXH4
+        +EVWkEHMApoS63fpQ4QdJfo/7WWBmM8nceOtIMQNfBKTtk2HBhavREebEES1msSGZRvYYNZ2
+        7VzJPIFRaRaSx2Yh+WYWkm9mIexdwMiyilE8tbQ4Nz212DgvtVyvODG3uDQvXS85P3cTIzD5
+        nP53/OsOxn1/kg4xCnAwKvHwJlyPjhViTSwrrsw9xCjBwawkwlsxJypWiDclsbIqtSg/vqg0
+        J7X4EKM0B4uSOG81w4NoIYH0xJLU7NTUgtQimCwTB6dUA+NksWV+lsy/4nZtY82QbpeadG7T
+        mTXaaienCbHWzDzB/c9t7f+8VxPyz2wxS/FUDNn1uTnQ61ddLe/Cy1ybwm/Xx3q1T1otu0yp
+        xrNtpvy0ha3uIo+/abzeduNv9JXpuY9Np2T9vp/QfOh2QmXsAV51tf8yS5od5m4NK7CSjrSd
+        /Dtbv5VzYYcSS3FGoqEWc1FxIgAjnHmBOgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsVy+t/xe7qp36NjDXY8l7FYfbefzeLN8elM
+        FjcbdzNZTPmznMni2I5HTBaXd81hs+j8MovNgd3j8tlSjzvX9rB5TPjwls3j/b6rbB6fN8kF
+        sEbp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZXzZ
+        /pKx4B13xb9jq1kaGG9wdjFycEgImEj8Wa7axcjFISSwlFHizqXjLBBxGYnj68u6GDmBTGGJ
+        P9e62EBsIYHXjBK39yqC2MICURInXm5kB7FFBMwlHj9ZyAoyh1lgDqPE9+WzWCGGHmeUePm5
+        hRWkik3ASmJi+ypGEJtXwE6idcEfsKksAqoSU57dA6sRFYiQOPN+BQtEjaDEyZlPwA7iFLCX
+        mPGuHiTMLKAu8WfeJWYIW1zi1pP5TBC2vMT2t3OYJzAKzULSPQtJyywkLbOQtCxgZFnFKJJa
+        WpybnltspFecmFtcmpeul5yfu4kRGG/bjv3csoOx613wIUYBDkYlHt4dN6NjhVgTy4orcw8x
+        SnAwK4nwVsyJihXiTUmsrEotyo8vKs1JLT7EaAr020RmKdHkfGAqyCuJNzQ1NLewNDQ3Njc2
+        s1AS5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwHhuV1Bk+aylU0u06q1MeaemHF+2R/qfSf+W
+        G7+SPzxM23G7bs4JdsUz79jqvuXsWNHs/LDg4IvF22XYVAxDsuJErWX26XvNUZXU2ZYkut1b
+        9XLuRfuUpa1/rZ6ZXM+Sv86idqxlc1zfhusfvW6fuT0rek7no2XtGfWs3JPmVeu9WzB3ut6J
+        mexKLMUZiYZazEXFiQBtlJWXzQIAAA==
+X-CMS-MailID: 20190820133637eucas1p13c8129a8dbc1987fd71cb93bbff0bce9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190820123601epcas1p19aecef8b133d389e392fdd12273ef3a6
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190820123601epcas1p19aecef8b133d389e392fdd12273ef3a6
+References: <1566304548-19972-1-git-send-email-info@metux.net>
+        <CGME20190820123601epcas1p19aecef8b133d389e392fdd12273ef3a6@epcas1p1.samsung.com>
+        <1566304548-19972-8-git-send-email-info@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.08.2019 21:07, Heiner Kallweit wrote:=0A=
-> Caution: EXT Email=0A=
-> =0A=
-> On 19.08.2019 08:32, Christian Herber wrote:=0A=
->> On 16.08.2019 22:59, Heiner Kallweit wrote:=0A=
->>> On 15.08.2019 17:32, Christian Herber wrote:=0A=
->>>> This patch adds basic support for BASE-T1 PHYs in the framework.=0A=
->>>> BASE-T1 PHYs main area of application are automotive and industrial.=
-=0A=
->>>> BASE-T1 is standardized in IEEE 802.3, namely=0A=
->>>> - IEEE 802.3bw: 100BASE-T1=0A=
->>>> - IEEE 802.3bp 1000BASE-T1=0A=
->>>> - IEEE 802.3cg: 10BASE-T1L and 10BASE-T1S=0A=
->>>>=0A=
->>>> There are no products which contain BASE-T1 and consumer type PHYs lik=
-e=0A=
->>>> 1000BASE-T. However, devices exist which combine 100BASE-T1 and 1000BA=
-SE-T1=0A=
->>>> PHYs with auto-negotiation.=0A=
->>>=0A=
->>> Is this meant in a way that *currently* there are no PHY's combining Ba=
-se-T1=0A=
->>> with normal Base-T modes? Or are there reasons why this isn't possible =
-in=0A=
->>> general? I'm asking because we have PHY's combining copper and fiber, a=
-nd e.g.=0A=
->>> the mentioned Aquantia PHY that combines NBase-T with 1000Base-T2.=0A=
->>>=0A=
->>>>=0A=
->>>> The intention of this patch is to make use of the existing Clause 45 f=
-unctions.=0A=
->>>> BASE-T1 adds some additional registers e.g. for aneg control, which fo=
-llow a=0A=
->>>> similiar register layout as the existing devices. The bits which are u=
-sed in=0A=
->>>> BASE-T1 specific registers are the same as in basic registers, thus th=
-e=0A=
->>>> existing functions can be resued, with get_aneg_ctrl() selecting the c=
-orrect=0A=
->>>> register address.=0A=
->>>>=0A=
->>> If Base-T1 can't be combined with other modes then at a first glance I =
-see no=0A=
->>> benefit in defining new registers e.g. for aneg control, and the standa=
-rd ones=0A=
->>> are unused. Why not using the standard registers? Can you shed some lig=
-ht on that?=0A=
->>>=0A=
->>> Are the new registers internally shadowed to the standard location?=0A=
->>> That's something I've seen on other PHY's: one register appears in diff=
-erent=0A=
->>> places in different devices.=0A=
->>>=0A=
->>>> The current version of ethtool has been prepared for 100/1000BASE-T1 a=
-nd works=0A=
->>>> with this patch. 10BASE-T1 needs to be added to ethtool.=0A=
->>>>=0A=
->>>> Christian Herber (1):=0A=
->>>>     Added BASE-T1 PHY support to PHY Subsystem=0A=
->>>>=0A=
->>>>    drivers/net/phy/phy-c45.c    | 113 +++++++++++++++++++++++++++++++-=
----=0A=
->>>>    drivers/net/phy/phy-core.c   |   4 +-=0A=
->>>>    include/uapi/linux/ethtool.h |   2 +=0A=
->>>>    include/uapi/linux/mdio.h    |  21 +++++++=0A=
->>>>    4 files changed, 129 insertions(+), 11 deletions(-)=0A=
->>>>=0A=
->>>=0A=
->>> Heiner=0A=
->>>=0A=
->>=0A=
->> Hi Heiner,=0A=
->>=0A=
->> I do not think the Aquantia part you are describing is publicly=0A=
->> documented, so i cannot comment on that part.=0A=
-> Right, datasheet isn't publicly available. All I wanted to say with=0A=
-> mentioning this PHY: It's not a rare exception that a PHY combines=0A=
-> standard BaseT modes with "non-consumer" modes for special purposes.=0A=
-> One practical use case of this proprietary 1000Base-T2 mode is=0A=
-> re-using existing 2-pair cabling in aircrafts.=0A=
-> =0A=
->> There are multiple reasons why e.g. xBASE-T1 plus 1000BASE-T is=0A=
->> unlikely. First, the is no use-case known to me, where this would be=0A=
->> required. Second, there is no way that you can do an auto-negotiation=0A=
->> between the two, as these both have their own auto-neg defined (Clause=
-=0A=
->> 28/73 vs. Clause 98). Thirdly, if you would ever have a product with=0A=
->> both, I believe it would just include two full PHYs and a way to select=
-=0A=
->> which flavor you want. Of course, this is the theory until proven=0A=
->> otherwise, but to me it is sufficient to use a single driver.=0A=
->>=0A=
-> I'm with you if you say it's unlikely. However your statement in the=0A=
-> commit message leaves the impression that there can't be such a device.=
-=0A=
-> And that's a difference.=0A=
-> =0A=
-> Regarding "including two full PHYs":=0A=
-> This case we have already, there are PHYs combining different IP blocks,=
-=0A=
-> each one supporting a specific mode (e.g. copper and fiber). There you=0A=
-> also have the case of different autoneg methods, clause 28 vs. clause 37.=
-=0A=
-> =0A=
->> The registers are different in the fields they include. It is just that=
-=0A=
->> the flags which are used by the Linux driver, like restarting auto-neg,=
-=0A=
->> are at the same position.=0A=
->>=0A=
-> Good to know. Your commit description doesn't mention any specific PHY.=
-=0A=
-> I suppose you have PHYs you'd like to operate with the genphy_c45 driver.=
-=0A=
-> Could you give an example? And ideally, is a public datasheet available?=
-=0A=
-> =0A=
->> Christian=0A=
->>=0A=
->>=0A=
-> Heiner=0A=
-> =0A=
-=0A=
-There are no public BASE-T1 devices on the market right now that use =0A=
-Clause 45 standard registers. The first such products were developed =0A=
-before the IEEE standard (BroadR-Reach) and used Clause 22 access (see =0A=
-e.g. the support in the Kernel for TJA110x).=0A=
-=0A=
-The most convenient way to test with a BASE-T1 device would be to use an =
-=0A=
-SFP (e.g. =0A=
-https://technica-engineering.de/produkt/1000base-t1-sfp-module/). =0A=
-Alternative source could be Goepel.=0A=
-=0A=
-There are also a number of media-converters around where one could break =
-=0A=
-out the MDIO and connect to a processor. Of course, in all cases it =0A=
-should be made sure that this is a Clause-45 device.=0A=
-=0A=
-As all relevant parts are NDA-restricted, this is pretty much all the =0A=
-information I can share.=0A=
-=0A=
-Christian=0A=
-=0A=
+
+On 8/20/19 2:35 PM, Enrico Weigelt, metux IT consult wrote:
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
+
+It would also be worth to mention in the patch description that
+on !res condition the driver will now return -EINVAL (instead of
+-ENODEV) and print an error.
+
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> ---
+>  drivers/ata/sata_gemini.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/drivers/ata/sata_gemini.c b/drivers/ata/sata_gemini.c
+> index f793564..55e2689 100644
+> --- a/drivers/ata/sata_gemini.c
+> +++ b/drivers/ata/sata_gemini.c
+> @@ -318,7 +318,6 @@ static int gemini_sata_probe(struct platform_device *pdev)
+>  	struct device_node *np = dev->of_node;
+>  	struct sata_gemini *sg;
+>  	struct regmap *map;
+> -	struct resource *res;
+>  	enum gemini_muxmode muxmode;
+>  	u32 gmode;
+>  	u32 gmask;
+> @@ -329,11 +328,7 @@ static int gemini_sata_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	sg->dev = dev;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!res)
+> -		return -ENODEV;
+> -
+> -	sg->base = devm_ioremap_resource(dev, res);
+> +	sg->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(sg->base))
+>  		return PTR_ERR(sg->base);
