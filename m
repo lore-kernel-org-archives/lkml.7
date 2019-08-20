@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0803C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AD5C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875AB2332A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A2122332A
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308444;
-	bh=6Qop+X5mrgk58CnhImkOZqXfjfCqjcRE6X3Fin3xA2g=;
+	s=default; t=1566308447;
+	bh=/9RJlkedACGw7ohoLN1ltEN4W8LdBKzQ8gvD4GvVr+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VjTMwamNreQuZyCLGDDIFEiomwvKpXHnwbeVsiJClzde1+MAi63vk6XKbOQodtca0
-	 TBcesS4ZfBXv0ue7E+zSUsqIB/Q8ZMYlSw+FrUc4gad00+ObT3YTeMKyI2QwYi1tXm
-	 eYXlX3TebtSU7U4MtGMtAVR02sJyJ7TibZA++o+Y=
+	b=qMHKCMDLMcJzqsK4Dm20kGAF0bAyDI1CCG7ziIKbynvKsNsIli5WORPo71TH+KRYN
+	 5/DZqlwzz57KIGvdxfl5LcKRwXKqrugLMo/8P9AGhvndS7I63++dVlfJYud8PFAxbM
+	 axKoIC3c2bTMva9teljpgbZqM33rr2tqSOYUCesg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbfHTNkn (ORCPT
+        id S1730209AbfHTNkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:40:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35370 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:40:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730117AbfHTNkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:40:39 -0400
+        id S1730151AbfHTNkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:40:41 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCF6422DA9;
-        Tue, 20 Aug 2019 13:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33B052339E;
+        Tue, 20 Aug 2019 13:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308438;
-        bh=6Qop+X5mrgk58CnhImkOZqXfjfCqjcRE6X3Fin3xA2g=;
+        s=default; t=1566308440;
+        bh=/9RJlkedACGw7ohoLN1ltEN4W8LdBKzQ8gvD4GvVr+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e0hb6TXXPiXLBqkT7QtU8egSW4fp//oUJQE3dM60Xba6qhrY0dXTaQqmQTif2Lf3x
-         A1KCBngRgYU6CTx1iyic2tolYdjfGkOKyr9VqgqaZPM4/yuuovPzfXuODGeRze8OsZ
-         fJjdRgR01DFlWUWXmUPCwtYj53JkbMY0P4sFbTEw=
+        b=nStgeZqDtCERZuHpMpaU41c185g49hoUxYeX5Ru/ZlVm6ARBAJxVno74uOJjWoifP
+         CfeUCrktVL2ovdmPR3/LgWFhVFts1xDwmLKAimVkTCr04fX06cf5rCYpeiHwZjp091
+         HbrMS+3z2r/KA3VNPleRKEOOHD3QRE5fishoe204=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Logan Gunthorpe <logang@deltatee.com>,
         Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 10/44] nvmet: Fix use-after-free bug when a port is removed
-Date:   Tue, 20 Aug 2019 09:39:54 -0400
-Message-Id: <20190820134028.10829-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 13/44] nvme-core: Fix extra device_put() call on error path
+Date:   Tue, 20 Aug 2019 09:39:57 -0400
+Message-Id: <20190820134028.10829-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
@@ -62,77 +61,143 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit 3aed86731ee2b23e4dc4d2c6d943d33992cd551b ]
+[ Upstream commit 8c36e66fb407ce076535a7db98ab9f6d720b866a ]
 
-When a port is removed through configfs, any connected controllers
-are still active and can still send commands. This causes a
-use-after-free bug which is detected by KASAN for any admin command
-that dereferences req->port (like in nvmet_execute_identify_ctrl).
+In the error path for nvme_init_subsystem(), nvme_put_subsystem()
+will call device_put(), but it will get called again after the
+mutex_unlock().
 
-To fix this, disconnect all active controllers when a subsystem is
-removed from a port. This ensures there are no active controllers
-when the port is eventually removed.
+The device_put() only needs to be called if device_add() fails.
 
+This bug caused a KASAN use-after-free error when adding and
+removing subsytems in a loop:
+
+  BUG: KASAN: use-after-free in device_del+0x8d9/0x9a0
+  Read of size 8 at addr ffff8883cdaf7120 by task multipathd/329
+
+  CPU: 0 PID: 329 Comm: multipathd Not tainted 5.2.0-rc6-vmlocalyes-00019-g70a2b39005fd-dirty #314
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+  Call Trace:
+   dump_stack+0x7b/0xb5
+   print_address_description+0x6f/0x280
+   ? device_del+0x8d9/0x9a0
+   __kasan_report+0x148/0x199
+   ? device_del+0x8d9/0x9a0
+   ? class_release+0x100/0x130
+   ? device_del+0x8d9/0x9a0
+   kasan_report+0x12/0x20
+   __asan_report_load8_noabort+0x14/0x20
+   device_del+0x8d9/0x9a0
+   ? device_platform_notify+0x70/0x70
+   nvme_destroy_subsystem+0xf9/0x150
+   nvme_free_ctrl+0x280/0x3a0
+   device_release+0x72/0x1d0
+   kobject_put+0x144/0x410
+   put_device+0x13/0x20
+   nvme_free_ns+0xc4/0x100
+   nvme_release+0xb3/0xe0
+   __blkdev_put+0x549/0x6e0
+   ? kasan_check_write+0x14/0x20
+   ? bd_set_size+0xb0/0xb0
+   ? kasan_check_write+0x14/0x20
+   ? mutex_lock+0x8f/0xe0
+   ? __mutex_lock_slowpath+0x20/0x20
+   ? locks_remove_file+0x239/0x370
+   blkdev_put+0x72/0x2c0
+   blkdev_close+0x8d/0xd0
+   __fput+0x256/0x770
+   ? _raw_read_lock_irq+0x40/0x40
+   ____fput+0xe/0x10
+   task_work_run+0x10c/0x180
+   ? filp_close+0xf7/0x140
+   exit_to_usermode_loop+0x151/0x170
+   do_syscall_64+0x240/0x2e0
+   ? prepare_exit_to_usermode+0xd5/0x190
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f5a79af05d7
+  Code: 00 00 0f 05 48 3d 00 f0 ff ff 77 3f c3 66 0f 1f 44 00 00 53 89 fb 48 83 ec 10 e8 c4 fb ff ff 89 df 89 c2 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 2b 89 d7 89 44 24 0c e8 06 fc ff ff 8b 44 24
+  RSP: 002b:00007f5a7799c810 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+  RAX: 0000000000000000 RBX: 0000000000000008 RCX: 00007f5a79af05d7
+  RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000008
+  RBP: 00007f5a58000f98 R08: 0000000000000002 R09: 00007f5a7935ee80
+  R10: 0000000000000000 R11: 0000000000000293 R12: 000055e432447240
+  R13: 0000000000000000 R14: 0000000000000001 R15: 000055e4324a9cf0
+
+  Allocated by task 1236:
+   save_stack+0x21/0x80
+   __kasan_kmalloc.constprop.6+0xab/0xe0
+   kasan_kmalloc+0x9/0x10
+   kmem_cache_alloc_trace+0x102/0x210
+   nvme_init_identify+0x13c3/0x3820
+   nvme_loop_configure_admin_queue+0x4fa/0x5e0
+   nvme_loop_create_ctrl+0x469/0xf40
+   nvmf_dev_write+0x19a3/0x21ab
+   __vfs_write+0x66/0x120
+   vfs_write+0x154/0x490
+   ksys_write+0x104/0x240
+   __x64_sys_write+0x73/0xb0
+   do_syscall_64+0xa5/0x2e0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+  Freed by task 329:
+   save_stack+0x21/0x80
+   __kasan_slab_free+0x129/0x190
+   kasan_slab_free+0xe/0x10
+   kfree+0xa7/0x200
+   nvme_release_subsystem+0x49/0x60
+   device_release+0x72/0x1d0
+   kobject_put+0x144/0x410
+   put_device+0x13/0x20
+   klist_class_dev_put+0x31/0x40
+   klist_put+0x8f/0xf0
+   klist_del+0xe/0x10
+   device_del+0x3a7/0x9a0
+   nvme_destroy_subsystem+0xf9/0x150
+   nvme_free_ctrl+0x280/0x3a0
+   device_release+0x72/0x1d0
+   kobject_put+0x144/0x410
+   put_device+0x13/0x20
+   nvme_free_ns+0xc4/0x100
+   nvme_release+0xb3/0xe0
+   __blkdev_put+0x549/0x6e0
+   blkdev_put+0x72/0x2c0
+   blkdev_close+0x8d/0xd0
+   __fput+0x256/0x770
+   ____fput+0xe/0x10
+   task_work_run+0x10c/0x180
+   exit_to_usermode_loop+0x151/0x170
+   do_syscall_64+0x240/0x2e0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 32fd90c40768 ("nvme: change locking for the per-subsystem controller list")
 Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
 Reviewed-by : Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/configfs.c |  1 +
- drivers/nvme/target/core.c     | 12 ++++++++++++
- drivers/nvme/target/nvmet.h    |  3 +++
- 3 files changed, 16 insertions(+)
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
-index 08dd5af357f7c..3854363118ccf 100644
---- a/drivers/nvme/target/configfs.c
-+++ b/drivers/nvme/target/configfs.c
-@@ -673,6 +673,7 @@ static void nvmet_port_subsys_drop_link(struct config_item *parent,
- 
- found:
- 	list_del(&p->entry);
-+	nvmet_port_del_ctrls(port, subsys);
- 	nvmet_port_disc_changed(port, subsys);
- 
- 	if (list_empty(&port->subsystems))
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 7734a6acff851..e4db9a4411681 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -277,6 +277,18 @@ void nvmet_unregister_transport(const struct nvmet_fabrics_ops *ops)
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index ab1a2b1ec3637..dfbd5872f4422 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2440,6 +2440,7 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 		if (ret) {
+ 			dev_err(ctrl->device,
+ 				"failed to register subsystem device.\n");
++			put_device(&subsys->dev);
+ 			goto out_unlock;
+ 		}
+ 		ida_init(&subsys->ns_ida);
+@@ -2462,7 +2463,6 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 	nvme_put_subsystem(subsys);
+ out_unlock:
+ 	mutex_unlock(&nvme_subsystems_lock);
+-	put_device(&subsys->dev);
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(nvmet_unregister_transport);
- 
-+void nvmet_port_del_ctrls(struct nvmet_port *port, struct nvmet_subsys *subsys)
-+{
-+	struct nvmet_ctrl *ctrl;
-+
-+	mutex_lock(&subsys->lock);
-+	list_for_each_entry(ctrl, &subsys->ctrls, subsys_entry) {
-+		if (ctrl->port == port)
-+			ctrl->ops->delete_ctrl(ctrl);
-+	}
-+	mutex_unlock(&subsys->lock);
-+}
-+
- int nvmet_enable_port(struct nvmet_port *port)
- {
- 	const struct nvmet_fabrics_ops *ops;
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index c25d88fc9dec8..b6b0d483e0c50 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -415,6 +415,9 @@ void nvmet_port_send_ana_event(struct nvmet_port *port);
- int nvmet_register_transport(const struct nvmet_fabrics_ops *ops);
- void nvmet_unregister_transport(const struct nvmet_fabrics_ops *ops);
- 
-+void nvmet_port_del_ctrls(struct nvmet_port *port,
-+			  struct nvmet_subsys *subsys);
-+
- int nvmet_enable_port(struct nvmet_port *port);
- void nvmet_disable_port(struct nvmet_port *port);
  
 -- 
 2.20.1
