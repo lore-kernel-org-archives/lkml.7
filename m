@@ -2,186 +2,99 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E122C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4AAC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1E922DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308502;
-	bh=lh2wv/YLcV+W2NsJ0xt4/MGkv9oSBwvlMCm3cylHGtc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RvHml8sYAQVdqbopj1mHvvckOkqkRjfdDLRDuKg8firTf1wnC1vt8e8St4/VwdAAZ
-	 1L17ZtF5l/M7jbdiVNXzXgPj9RAvaHtz9fGyhYKWSwlfkfv+C+ErqZ7RJH1Wla1btD
-	 N41PlfdN2mmW05AOu3yyZ3ybYDbqe3qc8UkBtb8E=
+	by mail.kernel.org (Postfix) with ESMTP id A1FD922DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZDi1SFp8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbfHTNll (ORCPT
+        id S1730452AbfHTNlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 20 Aug 2019 09:41:44 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39721 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730430AbfHTNll (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 20 Aug 2019 09:41:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730417AbfHTNli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:41:38 -0400
-Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD97F2339E;
-        Tue, 20 Aug 2019 13:41:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308497;
-        bh=lh2wv/YLcV+W2NsJ0xt4/MGkv9oSBwvlMCm3cylHGtc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVSPdSZrGrp0scSXu3YSf3YDIKRbjr8LYYXrYJ/YFHk57szVzsai4ZbWU2OzV+rZE
-         CZ5HVl7gEi3I5xdJ2R3TovPx82AolYddDrpwnVWo/dqDcXAbV90uEHO4b8bkE1Apj3
-         wxPnejW+H+O4R/lk6jvie7IB9E3c0hdlqai3hcDw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oded Gabbay <oded.gabbay@gmail.com>,
-        Ben Segal <bpsegal20@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 33/44] habanalabs: fix endianness handling for internal QMAN submission
-Date:   Tue, 20 Aug 2019 09:40:17 -0400
-Message-Id: <20190820134028.10829-33-sashal@kernel.org>
+Received: by mail-lj1-f196.google.com with SMTP id x4so5173542ljj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gNuDQYJVmflL/Wny4LHIdiHjJtChxjlf3zzR+P07bYQ=;
+        b=ZDi1SFp8FXJaCjqmp4zm/ByzXqtJBaAQvabUX02QHSb6SDgYVNy5d57jcfvwyT0dA5
+         8fzbFhHg9LRNWdJpl72dppeSuclNMByTBbZmU1xF7nAeqeBmQRvhlMYjmaiXLE4LV8wa
+         zxoY/hF5DCBbdn3mRlsGF/QKdWdyYmxwOQPdPchKF8HLcZypJV/Ukw61WnY3PsnFAK6u
+         Q+YJvglENuW+ieeSkGQnazSrxJiAcBHbB6uLYLGz1AJ9h/LaCq1SaT3QhJAAHmVF4Fz7
+         Q2G5T+L+zrAQfW0/HE1GXl6UCt7EAtJC8GptIXHJXVjn/yaRqmlb/VYXAa36kix3OPE7
+         AUMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gNuDQYJVmflL/Wny4LHIdiHjJtChxjlf3zzR+P07bYQ=;
+        b=D6QC0+3gBlYiVebz3PnLeq0DBEvsBFgARIsqscWcJK2Dpoq17sX3Cr34sfwj9iiD5M
+         jaGQb76T5cw5PHFiWppl1OW91jxOAGU83DI5CMRz8EznJME2+jmrMFLbN2wCq388KZ4g
+         DbbHz1q+0NdOaJhYVWqUDRlS6FLzA5dDOxyDuo3CqKKJS4WpRXsmeTyDZxB9VONRs2y1
+         0QQlA50rdhsxJ7FDp5ZUepSN6NBDG2/56S22vB14Rb8AMdofdcZatn5r60MbWIo5yVUJ
+         cmL/tadGsBJeZXuFza8GBm3C75+0QtqwJnER50mNRba1TXoL8JAlMspcyirHiCjyml2v
+         4vfg==
+X-Gm-Message-State: APjAAAXXYmmlH+TP7GEZLzDMie6uacyuZELEGfAzPuJmmw06fMkVHQWu
+        LMAYOX08qNAtDUKlFNHq4jAqow==
+X-Google-Smtp-Source: APXvYqxp8WgHlmWB1TJ1U6T1cdPC1f76z95rZGZ+Y6JhIi2z2/jagdLSnDlzo64tshfBrRxPu29rpQ==
+X-Received: by 2002:a2e:b0cb:: with SMTP id g11mr15447861ljl.76.1566308499392;
+        Tue, 20 Aug 2019 06:41:39 -0700 (PDT)
+Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
+        by smtp.gmail.com with ESMTPSA id f22sm2820208ljh.22.2019.08.20.06.41.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 06:41:38 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net
+Cc:     linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH] selftests: bpf: add config fragment BPF_JIT
+Date:   Tue, 20 Aug 2019 15:41:34 +0200
+Message-Id: <20190820134134.25818-1-anders.roxell@linaro.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
-References: <20190820134028.10829-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oded Gabbay <oded.gabbay@gmail.com>
+When running test_kmod.sh the following shows up
 
-[ Upstream commit b9040c99414ba5b85090595a61abc686a5dbb388 ]
+ # sysctl cannot stat /proc/sys/net/core/bpf_jit_enable No such file or directory
+ cannot: stat_/proc/sys/net/core/bpf_jit_enable #
+ # sysctl cannot stat /proc/sys/net/core/bpf_jit_harden No such file or directory
+ cannot: stat_/proc/sys/net/core/bpf_jit_harden #
 
-The PQs of internal H/W queues (QMANs) can be located in different memory
-areas for different ASICs. Therefore, when writing PQEs, we need to use
-the correct function according to the location of the PQ. e.g. if the PQ
-is located in the device's memory (SRAM or DRAM), we need to use
-memcpy_toio() so it would work in architectures that have separate
-address ranges for IO memory.
+Rework to enable CONFIG_BPF_JIT to solve "No such file or directory"
 
-This patch makes the code that writes the PQE to be ASIC-specific so we
-can handle this properly per ASIC.
-
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-Tested-by: Ben Segal <bpsegal20@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- drivers/misc/habanalabs/goya/goya.c  |  7 ++++---
- drivers/misc/habanalabs/goya/goyaP.h |  2 +-
- drivers/misc/habanalabs/habanalabs.h |  9 +++++++--
- drivers/misc/habanalabs/hw_queue.c   | 14 +++++---------
- 4 files changed, 17 insertions(+), 15 deletions(-)
+ tools/testing/selftests/bpf/config | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 0644fd7742057..9216cc3599178 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -2716,9 +2716,10 @@ void goya_ring_doorbell(struct hl_device *hdev, u32 hw_queue_id, u32 pi)
- 				GOYA_ASYNC_EVENT_ID_PI_UPDATE);
- }
- 
--void goya_flush_pq_write(struct hl_device *hdev, u64 *pq, u64 exp_val)
-+void goya_pqe_write(struct hl_device *hdev, __le64 *pqe, struct hl_bd *bd)
- {
--	/* Not needed in Goya */
-+	/* The QMANs are on the SRAM so need to copy to IO space */
-+	memcpy_toio((void __iomem *) pqe, bd, sizeof(struct hl_bd));
- }
- 
- static void *goya_dma_alloc_coherent(struct hl_device *hdev, size_t size,
-@@ -4784,7 +4785,7 @@ static const struct hl_asic_funcs goya_funcs = {
- 	.resume = goya_resume,
- 	.cb_mmap = goya_cb_mmap,
- 	.ring_doorbell = goya_ring_doorbell,
--	.flush_pq_write = goya_flush_pq_write,
-+	.pqe_write = goya_pqe_write,
- 	.asic_dma_alloc_coherent = goya_dma_alloc_coherent,
- 	.asic_dma_free_coherent = goya_dma_free_coherent,
- 	.get_int_queue_base = goya_get_int_queue_base,
-diff --git a/drivers/misc/habanalabs/goya/goyaP.h b/drivers/misc/habanalabs/goya/goyaP.h
-index c83cab0d641e2..e2040fd331ca1 100644
---- a/drivers/misc/habanalabs/goya/goyaP.h
-+++ b/drivers/misc/habanalabs/goya/goyaP.h
-@@ -170,7 +170,7 @@ int goya_late_init(struct hl_device *hdev);
- void goya_late_fini(struct hl_device *hdev);
- 
- void goya_ring_doorbell(struct hl_device *hdev, u32 hw_queue_id, u32 pi);
--void goya_flush_pq_write(struct hl_device *hdev, u64 *pq, u64 exp_val);
-+void goya_pqe_write(struct hl_device *hdev, __le64 *pqe, struct hl_bd *bd);
- void goya_update_eq_ci(struct hl_device *hdev, u32 val);
- void goya_restore_phase_topology(struct hl_device *hdev);
- int goya_context_switch(struct hl_device *hdev, u32 asid);
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index adef7d9d7488a..d56ab65d5b2a4 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -449,7 +449,11 @@ enum hl_pll_frequency {
-  * @resume: handles IP specific H/W or SW changes for resume.
-  * @cb_mmap: maps a CB.
-  * @ring_doorbell: increment PI on a given QMAN.
-- * @flush_pq_write: flush PQ entry write if necessary, WARN if flushing failed.
-+ * @pqe_write: Write the PQ entry to the PQ. This is ASIC-specific
-+ *             function because the PQs are located in different memory areas
-+ *             per ASIC (SRAM, DRAM, Host memory) and therefore, the method of
-+ *             writing the PQE must match the destination memory area
-+ *             properties.
-  * @asic_dma_alloc_coherent: Allocate coherent DMA memory by calling
-  *                           dma_alloc_coherent(). This is ASIC function because
-  *                           its implementation is not trivial when the driver
-@@ -518,7 +522,8 @@ struct hl_asic_funcs {
- 	int (*cb_mmap)(struct hl_device *hdev, struct vm_area_struct *vma,
- 			u64 kaddress, phys_addr_t paddress, u32 size);
- 	void (*ring_doorbell)(struct hl_device *hdev, u32 hw_queue_id, u32 pi);
--	void (*flush_pq_write)(struct hl_device *hdev, u64 *pq, u64 exp_val);
-+	void (*pqe_write)(struct hl_device *hdev, __le64 *pqe,
-+			struct hl_bd *bd);
- 	void* (*asic_dma_alloc_coherent)(struct hl_device *hdev, size_t size,
- 					dma_addr_t *dma_handle, gfp_t flag);
- 	void (*asic_dma_free_coherent)(struct hl_device *hdev, size_t size,
-diff --git a/drivers/misc/habanalabs/hw_queue.c b/drivers/misc/habanalabs/hw_queue.c
-index 2894d89759334..bb76794747279 100644
---- a/drivers/misc/habanalabs/hw_queue.c
-+++ b/drivers/misc/habanalabs/hw_queue.c
-@@ -290,23 +290,19 @@ static void int_hw_queue_schedule_job(struct hl_cs_job *job)
- 	struct hl_device *hdev = job->cs->ctx->hdev;
- 	struct hl_hw_queue *q = &hdev->kernel_queues[job->hw_queue_id];
- 	struct hl_bd bd;
--	u64 *pi, *pbd = (u64 *) &bd;
-+	__le64 *pi;
- 
- 	bd.ctl = 0;
--	bd.len = __cpu_to_le32(job->job_cb_size);
--	bd.ptr = __cpu_to_le64((u64) (uintptr_t) job->user_cb);
-+	bd.len = cpu_to_le32(job->job_cb_size);
-+	bd.ptr = cpu_to_le64((u64) (uintptr_t) job->user_cb);
- 
--	pi = (u64 *) (uintptr_t) (q->kernel_address +
-+	pi = (__le64 *) (uintptr_t) (q->kernel_address +
- 		((q->pi & (q->int_queue_len - 1)) * sizeof(bd)));
- 
--	pi[0] = pbd[0];
--	pi[1] = pbd[1];
--
- 	q->pi++;
- 	q->pi &= ((q->int_queue_len << 1) - 1);
- 
--	/* Flush PQ entry write. Relevant only for specific ASICs */
--	hdev->asic_funcs->flush_pq_write(hdev, pi, pbd[0]);
-+	hdev->asic_funcs->pqe_write(hdev, pi, &bd);
- 
- 	hdev->asic_funcs->ring_doorbell(hdev, q->hw_queue_id, q->pi);
- }
+diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
+index f7a0744db31e..5dc109f4c097 100644
+--- a/tools/testing/selftests/bpf/config
++++ b/tools/testing/selftests/bpf/config
+@@ -34,3 +34,4 @@ CONFIG_NET_MPLS_GSO=m
+ CONFIG_MPLS_ROUTING=m
+ CONFIG_MPLS_IPTUNNEL=m
+ CONFIG_IPV6_SIT=m
++CONFIG_BPF_JIT=y
 -- 
 2.20.1
 
