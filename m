@@ -2,129 +2,204 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D250C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3D3C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95A82064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE796206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730501AbfHTR1z (ORCPT
+        id S1730202AbfHTRdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:27:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46154 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725983AbfHTR1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:27:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1272AABBE;
-        Tue, 20 Aug 2019 17:27:53 +0000 (UTC)
-Message-ID: <ef3eaf8ea03ae8dc86a1a2f293087ff5c2f56b7a.camel@suse.de>
-Subject: Re: [PATCH v2 03/11] of/fdt: add of_fdt_machine_is_compatible
- function
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     "open list:GENERIC INCLUDE/ASM HEADER FILES" 
-        <linux-arch@vger.kernel.org>, devicetree@vger.kernel.org,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Eric Anholt <eric@anholt.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org, Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        linux-riscv@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, phill@raspberryi.org
-Date:   Tue, 20 Aug 2019 19:27:50 +0200
-In-Reply-To: <CAL_JsqJT3UNVKpAt+3g-tosy=uCZTosUxD4RfVYjMJ-gpGmPiA@mail.gmail.com>
-References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
-         <20190820145821.27214-4-nsaenzjulienne@suse.de>
-         <CAL_JsqJT3UNVKpAt+3g-tosy=uCZTosUxD4RfVYjMJ-gpGmPiA@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Cm+dM0aB2YImXVa0ovlW"
-User-Agent: Evolution 3.32.4 
+        Tue, 20 Aug 2019 13:33:42 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:44979 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727272AbfHTRdm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 13:33:42 -0400
+Received: by mail-ot1-f68.google.com with SMTP id w4so5785299ote.11
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:33:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DJrnLjhScHru9gcJVh+InGx4/K8NhQtt/YaanaUBKEI=;
+        b=YR4N3Zc9UFFyBrTNldCqnIR9cIMgisCCqjkeoarMfUz5mKqE+ZU5OqGmhAnCMwYaNy
+         tmEz5EMDEbUOwnHyleUFZyll3yjgW8PblMgYROvz0jL2srV5WhopoD92tDZk9OFe6cXK
+         T/W0AwzK1GA9SolRf9PodzIE14DTe4towajs6BbzPt3K54T00b55NkgVojKc17mtwc9D
+         t6KMYl8UfSGo5JwXtHTrtHRIvlEZ0WVrhH71Jx3EknZuQBr9WPORie/2mmn83ryvXXoC
+         eazr1j0kXqMeU+F5DmFSA35NGCBbze7X5370OEYZRahQ8QGm9a3VgRde4rugDQYMiuwL
+         EG6A==
+X-Gm-Message-State: APjAAAWT5zHKLE1XH+4CInFxPqpaPwLnLEVC+SAPEKbZl/XtR1cGCD3P
+        qLWos4+yhdXw6vJa0dZsmuI=
+X-Google-Smtp-Source: APXvYqwLvtPAu0vNNv/aME3T3x5ujv2kgu7v1Dc+Lbq4Pc0X6NZyD8oBBkPNk9orn/aWQjslTJCPQw==
+X-Received: by 2002:a9d:628e:: with SMTP id x14mr14957344otk.361.1566322421233;
+        Tue, 20 Aug 2019 10:33:41 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id v24sm6742582otj.78.2019.08.20.10.33.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 10:33:40 -0700 (PDT)
+Subject: Re: [PATCH 3/3] nvme: complete request in work queue on CPU with
+ flooded interrupts
+To:     longli@linuxonhyperv.com, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+References: <1566281669-48212-1-git-send-email-longli@linuxonhyperv.com>
+ <1566281669-48212-4-git-send-email-longli@linuxonhyperv.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <2a30a07f-982c-c291-e263-0cf72ec61235@grimberg.me>
+Date:   Tue, 20 Aug 2019 10:33:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <1566281669-48212-4-git-send-email-longli@linuxonhyperv.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-Cm+dM0aB2YImXVa0ovlW
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> From: Long Li <longli@microsoft.com>
+> 
+> When a NVMe hardware queue is mapped to several CPU queues, it is possible
+> that the CPU this hardware queue is bound to is flooded by returning I/O for
+> other CPUs.
+> 
+> For example, consider the following scenario:
+> 1. CPU 0, 1, 2 and 3 share the same hardware queue
+> 2. the hardware queue interrupts CPU 0 for I/O response
+> 3. processes from CPU 1, 2 and 3 keep sending I/Os
+> 
+> CPU 0 may be flooded with interrupts from NVMe device that are I/O responses
+> for CPU 1, 2 and 3. Under heavy I/O load, it is possible that CPU 0 spends
+> all the time serving NVMe and other system interrupts, but doesn't have a
+> chance to run in process context.
+> 
+> To fix this, CPU 0 can schedule a work to complete the I/O request when it
+> detects the scheduler is not making progress. This serves multiple purposes:
+> 
+> 1. This CPU has to be scheduled to complete the request. The other CPUs can't
+> issue more I/Os until some previous I/Os are completed. This helps this CPU
+> get out of NVMe interrupts.
+> 
+> 2. This acts a throttling mechanisum for NVMe devices, in that it can not
+> starve a CPU while servicing I/Os from other CPUs.
+> 
+> 3. This CPU can make progress on RCU and other work items on its queue.
 
-Hi Rob,
-thanks for the rewiew.
+The problem is indeed real, but this is the wrong approach in my mind.
 
-On Tue, 2019-08-20 at 12:16 -0500, Rob Herring wrote:
-> On Tue, Aug 20, 2019 at 9:58 AM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > Provides the same functionality as of_machine_is_compatible.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > ---
-> >=20
-> > Changes in v2: None
-> >=20
-> >  drivers/of/fdt.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >=20
-> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> > index 9cdf14b9aaab..06ffbd39d9af 100644
-> > --- a/drivers/of/fdt.c
-> > +++ b/drivers/of/fdt.c
-> > @@ -802,6 +802,13 @@ const char * __init of_flat_dt_get_machine_name(vo=
-id)
-> >         return name;
-> >  }
-> >=20
-> > +static const int __init of_fdt_machine_is_compatible(char *name)
->=20
-> No point in const return (though name could possibly be const), and
-> the return could be bool instead.
+We already have irqpoll which takes care proper budgeting polling
+cycles and not hogging the cpu.
 
-Sorry, I completely missed that const, shouldn't have been there to begin w=
-ith.
+I've sent rfc for this particular problem before [1]. At the time IIRC,
+Christoph suggested that we will poll the first batch directly from
+the irq context and reap the rest in irqpoll handler.
 
-I'll add a const to the name argument and return a bool on the next version=
-.
+[1]: 
+http://lists.infradead.org/pipermail/linux-nvme/2016-October/006497.html
 
-Regards,
-Nicolas
+How about something like this instead:
+--
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 71127a366d3c..84bf16d75109 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -24,6 +24,7 @@
+  #include <linux/io-64-nonatomic-lo-hi.h>
+  #include <linux/sed-opal.h>
+  #include <linux/pci-p2pdma.h>
++#include <linux/irq_poll.h>
 
+  #include "trace.h"
+  #include "nvme.h"
+@@ -32,6 +33,7 @@
+  #define CQ_SIZE(q)     ((q)->q_depth * sizeof(struct nvme_completion))
 
+  #define SGES_PER_PAGE  (PAGE_SIZE / sizeof(struct nvme_sgl_desc))
++#define NVME_POLL_BUDGET_IRQ   256
 
---=-Cm+dM0aB2YImXVa0ovlW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+  /*
+   * These can be higher, but we need to ensure that any command doesn't
+@@ -189,6 +191,7 @@ struct nvme_queue {
+         u32 *dbbuf_cq_db;
+         u32 *dbbuf_sq_ei;
+         u32 *dbbuf_cq_ei;
++       struct irq_poll iop;
+         struct completion delete_done;
+  };
 
------BEGIN PGP SIGNATURE-----
+@@ -1015,6 +1018,23 @@ static inline int nvme_process_cq(struct 
+nvme_queue *nvmeq, u16 *start,
+         return found;
+  }
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1cLZYACgkQlfZmHno8
-x/4DowgAjoLUq0qUOWOtkTx0OcxyQrKy++gIvChR7IajK1yXJKyT8kA/QNZrERqj
-nvLlebXPhJG0y4uUTzEVmzsgUFS4vopZAzL+H7TGfXsL8pQbGjnO+l62gc1oqTVd
-U+IrQWs0BPZ/MeCxUXUtKlYdMMuf9Ld8z16siDZPj5pYY6IHq8HtS1WseTvTti6S
-pHpXyK+XiPpxzupgUjNm6Lzsm8FO0P2tw5IKD3vRLS+4vLaYUPieCLdMvkf1lMU6
-DkQ71pEENpt35eBer1lLK/meYuisvK4V+tnwrWSDGZCuywbhi1fpvAyh3CRicE3t
-rvLGmR2JEXsldgQeodOoEyKoeWSAgQ==
-=hgaN
------END PGP SIGNATURE-----
++static int nvme_irqpoll_handler(struct irq_poll *iop, int budget)
++{
++       struct nvme_queue *nvmeq = container_of(iop, struct nvme_queue, 
+iop);
++       struct pci_dev *pdev = to_pci_dev(nvmeq->dev->dev);
++       u16 start, end;
++       int completed;
++
++       completed = nvme_process_cq(nvmeq, &start, &end, budget);
++       nvme_complete_cqes(nvmeq, start, end);
++       if (completed < budget) {
++               irq_poll_complete(&nvmeq->iop);
++               enable_irq(pci_irq_vector(pdev, nvmeq->cq_vector));
++       }
++
++       return completed;
++}
++
+  static irqreturn_t nvme_irq(int irq, void *data)
+  {
+         struct nvme_queue *nvmeq = data;
+@@ -1028,12 +1048,16 @@ static irqreturn_t nvme_irq(int irq, void *data)
+         rmb();
+         if (nvmeq->cq_head != nvmeq->last_cq_head)
+                 ret = IRQ_HANDLED;
+-       nvme_process_cq(nvmeq, &start, &end, -1);
++       nvme_process_cq(nvmeq, &start, &end, NVME_POLL_BUDGET_IRQ);
+         nvmeq->last_cq_head = nvmeq->cq_head;
+         wmb();
 
---=-Cm+dM0aB2YImXVa0ovlW--
+         if (start != end) {
+                 nvme_complete_cqes(nvmeq, start, end);
++               if (nvme_cqe_pending(nvmeq)) {
++                       disable_irq_nosync(irq);
++                       irq_poll_sched(&nvmeq->iop);
++               }
+                 return IRQ_HANDLED;
+         }
 
+@@ -1347,6 +1371,7 @@ static enum blk_eh_timer_return 
+nvme_timeout(struct request *req, bool reserved)
+
+  static void nvme_free_queue(struct nvme_queue *nvmeq)
+  {
++       irq_poll_disable(&nvmeq->iop);
+         dma_free_coherent(nvmeq->dev->dev, CQ_SIZE(nvmeq),
+                                 (void *)nvmeq->cqes, nvmeq->cq_dma_addr);
+         if (!nvmeq->sq_cmds)
+@@ -1481,6 +1506,7 @@ static int nvme_alloc_queue(struct nvme_dev *dev, 
+int qid, int depth)
+         nvmeq->dev = dev;
+         spin_lock_init(&nvmeq->sq_lock);
+         spin_lock_init(&nvmeq->cq_poll_lock);
++       irq_poll_init(&nvmeq->iop, NVME_POLL_BUDGET_IRQ, 
+nvme_irqpoll_handler);
+         nvmeq->cq_head = 0;
+         nvmeq->cq_phase = 1;
+         nvmeq->q_db = &dev->dbs[qid * 2 * dev->db_stride];
+--
