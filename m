@@ -2,141 +2,278 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A8EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA216C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 159A622DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AA1205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:55:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EF96vaXI"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VQmitB5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbfHTPy4 (ORCPT
+        id S1730634AbfHTPzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:54:56 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45625 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727246AbfHTPy4 (ORCPT
+        Tue, 20 Aug 2019 11:55:03 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46877 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730538AbfHTPzD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:54:56 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o13so3475845pgp.12;
-        Tue, 20 Aug 2019 08:54:56 -0700 (PDT)
+        Tue, 20 Aug 2019 11:55:03 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c2so2959680plz.13
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 08:55:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oKRxdUPEqx182AGsFYC1FZNnJTIkLhG2zitRB8VXskY=;
-        b=EF96vaXIKSJqXkEQ+iKjKVxtUoKoMAu+x4HM+r2PftVEkhJ0IX1sPAboufpFgvzhvZ
-         Lx+vxJ3MlNqgsYplkTfIzRKqr0YW321a3A0bPHWCbwPxhqjZ14R6LD2Dlgg3FZ2J9C+G
-         45dyKwseoRQuhJZQSMtqwyCqJJYy7LzKCPsci7rrVprv5SaUNrQ+UXGwHFAFXU0kccLM
-         mOX2CuMyDgvMoOrd6bEvJ6U+leMuAbd4VHTc7rXLqx9xa8TmMuH64nxeg8BBtUVO/DIt
-         xd+ghgEDijtJYXvCeTA87FYY9I6VjXFELZ1fVrRib1vmJB9IiNbpemnww78rxMPJThMm
-         vY8w==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=//QQ1ht+tfIE4padC2Q4HKNAwrbhTDJJQX8waDwKAjk=;
+        b=VQmitB5v4y5q/rJdoXEU3q0jb4QaW0EmJBEezy3BWQDoDxCU4sXzkvbo5rguMaOy9B
+         R0S0gnMJXQzkOHRlX9ySUTvkaUgyz6TkSBKI/CBL4ThTCpjpgB1EZXA4pBTOI6vwsn5C
+         ZrPrPydAcm6vyYibW/o6W47x08xvkfeF1cXEM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oKRxdUPEqx182AGsFYC1FZNnJTIkLhG2zitRB8VXskY=;
-        b=ne+8HeDHYZ+CSU7LnCHCCux8xXEoZR2Ywe37jz9SSSoxRq+hLNLV8VqkDNEKMjM3Rr
-         zBii428wRoDIoGrb8GUDGIG1fkKdr1op0zKUcMLGCRxcPIyQu4GhuI2890uHUKYo4q+n
-         h5oEs/JMZxOLzV7OOslJsunysI3hvvNgQ8K9xtZNEROuLydKywNtRvZulOfh1OW9VbHv
-         QIQjRZxRtUGTjjjEe2P9GtQjJ6yVYk//TE+TP+CsT+Nngd3CoAZUlo+1RAZ0bCIJZmyD
-         HMsTYqMSPBGb68782OF8oYG+LQ3s0Urv+Qpc00MKy1XRKslcunJAOnaqTGhoCN/qlcpa
-         pfQg==
-X-Gm-Message-State: APjAAAUmt9xVooL6q6eXvz9w1aOSpl4rK2vB8zfYC7vjQzCzQeZoFNzC
-        u/bqmLLNUQd1EGlNWWNVfcQ=
-X-Google-Smtp-Source: APXvYqwT6p/B3nVNF9dkl92avzPLIXO+NgzJ9fT0X+D8I222afrN3om41gfv7AR8PrYHKtWYHCgUwQ==
-X-Received: by 2002:a63:31c1:: with SMTP id x184mr26182258pgx.128.1566316495255;
-        Tue, 20 Aug 2019 08:54:55 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e7sm21147062pfn.72.2019.08.20.08.54.54
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=//QQ1ht+tfIE4padC2Q4HKNAwrbhTDJJQX8waDwKAjk=;
+        b=H+rY6BuWdAh1BhTz1/ryJJwnlXRzRYEdd9yI7Coz6Xnqe+w+udkkjgbMwEFfzpnNgo
+         cdPE1wrDO3uf+1acVgsbJxy+vJUb4wvDTi8valdH5CdzVYgDgJ+3ss5DdfUDuGev9utO
+         Px5S6CmrgiK9V60gKCOjuuTp0W3odnsiJpRX3lCTj16u9gs9vvhlD/MzsrTLg5h4WODi
+         I7X3HleQsJgoH8uZynxIZ9uv4PHGtaw4vPHpRPcg9B6Ji2GkCONrY62n2Kas3ERZYpt2
+         RmJBS1K+ucdy/BAcVgmZzGp76T3R2ZhlwdAEyocORhJ/FuZ9IP8U5ZoEiOfH1GJcZ1oD
+         hurA==
+X-Gm-Message-State: APjAAAX3k6xywcD3RgnosCPDQFCGjOzFmRbK000CPhCZA+MfKf0yuUhi
+        rAkTgBBnJVAPNVSm0L+LpLfluw==
+X-Google-Smtp-Source: APXvYqwv29npnp3S1cUOa4oSbGNTjYfsnr9tFYIb6WC009cJCEBGo+6fpxgThTkzC9broAD99z/Clw==
+X-Received: by 2002:a17:902:848c:: with SMTP id c12mr26869867plo.47.1566316501842;
+        Tue, 20 Aug 2019 08:55:01 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id g8sm16705907pgk.1.2019.08.20.08.54.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 08:54:54 -0700 (PDT)
-Subject: Re: [PATCH v2 1/6] dt-bindings: watchdog: Add YAML schemas for the
- generic watchdog bindings
-To:     Maxime Ripard <mripard@kernel.org>, wim@linux-watchdog.org
-Cc:     linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-References: <20190819182039.24892-1-mripard@kernel.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <ada53037-898f-7b8c-8a96-b80414563fa7@roeck-us.net>
-Date:   Tue, 20 Aug 2019 08:54:53 -0700
+        Tue, 20 Aug 2019 08:55:00 -0700 (PDT)
+Subject: Re: [PATCH 3/3] firmware: add mutex fw_lock_fallback for race
+ condition
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org
+References: <20190816000945.29810-1-scott.branden@broadcom.com>
+ <20190816000945.29810-4-scott.branden@broadcom.com>
+ <20190819053937.GR16384@42.do-not-panic.com>
+ <16823ee6-c52a-b3b5-caed-79c00772fa68@broadcom.com>
+ <20190820012655.GU16384@42.do-not-panic.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <76fac608-427e-b039-61d4-4ef35ac95715@broadcom.com>
+Date:   Tue, 20 Aug 2019 08:54:58 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190819182039.24892-1-mripard@kernel.org>
+In-Reply-To: <20190820012655.GU16384@42.do-not-panic.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 11:20 AM, Maxime Ripard wrote:
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
-> 
-> The watchdogs have a bunch of generic properties that are needed in a
-> device tree. Add a YAML schemas for those.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Hi Luis,
 
-What is the target subsystem for this series ? You didn't copy the watchdog
-mailing list, so I assume it won't be the watchdog subsystem.
+I'm glad you are a subject expert in this area.
 
-Thanks,
-Guenter
+Some more comments inline.
 
-> 
-> ---
-> 
-> Changes from v1:
->    - New patch
-> ---
->   .../bindings/watchdog/watchdog.yaml           | 26 +++++++++++++++++++
->   1 file changed, 26 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/watchdog/watchdog.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/watchdog.yaml b/Documentation/devicetree/bindings/watchdog/watchdog.yaml
-> new file mode 100644
-> index 000000000000..187bf6cb62bf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/watchdog.yaml
-> @@ -0,0 +1,26 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/watchdog/watchdog.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Watchdog Generic Bindings
-> +
-> +maintainers:
-> +  - Guenter Roeck <linux@roeck-us.net>
-> +  - Wim Van Sebroeck <wim@linux-watchdog.org>
-> +
-> +description: |
-> +  This document describes generic bindings which can be used to
-> +  describe watchdog devices in a device tree.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^watchdog(@.*|-[0-9a-f])?$"
-> +
-> +  timeout-sec:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Contains the watchdog timeout in seconds.
-> +
-> +...
-> 
 
+On 2019-08-19 6:26 p.m., Luis Chamberlain wrote:
+> On Mon, Aug 19, 2019 at 09:19:51AM -0700, Scott Branden wrote:
+>> To be honest, I find the entire firmware code sloppy.
+> And that is after years of cleanup on my part. Try going back to v4.1
+> for instance, check the code out then for an incredible horrific sight :)
+>
+>> I don't think the cache/no-cache feature is
+>> implemented or tested properly nor fallback to begin with.
+> I'm in total agreement! I *know* there must be holes in that code, and I
+> acknowledge a few possible gotchas on the commit logs. For instance, I
+> acknowledged that the firmware cache had a secondary purpose which was
+> not well documented or understood through commit e44565f62a720
+> ("firmware: fix batched requests - wake all waiters"). The firmware
+> cache allows for batching requests and sharing the same original request
+> for multiple consecutive requests which *race against each other*.
+> That's when I started having my doubts about the architecture of the
+> firmware cache mechanism, it seemed too complex and perhaps overkill
+> and considered killing it.
+
+Great (kill it!).  I have no need for cached or batched requests.
+
+The would remove a lot of problems.
+
+>
+> As I noted in that commit, the firmware cache is used for:
+>      
+> 1) Addressing races with file lookups during the suspend/resume cycle by
+> keeping firmware in memory during the suspend/resume cycle
+> 	
+> 2) Batched requests for the same file rely only on work from the first
+> file lookup, which keeps the firmware in memory until the last
+> release_firmware() is called
+>
+> Also worth quoting from that commit as well:
+>
+> "Batched requests *only* take effect if secondary requests come in
+> prior to the first user calling release_firmware(). The devres name used
+> for the internal firmware cache is used as a hint other pending requests
+> are ongoing, the firmware buffer data is kept in memory until the last
+> user of the buffer calls release_firmware(), therefore serializing
+> requests and delaying the release until all requests are done."
+>
+> Later we discovered that the firmware cache had a serious security issue
+> since its inception through commit 422b3db2a503 ("firmware: Fix security
+> issue with request_firmware_into_buf()"). Granted, exploiting this would
+> require the ability to load kernel code, so the vector of exploitation
+> is rather small.
+>
+> The cache stuff cannot be removed as it *at least* resolves the fw
+> suspend stuff, but still, this can likely use a revisit in rachitecture
+> long term. The second implicit use case for batched requests however
+> seems complex and not sure if its worth to maintain. I'll note that
+> at least some drivers *do* their own firmware caching, iwlwifi, is one,
+> so there is an example there to allow drivers to say "I actually don't
+> need caching" for the future.
+>
+> If you're volunteering to cleaning / testing the cache stuff I highly
+> welcome that.
+
+I would only volunteer to remove it, not test or support it.
+
+>   That and the fallback stuff has been needing testing for
+> years. Someoone was working on patches on the test case for cache stuff
+> a while ago, from Intel, but they disappeared.
+Again, I would only volunteer to remove the fallback mechanism to remove 
+added race conditions.
+>> I'm not claiming this patch is the final
+>> solution and indicated such in the cover letter and the comment above.
+> I missed that sorry.
+>
+>> I hope there is someone more familiar with this code to comment further and
+>> come up with a proper solution.
+> Alright, I'll dig in and take a look, and propose an alternative.
+>
+>> I have found numerous issues and race conditions with the firmware code (I
+>> simply added a test).
+> That is nothing compared to the amount of fixes I have found and
+> actually fixed too, the code was a nightmare before I took on
+> maintenance.
+>
+>> 1) Try loading the same valid firmware using no-cache once it has already
+>> been loaded with cache.
+> :)
+>
+>> It won't work, which is why I had to use a different filename in the test
+>> for request_firmware_into_buf.
+> Alright, I'll go try to fix this. Thanks for the report.
+
+I think it's a minor issue compared to the race conditions present.
+
+In reality I don't think anyone will load the same firmware using cache vs.
+
+no-cache.
+
+It's just something I stumbled upon when adding the test case and then 
+had to avoid.
+
+>
+>> 2) Try removing the "if (opt_flags & FW_OPT_NOCACHE)" in my patch and always
+>> call the mutex.
+>>
+>> The firmware test will lock up during a "no uevent" test.  I am not familiar
+>> with the code to
+>>
+>> know why such is true and what issue this exposes in the code.
+> I hinted in my review of the oops what the issue was.
+
+I don't know if it's the same bug for the "no uevent" test case though?  
+The test
+
+just hangs and the kernel oops is not present.  It might be exposing another
+
+underlying issue with the request_firmware code.
+
+>
+>> 3) I have a driver that uses request_firmware_into_buf and have multiple
+>> instances of the driver
+> Cool, is the driver upstream?
+
+I'm working on cleaning up the driver right now to upstream.
+
+First thing is I need the request_firmware_into_buf tests accepted upstream.
+
+Then I can add my enhancement to request_firmware_into_buf to partial 
+read the file (previous sent out but needed test case).
+
+In order to do so Greg K-H required a test case for this but even the 
+current API had no test.
+
+In that patch series I can then add the new driver which requires my 
+enhanced request_firmware_into_buf.
+
+>
+>> loading the same firmware in parallel.  Some of the data is not read
+>> correctly in each instance.
+> Makes perfect sense considering the lack of testing I noted.
+>
+>> I haven't yet to reproduce this issue with the firmware test
+> That's because of batched firmware request mechanism.
+
+Is there a way to not use the batch firmware request mechanism when 
+calling request_firmware_into_buf
+
+to see if the problem doesn't happen?
+
+>
+>> but currently
+>> have a mutex around the entire
+>> call to request_firmware_into_buf in our driver.
+> I will take a look at this now.
+>
+>> Perhaps it is better at this point to add a mutex in
+>> request_firmware_into_buf to make is entirely safe?
+> No, that is not sufficient, although it would also solve the
+> issue.
+
+I don't have another solution with all the other mechanisms in
+
+play in the current firmware code.  For now I'll leave the mutex
+
+in the driver I'm upstreaming so it works reliably.
+
+>
+>> (Perhaps even with every request_firmware functions as none seems to be
+>> tested properly.)
+> No, you are incorrect. The other firmware API calls *have* been
+> elaborately tested. The firmware cache stuff *is a mess* however,
+> since we *use and support it*, I've done my best to salvage it and
+> document it.
+
+OK, I don't use any of the other mechanisms right now.
+
+All I require is request_firmware_into_buf.
+
+>
+> I'll take a look at this and propose an alternative solution.
+>
+>    Luis
