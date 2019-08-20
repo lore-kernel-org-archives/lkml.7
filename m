@@ -2,96 +2,83 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2787BC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62069C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 030E52087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D08622DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566317768;
+	bh=o+9Y1S8EJeybPB3/XiGd1VecFWcI3U1F/7ifdtRoKzQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=j2AjCNy269q44SxLnMfKaqpp5+JUWdL06nyNaP0j1VcBUXnxO5YJwwahDp1awurHI
+	 7E11c+OQ1mPfP8Y4rPPDtjbLgnqWlMdIqTmwiznzuEDKEPIf9LOOLBrEXd+nevxqr+
+	 QeXzLEP85keqV4za6AoHoCZyP4jeQpYy0DUlP46Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbfHTQOh (ORCPT
+        id S1730119AbfHTQQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:14:37 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:52562 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfHTQOg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:14:36 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1i06mH-0002oa-9G; Tue, 20 Aug 2019 18:14:33 +0200
-Date:   Tue, 20 Aug 2019 18:14:33 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        tglx@linutronix.de
-Subject: Re: [PATCH] sched/core: Schedule new worker even if PI-blocked
-Message-ID: <20190820161433.4v5du5zykycuganr@linutronix.de>
-References: <20190816160626.12742-1-bigeasy@linutronix.de>
- <20190820135014.GQ2332@hirez.programming.kicks-ass.net>
- <20190820145926.jhnpwiicv73z6ol3@linutronix.de>
- <20190820152025.GU2349@hirez.programming.kicks-ass.net>
- <20190820155401.c5apbxjntdz5n2gk@linutronix.de>
- <20190820160217.GR2369@hirez.programming.kicks-ass.net>
+        Tue, 20 Aug 2019 12:16:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbfHTQQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:16:06 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ED6B230F2;
+        Tue, 20 Aug 2019 16:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566317766;
+        bh=o+9Y1S8EJeybPB3/XiGd1VecFWcI3U1F/7ifdtRoKzQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Hq3LvZjFfnrBR33GHefdlaXFKqMqUujeYNw2kRo6h4AY/lH46aepgIsEYj17NJaEY
+         d6B/fUXh/S7aVrOkFzKwupvPvyW+mRANSNf29yG8OQCAjwpbZOw7mN5hwHQTr5v2Gn
+         FTSZ+jbiwvHthFu3wAs1dOgwtWnkrmiBHqzFL7Ps=
+Received: by mail-qt1-f173.google.com with SMTP id i4so6652701qtj.8;
+        Tue, 20 Aug 2019 09:16:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAWegxsc1rk+o7dNwLl29BAgJ2SZbUN82td8+DeXbCvRqfKHCqJU
+        lynCey/nqz1Gchb6C9LIQHZNsg3o/EFvSdF9Zw==
+X-Google-Smtp-Source: APXvYqz7/XDtwS8pKWW3WNm/atXtEdgaMroF8d1FCSG5RqKVSlW11FfeZTvwkmlYEEwGR9WC60bpQDx079FVVKGuyUQ=
+X-Received: by 2002:ac8:44c4:: with SMTP id b4mr26685231qto.224.1566317765244;
+ Tue, 20 Aug 2019 09:16:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190820160217.GR2369@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+References: <20190820144052.18269-1-narmstrong@baylibre.com> <20190820144052.18269-5-narmstrong@baylibre.com>
+In-Reply-To: <20190820144052.18269-5-narmstrong@baylibre.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 20 Aug 2019 11:15:53 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKFBcstWfaG-n6k9169bF0o7DDq1Uy6EcTF4p-Ta_DOBA@mail.gmail.com>
+Message-ID: <CAL_JsqKFBcstWfaG-n6k9169bF0o7DDq1Uy6EcTF4p-Ta_DOBA@mail.gmail.com>
+Subject: Re: [PATCH 4/6] dt-bindings: arm: amlogic: add SM1 bindings
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-20 18:02:17 [+0200], Peter Zijlstra wrote:
-> On Tue, Aug 20, 2019 at 05:54:01PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2019-08-20 17:20:25 [+0200], Peter Zijlstra wrote:
-> 
-> > > And am I right in thinking that that, again, is specific to the
-> > > sleeping-spinlocks from PREEMPT_RT? Is there really nothing else that
-> > > identifies those more specifically? It's been a while since I looked at
-> > > them.
-> > 
-> > Not really. I hacked "int sleeping_lock" into task_struct which is
-> > incremented each time a "sleeping lock" version of rtmutex is requested.
-> > We have two users as of now:
-> > - RCU, which checks if we schedule() while holding rcu_read_lock() which
-> >   is okay if it is a sleeping lock.
-> > 
-> > - NOHZ's pending softirq detection while going to idle. It is possible
-> >   that "ksoftirqd" and "current" are blocked on locks and the CPU goes
-> >   to idle (because nothing else is runnable) with pending softirqs.
-> > 
-> > I wanted to let rtmutex invoke another schedule() function in case of a
-> > sleeping lock to avoid the RCU warning. This would avoid incrementing
-> > "sleeping_lock" in the fast path. But then I had no idea what to do with
-> > the NOHZ thing.
-> 
-> Once upon a time there was also a shadow task->state thing, that was
-> specific to the sleeping locks, because normally spinlocks don't muck
-> with task->state and so we have code relying on it not getting trampled.
-> 
-> Can't we use that somewhow? Or is that gone?
+On Tue, Aug 20, 2019 at 9:41 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Add bindings for the new Amlogic SM1 SoC Family.
+>
+> It a derivative of the G12A SoC Family with :
+> - Cortex-A55 core instead of A53
+> - more power domains
+> - a neural network co-processor
+> - a CSI input and image processor
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/arm/amlogic.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 
-we have ->state and ->saved_state. While sleeping on a sleeping lock
-->state goes to ->saved_state (usually TASK_RUNNING) and ->state becomes
-TASK_UNINTERRUPTIBLE. This is no different compared to regular
-blocked-on-I/O wait.
-We could add a state, say, TASK_LOCK_BLOCK to identify a task blocking
-on sleeping lock. This shouldn't break anything. After all only a
-regular "unlock" is allowed to wake such a task and "non-matching" wakes
-are redirected to update ->saved_state.
-
-> > > Also, I suppose it would be really good to put that in a comment.
-> > So, what does that mean for that patch. According to my inbox it has
-> > applied to an "urgent" branch. Do I resubmit the whole thing or just a
-> > comment on top?
-> 
-> Yeah, I'm not sure. I was surprised by that, because afaict all this is
-> PREEMPT_RT specific and not really /urgent material in the first place.
-> Ingo?
-
-Sebastian
+Reviewed-by: Rob Herring <robh@kernel.org>
