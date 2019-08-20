@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1498C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C818CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9518E22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE8F22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308508;
-	bh=E6GRUZx3EGeIzIFRsxVuHCrahG/QCZLegWBUbg3WxDA=;
+	s=default; t=1566308511;
+	bh=DDdouO8ebmkeL/1cMnnHpfKGuqbIm3aGqks+TdEDb60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ABYf9NOruUQSbcSoDrQ4KmMz/gXzlxqHEgka8LwVBxX4XixZAlt9OO2mXcxH5mC59
-	 am3Yf7u8VK+RyooS1ungGlW7mBmjpNhSd/LfKfmAU10SWBuoXC2yf88OstyW+aMf4X
-	 MXBQQU8pafh7jNylXIEDxd4HPyFntcRKYApOZ7yE=
+	b=MwuG+KiMuVlaly5HQoQy+4v6AjgiMzXqP5Vvw8TSyvc2m4yd4e3yC482H8j+B1U+B
+	 vpahe2ACJ/LslQAdSa+1CNHZZFSM2887E0E0l8/2c6KGUC7XIeAe9l/OLEeGcrTA79
+	 NY7vsiMArVKrrdbXhqZ+i6NUNQpJTBintu6xQTWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730467AbfHTNlr (ORCPT
+        id S1730483AbfHTNlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:41:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36852 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:41:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730450AbfHTNlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:41:44 -0400
+        id S1730463AbfHTNls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:41:48 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0460722DA7;
-        Tue, 20 Aug 2019 13:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65B2022DA7;
+        Tue, 20 Aug 2019 13:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308503;
-        bh=E6GRUZx3EGeIzIFRsxVuHCrahG/QCZLegWBUbg3WxDA=;
+        s=default; t=1566308507;
+        bh=DDdouO8ebmkeL/1cMnnHpfKGuqbIm3aGqks+TdEDb60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I97U3EZvx6AtL5pioQ9VXuvCjZ5cqNBMBkn77gGE+iBWH6hj991qnZHffNP4RqnQ1
-         1Y766XbI/4Pmkf7TT0KOAT3a1mH0g3XsnrMJ8mQx7OyXuRTm7ErR7laghUcMBS4Ftq
-         RD2lyv+drOjKIsyqvxTdPHzwoP2Aum74HB59vDDU=
+        b=2SC6Mnq68OfuJKz8BCmYLoEC3Ok3vRmD46W3bFoBBTUum7q5MDOB8Kktf1lFOnva7
+         Jc9HW4X6vv5fthQia9RU1YbNzt6qdCuWOHLmjxhAAYAqftWVrtY1J37SRoeeNAGT0I
+         yqE+ecGivGveTtVO5jZng2OJUUl7tV3HcH2HJYtU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Segal <bpsegal20@gmail.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
+Cc:     Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 34/44] habanalabs: fix device IRQ unmasking for BE host
-Date:   Tue, 20 Aug 2019 09:40:18 -0400
-Message-Id: <20190820134028.10829-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 36/44] arm64: cpufeature: Don't treat granule sizes as strict
+Date:   Tue, 20 Aug 2019 09:40:20 -0400
+Message-Id: <20190820134028.10829-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
@@ -59,98 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Segal <bpsegal20@gmail.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit b421d83a3947369fd5718824aecfaebe1efbf7ed ]
+[ Upstream commit 5717fe5ab38f9ccb32718bcb03bea68409c9cce4 ]
 
-When unmasking IRQs inside the ASIC, the driver passes an array of all the
-IRQ to unmask. The ASIC's CPU is working in LE so when running in a BE
-host, the driver needs to do the proper endianness swapping when preparing
-this array.
+If a CPU doesn't support the page size for which the kernel is
+configured, then we will complain and refuse to bring it online. For
+secondary CPUs (and the boot CPU on a system booting with EFI), we will
+also print an error identifying the mismatch.
 
-In addition, this patch also fixes the endianness of a couple of kernel log
-debug messages that print values of packets
+Consequently, the only time that the cpufeature code can detect a
+granule size mismatch is for a granule other than the one that is
+currently being used. Although we would rather such systems didn't
+exist, we've unfortunately lost that battle and Kevin reports that
+on his amlogic S922X (odroid-n2 board) we end up warning and taining
+with defconfig because 16k pages are not supported by all of the CPUs.
 
-Signed-off-by: Ben Segal <bpsegal20@gmail.com>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+In such a situation, we don't actually care about the feature mismatch,
+particularly now that KVM only exposes the sanitised view of the CPU
+registers (commit 93390c0a1b20 - "arm64: KVM: Hide unsupported AArch64
+CPU features from guests"). Treat the granule fields as non-strict and
+let Kevin run without a tainted kernel.
+
+Cc: Marc Zyngier <maz@kernel.org>
+Reported-by: Kevin Hilman <khilman@baylibre.com>
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+[catalin.marinas@arm.com: changelog updated with KVM sanitised regs commit]
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/goya/goya.c | 33 +++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 9 deletions(-)
+ arch/arm64/kernel/cpufeature.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 9216cc3599178..ac6b252a1ddcb 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -3311,9 +3311,11 @@ static int goya_validate_dma_pkt_no_mmu(struct hl_device *hdev,
- 	int rc;
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index ae63eedea1c12..68faf535f40a3 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -184,9 +184,17 @@ static const struct arm64_ftr_bits ftr_id_aa64zfr0[] = {
+ };
  
- 	dev_dbg(hdev->dev, "DMA packet details:\n");
--	dev_dbg(hdev->dev, "source == 0x%llx\n", user_dma_pkt->src_addr);
--	dev_dbg(hdev->dev, "destination == 0x%llx\n", user_dma_pkt->dst_addr);
--	dev_dbg(hdev->dev, "size == %u\n", user_dma_pkt->tsize);
-+	dev_dbg(hdev->dev, "source == 0x%llx\n",
-+		le64_to_cpu(user_dma_pkt->src_addr));
-+	dev_dbg(hdev->dev, "destination == 0x%llx\n",
-+		le64_to_cpu(user_dma_pkt->dst_addr));
-+	dev_dbg(hdev->dev, "size == %u\n", le32_to_cpu(user_dma_pkt->tsize));
- 
- 	ctl = le32_to_cpu(user_dma_pkt->ctl);
- 	user_dir = (ctl & GOYA_PKT_LIN_DMA_CTL_DMA_DIR_MASK) >>
-@@ -3342,9 +3344,11 @@ static int goya_validate_dma_pkt_mmu(struct hl_device *hdev,
- 				struct packet_lin_dma *user_dma_pkt)
- {
- 	dev_dbg(hdev->dev, "DMA packet details:\n");
--	dev_dbg(hdev->dev, "source == 0x%llx\n", user_dma_pkt->src_addr);
--	dev_dbg(hdev->dev, "destination == 0x%llx\n", user_dma_pkt->dst_addr);
--	dev_dbg(hdev->dev, "size == %u\n", user_dma_pkt->tsize);
-+	dev_dbg(hdev->dev, "source == 0x%llx\n",
-+		le64_to_cpu(user_dma_pkt->src_addr));
-+	dev_dbg(hdev->dev, "destination == 0x%llx\n",
-+		le64_to_cpu(user_dma_pkt->dst_addr));
-+	dev_dbg(hdev->dev, "size == %u\n", le32_to_cpu(user_dma_pkt->tsize));
- 
- 	/*
- 	 * WA for HW-23.
-@@ -3384,7 +3388,8 @@ static int goya_validate_wreg32(struct hl_device *hdev,
- 
- 	dev_dbg(hdev->dev, "WREG32 packet details:\n");
- 	dev_dbg(hdev->dev, "reg_offset == 0x%x\n", reg_offset);
--	dev_dbg(hdev->dev, "value      == 0x%x\n", wreg_pkt->value);
-+	dev_dbg(hdev->dev, "value      == 0x%x\n",
-+		le32_to_cpu(wreg_pkt->value));
- 
- 	if (reg_offset != (mmDMA_CH_0_WR_COMP_ADDR_LO & 0x1FFF)) {
- 		dev_err(hdev->dev, "WREG32 packet with illegal address 0x%x\n",
-@@ -4252,6 +4257,8 @@ static int goya_unmask_irq_arr(struct hl_device *hdev, u32 *irq_arr,
- 	size_t total_pkt_size;
- 	long result;
- 	int rc;
-+	int irq_num_entries, irq_arr_index;
-+	__le32 *goya_irq_arr;
- 
- 	total_pkt_size = sizeof(struct armcp_unmask_irq_arr_packet) +
- 			irq_arr_size;
-@@ -4269,8 +4276,16 @@ static int goya_unmask_irq_arr(struct hl_device *hdev, u32 *irq_arr,
- 	if (!pkt)
- 		return -ENOMEM;
- 
--	pkt->length = cpu_to_le32(irq_arr_size / sizeof(irq_arr[0]));
--	memcpy(&pkt->irqs, irq_arr, irq_arr_size);
-+	irq_num_entries = irq_arr_size / sizeof(irq_arr[0]);
-+	pkt->length = cpu_to_le32(irq_num_entries);
-+
-+	/* We must perform any necessary endianness conversation on the irq
-+	 * array being passed to the goya hardware
+ static const struct arm64_ftr_bits ftr_id_aa64mmfr0[] = {
+-	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN4_SHIFT, 4, ID_AA64MMFR0_TGRAN4_NI),
+-	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN64_SHIFT, 4, ID_AA64MMFR0_TGRAN64_NI),
+-	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN16_SHIFT, 4, ID_AA64MMFR0_TGRAN16_NI),
++	/*
++	 * We already refuse to boot CPUs that don't support our configured
++	 * page size, so we can only detect mismatches for a page size other
++	 * than the one we're currently using. Unfortunately, SoCs like this
++	 * exist in the wild so, even though we don't like it, we'll have to go
++	 * along with it and treat them as non-strict.
 +	 */
-+	for (irq_arr_index = 0, goya_irq_arr = (__le32 *) &pkt->irqs;
-+			irq_arr_index < irq_num_entries ; irq_arr_index++)
-+		goya_irq_arr[irq_arr_index] =
-+				cpu_to_le32(irq_arr[irq_arr_index]);
- 
- 	pkt->armcp_pkt.ctl = cpu_to_le32(ARMCP_PACKET_UNMASK_RAZWI_IRQ_ARRAY <<
- 						ARMCP_PKT_CTL_OPCODE_SHIFT);
++	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN4_SHIFT, 4, ID_AA64MMFR0_TGRAN4_NI),
++	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN64_SHIFT, 4, ID_AA64MMFR0_TGRAN64_NI),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN16_SHIFT, 4, ID_AA64MMFR0_TGRAN16_NI),
++
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_BIGENDEL0_SHIFT, 4, 0),
+ 	/* Linux shouldn't care about secure memory */
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_SNSMEM_SHIFT, 4, 0),
 -- 
 2.20.1
 
