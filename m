@@ -2,115 +2,190 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8132C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924F2C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9978B22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:01:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566259298;
-	bh=Dygb+76S30NlTIz0E98ZuWWzV7OGS2DSaQKUzrhuObs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ANKSawLo6hTULSTo5Bv/bnvzPx0kVXY9z6g/2gofo3KgR8siQCHcqaSWfJo1IBkyV
-	 cuhZ7zPVt7V4+U3q27a052/fQypcDNQPxLIuNt8z0z7MFw9CA30Y09SpolOu57/cW6
-	 cYQJ69OF48s1MjomAJl8JEEFP3PUb8kUYpuuPakI=
+	by mail.kernel.org (Postfix) with ESMTP id 592BF2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 00:02:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lEULkMiv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbfHTABh (ORCPT
+        id S1728788AbfHTACQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 20:01:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728578AbfHTABh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 20:01:37 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 472E82082F;
-        Tue, 20 Aug 2019 00:01:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566259296;
-        bh=Dygb+76S30NlTIz0E98ZuWWzV7OGS2DSaQKUzrhuObs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FRsrIwP79+XwJmcnEAvDLzIWZSmxMclwruPxmhgmjRCdJSaHwtKzRLl0WWC7CRXRK
-         95gazBM+n2Es4NcakK9McZLYoxqKpcDYTUyQQMkQxKvFGo1IKgusw0QFJndCBU9jVE
-         xJ1GsnFxBziE8PutDAeUpVaZDFWqfVrSYgkPKuHE=
-Date:   Tue, 20 Aug 2019 09:01:30 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] kprobes: adjust kprobe addr for KPROBES_ON_FTRACE
-Message-Id: <20190820090130.844fc064030db67efb05ceb1@kernel.org>
-In-Reply-To: <20190819192505.483c0bf0@xhacker.debian>
-References: <20190819192422.5ed79702@xhacker.debian>
-        <20190819192505.483c0bf0@xhacker.debian>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 19 Aug 2019 20:02:16 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:56590 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728578AbfHTACP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 20:02:15 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190820000213epoutp023eed0132ff49a50fda5536e403284ff3~8eJCvyEgm2910129101epoutp026
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 00:02:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190820000213epoutp023eed0132ff49a50fda5536e403284ff3~8eJCvyEgm2910129101epoutp026
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566259333;
+        bh=1IZDAsELDme1WOYVxDryTaAg4O77J7UQde+jdSXIPI0=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=lEULkMivshUYXAcQ9YKc2gnw2RhmL0azUbaxEBWs6Vp70fx21ARSCx1uRYPWyGARP
+         tuDOM0X+xUdAk8V6GOg53DR9nh3aKyk7MaPRilVar/jSHCdagku7EnIk9sYpwvp92d
+         6n/ex6IPmT40Xb8Qq56JFGn1gCjLJ2MVrtlGMiU8=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190820000212epcas1p2af04979a0188984b33d68b06d3d873d5~8eJCXyOqJ1984219842epcas1p2r;
+        Tue, 20 Aug 2019 00:02:12 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.152]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 46C9vh0gHPzMqYlm; Tue, 20 Aug
+        2019 00:02:08 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F1.66.04088.F783B5D5; Tue, 20 Aug 2019 09:02:07 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190820000207epcas1p16180da78ca4b50c001ddd930984d18ef~8eI9PMm2R0990409904epcas1p1q;
+        Tue, 20 Aug 2019 00:02:07 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190820000207epsmtrp1e115e27bd6b29f136519a538fd53ec57~8eI9OHGeU2556025560epsmtrp1p;
+        Tue, 20 Aug 2019 00:02:07 +0000 (GMT)
+X-AuditID: b6c32a35-85dff70000000ff8-75-5d5b387f9c9d
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        01.53.03706.F783B5D5; Tue, 20 Aug 2019 09:02:07 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190820000207epsmtip22ff4beb6e8d48b6fc4a3b6c41eda76ff~8eI9BlO3A1455614556epsmtip2A;
+        Tue, 20 Aug 2019 00:02:07 +0000 (GMT)
+Subject: Re: [PATCH v6 03/19] PM / devfreq: tegra30: Handle possible
+ round-rate error
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <b57acb3f-ef28-b945-0b8f-38892dc131bb@samsung.com>
+Date:   Tue, 20 Aug 2019 09:06:01 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190811212315.12689-4-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2+VsRrPPpfW6qPSEQSMvR50dw9m9BgkZBnZB7KAHFbedubOZ
+        1o+85iUv2U1aptMySo1uGiqG5YSwKCIzShsIRphFUVpolrXtGPnveZ/nvT3f98rFyluESp5h
+        tLBmI6MniUWSe451IcHH6UNJYTZnMN36dQzRRbYmCf204JOMHuyuI+jJyn5El03ZCHok/xpB
+        z3TXS+iqGy+IzV66TucVpOuyOWW6ysLPhK6qvQXpJu+sipcezIxJZ5lU1hzAGlO41Axjmpbc
+        nZC8LVkTFUYFU9H0BjLAyBhYLbk9Lj54Z4betRAZkM3orS4qnuF5MjQ2xsxZLWxAOsdbtCRr
+        StWbok0hPGPgrca0kBTOsJEKCwvXuBIPZ6afb5iRmkZwTmVDqygP3VKUIy854Ei4fbcElaNF
+        ciXuRFBRPCUTgm8I6n4NS4TgB4LaJ38k/0p+No6JBOE+guayHqkQfEHwumAOubOW4kR4W9Ej
+        dgu+eA5B2Uwh4RbE+AA4ulpFbkxgNfSOv/bwS3AgDE2PeYoVOBacD954eAkOgtHyAg/vh/fD
+        t1GHVMjxgYEL7zwreeEouFE5LRL6L4fhdw3zeDUUdlz0LAF4loD+07dd7uSuYDucG14p2FkK
+        E4/aZQJWwYfqE/P4GFwf6CeE2lIE7b3PpYIQAb3NZ0TuPmK8Dm52hwp0IHTNXkLCXG/4/L1C
+        KoxSQOkJpZCyBgZHnSIB+8PlkjLiFCJtC9zYFjiwLXBg+z/MjiQtaBlr4g1pLE+ZqIXffQd5
+        rlWt6URnn8X1ISxH5GKF7vzBJKWUyeZzDX0I5GLSV5FT56IUqUzuUdbMJZutepbvQxrXY9eI
+        VX4pnOv2jZZkShMeERFBR1JRGooilysap+kkJU5jLGwmy5pY8786kdxLlYc0M9fa9mSWGEbs
+        00Un87G2MTtEzflwJw9MqNq8s3qbijfZjaK+j9bBoKD4Ze8jY7LiLvjUBJKJjp7xcZ/HWd2a
+        mBp/eylnf/4qN3Js6vfW+iND+5K2FDXE7kqIu7tC2z7xcKdjZSGj+NhVU73j8dxVWWhHhnrz
+        3k3r17bU1r58+4GU8OkMpRabeeYv3eiRusMDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSvG69RXSswdxGfovVHx8zWrTMWsRi
+        cbbpDbvF5V1z2Cw+9x5htOj8MovN4nbjCjaLn7vmsVj0rb3E5sDpsePuEkaPnbPusnv0Nr9j
+        8+jbsorR4/MmuQDWKC6blNSczLLUIn27BK6MafN/shbcFqjonb+aqYFxA28XIyeHhICJxK+F
+        j5m6GLk4hAR2M0rcXHKdFSIhKTHt4lHmLkYOIFtY4vDhYoiat4wSC95vYwepERYIl7jTs4cZ
+        JCEi0MQksan3AliCWSBSomfuFjaIjq2MEj+/QyTYBLQk9r+4wQZi8wsoSlz98ZgRxOYVsJO4
+        e+AmWJxFQFXiQVcTWFxUIELi8I5ZUDWCEidnPmEBsTkFzCTW9v5gglimLvFn3iVmCFtc4taT
+        +VBxeYnmrbOZJzAKz0LSPgtJyywkLbOQtCxgZFnFKJlaUJybnltsWGCYl1quV5yYW1yal66X
+        nJ+7iREcZVqaOxgvL4k/xCjAwajEw+sxLSpWiDWxrLgy9xCjBAezkghvxRygEG9KYmVValF+
+        fFFpTmrxIUZpDhYlcd6neccihQTSE0tSs1NTC1KLYLJMHJxSDYyWy+vf7axvmB57qMpVpvX6
+        s0P6fbf3NbGKrH7pfbZg+sp2k83Nx6cce6X9iDlc5Jt/o0HP0+arFnYzA5Xt12c/MStvqGsq
+        Wr9lbvX7e+cuqmZmZ7fdyFbxmVlf8ZepxXVr/hJBm4s27Veyj0/6/vLE7gv21mtid1Z6PK7d
+        zWL5LO/35a0TP3xUYinOSDTUYi4qTgQAe/ypOK4CAAA=
+X-CMS-MailID: 20190820000207epcas1p16180da78ca4b50c001ddd930984d18ef
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190811212443epcas3p3294b8ac39ea075000fbffee6078cf068
+References: <20190811212315.12689-1-digetx@gmail.com>
+        <CGME20190811212443epcas3p3294b8ac39ea075000fbffee6078cf068@epcas3p3.samsung.com>
+        <20190811212315.12689-4-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jisheng,
+Hi,
 
-On Mon, 19 Aug 2019 11:36:09 +0000
-Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
-
-> For KPROBES_ON_FTRACE case, we need to adjust the kprobe's addr
-> correspondingly.
-
-No, I think you have misunderstood what the ftrace_call_adjust() does.
-Ftrace's rec->ip is already adjusted when initializing it. Kprobes
-checks the list after initialized (adjusted). So you don't need to
-adjust it again.
-
-BTW, this type of hidden adjustment should be avoided by design.
-If you find user specifies wrong address, return error instead of
-adjust it silently.
-
-Thank you,
-
+On 19. 8. 12. 오전 6:22, Dmitry Osipenko wrote:
+> The EMC clock rate rounding technically could fail, hence let's handle
+> the error cases properly.
 > 
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  kernel/kprobes.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/devfreq/tegra30-devfreq.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 9873fc627d61..f8400753a8a9 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1560,6 +1560,9 @@ int register_kprobe(struct kprobe *p)
->  	addr = kprobe_addr(p);
->  	if (IS_ERR(addr))
->  		return PTR_ERR(addr);
-> +#ifdef CONFIG_KPROBES_ON_FTRACE
-> +	addr = (kprobe_opcode_t *)ftrace_call_adjust((unsigned long)addr);
-> +#endif
->  	p->addr = addr;
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index 8be6a33beb9c..bfee9d43de1e 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -592,8 +592,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  	struct tegra_devfreq_device *dev;
+>  	struct tegra_devfreq *tegra;
+>  	struct devfreq *devfreq;
+> -	unsigned long rate;
+>  	unsigned int i;
+> +	long rate;
+>  	int err;
 >  
->  	ret = check_kprobe_rereg(p);
-> -- 
-> 2.23.0.rc1
+>  	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
+> @@ -650,8 +650,14 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  
+>  	reset_control_deassert(tegra->reset);
+>  
+> -	tegra->max_freq = clk_round_rate(tegra->emc_clock, ULONG_MAX) / KHZ;
+> +	rate = clk_round_rate(tegra->emc_clock, ULONG_MAX);
+> +	if (rate < 0) {
+> +		dev_err(&pdev->dev, "Failed to round clock rate: %ld\n", rate);
+> +		return rate;
+> +	}
+> +
+>  	tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
+> +	tegra->max_freq = rate / KHZ;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
+>  		dev = tegra->devices + i;
+> @@ -662,6 +668,13 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
+>  		rate = clk_round_rate(tegra->emc_clock, rate);
+>  
+> +		if (rate < 0) {
+> +			dev_err(&pdev->dev,
+> +				"Failed to round clock rate: %ld\n", rate);
+> +			err = rate;
+> +			goto remove_opps;
+> +		}
+> +
+>  		err = dev_pm_opp_add(&pdev->dev, rate, 0);
+>  		if (err) {
+>  			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
 > 
 
+It supports the exception handling. Looks good to me.
+
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
