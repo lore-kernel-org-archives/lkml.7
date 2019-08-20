@@ -2,61 +2,54 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FA4C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83F9C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13032339E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92498230F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566329322;
-	bh=nyQDcDGVNc52qwyCVzLDl29QlA+MDVXD/S7ZPOvV3AY=;
+	s=default; t=1566329326;
+	bh=EkJxKz4u+q8ZKgqhSLL9/DOv/Q6wJNl+yFxl6ZK0WbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P0haJCyg3zrI51ZaGNaFmC4n/3++b3MQbCQL4tRze/l7INlFqImDKKxEGZVeXfMuf
-	 bYgMPQ+3cuYIIcKSt4FQWnP/ZfIjdEyzKF7OwwLPh5pmWBkpVsNi1NTIEoDhOjqICp
-	 /hc3GOmJK2Y/TmE2KQDuTMedUaYPkA00kIpZSG8w=
+	b=XMgJ1rX0Fn6LvV1wNAIEf+WWS3yZ1AAvHhC5L8VxQPtZB/k/aJr1Of4aI5U0lcWsl
+	 7ENAquWYGTYWGIKRNCpcJHTN9dH1XmNH6os1hd8NMRi4U3GSE2moaeuAEzz2HbMecA
+	 JT1Z+6DIqqlSIAfk/zrg+UpYYp/S0BXP204ZNF/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730909AbfHTT2l (ORCPT
+        id S1730920AbfHTT2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41396 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 15:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730466AbfHTT2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:28:40 -0400
+        id S1730466AbfHTT2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 15:28:43 -0400
 Received: from quaco.ghostprotocols.net (177.206.236.100.dynamic.adsl.gvt.net.br [177.206.236.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C70D22DD6;
-        Tue, 20 Aug 2019 19:28:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA48B22DD3;
+        Tue, 20 Aug 2019 19:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566329319;
-        bh=nyQDcDGVNc52qwyCVzLDl29QlA+MDVXD/S7ZPOvV3AY=;
+        s=default; t=1566329322;
+        bh=EkJxKz4u+q8ZKgqhSLL9/DOv/Q6wJNl+yFxl6ZK0WbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=glezjKsKTTE8U3A0qUcMpTsgKWzjLZL70stlvw3BUEPBC5o+zym5w+Y6FSaGwaCcO
-         rNNiGdk+VgKfsBjQMzOGeSFJbFqSpePlaattXdccUWwUJaDVMU7XlDlK9d70quAsvX
-         +2UN+dHgnkk2vja2Scbl1QFibkr3HyWjod710Npg=
+        b=gyA4b/28AJ48JOOn6P2R7szQOMSKh1oL8Y17F2vSt/ZG9VNW4/+wCpQVa0cyMq2QD
+         oN77ANukrpoVflzoDVwRmUWpP2fBG0x1/kZlNyMy+jcb6ObVpPJMwQlFwwxL+RpHi0
+         tr5i3toJn3BZm/TuM6xFGviSpF/By+fqBlAjb/20=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Robert Walker <robert.walker@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 11/17] perf cs-etm: Support sample flags 'insn' and 'insnlen'
-Date:   Tue, 20 Aug 2019 16:27:27 -0300
-Message-Id: <20190820192733.19180-12-acme@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH 12/17] perf ui: Make 'exit_msg' optional in ui__question_window()
+Date:   Tue, 20 Aug 2019 16:27:28 -0300
+Message-Id: <20190820192733.19180-13-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190820192733.19180-1-acme@kernel.org>
 References: <20190820192733.19180-1-acme@kernel.org>
@@ -67,131 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The synthetic branch and instruction samples are missed to set
-instruction related info, thus the perf tool fails to display samples
-with flags '-F,+insn,+insnlen'.
+We will not need it when refactoring this function to be
+non-interactive, so make it optional.
 
-The CoreSight trace decoder provides sufficient information to decide
-the instruction size based on the ISA type: A64/A32 instructions are
-32-bit size, but one exception is the T32 instruction size, which might
-be 32-bit or 16-bit.
-
-This patch handles these cases and it reads the instruction values from
-DSO file; thus can support the flags '-F,+insn,+insnlen'.
-
-Before:
-
-  # perf script -F,insn,insnlen,ip,sym
-                0 [unknown] ilen: 0
-     ffff97174044 _start ilen: 0
-     ffff97174938 _dl_start ilen: 0
-     ffff97174938 _dl_start ilen: 0
-     ffff97174938 _dl_start ilen: 0
-     ffff97174938 _dl_start ilen: 0
-     ffff97174938 _dl_start ilen: 0
-     ffff97174938 _dl_start ilen: 0
-     ffff97174938 _dl_start ilen: 0
-     ffff97174938 _dl_start ilen: 0
-
-  [...]
-
-After:
-
-  # perf script -F,insn,insnlen,ip,sym
-                0 [unknown] ilen: 0
-     ffff97174044 _start ilen: 4 insn: 2f 02 00 94
-     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
-     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
-     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
-     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
-     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
-     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
-     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
-     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
-
-  [...]
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mike Leach <mike.leach@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Robert Walker <robert.walker@arm.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190815082854.18191-1-leo.yan@linaro.org
+Link: https://lkml.kernel.org/n/tip-pnx1dn17bsz7lqt9ty95nnjx@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+ tools/perf/ui/tui/util.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index ed6f7fd5b90b..b3a5daaf1a8f 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1076,6 +1076,35 @@ bool cs_etm__etmq_is_timeless(struct cs_etm_queue *etmq)
- 	return !!etmq->etm->timeless_decoding;
- }
+diff --git a/tools/perf/ui/tui/util.c b/tools/perf/ui/tui/util.c
+index fe5e571816fc..5d65ea8b6496 100644
+--- a/tools/perf/ui/tui/util.c
++++ b/tools/perf/ui/tui/util.c
+@@ -188,7 +188,9 @@ int ui__question_window(const char *title, const char *text,
+ 	pthread_mutex_lock(&ui__lock);
  
-+static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
-+			      u64 trace_chan_id,
-+			      const struct cs_etm_packet *packet,
-+			      struct perf_sample *sample)
-+{
-+	/*
-+	 * It's pointless to read instructions for the CS_ETM_DISCONTINUITY
-+	 * packet, so directly bail out with 'insn_len' = 0.
-+	 */
-+	if (packet->sample_type == CS_ETM_DISCONTINUITY) {
-+		sample->insn_len = 0;
-+		return;
+ 	max_len += 2;
+-	nr_lines += 4;
++	nr_lines += 2;
++	if (exit_msg)
++		nr_lines += 2;
+ 	y = SLtt_Screen_Rows / 2 - nr_lines / 2,
+ 	x = SLtt_Screen_Cols / 2 - max_len / 2;
+ 
+@@ -199,14 +201,20 @@ int ui__question_window(const char *title, const char *text,
+ 		SLsmg_write_string((char *)title);
+ 	}
+ 	SLsmg_gotorc(++y, x);
+-	nr_lines -= 2;
++	if (exit_msg)
++		nr_lines -= 2;
+ 	max_len -= 2;
+ 	SLsmg_write_wrapped_string((unsigned char *)text, y, x,
+ 				   nr_lines, max_len, 1);
+ 	SLsmg_gotorc(y + nr_lines - 2, x);
+ 	SLsmg_write_nstring((char *)" ", max_len);
+ 	SLsmg_gotorc(y + nr_lines - 1, x);
+-	SLsmg_write_nstring((char *)exit_msg, max_len);
++	if (exit_msg) {
++		SLsmg_gotorc(y + nr_lines - 2, x);
++		SLsmg_write_nstring((char *)" ", max_len);
++		SLsmg_gotorc(y + nr_lines - 1, x);
++		SLsmg_write_nstring((char *)exit_msg, max_len);
 +	}
-+
-+	/*
-+	 * T32 instruction size might be 32-bit or 16-bit, decide by calling
-+	 * cs_etm__t32_instr_size().
-+	 */
-+	if (packet->isa == CS_ETM_ISA_T32)
-+		sample->insn_len = cs_etm__t32_instr_size(etmq, trace_chan_id,
-+							  sample->ip);
-+	/* Otherwise, A64 and A32 instruction size are always 32-bit. */
-+	else
-+		sample->insn_len = 4;
-+
-+	cs_etm__mem_access(etmq, trace_chan_id, sample->ip,
-+			   sample->insn_len, (void *)sample->insn);
-+}
-+
- static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
- 					    struct cs_etm_traceid_queue *tidq,
- 					    u64 addr, u64 period)
-@@ -1097,9 +1126,10 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
- 	sample.period = period;
- 	sample.cpu = tidq->packet->cpu;
- 	sample.flags = tidq->prev_packet->flags;
--	sample.insn_len = 1;
- 	sample.cpumode = event->sample.header.misc;
+ 	SLsmg_refresh();
  
-+	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
-+
- 	if (etm->synth_opts.last_branch) {
- 		cs_etm__copy_last_branch_rb(etmq, tidq);
- 		sample.branch_stack = tidq->last_branch;
-@@ -1159,6 +1189,9 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
- 	sample.flags = tidq->prev_packet->flags;
- 	sample.cpumode = event->sample.header.misc;
- 
-+	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->prev_packet,
-+			  &sample);
-+
- 	/*
- 	 * perf report cannot handle events without a branch stack
- 	 */
+ 	pthread_mutex_unlock(&ui__lock);
 -- 
 2.21.0
 
