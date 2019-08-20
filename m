@@ -2,192 +2,160 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9723C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69587C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF3022DA8
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19CFE22CE8
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:51:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fossix-org.20150623.gappssmtp.com header.i=@fossix-org.20150623.gappssmtp.com header.b="xDgOvr7d"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="DkRCG5r5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfHTBsB (ORCPT
+        id S1728876AbfHTBv4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 21:48:01 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42360 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfHTBsA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 21:48:00 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i30so2305715pfk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 18:48:00 -0700 (PDT)
+        Mon, 19 Aug 2019 21:51:56 -0400
+Received: from mail-eopbgr820078.outbound.protection.outlook.com ([40.107.82.78]:1920
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728647AbfHTBvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 21:51:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ak4dIrMwIxHAQRkwI8EICZNWfaJx0uKosS/wWNNPzGgm2/bBIckHMZeLA8HQvMWkWGlzIDqOJdUXOjfX+P2gzfgXdi6KRRc6Gh0aZkREddL8CTPB1d7caOoI5RrmbUS1Mzb0IZNwT3Lr1wmC1a1zarRWbcJg9THvfCI+xL/ms8jgh+Lkx6omsLy84eoncUyiE2mxllF6jdnLcjEU9RVZm5wlhK8uyMq+OGrVVuqnOqAdNOHegXFM7E0MwqKcQqsBEOUFXHXU6xycWXCZHEd7I7zMPFv2tU+Ss36MGxOuiWsYrpnrNzvhVFn8h+ciFqrBBVAfvkgn9lIhGqU4A4fAlg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bpw4V+QcHiY7OKM83+PXT+nZRYTlHkfnTY6HW4l9taQ=;
+ b=dPsjYIDLIXVVKrEFiW1UcG5BVjUYZt8L6bovvYgS9npmrc+yCaRSsbR9PFZei/+XtT+6w7IHmbx+fVtBiQEYhmsWf02QsXVuuoKBE1TFUWENoHRufIzKLPeH+QegcE8kGdMEDN/Jth8MgAftENVY8wbCxfrsEWqC7NGCHDBt+zACtz/l75q1BFWEIf6qigxsmHd1/SesFeWBYbvagYmA7GtU7tiazN7R30/h4nDz3acOZnBxxItYr44VGDEntDT3KkxVipKkh1RE1NefTEgG+yXyQ3yz8d+OAnwK52hi3evB8SZgW1OwZm8+uxlMgRCfJfHHDUN/z9ODlynrl5Vksg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fossix-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=RfLs+sRfBSDgb+tBIhChiANAEUhKiMw/rtbpKhN6zaY=;
-        b=xDgOvr7dIvIKX4kULkDv9+SPhMsQwKzSH0sKoqyXx/wpx5DHVoyuaCtOBzG7HwuRYp
-         jh8X8OfTPK5SowqYmxTCsg/xKHv5iG8CBBSXHn+pHgPpPDEBO3xZvClGHHr9/V5Osy+E
-         FUAIaGka/yjKUD9VxaCbcIDwAuVdeaZdXfPqg/23hXjLcYhNGoTDXJEioXK2eF/wdcSj
-         vINbNRuNtkq3oXEXtMgq/SXF3lXNzxo/PJrxwQUVM68i62c44Ofjb2IwbBDn0ZAJb/Mk
-         vBUPUOUVATwFGL18ru1BrsD/w8Fnpivid49hcQhPvzboCRhk+cL4mfmFKt39vO552iHQ
-         QkCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=RfLs+sRfBSDgb+tBIhChiANAEUhKiMw/rtbpKhN6zaY=;
-        b=eq9cyHNjHatiPWML0fNKE4lXwrVOvLHR9YjQzmuZeo39CnEowS9jJeIQN97MhmsZLt
-         p25Bwz38x1WoiZplwgY7wJ4CprCORbjqenscgM0z7CRIpo3oxkr3peji7ew/uXdCqJHn
-         we/8oG8qDHLje/W0e8bEX0wbcEgcTb/KrcSNxFW9a9d8loh5MIRAKY0k0tlQN1LbsJo5
-         gcdd/PflL4BWc7UNGlt0PNX/0yHe6X6ap6081MmaO4lTKZrgcbw3ahlThwSnHJtuSW2n
-         Su3MIp0RvODla6Keb/vq9qxSXeTwsz8QkzwuTiCswax1BxUkG7+mCyGwd5jsCNgYNMay
-         W8KQ==
-X-Gm-Message-State: APjAAAVGu7eqx3Sy0rwwNkAGG1oVKI9TfyPQT1Bfi6tx8bPJ525ONkYh
-        cqtwDJ57d36bu/+eRqxgCfoEhg==
-X-Google-Smtp-Source: APXvYqwVegiYT4hHAvpHnbXs+lPZw+l1k9sXk0MQ52n1ouVNqGK5erNtO31mcO6BFgTZIuKjY+o1eQ==
-X-Received: by 2002:a65:4841:: with SMTP id i1mr22588419pgs.316.1566265679652;
-        Mon, 19 Aug 2019 18:47:59 -0700 (PDT)
-Received: from localhost ([49.205.218.65])
-        by smtp.gmail.com with ESMTPSA id s20sm16948435pfe.169.2019.08.19.18.47.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2019 18:47:59 -0700 (PDT)
-From:   Santosh Sivaraj <santosh@fossix.org>
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, stable@vger.kernel.org
-Subject: Re: [PATCH v10 2/7] powerpc/mce: Fix MCE handling for huge pages
-In-Reply-To: <1566223931.kpuwkor3n7.astroid@bobo.none>
-References: <20190815003941.18655-1-santosh@fossix.org> <20190815003941.18655-3-santosh@fossix.org> <1566223931.kpuwkor3n7.astroid@bobo.none>
-Date:   Tue, 20 Aug 2019 07:17:56 +0530
-Message-ID: <87ef1gppyr.fsf@santosiv.in.ibm.com>
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bpw4V+QcHiY7OKM83+PXT+nZRYTlHkfnTY6HW4l9taQ=;
+ b=DkRCG5r50CL+Ht/5umrByyx7YAWRO1rNezkloYyxBflTjPm7leDLtitceZozRDlMYnhb43Odq0RV/XCdPnUxoxgOPfbY8iYn+G50nyDOjkpVcFf8nSZzjjBZxK3D3PSwMxjt4sDBp6rZs2JZcalotGfJvWxfE7N3NS/qaoNqIfM=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB3463.namprd03.prod.outlook.com (52.135.212.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Tue, 20 Aug 2019 01:51:52 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::a517:3578:67bf:6c88]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::a517:3578:67bf:6c88%7]) with mapi id 15.20.2157.022; Tue, 20 Aug 2019
+ 01:51:52 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+CC:     Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH 1/4] kprobes: adjust kprobe addr for KPROBES_ON_FTRACE
+Thread-Topic: [PATCH 1/4] kprobes: adjust kprobe addr for KPROBES_ON_FTRACE
+Thread-Index: AQHVVoJFk8X59Zi3AUirAcI9pTWKbqcCrVAAgACWOIA=
+Date:   Tue, 20 Aug 2019 01:51:52 +0000
+Message-ID: <20190820094041.7072d90b@xhacker.debian>
+References: <20190819192422.5ed79702@xhacker.debian>
+        <20190819192505.483c0bf0@xhacker.debian>
+        <1566232801.derqq08wxh.naveen@linux.ibm.com>
+In-Reply-To: <1566232801.derqq08wxh.naveen@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TY2PR01CA0059.jpnprd01.prod.outlook.com
+ (2603:1096:404:10a::23) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fbe1173c-2227-4a0e-9397-08d72510f8ea
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB3463;
+x-ms-traffictypediagnostic: BYAPR03MB3463:
+x-microsoft-antispam-prvs: <BYAPR03MB34636D1A445C4EC90F4A640CEDAB0@BYAPR03MB3463.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 013568035E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(39850400004)(136003)(346002)(376002)(199004)(189003)(43544003)(2906002)(86362001)(476003)(256004)(14444005)(6506007)(386003)(66476007)(66556008)(64756008)(66446008)(66946007)(5024004)(486006)(6436002)(9686003)(6512007)(5660300002)(53936002)(6246003)(446003)(26005)(11346002)(102836004)(186003)(7736002)(50226002)(1076003)(66066001)(6916009)(71200400001)(99286004)(81156014)(14454004)(81166006)(8936002)(305945005)(8676002)(6116002)(3846002)(7416002)(478600001)(4326008)(25786009)(229853002)(316002)(71190400001)(6486002)(76176011)(54906003)(52116002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3463;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3NHRwGzMrfDae1rGvWCCGz3UtVq04qqP0eF7NUNqWKCw25kugyxzJVavmEv8R8+RSon2cv8QrRB9V6n+wGs6wjH2k79R94D1c0baeolWMl8y5tzwSpfDkG57l/cwcnINPrledOmwlIUL4zSbKStDP137OBW3QAoC3Phl3G/X2gPKWQhWij1J3x3CL2/WLZFy/tbmgPp+0Hr9MyWA5+9YlSQp5JgKi1UdPYbtsJ1cokoH/o83pHp3lpEMVnBMTdb7PH2Sii0QrelwZ1XJcAQQcWnFeL0oD6bMIPNFv3+zltIakNAKRm7d5yAlmuvRhxLGWpIL6DaX+Jhyh46J8oKi1dGjO+DSuiwDgtjYDx+G/MFVaY1wDuJURQWU0yAPW/PTGFLi2CFt+Z1o46tiEcpz+3MVg1GLMaCHd7+V9/mM+ig=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AEBA496DE4C2C64AB0CBDEF3409E623E@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbe1173c-2227-4a0e-9397-08d72510f8ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 01:51:52.4470
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ryGGrf5vJoBX2+T14QlbD6gaGoogsIfqlnGXoxPB2Fpj7zVA4JAXoJ+PpnjLGISvwsZKSOM6219izaDy7Q4kIA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3463
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
+On Mon, 19 Aug 2019 22:13:02 +0530 "Naveen N. Rao"  wrote:
 
-Nicholas Piggin <npiggin@gmail.com> writes:
+> CAUTION: Email originated externally, do not click links or open attachme=
+nts unless you recognize the sender and know the content is safe.
+>=20
+>=20
+> Jisheng Zhang wrote:
+> > For KPROBES_ON_FTRACE case, we need to adjust the kprobe's addr
+> > correspondingly.
+> >
+> > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> > ---
+> >  kernel/kprobes.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index 9873fc627d61..f8400753a8a9 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -1560,6 +1560,9 @@ int register_kprobe(struct kprobe *p)
+> >       addr =3D kprobe_addr(p);
+> >       if (IS_ERR(addr))
+> >               return PTR_ERR(addr);
+> > +#ifdef CONFIG_KPROBES_ON_FTRACE
+> > +     addr =3D (kprobe_opcode_t *)ftrace_call_adjust((unsigned long)add=
+r);
+> > +#endif
+> >       p->addr =3D addr; =20
+>=20
+> I'm not sure what this is achieving, but looks wrong to me.
 
-> Santosh Sivaraj's on August 15, 2019 10:39 am:
->> From: Balbir Singh <bsingharora@gmail.com>
->> 
->> The current code would fail on huge pages addresses, since the shift would
->> be incorrect. Use the correct page shift value returned by
->> __find_linux_pte() to get the correct physical address. The code is more
->> generic and can handle both regular and compound pages.
->> 
->> Fixes: ba41e1e1ccb9 ("powerpc/mce: Hookup derror (load/store) UE errors")
->> Signed-off-by: Balbir Singh <bsingharora@gmail.com>
->> [arbab@linux.ibm.com: Fixup pseries_do_memory_failure()]
->> Signed-off-by: Reza Arbab <arbab@linux.ibm.com>
->> Co-developed-by: Santosh Sivaraj <santosh@fossix.org>
->> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
->> Tested-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
->> Cc: stable@vger.kernel.org # v4.15+
->> ---
->>  arch/powerpc/include/asm/mce.h       |  2 +-
->>  arch/powerpc/kernel/mce_power.c      | 55 ++++++++++++++--------------
->>  arch/powerpc/platforms/pseries/ras.c |  9 ++---
->>  3 files changed, 32 insertions(+), 34 deletions(-)
->> 
->> diff --git a/arch/powerpc/include/asm/mce.h b/arch/powerpc/include/asm/mce.h
->> index a4c6a74ad2fb..f3a6036b6bc0 100644
->> --- a/arch/powerpc/include/asm/mce.h
->> +++ b/arch/powerpc/include/asm/mce.h
->> @@ -209,7 +209,7 @@ extern void release_mce_event(void);
->>  extern void machine_check_queue_event(void);
->>  extern void machine_check_print_event_info(struct machine_check_event *evt,
->>  					   bool user_mode, bool in_guest);
->> -unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr);
->> +unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr);
->>  #ifdef CONFIG_PPC_BOOK3S_64
->>  void flush_and_reload_slb(void);
->>  #endif /* CONFIG_PPC_BOOK3S_64 */
->> diff --git a/arch/powerpc/kernel/mce_power.c b/arch/powerpc/kernel/mce_power.c
->> index a814d2dfb5b0..e74816f045f8 100644
->> --- a/arch/powerpc/kernel/mce_power.c
->> +++ b/arch/powerpc/kernel/mce_power.c
->> @@ -20,13 +20,14 @@
->>  #include <asm/exception-64s.h>
->>  
->>  /*
->> - * Convert an address related to an mm to a PFN. NOTE: we are in real
->> - * mode, we could potentially race with page table updates.
->> + * Convert an address related to an mm to a physical address.
->> + * NOTE: we are in real mode, we could potentially race with page table updates.
->>   */
->> -unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
->> +unsigned long addr_to_phys(struct pt_regs *regs, unsigned long addr)
->>  {
->> -	pte_t *ptep;
->> -	unsigned long flags;
->> +	pte_t *ptep, pte;
->> +	unsigned int shift;
->> +	unsigned long flags, phys_addr;
->>  	struct mm_struct *mm;
->>  
->>  	if (user_mode(regs))
->> @@ -35,14 +36,21 @@ unsigned long addr_to_pfn(struct pt_regs *regs, unsigned long addr)
->>  		mm = &init_mm;
->>  
->>  	local_irq_save(flags);
->> -	if (mm == current->mm)
->> -		ptep = find_current_mm_pte(mm->pgd, addr, NULL, NULL);
->> -	else
->> -		ptep = find_init_mm_pte(addr, NULL);
->> +	ptep = __find_linux_pte(mm->pgd, addr, NULL, &shift);
->>  	local_irq_restore(flags);
->> +
->>  	if (!ptep || pte_special(*ptep))
->>  		return ULONG_MAX;
->> -	return pte_pfn(*ptep);
->> +
->> +	pte = *ptep;
->> +	if (shift > PAGE_SHIFT) {
->> +		unsigned long rpnmask = (1ul << shift) - PAGE_SIZE;
->> +
->> +		pte = __pte(pte_val(pte) | (addr & rpnmask));
->> +	}
->> +	phys_addr = pte_pfn(pte) << PAGE_SHIFT;
->> +
->> +	return phys_addr;
->>  }
->
-> This should remain addr_to_pfn I think. None of the callers care what
-> size page the EA was mapped with. 'pfn' is referring to the Linux pfn,
-> which is the small page number.
->
->   if (shift > PAGE_SHIFT)
->     return (pte_pfn(*ptep) | ((addr & ((1UL << shift) - 1)) >> PAGE_SHIFT);
->   else
->     return pte_pfn(*ptep);
->
-> Something roughly like that, then you don't have to change any callers
-> or am I missing something?
+Indeed, I didn't take care of non-ftrace addr when KPROBES_ON_FTRACE, will
+update in next version.
 
-Here[1] you asked to return the real address rather than pfn, which all
-callers care about. So made the changes accordingly.
+thanks
 
-[1] https://www.spinics.net/lists/kernel/msg3187658.html
+>=20
+> If you intend to have kprobes default to using ftrace entry for probing
+> functions, consider over-riding kprobe_lookup_name() -- see powerpc
+> variant for example.
+>=20
+>=20
+> - Naveen
+>=20
 
-Thanks,
-Santosh
->
-> Thanks,
-> Nick
