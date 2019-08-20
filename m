@@ -2,482 +2,242 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C225DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3E0C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:36:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8554122DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B12214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:36:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="B+Ejfd/X"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="R2/YxrBi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730092AbfHTNep (ORCPT
+        id S1729968AbfHTNgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:34:45 -0400
-Received: from vps.xff.cz ([195.181.215.36]:58756 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729762AbfHTNeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:34:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1566308081; bh=epDoDcu9vV/+qVSbBiiLAnXsmtqh1AFCqKWEoP5d07Y=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=B+Ejfd/XKihqEtbkxkoyT0kdsF5I8XhFqI/jCO8VMuS4w1ARNugt6H0uJ0KQAiyP2
-         CpBKx0FSqhwLw7Ksw5mMkRXfzPPyx5VB5zTQHWwB1lifgMOzep1TZMd4Us2vMUq96J
-         ZlONOB2560B/t4xr4jN2Mm3Lh1UxLr0aQLOfnEEg=
-Date:   Tue, 20 Aug 2019 15:34:41 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 04/10] mailbox: sunxi-msgbox: Add a new mailbox driver
-Message-ID: <20190820133441.g56apl2oclioi4ts@core.my.home>
-Mail-Followup-To: Samuel Holland <samuel@sholland.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190820032311.6506-1-samuel@sholland.org>
- <20190820032311.6506-5-samuel@sholland.org>
- <20190820111825.2w55fleehrnon27u@core.my.home>
- <bc09e14c-1cf5-8124-fc34-c651b78577ce@sholland.org>
+        Tue, 20 Aug 2019 09:36:18 -0400
+Received: from mail-eopbgr150072.outbound.protection.outlook.com ([40.107.15.72]:19009
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728682AbfHTNgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:36:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oJo1ePUWe03p8rFGi8AwOM8qX2nPMZl5B+CoUF1fQZzzEzYRhz6ayy/mz9fZzrxkcggjPovnGg2kx+Nh9rvO7jttO+C2qYVowQs1OKkAu+1Ts71A+67w+6qkM8BUy3VOM0IUDK+6MWQVXWzLWAE8TYCWCxIstBjRCbHeEGt3Gg9720HDLhPi5CnslBAZG1iMvCDks6DRq/sBQyD0XMhzhkGx99bg897TPkxW6ivtNrBfeelfegQ6Mlp6aSGw1Vur9H6Vjl0nGQjldVOpsTE9nXfqHbQNr+BIGvyjSQiMXWYtmmj+OUuOPbD91VLU76lXwIzLzPeKnZx7ySYiw73gww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IbfvC7Gy6a5jMJm5qHD1Ktdcx8lzMmE5vVOtmdYjkVY=;
+ b=JEspPKfnZtY/mBBzf1IwHl1GUDg4NuNMfZch2TbP0Z3oYAVujttBRYqdkDH1fCZLRDR4LfrNofohX+7UWWR2tMEMlnDGtttguRJuvXzGMoPeqgV2z1YnQVDhygR+Y1+fnQnaTba5Z+JfgGK/M3Fs/A8x/SHe6JVrajJwRT5KY71ImPhzqBrZRAjHitotBzv1avslfxQttoEt4i5gF757oscSyDDHfVSDZ1+vHIsBQV/05F4iLMjVgvzjTyZxJzqLAYgn79Mu45d9i8B7bv1nlFC3XmYinLEt01SvzNu0zTL2NFaDXSiyfW25k7EAoN4LGCq2v3hvvXPARAPC3yhiGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IbfvC7Gy6a5jMJm5qHD1Ktdcx8lzMmE5vVOtmdYjkVY=;
+ b=R2/YxrBi0PFZKsltJfxo6WNmHeEHoYXefcmtgkEQN4hjE1RV5tMpssdo6f5BGLy/ovOIcOyZS9wmxAObRaHyHxoxP21z85wKcfEuUz7yJ7SQElJf8dQcVgNsA3JZjwTwoSFvhBLfGAZQzO+5rR+MfGaLFqyeeN4hgh33LbhtJ2Q=
+Received: from AM6PR0402MB3798.eurprd04.prod.outlook.com (52.133.29.29) by
+ AM6PR0402MB3591.eurprd04.prod.outlook.com (52.133.20.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Tue, 20 Aug 2019 13:36:09 +0000
+Received: from AM6PR0402MB3798.eurprd04.prod.outlook.com
+ ([fe80::9de1:26ec:59e5:32fc]) by AM6PR0402MB3798.eurprd04.prod.outlook.com
+ ([fe80::9de1:26ec:59e5:32fc%5]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
+ 13:36:09 +0000
+From:   Christian Herber <christian.herber@nxp.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH net-next 0/1] Add BASE-T1 PHY support
+Thread-Topic: [EXT] Re: [PATCH net-next 0/1] Add BASE-T1 PHY support
+Thread-Index: AQHVVlfh9z1APBIvVEOf3Cz5T4N+yg==
+Date:   Tue, 20 Aug 2019 13:36:09 +0000
+Message-ID: <AM6PR0402MB3798FCBF1EE592687B13A3C386AB0@AM6PR0402MB3798.eurprd04.prod.outlook.com>
+References: <20190815153209.21529-1-christian.herber@nxp.com>
+ <8c15b855-6947-9930-c3df-71a64fbff33b@gmail.com>
+ <AM6PR0402MB379864B810F08D3698618B5F86A80@AM6PR0402MB3798.eurprd04.prod.outlook.com>
+ <13e65051-fe4f-5964-30b3-75285e6d2eee@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=christian.herber@nxp.com; 
+x-originating-ip: [217.111.68.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d9cd241c-3f18-461a-ad84-08d725735c69
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM6PR0402MB3591;
+x-ms-traffictypediagnostic: AM6PR0402MB3591:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <AM6PR0402MB3591C26642F178ED28287F5B86AB0@AM6PR0402MB3591.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 013568035E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(136003)(376002)(346002)(199004)(189003)(446003)(486006)(54906003)(8676002)(476003)(33656002)(91956017)(229853002)(76176011)(76116006)(186003)(14444005)(256004)(102836004)(6506007)(53546011)(55236004)(26005)(25786009)(7736002)(110136005)(6246003)(81156014)(81166006)(9686003)(305945005)(5660300002)(6436002)(4326008)(7696005)(74316002)(86362001)(53936002)(966005)(14454004)(99286004)(2501003)(316002)(71200400001)(71190400001)(66066001)(3846002)(6116002)(2906002)(66556008)(6306002)(478600001)(44832011)(66476007)(64756008)(66446008)(55016002)(66946007)(8936002)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3591;H:AM6PR0402MB3798.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: D7bzG4ERQ2PjDXIxnPa89dsZbHkUOitpeon6mE9Fj/q/rwl5Ve35KlWBvfJSPSwXBuovX8L8B68wpZ5fzMnMoH1y+zDMkBgEzU1Hs+B5kz8aCIH8IZO6sbKaJLCVijkcSQp/hlInm4NUt6MDTseRqDAAcOWfs/2C4ZnJ31knQzKrHYCl3Ww/bBAO+S+dEGEc4VayKPQk7beh2QIBJHPi4zJUzzzHUuaaftJxz9qq/1OQZj+1vrkomat4Z6NiFIYz/2xhPL+8vw0AFdNIjMS1F+N1849/IWDdrUMZrs07CXPJoFOPdevVdd3A2uEWy/KIjOvHgR3qhkc7bZ/6OW0UbPg1gk3Xs02A+UhbkrcoxqpGYnENuSqm+quZnHApsiSZCJrx3mgqMGRYQTr7S2+kmwkYGw8dsCefJ4bB/6FYkrI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bc09e14c-1cf5-8124-fc34-c651b78577ce@sholland.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9cd241c-3f18-461a-ad84-08d725735c69
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 13:36:09.6501
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HX7RQ/4M1KGF9+oO0KgaDpQkjJaaF6qPE2evR8/5d4oZvOgOWF9ib8OqWxnH4rkQ258STZi1To6GkGEQelVA1m/zNORyFu3rbC1xUrDPDnk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3591
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Aug 20, 2019 at 08:07:53AM -0500, Samuel Holland wrote:
-> On 8/20/19 6:18 AM, Ondřej Jirman wrote:
-> > Hi Samuel,
-> > 
-> > On Mon, Aug 19, 2019 at 10:23:05PM -0500, Samuel Holland wrote:
-> >> Allwinner sun8i, sun9i, and sun50i SoCs contain a hardware message box
-> >> used for communication between the ARM CPUs and the ARISC management
-> >> coprocessor. The hardware contains 8 unidirectional 4-message FIFOs.
-> >>
-> >> Add a driver for it, so it can be used for SCPI or other communication
-> >> protocols.
-> >>
-> >> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> >> ---
-> >>  drivers/mailbox/Kconfig        |  10 +
-> >>  drivers/mailbox/Makefile       |   2 +
-> >>  drivers/mailbox/sunxi-msgbox.c | 323 +++++++++++++++++++++++++++++++++
-> >>  3 files changed, 335 insertions(+)
-> >>  create mode 100644 drivers/mailbox/sunxi-msgbox.c
-> >>
-> >> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> >> index ab4eb750bbdd..57d12936175e 100644
-> >> --- a/drivers/mailbox/Kconfig
-> >> +++ b/drivers/mailbox/Kconfig
-> >> @@ -227,4 +227,14 @@ config ZYNQMP_IPI_MBOX
-> >>  	  message to the IPI buffer and will access the IPI control
-> >>  	  registers to kick the other processor or enquire status.
-> >>  
-> >> +config SUNXI_MSGBOX
-> >> +	tristate "Allwinner sunxi Message Box"
-> >> +	depends on ARCH_SUNXI || COMPILE_TEST
-> >> +	default ARCH_SUNXI
-> >> +	help
-> >> +	  Mailbox implementation for the hardware message box present in
-> >> +	  Allwinner sun8i, sun9i, and sun50i SoCs. The hardware message box is
-> >> +	  used for communication between the application CPUs and the power
-> >> +	  management coprocessor.
-> >> +
-> >>  endif
-> >> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> >> index c22fad6f696b..bec2d50b0976 100644
-> >> --- a/drivers/mailbox/Makefile
-> >> +++ b/drivers/mailbox/Makefile
-> >> @@ -48,3 +48,5 @@ obj-$(CONFIG_STM32_IPCC) 	+= stm32-ipcc.o
-> >>  obj-$(CONFIG_MTK_CMDQ_MBOX)	+= mtk-cmdq-mailbox.o
-> >>  
-> >>  obj-$(CONFIG_ZYNQMP_IPI_MBOX)	+= zynqmp-ipi-mailbox.o
-> >> +
-> >> +obj-$(CONFIG_SUNXI_MSGBOX)	+= sunxi-msgbox.o
-> >> diff --git a/drivers/mailbox/sunxi-msgbox.c b/drivers/mailbox/sunxi-msgbox.c
-> >> new file mode 100644
-> >> index 000000000000..29a5101a5390
-> >> --- /dev/null
-> >> +++ b/drivers/mailbox/sunxi-msgbox.c
-> >> @@ -0,0 +1,323 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +//
-> >> +// Copyright (c) 2017-2019 Samuel Holland <samuel@sholland.org>
-> >> +
-> >> +#include <linux/bitops.h>
-> >> +#include <linux/clk.h>
-> >> +#include <linux/device.h>
-> >> +#include <linux/err.h>
-> >> +#include <linux/interrupt.h>
-> >> +#include <linux/io.h>
-> >> +#include <linux/kernel.h>
-> >> +#include <linux/mailbox_controller.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/of_irq.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <linux/reset.h>
-> >> +#include <linux/spinlock.h>
-> >> +
-> >> +#define NUM_CHANS		8
-> >> +
-> >> +#define CTRL_REG(n)		(0x0000 + 0x4 * ((n) / 4))
-> >> +#define CTRL_RX(n)		BIT(0 + 8 * ((n) % 4))
-> >> +#define CTRL_TX(n)		BIT(4 + 8 * ((n) % 4))
-> >> +
-> >> +#define REMOTE_IRQ_EN_REG	0x0040
-> >> +#define REMOTE_IRQ_STAT_REG	0x0050
-> >> +#define LOCAL_IRQ_EN_REG	0x0060
-> >> +#define LOCAL_IRQ_STAT_REG	0x0070
-> >> +
-> >> +#define RX_IRQ(n)		BIT(0 + 2 * (n))
-> >> +#define RX_IRQ_MASK		0x5555
-> >> +#define TX_IRQ(n)		BIT(1 + 2 * (n))
-> >> +#define TX_IRQ_MASK		0xaaaa
-> >> +
-> >> +#define FIFO_STAT_REG(n)	(0x0100 + 0x4 * (n))
-> >> +#define FIFO_STAT_MASK		GENMASK(0, 0)
-> >> +
-> >> +#define MSG_STAT_REG(n)		(0x0140 + 0x4 * (n))
-> >> +#define MSG_STAT_MASK		GENMASK(2, 0)
-> >> +
-> >> +#define MSG_DATA_REG(n)		(0x0180 + 0x4 * (n))
-> >> +
-> >> +#define mbox_dbg(mbox, ...)	dev_dbg((mbox)->controller.dev, __VA_ARGS__)
-> >> +
-> >> +struct sunxi_msgbox {
-> >> +	struct mbox_controller controller;
-> >> +	struct clk *clk;
-> >> +	spinlock_t lock;
-> >> +	void __iomem *regs;
-> >> +};
-> >> +
-> >> +static bool sunxi_msgbox_last_tx_done(struct mbox_chan *chan);
-> >> +static bool sunxi_msgbox_peek_data(struct mbox_chan *chan);
-> >> +
-> >> +static inline int channel_number(struct mbox_chan *chan)
-> >> +{
-> >> +	return chan - chan->mbox->chans;
-> >> +}
-> >> +
-> >> +static inline struct sunxi_msgbox *channel_to_msgbox(struct mbox_chan *chan)
-> >> +{
-> >> +	return chan->con_priv;
-> >> +}
-> >> +
-> >> +static irqreturn_t sunxi_msgbox_irq(int irq, void *dev_id)
-> >> +{
-> >> +	struct sunxi_msgbox *mbox = dev_id;
-> >> +	uint32_t status;
-> >> +	int n;
-> >> +
-> >> +	/* Only examine channels that are currently enabled. */
-> >> +	status = readl(mbox->regs + LOCAL_IRQ_EN_REG) &
-> >> +		 readl(mbox->regs + LOCAL_IRQ_STAT_REG);
-> >> +
-> >> +	if (!(status & RX_IRQ_MASK))
-> >> +		return IRQ_NONE;
-> >> +
-> >> +	for (n = 0; n < NUM_CHANS; ++n) {
-> >> +		struct mbox_chan *chan = &mbox->controller.chans[n];
-> >> +
-> >> +		if (!(status & RX_IRQ(n)))
-> >> +			continue;
-> >> +
-> >> +		while (sunxi_msgbox_peek_data(chan)) {
-> >> +			uint32_t msg = readl(mbox->regs + MSG_DATA_REG(n));
-> >> +
-> >> +			mbox_dbg(mbox, "Channel %d received 0x%08x\n", n, msg);
-> >> +			mbox_chan_received_data(chan, &msg);
-> >> +		}
-> >> +
-> >> +		/* The IRQ can be cleared only once the FIFO is empty. */
-> >> +		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
-> >> +	}
-> >> +
-> >> +	return IRQ_HANDLED;
-> >> +}
-> >> +
-> >> +static int sunxi_msgbox_send_data(struct mbox_chan *chan, void *data)
-> >> +{
-> >> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> >> +	int n = channel_number(chan);
-> >> +	uint32_t msg = *(uint32_t *)data;
-> >> +
-> >> +	/* Using a channel backwards gets the hardware into a bad state. */
-> >> +	if (WARN_ON_ONCE(!(readl(mbox->regs + CTRL_REG(n)) & CTRL_TX(n))))
-> >> +		return 0;
-> >> +
-> >> +	/* We cannot post a new message if the FIFO is full. */
-> >> +	if (readl(mbox->regs + FIFO_STAT_REG(n)) & FIFO_STAT_MASK) {
-> >> +		mbox_dbg(mbox, "Channel %d busy sending 0x%08x\n", n, msg);
-> >> +		return -EBUSY;
-> >> +	}
-> >> +
-> >> +	writel(msg, mbox->regs + MSG_DATA_REG(n));
-> >> +	mbox_dbg(mbox, "Channel %d sent 0x%08x\n", n, msg);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static int sunxi_msgbox_startup(struct mbox_chan *chan)
-> >> +{
-> >> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> >> +	int n = channel_number(chan);
-> >> +
-> >> +	/* The coprocessor is responsible for setting channel directions. */
-> >> +	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
-> >> +		/* Flush the receive FIFO. */
-> >> +		while (sunxi_msgbox_peek_data(chan))
-> >> +			readl(mbox->regs + MSG_DATA_REG(n));
-> >> +		writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
-> >> +
-> >> +		/* Enable the receive IRQ. */
-> >> +		spin_lock(&mbox->lock);
-> >> +		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) | RX_IRQ(n),
-> >> +		       mbox->regs + LOCAL_IRQ_EN_REG);
-> >> +		spin_unlock(&mbox->lock);
-> >> +	}
-> >> +
-> >> +	mbox_dbg(mbox, "Channel %d startup complete\n", n);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static void sunxi_msgbox_shutdown(struct mbox_chan *chan)
-> >> +{
-> >> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> >> +	int n = channel_number(chan);
-> >> +
-> >> +	if (readl(mbox->regs + CTRL_REG(n)) & CTRL_RX(n)) {
-> >> +		/* Disable the receive IRQ. */
-> >> +		spin_lock(&mbox->lock);
-> >> +		writel(readl(mbox->regs + LOCAL_IRQ_EN_REG) & ~RX_IRQ(n),
-> >> +		       mbox->regs + LOCAL_IRQ_EN_REG);
-> >> +		spin_unlock(&mbox->lock);
-> >> +
-> >> +		/* Attempt to flush the FIFO until the IRQ is cleared. */
-> >> +		do {
-> >> +			while (sunxi_msgbox_peek_data(chan))
-> >> +				readl(mbox->regs + MSG_DATA_REG(n));
-> >> +			writel(RX_IRQ(n), mbox->regs + LOCAL_IRQ_STAT_REG);
-> >> +		} while (readl(mbox->regs + LOCAL_IRQ_STAT_REG) & RX_IRQ(n));
-> >> +	}
-> >> +
-> >> +	mbox_dbg(mbox, "Channel %d shutdown complete\n", n);
-> >> +}
-> >> +
-> >> +static bool sunxi_msgbox_last_tx_done(struct mbox_chan *chan)
-> >> +{
-> >> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> >> +	int n = channel_number(chan);
-> >> +
-> >> +	/*
-> >> +	 * The hardware allows snooping on the remote user's IRQ statuses.
-> >> +	 * We consider a message to be acknowledged only once the receive IRQ
-> >> +	 * for that channel is cleared. Since the receive IRQ for a channel
-> >> +	 * cannot be cleared until the FIFO for that channel is empty, this
-> >> +	 * ensures that the message has actually been read. It also gives the
-> >> +	 * recipient an opportunity to perform minimal processing before
-> >> +	 * acknowledging the message.
-> >> +	 */
-> >> +	return !(readl(mbox->regs + REMOTE_IRQ_STAT_REG) & RX_IRQ(n));
-> >> +}
-> >> +
-> >> +static bool sunxi_msgbox_peek_data(struct mbox_chan *chan)
-> >> +{
-> >> +	struct sunxi_msgbox *mbox = channel_to_msgbox(chan);
-> >> +	int n = channel_number(chan);
-> >> +
-> >> +	return readl(mbox->regs + MSG_STAT_REG(n)) & MSG_STAT_MASK;
-> >> +}
-> >> +
-> >> +static const struct mbox_chan_ops sunxi_msgbox_chan_ops = {
-> >> +	.send_data    = sunxi_msgbox_send_data,
-> >> +	.startup      = sunxi_msgbox_startup,
-> >> +	.shutdown     = sunxi_msgbox_shutdown,
-> >> +	.last_tx_done = sunxi_msgbox_last_tx_done,
-> >> +	.peek_data    = sunxi_msgbox_peek_data,
-> >> +};
-> >> +
-> >> +static int sunxi_msgbox_probe(struct platform_device *pdev)
-> >> +{
-> >> +	struct device *dev = &pdev->dev;
-> >> +	struct mbox_chan *chans;
-> >> +	struct reset_control *reset;
-> >> +	struct resource *res;
-> >> +	struct sunxi_msgbox *mbox;
-> >> +	int i, ret;
-> >> +
-> >> +	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-> >> +	if (!mbox)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	chans = devm_kcalloc(dev, NUM_CHANS, sizeof(*chans), GFP_KERNEL);
-> >> +	if (!chans)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	for (i = 0; i < NUM_CHANS; ++i)
-> >> +		chans[i].con_priv = mbox;
-> >> +
-> >> +	mbox->clk = devm_clk_get(dev, NULL);
-> >> +	if (IS_ERR(mbox->clk)) {
-> >> +		ret = PTR_ERR(mbox->clk);
-> >> +		dev_err(dev, "Failed to get clock: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	ret = clk_prepare_enable(mbox->clk);
-> >> +	if (ret) {
-> >> +		dev_err(dev, "Failed to enable clock: %d\n", ret);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	reset = devm_reset_control_get(dev, NULL);
-> >> +	if (IS_ERR(reset)) {
-> >> +		ret = PTR_ERR(reset);
-> >> +		dev_err(dev, "Failed to get reset control: %d\n", ret);
-> >> +		goto err_disable_unprepare;
-> >> +	}
-> >> +
-> >> +	ret = reset_control_deassert(reset);
-> >> +	if (ret) {
-> >> +		dev_err(dev, "Failed to deassert reset: %d\n", ret);
-> >> +		goto err_disable_unprepare;
-> >> +	}
-> > 
-> > You need to assert the reset again from now on, in error paths. devm
-> > will not do that for you.
-> 
-> I know, and that's intentional. This same message box device is used for ATF to
-> communicate with SCP firmware (on a different channel). This could be happening
-> on a different core while Linux is running. So Linux is not allowed to deassert
-> the reset. clk_disable_unprepare() is only okay because the clock is marked as
-> critical.
-
-Okay. It needs to be docummented here though, so that someone will
-not "fix" it in the future, after finding this with coccinelle or
-something.
-
-regards,
-	o.
-
-> >> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >> +	if (!res) {
-> >> +		ret = -ENODEV;
-> >> +		goto err_disable_unprepare;
-> >> +	}
-> >> +
-> >> +	mbox->regs = devm_ioremap_resource(&pdev->dev, res);
-> >> +	if (IS_ERR(mbox->regs)) {
-> >> +		ret = PTR_ERR(mbox->regs);
-> >> +		dev_err(dev, "Failed to map MMIO resource: %d\n", ret);
-> >> +		goto err_disable_unprepare;
-> >> +	}
-> >> +
-> >> +	/* Disable all IRQs for this end of the msgbox. */
-> >> +	writel(0, mbox->regs + LOCAL_IRQ_EN_REG);
-> >> +
-> >> +	ret = devm_request_irq(dev, irq_of_parse_and_map(dev->of_node, 0),
-> >> +			       sunxi_msgbox_irq, 0, dev_name(dev), mbox);
-> >> +	if (ret) {
-> >> +		dev_err(dev, "Failed to register IRQ handler: %d\n", ret);
-> >> +		goto err_disable_unprepare;
-> >> +	}
-> >> +
-> >> +	mbox->controller.dev           = dev;
-> >> +	mbox->controller.ops           = &sunxi_msgbox_chan_ops;
-> >> +	mbox->controller.chans         = chans;
-> >> +	mbox->controller.num_chans     = NUM_CHANS;
-> >> +	mbox->controller.txdone_irq    = false;
-> >> +	mbox->controller.txdone_poll   = true;
-> >> +	mbox->controller.txpoll_period = 5;
-> >> +
-> >> +	spin_lock_init(&mbox->lock);
-> >> +	platform_set_drvdata(pdev, mbox);
-> >> +
-> >> +	ret = mbox_controller_register(&mbox->controller);
-> >> +	if (ret) {
-> >> +		dev_err(dev, "Failed to register controller: %d\n", ret);
-> >> +		goto err_disable_unprepare;
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +
-> >> +err_disable_unprepare:
-> >> +	clk_disable_unprepare(mbox->clk);
-> >> +
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +static int sunxi_msgbox_remove(struct platform_device *pdev)
-> >> +{
-> >> +	struct sunxi_msgbox *mbox = platform_get_drvdata(pdev);
-> >> +
-> >> +	mbox_controller_unregister(&mbox->controller);
-> >> +	clk_disable_unprepare(mbox->clk);
-> > 
-> > Also, assert the reset here.
-> 
-> Same comment as above. This is intentional.
-> 
-> Thanks,
-> Samuel
-> 
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static const struct of_device_id sunxi_msgbox_of_match[] = {
-> >> +	{ .compatible = "allwinner,sun6i-a31-msgbox", },
-> >> +	{},
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, sunxi_msgbox_of_match);
-> >> +
-> >> +static struct platform_driver sunxi_msgbox_driver = {
-> >> +	.driver = {
-> >> +		.name = "sunxi-msgbox",
-> >> +		.of_match_table = sunxi_msgbox_of_match,
-> >> +	},
-> >> +	.probe  = sunxi_msgbox_probe,
-> >> +	.remove = sunxi_msgbox_remove,
-> >> +};
-> >> +module_platform_driver(sunxi_msgbox_driver);
-> >> +
-> >> +MODULE_AUTHOR("Samuel Holland <samuel@sholland.org>");
-> >> +MODULE_DESCRIPTION("Allwinner sunxi Message Box");
-> >> +MODULE_LICENSE("GPL v2");
-> >> -- 
-> >> 2.21.0
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+On 19.08.2019 21:07, Heiner Kallweit wrote:=0A=
+> Caution: EXT Email=0A=
+> =0A=
+> On 19.08.2019 08:32, Christian Herber wrote:=0A=
+>> On 16.08.2019 22:59, Heiner Kallweit wrote:=0A=
+>>> On 15.08.2019 17:32, Christian Herber wrote:=0A=
+>>>> This patch adds basic support for BASE-T1 PHYs in the framework.=0A=
+>>>> BASE-T1 PHYs main area of application are automotive and industrial.=
+=0A=
+>>>> BASE-T1 is standardized in IEEE 802.3, namely=0A=
+>>>> - IEEE 802.3bw: 100BASE-T1=0A=
+>>>> - IEEE 802.3bp 1000BASE-T1=0A=
+>>>> - IEEE 802.3cg: 10BASE-T1L and 10BASE-T1S=0A=
+>>>>=0A=
+>>>> There are no products which contain BASE-T1 and consumer type PHYs lik=
+e=0A=
+>>>> 1000BASE-T. However, devices exist which combine 100BASE-T1 and 1000BA=
+SE-T1=0A=
+>>>> PHYs with auto-negotiation.=0A=
+>>>=0A=
+>>> Is this meant in a way that *currently* there are no PHY's combining Ba=
+se-T1=0A=
+>>> with normal Base-T modes? Or are there reasons why this isn't possible =
+in=0A=
+>>> general? I'm asking because we have PHY's combining copper and fiber, a=
+nd e.g.=0A=
+>>> the mentioned Aquantia PHY that combines NBase-T with 1000Base-T2.=0A=
+>>>=0A=
+>>>>=0A=
+>>>> The intention of this patch is to make use of the existing Clause 45 f=
+unctions.=0A=
+>>>> BASE-T1 adds some additional registers e.g. for aneg control, which fo=
+llow a=0A=
+>>>> similiar register layout as the existing devices. The bits which are u=
+sed in=0A=
+>>>> BASE-T1 specific registers are the same as in basic registers, thus th=
+e=0A=
+>>>> existing functions can be resued, with get_aneg_ctrl() selecting the c=
+orrect=0A=
+>>>> register address.=0A=
+>>>>=0A=
+>>> If Base-T1 can't be combined with other modes then at a first glance I =
+see no=0A=
+>>> benefit in defining new registers e.g. for aneg control, and the standa=
+rd ones=0A=
+>>> are unused. Why not using the standard registers? Can you shed some lig=
+ht on that?=0A=
+>>>=0A=
+>>> Are the new registers internally shadowed to the standard location?=0A=
+>>> That's something I've seen on other PHY's: one register appears in diff=
+erent=0A=
+>>> places in different devices.=0A=
+>>>=0A=
+>>>> The current version of ethtool has been prepared for 100/1000BASE-T1 a=
+nd works=0A=
+>>>> with this patch. 10BASE-T1 needs to be added to ethtool.=0A=
+>>>>=0A=
+>>>> Christian Herber (1):=0A=
+>>>>     Added BASE-T1 PHY support to PHY Subsystem=0A=
+>>>>=0A=
+>>>>    drivers/net/phy/phy-c45.c    | 113 +++++++++++++++++++++++++++++++-=
+---=0A=
+>>>>    drivers/net/phy/phy-core.c   |   4 +-=0A=
+>>>>    include/uapi/linux/ethtool.h |   2 +=0A=
+>>>>    include/uapi/linux/mdio.h    |  21 +++++++=0A=
+>>>>    4 files changed, 129 insertions(+), 11 deletions(-)=0A=
+>>>>=0A=
+>>>=0A=
+>>> Heiner=0A=
+>>>=0A=
+>>=0A=
+>> Hi Heiner,=0A=
+>>=0A=
+>> I do not think the Aquantia part you are describing is publicly=0A=
+>> documented, so i cannot comment on that part.=0A=
+> Right, datasheet isn't publicly available. All I wanted to say with=0A=
+> mentioning this PHY: It's not a rare exception that a PHY combines=0A=
+> standard BaseT modes with "non-consumer" modes for special purposes.=0A=
+> One practical use case of this proprietary 1000Base-T2 mode is=0A=
+> re-using existing 2-pair cabling in aircrafts.=0A=
+> =0A=
+>> There are multiple reasons why e.g. xBASE-T1 plus 1000BASE-T is=0A=
+>> unlikely. First, the is no use-case known to me, where this would be=0A=
+>> required. Second, there is no way that you can do an auto-negotiation=0A=
+>> between the two, as these both have their own auto-neg defined (Clause=
+=0A=
+>> 28/73 vs. Clause 98). Thirdly, if you would ever have a product with=0A=
+>> both, I believe it would just include two full PHYs and a way to select=
+=0A=
+>> which flavor you want. Of course, this is the theory until proven=0A=
+>> otherwise, but to me it is sufficient to use a single driver.=0A=
+>>=0A=
+> I'm with you if you say it's unlikely. However your statement in the=0A=
+> commit message leaves the impression that there can't be such a device.=
+=0A=
+> And that's a difference.=0A=
+> =0A=
+> Regarding "including two full PHYs":=0A=
+> This case we have already, there are PHYs combining different IP blocks,=
+=0A=
+> each one supporting a specific mode (e.g. copper and fiber). There you=0A=
+> also have the case of different autoneg methods, clause 28 vs. clause 37.=
+=0A=
+> =0A=
+>> The registers are different in the fields they include. It is just that=
+=0A=
+>> the flags which are used by the Linux driver, like restarting auto-neg,=
+=0A=
+>> are at the same position.=0A=
+>>=0A=
+> Good to know. Your commit description doesn't mention any specific PHY.=
+=0A=
+> I suppose you have PHYs you'd like to operate with the genphy_c45 driver.=
+=0A=
+> Could you give an example? And ideally, is a public datasheet available?=
+=0A=
+> =0A=
+>> Christian=0A=
+>>=0A=
+>>=0A=
+> Heiner=0A=
+> =0A=
+=0A=
+There are no public BASE-T1 devices on the market right now that use =0A=
+Clause 45 standard registers. The first such products were developed =0A=
+before the IEEE standard (BroadR-Reach) and used Clause 22 access (see =0A=
+e.g. the support in the Kernel for TJA110x).=0A=
+=0A=
+The most convenient way to test with a BASE-T1 device would be to use an =
+=0A=
+SFP (e.g. =0A=
+https://technica-engineering.de/produkt/1000base-t1-sfp-module/). =0A=
+Alternative source could be Goepel.=0A=
+=0A=
+There are also a number of media-converters around where one could break =
+=0A=
+out the MDIO and connect to a processor. Of course, in all cases it =0A=
+should be made sure that this is a Clause-45 device.=0A=
+=0A=
+As all relevant parts are NDA-restricted, this is pretty much all the =0A=
+information I can share.=0A=
+=0A=
+Christian=0A=
+=0A=
