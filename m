@@ -2,120 +2,188 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C92C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F517C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A014F22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4591D22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:04:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s1wwfXpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbfHTPDb (ORCPT
+        id S1730006AbfHTPEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:03:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45830 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbfHTPDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:03:31 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D8662C047B6E;
-        Tue, 20 Aug 2019 15:03:30 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F05118220;
-        Tue, 20 Aug 2019 15:03:27 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 09:03:27 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "kraxel@redhat.com" <kraxel@redhat.com>
-Cc:     "Zhang, Tina" <tina.zhang@intel.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Yuan, Hang" <hang.yuan@intel.com>,
-        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>
-Subject: Re: [PATCH v5 2/6] vfio: Introduce vGPU display irq type
-Message-ID: <20190820090327.27cfb414@x1.home>
-In-Reply-To: <20190820072030.kgjjiysxgs3yj25j@sirius.home.kraxel.org>
-References: <20190816023528.30210-1-tina.zhang@intel.com>
-        <20190816023528.30210-3-tina.zhang@intel.com>
-        <20190816145148.307408dc@x1.home>
-        <237F54289DF84E4997F34151298ABEBC876F9AD3@SHSMSX101.ccr.corp.intel.com>
-        <20190820072030.kgjjiysxgs3yj25j@sirius.home.kraxel.org>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 20 Aug 2019 15:03:30 +0000 (UTC)
+        Tue, 20 Aug 2019 11:04:31 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35742 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726742AbfHTPEa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:04:30 -0400
+Received: by mail-wm1-f67.google.com with SMTP id l2so2977729wmg.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 08:04:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=b/1w5LvL+fBJM0aA0+n6sQkDfXDbUnJO+MNoklWJK6k=;
+        b=s1wwfXpp3IIu5zYLuh/BcfPpG9+/3h93ZL8srfWtCF6/V4AgZTQd88PQVUUcIIceg3
+         iSId+Jf/SelQiNRkah6dq2I28zAviqQCMMKXSS+Xiq3oPHj6m6EgZaG51LEYGQoBnQon
+         G5r+to80gAgDsdFn3J9Kfbq0B/bgkyctwrG6pxNOikJmnb0tEmRvAZqt7d+KRolHHXm7
+         TwWegXMdH5f5PRHcQnm6Izew+8dZ7IHI8eGNOXbrLyLpI01vth6grw8bR/FXPEVPSkrb
+         /Ne4lqEnKF4FHaTQ7a8RZpQ+5N9qvYCSvDIJl5JnoEnpsJiBH737i+GLHjhNBHlYpBlF
+         jP4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=b/1w5LvL+fBJM0aA0+n6sQkDfXDbUnJO+MNoklWJK6k=;
+        b=cwBtVf1RSamfrhBTvdVnNcDln44T401iSZemMv/VIdhVwOWhQw3Sx+0AxF5V+xhlun
+         wDvTod5r3zYk8HYBTgVKPh8B0bHkJntOF00Fc98TlUJVnctNxmrdIBrX8T7T89TF7crU
+         LLuD9HkIOZL9RgeOJuAP20mBW7C4AJtHjUHyl8ZHL0LEdL2ae6ujiEkIH4xxDbxUmzfg
+         0DOGLx3s5Hmf10bmmm00PkHZIXx9Q3xwtNvpu9bc96E7hmCvny8cMJgCDNXCVSHHQFNO
+         aACNTeFT4JBCDMXBSE9WX8OP1KxjsijCXy+C+y8bcfsxftadDYdr61NABDkrKxMlGspC
+         92Kw==
+X-Gm-Message-State: APjAAAWOv6kf0/xh9Pzp0WeESXOmv5dt1TlqGR9El01cJr9VDLiIAQ0D
+        QsRvi3pGw6K54h0dVC5jODKnwA==
+X-Google-Smtp-Source: APXvYqxD2lete8UEuvPIbzlRuBI6fHCtkpp45v8YWanLLfdGYOXLCH+A4P7NECo2rhTeuiIc8MSXJw==
+X-Received: by 2002:a7b:c195:: with SMTP id y21mr498870wmi.16.1566313468179;
+        Tue, 20 Aug 2019 08:04:28 -0700 (PDT)
+Received: from [192.168.0.101] (88-147-37-138.dyn.eolo.it. [88.147.37.138])
+        by smtp.gmail.com with ESMTPSA id f7sm25906746wrf.8.2019.08.20.08.04.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 08:04:27 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
+ porportional controller
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <5A63F937-F7B5-4D09-9DB4-C73D6F571D50@linaro.org>
+Date:   Tue, 20 Aug 2019 17:04:25 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>, newella@fb.com, clm@fb.com,
+        Josef Bacik <josef@toxicpanda.com>, dennisz@fb.com,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>, kernel-team@fb.com,
+        cgroups@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        bpf@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
+References: <20190614015620.1587672-1-tj@kernel.org>
+ <20190614175642.GA657710@devbig004.ftw2.facebook.com>
+ <5A63F937-F7B5-4D09-9DB4-C73D6F571D50@linaro.org>
+To:     Tejun Heo <tj@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019 09:20:30 +0200
-"kraxel@redhat.com" <kraxel@redhat.com> wrote:
 
-> > > > +#define VFIO_IRQ_TYPE_GFX				(1)
-> > > > +/*
-> > > > + * vGPU vendor sub-type
-> > > > + * vGPU device display related interrupts e.g. vblank/pageflip  */
-> > > > +#define VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ		(1)  
-> > > 
-> > > If this is a GFX/DISPLAY IRQ, why are we talking about a "vGPU" in the
-> > > description?  It's not specific to a vGPU implementation, right?  Is this
-> > > related to a physical display or a virtual display?  If it's related to the GFX
-> > > PLANE ioctls, it should state that.  It's not well specified what this interrupt
-> > > signals.  Is it vblank?  Is it pageflip?
-> > > Is it both?  Neither?  Something else?  
-> > 
-> > Sorry for the confusion caused here. 
-> > 
-> > The original idea here was to use VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ to
-> > notify user space with the display refresh event. The display refresh
-> > event is general. When notified, user space can use
-> > VFIO_DEVICE_QUERY_GFX_PLANE and VFIO_DEVICE_GET_GFX_DMABUF to get the
-> > updated framebuffer, instead of polling them all the time.
-> > 
-> > In order to give user space more choice to do the optimization,
-> > vfio_irq_info_cap_display_plane_events is proposed to tell user space
-> > the different plane refresh event values. So when notified by
-> > VFIO_IRQ_SUBTYPE_GFX_DISPLAY_IRQ, user space can get the value of the
-> > eventfd counter and understand which plane the event refresh event
-> > comes from and choose to get the framebuffer on that plane instead of
-> > all the planes.
-> > 
-> > So, from the VFIO user point of view, there is only the display
-> > refresh event (i.e. no other events like vblank, pageflip ...). For
-> > GTV-g, this display refresh event is implemented by both vblank and
-> > pageflip, which is only the implementation thing and can be
-> > transparent to the user space. Again sorry about the confusion cased
-> > here, I'll correct the comments in the next version.  
-> 
-> All this should be explained in a comment for the IRQ in the header file.
 
-Yes, Tina's update and your clarification all make sense to me, but it
-needs to be specified in the header how this is supposed to work, what
-events get signaled and what the user is intended to do in response to
-that signal.  The information is all here, it just needs to be included
-in the uapi definition.  Thanks,
+> Il giorno 20 ago 2019, alle ore 12:48, Paolo Valente =
+<paolo.valente@linaro.org> ha scritto:
+>=20
+>=20
+>=20
+>> Il giorno 14 giu 2019, alle ore 19:56, Tejun Heo <tj@kernel.org> ha =
+scritto:
+>>=20
+>> On Thu, Jun 13, 2019 at 06:56:10PM -0700, Tejun Heo wrote:
+>> ...
+>>> The patchset is also available in the following git branch.
+>>>=20
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git =
+review-iow
+>>=20
+>> Updated patchset available in the following branch.  Just build fixes
+>> and cosmetic changes for now.
+>>=20
+>> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git =
+review-iow-v2
+>>=20
+>=20
+> Hi Tejun,
+> I'm running the kernel in your tree above, in an Ubuntu 18.04.
+>=20
+> After unmounting the v1 blkio controller that gets mounted at startup
+> I have created v2 root as follows
+>=20
+> $ mount -t cgroup2 none /cgroup
+>=20
+> Then I have:
+> $ ls /cgroup
+> cgroup.controllers  cgroup.max.descendants  cgroup.stat             =
+cgroup.threads  io.weight.cost_model  system.slice
+> cgroup.max.depth    cgroup.procs            cgroup.subtree_control  =
+init.scope      io.weight.qos         user.slice
+>=20
+> But the following command gives no output:
+> $ cat /cgroup/io.weight.qos=20
+>=20
+> And, above all,
+> $ echo 1 > /cgroup/io.weight.qos=20
+> bash: echo: write error: Invalid argument
+>=20
+> No complain in the kernel log.
+>=20
+> What am I doing wrong? How can I make the controller work?
+>=20
 
-Alex
+I made it, sorry for my usual silly questions (for some reason, I
+thought the controller could be enabled globally by just passing a 1).
 
-> Key point for the API is that (a) this is a "the display should be
-> updated" event and (b) this covers all display updates, i.e. user space
-> can stop the display update timer and fully depend on getting
-> notifications if an update is needed.
-> 
-> That GTV-g watches guest pageflips is an implementation detail.  Should
-> nvidia support this they will probably do something completely
-> different.  As far I know they render the guest display to some
-> framebuffer at something like 10fps, so it would make sense for them to
-> send an event each time they refreshed the framebuffer.
-> 
-> Also note the relationships (cur_event_val is for DRM_PLANE_TYPE_CURSOR
-> updates and pri_event_val for DRM_PLANE_TYPE_PRIMARY).
+The problem now is that the controller doesn't seem to work.  I've
+emulated 16 clients doing I/O on a SATA SSD.  One client, the target,
+does random reads, while the remaining 15 clients, the interferers, do
+sequential reads.
+
+Each client is encapsulated in a separate group, but whatever weight
+is assigned to the target group, the latter gets the same, extremely
+low bandwidth.  I have tried with even the maximum weight ratio, i.e.,
+1000 for the target and only 1 for each interferer.  Here are the
+results, compared with BFQ (bandwidth in MB/s):
+
+io.weight   BFQ
+0.2         3.7
+
+I ran this test with the script S/bandwidth-latency/bandwidth-latency.sh
+of the S benchmark suite [1], invoked as follows:
+sudo ./bandwidth-latency.sh -t randread -s none -b weight -n 15 -w 1000 =
+-W 1
+
+The above command simply creates groups, assigns weights as follows
+
+echo 1 > /cgroup/InterfererGroup0/io.weight
+echo 1 > /cgroup/InterfererGroup1/io.weight
+...
+echo 1 > /cgroup/InterfererGroup14/io.weight
+echo 1000 > /cgroup/interfered/io.weight
+
+and makes one fio instance generate I/O for each group.  The bandwidth
+reported above is that reported by the fio instance emulating the
+target client.
+
+Am I missing something?
+
+Thanks,
+Paolo
+
+[1] https://github.com/Algodev-github/S
+
+
+> Thanks,
+> Paolo
+>=20
+>> Thanks.
+>>=20
+>> --=20
+>> tejun
+>=20
 
