@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66947C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F76C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26BDC216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E9822DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566331211;
-	bh=d1hDDRy02TR6rrVBC44AVXejCXzE4XjKzfuhyB/4zqs=;
+	s=default; t=1566331214;
+	bh=bbPgwOfacamIw6XEr0jX8ZS2sXxPby4C03F8bXxUXs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nDy/C3hBwYBAewe9em+8HitpreKkqsby6RviMqqXv0anQpMvvniZ1vFH8hfoAx2/a
-	 CsJR7PGdOTXmnV4q2vqSMS3zpgfhjj+VSoiElXAzjH7P2Ikxqulydbr7AA/jUX3cZ2
-	 hOmxl8WIQqcpBBJx1K+epdtaruaF+pWm+UZQBsu8=
+	b=vKEBRnKrGgtcu/JkbMgAJgS9TnM9Xz157sFu1Y93PPmdEr/ZI4aiM4JQ41jbMzVaQ
+	 tD5Y9wkEtuoUFqhdAUqhqr+ohHXvtBCaoZrC4t9TgC/31oziAablWEekD3kRFfwxgC
+	 wcMwq98bJtuaoeH9hK77wHeWh7Ss3l7FzYP3wSEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730834AbfHTUAJ (ORCPT
+        id S1730752AbfHTUAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 16:00:09 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38799 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730744AbfHTUAG (ORCPT
+        Tue, 20 Aug 2019 16:00:05 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46553 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729833AbfHTUAD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 16:00:06 -0400
-Received: by mail-oi1-f195.google.com with SMTP id p124so5100393oig.5;
-        Tue, 20 Aug 2019 13:00:05 -0700 (PDT)
+        Tue, 20 Aug 2019 16:00:03 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t24so5077455oij.13;
+        Tue, 20 Aug 2019 13:00:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v9qdf6OuK28xHVuyTgCPEF7N3ZpxSCPg8pW5UrKyKfM=;
-        b=ktXN5R8q1qt2DibVYjweVOxCKYocEGbQ1jNnoGDsuDBCsKjKp9FdOavyrzbc9A7RL+
-         L2aRU//tN1/JSAsRerM2lpqZtapJdL3X/HambiVRvx/68mhJFx0UFR7GEi8HAa6CV+fP
-         I3+i5JWviy/YjlzSe253u/MY6ZzXIix5e952Iy60EY79g6pcxo2OeY7zeLjeKYDhzvCX
-         4bSmuKjmUZSkvj/0SzQUpNnx8QEsS40KMyrGaz7IqsYUCOoqyBZj9oRFhJlFSiOJgSTS
-         VmEceFowpqpHZzjy+tWphRV0fCQoDrhCH9HNYuVfgF1uzA8C7NsN1CZtTLOpJHv7RRnf
-         yGFQ==
-X-Gm-Message-State: APjAAAV1nmCGegUrV1757nZqX9yFdXH0zkC7JNZF/5EVxhutPx3LYlaz
-        IQQgm6tqbDJHS4sPDOK+aUTpUTw=
-X-Google-Smtp-Source: APXvYqzaWy45AoBSXE/R8f4paArbKOH0i+adQ+8nfTwwoKp1b9FyR37fpC7lXEkLeubUORC4WIaa2w==
-X-Received: by 2002:aca:5c3:: with SMTP id 186mr1269320oif.37.1566331204755;
-        Tue, 20 Aug 2019 13:00:04 -0700 (PDT)
+        bh=xp1mwVvsj/2inAIwWOULguGqWOlKMJGQ9M60Vravw4Q=;
+        b=m7d+UAE96rfk2Np8Vi2TTVexXRhEOyEX5oT5LH56A3Rodnu0sgfc7433unj9PQJ8hL
+         Mbon+ITmHFDCYgMyuy2ArOw0tDpcG5i2LHUkilJG0tQY+zdlURpFJU7vOb8Ldve5NY2O
+         pQZXLNKoD0cG/BRkLMEIElAoRJ+h5zjcCp+HeUiamV9iQWb/yBwE2DBZ/GtSaCTYo/dO
+         38nW7sTP3o6C9aKBGDLgSpVokN9TnXL4cTTq0T73K7tJ47Kq7wTtffNO6L3atgbvL+SS
+         pJOmTxZy9kpUj9trVCeBacYzcZwlHmAw7qJ5RddtWS90tllvg5xQ4EVp7lfaPiDEW7Wq
+         Bkrw==
+X-Gm-Message-State: APjAAAWdOwcqnc3BnuRWl2VO8DARaqbwy7ka5R/6HGVoUy+ykoAR5OOp
+        dBrDqTY8Ft09lxyYMzv6FqgucEI=
+X-Google-Smtp-Source: APXvYqx5YB2qhcqioK+5whT74eUq0jYOHbPAnb1saLP8Njx6ijPIYaMXdLlXobw8s+lAyGInzVZssw==
+X-Received: by 2002:aca:ec87:: with SMTP id k129mr1268913oih.80.1566331202439;
+        Tue, 20 Aug 2019 13:00:02 -0700 (PDT)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id e22sm5082159oii.7.2019.08.20.13.00.03
+        by smtp.googlemail.com with ESMTPSA id e22sm5082159oii.7.2019.08.20.13.00.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 13:00:04 -0700 (PDT)
+        Tue, 20 Aug 2019 13:00:00 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
@@ -57,9 +57,9 @@ Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] dt-bindings: Convert Arm Mali Utgard GPU to DT schema
-Date:   Tue, 20 Aug 2019 14:59:59 -0500
-Message-Id: <20190820195959.6126-4-robh@kernel.org>
+Subject: [PATCH 1/3] dt-bindings: Convert Arm Mali Midgard GPU to DT schema
+Date:   Tue, 20 Aug 2019 14:59:57 -0500
+Message-Id: <20190820195959.6126-2-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820195959.6126-1-robh@kernel.org>
 References: <20190820195959.6126-1-robh@kernel.org>
@@ -70,171 +70,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Arm Utgard GPU binding to DT schema format.
-
-'allwinner,sun8i-a23-mali' compatible was not documented, so add it.
+Convert the Arm Midgard GPU binding to DT schema format.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/gpu/arm,mali-utgard.txt          | 129 --------------
- .../bindings/gpu/arm,mali-utgard.yaml         | 166 ++++++++++++++++++
- 2 files changed, 166 insertions(+), 129 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+ .../bindings/gpu/arm,mali-midgard.txt         | 119 -------------
+ .../bindings/gpu/arm,mali-midgard.yaml        | 165 ++++++++++++++++++
+ 2 files changed, 165 insertions(+), 119 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
 deleted file mode 100644
-index ba895efe3039..000000000000
---- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+index 9b298edec5b2..000000000000
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
 +++ /dev/null
-@@ -1,129 +0,0 @@
--ARM Mali Utgard GPU
--===================
+@@ -1,119 +0,0 @@
+-ARM Mali Midgard GPU
+-====================
 -
 -Required properties:
--  - compatible
--    * Must be one of the following:
--      + "arm,mali-300"
--      + "arm,mali-400"
--      + "arm,mali-450"
--    * And, optionally, one of the vendor specific compatible:
--      + allwinner,sun4i-a10-mali
--      + allwinner,sun7i-a20-mali
--      + allwinner,sun8i-h3-mali
--      + allwinner,sun50i-a64-mali
--      + allwinner,sun50i-h5-mali
--      + amlogic,meson8-mali
--      + amlogic,meson8b-mali
--      + amlogic,meson-gxbb-mali
--      + amlogic,meson-gxl-mali
--      + samsung,exynos4210-mali
--      + rockchip,rk3036-mali
--      + rockchip,rk3066-mali
--      + rockchip,rk3188-mali
--      + rockchip,rk3228-mali
--      + rockchip,rk3328-mali
--      + stericsson,db8500-mali
--      + hisilicon,hi6220-mali
 -
--  - reg: Physical base address and length of the GPU registers
+-- compatible :
+-  * Must contain one of the following:
+-    + "arm,mali-t604"
+-    + "arm,mali-t624"
+-    + "arm,mali-t628"
+-    + "arm,mali-t720"
+-    + "arm,mali-t760"
+-    + "arm,mali-t820"
+-    + "arm,mali-t830"
+-    + "arm,mali-t860"
+-    + "arm,mali-t880"
+-  * which must be preceded by one of the following vendor specifics:
+-    + "allwinner,sun50i-h6-mali"
+-    + "amlogic,meson-gxm-mali"
+-    + "samsung,exynos5433-mali"
+-    + "rockchip,rk3288-mali"
+-    + "rockchip,rk3399-mali"
 -
--  - interrupts: an entry for each entry in interrupt-names.
--    See ../interrupt-controller/interrupts.txt for details.
+-- reg : Physical base address of the device and length of the register area.
 -
--  - interrupt-names:
--    * ppX: Pixel Processor X interrupt (X from 0 to 7)
--    * ppmmuX: Pixel Processor X MMU interrupt (X from 0 to 7)
--    * pp: Pixel Processor broadcast interrupt (mali-450 only)
--    * gp: Geometry Processor interrupt
--    * gpmmu: Geometry Processor MMU interrupt
+-- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
 -
--  - clocks: an entry for each entry in clock-names
--  - clock-names:
--    * bus: bus clock for the GPU
--    * core: clock driving the GPU itself
+-- interrupt-names : Contains the names of IRQ resources in the order they were
+-  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
+-
 -
 -Optional properties:
--  - interrupt-names and interrupts:
--    * pmu: Power Management Unit interrupt, if implemented in hardware
 -
--  - memory-region:
--    Memory region to allocate from, as defined in
--    Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+-- clocks : Phandle to clock for the Mali Midgard device.
 -
--  - mali-supply:
--    Phandle to regulator for the Mali device, as defined in
--    Documentation/devicetree/bindings/regulator/regulator.txt for details.
+-- clock-names : Specify the names of the clocks specified in clocks
+-  when multiple clocks are present.
+-    * core: clock driving the GPU itself (When only one clock is present,
+-      assume it's this clock.)
+-    * bus: bus clock for the GPU
 -
--  - operating-points-v2:
--    Operating Points for the GPU, as defined in
--    Documentation/devicetree/bindings/opp/opp.txt
+-- mali-supply : Phandle to regulator for the Mali device. Refer to
+-  Documentation/devicetree/bindings/regulator/regulator.txt for details.
 -
--  - power-domains:
--    A power domain consumer specifier as defined in
--    Documentation/devicetree/bindings/power/power_domain.txt
+-- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
+-  for details.
+-
+-- #cooling-cells: Refer to Documentation/devicetree/bindings/thermal/thermal.txt
+-  for details.
+-
+-- resets : Phandle of the GPU reset line.
 -
 -Vendor-specific bindings
 -------------------------
 -
 -The Mali GPU is integrated very differently from one SoC to
--another. In order to accomodate those differences, you have the option
+-another. In order to accommodate those differences, you have the option
 -to specify one more vendor-specific compatible, among:
 -
--  - allwinner,sun4i-a10-mali
--    Required properties:
--      * resets: phandle to the reset line for the GPU
+-- "allwinner,sun50i-h6-mali"
+-  Required properties:
+-  - clocks : phandles to core and bus clocks
+-  - clock-names : must contain "core" and "bus"
+-  - resets: phandle to GPU reset line
 -
--  - allwinner,sun7i-a20-mali
--    Required properties:
--      * resets: phandle to the reset line for the GPU
+-- "amlogic,meson-gxm-mali"
+-  Required properties:
+-  - resets : Should contain phandles of :
+-    + GPU reset line
+-    + GPU APB glue reset line
 -
--  - allwinner,sun50i-a64-mali
--    Required properties:
--      * resets: phandle to the reset line for the GPU
+-Example for a Mali-T760:
 -
--  - allwinner,sun50i-h5-mali
--    Required properties:
--      * resets: phandle to the reset line for the GPU
--
--  - amlogic,meson8-mali and amlogic,meson8b-mali
--    Required properties:
--      * resets: phandle to the reset line for the GPU
--
--  - Rockchip variants:
--    Required properties:
--      * resets: phandle to the reset line for the GPU
--
--  - stericsson,db8500-mali
--    Required properties:
--      * interrupt-names and interrupts:
--        + combined: combined interrupt of all of the above lines
--
--  - hisilicon,hi6220-mali
--    Required properties:
--      * resets: phandles to the reset lines for the GPU
--
--Example:
--
--mali: gpu@1c40000 {
--	compatible = "allwinner,sun7i-a20-mali", "arm,mali-400";
--	reg = <0x01c40000 0x10000>;
--	interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
--	interrupt-names = "gp",
--			  "gpmmu",
--			  "pp0",
--			  "ppmmu0",
--			  "pp1",
--			  "ppmmu1",
--			  "pmu";
--	clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
--	clock-names = "bus", "core";
--	resets = <&ccu RST_BUS_GPU>;
+-gpu@ffa30000 {
+-	compatible = "rockchip,rk3288-mali", "arm,mali-t760";
+-	reg = <0xffa30000 0x10000>;
+-	interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+-		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+-		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+-	interrupt-names = "job", "mmu", "gpu";
+-	clocks = <&cru ACLK_GPU>;
+-	mali-supply = <&vdd_gpu>;
+-	operating-points-v2 = <&gpu_opp_table>;
+-	power-domains = <&power RK3288_PD_GPU>;
+-	#cooling-cells = <2>;
 -};
 -
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
+-gpu_opp_table: opp_table0 {
+-	compatible = "operating-points-v2";
+-
+-	opp@533000000 {
+-		opp-hz = /bits/ 64 <533000000>;
+-		opp-microvolt = <1250000>;
+-	};
+-	opp@450000000 {
+-		opp-hz = /bits/ 64 <450000000>;
+-		opp-microvolt = <1150000>;
+-	};
+-	opp@400000000 {
+-		opp-hz = /bits/ 64 <400000000>;
+-		opp-microvolt = <1125000>;
+-	};
+-	opp@350000000 {
+-		opp-hz = /bits/ 64 <350000000>;
+-		opp-microvolt = <1075000>;
+-	};
+-	opp@266000000 {
+-		opp-hz = /bits/ 64 <266000000>;
+-		opp-microvolt = <1025000>;
+-	};
+-	opp@160000000 {
+-		opp-hz = /bits/ 64 <160000000>;
+-		opp-microvolt = <925000>;
+-	};
+-	opp@100000000 {
+-		opp-hz = /bits/ 64 <100000000>;
+-		opp-microvolt = <912500>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
 new file mode 100644
-index 000000000000..d3883ba09174
+index 000000000000..24c4af74fb8d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-@@ -0,0 +1,166 @@
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+@@ -0,0 +1,165 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/gpu/arm,mali-utgard.yaml#
++$id: http://devicetree.org/schemas/gpu/arm,mali-midgard.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: ARM Mali Utgard GPU
++title: ARM Mali Midgard GPU
 +
 +maintainers:
 +  - Rob Herring <robh@kernel.org>
-+  - Maxime Ripard <maxime.ripard@free-electrons.com>
-+  - Heiko Stuebner <heiko@sntech.de>
 +
 +properties:
 +  $nodename:
@@ -242,96 +228,68 @@ index 000000000000..d3883ba09174
 +  compatible:
 +    oneOf:
 +      - items:
-+          - const: allwinner,sun8i-a23-mali
-+          - const: allwinner,sun7i-a20-mali
-+          - const: arm,mali-400
++          - enum:
++             - allwinner,sun50i-h6-mali
++          - const: arm,mali-t720
 +      - items:
 +          - enum:
-+              - allwinner,sun4i-a10-mali
-+              - allwinner,sun7i-a20-mali
-+              - allwinner,sun8i-h3-mali
-+              - allwinner,sun50i-a64-mali
-+              - rockchip,rk3036-mali
-+              - rockchip,rk3066-mali
-+              - rockchip,rk3188-mali
-+              - rockchip,rk3228-mali
-+              - samsung,exynos4210-mali
-+              - stericsson,db8500-mali
-+          - const: arm,mali-400
++             - amlogic,meson-gxm-mali
++          - const: arm,mali-t820
 +      - items:
 +          - enum:
-+              - allwinner,sun50i-h5-mali
-+              - amlogic,meson8-mali
-+              - amlogic,meson8b-mali
-+              - amlogic,meson-gxbb-mali
-+              - amlogic,meson-gxl-mali
-+              - hisilicon,hi6220-mali
-+              - rockchip,rk3328-mali
-+          - const: arm,mali-450
++             - rockchip,rk3288-mali
++          - const: arm,mali-t760
++      - items:
++          - enum:
++             - rockchip,rk3399-mali
++          - const: arm,mali-t860
++      - items:
++          - enum:
++             - samsung,exynos5433-mali
++          - const: arm,mali-t760
 +
-+      # "arm,mali-300"
++          # "arm,mali-t604"
++          # "arm,mali-t624"
++          # "arm,mali-t628"
++          # "arm,mali-t830"
++          # "arm,mali-t880"
 +
 +  reg:
 +    maxItems: 1
 +
 +  interrupts:
-+    minItems: 4
-+    maxItems: 20
++    items:
++      - description: Job interrupt
++      - description: MMU interrupt
++      - description: GPU interrupt
 +
 +  interrupt-names:
-+    allOf:
-+      - additionalItems: true
-+        minItems: 4
-+        maxItems: 20
-+        items:
-+          # At least enforce the first 2 interrupts
-+          - const: gp
-+          - const: gpmmu
-+      - items:
-+          # Not ideal as any order and combination are allowed
-+          enum:
-+            - gp        # Geometry Processor interrupt
-+            - gpmmu     # Geometry Processor MMU interrupt
-+            - pp        # Pixel Processor broadcast interrupt (mali-450 only)
-+            - pp0       # Pixel Processor X interrupt (X from 0 to 7)
-+            - ppmmu0    # Pixel Processor X MMU interrupt (X from 0 to 7)
-+            - pp1
-+            - ppmmu1
-+            - pp2
-+            - ppmmu2
-+            - pp3
-+            - ppmmu3
-+            - pp4
-+            - ppmmu4
-+            - pp5
-+            - ppmmu5
-+            - pp6
-+            - ppmmu6
-+            - pp7
-+            - ppmmu7
-+            - pmu       # Power Management Unit interrupt (optional)
-+            - combined  # stericsson,db8500-mali only
++    items:
++      - const: job
++      - const: mmu
++      - const: gpu
 +
 +  clocks:
++    minItems: 1
 +    maxItems: 2
 +
 +  clock-names:
++    minItems: 1
 +    items:
-+      - const: bus
 +      - const: core
-+
-+  memory-region: true
++      - const: bus
 +
 +  mali-supply:
 +    maxItems: 1
 +
-+  power-domains:
-+    maxItems: 1
-+
 +  resets:
-+    maxItems: 1
++    minItems: 1
++    maxItems: 2
 +
 +  operating-points-v2: true
++
++  "#cooling-cells":
++    const: 2
 +
 +required:
 +  - compatible
@@ -344,20 +302,24 @@ index 000000000000..d3883ba09174
 +      properties:
 +        compatible:
 +          contains:
-+            enum:
-+              - allwinner,sun4i-a10-mali
-+              - allwinner,sun7i-a20-mali
-+              - allwinner,sun50i-a64-mali
-+              - allwinner,sun50i-h5-mali
-+              - amlogic,meson8-mali
-+              - amlogic,meson8b-mali
-+              - hisilicon,hi6220-mali
-+              - rockchip,rk3036-mali
-+              - rockchip,rk3066-mali
-+              - rockchip,rk3188-mali
-+              - rockchip,rk3228-mali
-+              - rockchip,rk3328-mali
++            const: allwinner,sun50i-h6-mali
 +    then:
++      properties:
++        clocks:
++          minItems: 2
++      required:
++        - clocks
++        - clock-names
++        - resets
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: amlogic,meson-gxm-mali
++    then:
++      properties:
++        resets:
++          minItems: 2
 +      required:
 +        - resets
 +
@@ -366,26 +328,51 @@ index 000000000000..d3883ba09174
 +    #include <dt-bindings/interrupt-controller/irq.h>
 +    #include <dt-bindings/interrupt-controller/arm-gic.h>
 +
-+    mali: gpu@1c40000 {
-+      compatible = "allwinner,sun7i-a20-mali", "arm,mali-400";
-+      reg = <0x01c40000 0x10000>;
-+      interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-+      interrupt-names = "gp",
-+            "gpmmu",
-+            "pp0",
-+            "ppmmu0",
-+            "pp1",
-+            "ppmmu1",
-+            "pmu";
-+      clocks = <&ccu 1>, <&ccu 2>;
-+      clock-names = "bus", "core";
-+      resets = <&ccu 1>;
++    gpu@ffa30000 {
++      compatible = "rockchip,rk3288-mali", "arm,mali-t760";
++      reg = <0xffa30000 0x10000>;
++      interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++             <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++             <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++      interrupt-names = "job", "mmu", "gpu";
++      clocks = <&cru 0>;
++      mali-supply = <&vdd_gpu>;
++      operating-points-v2 = <&gpu_opp_table>;
++      power-domains = <&power 0>;
++      #cooling-cells = <2>;
++    };
++
++    gpu_opp_table: opp_table0 {
++      compatible = "operating-points-v2";
++
++      opp@533000000 {
++        opp-hz = /bits/ 64 <533000000>;
++        opp-microvolt = <1250000>;
++      };
++      opp@450000000 {
++        opp-hz = /bits/ 64 <450000000>;
++        opp-microvolt = <1150000>;
++      };
++      opp@400000000 {
++        opp-hz = /bits/ 64 <400000000>;
++        opp-microvolt = <1125000>;
++      };
++      opp@350000000 {
++        opp-hz = /bits/ 64 <350000000>;
++        opp-microvolt = <1075000>;
++      };
++      opp@266000000 {
++        opp-hz = /bits/ 64 <266000000>;
++        opp-microvolt = <1025000>;
++      };
++      opp@160000000 {
++        opp-hz = /bits/ 64 <160000000>;
++        opp-microvolt = <925000>;
++      };
++      opp@100000000 {
++        opp-hz = /bits/ 64 <100000000>;
++        opp-microvolt = <912500>;
++      };
 +    };
 +
 +...
