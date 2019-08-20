@@ -2,187 +2,114 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110F6C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB88C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C68A12082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC442082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:51:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NC7ZXBDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbfHTGu4 (ORCPT
+        id S1729294AbfHTGv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 02:50:56 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3970 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726049AbfHTGu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 02:50:56 -0400
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 4DB5C6FFAC624473D35E;
-        Tue, 20 Aug 2019 14:50:52 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 20 Aug 2019 14:50:52 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 20 Aug 2019 14:50:51 +0800
-Date:   Tue, 20 Aug 2019 14:50:10 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Philip Li <philip.li@intel.com>
-CC:     Gao Xiang <hsiangkao@aol.com>, kbuild test robot <lkp@intel.com>,
-        <kbuild-all@01.org>, <devel@driverdev.osuosl.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Fang Wei <fangwei1@huawei.com>, Miao Xie <miaoxie@huawei.com>
-Subject: Re: [PATCH] staging: erofs: fix an error handling in erofs_readdir()
-Message-ID: <20190820065010.GG159846@architecture4>
-References: <20190818031855.9723-1-hsiangkao@aol.com>
- <201908182116.RRufKUpl%lkp@intel.com>
- <20190818132503.GA26232@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190820065038.GG4479@intel.com>
+        Tue, 20 Aug 2019 02:51:26 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36733 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfHTGv0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 02:51:26 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g67so1581020wme.1;
+        Mon, 19 Aug 2019 23:51:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dHMvwwjCFDHUoBdNporEs9m3cfxy8SuBzzm+vPiCqbY=;
+        b=NC7ZXBDyj0zacep+JRrl9D5/vlSG8B+pwH/fsEfZLTkbP+HuPvrXhqakmMfUY/aVaq
+         7lIczetA3vOjVPflQUHyxbr6Df/7NjRh9dIQnseOIYgIpiSGCZR7wlVMoJAvJkjywmOs
+         qSGvfWT7rFEomqVhIwrrGyWmmz37k3cIJ6dzMPzGLI0DT3N5P07HtxiUkdKY9W8mhi4B
+         +g/KYHNUpCyFtO9E6uTaWvK0dOFGb/fFnXJvB2zWownHGrXbP+JZJSvBiLi32szQzTCp
+         cs5Qwi7HAAflPCAQF3WBKm0lA8axUkNlfkeK9zuLQiX5lKznYOPzW1YKAOocJeAtQf/Y
+         xeCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=dHMvwwjCFDHUoBdNporEs9m3cfxy8SuBzzm+vPiCqbY=;
+        b=bfAz6mEmgzG14714pVJYNyatazAYc6Uaoa/xcOaWXme+94wEJJbtJfdfJ1rdICera1
+         NubhdDK2A7rjUliisyv+qZpF6gORVoh7PHngX5JhO9yg1D+6dzBAMsTR7GoERuu3Igu/
+         T44xptPIBTobXLH7AjKbomm9CQTTQ+KUj2h8kQDk+GmY2VMVH8x3ak7wgM811ceAtNdQ
+         5ANMjhhgj5HgYtUgpCMwnCN0ItgDC3vzOAuXf4LHg3w/otQ3IgY2XgnRQM1xeiPin6zS
+         HIi5SItEpkuOBS5pRYO4lxXS699ukJRBXh5ZrmAML5tE6AES5iX01lbnrut3iRoxOYuC
+         /V6Q==
+X-Gm-Message-State: APjAAAWpae3uakIq26Yp2rqst2aNpo5qRuZBHa7Ls7JIyT4+NQ2T5n9D
+        3U6hs7BRKN8Wo/DHj+ymSgsXdNFp0aZ9Eg==
+X-Google-Smtp-Source: APXvYqyMokm8ag/bbYBCT0yDvXeSG7eRaXpoQxvGmAIcyLtDP58UFmdThS8EV/NVLkXY8+KKTX+4nA==
+X-Received: by 2002:a1c:2dcf:: with SMTP id t198mr22753202wmt.147.1566283883732;
+        Mon, 19 Aug 2019 23:51:23 -0700 (PDT)
+Received: from localhost.localdomain (ip5f5aef41.dynamic.kabel-deutschland.de. [95.90.239.65])
+        by smtp.gmail.com with ESMTPSA id p10sm13922257wma.8.2019.08.19.23.51.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 23:51:23 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/PCI: Remove surplus return from a void function
+Date:   Tue, 20 Aug 2019 08:51:21 +0200
+Message-Id: <20190820065121.16594-1-kw@linux.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190820065038.GG4479@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme703-chm.china.huawei.com (10.1.199.99) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philip,
+Remove unnecessary empty return statement at the end of a void
+function in the arch/x86/kernel/quirks.c.
 
-On Tue, Aug 20, 2019 at 02:50:38PM +0800, Philip Li wrote:
-> On Sun, Aug 18, 2019 at 09:25:04PM +0800, Gao Xiang wrote:
-> > On Sun, Aug 18, 2019 at 09:17:52PM +0800, kbuild test robot wrote:
-> > > Hi Gao,
-> > > 
-> > > I love your patch! Yet something to improve:
-> > > 
-> > > [auto build test ERROR on linus/master]
-> > > [cannot apply to v5.3-rc4 next-20190816]
-> > > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> > 
-> > ... those patches should be applied to staging tree
-> > since linux-next has not been updated yet...
-> thanks for the feedback, we will consider this to our todo list.
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+ arch/x86/kernel/quirks.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Yes, many confusing reports anyway...
-(Just my personal suggestion, maybe we can add some hints on the patch email
-to indicate which tree can be applied successfully for ci in the future...)
+diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
+index 8451f38ad399..1daf8f2aa21f 100644
+--- a/arch/x86/kernel/quirks.c
++++ b/arch/x86/kernel/quirks.c
+@@ -90,8 +90,6 @@ static void ich_force_hpet_resume(void)
+ 		BUG();
+ 	else
+ 		printk(KERN_DEBUG "Force enabled HPET at resume\n");
+-
+-	return;
+ }
+ 
+ static void ich_force_enable_hpet(struct pci_dev *dev)
+@@ -448,7 +446,6 @@ static void nvidia_force_enable_hpet(struct pci_dev *dev)
+ 	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at 0x%lx\n",
+ 		force_hpet_address);
+ 	cached_dev = dev;
+-	return;
+ }
+ 
+ /* ISA Bridges */
+@@ -513,7 +510,6 @@ static void e6xx_force_enable_hpet(struct pci_dev *dev)
+ 	force_hpet_resume_type = NONE_FORCE_HPET_RESUME;
+ 	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at "
+ 		"0x%lx\n", force_hpet_address);
+-	return;
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_E6XX_CU,
+ 			 e6xx_force_enable_hpet);
+-- 
+2.22.1
 
-Thanks,
-Gao Xiang
-
-> 
-> > 
-> > Thanks,
-> > Gao Xiang
-> > 
-> > > 
-> > > url:    https://github.com/0day-ci/linux/commits/Gao-Xiang/staging-erofs-fix-an-error-handling-in-erofs_readdir/20190818-191344
-> > > config: arm64-allyesconfig (attached as .config)
-> > > compiler: aarch64-linux-gcc (GCC) 7.4.0
-> > > reproduce:
-> > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > >         chmod +x ~/bin/make.cross
-> > >         # save the attached .config to linux build tree
-> > >         GCC_VERSION=7.4.0 make.cross ARCH=arm64 
-> > > 
-> > > If you fix the issue, kindly add following tag
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > 
-> > > All errors (new ones prefixed by >>):
-> > > 
-> > >    drivers/staging/erofs/dir.c: In function 'erofs_readdir':
-> > > >> drivers/staging/erofs/dir.c:110:11: error: 'EFSCORRUPTED' undeclared (first use in this function); did you mean 'FS_NRSUPER'?
-> > >        err = -EFSCORRUPTED;
-> > >               ^~~~~~~~~~~~
-> > >               FS_NRSUPER
-> > >    drivers/staging/erofs/dir.c:110:11: note: each undeclared identifier is reported only once for each function it appears in
-> > > 
-> > > vim +110 drivers/staging/erofs/dir.c
-> > > 
-> > >     85	
-> > >     86	static int erofs_readdir(struct file *f, struct dir_context *ctx)
-> > >     87	{
-> > >     88		struct inode *dir = file_inode(f);
-> > >     89		struct address_space *mapping = dir->i_mapping;
-> > >     90		const size_t dirsize = i_size_read(dir);
-> > >     91		unsigned int i = ctx->pos / EROFS_BLKSIZ;
-> > >     92		unsigned int ofs = ctx->pos % EROFS_BLKSIZ;
-> > >     93		int err = 0;
-> > >     94		bool initial = true;
-> > >     95	
-> > >     96		while (ctx->pos < dirsize) {
-> > >     97			struct page *dentry_page;
-> > >     98			struct erofs_dirent *de;
-> > >     99			unsigned int nameoff, maxsize;
-> > >    100	
-> > >    101			dentry_page = read_mapping_page(mapping, i, NULL);
-> > >    102			if (dentry_page == ERR_PTR(-ENOMEM)) {
-> > >    103				errln("no memory to readdir of logical block %u of nid %llu",
-> > >    104				      i, EROFS_V(dir)->nid);
-> > >    105				err = -ENOMEM;
-> > >    106				break;
-> > >    107			} else if (IS_ERR(dentry_page)) {
-> > >    108				errln("fail to readdir of logical block %u of nid %llu",
-> > >    109				      i, EROFS_V(dir)->nid);
-> > >  > 110				err = -EFSCORRUPTED;
-> > >    111				break;
-> > >    112			}
-> > >    113	
-> > >    114			de = (struct erofs_dirent *)kmap(dentry_page);
-> > >    115	
-> > >    116			nameoff = le16_to_cpu(de->nameoff);
-> > >    117	
-> > >    118			if (unlikely(nameoff < sizeof(struct erofs_dirent) ||
-> > >    119				     nameoff >= PAGE_SIZE)) {
-> > >    120				errln("%s, invalid de[0].nameoff %u",
-> > >    121				      __func__, nameoff);
-> > >    122	
-> > >    123				err = -EIO;
-> > >    124				goto skip_this;
-> > >    125			}
-> > >    126	
-> > >    127			maxsize = min_t(unsigned int,
-> > >    128					dirsize - ctx->pos + ofs, PAGE_SIZE);
-> > >    129	
-> > >    130			/* search dirents at the arbitrary position */
-> > >    131			if (unlikely(initial)) {
-> > >    132				initial = false;
-> > >    133	
-> > >    134				ofs = roundup(ofs, sizeof(struct erofs_dirent));
-> > >    135				if (unlikely(ofs >= nameoff))
-> > >    136					goto skip_this;
-> > >    137			}
-> > >    138	
-> > >    139			err = erofs_fill_dentries(ctx, de, &ofs, nameoff, maxsize);
-> > >    140	skip_this:
-> > >    141			kunmap(dentry_page);
-> > >    142	
-> > >    143			put_page(dentry_page);
-> > >    144	
-> > >    145			ctx->pos = blknr_to_addr(i) + ofs;
-> > >    146	
-> > >    147			if (unlikely(err))
-> > >    148				break;
-> > >    149			++i;
-> > >    150			ofs = 0;
-> > >    151		}
-> > >    152		return err < 0 ? err : 0;
-> > >    153	}
-> > >    154	
-> > > 
-> > > ---
-> > > 0-DAY kernel test infrastructure                Open Source Technology Center
-> > > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> > 
-> > 
