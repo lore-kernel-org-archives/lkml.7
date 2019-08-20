@@ -2,99 +2,155 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4AAC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1498C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1FD922DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZDi1SFp8"
+	by mail.kernel.org (Postfix) with ESMTP id 9518E22DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566308508;
+	bh=E6GRUZx3EGeIzIFRsxVuHCrahG/QCZLegWBUbg3WxDA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ABYf9NOruUQSbcSoDrQ4KmMz/gXzlxqHEgka8LwVBxX4XixZAlt9OO2mXcxH5mC59
+	 am3Yf7u8VK+RyooS1ungGlW7mBmjpNhSd/LfKfmAU10SWBuoXC2yf88OstyW+aMf4X
+	 MXBQQU8pafh7jNylXIEDxd4HPyFntcRKYApOZ7yE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730452AbfHTNlo (ORCPT
+        id S1730467AbfHTNlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 20 Aug 2019 09:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730450AbfHTNlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 20 Aug 2019 09:41:44 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39721 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730430AbfHTNll (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:41:41 -0400
-Received: by mail-lj1-f196.google.com with SMTP id x4so5173542ljj.6
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:41:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gNuDQYJVmflL/Wny4LHIdiHjJtChxjlf3zzR+P07bYQ=;
-        b=ZDi1SFp8FXJaCjqmp4zm/ByzXqtJBaAQvabUX02QHSb6SDgYVNy5d57jcfvwyT0dA5
-         8fzbFhHg9LRNWdJpl72dppeSuclNMByTBbZmU1xF7nAeqeBmQRvhlMYjmaiXLE4LV8wa
-         zxoY/hF5DCBbdn3mRlsGF/QKdWdyYmxwOQPdPchKF8HLcZypJV/Ukw61WnY3PsnFAK6u
-         Q+YJvglENuW+ieeSkGQnazSrxJiAcBHbB6uLYLGz1AJ9h/LaCq1SaT3QhJAAHmVF4Fz7
-         Q2G5T+L+zrAQfW0/HE1GXl6UCt7EAtJC8GptIXHJXVjn/yaRqmlb/VYXAa36kix3OPE7
-         AUMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gNuDQYJVmflL/Wny4LHIdiHjJtChxjlf3zzR+P07bYQ=;
-        b=D6QC0+3gBlYiVebz3PnLeq0DBEvsBFgARIsqscWcJK2Dpoq17sX3Cr34sfwj9iiD5M
-         jaGQb76T5cw5PHFiWppl1OW91jxOAGU83DI5CMRz8EznJME2+jmrMFLbN2wCq388KZ4g
-         DbbHz1q+0NdOaJhYVWqUDRlS6FLzA5dDOxyDuo3CqKKJS4WpRXsmeTyDZxB9VONRs2y1
-         0QQlA50rdhsxJ7FDp5ZUepSN6NBDG2/56S22vB14Rb8AMdofdcZatn5r60MbWIo5yVUJ
-         cmL/tadGsBJeZXuFza8GBm3C75+0QtqwJnER50mNRba1TXoL8JAlMspcyirHiCjyml2v
-         4vfg==
-X-Gm-Message-State: APjAAAXXYmmlH+TP7GEZLzDMie6uacyuZELEGfAzPuJmmw06fMkVHQWu
-        LMAYOX08qNAtDUKlFNHq4jAqow==
-X-Google-Smtp-Source: APXvYqxp8WgHlmWB1TJ1U6T1cdPC1f76z95rZGZ+Y6JhIi2z2/jagdLSnDlzo64tshfBrRxPu29rpQ==
-X-Received: by 2002:a2e:b0cb:: with SMTP id g11mr15447861ljl.76.1566308499392;
-        Tue, 20 Aug 2019 06:41:39 -0700 (PDT)
-Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
-        by smtp.gmail.com with ESMTPSA id f22sm2820208ljh.22.2019.08.20.06.41.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 06:41:38 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net
-Cc:     linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] selftests: bpf: add config fragment BPF_JIT
-Date:   Tue, 20 Aug 2019 15:41:34 +0200
-Message-Id: <20190820134134.25818-1-anders.roxell@linaro.org>
+Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0460722DA7;
+        Tue, 20 Aug 2019 13:41:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566308503;
+        bh=E6GRUZx3EGeIzIFRsxVuHCrahG/QCZLegWBUbg3WxDA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I97U3EZvx6AtL5pioQ9VXuvCjZ5cqNBMBkn77gGE+iBWH6hj991qnZHffNP4RqnQ1
+         1Y766XbI/4Pmkf7TT0KOAT3a1mH0g3XsnrMJ8mQx7OyXuRTm7ErR7laghUcMBS4Ftq
+         RD2lyv+drOjKIsyqvxTdPHzwoP2Aum74HB59vDDU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ben Segal <bpsegal20@gmail.com>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 34/44] habanalabs: fix device IRQ unmasking for BE host
+Date:   Tue, 20 Aug 2019 09:40:18 -0400
+Message-Id: <20190820134028.10829-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
+References: <20190820134028.10829-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running test_kmod.sh the following shows up
+From: Ben Segal <bpsegal20@gmail.com>
 
- # sysctl cannot stat /proc/sys/net/core/bpf_jit_enable No such file or directory
- cannot: stat_/proc/sys/net/core/bpf_jit_enable #
- # sysctl cannot stat /proc/sys/net/core/bpf_jit_harden No such file or directory
- cannot: stat_/proc/sys/net/core/bpf_jit_harden #
+[ Upstream commit b421d83a3947369fd5718824aecfaebe1efbf7ed ]
 
-Rework to enable CONFIG_BPF_JIT to solve "No such file or directory"
+When unmasking IRQs inside the ASIC, the driver passes an array of all the
+IRQ to unmask. The ASIC's CPU is working in LE so when running in a BE
+host, the driver needs to do the proper endianness swapping when preparing
+this array.
 
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+In addition, this patch also fixes the endianness of a couple of kernel log
+debug messages that print values of packets
+
+Signed-off-by: Ben Segal <bpsegal20@gmail.com>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/config | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/habanalabs/goya/goya.c | 33 +++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
-index f7a0744db31e..5dc109f4c097 100644
---- a/tools/testing/selftests/bpf/config
-+++ b/tools/testing/selftests/bpf/config
-@@ -34,3 +34,4 @@ CONFIG_NET_MPLS_GSO=m
- CONFIG_MPLS_ROUTING=m
- CONFIG_MPLS_IPTUNNEL=m
- CONFIG_IPV6_SIT=m
-+CONFIG_BPF_JIT=y
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 9216cc3599178..ac6b252a1ddcb 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -3311,9 +3311,11 @@ static int goya_validate_dma_pkt_no_mmu(struct hl_device *hdev,
+ 	int rc;
+ 
+ 	dev_dbg(hdev->dev, "DMA packet details:\n");
+-	dev_dbg(hdev->dev, "source == 0x%llx\n", user_dma_pkt->src_addr);
+-	dev_dbg(hdev->dev, "destination == 0x%llx\n", user_dma_pkt->dst_addr);
+-	dev_dbg(hdev->dev, "size == %u\n", user_dma_pkt->tsize);
++	dev_dbg(hdev->dev, "source == 0x%llx\n",
++		le64_to_cpu(user_dma_pkt->src_addr));
++	dev_dbg(hdev->dev, "destination == 0x%llx\n",
++		le64_to_cpu(user_dma_pkt->dst_addr));
++	dev_dbg(hdev->dev, "size == %u\n", le32_to_cpu(user_dma_pkt->tsize));
+ 
+ 	ctl = le32_to_cpu(user_dma_pkt->ctl);
+ 	user_dir = (ctl & GOYA_PKT_LIN_DMA_CTL_DMA_DIR_MASK) >>
+@@ -3342,9 +3344,11 @@ static int goya_validate_dma_pkt_mmu(struct hl_device *hdev,
+ 				struct packet_lin_dma *user_dma_pkt)
+ {
+ 	dev_dbg(hdev->dev, "DMA packet details:\n");
+-	dev_dbg(hdev->dev, "source == 0x%llx\n", user_dma_pkt->src_addr);
+-	dev_dbg(hdev->dev, "destination == 0x%llx\n", user_dma_pkt->dst_addr);
+-	dev_dbg(hdev->dev, "size == %u\n", user_dma_pkt->tsize);
++	dev_dbg(hdev->dev, "source == 0x%llx\n",
++		le64_to_cpu(user_dma_pkt->src_addr));
++	dev_dbg(hdev->dev, "destination == 0x%llx\n",
++		le64_to_cpu(user_dma_pkt->dst_addr));
++	dev_dbg(hdev->dev, "size == %u\n", le32_to_cpu(user_dma_pkt->tsize));
+ 
+ 	/*
+ 	 * WA for HW-23.
+@@ -3384,7 +3388,8 @@ static int goya_validate_wreg32(struct hl_device *hdev,
+ 
+ 	dev_dbg(hdev->dev, "WREG32 packet details:\n");
+ 	dev_dbg(hdev->dev, "reg_offset == 0x%x\n", reg_offset);
+-	dev_dbg(hdev->dev, "value      == 0x%x\n", wreg_pkt->value);
++	dev_dbg(hdev->dev, "value      == 0x%x\n",
++		le32_to_cpu(wreg_pkt->value));
+ 
+ 	if (reg_offset != (mmDMA_CH_0_WR_COMP_ADDR_LO & 0x1FFF)) {
+ 		dev_err(hdev->dev, "WREG32 packet with illegal address 0x%x\n",
+@@ -4252,6 +4257,8 @@ static int goya_unmask_irq_arr(struct hl_device *hdev, u32 *irq_arr,
+ 	size_t total_pkt_size;
+ 	long result;
+ 	int rc;
++	int irq_num_entries, irq_arr_index;
++	__le32 *goya_irq_arr;
+ 
+ 	total_pkt_size = sizeof(struct armcp_unmask_irq_arr_packet) +
+ 			irq_arr_size;
+@@ -4269,8 +4276,16 @@ static int goya_unmask_irq_arr(struct hl_device *hdev, u32 *irq_arr,
+ 	if (!pkt)
+ 		return -ENOMEM;
+ 
+-	pkt->length = cpu_to_le32(irq_arr_size / sizeof(irq_arr[0]));
+-	memcpy(&pkt->irqs, irq_arr, irq_arr_size);
++	irq_num_entries = irq_arr_size / sizeof(irq_arr[0]);
++	pkt->length = cpu_to_le32(irq_num_entries);
++
++	/* We must perform any necessary endianness conversation on the irq
++	 * array being passed to the goya hardware
++	 */
++	for (irq_arr_index = 0, goya_irq_arr = (__le32 *) &pkt->irqs;
++			irq_arr_index < irq_num_entries ; irq_arr_index++)
++		goya_irq_arr[irq_arr_index] =
++				cpu_to_le32(irq_arr[irq_arr_index]);
+ 
+ 	pkt->armcp_pkt.ctl = cpu_to_le32(ARMCP_PACKET_UNMASK_RAZWI_IRQ_ARRAY <<
+ 						ARMCP_PKT_CTL_OPCODE_SHIFT);
 -- 
 2.20.1
 
