@@ -2,133 +2,81 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C488EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340CDC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96FC422DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308665;
-	bh=TEL9wBgPW75cphadyHMqEYnF7SZMdviPo/Asrg6Z0v4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B1gI+gTmAvv4Ws+4j9+bCVP/fXUqwXlYI5wU1Ejo5/BrbMZ7JJJtjoGyXFzua64ko
-	 SnJbD7jje9oz+NDtZjs6WJtDQBgOoSkA3BpghAEFsA82PoOF7Mlgt/7WswiJcPBWei
-	 wjQcTFsD5VHTxzIGTfS88K1J5ahAjSTy1sSlfAnY=
+	by mail.kernel.org (Postfix) with ESMTP id 0331722DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730524AbfHTNoY (ORCPT
+        id S1730540AbfHTNoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:44:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38832 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:44:30 -0400
+Received: from mga03.intel.com ([134.134.136.65]:8998 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730799AbfHTNnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:43:11 -0400
-Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E8422DA9;
-        Tue, 20 Aug 2019 13:43:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308590;
-        bh=TEL9wBgPW75cphadyHMqEYnF7SZMdviPo/Asrg6Z0v4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y07fiW++il7IORTY6E4MyXIGJ1PIEJZQISr1h6dvJb6ZydQc26M+VsZ51Dwfrg9K+
-         vTC96Zmk/jM+sjS4/4V/Y7EiPnMzpXWypkRgQR03aG/NnhlvwkoBZUyEcpDktoBnxg
-         YJr6Sn0AmdX51pSPpx2PRcD8dRzClqwxTNQG6pMs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Y.C. Chen" <yc_chen@aspeedtech.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Airlie <airlied@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.14 10/12] drm/ast: Fixed reboot test may cause system hanged
-Date:   Tue, 20 Aug 2019 09:42:51 -0400
-Message-Id: <20190820134253.11562-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820134253.11562-1-sashal@kernel.org>
-References: <20190820134253.11562-1-sashal@kernel.org>
+        id S1730789AbfHTNnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:43:08 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 06:43:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
+   d="scan'208";a="172453032"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by orsmga008.jf.intel.com with ESMTP; 20 Aug 2019 06:43:05 -0700
+Date:   Tue, 20 Aug 2019 21:44:35 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
+        mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        yu.c.zhang@intel.com, alazar@bitdefender.com
+Subject: Re: [PATCH RESEND v4 7/9] KVM: VMX: Handle SPP induced vmexit and
+ page fault
+Message-ID: <20190820134435.GE4828@local-michael-cet-test.sh.intel.com>
+References: <20190814070403.6588-1-weijiang.yang@intel.com>
+ <20190814070403.6588-8-weijiang.yang@intel.com>
+ <5f6ba406-17c4-a552-2352-2ff50569aac0@redhat.com>
+ <fb6cd8b4-eee9-6e58-4047-550811bffd58@redhat.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb6cd8b4-eee9-6e58-4047-550811bffd58@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Y.C. Chen" <yc_chen@aspeedtech.com>
+On Mon, Aug 19, 2019 at 05:04:23PM +0200, Paolo Bonzini wrote:
+> On 19/08/19 16:43, Paolo Bonzini wrote:
+> >> +			/*
+> >> +			 * Record write protect fault caused by
+> >> +			 * Sub-page Protection, let VMI decide
+> >> +			 * the next step.
+> >> +			 */
+> >> +			if (spte & PT_SPP_MASK) {
+> > Should this be "if (spte & PT_WRITABLE_MASK)" instead?  That is, if the
+> > page is already writable, the fault must be an SPP fault.
+> 
+> Hmm, no I forgot how SPP works; still, this is *not* correct.  For
+> example, if SPP marks part of a page as read-write, but KVM wants to
+> write-protect the whole page for access or dirty tracking, that should
+> not cause an SPP exit.
+> 
+> So I think that when KVM wants to write-protect the whole page
+> (wrprot_ad_disabled_spte) it must also clear PT_SPP_MASK; for example it
+> could save it in bit 53 (PT64_SECOND_AVAIL_BITS_SHIFT + 1).  If the
+> saved bit is set, fast_page_fault must then set PT_SPP_MASK instead of
+> PT_WRITABLE_MASK.
+Sure, will change the processing flow.
 
-[ Upstream commit 05b439711f6ff8700e8660f97a1179650778b9cb ]
-
-There is another thread still access standard VGA I/O while loading drm driver.
-Disable standard VGA I/O decode to avoid this issue.
-
-Signed-off-by: Y.C. Chen <yc_chen@aspeedtech.com>
-Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1523410059-18415-1-git-send-email-yc_chen@aspeedtech.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/ast/ast_main.c | 5 ++++-
- drivers/gpu/drm/ast/ast_mode.c | 2 +-
- drivers/gpu/drm/ast/ast_post.c | 2 +-
- 3 files changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/ast/ast_main.c b/drivers/gpu/drm/ast/ast_main.c
-index 373700c05a00f..224fa1ef87ff9 100644
---- a/drivers/gpu/drm/ast/ast_main.c
-+++ b/drivers/gpu/drm/ast/ast_main.c
-@@ -131,8 +131,8 @@ static int ast_detect_chip(struct drm_device *dev, bool *need_post)
- 
- 
- 	/* Enable extended register access */
--	ast_enable_mmio(dev);
- 	ast_open_key(ast);
-+	ast_enable_mmio(dev);
- 
- 	/* Find out whether P2A works or whether to use device-tree */
- 	ast_detect_config_mode(dev, &scu_rev);
-@@ -576,6 +576,9 @@ void ast_driver_unload(struct drm_device *dev)
- {
- 	struct ast_private *ast = dev->dev_private;
- 
-+	/* enable standard VGA decode */
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x04);
-+
- 	ast_release_firmware(dev);
- 	kfree(ast->dp501_fw_addr);
- 	ast_mode_fini(dev);
-diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
-index 343867b182dd8..a09fafa270822 100644
---- a/drivers/gpu/drm/ast/ast_mode.c
-+++ b/drivers/gpu/drm/ast/ast_mode.c
-@@ -600,7 +600,7 @@ static int ast_crtc_mode_set(struct drm_crtc *crtc,
- 		return -EINVAL;
- 	ast_open_key(ast);
- 
--	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
- 
- 	ast_set_std_reg(crtc, adjusted_mode, &vbios_mode);
- 	ast_set_crtc_reg(crtc, adjusted_mode, &vbios_mode);
-diff --git a/drivers/gpu/drm/ast/ast_post.c b/drivers/gpu/drm/ast/ast_post.c
-index f7d421359d564..c1d1ac51d1c20 100644
---- a/drivers/gpu/drm/ast/ast_post.c
-+++ b/drivers/gpu/drm/ast/ast_post.c
-@@ -46,7 +46,7 @@ void ast_enable_mmio(struct drm_device *dev)
- {
- 	struct ast_private *ast = dev->dev_private;
- 
--	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
- }
- 
- 
--- 
-2.20.1
-
+> On re-entry this will cause an SPP vmexit;
+> fast_page_fault should never trigger an SPP userspace exit on its own,
+> all the SPP handling should go through handle_spp.
+> 
+> Paolo
