@@ -2,128 +2,150 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2C4C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C0DCC3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943E022DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFAFE22DD3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oTJV/F9u"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K8XKJ8bK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730800AbfHTRle (ORCPT
+        id S1730816AbfHTRlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:41:34 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:42164 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730680AbfHTRlS (ORCPT
+        Tue, 20 Aug 2019 13:41:36 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43829 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730746AbfHTRlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:41:18 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 925D533D;
-        Tue, 20 Aug 2019 19:41:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566322876;
-        bh=8TSAbOc99oaocNanYpIuNSjuJymG5rkFZtxYVVqu2wU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oTJV/F9uYWNZIyTdvp2beSi864kYUk09+Kil83mxRJqLnCUfKp6GLjFjFhe+0qzGK
-         j1kpG8z5++Fhw2CUBIXfW/mSDmYrqPfUYpadGJVMau+4lBA6pj6N/V1xvjNsiENKFi
-         XuoF6BLOH+sSnElD/PbT4xEU5K10CwPnYsKDQHMQ=
-Date:   Tue, 20 Aug 2019 20:41:10 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 01/19] dt-bindings: display: renesas,cmm: Add R-Car
- CMM documentation
-Message-ID: <20190820174110.GH10820@pendragon.ideasonboard.com>
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
- <20190706140746.29132-2-jacopo+renesas@jmondi.org>
- <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
- <CAMuHMdWFHDGPSZt2_H_sC9rCKDYBR0XDLn0TGxzPRxZsrOTEHw@mail.gmail.com>
- <20190820074826.5rdzeqyk6ylpjr7o@uno.localdomain>
- <CAMuHMdXNJLLRqZCZ5KHkdUKgtwmE-F-s5Vi6P10xHR38n_=HrA@mail.gmail.com>
+        Tue, 20 Aug 2019 13:41:25 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v12so3800080pfn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=nL1brXEfQMdIxIJXPk/Y2+UflsnVuvtsUOeRD+MuXQE=;
+        b=K8XKJ8bKRTslVZ76tJ4PUPFt1p/dMxR8oFMl8Fm7Ks6IhPnc2oyKSQ1bQniMiQP3/T
+         MDciMxKSfnBaN+bGzkqIadMVKHWZVRdBeQgf/fXPcv9dsO9olIySiOGcTUZ5AgyXTXv/
+         zjatU+bjT8uF/UCEFVJk+T6QAlarlIx37v+dOEg5kg0eVqbn4uak3cWTE8J2YQRGcfCv
+         VBBH+2//hURClTZXu5VGctfLqVRImaF0WqPbRh2IC897jFU2NFRR6/FtQzBpXSUQAT00
+         WciLVG6eeS7HuXzowi1dlNzlVE+gaWXPJGAZltwWf8usti3ZDPJ21hVOgPCmL/C2nOwP
+         eeyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=nL1brXEfQMdIxIJXPk/Y2+UflsnVuvtsUOeRD+MuXQE=;
+        b=qi3skASiPtLG8cIjccXQNgOsE6LwBeHH4W0qe9VOs3jnMHzA8k78ANE4qCQ6+hMH+F
+         vNIicVkg4qC4+YONJBGrJPR9eXypoycvxHAN87vo7tdUsZ9mOwHM6JwmFHJsCauICc7d
+         x8q1aSdnYWjNwjerY+lTOHTPwHOtXD1j0FE0e6oJNzdurbQb2ry3mwHRHA0OZAep8bnw
+         trHkHAJlKW7e+nrBz2FhKWCxtVDIpzh5PdRdD0hhZQ/kIc3cwTBMb5H7rXxGqDcNSnuQ
+         8fdQa19LX11EGg/g3lCTxxAePXGL4Zf/wQR6a8XoyOkDhcxxbAQVewe/MEh4Jd0uHYT3
+         gO2g==
+X-Gm-Message-State: APjAAAXrZLbhJCiWD8TYtH/jSpjGj0oeQkV/fy3HHOLvCdKVUsHoa0rJ
+        TBJb5Sgqji2RTTy2IQHCJ9O7sGOn/6L1cg==
+X-Google-Smtp-Source: APXvYqxp/gkn8Z/n+lFf5mLqXdQyUrj595hqoOZvbNvA/EiG0s9l/162vIpQtZ/Pk8XsRYYST3Seag==
+X-Received: by 2002:a63:3006:: with SMTP id w6mr25998111pgw.440.1566322883800;
+        Tue, 20 Aug 2019 10:41:23 -0700 (PDT)
+Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
+        by smtp.gmail.com with ESMTPSA id z16sm19543049pgi.8.2019.08.20.10.41.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 10:41:23 -0700 (PDT)
+From:   bsegall@google.com
+To:     Qian Cai <cai@lca.pw>
+Cc:     mingo@redhat.com, peterz@infradead.org, chiluk+linux@indeed.com,
+        pauld@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] sched/fair: fix -Wunused-but-set-variable warnings
+References: <1566310558-29584-1-git-send-email-cai@lca.pw>
+Date:   Tue, 20 Aug 2019 10:41:22 -0700
+In-Reply-To: <1566310558-29584-1-git-send-email-cai@lca.pw> (Qian Cai's
+        message of "Tue, 20 Aug 2019 10:15:58 -0400")
+Message-ID: <xm26y2znivjx.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXNJLLRqZCZ5KHkdUKgtwmE-F-s5Vi6P10xHR38n_=HrA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Qian Cai <cai@lca.pw> writes:
 
-On Tue, Aug 20, 2019 at 09:53:44AM +0200, Geert Uytterhoeven wrote:
-> On Tue, Aug 20, 2019 at 9:47 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
-> > On Mon, Aug 19, 2019 at 03:45:54PM +0200, Geert Uytterhoeven wrote:
-> >> On Mon, Jul 8, 2019 at 9:58 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >>> On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> >>>> Add device tree bindings documentation for the Renesas R-Car Display
-> >>>> Unit Color Management Module.
-> >>>>
-> >>>> CMM is the image enhancement module available on each R-Car DU video
-> >>>> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
-> >>>>
-> >>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >>>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >>>
-> >>> Thanks for your patch!
-> >>>
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
-> >>>> @@ -0,0 +1,25 @@
-> >>>> +* Renesas R-Car Color Management Module (CMM)
-> >>>> +
-> >>>> +Renesas R-Car image enhancement module connected to R-Car DU video channels.
-> >>>> +
-> >>>> +Required properties:
-> >>>> + - compatible: shall be one of:
-> >>>> +   - "renesas,rcar-gen3-cmm"
-> >>>> +   - "renesas,rcar-gen2-cmm"
-> >>>
-> >>> Why do you think you do not need SoC-specific compatible values?
-> >>> What if you discover a different across the R-Car Gen3 line tomorrow?
-> >>> Does the IP block have a version register?
-> >>
-> >> Do you have an answer to these questions?
-> >
-> > It does not seem to me that CMM has any version register, nor there
-> > are differences between the different Gen3 SoCs..
-> >
-> > However, even if we now define a single compatible property for
-> > gen3/gen2 and we later find out one of the SoC needs a soc-specific
-> > property we can safely add it and keep the generic gen3/gen2 one as
-> > fallback.. Does it work for you?
-> 
-> Unfortunately that won't work, as the existing DTBs won't have the
-> soc-specific compatible value.
-> You could still resort to soc_device_match(), but it is better to avoid that.
+> The linux-next commit "sched/fair: Fix low cpu usage with high
+> throttling by removing expiration of cpu-local slices" [1] introduced a
+> few compilation warnings,
+>
+> kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
+> kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used
+> [-Wunused-but-set-variable]
+> kernel/sched/fair.c: In function 'start_cfs_bandwidth':
+> kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not used
+> [-Wunused-but-set-variable]
+>
+> Also, __refill_cfs_bandwidth_runtime() does no longer update the
+> expiration time, so fix the comments accordingly.
+>
+> [1] https://lore.kernel.org/lkml/1558121424-2914-1-git-send-email-chiluk+linux@indeed.com/
+>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  kernel/sched/fair.c | 18 +++++-------------
+>  1 file changed, 5 insertions(+), 13 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 84959d3285d1..43d6eb033ca8 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4354,21 +4354,16 @@ static inline u64 sched_cfs_bandwidth_slice(void)
+>  }
+>  
+>  /*
+> - * Replenish runtime according to assigned quota and update expiration time.
+> - * We use sched_clock_cpu directly instead of rq->clock to avoid adding
+> - * additional synchronization around rq->lock.
+> + * Replenish runtime according to assigned quota. We use sched_clock_cpu
+> + * directly instead of rq->clock to avoid adding additional synchronization
+> + * around rq->lock.
+>   *
+>   * requires cfs_b->lock
+>   */
+>  void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
+>  {
+> -	u64 now;
+> -
+> -	if (cfs_b->quota == RUNTIME_INF)
+> -		return;
+> -
+> -	now = sched_clock_cpu(smp_processor_id());
+> -	cfs_b->runtime = cfs_b->quota;
+> +	if (cfs_b->quota != RUNTIME_INF)
+> +		cfs_b->runtime = cfs_b->quota;
+>  }
 
-We've had the same discussion over and over for quite a long time :-) I
-wonder, now that we have implemented SoC-specific compatible values for
-many IP cores, how many of them have actually benefited from it ? I'm
-not considering IP cores where we knew from the start that each SoC was
-different (such as pinctrl or clocks for instance), but IP cores where
-we though all SoCs would be handled in the same way. I also wouldn't
-count ES-specific differences, as those are handled by
-soc_device_match() anyway.
+This is fine.
 
--- 
-Regards,
+>  
+>  static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
+> @@ -4989,15 +4984,12 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+>  
+>  void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+>  {
+> -	u64 overrun;
+> -
+>  	lockdep_assert_held(&cfs_b->lock);
+>  
+>  	if (cfs_b->period_active)
+>  		return;
+>  
+>  	cfs_b->period_active = 1;
+> -	overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
 
-Laurent Pinchart
+This is not - hrtimer_forward_now has effects we still need.
+
+>  	hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
+>  }
