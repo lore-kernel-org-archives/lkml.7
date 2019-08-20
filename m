@@ -2,97 +2,145 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B41C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B957FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9C72341C
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A32A2341D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbfHTHqY (ORCPT
+        id S1729351AbfHTHrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:46:24 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:34413 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfHTHqY (ORCPT
+        Tue, 20 Aug 2019 03:47:11 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:39049 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfHTHrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:46:24 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46CNCL0NxNz1rK4l;
-        Tue, 20 Aug 2019 09:46:22 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46CNCK6d0dz1qqkQ;
-        Tue, 20 Aug 2019 09:46:21 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id h_MA-htdbiCz; Tue, 20 Aug 2019 09:46:21 +0200 (CEST)
-X-Auth-Info: prE92elRMKSf1/jqoEhkE2DLPPA8p3cg3p+PYrMx3HIkJWlUjiRKFPESlmwx3WsX
-Received: from hawking (nat.nue.novell.com [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue, 20 Aug 2019 09:46:21 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-        Allison Randal <allison@lohutok.net>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "hch\@infradead.org" <hch@infradead.org>
-Subject: Re: [v2 PATCH] RISC-V: Optimize tlb flush path.
-References: <20190820004735.18518-1-atish.patra@wdc.com>
-X-Yow:  When you get your PH.D. will you get able to work at BURGER KING?
-Date:   Tue, 20 Aug 2019 09:46:20 +0200
-In-Reply-To: <20190820004735.18518-1-atish.patra@wdc.com> (Atish Patra's
-        message of "Mon, 19 Aug 2019 17:47:35 -0700")
-Message-ID: <mvmh86cl1o3.fsf@linux-m68k.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
+        Tue, 20 Aug 2019 03:47:11 -0400
+Received: from uno.localdomain (unknown [87.18.63.98])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 68BE5240008;
+        Tue, 20 Aug 2019 07:47:02 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 09:48:26 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 01/19] dt-bindings: display: renesas,cmm: Add R-Car
+ CMM documentation
+Message-ID: <20190820074826.5rdzeqyk6ylpjr7o@uno.localdomain>
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+ <20190706140746.29132-2-jacopo+renesas@jmondi.org>
+ <CAMuHMdWVzm8yoZSoKZh3MJsaX4jCRXQCbn2x2LAu4UWtb1yYjw@mail.gmail.com>
+ <CAMuHMdWFHDGPSZt2_H_sC9rCKDYBR0XDLn0TGxzPRxZsrOTEHw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wjfjaeh4g25lin6n"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWFHDGPSZt2_H_sC9rCKDYBR0XDLn0TGxzPRxZsrOTEHw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Aug 19 2019, Atish Patra <atish.patra@wdc.com> wrote:
 
-> @@ -42,20 +43,44 @@ static inline void flush_tlb_range(struct vm_area_struct *vma,
->  
->  #include <asm/sbi.h>
->  
-> -static inline void remote_sfence_vma(struct cpumask *cmask, unsigned long start,
-> -				     unsigned long size)
-> +static void __riscv_flush_tlb(struct cpumask *cmask, unsigned long start,
-> +			      unsigned long size)
+--wjfjaeh4g25lin6n
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-cmask can be const.
+Hi Geert,
+   sorry for the delayed response..
 
->  {
->  	struct cpumask hmask;
-> +	unsigned int hartid;
-> +	unsigned int cpuid;
->  
->  	cpumask_clear(&hmask);
-> +
-> +	if (!cmask) {
-> +		riscv_cpuid_to_hartid_mask(cpu_online_mask, &hmask);
-> +		goto issue_sfence;
-> +	}
+On Mon, Aug 19, 2019 at 03:45:54PM +0200, Geert Uytterhoeven wrote:
+> Hi Jacopo,
+>
+> On Mon, Jul 8, 2019 at 9:58 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > > Add device tree bindings documentation for the Renesas R-Car Display
+> > > Unit Color Management Module.
+> > >
+> > > CMM is the image enhancement module available on each R-Car DU video
+> > > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
+> > > @@ -0,0 +1,25 @@
+> > > +* Renesas R-Car Color Management Module (CMM)
+> > > +
+> > > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
+> > > +
+> > > +Required properties:
+> > > + - compatible: shall be one of:
+> > > +   - "renesas,rcar-gen3-cmm"
+> > > +   - "renesas,rcar-gen2-cmm"
+> >
+> > Why do you think you do not need SoC-specific compatible values?
+> > What if you discover a different across the R-Car Gen3 line tomorrow?
+> > Does the IP block have a version register?
+>
+> Do you have an answer to these questions?
 
-Wouldn't it make sense to fall through to doing a local flush here?
+It does not seem to me that CMM has any version register, nor there
+are differences between the different Gen3 SoCs..
 
-	if (!cmask)
-		cmask = cpu_online_mask;
+However, even if we now define a single compatible property for
+gen3/gen2 and we later find out one of the SoC needs a soc-specific
+property we can safely add it and keep the generic gen3/gen2 one as
+fallback.. Does it work for you?
 
-Andreas.
+Thanks
+   j
 
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+
+> Thanks!
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+--wjfjaeh4g25lin6n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1bpb4ACgkQcjQGjxah
+VjzFehAAtZJyQ2C0O0+nEMVUjcPez/olBePoMeBVwI9w3mnWypOuE2eVaEyzNlMb
+imYJcwvi3JNKbb+3sxlcQAarRkWBayu5QFq/5Orbtk5ZxwBsKVyUjCkfkcTEprsf
+Drf5HI77kmvBDtIDRAwSZUPllhAzzmqqymQNOmuCRebv4i+BTKsiyRMrAIxH8xkw
+gcwpsfCCYzQxvjZgR73cshXHidzgrPVWL9mTT+SntxymEAspd+S+bd2Q4pVWHCaq
+ErkXABSR8quM6hLdPozJGRCaVv9oDkhSxihAj3dkp0AqtwvPLecmm1Czsoe7j5T3
+Qi+012N+EyLV5T/lt/jNNJZExS1wUVrkArYzulUUGrSYpWbN0B6StL/rEKY/KcgX
+RwubHKNXKAZKSXcHCzL3rnqeGhhP8QavJBtsj+F9oPy6K3tjoj95TBu2llE6fbuv
+dwJ4VbdccJA5bGYUTPbl9Xkn671CwUmCMnuGpp3C/jCOBJNLm9k3+4jMkkQcQYae
+kt3AwaARLmVCFRjh++QCczkG/MAZtOUVBcqXfJpGqKb4NkKwQofq3lcxib9zSGyk
+G3l+SEUmEwIm4TEvyu5VK04y6VD+Vx9CbcE7oJSG2aDzoEsBQymAIIx10vDvRTgA
+QV5rl0pWKx75XvHoWn8+OBO3phKOqM2Jr7n7QuhpdMR8GPY7pWY=
+=CPng
+-----END PGP SIGNATURE-----
+
+--wjfjaeh4g25lin6n--
