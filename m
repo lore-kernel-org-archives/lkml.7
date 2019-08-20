@@ -2,82 +2,124 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09511C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CC3C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF46A22DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF3322DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:36:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Fvf87/Fx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbfHTMgp (ORCPT
+        id S1729155AbfHTMgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:36:45 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:36635 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729808AbfHTMf7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:35:59 -0400
-Received: from orion.localdomain ([95.117.23.32]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MYvHa-1hmlhW0POy-00UvhJ; Tue, 20 Aug 2019 14:35:50 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, hdegoede@redhat.com, b.zolnierkie@samsung.com,
-        linus.walleij@linaro.org, linux-ide@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH 2/9] drivers: ata: ahci_seattle: use devm_platform_ioremap_resource()
-Date:   Tue, 20 Aug 2019 14:35:41 +0200
-Message-Id: <1566304548-19972-2-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1566304548-19972-1-git-send-email-info@metux.net>
-References: <1566304548-19972-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:8p4Km0MCnpVjDS1WNM0GIZVy6MCCkt6Cv7JtBwcg2MXrS60BV7A
- lvFcRZeDyIm3aMe7keYq/C8erCHDJdlNa5anpt5mUUZqrtgg339e2zkMHQPZzSswJypMLQO
- jJVSsti86pe+gVBYSN5XmCC/jAcsqVknZY4aRjL/76i4LweKHT5I6Efk4gliE4fR/mNG4wA
- fkplgQwKHfH3o6iVRzpog==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mBQMjtd9fJg=:xsdD5yxAnXqEEBD3r3gsd0
- xnGtDN6s5tx8fdaz3FsQjGD3qpeDRer8W4ZkBPpjpoXwV/LGE2eGCD0OKwmGJ+vL1KARuXtYX
- NDW1Q17CNUFixKaXjPJ5pmqC1FB//P8MD/c1DgETY2P3qTKkbkQGScHtPwTLn0d+sBNn3IKZ3
- XI6R/1JRqQbf7E9U7E7AVDUiriVSKnR34DWj4kpDe3vlpDjut0XFjzHksTwqp8AitZ+VOJLjD
- Krzuz+jnXXKTXFe9kxdVF2PVg/YPdu/853y89G6zyvktpp/j/RV1NmgeayTrcK39tnCWa7CH/
- QSoWm/7h0ZpJ6K0GCRie1SL3zNHMaPQknT5FeMoI/puWwAi+HBny9l13+i4tTBtKWHjZXuut3
- IR2TsBj2gIoWVIceCJCK4BX5xnndSvkIpmTWj0CFt/MluJA/QlI63FJdL4Z5jAVMB89jltuLk
- jnNVx7sAgXObyxiiWJqAxZQlOiTpU4AQio0wz9RxpNJ9clvubjgjWeCdTzd6y6wK3vz/YNW+r
- rKjMrNZMQ0CGfHAs65Yxy/SpSJmIAouGUIGPbiWiqBQWxJI7rr2RPPKYqQ7C+BycPqdMboXXf
- goaOG37ivhAa0Jd6MJ9KFpPC3W2CiBxQ2ualHd/vfG/+EjxwyN6MiSuiGPqq23ilDcdK2P3O+
- ErsBKjUythOtRyoPUxbMjbSZVSQseguuTMJTu8H3J6X0NDq9MIl2dY5egwtIptHuMlR7ZI208
- AJqWfMbahqFvF+mRzXVqcRcyvZUrGMNr9idYsQ==
+        Tue, 20 Aug 2019 08:36:48 -0400
+Received: from mail-eopbgr150078.outbound.protection.outlook.com ([40.107.15.78]:55719
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730055AbfHTMgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:36:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d49TK6e1Y9OWSQ5sFW7eMZmx8DofYOInqZc3pD2vYwjznKTv2t7Ab4QIU6+IKnqdVJGiH5CHX6HZs1sr+/O9mocg8PgN/+21uILU0PWHyprlxw9dx4xqJHB8hiZA6/dMiYkxVAs17FdkRbCcyHQXCbbJd15tuNR19c/zyAQvp99U9ZL7kqinYRf8nhjrXpayWVp0lSDsKQddAgcdAvhmCyuJX9z2AGl4pbthzHE7Ah+C9ep3RrihJ+zMdzGvP7kW7yyCRzCSMNT7eF5G66fQ3dkKU8SIZRY+gNpD7cScf/KazXe8nPiCzzfSn4JJNlpMIHAncl0Lg/STJII/s6R30g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G5lW6ZVJMifvtjp+A6LbX1tQh/oG5NkB6LjiBbFbcgA=;
+ b=P25vby3rIO67weB+fYNBkPjjaDipDo3JXkbH6gf4aPByBQM7/umClskaj9P+eIjvjA1zr/5tq6B5SfuOWHMPmu+cx07iMHCmetWtk4iJ4hxpLdDkH56mE46kUq9jf6vNWgsLDD2Vw1eoXQKsXP0rhU9KkLqWepMOvvFjLgPVVEnvJCXx9QqbIbXQe1Di27z4K0y6F3maDLc8iEjCuHE7RFTy4TjNIm3CM/6eHtLvZqfa075Uscsrkh8pmlDGHeyhdSgtVcvAGsIUZZRuXM3yJcK+asH6/AB2LMCZH3idiDze3YnOHK+40Lczn+96V6IyAwHUSHhW0/xsinkNnuOryA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G5lW6ZVJMifvtjp+A6LbX1tQh/oG5NkB6LjiBbFbcgA=;
+ b=Fvf87/FxuhC1NjhNOWkEPQMv2VuCFQELwbtjp7wBrdK3fgg86cibRG3BxtK2yol/5Bmof8JGu8pQYD+CBN5BLHryDGLysP7gfh1pprYleLKIzKIPCaLtuZE2chyrIHGWb/d9PyLJI3y2pb9IDD96ZSshK4QcTRMSWO3D+6Sr8YQ=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6462.eurprd05.prod.outlook.com (20.179.24.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Tue, 20 Aug 2019 12:36:43 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2178.018; Tue, 20 Aug 2019
+ 12:36:43 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Randy Dunlap <rdunlap@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Subject: Re: linux-next: Tree for Aug 19 (amdgpu)
+Thread-Topic: linux-next: Tree for Aug 19 (amdgpu)
+Thread-Index: AQHVVvkFv70F6uhlHE+MpL/A8Ss0j6cD+d6A
+Date:   Tue, 20 Aug 2019 12:36:43 +0000
+Message-ID: <20190820123637.GB29225@mellanox.com>
+References: <20190819191832.03f1a579@canb.auug.org.au>
+ <ba3cde82-6163-12e5-2e77-36834454113a@infradead.org>
+ <20190820114554.0e522651@canb.auug.org.au>
+In-Reply-To: <20190820114554.0e522651@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQBPR0101CA0053.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:1::30) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9a27219f-e288-40ed-58a1-08d7256b0eb9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR05MB6462;
+x-ms-traffictypediagnostic: VI1PR05MB6462:
+x-microsoft-antispam-prvs: <VI1PR05MB646288B7F984E7ED815EB2D1CFAB0@VI1PR05MB6462.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:397;
+x-forefront-prvs: 013568035E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(189003)(199004)(53754006)(478600001)(71190400001)(5024004)(256004)(71200400001)(99286004)(14454004)(76176011)(66476007)(66946007)(6486002)(8676002)(66556008)(81156014)(8936002)(81166006)(25786009)(4326008)(64756008)(66446008)(229853002)(6512007)(6436002)(102836004)(186003)(486006)(5660300002)(6916009)(6246003)(53936002)(66066001)(6116002)(3846002)(6506007)(53546011)(386003)(2616005)(446003)(476003)(1076003)(4744005)(11346002)(2906002)(52116002)(36756003)(54906003)(7736002)(305945005)(316002)(86362001)(26005)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6462;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: uhlLIvyV3SABRR+DF5pjB70gqsH70+slsdGH8U1GWtO5cGhuHKgeMkV0wGWltYwnVEHz6P2R28eRYv5A4cFyY5iuMpHUcsm8OcE8CaDlYUakwdQRorsza7iHgC7LMoEY/EDMOYRdvAquuTYmRdkwTwvY6npPTscv/8UBrRBFlUvDZD0swtkcHDEByuHzNUKBIDIje8qpM9Gv0NDMxnu9HaI5sziQu1kkwIlUqAhToPwt+oXA/bBdlL+eYuuePXdpNiCjFX9OxmqleInU5gH6n30YQHbqIZfNQY+0T0jdlnfeiD+BvGF8I/sSbVfP982sRGNk9eSU5a5KQRK8NEgqnaQ5c/oBkmxrA3tMMBeWlIU2R8xX8Foma0BvW4Na2AJJ5bN0nqLGPpX15a+T4U2zjmWK9iyX6ZZFITllf0bkr3U=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <146AD0307B5F9244BBC8DDA184B159E7@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a27219f-e288-40ed-58a1-08d7256b0eb9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 12:36:43.7009
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: v3esOl9TUoOBUT+lZNM3sgVnetHnHqU17rO7Z+sPONv4wwgSfwxT+95rBolR+Cawb4F7uJS/ri+f1hdfIN3bxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6462
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new helper that wraps the calls to platform_get_resource()
-and devm_ioremap_resource() together.
-
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/ata/ahci_seattle.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/ata/ahci_seattle.c b/drivers/ata/ahci_seattle.c
-index ced12705..2d88d36 100644
---- a/drivers/ata/ahci_seattle.c
-+++ b/drivers/ata/ahci_seattle.c
-@@ -132,8 +132,7 @@ static const struct ata_port_info *ahci_seattle_get_port_info(
- 	if (!plat_data)
- 		return &ahci_port_info;
- 
--	plat_data->sgpio_ctrl = devm_ioremap_resource(dev,
--			      platform_get_resource(pdev, IORESOURCE_MEM, 1));
-+	plat_data->sgpio_ctrl = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(plat_data->sgpio_ctrl))
- 		return &ahci_port_info;
- 
--- 
-1.9.1
-
+T24gVHVlLCBBdWcgMjAsIDIwMTkgYXQgMTE6NDU6NTRBTSArMTAwMCwgU3RlcGhlbiBSb3Rod2Vs
+bCB3cm90ZToNCj4gSGkgYWxsLA0KPiANCj4gT24gTW9uLCAxOSBBdWcgMjAxOSAxODozNDo0MSAt
+MDcwMCBSYW5keSBEdW5sYXAgPHJkdW5sYXBAaW5mcmFkZWFkLm9yZz4gd3JvdGU6DQo+ID4NCj4g
+PiBPbiA4LzE5LzE5IDI6MTggQU0sIFN0ZXBoZW4gUm90aHdlbGwgd3JvdGU6DQo+ID4gPiBIaSBh
+bGwsDQo+ID4gPiANCj4gPiA+IENoYW5nZXMgc2luY2UgMjAxOTA4MTY6DQo+ID4gPiAgIA0KPiA+
+IA0KPiA+IG9uIHg4Nl82NDoNCj4gPiANCj4gPiAuLi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdw
+dS9hbWRncHVfZHJ2LmM6IEluIGZ1bmN0aW9uIOKAmGFtZGdwdV9leGl04oCZOg0KPiA+IC4uL2Ry
+aXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9kcnYuYzoxNDcxOjI6IGVycm9yOiBpbXBs
+aWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhtbXVfbm90aWZpZXJfc3luY2hyb25pemXi
+gJk7IGRpZCB5b3UgbWVhbiDigJhfX3N5bmNfc3luY2hyb25pemXigJk/IFstV2Vycm9yPWltcGxp
+Y2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQ0KPiA+ICAgbW11X25vdGlmaWVyX3N5bmNocm9uaXpl
+KCk7DQo+ID4gICBefn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4NCj4gPiAgIF9fc3luY19zeW5jaHJv
+bml6ZQ0KPiA+IA0KPiA+IA0KPiA+IEZ1bGwgcmFuZGNvbmZpZyBmaWxlIGlzIGF0dGFjaGVkLg0K
+PiANCj4gQ2F1c2VkIGJ5IGNvbW1pdA0KPiANCj4gICA2ODMyYzlkYzgzNTggKCJobW06IHVzZSBt
+bXVfbm90aWZpZXJfZ2V0L3B1dCBmb3IgJ3N0cnVjdCBobW0nIikNCj4gDQo+IGZyb20gdGhlIGht
+bSB0cmVlLg0KPiANCj4gZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2Rydi5jIG5l
+ZWQgdG8gaW5jbHVkZSBsaW51eC9tbXVfbm90aWZpZXIuaA0KDQpBaCB5ZXMsIHRoYW5rcywgaXQg
+aXMgYmVjYXVzZSBvZiAhQ09ORklHX0hNTV9NSVJST1IgaW4gdGhpcw0KcmFuZGNvbmZpZy4gSSd2
+ZSBmaXhlZCBpdCB1cC4NCg0KUmVnYXJkcywNCkphc29uDQoNCg==
