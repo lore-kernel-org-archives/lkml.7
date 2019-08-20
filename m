@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AA1C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E122C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEDE022DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1E922DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308492;
-	bh=DDCgT1Nmrt2ow0/uFfydiLLSCAIVjJjYDtTpJrHqk6U=;
+	s=default; t=1566308502;
+	bh=lh2wv/YLcV+W2NsJ0xt4/MGkv9oSBwvlMCm3cylHGtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bw8JllNiLhgNfWrMUDU6eXmND5IFxj2UtnoDT3nG/yusg0FaxAiOtQIrCQ0TDjh25
-	 ywB2+Idq7iaxEZygNTVbZbSTxMlX7LUh2u9cQtjijqntV9M5fEguQGLo6GCKbM6xe1
-	 pgm7ZmuSzYEXHYNyJl1ncW87AItc/dvbxhYMiuA0=
+	b=RvHml8sYAQVdqbopj1mHvvckOkqkRjfdDLRDuKg8firTf1wnC1vt8e8St4/VwdAAZ
+	 1L17ZtF5l/M7jbdiVNXzXgPj9RAvaHtz9fGyhYKWSwlfkfv+C+ErqZ7RJH1Wla1btD
+	 N41PlfdN2mmW05AOu3yyZ3ybYDbqe3qc8UkBtb8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbfHTNl2 (ORCPT
+        id S1730436AbfHTNll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:41:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36476 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:41:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729937AbfHTNl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:41:26 -0400
+        id S1730417AbfHTNli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:41:38 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DB7E22DBF;
-        Tue, 20 Aug 2019 13:41:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD97F2339E;
+        Tue, 20 Aug 2019 13:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308485;
-        bh=DDCgT1Nmrt2ow0/uFfydiLLSCAIVjJjYDtTpJrHqk6U=;
+        s=default; t=1566308497;
+        bh=lh2wv/YLcV+W2NsJ0xt4/MGkv9oSBwvlMCm3cylHGtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hJKxA2XE83IRwxwJqGPz5F07D5ghs43AqVKLMNRrMuCM4oJC/79vzToYsR9TqPtBk
-         RAWCq8IDpAbEQ/OFoiZ8goMXma0o2IOf4EAUJs/q4rKgbXcaaDY5vWoUTjQzl3J/rD
-         8uBGtQwADeaLfjFWZw5Xps/YA8u2Sq6gQazFUm7A=
+        b=DVSPdSZrGrp0scSXu3YSf3YDIKRbjr8LYYXrYJ/YFHk57szVzsai4ZbWU2OzV+rZE
+         CZ5HVl7gEi3I5xdJ2R3TovPx82AolYddDrpwnVWo/dqDcXAbV90uEHO4b8bkE1Apj3
+         wxPnejW+H+O4R/lk6jvie7IB9E3c0hdlqai3hcDw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Segal <bpsegal20@gmail.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
+Cc:     Oded Gabbay <oded.gabbay@gmail.com>,
+        Ben Segal <bpsegal20@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 31/44] habanalabs: fix endianness handling for packets from user
-Date:   Tue, 20 Aug 2019 09:40:15 -0400
-Message-Id: <20190820134028.10829-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 33/44] habanalabs: fix endianness handling for internal QMAN submission
+Date:   Tue, 20 Aug 2019 09:40:17 -0400
+Message-Id: <20190820134028.10829-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
 References: <20190820134028.10829-1-sashal@kernel.org>
@@ -59,137 +59,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Segal <bpsegal20@gmail.com>
+From: Oded Gabbay <oded.gabbay@gmail.com>
 
-[ Upstream commit 213ad5ad016a0da975b35f54e8cd236c3b04724b ]
+[ Upstream commit b9040c99414ba5b85090595a61abc686a5dbb388 ]
 
-Packets that arrive from the user and need to be parsed by the driver are
-assumed to be in LE format.
+The PQs of internal H/W queues (QMANs) can be located in different memory
+areas for different ASICs. Therefore, when writing PQEs, we need to use
+the correct function according to the location of the PQ. e.g. if the PQ
+is located in the device's memory (SRAM or DRAM), we need to use
+memcpy_toio() so it would work in architectures that have separate
+address ranges for IO memory.
 
-This patch fix all the places where the code handles these packets and use
-the correct endianness macros to handle them, as the driver handles the
-packets in CPU format (LE or BE depending on the arch).
+This patch makes the code that writes the PQE to be ASIC-specific so we
+can handle this properly per ASIC.
 
-Signed-off-by: Ben Segal <bpsegal20@gmail.com>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Tested-by: Ben Segal <bpsegal20@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/goya/goya.c           | 32 +++++++++++--------
- .../habanalabs/include/goya/goya_packets.h    | 13 ++++++++
- 2 files changed, 32 insertions(+), 13 deletions(-)
+ drivers/misc/habanalabs/goya/goya.c  |  7 ++++---
+ drivers/misc/habanalabs/goya/goyaP.h |  2 +-
+ drivers/misc/habanalabs/habanalabs.h |  9 +++++++--
+ drivers/misc/habanalabs/hw_queue.c   | 14 +++++---------
+ 4 files changed, 17 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 02d116b01a1a2..0644fd7742057 100644
+index 0644fd7742057..9216cc3599178 100644
 --- a/drivers/misc/habanalabs/goya/goya.c
 +++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -3425,12 +3425,13 @@ static int goya_validate_cb(struct hl_device *hdev,
- 	while (cb_parsed_length < parser->user_cb_size) {
- 		enum packet_id pkt_id;
- 		u16 pkt_size;
--		void *user_pkt;
-+		struct goya_packet *user_pkt;
+@@ -2716,9 +2716,10 @@ void goya_ring_doorbell(struct hl_device *hdev, u32 hw_queue_id, u32 pi)
+ 				GOYA_ASYNC_EVENT_ID_PI_UPDATE);
+ }
  
--		user_pkt = (void *) (uintptr_t)
-+		user_pkt = (struct goya_packet *) (uintptr_t)
- 			(parser->user_cb->kernel_address + cb_parsed_length);
+-void goya_flush_pq_write(struct hl_device *hdev, u64 *pq, u64 exp_val)
++void goya_pqe_write(struct hl_device *hdev, __le64 *pqe, struct hl_bd *bd)
+ {
+-	/* Not needed in Goya */
++	/* The QMANs are on the SRAM so need to copy to IO space */
++	memcpy_toio((void __iomem *) pqe, bd, sizeof(struct hl_bd));
+ }
  
--		pkt_id = (enum packet_id) (((*(u64 *) user_pkt) &
-+		pkt_id = (enum packet_id) (
-+				(le64_to_cpu(user_pkt->header) &
- 				PACKET_HEADER_PACKET_ID_MASK) >>
- 					PACKET_HEADER_PACKET_ID_SHIFT);
+ static void *goya_dma_alloc_coherent(struct hl_device *hdev, size_t size,
+@@ -4784,7 +4785,7 @@ static const struct hl_asic_funcs goya_funcs = {
+ 	.resume = goya_resume,
+ 	.cb_mmap = goya_cb_mmap,
+ 	.ring_doorbell = goya_ring_doorbell,
+-	.flush_pq_write = goya_flush_pq_write,
++	.pqe_write = goya_pqe_write,
+ 	.asic_dma_alloc_coherent = goya_dma_alloc_coherent,
+ 	.asic_dma_free_coherent = goya_dma_free_coherent,
+ 	.get_int_queue_base = goya_get_int_queue_base,
+diff --git a/drivers/misc/habanalabs/goya/goyaP.h b/drivers/misc/habanalabs/goya/goyaP.h
+index c83cab0d641e2..e2040fd331ca1 100644
+--- a/drivers/misc/habanalabs/goya/goyaP.h
++++ b/drivers/misc/habanalabs/goya/goyaP.h
+@@ -170,7 +170,7 @@ int goya_late_init(struct hl_device *hdev);
+ void goya_late_fini(struct hl_device *hdev);
  
-@@ -3450,7 +3451,8 @@ static int goya_validate_cb(struct hl_device *hdev,
- 			 * need to validate here as well because patch_cb() is
- 			 * not called in MMU path while this function is called
- 			 */
--			rc = goya_validate_wreg32(hdev, parser, user_pkt);
-+			rc = goya_validate_wreg32(hdev,
-+				parser, (struct packet_wreg32 *) user_pkt);
- 			break;
+ void goya_ring_doorbell(struct hl_device *hdev, u32 hw_queue_id, u32 pi);
+-void goya_flush_pq_write(struct hl_device *hdev, u64 *pq, u64 exp_val);
++void goya_pqe_write(struct hl_device *hdev, __le64 *pqe, struct hl_bd *bd);
+ void goya_update_eq_ci(struct hl_device *hdev, u32 val);
+ void goya_restore_phase_topology(struct hl_device *hdev);
+ int goya_context_switch(struct hl_device *hdev, u32 asid);
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index adef7d9d7488a..d56ab65d5b2a4 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -449,7 +449,11 @@ enum hl_pll_frequency {
+  * @resume: handles IP specific H/W or SW changes for resume.
+  * @cb_mmap: maps a CB.
+  * @ring_doorbell: increment PI on a given QMAN.
+- * @flush_pq_write: flush PQ entry write if necessary, WARN if flushing failed.
++ * @pqe_write: Write the PQ entry to the PQ. This is ASIC-specific
++ *             function because the PQs are located in different memory areas
++ *             per ASIC (SRAM, DRAM, Host memory) and therefore, the method of
++ *             writing the PQE must match the destination memory area
++ *             properties.
+  * @asic_dma_alloc_coherent: Allocate coherent DMA memory by calling
+  *                           dma_alloc_coherent(). This is ASIC function because
+  *                           its implementation is not trivial when the driver
+@@ -518,7 +522,8 @@ struct hl_asic_funcs {
+ 	int (*cb_mmap)(struct hl_device *hdev, struct vm_area_struct *vma,
+ 			u64 kaddress, phys_addr_t paddress, u32 size);
+ 	void (*ring_doorbell)(struct hl_device *hdev, u32 hw_queue_id, u32 pi);
+-	void (*flush_pq_write)(struct hl_device *hdev, u64 *pq, u64 exp_val);
++	void (*pqe_write)(struct hl_device *hdev, __le64 *pqe,
++			struct hl_bd *bd);
+ 	void* (*asic_dma_alloc_coherent)(struct hl_device *hdev, size_t size,
+ 					dma_addr_t *dma_handle, gfp_t flag);
+ 	void (*asic_dma_free_coherent)(struct hl_device *hdev, size_t size,
+diff --git a/drivers/misc/habanalabs/hw_queue.c b/drivers/misc/habanalabs/hw_queue.c
+index 2894d89759334..bb76794747279 100644
+--- a/drivers/misc/habanalabs/hw_queue.c
++++ b/drivers/misc/habanalabs/hw_queue.c
+@@ -290,23 +290,19 @@ static void int_hw_queue_schedule_job(struct hl_cs_job *job)
+ 	struct hl_device *hdev = job->cs->ctx->hdev;
+ 	struct hl_hw_queue *q = &hdev->kernel_queues[job->hw_queue_id];
+ 	struct hl_bd bd;
+-	u64 *pi, *pbd = (u64 *) &bd;
++	__le64 *pi;
  
- 		case PACKET_WREG_BULK:
-@@ -3478,10 +3480,10 @@ static int goya_validate_cb(struct hl_device *hdev,
- 		case PACKET_LIN_DMA:
- 			if (is_mmu)
- 				rc = goya_validate_dma_pkt_mmu(hdev, parser,
--						user_pkt);
-+					(struct packet_lin_dma *) user_pkt);
- 			else
- 				rc = goya_validate_dma_pkt_no_mmu(hdev, parser,
--						user_pkt);
-+					(struct packet_lin_dma *) user_pkt);
- 			break;
+ 	bd.ctl = 0;
+-	bd.len = __cpu_to_le32(job->job_cb_size);
+-	bd.ptr = __cpu_to_le64((u64) (uintptr_t) job->user_cb);
++	bd.len = cpu_to_le32(job->job_cb_size);
++	bd.ptr = cpu_to_le64((u64) (uintptr_t) job->user_cb);
  
- 		case PACKET_MSG_LONG:
-@@ -3654,15 +3656,16 @@ static int goya_patch_cb(struct hl_device *hdev,
- 		enum packet_id pkt_id;
- 		u16 pkt_size;
- 		u32 new_pkt_size = 0;
--		void *user_pkt, *kernel_pkt;
-+		struct goya_packet *user_pkt, *kernel_pkt;
+-	pi = (u64 *) (uintptr_t) (q->kernel_address +
++	pi = (__le64 *) (uintptr_t) (q->kernel_address +
+ 		((q->pi & (q->int_queue_len - 1)) * sizeof(bd)));
  
--		user_pkt = (void *) (uintptr_t)
-+		user_pkt = (struct goya_packet *) (uintptr_t)
- 			(parser->user_cb->kernel_address + cb_parsed_length);
--		kernel_pkt = (void *) (uintptr_t)
-+		kernel_pkt = (struct goya_packet *) (uintptr_t)
- 			(parser->patched_cb->kernel_address +
- 					cb_patched_cur_length);
+-	pi[0] = pbd[0];
+-	pi[1] = pbd[1];
+-
+ 	q->pi++;
+ 	q->pi &= ((q->int_queue_len << 1) - 1);
  
--		pkt_id = (enum packet_id) (((*(u64 *) user_pkt) &
-+		pkt_id = (enum packet_id) (
-+				(le64_to_cpu(user_pkt->header) &
- 				PACKET_HEADER_PACKET_ID_MASK) >>
- 					PACKET_HEADER_PACKET_ID_SHIFT);
+-	/* Flush PQ entry write. Relevant only for specific ASICs */
+-	hdev->asic_funcs->flush_pq_write(hdev, pi, pbd[0]);
++	hdev->asic_funcs->pqe_write(hdev, pi, &bd);
  
-@@ -3677,15 +3680,18 @@ static int goya_patch_cb(struct hl_device *hdev,
- 
- 		switch (pkt_id) {
- 		case PACKET_LIN_DMA:
--			rc = goya_patch_dma_packet(hdev, parser, user_pkt,
--						kernel_pkt, &new_pkt_size);
-+			rc = goya_patch_dma_packet(hdev, parser,
-+					(struct packet_lin_dma *) user_pkt,
-+					(struct packet_lin_dma *) kernel_pkt,
-+					&new_pkt_size);
- 			cb_patched_cur_length += new_pkt_size;
- 			break;
- 
- 		case PACKET_WREG_32:
- 			memcpy(kernel_pkt, user_pkt, pkt_size);
- 			cb_patched_cur_length += pkt_size;
--			rc = goya_validate_wreg32(hdev, parser, kernel_pkt);
-+			rc = goya_validate_wreg32(hdev, parser,
-+					(struct packet_wreg32 *) kernel_pkt);
- 			break;
- 
- 		case PACKET_WREG_BULK:
-diff --git a/drivers/misc/habanalabs/include/goya/goya_packets.h b/drivers/misc/habanalabs/include/goya/goya_packets.h
-index a14407b975e4e..ef54bad205099 100644
---- a/drivers/misc/habanalabs/include/goya/goya_packets.h
-+++ b/drivers/misc/habanalabs/include/goya/goya_packets.h
-@@ -52,6 +52,19 @@ enum goya_dma_direction {
- #define GOYA_PKT_CTL_MB_SHIFT		31
- #define GOYA_PKT_CTL_MB_MASK		0x80000000
- 
-+/* All packets have, at least, an 8-byte header, which contains
-+ * the packet type. The kernel driver uses the packet header for packet
-+ * validation and to perform any necessary required preparation before
-+ * sending them off to the hardware.
-+ */
-+struct goya_packet {
-+	__le64 header;
-+	/* The rest of the packet data follows. Use the corresponding
-+	 * packet_XXX struct to deference the data, based on packet type
-+	 */
-+	u8 contents[0];
-+};
-+
- struct packet_nop {
- 	__le32 reserved;
- 	__le32 ctl;
+ 	hdev->asic_funcs->ring_doorbell(hdev, q->hw_queue_id, q->pi);
+ }
 -- 
 2.20.1
 
