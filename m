@@ -2,92 +2,198 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FA0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAA5C3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F001122CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5754E22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:35:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pYwMho3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbfHTJeV (ORCPT
+        id S1729527AbfHTJfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:34:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:37328 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729194AbfHTJeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:34:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C41A344;
-        Tue, 20 Aug 2019 02:34:18 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE45A3F706;
-        Tue, 20 Aug 2019 02:34:17 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 10:34:16 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/PCI: Remove surplus return from a void function
-Message-ID: <20190820093415.GF23903@e119886-lin.cambridge.arm.com>
-References: <20190820065121.16594-1-kw@linux.com>
+        Tue, 20 Aug 2019 05:35:07 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34780 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729418AbfHTJfG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:35:06 -0400
+Received: by mail-lj1-f193.google.com with SMTP id x18so4477912ljh.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 02:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hTvsFcOmSwggdm7PgrD1IJjN9bzFDClMt1u/HcunehU=;
+        b=pYwMho3J5PMYtyIzLlzyRFcsPsBb+P6BTE2MZHiEQBcRqt+f9Jz+khkLvoi5Ngt254
+         ZGwBYFbhdsmQ6YmsTzlkIkjauww4it8jmFXyqP4py9lHNIlG9faxZAgP+erhDyNebWBL
+         4KSexr2QaR3QMuQ1lNMy9RiwFF+JtJomrwt1jXPZWErvZnMV6jxOogjxVvpLc5GowChL
+         fgwV4OEiV5D47t8inBDHbidFcoXqhb3GwVDho35s55PBp9tAX1oYZ4/Ld6kKm5S7ZLvf
+         Y1wVIvO/qFqfxsxJLNIlts46l0fR+E+f8/8WPTVTjkK2TCA1RO+AladojpZM712fb6z4
+         ZZBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hTvsFcOmSwggdm7PgrD1IJjN9bzFDClMt1u/HcunehU=;
+        b=QU7EeVRMsoLgh6NSt5Z7cPQT/3A4E/UT5xcMqFI0N2t3K2OErsMMEe+iplko/6oyZe
+         RZXQuhgJlWVDOOLePDWaHPaTa2Na+ip5dQwGrnHTvWAkeHY6kHC1oSY85XVoe3hvJron
+         CeC7jehFGTln4K840WHRIXVukQK+fGylIgr9fwBGbWFpfGVQdX+sCZZVBDYTHHpTa2Dt
+         2CDOfa9TP12BOYrL4VUofdlxGjcOa4rl/DXm4wFMVxKz9g9Utts+7YRRJh4xspXThqD1
+         ErO10mh8h2k5ZSLeB/pH8hkWIG2VqU/sntkwKSy18fRMDjhaQUTm3Dv7KXc4EWfBekCw
+         dzuw==
+X-Gm-Message-State: APjAAAXslDqqlKgm7gQc25y7BspOi8kgF9O0L+o890HPonv+ilKa5lWt
+        s4Q5QpBHHzJxu9+zuBOtj7JVHg==
+X-Google-Smtp-Source: APXvYqyvVDnssfzkEcE0lLTlxkxh4aA/7WLmrToi/RHVH5+iW6Z7neHR7Z56pl2XgwrgAhL8Oo7eww==
+X-Received: by 2002:a05:651c:153:: with SMTP id c19mr5188412ljd.152.1566293704102;
+        Tue, 20 Aug 2019 02:35:04 -0700 (PDT)
+Received: from [192.168.27.187] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id d16sm2782440lfi.31.2019.08.20.02.35.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 02:35:03 -0700 (PDT)
+Subject: Re: [PATCH 1/2] venus: use on-chip interconnect API
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Aniket Masule <amasule@codeaurora.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+References: <20190814084701.25455-1-stanimir.varbanov@linaro.org>
+ <20190814084701.25455-2-stanimir.varbanov@linaro.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <cc85f55c-3d21-c3b2-6848-e48513263e39@linaro.org>
+Date:   Tue, 20 Aug 2019 12:34:59 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820065121.16594-1-kw@linux.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190814084701.25455-2-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 08:51:21AM +0200, Krzysztof Wilczynski wrote:
-> Remove unnecessary empty return statement at the end of a void
-> function in the arch/x86/kernel/quirks.c.
+Hi Stan,
+
+On 8/14/19 11:47, Stanimir Varbanov wrote:
+> This aims to add a requests for bandwidth scaling depending
+> on the resolution and framerate (macroblocks per second). The
+> exact value ff the requested bandwidth is get from a
+
+s/ff/of/
+
+> pre-calculated tables for encoder and decoder.
 > 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 > ---
->  arch/x86/kernel/quirks.c | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
-> index 8451f38ad399..1daf8f2aa21f 100644
-> --- a/arch/x86/kernel/quirks.c
-> +++ b/arch/x86/kernel/quirks.c
-> @@ -90,8 +90,6 @@ static void ich_force_hpet_resume(void)
->  		BUG();
->  	else
->  		printk(KERN_DEBUG "Force enabled HPET at resume\n");
-> -
-> -	return;
->  }
->  
->  static void ich_force_enable_hpet(struct pci_dev *dev)
-> @@ -448,7 +446,6 @@ static void nvidia_force_enable_hpet(struct pci_dev *dev)
->  	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at 0x%lx\n",
->  		force_hpet_address);
->  	cached_dev = dev;
-> -	return;
->  }
->  
->  /* ISA Bridges */
-> @@ -513,7 +510,6 @@ static void e6xx_force_enable_hpet(struct pci_dev *dev)
->  	force_hpet_resume_type = NONE_FORCE_HPET_RESUME;
->  	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at "
->  		"0x%lx\n", force_hpet_address);
-> -	return;
->  }
->  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_E6XX_CU,
->  			 e6xx_force_enable_hpet);
-> -- 
+>  drivers/media/platform/qcom/venus/core.c    | 34 +++++++++++
+>  drivers/media/platform/qcom/venus/core.h    | 14 +++++
+>  drivers/media/platform/qcom/venus/helpers.c | 67 ++++++++++++++++++++-
+>  3 files changed, 114 insertions(+), 1 deletion(-)
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+It looks like venus can be built-in, so how about the case when venus is
+built-in and the interconnect provider is a module? Maybe add a dependency in
+Kconfig to depend on INTERCONNECT || !INTERCONNECT?
 
-> 2.22.1
 > 
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+> index 0acc7576cc58..19cbe9d5d028 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -5,6 +5,7 @@
+>   */
+>  #include <linux/clk.h>
+>  #include <linux/init.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/ioctl.h>
+>  #include <linux/list.h>
+>  #include <linux/module.h>
+> @@ -239,6 +240,14 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (IS_ERR(core->base))
+>  		return PTR_ERR(core->base);
+>  
+> +	core->video_path = of_icc_get(dev, "video-mem");
+> +	if (IS_ERR(core->video_path))
+> +		return PTR_ERR(core->video_path);
+> +
+> +	core->cpucfg_path = of_icc_get(dev, "cpu-cfg");
+> +	if (IS_ERR(core->cpucfg_path))
+> +		return PTR_ERR(core->cpucfg_path);
+> +
+>  	core->irq = platform_get_irq(pdev, 0);
+>  	if (core->irq < 0)
+>  		return core->irq;
+> @@ -273,6 +282,10 @@ static int venus_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = hfi_create(core, &venus_core_ops);
+>  	if (ret)
+>  		return ret;
+> @@ -355,6 +368,9 @@ static int venus_remove(struct platform_device *pdev)
+>  	pm_runtime_put_sync(dev);
+>  	pm_runtime_disable(dev);
+>  
+> +	icc_put(core->video_path);
+> +	icc_put(core->cpucfg_path);
+> +
+
+Do you have any plans to scale the bandwidth on suspend/resume too?
+
+Thanks,
+Georgi
