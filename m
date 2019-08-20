@@ -2,194 +2,113 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC49C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC24C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E47A22CE3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D226822CE3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:32:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UVuz+pt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbfHTQbO (ORCPT
+        id S1730190AbfHTQce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:31:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39198 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730033AbfHTQbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:31:14 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E68BEC057F2E;
-        Tue, 20 Aug 2019 16:31:13 +0000 (UTC)
-Received: from gondolin (ovpn-116-201.ams2.redhat.com [10.36.116.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 301329CC9;
-        Tue, 20 Aug 2019 16:31:08 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 18:31:06 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     Christophe de Dinechin <christophe.de.dinechin@gmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        cjia <cjia@nvidia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Message-ID: <20190820183106.1680d0d9.cohuck@redhat.com>
-In-Reply-To: <AM0PR05MB4866EBB51F7019F2E3D9918CD1AB0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190802065905.45239-1-parav@mellanox.com>
-        <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
-        <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190813085246.1d642ae5@x1.home>
-        <AM0PR05MB48663579A340E6597B3D01BCD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190813111149.027c6a3c@x1.home>
-        <AM0PR05MB4866D40F8EBB382C78193C91D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814100135.1f60aa42.cohuck@redhat.com>
-        <AM0PR05MB4866ABFDDD9DDCBC01F6CA90D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814150911.296da78c.cohuck@redhat.com>
-        <AM0PR05MB48666CCDFE985A25F42A0259D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814085746.26b5f2a3@x1.home>
-        <AM0PR05MB4866148ABA3C4E48E73E95FCD1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <AM0PR05MB48668B6221E477A873688CDBD1AB0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <m1o90kduow.fsf@dinechin.org>
-        <AM0PR05MB4866EBB51F7019F2E3D9918CD1AB0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Organization: Red Hat GmbH
+        Tue, 20 Aug 2019 12:32:34 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42431 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729672AbfHTQcd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 12:32:33 -0400
+Received: by mail-wr1-f65.google.com with SMTP id b16so13058140wrq.9
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 09:32:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wzFwBxJwNYVFz8c23UR6EVA4QWVFqmII5gU+JmWuczE=;
+        b=UVuz+pt2vpL53mRHNmJ1TU5lEwmqvpAXHYMHYAuJ3MR3nGicW67xSDcxejCOHaChSn
+         UxPNWcr4L2TAJk3Xipd3O7/xHpg9t/yJmTmR0/aPF3QIWtv9tg2DqcIQ4EJ3jZm4wsUV
+         hFlG7wocFSEg6zjiqAtU5WUmZyezDVH1mXwTQfJwrUzEaePzW4+vK+A9jfOiTJebaG6b
+         S+w4UblzXJLp/M4k/NYD40/x7Smfg5Op6MQqThvRO34g37kPVzeRGySFW+FXGMZ5PSQs
+         8J19gTKqWWZ3Irun4ynV1p8TuMjnmYBhBDtY/aWQHNSFyJpmyHiQFtj/gueWk1khKcSa
+         BmxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wzFwBxJwNYVFz8c23UR6EVA4QWVFqmII5gU+JmWuczE=;
+        b=Yqyrgt8zoCYkWTEl67kykHPml3e8e1MMtbOVoI97CaiiyxrfRwcCIQNKMouPWfCiid
+         LfSMrxdf+WLc58jG7DBLWm9ZkYjTn+sDpF5QUKJJRzr6f2BJd6jpbs/2mmF4kKgneTHm
+         El4u5VPmBcr98xgsGZqW4D4psP73LkGeLRtq0Q2ZDT1due0IzVSOyXF4UC40UmpAHiit
+         p6E+XrAB4vStpTWjYG5pOvg8UO5ubCI9u1O2Yx4bwL8if0OugRBrk05t3G+kALi0CD4L
+         bymKYfS1CeyGMa0eMHodl0ZDyZEdF+aRMFXAVoQGTlnfmoAey0Cg2Kca1FqgPzVu5MVI
+         NeIg==
+X-Gm-Message-State: APjAAAUAlPB09uwDngkPV1sU2vcyrmDl3yZ5ydooMdqZ56gzJ+GA9B3L
+        CT+wU78vFxdimUdUYwjbRYsPzg==
+X-Google-Smtp-Source: APXvYqxZeEQOGmvTSeY3NAXBX2ijAVwVyFh7cjQfFiojdkB4QWK59zEazcrFVniEAzKjEwyVc8J9Qw==
+X-Received: by 2002:a05:6000:10cf:: with SMTP id b15mr35124310wrx.180.1566318751477;
+        Tue, 20 Aug 2019 09:32:31 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id g12sm20431627wrv.9.2019.08.20.09.32.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 09:32:30 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 17:32:28 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] video: backlight: tosa_lcd: drop check because
+ i2c_unregister_device() is NULL safe
+Message-ID: <20190820163228.xuz7su6psovp6pkp@holly.lan>
+References: <20190820153439.7638-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 20 Aug 2019 16:31:14 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820153439.7638-1-wsa+renesas@sang-engineering.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019 11:25:05 +0000
-Parav Pandit <parav@mellanox.com> wrote:
-
-> > -----Original Message-----
-> > From: Christophe de Dinechin <christophe.de.dinechin@gmail.com>
-> > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > 
-> > 
-> > Parav Pandit writes:
-> >   
-> > > + Dave.
-> > >
-> > > Hi Jiri, Dave, Alex, Kirti, Cornelia,
-> > >
-> > > Please provide your feedback on it, how shall we proceed?
-> > >
-> > > Hence, I would like to discuss below options.
-> > >
-> > > Option-1: mdev index
-> > > Introduce an optional mdev index/handle as u32 during mdev create time.
-> > > User passes mdev index/handle as input.
-> > >
-> > > phys_port_name=mIndex=m%u
-> > > mdev_index will be available in sysfs as mdev attribute for udev to name the  
-> > mdev's netdev.  
-> > >
-> > > example mdev create command:
-> > > UUID=$(uuidgen)
-> > > echo $UUID index=10 >
-> > > /sys/class/net/ens2f0/mdev_supported_types/mlx5_core_mdev/create
-> > > example netdevs:
-> > > repnetdev=ens2f0_m10	/*ens2f0 is parent PF's netdevice */
-> > > mdev_netdev=enm10
-> > >
-> > > Pros:
-> > > 1. mdevctl and any other existing tools are unaffected.
-> > > 2. netdev stack, ovs and other switching platforms are unaffected.
-> > > 3. achieves unique phys_port_name for representor netdev 4. achieves
-> > > unique mdev eth netdev name for the mdev using udev/systemd extension.
-> > > 5. Aligns well with mdev and netdev subsystem and similar to existing sriov  
-> > bdf's.  
-> > >
-> > > Option-2: shorter mdev name
-> > > Extend mdev to have shorter mdev device name in addition to UUID.
-> > > such as 'foo', 'bar'.
-> > > Mdev will continue to have UUID.
-
-I fail to understand how 'uses uuid' and 'allow shorter device name'
-are supposed to play together?
-
-> > > phys_port_name=mdev_name
-> > >
-> > > Pros:
-> > > 1. All same as option-1, except mdevctl needs upgrade for newer usage.
-> > > It is common practice to upgrade iproute2 package along with the kernel.
-> > > Similar practice to be done with mdevctl.
-> > > 2. Newer users of mdevctl who wants to work with non_UUID names, will use  
-> > newer mdevctl/tools.  
-> > > Cons:
-> > > 1. Dual naming scheme of mdev might affect some of the existing tools.
-> > > It's unclear how/if it actually affects.
-> > > mdevctl [2] is very recently developed and can be enhanced for dual naming  
-> > scheme.  
-
-The main problem is not tools we know about (i.e. mdevctl), but those we
-don't know about.
-
-IOW, this (and the IFNAMESIZ change, which seems even worse) are the
-options I would not want at all.
-
-> > >
-> > > Option-3: mdev uuid alias
-> > > Instead of shorter mdev name or mdev index, have alpha-numeric name  
-> > alias.  
-> > > Alias is an optional mdev sysfs attribute such as 'foo', 'bar'.
-> > > example mdev create command:
-> > > UUID=$(uuidgen)
-> > > echo $UUID alias=foo >
-> > > /sys/class/net/ens2f0/mdev_supported_types/mlx5_core_mdev/create
-> > > example netdevs:
-> > > examle netdevs:
-> > > repnetdev = ens2f0_mfoo
-> > > mdev_netdev=enmfoo
-> > >
-> > > Pros:
-> > > 1. All same as option-1.
-> > > 2. Doesn't affect existing mdev naming scheme.
-> > > Cons:
-> > > 1. Index scheme of option-1 is better which can number large number of  
-> > mdevs with fewer characters, simplifying the management tool.
-> > 
-> > I believe that Alex pointed out another "Cons" to all three options, which is that
-> > it forces user-space to resolve potential race conditions when creating an index
-> > or short name or alias.
-> >   
-> This race condition exists for at least two subsystems that I know of, i.e. netdev and rdma.
-> If a device with a given name exists, subsystem returns error.
-> When user space gets error code EEXIST, and it can picks up different identifier(s).
-
-If you decouple device creation and setting the alias/index, you make
-the issue visible and thus much more manageable.
-
+On Tue, Aug 20, 2019 at 05:34:39PM +0200, Wolfram Sang wrote:
+> No need to check the argument of i2c_unregister_device() because the
+> function itself does it.
 > 
-> > Also, what happens if `index=10` is not provided on the command-line?
-> > Does that make the device unusable for your purpose?  
-> Yes, it is unusable to an extent.
-> Currently we have DEVLINK_PORT_FLAVOUR_PCI_VF in include/uapi/linux/devlink.h
-> Similar to it, we need to have DEVLINK_PORT_FLAVOUR_MDEV for mdev eswitch ports.
-> This port flavour needs to generate phys_port_name(). This should be user parameter driven.
-> Because representor netdevice name is generated based on this parameter.
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-I'm also unsure how the extra parameter is supposed to work; writing it
-to the create attribute does not sound right.
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-mdevctl supports setting additional parameters on an already created
-device (see the examples provided for vfio-ap), so going that route
-would actually work out of the box from the tooling side.
 
-What you would need is some kind of synchronization/locking to make
-sure that you only link up to the other device after the extra
-attribute has been set and that you don't allow to change it as long as
-it is associated with the other side. I do not know enough about the
-actual devices to suggest something here; if you need userspace
-cooperation, maybe uevents would be an option.
+> ---
+> Build tested only, buildbot is happy, too.
+> 
+> Please apply to your tree.
+> 
+>  drivers/video/backlight/tosa_lcd.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/tosa_lcd.c b/drivers/video/backlight/tosa_lcd.c
+> index 65cb7578776f..29af8e27b6e5 100644
+> --- a/drivers/video/backlight/tosa_lcd.c
+> +++ b/drivers/video/backlight/tosa_lcd.c
+> @@ -222,8 +222,7 @@ static int tosa_lcd_remove(struct spi_device *spi)
+>  {
+>  	struct tosa_lcd_data *data = spi_get_drvdata(spi);
+>  
+> -	if (data->i2c)
+> -		i2c_unregister_device(data->i2c);
+> +	i2c_unregister_device(data->i2c);
+>  
+>  	tosa_lcd_tg_off(data);
+>  
+> -- 
+> 2.20.1
+> 
