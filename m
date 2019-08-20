@@ -2,192 +2,75 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE50C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 667A5C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA31206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B71206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 11:04:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="W3EecKqR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZNAvkO1m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729726AbfHTLCm (ORCPT
+        id S1729537AbfHTLEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 07:02:42 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:63654 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbfHTLCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 07:02:40 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 46CSX05fwvzM6;
-        Tue, 20 Aug 2019 13:01:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1566298864; bh=vhh0R3ZwxyK95TRRuvI0sK1jU1a82qw8GoKLehqjapY=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=W3EecKqRDYEHwdqRCHVlv/4lWa3NvXCfiX89Qpg/qsSiFkpci9P2/11HMtgib/YiD
-         1cAXGO6KWAS9EZFplwc6qLQfB6b4WD8CBOCEl06YeM9e0C2dZW8XvpEIngq8CFIw85
-         n6Uucs3O7Zvb8cd3mWpsACiMs7p1hbqyTUlbSEN+AHYdUr7D1HJJ9N9/BE3rcKQzel
-         oxXX4PhmBYQ09GPnDMJHhX0OLV61NpVHJCI/ELzGafCPTNT6Y8jzb+U3Jq2zjMhIc+
-         5Qxtep0I0zRr74JAXlpbXeNMqFx8i/1I8PrWiOuuD7h+6+cyguvOGaYmGI/72oI49B
-         EAt5M8BeBFLhw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.2 at mail
-Date:   Tue, 20 Aug 2019 13:02:37 +0200
-Message-Id: <125cd3c9f298da9b08a4d6002d4c00d70a898950.1566298834.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <f95ae1085f9f3c137a122c4d95728711613c15f7.1566298834.git.mirq-linux@rere.qmqm.pl>
-References: <f95ae1085f9f3c137a122c4d95728711613c15f7.1566298834.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 2/2] ASoC: wm8904: implement input mode select as a mux
+        Tue, 20 Aug 2019 07:04:43 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35528 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728503AbfHTLEm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 07:04:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ts4v6M3z2r4Kl3nDDDGqpuSc/Z0cqjuzGtxOIWMF0Kc=; b=ZNAvkO1mOiFhEryFwP2Jdiacm
+        +Tk9lxLBZlHhJJd5TysLQeLIAKZ9St7JOu+CnhgtxoIz5uYQNDBpDq+Dap0+cM2piopslwxnlKi6g
+        0YMq+OFgJoCHkUcVw4ZhWHcUYAEIVt3q6mYc+yu/5F06wxobZl4/+bMeaPxZ8RteCC92Fa59CXbE3
+        6+wxxnEMDKMjIx8flfhZAyzuEKIeVLhD6keJ5ftJVILpAhak1qL5hYyYfPGrfIPa+KbYX6NSGo1VA
+        u1nIsZg1GVmGH/SZeUzf4zr5uEw2TdhBpD5D1vRXtkpUv/2Sl5OEMyuXcAoaYv0OPfdR8KTsSy+qY
+        KnJVqwzMg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i01wH-0006ny-Ti; Tue, 20 Aug 2019 11:04:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1EA2A307456;
+        Tue, 20 Aug 2019 13:03:58 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1930820B342B1; Tue, 20 Aug 2019 13:04:30 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 13:04:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     c00423981 <caomeng5@huawei.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpustat: print watchdog time and statistics of soft and
+ hard interrupts in soft lockup scenes
+Message-ID: <20190820110430.GL2332@hirez.programming.kicks-ass.net>
+References: <60319e82-3c2b-ff24-4ba7-4d58048130ff@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     alsa-devel@alsa-project.org
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        patches@opensource.cirrus.com, linux-kernel@vger.kernel.org,
-        Kate Stewart <kstewart@linuxfoundation.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <60319e82-3c2b-ff24-4ba7-4d58048130ff@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make '* Capture Mode' a mux. This makes DAPM know that in single-ended
-mode only inverting mux paths need to be enabled.
+On Mon, Aug 19, 2019 at 03:12:24PM +0800, c00423981 wrote:
+> +static u64 cpustat_curr_cputime(int cpu, int index)
+> +{
+> +	u64 time;
+> +
+> +	if (index == CPUTIME_IDLE)
+> +		time = get_idle_time(cpu);
+> +	else if (index == CPUTIME_IOWAIT)
+> +		time = get_iowait_time(cpu);
 
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
-v2: fixed 'right' to be 'Right'
----
- sound/soc/codecs/wm8904.c | 52 +++++++++++++++++++++++++--------------
- 1 file changed, 33 insertions(+), 19 deletions(-)
-
-diff --git a/sound/soc/codecs/wm8904.c b/sound/soc/codecs/wm8904.c
-index 525e4ef654a1..bcb3c9d5abf0 100644
---- a/sound/soc/codecs/wm8904.c
-+++ b/sound/soc/codecs/wm8904.c
-@@ -545,18 +545,6 @@ static const DECLARE_TLV_DB_SCALE(out_tlv, -5700, 100, 0);
- static const DECLARE_TLV_DB_SCALE(sidetone_tlv, -3600, 300, 0);
- static const DECLARE_TLV_DB_SCALE(eq_tlv, -1200, 100, 0);
- 
--static const char *input_mode_text[] = {
--	"Single-Ended", "Differential Line", "Differential Mic"
--};
--
--static SOC_ENUM_SINGLE_DECL(lin_mode,
--			    WM8904_ANALOGUE_LEFT_INPUT_1, 0,
--			    input_mode_text);
--
--static SOC_ENUM_SINGLE_DECL(rin_mode,
--			    WM8904_ANALOGUE_RIGHT_INPUT_1, 0,
--			    input_mode_text);
--
- static const char *hpf_mode_text[] = {
- 	"Hi-fi", "Voice 1", "Voice 2", "Voice 3"
- };
-@@ -591,9 +579,6 @@ static const struct snd_kcontrol_new wm8904_adc_snd_controls[] = {
- SOC_DOUBLE_R_TLV("Digital Capture Volume", WM8904_ADC_DIGITAL_VOLUME_LEFT,
- 		 WM8904_ADC_DIGITAL_VOLUME_RIGHT, 1, 119, 0, digital_tlv),
- 
--SOC_ENUM("Left Capture Mode", lin_mode),
--SOC_ENUM("Right Capture Mode", rin_mode),
--
- /* No TLV since it depends on mode */
- SOC_DOUBLE_R("Capture Volume", WM8904_ANALOGUE_LEFT_INPUT_0,
- 	     WM8904_ANALOGUE_RIGHT_INPUT_0, 0, 31, 0),
-@@ -852,6 +837,10 @@ static int out_pga_event(struct snd_soc_dapm_widget *w,
- 	return 0;
- }
- 
-+static const char *input_mode_text[] = {
-+	"Single-Ended", "Differential Line", "Differential Mic"
-+};
-+
- static const char *lin_text[] = {
- 	"IN1L", "IN2L", "IN3L"
- };
-@@ -868,6 +857,13 @@ static SOC_ENUM_SINGLE_DECL(lin_inv_enum, WM8904_ANALOGUE_LEFT_INPUT_1, 4,
- static const struct snd_kcontrol_new lin_inv_mux =
- 	SOC_DAPM_ENUM("Left Capture Inverting Mux", lin_inv_enum);
- 
-+static SOC_ENUM_SINGLE_DECL(lin_mode_enum,
-+			    WM8904_ANALOGUE_LEFT_INPUT_1, 0,
-+			    input_mode_text);
-+
-+static const struct snd_kcontrol_new lin_mode =
-+	SOC_DAPM_ENUM("Left Capture Mode", lin_mode_enum);
-+
- static const char *rin_text[] = {
- 	"IN1R", "IN2R", "IN3R"
- };
-@@ -884,6 +880,13 @@ static SOC_ENUM_SINGLE_DECL(rin_inv_enum, WM8904_ANALOGUE_RIGHT_INPUT_1, 4,
- static const struct snd_kcontrol_new rin_inv_mux =
- 	SOC_DAPM_ENUM("Right Capture Inverting Mux", rin_inv_enum);
- 
-+static SOC_ENUM_SINGLE_DECL(rin_mode_enum,
-+			    WM8904_ANALOGUE_RIGHT_INPUT_1, 0,
-+			    input_mode_text);
-+
-+static const struct snd_kcontrol_new rin_mode =
-+	SOC_DAPM_ENUM("Right Capture Mode", rin_mode_enum);
-+
- static const char *aif_text[] = {
- 	"Left", "Right"
- };
-@@ -932,9 +935,11 @@ SND_SOC_DAPM_SUPPLY("MICBIAS", WM8904_MIC_BIAS_CONTROL_0, 0, 0, NULL, 0),
- SND_SOC_DAPM_MUX("Left Capture Mux", SND_SOC_NOPM, 0, 0, &lin_mux),
- SND_SOC_DAPM_MUX("Left Capture Inverting Mux", SND_SOC_NOPM, 0, 0,
- 		 &lin_inv_mux),
-+SND_SOC_DAPM_MUX("Left Capture Mode", SND_SOC_NOPM, 0, 0, &lin_mode),
- SND_SOC_DAPM_MUX("Right Capture Mux", SND_SOC_NOPM, 0, 0, &rin_mux),
- SND_SOC_DAPM_MUX("Right Capture Inverting Mux", SND_SOC_NOPM, 0, 0,
- 		 &rin_inv_mux),
-+SND_SOC_DAPM_MUX("Right Capture Mode", SND_SOC_NOPM, 0, 0, &rin_mode),
- 
- SND_SOC_DAPM_PGA("Left Capture PGA", WM8904_POWER_MANAGEMENT_0, 1, 0,
- 		 NULL, 0),
-@@ -1057,6 +1062,12 @@ static const struct snd_soc_dapm_route adc_intercon[] = {
- 	{ "Left Capture Inverting Mux", "IN2L", "IN2L" },
- 	{ "Left Capture Inverting Mux", "IN3L", "IN3L" },
- 
-+	{ "Left Capture Mode", "Single-Ended", "Left Capture Inverting Mux" },
-+	{ "Left Capture Mode", "Differential Line", "Left Capture Mux" },
-+	{ "Left Capture Mode", "Differential Line", "Left Capture Inverting Mux" },
-+	{ "Left Capture Mode", "Differential Mic", "Left Capture Mux" },
-+	{ "Left Capture Mode", "Differential Mic", "Left Capture Inverting Mux" },
-+
- 	{ "Right Capture Mux", "IN1R", "IN1R" },
- 	{ "Right Capture Mux", "IN2R", "IN2R" },
- 	{ "Right Capture Mux", "IN3R", "IN3R" },
-@@ -1065,11 +1076,14 @@ static const struct snd_soc_dapm_route adc_intercon[] = {
- 	{ "Right Capture Inverting Mux", "IN2R", "IN2R" },
- 	{ "Right Capture Inverting Mux", "IN3R", "IN3R" },
- 
--	{ "Left Capture PGA", NULL, "Left Capture Mux" },
--	{ "Left Capture PGA", NULL, "Left Capture Inverting Mux" },
-+	{ "Right Capture Mode", "Single-Ended", "Right Capture Inverting Mux" },
-+	{ "Right Capture Mode", "Differential Line", "Right Capture Mux" },
-+	{ "Right Capture Mode", "Differential Line", "Right Capture Inverting Mux" },
-+	{ "Right Capture Mode", "Differential Mic", "Right Capture Mux" },
-+	{ "Right Capture Mode", "Differential Mic", "Right Capture Inverting Mux" },
- 
--	{ "Right Capture PGA", NULL, "Right Capture Mux" },
--	{ "Right Capture PGA", NULL, "Right Capture Inverting Mux" },
-+	{ "Left Capture PGA", NULL, "Left Capture Mode" },
-+	{ "Right Capture PGA", NULL, "Right Capture Mode" },
- 
- 	{ "AIFOUTL Mux", "Left", "ADCL" },
- 	{ "AIFOUTL Mux", "Right", "ADCR" },
--- 
-2.20.1
-
+NAK; don't add new users of this terminally broken interface.
