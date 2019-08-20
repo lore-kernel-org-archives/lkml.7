@@ -7,27 +7,27 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC05C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE63C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2A5222DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DA422DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="OUSQL0xW"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="qluk3iBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbfHTOyI (ORCPT
+        id S1727744AbfHTOyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:54:08 -0400
-Received: from vps.xff.cz ([195.181.215.36]:60092 "EHLO vps.xff.cz"
+        Tue, 20 Aug 2019 10:54:22 -0400
+Received: from vps.xff.cz ([195.181.215.36]:60028 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730088AbfHTOxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:53:48 -0400
+        id S1729155AbfHTOxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:53:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1566312826; bh=fJp1/iHxqT8rIRrQhM5u30ZJqn3FLJCfRTqKNHdiDpk=;
+        t=1566312825; bh=pjJHOWO7nxttAsWYJkOKvdkuaULnN0PZZ0RAx5PpN9o=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=OUSQL0xWoyyXiFXG3/LwHN+ZkRJ0/NRPLbNEZ28F4MzGzDOMyvlvwINEM5mFJYNBR
-         be7A368YMVBuW/BTSfCfJpd3WPAJFNcr60QlNdWdrKPxhUsesiBpVmvMoqsy48u2/Q
-         a46vrrjCQAzAMqZWEPxmeFnRIKmjGU0LoyfmSZ0s=
+        b=qluk3iBQwrjiEBjSIXnZAafxX6k9lhkgFCeddtDvIAl7JMO+Qt0ZDOCav+zNhQtUW
+         4i/wOMDdMxpBqkyqrB67GP86/7lpBKTY0FbsdQVpLRS/nayXCeyRz+0IjEubxfNo2q
+         JljrlnPu7zifGmGGs1Y4aDWbZA/PkOP+uwRrjCRI=
 From:   megous@megous.com
 To:     "David S. Miller" <davem@davemloft.net>,
         Rob Herring <robh+dt@kernel.org>,
@@ -42,9 +42,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, netdev@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 4/6] net: stmmac: sun8i: Rename PHY regulator variable to regulator_phy
-Date:   Tue, 20 Aug 2019 16:53:41 +0200
-Message-Id: <20190820145343.29108-5-megous@megous.com>
+Subject: [PATCH 1/6] dt-bindings: net: sun8i-a83t-emac: Add phy-supply property
+Date:   Tue, 20 Aug 2019 16:53:38 +0200
+Message-Id: <20190820145343.29108-2-megous@megous.com>
 In-Reply-To: <20190820145343.29108-1-megous@megous.com>
 References: <20190820145343.29108-1-megous@megous.com>
 MIME-Version: 1.0
@@ -56,83 +56,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-We'll be adding further optional regulators, and this makes it clearer
-what the regulator is for.
+This is already supported by the driver, but is missing from the
+bindings.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 32 ++++++++++---------
- 1 file changed, 17 insertions(+), 15 deletions(-)
+ .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml    | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index 3e951a11aec3..e7df30d3cab1 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -57,19 +57,21 @@ struct emac_variant {
- };
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+index 3fb0714e761e..304f244e9ab5 100644
+--- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
++++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+@@ -43,6 +43,10 @@ properties:
+       Phandle to the device containing the EMAC or GMAC clock
+       register
  
- /* struct sunxi_priv_data - hold all sunxi private data
-- * @tx_clk:	reference to MAC TX clock
-- * @ephy_clk:	reference to the optional EPHY clock for the internal PHY
-- * @regulator:	reference to the optional regulator
-- * @rst_ephy:	reference to the optional EPHY reset for the internal PHY
-- * @variant:	reference to the current board variant
-- * @regmap:	regmap for using the syscon
-- * @internal_phy_powered: Does the internal PHY is enabled
-- * @mux_handle:	Internal pointer used by mdio-mux lib
-+ * @tx_clk:			reference to MAC TX clock
-+ * @ephy_clk:			reference to the optional EPHY clock for
-+ *				the internal PHY
-+ * @regulator_phy:		reference to the optional regulator
-+ * @rst_ephy:			reference to the optional EPHY reset for
-+ *				the internal PHY
-+ * @variant:			reference to the current board variant
-+ * @regmap:			regmap for using the syscon
-+ * @internal_phy_powered:	Does the internal PHY is enabled
-+ * @mux_handle:			Internal pointer used by mdio-mux lib
-  */
- struct sunxi_priv_data {
- 	struct clk *tx_clk;
- 	struct clk *ephy_clk;
--	struct regulator *regulator;
-+	struct regulator *regulator_phy;
- 	struct reset_control *rst_ephy;
- 	const struct emac_variant *variant;
- 	struct regmap_field *regmap_field;
-@@ -528,9 +530,9 @@ static int sun8i_dwmac_init(struct platform_device *pdev, void *priv)
- 	struct sunxi_priv_data *gmac = priv;
- 	int ret;
- 
--	ret = regulator_enable(gmac->regulator);
-+	ret = regulator_enable(gmac->regulator_phy);
- 	if (ret) {
--		dev_err(&pdev->dev, "Fail to enable regulator\n");
-+		dev_err(&pdev->dev, "Fail to enable PHY regulator\n");
- 		return ret;
- 	}
- 
-@@ -990,7 +992,7 @@ static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
- 
- 	clk_disable_unprepare(gmac->tx_clk);
- 
--	regulator_disable(gmac->regulator);
-+	regulator_disable(gmac->regulator_phy);
- }
- 
- static void sun8i_dwmac_set_mac_loopback(void __iomem *ioaddr, bool enable)
-@@ -1126,9 +1128,9 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Optional regulator for PHY */
--	gmac->regulator = devm_regulator_get(dev, "phy");
--	if (IS_ERR(gmac->regulator)) {
--		ret = PTR_ERR(gmac->regulator);
-+	gmac->regulator_phy = devm_regulator_get(dev, "phy");
-+	if (IS_ERR(gmac->regulator_phy)) {
-+		ret = PTR_ERR(gmac->regulator_phy);
- 		if (ret != -EPROBE_DEFER)
- 			dev_err(dev, "Failed to get PHY regulator (%d)\n", ret);
- 		return ret;
++  phy-supply:
++    description:
++      PHY regulator
++
+ required:
+   - compatible
+   - reg
 -- 
 2.22.1
 
