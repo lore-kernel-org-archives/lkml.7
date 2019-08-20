@@ -2,116 +2,225 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479A2C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30657C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1C722DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NCf+aQCL"
+	by mail.kernel.org (Postfix) with ESMTP id F011322DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:41:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566308483;
+	bh=raOrY5VcQCrpTE9XAV1IsbgMSyjwTSUi9PHXz5s6vRc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IT40B2WsZX2s80plMpBhgvUI917Iajzxz08XEwbFLvi0BZ1+nU8alqg46Jw8Z4QO0
+	 rEG73NTV2XfVYQtrXHKkx4jFdWS1vexPIFMcp/4vIVjUvZDrxNRJ+kix1uGm/zbaY4
+	 RGLagJ8Ju7F0DdtFHiyW5I/ZyLRyOzFI8W/fYz6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbfHTNlO (ORCPT
+        id S1730383AbfHTNlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:41:14 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45763 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730341AbfHTNlM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:41:12 -0400
-Received: by mail-lf1-f67.google.com with SMTP id a30so4148544lfk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qKDCjGrUGEITn9keK4O4wSbQw8s60BA2KTQLoKiFzno=;
-        b=NCf+aQCLyOPmICxmwDK6V0Xcg9NK5tJa5uZ4tFopVmo3qpZW6uFwm9JMgevQtG9Qns
-         hGHjeb0UzJ7k09qOfUkp4Tql14PTk9unwPbaHn939zgf4VvQG10w3MfUxWZjjoCKatxl
-         EPG7eYhW6U7R91XYDZNKBKlrBYpL8eES3GJDUgi5sZdP7nqOjqr3C28o5/77BHkLSvqF
-         Fc5OouIJ09I1e4/Qzl0Aw9X/1cvzsuWb4o3+kehRU8k3RCQV2jdLDOmi2XICAYA8O50t
-         UC9Rsy6Wxa5j/F4H6Kjn2u4Dj9hkiAVk1c/6idfukQi4nLlZwGfGWAdkhlgEdvk2An7m
-         3X9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qKDCjGrUGEITn9keK4O4wSbQw8s60BA2KTQLoKiFzno=;
-        b=BaJJoAGiUdIMCvv2WfFqNK5vIjDLS7MT+RJkHLYplIEcK1zpKhSrsIaF/V1DPmRdGl
-         alM7qwLMLOgCCE5m3gTsRdcWQsUUMyjCNc3Nt8W4N7f3rWbV3fpf94u79u2K/XMr9OGA
-         /R7xQnzKBkCeDEkQRhVVhDd0M6jZXEqe2EohDovkMaEoFT8jRjBp/QktxXnep5OclOw6
-         66OcgHD+zZ0JTld6VbjlJ502kFzb1pnAwCAP32B9NxFV/DSHuXkpg6Z8PRf7I5EKNnzu
-         ZaeMYyIQRlPw4uE4ICVNgu0LlXia9tu1uTTAF1k8QsIQi8XO8zzMDoq7fXBCgnH1/Hd5
-         o4gQ==
-X-Gm-Message-State: APjAAAX1TL/J2mz2wwaPZxxFLb6Fo8+T5v23MQ/8UfpthctmO0IyAKi5
-        EdsafHYGJvRFMyHVov+Em5zs1w==
-X-Google-Smtp-Source: APXvYqxttx78GtX0vd5yiKKkdqsdz1pehalivWVgs1kXk1dF/0y8Iyrv4JOoqygWTduXugZhAZBz6w==
-X-Received: by 2002:a19:a416:: with SMTP id q22mr15652060lfc.145.1566308470396;
-        Tue, 20 Aug 2019 06:41:10 -0700 (PDT)
-Received: from localhost (c-243c70d5.07-21-73746f28.bbcust.telenor.se. [213.112.60.36])
-        by smtp.gmail.com with ESMTPSA id d3sm2867007lfb.92.2019.08.20.06.41.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 06:41:09 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     davem@davemloft.net, shuah@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH] selftests: net: add missing NFT_FWD_NETDEV to config
-Date:   Tue, 20 Aug 2019 15:41:02 +0200
-Message-Id: <20190820134102.25636-1-anders.roxell@linaro.org>
+        Tue, 20 Aug 2019 09:41:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730326AbfHTNlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:41:08 -0400
+Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAF8C2087E;
+        Tue, 20 Aug 2019 13:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566308467;
+        bh=raOrY5VcQCrpTE9XAV1IsbgMSyjwTSUi9PHXz5s6vRc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cuPNAxmgfC+Zxeicy2pYkRiFsUexi2+Nz3ZdOzjBasJLTBiVaxkMTqJqIEsmckGe8
+         Z4k2xhzfMWiLTURi2G+pAyf++MMD3hClBnGpajmrV0e4vwRloLdgVf3brycr166TII
+         yZ6D1rAP/cRzuNzwo5DbcEiJfNX1EH4gPvZdcpFI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 29/44] usb: gadget: mass_storage: Fix races between fsg_disable and fsg_set_alt
+Date:   Tue, 20 Aug 2019 09:40:13 -0400
+Message-Id: <20190820134028.10829-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190820134028.10829-1-sashal@kernel.org>
+References: <20190820134028.10829-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running xfrm_policy.sh we see the following
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
- # sysctl cannot stat /proc/sys/net/ipv4/conf/eth1/forwarding No such file or directory
- cannot: stat_/proc/sys/net/ipv4/conf/eth1/forwarding #
- # sysctl cannot stat /proc/sys/net/ipv4/conf/veth0/forwarding No such file or directory
- cannot: stat_/proc/sys/net/ipv4/conf/veth0/forwarding #
- # sysctl cannot stat /proc/sys/net/ipv4/conf/eth1/forwarding No such file or directory
- cannot: stat_/proc/sys/net/ipv4/conf/eth1/forwarding #
- # sysctl cannot stat /proc/sys/net/ipv4/conf/veth0/forwarding No such file or directory
- cannot: stat_/proc/sys/net/ipv4/conf/veth0/forwarding #
- # sysctl cannot stat /proc/sys/net/ipv6/conf/eth1/forwarding No such file or directory
- cannot: stat_/proc/sys/net/ipv6/conf/eth1/forwarding #
- # sysctl cannot stat /proc/sys/net/ipv6/conf/veth0/forwarding No such file or directory
- cannot: stat_/proc/sys/net/ipv6/conf/veth0/forwarding #
- # sysctl cannot stat /proc/sys/net/ipv6/conf/eth1/forwarding No such file or directory
- cannot: stat_/proc/sys/net/ipv6/conf/eth1/forwarding #
- # sysctl cannot stat /proc/sys/net/ipv6/conf/veth0/forwarding No such file or directory
- cannot: stat_/proc/sys/net/ipv6/conf/veth0/forwarding #
- # modprobe FATAL Module ip_tables not found in directory /lib/modules/5.3.0-rc5-next-20190820+
- FATAL: Module_ip_tables #
- # iptables v1.6.2 can't initialize iptables table `filter' Table does not exist (do you need to insmod?)
- v1.6.2: can't_initialize #
+[ Upstream commit 4a56a478a525d6427be90753451c40e1327caa1a ]
 
-Rework to enable CONFIG_NF_TABLES_NETDEV and CONFIG_NFT_FWD_NETDEV.
+If fsg_disable() and fsg_set_alt() are called too closely to each
+other (for example due to a quick reset/reconnect), what can happen
+is that fsg_set_alt sets common->new_fsg from an interrupt while
+handle_exception is trying to process the config change caused by
+fsg_disable():
 
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+	fsg_disable()
+	...
+	handle_exception()
+		sets state back to FSG_STATE_NORMAL
+		hasn't yet called do_set_interface()
+		or is inside it.
+
+ ---> interrupt
+	fsg_set_alt
+		sets common->new_fsg
+		queues a new FSG_STATE_CONFIG_CHANGE
+ <---
+
+Now, the first handle_exception can "see" the updated
+new_fsg, treats it as if it was a fsg_set_alt() response,
+call usb_composite_setup_continue() etc...
+
+But then, the thread sees the second FSG_STATE_CONFIG_CHANGE,
+and goes back down the same path, wipes and reattaches a now
+active fsg, and .. calls usb_composite_setup_continue() which
+at this point is wrong.
+
+Not only we get a backtrace, but I suspect the second set_interface
+wrecks some state causing the host to get upset in my case.
+
+This fixes it by replacing "new_fsg" by a "state argument" (same
+principle) which is set in the same lock section as the state
+update, and retrieved similarly.
+
+That way, there is never any discrepancy between the dequeued
+state and the observed value of it. We keep the ability to have
+the latest reconfig operation take precedence, but we guarantee
+that once "dequeued" the argument (new_fsg) will not be clobbered
+by any new event.
+
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/config | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/function/f_mass_storage.c | 28 +++++++++++++-------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-diff --git a/tools/testing/selftests/net/config b/tools/testing/selftests/net/config
-index b8503a8119b0..e30b0ae5d474 100644
---- a/tools/testing/selftests/net/config
-+++ b/tools/testing/selftests/net/config
-@@ -29,3 +29,5 @@ CONFIG_NET_SCH_FQ=m
- CONFIG_NET_SCH_ETF=m
- CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_KALLSYMS=y
-+CONFIG_NF_TABLES_NETDEV=y
-+CONFIG_NFT_FWD_NETDEV=m
+diff --git a/drivers/usb/gadget/function/f_mass_storage.c b/drivers/usb/gadget/function/f_mass_storage.c
+index 043f97ad8f226..f2bc8d0370676 100644
+--- a/drivers/usb/gadget/function/f_mass_storage.c
++++ b/drivers/usb/gadget/function/f_mass_storage.c
+@@ -261,7 +261,7 @@ struct fsg_common;
+ struct fsg_common {
+ 	struct usb_gadget	*gadget;
+ 	struct usb_composite_dev *cdev;
+-	struct fsg_dev		*fsg, *new_fsg;
++	struct fsg_dev		*fsg;
+ 	wait_queue_head_t	io_wait;
+ 	wait_queue_head_t	fsg_wait;
+ 
+@@ -290,6 +290,7 @@ struct fsg_common {
+ 	unsigned int		bulk_out_maxpacket;
+ 	enum fsg_state		state;		/* For exception handling */
+ 	unsigned int		exception_req_tag;
++	void			*exception_arg;
+ 
+ 	enum data_direction	data_dir;
+ 	u32			data_size;
+@@ -391,7 +392,8 @@ static int fsg_set_halt(struct fsg_dev *fsg, struct usb_ep *ep)
+ 
+ /* These routines may be called in process context or in_irq */
+ 
+-static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
++static void __raise_exception(struct fsg_common *common, enum fsg_state new_state,
++			      void *arg)
+ {
+ 	unsigned long		flags;
+ 
+@@ -404,6 +406,7 @@ static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
+ 	if (common->state <= new_state) {
+ 		common->exception_req_tag = common->ep0_req_tag;
+ 		common->state = new_state;
++		common->exception_arg = arg;
+ 		if (common->thread_task)
+ 			send_sig_info(SIGUSR1, SEND_SIG_PRIV,
+ 				      common->thread_task);
+@@ -411,6 +414,10 @@ static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
+ 	spin_unlock_irqrestore(&common->lock, flags);
+ }
+ 
++static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
++{
++	__raise_exception(common, new_state, NULL);
++}
+ 
+ /*-------------------------------------------------------------------------*/
+ 
+@@ -2285,16 +2292,16 @@ static int do_set_interface(struct fsg_common *common, struct fsg_dev *new_fsg)
+ static int fsg_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
+ {
+ 	struct fsg_dev *fsg = fsg_from_func(f);
+-	fsg->common->new_fsg = fsg;
+-	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
++
++	__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, fsg);
+ 	return USB_GADGET_DELAYED_STATUS;
+ }
+ 
+ static void fsg_disable(struct usb_function *f)
+ {
+ 	struct fsg_dev *fsg = fsg_from_func(f);
+-	fsg->common->new_fsg = NULL;
+-	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
++
++	__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, NULL);
+ }
+ 
+ 
+@@ -2307,6 +2314,7 @@ static void handle_exception(struct fsg_common *common)
+ 	enum fsg_state		old_state;
+ 	struct fsg_lun		*curlun;
+ 	unsigned int		exception_req_tag;
++	struct fsg_dev		*new_fsg;
+ 
+ 	/*
+ 	 * Clear the existing signals.  Anything but SIGUSR1 is converted
+@@ -2360,6 +2368,7 @@ static void handle_exception(struct fsg_common *common)
+ 	common->next_buffhd_to_fill = &common->buffhds[0];
+ 	common->next_buffhd_to_drain = &common->buffhds[0];
+ 	exception_req_tag = common->exception_req_tag;
++	new_fsg = common->exception_arg;
+ 	old_state = common->state;
+ 	common->state = FSG_STATE_NORMAL;
+ 
+@@ -2413,8 +2422,8 @@ static void handle_exception(struct fsg_common *common)
+ 		break;
+ 
+ 	case FSG_STATE_CONFIG_CHANGE:
+-		do_set_interface(common, common->new_fsg);
+-		if (common->new_fsg)
++		do_set_interface(common, new_fsg);
++		if (new_fsg)
+ 			usb_composite_setup_continue(common->cdev);
+ 		break;
+ 
+@@ -2989,8 +2998,7 @@ static void fsg_unbind(struct usb_configuration *c, struct usb_function *f)
+ 
+ 	DBG(fsg, "unbind\n");
+ 	if (fsg->common->fsg == fsg) {
+-		fsg->common->new_fsg = NULL;
+-		raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
++		__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, NULL);
+ 		/* FIXME: make interruptible or killable somehow? */
+ 		wait_event(common->fsg_wait, common->fsg != fsg);
+ 	}
 -- 
 2.20.1
 
