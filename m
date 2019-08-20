@@ -2,101 +2,119 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084ECC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A9BC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE95822CF7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C721523958
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 08:41:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bfTxW2jv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729351AbfHTIlD (ORCPT
+        id S1729447AbfHTIlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 04:41:03 -0400
-Received: from mga18.intel.com ([134.134.136.126]:63414 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbfHTIlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 04:41:03 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 01:41:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="172385728"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.6]) ([10.239.13.6])
-  by orsmga008.jf.intel.com with ESMTP; 20 Aug 2019 01:41:00 -0700
-Subject: Re: [kbuild-all] [PATCH] fix odd_ptr_err.cocci warnings
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>, alsa-devel@alsa-project.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, kbuild-all@01.org
-References: <alpine.DEB.2.21.1908091229140.2946@hadrien>
- <20190809123112.GC3963@sirena.co.uk>
- <88ac4c79-5ce3-3f1a-5f6e-3928a30a1ef5@ti.com>
- <alpine.DEB.2.21.1908091519400.2946@hadrien>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <297e44a8-e08d-ddf2-e5e8-b532965b4a8d@intel.com>
-Date:   Tue, 20 Aug 2019 16:41:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 20 Aug 2019 04:41:15 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:46358 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728879AbfHTIlP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 04:41:15 -0400
+Received: by mail-wr1-f51.google.com with SMTP id z1so11449566wru.13
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 01:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KYkJZ7ygqpGVyziIAkPglTpFbYkqx1ZCclLUpHigUPc=;
+        b=bfTxW2jv1ZNeSc5mHCdK2zcQw/vzn63re+UOQJv+x3SzSIXCNj48qza9cBPl33mDur
+         fkd7FSvNI6j0nQOMXHlNy2RKNW/OAblqxe7e3Y9a9CD+6+mnxhINF4+inEG08sYdYli7
+         yGUF1VmcEwSQh/uY/uOXHL9L0NQfcBmNFYSlnCmY8/bo+nDUXnnXlOpg40jRsU/FCGLY
+         syOe1ZtHCv9HilqtHXRrilzK079KfD+/+7J1KnrufjX3RmwISfiIlMZ370rda3isfo//
+         A5jasBfjs354i7zIkKR6IdINsDYQsn2ufZj5K52QXgETl25iF1t25rlKXgj7KdQ+QcwA
+         TNbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KYkJZ7ygqpGVyziIAkPglTpFbYkqx1ZCclLUpHigUPc=;
+        b=oZGjnivAcCg3SjGipEhvvnSWB1BdoLkaZWPl3H7UL+Bp9hrQcM+NNdLpB5SLcN0AFR
+         4fO7HfmZ33hz6ZlxwV7b3knz46T20aZsNW8iuTf4EucIPglhY8HEgJiZAHuPaKtfOZ3m
+         Gt2G/utaNSPri3DxbzyKLiR2YKOzQJxF7BcrNec9ui5ApyFuZm6GU5W/6870LsULSaOv
+         4oVd2uGcWuqFL15fkb3tYF31967Z+24Pfgfnyn/4oP0Pwjj0kxB1NWHakkA1O9L0dgwG
+         RxmmV0RSCr2FfbpAB5b0gGwel55sqWqWtvoKRqaoz1Aj16kRHYTgAqWh9IzvYIOGDZ53
+         4uXg==
+X-Gm-Message-State: APjAAAU7TT2gwhdh481t4+8AZn/q1RRz/orLPjf/cHpQsnySzol9kuGo
+        LfAxPOTwdQPPjBhJcae22OrF2w==
+X-Google-Smtp-Source: APXvYqx2KIAs3etJ5JAW81f4A9TpNQ2I/pe1woSnHDb8DN4a16tSMefBVnJ06dg+YaHBCRBfu4g3Uw==
+X-Received: by 2002:adf:fdcc:: with SMTP id i12mr33798582wrs.88.1566290472758;
+        Tue, 20 Aug 2019 01:41:12 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id g2sm34275648wru.27.2019.08.20.01.41.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 01:41:11 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net,
+        boris.brezillon@collabora.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC 00/11] drm/bridge: dw-hdmi: implement bus-format negotiation and YUV420 support
+Date:   Tue, 20 Aug 2019 10:40:58 +0200
+Message-Id: <20190820084109.24616-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1908091519400.2946@hadrien>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+This patchset is based on Boris's "drm: Add support for bus-format negotiation" RFC at [1]
+patchset to implement :
+- basic bus-format negotiation for DW-HDMI
+- advanced HDMI2.0 YUV420 bus-format negotiation for DW-HDMI
 
-We have updated to only send the reports to you, please see 
-https://github.com/intel/lkp-tests/blob/master/repo/linux/omap-audio
+And the counterpart implementation in the Amlogic Meson VPU dw-hdmi glue :
+- basic bus-format negotiation to select YUV444 bus-format as DW-HDMI input
+- YUV420 support when HDMI2.0 YUV420 modeset
 
-Best Regards,
-Rong Chen
+This is a follow-up from the previous attempts :
+- "drm/meson: Add support for HDMI2.0 YUV420 4k60" at [2]
+- "drm/meson: Add support for HDMI2.0 4k60" at [3]
 
-On 8/9/19 9:21 PM, Julia Lawall wrote:
->
-> On Fri, 9 Aug 2019, Peter Ujfalusi wrote:
->
->>
->> On 09/08/2019 15.31, Mark Brown wrote:
->>> On Fri, Aug 09, 2019 at 12:30:46PM +0200, Julia Lawall wrote:
->>>
->>>> tree:   https://github.com/omap-audio/linux-audio peter/ti-linux-4.19.y/wip
->>>> head:   62c9c1442c8f61ca93e62e1a9d8318be0abd9d9a
->>>> commit: 62c9c1442c8f61ca93e62e1a9d8318be0abd9d9a [34/34] j721e new machine driver wip
->>>> :::::: branch date: 20 hours ago
->>>> :::::: commit date: 20 hours ago
->>>>
->>>>   j721e-evm.c |    4 ++--
->>>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> --- a/sound/soc/ti/j721e-evm.c
->>>> +++ b/sound/soc/ti/j721e-evm.c
->>>> @@ -283,7 +283,7 @@ static int j721e_get_clocks(struct platf
->>> This file isn't upstream, it's only in the TI BSP.
->> Yes, it is not upstream, but the fix is valid.
->>
->> Julia: is it possible to direct these notifications only to me from
->> https://github.com/omap-audio/linux-audio.git ?
->>
->> It mostly carries TI BSP stuff and my various for upstream branches nowdays.
-> Please discuss it with the kbuild people.  They should be able to set it
-> up as you want.
->
-> You can try lkp@intel.com
->
-> julia
-> _______________________________________________
-> kbuild-all mailing list
-> kbuild-all@lists.01.org
-> https://lists.01.org/mailman/listinfo/kbuild-all
+[1] https://patchwork.freedesktop.org/patch/msgid/20190808151150.16336-1-boris.brezillon@collabora.com
+[2] https://patchwork.freedesktop.org/patch/msgid/20190520133753.23871-1-narmstrong@baylibre.com
+[3] https://patchwork.freedesktop.org/patch/msgid/1549022873-40549-1-git-send-email-narmstrong@baylibre.com
+
+Neil Armstrong (11):
+  fixup! drm/bridge: Add the necessary bits to support bus format
+    negotiation
+  drm/meson: venc: make drm_display_mode const
+  drm/meson: meson_dw_hdmi: switch to drm_bridge_funcs
+  drm/bridge: synopsys: dw-hdmi: add basic bridge_atomic_check
+  drm/bridge: synopsys: dw-hdmi: use negociated bus formats
+  drm/meson: dw-hdmi: stop enforcing input_bus_format
+  drm/bridge: dw-hdmi: allow ycbcr420 modes for >= 0x200a
+  drm/bridge: synopsys: dw-hdmi: add 420 mode format negociation
+  drm/meson: venc: add support for YUV420 setup
+  drm/meson: vclk: add support for YUV420 setup
+  drm/meson: Add YUV420 output support
+
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c |  97 +++++++++++++++-
+ drivers/gpu/drm/drm_bridge.c              |   6 +-
+ drivers/gpu/drm/meson/meson_dw_hdmi.c     | 135 +++++++++++++++++-----
+ drivers/gpu/drm/meson/meson_vclk.c        |  93 +++++++++++----
+ drivers/gpu/drm/meson/meson_vclk.h        |   7 +-
+ drivers/gpu/drm/meson/meson_venc.c        |   8 +-
+ drivers/gpu/drm/meson/meson_venc.h        |  13 ++-
+ drivers/gpu/drm/meson/meson_venc_cvbs.c   |   3 +-
+ include/drm/bridge/dw_hdmi.h              |   1 +
+ 9 files changed, 295 insertions(+), 68 deletions(-)
+
+-- 
+2.22.0
 
