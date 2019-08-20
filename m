@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D40C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3194C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D81622DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E17622DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308780;
-	bh=XLQvMLaa4CApdFhHK4HaqlISLkGZom8MvsfkBRH6x7Y=;
+	s=default; t=1566308786;
+	bh=nYizPpnTiY7xVQPeBOPeOVVEBMRRYIfGNXJevNUNqpc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FIjqYxKUSCfXLLLla9+kTZiYR0wA2E+Da5rU7cQ8lIuUxg3fxQvEHMPabScT7pJz5
-	 GcThzxT6n3+eeEwIbzZq3o88pdvP/VZa26XgC4GwJFqtzk/HuZT/7lwSzWvQrzk2T8
-	 34AIgo8MJV9PXJNga5WRrRf9MhCDuV11FW2Osme8=
+	b=IyTCuUdU7VrE16XVyVVTMZTBrviLc60A384ZjWWa0QLzF/KTnzjUkjljXtJxauCNW
+	 Q5a1gA3/wdZ9iQjIqQs1Ky1fxoMyEAa0S7tuOSTOJoS7YyOspAwdaDBKLBF1l8Duam
+	 yyaA9YRwsxSgWGNOHQo9qvzcBqRXpgIuWYZ2av0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbfHTNqT (ORCPT
+        id S1729351AbfHTNqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:46:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37642 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730583AbfHTNmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:42:21 -0400
+        id S1729838AbfHTNmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:42:16 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBA0E2339F;
-        Tue, 20 Aug 2019 13:42:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 851F622DD3;
+        Tue, 20 Aug 2019 13:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308540;
-        bh=XLQvMLaa4CApdFhHK4HaqlISLkGZom8MvsfkBRH6x7Y=;
+        s=default; t=1566308536;
+        bh=nYizPpnTiY7xVQPeBOPeOVVEBMRRYIfGNXJevNUNqpc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tL5tFvjiE9kX6z0YVRC1pCtq9Nq66cQfqNnCBKl5YLut7621IULiT15FF5I50zuYa
-         tSu+7h2Ocn90c028lBO23tnPpXGnR948jtOsfYJLOdmSiRcnMHEyaWfhRbaFwuSSuS
-         ZbPN7+N0n4GqPvagahwLB1uQGR9G1iIlHN7FG6C4=
+        b=i4wCG0nA+LLNTh/EOOPdRTuCi0vkUPdh78UZ8N77GOrzdadpdagk4hmCw0MNnUU1m
+         e/69DJ02nftffpJuEyaQPt9Rug+R/wGfm88oOkHBDrsogCpdOwYH1bDetz/0D/+RjQ
+         2ruCK/tPNW4CvS7yikBZS7Poc8S5d8e8U0yhoI4M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 07/27] intel_th: Use the correct style for SPDX License Identifier
-Date:   Tue, 20 Aug 2019 09:41:53 -0400
-Message-Id: <20190820134213.11279-7-sashal@kernel.org>
+Cc:     Anthony Iliopoulos <ailiopoulos@suse.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 02/27] nvme-multipath: revalidate nvme_ns_head gendisk in nvme_validate_ns
+Date:   Tue, 20 Aug 2019 09:41:48 -0400
+Message-Id: <20190820134213.11279-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134213.11279-1-sashal@kernel.org>
 References: <20190820134213.11279-1-sashal@kernel.org>
@@ -60,49 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nishad Kamdar <nishadkamdar@gmail.com>
+From: Anthony Iliopoulos <ailiopoulos@suse.com>
 
-[ Upstream commit fac7b714c514fcc555541e1d6450c694b0a5f8d3 ]
+[ Upstream commit fab7772bfbcfe8fb8e3e352a6a8fcaf044cded17 ]
 
-This patch corrects the SPDX License Identifier style
-in header files related to Drivers for Intel(R) Trace Hub
-controller.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used)
+When CONFIG_NVME_MULTIPATH is set, only the hidden gendisk associated
+with the per-controller ns is run through revalidate_disk when a
+rescan is triggered, while the visible blockdev never gets its size
+(bdev->bd_inode->i_size) updated to reflect any capacity changes that
+may have occurred.
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46
+This prevents online resizing of nvme block devices and in extension of
+any filesystems atop that will are unable to expand while mounted, as
+userspace relies on the blockdev size for obtaining the disk capacity
+(via BLKGETSIZE/64 ioctls).
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by explicitly revalidating the actual namespace gendisk in
+addition to the per-controller gendisk, when multipath is enabled.
+
+Signed-off-by: Anthony Iliopoulos <ailiopoulos@suse.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/intel_th/msu.h | 2 +-
- drivers/hwtracing/intel_th/pti.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvme/host/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hwtracing/intel_th/msu.h b/drivers/hwtracing/intel_th/msu.h
-index 9cc8aced6116a..979548791b7db 100644
---- a/drivers/hwtracing/intel_th/msu.h
-+++ b/drivers/hwtracing/intel_th/msu.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Intel(R) Trace Hub Memory Storage Unit (MSU) data structures
-  *
-diff --git a/drivers/hwtracing/intel_th/pti.h b/drivers/hwtracing/intel_th/pti.h
-index e9381babc84c3..7dfc0431333b7 100644
---- a/drivers/hwtracing/intel_th/pti.h
-+++ b/drivers/hwtracing/intel_th/pti.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Intel(R) Trace Hub PTI output data structures
-  *
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index e26d1191c5ad6..d838a300ae770 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1557,6 +1557,7 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
+ 	if (ns->head->disk) {
+ 		nvme_update_disk_info(ns->head->disk, ns, id);
+ 		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
++		revalidate_disk(ns->head->disk);
+ 	}
+ #endif
+ }
 -- 
 2.20.1
 
