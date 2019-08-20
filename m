@@ -2,138 +2,135 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD31EC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78DAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9960F218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72D8218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:11:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CZ4ZI+y0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbfHTDKT (ORCPT
+        id S1729052AbfHTDL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 23:10:19 -0400
-Received: from mga06.intel.com ([134.134.136.31]:20591 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbfHTDKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 23:10:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Aug 2019 20:10:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,407,1559545200"; 
-   d="scan'208";a="377633230"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Aug 2019 20:10:17 -0700
-Received: from [10.226.38.19] (vramuthx-mobl1.gar.corp.intel.com [10.226.38.19])
-        by linux.intel.com (Postfix) with ESMTP id 3614E58050C;
-        Mon, 19 Aug 2019 20:10:16 -0700 (PDT)
-Subject: Re: [PATCH v1 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, peter.harliman.liem@intel.com
-References: <20190819034416.45192-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190819034416.45192-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190819160642.GC30120@smile.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <0bae8558-1ecd-e3f0-76c6-ba25c529a12e@linux.intel.com>
-Date:   Tue, 20 Aug 2019 11:10:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Mon, 19 Aug 2019 23:11:28 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:12375 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728719AbfHTDL1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 19 Aug 2019 23:11:27 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5b64df0000>; Mon, 19 Aug 2019 20:11:27 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 19 Aug 2019 20:11:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 19 Aug 2019 20:11:27 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Aug
+ 2019 03:11:26 +0000
+Received: from [10.2.161.11] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 20 Aug
+ 2019 03:11:26 +0000
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+To:     Dave Chinner <david@fromorbit.com>
+CC:     Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
+        <linux-xfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
+        <linux-mm@kvack.org>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190814101714.GA26273@quack2.suse.cz>
+ <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
+ <20190815130558.GF14313@quack2.suse.cz>
+ <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
+ <20190817022603.GW6129@dread.disaster.area>
+ <20190819063412.GA20455@quack2.suse.cz>
+ <20190819092409.GM7777@dread.disaster.area>
+ <ae64491b-85f8-eeca-14e8-2f09caf8abd2@nvidia.com>
+ <20190820012021.GQ7777@dread.disaster.area>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <84318b51-bd07-1d9b-d842-e65cac2ff484@nvidia.com>
+Date:   Mon, 19 Aug 2019 20:09:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190819160642.GC30120@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190820012021.GQ7777@dread.disaster.area>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566270687; bh=AKYDp6zi8g/3Ey7Fk8otUT5V262BqzkSQ0q+IcrDmeo=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CZ4ZI+y0zL6VhLHNeKaQ2BvucdquPt4NgzTapmdwmc3GH3ircx3XCkVaxgGV+d4sV
+         NV4xzAxkdZ0qipuq6cmTMvEo0GkMUZ0LA3h8jLsrhtdUSK7LJYDcORQUkb27HU5iJS
+         D8J/timtnz1ic6DmnMqDlno5UI+SPuaRVL4k6cJ9e1Yy2OisErHDl40bOiFkRHVohj
+         dvzXeKjnkRwCke55psIxtF5KXQ3oFpQTgwnRbtrvqucZqN39Wqb3XG4Rtkggo8WdSf
+         UF27W8iph40Uw6qp5h0XPXa7CrDBm9DA/1RdEpAz6OMTNS7ZEHj/b9rS0k4Y8oW/rq
+         ihGqFKtG8v2lg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/8/2019 12:06 AM, Andy Shevchenko wrote:
-> On Mon, Aug 19, 2019 at 11:44:16AM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On 8/19/19 6:20 PM, Dave Chinner wrote:
+> On Mon, Aug 19, 2019 at 05:05:53PM -0700, John Hubbard wrote:
+>> On 8/19/19 2:24 AM, Dave Chinner wrote:
+>>> On Mon, Aug 19, 2019 at 08:34:12AM +0200, Jan Kara wrote:
+>>>> On Sat 17-08-19 12:26:03, Dave Chinner wrote:
+>>>>> On Fri, Aug 16, 2019 at 12:05:28PM -0700, Ira Weiny wrote:
+>>>>>> On Thu, Aug 15, 2019 at 03:05:58PM +0200, Jan Kara wrote:
+>>>>>>> On Wed 14-08-19 11:08:49, Ira Weiny wrote:
+>>>>>>>> On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
+>> ...
 >>
->> Adds support for eMMC PHY on Intel's Lightning Mountain SoC.
-> Adds -> Add.
-Thanks Andy, agreed.
->> +/* eMMC phy register definitions */
->> +#define EMMC_PHYCTRL0_REG	0xa8
->> +#define DR_TY_MASK		GENMASK(30, 28)
->> +#define DR_TY_50OHM(x)		((~(x) << 28) & DR_TY_MASK)
->> +#define OTAPDLYENA		BIT(14)
->> +#define OTAPDLYSEL_MASK		GENMASK(13, 10)
->> +#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
->> +
->> +#define EMMC_PHYCTRL1_REG	0xac
->> +#define PDB_MASK		1
-> BIT(0)
-agreed.
->> +#define ENDLL_MASK		BIT(7)
->> +#define ENDLL_VAL		BIT(7)
->> +
->> +#define EMMC_PHYCTRL2_REG	0xb0
->> +#define FRQSEL_25M		0
->> +#define FRQSEL_150M		3
->> +#define FRQSEL_MASK		GENMASK(24, 22)
->> +#define FRQSEL_SHIFT(x)		((x) << 22)
->> +
->> +#define EMMC_PHYSTAT_REG	0xbc
->> +#define CALDONE_MASK		1
->> +#define DLLRDY_MASK		1
->> +#define IS_CALDONE(x)	((((x) >> 9) & CALDONE_MASK) == 1)
->> +#define IS_DLLRDY(x)	((((x) >> 8) & DLLRDY_MASK) == 1)
-> These are inconsistent with above:
->
-> 	#define CALDONE_MASK	BIT(9)
-> 	...
-> 	#define IS_CALDONE	((x) & CALDONE_MASK)
->
-> Note redundant == part.
-Agreed, will update.
->> +static int intel_emmc_phy_power(struct phy *phy, bool on_off)
->> +{
->> +	 * - PHY driver to probe
->> +	 * - SDHCI driver to start probe
->> +	 * - SDHCI driver to register it's clock
->> +	 * - SDHCI driver to get the PHY
->> +	 * - SDHCI driver to init the PHY
->> +	 *
->
->> +	 * The clock is optional, so upon any error we just set to NULL.
-> No, the clock framework will do it for you.
->
->> +	 *
->> +	 * NOTE: we don't do anything special for EPROBE_DEFER here.  Given the
->> +	 * above expected use case, EPROBE_DEFER isn't sensible to expect, so
->> +	 * it's just like any other error.
-> This comment is not correct...
-Agreed, re-structure the sentence.
->> +	 */
->> +	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
->> +	if (IS_ERR(priv->emmcclk)) {
->> +		dev_warn(&phy->dev, "ERROR: getting emmcclk\n");
-> ...because here you have to return an error...
-Agreed.
->> +		priv->emmcclk = NULL;
-> ...and here is redundant assignment.
->
-Agreed.
->> +	}
->> +
->> +	return 0;
->> +}
-> When you send out patches, check that you do this for latest version you got reviewed internally.
-Thank you so much for the review comments, sure I will recheck and 
-recollect your review comments of different patches
-for  the same cases .
+>> Any thoughts about sockets? I'm looking at net/xdp/xdp_umem.c which pins
+>> memory with FOLL_LONGTERM, and wondering how to make that work here.
+> 
+> I'm not sure how this interacts with file mappings? I mean, this
+> is just pinning anonymous pages for direct data placement into
+> userspace, right?
+> 
+> Are you asking "what if this pinned memory was a file mapping?",
+> or something else?
 
-With Best Regards
-vadivel
+Yes, mainly that one. Especially since the FOLL_LONGTERM flag is
+already there in xdp_umem_pin_pages(), unconditionally. So the
+simple rules about struct *vaddr_pin usage (set it to NULL if FOLL_LONGTERM is
+not set) are not going to work here.
 
 
+> 
+>> These are close to files, in how they're handled, but just different
+>> enough that it's not clear to me how to make work with this system.
+> 
+> I'm guessing that if they are pinning a file backed mapping, they
+> are trying to dma direct to the file (zero copy into page cache?)
+> and so they'll need to either play by ODP rules or take layout
+> leases, too....
+> 
+
+OK. I was just wondering if there was some simple way to dig up a
+struct file associated with a socket (I don't think so), but it sounds
+like this is an exercise that's potentially different for each subsystem.
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
