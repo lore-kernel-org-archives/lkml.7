@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B90DC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0547DC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E61CD22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE5322DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:54:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="JQloAJ9J"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="XI5z9DBn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730479AbfHTOxx (ORCPT
+        id S1730542AbfHTOyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:53:53 -0400
-Received: from vps.xff.cz ([195.181.215.36]:60048 "EHLO vps.xff.cz"
+        Tue, 20 Aug 2019 10:54:01 -0400
+Received: from vps.xff.cz ([195.181.215.36]:60114 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729351AbfHTOxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:53:48 -0400
+        id S1729888AbfHTOxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 10:53:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1566312825; bh=wIAxljKfYwADgH+42GDkJIwLygOIg7HG/xvcRvcY98U=;
+        t=1566312826; bh=4hhK28dgS8BmhfHSH/CC6uoVklNXHuscBoxMGcS+N/w=;
         h=From:To:Cc:Subject:Date:References:From;
-        b=JQloAJ9JgxomMDFTbsLxbkyZJgYGUbjBaehlsq8CDjjsR5kp8P2V0WYdgIg7+puj6
-         AFMc4kQ/MwZPB+37mMTvujOxThMU3fqh605btYUrm9Kj8JtaQRpcl2rhfqL4tJ35CM
-         I13XbUfgxDkjIsR5LBRq5X2HaxW5C+MsAGAiCREI=
+        b=XI5z9DBnNdOUqFw25KNQyt9MWq35cijMPrMPxwWFujdoAioSTERrxgfz/4Bgv2BoY
+         LnJJavS2Z5Ic3cP0TpH8b795HjbJ4uOUXZsAj60ug3CNw3S0q57v5h7TtLAQ7x87ID
+         yLHJzWbAsNjcbG4da6MFfZ19DXmU85CokPZfpB3U=
 From:   megous@megous.com
 To:     "David S. Miller" <davem@davemloft.net>,
         Rob Herring <robh+dt@kernel.org>,
@@ -42,9 +42,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, netdev@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 2/6] dt-bindings: net: sun8i-a83t-emac: Add phy-io-supply property
-Date:   Tue, 20 Aug 2019 16:53:39 +0200
-Message-Id: <20190820145343.29108-3-megous@megous.com>
+Subject: [PATCH 5/6] net: stmmac: sun8i: Add support for enabling a regulator for PHY I/O pins
+Date:   Tue, 20 Aug 2019 16:53:42 +0200
+Message-Id: <20190820145343.29108-6-megous@megous.com>
 In-Reply-To: <20190820145343.29108-1-megous@megous.com>
 References: <20190820145343.29108-1-megous@megous.com>
 MIME-Version: 1.0
@@ -56,30 +56,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-Some PHYs require separate power supply for I/O pins in some modes
-of operation. Add phy-io-supply property, to allow enabling this
-power supply.
+Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
+to the phy datasheet, both regulators need to be enabled at the same time.
+
+Add support for the second optional regulator, "phy-io", to the glue
+driver.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- .../devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml    | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 31 ++++++++++++++++---
+ 1 file changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-index 304f244e9ab5..782e202aa124 100644
---- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-+++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
-@@ -47,6 +47,10 @@ properties:
-     description:
-       PHY regulator
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index e7df30d3cab1..e96337b7cd12 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -61,6 +61,8 @@ struct emac_variant {
+  * @ephy_clk:			reference to the optional EPHY clock for
+  *				the internal PHY
+  * @regulator_phy:		reference to the optional regulator
++ * @regulator_phy_io:		reference to the optional regulator for
++ *				PHY I/O pins
+  * @rst_ephy:			reference to the optional EPHY reset for
+  *				the internal PHY
+  * @variant:			reference to the current board variant
+@@ -72,6 +74,7 @@ struct sunxi_priv_data {
+ 	struct clk *tx_clk;
+ 	struct clk *ephy_clk;
+ 	struct regulator *regulator_phy;
++	struct regulator *regulator_phy_io;
+ 	struct reset_control *rst_ephy;
+ 	const struct emac_variant *variant;
+ 	struct regmap_field *regmap_field;
+@@ -530,21 +533,30 @@ static int sun8i_dwmac_init(struct platform_device *pdev, void *priv)
+ 	struct sunxi_priv_data *gmac = priv;
+ 	int ret;
  
-+  phy-io-supply:
-+    description:
-+      PHY I/O pins regulator
++	ret = regulator_enable(gmac->regulator_phy_io);
++	if (ret) {
++		dev_err(&pdev->dev, "Fail to enable PHY I/O regulator\n");
++		return ret;
++	}
 +
- required:
-   - compatible
-   - reg
+ 	ret = regulator_enable(gmac->regulator_phy);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Fail to enable PHY regulator\n");
+-		return ret;
++		goto err_disable_regulator_phy_io;
+ 	}
+ 
+ 	ret = clk_prepare_enable(gmac->tx_clk);
+ 	if (ret) {
+-		if (gmac->regulator)
+-			regulator_disable(gmac->regulator);
+ 		dev_err(&pdev->dev, "Could not enable AHB clock\n");
+-		return ret;
++		goto err_disable_regulator_phy;
+ 	}
+ 
+ 	return 0;
++err_disable_regulator_phy:
++	regulator_disable(gmac->regulator_phy);
++err_disable_regulator_phy_io:
++	regulator_disable(gmac->regulator_phy_io);
++	return ret;
+ }
+ 
+ static void sun8i_dwmac_core_init(struct mac_device_info *hw,
+@@ -993,6 +1005,7 @@ static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
+ 	clk_disable_unprepare(gmac->tx_clk);
+ 
+ 	regulator_disable(gmac->regulator_phy);
++	regulator_disable(gmac->regulator_phy_io);
+ }
+ 
+ static void sun8i_dwmac_set_mac_loopback(void __iomem *ioaddr, bool enable)
+@@ -1136,6 +1149,16 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	/* Optional regulator for PHY I/O pins */
++	gmac->regulator_phy_io = devm_regulator_get(dev, "phy-io");
++	if (IS_ERR(gmac->regulator_phy_io)) {
++		ret = PTR_ERR(gmac->regulator_phy_io);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "Failed to get PHY I/O regulator (%d)\n",
++				ret);
++		return ret;
++	}
++
+ 	/* The "GMAC clock control" register might be located in the
+ 	 * CCU address range (on the R40), or the system control address
+ 	 * range (on most other sun8i and later SoCs).
 -- 
 2.22.1
 
