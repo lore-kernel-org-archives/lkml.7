@@ -2,89 +2,130 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 669B4C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E01CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302C32332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566343040;
-	bh=CYqLG2yyf3Oj+6GRNfljZ+NgviW0JS9UplmVKcdHjsI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PXiK3FV3V88ubWeb7isWaQ/1HWGb+7RamSdD8TwM0vrtRk3cuZxXFV+6xL/wmhbJG
-	 4C1iMri+9NuK172fmKYLX2d8/v9Z68qalZGP5Vro1ST5kBmnQVC9wEGC/vCNMkz1X8
-	 9F5vrs7lzja5YT4m3JaACQuKAUoP+XPfHmQYYGEI=
+	by mail.kernel.org (Postfix) with ESMTP id EC43D233A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:19:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NbbaON+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726384AbfHTXRS (ORCPT
+        id S1726364AbfHTXT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 19:17:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbfHTXRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 19:17:18 -0400
-Received: from localhost (li1825-44.members.linode.com [172.104.248.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCE2A2332B;
-        Tue, 20 Aug 2019 23:17:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566343037;
-        bh=CYqLG2yyf3Oj+6GRNfljZ+NgviW0JS9UplmVKcdHjsI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B0ZfYQdgEVeypPJTzOt4tR+HmgBp5JQIDtYRiei/V1OT7dmDOs1Gyr3Mc+ossWemj
-         +ts1/vOwb23Uu50f6OZuJb7XjLujQVVHYu7EG7OufRSnI7fuWd37Y6me5x/CHBf/5D
-         45GDShPdbirkzGd3a6VCJwFnD4T2+61TvgAf1nEE=
-Date:   Tue, 20 Aug 2019 16:17:10 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Stephen Brennan <stephen@brennan.io>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] staging: rtl8192u: fix OPEN_BRACE errors in ieee80211
-Message-ID: <20190820231710.GA27451@kroah.com>
-References: <20190820231156.30031-1-stephen@brennan.io>
- <20190820231156.30031-2-stephen@brennan.io>
+        Tue, 20 Aug 2019 19:19:58 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40878 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfHTXT5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 19:19:57 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b17so330826lff.7;
+        Tue, 20 Aug 2019 16:19:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YcmcRq3HCfNtNX+YWz14n9pREBcIsfhG8VklV7l3VAQ=;
+        b=NbbaON+VCaOIulax5eo/+tBHL6ayAZySIJXO2yiCMDuVVbGk0SLAxbRI7azUNjJZFv
+         4UUBQc0CgzzOR9UHjmfJf2KcJ43RGPdB4N5QizOAuTMveSrQWS+cTN8J5RMLQC/ZXYOa
+         6z3iUgAsqia3wbB/FON7HUKC6RQVpUCKsGQqjamevgg6deIHiOYTc0HB4/4G2gD1ga9F
+         dmSaV8RQy5pOm1Jt5aet7qEk2Uar4pasT2th9TfEFf1h9p5tTHlE2uN9RpeWOP2echmO
+         VCKDVmpu7vUv/6lAVeiw4cy2z6VMm6P0RP05kL7wcrDzGE6KxMMjanJwAW/jsT871Q1K
+         1yvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YcmcRq3HCfNtNX+YWz14n9pREBcIsfhG8VklV7l3VAQ=;
+        b=TSDRChLEA2tOafWXBYWkJ2zRGdLA3LRu0UM8aq/2v0lrRYpo73sbO6E7w8WJS6gs+6
+         ich1ZUAoStfMuYxCBuJl9qA/e+/nW0h6GiuZSaJ1p51UbzdNLQL5tsst8gLovp+SZMuH
+         8Wo+s8tw2uJjxa0+OCZxZQPO35eR15i9Bmm+E+Sg1HqMMq2TvCqSd1fX8r9ZYz/C2/x3
+         HGCiAfrqac0U6RDBxjP7tlBiW8OBJXHEvbJExZC0EbNMJMUUusA2pWQs3cdEeoruklAI
+         tje9kpOOz1dhN8r+oaXCqjMiwkCbg6aNxkXR/pzB7MMYaHo3QmZ4dO2ciIeXMZt3CTMS
+         280w==
+X-Gm-Message-State: APjAAAU7VfDukmuWvoRUySKxmT0xD9JeDfF6YvxiW+CRlLghgTigmgK+
+        JM8OMyIF03jXJEB0pYg9OzLbMY/g
+X-Google-Smtp-Source: APXvYqx1h1/+ICLIaia5cQl3tZFaRSfO3ar0/YeiF0WytQ5pL953MFEf755IttmEVOhx/4PRZ900pA==
+X-Received: by 2002:a19:8c56:: with SMTP id i22mr16806746lfj.105.1566343195280;
+        Tue, 20 Aug 2019 16:19:55 -0700 (PDT)
+Received: from [192.168.2.145] ([94.29.34.218])
+        by smtp.googlemail.com with ESMTPSA id k4sm1970475ljb.20.2019.08.20.16.19.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 16:19:53 -0700 (PDT)
+Subject: Re: [PATCH v6 08/19] PM / devfreq: tegra30: Ensure that target freq
+ won't overflow
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190811212315.12689-1-digetx@gmail.com>
+ <CGME20190811212546epcas1p22be9fefe18908cdd17a518950d296983@epcas1p2.samsung.com>
+ <20190811212315.12689-9-digetx@gmail.com>
+ <c85dbd27-7536-9c51-19a2-fe1c2c6342b9@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f4398556-12e0-9ba8-b59b-19a38764312f@gmail.com>
+Date:   Wed, 21 Aug 2019 02:19:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820231156.30031-2-stephen@brennan.io>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <c85dbd27-7536-9c51-19a2-fe1c2c6342b9@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 04:11:54PM -0700, Stephen Brennan wrote:
-> Signed-off-by: Stephen Brennan <stephen@brennan.io>
-> ---
+Hello Chanwoo,
 
-Hi,
+20.08.2019 3:23, Chanwoo Choi пишет:
+> On 19. 8. 12. 오전 6:23, Dmitry Osipenko wrote:
+>> We already had few integer overflow bugs, let's limit the freq for
+>> consistency.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/devfreq/tegra30-devfreq.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+>> index 70dce58212a4..ca499368ee81 100644
+>> --- a/drivers/devfreq/tegra30-devfreq.c
+>> +++ b/drivers/devfreq/tegra30-devfreq.c
+>> @@ -430,7 +430,7 @@ static unsigned long actmon_update_target(struct tegra_devfreq *tegra,
+>>  	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD + dev->boost_freq;
+>>  	target_freq = tegra_actmon_account_cpu_freq(tegra, dev, target_freq);
+>>  
+>> -	return target_freq;
+>> +	return min(target_freq, tegra->max_freq);
+> 
+> Once again, did you meet this case sometimes?
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+This case happens at least whenever CPU's freq accounting returns
+KHZ_MAX, please see actmon_emc_ratios[] and actmon_cpu_to_emc_rate().
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+> Usually, we can prevent the overflow of target_freq
+> when calculating the target frequency or this style.
+> 
+> I think that if the overflow of target frequency happen frequently,
+> it might have the problem of calculation way. 
 
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/SubmittingPatches for what is needed in order to
-  properly describe the change.
+It is possible to get sampled avg_count from hardware that results in
+target_freq > max_freq because translating number of memory events to
+memory frequency has some calculation error, although it is negligible.
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+In fact, it shouldn't matter that the returned target_freq > max_freq
+with the current driver's code structure and in the commit's message I
+wrote that this change is done for consistency. Hence it should be okay
+to drop this patch as well.
