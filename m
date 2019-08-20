@@ -6,78 +6,89 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E66C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2F1C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F58922CF4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 809DE205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbfHTJJQ (ORCPT
+        id S1729478AbfHTJKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:09:16 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37293 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728698AbfHTJJP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:09:15 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f17so4377923otq.4;
-        Tue, 20 Aug 2019 02:09:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZIHwa6ihqTOJt1z0IhqMmdXZIDcNIppjjHYyAVGEHXg=;
-        b=DgzSD1FLX0W8ZjSibJDNfdt/ElDWiDSIzPln2e0hk6XyY+pJjNMeTxXEPSTdwJ8CXC
-         kCivoV6pm5q5dpZYnIHVKFc/X0wolAZkC0rSdjbGs1PJ1oBlEP5G5OZegcMLIXQbkZtI
-         FX1LUIl/Ba1nYMOVoSZ7Krqu6aPmQ4SjCoQ9yDrFM5OhtaSsDG5WXNte/nnEsoSaMaoX
-         QBtWkNwg4hibFHMBVqtKtVLRoGKHYV7xJLrxkmFmigY5Xn8UIgpFqChEwCwLH9Jm1qvw
-         Xg8sA+Ebz1z63rnTBGaGciBKboF+EqxZ9O742z+PjbZBGLX1npuFdJAPnnZ1u3eqV2vY
-         xaeg==
-X-Gm-Message-State: APjAAAVHczAAN9mP+RmVm6hbiXtEVY573wgGFY76KF/Fe+vpitZ+oFPp
-        REao/OjuLEpZwP2w9X5ZvXSex9Ih+/J7i65EedjMWQ==
-X-Google-Smtp-Source: APXvYqw30yn1caNh6mh1HQnqWHqS4uD51BXVqcEvPabVcPpcr3fQGtvSjat8N4MLnyLawr1odAUPW3iOqnkiSt5gW/8=
-X-Received: by 2002:a9d:459d:: with SMTP id x29mr22524737ote.39.1566292154481;
- Tue, 20 Aug 2019 02:09:14 -0700 (PDT)
+        Tue, 20 Aug 2019 05:10:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37704 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728698AbfHTJKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 05:10:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id EBB09ADDA;
+        Tue, 20 Aug 2019 09:10:22 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Nicolas Ferre <Nicolas.Ferre@microchip.com>,
+        David Miller <davem@davemloft.net>,
+        Yash Shah <yash.shah@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel\@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Petr =?utf-8?Q?=C5=A0tetiar?= <ynezz@true.cz>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: Re: [PATCH 2/3] macb: Update compatibility string for SiFive FU540-C000
+References: <1563534631-15897-1-git-send-email-yash.shah@sifive.com>
+        <1563534631-15897-2-git-send-email-yash.shah@sifive.com>
+        <4075b955-a187-6fd7-a2e6-deb82b5d4fb6@microchip.com>
+        <CAJ2_jOEHoh+D76VpAoVq3XnpAZEQxdQtaVX5eiKw5X4r+ypKVw@mail.gmail.com>
+        <alpine.DEB.2.21.9999.1908131142150.5033@viisi.sifive.com>
+X-Yow:  Are we live or on tape?
+Date:   Tue, 20 Aug 2019 11:10:20 +0200
+In-Reply-To: <alpine.DEB.2.21.9999.1908131142150.5033@viisi.sifive.com> (Paul
+        Walmsley's message of "Tue, 13 Aug 2019 11:42:49 -0700 (PDT)")
+Message-ID: <mvm5zmskxs3.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
 MIME-Version: 1.0
-References: <20190819121618.16557-1-max@enpas.org> <20190819121618.16557-2-max@enpas.org>
-In-Reply-To: <20190819121618.16557-2-max@enpas.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 20 Aug 2019 11:09:03 +0200
-Message-ID: <CAMuHMdV6DhgLSj9dyretKRi47QFOAG-b8NW9RT-JPnZWfG_Z6A@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] hwmon/ltc2990: Generalise DT to fwnode support
-To:     Max Staudt <max@enpas.org>
-Cc:     Linux I2C <linux-i2c@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 2:17 PM Max Staudt <max@enpas.org> wrote:
-> ltc2990 will now use device_property_read_u32_array() instead of
-> of_property_read_u32_array() - allowing the use of software nodes
-> via fwnode_create_software_node().
+On Aug 13 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+
+> Dave, Nicolas,
 >
-> This allows code using i2c_new_device() to specify a default
-> measurement mode for the LTC2990 via fwnode_create_software_node().
+> On Mon, 22 Jul 2019, Yash Shah wrote:
 >
-> Signed-off-by: Max Staudt <max@enpas.org>
+>> On Fri, Jul 19, 2019 at 5:36 PM <Nicolas.Ferre@microchip.com> wrote:
+>> >
+>> > On 19/07/2019 at 13:10, Yash Shah wrote:
+>> > > Update the compatibility string for SiFive FU540-C000 as per the new
+>> > > string updated in the binding doc.
+>> > > Reference: https://lkml.org/lkml/2019/7/17/200
+>> >
+>> > Maybe referring to lore.kernel.org is better:
+>> > https://lore.kernel.org/netdev/CAJ2_jOFEVZQat0Yprg4hem4jRrqkB72FKSeQj4p8P5KA-+rgww@mail.gmail.com/
+>> 
+>> Sure. Will keep that in mind for future reference.
+>> 
+>> >
+>> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+>> >
+>> > Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+>> 
+>> Thanks.
+>
+> Am assuming you'll pick this up for the -net tree for v5.4-rc1 or earlier.
+> If not, please let us know.
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+This is still missing in v5.4-rc5, which means that networking is broken.
 
-Gr{oetje,eeting}s,
-
-                        Geert
+Andreas.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
