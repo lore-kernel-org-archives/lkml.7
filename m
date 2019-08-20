@@ -2,131 +2,103 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65D0C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE54C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFAFC2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41D62082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 06:42:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4WRMyRe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbfHTGj6 (ORCPT
+        id S1729228AbfHTGmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 02:39:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60182 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbfHTGj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 02:39:58 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1A8A42F30D8
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:39:58 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id g2so204448wmk.5
-        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 23:39:58 -0700 (PDT)
+        Tue, 20 Aug 2019 02:42:10 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38316 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbfHTGmK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 02:42:10 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m125so1549369wmm.3;
+        Mon, 19 Aug 2019 23:42:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EVxFeA8hyDYWAhFuzK0XsOFXkFtEPR9uwLn/TZ8pG/s=;
+        b=e4WRMyRe7HkG7zrmCB9sXvTU2QWJdYkt+Lw4lQS9VZaczTGNQw7VmIHnxlAheqfwOe
+         NBSMCdetTgi2FrNlPg7udZJFH1nJPiPXahvRIhSqy9o1NtMqzphPvtgLW11Qm5tWD4+s
+         yWontLf44o1EJGjyqi0Uid2qKVY4FoA+Alzo3xj7n3kQ0SLOTRx7+2rSNI5QS5MZSqn8
+         o8UJn4tQG/y8h/Joq8QSu65TLz9Z1vqBPa+sYH9FEx4rnM3VtQdD9ewbO5gVTXrFfeu/
+         92NsFeKH64fW8NlqsHxEj6jXgmyzK7s9TFhBb2IUpQLDNTsOMVHd3/OL2oPeTyXtpk80
+         HIcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AEG28A+e5HQNRm3+K/rNuEWJbyCUec+vt5vla5rq9Tc=;
-        b=BXyTp/5Y/3UD/1ml/4wpt4ZyYH1FAKsRKYOU1j3LSGkMHTObuFGydN7Z9pDxM+uqFZ
-         4y6oxNtWzzxoQxQ0gN33uqfnirZQksw+IAqSNw7uGIMzbPK8UG84pS0tpHfESggwcMp5
-         Xry/wsHowHSxBVxdVcTyWMf/kAcvMGheDUY3kPtM9L0XmW+3KzUADA4ZVkyOJL9b8bcS
-         3OzOPh4VlLAdYk3ysTIMCEAUIILwtr3tk4cRGtc9WxFo5T4ECDnXjWkHSz5WbP3gRRE1
-         p8nztQVicxi4ex83aakzoXbVg0knmvx2usqxsDKcqYpagxt06SSNS73JovSfSY/pEGFd
-         Uwzg==
-X-Gm-Message-State: APjAAAU6t7EkM6oCahC6xZn5fFOXnL4hvuN2Raq1GSvMCetfHAjJzen6
-        p/bIvpnSXwFxkm4ZtxrnZRq24WidBlSJX8zXJaNS/Ds02DBtGrjbYaKZJFFJRW+uQGi2ilgARLy
-        oG9FUhIjpFKpyitymXnlFZxmc
-X-Received: by 2002:a1c:ef14:: with SMTP id n20mr16167960wmh.89.1566283196669;
-        Mon, 19 Aug 2019 23:39:56 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwd4hNjvqCSuJiEt6Sxv6ofzCTMhDPqB4dqD3uD5gHwn88UwqcpABqBUFZaPI/mTCRngX9e6w==
-X-Received: by 2002:a1c:ef14:: with SMTP id n20mr16167944wmh.89.1566283196317;
-        Mon, 19 Aug 2019 23:39:56 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:8033:56b6:f047:ba4f? ([2001:b07:6468:f312:8033:56b6:f047:ba4f])
-        by smtp.gmail.com with ESMTPSA id a142sm13902746wme.2.2019.08.19.23.39.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Aug 2019 23:39:55 -0700 (PDT)
-Subject: Re: [KVM] 323d73a8ec:
- kernel_selftests.kvm.vmx_set_nested_state_test.fail
-To:     kernel test robot <rong.a.chen@intel.com>,
-        Liran Alon <liran.alon@oracle.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Maran Wilson <maran.wilson@oracle.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, lkp@01.org
-References: <20190820005206.GG734@shao2-debian>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <88004f6e-dbbc-e2a9-bd80-bbedb29c0d2c@redhat.com>
-Date:   Tue, 20 Aug 2019 08:40:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EVxFeA8hyDYWAhFuzK0XsOFXkFtEPR9uwLn/TZ8pG/s=;
+        b=GOfdIJ+ZcVPYyyIIjsA+PmzILAe4QSmcu2ngnBEeZEGYPww5VKuWbxZtD9tbPgJNdO
+         kQiq5y2+J1Rbe09NfAE5dI0hsikdrUYovBvPScKEBSEjwgWeJVZVNENwjA9DbgaPQ4TI
+         kC/7uReTqkU11NQYJOrw7CzwLag6nTpPFfysJjiwB6mXfAIeaOQ8aEOnntYSALoUNv/N
+         41Xiln2glOAGHz2x6l3tjZZeWE4VwYwyJsQiLeRcYBvXKNHVgwj8UUOQONPxmexrpMh/
+         QWzA8O4y2WtNiJxVbzowEWwkfe2wheQGXV2FlnmJxSWA0Yn+Ml3O0yQFV3AsNkPKe8gW
+         JlOg==
+X-Gm-Message-State: APjAAAXRoNwOv32T6mWTbp5p9y3b9IIGSjgaI3Crw6mWDAGvV6PowF1A
+        c6dfjakhZfl9XBYYxL+WoCo=
+X-Google-Smtp-Source: APXvYqwmJJ/VEbwWYnKm/g5V5nrrZFl+M2P/0Zn8sMgZjJcOfvlxy4LTQM53HoJGjzpbTJ7LGZNZ8A==
+X-Received: by 2002:a7b:c091:: with SMTP id r17mr22383277wmh.74.1566283327707;
+        Mon, 19 Aug 2019 23:42:07 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.237.107])
+        by smtp.gmail.com with ESMTPSA id 2sm17673955wrg.83.2019.08.19.23.42.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 19 Aug 2019 23:42:06 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 08:42:03 +0200
+From:   Juri Lelli <juri.lelli@gmail.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Juri Lelli <juri.lelli@redhat.com>, kbuild-all@01.org,
+        tglx@linutronix.de, bigeasy@linutronix.de, rostedt@goodmis.org,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        williams@redhat.com
+Subject: Re: [RT PATCH v2] net/xfrm/xfrm_ipcomp: Protect scratch buffer with
+ local_lock
+Message-ID: <20190820064203.GB6860@localhost.localdomain>
+References: <20190819122731.6600-1-juri.lelli@redhat.com>
+ <201908201356.Pffozrxv%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190820005206.GG734@shao2-debian>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201908201356.Pffozrxv%lkp@intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/08/19 02:52, kernel test robot wrote:
-> FYI, we noticed the following commit (built with gcc-7):
-> 
-> commit: 323d73a8ecad22bf3284f11112a7cce576ade6af ("KVM: nVMX: Change KVM_STATE_NESTED_EVMCS to signal vmcs12 is copied from eVMCS")
-> https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git master
-> 
-> in testcase: kernel_selftests
-> with following parameters:
-> 
-> 	group: kselftests-01
-> 
-> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
-> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
-> 
-> 
-> on test machine: 8 threads Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz with 16G memory
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+Hi,
 
-Patches for these are already on the list, but I'll add the Reported-by.
+On 20/08/19 13:35, kbuild test robot wrote:
+> Hi Juri,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [cannot apply to v5.3-rc5 next-20190819]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Paolo
+This seems to be indeed the case, as this patch is for RT v4.19-rt
+stable tree:
 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> 
-> # selftests: kvm: vmx_set_nested_state_test
-> # ==== Test Assertion Failure ====
-> #   lib/kvm_util.c:1277: ret == 0
-> #   pid=12810 tid=12810 - Invalid argument
-> #      1	0x0000000000403624: vcpu_nested_state_set at kvm_util.c:1275
-> #      2	0x0000000000401197: test_nested_state at vmx_set_nested_state_test.c:32
-> #      3	0x0000000000401562: test_vmx_nested_state at vmx_set_nested_state_test.c:151
-> #      4	0x000000000040100f: main at vmx_set_nested_state_test.c:283
-> #      5	0x00007efdc57f409a: ?? ??:0
-> #      6	0x0000000000401099: _start at ??:?
-> #   KVM_SET_NESTED_STATE failed, ret: -1 errno: 22
-> not ok 12 selftests: kvm: vmx_set_nested_state_test
-> 
-> 
-> To reproduce:
-> 
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp install job.yaml  # job file is attached in this email
->         bin/lkp run     job.yaml
-> 
-> 
-> 
-> Thanks,
-> Rong Chen
-> 
+git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git v4.19-rt
 
+I was under the impression that putting "RT" on the subject line (before
+PATCH) would prevent build bot to pick this up, but maybe something
+else/different is needed?
+
+Thanks,
+
+Juri
