@@ -2,129 +2,259 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7A9C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC117C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDEE022CF4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4AC206DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 03:39:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mCEsjGHE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbfHTDhX (ORCPT
+        id S1729110AbfHTDjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 23:37:23 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:35236 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728647AbfHTDhW (ORCPT
+        Mon, 19 Aug 2019 23:39:33 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45639 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728647AbfHTDjc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 23:37:22 -0400
-Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 79FD543C142;
-        Tue, 20 Aug 2019 13:37:15 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hzuwK-0002SY-6I; Tue, 20 Aug 2019 13:36:08 +1000
-Date:   Tue, 20 Aug 2019 13:36:08 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
-        linux-xfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190820033608.GB1119@dread.disaster.area>
-References: <20190814101714.GA26273@quack2.suse.cz>
- <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
- <20190815130558.GF14313@quack2.suse.cz>
- <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190817022603.GW6129@dread.disaster.area>
- <20190819063412.GA20455@quack2.suse.cz>
- <20190819092409.GM7777@dread.disaster.area>
- <ae64491b-85f8-eeca-14e8-2f09caf8abd2@nvidia.com>
- <20190820012021.GQ7777@dread.disaster.area>
- <84318b51-bd07-1d9b-d842-e65cac2ff484@nvidia.com>
+        Mon, 19 Aug 2019 23:39:32 -0400
+Received: by mail-pg1-f195.google.com with SMTP id o13so2366387pgp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 19 Aug 2019 20:39:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DYGO86uLTSpBFsqyRPgG0kZAe1AG4hshV79weFR5920=;
+        b=mCEsjGHEV/007JwSzWPqAL6lNivgf0WcmcgTIxpLCH3P6kLl8PO6XhqagkWFSQwVG3
+         0nigHbGCULjYmojCXTzJbxmerZxC99eFsf34Rl9lwnGIimxMizNZZR/kod7JTk1xuaBm
+         wutn87TaESpTlsiYFDwI2mD8yEgXKVxDWorWE+SyHugrIfo1WCgGOgDjM7TpBhrWjNxX
+         y22qC45an5oM0evMP0ybn51EbI/K6vlPVv3IsB/sor+H03c9wTN4UlHfoazUZBUNijrc
+         iN9o2hhErrOZ3fgcae9W3EdtBIrR5XxgdB2mOQcihllJofU8jNxLCkxyQqUicaYwG8v2
+         IzFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DYGO86uLTSpBFsqyRPgG0kZAe1AG4hshV79weFR5920=;
+        b=m81yLNljWzoHHAiaz6lEV7bvmo5ciWuYeItZhsUSYpMb8JD/h1GPcn6OLl8SsxQ1hI
+         743sHzwB2eqE2QTVt+IcXrf03pai5Zs5p5nb4ZzJwgTQ/mPO4ZTrvhpTKoZhe++hNzHM
+         ZQk+JeDBT2H4IB9eqe+8fVeZBPD115G7fHhejpKG4NAaDfIRvE81QOryq7n266cE8pas
+         BNZokoBupFMC392ysbbgTbWi4iMBoj6lzOexnXrd+20Wj6v2SR9OoLNiF8u/Zf6MnDCY
+         0XFISoXdfx4W/xpNkrhESvyIiCAFDXT3aUjV6ch2ca8DqPul3sF/c8y1B0WePNrv/V5L
+         CTog==
+X-Gm-Message-State: APjAAAW9GxPcO57XXey5vGCQgSM3sPqsnMyFeqs1kUEg9fRrDn9TZWFv
+        gglo9DyWrGHzCuiYR1LIzV7ruA==
+X-Google-Smtp-Source: APXvYqzFpEjUSmXBk62EUY/Mz1WvgYWKQh88SMa3hzj+OaxnG3lQPeO6zyJZ8hFl1UXHq9rv1X8Eug==
+X-Received: by 2002:a65:6415:: with SMTP id a21mr21550631pgv.98.1566272371730;
+        Mon, 19 Aug 2019 20:39:31 -0700 (PDT)
+Received: from localhost ([122.172.76.219])
+        by smtp.gmail.com with ESMTPSA id i137sm36834826pgc.4.2019.08.19.20.39.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Aug 2019 20:39:30 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 09:09:27 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com, fan.chen@mediatek.com
+Subject: Re: [v4, 7/8] cpufreq: mediatek: add opp notification for SVS support
+Message-ID: <20190820033927.72muldasu4xd6wb7@vireshk-i7>
+References: <1565703113-31479-1-git-send-email-andrew-sh.cheng@mediatek.com>
+ <1565703113-31479-8-git-send-email-andrew-sh.cheng@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <84318b51-bd07-1d9b-d842-e65cac2ff484@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
-        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
-        a=7-415B0cAAAA:8 a=PhlOC_QpxKtFCDIvIqEA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <1565703113-31479-8-git-send-email-andrew-sh.cheng@mediatek.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 08:09:33PM -0700, John Hubbard wrote:
-> On 8/19/19 6:20 PM, Dave Chinner wrote:
-> > On Mon, Aug 19, 2019 at 05:05:53PM -0700, John Hubbard wrote:
-> > > On 8/19/19 2:24 AM, Dave Chinner wrote:
-> > > > On Mon, Aug 19, 2019 at 08:34:12AM +0200, Jan Kara wrote:
-> > > > > On Sat 17-08-19 12:26:03, Dave Chinner wrote:
-> > > > > > On Fri, Aug 16, 2019 at 12:05:28PM -0700, Ira Weiny wrote:
-> > > > > > > On Thu, Aug 15, 2019 at 03:05:58PM +0200, Jan Kara wrote:
-> > > > > > > > On Wed 14-08-19 11:08:49, Ira Weiny wrote:
-> > > > > > > > > On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
-> > > ...
-> > > 
-> > > Any thoughts about sockets? I'm looking at net/xdp/xdp_umem.c which pins
-> > > memory with FOLL_LONGTERM, and wondering how to make that work here.
-> > 
-> > I'm not sure how this interacts with file mappings? I mean, this
-> > is just pinning anonymous pages for direct data placement into
-> > userspace, right?
-> > 
-> > Are you asking "what if this pinned memory was a file mapping?",
-> > or something else?
+On 13-08-19, 21:31, Andrew-sh.Cheng wrote:
+> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
 > 
-> Yes, mainly that one. Especially since the FOLL_LONGTERM flag is
-> already there in xdp_umem_pin_pages(), unconditionally. So the
-> simple rules about struct *vaddr_pin usage (set it to NULL if FOLL_LONGTERM is
-> not set) are not going to work here.
+> cpufreq should listen opp notification and do proper actions
+> when receiving disable and voltage adjustment events,
+> which are triggered when SVS is enabled.
 > 
+> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+> ---
+>  drivers/cpufreq/mediatek-cpufreq.c | 78 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
 > 
-> > 
-> > > These are close to files, in how they're handled, but just different
-> > > enough that it's not clear to me how to make work with this system.
-> > 
-> > I'm guessing that if they are pinning a file backed mapping, they
-> > are trying to dma direct to the file (zero copy into page cache?)
-> > and so they'll need to either play by ODP rules or take layout
-> > leases, too....
-> > 
-> 
-> OK. I was just wondering if there was some simple way to dig up a
-> struct file associated with a socket (I don't think so), but it sounds
-> like this is an exercise that's potentially different for each subsystem.
+> diff --git a/drivers/cpufreq/mediatek-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
+> index 4dce41b18369..9820c8003507 100644
+> --- a/drivers/cpufreq/mediatek-cpufreq.c
+> +++ b/drivers/cpufreq/mediatek-cpufreq.c
+> @@ -42,6 +42,10 @@ struct mtk_cpu_dvfs_info {
+>  	struct list_head list_head;
+>  	int intermediate_voltage;
+>  	bool need_voltage_tracking;
+> +	struct mutex lock; /* avoid notify and policy race condition */
+> +	struct notifier_block opp_nb;
+> +	int opp_cpu;
+> +	unsigned long opp_freq;
+>  };
+>  
+>  static LIST_HEAD(dvfs_info_list);
+> @@ -231,6 +235,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  	vproc = dev_pm_opp_get_voltage(opp);
+>  	dev_pm_opp_put(opp);
+>  
+> +	mutex_lock(&info->lock);
+>  	/*
+>  	 * If the new voltage or the intermediate voltage is higher than the
+>  	 * current voltage, scale up voltage first.
+> @@ -242,6 +247,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  			pr_err("cpu%d: failed to scale up voltage!\n",
+>  			       policy->cpu);
+>  			mtk_cpufreq_set_voltage(info, old_vproc);
+> +			mutex_unlock(&info->lock);
+>  			return ret;
+>  		}
+>  	}
+> @@ -253,6 +259,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  		       policy->cpu);
+>  		mtk_cpufreq_set_voltage(info, old_vproc);
+>  		WARN_ON(1);
+> +		mutex_unlock(&info->lock);
+>  		return ret;
+>  	}
+>  
+> @@ -263,6 +270,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  		       policy->cpu);
+>  		clk_set_parent(cpu_clk, armpll);
+>  		mtk_cpufreq_set_voltage(info, old_vproc);
+> +		mutex_unlock(&info->lock);
+>  		return ret;
+>  	}
+>  
+> @@ -273,6 +281,7 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  		       policy->cpu);
+>  		mtk_cpufreq_set_voltage(info, inter_vproc);
+>  		WARN_ON(1);
+> +		mutex_unlock(&info->lock);
+>  		return ret;
+>  	}
+>  
+> @@ -288,15 +297,74 @@ static int mtk_cpufreq_set_target(struct cpufreq_policy *policy,
+>  			clk_set_parent(cpu_clk, info->inter_clk);
+>  			clk_set_rate(armpll, old_freq_hz);
+>  			clk_set_parent(cpu_clk, armpll);
+> +			mutex_unlock(&info->lock);
+>  			return ret;
+>  		}
+>  	}
+>  
+> +	info->opp_freq = freq_hz;
+> +	mutex_unlock(&info->lock);
+> +
+>  	return 0;
+>  }
+>  
+>  #define DYNAMIC_POWER "dynamic-power-coefficient"
+>  
+> +static int mtk_cpufreq_opp_notifier(struct notifier_block *nb,
+> +				    unsigned long event, void *data)
+> +{
+> +	struct dev_pm_opp *opp = data;
+> +	struct dev_pm_opp *opp_item;
+> +	struct mtk_cpu_dvfs_info *info =
+> +		container_of(nb, struct mtk_cpu_dvfs_info, opp_nb);
+> +	unsigned long freq, volt;
+> +	struct cpufreq_policy *policy;
+> +	int ret = 0;
+> +
+> +	if (event == OPP_EVENT_ADJUST_VOLTAGE) {
+> +		freq = dev_pm_opp_get_freq(opp);
+> +
+> +		mutex_lock(&info->lock);
+> +		if (info->opp_freq == freq) {
+> +			volt = dev_pm_opp_get_voltage(opp);
+> +			ret = mtk_cpufreq_set_voltage(info, volt);
+> +			if (ret)
+> +				dev_err(info->cpu_dev, "failed to scale voltage: %d\n",
+> +					ret);
+> +		}
+> +		mutex_unlock(&info->lock);
+> +	} else if (event == OPP_EVENT_DISABLE) {
 
-AFAIA, there is no struct file here - the memory that has been pinned
-is just something mapped into the application's address space.
+Does this ever get called for your platform ? Why are you using opp disable ?
+Maybe we can avoid it completely.
 
-It seems to me that the socket here is equivalent of the RDMA handle
-that that owns the hardware that pins the pages. Again, that RDMA
-handle is not aware of waht the mapping represents, hence need to
-hold a layout lease if it's a file mapping.
+> +		freq = info->opp_freq;
+> +		opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev, &freq);
+> +		if (!IS_ERR(opp_item))
+> +			dev_pm_opp_put(opp_item);
+> +		else
+> +			freq = 0;
+> +
+> +		/* case of current opp is disabled */
+> +		if (freq == 0 || freq != info->opp_freq) {
+> +			// find an enable opp item
+> +			freq = 1;
+> +			opp_item = dev_pm_opp_find_freq_ceil(info->cpu_dev,
+> +							     &freq);
+> +			if (!IS_ERR(opp_item)) {
+> +				dev_pm_opp_put(opp_item);
+> +				policy = cpufreq_cpu_get(info->opp_cpu);
+> +				if (policy) {
+> +					cpufreq_driver_target(policy,
+> +						freq / 1000,
+> +						CPUFREQ_RELATION_L);
+> +					cpufreq_cpu_put(policy);
+> +				}
+> +			} else
+> +				pr_err("%s: all opp items are disabled\n",
+> +				       __func__);
+> +		}
+> +	}
+> +
+> +	return notifier_from_errno(ret);
+> +}
+> +
+>  static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>  {
+>  	struct device *cpu_dev;
+> @@ -383,11 +451,21 @@ static int mtk_cpu_dvfs_info_init(struct mtk_cpu_dvfs_info *info, int cpu)
+>  	info->intermediate_voltage = dev_pm_opp_get_voltage(opp);
+>  	dev_pm_opp_put(opp);
+>  
+> +	info->opp_cpu = cpu;
+> +	info->opp_nb.notifier_call = mtk_cpufreq_opp_notifier;
+> +	ret = dev_pm_opp_register_notifier(cpu_dev, &info->opp_nb);
+> +	if (ret) {
+> +		pr_warn("cannot register opp notification\n");
+> +		goto out_free_opp_table;
+> +	}
+> +
+> +	mutex_init(&info->lock);
+>  	info->cpu_dev = cpu_dev;
+>  	info->proc_reg = proc_reg;
+>  	info->sram_reg = IS_ERR(sram_reg) ? NULL : sram_reg;
+>  	info->cpu_clk = cpu_clk;
+>  	info->inter_clk = inter_clk;
+> +	info->opp_freq = clk_get_rate(cpu_clk);
+>  
+>  	/*
+>  	 * If SRAM regulator is present, software "voltage tracking" is needed
+> -- 
+> 2.12.5
 
-SO from the filesystem persepctive, there's no difference between
-XDP or RDMA - if it's a FSDAX mapping then it is DMAing directly
-into the filesystem's backing store and that will require use of
-layout leases to perform safely.
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+viresh
