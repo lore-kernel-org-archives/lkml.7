@@ -2,194 +2,113 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77408C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F38C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C40922DCC
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566304486;
-	bh=Bam4LdkU8U7A47aMZOtA1dD1I96RQ7IHpmWNYvtcCi8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1A+SGwPJhaa7AaTMQZjkxT5yjmWM8BS6rT7/bEJUmJLEdmSam+WLoSNlyQM0HgPyh
-	 46Wl0dWcE/aZYCQ4YPTyRsNmV6nD4k7hH3cXD9CrGAmV3XShAeGtiOc+BYLvOm5RJA
-	 QMTdFEQxetofg026I55U0Y+jsVFotOFGTYyvNaiM=
+	by mail.kernel.org (Postfix) with ESMTP id 06EFB22DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:34:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tk706P5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfHTMep (ORCPT
+        id S1730038AbfHTMes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:34:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728283AbfHTMep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:34:45 -0400
-Received: from guoren-Inspiron-7460.lan (unknown [223.93.147.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E99722DA9;
-        Tue, 20 Aug 2019 12:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566304484;
-        bh=Bam4LdkU8U7A47aMZOtA1dD1I96RQ7IHpmWNYvtcCi8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=heQy/ICnr2RRK8OFHIih+L7JvtaiRLqvZE91tsTeDnLd4Q/+qOCN2Iuw7ZcZ5p8Ai
-         L9rXtJh/oGPqTaHU2rjLJ2CuUX7JOmAeRfyIiODWSAV9tAWeqlt7JUEx/CJdNe5Njq
-         VPLLxcq9xHZVuh+VyA+q9aJavUSEJde1dGLKan1Q=
-From:   guoren@kernel.org
-To:     arnd@arndb.de
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-csky@vger.kernel.org, douzhk@nationalchip.com,
-        Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH 1/3] csky: Fixup arch_get_unmapped_area() implementation
-Date:   Tue, 20 Aug 2019 20:34:27 +0800
-Message-Id: <1566304469-5601-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 20 Aug 2019 08:34:48 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45411 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbfHTMer (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 08:34:47 -0400
+Received: by mail-io1-f67.google.com with SMTP id t3so11712311ioj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 05:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=81olWJ9roiVSRuHP2fqvrmXHfWo10yGJXv+JCQOXliI=;
+        b=tk706P5Cou1MizyP1h8CWgCVukuNWhrsgRlX0ez8rnsdPTlZeS+LWQjbIf4IZ9R7pw
+         khkHuB5ee96OE/2TZTeos0PboZfPIdzIZZ3P8hJcgYZqyaYw0RSmSzAepK9PQnGRH3yf
+         Yj2ZFceVn9+9lALgBcm78yWYXp3pCttCggWKNgkGFPSGd+T3Pn4zW5x2O4zM4DS+CCYh
+         5h8eRc4cfFChHe5MI1E12elLQarGr+cyJ6fZQESWX2sfTzVMaFbgHiJMIfIy0VQ0zQgA
+         QGPgqONhiJAm8d7q/4UcfFGCYwn+TqnToGeAREr+XiA3bfxuyjLXnfEK5fdKnI9eHtEm
+         Fe0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=81olWJ9roiVSRuHP2fqvrmXHfWo10yGJXv+JCQOXliI=;
+        b=OCvjZSeONPzAjLMXSAOyFla0m3ayoYwDPnG/tNrjqMuzRt6VR6sSTC25z1gWTHL8V3
+         oqOKZUa7RharCnb4OU9kz7oEGCXzOKcnUQzM7RY6fciQ1hUZhmZYWBpx8ZeAyCtgatwg
+         8NxBqJ1emJT++uMEJgZhkxkVNuS+NPmyDJ1SVLsVFU+VX0ImIUB7TRj/g8DVIpQm70vx
+         4Ms6apLmudx+jbFHRRx8Tz+iKH4p4Utvb6gwJniTVbdbJgt0W0EjM/GU92HULcmuLhWM
+         +NccNDXYx8lYUtBxYscNvV3EmJvIKxQmgOWnrQACDsBt5aTcXUmqvDva/XVkWZ4wJ7Om
+         RPhw==
+X-Gm-Message-State: APjAAAVAEMXiKnfi76Y6gB3pMm5re6n4PAWVXwSZovsmdQu5MB17NrQO
+        MhFCVbZam+D0vA4wfN72VYVYpIj/E/xdxT2foQ==
+X-Google-Smtp-Source: APXvYqymgqWgtRE50NKeUfX7dlt3oD9HgBzMDEMgz+c6OfWLeSqJvmquagFYteTP3RpjM1VPiLEa5SK+XhFB8ewj+sc=
+X-Received: by 2002:a02:952d:: with SMTP id y42mr3469605jah.66.1566304486595;
+ Tue, 20 Aug 2019 05:34:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <2e70a6e2-23a6-dbf2-4911-1e382469c9cb@gmail.com>
+ <CAM6Zs0WqdfCv=EGi5qU5w6Dqh2NHQF2y_uF4i57Z9v=NoHHwPA@mail.gmail.com>
+ <CAM6Zs0X_TpRPSR9XRikkYxHSA4vZsFr7WH_pEyq6npNjobdRVw@mail.gmail.com>
+ <11dc5f68-b253-913a-4219-f6780c8967a0@intel.com> <594c424c-2474-5e2c-9ede-7e7dc68282d5@gmail.com>
+ <CAM6Zs0XzBvoNFa5CSAaEEBBJHcxvguZFRqVOVdr5+JDE=PVGVw@mail.gmail.com>
+ <alpine.DEB.2.21.1908100811160.7324@nanos.tec.linutronix.de>
+ <fbcf3c93-3868-2b0e-b831-43fa68c48d6c@gmail.com> <CAM6Zs0WLQG90EQ+38NE1Nv8bcnbxW8wO4oEfxSuu4dLhfT1YZA@mail.gmail.com>
+ <alpine.DEB.2.21.1908121917460.7324@nanos.tec.linutronix.de>
+ <CAM6Zs0UoHZyBkY9-RLdO-W+u09RZPbzq-A-K01sHyRkfoEiYTA@mail.gmail.com> <alpine.DEB.2.21.1908150924210.2241@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1908150924210.2241@nanos.tec.linutronix.de>
+From:   Woody Suwalski <terraluna977@gmail.com>
+Date:   Tue, 20 Aug 2019 07:34:35 -0500
+Message-ID: <CAM6Zs0XE8GW-P4Q3YM3KZo-1L+g2wt5QRN+JM3_m1xuwgFDVXQ@mail.gmail.com>
+Subject: Re: Kernel 5.3.x, 5.2.2+: VMware player suspend on 64/32 bit guests
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Woody Suwalski <terraluna977@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+On Thu, Aug 15, 2019 at 2:37 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Woody,
+>
+> On Tue, 13 Aug 2019, Woody Suwalski wrote:
+> > On Mon, Aug 12, 2019 at 1:24 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > The ACPI handler is not the culprit. This is either an emulation bug or
+> > > something really strange. Can you please use a WARN_ON() if the loop is
+> > > exited via the timeout so we can see in which context this happens?
+> > >
+> >
+> > B. On 5.3-rc4 problem is gone. I guess it is overall good sign.
+>
+> Now the interesting question is what changed between 5.3-rc3 and
+> 5.3-rc4. Could you please try to bisect that?
+>
 
-Current arch_get_unmapped_area() of abiv1 doesn't use standard kernel
-api. After referring to the implementation of arch/arm, we implement
-it with vm_unmapped_area() from linux/mm.h.
+Apparently I can not, and frustrated'ingly do not understand it.
+Tried twice, and every time I get it broken to the end of bisection -
+so the fixed-in-5.3-rc4 theory falls apart. Yet if I build cleanly
+5.3-rc4 or -rc5, it works OK.
+Then on a 32 bit system - I first tried with a scaled-down kernel
+(just with the drivers needed in the VM). That one is never working,
+even in rc5. Yet the "full" kernel works OK. So now there is a config
+issue variation on top of other problem?
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
----
- arch/csky/abiv1/inc/abi/page.h |  5 +--
- arch/csky/abiv1/mmap.c         | 75 ++++++++++++++++++++++--------------------
- 2 files changed, 43 insertions(+), 37 deletions(-)
+>
+> dpm_suspend_noirq() is called with all CPUs online and interrupts
+> enabled. In that case an interrupt pending in IRR does not make any sense
+> at all. Confused.
+>
+For now I use a timeout counter patch - and it is showing 100% irq9
+jammed and needing rescue. And I am even more confused...
 
-diff --git a/arch/csky/abiv1/inc/abi/page.h b/arch/csky/abiv1/inc/abi/page.h
-index 6336e92..c864519 100644
---- a/arch/csky/abiv1/inc/abi/page.h
-+++ b/arch/csky/abiv1/inc/abi/page.h
-@@ -1,13 +1,14 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
- 
--extern unsigned long shm_align_mask;
-+#include <asm/shmparam.h>
-+
- extern void flush_dcache_page(struct page *page);
- 
- static inline unsigned long pages_do_alias(unsigned long addr1,
- 					   unsigned long addr2)
- {
--	return (addr1 ^ addr2) & shm_align_mask;
-+	return (addr1 ^ addr2) & (SHMLBA-1);
- }
- 
- static inline void clear_user_page(void *addr, unsigned long vaddr,
-diff --git a/arch/csky/abiv1/mmap.c b/arch/csky/abiv1/mmap.c
-index b462fd5..6792aca 100644
---- a/arch/csky/abiv1/mmap.c
-+++ b/arch/csky/abiv1/mmap.c
-@@ -9,58 +9,63 @@
- #include <linux/random.h>
- #include <linux/io.h>
- 
--unsigned long shm_align_mask = (0x4000 >> 1) - 1;   /* Sane caches */
-+#define COLOUR_ALIGN(addr,pgoff)		\
-+	((((addr)+SHMLBA-1)&~(SHMLBA-1)) +	\
-+	 (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
- 
--#define COLOUR_ALIGN(addr, pgoff) \
--	((((addr) + shm_align_mask) & ~shm_align_mask) + \
--	 (((pgoff) << PAGE_SHIFT) & shm_align_mask))
--
--unsigned long arch_get_unmapped_area(struct file *filp, unsigned long addr,
-+/*
-+ * We need to ensure that shared mappings are correctly aligned to
-+ * avoid aliasing issues with VIPT caches.  We need to ensure that
-+ * a specific page of an object is always mapped at a multiple of
-+ * SHMLBA bytes.
-+ *
-+ * We unconditionally provide this function for all cases.
-+ */
-+unsigned long
-+arch_get_unmapped_area(struct file *filp, unsigned long addr,
- 		unsigned long len, unsigned long pgoff, unsigned long flags)
- {
--	struct vm_area_struct *vmm;
--	int do_color_align;
-+	struct mm_struct *mm = current->mm;
-+	struct vm_area_struct *vma;
-+	int do_align = 0;
-+	struct vm_unmapped_area_info info;
-+
-+	/*
-+	 * We only need to do colour alignment if either the I or D
-+	 * caches alias.
-+	 */
-+	do_align = filp || (flags & MAP_SHARED);
- 
-+	/*
-+	 * We enforce the MAP_FIXED case.
-+	 */
- 	if (flags & MAP_FIXED) {
--		/*
--		 * We do not accept a shared mapping if it would violate
--		 * cache aliasing constraints.
--		 */
--		if ((flags & MAP_SHARED) &&
--			((addr - (pgoff << PAGE_SHIFT)) & shm_align_mask))
-+		if (flags & MAP_SHARED &&
-+		    (addr - (pgoff << PAGE_SHIFT)) & (SHMLBA - 1))
- 			return -EINVAL;
- 		return addr;
- 	}
- 
- 	if (len > TASK_SIZE)
- 		return -ENOMEM;
--	do_color_align = 0;
--	if (filp || (flags & MAP_SHARED))
--		do_color_align = 1;
-+
- 	if (addr) {
--		if (do_color_align)
-+		if (do_align)
- 			addr = COLOUR_ALIGN(addr, pgoff);
- 		else
- 			addr = PAGE_ALIGN(addr);
--		vmm = find_vma(current->mm, addr);
-+
-+		vma = find_vma(mm, addr);
- 		if (TASK_SIZE - len >= addr &&
--				(!vmm || addr + len <= vmm->vm_start))
-+		    (!vma || addr + len <= vm_start_gap(vma)))
- 			return addr;
- 	}
--	addr = TASK_UNMAPPED_BASE;
--	if (do_color_align)
--		addr = COLOUR_ALIGN(addr, pgoff);
--	else
--		addr = PAGE_ALIGN(addr);
- 
--	for (vmm = find_vma(current->mm, addr); ; vmm = vmm->vm_next) {
--		/* At this point: (!vmm || addr < vmm->vm_end). */
--		if (TASK_SIZE - len < addr)
--			return -ENOMEM;
--		if (!vmm || addr + len <= vmm->vm_start)
--			return addr;
--		addr = vmm->vm_end;
--		if (do_color_align)
--			addr = COLOUR_ALIGN(addr, pgoff);
--	}
-+	info.flags = 0;
-+	info.length = len;
-+	info.low_limit = mm->mmap_base;
-+	info.high_limit = TASK_SIZE;
-+	info.align_mask = do_align ? (PAGE_MASK & (SHMLBA - 1)) : 0;
-+	info.align_offset = pgoff << PAGE_SHIFT;
-+	return vm_unmapped_area(&info);
- }
--- 
-2.7.4
-
+Thanks, Woody
