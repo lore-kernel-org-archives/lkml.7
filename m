@@ -2,151 +2,209 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B64C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3219EC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C41E20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B1120656
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:24:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NodbgSEs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AY1B8ig4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730786AbfHTUXv (ORCPT
+        id S1730894AbfHTUYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 16:23:51 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:39048 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730701AbfHTUXu (ORCPT
+        Tue, 20 Aug 2019 16:24:19 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37793 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728283AbfHTUYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 16:23:50 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KKJXLU002168
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:23:49 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=jObesXKggt5JGXaZ0VMUjP8B5+A1J+eZwFaxZ+FinwI=;
- b=NodbgSEs2ODM30qAs9QTTUsFXeTNrDR6nvYyarRKl+ZfeH/Ps2Yw4vGhQUBC6JR2pbr/
- S0X9KEHHGM39wA0R//5xWUxoPM8yG4gCJL4uoUq4+ozRzX3S7h9YVb3k72IRm0gPY5ua
- qeMqitv0hsFOZTwqqIlhrDfmxqJdBgkpw/I= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ugpmaravm-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:23:49 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 20 Aug 2019 13:23:47 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 4A47362E2A14; Tue, 20 Aug 2019 13:23:47 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-CC:     <kernel-team@fb.com>, Song Liu <songliubraving@fb.com>,
-        <stable@vger.kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v2] x86/mm/pti: in pti_clone_pgtable(), increase addr properly
-Date:   Tue, 20 Aug 2019 13:23:14 -0700
-Message-ID: <20190820202314.1083149-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Tue, 20 Aug 2019 16:24:18 -0400
+Received: by mail-pl1-f196.google.com with SMTP id bj8so42094plb.4;
+        Tue, 20 Aug 2019 13:24:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kw+BWVelTojkJsvwqygtdNO4/vmivNNP6hXgKWpJlMw=;
+        b=AY1B8ig4lPv0H4990HMtOBhM+w78X/94pERUJguyjkGjofwlJbbxu3z4kRLvV4Nrc+
+         8OzORrTBOFb4aD7Sc+XjPgJ4CSKUcJeeyPWNv52CbN92OvA80rqysz31DkORfSt1ddtc
+         dYTubwXXUxxY5xFPI7D/okDsoKIeTPjA/loRQ9nDZlG8iMrmhg9dqGTT5IxCyctdF+wr
+         KaitROyEr7Tlb9WE+PWT65BRmjTebJMjjOp2yvQAq92gBL8R+DdnjeGVLJiYcq+2p++q
+         YDcsEWpMMQfPjOQiKmo+FEPNx3xPW5l1LReJGD75pO+W42s9nMDLkc0WRKDXw1lIe2c4
+         9vnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kw+BWVelTojkJsvwqygtdNO4/vmivNNP6hXgKWpJlMw=;
+        b=tw4GgTs+Q4xgEJqhbqZrv9NGYfdN+CUoCLmeD/JVzEVpIvZU9+RoYCtVq7yjvyEGYd
+         bwwwcfiKsqrjXb3zqsLIsxgWv22qOiV/vUk8brO9k7GMyUEVf2vPeW+XNqZrqJ3Rjpzi
+         Oct4HQlLBI7+YIGtELJQuaEmnVVYwLlFcsu4BXGKSsnxQDOCehPcEjpSQGwgzND9JWnK
+         tPc1pB2wN0ThbPYfN5ZcYmxf1dcPjj+3BTBaVzxIVAVBuIShffxdSujJXzieBmZpmgF8
+         0FW7j1rUzDmSJc3e8BAVlZVwMXgmWSmNMklUV6ULoPjtu1866PYp5NahrD/gchNYBYE4
+         xD7g==
+X-Gm-Message-State: APjAAAWWoUcDqr7bNDllXdFhR79uesJcDM6b+D0sYpcvDlLvDJZz7hyM
+        RiBNtTH2djIecSlOe+QzW++6Ozr6hSA=
+X-Google-Smtp-Source: APXvYqwZ+Lc/dCqYfVfBb89477ZwCXF48UX2ajOhv+/NeBwesgrQN0ffmL938+8xnMZ6xYKjZ+e8Kg==
+X-Received: by 2002:a17:902:9889:: with SMTP id s9mr30630138plp.100.1566332657434;
+        Tue, 20 Aug 2019 13:24:17 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id k3sm36149846pfg.23.2019.08.20.13.24.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 13:24:16 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Spencer <christopher.spencer@sea.co.uk>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v8 00/16] crypto: caam - Add i.MX8MQ support
+Date:   Tue, 20 Aug 2019 13:23:46 -0700
+Message-Id: <20190820202402.24951-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=825 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908200182
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before 32-bit support, pti_clone_pmds() always adds PMD_SIZE to addr.
-This behavior changes after the 32-bit support:  pti_clone_pgtable()
-increases addr by PUD_SIZE for pud_none(*pud) case, and increases addr by
-PMD_SIZE for pmd_none(*pmd) case. However, this is not accurate because
-addr may not be PUD_SIZE/PMD_SIZE aligned.
+Everyone:
 
-Fix this issue by properly rounding up addr to next PUD_SIZE/PMD_SIZE
-in these two cases.
+Picking up where Chris left off (I chatted with him privately
+beforehead), this series adds support for i.MX8MQ to CAAM driver. Just
+like [v1], this series is i.MX8MQ only.
 
-The following explains how we debugged this issue:
+Feedback is welcome!
+Thanks,
+Andrey Smirnov
 
-We use huge page for hot text and thus reduces iTLB misses. As we
-benchmark 5.2 based kernel (vs. 4.16 based), we found ~2.5x more
-iTLB misses.
+Changes since [v7]:
 
-To figure out the issue, I use a debug patch that dumps page table for
-a pid. The following are information from the workload pid.
+  - Series rebase on latest cryptodev-2.6 (198429631a85)
 
-For the 4.16 based kernel:
+  - "crypto: caam - force DMA address to 32-bit on 64-bit i.MX SoCs"
+    converted to use CTPR and MCFGR to determine CAAM pointer width
+    and renamed to "crypto: caam - select DMA address size at runtime"
 
-host-4.16 # grep "x  pmd" /sys/kernel/debug/page_tables/dump_pid
-0x0000000000600000-0x0000000000e00000           8M USR ro         PSE         x  pmd
-0xffffffff81a00000-0xffffffff81c00000           2M     ro         PSE         x  pmd
+  - Patch adding corresponding DT node added to the series
 
-For the 5.2 based kernel before this patch:
+Changes since [v6]:
 
-host-5.2-before # grep "x  pmd" /sys/kernel/debug/page_tables/dump_pid
-0x0000000000600000-0x0000000000e00000           8M USR ro         PSE         x  pmd
+  - Fixed build problems in "crypto: caam - make CAAM_PTR_SZ dynamic"
 
-The 8MB text in pmd is from user space. 4.16 kernel has 1 pmd for the
-irq entry table; while 4.16 kernel doesn't have it.
+  - Collected Reviewied-by from Horia
 
-For the 5.2 based kernel after this patch:
+  - "crypto: caam - force DMA address to 32-bit on 64-bit i.MX SoCs"
+    is changed to check 'caam_ptr_sz' instead of using 'caam_imx'
+    
+  - Incorporated feedback for "crypto: caam - request JR IRQ as the
+    last step" and "crypto: caam - simplfy clock initialization"
 
-host-5.2-after # grep "x  pmd" /sys/kernel/debug/page_tables/dump_pid
-0x0000000000600000-0x0000000000e00000           8M USR ro         PSE         x  pmd
-0xffffffff81000000-0xffffffff81e00000          14M     ro         PSE     GLB x  pmd
+Changes since [v5]:
 
-So after this patch, the 5.2 based kernel has 7 PMDs instead of 1 PMD
-in 4.16 kernel. This further reduces iTLB miss rate
+  - Hunk replacing sizeof(*jrp->inpring) to SIZEOF_JR_INPENTRY in
+    "crypto: caam - don't hardcode inpentry size", lost in [v5], is
+    back
 
-Cc: stable@vger.kernel.org # v4.19+
-Fixes: 16a3fe634f6a ("x86/mm/pti: Clone kernel-image on PTE level for 32 bit")
-Reviewed-by: Rik van Riel <riel@surriel.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- arch/x86/mm/pti.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+  - Collected Tested-by from Iuliana
 
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index b196524759ec..1337494e22ef 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -330,13 +330,13 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
- 
- 		pud = pud_offset(p4d, addr);
- 		if (pud_none(*pud)) {
--			addr += PUD_SIZE;
-+			addr = round_up(addr + 1, PUD_SIZE);
- 			continue;
- 		}
- 
- 		pmd = pmd_offset(pud, addr);
- 		if (pmd_none(*pmd)) {
--			addr += PMD_SIZE;
-+			addr = round_up(addr + 1, PMD_SIZE);
- 			continue;
- 		}
- 
+Changes since [v4]:
+
+  - Fixed missing sentinel element in "crypto: caam - simplfy clock
+    initialization"
+    
+  - Squashed all of the devers related patches into a single one and
+    converted IRQ allocation to use devres while at it
+
+  - Added "crypto: caam - request JR IRQ as the last step" as
+    discussed
+
+Changes since [v3]:
+
+  - Patchset changed to select DMA size at runtime in order to enable
+    support for both i.MX8MQ and Layerscape at the same time. I only
+    tested the patches on i.MX6,7 and 8MQ, since I don't have access
+    to any of the Layerscape HW. Any help in that regard would be
+    appareciated.
+
+  - Bulk clocks and their number are now stored as a part of struct
+    caam_drv_private to simplify allocation and cleanup code (no
+    special context needed)
+    
+  - Renamed 'soc_attr' -> 'imx_soc_match' for clarity
+
+Changes since [v2]:
+
+  - Dropped "crypto: caam - do not initialise clocks on the i.MX8" and
+    replaced it with "crypto: caam - simplfy clock initialization" and 
+    "crypto: caam - add clock entry for i.MX8MQ"
+
+
+Changes since [v1]
+
+  - Series reworked to continue using register based interface for
+    queueing RNG initialization job, dropping "crypto: caam - use job
+    ring for RNG instantiation instead of DECO"
+
+  - Added a patch to share DMA mask selection code
+
+  - Added missing Signed-off-by for authors of original NXP tree
+    commits that this sereis is based on
+
+[v7] lore.kernel.org/r/20190812200739.30389-1-andrew.smirnov@gmail.com
+[v6] lore.kernel.org/r/20190717152458.22337-1-andrew.smirnov@gmail.com
+[v5] lore.kernel.org/r/20190715201942.17309-1-andrew.smirnov@gmail.com
+[v4] lore.kernel.org/r/20190703081327.17505-1-andrew.smirnov@gmail.com
+[v3] lore.kernel.org/r/20190617160339.29179-1-andrew.smirnov@gmail.com
+[v2] lore.kernel.org/r/20190607200225.21419-1-andrew.smirnov@gmail.com
+[v1] https://patchwork.kernel.org/cover/10825625/
+
+Andrey Smirnov (16):
+  crypto: caam - move DMA mask selection into a function
+  crypto: caam - simplfy clock initialization
+  crypto: caam - convert caam_jr_init() to use devres
+  crypto: caam - request JR IRQ as the last step
+  crytpo: caam - make use of iowrite64*_hi_lo in wr_reg64
+  crypto: caam - use ioread64*_hi_lo in rd_reg64
+  crypto: caam - drop 64-bit only wr/rd_reg64()
+  crypto: caam - share definition for MAX_SDLEN
+  crypto: caam - make CAAM_PTR_SZ dynamic
+  crypto: caam - move cpu_to_caam_dma() selection to runtime
+  crypto: caam - drop explicit usage of struct jr_outentry
+  crypto: caam - don't hardcode inpentry size
+  crypto: caam - select DMA address size at runtime
+  crypto: caam - always select job ring via RSR on i.MX8MQ
+  crypto: caam - add clock entry for i.MX8MQ
+  arm64: dts: imx8mq: Add CAAM node
+
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi |  30 +++
+ drivers/crypto/caam/caamalg.c             |   2 +-
+ drivers/crypto/caam/caamalg_qi2.h         |  27 ---
+ drivers/crypto/caam/caamhash.c            |   2 +-
+ drivers/crypto/caam/caampkc.c             |   8 +-
+ drivers/crypto/caam/caamrng.c             |   2 +-
+ drivers/crypto/caam/ctrl.c                | 221 ++++++++++------------
+ drivers/crypto/caam/desc_constr.h         |  47 ++++-
+ drivers/crypto/caam/error.c               |   3 +
+ drivers/crypto/caam/intern.h              |  32 +++-
+ drivers/crypto/caam/jr.c                  |  93 +++------
+ drivers/crypto/caam/pdb.h                 |  16 +-
+ drivers/crypto/caam/pkc_desc.c            |   8 +-
+ drivers/crypto/caam/qi.h                  |  26 ---
+ drivers/crypto/caam/regs.h                | 140 ++++++++++----
+ 15 files changed, 359 insertions(+), 298 deletions(-)
+
 -- 
-2.17.1
+2.21.0
 
