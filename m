@@ -2,94 +2,82 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A5EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63548C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D537214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566324019;
-	bh=pJwMxVEYJ25haAf1rP478Y2nXlmnA5RnPWNYvrAobYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CwQVVExqLgTjegkY/PJN3rtZ/oQopf0i1zWAXvCLwJrnQdtn+m4zETs357i9XDDHo
-	 F/s658QwSXyRglKD9n6s0heczoI+g0MEsX8df5fAfVimoJwclDxqS9GD8/04EmIcTM
-	 M0OKfGiyegplsNfTpGJ/OdhWmTIbnuRdDU6tgRmA=
+	by mail.kernel.org (Postfix) with ESMTP id 422CB214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 18:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbfHTSAS (ORCPT
+        id S1730585AbfHTSBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 14:00:18 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35932 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbfHTSAS (ORCPT
+        Tue, 20 Aug 2019 14:01:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52791 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbfHTSBW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 14:00:18 -0400
-Received: by mail-oi1-f196.google.com with SMTP id n1so2396090oic.3;
-        Tue, 20 Aug 2019 11:00:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q1gvNC9FakNN70iNTlLfpOxXe43hETiV8DaUowjuk4k=;
-        b=qUAMqzpRFw2L6Fcsm7gYUp4B9TblbORRvAuoXoQE1BkkuoBOoyXNJf+4xXYuOAcnI8
-         o+cB5TwxHn4HNj+BfQT3P9HMdhcOyMq0n2lvho344G3jgP4bY+7RQNrmYByWw/RP1ayw
-         bAMiHhiYHTFBmiLDvvic9bY1IitIvDmbjUr6+j7Mm2Z6423r4dxEXcO6bR6w/RsH0b1d
-         eqXd9SwGaoI07VS/6WD1ixQrxnv7ws7Rw5ccVyOX/DEcpagKN/jKQPEAu4Ee2ag+JS04
-         6M/jESB8tEMJf7PIuq7XFVw6sTtZUKmecpmISKm9od7AUz377ESTwCJ6D0+ANn4cLQFF
-         JOxA==
-X-Gm-Message-State: APjAAAXBUcbw/D2L43Yzbj71ylO9JI6hAvlCnZuudJtnBH+rZNasfdxw
-        KCCV+TVpsUB3B3UeNA8hTQ==
-X-Google-Smtp-Source: APXvYqwS6vfSL5GG6Hy6vUEP0afiI29iW09/eMOV/jj9QtbvAKZYhgHCM2xtDsPdntbHcHfBhRBbOg==
-X-Received: by 2002:aca:3509:: with SMTP id c9mr900141oia.179.1566324016813;
-        Tue, 20 Aug 2019 11:00:16 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o26sm6431165otl.34.2019.08.20.11.00.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 11:00:16 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 13:00:15 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: Re: [PATCH v4 9/10] dt-bindings: pwm: update bindings for MT7629 SoC
-Message-ID: <20190820180015.GA12975@bogus>
-References: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
- <1566265225-27452-10-git-send-email-sam.shih@mediatek.com>
+        Tue, 20 Aug 2019 14:01:22 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i08RX-0004FB-JJ; Tue, 20 Aug 2019 20:01:15 +0200
+Date:   Tue, 20 Aug 2019 20:01:14 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Matthew Wilcox <willy@infradead.org>
+cc:     Sebastian Siewior <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>, Jan Kara <jack@suse.cz>,
+        Theodore Tso <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joel Becker <jlbec@evilplan.org>
+Subject: Re: [PATCH] fs/buffer: Make BH_Uptodate_Lock bit_spin_lock a regular
+ spinlock_t
+In-Reply-To: <20190820171721.GA4949@bombadil.infradead.org>
+Message-ID: <alpine.DEB.2.21.1908201959240.2223@nanos.tec.linutronix.de>
+References: <20190820170818.oldsdoumzashhcgh@linutronix.de> <20190820171721.GA4949@bombadil.infradead.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566265225-27452-10-git-send-email-sam.shih@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019 09:40:24 +0800, Sam Shih wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
+On Tue, 20 Aug 2019, Matthew Wilcox wrote:
+> On Tue, Aug 20, 2019 at 07:08:18PM +0200, Sebastian Siewior wrote:
+> > Bit spinlocks are problematic if PREEMPT_RT is enabled, because they
+> > disable preemption, which is undesired for latency reasons and breaks when
+> > regular spinlocks are taken within the bit_spinlock locked region because
+> > regular spinlocks are converted to 'sleeping spinlocks' on RT. So RT
+> > replaces the bit spinlocks with regular spinlocks to avoid this problem.
+> > Bit spinlocks are also not covered by lock debugging, e.g. lockdep.
+> > 
+> > Substitute the BH_Uptodate_Lock bit spinlock with a regular spinlock.
+> > 
+> > Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> > [bigeasy: remove the wrapper and use always spinlock_t]
 > 
-> This updates bindings for MT7629 pwm controller.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+> Uhh ... always grow the buffer_head, even for non-PREEMPT_RT?  Why?
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Christoph requested that:
 
-If a tag was not added on purpose, please state why and what changed.
+  https://lkml.kernel.org/r/20190802075612.GA20962@infradead.org
+
+Thanks,
+
+	tglx
