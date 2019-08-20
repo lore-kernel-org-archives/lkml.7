@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF3DC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBD3C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B15233A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8304422DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308539;
-	bh=1fivXv3Xy+71BjwYr1CKkSmG40mAsuBQnNFjG4WErMs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bGwXmeGCEwk0uG+q9Y+ujkMEAffY9cJ7rCX0K/oTkEiba+EPjCUJyTO+iU7R5VENm
-	 rHJglPnJECcNUMeHAfF1BN2IlveDTURZl+2pr2ui0mXIcEmUCUKZhEzOJXaNVHt9Ke
-	 4V7WyIh8REJBnc8nn6g9TWZVG+/lrn+jv8Gta/KU=
+	s=default; t=1566308544;
+	bh=QSnNxxMoohRzifLH0u+uYpnq0gUgkQHKqDHmE1Cvx4c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=McJnzeMGg0XOBXDe6K1X8kya3LlL99dm3JoyUKjE1vPVR4JcVQ3ANcWNb9e3TqHPh
+	 X4KEQ9ewDEqz0n/9mIufakaf1Jhxxqjjc6dZMhZfk0UDjwljXr/iA/Vq/2pmjIMpVr
+	 JsdOXVQMwu6Cue5eV6j+SyCcj96wutD2+BcXVzQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbfHTNmS (ORCPT
+        id S1730610AbfHTNmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:42:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37474 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:42:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbfHTNmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:42:15 -0400
+        id S1729956AbfHTNmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:42:19 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F43822DD6;
-        Tue, 20 Aug 2019 13:42:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03C5422DD6;
+        Tue, 20 Aug 2019 13:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308535;
-        bh=1fivXv3Xy+71BjwYr1CKkSmG40mAsuBQnNFjG4WErMs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=D88kYfj7ve81YUFW6rq42wsZa7RujQ1kXkQTM96D+hq9O9fv/5TWoHLH3+Pr+rBkJ
-         zvudiUfdMXWFhCCNm/QbFvrRRLDrLOTbyxkjQUx0JEh7CXZWXXpekxd6TNjNG44FmP
-         sgw4yvcp6A/KqzlPGSy15FGde7HGDt7kzCLgERlg=
+        s=default; t=1566308538;
+        bh=QSnNxxMoohRzifLH0u+uYpnq0gUgkQHKqDHmE1Cvx4c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Gw6Y8jL731kSFpJycv4r3FgG6kdBAiv4N8nhSOqkE0JkT/kGSDlMLlN79+DwFTRrG
+         AyUR0u4iR8FBDit7C0GJy3oIdJmTSPtrxMWfJAbX5AXu4oAadEEbC6+S+apG+auK2q
+         zmXMXB6lV1iniqbw2dbw9dGHKryR2nWVcMYgNzbk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 01/27] dmaengine: ste_dma40: fix unneeded variable warning
-Date:   Tue, 20 Aug 2019 09:41:47 -0400
-Message-Id: <20190820134213.11279-1-sashal@kernel.org>
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 05/27] fs: afs: Fix a possible null-pointer dereference in afs_put_read()
+Date:   Tue, 20 Aug 2019 09:41:51 -0400
+Message-Id: <20190820134213.11279-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190820134213.11279-1-sashal@kernel.org>
+References: <20190820134213.11279-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,54 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 5d6fb560729a5d5554e23db8d00eb57cd0021083 ]
+[ Upstream commit a6eed4ab5dd4bfb696c1a3f49742b8d1846a66a0 ]
 
-clang-9 points out that there are two variables that depending on the
-configuration may only be used in an ARRAY_SIZE() expression but not
-referenced:
+In afs_read_dir(), there is an if statement on line 255 to check whether
+req->pages is NULL:
+	if (!req->pages)
+		goto error;
 
-drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-static u32 d40_backup_regs[] = {
-           ^
-drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-static u32 d40_backup_regs_chan[] = {
+If req->pages is NULL, afs_put_read() on line 337 is executed.
+In afs_put_read(), req->pages[i] is used on line 195.
+Thus, a possible null-pointer dereference may occur in this case.
 
-Mark these __maybe_unused to shut up the warning.
+To fix this possible bug, an if statement is added in afs_put_read() to
+check req->pages.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20190712091357.744515-1-arnd@arndb.de
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+This bug is found by a static analysis tool STCheck written by us.
+
+Fixes: f3ddee8dc4e2 ("afs: Fix directory handling")
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ste_dma40.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/afs/file.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-index f4edfc56f34ef..3d55405c49cac 100644
---- a/drivers/dma/ste_dma40.c
-+++ b/drivers/dma/ste_dma40.c
-@@ -142,7 +142,7 @@ enum d40_events {
-  * when the DMA hw is powered off.
-  * TODO: Add save/restore of D40_DREG_GCC on dma40 v3 or later, if that works.
-  */
--static u32 d40_backup_regs[] = {
-+static __maybe_unused u32 d40_backup_regs[] = {
- 	D40_DREG_LCPA,
- 	D40_DREG_LCLA,
- 	D40_DREG_PRMSE,
-@@ -211,7 +211,7 @@ static u32 d40_backup_regs_v4b[] = {
+diff --git a/fs/afs/file.c b/fs/afs/file.c
+index 7d4f26198573d..843d3b970b845 100644
+--- a/fs/afs/file.c
++++ b/fs/afs/file.c
+@@ -193,11 +193,13 @@ void afs_put_read(struct afs_read *req)
+ 	int i;
  
- #define BACKUP_REGS_SZ_V4B ARRAY_SIZE(d40_backup_regs_v4b)
- 
--static u32 d40_backup_regs_chan[] = {
-+static __maybe_unused u32 d40_backup_regs_chan[] = {
- 	D40_CHAN_REG_SSCFG,
- 	D40_CHAN_REG_SSELT,
- 	D40_CHAN_REG_SSPTR,
+ 	if (refcount_dec_and_test(&req->usage)) {
+-		for (i = 0; i < req->nr_pages; i++)
+-			if (req->pages[i])
+-				put_page(req->pages[i]);
+-		if (req->pages != req->array)
+-			kfree(req->pages);
++		if (req->pages) {
++			for (i = 0; i < req->nr_pages; i++)
++				if (req->pages[i])
++					put_page(req->pages[i]);
++			if (req->pages != req->array)
++				kfree(req->pages);
++		}
+ 		kfree(req);
+ 	}
+ }
 -- 
 2.20.1
 
