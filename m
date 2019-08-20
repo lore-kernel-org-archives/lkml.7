@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBD3C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D87C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8304422DD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1F222DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:42:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308544;
-	bh=QSnNxxMoohRzifLH0u+uYpnq0gUgkQHKqDHmE1Cvx4c=;
+	s=default; t=1566308546;
+	bh=bX09ssadu/1oiVKOYAUmOwBp8D46nwwxLq1K/JTtefE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=McJnzeMGg0XOBXDe6K1X8kya3LlL99dm3JoyUKjE1vPVR4JcVQ3ANcWNb9e3TqHPh
-	 X4KEQ9ewDEqz0n/9mIufakaf1Jhxxqjjc6dZMhZfk0UDjwljXr/iA/Vq/2pmjIMpVr
-	 JsdOXVQMwu6Cue5eV6j+SyCcj96wutD2+BcXVzQA=
+	b=Rj2MqmqLyJyJ0fXX/BnuLVtGEbfCjl8zXTiK87vj22Nwgy/pxnHOGrHipCY1fOyvk
+	 nnQFKNrOWQ4R6mrvNoxaO9LYDnDBB37jTWaPgThDDgFGvBRjvKT4N1mAv8C+kO4o1t
+	 2ucPEkYx61bgQjf6h0kZA5O7Aegufq2h0Om+Ho2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbfHTNmX (ORCPT
+        id S1730622AbfHTNmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:42:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37596 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 09:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729956AbfHTNmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:42:19 -0400
+        id S1730586AbfHTNmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:42:21 -0400
 Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03C5422DD6;
-        Tue, 20 Aug 2019 13:42:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8571C233FF;
+        Tue, 20 Aug 2019 13:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308538;
-        bh=QSnNxxMoohRzifLH0u+uYpnq0gUgkQHKqDHmE1Cvx4c=;
+        s=default; t=1566308541;
+        bh=bX09ssadu/1oiVKOYAUmOwBp8D46nwwxLq1K/JTtefE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gw6Y8jL731kSFpJycv4r3FgG6kdBAiv4N8nhSOqkE0JkT/kGSDlMLlN79+DwFTRrG
-         AyUR0u4iR8FBDit7C0GJy3oIdJmTSPtrxMWfJAbX5AXu4oAadEEbC6+S+apG+auK2q
-         zmXMXB6lV1iniqbw2dbw9dGHKryR2nWVcMYgNzbk=
+        b=DmjiS6ymZ/eONc7JdxujGyllCBx7/8HZSB+6fmv0aVYPGnZHQQcQl1b85i66G2/fX
+         +3zfu5cv4lSPJGihoFieCxAIfWyMWJuMLW+ASjscel586a4Ig/hX9PJ3TIfPzDv+b2
+         3Y098y0JitYbXwLfIN0dige3i+GFL8doUlvlwj7w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 05/27] fs: afs: Fix a possible null-pointer dereference in afs_put_read()
-Date:   Tue, 20 Aug 2019 09:41:51 -0400
-Message-Id: <20190820134213.11279-5-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 08/27] nvmet-loop: Flush nvme_delete_wq when removing the port
+Date:   Tue, 20 Aug 2019 09:41:54 -0400
+Message-Id: <20190820134213.11279-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820134213.11279-1-sashal@kernel.org>
 References: <20190820134213.11279-1-sashal@kernel.org>
@@ -59,55 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit a6eed4ab5dd4bfb696c1a3f49742b8d1846a66a0 ]
+[ Upstream commit 86b9a63e595ff03f9d0a7b92b6acc231fecefc29 ]
 
-In afs_read_dir(), there is an if statement on line 255 to check whether
-req->pages is NULL:
-	if (!req->pages)
-		goto error;
+After calling nvme_loop_delete_ctrl(), the controllers will not
+yet be deleted because nvme_delete_ctrl() only schedules work
+to do the delete.
 
-If req->pages is NULL, afs_put_read() on line 337 is executed.
-In afs_put_read(), req->pages[i] is used on line 195.
-Thus, a possible null-pointer dereference may occur in this case.
+This means a race can occur if a port is removed but there
+are still active controllers trying to access that memory.
 
-To fix this possible bug, an if statement is added in afs_put_read() to
-check req->pages.
+To fix this, flush the nvme_delete_wq before returning from
+nvme_loop_remove_port() so that any controllers that might
+be in the process of being deleted won't access a freed port.
 
-This bug is found by a static analysis tool STCheck written by us.
-
-Fixes: f3ddee8dc4e2 ("afs: Fix directory handling")
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by : Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/file.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/nvme/target/loop.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index 7d4f26198573d..843d3b970b845 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -193,11 +193,13 @@ void afs_put_read(struct afs_read *req)
- 	int i;
- 
- 	if (refcount_dec_and_test(&req->usage)) {
--		for (i = 0; i < req->nr_pages; i++)
--			if (req->pages[i])
--				put_page(req->pages[i]);
--		if (req->pages != req->array)
--			kfree(req->pages);
-+		if (req->pages) {
-+			for (i = 0; i < req->nr_pages; i++)
-+				if (req->pages[i])
-+					put_page(req->pages[i]);
-+			if (req->pages != req->array)
-+				kfree(req->pages);
-+		}
- 		kfree(req);
- 	}
+diff --git a/drivers/nvme/target/loop.c b/drivers/nvme/target/loop.c
+index 9908082b32c4b..137a27fa369cb 100644
+--- a/drivers/nvme/target/loop.c
++++ b/drivers/nvme/target/loop.c
+@@ -678,6 +678,14 @@ static void nvme_loop_remove_port(struct nvmet_port *port)
+ 	mutex_lock(&nvme_loop_ports_mutex);
+ 	list_del_init(&port->entry);
+ 	mutex_unlock(&nvme_loop_ports_mutex);
++
++	/*
++	 * Ensure any ctrls that are in the process of being
++	 * deleted are in fact deleted before we return
++	 * and free the port. This is to prevent active
++	 * ctrls from using a port after it's freed.
++	 */
++	flush_workqueue(nvme_delete_wq);
  }
+ 
+ static const struct nvmet_fabrics_ops nvme_loop_ops = {
 -- 
 2.20.1
 
