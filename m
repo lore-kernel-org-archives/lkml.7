@@ -2,110 +2,77 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0B8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38682C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E88A22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566314349;
-	bh=Q4tsNIwJpNT6pPk+ksybwyAjwvuVCv3Qw0XIIzLSW2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iH1FMJDWN1Jxsu5ytTvGroMGpJJv3OroVhaaNv8Typ2BhuTsmEqukG1CZD+vFUcUx
-	 PMQDD56YMOMm/H0JrQ0bF7IOx7lykJ5Q+Hsj6bUyIy9OD21JM/JOWIZHKZQRFLSx1a
-	 d3dPpsZUnPTwARq45WybJle6xD/8I9OOqo3Cym50=
+	by mail.kernel.org (Postfix) with ESMTP id 0A389216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbfHTPTI (ORCPT
+        id S1730415AbfHTPTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:19:08 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:44270 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730356AbfHTPTH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:19:07 -0400
-Received: by mail-qt1-f193.google.com with SMTP id 44so6417395qtg.11;
-        Tue, 20 Aug 2019 08:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=c+ytF9JRpx+c+jH7VEntcNHapqJkhUT6uddNW8eq0CI=;
-        b=j/1N4ekm9zWh5OV8A5seiIkduZDfjViU9YztBjbBDi/ScXALSStzfFPCDm2ywBgFj8
-         AORxFbVW4sevVDpQebSL2W1ZojiMi+XLadvgTE3WCgc7EXGi+LOyEqH8QbHkcuPB8M6w
-         IUTsf8zPnnBepJEIZ/O4HkfQjDt4ZNMqlk3lL6TsEqpC208NnZkb26y6clD8vPNbUxpF
-         nzYJe9/TAMcTTEx4+jtfLT5n3UfKgN64VgK23qGqtcjtUVCFIZP5TO7t2fS5zVa60L80
-         1h+LaGlzWQF8Gzp8ZMe7GR4lpBYwpXxxGot+HkJHKIGWwXc7E45B5XlcOCUfhxLDy/5c
-         DxWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=c+ytF9JRpx+c+jH7VEntcNHapqJkhUT6uddNW8eq0CI=;
-        b=ZRaxFO9Q6GxP22hyqnP8HHrnzhKb1imJyGJUNGpPfFcBOar79PjNgw1tfcD20RbTDb
-         WJFyASzegDgrS2J18/ZpXEyAgjU5JzeRLxjbkbk6GtC2PTqBzjzaV2f6DiAsutKlEhHv
-         BAkurQlVnM0+eWWWAKzenZGr8rAZ7riD2F+Ep2XZzro35Sj4kXVzKpCn19VbxTokBnZf
-         LbiJw/8MFbEIwDvB4pBLcJIT4pUTCby9o4Gf1skXWoBU/mMpjIXMHgug50XVGLv62j20
-         jDLIc5LySRy4jydgUyUhpFwddxySLiGZHQ3SuweT7Wm6XeZBf/2ZNa3LIo+ST/ufXBOl
-         CpBA==
-X-Gm-Message-State: APjAAAUTj+ZqbYoBhGG9ulwNyAwQIZSciH2eIkULBWyszSrk9duT0c+/
-        i+HbSkU+9GKiFlARk5jCDJk=
-X-Google-Smtp-Source: APXvYqyWuXwXMjQGCXY671Qo8mOEainLlVJu27sHZeN0PwMV+DobUfF0v5Dvll39J+tn5aaHlVKmpw==
-X-Received: by 2002:a05:6214:130d:: with SMTP id a13mr14780230qvv.113.1566314346304;
-        Tue, 20 Aug 2019 08:19:06 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:4c8f])
-        by smtp.gmail.com with ESMTPSA id m9sm8417177qtp.27.2019.08.20.08.19.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 08:19:05 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 08:19:03 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, newella@fb.com, clm@fb.com,
-        Josef Bacik <josef@toxicpanda.com>, dennisz@fb.com,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>, kernel-team@fb.com,
-        cgroups@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        bpf@vger.kernel.org
-Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
- porportional controller
-Message-ID: <20190820151903.GH2263813@devbig004.ftw2.facebook.com>
-References: <20190614015620.1587672-1-tj@kernel.org>
- <20190614175642.GA657710@devbig004.ftw2.facebook.com>
- <5A63F937-F7B5-4D09-9DB4-C73D6F571D50@linaro.org>
- <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
+        Tue, 20 Aug 2019 11:19:34 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5166 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729956AbfHTPTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 11:19:33 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EADE958FF6C9E88FE42E;
+        Tue, 20 Aug 2019 23:19:28 +0800 (CST)
+Received: from szxyal004123181.china.huawei.com (10.65.65.77) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 20 Aug 2019 23:19:27 +0800
+From:   Dongxu Liu <liudongxu3@huawei.com>
+To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] net: Fix detection for IPv4 duplicate address.
+Date:   Tue, 20 Aug 2019 23:19:05 +0800
+Message-ID: <20190820151905.13148-1-liudongxu3@huawei.com>
+X-Mailer: git-send-email 2.12.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
+X-Originating-IP: [10.65.65.77]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Paolo.
+The network sends an ARP REQUEST packet to determine
+whether there is a host with the same IP.
+The source IP address of the packet is 0.
+However, Windows may also send the source IP address
+to determine, then the source IP address is equal to
+the destination IP address.
 
-On Tue, Aug 20, 2019 at 05:04:25PM +0200, Paolo Valente wrote:
-> and makes one fio instance generate I/O for each group.  The bandwidth
-> reported above is that reported by the fio instance emulating the
-> target client.
-> 
-> Am I missing something?
+Signed-off-by: Dongxu Liu <liudongxu3@huawei.com>
+---
+ net/ipv4/arp.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-If you didn't configure QoS targets, the controller is using device
-qdepth saturation as the sole guidance in determining whether the
-device needs throttling.  Please try configuring the target latencies.
-The bandwidth you see for single stream of rand ios should have direct
-correlation with how the latency targets are configured.  The head
-letter for the patchset has some examples.
-
-Thanks.
-
+diff --git a/net/ipv4/arp.c b/net/ipv4/arp.c
+index 05eb42f..944f8e8 100644
+--- a/net/ipv4/arp.c
++++ b/net/ipv4/arp.c
+@@ -800,8 +800,11 @@ static int arp_process(struct net *net, struct sock *sk, struct sk_buff *skb)
+ 			    iptunnel_metadata_reply(skb_metadata_dst(skb),
+ 						    GFP_ATOMIC);
+ 
+-	/* Special case: IPv4 duplicate address detection packet (RFC2131) */
+-	if (sip == 0) {
++/* Special case: IPv4 duplicate address detection packet (RFC2131).
++ * Linux usually sends zero to detect duplication, and windows may
++ * send a same ip (not zero, sip equal to tip) to do this detection.
++ */
++	if (sip == 0 || sip == tip) {
+ 		if (arp->ar_op == htons(ARPOP_REQUEST) &&
+ 		    inet_addr_type_dev_table(net, dev, tip) == RTN_LOCAL &&
+ 		    !arp_ignore(in_dev, sip, tip))
 -- 
-tejun
+2.12.3
+
+
