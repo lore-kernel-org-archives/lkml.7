@@ -2,423 +2,627 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E552C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709CEC3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3053622CE3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2831B22CE3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pe43NX5r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SupqMLTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbfHTPsT (ORCPT
+        id S1730601AbfHTPt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:48:19 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46338 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbfHTPsT (ORCPT
+        Tue, 20 Aug 2019 11:49:56 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38388 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729991AbfHTPtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:48:19 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c2so2950930plz.13;
-        Tue, 20 Aug 2019 08:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zM4tkp5HVe5NvMKdx1PxufJlR17iBM8TdN6ox0aCcPk=;
-        b=pe43NX5ra6XUeZ/gR3lq4k22EGIYUbVg+TNkByk89byxYUlD6CAbjZrBXx641dMkR4
-         GS4L6X7S/tu5SWsNY/yjWY3+aFGrchw0FfqHtdP+q4lyT/fWTwriTZn8eBhHfo7a76C6
-         Ko/S3WzR8hYGMkVbZdgCTg23KD/5krksMLfXieSJCQAgzMHoGWp9+U5skGerM4HYmxMR
-         lHFivlGtJSSkIrSVf/iCqc3ckSEoNOjsBYxPdh5RakBSqNPBhkns/3+NTGaRfJKbjjUc
-         SDnZrsyFUfK99D4mIDq4yRlfsGYPAJ7s4dlZfccchgHdqLuU6nlvMILz1/5mXFc4+BBH
-         Z3Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zM4tkp5HVe5NvMKdx1PxufJlR17iBM8TdN6ox0aCcPk=;
-        b=ZYVolvqXiyyZsE8YH2AohTZY/WLZQhXWpiKedoX41hF8cJvaQBhFTI2O/4mDZcbzm6
-         BZnaewGiLa7e6Fj/SIUAejcJWFWqt8L6HR2uwqXBrqyaDwbgjiIxf1VxbkA9d0kCcmRy
-         6H2fOy18RhbLdA3zWD6z2I7m+HYNqBnP5hNuziTnsIXOt/JLehSQN0UeNI+tCv2fsdlh
-         qXkXZ9HkaKaqugJBmDzs3onysrC1nMcezTj1HufzQZp66EWBIuun7GUGM/eLp8yuidzY
-         tx0zP4+pxwMw3v/T4O91ednnycT566PMfhx1zFWMptg2JNs0dZXvWgNYMo7jvQDZLhsR
-         pCrw==
-X-Gm-Message-State: APjAAAXaZd3HbNs2jitmtSQIYhg+lBVjGHkJCcyLW6TFpdmdfTaQVzq9
-        ZT99MbZ12BTQeynn3pMjAjQ=
-X-Google-Smtp-Source: APXvYqylKgL/BN33iAN9MePIBPwVHO56HCvmDtfcBGesVftSeHMm5mppBHH5fAVYvV95Nbztea53bg==
-X-Received: by 2002:a17:902:8602:: with SMTP id f2mr9635760plo.235.1566316097320;
-        Tue, 20 Aug 2019 08:48:17 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y68sm10495491pfy.25.2019.08.20.08.48.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 08:48:16 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 08:48:15 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Anson.Huang@nxp.com
-Cc:     wim@linux-watchdog.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br,
-        leonard.crestez@nxp.com, u.kleine-koenig@pengutronix.de,
-        schnitzeltony@gmail.com, jan.tuerk@emtrion.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V2 2/4] watchdog: Add i.MX7ULP watchdog support
-Message-ID: <20190820154815.GA20033@roeck-us.net>
-References: <20190812085321.13823-1-Anson.Huang@nxp.com>
- <20190812085321.13823-2-Anson.Huang@nxp.com>
- <20190820153155.GA19394@roeck-us.net>
+        Tue, 20 Aug 2019 11:49:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rM4CMHAB9FnKIeWhJdPdrsStnqySK6qnjePVGMWHPT8=; b=SupqMLTD6NJ3IBaeJLWZ5urGH
+        o6E/neT72AXbtWEccxvOYfG1HcWLZkd98sOwouUMmYY+L+UhBajAdj1A4qTheqwQPoyIKC9B6M5S6
+        l7qPuk9pTZwGHIZPvKX0dwUCwevifK7QzxEdj/kod1miiLkdmIxGEmE1vV5riUO9p/YhLR/bPCvvf
+        deApJDRl/Gyl6KInQH62BlQbEZ5tf3w6g8jFI+Lz4O+ov6P1OPPxm1Rou7djCGdu/1SIOdF1fUzAH
+        F6T5TxnDmPclEzIID0iCz9EBRhxfFzy8EXQpYczblWekcW5qi63B975TJngCIedoQ7/bUrq3YnvQW
+        rxxJZ+1HA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i06OM-0001W1-Vt; Tue, 20 Aug 2019 15:49:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1A74E3075FF;
+        Tue, 20 Aug 2019 17:49:18 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 64FCB20A21FD1; Tue, 20 Aug 2019 17:49:49 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 17:49:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Luck, Tony" <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS, x86/CPU: Tony Luck will maintain
+ asm/intel-family.h
+Message-ID: <20190820154949.GH2386@hirez.programming.kicks-ass.net>
+References: <20190814234030.30817-1-tony.luck@intel.com>
+ <20190815075822.GC15313@zn.tnic>
+ <20190815172159.GA4935@agluck-desk2.amr.corp.intel.com>
+ <20190815175455.GJ15313@zn.tnic>
+ <20190815183055.GA6847@agluck-desk2.amr.corp.intel.com>
+ <alpine.DEB.2.21.1908152217070.1908@nanos.tec.linutronix.de>
+ <20190820154011.GY2332@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820153155.GA19394@roeck-us.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190820154011.GY2332@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 08:31:55AM -0700, Guenter Roeck wrote:
-> On Mon, Aug 12, 2019 at 04:53:19PM +0800, Anson.Huang@nxp.com wrote:
-> > From: Anson Huang <Anson.Huang@nxp.com>
-> > 
-> > The i.MX7ULP Watchdog Timer (WDOG) module is an independent timer
-> > that is available for system use.
-> > It provides a safety feature to ensure that software is executing
-> > as planned and that the CPU is not stuck in an infinite loop or
-> > executing unintended code. If the WDOG module is not serviced
-> > (refreshed) within a certain period, it resets the MCU.
-> > 
-> > Add driver support for i.MX7ULP watchdog.
-> > 
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On Tue, Aug 20, 2019 at 05:40:11PM +0200, Peter Zijlstra wrote:
+
+> > _CORE
+> > _DESKTOP
 > 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> 
+> These two and no _SHORT should/could be collated, I think.
 
-Wait, I have to withdraw that.
+for i in `git grep -l "INTEL_FAM6_.*_\(CORE\|DESKTOP\)"`
+do
+	sed -i -e 's/\(INTEL_FAM6_.*\)_\(CORE\|DESKTOP\)/\1/g' ${i}
+done
 
-With clk_prepare_enable(), you'll also need to call clk_disable_unprepare()
-on remove. An easy way to do this and keep the code simple would be:
+---
+ arch/x86/events/intel/core.c          | 26 +++++++++++++-------------
+ arch/x86/events/intel/cstate.c        | 22 +++++++++++-----------
+ arch/x86/events/intel/pt.c            |  2 +-
+ arch/x86/events/intel/rapl.c          | 10 +++++-----
+ arch/x86/events/intel/uncore.c        | 12 ++++++------
+ arch/x86/events/msr.c                 |  8 ++++----
+ arch/x86/include/asm/intel-family.h   | 10 +++++-----
+ arch/x86/kernel/apic/apic.c           |  8 ++++----
+ arch/x86/kernel/cpu/bugs.c            |  8 ++++----
+ arch/x86/kernel/cpu/intel.c           | 10 +++++-----
+ drivers/cpufreq/intel_pstate.c        | 12 ++++++------
+ drivers/idle/intel_idle.c             |  2 +-
+ tools/power/x86/turbostat/turbostat.c | 28 ++++++++++++++--------------
+ 13 files changed, 79 insertions(+), 79 deletions(-)
 
-static void imx7ulp_wdt_clk_disable_unprepare(void *data)
-{
-	clk_disable_unprepare(data);
-}
-
-static int imx7ulp_wdt_probe(...)
-{
-	...
-	ret = clk_prepare_enable(imx7ulp_wdt->clk);
-	if (ret)
-		return ret;
-	ret = devm_add_action_or_reset(dev, imx7ulp_wdt_clk_disable_unprepare);
-	if (ret)
-		return ret;
-	...
-
-Thanks,
-Guenter
-
-> > ---
-> > Changes since V1:
-> > 	- Add clock operation;
-> > 	- Remove unneccsary error message when registering watchdog device failed;
-> > 	- Use BIT() instead of hard code;
-> > ---
-> >  drivers/watchdog/Kconfig       |  13 +++
-> >  drivers/watchdog/Makefile      |   1 +
-> >  drivers/watchdog/imx7ulp_wdt.c | 244 +++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 258 insertions(+)
-> >  create mode 100644 drivers/watchdog/imx7ulp_wdt.c
-> > 
-> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> > index 8188963..0884e53 100644
-> > --- a/drivers/watchdog/Kconfig
-> > +++ b/drivers/watchdog/Kconfig
-> > @@ -740,6 +740,19 @@ config IMX_SC_WDT
-> >  	  To compile this driver as a module, choose M here: the
-> >  	  module will be called imx_sc_wdt.
-> >  
-> > +config IMX7ULP_WDT
-> > +	tristate "IMX7ULP Watchdog"
-> > +	depends on ARCH_MXC || COMPILE_TEST
-> > +	select WATCHDOG_CORE
-> > +	help
-> > +	  This is the driver for the hardware watchdog on the Freescale
-> > +	  IMX7ULP and later processors. If you have one of these
-> > +	  processors and wish to have watchdog support enabled,
-> > +	  say Y, otherwise say N.
-> > +
-> > +	  To compile this driver as a module, choose M here: the
-> > +	  module will be called imx7ulp_wdt.
-> > +
-> >  config UX500_WATCHDOG
-> >  	tristate "ST-Ericsson Ux500 watchdog"
-> >  	depends on MFD_DB8500_PRCMU
-> > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> > index 7caa920..7d32537 100644
-> > --- a/drivers/watchdog/Makefile
-> > +++ b/drivers/watchdog/Makefile
-> > @@ -69,6 +69,7 @@ obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
-> >  obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
-> >  obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
-> >  obj-$(CONFIG_IMX_SC_WDT) += imx_sc_wdt.o
-> > +obj-$(CONFIG_IMX7ULP_WDT) += imx7ulp_wdt.o
-> >  obj-$(CONFIG_UX500_WATCHDOG) += ux500_wdt.o
-> >  obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
-> >  obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
-> > diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
-> > new file mode 100644
-> > index 0000000..c20fba4
-> > --- /dev/null
-> > +++ b/drivers/watchdog/imx7ulp_wdt.c
-> > @@ -0,0 +1,244 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright 2019 NXP.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/init.h>
-> > +#include <linux/io.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/reboot.h>
-> > +#include <linux/watchdog.h>
-> > +
-> > +#define WDOG_CS			0x0
-> > +#define WDOG_CS_CMD32EN		BIT(13)
-> > +#define WDOG_CS_ULK		BIT(11)
-> > +#define WDOG_CS_RCS		BIT(10)
-> > +#define WDOG_CS_EN		BIT(7)
-> > +#define WDOG_CS_UPDATE		BIT(5)
-> > +
-> > +#define WDOG_CNT	0x4
-> > +#define WDOG_TOVAL	0x8
-> > +
-> > +#define REFRESH_SEQ0	0xA602
-> > +#define REFRESH_SEQ1	0xB480
-> > +#define REFRESH		((REFRESH_SEQ1 << 16) | REFRESH_SEQ0)
-> > +
-> > +#define UNLOCK_SEQ0	0xC520
-> > +#define UNLOCK_SEQ1	0xD928
-> > +#define UNLOCK		((UNLOCK_SEQ1 << 16) | UNLOCK_SEQ0)
-> > +
-> > +#define DEFAULT_TIMEOUT	60
-> > +#define MAX_TIMEOUT	128
-> > +
-> > +static bool nowayout = WATCHDOG_NOWAYOUT;
-> > +module_param(nowayout, bool, 0000);
-> > +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-> > +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> > +
-> > +struct imx7ulp_wdt_device {
-> > +	struct notifier_block restart_handler;
-> > +	struct watchdog_device wdd;
-> > +	void __iomem *base;
-> > +	struct clk *clk;
-> > +	int rate;
-> > +};
-> > +
-> > +static inline void imx7ulp_wdt_enable(void __iomem *base, bool enable)
-> > +{
-> > +	u32 val = readl(base + WDOG_CS);
-> > +
-> > +	writel(UNLOCK, base + WDOG_CNT);
-> > +	if (enable)
-> > +		writel(val | WDOG_CS_EN, base + WDOG_CS);
-> > +	else
-> > +		writel(val & ~WDOG_CS_EN, base + WDOG_CS);
-> > +}
-> > +
-> > +static inline bool imx7ulp_wdt_is_enabled(void __iomem *base)
-> > +{
-> > +	u32 val = readl(base + WDOG_CS);
-> > +
-> > +	return val & WDOG_CS_EN;
-> > +}
-> > +
-> > +static int imx7ulp_wdt_ping(struct watchdog_device *wdog)
-> > +{
-> > +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-> > +
-> > +	writel(REFRESH, wdt->base + WDOG_CNT);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int imx7ulp_wdt_start(struct watchdog_device *wdog)
-> > +{
-> > +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-> > +
-> > +	imx7ulp_wdt_enable(wdt->base, true);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int imx7ulp_wdt_stop(struct watchdog_device *wdog)
-> > +{
-> > +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-> > +
-> > +	imx7ulp_wdt_enable(wdt->base, false);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
-> > +				   unsigned int timeout)
-> > +{
-> > +	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-> > +	u32 val = wdt->rate * timeout;
-> > +
-> > +	writel(UNLOCK, wdt->base + WDOG_CNT);
-> > +	writel(val, wdt->base + WDOG_TOVAL);
-> > +
-> > +	wdog->timeout = timeout;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct watchdog_ops imx7ulp_wdt_ops = {
-> > +	.owner = THIS_MODULE,
-> > +	.start = imx7ulp_wdt_start,
-> > +	.stop  = imx7ulp_wdt_stop,
-> > +	.ping  = imx7ulp_wdt_ping,
-> > +	.set_timeout = imx7ulp_wdt_set_timeout,
-> > +};
-> > +
-> > +static const struct watchdog_info imx7ulp_wdt_info = {
-> > +	.identity = "i.MX7ULP watchdog timer",
-> > +	.options  = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-> > +		    WDIOF_MAGICCLOSE,
-> > +};
-> > +
-> > +static inline void imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
-> > +{
-> > +	u32 val;
-> > +
-> > +	/* unlock the wdog for reconfiguration */
-> > +	writel_relaxed(UNLOCK_SEQ0, base + WDOG_CNT);
-> > +	writel_relaxed(UNLOCK_SEQ1, base + WDOG_CNT);
-> > +
-> > +	/* set an initial timeout value in TOVAL */
-> > +	writel(timeout, base + WDOG_TOVAL);
-> > +	/* enable 32bit command sequence and reconfigure */
-> > +	val = BIT(13) | BIT(8) | BIT(5);
-> > +	writel(val, base + WDOG_CS);
-> > +}
-> > +
-> > +static int imx7ulp_wdt_probe(struct platform_device *pdev)
-> > +{
-> > +	struct imx7ulp_wdt_device *imx7ulp_wdt;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct watchdog_device *wdog;
-> > +	int ret;
-> > +
-> > +	imx7ulp_wdt = devm_kzalloc(dev, sizeof(*imx7ulp_wdt), GFP_KERNEL);
-> > +	if (!imx7ulp_wdt)
-> > +		return -ENOMEM;
-> > +
-> > +	platform_set_drvdata(pdev, imx7ulp_wdt);
-> > +
-> > +	imx7ulp_wdt->base = devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(imx7ulp_wdt->base))
-> > +		return PTR_ERR(imx7ulp_wdt->base);
-> > +
-> > +	imx7ulp_wdt->clk = devm_clk_get(dev, NULL);
-> > +	if (IS_ERR(imx7ulp_wdt->clk)) {
-> > +		dev_err(dev, "Failed to get watchdog clock\n");
-> > +		return PTR_ERR(imx7ulp_wdt->clk);
-> > +	}
-> > +
-> > +	ret = clk_prepare_enable(imx7ulp_wdt->clk);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	imx7ulp_wdt->rate = 1000;
-> > +	wdog = &imx7ulp_wdt->wdd;
-> > +	wdog->info = &imx7ulp_wdt_info;
-> > +	wdog->ops = &imx7ulp_wdt_ops;
-> > +	wdog->min_timeout = 1;
-> > +	wdog->max_timeout = MAX_TIMEOUT;
-> > +	wdog->parent = dev;
-> > +	wdog->timeout = DEFAULT_TIMEOUT;
-> > +
-> > +	watchdog_init_timeout(wdog, 0, dev);
-> > +	watchdog_stop_on_reboot(wdog);
-> > +	watchdog_stop_on_unregister(wdog);
-> > +	watchdog_set_drvdata(wdog, imx7ulp_wdt);
-> > +	imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * imx7ulp_wdt->rate);
-> > +
-> > +	ret = devm_watchdog_register_device(dev, wdog);
-> > +	if (ret)
-> > +		goto disable_clk;
-> > +
-> > +	return 0;
-> > +
-> > +disable_clk:
-> > +	clk_disable_unprepare(imx7ulp_wdt->clk);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int __maybe_unused imx7ulp_wdt_suspend(struct device *dev)
-> > +{
-> > +	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
-> > +
-> > +	if (watchdog_active(&imx7ulp_wdt->wdd))
-> > +		imx7ulp_wdt_stop(&imx7ulp_wdt->wdd);
-> > +
-> > +	clk_disable_unprepare(imx7ulp_wdt->clk);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int __maybe_unused imx7ulp_wdt_resume(struct device *dev)
-> > +{
-> > +	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
-> > +	u32 timeout = imx7ulp_wdt->wdd.timeout * imx7ulp_wdt->rate;
-> > +	int ret;
-> > +
-> > +	ret = clk_prepare_enable(imx7ulp_wdt->clk);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (imx7ulp_wdt_is_enabled(imx7ulp_wdt->base))
-> > +		imx7ulp_wdt_init(imx7ulp_wdt->base, timeout);
-> > +
-> > +	if (watchdog_active(&imx7ulp_wdt->wdd))
-> > +		imx7ulp_wdt_start(&imx7ulp_wdt->wdd);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static SIMPLE_DEV_PM_OPS(imx7ulp_wdt_pm_ops, imx7ulp_wdt_suspend,
-> > +			 imx7ulp_wdt_resume);
-> > +
-> > +static const struct of_device_id imx7ulp_wdt_dt_ids[] = {
-> > +	{ .compatible = "fsl,imx7ulp-wdt", },
-> > +	{ /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, imx7ulp_wdt_dt_ids);
-> > +
-> > +static struct platform_driver imx7ulp_wdt_driver = {
-> > +	.probe		= imx7ulp_wdt_probe,
-> > +	.driver		= {
-> > +		.name	= "imx7ulp-wdt",
-> > +		.pm	= &imx7ulp_wdt_pm_ops,
-> > +		.of_match_table = imx7ulp_wdt_dt_ids,
-> > +	},
-> > +};
-> > +module_platform_driver(imx7ulp_wdt_driver);
-> > +
-> > +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-> > +MODULE_DESCRIPTION("Freescale i.MX7ULP watchdog driver");
-> > +MODULE_LICENSE("GPL v2");
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 648260b5f367..76bff3a33725 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3964,12 +3964,12 @@ static __init void intel_clovertown_quirk(void)
+ }
+ 
+ static const struct x86_cpu_desc isolation_ucodes[] = {
+-	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_CORE,		 3, 0x0000001f),
++	INTEL_CPU_DESC(INTEL_FAM6_HASWELL,		 3, 0x0000001f),
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_ULT,		 1, 0x0000001e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_GT3E,		 1, 0x00000015),
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_X,		 2, 0x00000037),
+ 	INTEL_CPU_DESC(INTEL_FAM6_HASWELL_X,		 4, 0x0000000a),
+-	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_CORE,	 4, 0x00000023),
++	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL,		 4, 0x00000023),
+ 	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_GT3E,	 1, 0x00000014),
+ 	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_XEON_D,	 2, 0x00000010),
+ 	INTEL_CPU_DESC(INTEL_FAM6_BROADWELL_XEON_D,	 3, 0x07000009),
+@@ -3979,16 +3979,16 @@ static const struct x86_cpu_desc isolation_ucodes[] = {
+ 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 3, 0x00000021),
+ 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_X,		 4, 0x00000000),
+ 	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_MOBILE,	 3, 0x0000007c),
+-	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE_DESKTOP,	 3, 0x0000007c),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_DESKTOP,	 9, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_SKYLAKE,		 3, 0x0000007c),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		 9, 0x0000004e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	 9, 0x0000004e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	10, 0x0000004e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	11, 0x0000004e),
+ 	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_MOBILE,	12, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_DESKTOP,	10, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_DESKTOP,	11, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_DESKTOP,	12, 0x0000004e),
+-	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE_DESKTOP,	13, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		10, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		11, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		12, 0x0000004e),
++	INTEL_CPU_DESC(INTEL_FAM6_KABYLAKE,		13, 0x0000004e),
+ 	{}
+ };
+ 
+@@ -4857,7 +4857,7 @@ __init int intel_pmu_init(void)
+ 		break;
+ 
+ 
+-	case INTEL_FAM6_HASWELL_CORE:
++	case INTEL_FAM6_HASWELL:
+ 	case INTEL_FAM6_HASWELL_X:
+ 	case INTEL_FAM6_HASWELL_ULT:
+ 	case INTEL_FAM6_HASWELL_GT3E:
+@@ -4890,7 +4890,7 @@ __init int intel_pmu_init(void)
+ 		name = "haswell";
+ 		break;
+ 
+-	case INTEL_FAM6_BROADWELL_CORE:
++	case INTEL_FAM6_BROADWELL:
+ 	case INTEL_FAM6_BROADWELL_XEON_D:
+ 	case INTEL_FAM6_BROADWELL_GT3E:
+ 	case INTEL_FAM6_BROADWELL_X:
+@@ -4956,9 +4956,9 @@ __init int intel_pmu_init(void)
+ 		pmem = true;
+ 		/* fall through */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:
+-	case INTEL_FAM6_SKYLAKE_DESKTOP:
++	case INTEL_FAM6_SKYLAKE:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+-	case INTEL_FAM6_KABYLAKE_DESKTOP:
++	case INTEL_FAM6_KABYLAKE:
+ 		x86_add_quirk(intel_pebs_isolation_quirk);
+ 		x86_pmu.late_ack = true;
+ 		memcpy(hw_cache_event_ids, skl_hw_cache_event_ids, sizeof(hw_cache_event_ids));
+@@ -5006,7 +5006,7 @@ __init int intel_pmu_init(void)
+ 		pmem = true;
+ 		/* fall through */
+ 	case INTEL_FAM6_ICELAKE_MOBILE:
+-	case INTEL_FAM6_ICELAKE_DESKTOP:
++	case INTEL_FAM6_ICELAKE:
+ 		x86_pmu.late_ack = true;
+ 		memcpy(hw_cache_event_ids, skl_hw_cache_event_ids, sizeof(hw_cache_event_ids));
+ 		memcpy(hw_cache_extra_regs, skl_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 688592b34564..3854400ad8ff 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -593,40 +593,40 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
+ 	X86_CSTATES_MODEL(INTEL_FAM6_IVYBRIDGE,   snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_IVYBRIDGE_X, snb_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_CORE, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL,      snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_X,	   snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_GT3E, snb_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_HASWELL_ULT, hswult_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_SILVERMONT, slm_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_SILVERMONT,   slm_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_SILVERMONT_X, slm_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_AIRMONT,     slm_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_AIRMONT,      slm_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_CORE,   snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL,        snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_XEON_D, snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_GT3E,   snb_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_BROADWELL_X,      snb_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_MOBILE,  snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_DESKTOP, snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_X, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_MOBILE, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE,        snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_SKYLAKE_X,      snb_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_MOBILE,  hswult_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_DESKTOP, hswult_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE_MOBILE, hswult_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_KABYLAKE,        hswult_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_CANNONLAKE_MOBILE, cnl_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_XEON_PHI_KNL, knl_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_XEON_PHI_KNM, knl_cstates),
+ 
+-	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT, glm_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT,   glm_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_X, glm_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_PLUS, glm_cstates),
+ 
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_MOBILE, snb_cstates),
+-	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_DESKTOP, snb_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE,        snb_cstates),
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
+diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+index d3dc2274ddd4..8cb9626e6277 100644
+--- a/arch/x86/events/intel/pt.c
++++ b/arch/x86/events/intel/pt.c
+@@ -204,7 +204,7 @@ static int __init pt_pmu_hw_init(void)
+ 
+ 	/* model-specific quirks */
+ 	switch (boot_cpu_data.x86_model) {
+-	case INTEL_FAM6_BROADWELL_CORE:
++	case INTEL_FAM6_BROADWELL:
+ 	case INTEL_FAM6_BROADWELL_XEON_D:
+ 	case INTEL_FAM6_BROADWELL_GT3E:
+ 	case INTEL_FAM6_BROADWELL_X:
+diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
+index 64ab51ffdf06..c1278e2764f4 100644
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/intel/rapl.c
+@@ -720,27 +720,27 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SANDYBRIDGE_X,		model_snbep),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE,		model_snb),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE_X,		model_snbep),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_CORE,		model_hsw),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_X,		model_hsx),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_ULT,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_GT3E,		model_hsw),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_CORE,		model_hsw),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_GT3E,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_X,		model_hsx),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_XEON_D,	model_hsx),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNL,		model_knl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNM,		model_knl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_MOBILE,		model_skl),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_DESKTOP,	model_skl),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE,		model_skl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_X,		model_hsx),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE,	model_skl),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP,	model_skl),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE,		model_skl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_CANNONLAKE_MOBILE,	model_skl),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT,		model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_X,	model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_PLUS,	model_hsw),
+ 	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE,		model_skl),
+-	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_DESKTOP,	model_skl),
++	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE,		model_skl),
+ 	{},
+ };
+ 
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 3694a5d0703d..d5e091586242 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1451,10 +1451,10 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_WESTMERE_EP,	  nhm_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SANDYBRIDGE,	  snb_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE,	  ivb_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL_CORE,	  hsw_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL,	  hsw_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL_ULT,	  hsw_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_HASWELL_GT3E,	  hsw_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_BROADWELL_CORE, bdw_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_BROADWELL,	  bdw_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_BROADWELL_GT3E, bdw_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SANDYBRIDGE_X,  snbep_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_NEHALEM_EX,	  nhmex_uncore_init),
+@@ -1465,14 +1465,14 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_BROADWELL_XEON_D, bdx_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNL,	  knl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNM,	  knl_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_DESKTOP,skl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE,	  skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_MOBILE, skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_SKYLAKE_X,      skx_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE, skl_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP, skl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE,	  skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE, icl_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_NNPI, icl_uncore_init),
+-	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_DESKTOP, icl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_NNPI,	  icl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE,	  icl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ATOM_TREMONT_X, snr_uncore_init),
+ 	{},
+ };
+diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
+index 9431447541e9..08d320a39dff 100644
+--- a/arch/x86/events/msr.c
++++ b/arch/x86/events/msr.c
+@@ -59,12 +59,12 @@ static bool test_intel(int idx, void *data)
+ 	case INTEL_FAM6_IVYBRIDGE:
+ 	case INTEL_FAM6_IVYBRIDGE_X:
+ 
+-	case INTEL_FAM6_HASWELL_CORE:
++	case INTEL_FAM6_HASWELL:
+ 	case INTEL_FAM6_HASWELL_X:
+ 	case INTEL_FAM6_HASWELL_ULT:
+ 	case INTEL_FAM6_HASWELL_GT3E:
+ 
+-	case INTEL_FAM6_BROADWELL_CORE:
++	case INTEL_FAM6_BROADWELL:
+ 	case INTEL_FAM6_BROADWELL_XEON_D:
+ 	case INTEL_FAM6_BROADWELL_GT3E:
+ 	case INTEL_FAM6_BROADWELL_X:
+@@ -85,10 +85,10 @@ static bool test_intel(int idx, void *data)
+ 		break;
+ 
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:
+-	case INTEL_FAM6_SKYLAKE_DESKTOP:
++	case INTEL_FAM6_SKYLAKE:
+ 	case INTEL_FAM6_SKYLAKE_X:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+-	case INTEL_FAM6_KABYLAKE_DESKTOP:
++	case INTEL_FAM6_KABYLAKE:
+ 	case INTEL_FAM6_ICELAKE_MOBILE:
+ 		if (idx == PERF_MSR_SMI || idx == PERF_MSR_PPERF)
+ 			return true;
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index fe7c205233f1..800dd17e61c4 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -49,27 +49,27 @@
+ #define INTEL_FAM6_IVYBRIDGE		0x3A
+ #define INTEL_FAM6_IVYBRIDGE_X		0x3E
+ 
+-#define INTEL_FAM6_HASWELL_CORE		0x3C
++#define INTEL_FAM6_HASWELL		0x3C
+ #define INTEL_FAM6_HASWELL_X		0x3F
+ #define INTEL_FAM6_HASWELL_ULT		0x45
+ #define INTEL_FAM6_HASWELL_GT3E		0x46
+ 
+-#define INTEL_FAM6_BROADWELL_CORE	0x3D
++#define INTEL_FAM6_BROADWELL		0x3D
+ #define INTEL_FAM6_BROADWELL_GT3E	0x47
+ #define INTEL_FAM6_BROADWELL_X		0x4F
+ #define INTEL_FAM6_BROADWELL_XEON_D	0x56
+ 
+ #define INTEL_FAM6_SKYLAKE_MOBILE	0x4E
+-#define INTEL_FAM6_SKYLAKE_DESKTOP	0x5E
++#define INTEL_FAM6_SKYLAKE		0x5E
+ #define INTEL_FAM6_SKYLAKE_X		0x55
+ #define INTEL_FAM6_KABYLAKE_MOBILE	0x8E
+-#define INTEL_FAM6_KABYLAKE_DESKTOP	0x9E
++#define INTEL_FAM6_KABYLAKE		0x9E
+ 
+ #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
+ 
+ #define INTEL_FAM6_ICELAKE_X		0x6A
+ #define INTEL_FAM6_ICELAKE_XEON_D	0x6C
+-#define INTEL_FAM6_ICELAKE_DESKTOP	0x7D
++#define INTEL_FAM6_ICELAKE		0x7D
+ #define INTEL_FAM6_ICELAKE_MOBILE	0x7E
+ #define INTEL_FAM6_ICELAKE_NNPI		0x9D
+ 
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 84104dfc4cf6..e0bc8a27a166 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -593,18 +593,18 @@ static const struct x86_cpu_id deadline_match[] = {
+ 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_BROADWELL_XEON_D,	bdx_deadline_rev),
+ 	DEADLINE_MODEL_MATCH_FUNC( INTEL_FAM6_SKYLAKE_X,	skx_deadline_rev),
+ 
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_CORE,	0x22),
++	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL,		0x22),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_ULT,	0x20),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_HASWELL_GT3E,	0x17),
+ 
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_CORE,	0x25),
++	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL,	0x25),
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_BROADWELL_GT3E,	0x17),
+ 
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_SKYLAKE_MOBILE,	0xb2),
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_SKYLAKE_DESKTOP,	0xb2),
++	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_SKYLAKE,		0xb2),
+ 
+ 	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_KABYLAKE_MOBILE,	0x52),
+-	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_KABYLAKE_DESKTOP,	0x52),
++	DEADLINE_MODEL_MATCH_REV ( INTEL_FAM6_KABYLAKE,		0x52),
+ 
+ 	{},
+ };
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 79d9d6da5d62..21d8f58bec31 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1184,15 +1184,15 @@ static void override_cache_bits(struct cpuinfo_x86 *c)
+ 	case INTEL_FAM6_WESTMERE:
+ 	case INTEL_FAM6_SANDYBRIDGE:
+ 	case INTEL_FAM6_IVYBRIDGE:
+-	case INTEL_FAM6_HASWELL_CORE:
++	case INTEL_FAM6_HASWELL:
+ 	case INTEL_FAM6_HASWELL_ULT:
+ 	case INTEL_FAM6_HASWELL_GT3E:
+-	case INTEL_FAM6_BROADWELL_CORE:
++	case INTEL_FAM6_BROADWELL:
+ 	case INTEL_FAM6_BROADWELL_GT3E:
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:
+-	case INTEL_FAM6_SKYLAKE_DESKTOP:
++	case INTEL_FAM6_SKYLAKE:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+-	case INTEL_FAM6_KABYLAKE_DESKTOP:
++	case INTEL_FAM6_KABYLAKE:
+ 		if (c->x86_cache_bits < 44)
+ 			c->x86_cache_bits = 44;
+ 		break;
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 66de4b84c369..92287fff158e 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -142,21 +142,21 @@ struct sku_microcode {
+ 	u32 microcode;
+ };
+ static const struct sku_microcode spectre_bad_microcodes[] = {
+-	{ INTEL_FAM6_KABYLAKE_DESKTOP,	0x0B,	0x80 },
+-	{ INTEL_FAM6_KABYLAKE_DESKTOP,	0x0A,	0x80 },
+-	{ INTEL_FAM6_KABYLAKE_DESKTOP,	0x09,	0x80 },
++	{ INTEL_FAM6_KABYLAKE,		0x0B,	0x80 },
++	{ INTEL_FAM6_KABYLAKE,		0x0A,	0x80 },
++	{ INTEL_FAM6_KABYLAKE,		0x09,	0x80 },
+ 	{ INTEL_FAM6_KABYLAKE_MOBILE,	0x0A,	0x80 },
+ 	{ INTEL_FAM6_KABYLAKE_MOBILE,	0x09,	0x80 },
+ 	{ INTEL_FAM6_SKYLAKE_X,		0x03,	0x0100013e },
+ 	{ INTEL_FAM6_SKYLAKE_X,		0x04,	0x0200003c },
+-	{ INTEL_FAM6_BROADWELL_CORE,	0x04,	0x28 },
++	{ INTEL_FAM6_BROADWELL,		0x04,	0x28 },
+ 	{ INTEL_FAM6_BROADWELL_GT3E,	0x01,	0x1b },
+ 	{ INTEL_FAM6_BROADWELL_XEON_D,	0x02,	0x14 },
+ 	{ INTEL_FAM6_BROADWELL_XEON_D,	0x03,	0x07000011 },
+ 	{ INTEL_FAM6_BROADWELL_X,	0x01,	0x0b000025 },
+ 	{ INTEL_FAM6_HASWELL_ULT,	0x01,	0x21 },
+ 	{ INTEL_FAM6_HASWELL_GT3E,	0x01,	0x18 },
+-	{ INTEL_FAM6_HASWELL_CORE,	0x03,	0x23 },
++	{ INTEL_FAM6_HASWELL,		0x03,	0x23 },
+ 	{ INTEL_FAM6_HASWELL_X,		0x02,	0x3b },
+ 	{ INTEL_FAM6_HASWELL_X,		0x04,	0x10 },
+ 	{ INTEL_FAM6_IVYBRIDGE_X,	0x04,	0x42a },
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index cc27d4c59dca..17cb9af25328 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1867,12 +1867,12 @@ static const struct pstate_funcs knl_funcs = {
+ 			(unsigned long)&policy }
+ 
+ static const struct x86_cpu_id intel_pstate_cpu_ids[] = {
+-	ICPU(INTEL_FAM6_SANDYBRIDGE, 		core_funcs),
++	ICPU(INTEL_FAM6_SANDYBRIDGE,		core_funcs),
+ 	ICPU(INTEL_FAM6_SANDYBRIDGE_X,		core_funcs),
+ 	ICPU(INTEL_FAM6_ATOM_SILVERMONT,	silvermont_funcs),
+ 	ICPU(INTEL_FAM6_IVYBRIDGE,		core_funcs),
+-	ICPU(INTEL_FAM6_HASWELL_CORE,		core_funcs),
+-	ICPU(INTEL_FAM6_BROADWELL_CORE,		core_funcs),
++	ICPU(INTEL_FAM6_HASWELL,		core_funcs),
++	ICPU(INTEL_FAM6_BROADWELL,		core_funcs),
+ 	ICPU(INTEL_FAM6_IVYBRIDGE_X,		core_funcs),
+ 	ICPU(INTEL_FAM6_HASWELL_X,		core_funcs),
+ 	ICPU(INTEL_FAM6_HASWELL_ULT,		core_funcs),
+@@ -1881,7 +1881,7 @@ static const struct x86_cpu_id intel_pstate_cpu_ids[] = {
+ 	ICPU(INTEL_FAM6_ATOM_AIRMONT,		airmont_funcs),
+ 	ICPU(INTEL_FAM6_SKYLAKE_MOBILE,		core_funcs),
+ 	ICPU(INTEL_FAM6_BROADWELL_X,		core_funcs),
+-	ICPU(INTEL_FAM6_SKYLAKE_DESKTOP,	core_funcs),
++	ICPU(INTEL_FAM6_SKYLAKE,		core_funcs),
+ 	ICPU(INTEL_FAM6_BROADWELL_XEON_D,	core_funcs),
+ 	ICPU(INTEL_FAM6_XEON_PHI_KNL,		knl_funcs),
+ 	ICPU(INTEL_FAM6_XEON_PHI_KNM,		knl_funcs),
+@@ -1900,13 +1900,13 @@ static const struct x86_cpu_id intel_pstate_cpu_oob_ids[] __initconst = {
+ };
+ 
+ static const struct x86_cpu_id intel_pstate_cpu_ee_disable_ids[] = {
+-	ICPU(INTEL_FAM6_KABYLAKE_DESKTOP, core_funcs),
++	ICPU(INTEL_FAM6_KABYLAKE, core_funcs),
+ 	{}
+ };
+ 
+ static const struct x86_cpu_id intel_pstate_hwp_boost_ids[] = {
+ 	ICPU(INTEL_FAM6_SKYLAKE_X, core_funcs),
+-	ICPU(INTEL_FAM6_SKYLAKE_DESKTOP, core_funcs),
++	ICPU(INTEL_FAM6_SKYLAKE, core_funcs),
+ 	{}
+ };
+ 
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index fa5ff77b8fe4..ac584872b638 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -1311,7 +1311,7 @@ static void intel_idle_state_table_update(void)
+ 	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
+ 		bxt_idle_state_table_update();
+ 		break;
+-	case INTEL_FAM6_SKYLAKE_DESKTOP:
++	case INTEL_FAM6_SKYLAKE:
+ 		sklh_idle_state_table_update();
+ 		break;
+ 	}
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 75fc4fb9901c..8083a354ae7f 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -3207,10 +3207,10 @@ int probe_nhm_msrs(unsigned int family, unsigned int model)
+ 		pkg_cstate_limits = snb_pkg_cstate_limits;
+ 		has_misc_feature_control = 1;
+ 		break;
+-	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_X:	/* HSX */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+-	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
++	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+@@ -3403,10 +3403,10 @@ int has_config_tdp(unsigned int family, unsigned int model)
+ 
+ 	switch (model) {
+ 	case INTEL_FAM6_IVYBRIDGE:	/* IVB */
+-	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_X:	/* HSX */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+-	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
++	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+@@ -3840,9 +3840,9 @@ void rapl_probe_intel(unsigned int family, unsigned int model)
+ 	switch (model) {
+ 	case INTEL_FAM6_SANDYBRIDGE:
+ 	case INTEL_FAM6_IVYBRIDGE:
+-	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+-	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
++	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+ 		do_rapl = RAPL_PKG | RAPL_CORES | RAPL_CORE_POLICY | RAPL_GFX | RAPL_PKG_POWER_INFO;
+ 		if (rapl_joules) {
+@@ -4031,7 +4031,7 @@ void perf_limit_reasons_probe(unsigned int family, unsigned int model)
+ 		return;
+ 
+ 	switch (model) {
+-	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+ 		do_gfx_perf_limit_reasons = 1;
+ 	case INTEL_FAM6_HASWELL_X:	/* HSX */
+@@ -4249,10 +4249,10 @@ int has_snb_msrs(unsigned int family, unsigned int model)
+ 	case INTEL_FAM6_SANDYBRIDGE_X:
+ 	case INTEL_FAM6_IVYBRIDGE:	/* IVB */
+ 	case INTEL_FAM6_IVYBRIDGE_X:	/* IVB Xeon */
+-	case INTEL_FAM6_HASWELL_CORE:	/* HSW */
++	case INTEL_FAM6_HASWELL:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_X:	/* HSW */
+ 	case INTEL_FAM6_HASWELL_GT3E:	/* HSW */
+-	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
++	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_GT3E:	/* BDW */
+ 	case INTEL_FAM6_BROADWELL_X:	/* BDX */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+@@ -4284,8 +4284,8 @@ int has_hsw_msrs(unsigned int family, unsigned int model)
+ 		return 0;
+ 
+ 	switch (model) {
+-	case INTEL_FAM6_HASWELL_CORE:
+-	case INTEL_FAM6_BROADWELL_CORE:	/* BDW */
++	case INTEL_FAM6_HASWELL:
++	case INTEL_FAM6_BROADWELL:	/* BDW */
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:	/* SKL */
+ 	case INTEL_FAM6_CANNONLAKE_MOBILE:	/* CNL */
+ 	case INTEL_FAM6_ATOM_GOLDMONT:	/* BXT */
+@@ -4569,16 +4569,16 @@ unsigned int intel_model_duplicates(unsigned int model)
+ 		return INTEL_FAM6_XEON_PHI_KNL;
+ 
+ 	case INTEL_FAM6_HASWELL_ULT:
+-		return INTEL_FAM6_HASWELL_CORE;
++		return INTEL_FAM6_HASWELL;
+ 
+ 	case INTEL_FAM6_BROADWELL_X:
+ 	case INTEL_FAM6_BROADWELL_XEON_D:	/* BDX-DE */
+ 		return INTEL_FAM6_BROADWELL_X;
+ 
+ 	case INTEL_FAM6_SKYLAKE_MOBILE:
+-	case INTEL_FAM6_SKYLAKE_DESKTOP:
++	case INTEL_FAM6_SKYLAKE:
+ 	case INTEL_FAM6_KABYLAKE_MOBILE:
+-	case INTEL_FAM6_KABYLAKE_DESKTOP:
++	case INTEL_FAM6_KABYLAKE:
+ 		return INTEL_FAM6_SKYLAKE_MOBILE;
+ 
+ 	case INTEL_FAM6_ICELAKE_MOBILE:
