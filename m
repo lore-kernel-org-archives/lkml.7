@@ -2,109 +2,76 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179ABC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B9CC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE1C722DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 917E422DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 14:01:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ooeAB8Xe"
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="huDQZX3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbfHTOAX (ORCPT
+        id S1730085AbfHTOBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 10:00:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50266 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729930AbfHTOAW (ORCPT
+        Tue, 20 Aug 2019 10:01:11 -0400
+Received: from mx-rz-1.rrze.uni-erlangen.de ([131.188.11.20]:53959 "EHLO
+        mx-rz-1.rrze.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729409AbfHTOBL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 10:00:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TWRaZEAnHrNRlH8ifo3ZQD1iiyxnRF/NRhravPIs25c=; b=ooeAB8XeFx9mkV2wPTzJifUFx
-        pwnZtTMR71QaoAV8FOdoBxW7MNR4Mz1zwoow92gi4p/SdNJR06JiZfl/mjclbj93gBZsxfiAayZHV
-        JKTp+WGmnFvobB47nn2zHVTG6mKwGQvTt+GVwvR9fi4sJE01o/IStNzFyiuOfyWafDq7PDwDHSPFB
-        XUzKT3HFjvdiIA9IHiCz457fuEkDJRoQZT3gg+Ue3jstT0SAnx2JG1ynaxg/ADd5zYr8+0xJmPe7c
-        RO4mgPibT3qwx/z9KDiaY7OG5OVPxGNbWqKoz8pw/RpP6nItpEsVzU412On0kN7wv+pJ69t9aKbGL
-        esejxAqyw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i04gN-00068l-V4; Tue, 20 Aug 2019 14:00:19 +0000
-Date:   Tue, 20 Aug 2019 07:00:19 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Jann Horn <jannh@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Arun KS <arunks@codeaurora.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Hugh Dickins <hughd@google.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Subject: Re: [PATCH 14/14] mm/lru: fix the comments of lru_lock
-Message-ID: <20190820140019.GB24642@bombadil.infradead.org>
-References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
- <1566294517-86418-15-git-send-email-alex.shi@linux.alibaba.com>
+        Tue, 20 Aug 2019 10:01:11 -0400
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 46CXWn33YLz8sjs;
+        Tue, 20 Aug 2019 16:01:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2013;
+        t=1566309669; bh=SmuOtpO6yuKYH+j3hML+tD9JcY//jbVASvT2tW8jJg0=;
+        h=To:Cc:From:Subject:Date:From:To:CC:Subject;
+        b=huDQZX3X2ooKpF87PkijbUnni6fbU/AH3fPB28C7wQJZJCGQ3cYtkCmH2DpRmqdle
+         KClmdVDnuoSkLpVJwpVU89HPKCQKvckGzlfA4aABoe+/4nDVC2vdPgWhROv6Nhihc1
+         +RSbghZ+3Ft9icFfe1kAXPVmPUaTOH5dp2FOFGtLc9ZM/ocW76V4/8yuACgPtxTYTV
+         us/ZiSJpjtejJWGW3R4vJ4hNoRjoz1m+hOXLb29jXsnKxN0/WAN4CvEh+Xysca/6qY
+         KXHaopKqSxDdCDzWW/LU6Y/HdTHdvETPWEF06uqqzYR/vlSilcS/Q1wsMYiQH7IXG1
+         h6O8E7GJ/eJqw==
+X-Virus-Scanned: amavisd-new at boeck1.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 109.41.192.99
+Received: from [192.168.43.238] (ip-109-41-192-99.web.vodafone.de [109.41.192.99])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: U2FsdGVkX18bHEwurg2pUjyR/ultBHm/eqbxfTc8GUY=)
+        by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 46CXWY2RPGz8sdL;
+        Tue, 20 Aug 2019 16:00:57 +0200 (CEST)
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com
+From:   Sebastian Duda <sebastian.duda@fau.de>
+Subject: Status of Subsystems - TI BQ27XXX POWER SUPPLY DRIVER
+Message-ID: <92d7646f-5a53-95db-d179-45a95c621c43@fau.de>
+Date:   Tue, 20 Aug 2019 16:00:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566294517-86418-15-git-send-email-alex.shi@linux.alibaba.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 05:48:37PM +0800, Alex Shi wrote:
-> @@ -159,7 +159,7 @@ static inline bool free_area_empty(struct free_area *area, int migratetype)
->  struct pglist_data;
->  
->  /*
-> - * zone->lock and the zone lru_lock are two of the hottest locks in the kernel.
-> + * zone->lock and the lru_lock are two of the hottest locks in the kernel.
->   * So add a wild amount of padding here to ensure that they fall into separate
->   * cachelines.  There are very few zone structures in the machine, so space
->   * consumption is not a concern here.
+Hello Andrew,
 
-But after this patch series, the lru lock is no longer stored in the zone.
-So this comment makes no sense.
+in my master thesis, I'm using the association of subsystems to 
+maintainers/reviewers and its status given in the MAINTAINERS file.
+During the research I noticed that there are several subsystems without 
+a status in the maintainers file. One of them is the subsystem `TI 
+BQ27XXX POWER SUPPLY DRIVER` where you're mentioned as reviewer.
 
-> @@ -295,7 +295,7 @@ struct zone_reclaim_stat {
->  
->  struct lruvec {
->  	struct list_head		lists[NR_LRU_LISTS];
-> -	/* move lru_lock to per lruvec for memcg */
-> +	/* perf lruvec lru_lock for memcg */
+Is it intended not to mention a status for your subsystems?
+What is the current status of your subsystem?
 
-What does the word 'perf' mean here?
-
+Kind regards
+Sebastian Duda
