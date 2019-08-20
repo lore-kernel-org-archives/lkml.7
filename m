@@ -2,145 +2,187 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EF3C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C33C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD01216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A868216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbfHTF3G (ORCPT
+        id S1729165AbfHTFco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 01:29:06 -0400
-Received: from twhmllg4.macronix.com ([211.75.127.132]:40977 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728657AbfHTF3G (ORCPT
+        Tue, 20 Aug 2019 01:32:44 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46519 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729024AbfHTFco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 01:29:06 -0400
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG4.macronix.com with ESMTP id x7K5Sv5o006682;
-        Tue, 20 Aug 2019 13:28:57 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     miquel.raynal@bootlin.com, richard@nod.at, marek.vasut@gmail.com,
-        dwmw2@infradead.org, bbrezillon@kernel.org,
-        computersforpeace@gmail.com, vigneshr@ti.com
-Cc:     kstewart@linuxfoundation.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, frieder.schrempf@kontron.de,
-        linux-mtd@lists.infradead.org, masonccyang@mxic.com.tw,
-        tglx@linutronix.de
-Subject: [PATCH] Add support for Macronix NAND randomizer
-Date:   Tue, 20 Aug 2019 13:53:48 +0800
-Message-Id: <1566280428-4159-1-git-send-email-masonccyang@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-X-MAIL: TWHMLLG4.macronix.com x7K5Sv5o006682
+        Tue, 20 Aug 2019 01:32:44 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hzwky-0001r5-O7; Tue, 20 Aug 2019 07:32:32 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hzwkw-0001MG-Jm; Tue, 20 Aug 2019 07:32:30 +0200
+Date:   Tue, 20 Aug 2019 07:32:30 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v4 1/10] pwm: mediatek: add a property "num-pwms"
+Message-ID: <20190820053230.veu5qseftw45laka@pengutronix.de>
+References: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
+ <1566265225-27452-2-git-send-email-sam.shih@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1566265225-27452-2-git-send-email-sam.shih@mediatek.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Macronix NANDs support randomizer operation for user data scrambled,
-which can be enabled with a SET_FEATURE.
+Hello,
 
-User data written to the NAND device without randomizer is still readable
-after randomizer function enabled.
-The penalty of randomizer are NOP = 1 instead of NOP = 4 and more time period
-is needed in program operation and entering deep power-down mode.
-i.e., tPROG 300us to 340us(randomizer enabled)
+On Tue, Aug 20, 2019 at 09:40:16AM +0800, Sam Shih wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> This adds a property "num-pwms" to avoid having an endless
+> list of compatibles with no differences for the same driver.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> ---
+> Used:
+> https://patchwork.kernel.org/project/linux-mediatek/list/?series=68207
+> 
+> Changes since v4:
+> Follow reviewer's comments:
+> Move the changes of droping the check for of_device_get_match_data
+> returning non-NULL to next patch
+> ---
+>  drivers/pwm/pwm-mediatek.c | 30 +++++++++++++++++++++---------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index eb6674ce995f..287fda3674ce 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -55,7 +55,7 @@ static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
+>  };
+>  
+>  struct mtk_pwm_platform_data {
+> -	unsigned int num_pwms;
+> +	unsigned int fallback_npwms;
+>  	bool pwm45_fixup;
+>  	bool has_clks;
+>  };
+> @@ -226,10 +226,10 @@ static const struct pwm_ops mtk_pwm_ops = {
+>  
+>  static int mtk_pwm_probe(struct platform_device *pdev)
+>  {
+> -	const struct mtk_pwm_platform_data *data;
+> +	struct device_node *np = pdev->dev.of_node;
+>  	struct mtk_pwm_chip *pc;
+>  	struct resource *res;
+> -	unsigned int i;
+> +	unsigned int i, npwms;
+>  	int ret;
+>  
+>  	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+> @@ -246,7 +246,19 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+>  	if (IS_ERR(pc->regs))
+>  		return PTR_ERR(pc->regs);
+>  
+> -	for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
+> +	ret = of_property_read_u32(np, "num-pwms", &npwms);
+> +	if (ret < 0) {
+> +		/* It's deprecated, we should specify num_pwms via DT now. */
+> +		if (pc->soc->fallback_npwms) {
+> +			npwms = pc->soc->fallback_npwms;
+> +			dev_warn(&pdev->dev, "DT is outdated, please update it\n");
+> +		} else {
+> +			dev_err(&pdev->dev, "failed to get number of PWMs\n");
+> +			return ret;
+> +		}
+> +	}
 
-If subpage write not available with hardware ECC, for example,
-NAND chip options NAND_NO_SUBPAGE_WRITE be set in driver and
-randomizer function is recommended for high-reliability.
-Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
-to see if this high-reliability function is supported.
+I'd suggest to add here:
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- drivers/mtd/nand/raw/nand_macronix.c | 54 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+	if (npwms > ARRAY_SIZE(mtk_pwm_clk_name) + 2)
+		npwms = ARRAY_SIZE(mtk_pwm_clk_name) + 2;
 
-diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-index 58511ae..b8b5bcb 100644
---- a/drivers/mtd/nand/raw/nand_macronix.c
-+++ b/drivers/mtd/nand/raw/nand_macronix.c
-@@ -11,6 +11,13 @@
- #define MACRONIX_READ_RETRY_BIT BIT(0)
- #define MACRONIX_NUM_READ_RETRY_MODES 6
- 
-+#define MACRONIX_RANDOMIZER_BIT BIT(1)
-+#define ONFI_FEATURE_ADDR_MXIC_RANDOMIZER 0xB0
-+#define MACRONIX_RANDOMIZER_ENPGM BIT(0)
-+#define MACRONIX_RANDOMIZER_RANDEN BIT(1)
-+#define MACRONIX_RANDOMIZER_RANDOPT BIT(2)
-+#define MACRONIX_RANDOMIZER_MODE_EXIT 0
-+
- struct nand_onfi_vendor_macronix {
- 	u8 reserved;
- 	u8 reliability_func;
-@@ -29,6 +36,42 @@ static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
- 	return nand_set_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
- }
- 
-+static void macronix_nand_randomizer_check_enable(struct nand_chip *chip)
-+{
-+	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-+	int ret;
-+
-+	ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-+				feature);
-+	if (feature[0]) {
-+		pr_info("Macronix NAND randomizer enabled:0x%x\n", feature[0]);
-+		return;
-+	}
-+
-+	feature[0] = MACRONIX_RANDOMIZER_ENPGM | MACRONIX_RANDOMIZER_RANDEN |
-+		     MACRONIX_RANDOMIZER_RANDOPT;
-+	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-+				feature);
-+	if (ret)
-+		goto err;
-+
-+	feature[0] = 0x0;
-+	ret = nand_prog_page_op(chip, 0, 0, feature, 1);
-+	if (ret)
-+		goto err;
-+
-+	feature[0] = MACRONIX_RANDOMIZER_MODE_EXIT;
-+	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_RANDOMIZER,
-+				feature);
-+	if (ret)
-+		goto err;
-+
-+	pr_info("Macronix NAND randomizer enable ok\n");
-+	return;
-+err:
-+	pr_err("Macronix NAND randomizer enable failed\n");
-+}
-+
- static void macronix_nand_onfi_init(struct nand_chip *chip)
- {
- 	struct nand_parameters *p = &chip->parameters;
-@@ -38,6 +81,17 @@ static void macronix_nand_onfi_init(struct nand_chip *chip)
- 		return;
- 
- 	mxic = (struct nand_onfi_vendor_macronix *)p->onfi->vendor;
-+	if (chip->options & NAND_NO_SUBPAGE_WRITE &&
-+	    mxic->reliability_func & MACRONIX_RANDOMIZER_BIT) {
-+		if (p->supports_set_get_features) {
-+			bitmap_set(p->set_feature_list,
-+				   ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
-+			bitmap_set(p->get_feature_list,
-+				   ONFI_FEATURE_ADDR_MXIC_RANDOMIZER, 1);
-+			macronix_nand_randomizer_check_enable(chip);
-+		}
-+	}
-+
- 	if ((mxic->reliability_func & MACRONIX_READ_RETRY_BIT) == 0)
- 		return;
- 
+to ensure to not use mtk_pwm_clk_name[10].
+
+Best regards
+Uwe
+
+> +
+> +	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
+>  		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
+>  		if (IS_ERR(pc->clks[i])) {
+>  			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
+> @@ -260,7 +272,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+>  	pc->chip.dev = &pdev->dev;
+>  	pc->chip.ops = &mtk_pwm_ops;
+>  	pc->chip.base = -1;
+> -	pc->chip.npwm = data->num_pwms;
+> +	pc->chip.npwm = npwms;
+>  
+>  	ret = pwmchip_add(&pc->chip);
+>  	if (ret < 0) {
+> @@ -279,25 +291,25 @@ static int mtk_pwm_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct mtk_pwm_platform_data mt2712_pwm_data = {
+> -	.num_pwms = 8,
+> +	.fallback_npwms = 8,
+>  	.pwm45_fixup = false,
+>  	.has_clks = true,
+>  };
+>  
+>  static const struct mtk_pwm_platform_data mt7622_pwm_data = {
+> -	.num_pwms = 6,
+> +	.fallback_npwms = 6,
+>  	.pwm45_fixup = false,
+>  	.has_clks = true,
+>  };
+>  
+>  static const struct mtk_pwm_platform_data mt7623_pwm_data = {
+> -	.num_pwms = 5,
+> +	.fallback_npwms = 5,
+>  	.pwm45_fixup = true,
+>  	.has_clks = true,
+>  };
+>  
+>  static const struct mtk_pwm_platform_data mt7628_pwm_data = {
+> -	.num_pwms = 4,
+> +	.fallback_npwms = 4,
+>  	.pwm45_fixup = true,
+>  	.has_clks = false,
+>  };
+> -- 
+> 2.17.1
+> 
+> 
+
 -- 
-1.9.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
