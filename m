@@ -2,134 +2,100 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B334EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7608C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 827FB22DBF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566306867;
-	bh=WX8SYzOKfj8Y410Nu+KbECJUJCHYCgaNqFFZooWkBzk=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=PgYIUelpRFEwu7k4F/iT3QYJOAAXe7PPRtFeZV/ZnbIxysiTVJIYv/ZTV0sdjwxjk
-	 OLGxC7Lw7ZGduydMutHjF26fRVMAW0hul0VLJ6tDAZY0mvxhfeUMAHIxv+C0RS0k/W
-	 W3FwDjCE7rrvdlK8De2DY6JNgBe2K4+cfYqnn5P8=
+	by mail.kernel.org (Postfix) with ESMTP id 98AF920673
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:14:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Db2v8fh7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbfHTNO0 (ORCPT
+        id S1729985AbfHTNOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:14:26 -0400
-Received: from mail-wm1-f97.google.com ([209.85.128.97]:39539 "EHLO
-        mail-wm1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbfHTNOX (ORCPT
+        Tue, 20 Aug 2019 09:14:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43272 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728595AbfHTNOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:14:23 -0400
-Received: by mail-wm1-f97.google.com with SMTP id i63so2604346wmg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:14:22 -0700 (PDT)
+        Tue, 20 Aug 2019 09:14:25 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y8so12346616wrn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:14:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=NIB0yDauqd7cwqCFZ5Bm7WKT8Vd6y3coQ7vww6yLLC0=;
+        b=Db2v8fh79KgGWcGUA3kDE66gzOCT6FcDNi6Bb7eEih7k+EujVQRBiOxhPga02sdmxP
+         8DgrEQmYW8N8CnvtPdaG/cconVUDrt92vqtd407lseGY38Rv70P2nL8lBbW+BPo64XZI
+         E2A6lsLnelEjqhg8J4dLVM0Yz0ApABa5ryRlWklh2gCiB1mbp5+c0O5RnqeZdplIBtYv
+         ro31NpEh+xiXkAE3ZvIgAYccd6Mp+0GmI+uzT9ejeOAmKuS3z3a8Gv1vNdQYdyKRLBmf
+         ZyDuguoiM/+FAC0P5EHE2xg6o/ZPxVdOpmJdC8dq0UNY/rrpavkEfosloYrn0VaOZdkP
+         yfzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=cXZ1tHQdDxSofQjcKdrjJTywasB4IlhStZwyyxo9TFM=;
-        b=nn1Oqse/IuJFROUTHuKn4QVXm8r7/2sQkXQ3JrKQm9/JusQmQkwnfiB6Ar7tV2yk1s
-         rwvNzkkF6YbdR31Xrdyae17rGA8I15/4k8Nb0PXPasDstf/Ox0L7qoiKCj01ybHQxWXG
-         tCBGaJa8UAfClUdVqyrIcDbOiLvTutiMCYpHQT0Avl2HE9773slqGloNlhLKyMuGCS5N
-         4eMCKr7CbJBdCeUkACZTDRLDqLhlr9e9CzFSvKk8cyAKdr5IhA4CW+qJlbazc5RdMHs4
-         sWwJQB2GcPFj2eIQmKYDWPSaOX8BUBJg1Vh/IWkDOT8TPq6HwtqmcTjh0M0nz/jx8h+g
-         +qaA==
-X-Gm-Message-State: APjAAAVhujoiUNp7YXfDHPyANqTvHEKBxQjCASdkKvtdDDDxuVe7jt1a
-        LudTUr9yJABsIVjbYK1+JSpz/VyKYPx2imo25Lpb3Hkdvk0DmESPFEj37e2vpCTfxQ==
-X-Google-Smtp-Source: APXvYqxbIWlIIY6vy6Hz/M5p3K6g8eUuS/jQgXheRopkkCtxO9zXJuYdqyXbbvWI7Lk8cz3eUMoOjQivwHMY
-X-Received: by 2002:a1c:be15:: with SMTP id o21mr25428618wmf.140.1566306861563;
-        Tue, 20 Aug 2019 06:14:21 -0700 (PDT)
-Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id j11sm372426wrb.64.2019.08.20.06.14.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 06:14:21 -0700 (PDT)
-X-Relaying-Domain: sirena.org.uk
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i03xt-0002LW-7M; Tue, 20 Aug 2019 13:14:21 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 8F31F274314E; Tue, 20 Aug 2019 14:14:20 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Kevin Hilman <khilman@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: axg-tdm-formatter: free reset on device removal" to the asoc tree
-In-Reply-To: <20190820123413.22249-1-jbrunet@baylibre.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190820131420.8F31F274314E@ypsilon.sirena.org.uk>
-Date:   Tue, 20 Aug 2019 14:14:20 +0100 (BST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=NIB0yDauqd7cwqCFZ5Bm7WKT8Vd6y3coQ7vww6yLLC0=;
+        b=EUBiegeXmSKtsEL4BidbZnSdZe8MpxTdgbjsuRe5+XiIk1YLDJfUnv19gN4xUyHKHR
+         hqPc34yROtLBezy2ZmFZBbq5M36PElKIzO6gOCA5ZVGXoImRT+Sb8yj5/1vwhPlmJSLz
+         UVohAeAAu6ANkSWPLRPC242mIC+Qv/gLrBRU5R7O0kVA2D1LNIn0udkIM+BsQrELF2oL
+         az19GTKaOy6ZuNidKj3IWs1qK+XJS2P/jPMOZ5jrqBA+LPEXoZsajO439PkTXDpZskKo
+         /1IjfWKt7R4BEXKPOHIv1d/pq3owD6p5PVmHVvlMIRzzSG0IJ3hFWKQKNHawuwhFa8FC
+         qMTA==
+X-Gm-Message-State: APjAAAVMa9fwB19BmgInwCUCTCq5fkALDlHbjCaqtpIRe3Fbf/iJ0CW7
+        UQmxj7XiMpcdnJmPL3N7sN0=
+X-Google-Smtp-Source: APXvYqyuX3spgjiH3WVjaq/Ko9mh6w+xlZcE68o6M5aki7mj2mLW9wBqmdLLtzUtLeMGVM6nEK9VNQ==
+X-Received: by 2002:adf:ce8d:: with SMTP id r13mr26400291wrn.37.1566306863843;
+        Tue, 20 Aug 2019 06:14:23 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id u186sm38200834wmu.26.2019.08.20.06.14.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 20 Aug 2019 06:14:23 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 15:14:22 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Sebastian Duda <sebastian.duda@fau.de>
+Cc:     linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com
+Subject: Re: Status of Subsystems
+Message-ID: <20190820131422.2navbg22etf7krxn@pali>
+References: <2529f953-305f-414b-5969-d03bf20892c4@fau.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2529f953-305f-414b-5969-d03bf20892c4@fau.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Tuesday 20 August 2019 15:05:51 Sebastian Duda wrote:
+> Hello Pali,
+> 
+> in my master thesis, I'm using the association of subsystems to
+> maintainers/reviewers and its status given in the MAINTAINERS file.
+> During the research I noticed that there are several subsystems without a
+> status in the maintainers file. One of them is the subsystem `ALPS PS/2
+> TOUCHPAD DRIVER` where you're mentioned as reviewer.
+> 
+> Is it intended not to mention a status for your subsystems?
+> What is the current status of these systems?
+> 
+> Kind regards
+> Sebastian Duda
 
-   ASoC: meson: axg-tdm-formatter: free reset on device removal
+Hi Sebastian! ALPS PS/2 is a driver for ALPS touchpad. They can be
+found on more laptops. And ALPS PS/2 itself is not separate subsystem.
+It is just driver which is part of kernel input subsystem with mailing
+list linux-input@vger.kernel.org.
 
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 18dd62ae3bc31baa0473e4a09e46c02e0bdc57a0 Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Tue, 20 Aug 2019 14:34:13 +0200
-Subject: [PATCH] ASoC: meson: axg-tdm-formatter: free reset on device removal
-
-Use the devm variant to get the formatter reset so it is properly freed
-on device removal
-
-Fixes: 751bd5db5260 ("ASoC: meson: axg-tdm-formatter: add reset")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20190820123413.22249-1-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/meson/axg-tdm-formatter.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/meson/axg-tdm-formatter.c b/sound/soc/meson/axg-tdm-formatter.c
-index 2e498201139f..1a0bf9d3836d 100644
---- a/sound/soc/meson/axg-tdm-formatter.c
-+++ b/sound/soc/meson/axg-tdm-formatter.c
-@@ -327,7 +327,7 @@ int axg_tdm_formatter_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Formatter dedicated reset line */
--	formatter->reset = reset_control_get_optional_exclusive(dev, NULL);
-+	formatter->reset = devm_reset_control_get_optional_exclusive(dev, NULL);
- 	if (IS_ERR(formatter->reset)) {
- 		ret = PTR_ERR(formatter->reset);
- 		if (ret != -EPROBE_DEFER)
 -- 
-2.20.1
-
+Pali Rohár
+pali.rohar@gmail.com
