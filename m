@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F29FC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FA4C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456102332A
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13032339E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566329317;
-	bh=swG7zWzEufKgLlsLjkzEw5DqyoyKOqjAW11ALqdrNMM=;
+	s=default; t=1566329322;
+	bh=nyQDcDGVNc52qwyCVzLDl29QlA+MDVXD/S7ZPOvV3AY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QtCmVdEYpvqLx1HYvSS4n0/Hb+aP7pnJhKQXirB/9L1S8cjzYp2Y3y/Db40+2dNCv
-	 X0/wHANNu/w8VeTANouqr4dLddyBJDvInImUh/r2h9eTbWKf1bVw2QtY8fDedDkx3z
-	 VP2I4a4wWeYa/y2t++/PGEHHNOicChHvdf54oepc=
+	b=P0haJCyg3zrI51ZaGNaFmC4n/3++b3MQbCQL4tRze/l7INlFqImDKKxEGZVeXfMuf
+	 bYgMPQ+3cuYIIcKSt4FQWnP/ZfIjdEyzKF7OwwLPh5pmWBkpVsNi1NTIEoDhOjqICp
+	 /hc3GOmJK2Y/TmE2KQDuTMedUaYPkA00kIpZSG8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730891AbfHTT2g (ORCPT
+        id S1730909AbfHTT2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:28:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41340 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 15:28:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730847AbfHTT2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:28:35 -0400
+        id S1730466AbfHTT2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 15:28:40 -0400
 Received: from quaco.ghostprotocols.net (177.206.236.100.dynamic.adsl.gvt.net.br [177.206.236.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B01F922DA7;
-        Tue, 20 Aug 2019 19:28:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C70D22DD6;
+        Tue, 20 Aug 2019 19:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566329314;
-        bh=swG7zWzEufKgLlsLjkzEw5DqyoyKOqjAW11ALqdrNMM=;
+        s=default; t=1566329319;
+        bh=nyQDcDGVNc52qwyCVzLDl29QlA+MDVXD/S7ZPOvV3AY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RpasWYOc57y9B2QiG0QojzO2kJjiJeQZxdCvVx6Bf3e5exSjr8/fnLbTX+qqM6Jhk
-         f8ka940w1oBxJVKG5iYch2dkHUUooa6aCFIhIBQm/tghAaYNGriFMquPa1UMc8sJpl
-         ZZ45LAa9BhheR5uJ2ot+iyc51C5xItgSyncP4gE4=
+        b=glezjKsKTTE8U3A0qUcMpTsgKWzjLZL70stlvw3BUEPBC5o+zym5w+Y6FSaGwaCcO
+         rNNiGdk+VgKfsBjQMzOGeSFJbFqSpePlaattXdccUWwUJaDVMU7XlDlK9d70quAsvX
+         +2UN+dHgnkk2vja2Scbl1QFibkr3HyWjod710Npg=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 10/17] perf report: Prefer DWARF callstacks to LBR ones when captured both
-Date:   Tue, 20 Aug 2019 16:27:26 -0300
-Message-Id: <20190820192733.19180-11-acme@kernel.org>
+        Mike Leach <mike.leach@linaro.org>,
+        Robert Walker <robert.walker@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 11/17] perf cs-etm: Support sample flags 'insn' and 'insnlen'
+Date:   Tue, 20 Aug 2019 16:27:27 -0300
+Message-Id: <20190820192733.19180-12-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190820192733.19180-1-acme@kernel.org>
 References: <20190820192733.19180-1-acme@kernel.org>
@@ -66,192 +67,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-Display DWARF based callchains when the perf.data file contains raw thread
-stack data as LBR callstack data.
+The synthetic branch and instruction samples are missed to set
+instruction related info, thus the perf tool fails to display samples
+with flags '-F,+insn,+insnlen'.
 
-Commiter testing:
+The CoreSight trace decoder provides sufficient information to decide
+the instruction size based on the ISA type: A64/A32 instructions are
+32-bit size, but one exception is the T32 instruction size, which might
+be 32-bit or 16-bit.
 
-This changes the output from the branch stack based one, i.e. without
-this patch, for the same file as in the previous csets:
+This patch handles these cases and it reads the instruction values from
+DSO file; thus can support the flags '-F,+insn,+insnlen'.
 
-  # perf report --stdio
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 13  of event 'cycles'
-  # Event count (approx.): 13
-  #
-  # Overhead  Command  Source Shared Object  Source Symbol                Target Symbol                              Basic Block Cycles
-  # ........  .......  ....................  ...........................  .........................................  ..................
-  #
-       7.69%  ls       libpthread-2.29.so    [.] _init                    [.] __pthread_initialize_minimal_internal  6827
-       7.69%  ls       ld-2.29.so            [k] _start                   [k] _dl_start                              -
-       7.69%  ls       ld-2.29.so            [.] _dl_start_user           [.] _dl_init                               -24790
-       7.69%  ls       ld-2.29.so            [k] _dl_start                [k] _dl_sysdep_start                       278
-       7.69%  ls       ld-2.29.so            [k] dl_main                  [k] _dl_map_object_deps                    15581
-       7.69%  ls       ld-2.29.so            [k] open_verify.constprop.0  [k] lseek64                                4228
-       7.69%  ls       ld-2.29.so            [k] _dl_map_object           [k] open_verify.constprop.0                55
-       7.69%  ls       ld-2.29.so            [k] openaux                  [k] _dl_map_object                         67
-       7.69%  ls       ld-2.29.so            [k] _dl_map_object_deps      [k] 0x00007f441b57c090                     112
-       7.69%  ls       ld-2.29.so            [.] call_init.part.0         [.] _init                                  334
-       7.69%  ls       ld-2.29.so            [.] _dl_init                 [.] call_init.part.0                       383
-       7.69%  ls       ld-2.29.so            [k] _dl_sysdep_start         [k] dl_main                                45
-       7.69%  ls       ld-2.29.so            [k] _dl_catch_exception      [k] openaux                                116
+Before:
 
-  #
-  # (Tip: For memory address profiling, try: perf mem record / perf mem report)
-  #
+  # perf script -F,insn,insnlen,ip,sym
+                0 [unknown] ilen: 0
+     ffff97174044 _start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
+     ffff97174938 _dl_start ilen: 0
 
-To the one that shows call chains:
+  [...]
 
-  # perf report --stdio
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 10  of event 'cycles'
-  # Event count (approx.): 3204047
-  #
-  # Children      Self  Command  Shared Object       Symbol
-  # ........  ........  .......  ..................  .........................................
-  #
-      55.01%     0.00%  ls       [kernel.vmlinux]    [k] entry_SYSCALL_64_after_hwframe
-              |
-              ---entry_SYSCALL_64_after_hwframe
-                 do_syscall_64
-                 |
-                  --16.01%--__x64_sys_execve
-                            __do_execve_file.isra.0
-                            search_binary_handler
-                            load_elf_binary
-                            elf_map
-                            vm_mmap_pgoff
-                            do_mmap
-                            mmap_region
-                            perf_event_mmap
-                            perf_iterate_sb
-                            perf_iterate_ctx
-                            perf_event_mmap_output
-                            perf_output_copy
-                            memcpy_erms
+After:
 
-      55.01%    39.00%  ls       [kernel.vmlinux]    [k] do_syscall_64
-              |
-              |--39.00%--0xffffffffffffffff
-              |          _dl_map_object
-              |          open_verify.constprop.0
-              |          __lseek64 (inlined)
-              |          entry_SYSCALL_64_after_hwframe
-              |          do_syscall_64
-              |
-               --16.01%--do_syscall_64
-                         __x64_sys_execve
-                         __do_execve_file.isra.0
-                         search_binary_handler
-                         load_elf_binary
-                         elf_map
-                         vm_mmap_pgoff
-                         do_mmap
-                         mmap_region
-                         perf_event_mmap
-                         perf_iterate_sb
-                         perf_iterate_ctx
-                         perf_event_mmap_output
-                         perf_output_copy
-                         memcpy_erms
+  # perf script -F,insn,insnlen,ip,sym
+                0 [unknown] ilen: 0
+     ffff97174044 _start ilen: 4 insn: 2f 02 00 94
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
+     ffff97174938 _dl_start ilen: 4 insn: c1 ff ff 54
 
-      42.95%    42.95%  ls       libpthread-2.29.so  [.] __pthread_initialize_minimal_internal
-              |
-              ---_init
-                 __pthread_initialize_minimal_internal
+  [...]
 
-      42.95%     0.00%  ls       libpthread-2.29.so  [.] _init
-              |
-              ---_init
-                 __pthread_initialize_minimal_internal
-
-  <SNIP>
-
-  #
-  # (Tip: Profiling branch (mis)predictions with: perf record -b / perf report)
-  #
-  #
-
-The branch stack view be explicitely selected using:
-
-  # perf report -h branch-stack
-
-   Usage: perf report [<options>]
-
-      -b, --branch-stack    use branch records for per branch histogram filling
-
-  #
-
-I.e. after this patch:
-
-  # perf report -b --stdio
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 13  of event 'cycles'
-  # Event count (approx.): 13
-  #
-  # Overhead  Command  Source Shared Object  Source Symbol                Target Symbol                              Basic Block Cycles
-  # ........  .......  ....................  ...........................  .........................................  ..................
-  #
-       7.69%  ls       libpthread-2.29.so    [.] _init                    [.] __pthread_initialize_minimal_internal  6827
-       7.69%  ls       ld-2.29.so            [k] _start                   [k] _dl_start                              -
-       7.69%  ls       ld-2.29.so            [.] _dl_start_user           [.] _dl_init                               -24790
-       7.69%  ls       ld-2.29.so            [k] _dl_start                [k] _dl_sysdep_start                       278
-       7.69%  ls       ld-2.29.so            [k] dl_main                  [k] _dl_map_object_deps                    15581
-       7.69%  ls       ld-2.29.so            [k] open_verify.constprop.0  [k] lseek64                                4228
-       7.69%  ls       ld-2.29.so            [k] _dl_map_object           [k] open_verify.constprop.0                55
-       7.69%  ls       ld-2.29.so            [k] openaux                  [k] _dl_map_object                         67
-       7.69%  ls       ld-2.29.so            [k] _dl_map_object_deps      [k] 0x00007f441b57c090                     112
-       7.69%  ls       ld-2.29.so            [.] call_init.part.0         [.] _init                                  334
-       7.69%  ls       ld-2.29.so            [.] _dl_init                 [.] call_init.part.0                       383
-       7.69%  ls       ld-2.29.so            [k] _dl_sysdep_start         [k] dl_main                                45
-       7.69%  ls       ld-2.29.so            [k] _dl_catch_exception      [k] openaux                                116
-
-  #
-  # (Tip: Show current config key-value pairs: perf config --list)
-  #
-  #
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mike Leach <mike.leach@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/ccbd9583-82f4-dec5-7e84-64bf56e351fb@linux.intel.com
+Cc: Robert Walker <robert.walker@arm.com>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: coresight@lists.linaro.org
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/20190815082854.18191-1-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/cs-etm.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 5e003d02821e..79dfb1139f94 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1281,6 +1281,8 @@ int cmd_report(int argc, const char **argv)
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index ed6f7fd5b90b..b3a5daaf1a8f 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1076,6 +1076,35 @@ bool cs_etm__etmq_is_timeless(struct cs_etm_queue *etmq)
+ 	return !!etmq->etm->timeless_decoding;
+ }
  
- 	has_br_stack = perf_header__has_feat(&session->header,
- 					     HEADER_BRANCH_STACK);
-+	if (perf_evlist__combined_sample_type(session->evlist) & PERF_SAMPLE_STACK_USER)
-+		has_br_stack = false;
++static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
++			      u64 trace_chan_id,
++			      const struct cs_etm_packet *packet,
++			      struct perf_sample *sample)
++{
++	/*
++	 * It's pointless to read instructions for the CS_ETM_DISCONTINUITY
++	 * packet, so directly bail out with 'insn_len' = 0.
++	 */
++	if (packet->sample_type == CS_ETM_DISCONTINUITY) {
++		sample->insn_len = 0;
++		return;
++	}
++
++	/*
++	 * T32 instruction size might be 32-bit or 16-bit, decide by calling
++	 * cs_etm__t32_instr_size().
++	 */
++	if (packet->isa == CS_ETM_ISA_T32)
++		sample->insn_len = cs_etm__t32_instr_size(etmq, trace_chan_id,
++							  sample->ip);
++	/* Otherwise, A64 and A32 instruction size are always 32-bit. */
++	else
++		sample->insn_len = 4;
++
++	cs_etm__mem_access(etmq, trace_chan_id, sample->ip,
++			   sample->insn_len, (void *)sample->insn);
++}
++
+ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+ 					    struct cs_etm_traceid_queue *tidq,
+ 					    u64 addr, u64 period)
+@@ -1097,9 +1126,10 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+ 	sample.period = period;
+ 	sample.cpu = tidq->packet->cpu;
+ 	sample.flags = tidq->prev_packet->flags;
+-	sample.insn_len = 1;
+ 	sample.cpumode = event->sample.header.misc;
  
- 	setup_forced_leader(&report, session->evlist);
++	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->packet, &sample);
++
+ 	if (etm->synth_opts.last_branch) {
+ 		cs_etm__copy_last_branch_rb(etmq, tidq);
+ 		sample.branch_stack = tidq->last_branch;
+@@ -1159,6 +1189,9 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+ 	sample.flags = tidq->prev_packet->flags;
+ 	sample.cpumode = event->sample.header.misc;
  
++	cs_etm__copy_insn(etmq, tidq->trace_chan_id, tidq->prev_packet,
++			  &sample);
++
+ 	/*
+ 	 * perf report cannot handle events without a branch stack
+ 	 */
 -- 
 2.21.0
 
