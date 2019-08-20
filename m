@@ -2,125 +2,186 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436DEC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F23C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142E922CF4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CDA422DD6
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 07:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="g9/LqEDF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wizzup.org header.i=@wizzup.org header.b="C2vhCqgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbfHTHbC (ORCPT
+        id S1729319AbfHTHgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 03:31:02 -0400
-Received: from mail.intenta.de ([178.249.25.132]:33896 "EHLO mail.intenta.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728414AbfHTHbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 03:31:01 -0400
-X-Greylist: delayed 338 seconds by postgrey-1.27 at vger.kernel.org; Tue, 20 Aug 2019 03:31:01 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
-        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=DkLrTcyw02QsvPxs9EBd44X1AWWhv0U810ENHIUA/sU=;
-        b=g9/LqEDF6XZckbNpR3jQejUs+HROnv2ykoZqqW2LC3V0TRMF2Zror6CHw4XIqioagA1NqXfY2Hahhxhx29qHokl12gcv4G34RkrM7q34dON5IihNfGJ6cyX82A84E3aeO+m5JBBKDx2nnwozUNRUy1HeP4ylgQ8VosgTe68aImulKo3K3I6QdZAUZYsEG27vkH7mLsJcc41ionMy1M7zSKrfEPUgtXXLO3ZKIfyK+2oDGPtkMK9tEr/l8bzqk2BXZbHB/trlDKTodhi+kGnzi5tQCemiYBSVVb4fhlpoPtC5NNWmoLZ4MQilhaFyaaJQ2KxtWmrZ+cOSA+yfzUmAIA==;
-X-CTCH-RefID: str=0001.0A0C020F.5D5BA055.0034,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Date:   Tue, 20 Aug 2019 09:25:08 +0200
-From:   Helmut Grohne <helmut.grohne@intenta.de>
-To:     Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-CC:     <miquel.raynal@bootlin.com>, <bbrezillon@kernel.org>,
-        <richard@nod.at>, <dwmw2@infradead.org>,
-        <computersforpeace@gmail.com>, <marek.vasut@gmail.com>,
-        <vigneshr@ti.com>, <yamada.masahiro@socionext.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <srinivas.goud@xilinx.com>, <shubhrajyoti.datta@xilinx.com>,
-        <svemula@xilinx.com>, <nagasuresh12@gmail.com>,
-        <michal.simek@xilinx.com>
-Subject: Re: [LINUX PATCH v19] mtd: rawnand: pl353: Add basic driver for arm
- pl353 smc nand interface
-Message-ID: <20190820072507.GA23478@laureti-dev>
-References: <20190730114337.6601-1-naga.sureshkumar.relli@xilinx.com>
+        Tue, 20 Aug 2019 03:36:07 -0400
+Received: from nala.villavu.com ([188.165.243.101]:43857 "EHLO
+        nala.villavu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729210AbfHTHgG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 03:36:06 -0400
+X-Greylist: delayed 1612 seconds by postgrey-1.27 at vger.kernel.org; Tue, 20 Aug 2019 03:36:05 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=wizzup.org;
+         s=mail; h=Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:
+        References:Cc:To:Subject:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+        :List-Post:List-Owner:List-Archive;
+        bh=IHLdQw2lyWMtk2QPVw9dMAyYXXCRb0XSjO3zLqVKeWY=; b=C2vhCqgZuoDriIjR9njF/+Gz5l
+        fwPwzwMzTCM6gVP4Ovizz+nUoZlI+RZWEJqrNW9uttThsr+HvTJO8tqFeoZjaLhJDD1scpTVWkztQ
+        s2621c8AB9OYSbyWlAOqRHgqoVGgXNjKjqXZ2095b3fjKMCwLLTwxRv/n8jMro/RRsCVZvvefT4N5
+        Pauek9t6H6XoxW46WKW7Bh0abqRujE2OdUi77qNj85i0yDKnNEIeSYLwasl4Qp2dxaUK864vtTgpO
+        iTn4M5LTEU8RIVjNGCzmpxTfM7+YbYbyaEiwAv2Wp5AzVaoxw4qLfo8U9s58Isnes0LffGwdDlFFm
+        RHLxTKCw==;
+Received: from a82-161-36-93.adsl.xs4all.nl ([82.161.36.93] helo=[0.0.0.0])
+        by nala.villavu.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <merlijn@wizzup.org>)
+        id 1hzyGQ-0001pm-UW; Tue, 20 Aug 2019 09:09:07 +0200
+Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
+ OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Adam Ford <aford173@gmail.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Philipp Rossak <embed3d@gmail.com>,
+        moaz korena <moaz@korena.xyz>,
+        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+        =?UTF-8?Q?Filip_Matijevi=c4=87?= <filip.matijevic.pz@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        kernel@pyra-handheld.com,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20180108214032.GW3872@atomide.com>
+ <0b00ce0a-969f-e638-8247-c2da96cf7ce6@gmail.com>
+ <20190213004143.GP5720@atomide.com>
+ <480AB632-A544-41E7-95A4-DC354AEBB71A@goldelico.com>
+ <CAKpie0SigGGsQxSU+X-Mz5boy-Xx=3wRNOcrf+F=ehFr3RBi7Q@mail.gmail.com>
+ <092210C3-05DE-4AFB-986F-81BD8F990B67@goldelico.com>
+ <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com>
+ <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com>
+ <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com>
+ <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com>
+ <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
+ <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
+ <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
+ <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
+ <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
+ <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
+ <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
+ <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
+From:   Merlijn Wajer <merlijn@wizzup.org>
+Openpgp: preference=signencrypt
+Message-ID: <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org>
+Date:   Tue, 20 Aug 2019 09:09:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190730114337.6601-1-naga.sureshkumar.relli@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
- (10.10.16.48)
+In-Reply-To: <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="jtGyfkLCCVCpHa0CRw28H4yJodhADJ6QS"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--jtGyfkLCCVCpHa0CRw28H4yJodhADJ6QS
+Content-Type: multipart/mixed; boundary="XMWJxZweNWQ51obQd6sIXuWNdA7y9N8gm";
+ protected-headers="v1"
+From: Merlijn Wajer <merlijn@wizzup.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>, Adam Ford <aford173@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>,
+ =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+ Philipp Rossak <embed3d@gmail.com>, moaz korena <moaz@korena.xyz>,
+ Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
+ =?UTF-8?Q?Filip_Matijevi=c4=87?= <filip.matijevic.pz@gmail.com>,
+ Tomi Valkeinen <tomi.valkeinen@ti.com>,
+ linux-omap <linux-omap@vger.kernel.org>, kernel@pyra-handheld.com,
+ Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+ maemo-leste@lists.dyne.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <ebb50954-b456-4dab-0765-9dfa06c67075@wizzup.org>
+Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
+ OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
+References: <20180108214032.GW3872@atomide.com>
+ <4d99c1ae-7752-949b-7e88-bc8f1dc594a2@wizzup.org>
+ <0C51EC59-9CDC-4196-ACF9-24596C9E61B6@goldelico.com>
+ <FA4520D5-62CB-446D-975C-A1C7B9251517@goldelico.com>
+ <20190212205132.GO5720@atomide.com>
+ <0b00ce0a-969f-e638-8247-c2da96cf7ce6@gmail.com>
+ <20190213004143.GP5720@atomide.com>
+ <480AB632-A544-41E7-95A4-DC354AEBB71A@goldelico.com>
+ <CAKpie0SigGGsQxSU+X-Mz5boy-Xx=3wRNOcrf+F=ehFr3RBi7Q@mail.gmail.com>
+ <092210C3-05DE-4AFB-986F-81BD8F990B67@goldelico.com>
+ <CAKpie0RXM1UC33YFeFy-kAxfGhYGNkw4vUgNTThf-ZCAhPTVXw@mail.gmail.com>
+ <BE23C1E4-2877-49FA-B230-F9C10691B805@goldelico.com>
+ <CAKpie0TSo-8gmDm9_Zw4Sd+kjVVEomp8yA9Vu8qY2U2AcrQc=w@mail.gmail.com>
+ <8A069D96-C65F-43F5-8F54-20019CFB1A8D@goldelico.com>
+ <d0cbfaaf-813e-8803-f90b-931a38396750@wizzup.org>
+ <3A03FF16-C203-43ED-AEEF-0260F6B3331A@goldelico.com>
+ <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
+ <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
+ <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
+ <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
+ <CAHCN7x+87xTsA3MeHy7kUWU0SU3X8HmSc2wbk5gKvYm1dRNe6A@mail.gmail.com>
+ <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
+In-Reply-To: <04809E3E-A690-4931-B949-1CFDAF407C14@goldelico.com>
+
+--XMWJxZweNWQ51obQd6sIXuWNdA7y9N8gm
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+
 Hi,
 
-On Tue, Jul 30, 2019 at 05:43:37AM -0600, Naga Sureshkumar Relli wrote:
-> Add driver for arm pl353 static memory controller nand interface.
-> This controller is used in Xilinx Zynq SoC for interfacing the
-> NAND flash memory.
+On 20/08/2019 08:48, H. Nikolaus Schaller wrote:
+>=20
+>> Am 19.08.2019 um 21:43 schrieb Adam Ford <aford173@gmail.com>:
+>>
+>>> Thanks to the help from the Pyra community, I was able to get a (bina=
+ry) reference
+>>> implementation using DRM that works on Pyra/OMAP5. At least the gles1=
+test1.
+>>
+>> just a question,
+>>
+>> If DRM is working, does that mean it works without needing the overhea=
+d of X?
+>=20
+> Yes, we have to kill X11 to successfully run the gles1test1. An interes=
+ting question
+> will be how to mix both... E.g. have a 3D rendering in a window control=
+led by some
+> window manager.
+>=20
 
-Is there a reason that you dropped me from the Cc list? If you Cc me,
-the feedback loop is faster. Please continue to Cc me on this driver.
+This is probably what you want to look at / start with:
+https://github.com/TexasInstruments/dri3wsegl
 
-> -> Tested Micron MT29F2G08ABAEAWP (On-die capable) and AMD/Spansion S34ML01G1.
+Cheers,
+Merlijn
 
-I tested this version of the driver with this exact Micron flash in an
-on-die configuration against v5.3-rc4. The patch applied cleanly and
-built without problems. The driver detects the chip and works
-"somewhat". One can interact with portions of the flash, but the amount
-of ECC errors returned makes it unusable. I was able to reproduce the
-same issue on multiple devices.
 
-...
-[   14.909894] jffs2: mtd->read(0x178 bytes from 0x21e0688) returned ECC error
-[   14.917250] jffs2: mtd->read(0x800 bytes from 0x21e0000) returned ECC error
-[   14.952765] jffs2: mtd->read(0x364 bytes from 0x21c049c) returned ECC error
-[   14.960070] jffs2: mtd->read(0x6f8 bytes from 0x21c0108) returned ECC error
-[   14.967435] jffs2: mtd->read(0x800 bytes from 0x21c0000) returned ECC error
-[   15.001194] ------------[ cut here ]------------
-[   15.006092] WARNING: CPU: 0 PID: 94 at drivers/mtd/nand/raw/nand_micron.c:245 micron_nand_read_page_on_die_ecc+0x394/0x3a0
-[   15.018148] ---[ end trace 2d1d02f05cac8fbb ]---
-[   15.022909] jffs2: error: (94) jffs2_get_inode_nodes: can not read 344 bytes from 0x021a16a8, error code: -22.
-[   15.035205] jffs2: error: (94) jffs2_do_read_inode_internal: cannot read nodes for ino 8375, returned error is -22
-[   15.045744] jffs2: Returned error for crccheck of ino #8375. Expect badness...
-[   15.231220] jffs2: Checked all inodes but still 0x15361c bytes of unchecked space?
-[   15.238851] jffs2: No space for garbage collection. Aborting GC thread
-...
+--XMWJxZweNWQ51obQd6sIXuWNdA7y9N8gm--
 
-I cannot confirm that the driver works.
+--jtGyfkLCCVCpHa0CRw28H4yJodhADJ6QS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-For completeness sake, here is the decompiled DT that I used:
+-----BEGIN PGP SIGNATURE-----
 
-memory-controller@e000e000 {
-	#address-cells = <0x2>;
-	#size-cells = <0x1>;
-	status = "okay";
-	clock-names = "memclk", "apb_pclk";
-	clocks = <0x1 0xb 0x1 0x2c>;
-	compatible = "arm,pl353-smc-r2p1", "arm,primecell";
-	interrupt-parent = <0x4>;
-	interrupts = <0x0 0x12 0x4>;
-	ranges = <0x0 0x0 0xe1000000 0x1000000>;
-	reg = <0xe000e000 0x1000>;
+iHUEARYIAB0WIQRM5LT7NbLF9yb6a/UGN09rynK8WgUCXVucjwAKCRAGN09rynK8
+WmPbAQDdulrAiF+QGYfkiYQoh0UpqMR/qVCcl6BjbVm3WBTfaQD7BFd9qGivO+lm
+cAI3kCSaiHUxD8NzVg3xv5jde9HR6As=
+=22xx
+-----END PGP SIGNATURE-----
 
-	flash@e1000000 {
-		status = "okay";
-		compatible = "arm,pl353-nand-r2p1";
-		reg = <0x0 0x0 0x1000000>;
-		#address-cells = <0x1>;
-		#size-cells = <0x1>;
-		nand-ecc-mode = "on-die";
-		nand-bus-width = <0x8>;
-
-	};
-};
-
-I am posting a decompiled DT, because parts are generated using
-https://github.com/Xilinx/device-tree-xlnx.
-
-The driver from the xlnx 4.14 tree continues to work with the hardware I
-used for testing.
-
-Helmut
+--jtGyfkLCCVCpHa0CRw28H4yJodhADJ6QS--
