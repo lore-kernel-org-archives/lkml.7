@@ -2,126 +2,104 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15B4C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF09C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C89322DD3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A058216F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 20:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566331387;
+	bh=lMA/WhU6XkQ8Xuoxb/NcCXxVQa9ffCVE+aF9sF1WIhw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E0hsnAtK4GpsbU/dXivelOgWzco4ZuTYcuVAOnTLTxq8xFrTtxK09OXGtuVLOwyWz
+	 tyCUuO+OVhfExTma2PysLq+v61J2fEU2qXj79F/onbemfcvgBfQ2Lpp/N9usQ51eeI
+	 6uzMziUqO/lDvbW6XdtuW7h6gHa7HqKVhZ7IGJEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbfHTUBs (ORCPT
+        id S1730732AbfHTUDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 16:01:48 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:60864 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729950AbfHTUBs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 16:01:48 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
+        Tue, 20 Aug 2019 16:03:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728283AbfHTUDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 16:03:06 -0400
+Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 2BC9F20094;
-        Tue, 20 Aug 2019 22:01:43 +0200 (CEST)
-Date:   Tue, 20 Aug 2019 22:01:41 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v4 00/25] drm: Kirin driver cleanups to prep for Kirin960
- support
-Message-ID: <20190820200141.GA23191@ravnborg.org>
-References: <20190819230321.56480-1-john.stultz@linaro.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 01BA7216F4;
+        Tue, 20 Aug 2019 20:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566331385;
+        bh=lMA/WhU6XkQ8Xuoxb/NcCXxVQa9ffCVE+aF9sF1WIhw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zHPGaRQGFnQ3otoseriAVz7qcD49P7TzY5I+EXVJGZqaAmNhexBfjD4iOUGmD66Iw
+         YfHxPI6x6RdzCUtyeCwSQuptYd93Gzpnx/69DFpXuK1ikAO7GKtT/8R5R/Zta9XA7F
+         ozX0jzu+g8qtKTYtd+2jUjZ1UVSYhCxSQXOgVg9Q=
+Date:   Tue, 20 Aug 2019 16:03:04 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Nishad Kamdar <nishadkamdar@gmail.com>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH AUTOSEL 5.2 09/44] intel_th: Use the correct style for
+ SPDX License Identifier
+Message-ID: <20190820200304.GS30205@sasha-vm>
+References: <20190820134028.10829-1-sashal@kernel.org>
+ <20190820134028.10829-9-sashal@kernel.org>
+ <20190820142722.GA816@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190819230321.56480-1-john.stultz@linaro.org>
+In-Reply-To: <20190820142722.GA816@kroah.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=KKAkSRfTAAAA:8
-        a=Wes08NWIifAUlHyeTIUA:9 a=CjuIK1q_8ugA:10 a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John.
+On Tue, Aug 20, 2019 at 07:27:22AM -0700, Greg Kroah-Hartman wrote:
+>On Tue, Aug 20, 2019 at 09:39:53AM -0400, Sasha Levin wrote:
+>> From: Nishad Kamdar <nishadkamdar@gmail.com>
+>>
+>> [ Upstream commit fac7b714c514fcc555541e1d6450c694b0a5f8d3 ]
+>>
+>> This patch corrects the SPDX License Identifier style
+>> in header files related to Drivers for Intel(R) Trace Hub
+>> controller.
+>> For C header files Documentation/process/license-rules.rst
+>> mandates C-like comments (opposed to C source files where
+>> C++ style should be used)
+>>
+>> Changes made by using a script provided by Joe Perches here:
+>> https://lkml.org/lkml/2019/2/7/46
+>>
+>> Suggested-by: Joe Perches <joe@perches.com>
+>> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/hwtracing/intel_th/msu.h | 2 +-
+>>  drivers/hwtracing/intel_th/pti.h | 2 +-
+>>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+>Not really a stable patch at all, unless you want to start backporting
+>all SPDX changes (hint, NO we do not!)  :)
+>
+>please drop this from everywhere.
+>
+>And what triggered this?  It's just comment changes, shouldn't the
+>autobot know to ignore those?
 
-On Mon, Aug 19, 2019 at 11:02:56PM +0000, John Stultz wrote:
-> Sending this out again, to get it based on drm-misc-next.
-> 
-> This patchset contains one fix (in the front, so its easier to
-> eventually backport), and a series of changes from YiPing to
-> refactor the kirin drm driver so that it can be used on both
-> kirin620 based devices (like the original HiKey board) as well
-> as kirin960 based devices (like the HiKey960 board).
-> 
-> The full kirin960 drm support is still being refactored, but as
-> this base kirin rework was getting to be substantial, I wanted
-> to send out the first chunk, so that the review burden wasn't
-> overwhelming.
-> 
-> The full HiKey960 patch stack can be found here:
->   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/hikey960-mainline-WIP
-> 
-> thanks
-> -john
-> 
-> 
-> New in v4:
-> * Rebased to drm-misc-next, minor tweaks to merge changes
-> * Dropped "drm: kirin: Get rid of drmP.h includes" as similar change
->   was already in drm-misc next
-> * Added acked-by tag from Xinliang
+It got a score just above my cutoff, and I missed it during review :(
 
-There was some checkpatch noises in some of the patches - please verify
-with "--strict".
-Mostly alignment of parameters with open parantesis
-Sample - but there was similar issues in other patches:
+FWIW, there's no explicit rule to ignore documentation, AUTOSEL sort of
+learned to do it on it's own, but here it seems that the content of the
+commit message outweighed the code change metrics.
 
-8788b59decc8 (HEAD -> drm-misc-next) drm: kirin: Move ade drm init to kirin drm drv
--:208: CHECK:PARENTHESIS_ALIGNMENT: Alignment should match open parenthesis
-#208: FILE: drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c:41:
-+static int kirin_drm_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
-+				struct drm_plane *plane,
-
--:244: CHECK:PARENTHESIS_ALIGNMENT: Alignment should match open parenthesis
-#244: FILE: drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c:77:
-+	ret = drm_universal_plane_init(dev, plane, 1, data->plane_funcs,
-+				data->channel_formats,
-
--:271: CHECK:PARENTHESIS_ALIGNMENT: Alignment should match open parenthesis
-#271: FILE: drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c:104:
-+static int kirin_drm_private_init(struct drm_device *dev,
-+				const struct kirin_drm_data *driver_data)
-
-
-
-
-And then the build failed like this:
- LD [M]  drivers/gpu/drm/hisilicon/kirin/kirin-drm.o
-aarch64-linux-gnu-ld: drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.o: in function `init_module':
-dw_drm_dsi.c:(.init.text+0x0): multiple definition of `init_module'; drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.o:kirin_drm_drv.c:(.init.text+0x0): first defined here
-aarch64-linux-gnu-ld: drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.o: in function `cleanup_module':
-dw_drm_dsi.c:(.exit.text+0x0): multiple definition of `cleanup_module'; drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.o:kirin_drm_drv.c:(.exit.text+0x0): first defined here
-make[3]: *** [/home/sam/drm/linux.git/scripts/Makefile.build:464: drivers/gpu/drm/hisilicon/kirin/kirin-drm.o] Error 1
-make[2]: *** [/home/sam/drm/linux.git/scripts/Makefile.build:490: drivers/gpu/drm/hisilicon/kirin] Error 2
-make[1]: *** [/home/sam/drm/linux.git/Makefile:1776: drivers/gpu/drm/hisilicon/] Error 2
-make[1]: Leaving directory '/home/sam/drm/linux.git/.build/arm64-allmodconfig'
-make: *** [Makefile:179: sub-make] Error 2
-
-It was a simple allmodconfig build where I did:
-
-make drivers/gpu/drm/hisilicon/
-
-Please fix and resend. I did not look further.
-
-	Sam
+--
+Thanks,
+Sasha
