@@ -2,120 +2,220 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C4CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94DDC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B4D22DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:26:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FNpmXbZ1"
+	by mail.kernel.org (Postfix) with ESMTP id 719C2233A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 01:27:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566264420;
+	bh=Ygqyzg45fVVRHtTQWdrzIhVgvXmXqvmRwJ/YimP1pcw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HtPqf+rlvUsiSZYOtENnHb+1PALyUUOuqQs9FRZekuzfoI24lMhIK8JumRXwVDHD4
+	 SE8DjLTaeotsl/LBJXlBRnE0cvpJcYnq+CX5Sq3TYTfAIGkRsHGkEN7Hypd6j75njk
+	 JD+o0Q1214dAsrZpu4u2j8CHQ0zpf6/TDGpzC3G8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfHTB0X (ORCPT
+        id S1728919AbfHTB07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 19 Aug 2019 21:26:23 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:32894 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728647AbfHTB0X (ORCPT
+        Mon, 19 Aug 2019 21:26:59 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33627 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728647AbfHTB06 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 19 Aug 2019 21:26:23 -0400
-Received: by mail-lj1-f193.google.com with SMTP id z17so3522218ljz.0;
-        Mon, 19 Aug 2019 18:26:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nIUbOMmJ/E0/oxoqpCDRKKZSlsVwBIRmIfZMOXNreVE=;
-        b=FNpmXbZ1lx/YCyO+nTSN7Qo/7qg1MM89bnr70fjrzymPENeBcOICjeJMcFkkgXo5UN
-         99nDxSYp7P79RZp2sP/akN1J8yzP85m7joZMHJcVh3c3bOymor3nQCsmsLpuULw/WSFI
-         aF3KXevj+HDEH8LZKni4dh7O49aWotJZwRwOqjQdreFFsKq++QZduGyLYKajQZStXBng
-         84uVJ3H5LvsB6clrLmSrE9hxrmdvi7KTJTQqdR3T1ShnWHwUnEkQDMcJXrF4g6MUBatO
-         jRenCyz5oQ0JQL5J/xpvdrJHwI/ABdmB6BSglQJzF4EXulgiiatyJuT94XzJE6mqo4OU
-         Hk+A==
+        Mon, 19 Aug 2019 21:26:58 -0400
+Received: by mail-pl1-f195.google.com with SMTP id go14so1844806plb.0;
+        Mon, 19 Aug 2019 18:26:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nIUbOMmJ/E0/oxoqpCDRKKZSlsVwBIRmIfZMOXNreVE=;
-        b=bC4Meyca6iMS5fj7/zS2VkpfEhglC0ar/bLTeeC4lntDD8YVm2vXvCf559kfXpaVoe
-         43GD5YDxFgON1SNAGcvrMHyCZqZaFe7SGv2AKcfh204JMkG9KOiA8y4nlCO30PmFzf5c
-         c9U4fO+Qbwr8gVoMOFmpTA4Yyr1WefjVZbQAunMApl8V2wHDJ2IBYuMZ6WAPVGABA4em
-         LN5oVOddBm8gXejksajidnFdmxKA7Qx03VDrPC5np95/qBZpaoc/FBwzCZzW9wF/NRgK
-         BnAcELwjNRPvoaSw8DcgAyMYBBDC2Sm/cr1EYeGTMhK6Xv/ertRpiqRL0+Yk5pehni+n
-         bkXA==
-X-Gm-Message-State: APjAAAU0jV7Y4vzHGPeS6IchkrG4grn8eZ24vLFtRdVw2bIRsGd9bU0D
-        WGIh6XHgUVLs8HhUl6IeBGihtTkXsVAQH4/5Xrk=
-X-Google-Smtp-Source: APXvYqypNqtw8gx1UvZs3VXty59BJkONiznthKWuc9ViOhnoMBfXElleSyreYerN3b2hpModMB6obOF3Ye2CGHnBq9Q=
-X-Received: by 2002:a2e:89da:: with SMTP id c26mr850927ljk.214.1566264381062;
- Mon, 19 Aug 2019 18:26:21 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1f+qnxuSTkrKhQhWKPw8r3KGzNHzDoVDPUhIrlUlE4U=;
+        b=ZBtQCObjsYU8plmwtDPelF7jsZrSpaLaLe6lBEeeieODGofikgi93DLlwvPMAJTUfT
+         xxSipbrf4cAH+w6Gt/v2apc4UeDO+AV3auZctNowiflnI1SV2jnwmTNu117p7R3PT69i
+         41bAews7H4PTuBjBFAvPCSXfto3JbFTtwxGImlR1LqyTiN6U83WE8P3h7mJ5HBusyWxW
+         RFNTht19ngrU9/b50Z1YRiSL7gbnqBRcklE057Y2HjlVZxJSFhA7HpdZUWHUQBd5T3ET
+         /xqAXJDrQf8k1x3B7X5+7V4DcCZAZENn3PLUjK/SinHsQfA3qEKkFupgAqIzQpHyMpP+
+         beyA==
+X-Gm-Message-State: APjAAAWZFyG4vVU8fpNp/PXqI6F7s7KQcHFHQeSuKOuGuUMW1xDyr9iO
+        MAmhqZFQj6wJAhRDdHiBmIGuaWbf
+X-Google-Smtp-Source: APXvYqwqmd8RfIeVgvfWwDKTWUaFR0bqyFGd+0cynJ08MQsmabbIYy4tspHV9X9PTCioiALEkqHmag==
+X-Received: by 2002:a17:902:2f43:: with SMTP id s61mr9505645plb.22.1566264417657;
+        Mon, 19 Aug 2019 18:26:57 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id j9sm18162084pfe.103.2019.08.19.18.26.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2019 18:26:56 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 87CAF4035F; Tue, 20 Aug 2019 01:26:55 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 01:26:55 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 3/3] firmware: add mutex fw_lock_fallback for race
+ condition
+Message-ID: <20190820012655.GU16384@42.do-not-panic.com>
+References: <20190816000945.29810-1-scott.branden@broadcom.com>
+ <20190816000945.29810-4-scott.branden@broadcom.com>
+ <20190819053937.GR16384@42.do-not-panic.com>
+ <16823ee6-c52a-b3b5-caed-79c00772fa68@broadcom.com>
 MIME-Version: 1.0
-References: <20190816223149.5714-1-dxu@dxuuu.xyz> <20190816223149.5714-2-dxu@dxuuu.xyz>
-In-Reply-To: <20190816223149.5714-2-dxu@dxuuu.xyz>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 19 Aug 2019 18:26:09 -0700
-Message-ID: <CAADnVQ+RKuJB5G+-1fjsE2xLp8CxJMmidd6Qobi_4dXQOWjrow@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add PERF_EVENT_IOC_QUERY_PROBE
- ioctl
-To:     Daniel Xu <dxu@dxuuu.xyz>
-Cc:     bpf <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <16823ee6-c52a-b3b5-caed-79c00772fa68@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 3:33 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> It's useful to know [uk]probe's nmissed and nhit stats. For example with
-> tracing tools, it's important to know when events may have been lost.
-> debugfs currently exposes a control file to get this information, but
-> it is not compatible with probes registered with the perf API.
->
-> While bpf programs may be able to manually count nhit, there is no way
-> to gather nmissed. In other words, it is currently not possible to
-> retrieve information about FD-based probes.
->
-> This patch adds a new ioctl that lets users query nmissed (as well as
-> nhit for completeness). We currently only add support for [uk]probes
-> but leave the possibility open for other probes like tracepoint.
->
-> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
-...
-> +int perf_kprobe_event_query(struct perf_event *event, void __user *info)
-> +{
-> +       struct perf_event_query_probe __user *uquery = info;
-> +       struct perf_event_query_probe query = {};
-> +       struct trace_event_call *call = event->tp_event;
-> +       struct trace_kprobe *tk = (struct trace_kprobe *)call->data;
-> +       u64 ncopy;
-> +
-> +       if (!capable(CAP_SYS_ADMIN))
-> +               return -EPERM;
-> +       if (copy_from_user(&query, uquery,
-> +                          offsetofend(struct perf_event_query_probe, size)))
-> +               return -EFAULT;
-> +
-> +       ncopy = min_t(u64, query.size, sizeof(query));
-> +       query.nhit = trace_kprobe_nhit(tk);
-> +       query.nmissed = tk->rp.kp.nmissed;
-> +
-> +       if (copy_to_user(uquery, &query, ncopy))
-> +               return -EFAULT;
+On Mon, Aug 19, 2019 at 09:19:51AM -0700, Scott Branden wrote:
+> To be honest, I find the entire firmware code sloppy.
 
-shouldn't kernel update query.size before copying back?
-Otherwise how user space would know which fields
-were populated?
+And that is after years of cleanup on my part. Try going back to v4.1
+for instance, check the code out then for an incredible horrific sight :)
+
+> I don't think the cache/no-cache feature is
+> implemented or tested properly nor fallback to begin with.
+
+I'm in total agreement! I *know* there must be holes in that code, and I
+acknowledge a few possible gotchas on the commit logs. For instance, I
+acknowledged that the firmware cache had a secondary purpose which was
+not well documented or understood through commit e44565f62a720
+("firmware: fix batched requests - wake all waiters"). The firmware
+cache allows for batching requests and sharing the same original request
+for multiple consecutive requests which *race against each other*.
+That's when I started having my doubts about the architecture of the
+firmware cache mechanism, it seemed too complex and perhaps overkill
+and considered killing it.
+
+As I noted in that commit, the firmware cache is used for:
+    
+1) Addressing races with file lookups during the suspend/resume cycle by
+keeping firmware in memory during the suspend/resume cycle
+	           
+2) Batched requests for the same file rely only on work from the first
+file lookup, which keeps the firmware in memory until the last
+release_firmware() is called
+
+Also worth quoting from that commit as well:
+
+"Batched requests *only* take effect if secondary requests come in
+prior to the first user calling release_firmware(). The devres name used
+for the internal firmware cache is used as a hint other pending requests
+are ongoing, the firmware buffer data is kept in memory until the last
+user of the buffer calls release_firmware(), therefore serializing
+requests and delaying the release until all requests are done."
+
+Later we discovered that the firmware cache had a serious security issue
+since its inception through commit 422b3db2a503 ("firmware: Fix security
+issue with request_firmware_into_buf()"). Granted, exploiting this would
+require the ability to load kernel code, so the vector of exploitation
+is rather small.
+
+The cache stuff cannot be removed as it *at least* resolves the fw
+suspend stuff, but still, this can likely use a revisit in rachitecture
+long term. The second implicit use case for batched requests however
+seems complex and not sure if its worth to maintain. I'll note that
+at least some drivers *do* their own firmware caching, iwlwifi, is one,
+so there is an example there to allow drivers to say "I actually don't
+need caching" for the future.
+
+If you're volunteering to cleaning / testing the cache stuff I highly
+welcome that. That and the fallback stuff has been needing testing for
+years. Someoone was working on patches on the test case for cache stuff
+a while ago, from Intel, but they disappeared.
+
+> I'm not claiming this patch is the final
+> solution and indicated such in the cover letter and the comment above.
+
+I missed that sorry.
+
+> I hope there is someone more familiar with this code to comment further and
+> come up with a proper solution.
+
+Alright, I'll dig in and take a look, and propose an alternative.
+
+> I have found numerous issues and race conditions with the firmware code (I
+> simply added a test).
+
+That is nothing compared to the amount of fixes I have found and
+actually fixed too, the code was a nightmare before I took on
+maintenance.
+
+> 1) Try loading the same valid firmware using no-cache once it has already
+> been loaded with cache.
+
+:) 
+
+> It won't work, which is why I had to use a different filename in the test
+> for request_firmware_into_buf.
+
+Alright, I'll go try to fix this. Thanks for the report.
+
+> 2) Try removing the "if (opt_flags & FW_OPT_NOCACHE)" in my patch and always
+> call the mutex.
+> 
+> The firmware test will lock up during a "no uevent" test.  I am not familiar
+> with the code to
+> 
+> know why such is true and what issue this exposes in the code.
+
+I hinted in my review of the oops what the issue was.
+
+> 3) I have a driver that uses request_firmware_into_buf and have multiple
+> instances of the driver
+
+Cool, is the driver upstream?
+
+> loading the same firmware in parallel.  Some of the data is not read
+> correctly in each instance.
+
+Makes perfect sense considering the lack of testing I noted.
+
+> I haven't yet to reproduce this issue with the firmware test 
+
+That's because of batched firmware request mechanism.
+
+> but currently
+> have a mutex around the entire
+> call to request_firmware_into_buf in our driver.
+
+I will take a look at this now.
+
+> Perhaps it is better at this point to add a mutex in
+> request_firmware_into_buf to make is entirely safe?
+
+No, that is not sufficient, although it would also solve the
+issue.
+
+> (Perhaps even with every request_firmware functions as none seems to be
+> tested properly.)
+
+No, you are incorrect. The other firmware API calls *have* been
+elaborately tested. The firmware cache stuff *is a mess* however,
+since we *use and support it*, I've done my best to salvage it and
+document it.
+
+I'll take a look at this and propose an alternative solution.
+
+  Luis
