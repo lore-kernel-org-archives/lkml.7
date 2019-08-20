@@ -2,96 +2,96 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164E6C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6D9C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7BF1206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12659206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:43:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="B1z0cTMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbfHTKnB (ORCPT
+        id S1729672AbfHTKnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:43:01 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:45411 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728842AbfHTKnA (ORCPT
+        Tue, 20 Aug 2019 06:43:31 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:37854 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728842AbfHTKna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:43:00 -0400
-Received: from [192.168.1.110] ([95.117.23.32]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Ma1HG-1hnu891uyK-00Vx1h; Tue, 20 Aug 2019 12:42:29 +0200
-Subject: Re: [PATCH v5 0/3] Enable ACPI-defined peripherals on i2c-piix4 SMBus
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     acooks@rationali.st, Jean Delvare <jdelvare@suse.de>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        platypus-sw@opengear.com, "Tobin C . Harding" <me@tobin.cc>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Will Wagner <willw@carallon.com>
-References: <20190802145109.38dd4045@endymion>
- <b013c33b-da11-ce5e-08d4-0b24a8575109@metux.net>
- <db725a3b-7b6e-ac79-ef1c-e601ff45c0f2@rationali.st>
- <9019cce9-837f-97fc-0f3b-7503b8fc3717@metux.net>
- <20190819185334.GA9762@kunai>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <82cd0682-91db-6afd-855c-2c2f4b329eda@metux.net>
-Date:   Tue, 20 Aug 2019 12:42:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 20 Aug 2019 06:43:30 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x7KAT3s2032243;
+        Tue, 20 Aug 2019 05:42:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=PODMain02222019;
+ bh=tKddglLlEJjgTvK9D3i7V32OoZf4zpI5sSiWD8Ezgn4=;
+ b=B1z0cTMfvfBeS4y5yEe4nhH31JDgDSh8YyUx4rYzwFgadSLKp5hL3j3ZaEHJagxWQLQz
+ AWkpeFwpNZErKYZpSn1K8XKHtDA4GZro/KGZiqEyaDky+IM5JvktYc7n+OeifVDjHtBx
+ 3GJvwhwU/rbLk2zmdtoJeKI0oKOrCkk+IpMSpf4vRY4sO1YK/yvYw/T2Svmw8yt+q8MB
+ PYgsf2/iBCGlLHFUs5DPFBbumNNnNmiBAsHiQlnX+IJ3evT9b2RV8v9Uxqsa6pe6hdOt
+ JxvMzLx7xKu/eczm4mTlcjchWrlUM4qnbnla3A6jTlxn8+xZNbIlt8zeF5NeeO1Rv7gU nw== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2uef01devv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 20 Aug 2019 05:42:12 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 20 Aug
+ 2019 11:42:10 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Tue, 20 Aug 2019 11:42:10 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 848042BA;
+        Tue, 20 Aug 2019 10:42:10 +0000 (UTC)
+Date:   Tue, 20 Aug 2019 10:42:10 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        zhong jiang <zhongjiang@huawei.com>,
+        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: wm8904: fix typo in DAPM kcontrol name
+Message-ID: <20190820104210.GF10308@ediswmail.ad.cirrus.com>
+References: <f95ae1085f9f3c137a122c4d95728711613c15f7.1566297120.git.mirq-linux@rere.qmqm.pl>
 MIME-Version: 1.0
-In-Reply-To: <20190819185334.GA9762@kunai>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:zT4OfnddwnA2IENScT3HmM3VE7IgCU9EdenYHdbXeMMSyKCzmED
- rrb204KVbOHlsdDcb5ZVN306oxoEoC8k470Frfbew/etKnQHooCdugwXHBjktmZzIjyeHgN
- mW+dJ/lxnBSVqsD6QTME8UUx/n/F1csdCCKwSdCA5WijfPpRfG1rLSktz2IV7sT9VQHTHSV
- xYOEzHmP06AAJqW46IyMQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XO1wNFqlyiQ=:yHlIl9BEzkY2TjZCT9lSZM
- sgxgPY2chG7g/6nFo8EB+nY40XiI62Esap4wxJXY9qCDTBXFYqCIZu9c4dOj4XcYaDR4lBPl5
- akKccGWJyMoGIfaYoF65aUdSHKX5TN3RVYPg1vlOvfAjx9x+v/JOGGrFtqqfNzPovpLfMUK4g
- FnfEEY8I//GsbW6MWU7RcN9DL0pzyNCjCDDdV8ezjjmfU7kVbIocGduI2bHSI3Ca0WVCjrliI
- BCJJVuPcBl8CrNVXBAk3oLKkMl9ITDkyVisg14UZXLpgncueL/YP0W3+qUV2C8ykEtzcP5FIu
- dJIAHgKc2USJObJ9OMV/acZn51Hi3lfPHuTK674jmoNpkFuUn3qrWzzmH62NhG2sWMFAb+iPZ
- H4B78ZmSIv3WbiRxpWJt33Yuw9gLK6hr+Xoam373+0gRkzMCFvhIB74xhBQBdDHBcEvJKxJYU
- MQ8CQVTPfRZsPhBgOJfC/2lTAXU3vMIePwhnUaLkltJa/m/p+2yd1+HDoNA/PJRr/maHJBCyw
- TxSUf75Z8p0MS8nDbEOUYHR1CvGLKqK22U5qLAJ93l/nZAVnMfyEzeGcDNdp2asWtNRzYToaL
- m1WC38dDJVFvAHIRlTKbl341L4Hh5IqigcieAwxAk323/BJNUWReEXl4rGIEM90hl365al0WF
- gbf6kw1rzQ9LOwmr+jsLkRbhs1aGrPItg/+HoKzYmKDM1C9TZS38lk9tgpzylEfa0Q4CVS1Ql
- ZMguNVUpk/0D/lRDXwbAEvTqExq3PwLc8KFGpUSOY8hr01GfiPdxTQfgeeZnZuWFfCUJCMwlq
- amyUp+UQl0KOYL2f3NVvXVO1gw04Q==
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f95ae1085f9f3c137a122c4d95728711613c15f7.1566297120.git.mirq-linux@rere.qmqm.pl>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 clxscore=1011
+ mlxlogscore=892 bulkscore=0 adultscore=0 priorityscore=1501 spamscore=0
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1908200111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.08.19 20:53, Wolfram Sang wrote:
+On Tue, Aug 20, 2019 at 12:33:29PM +0200, Michał Mirosław wrote:
+> Trivial fix for typo in "Capture Inverting Mux"es' name.
 > 
-> Just so I get this correct: This is all about instantiating the devices
-> sitting on the SMBus,
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
 
-Yes, I'm struggling to find out which devices are connected to the
-smbus, in case there're some already inside the SoC (instead of just
-entirely board specific).
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-> but you are okay with Jean's patches? Or is this
-> discussion affecting patch 3? (/me knows not much about ACPI'n'stuff)
-
-I'm fine with them, just wondered whether BIOS needs to add some extra
-support for the probing, that is not already somehow coming w/ aegesa.
-
-Unfortunately, we cannot rely on board vendors to do that right and
-cope w/ old and incomplete firmware. (that's also the reason why I'm
-*not* using acpi gpio entries for the apu2+ board family).
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Thanks,
+Charles
