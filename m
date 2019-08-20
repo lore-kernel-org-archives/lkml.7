@@ -2,83 +2,179 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E45C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E738EC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD2E214DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B21F2214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566329837;
-	bh=RmECbaNa3+52m57uCHzk4qd03apbfpEeYOhYHoEObHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=idNH+lrMs+ZKQXmB7HP+2hjCpxiamLHpq6efiLoH80LFrIY4xMUORv4o/iJYk8DKh
-	 t6A3ApI72/Td8l1RRHp9NIrI8MIJMx4OUvaiPqmwy5wny3pbZ+lCJeiaBgrWV2E4F4
-	 rbontrDfipBWHfrm7y0/a3x4M5i23dW+JT3uZ2E0=
+	s=default; t=1566329865;
+	bh=nSPTWxgTSSBej7q5ret8+e8QFb0fXix0iVWrBjjhUQk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0pcN5796fjTj6C6lR1r26eoJ8ZTQYytLjc2vXQBb8w7A/PFRxKNO+7Ml/o5RpnUId
+	 dhfW9iBQgqXLSv2IyzyZ7GDw7RonN6AvykBLGN2JgvvFr7SmNytunwRBJLCvRX6hHP
+	 ZWqWgRKOhaCFBJGqmHcmnSratCSFuhlXOyOcbj3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730728AbfHTThQ (ORCPT
+        id S1730759AbfHTTho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:37:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42792 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 15:37:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729231AbfHTThQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:37:16 -0400
-Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728185AbfHTTho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 15:37:44 -0400
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD6C722DA9;
-        Tue, 20 Aug 2019 19:37:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0524214DA;
+        Tue, 20 Aug 2019 19:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566329835;
-        bh=RmECbaNa3+52m57uCHzk4qd03apbfpEeYOhYHoEObHY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FpS8E67bLdjPaMQSox/JOP6ZOgrbg7mSgaaSgXDuqTcG4ZCXH2MRrVVeb0QWnlxb5
-         etRr0edlFI+g0EYxE0AkGJ6mUMSuCW3NrtAAlW64f/21Zo1QvyEAYI5/S8h2Qfw5QL
-         k8YOtrLwWlkRP9gicYe4XF8hJ/k32cZS/6DWAoU0=
-Date:   Tue, 20 Aug 2019 15:37:15 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH AUTOSEL 4.19 07/27] intel_th: Use the correct style for
- SPDX License Identifier
-Message-ID: <20190820193715.GR30205@sasha-vm>
-References: <20190820134213.11279-1-sashal@kernel.org>
- <20190820134213.11279-7-sashal@kernel.org>
- <f155ad1a9490bd273fa9c31a9745e328b346920a.camel@perches.com>
+        s=default; t=1566329863;
+        bh=nSPTWxgTSSBej7q5ret8+e8QFb0fXix0iVWrBjjhUQk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1+JhBm9RGKco7pgqDqsCD/WBQh5pzJsVXXyb/glnz93S5JI9lfsq4aT6zEZ19couM
+         uCFRZCyMt7T7b7/QJQHaaP1SUVKHdBb/e20ZE5j8hc98Ch4kwrid3JYZBvIcQaMUt0
+         4HVbbrtwqc9RUCwx0cYNtF+oZBWHlRH9yEtk4Xcg=
+Received: by mail-lj1-f170.google.com with SMTP id e27so6231877ljb.7;
+        Tue, 20 Aug 2019 12:37:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAUEB7e8CchviKkQ4XnZneXVsuKVcUBo5Jrtevz/iPfTaJv7nQqc
+        5FqnQ7US9kJ7/Ax5nWAFSqSA4QkdG1V8mbpUTDM=
+X-Google-Smtp-Source: APXvYqzYqxJRbRYm6dWQWcuF6mGrgohmoKorAwd/s9QlXOo/me03d2EOKdPcqUIWWnwYqLsRbaLjK+3gTgKYvrXxP2Y=
+X-Received: by 2002:a2e:b4d4:: with SMTP id r20mr16800519ljm.5.1566329860916;
+ Tue, 20 Aug 2019 12:37:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <f155ad1a9490bd273fa9c31a9745e328b346920a.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190813150827.31972-1-s.nawrocki@samsung.com>
+ <CGME20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c@eucas1p2.samsung.com>
+ <20190813150827.31972-3-s.nawrocki@samsung.com> <b5359603-b337-dcd8-b025-ca7dff5f4a06@nvidia.com>
+In-Reply-To: <b5359603-b337-dcd8-b025-ca7dff5f4a06@nvidia.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 20 Aug 2019 21:37:29 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPf597CMx=M2JmSTWe2GzBfcHFefgzSJbJ+njZGp-WfR1A@mail.gmail.com>
+Message-ID: <CAJKOXPf597CMx=M2JmSTWe2GzBfcHFefgzSJbJ+njZGp-WfR1A@mail.gmail.com>
+Subject: Re: [PATCH v3 2/9] soc: samsung: Convert exynos-chipid driver to use
+ the regmap API
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
+        kgene@kernel.org, pankaj.dubey@samsung.com,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 06:47:53AM -0700, Joe Perches wrote:
->On Tue, 2019-08-20 at 09:41 -0400, Sasha Levin wrote:
->> From: Nishad Kamdar <nishadkamdar@gmail.com>
->>
->> [ Upstream commit fac7b714c514fcc555541e1d6450c694b0a5f8d3 ]
->>
->> This patch corrects the SPDX License Identifier style
->> in header files related to Drivers for Intel(R) Trace Hub
->> controller.
->> For C header files Documentation/process/license-rules.rst
->> mandates C-like comments (opposed to C source files where
->> C++ style should be used)
+On Tue, 20 Aug 2019 at 21:24, Jon Hunter <jonathanh@nvidia.com> wrote:
 >
->Is there a reason to backport license header changes?
 >
->I believe there is not.
+> On 13/08/2019 16:08, Sylwester Nawrocki wrote:
+> > Convert the driver to use regmap API in order to allow other
+> > drivers, like ASV, to access the CHIPID registers.
+> >
+> > This patch adds definition of selected CHIPID register offsets
+> > and register bit fields for Exynos5422 SoC.
+> >
+> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > ---
+> > Changes since v2:
+> >  - s/_EXYNOS_ASV_H/__LINU_SOC_EXYNOS_ASV_H,
+> >  - removed __func__ from error log,
+> >  - removed unneeded <linux/of_address.h> header inclusion.
+> >
+> > Changes since v1 (RFC):
+> >  - new patch
+> > ---
+> >  drivers/soc/samsung/exynos-chipid.c       | 34 ++++++---------
+> >  include/linux/soc/samsung/exynos-chipid.h | 52 +++++++++++++++++++++++
+> >  2 files changed, 65 insertions(+), 21 deletions(-)
+> >  create mode 100644 include/linux/soc/samsung/exynos-chipid.h
+> >
+> > diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
+> > index bcf691f2b650..006a95feb618 100644
+> > --- a/drivers/soc/samsung/exynos-chipid.c
+> > +++ b/drivers/soc/samsung/exynos-chipid.c
+> > @@ -9,16 +9,13 @@
+> >   */
+> >
+> >  #include <linux/io.h>
+> > +#include <linux/mfd/syscon.h>
+> >  #include <linux/of.h>
+> > -#include <linux/of_address.h>
+> > +#include <linux/regmap.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/soc/samsung/exynos-chipid.h>
+> >  #include <linux/sys_soc.h>
+> >
+> > -#define EXYNOS_SUBREV_MASK   (0xF << 4)
+> > -#define EXYNOS_MAINREV_MASK  (0xF << 0)
+> > -#define EXYNOS_REV_MASK              (EXYNOS_SUBREV_MASK | EXYNOS_MAINREV_MASK)
+> > -#define EXYNOS_MASK          0xFFFFF000
+> > -
+> >  static const struct exynos_soc_id {
+> >       const char *name;
+> >       unsigned int id;
+> > @@ -51,29 +48,24 @@ static const char * __init product_id_to_soc_id(unsigned int product_id)
+> >  int __init exynos_chipid_early_init(void)
+> >  {
+> >       struct soc_device_attribute *soc_dev_attr;
+> > -     void __iomem *exynos_chipid_base;
+> >       struct soc_device *soc_dev;
+> >       struct device_node *root;
+> > -     struct device_node *np;
+> > +     struct regmap *regmap;
+> >       u32 product_id;
+> >       u32 revision;
+> > +     int ret;
+> >
+> > -     /* look up for chipid node */
+> > -     np = of_find_compatible_node(NULL, NULL, "samsung,exynos4210-chipid");
+> > -     if (!np)
+> > -             return -ENODEV;
+> > -
+> > -     exynos_chipid_base = of_iomap(np, 0);
+> > -     of_node_put(np);
+> > -
+> > -     if (!exynos_chipid_base) {
+> > -             pr_err("Failed to map SoC chipid\n");
+> > -             return -ENXIO;
+> > +     regmap = syscon_regmap_lookup_by_compatible("samsung,exynos4210-chipid");
+> > +     if (IS_ERR(regmap)) {
+> > +             pr_err("Failed to get CHIPID regmap\n");
+> > +             return PTR_ERR(regmap);
+> >       }
+>
+> Following this change, I am now seeing the above error on our Tegra
+> boards where this driver is enabled. This is triggering a kernel
+> warnings test we have to fail. Hence, I don't think that you can remove
+> the compatible node test here, unless you have a better way to determine
+> if this is a samsung device.
 
-There is not, I must have missed this one.
+Right, this is really wrong... I missed that it is not a probe but
+early init. And this init will be called on every board... Probably it
+should be converted to a regular driver.
 
---
-Thanks,
-Sasha
+This is very old patchset, revived recently. I see that in v6 it was a
+platform driver:
+https://patchwork.kernel.org/patch/9134949/
+Pankaj, apparently based on these comments, made it initcall... but why?
+
+Another point is that Arnd complained there about exposing global
+header and no change here - we still expose the global header, but not
+with soc revisions but register internals... although it has its
+purpose - other Exynos-specific drivers need to access through regmap.
+
+Best regards,
+Krzysztof
