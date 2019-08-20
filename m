@@ -2,95 +2,86 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFCDC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AD5C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70972082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D11F22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbfHTRze (ORCPT
+        id S1730119AbfHTR5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:55:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42162 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730423AbfHTRze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:55:34 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BC99C308402D;
-        Tue, 20 Aug 2019 17:55:33 +0000 (UTC)
-Received: from gondolin (ovpn-116-201.ams2.redhat.com [10.36.116.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 935161877E;
-        Tue, 20 Aug 2019 17:55:25 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 19:55:19 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Parav Pandit <parav@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Message-ID: <20190820195519.47d6fd6a.cohuck@redhat.com>
-In-Reply-To: <20190820111904.75515f58@x1.home>
-References: <20190802065905.45239-1-parav@mellanox.com>
-        <20190808141255.45236-1-parav@mellanox.com>
-        <20190808170247.1fc2c4c4@x1.home>
-        <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
-        <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190813085246.1d642ae5@x1.home>
-        <AM0PR05MB48663579A340E6597B3D01BCD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190813111149.027c6a3c@x1.home>
-        <AM0PR05MB4866D40F8EBB382C78193C91D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814100135.1f60aa42.cohuck@redhat.com>
-        <AM0PR05MB4866ABFDDD9DDCBC01F6CA90D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814150911.296da78c.cohuck@redhat.com>
-        <AM0PR05MB48666CCDFE985A25F42A0259D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814085746.26b5f2a3@x1.home>
-        <AM0PR05MB4866148ABA3C4E48E73E95FCD1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <AM0PR05MB48668B6221E477A873688CDBD1AB0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190820111904.75515f58@x1.home>
-Organization: Red Hat GmbH
+        Tue, 20 Aug 2019 13:57:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:52780 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbfHTR5l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 13:57:41 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i08O2-0004Cu-W2; Tue, 20 Aug 2019 19:57:39 +0200
+Date:   Tue, 20 Aug 2019 19:57:37 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Frederic Weisbecker <frederic@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: Re: [patch 04/44] posix-cpu-timers: Fixup stale comment
+In-Reply-To: <20190820142658.GG2093@lenoir>
+Message-ID: <alpine.DEB.2.21.1908201946320.2223@nanos.tec.linutronix.de>
+References: <20190819143141.221906747@linutronix.de> <20190819143801.747233612@linutronix.de> <20190820142658.GG2093@lenoir>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 20 Aug 2019 17:55:33 +0000 (UTC)
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019 11:19:04 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+On Tue, 20 Aug 2019, Frederic Weisbecker wrote:
+> On Mon, Aug 19, 2019 at 04:31:45PM +0200, Thomas Gleixner wrote:
+> >  /*
+> > - * Clean out CPU timers still ticking when a thread exited.  The task
+> > - * pointer is cleared, and the expiry time is replaced with the residual
+> > - * time for later timer_gettime calls to return.
+> > + * Clean out CPU timers which are still armed when a thread exits. The
+> > + * timers are only removed from the list. No other updates are done. The
+> > + * corresponding posix timers are still accessible, but cannot be rearmed.
+> > + *
+> >   * This must be called with the siglock held.
+> >   */
+> >  static void cleanup_timers(struct list_head *head)
+> 
+> Indeed and I believe we could avoid that step. We remove the sighand at the same
+> time so those can't be accessed anymore anyway.
+> 
+> exit_itimers() takes care of the last call release and could force remove from
+> the list (although it might be taken care of in your series, haven't checked yet):
 
-> What about an alias based on the uuid?  For example, we use 160-bit
-> sha1s daily with git (uuids are only 128-bit), but we generally don't
-> reference git commits with the full 20 character string.  Generally 12
-> characters is recommended to avoid ambiguity.  Could mdev automatically
-> create an abbreviated sha1 alias for the device?  If so, how many
-> characters should we use and what do we do on collision?  The colliding
-> device could add enough alias characters to disambiguate (we likely
-> couldn't re-alias the existing device to disambiguate, but I'm not sure
-> it matters, userspace has sysfs to associate aliases).  Ex.
-> 
-> UUID=$(uuidgen)
-> ALIAS=$(echo $UUID | sha1sum | colrm 13)
-> 
-> Since there seems to be some prefix overhead, as I ask about above in
-> how many characters we actually have to work with in IFNAMESZ, maybe we
-> start with 8 characters (matching your "index" namespace) and expand as
-> necessary for disambiguation.  If we can eliminate overhead in
-> IFNAMESZ, let's start with 12.  Thanks,
-> 
-> Alex
+No. The posix timer is not necessarily owned by the exiting task or
+process. It can be owned by a different entity which has permissions,
+e.g. parent.
 
-I really like that idea, and it seems the best option proposed yet, as
-we don't need to create a secondary identifier.
+So those are not in the posix timer list of the exiting task, which gets
+cleaned up in exit_itimers(). Those are in the list of the task which armed
+the timer. The timer is merily queued in the 'active timers' list of the
+exiting task and posix_cpu_timers_exit()/posix_cpu_timers_exit_group()
+remove it before the task/signal structs go away.
+
+Thanks,
+
+	tglx
+
+ 
