@@ -2,126 +2,190 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A02AC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E1EC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC821230F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566308724;
-	bh=wdaSxoTkah2zmmnyit3p019vdd45C7Dds6hWxuITWNQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IpBVMhrnxbUlE4ZLxFd91GBaKx9g9H53vogUPDeKwSIcYS9Vs1Bi4NfiL8Z5JAcYf
-	 GohzWqcAGrAm8tVStGDEVNMe6DJu6mhEu69G+mx82bQiJTy/5p9UsKb96XdQLOAc+Z
-	 gT+vMJ817hkuJFfjIxUwuyfUZkkyaNdk+mGx24YQ=
+	by mail.kernel.org (Postfix) with ESMTP id 2C27A22DA9
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 13:45:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JsqA37Ur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbfHTNpW (ORCPT
+        id S1730955AbfHTNp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 09:45:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730292AbfHTNml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 09:42:41 -0400
-Received: from sasha-vm.mshome.net (unknown [12.236.144.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C800222DA7;
-        Tue, 20 Aug 2019 13:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566308560;
-        bh=wdaSxoTkah2zmmnyit3p019vdd45C7Dds6hWxuITWNQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tX2WzZfb+f7dM4YcRI2hieISjAvpnzJJ7bjocdMgnDbnMhEKgNK7yFqBpnIRIvwy9
-         k3ZqMWej1nb/IMPeJp9ObMZRX//Q3Vo4HsAQDYQtVysyPLyAng2jop5OPsFwBbeBGo
-         hDckGi/c13iEC/6BQTuFRKSn3Vf0xqXN7OK0A51A=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 21/27] arm64: cpufeature: Don't treat granule sizes as strict
-Date:   Tue, 20 Aug 2019 09:42:07 -0400
-Message-Id: <20190820134213.11279-21-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190820134213.11279-1-sashal@kernel.org>
-References: <20190820134213.11279-1-sashal@kernel.org>
+        Tue, 20 Aug 2019 09:45:26 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:45894 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730473AbfHTNpY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:45:24 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190820134522euoutp0175406455fad9d816a421ab9bc940a6dc~8pXwdcRs60707807078euoutp01Q
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 13:45:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190820134522euoutp0175406455fad9d816a421ab9bc940a6dc~8pXwdcRs60707807078euoutp01Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566308722;
+        bh=Pk0t1/6+CK9w0PIy98d4IlAgpvrtyWbn4svzsn0utJE=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=JsqA37UrHU+Xry8R3X03A4Fp1ZmH6hbFi+wUOlZjtBufyjD4tAOv7E3DRKxqg9Nne
+         lIJuZ6ovu9j2y1hwBBArxbHD03uR1fQooE/HtFMyoAuB2sBl1jgxwVpXKz2jSsgOlU
+         mBUgEy6pRDZXz62DAa+iRdVmCpgwP+lqAeHPYUjU=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190820134522eucas1p2bf60e6c13585a4ee06ec5b55659b027d~8pXv4J4a91959019590eucas1p2I;
+        Tue, 20 Aug 2019 13:45:22 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 22.A0.04374.179FB5D5; Tue, 20
+        Aug 2019 14:45:22 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190820134521eucas1p1eeac5c5a1657db92d8ae60268728d9a8~8pXvIsJBS1025910259eucas1p1c;
+        Tue, 20 Aug 2019 13:45:21 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190820134521eusmtrp204d49c4a594f0d9447ef2b33ae36c0dd~8pXu6nQow0665206652eusmtrp2W;
+        Tue, 20 Aug 2019 13:45:21 +0000 (GMT)
+X-AuditID: cbfec7f5-4f7ff70000001116-73-5d5bf971477b
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id ED.F8.04117.179FB5D5; Tue, 20
+        Aug 2019 14:45:21 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190820134520eusmtip26bb6956c6ab6ba23de77c073840116a2~8pXuhYbHi1581215812eusmtip2L;
+        Tue, 20 Aug 2019 13:45:20 +0000 (GMT)
+Subject: Re: [PATCH 4/9] drivers: ata: ahci_xgene: use
+ devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, axboe@kernel.dk, hdegoede@redhat.com,
+        linus.walleij@linaro.org, linux-ide@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <00a33e10-b563-a7e1-4180-10386f803b75@samsung.com>
+Date:   Tue, 20 Aug 2019 15:45:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1566304548-19972-4-git-send-email-info@metux.net>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNKsWRmVeSWpSXmKPExsWy7djPc7pFP6NjDS6dZbRYfbefzeLN8elM
+        FjcbdzNZTPmznMni2I5HTBaXd81hs+j8MovNgd3j8tlSjzvX9rB5TPjwls3j/b6rbB6fN8kF
+        sEZx2aSk5mSWpRbp2yVwZaz5OIm5YLtoxbSPrYwNjGcEuxg5OSQETCTWPdrDBmILCaxglDi7
+        zKKLkQvI/sIosebAeSYI5zOjxPl9XxnhOj73sEIkljNK7Ox4AFX1llHi7Y0vzCBVwgKREn9W
+        /GcCsUUEzCUeP1kI1sEsMIdR4uPfbSwgCTYBK4mJ7avAxvIK2El8+PgOrIFFQFVi1pz5YDWi
+        AhES949tYIWoEZQ4OfMJWJxTwF7iXMcWdhCbWUBc4taT+UwQtrzE9rdzmEGWSQhsY5d4ffIc
+        C8TdLhLb599lh7CFJV4d3wJly0j83zmfCaJhHaPE344XUN3bGSWWT/7HBlFlLXH4+EWgMziA
+        VmhKrN+lDxF2lGhpXcYMEpYQ4JO48VYQ4gg+iUnbpkOFeSU62oQgqtUkNizbwAaztmvnSuYJ
+        jEqzkLw2C8k7s5C8Mwth7wJGllWM4qmlxbnpqcXGeanlesWJucWleel6yfm5mxiBSej0v+Nf
+        dzDu+5N0iFGAg1GJhzfhenSsEGtiWXFl7iFGCQ5mJRHeijlRsUK8KYmVValF+fFFpTmpxYcY
+        pTlYlMR5qxkeRAsJpCeWpGanphakFsFkmTg4pRoYG5Uc29Y+EGlZMu3a9tx77yz0rj39udxk
+        wfPqXsG8Izy7q5qUNS5P6Nqa/L3cWbssN6ht5ceck54TjEtqGVwvsB2ecqBKyFzD0u1CCafR
+        /u8bbyv2zXQqlZzu5XX4SOTje8ulynlVLySvuGEUk9XXX5m8YS7nmq5jZiL7V8X++q82c+/f
+        fI8XSizFGYmGWsxFxYkAimeZ3z4DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsVy+t/xe7qFP6NjDRb95bJYfbefzeLN8elM
+        FjcbdzNZTPmznMni2I5HTBaXd81hs+j8MovNgd3j8tlSjzvX9rB5TPjwls3j/b6rbB6fN8kF
+        sEbp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZaz5
+        OIm5YLtoxbSPrYwNjGcEuxg5OSQETCTWfe5h7WLk4hASWMooce7sK5YuRg6ghIzE8fVlEDXC
+        En+udbFB1LxmlHi4s4sJJCEsECnxZ8V/MFtEwFzi8ZOFYIOYBeYwSnxfPgtq6nFGiZ5rNxlB
+        qtgErCQmtq8Cs3kF7CQ+fHwH1s0ioCoxa858FhBbVCBC4sz7FSwQNYISJ2c+AbM5BewlznVs
+        YQexmQXUJf7Mu8QMYYtL3HoynwnClpfY/nYO8wRGoVlI2mchaZmFpGUWkpYFjCyrGEVSS4tz
+        03OLjfSKE3OLS/PS9ZLzczcxAqNu27GfW3Ywdr0LPsQowMGoxMO742Z0rBBrYllxZe4hRgkO
+        ZiUR3oo5UbFCvCmJlVWpRfnxRaU5qcWHGE2BnpvILCWanA9MCHkl8YamhuYWlobmxubGZhZK
+        4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhgn9mZ+3jbX97XKo15dAbEzE9M9fvLWa3Heu5Cg
+        OFft9MLMDeGOgYsevUmbX+sdfWtv+SMWbbOb7N160YIl2XGZ5z+vWOp4+15Fr5byn01+Ne2P
+        Y4VePjp8PGLmyRe9H4w3R8Xm5P6METyj1P0hTpqtS5VJQpRfqpx1x1+BvLXdt44kHD1TnKTE
+        UpyRaKjFXFScCABrM2tH0AIAAA==
+X-CMS-MailID: 20190820134521eucas1p1eeac5c5a1657db92d8ae60268728d9a8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190820123600epcas1p41f9e4e891a48fbafefcb2c22b5da7155
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190820123600epcas1p41f9e4e891a48fbafefcb2c22b5da7155
+References: <1566304548-19972-1-git-send-email-info@metux.net>
+        <CGME20190820123600epcas1p41f9e4e891a48fbafefcb2c22b5da7155@epcas1p4.samsung.com>
+        <1566304548-19972-4-git-send-email-info@metux.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 5717fe5ab38f9ccb32718bcb03bea68409c9cce4 ]
+On 8/20/19 2:35 PM, Enrico Weigelt, metux IT consult wrote:
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
+> 
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  drivers/ata/ahci_xgene.c | 21 +++++++--------------
+>  1 file changed, 7 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
+> index 16246c8..5391f5d 100644
+> --- a/drivers/ata/ahci_xgene.c
+> +++ b/drivers/ata/ahci_xgene.c
+> @@ -739,7 +739,6 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct ahci_host_priv *hpriv;
+>  	struct xgene_ahci_context *ctx;
+> -	struct resource *res;
+>  	const struct of_device_id *of_devid;
+>  	enum xgene_ahci_version version = XGENE_AHCI_V1;
+>  	const struct ata_port_info *ppi[] = { &xgene_ahci_v1_port_info,
+> @@ -759,31 +758,25 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+>  	ctx->dev = dev;
+>  
+>  	/* Retrieve the IP core resource */
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -	ctx->csr_core = devm_ioremap_resource(dev, res);
+> +	ctx->csr_core = devm_platform_ioremap_resource(pdev, 1);
+>  	if (IS_ERR(ctx->csr_core))
+>  		return PTR_ERR(ctx->csr_core);
+>  
+>  	/* Retrieve the IP diagnostic resource */
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> -	ctx->csr_diag = devm_ioremap_resource(dev, res);
+> +	ctx->csr_diag = devm_platform_ioremap_resource(pdev, 2);
+>  	if (IS_ERR(ctx->csr_diag))
+>  		return PTR_ERR(ctx->csr_diag);
+>  
+>  	/* Retrieve the IP AXI resource */
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+> -	ctx->csr_axi = devm_ioremap_resource(dev, res);
+> +	ctx->csr_axi = devm_platform_ioremap_resource(pdev, 3);
+>  	if (IS_ERR(ctx->csr_axi))
+>  		return PTR_ERR(ctx->csr_axi);
+>  
+>  	/* Retrieve the optional IP mux resource */
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
+> -	if (res) {
+> -		void __iomem *csr = devm_ioremap_resource(dev, res);
+> -		if (IS_ERR(csr))
+> -			return PTR_ERR(csr);
+> -
+> -		ctx->csr_mux = csr;
+> +	ctx->csr_mux = csr = devm_platform_ioremap_resource(pdev, 4);
 
-If a CPU doesn't support the page size for which the kernel is
-configured, then we will complain and refuse to bring it online. For
-secondary CPUs (and the boot CPU on a system booting with EFI), we will
-also print an error identifying the mismatch.
+This conversion is incorrect - despite the resource being optional
+we will get error message from devm_[platform_]ioremap_resource()
+(it always prints an error on !res condition).
 
-Consequently, the only time that the cpufeature code can detect a
-granule size mismatch is for a granule other than the one that is
-currently being used. Although we would rather such systems didn't
-exist, we've unfortunately lost that battle and Kevin reports that
-on his amlogic S922X (odroid-n2 board) we end up warning and taining
-with defconfig because 16k pages are not supported by all of the CPUs.
+> +	if (IS_ERR(ctx->csr_mux)) {
+> +		dev_info(&pdev->dev, "cant get ip mux resource (optional)");
 
-In such a situation, we don't actually care about the feature mismatch,
-particularly now that KVM only exposes the sanitised view of the CPU
-registers (commit 93390c0a1b20 - "arm64: KVM: Hide unsupported AArch64
-CPU features from guests"). Treat the granule fields as non-strict and
-let Kevin run without a tainted kernel.
+No need for this message.
 
-Cc: Marc Zyngier <maz@kernel.org>
-Reported-by: Kevin Hilman <khilman@baylibre.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-[catalin.marinas@arm.com: changelog updated with KVM sanitised regs commit]
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/kernel/cpufeature.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+> +		ctx->csr_mux = NULL;
+>  	}
+>  
+>  	of_devid = of_match_device(xgene_ahci_of_match, dev);
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index bce06083685dc..94babc3d0ec2c 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -165,9 +165,17 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
- };
- 
- static const struct arm64_ftr_bits ftr_id_aa64mmfr0[] = {
--	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN4_SHIFT, 4, ID_AA64MMFR0_TGRAN4_NI),
--	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN64_SHIFT, 4, ID_AA64MMFR0_TGRAN64_NI),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN16_SHIFT, 4, ID_AA64MMFR0_TGRAN16_NI),
-+	/*
-+	 * We already refuse to boot CPUs that don't support our configured
-+	 * page size, so we can only detect mismatches for a page size other
-+	 * than the one we're currently using. Unfortunately, SoCs like this
-+	 * exist in the wild so, even though we don't like it, we'll have to go
-+	 * along with it and treat them as non-strict.
-+	 */
-+	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN4_SHIFT, 4, ID_AA64MMFR0_TGRAN4_NI),
-+	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN64_SHIFT, 4, ID_AA64MMFR0_TGRAN64_NI),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN16_SHIFT, 4, ID_AA64MMFR0_TGRAN16_NI),
-+
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_BIGENDEL0_SHIFT, 4, 0),
- 	/* Linux shouldn't care about secure memory */
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_SNSMEM_SHIFT, 4, 0),
--- 
-2.20.1
-
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
