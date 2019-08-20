@@ -2,125 +2,123 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A16C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F87BC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC5E22CF4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 09:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6589420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enLo1ZcG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q4kYVlD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbfHTJ7Y (ORCPT
+        id S1729625AbfHTKBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 05:59:24 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46649 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728842AbfHTJ7X (ORCPT
+        Tue, 20 Aug 2019 06:01:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47754 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728426AbfHTKBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 05:59:23 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q139so3063398pfc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 02:59:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=o15KXmaxH2/gADXZDmhPtBesd8g7XYX73k5yCjzHx6M=;
-        b=enLo1ZcGWwnOPUuiZD1xPDHEHOCaQJ/wuly1Ay535TGqIBB5rOYa0nu84CQQT8PaoN
-         L8uJBHSHjTFJeEZZFkL8X4qLodujcvy0HHBiobgB2a36bVzBRZEKC52P6shMuNSBSQY6
-         45LKtzViEKzFB86Lh76VxFAREt409VWIJGofHgXSwuPyWOgreovZZcTA48a8QxmPGEzW
-         Bcf2uLR/1S7wxCMyW9OqGYOW3doiG1ls42Y3PttMa77GQ08BpTRT3hyMweh+2INAqXvU
-         C9MJ3unl2DAABtNIXYQ5s0OZ1B60aZ0iZ20H1RrS1zYWDPG+8MGQEG8C3f79Xfgsml8G
-         xjGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o15KXmaxH2/gADXZDmhPtBesd8g7XYX73k5yCjzHx6M=;
-        b=R/XkjRgKPDMazRrQnGCTNssL8YKuZIO0FVxHxawEvfSRBPVdKkdNo6lDAuR+ISEv0G
-         Cjly7UK0MYXQo/SRcxm600Fkz1GMg7L6t3mMRj7ivu4J21peYdFEwHzSerkVvGPxgI89
-         n4J4BTEuhKQ08+rtNFrzGaDWi56cFr8/qZ0l9jCaxI8djBRTksCzn5sNDEIVlEiZcWcO
-         MI7tH2WnIXRo8LeqOBzdH/Pjsnmv5jvAQCovO3OpPZaAGe/DOB0O7PmpKFIEm/URrjP+
-         YMUVFHqlXD2aELeBVhzLqRpxcsJTMQhCwdfEeY4hfrBojH51fsBlSWN2JJkk/bSgSNcR
-         TCuw==
-X-Gm-Message-State: APjAAAXXEFGSvnM2umNnMHIJIDrOrragcxI9G1eevFu/5Rv9ynBUheXt
-        0B/P+NjZrMy6a+8YrQlwmgU=
-X-Google-Smtp-Source: APXvYqzAIMhY6Zdnv2lpushSlhgBUByF4DIx9WlhnvlUwDly1zq7OdDiwebU19wyV8uYhH3Ccd6m/A==
-X-Received: by 2002:a63:7e17:: with SMTP id z23mr24101863pgc.14.1566295163014;
-        Tue, 20 Aug 2019 02:59:23 -0700 (PDT)
-Received: from localhost ([175.223.16.125])
-        by smtp.gmail.com with ESMTPSA id y188sm22045896pfb.115.2019.08.20.02.59.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 02:59:22 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 18:59:18 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Tue, 20 Aug 2019 06:01:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=K3x1PYKs8uoQSVAJgrYEuHNsKolkNQhJU7kFblu2V0E=; b=Q4kYVlD4BsdOrsy6IouqImCJa
+        EK429go2B9/u0U0rNTx0piIVJSNUZZNKe+0NnTL0/tyClAOSczTcjv8lPOh/Jl1191EgomV/E+QCt
+        fXZweSdGiLk2tu0PlQ6YAclkOboKULH7q/G9RFXqGAG2y02Vyz7I/HewOST1XjMjEAPnj2Xj5wPBn
+        P0UnkhiHqtOFg+5jJmXOixjKCxij0w6On7vgTFonz2pRsh4cgcBenze9hvRlpLT615N4KgjU7h0gj
+        ix5hhX9L0wF/CnLfT19yH6JDe2LeJhnXR2hIlvANXGj9MQn7lR+l4qFTIHFKbh04DJ13zph7x77OC
+        iyugOAEIA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i00wk-0000kK-7O; Tue, 20 Aug 2019 10:00:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9A03F307765;
+        Tue, 20 Aug 2019 12:00:24 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C842320CE7744; Tue, 20 Aug 2019 12:00:55 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 12:00:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kernel-team@fb.com, stable@vger.kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [RFC PATCH v4 8/9] printk-rb: new functionality to support printk
-Message-ID: <20190820095918.GB14137@jagdpanzerIV>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-9-john.ogness@linutronix.de>
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH] x86/mm/pti: in pti_clone_pgtable() don't increase addr
+ by PUD_SIZE
+Message-ID: <20190820100055.GI2332@hirez.programming.kicks-ass.net>
+References: <20190820075128.2912224-1-songliubraving@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190807222634.1723-9-john.ogness@linutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190820075128.2912224-1-songliubraving@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (08/08/19 00:32), John Ogness wrote:
-[..]
-> +void prb_init(struct printk_ringbuffer *rb, char *data, int data_size_bits,
-> +	      struct prb_desc *descs, int desc_count_bits,
-> +	      struct wait_queue_head *waitq)
-> +{
-> +	struct dataring *dr = &rb->dr;
-> +	struct numlist *nl = &rb->nl;
-> +
-> +	rb->desc_count_bits = desc_count_bits;
-> +	rb->descs = descs;
-> +	atomic_long_set(&descs[0].id, 0);
-> +	descs[0].desc.begin_lpos = 1;
-> +	descs[0].desc.next_lpos = 1;
+On Tue, Aug 20, 2019 at 12:51:28AM -0700, Song Liu wrote:
+> pti_clone_pgtable() increases addr by PUD_SIZE for pud_none(*pud) case.
+> This is not accurate because addr may not be PUD_SIZE aligned.
+> 
+> In our x86_64 kernel, pti_clone_pgtable() fails to clone 7 PMDs because
+> of this issuse, including PMD for the irq entry table. For a memcache
+> like workload, this introduces about 4.5x more iTLB-load and about 2.5x
+> more iTLB-load-misses on a Skylake CPU.
+> 
+> This patch fixes this issue by adding PMD_SIZE to addr for pud_none()
+> case.
 
-dataring_desc_init(), perhaps?
+> diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+> index b196524759ec..5a67c3015f59 100644
+> --- a/arch/x86/mm/pti.c
+> +++ b/arch/x86/mm/pti.c
+> @@ -330,7 +330,7 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
+>  
+>  		pud = pud_offset(p4d, addr);
+>  		if (pud_none(*pud)) {
+> -			addr += PUD_SIZE;
+> +			addr += PMD_SIZE;
+>  			continue;
+>  		}
 
-> +	atomic_set(&rb->desc_next_unused, 1);
-> +
-> +	atomic_long_set(&nl->head_id, 0);
-> +	atomic_long_set(&nl->tail_id, 0);
-> +	nl->node = prb_desc_node;
-> +	nl->node_arg = rb;
-> +	nl->busy = prb_desc_busy;
-> +	nl->busy_arg = rb;
-> +
-> +	dr->size_bits = data_size_bits;
-> +	dr->data = data;
-> +	atomic_long_set(&dr->head_lpos, -111 * sizeof(long));
-> +	atomic_long_set(&dr->tail_lpos, -111 * sizeof(long));
-> +	dr->getdesc = prb_getdesc;
-> +	dr->getdesc_arg = rb;
-> +
-> +	atomic_long_set(&rb->fail, 0);
-> +
-> +	rb->wq = waitq;
-> +}
-> +EXPORT_SYMBOL(prb_init);
+I'm thinking you're right in that there's a bug here, but I'm also
+thinking your patch is both incomplete and broken.
 
-	-ss
+What that code wants to do is skip to the end of the pud, a pmd_size
+increase will not do that. And right below this, there's a second
+instance of this exact pattern.
+
+Did I get the below right?
+
+---
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index b196524759ec..32b20b3cb227 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -330,12 +330,14 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
+ 
+ 		pud = pud_offset(p4d, addr);
+ 		if (pud_none(*pud)) {
++			addr &= PUD_MASK;
+ 			addr += PUD_SIZE;
+ 			continue;
+ 		}
+ 
+ 		pmd = pmd_offset(pud, addr);
+ 		if (pmd_none(*pmd)) {
++			addr &= PMD_MASK;
+ 			addr += PMD_SIZE;
+ 			continue;
+ 		}
