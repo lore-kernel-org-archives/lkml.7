@@ -2,31 +2,32 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F40EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF3CC3A59D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25508216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF2722DBF
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:19:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="RqPDvgDP"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="SMGaAyxp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbfHTPTi (ORCPT
+        id S1730569AbfHTPTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:19:38 -0400
-Received: from vps.xff.cz ([195.181.215.36]:32796 "EHLO vps.xff.cz"
+        Tue, 20 Aug 2019 11:19:46 -0400
+Received: from vps.xff.cz ([195.181.215.36]:32832 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbfHTPTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730427AbfHTPTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 20 Aug 2019 11:19:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1566314375; bh=3n0q7CBc9P4bQG/G0hfq9MsM1NWknDFFdma8+IRC/cg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RqPDvgDPVzlnaRwp8M3IghFK1wQglwVFc5+QYKZLLecgLDG5Wil2dozlnMco/EYls
-         /tTRCmZRHy22lpoHwy9E9Fr/ySqpCuyc55Qs9fnt0P+1UVmbOrWTAtsc86mOFmndqh
-         t3CYfwOjHBGp7SjGsGvlX8D7XF7SfRw54iJgeEMc=
+        t=1566314376; bh=9Bu3I/MHKVFLzcyKmY5PFKEAWplV+hj5AiRwPhNXy18=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=SMGaAyxpdu5QWmCjcwcx+YRShBYwGguwWZyv0b5+jRl38S939zdFmrCJfNAAbQ2iY
+         w70t8bzvUTGXqwYtteDbcgznmlvCO771ChE8QbXY5tWN8iouEgWUtKsRP1YH0TwqS3
+         K16IWoRvv79fGJlAznCCKUsHIvnnJhOgq/x4xuLk=
 From:   megous@megous.com
 To:     Alessandro Zummo <a.zummo@towertech.it>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -37,9 +38,11 @@ To:     Alessandro Zummo <a.zummo@towertech.it>,
 Cc:     Ondrej Jirman <megous@megous.com>, linux-rtc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: [PATCH v2 0/3] Add basic support for RTC on Allwinner H6 SoC
-Date:   Tue, 20 Aug 2019 17:19:31 +0200
-Message-Id: <20190820151934.3860-1-megous@megous.com>
+Subject: [PATCH v2 2/3] rtc: sun6i: Add support for H6 RTC
+Date:   Tue, 20 Aug 2019 17:19:33 +0200
+Message-Id: <20190820151934.3860-3-megous@megous.com>
+In-Reply-To: <20190820151934.3860-1-megous@megous.com>
+References: <20190820151934.3860-1-megous@megous.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,43 +52,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-I went through the datasheets for H6 and H5, and compared the differences.
-RTCs are largely similar, but not entirely compatible. Incompatibilities
-are in details not yet implemented by the rtc driver though.
+RTC on H6 is mostly the same as on H5 and H3. It has slight differences
+mostly in features that are not yet supported by this driver.
 
-I also corrected the clock tree in H6 DTSI.
+Some differences are already stated in the comments in existing code.
+One other difference is that H6 has extra bit in LOSC_CTRL_REG, called
+EXT_LOSC_EN to enable/disable external low speed crystal oscillator.
 
-This patchset is necessary for implementing the WiFi/Bluetooth support
-on boards using H6 SoC.
+It also has bit EXT_LOSC_STA in LOSC_AUTO_SWT_STA_REG, to check whether
+external low speed oscillator is working correctly.
 
-There was some discussion previously of describing HOSC, DCXO and XO
-oscillators and clocks as part of RTC in DT, but I decided against it
-because it's not necessary, becuse information that would be provided
-as a part of DT can already be determined at runtime from RTC registers,
-so this woudn't add any value and would only introduce complications
-to the driver. See: https://patchwork.kernel.org/cover/10898083/
+This patch adds support for enabling LOSC when necessary:
 
-Please take a look.
+- during reparenting
+- when probing the clock
 
+H6 also has capacbility to automatically reparent RTC clock from
+external crystal oscillator, to internal RC oscillator, if external
+oscillator fails. This is enabled by default. Disable it during
+probe.
 
-Thank you and regards,
-  Ondrej Jirman
+Signed-off-by: Ondrej Jirman <megous@megous.com>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/rtc/rtc-sun6i.c | 40 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
 
-
-Changes in v2:
-- bindings converted to yaml
-- added reviewed by tags
-
-Ondrej Jirman (3):
-  dt-bindings: Add compatible for H6 RTC
-  rtc: sun6i: Add support for H6 RTC
-  arm64: dts: sun50i-h6: Add support for RTC and fix the clock tree
-
- .../bindings/rtc/allwinner,sun6i-a31-rtc.yaml | 13 ++++++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 30 +++++++-------
- drivers/rtc/rtc-sun6i.c                       | 40 ++++++++++++++++++-
- 3 files changed, 67 insertions(+), 16 deletions(-)
-
+diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+index d50ee023b559..b0c3752bed3f 100644
+--- a/drivers/rtc/rtc-sun6i.c
++++ b/drivers/rtc/rtc-sun6i.c
+@@ -32,9 +32,11 @@
+ /* Control register */
+ #define SUN6I_LOSC_CTRL				0x0000
+ #define SUN6I_LOSC_CTRL_KEY			(0x16aa << 16)
++#define SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS		BIT(15)
+ #define SUN6I_LOSC_CTRL_ALM_DHMS_ACC		BIT(9)
+ #define SUN6I_LOSC_CTRL_RTC_HMS_ACC		BIT(8)
+ #define SUN6I_LOSC_CTRL_RTC_YMD_ACC		BIT(7)
++#define SUN6I_LOSC_CTRL_EXT_LOSC_EN		BIT(4)
+ #define SUN6I_LOSC_CTRL_EXT_OSC			BIT(0)
+ #define SUN6I_LOSC_CTRL_ACC_MASK		GENMASK(9, 7)
+ 
+@@ -128,6 +130,8 @@ struct sun6i_rtc_clk_data {
+ 	unsigned int has_prescaler : 1;
+ 	unsigned int has_out_clk : 1;
+ 	unsigned int export_iosc : 1;
++	unsigned int has_losc_en : 1;
++	unsigned int has_auto_swt : 1;
+ };
+ 
+ struct sun6i_rtc_dev {
+@@ -190,6 +194,10 @@ static int sun6i_rtc_osc_set_parent(struct clk_hw *hw, u8 index)
+ 	val &= ~SUN6I_LOSC_CTRL_EXT_OSC;
+ 	val |= SUN6I_LOSC_CTRL_KEY;
+ 	val |= index ? SUN6I_LOSC_CTRL_EXT_OSC : 0;
++	if (rtc->data->has_losc_en) {
++		val &= ~SUN6I_LOSC_CTRL_EXT_LOSC_EN;
++		val |= index ? SUN6I_LOSC_CTRL_EXT_LOSC_EN : 0;
++	}
+ 	writel(val, rtc->base + SUN6I_LOSC_CTRL);
+ 	spin_unlock_irqrestore(&rtc->lock, flags);
+ 
+@@ -215,6 +223,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
+ 	const char *iosc_name = "rtc-int-osc";
+ 	const char *clkout_name = "osc32k-out";
+ 	const char *parents[2];
++	u32 reg;
+ 
+ 	rtc = kzalloc(sizeof(*rtc), GFP_KERNEL);
+ 	if (!rtc)
+@@ -235,9 +244,18 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
+ 		goto err;
+ 	}
+ 
++	reg = SUN6I_LOSC_CTRL_KEY;
++	if (rtc->data->has_auto_swt) {
++		/* Bypass auto-switch to int osc, on ext losc failure */
++		reg |= SUN6I_LOSC_CTRL_AUTO_SWT_BYPASS;
++		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
++	}
++
+ 	/* Switch to the external, more precise, oscillator */
+-	writel(SUN6I_LOSC_CTRL_KEY | SUN6I_LOSC_CTRL_EXT_OSC,
+-	       rtc->base + SUN6I_LOSC_CTRL);
++	reg |= SUN6I_LOSC_CTRL_EXT_OSC;
++	if (rtc->data->has_losc_en)
++		reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
++	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+ 
+ 	/* Yes, I know, this is ugly. */
+ 	sun6i_rtc = rtc;
+@@ -345,6 +363,23 @@ CLK_OF_DECLARE_DRIVER(sun8i_h3_rtc_clk, "allwinner,sun8i-h3-rtc",
+ CLK_OF_DECLARE_DRIVER(sun50i_h5_rtc_clk, "allwinner,sun50i-h5-rtc",
+ 		      sun8i_h3_rtc_clk_init);
+ 
++static const struct sun6i_rtc_clk_data sun50i_h6_rtc_data = {
++	.rc_osc_rate = 16000000,
++	.fixed_prescaler = 32,
++	.has_prescaler = 1,
++	.has_out_clk = 1,
++	.export_iosc = 1,
++	.has_losc_en = 1,
++	.has_auto_swt = 1,
++};
++
++static void __init sun50i_h6_rtc_clk_init(struct device_node *node)
++{
++	sun6i_rtc_clk_init(node, &sun50i_h6_rtc_data);
++}
++CLK_OF_DECLARE_DRIVER(sun50i_h6_rtc_clk, "allwinner,sun50i-h6-rtc",
++		      sun50i_h6_rtc_clk_init);
++
+ static const struct sun6i_rtc_clk_data sun8i_v3_rtc_data = {
+ 	.rc_osc_rate = 32000,
+ 	.has_out_clk = 1,
+@@ -675,6 +710,7 @@ static const struct of_device_id sun6i_rtc_dt_ids[] = {
+ 	{ .compatible = "allwinner,sun8i-r40-rtc" },
+ 	{ .compatible = "allwinner,sun8i-v3-rtc" },
+ 	{ .compatible = "allwinner,sun50i-h5-rtc" },
++	{ .compatible = "allwinner,sun50i-h6-rtc" },
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
 -- 
 2.22.1
 
