@@ -2,155 +2,149 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD37C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EB4C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6D622CE3
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:13:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pqjhG9yp"
+	by mail.kernel.org (Postfix) with ESMTP id BBFC9214DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 17:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566321271;
+	bh=WGX3Gxv4dvM3DO7D4Aw57VijAg2RzIOgDn+ZtwXtLuA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yRmbKs9TUt47Y4KT9vTXWG6ecL0OERSVxvBG0ULRMq8F9KIrtu232qXuHf4+3RJi0
+	 H/5x6u1rllJDRnmCnD+ELnD1C1kSWOiScrUZjFqvWDZ3jf7dB7gL2qhF5AXQQ+rN8y
+	 2h9/KCy22r1d8gJClqaoLzvVbtA2+PRLVneXhNVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730334AbfHTRNu (ORCPT
+        id S1730374AbfHTROa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 13:13:50 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41471 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730174AbfHTRNu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 13:13:50 -0400
-Received: by mail-qk1-f194.google.com with SMTP id g17so5117114qkk.8
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 10:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Na+6gffEb112VVVNdODoi4mMyuuWBICqePLOsVHkZO0=;
-        b=pqjhG9ypHdS0uUoy/HCpHsRI3P4Rltot/YPX+KwM75jreLtmyQ5e9fqMS13TBUfkh1
-         LT/MhBkXETWWL+giL03xxJ4YuUuEJ+CR5TzxFrbw/WiySyKNGmuUBVUzIt/RzdaXhElA
-         etNSci7TitZxUosEiLJf5KqC3elvoLqbqWliR865AihvkGMvnmc9U3YQDThlX2gAeSdd
-         596XuREpM/89wdbn+5ASGGuK+cuuENOeQYh6LjWQhPg7bSU0P1CkhR6TjB8CVl4RclxI
-         da3CdIn8QH+HTd/h23fPucUrOp1idpGpz4K0XNfUQM/FsBYBrcg6zc6UtWen/JvoOiGT
-         7YAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Na+6gffEb112VVVNdODoi4mMyuuWBICqePLOsVHkZO0=;
-        b=ftLvkw2IW4tBk0SzdtbTs0L6TOIBk6wkjwGI4Nmems1tT6ycWHYNRX/7Xy4EYbVjlC
-         GnNOpbCOxP+hxE7+I3SMSXqTejnhNgwUu9BdsHsKkbDFmSpM/FAoHxYOcXCWb4KSlzbN
-         D0y5F+ODtn793qduJlUXolX/NfiJSFuI2K33iU+TG6ZQkY6LpP9SJf0+grhP1JePKqxE
-         KKvJdAr+vsL7H/+nfFmf+ejwL7p032jcCD2VzWj/2HfWpfWcjBHUueU5eGZLov9vcKTL
-         Td4gwoPI6UukWHNyzXMKEdFcbO+xx2egu4kZRjh6+O/cOeNaLW2XrwnubUyM914t53JH
-         gVmg==
-X-Gm-Message-State: APjAAAWGPLduo8aHogtAJnxaSBL8MlO5vNvhUiCFS6M21cQc+Sl73h2m
-        k7Ltm3zi6qDMHgpibbsi6Vk=
-X-Google-Smtp-Source: APXvYqwzYkkFfAAlFjyQYFHdG5IG3wZhAYzuWXE41Vc09yNKPK4x+y5+YRpP02OYmUEDG1iNLyvjtg==
-X-Received: by 2002:a37:649:: with SMTP id 70mr26851894qkg.208.1566321229163;
-        Tue, 20 Aug 2019 10:13:49 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.212.43])
-        by smtp.gmail.com with ESMTPSA id k74sm8958139qke.53.2019.08.20.10.13.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 10:13:46 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3E59A40340; Tue, 20 Aug 2019 14:13:42 -0300 (-03)
-Date:   Tue, 20 Aug 2019 14:13:42 -0300
-To:     "Lubashev, Igor" <ilubashe@akamai.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        James Morris <jmorris@namei.org>, Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v3 3/4] perf: Use CAP_SYSLOG with kptr_restrict checks
-Message-ID: <20190820171342.GD3929@kernel.org>
-References: <cover.1565188228.git.ilubashe@akamai.com>
- <291d2cda6ee75b4cd4c9ce717c177db18bf03a31.1565188228.git.ilubashe@akamai.com>
- <CANLsYkxZE0CQJKQ-bFi=zFV5vTCbL2v76+x1fmCpqNruqWiFXg@mail.gmail.com>
- <20190814184814.GM9280@kernel.org>
- <20190814185213.GN9280@kernel.org>
- <23f7b8c7616a467c93ee2c77e8ffd3cf@usma1ex-dag1mb6.msg.corp.akamai.com>
- <CANLsYkxqBcJq8QJq+aLZXQas1VBg_wGh_p5WTUuRVFCYEQWiQw@mail.gmail.com>
- <20190815214236.GA3929@kernel.org>
- <CANLsYkyPkcJWmBZzyjGj3vJRgEtuaun7HQjN1=5wcOyTPnfhmQ@mail.gmail.com>
- <3f70f6be3a464ca5b4cf563433933245@usma1ex-dag1mb6.msg.corp.akamai.com>
+        Tue, 20 Aug 2019 13:14:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728277AbfHTROa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 13:14:30 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 571D5233A0;
+        Tue, 20 Aug 2019 17:14:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566321269;
+        bh=WGX3Gxv4dvM3DO7D4Aw57VijAg2RzIOgDn+ZtwXtLuA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1yXHm0Cw2txK8FKtm1lYL+ceKrY7DkUGFh280BlxT1m8fd1yJvGoIVx0XuwOhxQFl
+         3vnSgFW8lKZ5tU+8Sczz4E2yLgkfj7rC+uZiW9anhIz5JhqNZ2QuOhbB3Db0e6C+Ey
+         r3/UkDEl7xBODkwZSZVqMzmvS/NH9009SEaBt8yY=
+Received: by mail-qt1-f170.google.com with SMTP id e8so6870132qtp.7;
+        Tue, 20 Aug 2019 10:14:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAUfp0l50+MstqZXIlWLS4T8CsWC5G/7uPi93UdxV3WCpKXSOVHc
+        9FhXM7pzNLqSrdW8Da/pu3QLniQVP2VaWhgM9Q==
+X-Google-Smtp-Source: APXvYqyY9ZsBecGQ3Xs5y7LG3j9BHwHgJiDVJDcbMsgosFCxqVWpdQe5Z5wA8XSvdYEItWSHAFvEDYIGvIF5NjfBNsQ=
+X-Received: by 2002:ac8:44c4:: with SMTP id b4mr26942067qto.224.1566321268306;
+ Tue, 20 Aug 2019 10:14:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3f70f6be3a464ca5b4cf563433933245@usma1ex-dag1mb6.msg.corp.akamai.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de> <20190820145821.27214-5-nsaenzjulienne@suse.de>
+In-Reply-To: <20190820145821.27214-5-nsaenzjulienne@suse.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 20 Aug 2019 12:14:16 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+Nr88Nvd_ZA8eJGm4xLwssv7CnDJLsnZyFqiM=EQWYxg@mail.gmail.com>
+Message-ID: <CAL_Jsq+Nr88Nvd_ZA8eJGm4xLwssv7CnDJLsnZyFqiM=EQWYxg@mail.gmail.com>
+Subject: Re: [PATCH v2 04/11] of/fdt: add early_init_dt_get_dma_zone_size()
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "open list:GENERIC INCLUDE/ASM HEADER FILES" 
+        <linux-arch@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        Frank Rowand <frowand.list@gmail.com>, phill@raspberryi.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eric Anholt <eric@anholt.net>,
+        Matthias Brugger <mbrugger@suse.com>,
+        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Aug 19, 2019 at 10:22:07PM +0000, Lubashev, Igor escreveu:
-> On Mon, August 19, 2019 at 12:51 PM Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
-> > On Thu, 15 Aug 2019 at 15:42, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > Things are working properly on your perf/cap branch.  I tested with on both
-> > x86 and ARM.
- 
-> Mathieu, you are probably testing with euid==0.  If you were to test
-> with euid!=0 but with CAP_SYSLOG and no libcap (and kptr_restrict=0,
-> perf_event_paranoid=2), you would likely hit the bug that you
-> identified in __perf_event__synthesize_kermel_mmap().
- 
-> See https://lkml.kernel.org/lkml/930a59730c0d495f8c5acf4f99048e8d@usma1ex-dag1mb6.msg.corp.akamai.com for the fix (Option 1 only or Options 1+2).
-> 
-> Arnaldo, once we decide what the right fix is, I am happy to post the update (options 1, 1+2) as a patch series.
+On Tue, Aug 20, 2019 at 9:58 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
+>
+> Some devices might have weird DMA addressing limitations that only apply
+> to a subset of the available peripherals. For example the Raspberry Pi 4
+> has two interconnects, one able to address the whole lower 4G memory
+> area and another one limited to the lower 1G.
+>
+> Being an uncommon situation we simply hardcode the device wide DMA
+> addressable memory size conditionally to the machine compatible name and
+> set 'dma_zone_size' accordingly.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>
+> ---
+>
+> Changes in v2:
+> - New approach to getting dma_zone_size, instead of parsing the dts we
+>   hardcode it conditionally to the machine compatible name.
+>
+>  drivers/of/fdt.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 06ffbd39d9af..f756e8c05a77 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -27,6 +27,7 @@
+>
+>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+>  #include <asm/page.h>
+> +#include <asm/dma.h>   /* for dma_zone_size */
+>
+>  #include "of_private.h"
+>
+> @@ -1195,6 +1196,12 @@ void __init early_init_dt_scan_nodes(void)
+>         of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+>  }
+>
+> +void __init early_init_dt_get_dma_zone_size(void)
 
-I think you should get the checks for ref_reloc_sym in place so as to
-make the code overall more robust, and also go on continuing to make the
-checks in tools/perf/ to match what is checked on the other side of the
-mirror, i.e. by the kernel, so from a quick read, please put first the
-robustness patches (check ref_reloc_sym) do your other suggestions and
-update the warnings, then refresh the two patches that still are not in
-my perf/core branch:
+static
 
-[acme@quaco perf]$ git rebase perf/core
-First, rewinding head to replay your work on top of it...
-Applying: perf tools: Use CAP_SYS_ADMIN with perf_event_paranoid checks
-Applying: perf symbols: Use CAP_SYSLOG with kptr_restrict checks
-[acme@quaco perf]$ 
+With that,
 
-I've pushed out perf/cap, so you can go from there as it is rebased on
-my current perf/core.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-Then test all these cases: with/without libcap, with euid==0 and
-different than zero, with capabilities, etc, patch by patch so that we
-don't break bisection nor regress,
-
-Thanks and keep up the good work!
-
-- Arnaldo
- 
-> - Igor
-> 
-> 
-> > > > I am not sure how this can be fixed.  I counted a total of 19
-> > > > instances where kmap->ref_reloc_sym->XYZ is called, only 2 of wich
-> > > > care to check if kmap->ref_reloc_sym is valid before proceeding.  As
-> > > > such I must hope that in the 17 other cases, kmap->ref_reloc_sym is
-> > > > guaranteed to be valid.  If I am correct then all we need is to
-> > > > check for a valid pointer in _perf_event__synthesize_kernel_mmap().
-> > > > Otherwise it will be a little harder.
-> > > >
-> > > > Mathieu
-> 
-
--- 
-
-- Arnaldo
+> +{
+> +       if (of_fdt_machine_is_compatible("brcm,bcm2711"))
+> +               dma_zone_size = 0x3c000000;
+> +}
+> +
+>  bool __init early_init_dt_scan(void *params)
+>  {
+>         bool status;
+> @@ -1204,6 +1211,7 @@ bool __init early_init_dt_scan(void *params)
+>                 return false;
+>
+>         early_init_dt_scan_nodes();
+> +       early_init_dt_get_dma_zone_size();
+>         return true;
+>  }
+>
+> --
+> 2.22.0
+>
