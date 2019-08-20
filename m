@@ -2,134 +2,116 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F475C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1722EC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B9D22CF5
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6DB220C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 10:16:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DP3SIkcq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbfHTKPg convert rfc822-to-8bit (ORCPT
+        id S1729639AbfHTKQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 06:15:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17506 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728545AbfHTKPg (ORCPT
+        Tue, 20 Aug 2019 06:16:55 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45453 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728545AbfHTKQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 06:15:36 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KABgRI100730
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:15:34 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ugefpsdtk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 06:15:34 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.ibm.com>;
-        Tue, 20 Aug 2019 11:15:32 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 20 Aug 2019 11:15:28 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7KAFRgd61145098
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Aug 2019 10:15:27 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 03FDA4C062;
-        Tue, 20 Aug 2019 10:15:27 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B3C64C04A;
-        Tue, 20 Aug 2019 10:15:26 +0000 (GMT)
-Received: from localhost (unknown [9.199.61.204])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 20 Aug 2019 10:15:26 +0000 (GMT)
-Date:   Tue, 20 Aug 2019 15:45:24 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [PATCH v2 2/3] kprobes: adjust kprobe addr for KPROBES_ON_FTRACE
-To:     Anil =?iso-8859-1?q?S=0A?= Keshavamurthy 
-        <anil.s.keshavamurthy@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 20 Aug 2019 06:16:54 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o13so2957328pgp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 03:16:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iKtnRnRXyBjoovTvJIaq2YQ2tJPH/EOQqzClVloanFg=;
+        b=DP3SIkcqOUk5qRV022QgDnIYhMRLclsJbQ+iMuhdQeFA6Vy8y4pu0GdWeJS1iSphsx
+         CeoRwgvdNmy74M1YMktAnP+rDB5p8+z0DyOXL+7bgRlbaa0a2dDeCksAHwX41p3+tZz9
+         27L/xSef5k2wR9z7Wx8BP60dtIyYTV6klemVidrjmXK0naEftG6wNr6TmbjhkjmHzx9J
+         /lRhkqxKpuGN0YLZkExZB0TH/hCMF06Z0cPlO+huQc54Riipp5frvylqrLy4I1ICvyaY
+         d6Dy+3Jc4lBSSUVSu+Rk9pWIwtcxzybEywnLMU7/lEVscGrc8tPufM1b7JT9yR4SeG/Y
+         IMkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iKtnRnRXyBjoovTvJIaq2YQ2tJPH/EOQqzClVloanFg=;
+        b=tQyYkAAxxGEWH3JZufqjIj80gSkk7lLGf9cucwaCNxFVXR+iETPmyZHGVv53RfRkGL
+         YwIKILgepsN+KvNFjBKRPGuzclj6V5sdLIqNO+Cgmz6qO3WT86emHwWRtkSQKY6U6l6d
+         gjOeIccerFJBOcsKCfQ4FUUXnfhk04vODghjx/fG1qqxj4T7CFmvq5JzzR+f1sZt/umC
+         3lff6JNudKdI6SfUwpigx0rIGPsdXz+E05bGhsAvCZ6TPTYIcwOQcQJlSf/+yImf4gGT
+         PQ1hPX3yDKJnWs3cKgS27i/gwPobUtsZ6p6bTBfUTFo6+MVSISqWx825agO7sJuLqhRF
+         UOfQ==
+X-Gm-Message-State: APjAAAVkYW1vEFwTKYznGrH4c2EKhUsx5OgYdm37Wd4jfZem4GhrelYp
+        bRa8YOzQavFQNU+375sXseruJj8p
+X-Google-Smtp-Source: APXvYqwgzcLdn0MCog+xQ170OVRC9VgAYrG0bYTJ3m1jyJ55KFyl9rQ0V/CAuip+wgMOjEC0ZAswxw==
+X-Received: by 2002:a17:90a:b014:: with SMTP id x20mr6255093pjq.60.1566296214062;
+        Tue, 20 Aug 2019 03:16:54 -0700 (PDT)
+Received: from localhost ([175.223.16.125])
+        by smtp.gmail.com with ESMTPSA id k3sm12387515pjo.3.2019.08.20.03.16.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 03:16:53 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 19:16:49 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Cc:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190820113928.1971900c@xhacker.debian>
-        <20190820114224.0c8963c4@xhacker.debian>
-In-Reply-To: <20190820114224.0c8963c4@xhacker.debian>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH v4 4/9] printk-rb: initialize new descriptors as
+ invalid
+Message-ID: <20190820101649.GC14137@jagdpanzerIV>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190807222634.1723-5-john.ogness@linutronix.de>
+ <20190820092337.cudkfdfhsu44vlhh@pathway.suse.cz>
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19082010-0008-0000-0000-0000030B00B9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082010-0009-0000-0000-00004A29275C
-Message-Id: <1566295437.yqnot2qd2e.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908200108
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820092337.cudkfdfhsu44vlhh@pathway.suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jisheng Zhang wrote:
-> For KPROBES_ON_FTRACE case, we need to adjust the kprobe's addr
-> correspondingly.
+On (08/20/19 11:23), Petr Mladek wrote:
+> > is no risk of the descriptor unexpectedly being determined as
+> > valid due to dataring head overflowing/wrapping.
 > 
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> ---
->  kernel/kprobes.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 9873fc627d61..3fd2f68644da 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1484,15 +1484,19 @@ static inline int check_kprobe_rereg(struct kprobe *p)
->  
->  int __weak arch_check_ftrace_location(struct kprobe *p)
->  {
-> -	unsigned long ftrace_addr;
-> +	unsigned long ftrace_addr, addr = (unsigned long)p->addr;
->  
-> -	ftrace_addr = ftrace_location((unsigned long)p->addr);
-> +#ifdef CONFIG_KPROBES_ON_FTRACE
-> +	addr = ftrace_call_adjust(addr);
-> +#endif
+> Please, provide more details about the solved race. Is it because
+> some reader could have reference to an invalid (reused) descriptor?
+> Can be these invalid descriptors be member of the list?
 
-Looking at the commit message for patch 3/3, it looks like you want the 
-probe to be placed on ftrace entry by default, and this patch seems to 
-be aimed at that.
+As far as I understand, such descriptors can be on the list:
 
-If so, this is not the right approach. As I mentioned previously, you 
-would want to over-ride kprobe_lookup_name(). This ensures that the 
-address is changed only if the user provided a symbol, and not if the 
-user wanted to probe at a very specific address. See commit 
-24bd909e94776 ("powerpc/kprobes: Prefer ftrace when probing function 
-entry").
+	prb_reserve()
+		assign_desc()
+			// pick a new never used descr
+			i = atomic_fetch_inc(&rb->desc_next_unused);
+			d = &rb->descs[i]
+			dataring_desc_init(&d->desc);
+			return d
+		buf = dataring_push()
+			// the oldest data is reserved, but not commited
+			ret = get_new_lpos()
+			if (ret)
+				dataring_desc_init()
+				return NULL
+		if (!buf)
+			numlist_push()
 
-If this patch is for some other purpose, then it isn't clear from the 
-commit log. Please provide a better explanation.
+_datablock_valid() has a "desc->begin_lpos == desc->next_lpos" check.
 
-
-- Naveen
-
+	-ss
