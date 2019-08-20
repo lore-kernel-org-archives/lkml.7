@@ -7,98 +7,114 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0EBC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017B8C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2C922DD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C642A233A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 19:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566329297;
-	bh=8hxSSt4ABaCovEYDd6K+BZw0tuWiuJTzE9Vsc0Y+4t4=;
+	s=default; t=1566329303;
+	bh=kMULxAQd0WVORfULSwsKX4J4Ff38utCSOvdLogWUDAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gBzp3LuujFeMPJu0Qd8/RDr/R9vcpM6LKsokf0dFdV1wYcwWksekYa67eMqWxk2pw
-	 2bpYJsXu+k37vqR5P9yzQc3Q2kuTx2VZVo68rvAulSQY6YGJW0YBtAtSRoRdNcioFj
-	 EaD2wonebP2dXEPUODXdMcUmTZOKMPjOKo7PTWPQ=
+	b=uf6jr+lO52QqnlQ8VDDZYl90OOd6bMTepGyroAjSQxtSDY4l4Xb5UzcX7bb0DoWQS
+	 9G47iPPecqvU8tGwX2NYKgdgDvDrB7n3nhl0aUOefH9jr6HrxX8MQNxHJy0gpz/t9d
+	 o2nTE0yiuXDK7pcd/ZPtXDucQKzREF7o6t5MhnVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbfHTT2R (ORCPT
+        id S1730845AbfHTT2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 15:28:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40980 "EHLO mail.kernel.org"
+        Tue, 20 Aug 2019 15:28:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730819AbfHTT2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 15:28:15 -0400
+        id S1730795AbfHTT2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 15:28:21 -0400
 Received: from quaco.ghostprotocols.net (177.206.236.100.dynamic.adsl.gvt.net.br [177.206.236.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA277230F2;
-        Tue, 20 Aug 2019 19:28:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B46C52332A;
+        Tue, 20 Aug 2019 19:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566329295;
-        bh=8hxSSt4ABaCovEYDd6K+BZw0tuWiuJTzE9Vsc0Y+4t4=;
+        s=default; t=1566329300;
+        bh=kMULxAQd0WVORfULSwsKX4J4Ff38utCSOvdLogWUDAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WXQgTQgWkxIq9Mc+w/QTXTBeVLqbXU6NGewcg66bUvXo8iCeHZXXeuVUDabe8+EU7
-         uXnSpwOHVg4d09x9Mgim4i/5uQ0oJFalY3SkBRyGOUyv1MQV3NV6HODuzevgzm0U3F
-         BdYt6Di1nh3XFX/FwZDbFGd79jUr2M+Q7MY+1Vrw=
+        b=sZwLw6Nluz/D5+QSQ6OAnRGwcrrsxDz4Kgeb2IkDAwpg3HOQN4UB2+MbpaN9unnqW
+         e53E6I+PHf/IYPQzVZVHmZkoy3Is06vUY/MK2MLHSxepi54EBTZ2MRS2C6PKO/le8i
+         D83u62WiRPOTDJCNlpF0IbnlkdG7VtNsbF94372M=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Michael Petlan <mpetlan@redhat.com>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        He Kuang <hekuang@huawei.com>, Michal rarek <mmarek@suse.com>,
+        Paul Turner <pjt@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 06/17] perf evsel: Add comment for 'idx' member in 'struct perf_sample_id
-Date:   Tue, 20 Aug 2019 16:27:22 -0300
-Message-Id: <20190820192733.19180-7-acme@kernel.org>
+        Stephane Eranian <eranian@google.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Wang Nan <wangnan0@huawei.com>,
+        stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 07/17] tools lib traceevent: Fix "robust" test of do_generate_dynamic_list_file
+Date:   Tue, 20 Aug 2019 16:27:23 -0300
+Message-Id: <20190820192733.19180-8-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190820192733.19180-1-acme@kernel.org>
 References: <20190820192733.19180-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-The 'idx' member was added as preparation for AUX area sampling. Add a
-comment to describe why.
+The tools/lib/traceevent/Makefile had a test added to it to detect a failure
+of the "nm" when making the dynamic list file (whatever that is). The
+problem is that the test sorts the values "U W w" and some versions of sort
+will place "w" ahead of "W" (even though it has a higher ASCII value, and
+break the test.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Add 'tr "w" "W"' to merge the two and not worry about the ordering.
+
+Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: David Carrillo-Cisneros <davidcc@google.com>
+Cc: He Kuang <hekuang@huawei.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Michal rarek <mmarek@suse.com>
+Cc: Paul Turner <pjt@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/83ff264f-84c3-5372-8976-dd9293d20c6f@intel.com
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: stable@vger.kernel.org
+Fixes: 6467753d61399 ("tools lib traceevent: Robustify do_generate_dynamic_list_file")
+Link: http://lkml.kernel.org/r/20190805130150.25acfeb1@gandalf.local.home
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/lib/traceevent/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 9cd6e3ae479a..efe08065838f 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -23,6 +23,13 @@ struct perf_sample_id {
- 	struct hlist_node 	node;
- 	u64		 	id;
- 	struct evsel		*evsel;
-+       /*
-+	* 'idx' will be used for AUX area sampling. A sample will have AUX area
-+	* data that will be queued for decoding, where there are separate
-+	* queues for each CPU (per-cpu tracing) or task (per-thread tracing).
-+	* The sample ID can be used to lookup 'idx' which is effectively the
-+	* queue number.
-+	*/
- 	int			idx;
- 	int			cpu;
- 	pid_t			tid;
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 3292c290654f..8352d53dcb5a 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -266,8 +266,8 @@ endef
+ 
+ define do_generate_dynamic_list_file
+ 	symbol_type=`$(NM) -u -D $1 | awk 'NF>1 {print $$1}' | \
+-	xargs echo "U W w" | tr ' ' '\n' | sort -u | xargs echo`;\
+-	if [ "$$symbol_type" = "U W w" ];then				\
++	xargs echo "U w W" | tr 'w ' 'W\n' | sort -u | xargs echo`;\
++	if [ "$$symbol_type" = "U W" ];then				\
+ 		(echo '{';						\
+ 		$(NM) -u -D $1 | awk 'NF>1 {print "\t"$$2";"}' | sort -u;\
+ 		echo '};';						\
 -- 
 2.21.0
 
