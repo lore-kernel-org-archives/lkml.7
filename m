@@ -2,97 +2,64 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB1BC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17CBC3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9617A2087E
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6C72087E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 05:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbfHTFzq (ORCPT
+        id S1729228AbfHTF42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 01:55:46 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:40885 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726049AbfHTFzq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 01:55:46 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzx7J-0003yO-E4; Tue, 20 Aug 2019 07:55:37 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hzx7I-0001z2-Sd; Tue, 20 Aug 2019 07:55:36 +0200
-Date:   Tue, 20 Aug 2019 07:55:36 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v4 4/10] pwm: mediatek: use pwm_mediatek as common prefix
-Message-ID: <20190820055536.xode62n3gk37ikqv@pengutronix.de>
-References: <1566265225-27452-1-git-send-email-sam.shih@mediatek.com>
- <1566265225-27452-5-git-send-email-sam.shih@mediatek.com>
+        Tue, 20 Aug 2019 01:56:28 -0400
+Received: from verein.lst.de ([213.95.11.211]:53805 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728878AbfHTF42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 01:56:28 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id A94A668B02; Tue, 20 Aug 2019 07:56:23 +0200 (CEST)
+Date:   Tue, 20 Aug 2019 07:56:23 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCHv2 2/2] i915: do not leak module ref counter
+Message-ID: <20190820055623.GC27501@lst.de>
+References: <20190820031359.11717-1-sergey.senozhatsky@gmail.com> <20190820031359.11717-2-sergey.senozhatsky@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1566265225-27452-5-git-send-email-sam.shih@mediatek.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190820031359.11717-2-sergey.senozhatsky@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 09:40:19AM +0800, Sam Shih wrote:
-> From: sam shih <sam.shih@mediatek.com>
+On Tue, Aug 20, 2019 at 12:13:59PM +0900, Sergey Senozhatsky wrote:
+> Always put_filesystem() in i915_gemfs_init().
 > 
-> Use pwm_mediatek as common prefix to match the filename.
-> No functional change intended.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 > ---
->  drivers/pwm/pwm-mediatek.c | 117 ++++++++++++++++++-------------------
->  1 file changed, 58 insertions(+), 59 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> index a70b69a975c1..d85761ad5283 100644
-> --- a/drivers/pwm/pwm-mediatek.c
-> +++ b/drivers/pwm/pwm-mediatek.c
-> @@ -1,12 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Mediatek Pulse Width Modulator driver
-> + * MediaTek Pulse Width Modulator driver
->   *
->   * Copyright (C) 2015 John Crispin <blogic@openwrt.org>
->   * Copyright (C) 2017 Zhi Mao <zhi.mao@mediatek.com>
->   *
-> - * This file is licensed under the terms of the GNU General Public
-> - * License version 2. This program is licensed "as is" without any
-> - * warranty of any kind, whether express or implied.
+>  - v2: rebased (i915 does not remount gemfs anymore)
 
-The license stuff is a separate change.
+Which means it real doesn't need its mount anyore, and thus can use
+plain old shmem_file_setup and doesn't need to mess with file system
+types at all.
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Assuming we find a legitimate rason for why a driver should be able
+to create a kernel mount or a file system type where it doesn't have
+access to the struct file_system_type an API that mount by file system
+name and thus hides the get_fs_type and put_filesystem would be a much
+better API than adding this random export.
