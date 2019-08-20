@@ -4,103 +4,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAD6C3A59D
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1F8C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0ED522DA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3281722DA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 12:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfHTMZ0 (ORCPT
+        id S1729847AbfHTMZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 08:25:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57040 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728366AbfHTMZZ (ORCPT
+        Tue, 20 Aug 2019 08:25:47 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:53021 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728366AbfHTMZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:25:25 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KCM7rd144102;
-        Tue, 20 Aug 2019 08:25:23 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ugf4c551r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Aug 2019 08:25:21 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7KCP8O5016306;
-        Tue, 20 Aug 2019 12:25:21 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma03dal.us.ibm.com with ESMTP id 2ue976mucs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Aug 2019 12:25:21 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7KCPJPI56033666
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 20 Aug 2019 12:25:19 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D11FD7805F;
-        Tue, 20 Aug 2019 12:25:19 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 633457805C;
-        Tue, 20 Aug 2019 12:25:19 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 20 Aug 2019 12:25:19 +0000 (GMT)
-From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
-To:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH] tpm_tis: Fix interrupt probing
-Date:   Tue, 20 Aug 2019 08:25:17 -0400
-Message-Id: <20190820122517.2086223-1-stefanb@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=820 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908200130
+        Tue, 20 Aug 2019 08:25:46 -0400
+Received: from orion.localdomain ([95.117.23.32]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N4eOd-1iQTex3btP-011hHa; Tue, 20 Aug 2019 14:25:44 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
+Subject: [PATCH v2] (submitted) input: misc: soc_button_array: use platform_device_register_resndata()
+Date:   Tue, 20 Aug 2019 14:25:44 +0200
+Message-Id: <1566303944-15321-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:DeU1/LtNheaj5rXfBgJzSh743MbaR6JLBKVErYqoADUipXQJFUe
+ bC2hFMf5UV93XvX+Ql5G3/jYkkeMT+myuB/Qo5ELXDpMKaz4MILFxj8ro+vj3sVhd0kglN9
+ 5Grnn8hGlnMg0Y+ms+3YKC78Noew1GIMhRm9o4eNjO7BrKo3rc98Ik5kFpU9dIvkat30JEm
+ fskuTgs4HY0SX0iTXCShQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TEfkfqHrXxw=:ygYv71I+ZEKf/eWbKvlcLB
+ CTwwr6v+Dti8wA5dP3NNwclF/BdAHZj5i2JkRettYHZfHeuJAjJT8BLgj7Rqhn2DqIE4qSzci
+ feCG1Qxf8N0eWf54JQD82EIk9dDrqQs6B0ufG3ivvcska0CIJYkIOaido1YPt043kwacHERJf
+ jmzHPnSjTxmPEHa3PXbgaUFb8tlkw9iZfJM3CLxU6NRo5zpUTa9b44x0B+/s/3GSdGFw4Q0D0
+ wtWL3mguNUbRWI6h/T7+vFOiyghPSopT5CgV6jL732C6UeX5vOjuPGA/4sT/5JNw3AGh1QJNl
+ SbdU9KVSGbV/RYeNh8RsRqvsdp0jeg7KEjQeBC3eNvJiVnYryim9P8N4SWJi9a92ZMHp3e4/x
+ FZQKmApsG92LdB2TfdOCq6Cw42M3n6hZIUf7xGuRRfqtt32I6KhAXoov9vmseHWlTlHPqNqTV
+ u1xdWmosl1EI7UewUgAw1t0k5n//Rax580qjVGkms0gJ6/3FK1TcTeG6KsmGCEGmeDZZhsS9C
+ AI2F0S+oET56o0QVtR6Wn6huWl1EU4w40be2iiWAnKBgP4Hvys2ZO5q2jzzXrX/hieDovSEte
+ SKkpqqZ8Og5GQe183/ODXMUGlZFzLW41fCcALfd0ID/Qh4zGYmLM/9ei0kYjKYzDv+BjIicNJ
+ 4Wvsxhm3wjAHaf4qBB2ixt0ycaJfhgGEUpwv89L0pfWDGiVzhB9E8+DBLnyohsWlp886b/MSk
+ JPcWNQ0/2+KpYHU9l8PRnOmVUX9Y6z+/Q1eVjQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Berger <stefanb@linux.ibm.com>
+From: Enrico Weigelt <info@metux.net>
 
-The interrupt probing of the TPM TIS was broken since we are trying to
-run it without an active locality and without the TPM_CHIP_FLAG_IRQ set.
+The registration of gpio-keys device can be written much shorter
+by using the platform_device_register_resndata() helper.
 
-Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+v2:
+    * pass &pdev->dev to platform_device_register_resndata()
+    * fixed errval on failed platform_device_register_resndata()
+
+Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/char/tpm/tpm_tis_core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/input/misc/soc_button_array.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-index c3181ea9f271..270f43acbb77 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -980,6 +980,8 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
- 			goto out_err;
- 		}
+diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+index 5e59f8e5..27550f9 100644
+--- a/drivers/input/misc/soc_button_array.c
++++ b/drivers/input/misc/soc_button_array.c
+@@ -110,25 +110,24 @@ static int soc_button_lookup_gpio(struct device *dev, int acpi_index)
+ 	gpio_keys_pdata->nbuttons = n_buttons;
+ 	gpio_keys_pdata->rep = autorepeat;
  
-+		tpm_chip_start(chip);
-+		chip->flags |= TPM_CHIP_FLAG_IRQ;
- 		if (irq) {
- 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
- 						 irq);
-@@ -989,6 +991,7 @@ int tpm_tis_core_init(struct device *dev, struct tpm_tis_data *priv, int irq,
- 		} else {
- 			tpm_tis_probe_irq(chip, intmask);
- 		}
-+		tpm_chip_stop(chip);
+-	pd = platform_device_alloc("gpio-keys", PLATFORM_DEVID_AUTO);
+-	if (!pd) {
+-		error = -ENOMEM;
++	pd = platform_device_register_resndata(
++		&pdev->dev,
++		"gpio-keys",
++		PLATFORM_DEVID_AUTO,
++		NULL,
++		0,
++		gpio_keys_pdata,
++		sizeof(*gpio_keys_pdata));
++
++	error = PTR_ERR_OR_ZERO(pd);
++
++	if (IS_ERR(pd)) {
++		dev_err(&pdev->dev, "failed registering gpio-keys: %ld\n", PTR_ERR(pd));
+ 		goto err_free_mem;
  	}
  
- 	rc = tpm_chip_register(chip);
+-	error = platform_device_add_data(pd, gpio_keys_pdata,
+-					 sizeof(*gpio_keys_pdata));
+-	if (error)
+-		goto err_free_pdev;
+-
+-	error = platform_device_add(pd);
+-	if (error)
+-		goto err_free_pdev;
+-
+ 	return pd;
+ 
+-err_free_pdev:
+-	platform_device_put(pd);
+ err_free_mem:
+ 	devm_kfree(&pdev->dev, gpio_keys_pdata);
+ 	return ERR_PTR(error);
 -- 
-2.14.5
+1.9.1
 
