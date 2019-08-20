@@ -2,146 +2,155 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C16C3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D69DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B991D20C01
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 22:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C879820C01
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 23:00:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="cQHGdpTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfHTW6H (ORCPT
+        id S1726281AbfHTXA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 18:58:07 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:35432 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfHTW6H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 18:58:07 -0400
-Received: by mail-io1-f70.google.com with SMTP id p2so495963iod.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 15:58:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=96tDGWwwRLUJuc8ZLUttwZP0NNSrENPZkHRRK+Wfi44=;
-        b=Y6IhTDxZwGi3Nn1JaPF5Zu0XtfJHztSZ3b7ChRb34lBTN8vJ/iiRIrMYxR4vQd8uoq
-         doVos0y1qGaWVySzq1pfqzSqq2grX5Oc6dfjMPSDlp1yFeTaQQw9jRFUZvOILGzJ5b5R
-         Tc6wjKMjjAKB2XNABJQLGWROw09Z6F9Zuxjiy4LGgXmV/pqiAwYQOThXehCnqnwMoFfC
-         OC21W52Wl/afQTThmc90crDlSzfOhe914wQt66q11i8TydATSm7u5OSHvy2I6G+9zxmu
-         ovV5LLzhG4ke6IwzymznTUfcT0MXHIxA5M2+9avBnHlkshfd0ZcY8U04g9PyEmEt8Dup
-         we3A==
-X-Gm-Message-State: APjAAAXxX4BH700BpE9SSTXECHa/R+dc/XFW4I8sIzdWKSu0Q9pjqIeY
-        tN+t1I18/51ydJ8IiebhsLd0uZXSO/HYQPoQ4ok9OaVYR6om
-X-Google-Smtp-Source: APXvYqz5NCXreIdnYQdGhBkGQdho4Cjw9M7clGtOieGpTNyO+v/kCngHgT18s6Ee+84CHbD/K3d+HpY/brmlpOl2ap/3VTur9qP5
+        Tue, 20 Aug 2019 19:00:26 -0400
+Received: from mail-eopbgr750124.outbound.protection.outlook.com ([40.107.75.124]:2549
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726028AbfHTXA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 19:00:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=k2pSIxb3vGNFKQ2AGngvx1CC377QywYN4fJne9npi5p2BMfb4pP7WbXnH27BDhcCRuuIE+UjFrLMNDU/1/chzhHhReUSqbGmANlcTyuv5ItUa3/16GoPwDPz3/3jBcNCsNx0d//8CcT/++ob97OQfaru566WTBFuIJlY4mLoQssUGwme5Kw93u9Owu48WTDUif8v48UWX+hPWAS1SKuPww5bOekQcDIEcL72VQzFY0yZ/PuzBb4dcNCUk00GlEV7SLW5+isdh2eLJs0n0rMVll1fYtzmHZuDYlhk/0dHhJf89UiKFDi/TKrBnm01nrhkJMlMAOVvxO0C2suA/Yo7cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MR0VZaEZLdxY9z75jCWi0hPlqHKns2uqrzNdyNs772M=;
+ b=Rv47X1ElEXMypApuQAmRUmhMhi4D4HbqbWu3qMe/C6DQzocWREHKCkWz0WrVYoZNnUU4HGXtqhq5boAQSN9iOE/2kGr4WYZJMLNU9/B5PCmsOQw0HZmCNByhKiYJRXwbssVWlIh99KrPHWvMsnfPUVulKvfRIqWA/FhBfw7tVQNw/Er8IYoDQuAL4F4W5NBf42bC3f+oS0zx8vR0MkG2eJI/0EUPayIziGBcRppPPg8hh+PmQwRn733vQSA7jXIA0v9Pw45Fxjn29JJb3rw3J7tcB3gLBzd602l7HNRae+5QylGcztPrrgAm3OR7DsawiFR6yYsgHXWcEkWdnUiTOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MR0VZaEZLdxY9z75jCWi0hPlqHKns2uqrzNdyNs772M=;
+ b=cQHGdpTDEhUFY/WrRxUTVrfG3DYPzPwZ8wQpKTWs0rLVBeHFloVwVDn/1kYttbqbjTqqzSbn74PXrZ0d1SIlqIzBVempHrhd3ljFh/2vp0x0Kdl4h68Mj00hqPtnSaczIvcnbKwbtRSV5PhCuApMOiV8AsfN5gqPoioPIERxBiI=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1451.namprd21.prod.outlook.com (20.180.23.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.3; Tue, 20 Aug 2019 23:00:23 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::28a1:fa7:2ff:108b]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::28a1:fa7:2ff:108b%5]) with mapi id 15.20.2220.000; Tue, 20 Aug 2019
+ 23:00:23 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     David Miller <davem@davemloft.net>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "eranbe@mellanox.com" <eranbe@mellanox.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next,v2 2/6] PCI: hv: Add a Hyper-V PCI interface
+ driver for software backchannel interface
+Thread-Topic: [PATCH net-next,v2 2/6] PCI: hv: Add a Hyper-V PCI interface
+ driver for software backchannel interface
+Thread-Index: AQHVVsSabXkFF5JzvUOerk/7F+w+SqcEbZ2AgAA6XzA=
+Date:   Tue, 20 Aug 2019 23:00:22 +0000
+Message-ID: <DM6PR21MB1337D02F2DE44173AD64734DCAAB0@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1566242976-108801-1-git-send-email-haiyangz@microsoft.com>
+        <1566242976-108801-3-git-send-email-haiyangz@microsoft.com>
+ <20190820.122925.1080288470348205792.davem@davemloft.net>
+In-Reply-To: <20190820.122925.1080288470348205792.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-20T23:00:21.1479761Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=373ea2b7-f035-43cb-b372-7a26cd2ba4ab;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [12.235.16.3]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 43700d19-88a3-4728-3fd5-08d725c22e99
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1451;
+x-ms-traffictypediagnostic: DM6PR21MB1451:|DM6PR21MB1451:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR21MB14518A09D02C5330845547ACCAAB0@DM6PR21MB1451.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 013568035E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(199004)(189003)(13464003)(52536014)(66446008)(64756008)(66556008)(66476007)(476003)(229853002)(478600001)(22452003)(86362001)(53936002)(6116002)(316002)(3846002)(76116006)(6246003)(66946007)(256004)(74316002)(14444005)(4326008)(8990500004)(6916009)(10290500003)(7736002)(14454004)(486006)(25786009)(305945005)(10090500001)(33656002)(186003)(54906003)(2906002)(8936002)(26005)(71190400001)(71200400001)(9686003)(55016002)(5660300002)(76176011)(66066001)(7416002)(11346002)(102836004)(7696005)(8676002)(6436002)(81156014)(53546011)(6506007)(81166006)(99286004)(446003)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1451;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: J2k3WyFgNCv653qIxQw8OjEXZ9Vf2Niw/d0DeSx5LsvhGyw5+KbNnzsXc4GlmpMuU6lsNCmve/iR4HaFp5moQyQYKiix+f3Qa4AgPDHhbuKcTS6grs95PlBX0T9oNJp23Mt92JEFG/4kV4xOf+vvBhLMbY2dbVW7HB47Zr2QFMH8MM9Iq+TVvrUYCW2SRSP4Zy250E+c0d2uj+zSQmyKE4WwtM0pPhdkh2G2j8icmlvBXVCZsBvGesHyzwDcjzvqkO7w9Lcx1X3Kb7kTKBnbi+6RKwJMiB7yx5BC0qIU/Ng4y23R1oLrOr8n3V9XhL1fqTYO/YxwacPc0dLdVP93FtomaSZ199kKbQ0V4YrCpPhMmi6hRe7F2x0JilaKgEVeAE0bO4qU3UOjqchoWfY8c4X1Ocw0DS/2ksxMIBg1fZo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a02:a492:: with SMTP id d18mr6795099jam.27.1566341886589;
- Tue, 20 Aug 2019 15:58:06 -0700 (PDT)
-Date:   Tue, 20 Aug 2019 15:58:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bf410005909463ff@google.com>
-Subject: WARNING: refcount bug in cdev_get
-From:   syzbot <syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43700d19-88a3-4728-3fd5-08d725c22e99
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2019 23:00:23.0230
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NI7zPLD4aYFUkiduwJnPPrh90xcbk2AsnXaVBUNHSZW+H6y8iYbj9/URLq+CVD4Q6aC20JxKgzlvaFnyCNNxfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1451
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    2d63ba3e Merge tag 'pm-5.3-rc5' of git://git.kernel.org/pu..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=165d3302600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3ff364e429585cf2
-dashboard link: https://syzkaller.appspot.com/bug?extid=82defefbbd8527e1c2cb
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16c8ab3c600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16be0c4c600000
-
-Bisection is inconclusive: the bug happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11de3622600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15de3622600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-refcount_t: increment on 0; use-after-free.
-WARNING: CPU: 1 PID: 11828 at lib/refcount.c:156 refcount_inc_checked  
-lib/refcount.c:156 [inline]
-WARNING: CPU: 1 PID: 11828 at lib/refcount.c:156  
-refcount_inc_checked+0x61/0x70 lib/refcount.c:154
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 11828 Comm: syz-executor746 Not tainted 5.3.0-rc4+ #112
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2dc/0x755 kernel/panic.c:219
-  __warn.cold+0x20/0x4c kernel/panic.c:576
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:refcount_inc_checked lib/refcount.c:156 [inline]
-RIP: 0010:refcount_inc_checked+0x61/0x70 lib/refcount.c:154
-Code: 1d 8e c6 64 06 31 ff 89 de e8 ab 9c 35 fe 84 db 75 dd e8 62 9b 35 fe  
-48 c7 c7 00 05 c6 87 c6 05 6e c6 64 06 01 e8 67 26 07 fe <0f> 0b eb c1 90  
-90 90 90 90 90 90 90 90 90 90 55 48 89 e5 41 57 41
-RSP: 0018:ffff8880907d78b8 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815c2466 RDI: ffffed10120faf09
-RBP: ffff8880907d78c8 R08: ffff8880a771a200 R09: fffffbfff134ae48
-R10: fffffbfff134ae47 R11: ffffffff89a5723f R12: ffff88809ea2bb80
-R13: 0000000000000000 R14: ffff88809ff6cd40 R15: ffff8880a1c56480
-  kref_get include/linux/kref.h:45 [inline]
-  kobject_get+0x66/0xc0 lib/kobject.c:644
-  cdev_get+0x60/0xb0 fs/char_dev.c:355
-  chrdev_open+0xb0/0x6b0 fs/char_dev.c:400
-  do_dentry_open+0x4df/0x1250 fs/open.c:797
-  vfs_open+0xa0/0xd0 fs/open.c:906
-  do_last fs/namei.c:3416 [inline]
-  path_openat+0x10e9/0x4630 fs/namei.c:3533
-  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-  do_sys_open+0x3fe/0x5d0 fs/open.c:1089
-  __do_sys_open fs/open.c:1107 [inline]
-  __se_sys_open fs/open.c:1102 [inline]
-  __x64_sys_open+0x7e/0xc0 fs/open.c:1102
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x406311
-Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 a4 18 00 00 c3 48  
-83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 02 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007f047e1c0960 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000406311
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007f047e1c0970
-RBP: 6666666666666667 R08: 000000000000000f R09: 00007f047e1c1700
-R10: 00007f047e1c19d0 R11: 0000000000000293 R12: 00000000006dbc3c
-R13: 0000000000000000 R14: 0000000000000000 R15: 00000000317a7973
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> -----Original Message-----
+> From: David Miller <davem@davemloft.net>
+> Sent: Tuesday, August 20, 2019 3:29 PM
+> To: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: sashal@kernel.org; saeedm@mellanox.com; leon@kernel.org;
+> eranbe@mellanox.com; lorenzo.pieralisi@arm.com; bhelgaas@google.com;
+> linux-pci@vger.kernel.org; linux-hyperv@vger.kernel.org;
+> netdev@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; Stephen
+> Hemminger <sthemmin@microsoft.com>; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH net-next,v2 2/6] PCI: hv: Add a Hyper-V PCI interface
+> driver for software backchannel interface
+>=20
+> From: Haiyang Zhang <haiyangz@microsoft.com>
+> Date: Mon, 19 Aug 2019 19:30:47 +0000
+>=20
+> > +static void __exit exit_hv_pci_intf(void) {
+> > +	pr_info("unloaded\n");
+> > +}
+> > +
+> > +static int __init init_hv_pci_intf(void) {
+> > +	pr_info("loaded\n");
+> > +
+>=20
+> Clogging up the logs with useless messages like this is inappropriate.
+> Please remove these pr_info() calls.
+>=20
+> Also, all of these symbols should probably be GPL exported.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+I will update the patch -- remove the pr_info, and use EXPORT_SYMBOL_GPL()
+for the symbols.
+
+Thanks,
+- Haiyang
+
