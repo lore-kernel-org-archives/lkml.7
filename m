@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6891EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5689C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48D432332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E762339D
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbfHTQYx (ORCPT
+        id S1730571AbfHTQY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:24:53 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:26172 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730501AbfHTQYv (ORCPT
+        Tue, 20 Aug 2019 12:24:56 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:41572 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730548AbfHTQYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:24:51 -0400
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+        Tue, 20 Aug 2019 12:24:55 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
   Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
   envelope-from="Codrin.Ciubotariu@microchip.com";
   x-sender="Codrin.Ciubotariu@microchip.com";
   x-conformance=spf_only; x-record-type="v=spf1";
@@ -31,30 +31,30 @@ Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
   a:smtpout.microchip.com a:mx1.microchip.iphmx.com
   a:mx2.microchip.iphmx.com include:servers.mcsv.net
   include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
   authenticity information available from domain of
   postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
   envelope-from="Codrin.Ciubotariu@microchip.com";
   x-sender="postmaster@email.microchip.com";
   x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: k49LkA1PwSg7+FMtzkVOjczNQshEeVT+fu6ohcIPQDNFa01RfH6kmxtmk/KvjbkJP/IRyjBAzs
- 7uK97KFQKlrWYGbD6gYG4h4/DCTikO/aQKq4wGNPQX9aJE1kO9yrwyiN445EFHQp1xI1iIgJ1M
- h6B2Eoum47oe4N8AT6N3xTEe/XNlkzG4R6iSeb/qoHdayPS9dNIHJwzxesTpYawKLYIym4IxRW
- FRFXXLJ+dJQM5c8YWu2GiTddsMmrjLiPDBXVOsyf4vOSG4kD/YuktppH0kE3fHzsWj3X8feJLx
- soM=
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: dA6LfjsoAA4tvGSQdYKXhvAjM1EInVQmSH+DEaD3R2i64g3NRkK2BsgQdGdBanQ2Fe9NX0IqFI
+ 1GfBX8appVOUjJln3I4d0lDfl8JxDxrenODMp0NUCpU87VRLEnBpEEV/gferMaxHm0uRro2Fz0
+ bPvf69YtpsaX/Zym+Wc5YPS+FU/TT2DuinC1T8zrh/0AJKElmUfTPwz6tEIEla3uhLhLJWs2Ia
+ e/l4QqcW3RVIV8CkejmgGISG4OGi/ww4h4WpSh9IksPVNx86hCzP1GfIyXkcjYctbUU0LoGQgp
+ fHo=
 X-IronPort-AV: E=Sophos;i="5.64,408,1559545200"; 
-   d="scan'208";a="47246841"
+   d="scan'208";a="44306429"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Aug 2019 09:24:50 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Aug 2019 09:24:54 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 20 Aug 2019 09:24:50 -0700
+ 15.1.1713.5; Tue, 20 Aug 2019 09:24:53 -0700
 Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Tue, 20 Aug 2019 09:24:47 -0700
+ 15.1.1713.5 via Frontend Transport; Tue, 20 Aug 2019 09:24:50 -0700
 From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 To:     <alsa-devel@alsa-project.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -63,9 +63,9 @@ CC:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
         <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
         <ludovic.desroches@microchip.com>,
         Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Subject: [PATCH 2/3] ASoC: mchp-i2s-mcc: Fix unprepare of GCLK
-Date:   Tue, 20 Aug 2019 19:24:09 +0300
-Message-ID: <20190820162411.24836-2-codrin.ciubotariu@microchip.com>
+Subject: [PATCH 1/3] ASoC: mchp-i2s-mcc: Wait for RX/TX RDY only if controller is running
+Date:   Tue, 20 Aug 2019 19:24:10 +0300
+Message-ID: <20190820162411.24836-3-codrin.ciubotariu@microchip.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190820162411.24836-1-codrin.ciubotariu@microchip.com>
 References: <20190820162411.24836-1-codrin.ciubotariu@microchip.com>
@@ -77,50 +77,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If hw_free() gets called after hw_params(), GCLK remains prepared,
-preventing further use of it. This patch fixes this by unpreparing the
-clock in hw_free() or if hw_params() gets an error.
+Since hw_free() can be called multiple times and not just after a stop
+trigger command, we should check whether the RX or TX ready interrupt was
+truly enabled previously. For this, we assure that the condition of the
+wait event is always true, except when RX/TX interrupts are enabled.
 
 Fixes: 7e0cdf545a55 ("ASoC: mchp-i2s-mcc: add driver for I2SC Multi-Channel Controller")
 Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 ---
- sound/soc/atmel/mchp-i2s-mcc.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ sound/soc/atmel/mchp-i2s-mcc.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
 diff --git a/sound/soc/atmel/mchp-i2s-mcc.c b/sound/soc/atmel/mchp-i2s-mcc.c
-index 8272915fa09b..ab7d5f98e759 100644
+index 86495883ca3f..8272915fa09b 100644
 --- a/sound/soc/atmel/mchp-i2s-mcc.c
 +++ b/sound/soc/atmel/mchp-i2s-mcc.c
-@@ -670,8 +670,13 @@ static int mchp_i2s_mcc_hw_params(struct snd_pcm_substream *substream,
+@@ -686,22 +686,24 @@ static int mchp_i2s_mcc_hw_free(struct snd_pcm_substream *substream,
+ 		err = wait_event_interruptible_timeout(dev->wq_txrdy,
+ 						       dev->tx_rdy,
+ 						       msecs_to_jiffies(500));
++		if (err == 0) {
++			dev_warn_once(dev->dev,
++				      "Timeout waiting for Tx ready\n");
++			regmap_write(dev->regmap, MCHP_I2SMCC_IDRA,
++				     MCHP_I2SMCC_INT_TXRDY_MASK(dev->channels));
++			dev->tx_rdy = 1;
++		}
+ 	} else {
+ 		err = wait_event_interruptible_timeout(dev->wq_rxrdy,
+ 						       dev->rx_rdy,
+ 						       msecs_to_jiffies(500));
+-	}
+-
+-	if (err == 0) {
+-		u32 idra;
+-
+-		dev_warn_once(dev->dev, "Timeout waiting for %s\n",
+-			      is_playback ? "Tx ready" : "Rx ready");
+-		if (is_playback)
+-			idra = MCHP_I2SMCC_INT_TXRDY_MASK(dev->channels);
+-		else
+-			idra = MCHP_I2SMCC_INT_RXRDY_MASK(dev->channels);
+-		regmap_write(dev->regmap, MCHP_I2SMCC_IDRA, idra);
++		if (err == 0) {
++			dev_warn_once(dev->dev,
++				      "Timeout waiting for Rx ready\n");
++			regmap_write(dev->regmap, MCHP_I2SMCC_IDRA,
++				     MCHP_I2SMCC_INT_RXRDY_MASK(dev->channels));
++			dev->rx_rdy = 1;
++		}
  	}
  
- 	ret = regmap_write(dev->regmap, MCHP_I2SMCC_MRA, mra);
--	if (ret < 0)
-+	if (ret < 0) {
-+		if (dev->gclk_use) {
-+			clk_unprepare(dev->gclk);
-+			dev->gclk_use = 0;
-+		}
- 		return ret;
-+	}
- 	return regmap_write(dev->regmap, MCHP_I2SMCC_MRB, mrb);
- }
+ 	if (!mchp_i2s_mcc_is_running(dev)) {
+@@ -809,6 +811,8 @@ static int mchp_i2s_mcc_dai_probe(struct snd_soc_dai *dai)
  
-@@ -710,9 +715,13 @@ static int mchp_i2s_mcc_hw_free(struct snd_pcm_substream *substream,
- 		regmap_write(dev->regmap, MCHP_I2SMCC_CR, MCHP_I2SMCC_CR_CKDIS);
+ 	init_waitqueue_head(&dev->wq_txrdy);
+ 	init_waitqueue_head(&dev->wq_rxrdy);
++	dev->tx_rdy = 1;
++	dev->rx_rdy = 1;
  
- 		if (dev->gclk_running) {
--			clk_disable_unprepare(dev->gclk);
-+			clk_disable(dev->gclk);
- 			dev->gclk_running = 0;
- 		}
-+		if (dev->gclk_use) {
-+			clk_unprepare(dev->gclk);
-+			dev->gclk_use = 0;
-+		}
- 	}
+ 	snd_soc_dai_init_dma_data(dai, &dev->playback, &dev->capture);
  
- 	return 0;
 -- 
 2.20.1
 
