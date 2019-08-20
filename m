@@ -2,98 +2,122 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E7CC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6B4C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC9F22DA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038DB233A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 15:52:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IxyZsOWY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730764AbfHTPvj (ORCPT
+        id S1730778AbfHTPwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 11:51:39 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:33957 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729827AbfHTPvj (ORCPT
+        Tue, 20 Aug 2019 11:52:04 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48870 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729975AbfHTPwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 11:51:39 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Ta-xkxy_1566316283;
-Received: from bn0418deMacBook-Pro.local(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0Ta-xkxy_1566316283)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 20 Aug 2019 23:51:24 +0800
-Subject: Re: [PATCH v3 0/3] genirq/vfio: Introduce update_irq_devid and
- optimize VFIO irq ops
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        tao.ma@linux.alibaba.com, gerry@linux.alibaba.com,
-        nanhai.zou@linux.alibaba.com, linyunsheng@huawei.com
-References: <cover.1565857737.git.luoben@linux.alibaba.com>
- <20190819145150.2d30669b@x1.home>
- <a1a8f8bc-07c0-2304-8550-7c302704fa4e@linux.alibaba.com>
- <20190820092209.0c89effd@x1.home>
-From:   luoben <luoben@linux.alibaba.com>
-Message-ID: <4b2c76e3-91da-09b6-65f4-535828373c04@linux.alibaba.com>
-Date:   Tue, 20 Aug 2019 23:51:23 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Tue, 20 Aug 2019 11:52:04 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7KFpsoJ045457;
+        Tue, 20 Aug 2019 10:51:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566316314;
+        bh=mQmSNLiAv7WjKYdDgBHw/fTkrXppz3KpCW7IMW2zTlk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=IxyZsOWY2xz4tqMMdjkUH6AF732j0pa642USEgsIU3MigwDJMEK0oIKnwp31YyXum
+         gL6fnc6iHTvyvt8cvuSVvrvGhfr+lnuivglkOkSfA/Bi1cvwdF5A40STfuIp2jjGPQ
+         62nb12zB65wEzbuX8ubKSkCX62eqkhnV/K9p7VY8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7KFps2u076566
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 20 Aug 2019 10:51:54 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 20
+ Aug 2019 10:51:53 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 20 Aug 2019 10:51:53 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7KFprlX123421;
+        Tue, 20 Aug 2019 10:51:53 -0500
+Subject: Re: [PATCH v2 4/4] leds: lm3532: Add full scale current configuration
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <tony@atomide.com>, <sre@kernel.org>,
+        <nekit1000@gmail.com>, <mpartap@gmx.net>, <merlijn@wizzup.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190813181154.6614-1-dmurphy@ti.com>
+ <20190813181154.6614-4-dmurphy@ti.com> <20190819105519.GG21072@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <1f4efd9f-8234-161a-2c05-c5bae2720207@ti.com>
+Date:   Tue, 20 Aug 2019 10:51:44 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190820092209.0c89effd@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190819105519.GG21072@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Pavel
 
-在 2019/8/20 下午11:22, Alex Williamson 写道:
-> On Tue, 20 Aug 2019 12:03:50 +0800
-> luoben <luoben@linux.alibaba.com> wrote:
+Thanks for the review
+
+On 8/19/19 5:55 AM, Pavel Machek wrote:
+> Hi!
 >
->> 在 2019/8/20 上午4:51, Alex Williamson 写道:
->>> On Thu, 15 Aug 2019 21:02:58 +0800
->>> Ben Luo <luoben@linux.alibaba.com> wrote:
->>>   
->>>> Currently, VFIO takes a lot of free-then-request-irq actions whenever
->>>> a VM (with device passthru via VFIO) sets irq affinity or mask/unmask
->>>> irq. Those actions only change the cookie data of irqaction or even
->>>> change nothing. The free-then-request-irq not only adds more latency,
->>>> but also increases the risk of losing interrupt, which may lead to a
->>>> VM hung forever in waiting for IO completion
->>> What guest environment is generating this?  Typically I don't see that
->>> Windows or Linux guests bounce the interrupt configuration much.
->>> Thanks,
->>>
->>> Alex
->> By tracing centos5u8 on host, I found it keep masking and unmasking
->> interrupt like this:
+>> Allow the full scale current to be configured at init.
+>> Valid rangles are 5mA->29.8mA.
 >>
->> [1566032533709879] index:28 irte_hi:000000010004a601
->> irte_lo:adb54bc000b98001
->> [1566032533711242] index:28 irte_hi:0000000000000000
->> irte_lo:0000000000000000
->> [1566032533711258] index:28 irte_hi:000000000004a601
->> irte_lo:00003fff00ac002d
->> [1566032533711269] index:28 irte_hi:000000000004a601
->> irte_lo:00003fff00ac002d
-> [snip]
->> "[1566032533720007]" is timestamp in μs, so centos5u8 tiggers 30+ irte
->> modification within 10ms
-> Ok, that matches my understanding that only very old guests behave in
-> this manner.  It's a curious case to optimize as RHEL5 is in extended
-> life-cycle support, with regular maintenance releases ending 2+ years
-> ago.  Thanks,
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> @@ -121,6 +125,7 @@ struct lm3532_als_data {
+>>    * @mode - Mode of the LED string
+>>    * @ctrl_brt_pointer - Zone target register that controls the sink
+>>    * @num_leds - Number of LED strings are supported in this array
+>> + * @full_scale_current - The full-scale current setting for the current sink.
+>>    * @led_strings - The LED strings supported in this array
+>>    * @label - LED label
+>>    */
+>> @@ -130,8 +135,9 @@ struct lm3532_led {
+>>   
+>>   	int control_bank;
+>>   	int mode;
+>> -	int ctrl_brt_pointer;
+>>   	int num_leds;
+>> +	int ctrl_brt_pointer;
+>> +	int full_scale_current;
+>>   	u32 led_strings[LM3532_MAX_CONTROL_BANKS];
+>>   	char label[LED_MAX_NAME_SIZE];
+>>   };
+> No need to move ctrl_brt_pointer... to keep order consistent with docs.
+
+OK I will reset the patches and get rid of that change.� I think this 
+got moved when I applied the v1 patch.
+
+
+>> +		fs_current_val = led->full_scale_current - LM3532_FS_CURR_MIN /
+>> +				 LM3532_FS_CURR_STEP;
+> The computation is wrong ... needs () AFAICT.
+
+Hmm. Doesn't order of operations take precedence?
+
+I will add the () unless checkpatch cribs about them
+
+Dan
+
+
 >
-> Alex
-
-But repeatedly set interrupt affinity in a new version guest can also 
-cause the problem.
-
-
-Thanks,
-
-     Ben
-
+> Best regards,
+> 									Pavel
