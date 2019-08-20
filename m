@@ -2,82 +2,139 @@ Return-Path: <SRS0=Exau=WQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB3EC3A589
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFD0C3A589
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D44B22DD6
-	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E3522CE3
+	for <linux-kernel@archiver.kernel.org>; Tue, 20 Aug 2019 16:28:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VNtmQN9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730142AbfHTQ1p (ORCPT
+        id S1730215AbfHTQ26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 12:27:45 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39422 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbfHTQ1o (ORCPT
+        Tue, 20 Aug 2019 12:28:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58856 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbfHTQ25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:27:44 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: dafna)
-        with ESMTPSA id 686E4283D55
-Message-ID: <26b78fe57106f47d34f14bec2f81732af40c3d8d.camel@collabora.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: arm: imx: add imx8mq nitrogen
- support
-From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com,
-        Gary Bisson <gary.bisson@boundarydevices.com>,
-        Troy Kisky <troy.kisky@boundarydevices.com>
-Date:   Tue, 20 Aug 2019 18:27:39 +0200
-In-Reply-To: <CAL_JsqJx6pTw7Pr=7f0jkC81JF+EDkyhHrvFehSWZV=0wy+YXQ@mail.gmail.com>
-References: <20190819172606.6410-1-dafna.hirschfeld@collabora.com>
-         <20190819172606.6410-2-dafna.hirschfeld@collabora.com>
-         <CAL_JsqJx6pTw7Pr=7f0jkC81JF+EDkyhHrvFehSWZV=0wy+YXQ@mail.gmail.com>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 20 Aug 2019 12:28:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HsG/F7Ogp9T1fgqikVwPMPM6wzzJxLkwajIeWfgFhs0=; b=VNtmQN9j07SQ46nnjhC0A8lTn
+        F69eYG3Lfxt+UvCsXGRS5wNwHK1zbLiDIo58EKAFtJg9XTEw2d2Oon69C4+FPws5ixhpBL1keqcn4
+        XyV1r7ihK3pxWJJNfvM2Uc40myT96KXuJZqVcVTbWJANBZQclRu+PNLfaj1Zcr4WL08c8VDrvMyWy
+        mldKUQ4p76bvlW1yvw00YjEoE5TM6lNrcnrrKjRsfIg4lbpLv15caps8ZKTe5OQSUDCgjPQ9TK0Pa
+        PNBULtASBuCu8mIiXPSKSrLAPx5e/xwKenYXimha8Rb/Lm1sdFtz4JHpf70c4HjmmWh4CWe5vWI6/
+        OHKASCizg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i070C-0006uR-IM; Tue, 20 Aug 2019 16:28:56 +0000
+Date:   Tue, 20 Aug 2019 09:28:56 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
+        arnd@arndb.de
+Subject: Re: [PATCH v8 08/20] adfs: Fill in max and min timestamps in sb
+Message-ID: <20190820162856.GA21274@bombadil.infradead.org>
+References: <20190818165817.32634-1-deepa.kernel@gmail.com>
+ <20190818165817.32634-9-deepa.kernel@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190818165817.32634-9-deepa.kernel@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-08-19 at 14:08 -0500, Rob Herring wrote:
-> On Mon, Aug 19, 2019 at 12:26 PM Dafna Hirschfeld
-> <dafna.hirschfeld@collabora.com> wrote:
-> > From: Gary Bisson <gary.bisson@boundarydevices.com>
-> > 
-> > The Nitrogen8M is an ARM based single board computer (SBC)
-> > designed to leverage the full capabilities of NXP’s i.MX8M
-> > Quad processor.
-> > 
-> > Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
-> > Signed-off-by: Troy Kisky <troy.kisky@boundarydevices.com>
-> > [Dafna: porting vendor's code to mainline]
-> > Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> 
-> Please add acks/reviewed-bys when posting new versions.
-> 
-Hi,
-Thank you for the remark, I forgot to add it. I will add it in the
-next.
-Regards,
-Dafna Hirschfeld
+On Sun, Aug 18, 2019 at 09:58:05AM -0700, Deepa Dinamani wrote:
+> Note that the min timestamp is assumed to be
+> 01 Jan 1970 00:00:00 (Unix epoch). This is consistent
+> with the way we convert timestamps in adfs_adfs2unix_time().
 
-> Rob
+That's not actually correct.  RISC OS timestamps are centiseconds since
+1900 stored in 5 bytes.
 
+> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> ---
+>  fs/adfs/adfs.h  | 13 +++++++++++++
+>  fs/adfs/inode.c |  8 ++------
+>  fs/adfs/super.c |  2 ++
+>  3 files changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/adfs/adfs.h b/fs/adfs/adfs.h
+> index b7e844d2f321..dca8b23aa43f 100644
+> --- a/fs/adfs/adfs.h
+> +++ b/fs/adfs/adfs.h
+> @@ -3,6 +3,19 @@
+>  #include <linux/fs.h>
+>  #include <linux/adfs_fs.h>
+>  
+> +/*
+> + * 01 Jan 1970 00:00:00 (Unix epoch) as seconds since
+> + * 01 Jan 1900 00:00:00 (RISC OS epoch)
+> + */
+> +#define RISC_OS_EPOCH_DELTA 2208988800LL
+> +
+> +/*
+> + * Convert 40 bit centi seconds to seconds
+> + * since 01 Jan 1900 00:00:00 (RISC OS epoch)
+> + * The result is 2248-06-03 06:57:57 GMT
+> + */
+> +#define ADFS_MAX_TIMESTAMP ((0xFFFFFFFFFFLL / 100) - RISC_OS_EPOCH_DELTA)
+> +
+>  /* Internal data structures for ADFS */
+>  
+>  #define ADFS_FREE_FRAG		 0
+> diff --git a/fs/adfs/inode.c b/fs/adfs/inode.c
+> index 124de75413a5..41eca1c451dc 100644
+> --- a/fs/adfs/inode.c
+> +++ b/fs/adfs/inode.c
+> @@ -167,11 +167,7 @@ static void
+>  adfs_adfs2unix_time(struct timespec64 *tv, struct inode *inode)
+>  {
+>  	unsigned int high, low;
+> -	/* 01 Jan 1970 00:00:00 (Unix epoch) as nanoseconds since
+> -	 * 01 Jan 1900 00:00:00 (RISC OS epoch)
+> -	 */
+> -	static const s64 nsec_unix_epoch_diff_risc_os_epoch =
+> -							2208988800000000000LL;
+> +	static const s64 nsec_unix_epoch_diff_risc_os_epoch = RISC_OS_EPOCH_DELTA * NSEC_PER_SEC;
+>  	s64 nsec;
+>  
+>  	if (!adfs_inode_is_stamped(inode))
+> @@ -216,7 +212,7 @@ adfs_unix2adfs_time(struct inode *inode, unsigned int secs)
+>  	if (adfs_inode_is_stamped(inode)) {
+>  		/* convert 32-bit seconds to 40-bit centi-seconds */
+>  		low  = (secs & 255) * 100;
+> -		high = (secs / 256) * 100 + (low >> 8) + 0x336e996a;
+> +		high = (secs / 256) * 100 + (low >> 8) + (RISC_OS_EPOCH_DELTA*100/256);
+>  
+>  		ADFS_I(inode)->loadaddr = (high >> 24) |
+>  				(ADFS_I(inode)->loadaddr & ~0xff);
+> diff --git a/fs/adfs/super.c b/fs/adfs/super.c
+> index 65b04ebb51c3..f074fe7d7158 100644
+> --- a/fs/adfs/super.c
+> +++ b/fs/adfs/super.c
+> @@ -463,6 +463,8 @@ static int adfs_fill_super(struct super_block *sb, void *data, int silent)
+>  	asb->s_map_size		= dr->nzones | (dr->nzones_high << 8);
+>  	asb->s_map2blk		= dr->log2bpmb - dr->log2secsize;
+>  	asb->s_log2sharesize	= dr->log2sharesize;
+> +	sb->s_time_min		= 0;
+> +	sb->s_time_max		= ADFS_MAX_TIMESTAMP;
+>  
+>  	asb->s_map = adfs_read_map(sb, dr);
+>  	if (IS_ERR(asb->s_map)) {
+> -- 
+> 2.17.1
+> 
