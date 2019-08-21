@@ -2,215 +2,99 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757E5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D6EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4296E216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B15D216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:15:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QBA+dCN6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbfHUPPg (ORCPT
+        id S1728017AbfHUPPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:15:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55966 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727395AbfHUPPf (ORCPT
+        Wed, 21 Aug 2019 11:15:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56574 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbfHUPPz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:15:35 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1i0SKg-0007vO-3d; Wed, 21 Aug 2019 17:15:30 +0200
-Date:   Wed, 21 Aug 2019 17:15:30 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Alexander Dahl <ada@thorsis.com>, linux-rt-users@vger.kernel.org,
+        Wed, 21 Aug 2019 11:15:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=iVHDhSA41pY3KOKvtbWLUEDzU5HZlZ5F6SW53D0z32I=; b=QBA+dCN6KNJgiRleSHdwLzok/
+        yU6238OA3P2HZLowgurEMrfBgCOoTpgz1w475l8tO9zEPLAS5F65blzedJvKy1f9t7WQImHmdo3y2
+        HKrohpsKZOW/5rQA8vf3t+UkXMEUKyK/2FWv0Y4dXQgTiv308iPEd3FdcJ5o5SsiBlggGHdnU2Y2n
+        UMfaBDCbVcicSx4EQLk74L7imSOZ5sZtVOHJWAlFDULCTdhOq0fcJvwC4ZIYpxk7v+Krk9kgTQCSW
+        jZlokkVEKcdsgnNcqxVs9n1HjjF7S1FH0Ya1YnWDSUXA2TJMSPboxjyVxpzxVQ55+uKVF3gCXwz+/
+        ULG7smB+w==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0SKu-0006hk-DY; Wed, 21 Aug 2019 15:15:44 +0000
+Date:   Wed, 21 Aug 2019 08:15:44 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [ANNOUNCE] v5.2.9-rt3
-Message-ID: <20190821151529.42rwd5lkzknv7ti2@linutronix.de>
-References: <20190816153616.fbridfzjkmfg4dnr@linutronix.de>
- <2182739.9IRgZpf3R8@ada>
- <20190820154418.GM3545@piout.net>
- <20190821132553.gjvya5lu6j2dfyo5@linutronix.de>
- <20190821142110.GC27031@piout.net>
- <20190821144230.knlyrnxz62d75hcb@linutronix.de>
- <20190821145837.GD27031@piout.net>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: consolidate pgtable_cache_init() and pgd_cache_init()
+Message-ID: <20190821151544.GC28819@bombadil.infradead.org>
+References: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190821145837.GD27031@piout.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-21 16:58:37 [+0200], Alexandre Belloni wrote:
-> On 21/08/2019 16:42:30+0200, Sebastian Andrzej Siewior wrote:
-> > On 2019-08-21 16:21:10 [+0200], Alexandre Belloni wrote:
-> > > I'm not sure it is worth it as the issue is introduced by
-> > > clocksource-tclib-allow-higher-clockrates.patch. Shouldn't we fix it
-> > > directly?
-> > 
-> > you want to get rid of CONFIG_ATMEL_TCB_CLKSRC_USE_SLOW_CLOCK and use
-> > the highest possible frequency by default? 
-> > 
-> 
-> No, I meant the issue fixed by clocksource-tclib-add-proper-depend.patch
-> is introduced by clocksource-tclib-allow-higher-clockrates.patch so I
-> would think fixing clocksource-tclib-allow-higher-clockrates.patch is
-> preferable than having a separate patch.
-> 
-> But maybe you meant you wanted a patch to fix
-> clocksource-tclib-allow-higher-clockrates.patch
+On Wed, Aug 21, 2019 at 06:06:58PM +0300, Mike Rapoport wrote:
+> +++ b/arch/alpha/include/asm/pgtable.h
+> @@ -362,7 +362,6 @@ extern void paging_init(void);
+>  /*
+>   * No page table caches to initialise
+>   */
+> -#define pgtable_cache_init()	do { } while (0)
 
-got it. So clocksource-tclib-allow-higher-clockrates.patch becomes:
+Delete the comment too?
 
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -424,11 +424,18 @@ config ATMEL_ST
- 
- config ATMEL_TCB_CLKSRC
- 	bool "Atmel TC Block timer driver" if COMPILE_TEST
--	depends on HAS_IOMEM
-+	depends on HAS_IOMEM && ATMEL_TCLIB
- 	select TIMER_OF if OF
- 	help
- 	  Support for Timer Counter Blocks on Atmel SoCs.
- 
-+config ATMEL_TCB_CLKSRC_USE_SLOW_CLOCK
-+	bool "TC Block use 32 KiHz clock"
-+	depends on ATMEL_TCB_CLKSRC
-+	default y
-+	help
-+	  Select this to use 32 KiHz base clock rate as TC block clock.
-+
- config CLKSRC_EXYNOS_MCT
- 	bool "Exynos multi core timer driver" if COMPILE_TEST
- 	depends on ARM || ARM64
---- a/drivers/clocksource/timer-atmel-tcb.c
-+++ b/drivers/clocksource/timer-atmel-tcb.c
-@@ -27,8 +27,7 @@
-  *     this 32 bit free-running counter. the second channel is not used.
-  *
-  *   - The third channel may be used to provide a 16-bit clockevent
-- *     source, used in either periodic or oneshot mode.  This runs
-- *     at 32 KiHZ, and can handle delays of up to two seconds.
-+ *     source, used in either periodic or oneshot mode.
-  *
-  * REVISIT behavior during system suspend states... we should disable
-  * all clocks and save the power.  Easily done for clockevent devices,
-@@ -131,6 +130,7 @@ struct tc_clkevt_device {
- 	struct clock_event_device	clkevt;
- 	struct clk			*clk;
- 	bool				clk_enabled;
-+	u32				freq;
- 	void __iomem			*regs;
- };
- 
-@@ -139,13 +139,6 @@ static struct tc_clkevt_device *to_tc_cl
- 	return container_of(clkevt, struct tc_clkevt_device, clkevt);
- }
- 
--/* For now, we always use the 32K clock ... this optimizes for NO_HZ,
-- * because using one of the divided clocks would usually mean the
-- * tick rate can never be less than several dozen Hz (vs 0.5 Hz).
-- *
-- * A divided clock could be good for high resolution timers, since
-- * 30.5 usec resolution can seem "low".
-- */
- static u32 timer_clock;
- 
- static void tc_clk_disable(struct clock_event_device *d)
-@@ -195,7 +188,7 @@ static int tc_set_oneshot(struct clock_e
- 
- 	tc_clk_enable(d);
- 
--	/* slow clock, count up to RC, then irq and stop */
-+	/* count up to RC, then irq and stop */
- 	writel(timer_clock | ATMEL_TC_CPCSTOP | ATMEL_TC_WAVE |
- 		     ATMEL_TC_WAVESEL_UP_AUTO, regs + ATMEL_TC_REG(2, CMR));
- 	writel(ATMEL_TC_CPCS, regs + ATMEL_TC_REG(2, IER));
-@@ -217,10 +210,10 @@ static int tc_set_periodic(struct clock_
- 	 */
- 	tc_clk_enable(d);
- 
--	/* slow clock, count up to RC, then irq and restart */
-+	/* count up to RC, then irq and restart */
- 	writel(timer_clock | ATMEL_TC_WAVE | ATMEL_TC_WAVESEL_UP_AUTO,
- 		     regs + ATMEL_TC_REG(2, CMR));
--	writel((32768 + HZ / 2) / HZ, tcaddr + ATMEL_TC_REG(2, RC));
-+	writel((tcd->freq + HZ / 2) / HZ, tcaddr + ATMEL_TC_REG(2, RC));
- 
- 	/* Enable clock and interrupts on RC compare */
- 	writel(ATMEL_TC_CPCS, regs + ATMEL_TC_REG(2, IER));
-@@ -246,7 +239,11 @@ static struct tc_clkevt_device clkevt =
- 		.features		= CLOCK_EVT_FEAT_PERIODIC |
- 					  CLOCK_EVT_FEAT_ONESHOT,
- 		/* Should be lower than at91rm9200's system timer */
-+#ifdef CONFIG_ATMEL_TCB_CLKSRC_USE_SLOW_CLOCK
- 		.rating			= 125,
-+#else
-+		.rating			= 200,
-+#endif
- 		.set_next_event		= tc_next_event,
- 		.set_state_shutdown	= tc_shutdown_clk_off,
- 		.set_state_periodic	= tc_set_periodic,
-@@ -268,8 +265,9 @@ static irqreturn_t ch2_irq(int irq, void
- 	return IRQ_NONE;
- }
- 
--static int __init setup_clkevents(struct atmel_tc *tc, int clk32k_divisor_idx)
-+static int __init setup_clkevents(struct atmel_tc *tc, int divisor_idx)
- {
-+	unsigned divisor = atmel_tc_divisors[divisor_idx];
- 	int ret;
- 	struct clk *t2_clk = tc->clk[2];
- 	int irq = tc->irq[2];
-@@ -290,7 +288,11 @@ static int __init setup_clkevents(struct
- 	clkevt.regs = tc->regs;
- 	clkevt.clk = t2_clk;
- 
--	timer_clock = clk32k_divisor_idx;
-+	timer_clock = divisor_idx;
-+	if (!divisor)
-+		clkevt.freq = 32768;
-+	else
-+		clkevt.freq = clk_get_rate(t2_clk) / divisor;
- 
- 	clkevt.clkevt.cpumask = cpumask_of(0);
- 
-@@ -301,7 +303,7 @@ static int __init setup_clkevents(struct
- 		return ret;
- 	}
- 
--	clockevents_config_and_register(&clkevt.clkevt, 32768, 1, 0xffff);
-+	clockevents_config_and_register(&clkevt.clkevt, clkevt.freq, 1, 0xffff);
- 
- 	return ret;
- }
-@@ -477,7 +479,11 @@ static int __init tcb_clksrc_init(struct
- 		goto err_disable_t1;
- 
- 	/* channel 2:  periodic and oneshot timer support */
-+#ifdef CONFIG_ATMEL_TCB_CLKSRC_USE_SLOW_CLOCK
- 	ret = setup_clkevents(&tc, clk32k_divisor_idx);
-+#else
-+	ret = setup_clkevents(&tc, best_divisor_idx);
-+#endif
- 	if (ret)
- 		goto err_unregister_clksrc;
- 
+> +++ b/arch/arc/include/asm/pgtable.h
+> @@ -398,7 +398,6 @@ void update_mmu_cache(struct vm_area_struct *vma, unsigned long address,
+>  /*
+>   * No page table caches to initialise
+>   */
+> -#define pgtable_cache_init()   do { } while (0)
 
+ditto
 
-> 
-> Hopefully, one day we will have a solution for that upstream (i.e. being
-> able to configure the clocksource and clockevent resolutions).
+> +++ b/arch/arm/include/asm/pgtable.h
+> @@ -368,7 +368,6 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+>  #define HAVE_ARCH_UNMAPPED_AREA
+>  #define HAVE_ARCH_UNMAPPED_AREA_TOPDOWN
+>  
+> -#define pgtable_cache_init() do { } while (0)
+>  
+>  #endif /* !__ASSEMBLY__ */
 
-Hopefully.
+delete one of the two blank lines?
 
-Sebastian
+> +++ b/arch/c6x/include/asm/pgtable.h
+> @@ -62,7 +62,6 @@ extern unsigned long empty_zero_page;
+>  /*
+>   * No page table caches to initialise
+>   */
+> -#define pgtable_cache_init()   do { } while (0)
+
+delete comment ... more of these.
+
