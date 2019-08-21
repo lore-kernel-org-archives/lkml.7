@@ -2,86 +2,179 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AB6C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89F5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF70206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:06:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566396396;
-	bh=k2aeA+9t09Cog1Nk1UWhL5LKdkxcT9cppvMiVBygP+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V3wWAz62yE6qOZ/DSCT4OfpoNU7DB9aBayhOSc/bAJgkKDy84GDqbVP1ZmZlZgu//
-	 bvQHA8MO2OJ46cGyCO5sY1+A2+BGE7taLtFKwgOqk2GuKuZv8XnWQlwBrgvbRc9EKS
-	 lBYLNs3NMHivPf9go+IzdCfhy2esXTNDVbKfQeYs=
+	by mail.kernel.org (Postfix) with ESMTP id 72849233FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:07:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="C+heZauL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfHUOGf (ORCPT
+        id S1729212AbfHUOHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:06:35 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58646 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727949AbfHUOGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:06:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7C940AF59;
-        Wed, 21 Aug 2019 14:06:33 +0000 (UTC)
-Date:   Wed, 21 Aug 2019 16:06:32 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
-        mgorman@techsingularity.net, dan.j.williams@intel.com,
-        osalvador@suse.de, richard.weiyang@gmail.com, hannes@cmpxchg.org,
-        arunks@codeaurora.org, rppt@linux.vnet.ibm.com, jgg@ziepe.ca,
-        amir73il@gmail.com, alexander.h.duyck@linux.intel.com,
-        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] Add predictive memory reclamation and compaction
-Message-ID: <20190821140632.GI3111@dhcp22.suse.cz>
-References: <20190813014012.30232-1-khalid.aziz@oracle.com>
- <20190813140553.GK17933@dhcp22.suse.cz>
- <3cb0af00-f091-2f3e-d6cc-73a5171e6eda@oracle.com>
- <20190814085831.GS17933@dhcp22.suse.cz>
- <d3895804-7340-a7ae-d611-62913303e9c5@oracle.com>
- <20190815170215.GQ9477@dhcp22.suse.cz>
- <2668ad2e-ee52-8c88-22c0-1952243af5a1@oracle.com>
+        Wed, 21 Aug 2019 10:07:11 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38776 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727949AbfHUOHL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 10:07:11 -0400
+Received: by mail-wm1-f67.google.com with SMTP id m125so2280015wmm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:07:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=oUhjfRkjOGkm9ELzvijHUs/x1QUpKZ8wRrXOGiFDrl8=;
+        b=C+heZauLukh60cWDzfa0hZEScY0R5vbFGyajHX7r+rrvVZ8x3xOq5KVn68h30idUA8
+         tYXFdcCsZWufZSKVaXmgKNKsuQL2ZA4/A82Y9dJ6hQdosvFI6A6Vsh3DoaF2aCfc8PBp
+         0huL2JdO2CwxqSwE+kRkRLjOKdyFnOC1ZFx/xSboA7aR1cGtA1cRev8qX9s+qrfI7jc4
+         IgC7uB/kHu4lY+iyq0nanNeNCv07SJauPqYr/WtFnw394RusIssBK6BDEkFuBUL//Tu8
+         1FzuYopdojlLU41ywE7CUxPhpqVvhXb6sR8RUlF0+/caXO0M7RvoppcHXSuCt2OHOgf7
+         s+TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=oUhjfRkjOGkm9ELzvijHUs/x1QUpKZ8wRrXOGiFDrl8=;
+        b=koHrlNNT/sMjxAIBbGyCDIz8AjD4LAnU3icVjqafvtFReO71Tmsg9yDfb4uMGAWb5n
+         JcvTUVS6LKE5UJNpOX1//Qx9eDjf6MrQxWbjW1uiQZ+Dmvv3Kqo1fSMCPaP1uTTycO+r
+         LfdyocYcxiW5oelkL+Sd9erHzgL65Y4agDC484tf/Na+kwEbMnqVjxz5o9Bv77xaIyxj
+         vRiKLJgdZ8f8tqGTy73e3CtdW0YIggVzNL4Usbbo6/TN29bq55OEFx4qiUQNBsFF691O
+         W1NauzOoYqfWdw1jV0b/6+tPBuhs0qTGUavgrbXXExzUOb29BkprSCDdtUYE1clPQ6J1
+         Lwdw==
+X-Gm-Message-State: APjAAAX0P6gKougl8PMhEfMbk66w3rk6q2KEF652bYmJ2vgnFCzZExX5
+        QnzkdDwIACR244yvGduP0AvzHA==
+X-Google-Smtp-Source: APXvYqxAAvjBc6PJvYfBvaR4OV8QOikUPN082WzSWa6tjG63CeieKvh07gvoK1hVcvFEgPHEOU8ytw==
+X-Received: by 2002:a1c:eb0a:: with SMTP id j10mr194381wmh.125.1566396427902;
+        Wed, 21 Aug 2019 07:07:07 -0700 (PDT)
+Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id 91sm65886784wrp.3.2019.08.21.07.07.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 07:07:07 -0700 (PDT)
+Subject: Re: [PATCH 08/14] arm64: dts: meson-gxl: fix internal phy compatible
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        jbrunet@baylibre.com
+Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+References: <20190814142918.11636-1-narmstrong@baylibre.com>
+ <20190814142918.11636-9-narmstrong@baylibre.com>
+ <CAFBinCAyhfk1wq0ejXazTWQ=eNqDROauB_Kbc80+ekPQ7oB9Ww@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <ba66449e-504c-2937-bc68-1d2b5b03d6b9@baylibre.com>
+Date:   Wed, 21 Aug 2019 16:07:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2668ad2e-ee52-8c88-22c0-1952243af5a1@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFBinCAyhfk1wq0ejXazTWQ=eNqDROauB_Kbc80+ekPQ7oB9Ww@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 15-08-19 14:51:04, Khalid Aziz wrote:
-> Hi Michal,
+On 20/08/2019 22:38, Martin Blumenstingl wrote:
+> adding Jerome
 > 
-> The smarts for tuning these knobs can be implemented in userspace and
-> more knobs added to allow for what is missing today, but we get back to
-> the same issue as before. That does nothing to make kernel self-tuning
-> and adds possibly even more knobs to userspace. Something so fundamental
-> to kernel memory management as making free pages available when they are
-> needed really should be taken care of in the kernel itself. Moving it to
-> userspace just means the kernel is hobbled unless one installs and tunes
-> a userspace package correctly.
+> On Wed, Aug 14, 2019 at 4:31 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> This fixes the following DT schemas check errors:
+>> meson-gxl-s805x-libretech-ac.dt.yaml: ethernet-phy@8: compatible: ['ethernet-phy-id0181.4400', 'ethernet-phy-ieee802.3-c22'] is not valid under any of the given schemas
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+>> index ee1ecdbcc958..43eb158bee24 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+>> @@ -709,7 +709,7 @@
+>>                         #size-cells = <0>;
+>>
+>>                         internal_phy: ethernet-phy@8 {
+>> -                               compatible = "ethernet-phy-id0181.4400", "ethernet-phy-ieee802.3-c22";
+>> +                               compatible = "ethernet-phy-id0181.4400";
+> on G12A there was a specific reason (iirc it was because the PHY ID
+> can be any arbitrary value programmed into some register) why we added
+> it with a compatible string
+> Jerome, do we have the same situation on GXL/GXM as well?
 
-From my past experience the existing autotunig works mostly ok for a
-vast variety of workloads. A more clever tuning is possible and people
-are doing that already. Especially for cases when the machine is heavily
-overcommited. There are different ways to achieve that. Your new
-in-kernel auto tuning would have to be tested on a large variety of
-workloads to be proven and riskless. So I am quite skeptical to be
-honest.
+Yes the ID in encoded in the register, but we use the very basic mmio mux, but we should
+switch to the same g12a-mdio-mux at some point..
 
-Therefore I would really focus on discussing whether we have sufficient
-APIs to tune the kernel to do the right thing when needed. That requires
-to identify gaps in that area.
--- 
-Michal Hocko
-SUSE Labs
+=> infinite TODO list !
+
+Neil
+
+> 
+> if not I prefer to drop the compatible string because it's probably
+> from a time where the PHY dt-bindings stated "add the PHY ID
+> compatible string if you know it" while the actual suggestion was
+> "only add it if reading the ID doesn't work for some reason"
+> 
+> 
+> Martin
+> 
+
