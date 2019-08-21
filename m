@@ -2,148 +2,119 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071DAC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B414C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA65F22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2899322CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:56:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="d0hkI4ZV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hadrons.org header.i=@hadrons.org header.b="msEuF30t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfHUDz5 (ORCPT
+        id S1727425AbfHUD4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 23:55:57 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:17887 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbfHUDzy (ORCPT
+        Tue, 20 Aug 2019 23:56:00 -0400
+Received: from 2.152.176.113.dyn.user.ono.com ([2.152.176.113]:36802 "EHLO
+        pulsar.hadrons.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727343AbfHUDz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 23:55:54 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x7L3tQp5016439;
-        Wed, 21 Aug 2019 12:55:29 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x7L3tQp5016439
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566359730;
-        bh=MnhKYcrz1ZD1zZa0FQ/c4pPVdWC1IqleRXHvTqLaiVQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d0hkI4ZVlWSQhA/kTYjAskk14fPWedG83kSrOlAXCBiuI8K3IFtSSzNbsi1T2Hxr4
-         L04gF3acSarHsw3tdC42LSOhYcbzhuzSgMRFGrt/3zcOL5mtbH8x0hlsiGoL+sZ4sr
-         0rpIDFni5/Hq8Q05VU5d5hdNnuvKXrGm0jFzxv4tvc15BpKZQw5BpTCUM7rpbNapGv
-         jqfAfQJ7/zj29cxu/I8xaQSB+PgqEaVFlh18jpJP9HVoqzpGdqt3Kk5CE8ZOw95P+b
-         jHbyOf7glfz/UycS8RpD1z99pWzxoWQcaDIibheQl0BP3a0nkjFG/Y8zbbXFnxJ3TF
-         cQ0nI+S/tbbOw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] video/logo: move pnmtologo tool to drivers/video/logo/ from scripts/
-Date:   Wed, 21 Aug 2019 12:55:16 +0900
-Message-Id: <20190821035517.21671-5-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190821035517.21671-1-yamada.masahiro@socionext.com>
-References: <20190821035517.21671-1-yamada.masahiro@socionext.com>
+        Tue, 20 Aug 2019 23:55:57 -0400
+X-Greylist: delayed 1074 seconds by postgrey-1.27 at vger.kernel.org; Tue, 20 Aug 2019 23:55:56 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hadrons.org
+        ; s=201908; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
+        Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Y/aHT4MYLaye6HK+sQi6zX4qI4fkCoiILg3MznRvPso=; b=msEuF30t8SwyqIY71h/bo34ebC
+        oZgNFChUPgMS3OvuOXcpTZj434SxKIDn31LeeZZ16jQM/wECsWgZPrbYIY3Ruwal8Q0MBvFlxl8sr
+        INOGtofV2CcTLl3bMFJsUPIFo7Rs160RCYu6za+5LvaDKJt3sLL2mHBw+SvqwIgdkrRA/pw4KYVpK
+        6c8to36xOCQQjKBrfL+lSAcBFALvcZCoOB87gqeqw/395wwrgI847+IXHmGyBJgoVVMtAJQo2I3AH
+        zrCNcfdbUiN4UGGqxMCBfscx6DGpxb1YA740zKnHBNB2pt7PkiHo6GjCIbKVeynPvJ14gQR9DYDIy
+        M0PbxzrQ==;
+Received: from guillem by pulsar.hadrons.org with local (Exim 4.92)
+        (envelope-from <guillem@hadrons.org>)
+        id 1i0HSK-0003gy-H2; Wed, 21 Aug 2019 05:38:40 +0200
+From:   Guillem Jover <guillem@hadrons.org>
+To:     linux-aio@kvack.org
+Cc:     Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        Benjamin LaHaise <bcrl@kvack.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] aio: Fix io_pgetevents() struct __compat_aio_sigset layout
+Date:   Wed, 21 Aug 2019 05:38:20 +0200
+Message-Id: <20190821033820.14155-1-guillem@hadrons.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This tool is only used by drivers/video/logo/Makefile. No reason to
-keep it in scripts/.
+This type is used to pass the sigset_t from userland to the kernel,
+but it was using the kernel native pointer type for the member
+representing the compat userland pointer to the userland sigset_t.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+This messes up the layout, and makes the kernel eat up both the
+userland pointer and the size members into the kernel pointer, and
+then reads garbage into the kernel sigsetsize. Which makes the sigset_t
+size consistency check fail, and consequently the syscall always
+returns -EINVAL.
+
+This breaks both libaio and strace on 32-bit userland running on 64-bit
+kernels. And there are apparently no users in the wild of the current
+broken layout (at least according to codesearch.debian.org and a brief
+check over github.com search). So it looks safe to fix this directly
+in the kernel, instead of either letting userland deal with this
+permanently with the additional overhead or trying to make the syscall
+infer what layout userland used, even though this is also being worked
+around in libaio to temporarily cope with kernels that have not yet
+been fixed.
+
+We use a proper compat_uptr_t instead of a compat_sigset_t pointer.
+
+Fixes: 7a074e96 ("aio: implement io_pgetevents")
+Signed-off-by: Guillem Jover <guillem@hadrons.org>
 ---
+ fs/aio.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- drivers/video/logo/.gitignore               |  1 +
- drivers/video/logo/Makefile                 | 10 +++++-----
- {scripts => drivers/video/logo}/pnmtologo.c |  0
- scripts/.gitignore                          |  1 -
- scripts/Makefile                            |  2 --
- 5 files changed, 6 insertions(+), 8 deletions(-)
- rename {scripts => drivers/video/logo}/pnmtologo.c (100%)
-
-diff --git a/drivers/video/logo/.gitignore b/drivers/video/logo/.gitignore
-index e48355f538fa..9dda1b26b2e4 100644
---- a/drivers/video/logo/.gitignore
-+++ b/drivers/video/logo/.gitignore
-@@ -5,3 +5,4 @@
- *_vga16.c
- *_clut224.c
- *_gray256.c
-+pnmtologo
-diff --git a/drivers/video/logo/Makefile b/drivers/video/logo/Makefile
-index 7d672d40bf01..bcda657493a4 100644
---- a/drivers/video/logo/Makefile
-+++ b/drivers/video/logo/Makefile
-@@ -18,19 +18,19 @@ obj-$(CONFIG_SPU_BASE)			+= logo_spe_clut224.o
+diff --git a/fs/aio.c b/fs/aio.c
+index 01e0fb9ae45a..056f291bc66f 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -2179,7 +2179,7 @@ SYSCALL_DEFINE5(io_getevents_time32, __u32, ctx_id,
+ #ifdef CONFIG_COMPAT
  
- # How to generate logo's
+ struct __compat_aio_sigset {
+-	compat_sigset_t __user	*sigmask;
++	compat_uptr_t		sigmask;
+ 	compat_size_t		sigsetsize;
+ };
  
--pnmtologo := scripts/pnmtologo
-+hostprogs-y := pnmtologo
+@@ -2204,7 +2204,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
+ 	if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
+ 		return -EFAULT;
  
- # Create commands like "pnmtologo -t mono -n logo_mac_mono -o ..."
- quiet_cmd_logo = LOGO    $@
--      cmd_logo = $(pnmtologo) -t $(lastword $(subst _, ,$*)) -n $* -o $@ $<
-+      cmd_logo = $(obj)/pnmtologo -t $(lastword $(subst _, ,$*)) -n $* -o $@ $<
+-	ret = set_compat_user_sigmask(ksig.sigmask, ksig.sigsetsize);
++	ret = set_compat_user_sigmask(compat_ptr(ksig.sigmask), ksig.sigsetsize);
+ 	if (ret)
+ 		return ret;
  
--$(obj)/%.c: $(src)/%.pbm $(pnmtologo) FORCE
-+$(obj)/%.c: $(src)/%.pbm $(obj)/pnmtologo FORCE
- 	$(call if_changed,logo)
+@@ -2239,7 +2239,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
+ 	if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
+ 		return -EFAULT;
  
--$(obj)/%.c: $(src)/%.ppm $(pnmtologo) FORCE
-+$(obj)/%.c: $(src)/%.ppm $(obj)/pnmtologo FORCE
- 	$(call if_changed,logo)
+-	ret = set_compat_user_sigmask(ksig.sigmask, ksig.sigsetsize);
++	ret = set_compat_user_sigmask(compat_ptr(ksig.sigmask), ksig.sigsetsize);
+ 	if (ret)
+ 		return ret;
  
--$(obj)/%.c: $(src)/%.pgm $(pnmtologo) FORCE
-+$(obj)/%.c: $(src)/%.pgm $(obj)/pnmtologo FORCE
- 	$(call if_changed,logo)
- 
- # generated C files
-diff --git a/scripts/pnmtologo.c b/drivers/video/logo/pnmtologo.c
-similarity index 100%
-rename from scripts/pnmtologo.c
-rename to drivers/video/logo/pnmtologo.c
-diff --git a/scripts/.gitignore b/scripts/.gitignore
-index 17f8cef88fa8..4aa1806c59c2 100644
---- a/scripts/.gitignore
-+++ b/scripts/.gitignore
-@@ -4,7 +4,6 @@
- bin2c
- conmakehash
- kallsyms
--pnmtologo
- unifdef
- recordmcount
- sortextable
-diff --git a/scripts/Makefile b/scripts/Makefile
-index 16bcb8087899..709df809f892 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -4,7 +4,6 @@
- # the kernel for the build process.
- # ---------------------------------------------------------------------------
- # kallsyms:      Find all symbols in vmlinux
--# pnmttologo:    Convert pnm files to logo files
- # conmakehash:   Create chartable
- # conmakehash:	 Create arrays for initializing the kernel console tables
- 
-@@ -12,7 +11,6 @@ HOST_EXTRACFLAGS += -I$(srctree)/tools/include
- 
- hostprogs-$(CONFIG_BUILD_BIN2C)  += bin2c
- hostprogs-$(CONFIG_KALLSYMS)     += kallsyms
--hostprogs-$(CONFIG_LOGO)         += pnmtologo
- hostprogs-$(CONFIG_VT)           += conmakehash
- hostprogs-$(BUILD_C_RECORDMCOUNT) += recordmcount
- hostprogs-$(CONFIG_BUILDTIME_EXTABLE_SORT) += sortextable
 -- 
-2.17.1
+2.23.0
 
