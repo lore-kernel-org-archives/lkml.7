@@ -2,112 +2,155 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D56CC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE3DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DDA2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566403243;
-	bh=z+I+ll9JzvSq5sT40Ie4Oipb+E0vOsXvpvHBtoHoKVE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X8w7Ju3ki6HiqQOS2aFzTL9pc4WAsRNZKEJOx+mpuCoSctv3dory1+IXPnkkXs6Mf
-	 lrWUAp6ohJm0IuKXbsFC99lweHuoJVe5baVA8eiP8XMbYQWnYGtjDeXbmxEPEyzgsU
-	 SqaXoROsGgUlVUR01NvbsG4YPPJRg5Zw3zLGcqnM=
+	by mail.kernel.org (Postfix) with ESMTP id 8BF8522CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbfHUQAm (ORCPT
+        id S1728433AbfHUQCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:00:42 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:44857 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727158AbfHUQAl (ORCPT
+        Wed, 21 Aug 2019 12:02:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20194 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727158AbfHUQCM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:00:41 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d79so2244259qke.11;
-        Wed, 21 Aug 2019 09:00:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SkQ1iRQmedFusEhYknXF0m0szFVCfve43ayyHL3P7UE=;
-        b=PfRGf7dJmGlq/vFV6Y+jNfBdQj9FXFXpgr4U2sqHZkOOzikZqcKARWfm/Ay9cjoDSU
-         SCX+h5EJLGStrV2y6/OzsiFWSydoRDIB8xs/LthT66NJMLZAYtyRP5nrnZgOEeHiNyJk
-         1bf35F88LlY3ZL6xZzCIEGGOZVVSZr2saC2AonVkeLUBSZKclxcjROkdE6IhiIiZK18A
-         z1eW4eMKnZKE5uALGEnUQyOrqFkSKIT6AjOY4D73Eu6oZ+ZkI6UO+7WVtIvPOc7iPQV5
-         aAxUr8psXAumVPPm2Vln5wKADn3tcXCg2XrJ+MksLKbdQw0SqjF2hpb4xY0Ud7EO5OH2
-         B8bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SkQ1iRQmedFusEhYknXF0m0szFVCfve43ayyHL3P7UE=;
-        b=c0tISbAsv4wpwue6Ehj1RzHwKDpIYuLEDDM8VbXDdYoOBuJCo5q7H0TIVLJIlc4WNe
-         BoWIusBC5VCoKrxKYjh81yFZka2Oq5+tIJO4F/piwde1KsOPZiy2QyC78IgfgM1fD9pS
-         PwhC7Ikw+cOGMh/MiFyzFya8f/DY8JFpFRH0Jkyy+5MT8RSfJNHfWBG2bp2koNiXwmhK
-         eQ0EJmHACi5xn6FH98JxzrYmxduiqx4vD15SJhDLM6prs5mLjrR6vz9qxGV9RkALq2hZ
-         /x+emHSjeWeTrfilRP6dGpAuEZufZh1T+1SlBQoTWvR9w3hL+9O6N7ub8af/0BDbY+9v
-         +jhg==
-X-Gm-Message-State: APjAAAUE1x9Lv27kfbcKbfQ1P9q8zY6waEW8B21OEl+E2hc9cBarXxy1
-        XE6BCJKaxx7AltntHhC7TRs=
-X-Google-Smtp-Source: APXvYqygD4G25/4+1lbrU9OJUBtreiUUAzC3687HWTZ5HRPAeIzC0XOf19SJJBxuWv+Hi3cQWG/YHA==
-X-Received: by 2002:a37:395:: with SMTP id 143mr32776745qkd.317.1566403240448;
-        Wed, 21 Aug 2019 09:00:40 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:1f05])
-        by smtp.gmail.com with ESMTPSA id s58sm11388981qth.59.2019.08.21.09.00.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 09:00:39 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 09:00:37 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     axboe@kernel.dk, hannes@cmpxchg.org, mhocko@kernel.org,
-        vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH 5/5] writeback, memcg: Implement foreign dirty flushing
-Message-ID: <20190821160037.GK2263813@devbig004.ftw2.facebook.com>
-References: <20190815195619.GA2263813@devbig004.ftw2.facebook.com>
- <20190815195930.GF2263813@devbig004.ftw2.facebook.com>
- <20190816160256.GI3041@quack2.suse.cz>
+        Wed, 21 Aug 2019 12:02:12 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LFvdZr144337
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 12:02:10 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uh87njr3b-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 12:02:10 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 21 Aug 2019 17:02:07 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 21 Aug 2019 17:02:03 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LG22In48693276
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 16:02:02 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1ABF0AE053;
+        Wed, 21 Aug 2019 16:02:02 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C708AE04D;
+        Wed, 21 Aug 2019 16:02:01 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.59])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 21 Aug 2019 16:02:01 +0000 (GMT)
+Date:   Wed, 21 Aug 2019 19:01:59 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: consolidate pgtable_cache_init() and pgd_cache_init()
+References: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
+ <20190821154942.js4u466rolnekwmq@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190816160256.GI3041@quack2.suse.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190821154942.js4u466rolnekwmq@willie-the-truck>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19082116-0016-0000-0000-000002A129E4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082116-0017-0000-0000-000033015F04
+Message-Id: <20190821160159.GG26713@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908210166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Aug 21, 2019 at 04:49:42PM +0100, Will Deacon wrote:
+> On Wed, Aug 21, 2019 at 06:06:58PM +0300, Mike Rapoport wrote:
+> > Both pgtable_cache_init() and pgd_cache_init() are used to initialize kmem
+> > cache for page table allocations on several architectures that do not use
+> > PAGE_SIZE tables for one or more levels of the page table hierarchy.
+> > 
+> > Most architectures do not implement these functions and use __week default
+> > NOP implementation of pgd_cache_init(). Since there is no such default for
+> > pgtable_cache_init(), its empty stub is duplicated among most
+> > architectures.
+> > 
+> > Rename the definitions of pgd_cache_init() to pgtable_cache_init() and drop
+> > empty stubs of pgtable_cache_init().
+> > 
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > ---
+> 
+> [...]
+> 
+> > diff --git a/arch/arm64/mm/pgd.c b/arch/arm64/mm/pgd.c
+> > index 7548f9c..4a64089 100644
+> > --- a/arch/arm64/mm/pgd.c
+> > +++ b/arch/arm64/mm/pgd.c
+> > @@ -35,7 +35,7 @@ void pgd_free(struct mm_struct *mm, pgd_t *pgd)
+> >  		kmem_cache_free(pgd_cache, pgd);
+> >  }
+> >  
+> > -void __init pgd_cache_init(void)
+> > +void __init pgtable_cache_init(void)
+> >  {
+> >  	if (PGD_SIZE == PAGE_SIZE)
+> >  		return;
+> 
+> [...]
+> 
+> > diff --git a/init/main.c b/init/main.c
+> > index b90cb5f..2fa8038 100644
+> > --- a/init/main.c
+> > +++ b/init/main.c
+> > @@ -507,7 +507,7 @@ void __init __weak mem_encrypt_init(void) { }
+> >  
+> >  void __init __weak poking_init(void) { }
+> >  
+> > -void __init __weak pgd_cache_init(void) { }
+> > +void __init __weak pgtable_cache_init(void) { }
+> >  
+> >  bool initcall_debug;
+> >  core_param(initcall_debug, initcall_debug, bool, 0644);
+> > @@ -565,7 +565,6 @@ static void __init mm_init(void)
+> >  	init_espfix_bsp();
+> >  	/* Should be run after espfix64 is set up. */
+> >  	pti_init();
+> > -	pgd_cache_init();
+> >  }
+> 
+> AFAICT, this change means we now initialise our pgd cache before
+> debug_objects_mem_init() has run.
 
-On Fri, Aug 16, 2019 at 06:02:56PM +0200, Jan Kara wrote:
-> 1) You ask to writeback LONG_MAX pages. That means that you give up any
-> livelock avoidance for the flusher work and you can writeback almost
-> forever if someone is busily dirtying pages in the wb. I think you need to
-> pick something like amount of dirty pages in the given wb (that would have
-> to be fetched after everything is looked up) or just some arbitrary
-> reasonably small constant like 1024 (but then I guess there's no guarantee
-> stuck memcg will make any progress and you've invalidated the frn entry
-> here).
+Right.
 
-I see.  Yeah, I think the right thing to do would be feeding the
-number of dirty pages or limiting it to one full sweep.  I'll look
-into it.
+> Is that going to cause fireworks with CONFIG_DEBUG_OBJECTS when we later
+> free a pgd?
 
-> 2) When you invalidate frn entry here by writing 0 to 'at', it's likely to get
-> reused soon. Possibly while the writeback is still running. And then you
-> won't start any writeback for the new entry because of the
-> atomic_read(&frn->done.cnt) == 1 check. This seems like it could happen
-> pretty frequently?
+We don't allocate a pgd at that time, we only create the kmem cache for the
+future allocations. And that cache is never destroyed anyway.
 
-Hmm... yeah, the clearing might not make sense.  I'll remove that.
-
-Thanks.
+> Will
 
 -- 
-tejun
+Sincerely yours,
+Mike.
+
