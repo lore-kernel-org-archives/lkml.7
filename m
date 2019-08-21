@@ -2,106 +2,94 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E04C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7ACAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF92E2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBB722DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:54:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="GfRFdiR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbfHUPxw (ORCPT
+        id S1728680AbfHUPyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:53:52 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:53670 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727873AbfHUPxw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:53:52 -0400
-Received: (qmail 5312 invoked by uid 2102); 21 Aug 2019 11:53:51 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 21 Aug 2019 11:53:51 -0400
-Date:   Wed, 21 Aug 2019 11:53:51 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <benjamin.tissoires@redhat.com>,
-        <jikos@kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in hidraw_ioctl
-In-Reply-To: <000000000000940ec30590a1b35e@google.com>
-Message-ID: <Pine.LNX.4.44L0.1908211152230.1816-100000@iolanthe.rowland.org>
+        Wed, 21 Aug 2019 11:54:39 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:58244 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728459AbfHUPyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:54:39 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id B630B42ED0;
+        Wed, 21 Aug 2019 15:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:date:date:from:from:subject:subject
+        :message-id:received:received:received; s=mta-01; t=1566402876;
+         x=1568217277; bh=mEhEh6gAJzPJESzZ96RxoI02+oLNMejWhrwLDGL5SN0=; b=
+        GfRFdiR+2woudO0W8abS4m+61cnvnKa2A9m6S5uWNHTdO/sR61m6SsA5GlJ8UY34
+        whO5W+Z2l6XWw49SGRp+qpxtacMkb+RT58I0dG/oz9Dt0B3+fUBg5FGpdwSZ5f7q
+        QZu8p4uiGQ3klFvJIhmXF2AvXh0u/Yd2hGx7VwCDyHY=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id e-29Zo6cjChT; Wed, 21 Aug 2019 18:54:36 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id C2BED4120B;
+        Wed, 21 Aug 2019 18:54:36 +0300 (MSK)
+Received: from localhost.localdomain (172.17.15.69) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Wed, 21 Aug 2019 18:54:35 +0300
+Message-ID: <90ee26eca127501ed035f5dcd74f880b0c7e10f5.camel@yadro.com>
+Subject: [PATCH 1/3] vesnin: add wdt2 section with alt-boot option
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+CC:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
+        <linux-watchdog@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        "Alexander Amelkin" <a.amelkin@yadro.com>
+Date:   Wed, 21 Aug 2019 18:54:35 +0300
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.17.15.69]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019, syzbot wrote:
+Adds wdt2 section with 'alt-boot' option into dts for vesnin.
 
-> Hello,
-> 
-> syzbot has tested the proposed patch but the reproducer still triggered  
-> crash:
-> KASAN: slab-out-of-bounds Read in hidraw_ioctl
-> 
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in strlen+0x79/0x90 lib/string.c:525
-> Read of size 1 at addr ffff8881d619df38 by task syz-executor.5/2984
-> 
-> CPU: 0 PID: 2984 Comm: syz-executor.5 Not tainted 5.3.0-rc2+ #1
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->   kasan_report+0xe/0x12 mm/kasan/common.c:612
->   strlen+0x79/0x90 lib/string.c:525
->   strlen include/linux/string.h:281 [inline]
->   hidraw_ioctl+0x245/0xae0 drivers/hid/hidraw.c:446
->   vfs_ioctl fs/ioctl.c:46 [inline]
->   file_ioctl fs/ioctl.c:509 [inline]
->   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
->   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
->   __do_sys_ioctl fs/ioctl.c:720 [inline]
->   __se_sys_ioctl fs/ioctl.c:718 [inline]
->   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
->   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x459829
-> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f19881acc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-> RDX: 0000000000000000 RSI: 0000000080404805 RDI: 0000000000000004
-> RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f19881ad6d4
-> R13: 00000000004c21de R14: 00000000004d5620 R15: 00000000ffffffff
+Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Looks like a test is missing in hidraw_ioctl.
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+index 0b9e29c3212e..2ee26c86a32e 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts
+@@ -222,3 +222,7 @@
+ &vuart {
+ 	status = "okay";
+ };
++
++&wdt2 {
++	aspeed,alt-boot;
++};
+-- 
+2.20.1
 
-Alan Stern
-
-#syz test: https://github.com/google/kasan.git e96407b4
-
-Index: usb-devel/drivers/hid/hidraw.c
-===================================================================
---- usb-devel.orig/drivers/hid/hidraw.c
-+++ usb-devel/drivers/hid/hidraw.c
-@@ -370,7 +370,7 @@ static long hidraw_ioctl(struct file *fi
- 
- 	mutex_lock(&minors_lock);
- 	dev = hidraw_table[minor];
--	if (!dev) {
-+	if (!dev || !dev->exist) {
- 		ret = -ENODEV;
- 		goto out;
- 	}
 
