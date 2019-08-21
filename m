@@ -2,75 +2,90 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1AAAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE643C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C609A2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5852064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbfHUTWo convert rfc822-to-8bit (ORCPT
+        id S1729769AbfHUTXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:22:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34116 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 15:23:12 -0400
+Received: from mga02.intel.com ([134.134.136.20]:54254 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727998AbfHUTWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:22:43 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F0F5630833CB;
-        Wed, 21 Aug 2019 19:22:42 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C53C04513;
-        Wed, 21 Aug 2019 19:22:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <1566402203.5162.12.camel@linux.ibm.com>
-References: <1566402203.5162.12.camel@linux.ibm.com> <1562814435.4014.11.camel@linux.ibm.com> <28477.1562362239@warthog.procyon.org.uk> <CAHk-=wjxoeMJfeBahnWH=9zShKp2bsVy527vo3_y8HfOdhwAAw@mail.gmail.com> <20190710194620.GA83443@gmail.com> <20190710201552.GB83443@gmail.com> <CAHk-=wiFti6=K2fyAYhx-PSX9ovQPJUNp0FMdV0pDaO_pSx9MQ@mail.gmail.com> <23498.1565962602@warthog.procyon.org.uk>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        James Morris <jmorris@namei.org>, keyrings@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, linux-nfs@vger.kernel.org,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Keys: Set 4 - Key ACLs for 5.3
+        id S1729221AbfHUTXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 15:23:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 12:23:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
+   d="scan'208";a="180148220"
+Received: from dbarua-mobl.amr.corp.intel.com (HELO [10.252.198.189]) ([10.252.198.189])
+  by fmsmga007.fm.intel.com with ESMTP; 21 Aug 2019 12:23:10 -0700
+Subject: Re: [alsa-devel] [PATCH 0/6] soundwire: inits and PM additions for
+ 5.4
+To:     alsa-devel@alsa-project.org
+Cc:     tiwai@suse.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com
+References: <20190813213227.5163-1-pierre-louis.bossart@linux.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <57e5dab5-2641-7c4b-a05a-fb4f0adccfc7@linux.intel.com>
+Date:   Wed, 21 Aug 2019 14:23:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <19087.1566415359.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Wed, 21 Aug 2019 20:22:39 +0100
-Message-ID: <19088.1566415359@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 21 Aug 2019 19:22:43 +0000 (UTC)
+In-Reply-To: <20190813213227.5163-1-pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I added a bunch of tests to the keyutils testsuite, currently on my -next
-branch:
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/log/?h=next
 
-See:
+On 8/13/19 4:32 PM, Pierre-Louis Bossart wrote:
+> This is an update on the RFC, to be applied after the '[PATCH v2 0/3]
+> soundwire: debugfs support for 5.4' and '[PATCH 00/17] soundwire:
+> fixes for 5.4' series.
+> 
+> Total that makes 28 patches submitted for review, broken in 3 sets.
 
-	Add a keyctl command for granting a permit on a key
-	Handle kernel having key/keyring ACLs
+I double-checked that this patchset does apply on top of soundwire/next 
++ the 4 debugfs patches I just sent earlier.
 
-I've added manpages to describe the new bits, but I wonder whether I should
-add a manpage specifically to detail the permissions system.  It'll probably
-be useful when more advanced subjects become available, such as for specific
-UIDs and for containers-as-a-whole.
+I will now send the rather big changes needed for SOF integration as an 
+RFC, assuming this set is applied.
 
-David
+> 
+> Changes since RFC (Feedback from GregKH, Vinod, Cezary, Guennadi):
+> Squashed init sequence fixes in one patch, which remains
+> readable. Tested all return values and called update_config() as
+> needed.
+> Fixed hw-reset debugfs (removed -unsafe and noisy dev_info traces)
+> Simplified enable_interrupt() with goto
+> Fixed style, removed typos and FIXMES in pm_runtime code
+> Clarified commit messages
+> 
+> Pierre-Louis Bossart (6):
+>    soundwire: fix startup sequence for Intel/Cadence
+>    soundwire: cadence_master: add hw_reset capability in debugfs
+>    soundwire: intel: add helper for initialization
+>    soundwire: intel: Add basic power management support
+>    soundwire: cadence_master: make clock stop exit configurable on init
+>    soundwire: intel: add pm_runtime support
+> 
+>   drivers/soundwire/cadence_master.c | 135 ++++++++++++++------
+>   drivers/soundwire/cadence_master.h |   5 +-
+>   drivers/soundwire/intel.c          | 194 +++++++++++++++++++++++++++--
+>   3 files changed, 289 insertions(+), 45 deletions(-)
+> 
