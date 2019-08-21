@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3D3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B263FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653BB20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E83B2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbfHUTdA (ORCPT
+        id S1729915AbfHUTas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:33:00 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57158 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729858AbfHUTas (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 21 Aug 2019 15:30:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57153 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729841AbfHUTar (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 15:30:47 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1i0WJh-0004A5-Q7; Wed, 21 Aug 2019 21:30:45 +0200
-Message-Id: <20190821192919.869350319@linutronix.de>
+        id 1i0WJg-00049t-V8; Wed, 21 Aug 2019 21:30:45 +0200
+Message-Id: <20190821192919.780348088@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 21 Aug 2019 21:08:54 +0200
+Date:   Wed, 21 Aug 2019 21:08:53 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
@@ -35,8 +35,7 @@ Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         Frederic Weisbecker <frederic@kernel.org>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>,
         Christoph Hellwig <hch@lst.de>
-Subject: [patch V2 07/38] posix-cpu-timers: Rename thread_group_cputimer() and
- make it static
+Subject: [patch V2 06/38] posix-cpu-timers: Sample directly in timer check
 References: <20190821190847.665673890@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,68 +44,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-thread_group_cputimer() is a complete misnomer. The function does two things:
-
- - For arming process wide timers it makes sure that the atomic time
-   storage is up to date. If no cpu timer is armed yet, then the atomic
-   time storage is not updated by the scheduler for performance reasons.
-
-   In that case a full summing up of all threads needs to be done and the
-   update needs to be enabled.
-
-- Samples the current time into the caller supplied storage.
-
-Rename it to thread_group_start_cputime(), make it static and fixup the
-callsite.
+The thread group accounting is active, otherwise the expiry function would
+not be running. Sample the thread group time directly.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/sched/cputime.h  |    1 -
- kernel/time/posix-cpu-timers.c |   17 +++++++++++++++--
- 2 files changed, 15 insertions(+), 3 deletions(-)
+ kernel/time/posix-cpu-timers.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/include/linux/sched/cputime.h
-+++ b/include/linux/sched/cputime.h
-@@ -61,7 +61,6 @@ extern void cputime_adjust(struct task_c
-  * Thread group CPU time accounting.
-  */
- void thread_group_cputime(struct task_struct *tsk, struct task_cputime *times);
--void thread_group_cputimer(struct task_struct *tsk, struct task_cputime *times);
- void thread_group_sample_cputime(struct task_struct *tsk, struct task_cputime *times);
- 
- /*
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -253,7 +253,20 @@ void thread_group_sample_cputime(struct
- 	sample_cputime_atomic(times, &cputimer->cputime_atomic);
- }
+@@ -914,16 +914,17 @@ static void check_process_timers(struct
+ 	if (!READ_ONCE(tsk->signal->cputimer.running))
+ 		return;
  
--void thread_group_cputimer(struct task_struct *tsk, struct task_cputime *times)
-+/**
-+ * thread_group_start_cputime - Start cputime and return a sample
-+ * @tsk:	Task for which cputime needs to be started
-+ * @iimes:	Storage for time samples
-+ *
-+ * The thread group cputime accouting is avoided when there are no posix
-+ * CPU timers armed. Before starting a timer it's required to check whether
-+ * the time accounting is active. If not, a full update of the atomic
-+ * accounting store needs to be done and the accounting enabled.
-+ *
-+ * Updates @times with an uptodate sample of the thread group cputimes.
-+ */
-+static void
-+thread_group_start_cputime(struct task_struct *tsk, struct task_cputime *times)
- {
- 	struct thread_group_cputimer *cputimer = &tsk->signal->cputimer;
- 	struct task_cputime sum;
-@@ -536,7 +549,7 @@ static int cpu_timer_sample_group(const
- {
- 	struct task_cputime cputime;
+-        /*
++       /*
+ 	 * Signify that a thread is checking for process timers.
+ 	 * Write access to this field is protected by the sighand lock.
+ 	 */
+ 	sig->cputimer.checking_timer = true;
  
--	thread_group_cputimer(p, &cputime);
-+	thread_group_start_cputime(p, &cputime);
- 	switch (CPUCLOCK_WHICH(which_clock)) {
- 	default:
- 		return -EINVAL;
+ 	/*
+-	 * Collect the current process totals.
++	 * Collect the current process totals. Group accounting is active
++	 * so the sample can be taken directly.
+ 	 */
+-	thread_group_cputimer(tsk, &cputime);
++	sample_cputime_atomic(&cputime, &sig->cputimer.cputime_atomic);
+ 	utime = cputime.utime;
+ 	ptime = utime + cputime.stime;
+ 	sum_sched_runtime = cputime.sum_exec_runtime;
 
 
