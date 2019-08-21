@@ -2,124 +2,157 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69096C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D39FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3702D22CE3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:56:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="TwmH/qbb"
+	by mail.kernel.org (Postfix) with ESMTP id 5A0F422CE3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbfHUS4i (ORCPT
+        id S1729179AbfHUS5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:56:38 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14194 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729038AbfHUS4i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:56:38 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5d93e60000>; Wed, 21 Aug 2019 11:56:38 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 21 Aug 2019 11:56:37 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 21 Aug 2019 11:56:37 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 18:56:37 +0000
-Received: from [10.2.161.131] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 18:56:37 +0000
-Subject: Re: Boot failure due to: x86/boot: Save fields explicitly, zero out
- everything else
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Neil MacLeod <neil@nmacleod.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>
-References: <CAFbqK8m=F_90531wTiwKT4J0R+EC-3ZmqHtKCwA_2th_nVYrpg@mail.gmail.com>
- <900a48bf-c9fc-09bd-52a3-9e16ff8baa19@nvidia.com>
- <alpine.DEB.2.21.1908212047140.1983@nanos.tec.linutronix.de>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <5b9b4c36-c28b-1644-61fe-dbdfe3c4a1d2@nvidia.com>
-Date:   Wed, 21 Aug 2019 11:54:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 14:57:04 -0400
+Received: from mga04.intel.com ([192.55.52.120]:47683 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726903AbfHUS5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 14:57:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 11:57:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
+   d="scan'208";a="203121300"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Aug 2019 11:57:03 -0700
+Date:   Wed, 21 Aug 2019 11:57:03 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
+Message-ID: <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
+References: <20190815130558.GF14313@quack2.suse.cz>
+ <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
+ <20190817022603.GW6129@dread.disaster.area>
+ <20190819063412.GA20455@quack2.suse.cz>
+ <20190819092409.GM7777@dread.disaster.area>
+ <20190819123841.GC5058@ziepe.ca>
+ <20190820011210.GP7777@dread.disaster.area>
+ <20190820115515.GA29246@ziepe.ca>
+ <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
+ <20190821181343.GH8653@ziepe.ca>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1908212047140.1983@nanos.tec.linutronix.de>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566413798; bh=59TbhX++fURQ6IB6sU9SaGJ90qlX21B5kkUFNbRHcNY=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=TwmH/qbb31K20tbA0upbxLrQ+eDSkIqweaP8EXTvOiePYRHEbHaeWeEkAFjMCFni+
-         HjZugrSxPNA8TSqVK+iIFLPpv6Zlo3HJx6+ENVknN4bzAi4WeTyhAvDy2hj1nkFGgc
-         z9mEkyTGjssl1Oohe+4qrvtCCDkNdfArS4Y2jag6i8edskt0nhJ1+razhjQbpTDZ8H
-         vPVsnWVuH+hyXhGcIxvRNv4YZNWlmBNj+z5r/D09eq9ZKx5UdYhUenQm9u77/5gYNx
-         CyuActTxqx0eqzH3w7HtyKrlYrO88SVnLcMOZB9TjC/fVDsGNiKn90wW0s8FZDMUHW
-         Y8vdqv4+FohMQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821181343.GH8653@ziepe.ca>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/19 11:51 AM, Thomas Gleixner wrote:
-> On Wed, 21 Aug 2019, John Hubbard wrote:
->> On 8/21/19 10:05 AM, Neil MacLeod wrote:
->> static void sanitize_boot_params(struct boot_params *boot_params)
->> {
->> ...
->> 		const struct boot_params_to_save to_save[] = {
->> 			BOOT_PARAM_PRESERVE(screen_info),
->> 			BOOT_PARAM_PRESERVE(apm_bios_info),
->> 			BOOT_PARAM_PRESERVE(tboot_addr),
->> 			BOOT_PARAM_PRESERVE(ist_info),
->> 			BOOT_PARAM_PRESERVE(acpi_rsdp_addr),
->> 			BOOT_PARAM_PRESERVE(hd0_info),
->> 			BOOT_PARAM_PRESERVE(hd1_info),
->> 			BOOT_PARAM_PRESERVE(sys_desc_table),
->> 			BOOT_PARAM_PRESERVE(olpc_ofw_header),
->> 			BOOT_PARAM_PRESERVE(efi_info),
->> 			BOOT_PARAM_PRESERVE(alt_mem_k),
->> 			BOOT_PARAM_PRESERVE(scratch),
->> 			BOOT_PARAM_PRESERVE(e820_entries),
->> 			BOOT_PARAM_PRESERVE(eddbuf_entries),
->> 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
->> 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
->> 			BOOT_PARAM_PRESERVE(e820_table),
->> 			BOOT_PARAM_PRESERVE(eddbuf),
->> 		};
+On Wed, Aug 21, 2019 at 03:13:43PM -0300, Jason Gunthorpe wrote:
+> On Wed, Aug 21, 2019 at 11:02:00AM -0700, Ira Weiny wrote:
+> > On Tue, Aug 20, 2019 at 08:55:15AM -0300, Jason Gunthorpe wrote:
+> > > On Tue, Aug 20, 2019 at 11:12:10AM +1000, Dave Chinner wrote:
+> > > > On Mon, Aug 19, 2019 at 09:38:41AM -0300, Jason Gunthorpe wrote:
+> > > > > On Mon, Aug 19, 2019 at 07:24:09PM +1000, Dave Chinner wrote:
+> > > > > 
+> > > > > > So that leaves just the normal close() syscall exit case, where the
+> > > > > > application has full control of the order in which resources are
+> > > > > > released. We've already established that we can block in this
+> > > > > > context.  Blocking in an interruptible state will allow fatal signal
+> > > > > > delivery to wake us, and then we fall into the
+> > > > > > fatal_signal_pending() case if we get a SIGKILL while blocking.
+> > > > > 
+> > > > > The major problem with RDMA is that it doesn't always wait on close() for the
+> > > > > MR holding the page pins to be destoyed. This is done to avoid a
+> > > > > deadlock of the form:
+> > > > > 
+> > > > >    uverbs_destroy_ufile_hw()
+> > > > >       mutex_lock()
+> > > > >        [..]
+> > > > >         mmput()
+> > > > >          exit_mmap()
+> > > > >           remove_vma()
+> > > > >            fput();
+> > > > >             file_operations->release()
+> > > > 
+> > > > I think this is wrong, and I'm pretty sure it's an example of why
+> > > > the final __fput() call is moved out of line.
+> > > 
+> > > Yes, I think so too, all I can say is this *used* to happen, as we
+> > > have special code avoiding it, which is the code that is messing up
+> > > Ira's lifetime model.
+> > > 
+> > > Ira, you could try unraveling the special locking, that solves your
+> > > lifetime issues?
+> > 
+> > Yes I will try to prove this out...  But I'm still not sure this fully solves
+> > the problem.
+> > 
+> > This only ensures that the process which has the RDMA context (RDMA FD) is safe
+> > with regard to hanging the close for the "data file FD" (the file which has
+> > pinned pages) in that _same_ process.  But what about the scenario.
 > 
-> I think I spotted it:
-> 
-> -               boot_params->acpi_rsdp_addr = 0;
-> 
-> + 			BOOT_PARAM_PRESERVE(acpi_rsdp_addr),
-> 
-> And it does not preserve 'hdr'
-> 
-> Grr. I surely was too tired when staring at this last time.
-> 
+> Oh, I didn't think we were talking about that. Hanging the close of
+> the datafile fd contingent on some other FD's closure is a recipe for
+> deadlock..
 
-ohhh man, that's embarrassing. Especially hdr, which was the center of
-the whole thing...sigh. Patch coming shortly.
+The discussion between Jan and Dave was concerning what happens when a user
+calls
 
+fd = open()
+fnctl(...getlease...)
+addr = mmap(fd...)
+ib_reg_mr() <pin>
+munmap(addr...)
+close(fd)
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+Dave suggested:
+
+"I'm of a mind to make the last close() on a file block if there's an
+active layout lease to prevent processes from zombie-ing layout
+leases like this. i.e. you can't close the fd until resources that
+pin the lease have been released."
+
+	-- Dave https://lkml.org/lkml/2019/8/16/994
+
+> 
+> IMHO the pin refcnt is held by the driver char dev FD, that is the
+> object you need to make it visible against.
+
+I'm sorry but what do you mean by "driver char dev FD"?
+
+> 
+> Why not just have a single table someplace of all the layout leases
+> with the file they are held on and the FD/socket/etc that is holding
+> the pin? Make it independent of processes and FDs?
+
+If it is independent of processes how will we know which process is blocking
+the truncate?  Using a global table is an interesting idea but I still believe
+the users are going to want to track this to specific processes.  It's not
+clear to me how that would be done with a global table.
+
+I agree the XDP/socket case is bothersome...  I was thinking that somewhere the
+fd of the socket could be hooked up in this case.  But taking a look at it
+reveals that is not going to be easy.  And I assume XDP has the same issue WRT
+SCM_RIGHTS and the ability to share the xdp context?
+
+Ira
+
+> 
+> Jason
