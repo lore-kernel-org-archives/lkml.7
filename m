@@ -2,120 +2,93 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE10C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D61C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4216F2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:42:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kMmEHoPl"
+	by mail.kernel.org (Postfix) with ESMTP id 88BA122CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfHUEmE (ORCPT
+        id S1727500AbfHUErR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:42:04 -0400
-Received: from ozlabs.org ([203.11.71.1]:57315 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbfHUEmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:42:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Cw495LSXz9s00;
-        Wed, 21 Aug 2019 14:42:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566362521;
-        bh=c2ZA7UuGe1Jz51uUDHrUKKg420FVgPBPVw/Mn6rVOvw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kMmEHoPlFEUoGGyFj2UY2VjSsRSjyqiDy676CxJamLBacx5YYA/vE8EJxYxzdwp9/
-         nowWw05L8SjsHhRig4E0D7cys2u0TzqxHaRvcZlGY97qVMlC7zs9JP3OjscyQprey4
-         gbVnOs0xYSsZ8youpLY8O/GvOxAA43df89MNU04XVqTd3vw5J3J9TbKeX69xWVldTI
-         I0mrQTSKo33YdfvWe8stQFbvWhxLUlsU39ipo/vZA/etpzzlVbp4d+605roC5VCMIY
-         CuLN5jyRXib/C24f4kuu1isfF4l3ljOtN7WF5uOsoQ9g/fjcR5x2yBH1W/feOGzkZX
-         Ou94zzEFeHWtA==
-Date:   Wed, 21 Aug 2019 14:42:00 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: linux-next: manual merge of the irqchip tree with the pci tree
-Message-ID: <20190821144200.7192b3a4@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/tdFKtA5bSqO30zf4t7_Rwin";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Wed, 21 Aug 2019 00:47:17 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:34961 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbfHUErR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 00:47:17 -0400
+Received: by mail-yw1-f67.google.com with SMTP id g19so435565ywe.2;
+        Tue, 20 Aug 2019 21:47:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=kxL2K/UgIPrq03eGU3MZLRfsEiG5CCTnJCgH/oJDhFQ=;
+        b=hhSGYpEJi+fiIGwrIaKkNzWWSizjKMr2UeKUOcLutfM75oV6pwzT4eDTtvPho4lzmZ
+         +UeK/UldFAYQyJtzyK/RtffGUtaKn9nOT51ZSOcl2Co7UH5p2ILMg0xVZAzB4is+g+Gk
+         ckfqYr0BvXGYh5rW7aVL14ePfxj+jvL2PGgllbBEtfS0+AFvhyyIL97YQo/LT2jqEymK
+         7CzinFv5R0ISb3YJI1WTxfINq2xSDUGoL07lN9KlZlzzR5kdqwDJ/d2/AXj180mcBXDm
+         czCSMdTirCNE5TY9keTcO72qDRa3+qICY2ijAPpK+c95bIAd7/aOOpnO2lJx0Zb29zWC
+         81bA==
+X-Gm-Message-State: APjAAAVXko7GeOT0Hcmoxtfn+gcRe725sDESX6qjkISgEAJO1vtkciqy
+        SYcVtNwYdreCsM+7Q4howU0=
+X-Google-Smtp-Source: APXvYqxmg12NdhtkerPB0YQdRJSxn1rHVls2t3HnfjSQ+zntUJ9k0lZ1UUqMM/Aae2kTW6Ia1+SNdw==
+X-Received: by 2002:a0d:dd51:: with SMTP id g78mr21950930ywe.102.1566362835944;
+        Tue, 20 Aug 2019 21:47:15 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id r193sm2670175ywe.8.2019.08.20.21.47.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 20 Aug 2019 21:47:14 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        GR-everest-linux-l2@marvell.com (supporter:QLOGIC QL4xxx ETHERNET
+        DRIVER), "David S. Miller" <davem@davemloft.net>,
+        netdev@vger.kernel.org (open list:QLOGIC QL4xxx ETHERNET DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] qed: Add cleanup in qed_slowpath_start()
+Date:   Tue, 20 Aug 2019 23:46:36 -0500
+Message-Id: <1566362796-5399-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tdFKtA5bSqO30zf4t7_Rwin
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+If qed_mcp_send_drv_version() fails, no cleanup is executed, leading to
+memory leaks. To fix this issue, introduce the label 'err4' to perform the
+cleanup work before returning the error.
 
-Hi all,
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/net/ethernet/qlogic/qed/qed_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Today's linux-next merge of the irqchip tree got a conflict in:
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
+index 829dd60..1efff7f 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_main.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
+@@ -1325,7 +1325,7 @@ static int qed_slowpath_start(struct qed_dev *cdev,
+ 					      &drv_version);
+ 		if (rc) {
+ 			DP_NOTICE(cdev, "Failed sending drv version command\n");
+-			return rc;
++			goto err4;
+ 		}
+ 	}
+ 
+@@ -1333,6 +1333,8 @@ static int qed_slowpath_start(struct qed_dev *cdev,
+ 
+ 	return 0;
+ 
++err4:
++	qed_ll2_dealloc_if(cdev);
+ err3:
+ 	qed_hw_stop(cdev);
+ err2:
+-- 
+2.7.4
 
-  drivers/pci/controller/pci-hyperv.c
-
-between commit:
-
-  44b1ece783ff ("PCI: hv: Detect and fix Hyper-V PCI domain number collisio=
-n")
-
-from the pci tree and commit:
-
-  467a3bb97432 ("PCI: hv: Allocate a named fwnode instead of an address-bas=
-ed one")
-
-from the irqchip tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/pci/controller/pci-hyperv.c
-index 3a56de6b2ec2,97056f3dd317..000000000000
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@@ -2563,7 -2521,7 +2563,8 @@@ static int hv_pci_probe(struct hv_devic
-  			const struct hv_vmbus_device_id *dev_id)
-  {
-  	struct hv_pcibus_device *hbus;
- +	u16 dom_req, dom;
-+ 	char *name;
-  	int ret;
- =20
-  	/*
-
---Sig_/tdFKtA5bSqO30zf4t7_Rwin
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1cy5gACgkQAVBC80lX
-0GxEjwf7B9JeDD7sR40T5sEE+XzFOOy6xkyorNU2attK2PW7bZ2QG5OKbns+ip8p
-rad1CrQFzUjeBzusakWsavi4FOidQrS7ETFhVuJKeGCWZ3PrlMLouWCcDemsrq+A
-pyvlx11HCr5UGYs/i5XQWgqTo1mq6FeaAOiJqwHitTUZ4iNQhp5Bgk+cATpocPj9
-kbthcNIN8brsnT7OSVJ11Gfz3yNbqLLVG0EHpo5OihF+4Om5MpPVe9dAloygng49
-sQsYuxA0qPi9VrQF86tqnX19mtBMte6QN8iDkGDscdNDwAXF+JTZgulhRWUqMn3H
-5rE5SY+4NLoTsU8g9rF1BjAHFpvVOQ==
-=F8xl
------END PGP SIGNATURE-----
-
---Sig_/tdFKtA5bSqO30zf4t7_Rwin--
