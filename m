@@ -2,116 +2,160 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F059C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1EAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA732332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA3BB2332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729730AbfHUQrq (ORCPT
+        id S1729676AbfHUQrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:47:46 -0400
-Received: from mga17.intel.com ([192.55.52.151]:56846 "EHLO mga17.intel.com"
+        Wed, 21 Aug 2019 12:47:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:35655 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729703AbfHUQro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:47:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1727416AbfHUQri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:47:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 09:47:44 -0700
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 09:47:38 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
-   d="scan'208";a="196031589"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Aug 2019 09:47:41 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1i0Tlq-0002mP-Dl; Wed, 21 Aug 2019 19:47:38 +0300
-Date:   Wed, 21 Aug 2019 19:47:38 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, tony.luck@intel.com, x86@kernel.org,
-        alan@linux.intel.com, rppt@linux.ibm.com,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-Subject: Re: [PATCH] x86/apic: Update virtual irq base for DT/OF based system
- as well
-Message-ID: <20190821164738.GA30120@smile.fi.intel.com>
-References: <20190821081330.1187-1-rahul.tanwar@linux.intel.com>
- <alpine.DEB.2.21.1908211028030.2223@nanos.tec.linutronix.de>
- <7b4db9f3-21da-5b5e-e219-0170e812a015@linux.intel.com>
- <alpine.DEB.2.21.1908211235180.2223@nanos.tec.linutronix.de>
- <20190821123451.GY30120@smile.fi.intel.com>
- <alpine.DEB.2.21.1908211510390.2223@nanos.tec.linutronix.de>
+   d="scan'208";a="181083823"
+Received: from unknown (HELO pbossart-mobl3.intel.com) ([10.252.139.119])
+  by orsmga003.jf.intel.com with ESMTP; 21 Aug 2019 09:47:37 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     tiwai@suse.de, broonie@kernel.org, devicetree@vger.kernel.org,
+        Xiubo.Lee@gmail.com, shengjiu.wang@nxp.com,
+        linux-kernel@vger.kernel.org, nicoleotsuka@gmail.com,
+        robh+dt@kernel.org, linux-imx@nxp.com, viorel.suman@nxp.com,
+        festevam@gmail.com, Daniel Baluta <daniel.baluta@nxp.com>,
+        Rob Herring <robh@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 1/3] dt-bindings: dsp: fsl: Add DSP core binding support
+Date:   Wed, 21 Aug 2019 11:47:28 -0500
+Message-Id: <20190821164730.7385-2-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190821164730.7385-1-pierre-louis.bossart@linux.intel.com>
+References: <20190821164730.7385-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908211510390.2223@nanos.tec.linutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 03:16:31PM +0200, Thomas Gleixner wrote:
-> On Wed, 21 Aug 2019, Andy Shevchenko wrote:
-> > On Wed, Aug 21, 2019 at 01:20:53PM +0200, Thomas Gleixner wrote:
-> > > But x86 implements arch_dynirq_lower_bound() which overrides the core limit
-> > > and because ioapic_dynirq_base is zero in the DT case it allows VIRQ 0 to
-> > > be allocated which then causes of_irq*() to fail.
-> > > 
-> > > So your change prevents that by excluding the 'GSI' range from allocation,
-> > > which means that the first irq number which is handed out is 24, assumed
-> > > you have one IOAPIC with 24 pins.
-> > 
-> > I have tested this on the ACPI-based system where we have 55 lines of IOAPIC,
-> > no PIC, and some GPIO lines. Overall I see that nr_irqs is 512 and shifting
-> > by 55 freezes 10% of the space for nothing. Luckily we have SPARSE_IRQS
-> > selected for any X86, so, it wouldn't waste memory.
-> >
-> > I think we may do slightly better if we just limit the change to the certain
-> > cases.
-> 
-> For DT we can actually avoid that completely. See below.
-> 
-> For ACPI not unfortunately as the stupid GSI mapping is hard coded.
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-The below works better for my case, so, if you are going with that
-Tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+This describes the DSP device tree node.
 
-> 
-> Thanks,
-> 
-> 	tglx
-> 
-> 8<-------------
-> --- a/arch/x86/kernel/apic/io_apic.c
-> +++ b/arch/x86/kernel/apic/io_apic.c
-> @@ -2438,7 +2438,13 @@ unsigned int arch_dynirq_lower_bound(uns
->  	 * dmar_alloc_hwirq() may be called before setup_IO_APIC(), so use
->  	 * gsi_top if ioapic_dynirq_base hasn't been initialized yet.
->  	 */
-> -	return ioapic_initialized ? ioapic_dynirq_base : gsi_top;
-> +	if (!ioapic_initialized)
-> +		return gsi_top;
-> +	/*
-> +	 * For DT enabled machines ioapic_dynirq_base is irrelevant and not
-> +	 * updated. So simply return @from if ioapic_dynirq_base == 0.
-> +	 */
-> +	return ioapic_dynirq_base ? : from;
->  }
->  
->  #ifdef CONFIG_X86_32
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+---
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      | 88 +++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
 
+diff --git a/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+new file mode 100644
+index 000000000000..3248595dc93c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+@@ -0,0 +1,88 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dsp/fsl,dsp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP i.MX8 DSP core
++
++maintainers:
++  - Daniel Baluta <daniel.baluta@nxp.com>
++
++description: |
++  Some boards from i.MX8 family contain a DSP core used for
++  advanced pre- and post- audio processing.
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx8qxp-dsp
++
++  reg:
++    description: Should contain register location and length
++
++  clocks:
++    items:
++      - description: ipg clock
++      - description: ocram clock
++      - description: core clock
++
++  clock-names:
++    items:
++      - const: ipg
++      - const: ocram
++      - const: core
++
++  power-domains:
++    description:
++      List of phandle and PM domain specifier as documented in
++      Documentation/devicetree/bindings/power/power_domain.txt
++    maxItems: 4
++
++  mboxes:
++    description:
++      List of <&phandle type channel> - 2 channels for TXDB, 2 channels for RXDB
++      (see mailbox/fsl,mu.txt)
++    maxItems: 4
++
++  mbox-names:
++    items:
++      - const: txdb0
++      - const: txdb1
++      - const: rxdb0
++      - const: rxdb1
++
++  memory-region:
++    description:
++       phandle to a node describing reserved memory (System RAM memory)
++       used by DSP (see bindings/reserved-memory/reserved-memory.txt)
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - power-domains
++  - mboxes
++  - mbox-names
++  - memory-region
++
++examples:
++  - |
++    #include <dt-bindings/firmware/imx/rsrc.h>
++    #include <dt-bindings/clock/imx8-clock.h>
++    dsp@596e8000 {
++        compatible = "fsl,imx8qxp-dsp";
++        reg = <0x596e8000 0x88000>;
++        clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
++                 <&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
++                 <&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
++        clock-names = "ipg", "ocram", "core";
++        power-domains = <&pd IMX_SC_R_MU_13A>,
++                        <&pd IMX_SC_R_MU_13B>,
++                        <&pd IMX_SC_R_DSP>,
++                        <&pd IMX_SC_R_DSP_RAM>;
++        mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
++        mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
++    };
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
