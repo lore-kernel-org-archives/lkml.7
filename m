@@ -2,66 +2,153 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA02C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935ADC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2896B217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68E8B217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:59:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="y1uQwjqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730921AbfHUX7V (ORCPT
+        id S1730942AbfHUX75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 19:59:21 -0400
-Received: from verein.lst.de ([213.95.11.211]:41874 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728124AbfHUX7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 19:59:20 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2757568C7B; Thu, 22 Aug 2019 01:59:17 +0200 (CEST)
-Date:   Thu, 22 Aug 2019 01:59:16 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Marta Rybczynska <mrybczyn@kalray.eu>,
-        Christoph Hellwig <hch@lst.de>, axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Samuel Jones <sjones@kalray.eu>,
-        Guillaume Missonnier <gmissonnier@kalray.eu>
-Subject: Re: [PATCH v2] nvme: allow 64-bit results in passthru commands
-Message-ID: <20190821235916.GE9511@lst.de>
-References: <89520652.56920183.1565948841909.JavaMail.zimbra@kalray.eu> <20190816131606.GA26191@lst.de> <469829119.56970464.1566198383932.JavaMail.zimbra@kalray.eu> <20190819144922.GC6883@localhost.localdomain>
+        Wed, 21 Aug 2019 19:59:57 -0400
+Received: from mail-eopbgr770075.outbound.protection.outlook.com ([40.107.77.75]:25798
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727255AbfHUX75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 19:59:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hMpZT/H+zChS1wad3/vkpKQ11iHqrjkjm/9FqMNqlBUnPlBkPcSxNaaV8OeJPUvfqXxN9Qzp03SaqtK5pdVcV9gY4Nn40ybDDZ7B6EOOkiZPUWt19aTQjtnPZsd6Jb3XS/oSOWwn4CRY85hRyzu7Gy+XRjcPe+s3dFP9bptJ4Mb98QRKlND/pZ3Ya3DDsAOC34rK5qM9QXfly7Ko2BGdUpfy4O+3xNMnJH5nKdLjnmYLqRS3wk+OC23+vRLnUYYfpO59Wl89Tgf81U1ATVv2giNW0KCQPsgrKxYtbfkGmKFJ+0K9JlHuC+dIUZtGSj/o7lNRNjoTKfOPePW9DE5Vjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NKggGy3Ls7+UFE7JskUtb9vMWRIDLBCdyheCExTksoQ=;
+ b=XRkXEHa2yMq5QpdnoHV4Nc4PC+sGOFdr+7EUsfUjMfx0Q2B+IFG7UANTAURzcp3c4RPuvQXGEpgf6ZEEQT/v85jHxDzwXEMjyeMUiPS9U2vE0HqwegLtsn4K4FvN1OEOLBfl20u3Ourw/e3lqZoT7B9QtLHu1devwPq2fbMkPXVr+bmOf9GRAltyRiH675LCXgJexqOOT3W5iogjuG4k0yJU+2TbM3ITxdWU393dnx60Yq/fN6vUIIuZCZGTGI/Wo8e6aVrKERkRpDE0CchXExRsSyzqkwwUsNr4ZrZx28tg6k4aQqpfoPo4ArBZ3AoHOqWu91U0BcZf64GyrayM8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NKggGy3Ls7+UFE7JskUtb9vMWRIDLBCdyheCExTksoQ=;
+ b=y1uQwjqBTUXlKdXs1oxe1JlX0Zs/Cpw67q7XTCfPgFxQuLr3CKCwIlsKmARe9DIvlRJh9L8kDEyNNhRbqoQn/S1BM5UjijTaabK6VNII39jeXlkh2uTZAr+iDGdaEA91Vo4oK0nOTQXpn7K+7NVGWf6bMEhHU3wAUHkXTVJ538U=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2815.namprd12.prod.outlook.com (52.135.107.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Wed, 21 Aug 2019 23:59:54 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d0b4:a849:c22b:3b53]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d0b4:a849:c22b:3b53%2]) with mapi id 15.20.2178.020; Wed, 21 Aug 2019
+ 23:59:54 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+CC:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>
+Subject: [PATCH v3 0/8] AMD64 EDAC fixes
+Thread-Topic: [PATCH v3 0/8] AMD64 EDAC fixes
+Thread-Index: AQHVWHyGkq5ZZJpNOUKXQmjNKGyrbg==
+Date:   Wed, 21 Aug 2019 23:59:53 +0000
+Message-ID: <20190821235938.118710-1-Yazen.Ghannam@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN2PR01CA0006.prod.exchangelabs.com (2603:10b6:804:2::16)
+ To SN6PR12MB2639.namprd12.prod.outlook.com (2603:10b6:805:6f::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [165.204.78.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e35ab55a-d07a-45c0-217b-08d72693a922
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2815;
+x-ms-traffictypediagnostic: SN6PR12MB2815:
+x-ms-exchange-purlcount: 2
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR12MB2815739C2DFCE08BA84570A9F8AA0@SN6PR12MB2815.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0136C1DDA4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(136003)(376002)(39860400002)(189003)(199004)(6486002)(8936002)(6436002)(81156014)(99286004)(50226002)(8676002)(26005)(81166006)(52116002)(2906002)(6916009)(53936002)(5640700003)(476003)(54906003)(66946007)(25786009)(66476007)(386003)(64756008)(66446008)(66556008)(186003)(2351001)(316002)(6506007)(6512007)(6306002)(2616005)(486006)(102836004)(14444005)(36756003)(478600001)(71190400001)(256004)(86362001)(2501003)(1076003)(4326008)(5660300002)(7736002)(305945005)(6116002)(3846002)(966005)(71200400001)(66066001)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2815;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: l5MVJimNaiPTU8qmgXkTwWd9XdGvsVQ9Ltp6EKsC22PygJkjP6KRbMD4AsU9nulot/0kwb/kyAKeDPOyJjxTM+KTMlNFLLnusl8Z9dq4xxdssHfz8rMzU2cn5hxuMchACHf+zmRFK5Ut9FWH0taWjETL238p18/wE0tWT7gizr4Di8bP3ez9I0xn+iugYLjy5vkENf0a/0FloknI6zkPbZV4Tm5ShFoPp6gc5rdqGRnuxC9r08tUfld3JXCBrCORcvvVeUALZhswefAJnP73nprf5M4I9cDdXg1ivmMqH86rwMBei7tTe90sKG3dUYW2yMGad5pjkn6jYwLURpNXXRkzvh1mwdciu/t2L9ch6yR+EUQ7bF4pHiSWzvn403Oza55FuSF+5DuTjxL0gQOH62WAv8iDgn6ZJHvEmX36b5E=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819144922.GC6883@localhost.localdomain>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e35ab55a-d07a-45c0-217b-08d72693a922
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 23:59:54.0476
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6pMFkVGS2ryHUO9IFuEvXVlr1gl87TsVg+9Y1iKxKaEgHf+4QDJagvyIaX9C49SP2Z0viwzJsMrykIhJB+L7hQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2815
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 08:49:22AM -0600, Keith Busch wrote:
-> On Mon, Aug 19, 2019 at 12:06:23AM -0700, Marta Rybczynska wrote:
-> > ----- On 16 Aug, 2019, at 15:16, Christoph Hellwig hch@lst.de wrote:
-> > > Sorry for not replying to the earlier version, and thanks for doing
-> > > this work.
-> > > 
-> > > I wonder if instead of using our own structure we'd just use
-> > > a full nvme SQE for the input and CQE for that output.  Even if we
-> > > reserve a few fields that means we are ready for any newly used
-> > > field (at least until the SQE/CQE sizes are expanded..).
-> > 
-> > We could do that, nvme_command and nvme_completion are already UAPI.
-> > On the other hand that would mean not filling out certain fields like
-> > command_id. Can do an approach like this.
-> 
-> Well, we need to pass user space addresses and lengths, which isn't
-> captured in struct nvme_command.
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-Well, the address would fit into the data pointer.  But yes, the lack
-of a command length concept in nvme makes this idea a mess and not
-really workable.
+Hi Boris,
+
+This set contains a few fixes for some changes merged in v5.2. There
+are also a couple of fixes for older issues. In addition, there are a
+couple of patches to add support for Asymmetric Dual-Rank DIMMs.
+
+I don't have the failing config readily available that you used, but I
+believe I found the issue. Please let me know how it goes.
+
+I've also added RFC patches to avoid the "ECC disabled" message for
+nodes without memory. I haven't fully tested these, but I wanted to get
+your thoughts. Here's an earlier discussion:
+https://lkml.kernel.org/r/20180321191335.7832-1-Yazen.Ghannam@amd.com
+
+Thanks,
+Yazen
+
+Link:
+https://lkml.kernel.org/r/20190709215643.171078-1-Yazen.Ghannam@amd.com
+
+v2->v3:
+* Drop Fixes: tags in patch 1.
+* Add detection of x8 DRAM devices in patches 2 and 3.
+* Fix Chip Select size printing in patch 4.
+* Added RFC patches to avoid "ECC disabled" message for nodes without memor=
+y.
+
+v1->v2:
+* Squash patches 1 and 2 together.
+
+
+Yazen Ghannam (10):
+  EDAC/amd64: Support more than two controllers for chip selects
+    handling
+  EDAC/amd64: Recognize DRAM device type with EDAC_CTL_CAP
+  EDAC/amd64: Initialize DIMM info for systems with more than two
+    channels
+  EDAC/amd64: Find Chip Select memory size using Address Mask
+  EDAC/amd64: Decode syndrome before translating address
+  EDAC/amd64: Cache secondary Chip Select registers
+  EDAC/amd64: Support Asymmetric Dual-Rank DIMMs
+  EDAC/amd64: Gather hardware information early
+  EDAC/amd64: Use cached data when checking for ECC
+  EDAC/amd64: Check for memory before fully initializing an instance
+
+ drivers/edac/amd64_edac.c | 371 +++++++++++++++++++++++++-------------
+ drivers/edac/amd64_edac.h |   9 +-
+ 2 files changed, 251 insertions(+), 129 deletions(-)
+
+--=20
+2.17.1
+
