@@ -2,219 +2,75 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC123C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ED2C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889E022DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:56:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="J/6vHtzz"
+	by mail.kernel.org (Postfix) with ESMTP id 3159622DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbfHUO4g (ORCPT
+        id S1728319AbfHUO6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:56:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44649 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfHUO4f (ORCPT
+        Wed, 21 Aug 2019 10:58:41 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:35211 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfHUO6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:56:35 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c81so1581864pfc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:56:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Htfb1Invgtay8dffJ+xxLqd/nCefYrqcHrBH+ytSs70=;
-        b=J/6vHtzzBlyi2UEACyvz2lhVgl6pRFOSrv7Ww/y6yWpJMkZ5Pg4u4qcQI89ASFlevR
-         3EMwIWSdBJV05v4nrDJng/waKw+loPiamp1cG4MKd4wCdv1b1FgYORyV8gMvCBzZvyIv
-         bAZ9JRNoaeeW4sMbmqwWwcKytOu6WXenLu19g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Htfb1Invgtay8dffJ+xxLqd/nCefYrqcHrBH+ytSs70=;
-        b=kAAm+UpwiWVitH8OQzQntY2vMiQ4TPFKq0AqMwrT6EtzHI74ECkZbWPRT1clFpZYZr
-         xLz2YOC3qnZbj8igJUpWRlpdH9/6BYYk2yl0KnKPPcmFt2WiHG+HR6fQJWLGTZMFXEJD
-         cfKfamhxKleXN5tReeDer2lUKuSubE+Fm5xp75v2/YjgON0g8d79j2JOtc270yh9WFtc
-         NAkcWO7mund5qMNSkgFfkKi6/pZSTFTN9m7kFGMC0g7yL8EZan/XRpj1/ja0rVYrHJdc
-         h/471QZFpoKzXRhPLDHcLfatlaG5L3XPoFYsv/O8gT5hfa/Ft4aIBhs2CB8/Fe5oF8w6
-         LjSg==
-X-Gm-Message-State: APjAAAVMTZaGoDbfwHypfaERkGMIn57qfyNTkM68dilRNmReO0LkB8cL
-        Qm91SPgoElX3gZTNuRS0J4wHjtiuU3Q=
-X-Google-Smtp-Source: APXvYqzojqP3/G9xAuAZr5XB5JRX+WQgdXdJmvrJx+6/GQ8udPkVJ+wa2f34E7ZmigYuSnplxJ5rog==
-X-Received: by 2002:a17:90a:c70e:: with SMTP id o14mr428008pjt.56.1566399394726;
-        Wed, 21 Aug 2019 07:56:34 -0700 (PDT)
-Received: from localhost ([172.19.216.18])
-        by smtp.gmail.com with ESMTPSA id k6sm23389210pfi.12.2019.08.21.07.56.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 07:56:33 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 10:56:17 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC v2] rcu/tree: Try to invoke_rcu_core() if in_irq() during
- unlock
-Message-ID: <20190821145617.GD147977@google.com>
-References: <20190818233135.GQ28441@linux.ibm.com>
- <20190818233839.GA160903@google.com>
- <20190819012153.GR28441@linux.ibm.com>
- <20190819014143.GB160903@google.com>
- <20190819014623.GC160903@google.com>
- <20190819022927.GS28441@linux.ibm.com>
- <20190819125757.GA6946@linux.ibm.com>
- <20190819143314.GT28441@linux.ibm.com>
- <20190819154143.GA18470@linux.ibm.com>
- <20190821143841.GC147977@google.com>
+        Wed, 21 Aug 2019 10:58:40 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id EB227200005;
+        Wed, 21 Aug 2019 14:58:37 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 16:58:37 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Alexander Dahl <ada@thorsis.com>, linux-rt-users@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [ANNOUNCE] v5.2.9-rt3
+Message-ID: <20190821145837.GD27031@piout.net>
+References: <20190816153616.fbridfzjkmfg4dnr@linutronix.de>
+ <2182739.9IRgZpf3R8@ada>
+ <20190820154418.GM3545@piout.net>
+ <20190821132553.gjvya5lu6j2dfyo5@linutronix.de>
+ <20190821142110.GC27031@piout.net>
+ <20190821144230.knlyrnxz62d75hcb@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190821143841.GC147977@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190821144230.knlyrnxz62d75hcb@linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 10:38:41AM -0400, Joel Fernandes wrote:
-> On Mon, Aug 19, 2019 at 08:41:43AM -0700, Paul E. McKenney wrote:
-> > On Mon, Aug 19, 2019 at 07:33:14AM -0700, Paul E. McKenney wrote:
-> > > On Mon, Aug 19, 2019 at 05:57:57AM -0700, Paul E. McKenney wrote:
-> > > > On Sun, Aug 18, 2019 at 07:29:27PM -0700, Paul E. McKenney wrote:
-> > > > > On Sun, Aug 18, 2019 at 09:46:23PM -0400, Joel Fernandes wrote:
-> > > > > > On Sun, Aug 18, 2019 at 09:41:43PM -0400, Joel Fernandes wrote:
-> > > > > > > On Sun, Aug 18, 2019 at 06:21:53PM -0700, Paul E. McKenney wrote:
-> > > > > > [snip]
-> > > > > > > > > > Also, your commit log's point #2 is "in_irq() implies in_interrupt()
-> > > > > > > > > > which implies raising softirq will not do any wake ups."  This mention
-> > > > > > > > > > of softirq seems a bit odd, given that we are going to wake up a rcuc
-> > > > > > > > > > kthread.  Of course, this did nothing to quell my suspicions.  ;-)
-> > > > > > > > > 
-> > > > > > > > > Yes, I should delete this #2 from the changelog since it is not very relevant
-> > > > > > > > > (I feel now). My point with #2 was that even if were to raise a softirq
-> > > > > > > > > (which we are not), a scheduler wakeup of ksoftirqd is impossible in this
-> > > > > > > > > path anyway since in_irq() implies in_interrupt().
-> > > > > > > > 
-> > > > > > > > Please!  Could you also add a first-principles explanation of why
-> > > > > > > > the added condition is immune from scheduler deadlocks?
-> > > > > > > 
-> > > > > > > Sure I can add an example in the change log, however I was thinking of this
-> > > > > > > example which you mentioned:
-> > > > > > > https://lore.kernel.org/lkml/20190627173831.GW26519@linux.ibm.com/
-> > > > > > > 
-> > > > > > > 	previous_reader()
-> > > > > > > 	{
-> > > > > > > 		rcu_read_lock();
-> > > > > > > 		do_something(); /* Preemption happened here. */
-> > > > > > > 		local_irq_disable(); /* Cannot be the scheduler! */
-> > > > > > > 		do_something_else();
-> > > > > > > 		rcu_read_unlock();  /* Must defer QS, task still queued. */
-> > > > > > > 		do_some_other_thing();
-> > > > > > > 		local_irq_enable();
-> > > > > > > 	}
-> > > > > > > 
-> > > > > > > 	current_reader() /* QS from previous_reader() is still deferred. */
-> > > > > > > 	{
-> > > > > > > 		local_irq_disable();  /* Might be the scheduler. */
-> > > > > > > 		do_whatever();
-> > > > > > > 		rcu_read_lock();
-> > > > > > > 		do_whatever_else();
-> > > > > > > 		rcu_read_unlock();  /* Must still defer reporting QS. */
-> > > > > > > 		do_whatever_comes_to_mind();
-> > > > > > > 		local_irq_enable();
-> > > > > > > 	}
-> > > > > > > 
-> > > > > > > One modification of the example could be, previous_reader() could also do:
-> > > > > > > 	previous_reader()
-> > > > > > > 	{
-> > > > > > > 		rcu_read_lock();
-> > > > > > > 		do_something_that_takes_really_long(); /* causes need_qs in
-> > > > > > > 							  the unlock_special_union to be set */
-> > > > > > > 		local_irq_disable(); /* Cannot be the scheduler! */
-> > > > > > > 		do_something_else();
-> > > > > > > 		rcu_read_unlock();  /* Must defer QS, task still queued. */
-> > > > > > > 		do_some_other_thing();
-> > > > > > > 		local_irq_enable();
-> > > > > > > 	}
-> > > > > > 
-> > > > > > The point you were making in that thread being, current_reader() ->
-> > > > > > rcu_read_unlock() -> rcu_read_unlock_special() would not do any wakeups
-> > > > > > because previous_reader() sets the deferred_qs bit.
-> > > > > > 
-> > > > > > Anyway, I will add all of this into the changelog.
-> > > > > 
-> > > > > Examples are good, but what makes it so that there are no examples of
-> > > > > its being unsafe?
-> > > > > 
-> > > > > And a few questions along the way, some quick quiz, some more serious.
-> > > > > Would it be safe if it checked in_interrupt() instead of in_irq()?
-> > > > > If not, should the in_interrupt() in the "if" condition preceding the
-> > > > > added "else if" be changed to in_irq()?  Would it make sense to add an
-> > > > > "|| !irqs_were_disabled" do your new "else if" condition?  Would the
-> > > > > body of the "else if" actually be executed in current mainline?
-> > > > > 
-> > > > > In an attempt to be at least a little constructive, I am doing some
-> > > > > testing of this patch overnight, along with a WARN_ON_ONCE() to see if
-> > > > > that invoke_rcu_core() is ever reached.
-> > > > 
-> > > > And that WARN_ON_ONCE() never triggered in two-hour rcutorture runs of
-> > > > TREE01, TREE02, TREE03, and TREE09.  (These are the TREE variants in
-> > > > CFLIST that have CONFIG_PREEMPT=y.)
-> > > > 
-> > > > This of course raises other questions.  But first, do you see that code
-> > > > executing in your testing?
-> > > 
-> > > Never mind!  Idiot here forgot the "--bootargs rcutree.use_softirq"...
-> > 
-> > So this time I ran the test this way:
-> > 
-> > tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 10 --configs "TREE01 TREE02 TREE03 TREE09" --bootargs "rcutree.use_softirq=0"
-> > 
-> > Still no splats.  Though only 10-minute runs instead of the two-hour runs
-> > I did last night.  (Got other stuff I need to do, sorry!)
-> > 
-> > My test version of your patch is shown below.  Please let me know if I messed
-> > something up.
+On 21/08/2019 16:42:30+0200, Sebastian Andrzej Siewior wrote:
+> On 2019-08-21 16:21:10 [+0200], Alexandre Belloni wrote:
+> > I'm not sure it is worth it as the issue is introduced by
+> > clocksource-tclib-allow-higher-clockrates.patch. Shouldn't we fix it
+> > directly?
 > 
-> I think you also need to pass rcutorture.irqreader=1 ?
+> you want to get rid of CONFIG_ATMEL_TCB_CLKSRC_USE_SLOW_CLOCK and use
+> the highest possible frequency by default? 
 > 
-> Otherwise seems all readers happen in process context AFAICS.
 
-Which is the default setting for that, so that's not the issue.
+No, I meant the issue fixed by clocksource-tclib-add-proper-depend.patch
+is introduced by clocksource-tclib-allow-higher-clockrates.patch so I
+would think fixing clocksource-tclib-allow-higher-clockrates.patch is
+preferable than having a separate patch.
 
-I think one reason could be, in_irq() is false when the timer callback
-executes, since the timer callback is executing after a grace-period. The
-stack is as follows:
+But maybe you meant you wanted a patch to fix
+clocksource-tclib-allow-higher-clockrates.patch
 
-Any reason why we cannot both test for call_rcu() and execute the RCU
-callback from the timer hardirq handler?
+Hopefully, one day we will have a solution for that upstream (i.e. being
+able to configure the clocksource and clockevent resolutions).
 
-In fact, I guess on use_nosoftirq systems, the callback will not even run
-in softirq context.
-
-[   20.553361]  => rcu_torture_timer_cb
-[   20.553361]  => rcu_do_batch
-[   20.553361]  => rcu_core
-[   20.553361]  => __do_softirq
-[   20.553361]  => do_softirq_own_stack
-[   20.553361]  => do_softirq.part.16
-[   20.553361]  => __local_bh_enable_ip
-[   20.553361]  => rcutorture_one_extend
-[   20.553361]  => rcu_torture_one_read
-[   20.553361]  => rcu_torture_reader
-[   20.553361]  => kthread
-[   20.553361]  => ret_from_fork
-
-
-thanks,
-
- - Joel
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
