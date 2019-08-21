@@ -2,136 +2,134 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257D3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81883C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7B3B22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE5E22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:12:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JaVC9qTT";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JaVC9qTT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="fjjsvyp5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfHUGHf (ORCPT
+        id S1727687AbfHUGMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 02:07:35 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59652 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727630AbfHUGHf (ORCPT
+        Wed, 21 Aug 2019 02:12:03 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:46795 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbfHUGMC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 02:07:35 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9282B60ACF; Wed, 21 Aug 2019 06:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566367654;
-        bh=pXIBqk4P+QePW7ibCGrnyuR0zHexMYLeI86KiWRpM0Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JaVC9qTTK66W6xP3lSDunbODw1J9tS5SFbIFCUKIT/+Va2VCWRGWixZfR4wm0uw+E
-         /ov9w6X91zUGfI1Ojw7KTugXe+VbJ1xwNcOiGmYbZM6+HMYs76oxTzv4GuELiyXGpc
-         /lUJSNGC3t1Qb3V0rHnDdOQdSCBhPMP+XXQJ8Trs=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 97F0E60741;
-        Wed, 21 Aug 2019 06:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566367654;
-        bh=pXIBqk4P+QePW7ibCGrnyuR0zHexMYLeI86KiWRpM0Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JaVC9qTTK66W6xP3lSDunbODw1J9tS5SFbIFCUKIT/+Va2VCWRGWixZfR4wm0uw+E
-         /ov9w6X91zUGfI1Ojw7KTugXe+VbJ1xwNcOiGmYbZM6+HMYs76oxTzv4GuELiyXGpc
-         /lUJSNGC3t1Qb3V0rHnDdOQdSCBhPMP+XXQJ8Trs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 97F0E60741
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>
-Subject: pull-request: wireless-drivers 2019-08-21
-Date:   Wed, 21 Aug 2019 09:07:30 +0300
-Message-ID: <87zhk359wd.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 21 Aug 2019 02:12:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1566367922; x=1597903922;
+  h=from:to:cc:subject:date:message-id;
+  bh=HQ234ZTqwBbZWKR3OpDGx9SSY09PzclKhtZHgmVz3/Y=;
+  b=fjjsvyp5H024UyO1krk7mWxRDmESIFCydV6rNpSYfJ9e++1UA9sF4d9Y
+   ciGUjFmgUyliOzQUA1GLsL9uusZFM/I3IRUdeZSqTYTKhHDMsuwTAY27o
+   AGaR12YJPKkjMn79ysfwHcudMgWPH+KGhXRkSzwPy8QoiI5DnD6Dwuez0
+   4HxvFaTAjvKvycjz8a7gsQJ2KK+TDTTmwOuWYSEUiRqbV24qN5s7RBOM1
+   GJJlXK4cwD3aiOjLzGgqllMd0WJmLJlZOsjHLw4cXMAXg3nlM/QrWKQrJ
+   7SGJ4anFy+52kBRN/ZwIhj4sKouAcMqGecMGXg74XvxhiTqR/CE4eCZDD
+   A==;
+IronPort-SDR: XdwFxE4X0dtt3FMfrfNAUEoYbpPxRtg4WV7S4gOuOchtcHKqjzlVMGy8Ll1CObwSv/hQPd92jQ
+ cDu1XIgqLGLbkauNZVwrKtSWFP76AEfo4ceUBDtLF1OMV27Z4qFsprBFLNR89UFICntvyFL06I
+ 2INv9IBqa6og8DZkQODzsXcXJYRDzepwGVnyFEc8YhK7zDGVV4+YS99JClGyQwrtTrGMrAFlVf
+ RGoKWWLt7+ZObb22HJ86F9U02ojNXjorw0NBqmOk2PN9EzpO0H6hJ/zEua1C+bEFOHUA0YHYE3
+ acA=
+X-IronPort-AV: E=Sophos;i="5.64,411,1559491200"; 
+   d="scan'208";a="222880634"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 21 Aug 2019 14:12:01 +0800
+IronPort-SDR: fdyBt+JXIhPG0CFWkemOCzKcguNRAK/kCDDZUQMRBdxP29JPqL7w2zjL3kdSkgeBPwhIWu6SoK
+ WZP1Tn9xoYxj3CsJtm0FcSBMmftg5AD9NixDvUSt3MpxtV/jHnD+Ad8URKVEvPEcIC4F+iJid/
+ JxVOpqtUredwhxxITJBMY8r9i8dsfk++4Mkg2oszOQ4Q8QiyQPUrVWkYv+L+qpy0x69fDhd+QA
+ s/2aqpAdqdrYa7Ntjyj2nmb6191KSeTnDEBY2p+lfCAaa4o7kXhGNtKMBGffHdtrURWuLLI44q
+ UKz1+ZXpF9b/+xhkWoUDf+6y
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 23:09:22 -0700
+IronPort-SDR: dmeZ0vyILOeZoHueTqrGz6gav5i6/c/2WlZFGhpNvVBF0lLJ7zJuzV7VU6kV+viKNmcFbL6iH3
+ 4/QI/F0pxBR/XhmKYbsFMZV4u0hUGGk8BfF6aiQ2LruBlMgkA8CdFCXg2prkuKquQdCdJEerxx
+ fAUTpi6nB5Ha+YG/3B1IVGuKebLiyEhTWYEFr/iotOc7u+0s+6Ys4q8fJ4XO/pILstf5LJ/Dij
+ ONshQqI9zByCDi17MHB6/WqO9fIK7mI6Vb+AQDUKM5XHtpKmXnOEZNJFzIjIHYxzo7PU23DP91
+ x9s=
+WDCIronportException: Internal
+Received: from cvenusqemu.hgst.com ([10.202.66.73])
+  by uls-op-cesaip01.wdc.com with ESMTP; 20 Aug 2019 23:12:01 -0700
+From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     axboe@kernel.dk, Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Subject: [PATCH V2 0/3] block: set ioprio value
+Date:   Tue, 20 Aug 2019 23:11:53 -0700
+Message-Id: <20190821061156.3127-1-chaitanya.kulkarni@wdc.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+Hi,
 
-here's a pull request to net for 5.3, more info below. I will be offline
-the next week, but Johannes should be able to help if there are any
-issues.
+While experimenting with the ionice, I came across the scenario where
+I cannot see the bio/request priority field being set when using
+blkdiscard for REQ_OP_DISCARD, REQ_OP_WRITE_ZEROES and other operations
+like REQ_OP_WRITE_SAME, REQ_OP_ZONE_RESET, and flush.
 
-Kalle
+This is a small patch-series which sets the ioprio value at various
+places for the zone-reset, flush, write-zeroes and discard operations.
+This patch series uses get_current_ioprio() so that bio associated
+with the respective operation can inherit the value from current
+process.
 
+In order to test this, I've modified the null_blk and enabled the 
+write_zeroes through module param. Following are the results.
 
-The following changes since commit d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
+Without these patches:-  
 
-  Linux 5.3-rc5 (2019-08-18 14:31:08 -0700)
+# modprobe null_blk gb=5 nr_devices=1 write_zeroes=1
+# for prio in `seq 0 3`; do ionice -c ${prio} blkdiscard -z -o 0 -l 4096 /dev/nullb0; done
+# dmesg  -c 
+[  402.958458] null_handle_cmd REQ_OP_WRITE_ZEROES priority class 0
+[  402.966024] null_handle_cmd REQ_OP_WRITE_ZEROES priority class 0
+[  402.973960] null_handle_cmd REQ_OP_WRITE_ZEROES priority class 0
+[  402.981373] null_handle_cmd REQ_OP_WRITE_ZEROES priority class 0
+# 
 
-are available in the git repository at:
+With these patches:-
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git tags/wireless-drivers-for-davem-2019-08-21
+# modprobe null_blk gb=5 nr_devices=1 write_zeroes=1
+# for prio in `seq 0 3`; do ionice -c ${prio} blkdiscard -z -o 0 -l 4096 /dev/nullb0; done 
+# dmesg  -c 
+[ 1426.091772] null_handle_cmd REQ_OP_WRITE_ZEROES priority class 0
+[ 1426.100177] null_handle_cmd REQ_OP_WRITE_ZEROES priority class 1
+[ 1426.108035] null_handle_cmd REQ_OP_WRITE_ZEROES priority class 2
+[ 1426.115768] null_handle_cmd REQ_OP_WRITE_ZEROES priority class 3
+# 
 
-for you to fetch changes up to 5a8c31aa63578cb0ff390a57537f1cb4b312a1ed:
+With the block trace extension support is being worked on [1] which has
+the ability to report the I/O priority, now we can track the correct
+priority values with this patch-series.
 
-  iwlwifi: pcie: fix recognition of QuZ devices (2019-08-20 17:00:42 +0300)
+Regards,
+Chaitanya
 
-----------------------------------------------------------------
-wireless-drivers fixes for 5.3
+[1] https://www.spinics.net/lists/linux-btrace/msg00880.html
 
-Third set of fixes for 5.3, and most likely the last one. The rt2x00
-regression has been reported multiple times, others are of lower
-priority.
+* Changes from V1:-
+1. Adjust the code for new changes from linux-block/for-next.  
 
-mt76
+Chaitanya Kulkarni (3):
+  block: set ioprio for zone-reset bio
+  block: set ioprio for flush bio
+  block: set ioprio for discard, write-zeroes etc
 
-* fix hang on resume on certain machines
+ block/blk-flush.c | 1 +
+ block/blk-lib.c   | 4 ++++
+ block/blk-zoned.c | 2 ++
+ 3 files changed, 7 insertions(+)
 
-rt2x00
+-- 
+2.17.0
 
-* fix AP mode regression related to encryption
-
-iwlwifi
-
-* avoid unnecessary error messages due to multicast frames when not
-  associated
-
-* fix configuration for ax201 devices
-
-* fix recognition of QuZ devices
-
-----------------------------------------------------------------
-Emmanuel Grumbach (1):
-      iwlwifi: pcie: fix the byte count table format for 22560 devices
-
-Ilan Peer (1):
-      iwlwifi: mvm: Allow multicast data frames only when associated
-
-Luca Coelho (2):
-      iwlwifi: pcie: don't switch FW to qnj when ax201 is detected
-      iwlwifi: pcie: fix recognition of QuZ devices
-
-Stanislaw Gruszka (2):
-      mt76: mt76x0u: do not reset radio on resume
-      rt2x00: clear IV's on start to fix AP mode regression
-
- drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c | 33 ++++++++++++++++++++---
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c | 10 +++++++
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c     | 17 ++++++++++++
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c   |  1 +
- drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c | 20 +++++++++-----
- drivers/net/wireless/mediatek/mt76/mt76x0/usb.c   |  8 +++---
- drivers/net/wireless/ralink/rt2x00/rt2800lib.c    |  9 +++++++
- drivers/net/wireless/ralink/rt2x00/rt2x00.h       |  1 +
- drivers/net/wireless/ralink/rt2x00/rt2x00dev.c    | 13 +++++----
- 9 files changed, 93 insertions(+), 19 deletions(-)
