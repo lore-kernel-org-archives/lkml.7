@@ -2,132 +2,116 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68074C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58CAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419EB206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2EB206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:34:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ib9f3bRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729791AbfHUP3h (ORCPT
+        id S1728891AbfHUPeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:29:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36938 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729052AbfHUP3h (ORCPT
+        Wed, 21 Aug 2019 11:34:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37490 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbfHUPeC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:29:37 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LFMedV065141
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:29:35 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uh87m1fxq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:29:35 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 21 Aug 2019 16:29:33 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 21 Aug 2019 16:29:30 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LFTTFv31391964
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 15:29:29 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A313E11C050;
-        Wed, 21 Aug 2019 15:29:29 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CCED811C04C;
-        Wed, 21 Aug 2019 15:29:28 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.59])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 21 Aug 2019 15:29:28 +0000 (GMT)
-Date:   Wed, 21 Aug 2019 18:29:27 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Wed, 21 Aug 2019 11:34:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=iNMFWtCVUyppqjH3IdnBVXbgFcyLHvc4XyezRJUSxvM=; b=Ib9f3bRpltoNRpCH+woTeIbcP
+        WSDU6AvMySyh08AJoaEp9TdoMNorEIVRwrO5lL0DuVFdFMXiJEWZIpZtbb+yH40vKc984XF03tDR2
+        KP3hunB1Nwkg38TWWg3kCGkkDgO/ppmczHxyl4Y6t0JVqW45CfqJcLnZTwO/QZP5XI1FAPX799s4u
+        +O3Q8TVigoYhA0gSn6JJJv4/bEBjJoNT1fYZfgQt+PrsSMvjCiI3/3jOXixI2ENXZMvami4TBQHK7
+        UlYA0ZFtj9h1nBNFQQYgk4WCxeLcJJC0Yz0eUYZ4amOid8XMjqrk4WlPu2wI0Q4FvV3/cX3jPKxeu
+        hzBdpRjtw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0Sc4-0005hh-My; Wed, 21 Aug 2019 15:33:28 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B95E2305F65;
+        Wed, 21 Aug 2019 17:32:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4CE5520A978FE; Wed, 21 Aug 2019 17:33:25 +0200 (CEST)
+Date:   Wed, 21 Aug 2019 17:33:25 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: consolidate pgtable_cache_init() and pgd_cache_init()
-References: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
- <20190821151544.GC28819@bombadil.infradead.org>
+        Joel Fernandes <joel@joelfernandes.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        rostedt <rostedt@goodmis.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+Message-ID: <20190821153325.GD2349@hirez.programming.kicks-ass.net>
+References: <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
+ <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
+ <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
+ <CAHk-=wh9qDFfWJscAQw_w+obDmZvcE5jWJRdYPKYP6YhgoGgGA@mail.gmail.com>
+ <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
+ <CAHk-=wgC4+kV9AiLokw7cPP429rKCU+vjA8cWAfyOjC3MtqC4A@mail.gmail.com>
+ <20190820135612.GS2332@hirez.programming.kicks-ass.net>
+ <20190820202932.GW28441@linux.ibm.com>
+ <20190821103200.kpufwtviqhpbuv2n@willie-the-truck>
+ <20190821132310.GC28441@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190821151544.GC28819@bombadil.infradead.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19082115-0016-0000-0000-000002A1280D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082115-0017-0000-0000-000033015D0E
-Message-Id: <20190821152926.GF26713@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=892 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908210162
+In-Reply-To: <20190821132310.GC28441@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 08:15:44AM -0700, Matthew Wilcox wrote:
-> On Wed, Aug 21, 2019 at 06:06:58PM +0300, Mike Rapoport wrote:
-> > +++ b/arch/alpha/include/asm/pgtable.h
-> > @@ -362,7 +362,6 @@ extern void paging_init(void);
-> >  /*
-> >   * No page table caches to initialise
-> >   */
-> > -#define pgtable_cache_init()	do { } while (0)
-> 
-> Delete the comment too?
-> 
-> > +++ b/arch/arc/include/asm/pgtable.h
-> > @@ -398,7 +398,6 @@ void update_mmu_cache(struct vm_area_struct *vma, unsigned long address,
-> >  /*
-> >   * No page table caches to initialise
-> >   */
-> > -#define pgtable_cache_init()   do { } while (0)
-> 
-> ditto
-> 
-> > +++ b/arch/arm/include/asm/pgtable.h
-> > @@ -368,7 +368,6 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
-> >  #define HAVE_ARCH_UNMAPPED_AREA
-> >  #define HAVE_ARCH_UNMAPPED_AREA_TOPDOWN
-> >  
-> > -#define pgtable_cache_init() do { } while (0)
-> >  
-> >  #endif /* !__ASSEMBLY__ */
-> 
-> delete one of the two blank lines?
-> 
-> > +++ b/arch/c6x/include/asm/pgtable.h
-> > @@ -62,7 +62,6 @@ extern unsigned long empty_zero_page;
-> >  /*
-> >   * No page table caches to initialise
-> >   */
-> > -#define pgtable_cache_init()   do { } while (0)
-> 
-> delete comment ... more of these.
+On Wed, Aug 21, 2019 at 06:23:10AM -0700, Paul E. McKenney wrote:
+> On Wed, Aug 21, 2019 at 11:32:01AM +0100, Will Deacon wrote:
 
-Actually, most of them :)
-Thanks for spotting this.
- 
+> > and so it is using a store-pair instruction to reduce the complexity in
+> > the immediate generation. Thus, the 64-bit store will only have 32-bit
+> > atomicity. In fact, this is scary because if I change bar to:
+> > 
+> > void bar(u64 *x)
+> > {
+> > 	*(volatile u64 *)x = 0xabcdef10abcdef10;
+> > }
+> > 
+> > then I get:
+> > 
+> > bar:
+> > 	mov	w1, 61200
+> > 	movk	w1, 0xabcd, lsl 16
+> > 	str	w1, [x0]
+> > 	str	w1, [x0, 4]
+> > 	ret
+> > 
+> > so I'm not sure that WRITE_ONCE would even help :/
+> 
+> Well, I can have the LWN article cite your email, then.  So thank you
+> very much!
+> 
+> Is generation of this code for a 64-bit volatile store considered a bug?
+> Or does ARMv8 exclude the possibility of 64-bit MMIO registers?  And I
+> would guess that Thomas and Linus would ask a similar bugginess question
+> for normal stores.  ;-)
 
--- 
-Sincerely yours,
-Mike.
-
+I'm calling this a compiler bug; the way I understand volatile this is
+very much against the intentended use case. That is, this is buggy even
+on UP vs signals or MMIO.
