@@ -2,199 +2,202 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EDCC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01753C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7BE42087E
+	by mail.kernel.org (Postfix) with ESMTP id D5EFD2332A
 	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:43:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfHUFmx convert rfc822-to-8bit (ORCPT
+        id S1727408AbfHUFnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 01:42:53 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:39200 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfHUFmw (ORCPT
+        Wed, 21 Aug 2019 01:43:07 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53723 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbfHUFnG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 01:42:52 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x7L5fP8t013248
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 21 Aug 2019 14:41:25 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x7L5fPie027570;
-        Wed, 21 Aug 2019 14:41:25 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x7L5fPMY031987;
-        Wed, 21 Aug 2019 14:41:25 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.151] [10.38.151.151]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-7746119; Wed, 21 Aug 2019 14:39:05 +0900
-Received: from BPXM23GP.gisp.nec.co.jp ([10.38.151.215]) by
- BPXC23GP.gisp.nec.co.jp ([10.38.151.151]) with mapi id 14.03.0439.000; Wed,
- 21 Aug 2019 14:39:04 +0900
-From:   Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-CC:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Punit Agrawal" <punit.agrawal@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Anshuman Khandual <khandual@linux.vnet.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        kvm <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        Xiao Guangrong <xiaoguangrong@tencent.com>,
-        "lidongchen@tencent.com" <lidongchen@tencent.com>,
-        "yongkaiwu@tencent.com" <yongkaiwu@tencent.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: ##freemail## Re: [PATCH v2] mm: hwpoison: disable memory error
- handling on 1GB hugepage
-Thread-Topic: ##freemail## Re: [PATCH v2] mm: hwpoison: disable memory error
- handling on 1GB hugepage
-Thread-Index: AQHVFnaoUuMkT7+k5kKGu78GtXiXKKaVCtaAgG58OYCAAXqfAA==
-Date:   Wed, 21 Aug 2019 05:39:04 +0000
-Message-ID: <20190821053904.GA23349@hori.linux.bs1.fc.nec.co.jp>
-References: <87inbbjx2w.fsf@e105922-lin.cambridge.arm.com>
- <20180207011455.GA15214@hori1.linux.bs1.fc.nec.co.jp>
- <87fu6bfytm.fsf@e105922-lin.cambridge.arm.com>
- <20180208121749.0ac09af2b5a143106f339f55@linux-foundation.org>
- <87wozhvc49.fsf@concordia.ellerman.id.au>
- <e673f38a-9e5f-21f6-421b-b3cb4ff02e91@oracle.com>
- <CANRm+CxAgWVv5aVzQ0wdP_A7QQgqfy7nN_SxyaactG7Mnqfr2A@mail.gmail.com>
- <f79d828c-b0b4-8a20-c316-a13430cfb13c@oracle.com>
- <20190610235045.GB30991@hori.linux.bs1.fc.nec.co.jp>
- <CANRm+CwwPv52k7pWiErYwFHV=_6kCdiyXZkT3QT6ef_UJagt9A@mail.gmail.com>
-In-Reply-To: <CANRm+CwwPv52k7pWiErYwFHV=_6kCdiyXZkT3QT6ef_UJagt9A@mail.gmail.com>
-Accept-Language: en-US, ja-JP
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.150]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <44D254A2BDC35E41B1EA6CD19B17F3BF@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Wed, 21 Aug 2019 01:43:06 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1i0JOe-0003aJ-D2; Wed, 21 Aug 2019 07:43:00 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: comments style: Re: [RFC PATCH v4 1/9] printk-rb: add a new printk ringbuffer implementation
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+        <20190807222634.1723-2-john.ogness@linutronix.de>
+        <20190820085554.deuejmxn4kbqnq7n@pathway.suse.cz>
+Date:   Wed, 21 Aug 2019 07:42:57 +0200
+Message-ID: <87h86bf50e.fsf@linutronix.de>
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 03:03:55PM +0800, Wanpeng Li wrote:
-> Cc Mel Gorman, Kirill, Dave Hansen,
-> On Tue, 11 Jun 2019 at 07:51, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com> wrote:
-> >
-> > On Wed, May 29, 2019 at 04:31:01PM -0700, Mike Kravetz wrote:
-> > > On 5/28/19 2:49 AM, Wanpeng Li wrote:
-> > > > Cc Paolo,
-> > > > Hi all,
-> > > > On Wed, 14 Feb 2018 at 06:34, Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> > > >>
-> > > >> On 02/12/2018 06:48 PM, Michael Ellerman wrote:
-> > > >>> Andrew Morton <akpm@linux-foundation.org> writes:
-> > > >>>
-> > > >>>> On Thu, 08 Feb 2018 12:30:45 +0000 Punit Agrawal <punit.agrawal@arm.com> wrote:
-> > > >>>>
-> > > >>>>>>
-> > > >>>>>> So I don't think that the above test result means that errors are properly
-> > > >>>>>> handled, and the proposed patch should help for arm64.
-> > > >>>>>
-> > > >>>>> Although, the deviation of pud_huge() avoids a kernel crash the code
-> > > >>>>> would be easier to maintain and reason about if arm64 helpers are
-> > > >>>>> consistent with expectations by core code.
-> > > >>>>>
-> > > >>>>> I'll look to update the arm64 helpers once this patch gets merged. But
-> > > >>>>> it would be helpful if there was a clear expression of semantics for
-> > > >>>>> pud_huge() for various cases. Is there any version that can be used as
-> > > >>>>> reference?
-> > > >>>>
-> > > >>>> Is that an ack or tested-by?
-> > > >>>>
-> > > >>>> Mike keeps plaintively asking the powerpc developers to take a look,
-> > > >>>> but they remain steadfastly in hiding.
-> > > >>>
-> > > >>> Cc'ing linuxppc-dev is always a good idea :)
-> > > >>>
-> > > >>
-> > > >> Thanks Michael,
-> > > >>
-> > > >> I was mostly concerned about use cases for soft/hard offline of huge pages
-> > > >> larger than PMD_SIZE on powerpc.  I know that powerpc supports PGD_SIZE
-> > > >> huge pages, and soft/hard offline support was specifically added for this.
-> > > >> See, 94310cbcaa3c "mm/madvise: enable (soft|hard) offline of HugeTLB pages
-> > > >> at PGD level"
-> > > >>
-> > > >> This patch will disable that functionality.  So, at a minimum this is a
-> > > >> 'heads up'.  If there are actual use cases that depend on this, then more
-> > > >> work/discussions will need to happen.  From the e-mail thread on PGD_SIZE
-> > > >> support, I can not tell if there is a real use case or this is just a
-> > > >> 'nice to have'.
-> > > >
-> > > > 1GB hugetlbfs pages are used by DPDK and VMs in cloud deployment, we
-> > > > encounter gup_pud_range() panic several times in product environment.
-> > > > Is there any plan to reenable and fix arch codes?
-> > >
-> > > I too am aware of slightly more interest in 1G huge pages.  Suspect that as
-> > > Intel MMU capacity increases to handle more TLB entries there will be more
-> > > and more interest.
-> > >
-> > > Personally, I am not looking at this issue.  Perhaps Naoya will comment as
-> > > he know most about this code.
-> >
-> > Thanks for forwarding this to me, I'm feeling that memory error handling
-> > on 1GB hugepage is demanded as real use case.
-> >
-> > >
-> > > > In addition, https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/kvm/mmu.c#n3213
-> > > > The memory in guest can be 1GB/2MB/4K, though the host-backed memory
-> > > > are 1GB hugetlbfs pages, after above PUD panic is fixed,
-> > > > try_to_unmap() which is called in MCA recovery path will mark the PUD
-> > > > hwpoison entry. The guest will vmexit and retry endlessly when
-> > > > accessing any memory in the guest which is backed by this 1GB poisoned
-> > > > hugetlbfs page. We have a plan to split this 1GB hugetblfs page by 2MB
-> > > > hugetlbfs pages/4KB pages, maybe file remap to a virtual address range
-> > > > which is 2MB/4KB page granularity, also split the KVM MMU 1GB SPTE
-> > > > into 2MB/4KB and mark the offensive SPTE w/ a hwpoison flag, a sigbus
-> > > > will be delivered to VM at page fault next time for the offensive
-> > > > SPTE. Is this proposal acceptable?
-> > >
-> > > I am not sure of the error handling design, but this does sound reasonable.
-> >
-> > I agree that that's better.
-> >
-> > > That block of code which potentially dissolves a huge page on memory error
-> > > is hard to understand and I'm not sure if that is even the 'normal'
-> > > functionality.  Certainly, we would hate to waste/poison an entire 1G page
-> > > for an error on a small subsection.
-> >
-> > Yes, that's not practical, so we need at first establish the code base for
-> > 2GB hugetlb splitting and then extending it to 1GB next.
-> 
-> I found it is not easy to split. There is a unique hugetlb page size
-> that is associated with a mounted hugetlbfs filesystem, file remap to
-> 2MB/4KB will break this. How about hard offline 1GB hugetlb page as
-> what has already done in soft offline, replace the corrupted 1GB page
-> by new 1GB page through page migration, the offending/corrupted area
-> in the original 1GB page doesn't need to be copied into the new page,
-> the offending/corrupted area in new page can keep full zero just as it
-> is clear during hugetlb page fault, other sub-pages of the original
-> 1GB page can be freed to buddy system. The sigbus signal is sent to
-> userspace w/ offending/corrupted virtual address, and signal code,
-> userspace should take care this.
+On 2019-08-20, Petr Mladek <pmladek@suse.com> wrote:
+>> --- /dev/null
+>> +++ b/kernel/printk/dataring.c
+>> +/**
+>> + * _datablock_valid() - Check if given positions yield a valid data block.
+>> + *
+>> + * @dr:         The associated data ringbuffer.
+>> + *
+>> + * @head_lpos:  The newest data logical position.
+>> + *
+>> + * @tail_lpos:  The oldest data logical position.
+>> + *
+>> + * @begin_lpos: The beginning logical position of the data block to check.
+>> + *
+>> + * @next_lpos:  The logical position of the next adjacent data block.
+>> + *              This value is used to identify the end of the data block.
+>> + *
+>
+> Please remove the empty lines between arguments description. They make
+> the comments too scattered.
 
-Splitting hugetlb is simply hard, IMHO. THP splitting is done by years
-of effort by many great kernel develpers, and I don't think doing similar
-development on hugetlb is a good idea.  I thought of converting hugetlb
-into thp, but maybe it's not an easy task either.
-"Hard offlining via soft offlining" approach sounds new and promising to me.
-I guess we don't need a large patchset to do this. So, thanks for the idea!
+Your feedback is contradicting what PeterZ requested[0]. Particularly
+when multiple lines are involved with a description, I find the spacing
+helpful. I've grown to like the spacing, but I won't fight for it.
 
-- Naoya
+>> +	/*
+>> +	 * dB:
+>> +	 *
+>> +	 * When a writer has completed accessing its data block, it sets the
+>> +	 * @id thus making the data block available for invalidation. This
+>> +	 * _acquire() ensures that this task sees all data ringbuffer and
+>> +	 * descriptor values seen by the writer as @id was set. This is
+>> +	 * necessary to ensure that the data block can be correctly identified
+>> +	 * as valid (i.e. @begin_lpos, @next_lpos, @head_lpos are at least the
+>> +	 * values seen by that writer, which yielded a valid data block at
+>> +	 * that time). It is not enough to rely on the address dependency of
+>> +	 * @desc to @id because @head_lpos is not depedent on @id. This pairs
+>> +	 * with the _release() in dataring_datablock_setid().
+>
+> This human readable description is really useful.
+>
+>> +	 *
+>> +	 * Memory barrier involvement:
+>> +	 *
+>> +	 * If dB reads from gA, then dC reads from fG.
+>> +	 * If dB reads from gA, then dD reads from fH.
+>> +	 * If dB reads from gA, then dE reads from fE.
+>> +	 *
+>> +	 * Note that if dB reads from gA, then dC cannot read from fC.
+>> +	 * Note that if dB reads from gA, then dD cannot read from fD.
+>> +	 *
+>> +	 * Relies on:
+>> +	 *
+>> +	 * RELEASE from fG to gA
+>> +	 *    matching
+>> +	 * ADDRESS DEP. from dB to dC
+>> +	 *
+>> +	 * RELEASE from fH to gA
+>> +	 *    matching
+>> +	 * ADDRESS DEP. from dB to dD
+>> +	 *
+>> +	 * RELEASE from fE to gA
+>> +	 *    matching
+>> +	 * ACQUIRE from dB to dE
+>> +	 */
+>
+> But I am not sure how much this is useful.
+
+When I was first implementing RFCv3, the "human-readable" text version
+was very useful for me. However, now it is the formal descriptions that
+I find more useful. They provide the proof and a far more detailed
+description.
+
+> It would take ages to decrypt all these shortcuts (signs) and
+> translate them into something human readable. Also it might get
+> outdated easily.
+>
+> That said, I haven't found yet if there was a system in all
+> the shortcuts. I mean if they can be descrypted easily
+> out of head. Also I am not familiar with the notation
+> of the dependencies.
+
+I'll respond to this part in Sergey's followup post.
+
+> If this is really needed then I am really scared of some barriers
+> that guard too many things. This one is a good example.
+>
+>> +	desc = dr->getdesc(smp_load_acquire(&db->id), dr->getdesc_arg);
+
+The variable's value (in this case db->id) is doing the guarding. The
+barriers ensure that db->id is read first (and set last).
+
+>> +
+>> +	/* dD: */
+>
+> It would be great if all these shortcuts (signs) are followed with
+> something human readable. Few words might be enough.
+
+I'll respond to this part in Sergey's followup post.
+
+>> +	next_lpos = READ_ONCE(desc->next_lpos);
+>> +
+>> +	if (!_datablock_valid(dr,
+>> +			      /* dE: */
+>> +			      atomic_long_read(&dr->head_lpos),
+>> +			      tail_lpos, begin_lpos, next_lpos)) {
+>> +		/* Another task has already invalidated the data block. */
+>> +		goto out;
+>> +	}
+>> +
+>> +
+>> +++ b/kernel/printk/numlist.c
+>> +bool numlist_read(struct numlist *nl, unsigned long id, unsigned long *seq,
+>> +		  unsigned long *next_id)
+>> +
+>> +	struct nl_node *n;
+>> +
+>> +	n = nl->node(id, nl->node_arg);
+>> +	if (!n)
+>> +		return false;
+>> +
+>> +	if (seq) {
+>> +		/*
+>> +		 * aA:
+>> +		 *
+>> +		 * Adresss dependency on @id.
+>> +		 */
+>
+> This is too scattered. If we really need so many shortcuts (signs)
+> then we should find a better style. The following looks perfectly
+> fine to me:
+>
+> 		/* aA: Adresss dependency on @id. */
+
+I'll respond to this part in Sergey's followup post.
+
+>> +		*seq = READ_ONCE(n->seq);
+>> +	}
+>> +
+>> +	if (next_id) {
+>> +		/*
+>> +		 * aB:
+>> +		 *
+>> +		 * Adresss dependency on @id.
+>> +		 */
+>> +		*next_id = READ_ONCE(n->next_id);
+>> +	}
+>> +
+
+John Ogness
+
+[0] https://lkml.kernel.org/r/20190618111215.GO3436@hirez.programming.kicks-ass.net
