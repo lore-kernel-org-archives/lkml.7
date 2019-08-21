@@ -2,123 +2,129 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEEEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D33CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88263214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605FE214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:45:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ACO16jaP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6FY9vza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfHUSp2 (ORCPT
+        id S1729330AbfHUSpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:45:28 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:12263 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727237AbfHUSp1 (ORCPT
+        Wed, 21 Aug 2019 14:45:41 -0400
+Received: from mail-io1-f50.google.com ([209.85.166.50]:45688 "EHLO
+        mail-io1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728485AbfHUSpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:45:27 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5d91470001>; Wed, 21 Aug 2019 11:45:27 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 21 Aug 2019 11:45:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 21 Aug 2019 11:45:26 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 18:45:26 +0000
-Received: from [10.2.161.131] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 18:45:26 +0000
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-To:     Dave Chinner <david@fromorbit.com>
-CC:     Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
-        <linux-xfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
-        <linux-mm@kvack.org>
-References: <20190814101714.GA26273@quack2.suse.cz>
- <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
- <20190815130558.GF14313@quack2.suse.cz>
- <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190817022603.GW6129@dread.disaster.area>
- <20190819063412.GA20455@quack2.suse.cz>
- <20190819092409.GM7777@dread.disaster.area>
- <ae64491b-85f8-eeca-14e8-2f09caf8abd2@nvidia.com>
- <20190820012021.GQ7777@dread.disaster.area>
- <84318b51-bd07-1d9b-d842-e65cac2ff484@nvidia.com>
- <20190820033608.GB1119@dread.disaster.area>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <29c89d84-d847-0221-70a7-9e5a3d472cda@nvidia.com>
-Date:   Wed, 21 Aug 2019 11:43:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 14:45:41 -0400
+Received: by mail-io1-f50.google.com with SMTP id t3so6597421ioj.12;
+        Wed, 21 Aug 2019 11:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=duQPXWUKXzTpnq5PHDEhf2NqP5Llzhi/XFfpphsmqjU=;
+        b=L6FY9vzaBHRCAZYmxoZof75tLMPCcbAO25iZ8TM7YHT7GQgCn5Oue/I4FMO1+AgGQw
+         O4RVoUO/nfudouztdHAFP6z3QsMO8TChOTKTSjuCSNKtFBdvHGCA2sIjBgt3U6m43YWO
+         G6HRXNpVkLegX/TRH/sYFob0bQcNiW4eD6dIjVVSpMYDEPhqc51QPj+q1uHAxRJ8isAx
+         ml+rqCisSZbBHMQLYYMWmqF3VcKVNUgGC8h5QgOl3xhvi3rEMUNbjuHEGMYmspCFSjBr
+         p9u4S406vCRGh7lkWHvpiitM/YZ4eeYp/cSim32cciTGAjYirgZqKfruvXpsQ+PTk3wA
+         q95w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=duQPXWUKXzTpnq5PHDEhf2NqP5Llzhi/XFfpphsmqjU=;
+        b=VGQUlmDxopsf3eHpyf5fCt1m+tLW002nP9UsahvqJL5SrMhwkTrYI5eGXZcFKuBJ26
+         gZG1VARBo2BwYKSy4s8KX0ytDKX0V7iP3j2Z+toPZ5aueWUQkeY35kp76K+FRYrtOEZd
+         joIHJ525isZHW+lpICJUFIxTHA5e+FdgSThOmiuEo1LAOR2yk4PtR32zrXTDxidlmDLP
+         uW0xbNiU0trogsBbkYb/si4MRhuq/YK8+3+YJOkm5Bh8k9H+3zBYcm6oRs3K9areKTpX
+         ePuFEFgynlB/qZoH6V/iLb9gFH2duRIunq4Vv5EmME42fshhojdqf5xPWX/EkDT7NmTs
+         O0rA==
+X-Gm-Message-State: APjAAAUleop4vaPqJd52DdVo2j/HKVcqQydiolTyZmvPgATVPR63jUtJ
+        LG3GAys3gGYn0sI5QTXmTjWGCCygQP9eO2dDmuM=
+X-Google-Smtp-Source: APXvYqyGAGYNFuygKmKAmNDZnx4kR7duWeE9isnUp7UbCKAotJ0lnyYV0P6bcQyMgDhDh4obZ0RjoJXVkMYr4nCtX7E=
+X-Received: by 2002:a5e:db0a:: with SMTP id q10mr33382306iop.58.1566413140158;
+ Wed, 21 Aug 2019 11:45:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190820033608.GB1119@dread.disaster.area>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566413127; bh=g14IgX27L0iEqAwtfxnkStXpyIeIQNw0GF3XHriRvWY=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ACO16jaP/ap0TKLBmx7hyuV5JFQiZfqp7UCvqna6b/2KLuheEl5ljqa2GaQK+VkX3
-         2o6LK53M+Zd6RFX+dlcv79kauSf6N5CjXssdmF1x2/a7RVLEismkCMFLaFqvH2SUr+
-         NxIqxfaZb0UzUGIbryHAFdvZGqeSBDHknpLK8nu+a7f/kIWSk4mN6Ra2Z3HRw6RP0k
-         5SQek5ORt0GZMJ7boIv3FRb8EfnUQYWbip+ljyYKi13OOsAzBUFu6FK8avyCjZDPDW
-         Pg0fChsXVcNZKL6LLP2jbIrh7qOe3OcRxKED2n15MC7KqHJbrMO6bpD0l6D1k1A4cL
-         iSjNXAQ5sfUwQ==
+References: <20190818140838.GC30291@darkstar.musicnaut.iki.fi> <20190821183123.GC26759@pendragon.ideasonboard.com>
+In-Reply-To: <20190821183123.GC26759@pendragon.ideasonboard.com>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 21 Aug 2019 13:45:28 -0500
+Message-ID: <CAHCN7xLEiH6PttR6707dSVvi4N4qZM9UyXj4b-TUqOJSboi71g@mail.gmail.com>
+Subject: Re: OMAP DRM regression on N900
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/19 8:36 PM, Dave Chinner wrote:
-> On Mon, Aug 19, 2019 at 08:09:33PM -0700, John Hubbard wrote:
->> On 8/19/19 6:20 PM, Dave Chinner wrote:
->>> On Mon, Aug 19, 2019 at 05:05:53PM -0700, John Hubbard wrote:
->>>> On 8/19/19 2:24 AM, Dave Chinner wrote:
->>>>> On Mon, Aug 19, 2019 at 08:34:12AM +0200, Jan Kara wrote:
->>>>>> On Sat 17-08-19 12:26:03, Dave Chinner wrote:
->>>>>>> On Fri, Aug 16, 2019 at 12:05:28PM -0700, Ira Weiny wrote:
->>>>>>>> On Thu, Aug 15, 2019 at 03:05:58PM +0200, Jan Kara wrote:
->>>>>>>>> On Wed 14-08-19 11:08:49, Ira Weiny wrote:
->>>>>>>>>> On Wed, Aug 14, 2019 at 12:17:14PM +0200, Jan Kara wrote:
->>>> ...
-> AFAIA, there is no struct file here - the memory that has been pinned
-> is just something mapped into the application's address space.
-> 
-> It seems to me that the socket here is equivalent of the RDMA handle
-> that that owns the hardware that pins the pages. Again, that RDMA
-> handle is not aware of waht the mapping represents, hence need to
-> hold a layout lease if it's a file mapping.
-> 
-> SO from the filesystem persepctive, there's no difference between
-> XDP or RDMA - if it's a FSDAX mapping then it is DMAing directly
-> into the filesystem's backing store and that will require use of
-> layout leases to perform safely.
-> 
+On Wed, Aug 21, 2019 at 1:37 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Aaro,
+>
+> On Sun, Aug 18, 2019 at 05:08:38PM +0300, Aaro Koskinen wrote:
+> > Hi,
+> >
+> > I haven't got display working on N900 since v5.1. Bisected to:
+> >
+> > d17eb4537a7eb16da9eafbfd5717e12b45b77251 is the first bad commit
+> > commit d17eb4537a7eb16da9eafbfd5717e12b45b77251
+> > Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Date:   Wed Sep 12 19:41:31 2018 +0300
+> >
+> >     drm/omap: Factor out common init/cleanup code for output devices
+>
+> Sorry :-(
+>
+> I'll send a tentative fix, I'd appreciate if you could test it.
 
-OK, got it! Makes perfect sense.
+Can you point me to this patch?  I was in the process of
+troubleshooting both a DM37, OMAP35 and AM35 board who all have blank
+screens.  I'd like to try this patch too.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+thank you,
+
+adam
+
+>
+> > looks like with this commit I get only the TV out:
+> >
+> > $ ls -l /sys/class/drm/
+> > total 0
+> > lrwxrwxrwx    1 root     root             0 Aug 18 16:15 card0 -> ../../devices/platform/omapdrm.0/drm/card0
+> > lrwxrwxrwx    1 root     root             0 Aug 18 16:15 card0-SVIDEO-1 -> ../../devices/platform/omapdrm.0/drm/card0/card0-SVIDEO-1
+> > lrwxrwxrwx    1 root     root             0 Aug 18 16:15 renderD128 -> ../../devices/platform/omapdrm.0/drm/renderD128
+> > -r--r--r--    1 root     root          4096 Aug 18 16:15 version
+> >
+> > with the previous commit both outputs are there:
+> >
+> > $ ls -l /sys/class/drm/
+> > total 0
+> > lrwxrwxrwx    1 root     root             0 Aug 18 16:28 card0 -> ../../devices/platform/omapdrm.0/drm/card0
+> > lrwxrwxrwx    1 root     root             0 Aug 18 16:28 card0-LVDS-1 -> ../../devices/platform/omapdrm.0/drm/card0/card0-LVDS-1
+> > lrwxrwxrwx    1 root     root             0 Aug 18 16:28 card0-SVIDEO-1 -> ../../devices/platform/omapdrm.0/drm/card0/card0-SVIDEO-1
+> > lrwxrwxrwx    1 root     root             0 Aug 18 16:28 renderD128 -> ../../devices/platform/omapdrm.0/drm/renderD128
+> > -r--r--r--    1 root     root          4096 Aug 18 16:28 version
+> >
+> > Used .config below.
+>
+> [snip]
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
