@@ -2,77 +2,90 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3687C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF53C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5422206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:15:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="b6p5/u/3"
+	by mail.kernel.org (Postfix) with ESMTP id 0759322CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbfHUVPM (ORCPT
+        id S1730813AbfHUVPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 17:15:12 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43002 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729594AbfHUVPM (ORCPT
+        Wed, 21 Aug 2019 17:15:41 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57688 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729594AbfHUVPk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 17:15:12 -0400
-Received: by mail-oi1-f194.google.com with SMTP id o6so2725849oic.9;
-        Wed, 21 Aug 2019 14:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f11r5rDIrPHkeH+HjkUpHOS2su3knSlDIuohz37NErM=;
-        b=b6p5/u/3tSHVdNTddkdJYeuyTycpn608S/Ffw98gMhYlEzN/fNlicwctGXe7dTarhI
-         fhITIj0x8uY+xBequHvjilYoNHB7bIv8PpZ41t/jpuR219c0uoHLvEFnIlfTTB/PZi+w
-         5xZ2XPDYoyFeLNvZRGi4+4vmaaudb+p+iZSvQfumNNG0+Q7CZbvBLb5F6JJVph51jmFQ
-         /sAwC36dvjGgAl95/cBVtd4K3cYcU2fIN71oAyusPjTPA3yZZW0xVcZ1uWfKlUCMDlE+
-         xjgrq+Z0NdrhEMhpSsTBVQBilY5FHB6zmcLZZWe8m0zJV0cASv9ZbtCdkB7M4cTwoSSE
-         xojA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f11r5rDIrPHkeH+HjkUpHOS2su3knSlDIuohz37NErM=;
-        b=RewMOb6Jx8QuxZZrvS0y+qtkTtnxERB7pVd7SnMAKLVYevF+Kh83Fjvr5HIV3kn8Y1
-         jDivG/5bCR4b4vf5hFXhtU70tDv8bdymdeiEZd+BMB/sy6SWeBRpnvnlzG6LhVEplkJ4
-         rmhSdODL+0Otz7eh/MJ5PzPsOPBLbpuKhVsoEzd6QnqpKOC3JwKCwpMxrSDqpYqnsqLJ
-         F2h9LtL2Ox09GqdVhQtbGQ2psDcYNjNTXU9DKsAF8u90XNtST/E686UFcG6mi3NUmkcZ
-         sorL5/npKTrQmGqMAw95PIIEJy6kEQAm3ekAUfkGYL1TYW3E+0MzUJOagC9zfecHP5ka
-         XB2A==
-X-Gm-Message-State: APjAAAWVArG1ivyPEpMfOGNc/4gmaGGhnENj7uKh2F9edtMK82lM+Jtt
-        vr7FklMno/5XBxo0AEA9Hn1Zwpr81Bvd/g3FuIM=
-X-Google-Smtp-Source: APXvYqzWYLbDJgY7jblPNDvJdCDNspP35RWDkTdkhOJypCJj8+By07BAkOd+Pc2Ew6gsVJok0cawdVBqY3xnEvZFnyI=
-X-Received: by 2002:aca:d650:: with SMTP id n77mr1514987oig.129.1566422111539;
- Wed, 21 Aug 2019 14:15:11 -0700 (PDT)
+        Wed, 21 Aug 2019 17:15:40 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i0XxB-0005fR-Ae; Wed, 21 Aug 2019 23:15:37 +0200
+Date:   Wed, 21 Aug 2019 23:15:36 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Woody Suwalski <terraluna977@gmail.com>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: Kernel 5.3.x, 5.2.2+: VMware player suspend on 64/32 bit
+ guests
+In-Reply-To: <CAM6Zs0XE8GW-P4Q3YM3KZo-1L+g2wt5QRN+JM3_m1xuwgFDVXQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1908212313340.1983@nanos.tec.linutronix.de>
+References: <2e70a6e2-23a6-dbf2-4911-1e382469c9cb@gmail.com> <CAM6Zs0WqdfCv=EGi5qU5w6Dqh2NHQF2y_uF4i57Z9v=NoHHwPA@mail.gmail.com> <CAM6Zs0X_TpRPSR9XRikkYxHSA4vZsFr7WH_pEyq6npNjobdRVw@mail.gmail.com> <11dc5f68-b253-913a-4219-f6780c8967a0@intel.com>
+ <594c424c-2474-5e2c-9ede-7e7dc68282d5@gmail.com> <CAM6Zs0XzBvoNFa5CSAaEEBBJHcxvguZFRqVOVdr5+JDE=PVGVw@mail.gmail.com> <alpine.DEB.2.21.1908100811160.7324@nanos.tec.linutronix.de> <fbcf3c93-3868-2b0e-b831-43fa68c48d6c@gmail.com>
+ <CAM6Zs0WLQG90EQ+38NE1Nv8bcnbxW8wO4oEfxSuu4dLhfT1YZA@mail.gmail.com> <alpine.DEB.2.21.1908121917460.7324@nanos.tec.linutronix.de> <CAM6Zs0UoHZyBkY9-RLdO-W+u09RZPbzq-A-K01sHyRkfoEiYTA@mail.gmail.com> <alpine.DEB.2.21.1908150924210.2241@nanos.tec.linutronix.de>
+ <CAM6Zs0XE8GW-P4Q3YM3KZo-1L+g2wt5QRN+JM3_m1xuwgFDVXQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190821142043.14649-1-narmstrong@baylibre.com> <20190821142043.14649-13-narmstrong@baylibre.com>
-In-Reply-To: <20190821142043.14649-13-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 21 Aug 2019 23:15:00 +0200
-Message-ID: <CAFBinCAb+mxh_FPa4P8pe4gGEACJD8qH+jJMb7b9pd8nAt5hqw@mail.gmail.com>
-Subject: Re: [PATCH v2 12/14] arm64: dts: meson-gxbb-nanopi-k2: add missing model
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 4:24 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> This fixes the following DT schemas check errors:
-> meson-gxbb-nanopi-k2.dt.yaml: /: 'model' is a required property
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Tue, 20 Aug 2019, Woody Suwalski wrote:
+> On Thu, Aug 15, 2019 at 2:37 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > On Tue, 13 Aug 2019, Woody Suwalski wrote:
+> > > On Mon, Aug 12, 2019 at 1:24 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > > The ACPI handler is not the culprit. This is either an emulation bug or
+> > > > something really strange. Can you please use a WARN_ON() if the loop is
+> > > > exited via the timeout so we can see in which context this happens?
+> > > >
+> > >
+> > > B. On 5.3-rc4 problem is gone. I guess it is overall good sign.
+> >
+> > Now the interesting question is what changed between 5.3-rc3 and
+> > 5.3-rc4. Could you please try to bisect that?
+> >
+> 
+> Apparently I can not, and frustrated'ingly do not understand it.
+> Tried twice, and every time I get it broken to the end of bisection -
+> so the fixed-in-5.3-rc4 theory falls apart. Yet if I build cleanly
+> 5.3-rc4 or -rc5, it works OK.
+> Then on a 32 bit system - I first tried with a scaled-down kernel
+> (just with the drivers needed in the VM). That one is never working,
+> even in rc5. Yet the "full" kernel works OK. So now there is a config
+> issue variation on top of other problem?
+
+Looks like and it would be good to know which knob it is.
+
+Can you send me the two configs please?
+
+> > dpm_suspend_noirq() is called with all CPUs online and interrupts
+> > enabled. In that case an interrupt pending in IRR does not make any sense
+> > at all. Confused.
+> >
+> For now I use a timeout counter patch - and it is showing 100% irq9
+> jammed and needing rescue. And I am even more confused...
+
+You're not alone, if that gives you a bit of comfort :)
+
+Thanks,
+
+	tglx
