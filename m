@@ -2,172 +2,202 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D06C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27505C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 799D32339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:01:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N05pmviJ"
+	by mail.kernel.org (Postfix) with ESMTP id EF0AB22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566421336;
+	bh=ilRgutXiZ+213c/g1ZHVDagwu0QIkC5jqCthLVjhsqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iWpnj7tcHh08pwF+TSAOFetGMBgfe8JcnXSkI5dcGl80SG7SIc4cMz6QlybuY0Nel
+	 DHnUCseOPdJDBw2XXDAQHTsPFitd55PNipZsncIztKzY+/fTQ4SLeDlhNvLVBrqZFx
+	 LwN9hHOQKGwmeJ+8RS6pK7fTquQvk1DEDpMY2N1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbfHUVB1 (ORCPT
+        id S1730681AbfHUVCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 17:01:27 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40877 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728512AbfHUVB0 (ORCPT
+        Wed, 21 Aug 2019 17:02:15 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34976 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728428AbfHUVCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 17:01:26 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c5so3333397wmb.5;
-        Wed, 21 Aug 2019 14:01:25 -0700 (PDT)
+        Wed, 21 Aug 2019 17:02:14 -0400
+Received: by mail-qk1-f193.google.com with SMTP id r21so3180206qke.2;
+        Wed, 21 Aug 2019 14:02:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UhcZQ4lA9u+37V2YEzYCZa77qAOCxfCX3xooq/2fuug=;
-        b=N05pmviJKP8bZU9VEbj3bzBOI+RzcCRMM2dZ3p3uhStr2Ox7nFeWLi4EyX4HE4pZJT
-         bw1DduTzfE6m23jKKjUdFaBg3NWijOh/bKx+mwrgvd1VWnsIaDNDh9zsmF0G0PYWFH0Q
-         iNLjEq1Qgk40H9b6C2DHuAcHe1fsu0cvP1CVur/kYviJ0VVf5Bl3dOc954c5ro9tW1vE
-         xsZl6ysXTtixVNZ4g+tiqAb9kfnDrYf7FlhsHQ/n+pzeuORRQ9CR2Y4ysFFE9lMWlxxI
-         hw2C276SX5C0XPKuyxNVeEVF6XhIuUiEmeHapD0K2O4UxMh6l0w4ZcnitXzQYsBM3yDF
-         npNw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KqdERxhIBAIfp0cd0hd74/Q6JgUT8pUqLNfVR97hQrw=;
+        b=cvs9Vr1YLEympRLozhgSozrKl/OUAv7d2nZM7TBMrHINk/WCc10TYb0b7zVsDTOHhU
+         Ta5B4QJ347mfUkR+Wup4leIKwduHVyS+oPVMrEk2P80BjxZRHKGUtSEQ6gZ9xJhc74f7
+         FXfp3eqwTYi689KtqkWIiD0avLvg+V4jePnSbNV5KsDQnukJYxKgL4OHMa+8ehX5TEHN
+         Sf7gBaXzkDUK+ATl6xXFt3mobpa8Y7S3RQchx1wt7116E02QSagSd/IuyCGvHU2Q+r8j
+         6rvey1+5cnTsOx0CG88ElNI/RUUWRUhXv5KiUGa23CgKxHmLU/gjbEvt2/2Rp8aPHMBT
+         N9lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UhcZQ4lA9u+37V2YEzYCZa77qAOCxfCX3xooq/2fuug=;
-        b=VKL83rFiR0lCXVIR+GVpu5s/urhQ62Y9farFqNoknr8sNUa0C29PzuDclOlwuebuUB
-         axcHAzCh0x94ymacJrOOReu5bYHQZVfIAgz/UyQJJN06Jh8UvAKuglReiLR3oDnMkXB+
-         LdRiaS3YBbqDmpUYBSM4hHYAtzE48yAR9oJ5f4eUIWAZIZvCJvJki0yIXSZc8/owmrnP
-         BVPXx/oWonciQJCiJ7GLZWStm99KMt0O5kfF0C2tMnTpcGoPs3+VDbZ0CzPkOU+dyvP+
-         3P0I/8OPvEqicwrc7brqrgeTYK6U003IHSlXsY6SjoUZEc0+XA838A32rlLGk+5wqReD
-         j3Ig==
-X-Gm-Message-State: APjAAAVqXjz717UUwzpiMCmZAEnqE7CekiGnpLbQuBxm5Fgy5gXiav2u
-        xWnKc8Vi0AsL5HD+DSBGxyc=
-X-Google-Smtp-Source: APXvYqxcY255zvfu7hHpFXkZjptvve/MnSI69viqZPleaXoRDa/TDCYIO3349YjnWOHfqVxFA1KTEw==
-X-Received: by 2002:a7b:c632:: with SMTP id p18mr2240221wmk.114.1566421284357;
-        Wed, 21 Aug 2019 14:01:24 -0700 (PDT)
-Received: from alejandro-pc.mundo-R.com (57.166.117.91.dynamic.reverse-mundo-r.com. [91.117.166.57])
-        by smtp.gmail.com with ESMTPSA id f6sm49972599wrh.30.2019.08.21.14.01.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 14:01:23 -0700 (PDT)
-From:   =?UTF-8?q?Alejandro=20Gonz=C3=A1lez?= 
-        <alejandro.gonzalez.correo@gmail.com>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        maxime.ripard@bootlin.com, wens@csie.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-sunxi@googlegroups.com,
-        =?UTF-8?q?Alejandro=20Gonz=C3=A1lez?= 
-        <alejandro.gonzalez.correo@gmail.com>
-Subject: [RESEND PATCH 1/1] rtc: sun6i: Allow using as wakeup source from suspend
-Date:   Wed, 21 Aug 2019 23:00:56 +0200
-Message-Id: <20190821210056.11995-1-alejandro.gonzalez.correo@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KqdERxhIBAIfp0cd0hd74/Q6JgUT8pUqLNfVR97hQrw=;
+        b=HiNLVJVgcUehhxt7HVn2urI0gMs8OTkFNqfZXY2ImC5P5jdI9JaDUaSSSNzKBTRfFf
+         8VYRV0E5cT7SckIsnRbTs+yO7En4drVC7bEWVjng4j7eT8iWJe3yjMhMW3+/G10l77cN
+         ToEW5I1dUPjUvItv4OV9tfBxpYCaSwEhEzK3lfaEFfVC3hz/tb3R3x8Kkfz6o3yLalT9
+         5e05O05pbCjA4F6rlbaTy3UiZ75LvZ0TRxQvwV/VQqmCdsRsmb0mYHRL2NylNBD8Qfyk
+         UUFv4GQYcp1ty4d2L07Rj2/qCqXe4Ltdurlr0buF8nhFsx6g2A9tOWPMylHocriKMc7d
+         d9Dg==
+X-Gm-Message-State: APjAAAUU4UMmuPHt21dtTeUiL4ZKNyGX7j2WVSgmEtmEwNJuPNQqGhdX
+        yR0fXvERhTBlt3CFRppdU3G3d8RG
+X-Google-Smtp-Source: APXvYqwiYZD1Q0jEB7i1nrSipTQUHE/zf0lNymV6cHbSadUYR57/Bem3O2OHYhxa9abFPy0fNICRPg==
+X-Received: by 2002:ae9:e84b:: with SMTP id a72mr33982679qkg.355.1566421332435;
+        Wed, 21 Aug 2019 14:02:12 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:1f05])
+        by smtp.gmail.com with ESMTPSA id l18sm10223076qtp.64.2019.08.21.14.02.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 14:02:11 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 14:02:10 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk, jack@suse.cz, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, guro@fb.com, akpm@linux-foundation.org
+Subject: [PATCH v3 4/5] writeback, memcg: Implement cgroup_writeback_by_id()
+Message-ID: <20190821210210.GM2263813@devbig004.ftw2.facebook.com>
+References: <20190815195619.GA2263813@devbig004.ftw2.facebook.com>
+ <20190815195902.GE2263813@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190815195902.GE2263813@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows userspace to set up wakeup alarms on any RTC handled by the
-sun6i driver, and adds the necessary PM operations to allow resuming from
-suspend when the configured wakeup alarm fires a IRQ. Of course, that the
-device actually resumes depends on the suspend state and how a particular
-hardware reacts to it, but that is out of scope for this patch.
+Implement cgroup_writeback_by_id() which initiates cgroup writeback
+from bdi and memcg IDs.  This will be used by memcg foreign inode
+flushing.
 
-I've tested these changes on a Pine H64 model B, which contains a
-Allwinner H6 SoC, with the help of CONFIG_PM_TEST_SUSPEND kernel option.
-These are the interesting outputs from the kernel and commands which
-show that it works. As every RTC handled by this driver is largely the
-same, I think that it shouldn't introduce any regression on other SoCs,
-but I may be wrong.
+v2: Use wb_get_lookup() instead of wb_get_create() to avoid creating
+    spurious wbs.
 
-[    1.092705] PM: test RTC wakeup from 'freeze' suspend
-[    1.098230] PM: suspend entry (s2idle)
-[    1.212907] PM: suspend devices took 0.080 seconds
-(The SoC freezes for some seconds)
-[    3.197604] PM: resume devices took 0.104 seconds
-[    3.215937] PM: suspend exit
+v3: Interpret 0 @nr as 1.25 * nr_dirty to implement best-effort
+    flushing while avoding possible livelocks.
 
-[    1.092812] PM: test RTC wakeup from 'mem' suspend
-[    1.098089] PM: suspend entry (deep)
-[    1.102033] PM: suspend exit
-[    1.105205] PM: suspend test failed, error -22
-
-In any case, the RTC alarm interrupt gets fired as exptected:
-
-$ echo +5 > /sys/class/rtc/rtc0/wakealarm && sleep 5 && grep rtc /proc/interrupts
- 29:          1          0          0          0     GICv2 133 Level     7000000.rtc
-
-Signed-off-by: Alejandro González <alejandro.gonzalez.correo@gmail.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
 ---
- drivers/rtc/rtc-sun6i.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ fs/fs-writeback.c         |   83 ++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/writeback.h |    2 +
+ 2 files changed, 85 insertions(+)
 
-diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-index c0e75c373605..b7611e5dea3f 100644
---- a/drivers/rtc/rtc-sun6i.c
-+++ b/drivers/rtc/rtc-sun6i.c
-@@ -598,6 +598,33 @@ static const struct rtc_class_ops sun6i_rtc_ops = {
- 	.alarm_irq_enable	= sun6i_rtc_alarm_irq_enable
- };
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -892,6 +892,89 @@ restart:
+ }
  
-+#ifdef CONFIG_PM_SLEEP
-+/* Enable IRQ wake on suspend, to wake up from RTC. */
-+static int sun6i_rtc_suspend(struct device *dev)
+ /**
++ * cgroup_writeback_by_id - initiate cgroup writeback from bdi and memcg IDs
++ * @bdi_id: target bdi id
++ * @memcg_id: target memcg css id
++ * @nr_pages: number of pages to write, 0 for best-effort dirty flushing
++ * @reason: reason why some writeback work initiated
++ * @done: target wb_completion
++ *
++ * Initiate flush of the bdi_writeback identified by @bdi_id and @memcg_id
++ * with the specified parameters.
++ */
++int cgroup_writeback_by_id(u64 bdi_id, int memcg_id, unsigned long nr,
++			   enum wb_reason reason, struct wb_completion *done)
 +{
-+	struct sun6i_rtc_dev *chip = dev_get_drvdata(dev);
++	struct backing_dev_info *bdi;
++	struct cgroup_subsys_state *memcg_css;
++	struct bdi_writeback *wb;
++	struct wb_writeback_work *work;
++	int ret;
 +
-+	if (device_may_wakeup(dev))
-+		enable_irq_wake(chip->irq);
++	/* lookup bdi and memcg */
++	bdi = bdi_get_by_id(bdi_id);
++	if (!bdi)
++		return -ENOENT;
 +
-+	return 0;
++	rcu_read_lock();
++	memcg_css = css_from_id(memcg_id, &memory_cgrp_subsys);
++	if (memcg_css && !css_tryget(memcg_css))
++		memcg_css = NULL;
++	rcu_read_unlock();
++	if (!memcg_css) {
++		ret = -ENOENT;
++		goto out_bdi_put;
++	}
++
++	/*
++	 * And find the associated wb.  If the wb isn't there already
++	 * there's nothing to flush, don't create one.
++	 */
++	wb = wb_get_lookup(bdi, memcg_css);
++	if (!wb) {
++		ret = -ENOENT;
++		goto out_css_put;
++	}
++
++	/*
++	 * If @nr is zero, the caller is attempting to write out most of
++	 * the currently dirty pages.  Let's take the current dirty page
++	 * count and inflate it by 25% which should be large enough to
++	 * flush out most dirty pages while avoiding getting livelocked by
++	 * concurrent dirtiers.
++	 */
++	if (!nr) {
++		unsigned long filepages, headroom, dirty, writeback;
++
++		mem_cgroup_wb_stats(wb, &filepages, &headroom, &dirty,
++				      &writeback);
++		nr = dirty * 10 / 8;
++	}
++
++	/* issue the writeback work */
++	work = kzalloc(sizeof(*work), GFP_NOWAIT | __GFP_NOWARN);
++	if (work) {
++		work->nr_pages = nr;
++		work->sync_mode = WB_SYNC_NONE;
++		work->range_cyclic = 1;
++		work->reason = reason;
++		work->done = done;
++		work->auto_free = 1;
++		wb_queue_work(wb, work);
++		ret = 0;
++	} else {
++		ret = -ENOMEM;
++	}
++
++	wb_put(wb);
++out_css_put:
++	css_put(memcg_css);
++out_bdi_put:
++	bdi_put(bdi);
++	return ret;
 +}
 +
-+/* Disable IRQ wake on resume. */
-+static int sun6i_rtc_resume(struct device *dev)
-+{
-+	struct sun6i_rtc_dev *chip = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev))
-+		disable_irq_wake(chip->irq);
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(sun6i_rtc_pm_ops,
-+	sun6i_rtc_suspend, sun6i_rtc_resume);
-+
- static int sun6i_rtc_probe(struct platform_device *pdev)
- {
- 	struct sun6i_rtc_dev *chip = sun6i_rtc;
-@@ -650,6 +677,8 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
++/**
+  * cgroup_writeback_umount - flush inode wb switches for umount
+  *
+  * This function is called when a super_block is about to be destroyed and
+--- a/include/linux/writeback.h
++++ b/include/linux/writeback.h
+@@ -217,6 +217,8 @@ void wbc_attach_and_unlock_inode(struct
+ void wbc_detach_inode(struct writeback_control *wbc);
+ void wbc_account_cgroup_owner(struct writeback_control *wbc, struct page *page,
+ 			      size_t bytes);
++int cgroup_writeback_by_id(u64 bdi_id, int memcg_id, unsigned long nr_pages,
++			   enum wb_reason reason, struct wb_completion *done);
+ void cgroup_writeback_umount(void);
  
- 	clk_prepare_enable(chip->losc);
- 
-+	device_init_wakeup(&pdev->dev, 1);
-+
- 	chip->rtc = devm_rtc_device_register(&pdev->dev, "rtc-sun6i",
- 					     &sun6i_rtc_ops, THIS_MODULE);
- 	if (IS_ERR(chip->rtc)) {
-@@ -684,6 +713,7 @@ static struct platform_driver sun6i_rtc_driver = {
- 	.driver		= {
- 		.name		= "sun6i-rtc",
- 		.of_match_table = sun6i_rtc_dt_ids,
-+		.pm = &sun6i_rtc_pm_ops,
- 	},
- };
- builtin_platform_driver(sun6i_rtc_driver);
--- 
-2.20.1
-
+ /**
