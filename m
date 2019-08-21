@@ -2,98 +2,102 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E823C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330CCC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C2B2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1817206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:34:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PjRfProg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b9E4nxzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfHUGbz (ORCPT
+        id S1727848AbfHUGeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 02:31:55 -0400
-Received: from ozlabs.org ([203.11.71.1]:38697 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfHUGby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 02:31:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46CyVw01mQz9sML;
-        Wed, 21 Aug 2019 16:31:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566369112;
-        bh=hAJk249xrLAIaM5pUyU737RXL8NewzcUY3Q/r/1sGx4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PjRfProgCpXaNYIjIn/hjctcvVZHMWv19lKRITPUWUcp2OOJq18nTIvtQkSEQpjIw
-         bpY8IgJsJSwgf2MsWFJMmRFgiW/Q6+DNQIm4id4ag57aV03limFKJCnXH8D75AeDpG
-         rgScMRlQVcg9NPcifRGzcbECjHFkOpFeBCsg0pv8WEsNoT4W87DKtH2Pm6X7xbzjq+
-         8S+eu5dhfTYVUcQuJXIp0bMEPrsN6+0fa6zlqCc0avwe77b/d/f5lO3DN6MSoqwX7Q
-         I8VQl8hrsWbqxGkzb7oY03DG8v2zSVs+FaU8RDKKUTGGbESdDOFvzdE7hmy/gYM0wy
-         Dr7Z0Bp5q/4Ag==
-Date:   Wed, 21 Aug 2019 16:31:51 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the rtc tree
-Message-ID: <20190821163151.6e36d092@canb.auug.org.au>
+        Wed, 21 Aug 2019 02:34:11 -0400
+Received: from mail-ua1-f52.google.com ([209.85.222.52]:35433 "EHLO
+        mail-ua1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfHUGeL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 02:34:11 -0400
+Received: by mail-ua1-f52.google.com with SMTP id j21so460157uap.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 23:34:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cldCocYqDJhDAW6mUCiaKahQrJ4+bnhSa/eeLTEHE20=;
+        b=b9E4nxzDDgDhTa72QcuCf0+Ri0ENZZAcmmRDzScGsGvbITS9f4GrFF553zte4BaIWy
+         OE/PKMbCOv0G9cVrDaB6WW02z+M+WSYHQIFOxjb2xBCqPBMZ0BRVJrylWhDMGzJScBsc
+         mlpo7sFmpTzA98YeuPn9PENW/5F3rTb2WYE6E8m19fnOQn0NY3DLmEsvt7XB9Oy0hXz8
+         ACsStPZ/Yz2cBZEpwsBqbL41GAGwUHWtxhcJpymaZh8ClSeFDiSehXvSLsop2TCNicK4
+         7K1XTJCjrkh3JfsDsuOW4locPmvjKygw+v6voagM6ieXmvA2w1iYdwrFNPbWHSZVd++y
+         vlxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cldCocYqDJhDAW6mUCiaKahQrJ4+bnhSa/eeLTEHE20=;
+        b=TOFCQk9sGQZebCS7u35YVzurwiAvZTXXyZi+ubUnXe87AQTnQB5nQKKaep3trP6+zh
+         TuD8SO4zuN1JQMnkrie/TGBEtVylLk7h7C3g+M2KovTISkE5XzfkatKfScivRHDMgXp/
+         yl7HXe/9EL/032aERqzk4t3dg29IxEF2bTkpMb0duiH+5GaUHdTAFAtF8Uo/dcjWmKs+
+         Kqs3rVtfuILNokUx7P0Nd0dsG54pHdKmCJ4py6YaVR/CgtNw7cgjUQmLZpVsj5eo21OK
+         QH916QcvT6arjZvtwJXtdpbw9WPbZv2X6vLe1pK+Rn+3GAfMWCaCem25+1UefGEFtSdd
+         P/kw==
+X-Gm-Message-State: APjAAAVYLSwA/KMivgbP9NHF7hJpT4iWzU3DuQKDHtiAazICvPMB9jP0
+        xU9JM2XiGLTRckuhtVoFHLG2r6c5+mFR1dzDMQo=
+X-Google-Smtp-Source: APXvYqwV9IXC4VAQSFpeJVeWe8GCDuXR5CxR2jhJJ5ME0hbNNdFy/JCuN0h4tWjJOe7dtaWWt4EHjhL2ip8PbkMN74E=
+X-Received: by 2002:ab0:70c8:: with SMTP id r8mr1298852ual.89.1566369250021;
+ Tue, 20 Aug 2019 23:34:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ARH=FhoW7pcXYymzsW6/Phr";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190805140119.7337-1-kraxel@redhat.com> <20190805140119.7337-9-kraxel@redhat.com>
+ <20190813151115.GA29955@ulmo> <20190814055827.6hrxj6daovxxnnvw@sirius.home.kraxel.org>
+ <20190814093524.GA31345@ulmo> <20190814101411.lj3p6zjzbjvnnjf4@sirius.home.kraxel.org>
+In-Reply-To: <20190814101411.lj3p6zjzbjvnnjf4@sirius.home.kraxel.org>
+From:   Ben Skeggs <skeggsb@gmail.com>
+Date:   Wed, 21 Aug 2019 16:33:58 +1000
+Message-ID: <CACAvsv5Rar9F=Wf-9HBpndY4QaQZcGCx05j0esvV9pitM=JoGg@mail.gmail.com>
+Subject: Re: [Nouveau] [Intel-gfx] [PATCH v6 08/17] drm/ttm: use gem vma_node
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        ML nouveau <nouveau@lists.freedesktop.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        linux-graphics-maintainer@vmware.com,
+        Ben Skeggs <bskeggs@redhat.com>,
+        spice-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ARH=FhoW7pcXYymzsW6/Phr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 14 Aug 2019 at 20:14, Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+>   Hi,
+>
+> > > Changing the order doesn't look hard.  Patch attached (untested, have no
+> > > test hardware).  But maybe I missed some detail ...
+> >
+> > I came up with something very similar by splitting up nouveau_bo_new()
+> > into allocation and initialization steps, so that when necessary the GEM
+> > object can be initialized in between. I think that's slightly more
+> > flexible and easier to understand than a boolean flag.
+>
+> Yes, that should work too.
+>
+> Acked-by: Gerd Hoffmann <kraxel@redhat.com>
+Acked-by: Ben Skeggs <bskeggs@redhat.com>
 
-Hi all,
-
-After merging the rtc tree, today's linux-next build (x86_64 allmodconfig)
-produced this warning:
-
-drivers/rtc/rtc-aspeed.c: In function 'aspeed_rtc_probe':
-drivers/rtc/rtc-aspeed.c:89:6: warning: unused variable 'ret' [-Wunused-var=
-iable]
-  int ret;
-      ^~~
-drivers/rtc/rtc-armada38x.c: In function 'armada38x_rtc_probe':
-drivers/rtc/rtc-armada38x.c:505:6: warning: unused variable 'ret' [-Wunused=
--variable]
-  int ret;
-      ^~~
-
-Introduced by commit
-
-  5a3a2836e8bf ("rtc: remove superfluous error message")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ARH=FhoW7pcXYymzsW6/Phr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1c5VcACgkQAVBC80lX
-0GymKgf/YX9LY2xBlTGvC27UoIXvd+0OM+uowwimikOEtWCi1eTOjWn76KxEMmg1
-nohweMwRyvD0kwXNQfwH5FPhkHHd6WVV4F63DKziRp5XSto1aJ4AosifN5v32Ywj
-UQgQhMZp+GI+DX2mgJauhdMmqjQvXQxxGRpuVJwCkXNQ898GugjpVQA85MK6ihn+
-ZlGbLgRspriP0mTfxVS3ZZK494QHX5hJ64/KeJnTjt52kOTDaKXFEllre7um5O0e
-NCVXGAXeP09n3Rd1F3WDzyCwfSRVJXVN0XqtMDMpQ8jMbi6R8ScWUe45XZVk/ROC
-P9WXTn8v/PAMXNgboDHlzQNXqlPVSQ==
-=E2bI
------END PGP SIGNATURE-----
-
---Sig_/ARH=FhoW7pcXYymzsW6/Phr--
+>
+> cheers,
+>   Gerd
+>
+> _______________________________________________
+> Nouveau mailing list
+> Nouveau@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/nouveau
