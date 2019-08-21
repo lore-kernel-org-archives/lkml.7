@@ -2,123 +2,121 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2531C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704A2C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7917216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:13:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="nbdXa8G4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FIjJL6Gl"
+	by mail.kernel.org (Postfix) with ESMTP id 48AF5216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbfHUPNi (ORCPT
+        id S1729913AbfHUPP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:13:38 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:47845 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728579AbfHUPNi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:13:38 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id B0EDB2104C;
-        Wed, 21 Aug 2019 11:13:37 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Wed, 21 Aug 2019 11:13:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=UXyep5gmvR7gzJOTpOWksLGbdCj
-        w2vu09aQuJ/K1NOc=; b=nbdXa8G4twyAo8+ISYJ66Col/oqbNPt6AVX9SSYbLWi
-        uAgVpzJjqkxbKQG67or8LQCT+IPbcLdn0o3xfgdFA9HPCTyZg3rugtLjV4L2ZaXg
-        XqvcVOKqHJXR2qQlWcsKdBtQCWFUw/Q5lYfqyk4i4DE4ePTxDTK+QSof2+6+hyP7
-        b/VyxgUN7aFVkUAaGgDOL1O4tPmaKyhUcdTOh4b+Bs2n5YmUTvIc0izCvPsmazeJ
-        a3S8CIxpKnFQH8SA6HDd+gGal3X0dJuoZKtjO+HMOTMFcDxa6AOrjYIwq8hb0ZI9
-        yqcLljMFXOFgyLw4fS1/LS5tBMycYqDOwjLzFmUdbbA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=UXyep5
-        gmvR7gzJOTpOWksLGbdCjw2vu09aQuJ/K1NOc=; b=FIjJL6Gl6VLEJEiAyJNGPb
-        kW2mq+V+KmKF+EFY5EHxYvMsHlVsJvq53dWdCdvtfL2Eh4wjCV5So9sx/1BrGMap
-        tISxO+6XcL+FN4JMLbxH1lCehzf9H8fGJvmNPVtdN61zNw3YRlHAKYwVKabo/rBR
-        y1u1SaDZXs1F5iaikSwoF5fSUANzT/m7iuUzY3vtErbJPsM9CFjTRJ7MfY8+sKxH
-        qLtMTT0JFg8Dva+7vbWdE9NBVyhHRqbqC+uMIK2lEwVRdnmp5bA/CJtrcC+dr6wX
-        fzW1FWM26hkD384cKHf6aRilJ+BzF7UEjZMXuZGvGQZjkWvNVdgvutCFNnxY7psQ
-        ==
-X-ME-Sender: <xms:oF9dXUSkEp3wmoKgiGcC_-NCiEf8Yaz7E7Hs1XSR8vpvF-Ea-4pdaA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegfedgkeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdludehmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
-    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
-    gsihhnrdgttgeqnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepjedtrddu
-    ieeirdektddrudelgeenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsehtohgsihhnrd
-    gttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:oF9dXWXqaRTicXEg7Rivmu0jRibBbbqqORI_nNRcWfozKf6GdFT9RQ>
-    <xmx:oF9dXdt7svvQyWlYmVn7uDEWhm9PafN5fBawrZOYea3lrhP-eqHAKg>
-    <xmx:oF9dXUuunXXGCREuLqDauNdQ8nT2rlMtk2sJKEpeXIMId0yn5pOhHQ>
-    <xmx:oV9dXb8Y1JlYJaa2pMr28JqRZtlvXVatDBAwfCMod5lqhbSm41GA5w>
-Received: from localhost (wsip-70-166-80-194.sd.sd.cox.net [70.166.80.194])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 81450D6005A;
-        Wed, 21 Aug 2019 11:13:36 -0400 (EDT)
-Date:   Wed, 21 Aug 2019 08:13:35 -0700
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Joe Perches <joe@perches.com>, Caitlyn <caitlynannefinn@gmail.com>,
-        Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] staging/erofs: Balanced braces around a few
- conditional statements.
-Message-ID: <20190821151241.GF12461@ares>
-References: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
- <1566346700-28536-3-git-send-email-caitlynannefinn@gmail.com>
- <7aaca457a3d3feb951082d0659eec568a908971f.camel@perches.com>
- <20190821023122.GA159802@architecture4>
+        Wed, 21 Aug 2019 11:15:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:59808 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727395AbfHUPP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:15:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BD10337;
+        Wed, 21 Aug 2019 08:15:27 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89F1D3F718;
+        Wed, 21 Aug 2019 08:15:26 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 16:15:24 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peng Liu <iwtbavbm@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com
+Subject: Re: [PATCH] sched/fair: eliminate redundant code in sched_slice()
+Message-ID: <20190821151523.lwazjd2d6rp5otdh@e107158-lin.cambridge.arm.com>
+References: <20190816141202.GA3135@iZj6chx1xj0e0buvshuecpZ>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190821023122.GA159802@architecture4>
-X-Mailer: Mutt 1.9.4 (2018-02-28)
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190816141202.GA3135@iZj6chx1xj0e0buvshuecpZ>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 10:31:22AM +0800, Gao Xiang wrote:
-> On Tue, Aug 20, 2019 at 07:26:46PM -0700, Joe Perches wrote:
-> > On Tue, 2019-08-20 at 20:18 -0400, Caitlyn wrote:
-> > > Balanced braces to fix some checkpath warnings in inode.c and
-> > > unzip_vle.c
-> > []
-> > > diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-> > []
-> > > @@ -915,21 +915,21 @@ static int z_erofs_vle_unzip(struct super_block *sb,
-> > >  	mutex_lock(&work->lock);
-> > >  	nr_pages = work->nr_pages;
-> > >  
-> > > -	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES))
-> > > +	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES)) {
-> > >  		pages = pages_onstack;
-> > > -	else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
-> > > -		 mutex_trylock(&z_pagemap_global_lock))
-> > > +	} else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
-> > > +		 mutex_trylock(&z_pagemap_global_lock)) {
-> > 
-> > Extra space after tab
+On 08/16/19 22:12, Peng Liu wrote:
+> Since sched_slice() is used in high frequency,
+> small change should also make sense.
 > 
-> There is actually balanced braces in linux-next.
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/staging/erofs/zdata.c#n762
+> Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+> ---
+>  kernel/sched/fair.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1054d2cf6aaa..6ae2a507aac0 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -694,19 +694,16 @@ static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>  	u64 slice = __sched_period(cfs_rq->nr_running + !se->on_rq);
+>  
+>  	for_each_sched_entity(se) {
+> -		struct load_weight *load;
+>  		struct load_weight lw;
+>  
+>  		cfs_rq = cfs_rq_of(se);
+> -		load = &cfs_rq->load;
+> +		lw = cfs_rq->load;
+>  
+> -		if (unlikely(!se->on_rq)) {
+> +		if (unlikely(!se->on_rq))
+>  			lw = cfs_rq->load;
+>  
+> -			update_load_add(&lw, se->load.weight);
+> -			load = &lw;
+> -		}
+> -		slice = __calc_delta(slice, se->load.weight, load);
+> +		update_load_add(&lw, se->load.weight);
+> +		slice = __calc_delta(slice, se->load.weight, &lw);
 
-Which tree did these changes go in through please Gao?  I believe
-Caitlyn was working off of the staging-next branch of Greg's staging
-tree.
+Unless I misread the diff, you changed the behavior.
 
-thanks,
-Tobin.
+update_load_add() is only called if (unlikely(!se->on_rq)), but with your
+change it is called unconditionally. And lw is set twice.
+
+I think what you intended is this?
+
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index bc9cfeaac8bd..6bbe17d5943f 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -694,19 +694,15 @@ static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+	u64 slice = __sched_period(cfs_rq->nr_running + !se->on_rq);
+
+	for_each_sched_entity(se) {
+-               struct load_weight *load;
+		struct load_weight lw;
+
+		cfs_rq = cfs_rq_of(se);
+-               load = &cfs_rq->load;
+-
+-               if (unlikely(!se->on_rq)) {
+-                       lw = cfs_rq->load;
++               lw = cfs_rq->load;
+
++               if (unlikely(!se->on_rq))
+			update_load_add(&lw, se->load.weight);
+-                       load = &lw;
+-               }
+-               slice = __calc_delta(slice, se->load.weight, load);
++
++               slice = __calc_delta(slice, se->load.weight, &lw);
+	}
+	return slice;
+ }
+
+
+Cheers
+
+--
+Qais Yousef
