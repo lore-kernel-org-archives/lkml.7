@@ -2,79 +2,167 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F34C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F99C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D74CB22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDAE222D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ujCadKEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbfHUKJM (ORCPT
+        id S1727270AbfHUKK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:09:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55488 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726389AbfHUKJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:09:11 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F05063003185;
-        Wed, 21 Aug 2019 10:09:10 +0000 (UTC)
-Received: from [10.36.116.152] (ovpn-116-152.ams2.redhat.com [10.36.116.152])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 433F75B807;
-        Wed, 21 Aug 2019 10:09:07 +0000 (UTC)
-From:   "Eelco Chaudron" <echaudro@redhat.com>
-To:     "Ilya Maximets" <i.maximets@samsung.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        "=?utf-8?b?QmrDtnJuIFTDtnBlbA==?=" <bjorn.topel@intel.com>,
-        "Magnus Karlsson" <magnus.karlsson@intel.com>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        "Jeff Kirsher" <jeffrey.t.kirsher@intel.com>,
-        intel-wired-lan@lists.osuosl.org, "William Tu" <u9012063@gmail.com>
-Subject: Re: [PATCH net] ixgbe: fix double clean of tx descriptors with xdp
-Date:   Wed, 21 Aug 2019 12:09:06 +0200
-Message-ID: <9EFD9B47-2CD0-4D7A-BA22-D87018894E91@redhat.com>
-In-Reply-To: <20190820151611.10727-1-i.maximets@samsung.com>
-References: <CGME20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce@eucas1p1.samsung.com>
- <20190820151611.10727-1-i.maximets@samsung.com>
+        Wed, 21 Aug 2019 06:10:28 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:45296 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfHUKK1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 06:10:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fYbtPvqrUGygVEhVLuTCLW7Q83x6u7pjfVsDVHtGkUE=; b=ujCadKEuxRf4WAysr0rxQDISU
+        VZ2WCquCrckfYicExLwIpuEe0xy3zev1OOFTBue4HIwt3lhADCDgYX4wTAzuoQSYSHnLzIkm0AopG
+        xkEYZCEMlbH+TVgKHY1SAsEwN2cmSWounlz6b9fOmSWo8IFbqsjVUZ+Cip2y9QZlK2Zs4hGnA6t2p
+        hDc4xPTWQ5sdTZfyIRoeDuZgfOgG9RGBDTxNlhJXEVFDusUwJtB2Nc/vMbe+HU6bmAL15mBXoqDni
+        qKym6tfyCtX+Zka2iFHwXpRLHKG8sZbf+GID7BIoUh8O3VKsSlLWX5BcOkrNasQPXhOI0MTHy21Gx
+        gkK8AYsfQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0NZD-0004m9-8O; Wed, 21 Aug 2019 10:10:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 37519307456;
+        Wed, 21 Aug 2019 12:09:37 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C72D520C3BF31; Wed, 21 Aug 2019 12:10:08 +0200 (CEST)
+Date:   Wed, 21 Aug 2019 12:10:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kernel-team@fb.com, stable@vger.kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v2] x86/mm/pti: in pti_clone_pgtable(), increase addr
+ properly
+Message-ID: <20190821101008.GX2349@hirez.programming.kicks-ass.net>
+References: <20190820202314.1083149-1-songliubraving@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 21 Aug 2019 10:09:11 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820202314.1083149-1-songliubraving@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 20, 2019 at 01:23:14PM -0700, Song Liu wrote:
+> Before 32-bit support, pti_clone_pmds() always adds PMD_SIZE to addr.
+> This behavior changes after the 32-bit support:  pti_clone_pgtable()
+> increases addr by PUD_SIZE for pud_none(*pud) case, and increases addr by
+> PMD_SIZE for pmd_none(*pmd) case. However, this is not accurate because
+> addr may not be PUD_SIZE/PMD_SIZE aligned.
+> 
+> Fix this issue by properly rounding up addr to next PUD_SIZE/PMD_SIZE
+> in these two cases.
 
+So the patch is fine, ACK on that, but that still leaves us with the
+puzzle of why this didn't explode mightily and the story needs a little
+more work.
 
-On 20 Aug 2019, at 17:16, Ilya Maximets wrote:
+> The following explains how we debugged this issue:
+> 
+> We use huge page for hot text and thus reduces iTLB misses. As we
+> benchmark 5.2 based kernel (vs. 4.16 based), we found ~2.5x more
+> iTLB misses.
+> 
+> To figure out the issue, I use a debug patch that dumps page table for
+> a pid. The following are information from the workload pid.
+> 
+> For the 4.16 based kernel:
+> 
+> host-4.16 # grep "x  pmd" /sys/kernel/debug/page_tables/dump_pid
+> 0x0000000000600000-0x0000000000e00000           8M USR ro         PSE         x  pmd
+> 0xffffffff81a00000-0xffffffff81c00000           2M     ro         PSE         x  pmd
+> 
+> For the 5.2 based kernel before this patch:
+> 
+> host-5.2-before # grep "x  pmd" /sys/kernel/debug/page_tables/dump_pid
+> 0x0000000000600000-0x0000000000e00000           8M USR ro         PSE         x  pmd
+> 
+> The 8MB text in pmd is from user space. 4.16 kernel has 1 pmd for the
+> irq entry table; while 4.16 kernel doesn't have it.
+> 
+> For the 5.2 based kernel after this patch:
+> 
+> host-5.2-after # grep "x  pmd" /sys/kernel/debug/page_tables/dump_pid
+> 0x0000000000600000-0x0000000000e00000           8M USR ro         PSE         x  pmd
+> 0xffffffff81000000-0xffffffff81e00000          14M     ro         PSE     GLB x  pmd
+> 
+> So after this patch, the 5.2 based kernel has 7 PMDs instead of 1 PMD
+> in 4.16 kernel.
 
-> Tx code doesn't clear the descriptor status after cleaning.
-> So, if the budget is larger than number of used elems in a ring, some
-> descriptors will be accounted twice and xsk_umem_complete_tx will move
-> prod_tail far beyond the prod_head breaking the comletion queue ring.
->
-> Fix that by limiting the number of descriptors to clean by the number
-> of used descriptors in the tx ring.
->
-> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
-> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+This basically gives rise to more questions than it provides answers.
+You seem to have 'forgotten' to provide the equivalent mappings on the
+two older kernels. The fact that they're not PMD is evident, but it
+would be very good to know what is mapped, and what -- if anything --
+lives in the holes we've (accidentally) created.
+
+Can you please provide more complete mappings? Basically provide the
+whole cpu_entry_area mapping.
+
+> This further reduces iTLB miss rate
+
+What you're saying is that by using PMDs, we reduce 4K iTLB usage. But
+we increase 2M iTLB usage, but for your workload this works out
+favourably (a quick look at the PMU event tables for SKL didn't show me
+separate 4K/2M iTLB counters :/).
+
+> Cc: stable@vger.kernel.org # v4.19+
+> Fixes: 16a3fe634f6a ("x86/mm/pti: Clone kernel-image on PTE level for 32 bit")
+> Reviewed-by: Rik van Riel <riel@surriel.com>
+> Signed-off-by: Song Liu <songliubraving@fb.com>
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
 > ---
->
-> Not tested yet because of lack of available hardware.
-> So, testing is very welcome.
->
-Hi Ilya, this patch fixes the issue I reported earlier on the Open 
-vSwitch mailing list regarding complete queue overrun.
-
-Tested-by: Eelco Chaudron <echaudro@redhat.com>
-
-<SNIP>
+>  arch/x86/mm/pti.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+> index b196524759ec..1337494e22ef 100644
+> --- a/arch/x86/mm/pti.c
+> +++ b/arch/x86/mm/pti.c
+> @@ -330,13 +330,13 @@ pti_clone_pgtable(unsigned long start, unsigned long end,
+>  
+>  		pud = pud_offset(p4d, addr);
+>  		if (pud_none(*pud)) {
+> -			addr += PUD_SIZE;
+> +			addr = round_up(addr + 1, PUD_SIZE);
+>  			continue;
+>  		}
+>  
+>  		pmd = pmd_offset(pud, addr);
+>  		if (pmd_none(*pmd)) {
+> -			addr += PMD_SIZE;
+> +			addr = round_up(addr + 1, PMD_SIZE);
+>  			continue;
+>  		}
+>  
+> -- 
+> 2.17.1
+> 
