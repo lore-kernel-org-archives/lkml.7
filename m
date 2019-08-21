@@ -2,264 +2,187 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983B8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9133BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4B42332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D29C2332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:12:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="DWhR43+c"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="eDrUlZ1s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbfHUXKj (ORCPT
+        id S1731334AbfHUXMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 19:10:39 -0400
-Received: from mail-eopbgr820107.outbound.protection.outlook.com ([40.107.82.107]:32727
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727038AbfHUXKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 19:10:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JEklszr955VXeKwAwEdO1lhUFnFbHhx9N/WPFlmgSChvWWA+upisLX0k/HzOpfkq6gLnEW2oKpisQeuS3twjo8o8qaILzvxRdzFNkFvj65RqYLqJnLk4gclfPaagPO+0NpFaQEZttLwqBlDPD9dSS4Fu8WG3mgg+ysS0Dmg6FLz3wOKigItZyDhnxExwhfdcbHWmY0Tn6GpMUX1rqPg3ksAUMUHOTXEztcTb8X1S9h1idB+mYNIUYbyo5PAm+3O/AGR+AsSLb/6dV0mjyiREadGi3bt0N7AJvwUpB0Co5pbxkXlt35JRl4YbzGmh9sn+/P1muO1xzLjYOJ5ZZd6VUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WkHEL6qMgaFNtNeta/c8i/yh+pP+vs5P63jinOg9/iA=;
- b=a0v0n4coYGZSSZazvarWRiy0uX/hrP2xVACygDnC1nGxaiDYi20S2AIF/gYOlxUO4F9m3eHZQ9ZjxNzbGNXWgBANc6OrEbS+fP1esNcmW7ZDXC5ZSMUUTKlOW6ADQScHxhwnMXWh5j7zzv/cfEJgT5K72KYnyPtv5DassQacL9PeDveo3Zy6iA4DqR8uklXaJpieSFILz1XL/CnOu7/44j2jahPrFaTEXRP8fxKgVANyFmYr3hZhSxH6ggyfGmI0uepdCIPrJe5ZneaEddxrcNT6WiBD7hlrWmkwB5VoSMHC7FFUjg3fpqdJD3W7Pl/KFT6suFhHDYUPi/zVUStR8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WkHEL6qMgaFNtNeta/c8i/yh+pP+vs5P63jinOg9/iA=;
- b=DWhR43+ce82eIhWIfjDI9A1Su3/UlZ3Z9wsy4BPdAFLy4JyMOksncOwTfwCgFAhbh35okVOdvF1DN4cph+qzTGoC1SkxOs3Muo38/z47M3yhrhMJiXWOrcnMlfbiPFXOHjJI1sMkuvmbRvP8eV2+YXkHhJ768JdBw8IxLQgv+kE=
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
- DM5PR21MB0699.namprd21.prod.outlook.com (10.175.112.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.2; Wed, 21 Aug 2019 23:10:33 +0000
-Received: from DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::8985:a319:f21:530e]) by DM5PR21MB0137.namprd21.prod.outlook.com
- ([fe80::c437:6219:efcc:fb8a%8]) with mapi id 15.20.2220.000; Wed, 21 Aug 2019
- 23:10:33 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     brandonbonaby94 <brandonbonaby94@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>
-CC:     brandonbonaby94 <brandonbonaby94@gmail.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 2/3] drivers: hv: vmbus: add test attributes to debugfs
-Thread-Topic: [PATCH v3 2/3] drivers: hv: vmbus: add test attributes to
- debugfs
-Thread-Index: AQHVV7CExu5bjRhcDUSpSbsyf+SIMacGNsGw
-Date:   Wed, 21 Aug 2019 23:10:32 +0000
-Message-ID: <DM5PR21MB0137B4071E64688C5F902E83D7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
-References: <cover.1566340843.git.brandonbonaby94@gmail.com>
- <a17474c59601a98576f1e002a57192f6314b4aaf.1566340843.git.brandonbonaby94@gmail.com>
-In-Reply-To: <a17474c59601a98576f1e002a57192f6314b4aaf.1566340843.git.brandonbonaby94@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-21T23:10:31.0905286Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=51bb54f1-506c-4815-8aff-330654b52c72;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4975f03d-6126-47b6-126b-08d7268cc495
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR21MB0699;
-x-ms-traffictypediagnostic: DM5PR21MB0699:|DM5PR21MB0699:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM5PR21MB069995B58CABAF6ABB391727D7AA0@DM5PR21MB0699.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(39860400002)(396003)(366004)(376002)(136003)(199004)(189003)(74316002)(76116006)(3846002)(25786009)(7736002)(14444005)(55016002)(2906002)(66066001)(52536014)(4326008)(9686003)(1511001)(66476007)(22452003)(110136005)(2501003)(229853002)(316002)(8990500004)(54906003)(53936002)(6436002)(26005)(11346002)(10090500001)(99286004)(8676002)(71200400001)(14454004)(76176011)(478600001)(476003)(6246003)(66446008)(10290500003)(102836004)(64756008)(66556008)(33656002)(81156014)(186003)(256004)(81166006)(305945005)(86362001)(7696005)(71190400001)(6116002)(446003)(486006)(6506007)(66946007)(8936002)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0699;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7s/Ggjg3f1HvGRxNWtfS2nuLHr7H+l8ABAnGXYQBibESex5L3GVVW6ioZ8fpXPUD6I6fzz4w3pUsPP9OjSIv0HcILhPa44Zy/EceF6U+2hEohKH3ue4pNlbZ1SxcIYyGaOYR003/q8sBAzRPZzQ8hPhq2wSmE9LwbqybEm+82iIzjJN85xuPMdvLG1E113Bf/chCjBfVp3mQY1d9DKHeqKN83LJph1e0G3/QoJBoRlYSyFVVvDX4cN2iNhjYyENN83myRV3HK2YV6cDq8/RpctXF79SqvM4UzjhBVcnYQSyrWRq+lpMexfQCX8WRiR+vEYANE6IE6PTTjjynA9XXFaf3wtfEr61hwZfG2FfhRe1DkxEwBlGESpvz3AQwxy0oxy7EZ4mfmcyGCP2AvqY8ffbay9YY+mqz9eg08EIC+zQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 21 Aug 2019 19:12:22 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46977 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729763AbfHUXMV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 19:12:21 -0400
+Received: by mail-io1-f66.google.com with SMTP id x4so7998640iog.13
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 16:12:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0KVJzgs8EgORbeJXXQubNPgw1WiUGBr9OYGA7l6xlcE=;
+        b=eDrUlZ1sAmJkYbQSimlYWKmC1dUR+CGjg15fVmd1/JPfkySdGgd52llMp900L9A9hQ
+         xYCXspJbD486cUNWl0/vHQefQh4ROBps1vwmCGTQrj0xn4lK2BmEmSjR4zqihmxL0Vmv
+         v7SpuHz+28jBLO5xIB1jvjKV/0SjBjvjJG+fvcoP8THQk3rqzGv9l3FAHn1QHRoXwLPI
+         hJK4Zj3oUmIFYSV9I78tLqwFRk0/xZpZj76fvCFuDkXwwgXho67oM3Ir9m0oawERpcIJ
+         tjAwoiHFgGoi+9brArrSyzUTwbjpy9F5g9otqjnxC5V64fO44nqxNWscO/6okRf9PX0K
+         eq7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0KVJzgs8EgORbeJXXQubNPgw1WiUGBr9OYGA7l6xlcE=;
+        b=LrQopEKtsef6g4BfQAR55mtaySpuSVcOjtCEFQYjCu032lzlNuK2l2kppo0//Y2NL4
+         pm6mQWe11SkJVfO8iD7hZbGuOrwGn+mxOxNt6S40jxlbYOjuoMVdpuYyF8Oml9H1Yw1D
+         L5A+cnp6qLjZmGgKWXINC2qOzkkB77rn7emTlPHZj4ynY3wM9/mMCpwPD42JRPy5+qTj
+         abYKoRmLK6jp5F7EOL6dqrv6pNARhTKNiSmPZrHWBbv+rLTVkKZxowQRSjDlFityKW8J
+         uFfSK3cGn6+FZuXRm60GXvzKqwOXptoaFaLLWnx2Yc8hFYcfT8lHECZm+PZ1jIJSOJnB
+         LEgw==
+X-Gm-Message-State: APjAAAXgqun/avMgrHR7bQI8vsIKUDaKP8GtycmtfRIsOGsJ5r+A5D14
+        xRtiQSjLfc+ubmkG2d1CcfKz5Hy/Usr13iQ+xZikmQ==
+X-Google-Smtp-Source: APXvYqyloKzz7NgWTchmsnc7qXwItkNgE6mhmz6hYsrxditmjwnLHbvLORRpP5EyOywTjcrApKlY50azf7yp8TQmbak=
+X-Received: by 2002:a02:390c:: with SMTP id l12mr4178791jaa.76.1566429140549;
+ Wed, 21 Aug 2019 16:12:20 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4975f03d-6126-47b6-126b-08d7268cc495
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 23:10:32.9256
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XTwfuIidH3/9e3AO+GEl/PFb7ilJbXIkLmN9odEd6I2F+IIe7jiMWS674lt5tdenvja8qDbD1AcknNUvixA2UD5SvKSz5zVUJ4zCk8fXetg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0699
+References: <20190821001445.32114-1-echron@arista.com> <alpine.DEB.2.21.1908202024300.141379@chino.kir.corp.google.com>
+ <20190821064732.GW3111@dhcp22.suse.cz> <alpine.DEB.2.21.1908210017320.177871@chino.kir.corp.google.com>
+ <20190821074721.GY3111@dhcp22.suse.cz>
+In-Reply-To: <20190821074721.GY3111@dhcp22.suse.cz>
+From:   Edward Chron <echron@arista.com>
+Date:   Wed, 21 Aug 2019 16:12:08 -0700
+Message-ID: <CAM3twVR5Z1LG4+pqMF94mCw8R0sJ3VJtnggQnu+047c7jxJVug@mail.gmail.com>
+Subject: Re: [PATCH] mm/oom: Add oom_score_adj value to oom Killed process message
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Tuesday, August 20, =
-2019 4:39 PM
->=20
-> Expose the test parameters as part of the debugfs channel attributes.
-> We will control the testing state via these attributes.
->=20
-> Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
-> ---
-> Changes in v3:
->  - Change call to IS_ERR_OR_NULL, to IS_ERR.
->=20
-> Changes in v2:
->  - Move test attributes to debugfs.
->  - Wrap test code under #ifdef statements.
->  - Add new documentation file under Documentation/ABI/testing.
->  - Make commit message reflect the change from from sysfs to debugfs.
->=20
->  Documentation/ABI/testing/debugfs-hyperv |  21 +++
->  MAINTAINERS                              |   1 +
->  drivers/hv/vmbus_drv.c                   | 167 +++++++++++++++++++++++
->  3 files changed, 189 insertions(+)
->  create mode 100644 Documentation/ABI/testing/debugfs-hyperv
->=20
-> diff --git a/Documentation/ABI/testing/debugfs-hyperv
-> b/Documentation/ABI/testing/debugfs-hyperv
-> new file mode 100644
-> index 000000000000..b25f751fafa8
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/debugfs-hyperv
-> @@ -0,0 +1,21 @@
-> +What:           /sys/kernel/debug/hyperv/<UUID>/fuzz_test_state
-> +Date:           August 2019
-> +KernelVersion:  5.3
-> +Contact:        Branden Bonaby <brandonbonaby94@gmail.com>
-> +Description:    Fuzz testing status of a vmbus device, whether its in an=
- ON
-> +                state or a OFF state
+On Wed, Aug 21, 2019 at 12:47 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Wed 21-08-19 00:19:37, David Rientjes wrote:
+> > On Wed, 21 Aug 2019, Michal Hocko wrote:
+> >
+> > > > vm.oom_dump_tasks is pretty useful, however, so it's curious why you
+> > > > haven't left it enabled :/
+> > >
+> > > Because it generates a lot of output potentially. Think of a workload
+> > > with too many tasks which is not uncommon.
+> >
+> > Probably better to always print all the info for the victim so we don't
+> > need to duplicate everything between dump_tasks() and dump_oom_summary().
+>
+> I believe that the motivation was to have a one line summary that is already
+> parsed by log consumers. And that is in __oom_kill_process one.
+>
 
-Document what values are actually returned? =20
+Yes the motivation was one line summary that the OOM Killed Process
+message supplies along
+with the fact it is error priority as I mentioned. It is a very
+desirable place to put summarized
+information.
 
-> +Users:          Debugging tools
-> +
-> +What:           /sys/kernel/debug/hyperv/<UUID>/delay/fuzz_test_buffer_i=
-nterrupt_delay
-> +Date:           August 2019
-> +KernelVersion:  5.3
-> +Contact:        Branden Bonaby <brandonbonaby94@gmail.com>
-> +Description:    Fuzz testing buffer delay value between 0 - 1000
+> Also I do not think this patch improves things much for two reasons
+> at leasts a) it doesn't really give you the whole list of killed tasks
+> (this might be the whole memcg) and b) we already do have most important
+> information in __oom_kill_process. If something is missing there I do
+> not see a strong reason we cannot add it there. Like in this case.
+>
 
-It would be helpful to document the units -- I think this is 0 to 1000
-microseconds.
+This is a good point.
 
-> +Users:          Debugging tools
-> +
-> +What:           /sys/kernel/debug/hyperv/<UUID>/delay/fuzz_test_message_=
-delay
-> +Date:           August 2019
-> +KernelVersion:  5.3
-> +Contact:        Branden Bonaby <brandonbonaby94@gmail.com>
-> +Description:    Fuzz testing message delay value between 0 - 1000
+Additionally (which you know, but mentioning for reference) the OOM
+output used to look like this:
 
-Same here.
+Nov 14 15:23:48 oldserver kernel: [337631.991218] Out of memory: Kill
+process 19961 (python) score 17 or sacrifice child
+Nov 14 15:23:48 oldserver kernel: [337631.991237] Killed process 31357
+(sh) total-vm:5400kB, anon-rss:252kB, file-rss:4kB, shmem-rss:0kB
 
-> +Users:          Debugging tools
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e81e60bd7c26..120284a8185f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7460,6 +7460,7 @@ F:	include/uapi/linux/hyperv.h
->  F:	include/asm-generic/mshyperv.h
->  F:	tools/hv/
->  F:	Documentation/ABI/stable/sysfs-bus-vmbus
-> +F:	Documentation/ABI/testing/debugfs-hyperv
->=20
->  HYPERBUS SUPPORT
->  M:	Vignesh Raghavendra <vigneshr@ti.com>
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index ebd35fc35290..d2e47f04d172 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -919,6 +919,10 @@ static void vmbus_device_release(struct device *devi=
-ce)
->  	struct hv_device *hv_dev =3D device_to_hv_device(device);
->  	struct vmbus_channel *channel =3D hv_dev->channel;
->=20
-> +#ifdef CONFIG_HYPERV_TESTING
-> +	hv_debug_rm_dev_dir(hv_dev);
-> +#endif /* CONFIG_HYPERV_TESTING */
+It now looks like this with 5.3.0-rc5 (minus the oom_score_adj):
 
-Same comment in as previous patch about #ifdef inline in the code,
-and similarly for other occurrences in this patch.
+Jul 22 10:42:40 newserver kernel:
+oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,global_oom,task_memcg=/user.slice/user-10383.slice/user@10383.service,task=oomprocs,pid=3035,uid=10383
+Jul 22 10:42:40 newserver kernel: Out of memory: Killed process 3035
+(oomprocs) total-vm:1056800kB, anon-rss:8kB, file-rss:4kB,
+shmem-rss:0kB
+Jul 22 10:42:40 newserver kernel: oom_reaper: reaped process 3035
+(oomprocs), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
 
-> +
->  	mutex_lock(&vmbus_connection.channel_mutex);
->  	hv_process_channel_removal(channel);
->  	mutex_unlock(&vmbus_connection.channel_mutex);
-> @@ -1727,6 +1731,9 @@ int vmbus_device_register(struct hv_device *child_d=
-evice_obj)
->  		pr_err("Unable to register primary channeln");
->  		goto err_kset_unregister;
->  	}
-> +#ifdef CONFIG_HYPERV_TESTING
-> +	hv_debug_add_dev_dir(child_device_obj);
-> +#endif /* CONFIG_HYPERV_TESTING */
->=20
->  	return 0;
->=20
-> @@ -2086,6 +2093,159 @@ static void hv_crash_handler(struct pt_regs *regs=
-)
->  	hyperv_cleanup();
->  };
->=20
-> +#ifdef CONFIG_HYPERV_TESTING
-> +
-> +struct dentry *hv_root;
-> +
-> +static int hv_debugfs_delay_get(void *data, u64 *val)
-> +{
-> +	*val =3D *(u32 *)data;
-> +	return 0;
-> +}
-> +
-> +static int hv_debugfs_delay_set(void *data, u64 val)
-> +{
-> +	if (val >=3D 1 && val <=3D 1000)
-> +		*(u32 *)data =3D val;
-> +	/*Best to not use else statement here since we want
-> +	 * the delay to remain the same if val > 1000
-> +	 */
+The old output did explain that a oom_score of 17 must have either
+tied for highest or was the highest.
+This did document why OOM selected the process it did, even if ends up
+killing the related sh process.
 
-The standard multi-line comment style would be:
+With the newer format that added constraint message, it does provide
+uid which can be helpful and
+the oom_reaper showing that the memory was reclaimed is certainly reassuring.
 
-	/*
-	 * Best to not use else statement here since we want
-	 * the delay to remain the same if val > 1000
-	 */
+My understanding now is that printing the oom_score is discouraged.
+This seems unfortunate.  The oom_score_adj can be adjusted
+appropriately if oom_score is known.
+So It would be useful to have both.
 
-> +	else if (val <=3D 0)
-> +		*(u32 *)data =3D 0;
+But at least if oom_score_adj is printed you can confirm the value at
+the time of the OOM event.
 
-You could consider returning an error for an invalid
-value (< 0, or > 1000).
+Thank-you,
+-Edward Chron
+Arista Networks
 
-> +	return 0;
-> +}
-> +
-> +DEFINE_DEBUGFS_ATTRIBUTE(hv_debugfs_delay_fops, hv_debugfs_delay_get,
-> +			 hv_debugfs_delay_set, "%llu\n");
-> +
-
-Michael
+> > Edward, how about this?
+> >
+> > diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> > --- a/mm/oom_kill.c
+> > +++ b/mm/oom_kill.c
+> > @@ -420,11 +420,17 @@ static int dump_task(struct task_struct *p, void *arg)
+> >   * State information includes task's pid, uid, tgid, vm size, rss,
+> >   * pgtables_bytes, swapents, oom_score_adj value, and name.
+> >   */
+> > -static void dump_tasks(struct oom_control *oc)
+> > +static void dump_tasks(struct oom_control *oc, struct task_struct *victim)
+> >  {
+> >       pr_info("Tasks state (memory values in pages):\n");
+> >       pr_info("[  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n");
+> >
+> > +     /* If vm.oom_dump_tasks is disabled, only show the victim */
+> > +     if (!sysctl_oom_dump_tasks) {
+> > +             dump_task(victim, oc);
+> > +             return;
+> > +     }
+> > +
+> >       if (is_memcg_oom(oc))
+> >               mem_cgroup_scan_tasks(oc->memcg, dump_task, oc);
+> >       else {
+> > @@ -465,8 +471,8 @@ static void dump_header(struct oom_control *oc, struct task_struct *p)
+> >               if (is_dump_unreclaim_slabs())
+> >                       dump_unreclaimable_slab();
+> >       }
+> > -     if (sysctl_oom_dump_tasks)
+> > -             dump_tasks(oc);
+> > +     if (p || sysctl_oom_dump_tasks)
+> > +             dump_tasks(oc, p);
+> >       if (p)
+> >               dump_oom_summary(oc, p);
+> >  }
+>
+> --
+> Michal Hocko
+> SUSE Labs
