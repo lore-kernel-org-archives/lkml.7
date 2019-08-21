@@ -2,120 +2,66 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 654F3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F46EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373DE20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:45:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3148B20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:45:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UkT303Q6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FhDR6yl/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbfHUOpp (ORCPT
+        id S1729559AbfHUOpx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:45:45 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59090 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728608AbfHUOpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:45:45 -0400
-Received: from zn.tnic (p200300EC2F0A6300AD34BF75F4F01B21.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6300:ad34:bf75:f4f0:1b21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 640051EC02FE;
-        Wed, 21 Aug 2019 16:45:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566398743;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=lTbUTRWT7/yDYikPZXnxrPfidgHBKAk129d3QMAlBN8=;
-        b=UkT303Q6PQdQLRjF8bKFTVDYvf4/veO5tJOiyCziZe8EFQW68CVP7lBVMYQ6nGizmgFJKg
-        FXELQvYm+ouBqgeO8bgrwK4zZB6waqhJ19Svr+ncvTHiXIWFyPkdLQkYqVzmPMYB1QhKcy
-        UQ+ZL3nw4KcOvt+o5NmnqkpKAJ1PVOU=
-Date:   Wed, 21 Aug 2019 16:45:37 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v8 03/27] x86/fpu/xstate: Change names to separate XSAVES
- system and user states
-Message-ID: <20190821144537.GE6752@zn.tnic>
-References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
- <20190813205225.12032-4-yu-cheng.yu@intel.com>
+        Wed, 21 Aug 2019 10:45:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53482 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729373AbfHUOpx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 10:45:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=P5/ZWod6fAHXWUWrprOInsPqq0oUZgow3uUQibZVw8Y=; b=FhDR6yl/wOx357dfIqkd4iRMS
+        lbPa7cQHtnNhLrpvGVKVIzSEOU5OD5851S775jhqytjk5D5lt0S3eyss/RUFaAlrAjqFs9oI+misK
+        vni4mvVT9RppPtnmq/H3efqx52UccUrxQBM6Z8gqzj8m8TioTP8AydUH8rmN1e3tDJW78XI/xi82+
+        wZnSvSRd/JHou7xSZqJVqPrTJthEH8RUTJKo+iDIk05uRHk9Lk2ibLM/hg5Ma2zukE63NJ/tWgSAq
+        sQmAGVFS6y6wTfRqccdScleOFikXP314flN1+FLqOecos5ZY6J4v8oeIHN4yl0QydDM7QUizB+O+s
+        jGTHtPkvA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0Rs0-0007h8-PC; Wed, 21 Aug 2019 14:45:52 +0000
+Date:   Wed, 21 Aug 2019 07:45:52 -0700
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        Andreas Schwab <schwab@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org,
+        Allison Randal <allison@lohutok.net>
+Subject: Re: [v2 PATCH] RISC-V: Optimize tlb flush path.
+Message-ID: <20190821144552.GB4925@infradead.org>
+References: <20190820004735.18518-1-atish.patra@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190813205225.12032-4-yu-cheng.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190820004735.18518-1-atish.patra@wdc.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 01:52:01PM -0700, Yu-cheng Yu wrote:
-> Control-flow Enforcement (CET) MSR contents are XSAVES system states.
-> To support CET, introduce XSAVES system states first.
-> 
-> XSAVES is a "supervisor" instruction and, comparing to XSAVE, saves
-> additional "supervisor" states that can be modified only from CPL 0.
-> However, these states are per-task and not kernel's own.  Rename
-> "supervisor" states to "system" states to clearly separate them from
-> "user" states.
-> 
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> ---
->  arch/x86/include/asm/fpu/internal.h |  4 +-
->  arch/x86/include/asm/fpu/xstate.h   | 20 +++----
->  arch/x86/kernel/fpu/init.c          |  2 +-
->  arch/x86/kernel/fpu/signal.c        | 10 ++--
->  arch/x86/kernel/fpu/xstate.c        | 86 ++++++++++++++---------------
->  5 files changed, 60 insertions(+), 62 deletions(-)
-
-...
-
-> diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-> index e5cb67d67c03..d560e8861a3c 100644
-> --- a/arch/x86/kernel/fpu/xstate.c
-> +++ b/arch/x86/kernel/fpu/xstate.c
-> @@ -54,13 +54,16 @@ static short xsave_cpuid_features[] __initdata = {
->  };
->  
->  /*
-> - * Mask of xstate features supported by the CPU and the kernel:
-> + * XSAVES system states can only be modified from CPL 0 and saved by
-> + * XSAVES.  The rest are user states.  The following is a mask of
-> + * supported user state features derived from boot_cpu_has() and
-
-...derived from detected CPUID feature flags and
-SUPPORTED_XFEATURES_MASK.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Btw, for the next version it also might make sense to do one
+optimization at a time.  E.g. the empty cpumask one as the
+first patch, the local cpu directly one next, and the threshold
+based full flush as a third.
