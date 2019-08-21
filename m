@@ -2,89 +2,80 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F59C3A59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9FDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1996122D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 674C922DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:49:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MQBLmHoe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfHUBsx (ORCPT
+        id S1727052AbfHUBtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 21:48:53 -0400
-Received: from sender3-pp-o92.zoho.com.cn ([124.251.121.251]:25756 "EHLO
-        sender3-pp-o92.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726372AbfHUBsx (ORCPT
+        Tue, 20 Aug 2019 21:49:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42616 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfHUBtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 21:48:53 -0400
-X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Tue, 20 Aug 2019 21:48:52 EDT
-ARC-Seal: i=1; a=rsa-sha256; t=1566351194; cv=none; 
-        d=zoho.com.cn; s=zohoarc; 
-        b=qXDiO8FzgxJCCamp5ZOnxH8GADPlPSHLur4pqj/1XkFusSgR4zxgAAPbvwa5TWc65Y9yvJph6Cc4mwYnqJdsIGA0e+fTcvvitOwy7Vi1yXXxLpKAClkJylh8RabS1eXPowpAZtsGI70zuyphL1jJ31T2xP/2N2rgV+IotA6IXwI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com.cn; s=zohoarc; 
-        t=1566351194; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:Reply-To:References:Subject:To:ARC-Authentication-Results; 
-        bh=DcF5su0fLTO1Pln6URG5KEfqkJ7no+cr1/Tz3A0/29c=; 
-        b=WTGfIeb93/NnQATYhsuXKzuOj0HAYuNGPHQivWs4851ioPX+zB0McGmqi7I7/RmWu8koplnSLV3b+oi3M2Khs6vzZ9y4zmY12xj5MQK98GJVqzz2RejmsyDvsjVK2pp9TRizYFc49W4NjZysM6wiVlhrBylsaGwxUNqgGGYYnuo=
-ARC-Authentication-Results: i=1; mx.zoho.com.cn;
-        dkim=pass  header.i=zoho.com.cn;
-        spf=pass  smtp.mailfrom=cgxu519@zoho.com.cn;
-        dmarc=pass header.from=<cgxu519@zoho.com.cn> header.from=<cgxu519@zoho.com.cn>
-Received: from hades (218.18.229.179 [218.18.229.179]) by mx.zoho.com.cn
-        with SMTPS id 1566351192884306.16074813454156; Wed, 21 Aug 2019 09:33:12 +0800 (CST)
-Message-ID: <9afcec4d3987296ed4823d024c5a6fc54f741364.camel@zoho.com.cn>
-Subject: Re: [PATCH] 9p: avoid attaching writeback_fid on mmap with type
- PRIVATE
-From:   "cgxu519@zoho.com.cn" <cgxu519@zoho.com.cn>
-Reply-To: cgxu519@zoho.com.cn
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     ericvh@gmail.com, lucho@ionkov.net,
-        v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Date:   Wed, 21 Aug 2019 09:33:09 +0800
-In-Reply-To: <20190820114927.GA12715@nautica>
-References: <20190820100325.10313-1-cgxu519@zoho.com.cn>
-         <20190820114927.GA12715@nautica>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 20 Aug 2019 21:49:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SGtyDfOk7ztf7e1zq8UPqa3xUIMnaYAeWahTWcEr7d4=; b=MQBLmHoexH6YgdK4vldQKz4da
+        8RAZW2Yi8DxJxQAlpwgczYaEaHM1c41vT1AnkpoCnNqXbGnGTNghSk0fVikznf0kIEi0v+5N5r8g1
+        /6oblkV7iXrJ3a45Axj84aDQZSNiq8kQRjY+HUCF8V1Py56nJy0hBCl9/lpFyn+yndcDaRZqJkzVt
+        bIi8Pv29Kk3FsfaRxdzwIJpj8AfPIsMMPyFdhswi9/+xmIhUaAbFj+F5czW5zAlG2znKGKTxCbpT/
+        UF3RHjXmL4RitId7QozMvfJ4mmRlqlKtKIA6x7b3LDsgzeXJblkyLmEfssdO0Km6aGAzq3az5/zkW
+        SJ4UIFkeA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0FkA-0003gm-R5; Wed, 21 Aug 2019 01:48:58 +0000
+Date:   Tue, 20 Aug 2019 18:48:58 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Christoph Hellwig <hch@infradead.org>, dsterba@suse.cz,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        erhard_f@mailbox.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        stable@vger.kernel.org, Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCH] btrfs: fix allocation of bitmap pages.
+Message-ID: <20190821014858.GA9158@infradead.org>
+References: <20190817074439.84C6C1056A3@localhost.localdomain>
+ <20190819174600.GN24086@twin.jikos.cz>
+ <20190820023031.GC9594@infradead.org>
+ <6f99b73c-db8f-8135-b827-0a135734d7da@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f99b73c-db8f-8135-b827-0a135734d7da@suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-20 at 13:49 +0200, Dominique Martinet wrote:
-> Chengguang Xu wrote on Tue, Aug 20, 2019:
-> > Currently on mmap cache policy, we always attach writeback_fid
-> > whether mmap type is SHARED or PRIVATE. However, in the use case
-> > of kata-container which combines 9p(Guest OS) with overlayfs(Host OS),
-> > this behavior will trigger overlayfs' copy-up when excute command
-> > inside container.
+On Tue, Aug 20, 2019 at 01:06:25PM +0200, Vlastimil Babka wrote:
+> > The whole point of copy_page is to copy exactly one page and it makes
+> > sense to assume that is aligned.  A sane memcpy would use the same
+> > underlying primitives as well after checking they fit.  So I think the
+> > prime issue here is btrfs' use of copy_page instead of memcpy.  The
+> > secondary issue is slub fucking up alignments for no good reason.  We
+> > just got bitten by that crap again in XFS as well :(
 > 
-> hmm, I guess this just works for non-ovl cases because sync_inode()
-> realizes there is nothing to sync, but the fsync at the end still
-> triggers the copy-up ?
-> 
-> Well, I guess there really is no need to flush for private mappings,
-> so might as well go for this; sparing an extra useless clone walk cannot
-> hurt.
+> Meh, I should finally get back to https://lwn.net/Articles/787740/ right
 
-Unfortunately, overlayfs does copy-up at open operation if the open flags
-indicate data/meta modification, so as long as we attach writeback_fid with
-O_RDWR on private mmap there are a lot of unnecessary copy-up of binary and
-shared library files on backedn overlayfs when executing command inside kata
-containers. After this patch we found there are no useless copy-up files anymore
-and also private/shared mmap worked as expected.
+Yes.  For now Dave came up with an idea for a workaround that will
+be forward-compatible with that:
 
-
-Thanks,
-Chengguang.
-
-> 
-> I'll queue this up after tests, no promise on delay sorry :/
-
-
-
+https://www.spinics.net/lists/linux-xfs/msg30521.html
