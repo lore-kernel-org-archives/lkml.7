@@ -2,147 +2,166 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BE3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477ACC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA35922D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:34:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="WjjyvMXb"
+	by mail.kernel.org (Postfix) with ESMTP id 19D262087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbfHUFev (ORCPT
+        id S1727269AbfHUFl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 01:34:51 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:46254 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727075AbfHUFev (ORCPT
+        Wed, 21 Aug 2019 01:41:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53711 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726907AbfHUFl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 01:34:51 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7L5WkW8014790;
-        Wed, 21 Aug 2019 01:34:24 -0400
-Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2055.outbound.protection.outlook.com [104.47.45.55])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2ug3mab7aq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 21 Aug 2019 01:34:24 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c6I9DeXQTRRyQ5iSK61PKJ1vLABreRlp41e9VQT8DFJnIuwIoNlK2/JtYwFkMX0kHY7BUylPBY0+9DDLFV7WvuuWPGi2XAk5fa10S4yydubgTKO/f+S2KwHoI+p6phNr0qONyFTDosyv7FsSL3RuDx0eJjYmNHayI+SYbC7XCFgETG+R0xfQJRMP7VOTcq/Qo4ErjjkQa/hAXmQvy2ThtaWOCJHtN22ArwbR3FMDlcEzUYNc05icf1OXaA69x8pyR/k1X2juznLOe4nmGNvB6VDmhTDN+IG9dfxD1++TRYPpwoNfrl4xqXZBc3L17NGVBQwIN+xntt/pfwTbUDp3qQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xirPD+rtCNe8bUBn60WGSNnSAEPRvXka5c2bYpCjF8A=;
- b=Cb1ovSu1TI/p8/LFLTf7c+su3TTlPDAUqspE54EviGcmRYvlNMQyJlFjKv1id/GkVi5tr/3ZITuX8R0rqWYc23bsEgkqssdQhwVLDfQgoLOP6d57h0nppfHJSPaXG8UG3ZWuuC1lVveCP2XKSI8QOSnbGNkH/I5Aj6tV4ntK1W+tMg/3Bl56x8ZaefXBHbAe3fAwRdEAoBaJFaljSfSfs8RlUV62y3O09oGbv0No4Y10AbXFZRSB4I/IKLnx3bE7neQMcKzt+C9sIBTrm0ZGRgAXz85tJwsiarFKIfCOmQ6PFgm+0jlueRBGWXbLGP3Fgr85cXD/TTJRjP3KflAC7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xirPD+rtCNe8bUBn60WGSNnSAEPRvXka5c2bYpCjF8A=;
- b=WjjyvMXb2XQmV/c0bpDVwNXAqsAQo4cjBjmPwXMQ95cQ3eTpx5vQtQPpegmMk/V6sIoAXyhOi2S8DvE506R3GPq7QfSr+ay9gXuEh28pijw+8Rh/Yp6O30VSmyCTwK+YpNZ+I3UDh1jtzKiHOjAqJjes7hn2fHCQagQB6Lq61Tg=
-Received: from BN8PR03MB4770.namprd03.prod.outlook.com (20.179.64.223) by
- BN8PR03MB4868.namprd03.prod.outlook.com (20.178.223.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Wed, 21 Aug 2019 05:34:22 +0000
-Received: from BN8PR03MB4770.namprd03.prod.outlook.com
- ([fe80::d096:6c2e:91ac:39bb]) by BN8PR03MB4770.namprd03.prod.outlook.com
- ([fe80::d096:6c2e:91ac:39bb%6]) with mapi id 15.20.2178.018; Wed, 21 Aug 2019
- 05:34:22 +0000
-From:   "Togorean, Bogdan" <Bogdan.Togorean@analog.com>
-To:     "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "sam@ravnborg.org" <sam@ravnborg.org>
-CC:     "Laurent.pinchart@ideasonboard.com" 
-        <Laurent.pinchart@ideasonboard.com>,
-        "a.hajda@samsung.com" <a.hajda@samsung.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "matt.redfearn@thinci.com" <matt.redfearn@thinci.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/2] drm: bridge: adv7511: Add support for ADV7535
-Thread-Topic: [PATCH v2 2/2] drm: bridge: adv7511: Add support for ADV7535
-Thread-Index: AQHVTr0hmVnX1zVUNEq8UIbUXOMh2qby78kAgA9LnQCAAB3GAIABctKAgAGM+wA=
-Date:   Wed, 21 Aug 2019 05:34:22 +0000
-Message-ID: <ccba9a66c6d5db8a295353b16084c6a1199f31dc.camel@analog.com>
-References: <20190809141611.9927-1-bogdan.togorean@analog.com>
-         <20190809141611.9927-3-bogdan.togorean@analog.com>
-         <20190809152510.GA23265@ravnborg.org>
-         <c99cfbd3dc45bb02618e7653c33022f3553e1cce.camel@analog.com>
-         <20190819104616.GA15890@ravnborg.org>
-         <20190820085329.GC11147@phenom.ffwll.local>
-In-Reply-To: <20190820085329.GC11147@phenom.ffwll.local>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9f362487-0ebb-4c4e-3897-08d725f938d0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BN8PR03MB4868;
-x-ms-traffictypediagnostic: BN8PR03MB4868:
-x-microsoft-antispam-prvs: <BN8PR03MB4868B74300A53F9EEA69AA5A9BAA0@BN8PR03MB4868.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(39860400002)(396003)(346002)(136003)(189003)(199004)(476003)(446003)(11346002)(2616005)(486006)(478600001)(14454004)(6512007)(186003)(316002)(110136005)(229853002)(54906003)(99286004)(26005)(7416002)(71190400001)(71200400001)(6506007)(5660300002)(102836004)(76116006)(305945005)(6246003)(86362001)(4326008)(8676002)(36756003)(81166006)(81156014)(66066001)(118296001)(6116002)(3846002)(2501003)(91956017)(64756008)(66476007)(7736002)(66946007)(66446008)(66556008)(256004)(76176011)(6436002)(6486002)(53936002)(8936002)(25786009)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR03MB4868;H:BN8PR03MB4770.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MyJSq99kDTZJVqBlKWe4npJjPySNVQQpC9aDMxhIg2vM+MHM4ucW8mowSmSWnXHp0eVnSNwSXwCp2yJdyL60K6PHyGlE4DxdNACIDaY4GO44hW1S4xAyjp5ldXT10+buKPRyiP0YRd5OlEHJQspCHCS4k8ziWTlUCMmnHsHsm05RJ7etBNo5C33aat0Cso9HxhJ51iTiAjgv7R6gYPC4CWSNq2U5gi4XPMjqBtbn5jn/zDEkTNamhC0Bv0Pb/+7efB09OOqB3Nka1xS/fK4pUOCIGPiy2T8QThO6SF01BGbVVGKe0Wp3qKTMk0FNkgFNYU9HG5BZC6pdKopl4u6LotPna0Qj2upnVsUuHXCthMFOym30MJmj6h66mgPgzDTfqzRy4HC//Dh2aAetL+YJ4WIatqyssugZ/GmR6CASGMM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <98805991ABBC544694582903F3984374@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 21 Aug 2019 01:41:28 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1i0JMx-0003X7-RM; Wed, 21 Aug 2019 07:41:15 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: numlist_pop(): Re: [RFC PATCH v4 1/9] printk-rb: add a new printk ringbuffer implementation
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+        <20190807222634.1723-2-john.ogness@linutronix.de>
+        <20190820081518.3r3cagzggtifsvhz@pathway.suse.cz>
+Date:   Wed, 21 Aug 2019 07:41:13 +0200
+Message-ID: <87pnkzf53a.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f362487-0ebb-4c4e-3897-08d725f938d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 05:34:22.3990
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BtkERW8I/SAbf12VW+l0wW38HszfxW5RGbylTOfZrjTj0qlFuFsqjzyBI4IhwhNJOhn0jYvB9b5liHySKjrzE1L5hbUQco+j77cK3fK9vOw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR03MB4868
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908210060
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA4LTIwIGF0IDEwOjUzICswMjAwLCBEYW5pZWwgVmV0dGVyIHdyb3RlOg0K
-PiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBNb24sIEF1ZyAxOSwgMjAxOSBhdCAxMjo0NjoxNlBNICsw
-MjAwLCBTYW0gUmF2bmJvcmcgd3JvdGU6DQo+ID4gSGkgQm9nZGFuLg0KPiA+IA0KPiA+ID4gPiA+
-ICAJCWFkdjc1MzNfZGV0YWNoX2RzaShhZHY3NTExKTsNCj4gPiA+ID4gPiAgCWkyY191bnJlZ2lz
-dGVyX2RldmljZShhZHY3NTExLT5pMmNfY2VjKTsNCj4gPiA+ID4gPiAgCWlmIChhZHY3NTExLT5j
-ZWNfY2xrKQ0KPiA+ID4gPiA+IEBAIC0xMjY2LDggKzEyNzgsOSBAQCBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IGkyY19kZXZpY2VfaWQNCj4gPiA+ID4gPiBhZHY3NTExX2kyY19pZHNbXSA9IHsNCj4gPiA+
-ID4gPiAgCXsgImFkdjc1MTEiLCBBRFY3NTExIH0sDQo+ID4gPiA+ID4gIAl7ICJhZHY3NTExdyIs
-IEFEVjc1MTEgfSwNCj4gPiA+ID4gPiAgCXsgImFkdjc1MTMiLCBBRFY3NTExIH0sDQo+ID4gPiA+
-ID4gLSNpZmRlZiBDT05GSUdfRFJNX0kyQ19BRFY3NTMzDQo+ID4gPiA+ID4gKyNpZmRlZiBDT05G
-SUdfRFJNX0kyQ19BRFY3NTN4DQo+ID4gPiA+ID4gIAl7ICJhZHY3NTMzIiwgQURWNzUzMyB9LA0K
-PiA+ID4gPiA+ICsJeyAiYWR2NzUzNSIsIEFEVjc1MzUgfSwNCj4gPiA+ID4gPiAgI2VuZGlmDQo+
-ID4gPiA+IA0KPiA+ID4gPiBUaGlzIGlmZGVmIG1heSBub3QgYmUgbmVlZGVkPz8NCj4gPiA+ID4g
-SWYgd2UgZGlkIG5vdCBnZXQgdGhpcyB0eXBlIHdlIHdpbGwgbm90IGxvb2sgaXQgdXAuDQo+ID4g
-PiBCdXQgaWYgd2UgaGF2ZSBkZWZpbmVkIGluIERUIGFkdjc1MzMvNSBkZXZpY2UgYnV0DQo+ID4g
-PiBDT05GSUdfRFJNX0kyQ19BRFY3NTN4IG5vdCBzZWxlY3RlZCBwcm9iZSB3aWxsIGZhaWwgd2l0
-aCBFTk9ERVYuDQo+ID4gPiBUaGF0DQo+ID4gPiB3b3VsZCBiZSBvaz8NCj4gPiANCj4gPiBXaGF0
-IGRvIHdlIGdhaW4gZnJvbSB0aGlzIGNvbXBsZXhpdHkgaW4gdGhlIGVuZC4NCj4gPiBXaHkgbm90
-IGxldCB0aGUgZHJpdmVyIGFsd2F5cyBzdXBwb3J0IGFsbCB2YXJpYW50cy4NCj4gPiANCj4gPiBJ
-ZiB0aGlzIHJlc3VsdCBpbiBhIHNpbXBsZXIgZHJpdmVyLCBhbmQgbGVzcyBjaG9pY2VzIGluIEtj
-b25maWcNCj4gPiB0aGVuIGl0IGlzIGEgd2luLXdpbi4NCj4gDQo+IFllYWggaW4gZ2VuZXJhbCB3
-ZSBkb24ndCBLY29uZmlnIHdpdGhpbiBkcml2ZXJzIGluIGRybSB0byBkaXNhYmxlDQo+IHNwZWNp
-ZmljDQo+IGNvZGUtcGF0aHMuIEl0J3Mgbm90IHdvcnRoIHRoZSBwYWluLg0KQWNrLA0KVGhhbmsg
-eW91IGZvciBjbGFyaWZpY2F0aW9uLiBXaWxsIHJlbW92ZSBpbiBWMy4NCj4gLURhbmllbA0K
+On 2019-08-20, Petr Mladek <pmladek@suse.com> wrote:
+>> --- /dev/null
+>> +++ b/kernel/printk/numlist.c
+>> +/**
+>> + * numlist_pop() - Remove the oldest node from the list.
+>> + *
+>> + * @nl: The numbered list from which to remove the tail node.
+>> + *
+>> + * The tail node can only be removed if two conditions are satisfied:
+>> + *
+>> + * * The node is not the only node on the list.
+>> + * * The node is not busy.
+>> + *
+>> + * If, during this function, another task removes the tail, this function
+>> + * will try again with the new tail.
+>> + *
+>> + * Return: The removed node or NULL if the tail node cannot be removed.
+>> + */
+>> +struct nl_node *numlist_pop(struct numlist *nl)
+>> +{
+>> +	unsigned long tail_id;
+>> +	unsigned long next_id;
+>> +	unsigned long r;
+>> +
+>> +	/* cA: #1 */
+>> +	tail_id = atomic_long_read(&nl->tail_id);
+>> +
+>> +	for (;;) {
+>> +		/* cB */
+>> +		while (!numlist_read(nl, tail_id, NULL, &next_id)) {
+>> +			/*
+>> +			 * @tail_id is invalid. Try again with an
+>> +			 * updated value.
+>> +			 */
+>> +
+>> +			cpu_relax();
+>> +
+>> +			/* cA: #2 */
+>> +			tail_id = atomic_long_read(&nl->tail_id);
+>> +		}
+>
+> The above while-cycle basically does the same as the upper for-cycle.
+> It tries again with freshly loaded nl->tail_id. The following code
+> looks easier to follow:
+>
+> 	do {
+> 		tail_id = atomic_long_read(&nl->tail_id);
+>
+> 		/*
+> 		 * Read might fail when the tail node has been removed
+> 		 * and reused in parallel.
+> 		 */
+> 		if (!numlist_read(nl, tail_id, NULL, &next_id))
+> 			continue;
+>
+> 		/* Make sure the node is not the only node on the list. */
+> 		if (next_id == tail_id)
+> 			return NULL;
+>
+> 		/* cC: Make sure the node is not busy. */
+> 		if (nl->busy(tail_id, nl->busy_arg))
+> 			return NULL;
+>
+> 	while (atomic_long_cmpxchg_relaxed(&nl->tail_id, tail_id, next_id) !=
+> 			tail_id);
+>
+> 	/* This should never fail. The node is ours. */
+> 	return nl->node(tail_id, nl->node_arg);
+
+You will see that pattern in several cmpxchg() loops. The reason I chose
+to do it that way was so that I could make use of the return value of
+the failed cmpcxhg(). This avoids an unnecessary LOAD and establishes a
+data dependency between the failed cmpxchg() and the following
+numlist_read(). I suppose none of that matters since we only care about
+the case where cmpxchg() is successful.
+
+I agree that your variation is easier to read.
+
+>> +		/* Make sure the node is not the only node on the list. */
+>> +		if (next_id == tail_id)
+>> +			return NULL;
+>> +
+>> +		/*
+>> +		 * cC:
+>> +		 *
+>> +		 * Make sure the node is not busy.
+>> +		 */
+>> +		if (nl->busy(tail_id, nl->busy_arg))
+>> +			return NULL;
+>> +
+>> +		r = atomic_long_cmpxchg_relaxed(&nl->tail_id,
+>> +						tail_id, next_id);
+>> +		if (r == tail_id)
+>> +			break;
+>> +
+>> +		/* cA: #3 */
+>> +		tail_id = r;
+>> +	}
+>> +
+>> +	return nl->node(tail_id, nl->node_arg);
+>
+> If I get it correctly, the above nl->node() call should never fail.
+> The node has been removed from the list and nobody else could
+> touch it. It is pretty useful information and it might be worth
+> mention it in a comment.
+
+You are correct and I will add a comment.
+
+> PS: I am scratching my head around the patchset. I'll try Peter's
+> approach and comment independent things is separate mails.
+
+I think it is an excellent approach. Especially when discussing the
+memory barriers.
+
+John Ogness
