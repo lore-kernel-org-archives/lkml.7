@@ -2,111 +2,87 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4D6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD2CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01AC12339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:11:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Q+hfVBsu"
+	by mail.kernel.org (Postfix) with ESMTP id A0DA82339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:13:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbfHUSLc (ORCPT
+        id S1728405AbfHUSNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:11:32 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:35042 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfHUSLb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:11:31 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7LI4Rgu120269;
-        Wed, 21 Aug 2019 18:11:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=LNf/BiY2c1aCxKX7cjTK7slHPQCUjmmpu+MZQ6fjJdM=;
- b=Q+hfVBsuRY7LWwkM8gzMb09S5nUtD+VJG9UkvLHZMRuVRVaQ7j1e7AkOTs+4eNTzY5CL
- kbUfqc3f0XgqPzDfYvdGObfzkfmSdAtgJupFG7WtazzTDPzdtAoPwJgAiPdm3DB7Zx70
- 3lum28/+AfuTlUV3MX8eElOcvCXgTJLI3PyQJwnhOCM1lwxK2Rgt0+++QaOz3LMVU0BQ
- 582k2TLAcRLU+e+JeBJbUFDNjJII25iIj9uBiPfSbgBeiCXgQmztV/gwC2tyDi2joDad
- /1P93IsvXfn0svPk/JYacz1GbdwMECFkk3UwN9XprhmMAaTtWsQpgKrzM8LbSq1BrJ8c Jw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2ue9hpqd81-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 18:11:25 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7LI32BP145251;
-        Wed, 21 Aug 2019 18:11:25 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2ugj7q6k10-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 18:11:24 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7LIBNCq019908;
-        Wed, 21 Aug 2019 18:11:23 GMT
-Received: from [10.132.92.146] (/10.132.92.146)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 21 Aug 2019 11:11:23 -0700
-Subject: Re: kernel panic in 5.3-rc5, nfsd_reply_cache_stats_show+0x11
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     CHUCK_LEVER <chuck.lever@oracle.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        linux-nfs@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <72e41dc2-b4cf-a5dd-a365-d26ba1257ef9@oracle.com>
- <CAPcyv4iPuTpk9bifyX5yQxO8gT0fRhYXPrwk-obazWA=Dou3iQ@mail.gmail.com>
-From:   jane.chu@oracle.com
-Organization: Oracle Corporation
-Message-ID: <74aeafff-a123-bf20-4b5e-9cd636bdb22e@oracle.com>
-Date:   Wed, 21 Aug 2019 11:11:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 14:13:11 -0400
+Received: from mga05.intel.com ([192.55.52.43]:59967 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728157AbfHUSNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 14:13:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 11:13:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
+   d="scan'208";a="203109821"
+Received: from kumarsh1-mobl.ger.corp.intel.com (HELO localhost) ([10.249.33.104])
+  by fmsmga004.fm.intel.com with ESMTP; 21 Aug 2019 11:13:06 -0700
+Date:   Wed, 21 Aug 2019 21:13:05 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>
+Subject: Re: [PATCH v4 2/6] tpm: tpm_tis_spi: Introduce a flow control
+ callback
+Message-ID: <20190821181305.e6dgrez5n4ovtg5s@linux.intel.com>
+References: <20190812223622.73297-1-swboyd@chromium.org>
+ <20190812223622.73297-3-swboyd@chromium.org>
+ <20190819163240.vsgylmctemzgqd34@linux.intel.com>
+ <5d5ad721.1c69fb81.6a514.e649@mx.google.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4iPuTpk9bifyX5yQxO8gT0fRhYXPrwk-obazWA=Dou3iQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908210180
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908210180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d5ad721.1c69fb81.6a514.e649@mx.google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Dan,
-
-On 8/20/19 8:48 PM, Dan Williams wrote:
-> On Tue, Aug 20, 2019 at 6:39 PM <jane.chu@oracle.com> wrote:
->>
->> Hi,
->>
->> Apology if there is a better channel reporting the issue, if so, please
->> let me know.
->>
->> I just saw below regression in 5.3-rc5 kernel, but not in 5.2-rc7 or
->> earlier kernels.
+On Mon, Aug 19, 2019 at 10:06:40AM -0700, Stephen Boyd wrote:
+> > AFAIK the flow control is not part of the SPI standard itself but is
+> > proprietary for each slave device. Thus, the flow control should be
+> > documented to the source code. I do not want flow control mechanisms to
+> > be multiplied before this is done.
 > 
-> Is the error stable enough to bisect?
+> Can you clarify this please? I don't understand what "the flow control
+> should be documented to the source code" means.
+
+Off the top of my head:
+
+/* TCG SPI flow control is documented in the section 6.4 of [1]. However,
+ * Google's CR50 chip has its own proprietary flow control. This struct
+ * is used to bind the appropriate flow control mechanism.
+ *
+ * [1] https://trustedcomputinggroup.org/resource/pc-client-platform-tpm-profile-ptp-specification/
+ */
+
+> > 
+> > The magic number 0x01 would be also good to get rid off.
+> > 
 > 
+> Ok. What name should the #define be? I can make that another patch.
 
-The error is stable, I haven't tried bisect, thought to report the issue
-first since it's late in the 5.3 process.
-Then saw Bruce' email, I'll report soon whether the patch takes care the 
-issue.
+Do nothing. Not part of your patch set scope, was a stupid comment from
+my side.
 
-thanks!
--jane
+/Jarkko
