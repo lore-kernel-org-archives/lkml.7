@@ -2,239 +2,234 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812B5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FCAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0D32339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MGLD5jrw"
+	by mail.kernel.org (Postfix) with ESMTP id 3D12122DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbfHUXdC (ORCPT
+        id S1730497AbfHUXeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 19:33:02 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35579 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfHUXdB (ORCPT
+        Wed, 21 Aug 2019 19:34:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27592 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727629AbfHUXeK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 19:33:01 -0400
-Received: by mail-pl1-f194.google.com with SMTP id gn20so2233903plb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 16:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Li3UBe8fI+pi64qmfeKTwbTPteH9HIZjUzvyj3UoeFw=;
-        b=MGLD5jrwG4bvu8DWnmzQYJzFS1/EptZ8wSe5Rt8mD73XH/bMx6G8SQefQZ+UmpmiMG
-         CTQgRYdud9d65PvEcTExXMizP0qA0bUbNsERbQG05wRcQMmI9kt+KPCv+d8LXuklTlCQ
-         8GdNTGObeP6PNG8DMgihfBMa4URCLFOAvPzmXgmoZrYIcWwrYtYUYuwzfrmG7SEf0N+1
-         LGr19VM9K0uNGpsCiGs3qBZhAXZbkSJ58M64j4gwnj3BDo1aeybhF+sW4J38W0New54k
-         EkAHZqQpYZz/F5wlE1PMOrBjVBPSqbrhBNx7puf/2TZluyPMnPTwslzrP8BanY137KAx
-         c/kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Li3UBe8fI+pi64qmfeKTwbTPteH9HIZjUzvyj3UoeFw=;
-        b=Vl4q8Rpdti5CwyKMwJyZxNG7qzcvU39+93DaNBpm/QLz19pv8QMXrvalx63a5Atdje
-         3heQYE4JJmjCHzlOeKJ2oXyXlvmiAZoHSrFXbeOczBzge2hVqxnrFDpJ7SG4SITuLA4X
-         nDni8POVoTbh56gDvDJOlQwF9cfojO07Kpaj9ltnPzxPFshQMW3PJVOJ91aDrrCoS7Xb
-         R+VsQDNpVjnuIQLPnfVpdUoZAe7X+/GKThGZiq3xeuP6QBwrf6CBtI/ny0rab7l7Y7Bn
-         DGZb5bvW6DK3b/65sgMSYOtK2obe4wLJwV+fR4pz72XPd2qwOQKjXc2l5pY/uubyLdOR
-         EMTA==
-X-Gm-Message-State: APjAAAVUf3aPSI9nX2T/yqCH/gznhlaeUhMqqbMW+Hj8iaOTXMkBKGCO
-        m+la1bERkdp0awp5Pd34u8nW6g==
-X-Google-Smtp-Source: APXvYqxVI4mbGGV1tJ1qz87U1pU2VgtzBv1P6daTCRDMWqjsD+hGJrnHGR1YWbu9hi+D0j2JGid8uQ==
-X-Received: by 2002:a17:902:24b:: with SMTP id 69mr34895534plc.250.1566430380557;
-        Wed, 21 Aug 2019 16:33:00 -0700 (PDT)
-Received: from [10.17.0.244] ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id w11sm25303530pfi.105.2019.08.21.16.32.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 16:32:59 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH 15/15] riscv: disable the EFI PECOFF header for M-mode
-From:   Troy Benjegerdes <troy.benjegerdes@sifive.com>
-In-Reply-To: <MN2PR04MB6061794D39900E038F9FCF218DAA0@MN2PR04MB6061.namprd04.prod.outlook.com>
-Date:   Wed, 21 Aug 2019 16:32:58 -0700
-Cc:     Atish Patra <Atish.Patra@wdc.com>, "hch@lst.de" <hch@lst.de>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "palmer@sifive.com" <palmer@sifive.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CCBE0CC0-76B2-415B-B987-0110F3CBEE70@sifive.com>
-References: <20190813154747.24256-1-hch@lst.de>
- <20190813154747.24256-16-hch@lst.de>
- <3BF39A0F-558D-40E0-880D-27829486F9F0@sifive.com>
- <4f1677e24a5fcdfd2fda714cdd66f4dbe7817284.camel@wdc.com>
- <F4C28F0F-7385-432E-A766-64A3F8B8C381@sifive.com>
- <MN2PR04MB6061794D39900E038F9FCF218DAA0@MN2PR04MB6061.namprd04.prod.outlook.com>
-To:     Anup Patel <Anup.Patel@wdc.com>
-X-Mailer: Apple Mail (2.3445.9.1)
+        Wed, 21 Aug 2019 19:34:10 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LNWPsn049903;
+        Wed, 21 Aug 2019 19:34:00 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uhekchyt8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Aug 2019 19:34:00 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7LNXxvJ054492;
+        Wed, 21 Aug 2019 19:33:59 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uhekchysy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Aug 2019 19:33:59 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7LNUcJN007069;
+        Wed, 21 Aug 2019 23:33:59 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma04wdc.us.ibm.com with ESMTP id 2ufye0d701-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Aug 2019 23:33:59 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LNXwmN43319718
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 23:33:58 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A0CCBB205F;
+        Wed, 21 Aug 2019 23:33:58 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6BBE2B2065;
+        Wed, 21 Aug 2019 23:33:58 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.200.24])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 21 Aug 2019 23:33:58 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 1A56D16C65BA; Wed, 21 Aug 2019 16:33:58 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 16:33:58 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v2 1/3] rcu: Acquire RCU lock when disabling BHs
+Message-ID: <20190821233358.GU28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190821231906.4224-1-swood@redhat.com>
+ <20190821231906.4224-2-swood@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821231906.4224-2-swood@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908210231
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 21, 2019 at 06:19:04PM -0500, Scott Wood wrote:
+> A plain local_bh_disable() is documented as creating an RCU critical
+> section, and (at least) rcutorture expects this to be the case.  However,
+> in_softirq() doesn't block a grace period on PREEMPT_RT, since RCU checks
+> preempt_count() directly.  Even if RCU were changed to check
+> in_softirq(), that wouldn't allow blocked BH disablers to be boosted.
+> 
+> Fix this by calling rcu_read_lock() from local_bh_disable(), and update
+> rcu_read_lock_bh_held() accordingly.
 
+Cool!  Some questions and comments below.
 
-> On Aug 21, 2019, at 4:02 PM, Anup Patel <Anup.Patel@wdc.com> wrote:
->=20
->=20
->=20
->> -----Original Message-----
->> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
->> owner@vger.kernel.org> On Behalf Of Troy Benjegerdes
->> Sent: Wednesday, August 21, 2019 11:25 PM
->> To: Atish Patra <Atish.Patra@wdc.com>
->> Cc: hch@lst.de; paul.walmsley@sifive.com; =
-linux-riscv@lists.infradead.org;
->> Damien Le Moal <Damien.LeMoal@wdc.com>; linux-
->> kernel@vger.kernel.org; palmer@sifive.com
->> Subject: Re: [PATCH 15/15] riscv: disable the EFI PECOFF header for =
-M-mode
->>=20
->>=20
->>=20
->>> On Aug 21, 2019, at 10:31 AM, Atish Patra <Atish.Patra@wdc.com> =
-wrote:
->>>=20
->>> On Tue, 2019-08-20 at 21:14 -0700, Troy Benjegerdes wrote:
->>>>> On Aug 13, 2019, at 8:47 AM, Christoph Hellwig <hch@lst.de> wrote:
->>>>>=20
->>>>> No point in bloating the kernel image with a bootloader header if =
-we
->>>>> run bare metal.
->>>>=20
->>>> I would say the same for S-mode. EFI booting should be an option, =
-not
->>>> a requirement.
->>>=20
->>> EFI booting is never a requirement on any board. When EFI stub will =
-be
->>> added for kernel, it will be enabled with CONFIG_EFI_STUB only.
->>>=20
->>> The current additional header is only 64 bytes and also required for
->>> booti in U-boot. So it shouldn't disabled for S-mode.
->>>=20
->>> Disabling it for M-Mode Linux is okay because of memory constraint =
-and
->>> M-Mode linux won't use U-boot anyways.
->>>=20
->>>> I have M-mode U-boot working with bootelf to start BBL, and at some
->>>> point, I=E2=80=99m hoping we can have a M-mode linux kernel be the =
-SBI
->>>> provider for S-mode kernels,
->>>=20
->>> Why do you want bloat a M-Mode software with Linux just for SBI
->>> implementation?
->>>=20
->>> Using Linux as a last stage boot loader i.e. LinuxBoot may make =
-sense
->>> though.
->>>=20
->>=20
->> Boot time, and ease of development, and simplified system management.
->>=20
->> Having M-mode linux as a supervisor/boot kernel can get us to =
-responding to
->> HTTPS/SSH/etc requests within seconds of power-on, while the =
-=E2=80=98boot=E2=80=99
->> kernel can be loading guest S-mode kernels from things like NVME =
-flash
->> drives that are going to be a lot more code and development to =
-support in U-
->> boot or any other non-linux dedicated boot loader.
->=20
-> I don't see why these things cannot be achieved in existing =
-open-source
-> bootloaders. In fact, U-boot already has "Falcon" mode for fast =
-booting.
->=20
->>=20
->> There=E2=80=99s also a very strong security argument, as Linux is =
-going to get the
->> largest and broadest security review, and will likely get software =
-updates a
->> lot faster than dedicated boot firmwares will.
->=20
-> For security, we have to get SW certified with various something like =
-ISO2626
-> standard. This is very common practice in Automotive industry. To =
-achieve such
-> a certification for any SW, the size of code base is very very =
-important.
->=20
-> Due to this reason, even today Linux (and other big open-source =
-project)
-> are very difficult to be security certified.
+							Thanx, Paul
 
-There=E2=80=99s security certified, and then there=E2=80=99s what I =
-personally consider secure.
+> Signed-off-by: Scott Wood <swood@redhat.com>
+> ---
+> Another question is whether non-raw spinlocks are intended to create an
+> RCU read-side critical section due to implicit preempt disable.
 
-The second category is code that I know is widely audited by lots of =
-people,
-and gets quickly updated when there is a problem. I like U-boot, and I =
-think
-its a great solution for industry, it=E2=80=99s just not the only =
-solution that could be=20
-used.
+Hmmm...  Did non-raw spinlocks act like rcu_read_lock_sched()
+and rcu_read_unlock_sched() pairs in -rt prior to the RCU flavor
+consolidation?  If not, I don't see why they should do so after that
+consolidation in -rt.
 
->=20
->>=20
->> Another reason would be sharing the same kernel binary (elf file) for =
-both
->> M-mode, and S-mode, and using the device tree passed to each to =
-specify
->> which mode it should be running it. There are probably a bunch of =
-gotchas
->> with this idea, and even so I suspect someone will decide to go ahead =
-and
->> just do it eventually because it could make testing, validation, and =
-security
->> updates a lot easier from an operational/deployment point of view.
->>=20
->> Linuxbios convinced me that if you want to do a really large cluster, =
-you can
->> build, manage, and run such a thing with fewer people and engineering =
-cost
->> than if you have all these extra layers of boot firmware that require =
-some
->> company to have firmware engineers and lots of extra system testing =
-on the
->> firmware.
->=20
-> I don't by this last argument. These days it's just very few folks =
-doing firmware,
-> bootloader, and Linux porting for any new SOC (any architecture). Most =
-of
-> the things are already there in various open-source project so same =
-person
-> can easily contribute to various projects.
->=20
-> Regards,
-> Anup
+>                                                                  If they
+> are, then we'd need to add rcu_read_lock() there as well since RT doesn't
+> disable preemption (and rcutorture should explicitly test with a
+> spinlock).  If not, the documentation should make that clear.
 
-What I see though is we=E2=80=99re duplicating code and work between =
-bootloaders
-and kernel, for example the SPI-NOR code, and if it was all linux, it =
-would be
-one driver model to learn/remember/track, and one place to fix things.
+True enough!
 
-U-boot is great because you can boot other !linux things (like FreeBSD),
-however if I was purpose building a linux cluster, I would want to be =
-running
-linux as early as possible so I can use linux scripting in =
-bash/go/python and
-talk to the queue/workload manager over a native high performance =
-network
-instead of the extremely limited =E2=80=98hush=E2=80=99 shell and having =
-to discover which
-user image to boot with something old and slow like dhcp/tftp/etc.=
+>  include/linux/rcupdate.h |  4 ++++
+>  kernel/rcu/update.c      |  4 ++++
+>  kernel/softirq.c         | 12 +++++++++---
+>  3 files changed, 17 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> index 388ace315f32..d6e357378732 100644
+> --- a/include/linux/rcupdate.h
+> +++ b/include/linux/rcupdate.h
+> @@ -615,10 +615,12 @@ static inline void rcu_read_unlock(void)
+>  static inline void rcu_read_lock_bh(void)
+>  {
+>  	local_bh_disable();
+> +#ifndef CONFIG_PREEMPT_RT_FULL
+>  	__acquire(RCU_BH);
+>  	rcu_lock_acquire(&rcu_bh_lock_map);
+>  	RCU_LOCKDEP_WARN(!rcu_is_watching(),
+>  			 "rcu_read_lock_bh() used illegally while idle");
+> +#endif
+
+Any chance of this using "if (!IS_ENABLED(CONFIG_PREEMPT_RT_FULL))"?
+We should be OK providing a do-nothing __maybe_unused rcu_bh_lock_map
+for lockdep-enabled -rt kernels, right?
+
+>  }
+>  
+>  /*
+> @@ -628,10 +630,12 @@ static inline void rcu_read_lock_bh(void)
+>   */
+>  static inline void rcu_read_unlock_bh(void)
+>  {
+> +#ifndef CONFIG_PREEMPT_RT_FULL
+>  	RCU_LOCKDEP_WARN(!rcu_is_watching(),
+>  			 "rcu_read_unlock_bh() used illegally while idle");
+>  	rcu_lock_release(&rcu_bh_lock_map);
+>  	__release(RCU_BH);
+> +#endif
+
+Ditto.
+
+>  	local_bh_enable();
+>  }
+>  
+> diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+> index 016c66a98292..a9cdf3d562bc 100644
+> --- a/kernel/rcu/update.c
+> +++ b/kernel/rcu/update.c
+> @@ -296,7 +296,11 @@ int rcu_read_lock_bh_held(void)
+>  		return 0;
+>  	if (!rcu_lockdep_current_cpu_online())
+>  		return 0;
+> +#ifdef CONFIG_PREEMPT_RT_FULL
+> +	return lock_is_held(&rcu_lock_map) || irqs_disabled();
+> +#else
+>  	return in_softirq() || irqs_disabled();
+> +#endif
+
+And globally.
+
+>  }
+>  EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
+>  
+> diff --git a/kernel/softirq.c b/kernel/softirq.c
+> index d16d080a74f7..6080c9328df1 100644
+> --- a/kernel/softirq.c
+> +++ b/kernel/softirq.c
+> @@ -115,8 +115,10 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
+>  	long soft_cnt;
+>  
+>  	WARN_ON_ONCE(in_irq());
+> -	if (!in_atomic())
+> +	if (!in_atomic()) {
+>  		local_lock(bh_lock);
+> +		rcu_read_lock();
+> +	}
+>  	soft_cnt = this_cpu_inc_return(softirq_counter);
+>  	WARN_ON_ONCE(soft_cnt == 0);
+>  	current->softirq_count += SOFTIRQ_DISABLE_OFFSET;
+> @@ -151,8 +153,10 @@ void _local_bh_enable(void)
+>  #endif
+>  
+>  	current->softirq_count -= SOFTIRQ_DISABLE_OFFSET;
+> -	if (!in_atomic())
+> +	if (!in_atomic()) {
+> +		rcu_read_unlock();
+>  		local_unlock(bh_lock);
+> +	}
+>  }
+>  
+>  void _local_bh_enable_rt(void)
+> @@ -185,8 +189,10 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
+>  	WARN_ON_ONCE(count < 0);
+>  	local_irq_enable();
+>  
+> -	if (!in_atomic())
+> +	if (!in_atomic()) {
+> +		rcu_read_unlock();
+>  		local_unlock(bh_lock);
+> +	}
+
+The return from in_atomic() is guaranteed to be the same at
+local_bh_enable() time as was at the call to the corresponding
+local_bh_disable()?
+
+I could have sworn that I ran afoul of this last year.  Might these
+added rcu_read_lock() and rcu_read_unlock() calls need to check for
+CONFIG_PREEMPT_RT_FULL?
+
+>  	current->softirq_count -= SOFTIRQ_DISABLE_OFFSET;
+>  	preempt_check_resched();
+> -- 
+> 1.8.3.1
+> 
