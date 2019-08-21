@@ -2,124 +2,100 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EC9C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CBEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC2D22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CDBB2332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:22:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XtzUgNUM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gregn.net header.i=@gregn.net header.b="nV+cWVQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbfHUWSS (ORCPT
+        id S1731102AbfHUWWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 18:18:18 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46122 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729168AbfHUWSS (ORCPT
+        Wed, 21 Aug 2019 18:22:12 -0400
+Received: from vserver.gregn.net ([174.136.110.154]:43724 "EHLO
+        vserver.gregn.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731023AbfHUWWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 18:18:18 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c2so2104044plz.13
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:18:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uRWHH/aM+UkPunAeZEcYoWrVH4+5skxbUg+WumsRgVA=;
-        b=XtzUgNUMdbn+u28A49CH+Fcb4+5NG6wGPAdq2AbB4sJce30mABw9IZ91C2OoBtQmPT
-         1wai5Q5IauNOff/9NU/6X8bDfc4tRI8v5Gy8YouagyzD4J5wS+IgfZK2Fz0Bnm7UW4VW
-         6vDrZ+IXSjxoeF1UvAYMJqxklW88OErPfGZxjtVBpLfUBZoH6fY8o9/zGk+sAkvTnZgh
-         oQ51I6L0ZrHD/xe49onARlEvlcfccpy/Ba1n8TkKA/NgozcxReNxSEtqKJOe+ThEu0Hd
-         CyaejOjbCTcvijgnq3nok3FNLdOYE5kFCR8gGYyXPVC87I6+h92hqpz+Ep6NARlyZBes
-         UK5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uRWHH/aM+UkPunAeZEcYoWrVH4+5skxbUg+WumsRgVA=;
-        b=EMgtV23Tg+LK/KxPUa3UfCTCnSMmcsb4c8oA99qjpdxQLOoEVqOHCVkLD2h7nrATtK
-         l2Ru1inWeI56oxZTKu+x1veI65xJhiD8tgGfeXzBwTJdn4pUUznaM60cNAXOxOTI669W
-         TDPKvbZgO0P0muuw8LvhwgdHzvUZj08M0FvLBqb2iRb7aLRwknecy9uLPKqKEbX2gYGA
-         TVKrHTGnPHbcTkxO1G0H2+dtXqqnUvbBC6c1mD3U/jeP4NAPiFeD2E3lCMXeVsx4bwts
-         +2sKUeCqNLCWK1HmZhtmkynR61VicbgLeMYtEtxUmf6E9DI36r0MlLF87vhnp0CohkKY
-         v4NA==
-X-Gm-Message-State: APjAAAXh05YbWpkFJAMR3CkpO4aQAPyj35rvhSxWZS53s0lxMoE3Ru9V
-        T/U4NYT1Qqjj/GvEbsjYGuQldw==
-X-Google-Smtp-Source: APXvYqxka50xMeSwMF1x/gmisRV3YfDJPdcEkDCUcQ9pUic4vCYwsXw9Y8y4zlmCzrTnTh9KjATPNg==
-X-Received: by 2002:a17:902:f096:: with SMTP id go22mr36907820plb.58.1566425896980;
-        Wed, 21 Aug 2019 15:18:16 -0700 (PDT)
-Received: from google.com ([2620:15c:2cd:202:668d:6035:b425:3a3a])
-        by smtp.gmail.com with ESMTPSA id a11sm848491pju.2.2019.08.21.15.18.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 15:18:15 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 15:18:14 -0700
-From:   Michel Lespinasse <walken@google.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] augmented rbtree: add new
- RB_DECLARE_CALLBACKS_MAX macro
-Message-ID: <20190821221814.GB99147@google.com>
-References: <20190702075819.34787-1-walken@google.com>
- <20190702075819.34787-3-walken@google.com>
- <20190702160913.ptg4p2jyb6ih43hb@linux-r8p5>
- <CANN689HVDJXKEwB80yPAVwvRwnV4HfiucQVAho=dupKM_iKozw@mail.gmail.com>
- <20190814000616.sd4mxwsewhqqz6ra@linux-r8p5>
+        Wed, 21 Aug 2019 18:22:12 -0400
+Received: from vbox.gregn.net (unknown [IPv6:2001:470:d:6c5:6ccc:a12a:8d2e:4f7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by vserver.gregn.net (Postfix) with ESMTPSA id 702AE6E2;
+        Wed, 21 Aug 2019 15:22:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=gregn.net; s=default;
+        t=1566426131; bh=144Ohs+i0Q11OCQeediSILhYP4LPx0bUH56q3gXaKrY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nV+cWVQmXrejg6AE9X7t2ZjZb7Qj1BYYfkz6+ujg5sznVDYfC7KcswQg2O19hSbrM
+         0kogOgMWe17p/voMqsZUMogjFXdls+VZWlH+RYfup/dOC1WlAgJ/XxlC7gA7rb02R3
+         b4gNMLF+u8bej+jToajN7LDtLlUPSWa/d6u6+q5KuqAkecHVztniLeMhnm/lCspvlF
+         7Xutc7YMcQnRBqrfbmdVMpb9wq0tH0x9fs+x9IwIUcGYvmqn0co8mp5COh5obE/CHP
+         XnbRtJTwZRRyyedV412XyK+GFi7ceK5nT2wuaqkyYm2mGIV4JoPyXbhmSjPTdRmctl
+         CG1I9Y50TEnnA==
+Received: from greg by vbox.gregn.net with local (Exim 4.84_2)
+        (envelope-from <greg@gregn.net>)
+        id 1i0YzZ-0001Up-I9; Wed, 21 Aug 2019 15:22:09 -0700
+Date:   Wed, 21 Aug 2019 15:22:09 -0700
+From:   Gregory Nowak <greg@gregn.net>
+To:     "Speakup is a screen review system for Linux." 
+        <speakup@linux-speakup.org>
+Cc:     devel@driverdev.osuosl.org,
+        Simon Dickson <simonhdickson@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, John Covici <covici@ccs.covici.com>
+Subject: Re: [HELP REQUESTED from the community] Was: Staging status of
+ speakup
+Message-ID: <20190821222209.GA4577@gregn.net>
+References: <20190316031831.GA2499@kroah.com>
+ <20190706200857.22918345@narunkot>
+ <20190707065710.GA5560@kroah.com>
+ <20190712083819.GA8862@kroah.com>
+ <20190712092319.wmke4i7zqzr26tly@function>
+ <20190713004623.GA9159@gregn.net>
+ <20190725035352.GA7717@gregn.net>
+ <875znqhia0.fsf@cmbmachine.messageid.invalid>
+ <m3sgqucs1x.wl-covici@ccs.covici.com>
+ <CAOtcWM0qynSjnF6TtY_s7a51B7JweDb7jwdxStEmPvB9tJFU4Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190814000616.sd4mxwsewhqqz6ra@linux-r8p5>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAOtcWM0qynSjnF6TtY_s7a51B7JweDb7jwdxStEmPvB9tJFU4Q@mail.gmail.com>
+X-PGP-Key: http://www.gregn.net/pubkey.asc
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Virus-Scanned: clamav-milter 0.100.3 at vserver
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 05:06:16PM -0700, Davidlohr Bueso wrote:
-> On Tue, 02 Jul 2019, Michel Lespinasse wrote:
-> > - The majority of interval tree users (though either the
-> > interval_tree.h or the interval_tree_generic.h API) do not store any
-> > overlapping intervals, and as such they really don't have any reason
-> > to use an augmented rbtree in the first place. This seems to be true
-> > for at least drivers/gpu/drm/amd/amdgpu/amdgpu_mn.c,
-> > drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c, drivers/gpu/drm/drm_mm.c,
-> > drivers/gpu/drm/radeon/radeon_mn.c,
-> > drivers/infiniband/hw/usnic/usnic_uiom_interval_tree.c, and probably
-> > (not 100% sure) also drivers/infiniband/hw/hfi1/mmu_rb.c and
-> > drivers/vhost/vhost.c. I think the reason they do that is because they
-> > like to have the auto-generated insert / remove / iter functions
-> > rather than writing their own as they would have to do through the
-> > base rbtree API. Not necessarily a huge problem but it is annoying
-> > when working on inteval tree to consider that the data structure is
-> > not optimal for most of its users.
+On Wed, Aug 21, 2019 at 09:39:25AM -0700, Okash Khawaja wrote:
+> Hi Greg N,
 > 
-> I think the patch I sent earlier will add to your unhappiness.
+> Would like to send this as a patch as Greg K-H suggested? If not, I
+> can do that with your email in Authored-by: tag?
+> 
+> Thanks,
+> Okash
 
-Not really, I think the pat conversion is a good idea though I am
-confused about the interval definitions (open or closed ?) in your
-patch set.
+Hi Okash and all,
+feel free to submit the patch with my email in the Authored-by:
+tag if that's OK. Thanks, and good luck on your presentation.
 
-> > - The intervals are represented as [start, last], where most
-> > everything else in the kernel uses [start, end[ (with last == end -
-> > 1). The reason it was done that way was for stabbing queries - I
-> > thought these would be nicer to represent as a [stab, stab] interval
-> > rather than [stab, stab+1[. But, things didn't turn out that way
-> > because of huge pages, and we end up with stabbing queries in the
-> > [stab, stab + page_size - 1] format, at which point we could just as
-> > easily go for [stab, stab + page_size[ representation. Having looked
-> > into it, my understanding is that *all* current users of the interval
-> > tree API would be better served if the intervals were represented as
-> > [start, end[ like everywhere else in the kernel.
+Greg
 
-Do you have any thoughts about changing the interval tree definitions
-to use half-open intervals like everywhere else in the kernel ?
 
 -- 
-Michel "Walken" Lespinasse
-A program is never fully debugged until the last user dies.
+web site: http://www.gregn.net
+gpg public key: http://www.gregn.net/pubkey.asc
+skype: gregn1
+(authorization required, add me to your contacts list first)
+If we haven't been in touch before, e-mail me before adding me to your contacts.
+
+--
+Free domains: http://www.eu.org/ or mail dns-manager@EU.org
