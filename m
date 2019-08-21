@@ -2,122 +2,97 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91FBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7F3C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D68522D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F7022D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:16:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="L9thsney"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RtYQqKzp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbfHUGMQ (ORCPT
+        id S1727927AbfHUGQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 02:12:16 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:46795 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbfHUGMP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 02:12:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1566367935; x=1597903935;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=+CgoZ/ocgNTcJulImr9CQRjUBIQXXYEnN/SGKq6sN0A=;
-  b=L9thsneyQ2NpAkJntZxSiAV/KsaUZfENhWaO9UHIu4JKTaad33SFi4/W
-   A5iIs0aWZ2f66CzHUqITZRnLiHt0Cf17CMmmcLKMWeLNsqe/Kk0t6/5jI
-   cu8MaxRC46J5g9pAAVT4Q5VjW8cEepaOf4EGj1rItF0sHjHg+GxEC5jXf
-   qh3l+NnUWsmaiHnWH9WZIfBgIs2zErPe2ph9hYh/U4+bmQJOUpUvMPzok
-   O/psDPavD+S4YGzGMC9WqgLWz0fuhQqJT7gRDqPY6STfQyNLbHlKy/IJ+
-   5I8EMyK3mEmzYTTbzf1wuTqstzDBpJfVs/zg57wKNUcy5pQaxbXXLasqt
-   A==;
-IronPort-SDR: idT4I6Fc0qhb3Ee8FQ+uQIvGfwUeyKb8oTQB0sGxIeZodY0Dbjo9pRiV4+D9y7dt6Hd5QQrF/C
- 3PWuw1nLiIQ6bBRy+PMTnElm3wgZgo+CXdjxPXeUhXQmtqachZhN44g70XhPWYU5c6eXsmoCFd
- i0Y001g+7ZEfu65r0kb6q6XGU5mpK6EgLbyJM8p7qaME552qJWaDM32elJdBV5K8iCGF7xtuPG
- SNfzx63URsX3X4T6h/rbptyHvd7u7XT1vReVmTRxvattrYGYvkLA1NfiREhNopQ73scexS7UFH
- rKQ=
-X-IronPort-AV: E=Sophos;i="5.64,411,1559491200"; 
-   d="scan'208";a="222880652"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Aug 2019 14:12:15 +0800
-IronPort-SDR: SEILRXt/SrKK9cVWnBLZ5+A6JeNZXHsWF/BPEw4LmzGGuta5NlB+FU/ObDM6m98FE6fxaDPnBY
- veszYp8Oj5Wp/kkF47lO/Irprx70hOf2umM5ysuHrUOLvrZxh6CEwg6x/undDjXioT7Yh+8ZE9
- oiDn0bGyW4Vz5oKuEX7ovQWJVSfdWfMKRw5SZyHhOXq7sESoJ0fruj1IGuNIGe9K/dSNDSdx2h
- 6Mpp9xMtEt2J0aPwulNpNl0RrSnAjYhUewbzDMHmRWVdIy9AzmvX4Ct+cSgCN7g0Sh8OpXSEpF
- ASnGsBz/Rfvk/6XVn0sXdggJ
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 23:09:36 -0700
-IronPort-SDR: sf7UIrSw9Rwk5i9k5zjrBIF8/J99H8bua9MgofLvz7gP8vI6jev9ZrbFxENI6ilJJrVy2+8phw
- ZhdwDObYg43YZ8AALd1vaSgZiClBAB1+uprCkj77f+dCa1Cd8PSBaEITkhEV+h+SHRhnmsK3Jn
- oWeGaexsKRK6qECNtc38lqdOlHPe9QIrKSHcMSc9Rm5EwaxsGdk3Hdle5Ybwp5Mvl9X1BeNZBo
- VD4fvhALty0ykjJbHvr0pRRIBC297CtsIhNepap0S6t5U1wiKEzFXx+kHx/N/xcLiAvW0bKgHP
- KU4=
-WDCIronportException: Internal
-Received: from cvenusqemu.hgst.com ([10.202.66.73])
-  by uls-op-cesaip01.wdc.com with ESMTP; 20 Aug 2019 23:12:15 -0700
-From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     axboe@kernel.dk, Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Subject: [PATCH V2 3/3] block: set ioprio for discard, write-zeroes etc
-Date:   Tue, 20 Aug 2019 23:11:56 -0700
-Message-Id: <20190821061156.3127-4-chaitanya.kulkarni@wdc.com>
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20190821061156.3127-1-chaitanya.kulkarni@wdc.com>
-References: <20190821061156.3127-1-chaitanya.kulkarni@wdc.com>
+        Wed, 21 Aug 2019 02:16:24 -0400
+Received: from ozlabs.org ([203.11.71.1]:33021 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbfHUGQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 02:16:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Cy9057lqz9sDQ;
+        Wed, 21 Aug 2019 16:16:20 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566368180;
+        bh=C3JS9eWylw/jDZ7Js+18vZRRj+dDN5bTMZWNqK8bTzY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=RtYQqKzpyo9C7ODEBV6Szw3s6PzkQSDxdOFgTvo93e/lKCFj8Soj9ctkrseYy96TW
+         aeV7RPrNZp9VH6OZ0x1Hv9wzpOSXzUwyxkeMsSYn0fQYMCy3vhhxhX+sNbXsXb9l1S
+         OgEygSqVky5F9KLUvUHU81+UggzUckyDArVd4SRHdFki1fz+E4YPcI+SEI9FtEhuj1
+         IeXX4aFXXaLGUmu0dPhWfsJjuANjVeMlwmZzKu7pu1QWTMPYNM4lYffxHEJXzctQo1
+         oTxh9dGH9+ool3lETzWikxMAkO7mipz5ubsQVjpBdI8jcLykip7JKpuOQUMM+6NLhM
+         zHYtlKPVxEfcQ==
+Date:   Wed, 21 Aug 2019 16:16:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the pinctrl tree
+Message-ID: <20190821161620.403f663c@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/jB.TcCN=qHuU2IAp8DFPR0_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the current process's iopriority for discard.
+--Sig_/jB.TcCN=qHuU2IAp8DFPR0_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
----
- block/blk-lib.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Hi all,
 
-diff --git a/block/blk-lib.c b/block/blk-lib.c
-index 5f2c429d4378..500a857e5d9f 100644
---- a/block/blk-lib.c
-+++ b/block/blk-lib.c
-@@ -64,6 +64,7 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
- 		bio->bi_iter.bi_sector = sector;
- 		bio_set_dev(bio, bdev);
- 		bio_set_op_attrs(bio, op, 0);
-+		bio_set_prio(bio, get_current_ioprio());
- 
- 		bio->bi_iter.bi_size = req_sects << 9;
- 		sector += req_sects;
-@@ -162,6 +163,7 @@ static int __blkdev_issue_write_same(struct block_device *bdev, sector_t sector,
- 		bio->bi_io_vec->bv_offset = 0;
- 		bio->bi_io_vec->bv_len = bdev_logical_block_size(bdev);
- 		bio_set_op_attrs(bio, REQ_OP_WRITE_SAME, 0);
-+		bio_set_prio(bio, get_current_ioprio());
- 
- 		if (nr_sects > max_write_same_sectors) {
- 			bio->bi_iter.bi_size = max_write_same_sectors << 9;
-@@ -234,6 +236,7 @@ static int __blkdev_issue_write_zeroes(struct block_device *bdev,
- 		bio->bi_iter.bi_sector = sector;
- 		bio_set_dev(bio, bdev);
- 		bio->bi_opf = REQ_OP_WRITE_ZEROES;
-+		bio_set_prio(bio, get_current_ioprio());
- 		if (flags & BLKDEV_ZERO_NOUNMAP)
- 			bio->bi_opf |= REQ_NOUNMAP;
- 
-@@ -286,6 +289,7 @@ static int __blkdev_issue_zero_pages(struct block_device *bdev,
- 		bio->bi_iter.bi_sector = sector;
- 		bio_set_dev(bio, bdev);
- 		bio_set_op_attrs(bio, REQ_OP_WRITE, 0);
-+		bio_set_prio(bio, get_current_ioprio());
- 
- 		while (nr_sects != 0) {
- 			sz = min((sector_t) PAGE_SIZE, nr_sects << 9);
--- 
-2.17.0
+After merging the pinctrl tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
+drivers/pinctrl/pinctrl-st.c: In function 'st_pctl_dt_parse_groups':
+drivers/pinctrl/pinctrl-st.c:1212:15: error: implicit declaration of functi=
+on 'of_get_named_gpio'; did you mean 'of_get_address'? [-Werror=3Dimplicit-=
+function-declaration]
+   conf->pin =3D of_get_named_gpio(pins, pp->name, 0);
+               ^~~~~~~~~~~~~~~~~
+               of_get_address
+
+Probably caused by commit
+
+  712dfdaf62b6 ("pinctrl: st: Include the right header")
+
+I have used the pinctrl tree from next-20190820 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/jB.TcCN=qHuU2IAp8DFPR0_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1c4bQACgkQAVBC80lX
+0Gz83Qf9FVaZ4yjDC89TBP5bTni3Ml3fr1UUPjKf4cbrD8MPBMDEeDx4bhhNf0qf
+TaaTbsLoq2dBZqVltVEtvkoun9D2sGxn+K8DA3bmwtgEzgAnyIjLLBpDcpTHlcNX
+cRuoLsE878127e5Ie66QxfvUqBX8lIK5KiMrN53aTe1/OoQqqXK0RwAzoG2hb+GQ
+k9murRf4c3gLUeK5q69/AAdDIQOMeQj+lDNCOQ6Teet0CNDg44FoiSRfQs3pmOj2
+pXXM5nUPvkeiW6CtNhbeDPLZL7bAQkZWhOFyxLYvBch3LFXS0Xmu2Nn8FplHaXRE
+MWP5ipV62DymQcxY9rgv2O0RPLZbTw==
+=GF+G
+-----END PGP SIGNATURE-----
+
+--Sig_/jB.TcCN=qHuU2IAp8DFPR0_--
