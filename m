@@ -2,225 +2,87 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC41C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58138C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEF422DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:07:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qUOBGoJI"
+	by mail.kernel.org (Postfix) with ESMTP id 2B57E2332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfHUEHn (ORCPT
+        id S1727592AbfHUEHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:07:43 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:18953 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727479AbfHUEHg (ORCPT
+        Wed, 21 Aug 2019 00:07:54 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37374 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbfHUEHw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:07:36 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5cc3860002>; Tue, 20 Aug 2019 21:07:34 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 20 Aug 2019 21:07:34 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 20 Aug 2019 21:07:34 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 04:07:34 +0000
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 04:07:33 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 21 Aug 2019 04:07:34 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d5cc3850005>; Tue, 20 Aug 2019 21:07:33 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v2 3/3] mm/gup: introduce vaddr_pin_pages_remote(), and invoke it
-Date:   Tue, 20 Aug 2019 21:07:27 -0700
-Message-ID: <20190821040727.19650-4-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190821040727.19650-1-jhubbard@nvidia.com>
-References: <20190821040727.19650-1-jhubbard@nvidia.com>
+        Wed, 21 Aug 2019 00:07:52 -0400
+Received: by mail-ed1-f66.google.com with SMTP id f22so1283876edt.4
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 21:07:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2DH+Z8zu5DA8qxbFBSKsglzPr+woO5ZxUEZnrR+PcUs=;
+        b=bZl9KqUOtrujBg1QJQWFIxQj51sk2oB6tSyggrdmICn5ccEfv5VF/a4U4yfnCSl7JY
+         1FeIrZH/daAlzH9fAoA2AAdxr7yxpO8JB4WziIZe05IlRwIYDU+kOJcaM8oexqeE5F0e
+         yi84evrYO3awI9Fx2CeC/d2NAF6UNz/ptM0SICvYHd6/dnIbeUoqHs3j1YZA0cdn5Y01
+         k7ODXhg65AHvHifEKtkdsrtLfcF0CbSdqiQK8GScIjrYhMvjHtv5lS81Sp+vb5YrGMLW
+         fXL2fMoWAVOk/8cfYR3GAmAEbptJYtMwhkViKutA3rpViuszKggkHeP5XnzKwhH6R2Wb
+         2ffA==
+X-Gm-Message-State: APjAAAV6uqmbu8ZOqXC4AudjI89M7hDicWpByUDBjYtrW3yLpLhiKjx1
+        Ir2V+zBvkVfAlV9gVXCYV1IXGOlXQ9Y=
+X-Google-Smtp-Source: APXvYqxwx8FZA+a9CHC4BXrxz8DOU3y0C0lpgNUSzHim5ksXU2gwcueO/rNA5NmbO1ammjU3WaE92w==
+X-Received: by 2002:a50:ee0d:: with SMTP id g13mr34998002eds.113.1566360470438;
+        Tue, 20 Aug 2019 21:07:50 -0700 (PDT)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com. [209.85.128.51])
+        by smtp.gmail.com with ESMTPSA id r27sm3892993edc.17.2019.08.20.21.07.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Aug 2019 21:07:50 -0700 (PDT)
+Received: by mail-wm1-f51.google.com with SMTP id g67so650472wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 21:07:49 -0700 (PDT)
+X-Received: by 2002:a7b:c8c5:: with SMTP id f5mr3226423wml.25.1566360469671;
+ Tue, 20 Aug 2019 21:07:49 -0700 (PDT)
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566360454; bh=yaS48N2o2CPvqMWzUWhpSpOm4JNtAfActS1Th7wctzE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=qUOBGoJIEf/YL08oCTcD4iSkBMJKo16mo4WSO2uW9Tcw8WKfd/nCAvDlVcUPKWCNP
-         Z8ZgbCOK0B2mKWctwfX3z0PsDzknh2dJF+WCT+ZUaDmv055HjoS1XzCjVmsC6tOxq+
-         cm/0B4U9iyKnl+GKGAAYdhgqzxvQju0MNYSprL2O16ZJrKl9ELPyKIyrjzVtIy73eB
-         /SCUMKsMJVqoEMLZGyud5/rFqD2njRVbT+8DSl9Za/uWEWrDvphikno0VX7t4VZx4U
-         PNsDCO0gp7taqzGYS1hizU+vuZMc2c+h7C+EDcp9KG8QhNUiIZEt/1ppoCRsXfGzJH
-         1EdKGW5PtlAbw==
+References: <20190814060854.26345-1-codekipper@gmail.com> <20190814060854.26345-10-codekipper@gmail.com>
+In-Reply-To: <20190814060854.26345-10-codekipper@gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Wed, 21 Aug 2019 12:07:37 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65+-OB4zEyW8f7hcWHkL7DtfEB1YK2B1nOKdgNdNqC0kQ@mail.gmail.com>
+Message-ID: <CAGb2v65+-OB4zEyW8f7hcWHkL7DtfEB1YK2B1nOKdgNdNqC0kQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v5 09/15] clk: sunxi-ng: h6: Allow I2S to
+ change parent rate
+To:     Code Kipper <codekipper@gmail.com>
+Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vaddr_pin_user_pages_remote() is the "vaddr_pin_pages" corresponding
-variant to get_user_pages_remote(), except that:
-   a) it sets FOLL_PIN, and
-   b) it can handle FOLL_LONGTERM (and the associated vaddr_pin arg).
+On Wed, Aug 14, 2019 at 2:09 PM <codekipper@gmail.com> wrote:
+>
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
+>
+> I2S doesn't work if parent rate couldn't be change. Difference between
+> wanted and actual rate is too big.
+>
+> Fix this by adding CLK_SET_RATE_PARENT flag to I2S clocks.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-Change process_vm_rw_single_vec() to invoke the new function.
+This lacks your SoB. Please reply and I can add it when applying.
 
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
----
- include/linux/mm.h     |  5 +++++
- mm/gup.c               | 34 ++++++++++++++++++++++++++++++++++
- mm/process_vm_access.c | 23 +++++++++++++----------
- 3 files changed, 52 insertions(+), 10 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 6e7de424bf5e..849b509e9f89 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1606,6 +1606,11 @@ int __account_locked_vm(struct mm_struct *mm, unsign=
-ed long pages, bool inc,
- long vaddr_pin_pages(unsigned long addr, unsigned long nr_pages,
- 		     unsigned int gup_flags, struct page **pages,
- 		     struct vaddr_pin *vaddr_pin);
-+long vaddr_pin_user_pages_remote(struct task_struct *tsk, struct mm_struct=
- *mm,
-+				 unsigned long start, unsigned long nr_pages,
-+				 unsigned int gup_flags, struct page **pages,
-+				 struct vm_area_struct **vmas, int *locked,
-+				 struct vaddr_pin *vaddr_pin);
- void vaddr_unpin_pages(struct page **pages, unsigned long nr_pages,
- 		       struct vaddr_pin *vaddr_pin, bool make_dirty);
- bool mapping_inode_has_layout(struct vaddr_pin *vaddr_pin, struct page *pa=
-ge);
-diff --git a/mm/gup.c b/mm/gup.c
-index ba316d960d7a..d713ed9d4b9a 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2522,3 +2522,37 @@ void vaddr_unpin_pages(struct page **pages, unsigned=
- long nr_pages,
- 	__put_user_pages_dirty_lock(pages, nr_pages, make_dirty, vaddr_pin);
- }
- EXPORT_SYMBOL(vaddr_unpin_pages);
-+
-+/**
-+ * vaddr_pin_user_pages_remote() - pin pages by virtual address and return=
- the
-+ * pages to the user.
-+ *
-+ * @tsk:	the task_struct to use for page fault accounting, or
-+ *		NULL if faults are not to be recorded.
-+ * @mm:		mm_struct of target mm
-+ * @addr:	start address
-+ * @nr_pages:	number of pages to pin
-+ * @gup_flags:	flags to use for the pin. Please see FOLL_* documentation i=
-n
-+ *		mm.h.
-+ * @pages:	array of pages returned
-+ * @vaddr_pin:  If FOLL_LONGTERM is set, then vaddr_pin should point to an
-+ * initialized struct that contains the owning mm and file. Otherwise, vad=
-dr_pin
-+ * should be set to NULL.
-+ *
-+ * This is the "vaddr_pin_pages" corresponding variant to
-+ * get_user_pages_remote(), except that:
-+ *    a) it sets FOLL_PIN, and
-+ *    b) it can handle FOLL_LONGTERM (and the associated vaddr_pin arg).
-+ */
-+long vaddr_pin_user_pages_remote(struct task_struct *tsk, struct mm_struct=
- *mm,
-+				 unsigned long start, unsigned long nr_pages,
-+				 unsigned int gup_flags, struct page **pages,
-+				 struct vm_area_struct **vmas, int *locked,
-+				 struct vaddr_pin *vaddr_pin)
-+{
-+	gup_flags |=3D FOLL_TOUCH | FOLL_REMOTE | FOLL_PIN;
-+
-+	return __get_user_pages_locked(tsk, mm, start, nr_pages, pages, vmas,
-+				       locked, gup_flags, vaddr_pin);
-+}
-+EXPORT_SYMBOL(vaddr_pin_user_pages_remote);
-diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
-index 357aa7bef6c0..28e0a17b6080 100644
---- a/mm/process_vm_access.c
-+++ b/mm/process_vm_access.c
-@@ -44,7 +44,6 @@ static int process_vm_rw_pages(struct page **pages,
-=20
- 		if (vm_write) {
- 			copied =3D copy_page_from_iter(page, offset, copy, iter);
--			set_page_dirty_lock(page);
- 		} else {
- 			copied =3D copy_page_to_iter(page, offset, copy, iter);
- 		}
-@@ -96,7 +95,7 @@ static int process_vm_rw_single_vec(unsigned long addr,
- 		flags |=3D FOLL_WRITE;
-=20
- 	while (!rc && nr_pages && iov_iter_count(iter)) {
--		int pages =3D min(nr_pages, max_pages_per_loop);
-+		int pinned_pages =3D min(nr_pages, max_pages_per_loop);
- 		int locked =3D 1;
- 		size_t bytes;
-=20
-@@ -106,14 +105,17 @@ static int process_vm_rw_single_vec(unsigned long add=
-r,
- 		 * current/current->mm
- 		 */
- 		down_read(&mm->mmap_sem);
--		pages =3D get_user_pages_remote(task, mm, pa, pages, flags,
--					      process_pages, NULL, &locked);
-+
-+		pinned_pages =3D vaddr_pin_user_pages_remote(task, mm, pa,
-+							   pinned_pages, flags,
-+							   process_pages, NULL,
-+							   &locked, NULL);
- 		if (locked)
- 			up_read(&mm->mmap_sem);
--		if (pages <=3D 0)
-+		if (pinned_pages <=3D 0)
- 			return -EFAULT;
-=20
--		bytes =3D pages * PAGE_SIZE - start_offset;
-+		bytes =3D pinned_pages * PAGE_SIZE - start_offset;
- 		if (bytes > len)
- 			bytes =3D len;
-=20
-@@ -122,10 +124,11 @@ static int process_vm_rw_single_vec(unsigned long add=
-r,
- 					 vm_write);
- 		len -=3D bytes;
- 		start_offset =3D 0;
--		nr_pages -=3D pages;
--		pa +=3D pages * PAGE_SIZE;
--		while (pages)
--			put_page(process_pages[--pages]);
-+		nr_pages -=3D pinned_pages;
-+		pa +=3D pinned_pages * PAGE_SIZE;
-+
-+		/* If vm_write is set, the pages need to be made dirty: */
-+		vaddr_unpin_pages(process_pages, pinned_pages, NULL, vm_write);
- 	}
-=20
- 	return rc;
---=20
-2.22.1
-
+ChenYu
