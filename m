@@ -2,98 +2,108 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F53C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FD5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D5B22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566370055;
-	bh=yRPfh8F94y95g3H5Rd/+ScGD3gH1ptVeOngAdtWIq44=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BIWodrFXuMpbMtBA1TIrpGWqi+B3v9sE2FV5NHCXllc3ka0O3Czt61M8rP6ctfUQ4
-	 kgy/Q8TH3O655UMxM8iO9W5aBMXiXcALJammSvlxWeB1cVW/pGxpanUvBqdTwhX746
-	 FYGsZ1No5yagUB6qNsO2ExlKwFmxyp9mcWxy7jSs=
+	by mail.kernel.org (Postfix) with ESMTP id 1AA6B22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:49:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLj1EbaW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727643AbfHUGre (ORCPT
+        id S1727716AbfHUGta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 02:47:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50746 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726372AbfHUGre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 02:47:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D59E2ABE3;
-        Wed, 21 Aug 2019 06:47:32 +0000 (UTC)
-Date:   Wed, 21 Aug 2019 08:47:32 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Edward Chron <echron@arista.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, colona@arista.com
-Subject: Re: [PATCH] mm/oom: Add oom_score_adj value to oom Killed process
- message
-Message-ID: <20190821064732.GW3111@dhcp22.suse.cz>
-References: <20190821001445.32114-1-echron@arista.com>
- <alpine.DEB.2.21.1908202024300.141379@chino.kir.corp.google.com>
+        Wed, 21 Aug 2019 02:49:30 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35814 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbfHUGt3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 02:49:29 -0400
+Received: by mail-wm1-f65.google.com with SMTP id l2so940553wmg.0;
+        Tue, 20 Aug 2019 23:49:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=qHmnifucWhjp23s3a4oAMHwPWOuCsbyJNm6S+/4qM8o=;
+        b=hLj1EbaWDhxqhO76myPYLaHncGIAVJPFCYVT3y6bi0kxarjxWEYPSQZpH/0+SzLH9N
+         AZKL3hidq+A57+4PLERJVqwmWeQ19iRwT1n1Xj/MKV8cLQ24xkoVgT6E9diivM2g8m3w
+         d+hRIZ6Z7tuSL1MS6GuGXa9raRftXFbEAt+htZs2aMgCN+KpSWX/smIfbS0zQiKABYry
+         AbCx0fe/14C8pAxi/HlJ4eqkOPjiEImaHmnKmDZVRP7k0QVaCq2Uo0sXu7hpRH6GjxuQ
+         hT3p1YNmUgdDs+TUYKKMybwZivuxT0zrmm6Ww9dQeg8HFJGwuWBAOQbjc5FRnu9GcrEU
+         +NNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=qHmnifucWhjp23s3a4oAMHwPWOuCsbyJNm6S+/4qM8o=;
+        b=YyEWbRdCVm6ybGH/HzBs7WHnVAgD0cRkoIZTA9q77Kmydw3YA4dbfH1n7RJkWzt7w2
+         XgImLendLClHQhWx6ZiGG/LSZttjo3AhEuSV53otxkufb5jiZuajPadlIEkJq31zymdR
+         vLEEIIpJ9hRiQENVsWR9N+PrIrbrh3+iROsz42zAVBisgeBpU8Py2fi0cgjjCWUxkPxS
+         fYIbD2dZTAqvSl11BUC5w3cUZSiFwjRQmwnoJ9xBFEHSngb2Jmk/P+0mYAZfRTfbJ6Yh
+         y4knCwq0LwBxo4+RY902UOpRFi3TC7GbrbYtCCC/c9qebAs5cioWdEjaDLHmxTtRma/R
+         YnCQ==
+X-Gm-Message-State: APjAAAX8SO+zzwi3JFe6FuMHqCyp6PrKRCWDtIA85QP7UbDq1GAhsBvb
+        kmyZQ3N1drMap8iXx/zQ48Cd/2n7XKe4kdGcIi0=
+X-Google-Smtp-Source: APXvYqyuUFV+klctwIHlDjy8e7cOg3MvKi+wPwZeC967kGWWOmNnAYP6ILHMwgJTQs6Y17O5Md0Jq6M9lJyRvvJvPgs=
+X-Received: by 2002:a05:600c:10ce:: with SMTP id l14mr4025608wmd.118.1566370167053;
+ Tue, 20 Aug 2019 23:49:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908202024300.141379@chino.kir.corp.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190817041258.GA1641@chirva-slack.chirva-slack>
+ <87y2zsf9ps.fsf@depni.sinp.msu.ru> <20190817214448.GB1070@chirva-slack.chirva-slack>
+ <1b1e573e6502c97851838a3b27ac0b272198926c.camel@intel.com>
+In-Reply-To: <1b1e573e6502c97851838a3b27ac0b272198926c.camel@intel.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 21 Aug 2019 08:49:15 +0200
+Message-ID: <CA+icZUU6nX7KVir1CFBxZuVB-aHzw-QETKpDEwVsJD_X=1v1bg@mail.gmail.com>
+Subject: Re: PROBLEM: 5.3.0-rc* causes iwlwifi failure
+To:     Luciano Coelho <luciano.coelho@intel.com>
+Cc:     Stuart Little <achirvasub@gmail.com>,
+        Serge Belyshev <belyshev@depni.sinp.msu.ru>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-wireless@vger.kernel.org,
+        Haim Dreyfuss <haim.dreyfuss@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 20-08-19 20:25:32, David Rientjes wrote:
-> On Tue, 20 Aug 2019, Edward Chron wrote:
-> 
-> > For an OOM event: print oom_score_adj value for the OOM Killed process to
-> > document what the oom score adjust value was at the time the process was
-> > OOM Killed. The adjustment value can be set by user code and it affects
-> > the resulting oom_score so it is used to influence kill process selection.
-> > 
-> > When eligible tasks are not printed (sysctl oom_dump_tasks = 0) printing
-> > this value is the only documentation of the value for the process being
-> > killed. Having this value on the Killed process message documents if a
-> > miscconfiguration occurred or it can confirm that the oom_score_adj
-> > value applies as expected.
-> > 
-> > An example which illustates both misconfiguration and validation that
-> > the oom_score_adj was applied as expected is:
-> > 
-> > Aug 14 23:00:02 testserver kernel: Out of memory: Killed process 2692
-> >  (systemd-udevd) total-vm:1056800kB, anon-rss:1052760kB, file-rss:4kB,
-> >  shmem-rss:0kB oom_score_adj:1000
-> > 
-> > The systemd-udevd is a critical system application that should have an
-> > oom_score_adj of -1000. Here it was misconfigured to have a adjustment
-> > of 1000 making it a highly favored OOM kill target process. The output
-> > documents both the misconfiguration and the fact that the process
-> > was correctly targeted by OOM due to the miconfiguration. Having
-> > the oom_score_adj on the Killed message ensures that it is documented.
-> > 
-> > Signed-off-by: Edward Chron <echron@arista.com>
-> > Acked-by: Michal Hocko <mhocko@suse.com>
-> 
-> Acked-by: David Rientjes <rientjes@google.com>
-> 
-> vm.oom_dump_tasks is pretty useful, however, so it's curious why you 
-> haven't left it enabled :/
+On Tue, Aug 20, 2019 at 12:45 PM Luciano Coelho
+<luciano.coelho@intel.com> wrote:
+>
+> On Sat, 2019-08-17 at 17:44 -0400, Stuart Little wrote:
+> > After some private coaching from Serge Belyshev on git-revert I can
+> > confirm that reverting that commit atop the current tree resolves the
+> > issue (the wifi card scans for and finds networks just fine, no dmesg
+> > errors reported, etc.).
+>
+> Sorry for the delay in responding, I had to go and dig in our FW
+> sources to see what was going on.
+>
+> Unfortunately when this feature was implemented in the FW, we forgot to
+> add the usual flag (capabilities TLV) that we add to let the driver
+> know whether the command is supported or not.  So we need to match on
+> the FW version instead, but apparently that doesn't work for all
+> different NICs.
+>
+> I'll have to look into all NIC/FW-version combinations that we have and
+> update the iwl_mvm_sar_geo_support() function accordingly, which is,
+> BTW, the easier place for you to change if you want to workaround the
+> issue.
 
-Because it generates a lot of output potentially. Think of a workload
-with too many tasks which is not uncommon.
--- 
-Michal Hocko
-SUSE Labs
+For the records (here: Linux v5.2.y)
+
+"iwlwifi: Add support for SAR South Korea limitation"
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.2.y&id=2b9d99b399d5e4cd516973a4c56035fb0e2ee744
+
+- Sedat -
