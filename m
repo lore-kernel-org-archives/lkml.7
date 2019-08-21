@@ -2,139 +2,119 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E04FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB00C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5902332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:25:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="NP8pW7K/"
+	by mail.kernel.org (Postfix) with ESMTP id 3E2E42332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:28:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbfHUVY6 (ORCPT
+        id S1730793AbfHUV2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 17:24:58 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:60538 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728188AbfHUVY6 (ORCPT
+        Wed, 21 Aug 2019 17:28:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57744 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728062AbfHUV2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 17:24:58 -0400
-Received: from pps.filterd (m0170396.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LLAQZL000818;
-        Wed, 21 Aug 2019 17:24:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : subject :
- date : message-id : content-type : content-transfer-encoding :
- mime-version; s=smtpout1; bh=IW/4zYgD443tA89Wg+OoQ6xbIDSw8ToEd3ox1kivyl0=;
- b=NP8pW7K/UxhctC6VMfomtSLM2BVipafYSy8jg4itOTNjbbItaxTKAgQtp4DxUgwzmlBR
- B9VZHKw+FkdGNCheKzDo2+FuWy9NnrIPVpmvwkP8JuTByI4+Yj/4l7EvpsHACNnNZapE
- GekCPUF3q4zNXHE9TFuCjSbQApi1zS4WsdGCmHPwUshBk/q5k/3B2/U2YohU/bZuThID
- jR5QFtPsQbxTCTmkKcLFfaFWmLql5AHdPXAdPopbBtexy2RH/RthY8fAmJi+ZCBMWQiA
- Rfj2WaRAdi/hajA1jePtHdVJXcmZfGDNNSeG3NWX3YDx6YqoOMElmokWl7B0KOVmiMQe 2w== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 2ugh2s04gk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Aug 2019 17:24:56 -0400
-Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LLCuG0080700;
-        Wed, 21 Aug 2019 17:24:55 -0400
-Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
-        by mx0a-00154901.pphosted.com with ESMTP id 2uey0tn3a2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 17:24:55 -0400
-X-LoopCount0: from 10.166.135.94
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="450686217"
-From:   <Justin.Lee1@Dell.com>
-To:     <netdev@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>, <sam@mendozajonas.com>,
-        <davem@davemloft.net>
-Subject: [PATCH] net/ncsi: Fix the payload copying for the request coming from
- Netlink
-Thread-Topic: [PATCH] net/ncsi: Fix the payload copying for the request coming
- from Netlink
-Thread-Index: AdVYWI8OU3qkqsD+SsWDRcEtUwk7KQ==
-Date:   Wed, 21 Aug 2019 21:24:52 +0000
-Message-ID: <a94e5fa397a64ae3a676ec11ea09aaba@AUSX13MPS302.AMER.DELL.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Justin_Lee1@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-08-21T21:22:10.9472431Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 21 Aug 2019 17:28:10 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i0Y95-0005p8-K3; Wed, 21 Aug 2019 23:27:55 +0200
+Date:   Wed, 21 Aug 2019 23:27:53 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+cc:     Peter Zijlstra <peterz@infradead.org>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "alan@linux.intel.com" <alan@linux.intel.com>,
+        "ricardo.neri-calderon@linux.intel.com" 
+        <ricardo.neri-calderon@linux.intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wu, Qiming" <qi-ming.wu@intel.com>,
+        "Kim, Cheol Yong" <cheol.yong.kim@intel.com>,
+        "Tanwar, Rahul" <rahul.tanwar@intel.com>
+Subject: Re: [PATCH v2 2/3] x86/cpu: Add new Intel Atom CPU model name
+In-Reply-To: <20190821201845.GA29589@agluck-desk2.amr.corp.intel.com>
+Message-ID: <alpine.DEB.2.21.1908212324580.1983@nanos.tec.linutronix.de>
+References: <cover.1565940653.git.rahul.tanwar@linux.intel.com> <83345984845d24b6ce97a32bef21cd0bbdffc86d.1565940653.git.rahul.tanwar@linux.intel.com> <20190820122233.GN2332@hirez.programming.kicks-ass.net> <1D9AE27C-D412-412D-8FE8-51B625A7CC98@intel.com>
+ <20190820145735.GW2332@hirez.programming.kicks-ass.net> <20190821201845.GA29589@agluck-desk2.amr.corp.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=713 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908210208
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=869 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908210208
+Content-Type: multipart/mixed; boundary="8323329-392479363-1566422875=:1983"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The request coming from Netlink should use the OEM generic handler.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-The standard command handler expects payload in bytes/words/dwords
-but the actual payload is stored in data if the request is coming from Netl=
-ink.
+--8323329-392479363-1566422875=:1983
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Signed-off-by: Justin Lee <justin.lee1@dell.com>
+On Wed, 21 Aug 2019, Luck, Tony wrote:
+> On Tue, Aug 20, 2019 at 04:57:35PM +0200, Peter Zijlstra wrote:
+> > On Tue, Aug 20, 2019 at 12:48:05PM +0000, Luck, Tony wrote:
+> > > 
+> > > >> +#define INTEL_FAM6_ATOM_AIRMONT_NP    0x75 /* Lightning Mountain */
+> > > > 
+> > > > What's _NP ?
+> > > 
+> > > Network Processor. But that is too narrow a descriptor. This is going to be used in
+> > > other areas besides networking. 
+> > > 
+> > > I’m contemplating calling it AIRMONT2
+> > 
+> > What would describe the special sause that warranted a new SOC? If this
+> > thing is marketed as 'Network Processor' then I suppose we can actually
+> > use it, esp. if we're going to see this more, like the MID thing -- that
+> > lived for a while over multiple uarchs.
+> 
+> The reasons for allocating a new model number are a mystery.
+> I've seen cases where I thought we'd get a new numnber for sure,
+> but then just bumped the stepping. I've also seen us allocate a
+> new number when it didn't look needed (to me, from my OS perspective).
+> 
+> As I mentioned above, there are some folks internally that think
+> NP == Network Processor is too narrow a pigeonhole for this CPU.
+> 
+> But _NPAOS (Network Processor And Other Stuff) doesn't sound helpful.
+> 
+> > Note that for the big cores we added the NNPI thing, which was for
+> > Neural Network Processing something.
+> 
+> I'm sure that we will invent all sorts of strings for the "OPTDIFF"
+> part of the name (many of which will only be used once or twice).
+> 
+> Rationale for "AIRMONT2" is that this is derived from Airmont. So
+> you'd expect many model specific bits of code to do the same for
+> this as they did for plain AIRMONT. But in a few corner cases there
+> will be separate code.
+> 
+> Perhaps I need to update the rubric that I just added to the
+> head on intel-family.h to say that the MICROARCH element may
+> be followed by an optional number to differentiate SOCs that
+> use essentially the same core, but have different model numbers
+> because of SOC differences outside of the core.
 
----
- net/ncsi/ncsi-cmd.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Well, that kinda defeats the idea that the MICROARCH element is about the
+micro architecture. If the uarch is the same and it's just the SOC which is
+different then it would be better to say AIRMONT_CLIENT_V2 or such
 
-diff --git a/net/ncsi/ncsi-cmd.c b/net/ncsi/ncsi-cmd.c
-index eab4346..0187e65 100644
---- a/net/ncsi/ncsi-cmd.c
-+++ b/net/ncsi/ncsi-cmd.c
-@@ -309,14 +309,21 @@ static struct ncsi_request *ncsi_alloc_command(struct=
- ncsi_cmd_arg *nca)
-=20
- int ncsi_xmit_cmd(struct ncsi_cmd_arg *nca)
- {
-+	struct ncsi_cmd_handler *nch =3D NULL;
- 	struct ncsi_request *nr;
-+	unsigned char type;
- 	struct ethhdr *eh;
--	struct ncsi_cmd_handler *nch =3D NULL;
- 	int i, ret;
-=20
-+	/* Use OEM generic handler for Netlink request */
-+	if (nca->req_flags =3D=3D NCSI_REQ_FLAG_NETLINK_DRIVEN)
-+		type =3D NCSI_PKT_CMD_OEM;
-+	else
-+		type =3D nca->type;
-+
- 	/* Search for the handler */
- 	for (i =3D 0; i < ARRAY_SIZE(ncsi_cmd_handlers); i++) {
--		if (ncsi_cmd_handlers[i].type =3D=3D nca->type) {
-+		if (ncsi_cmd_handlers[i].type =3D=3D type) {
- 			if (ncsi_cmd_handlers[i].handler)
- 				nch =3D &ncsi_cmd_handlers[i];
- 			else
---=20
-2.9.3
+Thanks,
+
+	tglx
+--8323329-392479363-1566422875=:1983--
