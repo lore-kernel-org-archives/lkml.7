@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D8EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2456AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035052064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28F420679
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730030AbfHUTax (ORCPT
+        id S1730079AbfHUTa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:30:53 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57132 "EHLO
+        Wed, 21 Aug 2019 15:30:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57195 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729253AbfHUTao (ORCPT
+        with ESMTP id S1729988AbfHUTav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:30:44 -0400
+        Wed, 21 Aug 2019 15:30:51 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1i0WJd-000495-LB; Wed, 21 Aug 2019 21:30:41 +0200
-Message-Id: <20190821192919.326097175@linutronix.de>
+        id 1i0WJk-0004BM-Ts; Wed, 21 Aug 2019 21:30:49 +0200
+Message-Id: <20190821192920.245357769@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 21 Aug 2019 21:08:48 +0200
+Date:   Wed, 21 Aug 2019 21:08:58 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
@@ -35,7 +35,8 @@ Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         Frederic Weisbecker <frederic@kernel.org>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>,
         Christoph Hellwig <hch@lst.de>
-Subject: [patch V2 01/38] posix-cpu-timers: Provide task validation functions
+Subject: [patch V2 11/38] posix-cpu-timers: Use clock ID in
+ posix_cpu_timer_rearm()
 References: <20190821190847.665673890@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -44,120 +45,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code contains three slightly different copies of validating whether a
-given clock resolves to a valid task and whether the current caller has
-permissions to access it.
-
-Create central functions. Replace check_clock() as a first step and rename
-it to something sensible.
+Extract the clock ID (PROF/VIRT/SCHED) from the clock selector and use it
+as argument to the sample functions. That allows to simplify them once all
+callers are fixed.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/time/posix-cpu-timers.c |   65 +++++++++++++++++++++++++++--------------
- 1 file changed, 44 insertions(+), 21 deletions(-)
+ kernel/time/posix-cpu-timers.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -35,27 +35,52 @@ void update_rlimit_cpu(struct task_struc
- 	spin_unlock_irq(&task->sighand->siglock);
- }
- 
--static int check_clock(const clockid_t which_clock)
-+/*
-+ * Functions for validating access to tasks.
-+ */
-+static struct task_struct *lookup_task(const pid_t pid, bool thread)
- {
--	int error = 0;
- 	struct task_struct *p;
--	const pid_t pid = CPUCLOCK_PID(which_clock);
- 
--	if (CPUCLOCK_WHICH(which_clock) >= CPUCLOCK_MAX)
--		return -EINVAL;
-+	if (!pid)
-+		return thread ? current : current->group_leader;
- 
--	if (pid == 0)
--		return 0;
-+	p = find_task_by_vpid(pid);
-+	if (!p || p == current)
-+		return p;
-+	if (thread)
-+		return same_thread_group(p, current) ? p : NULL;
-+	if (p == current)
-+		return p;
-+	return has_group_leader_pid(p) ? p : NULL;
-+}
-+
-+static struct task_struct *__get_task_for_clock(const clockid_t clock,
-+						bool getref)
-+{
-+	const bool thread = !!CPUCLOCK_PERTHREAD(clock);
-+	const pid_t pid = CPUCLOCK_PID(clock);
-+	struct task_struct *p;
-+
-+	if (CPUCLOCK_WHICH(clock) >= CPUCLOCK_MAX)
-+		return NULL;
- 
- 	rcu_read_lock();
--	p = find_task_by_vpid(pid);
--	if (!p || !(CPUCLOCK_PERTHREAD(which_clock) ?
--		   same_thread_group(p, current) : has_group_leader_pid(p))) {
--		error = -EINVAL;
--	}
-+	p = lookup_task(pid, thread);
-+	if (p && getref)
-+		get_task_struct(p);
- 	rcu_read_unlock();
-+	return p;
-+}
- 
--	return error;
-+static inline struct task_struct *get_task_for_clock(const clockid_t clock)
-+{
-+	return __get_task_for_clock(clock, true);
-+}
-+
-+static inline int validate_clock_permissions(const clockid_t clock)
-+{
-+	return __get_task_for_clock(clock, false) ? 0 : -EINVAL;
- }
- 
- /*
-@@ -125,7 +150,8 @@ static inline u64 virt_ticks(struct task
- static int
- posix_cpu_clock_getres(const clockid_t which_clock, struct timespec64 *tp)
- {
--	int error = check_clock(which_clock);
-+	int error = validate_clock_permissions(which_clock);
-+
- 	if (!error) {
- 		tp->tv_sec = 0;
- 		tp->tv_nsec = ((NSEC_PER_SEC + HZ - 1) / HZ);
-@@ -142,20 +168,17 @@ posix_cpu_clock_getres(const clockid_t w
- }
- 
- static int
--posix_cpu_clock_set(const clockid_t which_clock, const struct timespec64 *tp)
-+posix_cpu_clock_set(const clockid_t clock, const struct timespec64 *tp)
- {
-+	int error = validate_clock_permissions(clock);
-+
- 	/*
- 	 * You can never reset a CPU clock, but we check for other errors
- 	 * in the call before failing with EPERM.
- 	 */
--	int error = check_clock(which_clock);
--	if (error == 0) {
--		error = -EPERM;
--	}
--	return error;
-+	return error ? : -EPERM;
- }
- 
--
- /*
-  * Sample a per-thread clock for the given task.
+@@ -987,6 +987,7 @@ static void check_process_timers(struct
   */
+ static void posix_cpu_timer_rearm(struct k_itimer *timer)
+ {
++	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
+ 	struct task_struct *p = timer->it.cpu.task;
+ 	struct sighand_struct *sighand;
+ 	unsigned long flags;
+@@ -999,7 +1000,7 @@ static void posix_cpu_timer_rearm(struct
+ 	 * Fetch the current sample and update the timer's expiry time.
+ 	 */
+ 	if (CPUCLOCK_PERTHREAD(timer->it_clock)) {
+-		cpu_clock_sample(timer->it_clock, p, &now);
++		cpu_clock_sample(clkid, p, &now);
+ 		bump_cpu_timer(timer, now);
+ 		if (unlikely(p->exit_state))
+ 			return;
+@@ -1025,7 +1026,7 @@ static void posix_cpu_timer_rearm(struct
+ 			/* If the process is dying, no need to rearm */
+ 			goto unlock;
+ 		}
+-		cpu_clock_sample_group(timer->it_clock, p, &now, true);
++		cpu_clock_sample_group(clkid, p, &now, true);
+ 		bump_cpu_timer(timer, now);
+ 		/* Leave the sighand locked for the call below.  */
+ 	}
 
 
