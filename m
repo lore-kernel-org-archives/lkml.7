@@ -2,103 +2,133 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 412B3C3A59B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A180C3A59B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07CDB22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D16D22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:21:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="kx7OwaVt"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JXBIHsFi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbfHUKUy (ORCPT
+        id S1728225AbfHUKVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:20:54 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:62278 "EHLO pegase1.c-s.fr"
+        Wed, 21 Aug 2019 06:21:00 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47128 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727669AbfHUKUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:20:53 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46D3b56w75z9v00k;
-        Wed, 21 Aug 2019 12:20:49 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=kx7OwaVt; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 5mxKnH78Nl8v; Wed, 21 Aug 2019 12:20:49 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46D3b55tB3z9v00j;
-        Wed, 21 Aug 2019 12:20:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566382849; bh=N68GV62YPUP85s+ntUba1TxmZ6DCcu8UBUiNuPYWgF8=;
-        h=From:Subject:To:Cc:Date:From;
-        b=kx7OwaVtbU13+k4R8hFKFj7L3+ERcqPtEnofI7l+KTcRB2lBCew3WZ6KyXIT5bjLd
-         rRiLtKj4lPRh98+ZGiTwlFHrcarZane7eQLeBTzbHXKm/AIsP+Sc9kQCIw140I7oW8
-         jiQGwGaCBiGRlBVrwxmIvoLy7szqOwW3XcvHVpuU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BBA808B7E2;
-        Wed, 21 Aug 2019 12:20:51 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id CtQxMFt3XWIt; Wed, 21 Aug 2019 12:20:51 +0200 (CEST)
-Received: from pc16032vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9E9458B7E0;
-        Wed, 21 Aug 2019 12:20:51 +0200 (CEST)
-Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 59EB96B73E; Wed, 21 Aug 2019 10:20:51 +0000 (UTC)
-Message-Id: <54f67bb7ac486c1350f2fa8905cd279f94b9dfb1.1566382841.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/8xx: set STACK_END_MAGIC earlier on the init_stack
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 21 Aug 2019 10:20:51 +0000 (UTC)
+        id S1727669AbfHUKU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 06:20:59 -0400
+Received: from zn.tnic (p200300EC2F0A6300A5E08EBEFD6E27E2.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6300:a5e0:8ebe:fd6e:27e2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 98A141EC0391;
+        Wed, 21 Aug 2019 12:20:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1566382857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=5HldHmjPtVDsjJt+73zl6zmVCWyCnVG8ascf+hIMWGg=;
+        b=JXBIHsFigf7rf/+opBf5Rm5Ekjif6uD6SYKry/tXM+paMrS7u1OT6MDNykHTeDtw3w4T52
+        /9jl1C9BKsaRZUQLAG7PcRSTF5dnSSfdKFJCAibbfRt+91K6pBpvmPI2CjfeCy6tEAebCH
+        axlDog6P1OYaf3Z4gMdyoY7QGY034Vs=
+Date:   Wed, 21 Aug 2019 12:20:52 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v8 02/27] x86/cpufeatures: Add CET CPU feature flags for
+ Control-flow Enforcement Technology (CET)
+Message-ID: <20190821102052.GD6752@zn.tnic>
+References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
+ <20190813205225.12032-3-yu-cheng.yu@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190813205225.12032-3-yu-cheng.yu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Today, the STACK_END_MAGIC is set on init_stack in start_kernel().
+On Tue, Aug 13, 2019 at 01:52:00PM -0700, Yu-cheng Yu wrote:
+> Add CPU feature flags for Control-flow Enforcement Technology (CET).
+> 
+> CPUID.(EAX=7,ECX=0):ECX[bit 7] Shadow stack
+> CPUID.(EAX=7,ECX=0):EDX[bit 20] Indirect branch tracking
+> 
+> Reviewed-by: Borislav Petkov <bp@suse.de>
+> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+> ---
+>  arch/x86/include/asm/cpufeatures.h | 2 ++
+>  arch/x86/kernel/cpu/cpuid-deps.c   | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index e880f2408e29..122265ab46c1 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -334,6 +334,7 @@
+>  #define X86_FEATURE_OSPKE		(16*32+ 4) /* OS Protection Keys Enable */
+>  #define X86_FEATURE_WAITPKG		(16*32+ 5) /* UMONITOR/UMWAIT/TPAUSE Instructions */
+>  #define X86_FEATURE_AVX512_VBMI2	(16*32+ 6) /* Additional AVX512 Vector Bit Manipulation Instructions */
+> +#define X86_FEATURE_SHSTK		(16*32+ 7) /* Shadow Stack */
+>  #define X86_FEATURE_GFNI		(16*32+ 8) /* Galois Field New Instructions */
+>  #define X86_FEATURE_VAES		(16*32+ 9) /* Vector AES */
+>  #define X86_FEATURE_VPCLMULQDQ		(16*32+10) /* Carry-Less Multiplication Double Quadword */
+> @@ -358,6 +359,7 @@
+>  #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+>  #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+>  #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
+> +#define X86_FEATURE_IBT			(18*32+20) /* Indirect Branch Tracking */
+>  #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+>  #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+>  #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
+> diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+> index b5353244749b..9bf35f081080 100644
+> --- a/arch/x86/kernel/cpu/cpuid-deps.c
+> +++ b/arch/x86/kernel/cpu/cpuid-deps.c
+> @@ -68,6 +68,8 @@ static const struct cpuid_dep cpuid_deps[] = {
+>  	{ X86_FEATURE_CQM_MBM_TOTAL,	X86_FEATURE_CQM_LLC   },
+>  	{ X86_FEATURE_CQM_MBM_LOCAL,	X86_FEATURE_CQM_LLC   },
+>  	{ X86_FEATURE_AVX512_BF16,	X86_FEATURE_AVX512VL  },
+> +	{ X86_FEATURE_SHSTK,		X86_FEATURE_XSAVES    },
+> +	{ X86_FEATURE_IBT,		X86_FEATURE_XSAVES    },
 
-To avoid a false 'Thread overran stack, or stack corrupted' message
-on early Oopses, setup STACK_END_MAGIC as soon as possible.
+This hunk needs re-tabbing after:
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/kernel/head_8xx.S | 4 ++++
- 1 file changed, 4 insertions(+)
+1e0c08e3034d ("cpu/cpuid-deps: Add a tab to cpuid dependent features")
 
-diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
-index 5ab9178c2347..b8ca5b43e587 100644
---- a/arch/powerpc/kernel/head_8xx.S
-+++ b/arch/powerpc/kernel/head_8xx.S
-@@ -15,6 +15,7 @@
-  */
- 
- #include <linux/init.h>
-+#include <linux/magic.h>
- #include <asm/processor.h>
- #include <asm/page.h>
- #include <asm/mmu.h>
-@@ -741,6 +742,9 @@ start_here:
- 	/* stack */
- 	lis	r1,init_thread_union@ha
- 	addi	r1,r1,init_thread_union@l
-+	lis	r0, STACK_END_MAGIC@h
-+	ori	r0, r0, STACK_END_MAGIC@l
-+	stw	r0, 0(r1)
- 	li	r0,0
- 	stwu	r0,THREAD_SIZE-STACK_FRAME_OVERHEAD(r1)
- 
+Thx.
+
 -- 
-2.13.3
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
