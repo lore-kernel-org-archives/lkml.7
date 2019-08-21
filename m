@@ -2,190 +2,257 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91779C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F76C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B446233A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CEAE22DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:24:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AWZWF9nT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731437AbfHUXTW (ORCPT
+        id S1730009AbfHUXYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 19:19:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43376 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 19:24:08 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:15253 "EHLO nat-hk.nvidia.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731413AbfHUXTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 19:19:14 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 09C307FDCD;
-        Wed, 21 Aug 2019 23:19:14 +0000 (UTC)
-Received: from t460p.redhat.com (ovpn-117-150.phx2.redhat.com [10.3.117.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB317600CD;
-        Wed, 21 Aug 2019 23:19:12 +0000 (UTC)
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        Scott Wood <swood@redhat.com>
-Subject: [PATCH RT v2 3/3] rcu: Disable use_softirq on PREEMPT_RT
-Date:   Wed, 21 Aug 2019 18:19:06 -0500
-Message-Id: <20190821231906.4224-4-swood@redhat.com>
-In-Reply-To: <20190821231906.4224-1-swood@redhat.com>
-References: <20190821231906.4224-1-swood@redhat.com>
+        id S1727644AbfHUXYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 19:24:08 -0400
+Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5dd2920000>; Thu, 22 Aug 2019 07:24:03 +0800
+Received: from HKMAIL104.nvidia.com ([10.18.16.13])
+  by hkpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 21 Aug 2019 16:24:02 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate102.nvidia.com on Wed, 21 Aug 2019 16:24:02 -0700
+Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL104.nvidia.com
+ (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
+ 2019 23:24:02 +0000
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (104.47.41.55) by
+ HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Wed, 21 Aug 2019 23:24:02 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b/VFJLtNlxlNwsAhyqLh0QR8R8V7ugguZUdlrg/BBQUZLkKlTE7e++zRxe85GuO9s4mgHlcYL/31LKlYNuyRLjlMMZ2Y8JoyaEDPCU8cWHCrIwj6NAkEncurTxkTukTdhj3AZJoUNLD+dfwDmFa4us5xPpve9ksb8sl3X0aM/briPnpRmK4yLqrl47SoZQHAgDut1cba2dd6+4QVLOItNrhQ5Xruj1AOBXQgqAorS5qQiLbg+q2kqK+M6xihpvUZsszOO4eGxWoal+HjJ9+n2eCanyOFt2fX0G1nUJ59jyQ+OA2jcarMAtKWX6vm9QDjb9fvGvnNZEryAds+WN1BMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ql+aqOwMM6SSITAe+zRaZNVJoxvLQftDPEGPlB447JA=;
+ b=O9r9IAKC57CXB8xjzda1nPGDQwfoZlGhWBYmLGhkR7dnC/jYIOfz8ikU4YBracePUpZZhvDME850+D4z4GnFrom2gP0OJ6LFOVw6PjgxHGY2jjmq1s66Rn9s5d6BtJEcjArkM11oYpJaRIcvit/RzJtgbkeanIdim6Lp+7/3BflJ42aQm7XGkb4w9LrM+PV3tCng5U1tICUcukt8GSWeWv567MbRlW/xuZVMGvLO5igA1Of3NT1+2bWXkcwivCwRXh1vuBxhruOoCOTWKM8EAlBasS3b2WJ08Ssi1vZ1wceU+uMXJhDexCN8V9oNd3JpjXGIhzd5XAKFU3uq8h0kTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from BYAPR12MB3015.namprd12.prod.outlook.com (20.178.53.140) by
+ BYAPR12MB3333.namprd12.prod.outlook.com (20.178.55.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Wed, 21 Aug 2019 23:23:57 +0000
+Received: from BYAPR12MB3015.namprd12.prod.outlook.com
+ ([fe80::8d38:5355:e2aa:c1aa]) by BYAPR12MB3015.namprd12.prod.outlook.com
+ ([fe80::8d38:5355:e2aa:c1aa%7]) with mapi id 15.20.2178.020; Wed, 21 Aug 2019
+ 23:23:57 +0000
+From:   Nitin Gupta <nigupta@nvidia.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "vbabka@suse.cz" <vbabka@suse.cz>,
+        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Yu Zhao <yuzhao@google.com>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Roman Gushchin <guro@fb.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Arun KS <arunks@codeaurora.org>,
+        Janne Huttunen <janne.huttunen@nokia.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: RE: [RFC] mm: Proactive compaction
+Thread-Topic: [RFC] mm: Proactive compaction
+Thread-Index: AQHVVHvSPOoT6GjwikqO8JNrunJOkacEogGAgAGdSZA=
+Date:   Wed, 21 Aug 2019 23:23:56 +0000
+Message-ID: <BYAPR12MB3015726BEF236D567FCFB29CD8AA0@BYAPR12MB3015.namprd12.prod.outlook.com>
+References: <20190816214413.15006-1-nigupta@nvidia.com>
+ <20190820222035.GC4949@bombadil.infradead.org>
+In-Reply-To: <20190820222035.GC4949@bombadil.infradead.org>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=nigupta@nvidia.com;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2019-08-21T23:23:54.4134724Z;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic;
+ Sensitivity=Unrestricted
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=nigupta@nvidia.com; 
+x-originating-ip: [216.228.112.22]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f549518d-fd12-4fd4-2bc2-08d7268ea3cc
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR12MB3333;
+x-ms-traffictypediagnostic: BYAPR12MB3333:
+x-microsoft-antispam-prvs: <BYAPR12MB33336101ABF09C823DF6A02ED8AA0@BYAPR12MB3333.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0136C1DDA4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(136003)(39860400002)(346002)(396003)(189003)(199004)(13464003)(52536014)(5660300002)(14444005)(256004)(26005)(64756008)(66446008)(102836004)(66946007)(6506007)(229853002)(7736002)(66556008)(66476007)(305945005)(66066001)(9686003)(76116006)(186003)(53546011)(55016002)(478600001)(8936002)(99286004)(54906003)(446003)(25786009)(11346002)(476003)(7416002)(2906002)(76176011)(14454004)(316002)(4326008)(53936002)(6246003)(7696005)(33656002)(74316002)(86362001)(6436002)(6916009)(486006)(71190400001)(3846002)(6116002)(8676002)(71200400001)(81156014)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB3333;H:BYAPR12MB3015.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nvidia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: z3ZO8slvvrI05UDd6GOWIbhrYksH6tuPpwBOH90BxjSMi+xQ8FWg00AwOrZEk6JINx53yNJI9KISL2VfTKKV4vty6ycfG2fe2vuDRr3OcaPHy+n+C1Fm21AJpeAXAdumJbXXaGz/oEplmZmFWzPiKLIqGRLR2ssZUth+PXf8GPuMI6ExeWNKUyIr63RO9VLw3iB7PhFwRBCnuFK8Z9pzKgh1TmIITxjj20xzS2zRY6KrA7O8xSNyPzpcH5IhzGN97E2SL4cHjUcKp8VW91lfwEapoR91U64rUeZrb8E3aaDC21q64MclChvH/S6bC+tDYH2FUJb0idyhQpXM/C05NWAO47uKbV5DpzTLQ0omiyEaUhWVH27dW8G9FX1cMQ6Jl+jQfaekyVFMtAZQvPJfu23b8YlKeIrCsb3koQ1ql48=
+x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 21 Aug 2019 23:19:14 +0000 (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f549518d-fd12-4fd4-2bc2-08d7268ea3cc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 23:23:56.9294
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C+78dX2Daz6ruM9ErANKoBlh1O4u+LjUrHRKcxxfBNxaRxDdEFaZ3ehxjCkhhZRp8vTOcSyZUvquh/oT/k5yZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3333
+X-OriginatorOrg: Nvidia.com
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566429843; bh=Ql+aqOwMM6SSITAe+zRaZNVJoxvLQftDPEGPlB447JA=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
+         Thread-Index:Date:Message-ID:References:In-Reply-To:
+         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
+         authentication-results:x-originating-ip:x-ms-publictraffictype:
+         x-ms-office365-filtering-correlation-id:x-microsoft-antispam:
+         x-ms-traffictypediagnostic:x-microsoft-antispam-prvs:
+         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
+         x-forefront-antispam-report:received-spf:
+         x-ms-exchange-senderadcheck:x-microsoft-antispam-message-info:
+         x-ms-exchange-transport-forked:MIME-Version:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-originalarrivaltime:
+         X-MS-Exchange-CrossTenant-fromentityheader:
+         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+         X-MS-Exchange-CrossTenant-userprincipalname:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
+         Content-Language:Content-Type:Content-Transfer-Encoding;
+        b=AWZWF9nTdOFDTDB0uybE7BRZm+FSlhElpszlpbQbr1JwfWdz/BIDaYW//57Q97XOU
+         0uRMZZIkzEc4pyo/k9KZ5IirhRyqRqIC1c++wKNzAPUfSOf/GBFinlMvu8E3nAZVLj
+         dCc2QLHLvQRRqpUP4o4bn+T6+xOjbsdQOqaMSZXvBBNvU/bVpZeZao54eTQaHq0IAX
+         sHrijzS8lUc24J3Cxqzi0YfRVqtrQpTwNN/5TzNEPYRYVjNF7GyA6CWzSXTxlzyluG
+         4micAtWNe4/TBH7BBrG7MVhnds/nWp3m+1kdjr61j3UqaMJGLEF+6qdQ32XC+tSa1I
+         YPtYcoZHAhQOg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Besides restoring behavior that used to be default on RT, this avoids
-a deadlock on scheduler locks:
 
-[  136.894657] 039: ============================================
-[  136.900401] 039: WARNING: possible recursive locking detected
-[  136.906146] 039: 5.2.9-rt3.dbg+ #174 Tainted: G            E
-[  136.912152] 039: --------------------------------------------
-[  136.917896] 039: rcu_torture_rea/13474 is trying to acquire lock:
-[  136.923990] 039: 000000005f25146d
-[  136.927310] 039:  (
-[  136.929414] 039: &p->pi_lock
-[  136.932303] 039: ){-...}
-[  136.934840] 039: , at: try_to_wake_up+0x39/0x920
-[  136.939461] 039:
-but task is already holding lock:
-[  136.944425] 039: 000000005f25146d
-[  136.947745] 039:  (
-[  136.949852] 039: &p->pi_lock
-[  136.952738] 039: ){-...}
-[  136.955274] 039: , at: try_to_wake_up+0x39/0x920
-[  136.959895] 039:
-other info that might help us debug this:
-[  136.965555] 039:  Possible unsafe locking scenario:
 
-[  136.970608] 039:        CPU0
-[  136.973493] 039:        ----
-[  136.976378] 039:   lock(
-[  136.978918] 039: &p->pi_lock
-[  136.981806] 039: );
-[  136.983911] 039:   lock(
-[  136.986451] 039: &p->pi_lock
-[  136.989336] 039: );
-[  136.991444] 039:
- *** DEADLOCK ***
+> -----Original Message-----
+> From: owner-linux-mm@kvack.org <owner-linux-mm@kvack.org> On Behalf
+> Of Matthew Wilcox
+> Sent: Tuesday, August 20, 2019 3:21 PM
+> To: Nitin Gupta <nigupta@nvidia.com>
+> Cc: akpm@linux-foundation.org; vbabka@suse.cz;
+> mgorman@techsingularity.net; mhocko@suse.com;
+> dan.j.williams@intel.com; Yu Zhao <yuzhao@google.com>; Qian Cai
+> <cai@lca.pw>; Andrey Ryabinin <aryabinin@virtuozzo.com>; Roman
+> Gushchin <guro@fb.com>; Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org>; Kees Cook <keescook@chromium.org>; Jann
+> Horn <jannh@google.com>; Johannes Weiner <hannes@cmpxchg.org>; Arun
+> KS <arunks@codeaurora.org>; Janne Huttunen
+> <janne.huttunen@nokia.com>; Konstantin Khlebnikov
+> <khlebnikov@yandex-team.ru>; linux-kernel@vger.kernel.org; linux-
+> mm@kvack.org
+> Subject: Re: [RFC] mm: Proactive compaction
+>=20
+> On Fri, Aug 16, 2019 at 02:43:30PM -0700, Nitin Gupta wrote:
+> > Testing done (on x86):
+> >  - Set /sys/kernel/mm/compaction/order-9/extfrag_{low,high} =3D {25, 30=
+}
+> > respectively.
+> >  - Use a test program to fragment memory: the program allocates all
+> > memory  and then for each 2M aligned section, frees 3/4 of base pages
+> > using  munmap.
+> >  - kcompactd0 detects fragmentation for order-9 > extfrag_high and
+> > starts  compaction till extfrag < extfrag_low for order-9.
+>=20
+> Your test program is a good idea, but I worry it may produce unrealistica=
+lly
+> optimistic outcomes.  Page cache is readily reclaimable, so you're settin=
+g up
+> a situation where 2MB pages can once again be produced.
+>=20
+> How about this:
+>=20
+> One program which creates a file several times the size of memory (or
+> several files which total the same amount).  Then read the file(s).  Mayb=
+e by
+> mmap(), and just do nice easy sequential accesses.
+>=20
+> A second program which causes slab allocations.  eg
+>=20
+> for (;;) {
+> 	for (i =3D 0; i < n * 1000 * 1000; i++) {
+> 		char fname[64];
+>=20
+> 		sprintf(fname, "/tmp/missing.%d", i);
+> 		open(fname, O_RDWR);
+> 	}
+> }
+>=20
+> The first program should thrash the pagecache, causing pages to
+> continuously be allocated, reclaimed and freed.  The second will create
+> millions of dentries, causing the slab allocator to allocate a lot of
+> order-0 pages which are harder to free.  If you really want to make it wo=
+rk
+> hard, mix in opening some files whihc actually exist, preventing the page=
+s
+> which contain those dentries from being evicted.
+>=20
+> This feels like it's simulating a more normal workload than your test.
+> What do you think?
 
-[  136.995194] 039:  May be due to missing lock nesting notation
+This combination of workloads for mixing movable and unmovable
+pages sounds good.   I coded up these two and here's what I observed:
 
-[  137.001115] 039: 3 locks held by rcu_torture_rea/13474:
-[  137.006341] 039:  #0:
-[  137.008707] 039: 000000005f25146d
-[  137.012024] 039:  (
-[  137.014131] 039: &p->pi_lock
-[  137.017015] 039: ){-...}
-[  137.019558] 039: , at: try_to_wake_up+0x39/0x920
-[  137.024175] 039:  #1:
-[  137.026540] 039: 0000000011c8e51d
-[  137.029859] 039:  (
-[  137.031966] 039: &rq->lock
-[  137.034679] 039: ){-...}
-[  137.037217] 039: , at: try_to_wake_up+0x241/0x920
-[  137.041924] 039:  #2:
-[  137.044291] 039: 00000000098649b9
-[  137.047610] 039:  (
-[  137.049714] 039: rcu_read_lock
-[  137.052774] 039: ){....}
-[  137.055314] 039: , at: cpuacct_charge+0x33/0x1e0
-[  137.059934] 039:
-stack backtrace:
-[  137.063425] 039: CPU: 39 PID: 13474 Comm: rcu_torture_rea Kdump: loaded Tainted: G            E     5.2.9-rt3.dbg+ #174
-[  137.074197] 039: Hardware name: Intel Corporation S2600BT/S2600BT, BIOS SE5C620.86B.01.00.0763.022420181017 02/24/2018
-[  137.084886] 039: Call Trace:
-[  137.087773] 039:  <IRQ>
-[  137.090226] 039:  dump_stack+0x5e/0x8b
-[  137.093997] 039:  __lock_acquire+0x725/0x1100
-[  137.098358] 039:  lock_acquire+0xc0/0x240
-[  137.102374] 039:  ? try_to_wake_up+0x39/0x920
-[  137.106737] 039:  _raw_spin_lock_irqsave+0x47/0x90
-[  137.111534] 039:  ? try_to_wake_up+0x39/0x920
-[  137.115910] 039:  try_to_wake_up+0x39/0x920
-[  137.120098] 039:  rcu_read_unlock_special+0x65/0xb0
-[  137.124977] 039:  __rcu_read_unlock+0x5d/0x70
-[  137.129337] 039:  cpuacct_charge+0xd9/0x1e0
-[  137.133522] 039:  ? cpuacct_charge+0x33/0x1e0
-[  137.137880] 039:  update_curr+0x14b/0x420
-[  137.141894] 039:  enqueue_entity+0x42/0x370
-[  137.146080] 039:  enqueue_task_fair+0xa9/0x490
-[  137.150528] 039:  activate_task+0x5a/0xf0
-[  137.154539] 039:  ttwu_do_activate+0x4e/0x90
-[  137.158813] 039:  try_to_wake_up+0x277/0x920
-[  137.163086] 039:  irq_exit+0xb6/0xf0
-[  137.166661] 039:  smp_apic_timer_interrupt+0xe3/0x3a0
-[  137.171714] 039:  apic_timer_interrupt+0xf/0x20
-[  137.176249] 039:  </IRQ>
-[  137.178785] 039: RIP: 0010:__schedule+0x0/0x8e0
-[  137.183319] 039: Code: 00 02 48 89 43 20 e8 0f 5a 00 00 48 8d 7b 28 e8 86 f2 fd ff 31 c0 5b 5d 41 5c c3 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 <55> 48 89 e5 41 57 41 56 49 c7 c6 c0 ca 1e 00 41 55 41 89 fd 41 54
-[  137.202498] 039: RSP: 0018:ffffc9005835fbc0 EFLAGS: 00000246
-[  137.208158] 039:  ORIG_RAX: ffffffffffffff13
-[  137.212428] 039: RAX: 0000000000000000 RBX: ffff8897c3e1bb00 RCX: 0000000000000001
-[  137.219994] 039: RDX: 0000000080004008 RSI: 0000000000000006 RDI: 0000000000000001
-[  137.227560] 039: RBP: ffff8897c3e1bb00 R08: 0000000000000000 R09: 0000000000000000
-[  137.235126] 039: R10: 0000000000000001 R11: 0000000000000001 R12: ffffffff81001fd1
-[  137.242694] 039: R13: 0000000000000044 R14: 0000000000000000 R15: ffffc9005835fcac
-[  137.250259] 039:  ? ___preempt_schedule+0x16/0x18
-[  137.254969] 039:  preempt_schedule_common+0x32/0x80
-[  137.259846] 039:  ___preempt_schedule+0x16/0x18
-[  137.264379] 039:  rcutorture_one_extend+0x33a/0x510 [rcutorture]
-[  137.270397] 039:  rcu_torture_one_read+0x18c/0x450 [rcutorture]
-[  137.276334] 039:  rcu_torture_reader+0xac/0x1f0 [rcutorture]
-[  137.281998] 039:  ? rcu_torture_reader+0x1f0/0x1f0 [rcutorture]
-[  137.287920] 039:  kthread+0x106/0x140
-[  137.291591] 039:  ? rcu_torture_one_read+0x450/0x450 [rcutorture]
-[  137.297681] 039:  ? kthread_bind+0x10/0x10
-[  137.301783] 039:  ret_from_fork+0x3a/0x50
+- kernel: 5.3.0-rc5 + this patch, x86_64, 32G RAM.
+- Set extfrag_{low,high} =3D {25,30} for order-9
+- Run pagecache and dentry thrash test programs as you described
+    - for pagecache test: mmap and sequentially read 128G file on a 32G sys=
+tem.
+    - for dentry test: set n=3D100. I created /tmp/missing.[0-10000] so the=
+se dentries stay allocated..
+- Start linux kernel compile for further pagecache thrashing.
 
-Signed-off-by: Scott Wood <swood@redhat.com>
----
-I think the prohibition on use_softirq can be dropped once RT gets the
-latest RCU code, but the question of what use_softirq should default
-to on PREEMPT_RT remains.
----
- kernel/rcu/tree.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+With above workload fragmentation for order-9 stayed 80-90% which kept
+kcompactd0 working but it couldn't make progress due to unmovable pages
+from dentries.  As expected, we keep hitting compaction_deferred() as
+compaction attempts fail.
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index fc8b00c61b32..12036d33e2f9 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -98,9 +98,16 @@ struct rcu_state rcu_state = {
- /* Dump rcu_node combining tree at boot to verify correct setup. */
- static bool dump_tree;
- module_param(dump_tree, bool, 0444);
--/* By default, use RCU_SOFTIRQ instead of rcuc kthreads. */
-+/*
-+ * By default, use RCU_SOFTIRQ instead of rcuc kthreads.
-+ * But, avoid RCU_SOFTIRQ on PREEMPT_RT due to pi/rq deadlocks.
-+ */
-+#ifdef CONFIG_PREEMPT_RT_FULL
-+static bool use_softirq;
-+#else
- static bool use_softirq = 1;
- module_param(use_softirq, bool, 0444);
-+#endif
- /* Control rcu_node-tree auto-balancing at boot time. */
- static bool rcu_fanout_exact;
- module_param(rcu_fanout_exact, bool, 0444);
--- 
-1.8.3.1
+After a manual `echo 3 | /proc/sys/vm/drop_caches` and stopping dentry thra=
+sher,
+kcompactd succeded in bringing extfrag below set thresholds.
+
+
+With unmovable pages spread across memory, there is little compaction
+can do. Maybe we should have a knob like 'compactness' (like swapiness) whi=
+ch
+defines how aggressive compaction can be. For high values, maybe allow
+freeing dentries too? This way hugepage sensitive applications can trade
+with higher I/O latencies.
+
+Thanks,
+Nitin
+
+
+
+
+
 
