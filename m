@@ -2,221 +2,136 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5C7C3A59B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA838C3A59B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329C322D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:11:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CbIXVfFO"
+	by mail.kernel.org (Postfix) with ESMTP id 97DC32332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfHUKLZ (ORCPT
+        id S1727607AbfHUKL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 21 Aug 2019 06:11:27 -0400
+Received: from mga01.intel.com ([192.55.52.88]:27940 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726217AbfHUKLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 21 Aug 2019 06:11:25 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38763 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfHUKLY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:11:24 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m125so1522556wmm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 03:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jrQICpWLHoOKA51TYZF4wdTk0Hlmd2hBlo/FIA7QGZo=;
-        b=CbIXVfFOJtxVCS5XepCddU8NQviPa3DQa8nyoEesyWgIjk6D5VIcUZaIsYZ2DAS+Gr
-         JA33INSo73e5TAHFo9cfpfia9/DQ2mwhkI7Vnh3ukcrQpW9TlvOxe+pa2+XZs7GGNCNV
-         20wDnqOW+pUnZXjnVRxrEPeU1OZY8xPBeLhpA73VnwnfIZMypEMvP4REs5nbPUOeT199
-         4YzL6S1BuCCVQtv7kZhi/PZqfdJOoeaAfmDjMSUsf0rh5IUU+iCNnF2DfsmAGg0RMMwT
-         ij/hk/IU+MRWcIW8aGXTaFL369V28xSKp7dKMfzXZrY2m9tGqgyfjuVFZIo8Ye/dg5xE
-         T6bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=jrQICpWLHoOKA51TYZF4wdTk0Hlmd2hBlo/FIA7QGZo=;
-        b=i7/UiY2gEB+7VGDIW5ttjcbZcotkpqwAVZ7qUB7NxUn8qdbTO9xU785Jkw0jOmELa7
-         zsBl54edqaiUVxfl+V9DUSIUo7uUY/QOPd0ZSQPLcNZO3s23t13UDZKX2RQhUo7ryr3+
-         0RzyIVB02PFwpT3gRiVzwXIoZcVEfGydTIpqXzXvi3k2Rpo/N5Is5bfsYoVg8pneWRvO
-         quCo/HBrju5/PdCtgADhOfWi7+WPhNDJY69TlnkhFLzG3pee9GrnJ/7C6y/ZFs0CdjQA
-         msbzoTzv3kBI0cR09hAs7JSLqAYf+QrD2E57G4nIMtm1jACT7q/ANy9n2y3gOLR26TET
-         3gqA==
-X-Gm-Message-State: APjAAAV8YbK1Gb5+AkZ/YAw/Sk6q28LDAhA+YAeBBgUCiZ5dx6dE5gfL
-        k6oNT6eQGh5MiX1TfOS+I82Rvp6Z03M=
-X-Google-Smtp-Source: APXvYqx0sNB68Mm6o9HSmvk7JqddxmMKASpcf5LTH54kQGLwEPYaUXWQnB2VHdsRg6nGBHNbhcWnhg==
-X-Received: by 2002:a1c:a503:: with SMTP id o3mr4898652wme.37.1566382280840;
-        Wed, 21 Aug 2019 03:11:20 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:9c18:ddf6:f0bb:53f8? ([2a01:e34:ed2f:f020:9c18:ddf6:f0bb:53f8])
-        by smtp.googlemail.com with ESMTPSA id u129sm3575299wmb.12.2019.08.21.03.11.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 03:11:20 -0700 (PDT)
-Subject: Re: [PATCH] [v5] clocksource/drivers/npcm: fix GENMASK and timer
- operation
-To:     Avi Fishman <avifishman70@gmail.com>, tmaimon77@gmail.com,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, tglx@linutronix.de
-Cc:     openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190729170354.202374-1-avifishman70@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <744188a1-d11a-7edc-79cd-e3c7dbcf6e86@linaro.org>
-Date:   Wed, 21 Aug 2019 12:11:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190729170354.202374-1-avifishman70@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 03:11:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
+   d="scan'208";a="172733736"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2019 03:11:22 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     kishon@ti.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, peter.harliman.liem@intel.com,
+        vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: [PATCH v3 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+Date:   Wed, 21 Aug 2019 18:11:17 +0800
+Message-Id: <20190821101118.42774-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/07/2019 19:03, Avi Fishman wrote:
-> NPCM7XX_Tx_OPER GENMASK bits where wrong,
-> Since NPCM7XX_REG_TICR0 register reset value of those bits was 0,
-> it did not cause an issue.
-> in npcm7xx_timer_oneshot() the original NPCM7XX_REG_TCSR0 register was
-> read again after masking it with ~NPCM7XX_Tx_OPER so the masking didn't
-> take effect.
-> 
-> npcm7xx_timer_periodic() was not wrong but it wrote to NPCM7XX_REG_TICR0
-> in a middle of read modify write to NPCM7XX_REG_TCSR0 which is
-> confusing.
-> npcm7xx_timer_oneshot() did wrong calculation
-> 
-> Signed-off-by: Avi Fishman <avifishman70@gmail.com>
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-I've applied the patch and massaged the changelog [1].
+Add a YAML schema to use the host controller driver with the
+eMMC PHY on Intel's Lightning Mountain SoC.
 
-Let me know if you disagree with it.
+Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+---
+changes in v3:
+  - resolve 'make dt_binding_check' warnings
 
-Please, in the future take care of adding the Fixes tag.
+changes in v2:
+  As per Rob Herring review comments, the following updates
+ - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+ - filename is the compatible string plus .yaml
+ - LGM: Lightning Mountain
+ - update maintainer
+ - add intel,syscon under property list
+ - keep one example instead of two
+---
+ .../bindings/phy/intel,lgm-emmc-phy.yaml           | 59 ++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
 
-Thanks
-
-  -- Daniel
-
-[1]
-https://git.linaro.org/people/daniel.lezcano/linux.git/commit/?h=clockevents/next&id=a5f6679fc81e42fcbef0184770d8a3b04c0f153e
-
-> ---
->  drivers/clocksource/timer-npcm7xx.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/clocksource/timer-npcm7xx.c b/drivers/clocksource/timer-npcm7xx.c
-> index 8a30da7f083b..9780ffd8010e 100644
-> --- a/drivers/clocksource/timer-npcm7xx.c
-> +++ b/drivers/clocksource/timer-npcm7xx.c
-> @@ -32,7 +32,7 @@
->  #define NPCM7XX_Tx_INTEN		BIT(29)
->  #define NPCM7XX_Tx_COUNTEN		BIT(30)
->  #define NPCM7XX_Tx_ONESHOT		0x0
-> -#define NPCM7XX_Tx_OPER			GENMASK(27, 3)
-> +#define NPCM7XX_Tx_OPER			GENMASK(28, 27)
->  #define NPCM7XX_Tx_MIN_PRESCALE		0x1
->  #define NPCM7XX_Tx_TDR_MASK_BITS	24
->  #define NPCM7XX_Tx_MAX_CNT		0xFFFFFF
-> @@ -84,8 +84,6 @@ static int npcm7xx_timer_oneshot(struct clock_event_device *evt)
->  
->  	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->  	val &= ~NPCM7XX_Tx_OPER;
-> -
-> -	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->  	val |= NPCM7XX_START_ONESHOT_Tx;
->  	writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
->  
-> @@ -97,12 +95,11 @@ static int npcm7xx_timer_periodic(struct clock_event_device *evt)
->  	struct timer_of *to = to_timer_of(evt);
->  	u32 val;
->  
-> +	writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
-> +
->  	val = readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
->  	val &= ~NPCM7XX_Tx_OPER;
-> -
-> -	writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0);
->  	val |= NPCM7XX_START_PERIODIC_Tx;
-> -
->  	writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
->  
->  	return 0;
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+new file mode 100644
+index 000000000000..9342e33d8b02
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
++
++maintainers:
++  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
++
++properties:
++  "#phy-cells":
++    const: 0
++
++  compatible:
++    const: intel,lgm-emmc-phy
++
++  reg:
++    maxItems: 1
++
++  syscon:
++    items:
++      $ref: "/schemas/types.yaml#definitions/phandle"
++
++  clocks:
++    items:
++      - description: e-MMC phy module clock
++
++  clock-names:
++    items:
++      - const: emmcclk
++
++  resets:
++    maxItems: 1
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - resets
++  - ref
++
++additionalProperties: false
++
++examples:
++  - |
++    emmc_phy: emmc_phy {
++        compatible = "intel,lgm-emmc-phy";
++        reg = <0xe0020000 0x100>;
++        intel,syscon = <&sysconf>;
++        clocks = <&emmc>;
++        clock-names = "emmcclk";
++        #phy-cells = <0>;
++    };
++
++...
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.11.0
 
