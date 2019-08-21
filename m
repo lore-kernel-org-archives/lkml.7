@@ -2,110 +2,299 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7C6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D8DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC84B2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16831216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:52:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fn83oNtn"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ibnhutbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730066AbfHUWsr (ORCPT
+        id S1730421AbfHUWwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 18:48:47 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44251 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729820AbfHUWsq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 18:48:46 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c81so2419858pfc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=teKoEoZBkGuWM1am+bLxrzg6jS/TPSFr7t15zPBCNd0=;
-        b=fn83oNtnI1C2eL/2sCStFsle3PKFMa1Tz57GE6Dkhr7A7QS4lH9XiGvffGi10XTFKV
-         UsdNPY7I+LpQATbTGIgv7S0LftxvcXeDTKQffKaWrtb9vVR4wU7TNoHVG9WeC+HwjzJI
-         ehriVN2QCZnH5FkGXbZeAx8QYXrakhPnYv9qBGrdxpVcW/tfmSVS/FYsKRbPfDglqMzN
-         eJ44IDYR6NuXCBuB+dxB347ZfCQ2qbmNR+Tl6X6FSUASKblhb4KeDqVFDxY/vvnyFFVL
-         WNyAX1XfPO3sD473CoaKkJaYn05hbRcw9nOyI3JOnVaIYLdm1qyvwWDqaLnUhH0pvsto
-         F4AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=teKoEoZBkGuWM1am+bLxrzg6jS/TPSFr7t15zPBCNd0=;
-        b=ITgeF3pTmxT5D/u2eQf/q0ewpCM4kRsiX43Nm0sbprNoi08lV5YjwGIbgp720n0mpn
-         5wJ7CQli6/IyNtMFJTWiC8ddeAraZthd94ofbtXOzUZkPO4uEHzN8Xs3wIxlC22AfhVw
-         ZRfKRGdUoDXHG1LsKYCbo4UjzJohrfdFbgEdKQD0k+LnhvtAxiZZhXLIF1zIpxpYTy7p
-         krbXiOeVqDvGyTbzltoJ/PopxR7ceH2NmA6i5fsX1LB2bNyA0+b317S2OOnw1WLEILaF
-         gBAMh87XI4NNLorTK9wbLdGkPjVmIqeZLg/H7VFDUn268hnHQTeDRRt4Roffx3p3HTAg
-         bq3w==
-X-Gm-Message-State: APjAAAV3KLqonj0kpt8NphKHITGOTWnObaelleNDgJm6BPbhxa+8ClS4
-        kBo5ZaBmadmRWf04q/fp6UDV/A==
-X-Google-Smtp-Source: APXvYqze4CscdkpN+NmoXK9M3820ciVP/ebbyCnpT1BSOyOKbjJX/1IXyEnQhdqXoEY4Czkz9iK+jw==
-X-Received: by 2002:a63:e54f:: with SMTP id z15mr30949865pgj.4.1566427725453;
-        Wed, 21 Aug 2019 15:48:45 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 5sm21909049pgh.93.2019.08.21.15.48.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 15:48:44 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 15:50:31 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     robh+dt@kernel.org, vkoul@kernel.org, aneela@codeaurora.org,
-        mark.rutland@arm.com, agross@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
-        clew@codeaurora.org
-Subject: Re: [PATCH v2 5/7] mailbox: qcom: Add support for Qualcomm SM8150
- and SC7180 SoCs
-Message-ID: <20190821225031.GA1892@tuxbook-pro>
-References: <20190807070957.30655-1-sibis@codeaurora.org>
- <20190807070957.30655-6-sibis@codeaurora.org>
+        Wed, 21 Aug 2019 18:52:09 -0400
+Received: from mail-eopbgr700118.outbound.protection.outlook.com ([40.107.70.118]:17472
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729892AbfHUWwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 18:52:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Loe51eiKF06R734w/njHJIBcJKc6896rQTwZ3/w0BhU2ATTjdHYytmCurasHsTE4u5Jd8vZy3wM2uGlOYI+qwfUmTHC5jp2agQKn1zTD4uL1VW1ecfik2XUTYj7YGrellcRDDWDoSQHdTKVfevPj/yHaQbm6hiX+Muhq36MUGBaAewfHuHyc4+dHDwVLsfD7zxnuBpx1ZS7TFcW/4nOlkUb2mG/wAk4/SIurosigt27YdmsOLc6eAOAF0h24tPaw/wQ9nWciKHKqb5ATXLGzhT9qhoib1HE0/kqA2F4y4t2Ra9Yv3mj/rSwzrUQuBdIWVaUexhIgQpTN7nqyEyrQ6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N3WJkNfsBwTw5LUMVVgIzAZfCHlZQ4uwjjh7IUadVm4=;
+ b=Q9mun3WOSKetK2wY1wJRQLPm9KP2+RaRxNvVPWyGv1dTNcbvqREo+6xNGxy0GxPTWui0ylr6k5IX2nNATHwIW0MqZNj1MjSoxb2MrxSkL7axkts5yQUs9hdrHYHP9qYtoh8XQPjkmrdgH75Co4eeUyAqe6oYtPV3LZz0E5vkEveuJtrUuv3+VHjzY2WK7JZuGyGQbH+83srXhK18RK36rSHbdRoqYNPR+r0SOGjZAAjt5GzmObBq7TEU94KVQah/iTSAePE95UzxK8zf0p1kqah50/mFPU4Qxz919ATXIe4naFXXuwMPcdHNrEv2uDuaGo15qk9r/MSFoLxsyFtwww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N3WJkNfsBwTw5LUMVVgIzAZfCHlZQ4uwjjh7IUadVm4=;
+ b=ibnhutbWp4e1WyUfAdc7rVZdJv/G1neHAp+HBwns20YuCykG5vCaauGC5WRT0WDXSBoKQoht25IQrpmtrgFvSQo54hhNmE/iWCDtVP1Yio57gRL2fq39xsEMO8cLi4++mI9FLwHDK/N/UX9f2J40U/jPHLDNq27OALQI5Ed5zfQ=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0153.namprd21.prod.outlook.com (10.173.173.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.4; Wed, 21 Aug 2019 22:52:04 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::8985:a319:f21:530e]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::c437:6219:efcc:fb8a%8]) with mapi id 15.20.2220.000; Wed, 21 Aug 2019
+ 22:52:04 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     brandonbonaby94 <brandonbonaby94@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>
+CC:     brandonbonaby94 <brandonbonaby94@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/3] drivers: hv: vmbus: Introduce latency testing
+Thread-Topic: [PATCH v2 1/3] drivers: hv: vmbus: Introduce latency testing
+Thread-Index: AQHVVwE2vVCk3RDz8U68oyYvQlF7g6cGJmDQ
+Date:   Wed, 21 Aug 2019 22:52:04 +0000
+Message-ID: <DM5PR21MB01375C24AE9ECD93DBE856C2D7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <cover.1566266609.git.brandonbonaby94@gmail.com>
+ <ebca54bf70d2af53de419c1b7ac8db5b77b888cb.1566266609.git.brandonbonaby94@gmail.com>
+In-Reply-To: <ebca54bf70d2af53de419c1b7ac8db5b77b888cb.1566266609.git.brandonbonaby94@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-08-21T22:52:02.8650892Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=165c4a81-c33f-47b4-8d0e-653907e32f15;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ceaa9a21-3355-489e-5b03-08d7268a300a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR21MB0153;
+x-ms-traffictypediagnostic: DM5PR21MB0153:|DM5PR21MB0153:|DM5PR21MB0153:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR21MB0153DB46822EAAC6146BF7AFD7AA0@DM5PR21MB0153.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0136C1DDA4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(376002)(396003)(366004)(346002)(136003)(199004)(189003)(55016002)(26005)(186003)(6436002)(66066001)(71200400001)(5660300002)(52536014)(54906003)(446003)(10290500003)(71190400001)(66946007)(1511001)(25786009)(76116006)(486006)(4326008)(476003)(86362001)(229853002)(7696005)(6246003)(2906002)(66556008)(11346002)(256004)(99286004)(66476007)(66446008)(53936002)(76176011)(64756008)(81156014)(8676002)(14454004)(316002)(33656002)(102836004)(22452003)(8990500004)(9686003)(8936002)(3846002)(478600001)(6116002)(305945005)(2501003)(6506007)(110136005)(7736002)(10090500001)(74316002)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0153;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: T8KmCQVYTIqRK6E+mGt64TMFqXbwTjFf6+zNCmwZqbIen18ck2wLKzh9AIcKQ2ccELqwvk3fz75qYv0AIzXQSI9rI5Dh9S2iTz4HA82g3wn2ep9yaJm766hm3ic4LdByvoXM83PIHXKnBe6VrflA4vBHfxrO0Ny4Mw1pbPelb/TFFGzs+itUNH5rAywKyfWNeOqpdxq/amFXB5xbyskRN5olGGCokj7fhf7aF9A5XII+Gyk1+aETEhKLgQkiJcT7odh/skRJpNeEDQh6z9DBkVpaiQZXgsNdtv+XOfifi88l9ZdQRbiu9soNO4JmY1YI72N1E1tZ4O4Ce1UfmpzATvzG6LAaJ15kEtjrk9kML13YL1k41SMnAAZzY5LLGVTQGp+Bl7IK4rQiPebV03BrHD2IXAgrHeogdRAySGXt60s=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807070957.30655-6-sibis@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ceaa9a21-3355-489e-5b03-08d7268a300a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 22:52:04.7842
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ypAH3KCoPIHid/agWnlT49HCHmfOPdf90l9aSRUqsFbcMLg8Xm5vWrUk+oQU8EbnXBCeMD/Qm9yZClvL9+zv30uLwaQn4dxoyr5KDMwfXvs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0153
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 07 Aug 00:09 PDT 2019, Sibi Sankar wrote:
-
-> Add the corresponding APSS shared offset for SM8150 and SC7180 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
+From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Monday, August 19, 2=
+019 7:45 PM
+>=20
+> Introduce user specified latency in the packet reception path.
+>=20
+> Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
 > ---
->  drivers/mailbox/qcom-apcs-ipc-mailbox.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> index 705e17a5479cc..2dfd288fe720d 100644
-> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> @@ -118,7 +118,9 @@ static const struct of_device_id qcom_apcs_ipc_of_match[] = {
->  	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = (void *)16 },
->  	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = (void *)8 },
->  	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = (void *)8 },
-> +	{ .compatible = "qcom,sc7180-apss-shared", .data = (void *)12 },
->  	{ .compatible = "qcom,sdm845-apss-shared", .data = (void *)12 },
-> +	{ .compatible = "qcom,sm8150-apss-shared", .data = (void *)12 },
->  	{}
+> Changes in v2:
+>  - Add #ifdef in Kconfig file so test code will not interfere
+>    with non-test code.
+>  - Move test code functions for delay to hyperv_vmbus header
+>    file.
+>  - Wrap test code under #ifdef statement.
+>=20
+>  drivers/hv/Kconfig        |  7 +++++++
+>  drivers/hv/connection.c   |  3 +++
+>  drivers/hv/hyperv_vmbus.h | 20 ++++++++++++++++++++
+>  drivers/hv/ring_buffer.c  |  7 +++++++
+>  include/linux/hyperv.h    | 21 +++++++++++++++++++++
+>  5 files changed, 58 insertions(+)
+>=20
+> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+> index 9a59957922d4..d97437ba0626 100644
+> --- a/drivers/hv/Kconfig
+> +++ b/drivers/hv/Kconfig
+> @@ -29,4 +29,11 @@ config HYPERV_BALLOON
+>  	help
+>  	  Select this option to enable Hyper-V Balloon driver.
+>=20
+> +config HYPERV_TESTING
+> +        bool "Hyper-V testing"
+> +        default n
+> +        depends on HYPERV && DEBUG_FS
+> +        help
+> +          Select this option to enable Hyper-V vmbus testing.
+> +
+>  endmenu
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index 09829e15d4a0..c9c63a4033cd 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -357,6 +357,9 @@ void vmbus_on_event(unsigned long data)
+>=20
+>  	trace_vmbus_on_event(channel);
+>=20
+> +#ifdef CONFIG_HYPERV_TESTING
+> +	hv_debug_delay_test(channel, INTERRUPT_DELAY);
+> +#endif /* CONFIG_HYPERV_TESTING */
+
+You are following Vitaly's suggestion to use #ifdef's so no code is
+generated when HYPERV_TESTING is not enabled.  However, this
+direct approach to using #ifdef's really clutters the code and makes
+it harder to read and follow.  The better approach is to use the
+#ifdef in the include file where the functions are defined.  If
+HYPERV_TESTING is not enabled, provide a #else that defines
+the function with an empty implementation for which the compiler
+will generate no code.   An as example, see the function definition
+for hyperv_init() in arch/x86/include/asm/mshyperv.h.  There are
+several functions treated similarly in that include file.
+
+
+>  	do {
+>  		void (*callback_fn)(void *);
+>=20
+> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+> index 362e70e9d145..edf14f596d8c 100644
+> --- a/drivers/hv/hyperv_vmbus.h
+> +++ b/drivers/hv/hyperv_vmbus.h
+> @@ -357,4 +357,24 @@ enum hvutil_device_state {
+>  	HVUTIL_DEVICE_DYING,     /* driver unload is in progress */
 >  };
->  MODULE_DEVICE_TABLE(of, qcom_apcs_ipc_of_match);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+>=20
+> +#ifdef CONFIG_HYPERV_TESTING
+> +#include <linux/debugfs.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+
+Generally #include files should go at the top of the file, even if they
+are only needed conditionally.
+
+> +#define TESTING "hyperv"
+
+I'm not seeing what this line is for, or how it is used.
+
+> +
+> +enum delay {
+> +	INTERRUPT_DELAY	=3D 0,
+> +	MESSAGE_DELAY   =3D 1,
+> +};
+> +
+> +int hv_debug_delay_files(struct hv_device *dev, struct dentry *root);
+> +int hv_debug_add_dev_dir(struct hv_device *dev);
+> +void hv_debug_rm_dev_dir(struct hv_device *dev);
+> +void hv_debug_rm_all_dir(void);
+> +void hv_debug_set_dir_dentry(struct hv_device *dev, struct dentry *root)=
+;
+> +void hv_debug_delay_test(struct vmbus_channel *channel, enum delay delay=
+_type);
+> +
+
+This is where you could put a #else and the null implementation of
+the above functions.
+
+> +#endif /* CONFIG_HYPERV_TESTING */
+> +
+>  #endif /* _HYPERV_VMBUS_H */
+> diff --git a/drivers/hv/ring_buffer.c b/drivers/hv/ring_buffer.c
+> index 9a03b163cbbd..51adda23b398 100644
+> --- a/drivers/hv/ring_buffer.c
+> +++ b/drivers/hv/ring_buffer.c
+> @@ -396,6 +396,10 @@ struct vmpacket_descriptor *hv_pkt_iter_first(struct
+> vmbus_channel *channel)
+>  	struct hv_ring_buffer_info *rbi =3D &channel->inbound;
+>  	struct vmpacket_descriptor *desc;
+>=20
+> +#ifdef CONFIG_HYPERV_TESTING
+> +	hv_debug_delay_test(channel, MESSAGE_DELAY);
+> +#endif /* CONFIG_HYPERV_TESTING */
+> +
+>  	if (hv_pkt_iter_avail(rbi) < sizeof(struct vmpacket_descriptor))
+>  		return NULL;
+>=20
+> @@ -421,6 +425,9 @@ __hv_pkt_iter_next(struct vmbus_channel *channel,
+>  	u32 packetlen =3D desc->len8 << 3;
+>  	u32 dsize =3D rbi->ring_datasize;
+>=20
+> +#ifdef CONFIG_HYPERV_TESTING
+> +	hv_debug_delay_test(channel, MESSAGE_DELAY);
+> +#endif /* CONFIG_HYPERV_TESTING */
+>  	/* bump offset to next potential packet */
+>  	rbi->priv_read_index +=3D packetlen + VMBUS_PKT_TRAILER;
+>  	if (rbi->priv_read_index >=3D dsize)
+> diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+> index 6256cc34c4a6..6bf8ef5c780c 100644
+> --- a/include/linux/hyperv.h
+> +++ b/include/linux/hyperv.h
+> @@ -926,6 +926,21 @@ struct vmbus_channel {
+>  	 * full outbound ring buffer.
+>  	 */
+>  	u64 out_full_first;
+> +
+> +#ifdef CONFIG_HYPERV_TESTING
+> +	/* enabling/disabling fuzz testing on the channel (default is false)*/
+> +	bool fuzz_testing_state;
+> +
+> +	/* Interrupt delay will delay the guest from emptying the ring buffer
+> +	 * for a specific amount of time. The delay is in microseconds and will
+> +	 * be between 1 to a maximum of 1000, its default is 0 (no delay).
+> +	 * The  Message delay will delay guest reading on a per message basis
+> +	 * in microseconds between 1 to 1000 with the default being 0
+> +	 * (no delay).
+> +	 */
+> +	u32 fuzz_testing_interrupt_delay;
+> +	u32 fuzz_testing_message_delay;
+> +#endif /* CONFIG_HYPERV_TESTING */
+
+For fields in a data structure like this, you don't have much choice
+but to put the #ifdef directly inline.  However, for small fields like this
+and where the data structure isn't size sensitive, you could consider
+omitting the #ifdef and just always including the fields even when
+HYPERV_TESTING is not enabled.  I don't have a strong preference
+either way.
+
+>  };
+>=20
+>  static inline bool is_hvsock_channel(const struct vmbus_channel *c)
+> @@ -1166,6 +1181,12 @@ struct hv_device {
+>=20
+>  	struct vmbus_channel *channel;
+>  	struct kset	     *channels_kset;
+> +
+> +#ifdef CONFIG_HYPERV_TESTING
+> +	/* place holder to keep track of the dir for hv device in debugfs */
+> +	struct dentry *debug_dir;
+> +#endif /* CONFIG_HYPERV_TESTING */
+
+Same here.
+
+Michael
+
+> +
+>  };
+>=20
+>=20
+> --
+> 2.17.1
+
