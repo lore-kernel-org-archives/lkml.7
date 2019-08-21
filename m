@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFF6C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48654C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8232B2339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D2F12339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cYeQS8nq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ms3BJi46"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfHUI0v (ORCPT
+        id S1727629AbfHUI04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 04:26:51 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51584 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbfHUI0u (ORCPT
+        Wed, 21 Aug 2019 04:26:56 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37065 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbfHUI0s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 04:26:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id k1so1192946wmi.1;
-        Wed, 21 Aug 2019 01:26:48 -0700 (PDT)
+        Wed, 21 Aug 2019 04:26:48 -0400
+Received: by mail-wm1-f66.google.com with SMTP id d16so1200039wme.2;
+        Wed, 21 Aug 2019 01:26:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=u4jqzd2Sa7cqOfxmJTjO2EUX/kBXhO1wvG+CPlLawDo=;
-        b=cYeQS8nqwJ2nxYaJvnK5iDKIc/f+MXApfpkaO7wT56NzwajB+RULs7NWeTMiIJLuy3
-         FfSXxk66yXF9qOYAKazW8bMiCkzcL7gPrZOu5UFiIlomiHsuGvkaddQrOKgY4Ygpv2KN
-         3C50QCTd664WoIJZ90u/4xdn0U0ti7rR1cD0TO3lj4YXiHnRbcsG3r2eMCCcVNDDd/ve
-         C7OKQx3cBCUgDmvtJ7KZc4VdWlU9THd1DDITdKNVUWg64DcZ9YGJs1exHkTiiEZm9bQB
-         dCu9U21FZRGx5z6hsJXbVdjTM9HjfIv4eAy8rRzJx7VNrxBfqwttbq+Ty8rYIDr4fF52
-         v9Lw==
+        bh=ZVtvs8aoMj7QTvzMN1wgA3FYSaFdOhLuHmxR1kxixVM=;
+        b=Ms3BJi46cOgN3pTo6ofz5yGM2VxaVWe9jdE/51BzXO80cpAlQf7wwUN796eodXSMj6
+         oVYahD3zOtwBIct35oFxGkytbVTt7GNek+i0kgV4WdsI7BVEB0DXWqCT0wnCodjouP7x
+         wbwWMdeyEYh54w9YydE4/+6laaIIXK40g5K2CDNDFQRbLu/kCTSAYCtRqyndAO//GYjw
+         gB1sGlIHskIYMEPuyLjTtm0ynKJAYrfAU2/9bWhZRVrce2a5chO9WYfz+E7Y1YPUTkjW
+         mfQ9NsitoVsak40G+qbQ3DO0vEFZ1fioNdtMnjjYR6GfctYfNKHg+ccDM7MvEGnKLStm
+         5SFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=u4jqzd2Sa7cqOfxmJTjO2EUX/kBXhO1wvG+CPlLawDo=;
-        b=AUwEJ2ntt9BC7jDrGLTO1aPtbKjp1vXNVABT826IeF8tGUi+pZsN4obsNDKFHbW83Z
-         MUnOuW5+5tqdQoSKH0UsNJVG5kn1wB7uYJGLY6H7C6CbaghxEtJHnsQx+SqPSzGbTTjk
-         mn12B03QUQUuYyGRJtu7aTRODqOiK6V7CLcK+HfNle8NsZLtk/JeT8esVRVmVxeMiKH+
-         IbSWzGWCZEvY0grx3PJjpkSV0IlTbI6WVV0M064Y6/2b5E3Rw3v+nN+TfPrqaqxyd8au
-         iQXvygwsX8VaNR4Zl1byyTYkt/THdVm/UzsvHPOMzP9oD9IJFAkPCk9jXisgONqtSRYL
-         5vBQ==
-X-Gm-Message-State: APjAAAV+v1rQD0g2duNU5FAe1pykBLBT27sDaACVp0a6Lf6JUW/wp6dW
-        maiim/v6FMsjgGNOPwdEfIcH/hDrrlM=
-X-Google-Smtp-Source: APXvYqyAE6UPHqryx0y2r5NIOdeFRnqkZSNLDgNCY7aIoVDEcZTIp4OMhLAwcnKfO0wfabKsIRa4Vg==
-X-Received: by 2002:a7b:c952:: with SMTP id i18mr4882470wml.44.1566376007688;
-        Wed, 21 Aug 2019 01:26:47 -0700 (PDT)
+        bh=ZVtvs8aoMj7QTvzMN1wgA3FYSaFdOhLuHmxR1kxixVM=;
+        b=TPtaS8Esu/F04jR+uAd+fnZ5CJoBn/U51VUUTG6St/oopdh/CKYKEknxYgFmEmLWn8
+         qJ/sL8CtWR3kevho39KzzeztBA9TYmB2vM3YkFWvWyvpfgsak/GWxhaf5hV8wVNJcenH
+         vpzsL7PsyvMwdEZEFu1YRLTjv59TzB+smNMDV4Sq6U8+v2Z50b2e0N3KmELHBpkVAKwo
+         kX8HO+BAXF7jTS8CmZqB23LW6JkNwGM4HeI83jMI1x1nm1rRrz9EXKRk+VX16z5lBWvw
+         FPbvjkHpZDR/xpOQXh3Dyiq9c89OKmYHYKTlnmVQ9ACc9d+yakGz9HCyH/+ND3WrUAow
+         6dbQ==
+X-Gm-Message-State: APjAAAWsJZ7HWLOLzWZegLNZwOhOW3OzkHY8qqo54uRQ+peswoRfJQS4
+        +RACsS1zQo5mGdKDb9r6N4rHsWxJbN8=
+X-Google-Smtp-Source: APXvYqyGnNk53xFt+keZcSaEml9lLPA+oaKPBtoKKpF3Rxa4fpSbvVbnG92HflTY3dZyHk8XmfV6Ag==
+X-Received: by 2002:a7b:c95a:: with SMTP id i26mr4762139wml.175.1566376006653;
+        Wed, 21 Aug 2019 01:26:46 -0700 (PDT)
 Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id w5sm2931892wmm.43.2019.08.21.01.26.46
+        by smtp.gmail.com with ESMTPSA id w5sm2931892wmm.43.2019.08.21.01.26.45
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 01:26:47 -0700 (PDT)
+        Wed, 21 Aug 2019 01:26:46 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     jmattson@redhat.com, ehabkost@redhat.com, konrad.wilk@oracle.com
-Subject: [PATCH 3/3] KVM: x86: use Intel speculation bugs and features as derived in generic x86 code
-Date:   Wed, 21 Aug 2019 10:26:42 +0200
-Message-Id: <1566376002-17121-4-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 2/3] KVM: x86: always expose VIRT_SSBD to guests
+Date:   Wed, 21 Aug 2019 10:26:41 +0200
+Message-Id: <1566376002-17121-3-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
 References: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
@@ -69,52 +69,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to AMD bits, set the Intel bits from the vendor-independent
-feature and bug flags, because KVM_GET_SUPPORTED_CPUID does not care
-about the vendor and they should be set on AMD processors as well.
+Even though it is preferrable to use SPEC_CTRL (represented by
+X86_FEATURE_AMD_SSBD) instead of VIRT_SPEC, VIRT_SPEC is always
+supported anyway because otherwise it would be impossible to
+migrate from old to new CPUs.  Make this apparent in the
+result of KVM_GET_SUPPORTED_CPUID as well.
 
-Suggested-by: Jim Mattson <jmattson@google.com>
+While at it, reuse X86_FEATURE_* constants for the SVM leaf too.
+
+However, we need to hide the bit on Intel processors, so move
+the setting to svm_set_supported_cpuid.
+
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Reported-by: Eduardo Habkost <ehabkost@redhat.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/cpuid.c | 6 ++++++
- arch/x86/kvm/x86.c   | 7 +++++++
- 2 files changed, 13 insertions(+)
+ arch/x86/kvm/svm.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 43caeb6059b9..dd5985eb61b4 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -392,6 +392,12 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index e3d3b2128f2b..c5120a9519f3 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -68,10 +68,8 @@
+ #define SEG_TYPE_LDT 2
+ #define SEG_TYPE_BUSY_TSS16 3
  
- 		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
- 		cpuid_mask(&entry->edx, CPUID_7_EDX);
-+		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
-+			entry->edx |= F(SPEC_CTRL);
-+		if (boot_cpu_has(X86_FEATURE_STIBP))
-+			entry->edx |= F(INTEL_STIBP);
-+		if (boot_cpu_has(X86_FEATURE_SSBD))
-+			entry->edx |= F(SPEC_CTRL_SSBD);
- 		/*
- 		 * We emulate ARCH_CAPABILITIES in software even
- 		 * if the host doesn't support it.
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 93b0bd45ac73..6b81c7609d09 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1254,6 +1254,13 @@ static u64 kvm_get_arch_capabilities(void)
- 	if (l1tf_vmx_mitigation != VMENTER_L1D_FLUSH_NEVER)
- 		data |= ARCH_CAP_SKIP_VMENTRY_L1DFLUSH;
- 
-+	if (!boot_cpu_has_bug(X86_BUG_CPU_MELTDOWN))
-+		data |= ARCH_CAP_RDCL_NO;
-+	if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
-+		data |= ARCH_CAP_SSB_NO;
-+	if (!boot_cpu_has_bug(X86_BUG_MDS))
-+		data |= ARCH_CAP_MDS_NO;
-+
- 	return data;
+-#define SVM_FEATURE_NPT            (1 <<  0)
+ #define SVM_FEATURE_LBRV           (1 <<  1)
+ #define SVM_FEATURE_SVML           (1 <<  2)
+-#define SVM_FEATURE_NRIP           (1 <<  3)
+ #define SVM_FEATURE_TSC_RATE       (1 <<  4)
+ #define SVM_FEATURE_VMCB_CLEAN     (1 <<  5)
+ #define SVM_FEATURE_FLUSH_ASID     (1 <<  6)
+@@ -5933,6 +5931,8 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
+ 	guest_cpuid_clear(vcpu, X86_FEATURE_X2APIC);
  }
  
++#define F(x) bit(X86_FEATURE_##x)
++
+ static void svm_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+ {
+ 	switch (func) {
+@@ -5944,6 +5944,11 @@ static void svm_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+ 		if (nested)
+ 			entry->ecx |= (1 << 2); /* Set SVM bit */
+ 		break;
++	case 0x80000008:
++		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
++		     boot_cpu_has(X86_FEATURE_AMD_SSBD))
++			entry->ebx |= F(VIRT_SSBD);
++		break;
+ 	case 0x8000000A:
+ 		entry->eax = 1; /* SVM revision 1 */
+ 		entry->ebx = 8; /* Lets support 8 ASIDs in case we add proper
+@@ -5954,11 +5959,11 @@ static void svm_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
+ 
+ 		/* Support next_rip if host supports it */
+ 		if (boot_cpu_has(X86_FEATURE_NRIPS))
+-			entry->edx |= SVM_FEATURE_NRIP;
++			entry->edx |= F(NRIPS);
+ 
+ 		/* Support NPT for the guest if enabled */
+ 		if (npt_enabled)
+-			entry->edx |= SVM_FEATURE_NPT;
++			entry->edx |= F(NPT);
+ 
+ 		break;
+ 	case 0x8000001F:
 -- 
 1.8.3.1
+
 
