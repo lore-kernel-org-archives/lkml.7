@@ -2,309 +2,137 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12443C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3BEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3ACE206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:27:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="CTovpnin"
+	by mail.kernel.org (Postfix) with ESMTP id 32B02206DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729192AbfHUQ1z (ORCPT
+        id S1729197AbfHUQ3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:27:55 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:38045 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728888AbfHUQ1z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:27:55 -0400
-Received: by mail-yw1-f65.google.com with SMTP id f187so1162199ywa.5
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 09:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9g+q33wId0eH0+EplXmj0yiWsc5rhqIe5dreCekLVfc=;
-        b=CTovpnin+xG4fahNvP6kUxijFjXa9J/mob6Z4me/XIcPwpO3z6It9v2V7aJJST9HUp
-         weeatsLIUk1rvVGHd4ZZ/AqAVmkZ//lOAmCL+Txyr4LUSyg4u2qyNKT15fLVSygpKs+z
-         PKtABCilb2Xds2Ssfekri2YNTZNqs0qAMiJoGgm95YNJA+ZzthCJUtCEr/5C1997JntY
-         YCiw9XS+ifulO9tAxN/ks/C3yjsoBudJhXMcxUi3fMPCGmx+rvMskxnR0tU2BS7aqKeH
-         nHqqKrRNnq7NLvNMGOWMzJdANhrdykt0hW/Gc/nrIppEPajtJoaPvdhbcIaYl/YUpp7u
-         nXpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9g+q33wId0eH0+EplXmj0yiWsc5rhqIe5dreCekLVfc=;
-        b=TtN3s0ZvDXRcQPoYpu/TuIEX152Sj6llGHzGozZ8VHkqR+g9fTQqsJ8K1PknMMdBzI
-         Mmc20SGVNL/orcJNFvx9hlmFb0el/TZ3HhBTN99SA9woFIeghW2+vS8+/KU8VrXYFN1c
-         luI50IKhfxW2AlMoUH0/qnTpCk9D2IEKrGkp/1Kb6WAIlXM7Vk5cvpJLskjVzku9p3z3
-         wlzjFQyvrPf1WjLEj81//IGulVRpqcwWL0on0pGCTXpw/8vCXmsmGkgGTIymyl+2+D9J
-         cCbl65XJxWfzwJfM9Q2aLWMeXqlBML9z+igShxocEKuzlT+OpMkQoKMk0AE9EefYB61D
-         8EKA==
-X-Gm-Message-State: APjAAAXsdB1liM6QM6hvX6I6g8apQKiucb4PXM/QxhWxHh4ZO9pkS5Iw
-        MYsgzpayClzDQXHwLcDV5Tr8eQ==
-X-Google-Smtp-Source: APXvYqyxBZeZ6KddrgZgUZGVlDckj8facP8PvyZrVD+6D/ivNPxEfqEfKzvB+PBKvDfxndE8by780A==
-X-Received: by 2002:a81:eb09:: with SMTP id n9mr25845895ywm.115.1566404873620;
-        Wed, 21 Aug 2019 09:27:53 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id x25sm4837162ywj.22.2019.08.21.09.27.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 09:27:52 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 12:27:52 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, Sean Paul <seanpaul@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Jayant Shekhar <jshekhar@codeaurora.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Fritz Koenig <frkoenig@google.com>,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/dpu: fix "frame done" timeouts
-Message-ID: <20190821162752.GG104440@art_vandelay>
-References: <20190820231301.28445-1-robdclark@gmail.com>
+        Wed, 21 Aug 2019 12:29:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42990 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726828AbfHUQ3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:29:12 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5AC227F752;
+        Wed, 21 Aug 2019 16:29:11 +0000 (UTC)
+Received: from [10.36.118.29] (unknown [10.36.118.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB03960126;
+        Wed, 21 Aug 2019 16:29:04 +0000 (UTC)
+Subject: Re: [PATCH] mm/balloon_compaction: suppress allocation warnings
+To:     Nadav Amit <namit@vmware.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190820091646.29642-1-namit@vmware.com>
+ <ba01ec8c-19c3-847c-a315-2f70f4b1fe31@redhat.com>
+ <5BBC6CB3-2DCD-4A95-90C9-7C23482F9B32@vmware.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <85c72875-278f-fbab-69c9-92dc1873d407@redhat.com>
+Date:   Wed, 21 Aug 2019 18:29:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820231301.28445-1-robdclark@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5BBC6CB3-2DCD-4A95-90C9-7C23482F9B32@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 21 Aug 2019 16:29:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 04:12:28PM -0700, Rob Clark wrote:
-> From: Rob Clark <robdclark@chromium.org>
+On 21.08.19 18:23, Nadav Amit wrote:
+>> On Aug 21, 2019, at 9:05 AM, David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 20.08.19 11:16, Nadav Amit wrote:
+>>> There is no reason to print warnings when balloon page allocation fails,
+>>> as they are expected and can be handled gracefully.  Since VMware
+>>> balloon now uses balloon-compaction infrastructure, and suppressed these
+>>> warnings before, it is also beneficial to suppress these warnings to
+>>> keep the same behavior that the balloon had before.
+>>
+>> I am not sure if that's a good idea. The allocation warnings are usually
+>> the only trace of "the user/admin did something bad because he/she tried
+>> to inflate the balloon to an unsafe value". Believe me, I processed a
+>> couple of such bugreports related to virtio-balloon and the warning were
+>> very helpful for that.
 > 
-> Previously, dpu_crtc_frame_event_work() would try to aquire all the
-> modeset locks in order to check whether it can release bandwidth.  (If
-> we only have cmd-mode display, bandwidth can be released at frame-done
-> time.)
+> Ok, so a message is needed, but does it have to be a generic frightening
+> warning?
 > 
-> The problem with this is that it is also responsible for signalling
-> frame_done_comp, which dpu_crtc_commit_kickoff() waits on if there is
-> already a frame pending.  This is called in the msm_atomic_commit_tail()
-> path.. which means that for non-nonblock commits, at least some of the
-> modeset locks are already held.
+> How about using __GFP_NOWARN, and if allocation do something like:
 > 
-> Re-work this scheme to use a reference count to track our need to have
-> clocks enabled.  It is incremented for each atomic commit, and
-> decremented in the corresponding frame-done.  Additionally, any crtc
-> used in video mode hold an extra reference while they are enabled.  The
-> net effect is that we can determine in frame-done whether it is safe to
-> drop bandwidth without needing to aquire any modeset locks.
+>   pr_warn(“Balloon memory allocation failed”);
 > 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Or even something more informative? This would surely be less intimidating
+> for common users.
+> 
 
-All looks good to me, nice cleanup!
+ratelimit would make sense :)
 
-Reviewed-by: Sean Paul <sean@chromium.org>
-
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 16 +------
->  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c      | 45 +++++++++++--------
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |  2 +
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  8 ++++
->  4 files changed, 38 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-> index 5cda96875e03..09a49b59bb5b 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
-> @@ -214,7 +214,6 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
->   */
->  void dpu_core_perf_crtc_release_bw(struct drm_crtc *crtc)
->  {
-> -	struct drm_crtc *tmp_crtc;
->  	struct dpu_crtc *dpu_crtc;
->  	struct dpu_crtc_state *dpu_cstate;
->  	struct dpu_kms *kms;
-> @@ -233,22 +232,9 @@ void dpu_core_perf_crtc_release_bw(struct drm_crtc *crtc)
->  	dpu_crtc = to_dpu_crtc(crtc);
->  	dpu_cstate = to_dpu_crtc_state(crtc->state);
->  
-> -	/* only do this for command mode rt client */
-> -	if (dpu_crtc_get_intf_mode(crtc) != INTF_MODE_CMD)
-> +	if (atomic_dec_return(&kms->bandwidth_ref) > 0)
->  		return;
->  
-> -	/*
-> -	 * If video interface present, cmd panel bandwidth cannot be
-> -	 * released.
-> -	 */
-> -	if (dpu_crtc_get_intf_mode(crtc) == INTF_MODE_CMD)
-> -		drm_for_each_crtc(tmp_crtc, crtc->dev) {
-> -			if (tmp_crtc->enabled &&
-> -				dpu_crtc_get_intf_mode(tmp_crtc) ==
-> -						INTF_MODE_VIDEO)
-> -				return;
-> -		}
-> -
->  	/* Release the bandwidth */
->  	if (kms->perf.enable_bw_release) {
->  		trace_dpu_cmd_release_bw(crtc->base.id);
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> index b3417d56032d..4e54550c4a80 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> @@ -292,19 +292,6 @@ void dpu_crtc_vblank_callback(struct drm_crtc *crtc)
->  	trace_dpu_crtc_vblank_cb(DRMID(crtc));
->  }
->  
-> -static void dpu_crtc_release_bw_unlocked(struct drm_crtc *crtc)
-> -{
-> -	int ret = 0;
-> -	struct drm_modeset_acquire_ctx ctx;
-> -
-> -	DRM_MODESET_LOCK_ALL_BEGIN(crtc->dev, ctx, 0, ret);
-> -	dpu_core_perf_crtc_release_bw(crtc);
-> -	DRM_MODESET_LOCK_ALL_END(ctx, ret);
-> -	if (ret)
-> -		DRM_ERROR("Failed to acquire modeset locks to release bw, %d\n",
-> -			  ret);
-> -}
-> -
->  static void dpu_crtc_frame_event_work(struct kthread_work *work)
->  {
->  	struct dpu_crtc_frame_event *fevent = container_of(work,
-> @@ -334,7 +321,7 @@ static void dpu_crtc_frame_event_work(struct kthread_work *work)
->  			/* release bandwidth and other resources */
->  			trace_dpu_crtc_frame_event_done(DRMID(crtc),
->  							fevent->event);
-> -			dpu_crtc_release_bw_unlocked(crtc);
-> +			dpu_core_perf_crtc_release_bw(crtc);
->  		} else {
->  			trace_dpu_crtc_frame_event_more_pending(DRMID(crtc),
->  								fevent->event);
-> @@ -650,7 +637,7 @@ void dpu_crtc_commit_kickoff(struct drm_crtc *crtc, bool async)
->  		dpu_encoder_prepare_for_kickoff(encoder, async);
->  
->  	if (!async) {
-> -		/* wait for frame_event_done completion */
-> +		/* wait for previous frame_event_done completion */
->  		DPU_ATRACE_BEGIN("wait_for_frame_done_event");
->  		ret = _dpu_crtc_wait_for_frame_done(crtc);
->  		DPU_ATRACE_END("wait_for_frame_done_event");
-> @@ -729,6 +716,7 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
->  	struct drm_encoder *encoder;
->  	struct msm_drm_private *priv;
->  	unsigned long flags;
-> +	bool release_bandwidth = false;
->  
->  	if (!crtc || !crtc->dev || !crtc->dev->dev_private || !crtc->state) {
->  		DPU_ERROR("invalid crtc\n");
-> @@ -745,8 +733,15 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
->  	drm_crtc_vblank_off(crtc);
->  
->  	drm_for_each_encoder_mask(encoder, crtc->dev,
-> -				  old_crtc_state->encoder_mask)
-> +				  old_crtc_state->encoder_mask) {
-> +		/* in video mode, we hold an extra bandwidth reference
-> +		 * as we cannot drop bandwidth at frame-done if any
-> +		 * crtc is being used in video mode.
-> +		 */
-> +		if (dpu_encoder_get_intf_mode(encoder) == INTF_MODE_VIDEO)
-> +			release_bandwidth = true;
->  		dpu_encoder_assign_crtc(encoder, NULL);
-> +	}
->  
->  	/* wait for frame_event_done completion */
->  	if (_dpu_crtc_wait_for_frame_done(crtc))
-> @@ -760,7 +755,8 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
->  	if (atomic_read(&dpu_crtc->frame_pending)) {
->  		trace_dpu_crtc_disable_frame_pending(DRMID(crtc),
->  				     atomic_read(&dpu_crtc->frame_pending));
-> -		dpu_core_perf_crtc_release_bw(crtc);
-> +		if (release_bandwidth)
-> +			dpu_core_perf_crtc_release_bw(crtc);
->  		atomic_set(&dpu_crtc->frame_pending, 0);
->  	}
->  
-> @@ -792,6 +788,7 @@ static void dpu_crtc_enable(struct drm_crtc *crtc,
->  	struct dpu_crtc *dpu_crtc;
->  	struct drm_encoder *encoder;
->  	struct msm_drm_private *priv;
-> +	bool request_bandwidth;
->  
->  	if (!crtc || !crtc->dev || !crtc->dev->dev_private) {
->  		DPU_ERROR("invalid crtc\n");
-> @@ -804,9 +801,19 @@ static void dpu_crtc_enable(struct drm_crtc *crtc,
->  	DRM_DEBUG_KMS("crtc%d\n", crtc->base.id);
->  	dpu_crtc = to_dpu_crtc(crtc);
->  
-> -	drm_for_each_encoder_mask(encoder, crtc->dev, crtc->state->encoder_mask)
-> +	drm_for_each_encoder_mask(encoder, crtc->dev, crtc->state->encoder_mask) {
-> +		/* in video mode, we hold an extra bandwidth reference
-> +		 * as we cannot drop bandwidth at frame-done if any
-> +		 * crtc is being used in video mode.
-> +		 */
-> +		if (dpu_encoder_get_intf_mode(encoder) == INTF_MODE_VIDEO)
-> +			request_bandwidth = true;
->  		dpu_encoder_register_frame_event_callback(encoder,
->  				dpu_crtc_frame_event_cb, (void *)crtc);
-> +	}
-> +
-> +	if (request_bandwidth)
-> +		atomic_inc(&_dpu_crtc_get_kms(crtc)->bandwidth_ref);
->  
->  	trace_dpu_crtc_enable(DRMID(crtc), true, dpu_crtc);
->  	dpu_crtc->enabled = true;
-> @@ -981,6 +988,8 @@ static int dpu_crtc_atomic_check(struct drm_crtc *crtc,
->  		}
->  	}
->  
-> +	atomic_inc(&_dpu_crtc_get_kms(crtc)->bandwidth_ref);
-> +
->  	rc = dpu_core_perf_crtc_check(crtc, state);
->  	if (rc) {
->  		DPU_ERROR("crtc%d failed performance check %d\n",
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> index 99d0bd569c38..681955eb286f 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> @@ -800,6 +800,8 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
->  		return rc;
->  	}
->  
-> +	atomic_set(&dpu_kms->bandwidth_ref, 0);
-> +
->  	dpu_kms->mmio = msm_ioremap(dpu_kms->pdev, "mdp", "mdp");
->  	if (IS_ERR(dpu_kms->mmio)) {
->  		rc = PTR_ERR(dpu_kms->mmio);
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-> index 9e40f559c51f..fdef016f5ca3 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-> @@ -120,6 +120,14 @@ struct dpu_kms {
->  	struct platform_device *pdev;
->  	bool rpm_enabled;
->  	struct dss_module_power mp;
-> +
-> +	/* reference count bandwidth requests, so we know when we can
-> +	 * release bandwidth.  Each atomic update increments, and frame-
-> +	 * done event decrements.  Additionally, for video mode, the
-> +	 * reference is incremented when crtc is enabled, and decremented
-> +	 * when disabled.
-> +	 */
-> +	atomic_t bandwidth_ref;
->  };
->  
->  struct vsync_info {
-> -- 
-> 2.21.0
-> 
+And yes, this would certainly be nicer.
 
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+
+Thanks,
+
+David / dhildenb
