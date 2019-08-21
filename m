@@ -2,108 +2,138 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FD5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E05C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA6B22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:49:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLj1EbaW"
+	by mail.kernel.org (Postfix) with ESMTP id 9DBDD206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfHUGta (ORCPT
+        id S1727526AbfHUG6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 02:49:30 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35814 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbfHUGt3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 02:49:29 -0400
-Received: by mail-wm1-f65.google.com with SMTP id l2so940553wmg.0;
-        Tue, 20 Aug 2019 23:49:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=qHmnifucWhjp23s3a4oAMHwPWOuCsbyJNm6S+/4qM8o=;
-        b=hLj1EbaWDhxqhO76myPYLaHncGIAVJPFCYVT3y6bi0kxarjxWEYPSQZpH/0+SzLH9N
-         AZKL3hidq+A57+4PLERJVqwmWeQ19iRwT1n1Xj/MKV8cLQ24xkoVgT6E9diivM2g8m3w
-         d+hRIZ6Z7tuSL1MS6GuGXa9raRftXFbEAt+htZs2aMgCN+KpSWX/smIfbS0zQiKABYry
-         AbCx0fe/14C8pAxi/HlJ4eqkOPjiEImaHmnKmDZVRP7k0QVaCq2Uo0sXu7hpRH6GjxuQ
-         hT3p1YNmUgdDs+TUYKKMybwZivuxT0zrmm6Ww9dQeg8HFJGwuWBAOQbjc5FRnu9GcrEU
-         +NNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=qHmnifucWhjp23s3a4oAMHwPWOuCsbyJNm6S+/4qM8o=;
-        b=YyEWbRdCVm6ybGH/HzBs7WHnVAgD0cRkoIZTA9q77Kmydw3YA4dbfH1n7RJkWzt7w2
-         XgImLendLClHQhWx6ZiGG/LSZttjo3AhEuSV53otxkufb5jiZuajPadlIEkJq31zymdR
-         vLEEIIpJ9hRiQENVsWR9N+PrIrbrh3+iROsz42zAVBisgeBpU8Py2fi0cgjjCWUxkPxS
-         fYIbD2dZTAqvSl11BUC5w3cUZSiFwjRQmwnoJ9xBFEHSngb2Jmk/P+0mYAZfRTfbJ6Yh
-         y4knCwq0LwBxo4+RY902UOpRFi3TC7GbrbYtCCC/c9qebAs5cioWdEjaDLHmxTtRma/R
-         YnCQ==
-X-Gm-Message-State: APjAAAX8SO+zzwi3JFe6FuMHqCyp6PrKRCWDtIA85QP7UbDq1GAhsBvb
-        kmyZQ3N1drMap8iXx/zQ48Cd/2n7XKe4kdGcIi0=
-X-Google-Smtp-Source: APXvYqyuUFV+klctwIHlDjy8e7cOg3MvKi+wPwZeC967kGWWOmNnAYP6ILHMwgJTQs6Y17O5Md0Jq6M9lJyRvvJvPgs=
-X-Received: by 2002:a05:600c:10ce:: with SMTP id l14mr4025608wmd.118.1566370167053;
- Tue, 20 Aug 2019 23:49:27 -0700 (PDT)
+        Wed, 21 Aug 2019 02:58:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36942 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbfHUG6r (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 02:58:47 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 22CC58AC6F6;
+        Wed, 21 Aug 2019 06:58:47 +0000 (UTC)
+Received: from krava (unknown [10.43.17.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C02E2C8E7;
+        Wed, 21 Aug 2019 06:58:45 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 08:58:44 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v6] perf diff: Report noisy for cycles diff
+Message-ID: <20190821065844.GA11701@krava>
+References: <20190820122207.9723-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-References: <20190817041258.GA1641@chirva-slack.chirva-slack>
- <87y2zsf9ps.fsf@depni.sinp.msu.ru> <20190817214448.GB1070@chirva-slack.chirva-slack>
- <1b1e573e6502c97851838a3b27ac0b272198926c.camel@intel.com>
-In-Reply-To: <1b1e573e6502c97851838a3b27ac0b272198926c.camel@intel.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 21 Aug 2019 08:49:15 +0200
-Message-ID: <CA+icZUU6nX7KVir1CFBxZuVB-aHzw-QETKpDEwVsJD_X=1v1bg@mail.gmail.com>
-Subject: Re: PROBLEM: 5.3.0-rc* causes iwlwifi failure
-To:     Luciano Coelho <luciano.coelho@intel.com>
-Cc:     Stuart Little <achirvasub@gmail.com>,
-        Serge Belyshev <belyshev@depni.sinp.msu.ru>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-wireless@vger.kernel.org,
-        Haim Dreyfuss <haim.dreyfuss@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190820122207.9723-1-yao.jin@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 21 Aug 2019 06:58:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 12:45 PM Luciano Coelho
-<luciano.coelho@intel.com> wrote:
->
-> On Sat, 2019-08-17 at 17:44 -0400, Stuart Little wrote:
-> > After some private coaching from Serge Belyshev on git-revert I can
-> > confirm that reverting that commit atop the current tree resolves the
-> > issue (the wifi card scans for and finds networks just fine, no dmesg
-> > errors reported, etc.).
->
-> Sorry for the delay in responding, I had to go and dig in our FW
-> sources to see what was going on.
->
-> Unfortunately when this feature was implemented in the FW, we forgot to
-> add the usual flag (capabilities TLV) that we add to let the driver
-> know whether the command is supported or not.  So we need to match on
-> the FW version instead, but apparently that doesn't work for all
-> different NICs.
->
-> I'll have to look into all NIC/FW-version combinations that we have and
-> update the iwl_mvm_sar_geo_support() function accordingly, which is,
-> BTW, the easier place for you to change if you want to workaround the
-> issue.
+On Tue, Aug 20, 2019 at 08:22:07PM +0800, Jin Yao wrote:
+> This patch prints the stddev and hist for the cycles diff of
+> program block. It can help us to understand if the cycles
+> is noisy or not.
+> 
+> This patch is inspired by Andi Kleen's patch
+> https://lwn.net/Articles/600471/
+> 
+> We create new option '--cycles-hist'.
+> 
+> Example:
+> 
+> perf record -b ./div
+> perf record -b ./div
+> perf diff -c cycles
+> 
+>   # Baseline                                       [Program Block Range] Cycles Diff  Shared Object      Symbol
+>   # ........  ......................................................................  .................  ............................
+>   #
+>       46.72%                                             [div.c:40 -> div.c:40]    0  div                [.] main
+>       46.72%                                             [div.c:42 -> div.c:44]    0  div                [.] main
+>       46.72%                                             [div.c:42 -> div.c:39]    0  div                [.] main
+>       20.54%                                 [random_r.c:357 -> random_r.c:394]    1  libc-2.27.so       [.] __random_r
+>       20.54%                                 [random_r.c:357 -> random_r.c:380]    0  libc-2.27.so       [.] __random_r
+>       20.54%                                 [random_r.c:388 -> random_r.c:388]    0  libc-2.27.so       [.] __random_r
+>       20.54%                                 [random_r.c:388 -> random_r.c:391]    0  libc-2.27.so       [.] __random_r
+>       17.04%                                     [random.c:288 -> random.c:291]    0  libc-2.27.so       [.] __random
+>       17.04%                                     [random.c:291 -> random.c:291]    0  libc-2.27.so       [.] __random
+>       17.04%                                     [random.c:293 -> random.c:293]    0  libc-2.27.so       [.] __random
+>       17.04%                                     [random.c:295 -> random.c:295]    0  libc-2.27.so       [.] __random
+>       17.04%                                     [random.c:295 -> random.c:295]    0  libc-2.27.so       [.] __random
+>       17.04%                                     [random.c:298 -> random.c:298]    0  libc-2.27.so       [.] __random
+>        8.40%                                             [div.c:22 -> div.c:25]    0  div                [.] compute_flag
+>        8.40%                                             [div.c:27 -> div.c:28]    0  div                [.] compute_flag
+>        5.14%                                           [rand.c:26 -> rand.c:27]    0  libc-2.27.so       [.] rand
+>        5.14%                                           [rand.c:28 -> rand.c:28]    0  libc-2.27.so       [.] rand
+>        2.15%                                         [rand@plt+0 -> rand@plt+0]    0  div                [.] rand@plt
+>        0.00%                                                                          [kernel.kallsyms]  [k] __x86_indirect_thunk_rax
+>        0.00%                                       [do_mmap+714 -> do_mmap+732]  -10  [kernel.kallsyms]  [k] do_mmap
+>        0.00%                                       [do_mmap+737 -> do_mmap+765]    1  [kernel.kallsyms]  [k] do_mmap
+>        0.00%                                       [do_mmap+262 -> do_mmap+299]    0  [kernel.kallsyms]  [k] do_mmap
+>        0.00%         [__x86_indirect_thunk_r15+0 -> __x86_indirect_thunk_r15+0]    7  [kernel.kallsyms]  [k] __x86_indirect_thunk_r15
+>        0.00%                   [native_sched_clock+0 -> native_sched_clock+119]   -1  [kernel.kallsyms]  [k] native_sched_clock
+>        0.00%                        [native_write_msr+0 -> native_write_msr+16]  -13  [kernel.kallsyms]  [k] native_write_msr
+> 
+> When we enable the option '--cycles-hist', the output is
+> 
+> perf diff -c cycles --cycles-hist
+> 
+>   # Baseline                                       [Program Block Range] Cycles Diff        stddev/Hist  Shared Object      Symbol
+>   # ........  ......................................................................  .................  .................  ............................
+>   #
+>       46.72%                                             [div.c:40 -> div.c:40]    0  ± 37.8% ▁█▁▁██▁█   div                [.] main
+>       46.72%                                             [div.c:42 -> div.c:44]    0  ± 49.4% ▁▁▂█▂▂▂▂   div                [.] main
+>       46.72%                                             [div.c:42 -> div.c:39]    0  ± 24.1% ▃█▂▄▁▃▂▁   div                [.] main
+>       20.54%                                 [random_r.c:357 -> random_r.c:394]    1  ± 33.5% ▅▂▁█▃▁▂▁   libc-2.27.so       [.] __random_r
+>       20.54%                                 [random_r.c:357 -> random_r.c:380]    0  ± 39.4% ▁▁█▁██▅▁   libc-2.27.so       [.] __random_r
+>       20.54%                                 [random_r.c:388 -> random_r.c:388]    0                     libc-2.27.so       [.] __random_r
+>       20.54%                                 [random_r.c:388 -> random_r.c:391]    0  ± 41.2% ▁▃▁▂█▄▃▁   libc-2.27.so       [.] __random_r
+>       17.04%                                     [random.c:288 -> random.c:291]    0  ± 48.8% ▁▁▁▁███▁   libc-2.27.so       [.] __random
+>       17.04%                                     [random.c:291 -> random.c:291]    0  ±100.0% ▁█▁▁▁▁▁▁   libc-2.27.so       [.] __random
+>       17.04%                                     [random.c:293 -> random.c:293]    0  ±100.0% ▁█▁▁▁▁▁▁   libc-2.27.so       [.] __random
+>       17.04%                                     [random.c:295 -> random.c:295]    0  ±100.0% ▁█▁▁▁▁▁▁   libc-2.27.so       [.] __random
+>       17.04%                                     [random.c:295 -> random.c:295]    0                     libc-2.27.so       [.] __random
+>       17.04%                                     [random.c:298 -> random.c:298]    0  ± 75.6% ▃█▁▁▁▁▁▁   libc-2.27.so       [.] __random
+>        8.40%                                             [div.c:22 -> div.c:25]    0  ± 42.1% ▁▃▁▁███▁   div                [.] compute_flag
+>        8.40%                                             [div.c:27 -> div.c:28]    0  ± 41.8% ██▁▁▄▁▁▄   div                [.] compute_flag
+>        5.14%                                           [rand.c:26 -> rand.c:27]    0  ± 37.8% ▁▁▁████▁   libc-2.27.so       [.] rand
+>        5.14%                                           [rand.c:28 -> rand.c:28]    0                     libc-2.27.so       [.] rand
+>        2.15%                                         [rand@plt+0 -> rand@plt+0]    0                     div                [.] rand@plt
+>        0.00%                                                                                             [kernel.kallsyms]  [k] __x86_indirect_thunk_rax
+>        0.00%                                       [do_mmap+714 -> do_mmap+732]  -10                     [kernel.kallsyms]  [k] do_mmap
+>        0.00%                                       [do_mmap+737 -> do_mmap+765]    1                     [kernel.kallsyms]  [k] do_mmap
+>        0.00%                                       [do_mmap+262 -> do_mmap+299]    0                     [kernel.kallsyms]  [k] do_mmap
+>        0.00%         [__x86_indirect_thunk_r15+0 -> __x86_indirect_thunk_r15+0]    7                     [kernel.kallsyms]  [k] __x86_indirect_thunk_r15
+>        0.00%                   [native_sched_clock+0 -> native_sched_clock+119]   -1  ± 38.5% ▄█▁        [kernel.kallsyms]  [k] native_sched_clock
+>        0.00%                        [native_write_msr+0 -> native_write_msr+16]  -13  ± 47.1% ▁█▇▃▁▁     [kernel.kallsyms]  [k] native_write_msr
+> 
+>  v6:
+>  ---
+>  1. Jiri provides better code for using data__hpp_register() in ui_init().
+>     Use this code in v6.
 
-For the records (here: Linux v5.2.y)
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 
-"iwlwifi: Add support for SAR South Korea limitation"
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.2.y&id=2b9d99b399d5e4cd516973a4c56035fb0e2ee744
-
-- Sedat -
+thanks,
+jirka
