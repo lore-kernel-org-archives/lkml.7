@@ -2,128 +2,221 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8FBC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5912AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2794822D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:24:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="k6ZdTrjO"
+	by mail.kernel.org (Postfix) with ESMTP id 28AFD22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfHUJX7 (ORCPT
+        id S1727027AbfHUJYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:23:59 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34499 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbfHUJX6 (ORCPT
+        Wed, 21 Aug 2019 05:24:12 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:57294 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfHUJYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:23:58 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so988875pgc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 02:23:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=WXbOIV/PPnZXH5Oc2xbiQaU6gpzCgh5LD6kBid8zVsA=;
-        b=k6ZdTrjOyX6/Zkg+v/eumDTkOMoX0cDzEk/+N+cSipXCBUg5Ewl+I/0l4ynujhqCze
-         N4ohG9Ii1D8knSNi6L0Ec6olYpTIHsnQTKQwMgrD0IF4x91LPIAsOqVVYi3zOqB18jbH
-         wrSyWUytB6HonPktkMHa2K9hd9dELtUJrBdEsxUVFu+JhUjBkXx9RENqcp2ncHHI06Hl
-         DdL7PXSKO2tu5z9HmL2agE6Ktw1i6OMSMeOFUC2L/L1JrpISjas4YAoRJNS1rjsm6+v2
-         CpjdbO2zACkVLoREccR+o0Y98SummfnKh258G9S0vOkRxtpKcp6oCjOfzn6NKlCJiHAP
-         NV0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WXbOIV/PPnZXH5Oc2xbiQaU6gpzCgh5LD6kBid8zVsA=;
-        b=co+6K9kEpdDmiWVw/jxzoHS31wI43OBkMx/omOd32IpfZK4bLX4Lb6LgNaBXzsGmD7
-         cM9skhcMUwHeUOK+rJboE1pAeRdlcSQStdH5PtaRTM0fMqOt3qFT2p9cpbVIJ0a4HgrF
-         Dwc7b+SFwnFMK+eWzgnfPA6qVcAE2pWC0J8bdY1hwWk4wEUFkam+p8vpYLCM0oITEvOF
-         qmWvnb02qAYjfK2xSAwqlzLGJUy0E+ylxFPASZHevsCICMiAdLukcsTccBfNWmH2VozP
-         ZFIEgFoYSR84S/Px3tdeoTNzWQnG9HlnEi47Uof2THuPyT7XxTxviZOycUiHbHjU6YAt
-         4/bw==
-X-Gm-Message-State: APjAAAUXww3zN5X2cgUzLus50fbk1NA0UMHu5hjY7X+1rpto1ikndvAH
-        zxaFip17m565ke4N0ypr+PmImw==
-X-Google-Smtp-Source: APXvYqzunXgF31zpY1az1veH6ySJAQHsK32XBPJ//0IqOBTv828KbyMMDM8C1V6Iwrp5vB7Bf2/XWg==
-X-Received: by 2002:a62:fb15:: with SMTP id x21mr35726157pfm.233.1566379437943;
-        Wed, 21 Aug 2019 02:23:57 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id s7sm25721327pfb.138.2019.08.21.02.23.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 21 Aug 2019 02:23:57 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, paul.walmsley@sifive.com
-Cc:     palmer@sifive.com, aou@eecs.berkeley.edu, bmeng.cn@gmail.com,
-        sagar.kadam@sifive.com, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH] riscv: dts: Add DT support for SiFive FU540 PWM driver
-Date:   Wed, 21 Aug 2019 14:53:40 +0530
-Message-Id: <1566379420-26762-1-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 21 Aug 2019 05:24:11 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: TfNkMrrhyb5EUx6EAOB9ixd9sS3OljjA7sRu8k4UZmEVWsl82OLRm6hrDKs+IGJkG6lUjN5RYm
+ T1YhQTZfG3iaK5glTcfdoDyhRr6Ocnm7k5V/4Wb2i6k+dskoDtRKIsburhyXOfIBVN0bbXmoO8
+ M5jdkGo5jsSf/kH/31SB4LzCv2NwMCU29ufrKhyDVA+wOal+EGaZ+the1y8mP/yP8wbB6Tz7na
+ DP0lLlHXnm7XvnlcRvqt9rdj5pr3qNan9ps1Yd2knqUF4W+No3k/76MjZCaK4RNVnRJgxhmgsj
+ PHY=
+X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
+   d="scan'208";a="45953286"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Aug 2019 02:24:09 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 21 Aug 2019 02:24:09 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 21 Aug 2019 02:24:08 -0700
+Date:   Wed, 21 Aug 2019 11:24:08 +0200
+From:   "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>
+To:     Sabrina Dubroca <sd@queasysnail.net>
+CC:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Igor Russkikh <Igor.Russkikh@aquantia.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
+        Pavel Belous <Pavel.Belous@aquantia.com>
+Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
+ infrastructure
+Message-ID: <20190821092406.p66uto4kuozakels@lx-anielsen.microsemi.net>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-7-antoine.tenart@bootlin.com>
+ <e96fa4ae-1f2c-c1be-b2d8-060217d8e151@aquantia.com>
+ <20190813085817.GA3200@kwain>
+ <20190813131706.GE15047@lunn.ch>
+ <2e3c2307-d414-a531-26cb-064e05fa01fc@aquantia.com>
+ <20190816132959.GC8697@bistromath.localdomain>
+ <20190820100140.GA3292@kwain>
+ <20190820144119.GA28714@bistromath.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20190820144119.GA28714@bistromath.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the PWM DT node in SiFive FU540 soc-specific DT file.
-Enable the PWM nodes in HiFive Unleashed board-specific DT file.
+Hi,
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 19 +++++++++++++++++++
- arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++++++
- 2 files changed, 27 insertions(+)
+I can add some information to the HW Antoine is working on, general design of it
+and the thoughts behind it. See below.
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 42b5ec2..bb422db 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -230,6 +230,25 @@
- 			#size-cells = <0>;
- 			status = "disabled";
- 		};
-+		pwm0: pwm@10020000 {
-+			compatible = "sifive,pwm0";
-+			reg = <0x0 0x10020000 0x0 0x1000>;
-+			interrupt-parent = <&plic0>;
-+			interrupts = <42 43 44 45>;
-+			clocks = <&prci PRCI_CLK_TLCLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+		pwm1: pwm@10021000 {
-+			compatible = "sifive,pwm0";
-+			reg = <0x0 0x10021000 0x0 0x1000>;
-+			interrupt-parent = <&plic0>;
-+			interrupts = <46 47 48 49>;
-+			reg-names = "control";
-+			clocks = <&prci PRCI_CLK_TLCLK>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
- 
- 	};
- };
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-index 93d68cb..104d334 100644
---- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-@@ -85,3 +85,11 @@
- 		reg = <0>;
- 	};
- };
-+
-+&pwm0 {
-+	status = "okay";
-+};
-+
-+&pwm1 {
-+	status = "okay";
-+};
--- 
-1.9.1
+The 08/20/2019 16:41, Sabrina Dubroca wrote:
+> 2019-08-20, 12:01:40 +0200, Antoine Tenart wrote:
+> > So it seems the ability to enable or disable the offloading on a given
+> > interface is the main missing feature. I'll add that, however I'll
+> > probably (at least at first):
+> > 
+> > - Have the interface to be fully offloaded or fully handled in s/w (with
+> >   errors being thrown if a given configuration isn't supported). Having
+> >   both at the same time on a given interface would be tricky because of
+> >   the MACsec validation parameter.
+> > 
+> > - Won't allow to enable/disable the offloading of there are rules in
+> >   place, as we're not sure the same rules would be accepted by the other
+> >   implementation.
+> 
+> That's probably quite problematic actually, because to do that you
+> need to be able to resync the state between software and hardware,
+> particularly packet numbers. So, yeah, we're better off having it
+> completely blocked until we have a working implementation (if that
+> ever happens).
+> 
+> However, that means in case the user wants to set up something that's
+> not offloadable, they'll have to:
+>  - configure the offloaded version until EOPNOTSUPP
+>  - tear everything down
+>  - restart from scratch without offloading
+> 
+> That's inconvenient.
+> 
+> Talking about packet numbers, can you describe how PN exhaustion is
+> handled?  I couldn't find much about packet numbers at all in the
+> driver patches (I hope the hw doesn't wrap around from 2^32-1 to 0 on
+> the same SA).
+New SA's are suppose to be installed ahead of time. The HW will automatic move
+to the next SA and reset the PN.
 
+> At some point userspace needs to know that we're
+> getting close to 2^32 and that it's time to re-key.  Since the whole
+> TX path of the software implementation is bypassed, it looks like the
+> PN (as far as drivers/net/macsec.c is concerned) never increases, so
+> userspace can't know when to negotiate a new SA.
+> 
+> > I'm not sure if we should allow to mix the implementations on a given
+> > physical interface (by having two MACsec interfaces attached) as the
+> > validation would be impossible to do (we would have no idea if a
+> > packet was correctly handled by the offloading part or just not being
+> > a MACsec packet in the first place, in Rx).
+> 
+> That's something that really bothers me with this proposal. Quoting
+> from the commit message:
+> 
+> > the packets seen by the networking stack on both the physical and
+> > MACsec virtual interface are exactly the same
+> 
+> If the HW/driver is expected to strip the sectag, I don't see how we
+> could ever have multiple secy's at the same time and demultiplex
+> properly between them. That's part of the reason why I chose to have
+> virtual interfaces: without them, picking the right secy on TX gets
+> weird.
+
+The HW does frame clasification, and use the claisfication to associate frames
+to a given secy.
+
+We we in SW have eth0, with 2 vlan-sub interfaces, and enable macsec on those,
+then we have:
+
+eth0
+eth0.10
+eth0.10.macsec
+eth0.20
+eth0.20.macsec
+
+In this case the HW needs to be configured to match vlan 10 to one secy, and
+vlan 20 to an other one.
+
+This is nor supported in the current patch, but is something we can add later.
+We just wanted to get the basic functionallity done right before moving on to
+this.
+
+But in the current design, there is nothing that prevent us from adding this.
+
+If anyone is interested in the details of this then it is described in section
+3.6.3 in http://ww1.microchip.com/downloads/en/DeviceDoc/VMDS-10455.pdf
+
+It is possible to construct an encapsulation that the HW can not classify
+correctly. If that is the case, then we should reject the HW offload, and use
+the SW.
+
+But it is a good point, which I think is missing. We should properly reject
+MACsec HW offload (with this driver, in this state) on virtual interfaces, if
+the encapsulation can not be handled (could start by reject all virtual
+interfaces)
+
+> AFAICT, it means that any filters (tc, tcpdump) need to be different
+> between offloaded and non-offloaded cases.
+It will see the result of the offloaded operation. But I guess that this is no
+different from when 'tc' operations are offloaded to HW.
+
+> How does the driver distinguish traffic that should pass through unmodified
+> from traffic that the HW needs to encapsulate and encrypt?
+It relay on frame classification (I think Antoine is missing a flow
+configuration to bypass all MKA traffic).
+
+> If you look at IPsec offloading, the networking stack builds up the
+> ESP header, and passes the unencrypted data down to the driver. I'm
+> wondering if the same would be possible with MACsec offloading: the
+> macsec virtual interface adds the header (and maybe a dummy ICV), and
+> then the HW does the encryption. In case of HW that needs to add the
+> sectag itself, the driver would first strip the headers that the stack
+> created. On receive, the driver would recreate a sectag and the macsec
+> interface would just skip all verification (decrypt, PN).
+I do not think this is possible with this HW, nor do I think this is desirable.
+
+One of the big differences between MACsec and IPsec, is the fact that it is a L2
+protocol, designed to be running on switches (this is how MACsec claims to limit
+key-distributions issues, as all frames are decrypted when entering a switch,
+and encrypted with a new key when leaving).
+
+If a SW stack needs to add a tag to the frame, then we cannot offload traffic
+being bridged in HW, and never goes to the CPU.
+
+/Allan
