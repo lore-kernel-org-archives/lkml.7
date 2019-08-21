@@ -2,157 +2,82 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D39FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC06C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0F422CE3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B13A22CE3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:57:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4+I01uoy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfHUS5E (ORCPT
+        id S1729253AbfHUS5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:57:04 -0400
-Received: from mga04.intel.com ([192.55.52.120]:47683 "EHLO mga04.intel.com"
+        Wed, 21 Aug 2019 14:57:22 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49774 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbfHUS5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:57:04 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 11:57:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
-   d="scan'208";a="203121300"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga004.fm.intel.com with ESMTP; 21 Aug 2019 11:57:03 -0700
-Date:   Wed, 21 Aug 2019 11:57:03 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
-References: <20190815130558.GF14313@quack2.suse.cz>
- <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190817022603.GW6129@dread.disaster.area>
- <20190819063412.GA20455@quack2.suse.cz>
- <20190819092409.GM7777@dread.disaster.area>
- <20190819123841.GC5058@ziepe.ca>
- <20190820011210.GP7777@dread.disaster.area>
- <20190820115515.GA29246@ziepe.ca>
- <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
- <20190821181343.GH8653@ziepe.ca>
+        id S1727959AbfHUS5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 14:57:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=vFX90YRsBTJK5AWhBMwuW2ac3NGFvVKSagxrVlHCSC4=; b=4+I01uoyADD27LQ/mt2GEBa42Y
+        HbuAEganfQyti5Uyxbt1dwaEQJZoXKHtwdpYz5CtuSBCFxQlu/c8juqgI1QyrIciBjofrSemh+cSI
+        a8qz9fC1h24ok064o74smCEVH86GnLus30Mi+BW+s10gxj859SXSSII/L0TZ3r+BUSf8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i0VnH-0007Ea-II; Wed, 21 Aug 2019 20:57:15 +0200
+Date:   Wed, 21 Aug 2019 20:57:15 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Christian Herber <christian.herber@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH net-next 0/1] Add BASE-T1 PHY support
+Message-ID: <20190821185715.GA16401@lunn.ch>
+References: <20190815153209.21529-1-christian.herber@nxp.com>
+ <8c15b855-6947-9930-c3df-71a64fbff33b@gmail.com>
+ <AM6PR0402MB379864B810F08D3698618B5F86A80@AM6PR0402MB3798.eurprd04.prod.outlook.com>
+ <13e65051-fe4f-5964-30b3-75285e6d2eee@gmail.com>
+ <AM6PR0402MB3798FCBF1EE592687B13A3C386AB0@AM6PR0402MB3798.eurprd04.prod.outlook.com>
+ <5c920846-b8f5-d087-cea4-a8ca3f816127@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190821181343.GH8653@ziepe.ca>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <5c920846-b8f5-d087-cea4-a8ca3f816127@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 03:13:43PM -0300, Jason Gunthorpe wrote:
-> On Wed, Aug 21, 2019 at 11:02:00AM -0700, Ira Weiny wrote:
-> > On Tue, Aug 20, 2019 at 08:55:15AM -0300, Jason Gunthorpe wrote:
-> > > On Tue, Aug 20, 2019 at 11:12:10AM +1000, Dave Chinner wrote:
-> > > > On Mon, Aug 19, 2019 at 09:38:41AM -0300, Jason Gunthorpe wrote:
-> > > > > On Mon, Aug 19, 2019 at 07:24:09PM +1000, Dave Chinner wrote:
-> > > > > 
-> > > > > > So that leaves just the normal close() syscall exit case, where the
-> > > > > > application has full control of the order in which resources are
-> > > > > > released. We've already established that we can block in this
-> > > > > > context.  Blocking in an interruptible state will allow fatal signal
-> > > > > > delivery to wake us, and then we fall into the
-> > > > > > fatal_signal_pending() case if we get a SIGKILL while blocking.
-> > > > > 
-> > > > > The major problem with RDMA is that it doesn't always wait on close() for the
-> > > > > MR holding the page pins to be destoyed. This is done to avoid a
-> > > > > deadlock of the form:
-> > > > > 
-> > > > >    uverbs_destroy_ufile_hw()
-> > > > >       mutex_lock()
-> > > > >        [..]
-> > > > >         mmput()
-> > > > >          exit_mmap()
-> > > > >           remove_vma()
-> > > > >            fput();
-> > > > >             file_operations->release()
-> > > > 
-> > > > I think this is wrong, and I'm pretty sure it's an example of why
-> > > > the final __fput() call is moved out of line.
-> > > 
-> > > Yes, I think so too, all I can say is this *used* to happen, as we
-> > > have special code avoiding it, which is the code that is messing up
-> > > Ira's lifetime model.
-> > > 
-> > > Ira, you could try unraveling the special locking, that solves your
-> > > lifetime issues?
-> > 
-> > Yes I will try to prove this out...  But I'm still not sure this fully solves
-> > the problem.
-> > 
-> > This only ensures that the process which has the RDMA context (RDMA FD) is safe
-> > with regard to hanging the close for the "data file FD" (the file which has
-> > pinned pages) in that _same_ process.  But what about the scenario.
+> The current patch set IMO is a little bit hacky. I'm not 100% happy
+> with the implicit assumption that there can't be devices supporting
+> T1 and classic BaseT modes or fiber modes.
 > 
-> Oh, I didn't think we were talking about that. Hanging the close of
-> the datafile fd contingent on some other FD's closure is a recipe for
-> deadlock..
+> Andrew: Do you have an opinion on that?
 
-The discussion between Jan and Dave was concerning what happens when a user
-calls
+Hi Heiner
 
-fd = open()
-fnctl(...getlease...)
-addr = mmap(fd...)
-ib_reg_mr() <pin>
-munmap(addr...)
-close(fd)
+I would also like cleaner integration. I doubt here is anything in the
+standard which says you cannot combine these modes. It is more a
+marketing question if anybody would build such a device. Maybe not
+directly into a vehicle, but you could imaging a mobile test device
+which uses T1 to talk to the car and T4 to connect to the garage
+network?
 
-Dave suggested:
+So i don't think we should limit ourselves. phylib should provide a
+clean, simple set of helpers to perform standard operations for
+various modes. Drivers can make use of those helpers. That much should
+be clear. If we try to make genphy support them all simultaneously, is
+less clear.
 
-"I'm of a mind to make the last close() on a file block if there's an
-active layout lease to prevent processes from zombie-ing layout
-leases like this. i.e. you can't close the fd until resources that
-pin the lease have been released."
-
-	-- Dave https://lkml.org/lkml/2019/8/16/994
-
-> 
-> IMHO the pin refcnt is held by the driver char dev FD, that is the
-> object you need to make it visible against.
-
-I'm sorry but what do you mean by "driver char dev FD"?
-
-> 
-> Why not just have a single table someplace of all the layout leases
-> with the file they are held on and the FD/socket/etc that is holding
-> the pin? Make it independent of processes and FDs?
-
-If it is independent of processes how will we know which process is blocking
-the truncate?  Using a global table is an interesting idea but I still believe
-the users are going to want to track this to specific processes.  It's not
-clear to me how that would be done with a global table.
-
-I agree the XDP/socket case is bothersome...  I was thinking that somewhere the
-fd of the socket could be hooked up in this case.  But taking a look at it
-reveals that is not going to be easy.  And I assume XDP has the same issue WRT
-SCM_RIGHTS and the ability to share the xdp context?
-
-Ira
-
-> 
-> Jason
+     Andrew
