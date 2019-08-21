@@ -2,62 +2,106 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396D4C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A0AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1786922DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5834A233FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:17:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566415027;
+	bh=8BSnsiIQxaT7aot50+/SfzQqBeGBE6xm0yv8squrEb4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QiJ2yldsdOZsUR/AE5JrA5tOIlX6txWxTD1ijQxgYPhpO3onF2xxmW3yXHaxd1Z8R
+	 QwdyPV83u7H0HESWyLGNOIg9lwJlgEhh3G5OL7PXjW9vnYOEOhcbwG0vkRvcZxZ3Wf
+	 w0Q0sg+7kEERwKOh3kVWqy5vuO7xGlXQV4HOKEFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbfHUTPj (ORCPT
+        id S1729693AbfHUTRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:15:39 -0400
-Received: from mga07.intel.com ([134.134.136.100]:63593 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbfHUTPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:15:38 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 12:15:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
-   d="scan'208";a="178597049"
-Received: from kumarsh1-mobl.ger.corp.intel.com (HELO localhost) ([10.249.33.104])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Aug 2019 12:15:35 -0700
-Date:   Wed, 21 Aug 2019 22:15:34 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stefan Berger <stefanb@linux.ibm.com>
-Subject: Re: [PATCH] tpm_tis: Fix interrupt probing
-Message-ID: <20190821191534.m57vx4awlzlxxza2@linux.intel.com>
-References: <20190820122517.2086223-1-stefanb@linux.vnet.ibm.com>
+        Wed, 21 Aug 2019 15:17:06 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39460 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729221AbfHUTRG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 15:17:06 -0400
+Received: by mail-ot1-f67.google.com with SMTP id b1so3129779otp.6;
+        Wed, 21 Aug 2019 12:17:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1QMM6X86ZE4m7WOOCA+numF1SrsPevg8RcLzZaNb79Q=;
+        b=mUhrwKZpFNyp3beHAxz5rIMZHI454dEots5EeGYo83UaPbwqzTbB6C2GioR5Ej3pvz
+         9UF/YHIySpqVxOkRr96NJI6BKMQOClosP40RR6VwD/WTezXEtBCBIITFisvEFWIxLCx3
+         StLO9N9VlY1xFQz4pBPoyJZLOQ5AlbtU7sJrQ0Wy2lLAg1YMLHpgN3FX2jezPrgsAtv6
+         suim87k7P+zQmGmMIaV/CVsib2Q/4RWV46VOUTtBF/fVk9Aw0pyGwyVX9DAAW72vkhnv
+         GGfLPcefJNh0jTw9AwOhNZiHtdsmgd6X8uSOeDKMnz4BfZYYkXYpwx6ZhQ8qrsX839Ip
+         F90Q==
+X-Gm-Message-State: APjAAAUkmQKfICnBUgIAsOO9qudrtzSFjoPd8ujk4Fi5oLALJGh/bN+L
+        sKG8qTcAdmuxz10fvjfKNga9RIk=
+X-Google-Smtp-Source: APXvYqx5PsTrBTUQAs9a8a7CgH0vWalbythAh/rmzUtUPMUX/sEYOLsQEUc3KVzZmH5LtUFbIRsbjQ==
+X-Received: by 2002:a9d:7d04:: with SMTP id v4mr9302990otn.329.1566415025136;
+        Wed, 21 Aug 2019 12:17:05 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b188sm6531532oia.57.2019.08.21.12.17.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 12:17:04 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 14:17:04 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org,
+        james.morse@arm.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
+        Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com,
+        paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com,
+        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1
+ EDAC
+Message-ID: <20190821191704.GA32425@bogus>
+References: <20190805143911.12185-1-hhhawa@amazon.com>
+ <20190805143911.12185-2-hhhawa@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820122517.2086223-1-stefanb@linux.vnet.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190805143911.12185-2-hhhawa@amazon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 08:25:17AM -0400, Stefan Berger wrote:
-> From: Stefan Berger <stefanb@linux.ibm.com>
+On Mon, Aug 05, 2019 at 03:39:08PM +0100, Hanna Hawa wrote:
+> Document Amazon's Annapurna Labs L1 EDAC SoC binding.
 > 
-> The interrupt probing of the TPM TIS was broken since we are trying to
-> run it without an active locality and without the TPM_CHIP_FLAG_IRQ set.
+> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> ---
+>  .../devicetree/bindings/edac/amazon,al-l1-edac.txt | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
 > 
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt b/Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
+> new file mode 100644
+> index 000000000000..2ae8370216bc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
+> @@ -0,0 +1,14 @@
+> +* Amazon's Annapurna Labs L1 EDAC
+> +
+> +Amazon's Annapurna Labs SoCs supports L1 single bit correction and
+> +two bits detection capability based on ARM implementation.
+> +
+> +Required properties:
+> +- compatible:
+> +	should be "amazon,al-l1-edac".
 
-Should have a fixes tag. I can add it. Thank you.
+Why is this even in DT? AFAICT, this is all just CortexA57 core features 
+(i.e. nothing Amazon specific). The core type and the ECC capabilities 
+are discoverable.
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-
-/Jarkko
+Rob
