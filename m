@@ -2,134 +2,138 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA86C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73879C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF412339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:18:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k4427tlh"
+	by mail.kernel.org (Postfix) with ESMTP id 51A332087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfHUASy (ORCPT
+        id S1726659AbfHUATq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 20:18:54 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46239 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbfHUASw (ORCPT
+        Tue, 20 Aug 2019 20:19:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49468 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726215AbfHUATp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 20:18:52 -0400
-Received: by mail-pl1-f194.google.com with SMTP id c2so287784plz.13
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 17:18:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wYmP7l7xYXEkpyG7dJwFSke/FRHdQ6zd7wLrtCe0Nro=;
-        b=k4427tlhkbAql47p/Igzqz9qG7iGY4VAjnTQCSvYQF2yNIuU9dyzJC4kHtm0M4r5eR
-         sqY80jG2mnHwORi1nDP7JqJPuHA2FqonA4I3Rp8wmASaosWeQg4MUwiQfW+HIqn2T8Nh
-         xORTETo+y/tIN3brE8Y+v2OMPBAiaQaX1f3NP23rJCEZRPPOvnvwCfuJnK57bBcfwqV/
-         7ixqGAQnp8uQnxqAZ9d2Fawi6vDDSM45A2MJPObeCosJZLGdPRdq3pING/UyJWnltOHt
-         PnAUEVlSqR4ZDKjlLk5bYhYAZ0+EUbNrV2O0aVunvGz3l6+AhIFtwuRVz0siuG1io3cP
-         Gx1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=wYmP7l7xYXEkpyG7dJwFSke/FRHdQ6zd7wLrtCe0Nro=;
-        b=hRce1P2fzEZ+AnrL98gcabGBM0CQdcGCcGiuXMm1jfuK+KEpiDDes+oVVhbq26TaWa
-         vd2E25NMZWyXEUOAprvrUXO625NO7f5ekChCQVcRPs94wBX3p0NtcpD0b2r0mJBU6tvK
-         xssPxsJkS4hs7OdAif2IvuhIVL05LBuy1vbSALOsEXWv9zKbf7zgAtE9WnBHimrr1K2U
-         +ZdjebrsZW8PTIRtQyjA/YgxGwcq1xE4UNseyBbdc5vB9ZKM15pVkxNexBqn/YQMIBD3
-         aqeRLs46Nl5UHL9EaGbFTKaxJlP3AFA9Uo+o/ol9JBCTcp6f0+Zt34O1uW6oNswDw36B
-         GniQ==
-X-Gm-Message-State: APjAAAXlYd1vUoY2m4Z7IGUsNuoys6iYFoaFbckYb/QoBvKhhEzPp+uZ
-        AOydyiDrtooIbPZV8uAeuqA=
-X-Google-Smtp-Source: APXvYqy4XOtwQD0YpAxEXf3o3I+klcEKkKhlauOgufGqS5op00QX4mOatNkI/mvUJE8aQ6wDXxuCsA==
-X-Received: by 2002:a17:902:6b07:: with SMTP id o7mr30180035plk.180.1566346731539;
-        Tue, 20 Aug 2019 17:18:51 -0700 (PDT)
-Received: from localhost.localdomain (wsip-184-188-36-2.sd.sd.cox.net. [184.188.36.2])
-        by smtp.googlemail.com with ESMTPSA id g2sm18806323pfm.32.2019.08.20.17.18.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 20 Aug 2019 17:18:51 -0700 (PDT)
-From:   Caitlyn <caitlynannefinn@gmail.com>
-To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Caitlyn <caitlynannefinn@gmail.com>,
-        "Tobin C . Harding" <me@tobin.cc>, linux-erofs@lists.ozlabs.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] staging/erofs: Balanced braces around a few conditional statements.
-Date:   Tue, 20 Aug 2019 20:18:20 -0400
-Message-Id: <1566346700-28536-3-git-send-email-caitlynannefinn@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
-References: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
+        Tue, 20 Aug 2019 20:19:45 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7L0HZ3x088923
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 20:19:44 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ugsw9tws8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 20:19:44 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 21 Aug 2019 01:19:42 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 21 Aug 2019 01:19:38 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7L0Jc6Z35193336
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 00:19:38 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3BD711C050;
+        Wed, 21 Aug 2019 00:19:37 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 913BB11C054;
+        Wed, 21 Aug 2019 00:19:37 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 21 Aug 2019 00:19:37 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 4207EA00E7;
+        Wed, 21 Aug 2019 10:19:36 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] powerpc: Allow flush_(inval_)dcache_range to work across ranges >4GB
+Date:   Wed, 21 Aug 2019 10:19:27 +1000
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19082100-0012-0000-0000-00000340E12D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082100-0013-0000-0000-0000217B06CB
+Message-Id: <20190821001929.4253-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908210002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Balanced braces to fix some checkpath warnings in inode.c and
-unzip_vle.c
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Signed-off-by: Caitlyn <caitlynannefinn@gmail.com>
+The upstream commit:
+22e9c88d486a ("powerpc/64: reuse PPC32 static inline flush_dcache_range()")
+has a similar effect, but since it is a rewrite of the assembler to C, is
+too invasive for stable. This patch is a minimal fix to address the issue in
+assembler.
+
+This patch applies cleanly to v5.2, v4.19 & v4.14.
+
+When calling flush_(inval_)dcache_range with a size >4GB, we were masking
+off the upper 32 bits, so we would incorrectly flush a range smaller
+than intended.
+
+This patch replaces the 32 bit shifts with 64 bit ones, so that
+the full size is accounted for.
+
+Changelog:
+v2
+  - Add related upstream commit
+
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- drivers/staging/erofs/inode.c     |  4 ++--
- drivers/staging/erofs/unzip_vle.c | 12 ++++++------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ arch/powerpc/kernel/misc_64.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index 4c3d8bf..8de6fcd 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/drivers/staging/erofs/inode.c
-@@ -278,9 +278,9 @@ struct inode *erofs_iget(struct super_block *sb,
- 		vi->nid = nid;
- 
- 		err = fill_inode(inode, isdir);
--		if (likely(!err))
-+		if (likely(!err)) {
- 			unlock_new_inode(inode);
--		else {
-+		} else {
- 			iget_failed(inode);
- 			inode = ERR_PTR(err);
- 		}
-diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index f0dab81..f431614 100644
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -915,21 +915,21 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 	mutex_lock(&work->lock);
- 	nr_pages = work->nr_pages;
- 
--	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES))
-+	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES)) {
- 		pages = pages_onstack;
--	else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
--		 mutex_trylock(&z_pagemap_global_lock))
-+	} else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
-+		 mutex_trylock(&z_pagemap_global_lock)) {
- 		pages = z_pagemap_global;
--	else {
-+	} else {
- repeat:
- 		pages = kvmalloc_array(nr_pages, sizeof(struct page *),
- 				       GFP_KERNEL);
- 
- 		/* fallback to global pagemap for the lowmem scenario */
- 		if (unlikely(!pages)) {
--			if (nr_pages > Z_EROFS_VLE_VMAP_GLOBAL_PAGES)
-+			if (nr_pages > Z_EROFS_VLE_VMAP_GLOBAL_PAGES) {
- 				goto repeat;
--			else {
-+			} else {
- 				mutex_lock(&z_pagemap_global_lock);
- 				pages = z_pagemap_global;
- 			}
+diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+index 1ad4089dd110..d4d096f80f4b 100644
+--- a/arch/powerpc/kernel/misc_64.S
++++ b/arch/powerpc/kernel/misc_64.S
+@@ -130,7 +130,7 @@ _GLOBAL_TOC(flush_dcache_range)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of dcache block size */
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
+ 0:	dcbst	0,r6
+@@ -148,7 +148,7 @@ _GLOBAL(flush_inval_dcache_range)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)/* Get log-2 of dcache block size */
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	beqlr				/* nothing to do? */
+ 	sync
+ 	isync
 -- 
-2.7.4
+2.21.0
 
