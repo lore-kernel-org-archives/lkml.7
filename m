@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25436C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25D6C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF02622D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C205A22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:58:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbfHUM5j (ORCPT
+        id S1728700AbfHUM6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 08:57:39 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:52761 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728649AbfHUM5h (ORCPT
+        Wed, 21 Aug 2019 08:58:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:57154 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728579AbfHUM6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 08:57:37 -0400
-Received: by mail-io1-f70.google.com with SMTP id q5so2512598iof.19
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 05:57:37 -0700 (PDT)
+        Wed, 21 Aug 2019 08:58:07 -0400
+Received: by mail-io1-f71.google.com with SMTP id m13so2478693ioj.23
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 05:58:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to:cc;
-        bh=QjkSwzJGqruLUor0WrhXtS14xNGl+DA69ls17YPrtvQ=;
-        b=rCAeZXe6IIMZRXIgLiTStE15j60Z4NwtNnM7GB2tTj7B1cKao8ldJmjb9bMtn1fQ2r
-         9ryywCz3vX3G7t6GCua4ybYfSTzHhAWuZjvQi3DJsVBLLPjSgoVW42sRT5ZIAP1SnkBU
-         WMCAnJ6tx9T4Ok8LwVzFR9E1XSTKlvWJFQq+seph4xbQvy1T4TdELKYNzV1e4HYable8
-         oG0xH7iRZXTo+CTlYeqeOmrUjkeo4yzLNS2LMjkQogo/Tm0Kihb8tqK8CwGjjwWmtJUF
-         Z8NBY8A14Pj4VpTAZpa1kqs+EWTcwSqDkcvDTLh1tEDXKjDrU0XeQ2GmsREw2mWZqX59
-         QIkA==
-X-Gm-Message-State: APjAAAUZ34EQJwGdPKRihVkI9vsHaUFsSy8YfFJ8pBEiB3sPYcD2o0lj
-        B/9KpWYah9rhaZdAJ1RnVAM7jU48dBDAewHTawSMitUNnfxs
-X-Google-Smtp-Source: APXvYqxYnOy2Ml4FXIS5PIdr76pUUL5lwpWpuAJFlnEGyvbEip9TSwDHmd6rHMQNRq1CDA4yW1gaJkf0EcQ02n5bFWst9uKa2Osl
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=aV3bT5uZ46Z7VDX544VCGQ0p1IXFNMJP6Dbo7okYtRE=;
+        b=Xd2eVDArRoDfYifO8lGdGWCH2DQTc4/4BPMT4YO948TqcPddWjX5Bx6SHT3ZiD2s+C
+         A+r5EyJ2R4CBQLupfguiglRvt5vyG3SVgjLN9mANrPuGyCU8qOmZ4kMV9vrW4L9txrQX
+         IzLOebIyTfYmWNkLumhnmnI4u8f0CZVbBEELrI8gJMefab7o9bPotzoxcWsehgO5H/Hq
+         WPc4GeocznRFRYEn9iw9CwyRbECLzMFHV/QvWt2S92hw3rP7SoY1f5K63CQC7V+iv5Q9
+         szSqlSxJoWp3t/jOMZCyTSB094/YkCBTsIVjLXuuGIYt7nULEA9493YQqy4crfBg3+wt
+         9hLg==
+X-Gm-Message-State: APjAAAUwAhhoOcBEeihV2wGcxqWNxUOWqE9E5MQ4SAN/c6WuX8n0YIGu
+        GkFoN3J+WYOSdsfqnj8P4PHzrrD1poOILjHxIdz9cp6B0/JK
+X-Google-Smtp-Source: APXvYqxpPgnmiHnS/9kNbl9Gd4tX4rvLKqgBWuaSeEGH6tVVE5Izm7P3VTRDAq/fh1rrCVFzWRImlxKARAAs8ogFjl9D5yuSd2kt
 MIME-Version: 1.0
-X-Received: by 2002:a5e:c802:: with SMTP id y2mr6255924iol.134.1566392256853;
- Wed, 21 Aug 2019 05:57:36 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 05:57:36 -0700
-In-Reply-To: <CAAeHK+zeN+bLTix2yaWDo-iu_G4D8T1KELjds=KVTtywiPpc4g@mail.gmail.com>
+X-Received: by 2002:a6b:fd10:: with SMTP id c16mr4436529ioi.217.1566392286780;
+ Wed, 21 Aug 2019 05:58:06 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 05:58:06 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000c820c0590a01e9a@google.com>
-Subject: Re: Re: KASAN: slab-out-of-bounds Read in hidraw_ioctl
-From:   syzbot <syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com>
-To:     "'Andrey Konovalov' via syzkaller-bugs" 
-        <syzkaller-bugs@googlegroups.com>
-Cc:     benjamin.tissoires@redhat.com, jikos@kernel.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+Message-ID: <000000000000d529bc0590a01f5f@google.com>
+Subject: WARNING in smsusb_start_streaming/usb_submit_urb
+From:   syzbot <syzbot+12002a39b8c60510f8fb@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,103 +54,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Sun, Aug 11, 2019 at 10:46 PM syzbot
-> <syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com> wrote:
+Hello,
 
->> syzbot has found a reproducer for the following crash on:
+syzbot found the following crash on:
 
->> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
->> git tree:       https://github.com/google/kasan.git usb-fuzzer
->> console output: https://syzkaller.appspot.com/x/log.txt?x=150426ba600000
->> kernel config:   
->> https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
->> dashboard link:  
->> https://syzkaller.appspot.com/bug?extid=5a6c4ec678a0c6ee84ba
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro:       
->> https://syzkaller.appspot.com/x/repro.syz?x=12725c02600000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162163c2600000
+HEAD commit:    eea39f24 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=139ec19c600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
+dashboard link: https://syzkaller.appspot.com/bug?extid=12002a39b8c60510f8fb
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a632ac600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10ed88b6600000
 
->> IMPORTANT: if you fix the bug, please add the following tag to the  
->> commit:
->> Reported-by: syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+12002a39b8c60510f8fb@syzkaller.appspotmail.com
 
->> ==================================================================
->> BUG: KASAN: slab-out-of-bounds in strlen+0x79/0x90 lib/string.c:525
->> Read of size 1 at addr ffff8881d29bdf38 by task syz-executor201/1726
-
->> CPU: 1 PID: 1726 Comm: syz-executor201 Not tainted 5.3.0-rc2+ #25
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
->> Google 01/01/2011
->> Call Trace:
->>    __dump_stack lib/dump_stack.c:77 [inline]
->>    dump_stack+0xca/0x13e lib/dump_stack.c:113
->>    print_address_description+0x6a/0x32c mm/kasan/report.c:351
->>    __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->>    kasan_report+0xe/0x12 mm/kasan/common.c:612
->>    strlen+0x79/0x90 lib/string.c:525
->>    strlen include/linux/string.h:281 [inline]
->>    hidraw_ioctl+0x245/0xae0 drivers/hid/hidraw.c:446
->>    vfs_ioctl fs/ioctl.c:46 [inline]
->>    file_ioctl fs/ioctl.c:509 [inline]
->>    do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
->>    ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
->>    __do_sys_ioctl fs/ioctl.c:720 [inline]
->>    __se_sys_ioctl fs/ioctl.c:718 [inline]
->>    __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
->>    do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
->> RIP: 0033:0x445679
->> Code: e8 5c ad 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89  
->> f7
->> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
->> ff 0f 83 9b cd fb ff c3 66 2e 0f 1f 84 00 00 00 00
->> RSP: 002b:00007ffc8514f3a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000445679
->> RDX: 0000000000000000 RSI: 0000000080404805 RDI: 0000000000000004
->> RBP: 00000000006d0018 R08: 000000000000000b R09: 00000000004002e0
->> R10: 000000000000000f R11: 0000000000000246 R12: 00000000004028a0
->> R13: 0000000000402930 R14: 0000000000000000 R15: 0000000000000000
-
->> Allocated by task 0:
->> (stack is not available)
-
->> Freed by task 0:
->> (stack is not available)
-
->> The buggy address belongs to the object at ffff8881d29bde60
->>    which belongs to the cache shmem_inode_cache of size 1168
->> The buggy address is located 216 bytes inside of
->>    1168-byte region [ffff8881d29bde60, ffff8881d29be2f0)
->> The buggy address belongs to the page:
->> page:ffffea00074a6f00 refcount:1 mapcount:0 mapping:ffff8881da115180
->> index:0x0 compound_mapcount: 0
->> flags: 0x200000000010200(slab|head)
->> raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da115180
->> raw: 0000000000000000 00000000800c000c 00000001ffffffff 0000000000000000
->> page dumped because: kasan: bad access detected
-
->> Memory state around the buggy address:
->>    ffff8881d29bde00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->>    ffff8881d29bde80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->> > ffff8881d29bdf00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->>                                           ^
->>    ffff8881d29bdf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->>    ffff8881d29be000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->> ==================================================================
-
-
-> Trying Alan's fix from another thread here:
-
-> #syz test: https://github.com/google/kasan.git usb-fuzzer e96407b4
-
-want 2 args (repo, branch), got 3
+usb 1-1: New USB device found, idVendor=2040, idProduct=c000,  
+bcdDevice=b1.e9
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+smsusb:smsusb_probe: board id=8, interface number 0
+smsusb:siano_media_device_register: media controller created
+------------[ cut here ]------------
+usb 1-1: BOGUS urb xfer, pipe 3 != type 1
+WARNING: CPU: 1 PID: 21 at drivers/usb/core/urb.c:477  
+usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.3.0-rc5+ #28
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x2a3/0x6da kernel/panic.c:219
+  __warn.cold+0x20/0x4a kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Code: 4d 85 ed 74 2c e8 88 ba ef fd 4c 89 f7 e8 70 bf 1c ff 41 89 d8 44 89  
+e1 4c 89 ea 48 89 c6 48 c7 c7 00 69 18 86 e8 6d a0 c5 fd <0f> 0b e9 20 f4  
+ff ff e8 5c ba ef fd 4c 89 f2 48 b8 00 00 00 00 00
+RSP: 0018:ffff8881da2f7018 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff81288cfd RDI: ffffed103b45edf5
+RBP: ffff8881d50e0550 R08: ffff8881da236000 R09: ffffed103b665d58
+R10: ffffed103b665d57 R11: ffff8881db32eabf R12: 0000000000000003
+R13: ffff8881d2a2cd50 R14: ffff8881d67533a0 R15: ffff8881d297c430
+  smsusb_submit_urb+0x26d/0x390 drivers/media/usb/siano/smsusb.c:173
+  smsusb_start_streaming+0x1f/0x87 drivers/media/usb/siano/smsusb.c:195
+  smsusb_init_device+0x8aa/0x9d5 drivers/media/usb/siano/smsusb.c:475
+  smsusb_probe+0x986/0xa24 drivers/media/usb/siano/smsusb.c:566
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2165
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2165
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-> --
-> You received this message because you are subscribed to the Google  
-> Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an  
-> email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit  
-> https://groups.google.com/d/msgid/syzkaller-bugs/CAAeHK%2BzeN%2BbLTix2yaWDo-iu_G4D8T1KELjds%3DKVTtywiPpc4g%40mail.gmail.com.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
