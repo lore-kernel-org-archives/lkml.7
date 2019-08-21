@@ -2,130 +2,161 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0953EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F764C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3042339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566406426;
-	bh=8EpYXOIJQ7TePwZ/ZCJnzDEkdpUgKmzzxBX02HTYDWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eP1ObTpdXYkFsOmF5JUiYE0/F6G0sar+QPy83xI1K5bA8Q0EhhctkvQBD4YCjt2tQ
-	 HwXCvzDi8TEKFRIu+o/wTaDB0nRKDpxTDByaWjuodKUwcfjkmMwUhAKaouck+FU+VH
-	 vv9G7wTH+lJBspfVkFsjGgTFSRbn23kS2EnpfyeY=
+	by mail.kernel.org (Postfix) with ESMTP id 3FE6D22DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:56:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sNoyMjDD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbfHUQxq (ORCPT
+        id S1729205AbfHUQ4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:53:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34182 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbfHUQxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:53:45 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9699122DD3;
-        Wed, 21 Aug 2019 16:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566406424;
-        bh=8EpYXOIJQ7TePwZ/ZCJnzDEkdpUgKmzzxBX02HTYDWc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mfA3TYZ5mReb6a41G+2FUsWZ4XDr3vM5MuLTd+xih2gFnd/B+p3syzRto7GLy1yCP
-         yNbNLlyJluiuGn/UDS0ljvkiKAsdh75khbDmuBybOByPBaXAfA3M/PM56Bd93ckdf7
-         Uz4JeqWNifNtxOjNgPEvRWiDgS+Ymy2V+CFJCsZE=
-Date:   Wed, 21 Aug 2019 17:53:39 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Ganapatrao Kulkarni <gklkml16@gmail.com>,
-        Ganapatrao Kulkarni <gkulkarni@marvell.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Wed, 21 Aug 2019 12:56:08 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40180 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728810AbfHUQ4H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:56:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c3so2706194wrd.7;
+        Wed, 21 Aug 2019 09:56:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=i3Zp/xrNLIhVbSe7rdYIOlD+qEvFODONbYp+TxFFec0=;
+        b=sNoyMjDDacPJS3dvBiHkDKQbt3VGWbTKagnxIbPchRlWkvA1weuhlIUL2SsTnAUxe9
+         aQEVK6Ti1rZL45HOtRosubCe/d+zcCz3ZBOwzmTWciGQOCCl2tAvBZpmBoil0RYrECQs
+         M1NzUH0fKksVWc2dFdHSX0bAqDUEy3HH33LCuSHg6dxFliEIr2kUQSv5mmgSsgBQGgPe
+         BrgApye5NRyNomGmBl0y+q7yNklpTQqbZj0oStPwI93Jnp+zGMrgG6EKpbC3U2iUHe2b
+         ipZGWaDmSlfS1gavLNgkLQ7s3sQqw9RXlgM8tt750A1bcr9ZQKSA/DbNVhAXloevDO6l
+         VwHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=i3Zp/xrNLIhVbSe7rdYIOlD+qEvFODONbYp+TxFFec0=;
+        b=jZg9/HaerrzdAiNpz4V1Sj7UCK6dDTfcNfmhlhXocppxq8GpZrrBFNhyUHDpMFdfuo
+         Jc/+zHnWgfuFkU6+a193MMZRuZWIVGXd7bqTmbP5cOnDHQDuyaLXmDPFe1E6hqNeGDNq
+         12AzsSiRS1l3YTsVnotk9ccBtaKYJTjLzPHGJSjjhz185wE9IaZ5I0mWB2e6JPwB6U69
+         mlsXtnx0fXsk3xIBOutDCpDaP9pvp73hUsk1l6ZeHPXwxBCtUw5Yp3pSiIqHKNGkRCGj
+         TiGAMs0RDLe3Cokr7IaD1Fg13tyABwME54bpFevyirdeW+M1hAS8wYCs4I0rgJra+MOa
+         DHyg==
+X-Gm-Message-State: APjAAAVrz2vLQLgdKNEqM8sR+IEi33/ivakl7zFg/fthDwZwEAuEO1mF
+        O6ZdsouqYUdJ8NeCsmBD6Zk=
+X-Google-Smtp-Source: APXvYqzifIju179Z9H7ZpvpK+ol1iUFt+D0QXW0i7YVV9PoYLYmX3wQJjxa9TnqcYPg3ai+nhex5Lg==
+X-Received: by 2002:adf:f851:: with SMTP id d17mr14511305wrq.77.1566406565347;
+        Wed, 21 Aug 2019 09:56:05 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f04:7c00:7026:65b1:a037:c969? (p200300EA8F047C00702665B1A037C969.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:7026:65b1:a037:c969])
+        by smtp.googlemail.com with ESMTPSA id f7sm32226599wrf.8.2019.08.21.09.56.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 09:56:04 -0700 (PDT)
+Subject: Re: [PATCH v2 net] Add genphy_c45_config_aneg() function to phy-c45.c
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Marco Hartmann <marco.hartmann@nxp.com>
+Cc:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Jan Glauber <jglauber@marvell.com>
-Subject: Re: [PATCH v3 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
- UNCORE driver.
-Message-ID: <20190821165339.7gu4rxkvdjcr4mta@willie-the-truck>
-References: <1563873380-2003-1-git-send-email-gkulkarni@marvell.com>
- <1563873380-2003-3-git-send-email-gkulkarni@marvell.com>
- <20190812120125.GA50712@lakrids.cambridge.arm.com>
- <CAKTKpr7juHd9Bgam28LESadihFadEAevRAhc-7w3PTMYY7HLNw@mail.gmail.com>
- <20190813110345.GD866@lakrids.cambridge.arm.com>
+        Christian Herber <christian.herber@nxp.com>
+References: <1566385208-23523-1-git-send-email-marco.hartmann@nxp.com>
+ <20190821153740.GB22091@lunn.ch>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <37eefeb7-7540-cb71-79b5-4a72d140a1a6@gmail.com>
+Date:   Wed, 21 Aug 2019 18:55:56 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813110345.GD866@lakrids.cambridge.arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190821153740.GB22091@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 12:03:45PM +0100, Mark Rutland wrote:
-> On Tue, Aug 13, 2019 at 04:25:15PM +0530, Ganapatrao Kulkarni wrote:
-> > On Mon, Aug 12, 2019 at 5:31 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > >
-> > > On Tue, Jul 23, 2019 at 09:16:28AM +0000, Ganapatrao Kulkarni wrote:
-> > > > CCPI2 is a low-latency high-bandwidth serial interface for connecting
-> > > > ThunderX2 processors. This patch adds support to capture CCPI2 perf events.
-> > >
-> > > It would be worth pointing out in the commit message how the CCPI2
-> > > counters differ from the others. I realise you have that in the body of
-> > > patch 1, but it's critical information when reviewing this patch...
-> > 
-> > Ok, I will add in next version.
-> > >
-> > > >
-> > > > Signed-off-by: Ganapatrao Kulkarni <gkulkarni@marvell.com>
-> > > > ---
-> > > >  drivers/perf/thunderx2_pmu.c | 248 ++++++++++++++++++++++++++++++-----
-> > > >  1 file changed, 214 insertions(+), 34 deletions(-)
-> > > >
-> > > > diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-> > > > index 43d76c85da56..a4e1273eafa3 100644
-> > > > --- a/drivers/perf/thunderx2_pmu.c
-> > > > +++ b/drivers/perf/thunderx2_pmu.c
-> > > > @@ -17,22 +17,31 @@
-> > > >   */
-> > > >
-> > > >  #define TX2_PMU_MAX_COUNTERS         4
-> > >
-> > > Shouldn't this be 8 now?
-> > 
-> > It is kept unchanged to 4(as suggested by Will), which is same for
-> > both L3 and DMC.
-> > For CCPI2 this macro is not used.
+On 21.08.2019 17:37, Andrew Lunn wrote:
+> On Wed, Aug 21, 2019 at 11:00:46AM +0000, Marco Hartmann wrote:
+>> Commit 34786005eca3 ("net: phy: prevent PHYs w/o Clause 22 regs from calling
+>> genphy_config_aneg") introduced a check that aborts phy_config_aneg()
+>> if the phy is a C45 phy.
+>> This causes phy_state_machine() to call phy_error() so that the phy
+>> ends up in PHY_HALTED state.
+>>
+>> Instead of returning -EOPNOTSUPP, call genphy_c45_config_aneg()
+>> (analogous to the C22 case) so that the state machine can run
+>> correctly.
+>>
+>> genphy_c45_config_aneg() closely resembles mv3310_config_aneg()
+>> in drivers/net/phy/marvell10g.c, excluding vendor specific
+>> configurations for 1000BaseT.
 > 
-> Hmmm....
+>> +/**
+>> + * genphy_c45_config_aneg - restart auto-negotiation or forced setup
+>> + * @phydev: target phy_device struct
+>> + *
+>> + * Description: If auto-negotiation is enabled, we configure the
+>> + *   advertising, and then restart auto-negotiation.  If it is not
+>> + *   enabled, then we force a configuration.
+>> + */
+>> +int genphy_c45_config_aneg(struct phy_device *phydev)
+>> +{
+>> +	bool changed = false;
+>> +	int ret;
+>> +
+>> +	if (phydev->autoneg == AUTONEG_DISABLE)
+>> +		return genphy_c45_pma_setup_forced(phydev);
+>> +
+>> +	ret = genphy_c45_an_config_aneg(phydev);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +	if (ret > 0)
+>> +		changed = true;
+>> +
+>> +	return genphy_c45_check_and_restart_aneg(phydev, changed);
+>> +}
+>> +EXPORT_SYMBOL_GPL(genphy_c45_config_aneg);
 > 
-> I disagree with that suggestion given that this also affects the
-> active_counters bitmap size (and thus it is not correctly sized as of
-> this patch), and it doesn't really save us much.
+> The vendor parts for 1000BaseT makes this interesting. Do we expect to
+> see an C45 PHYs which don't support 1000BaseT? I think that
+> unlikely. So all C45 PHYs are going to implement their own config_aneg
+> callback so they can set their vendor registers for 1000BaseT.
 > 
-> I think it would be better to bump this to 8 and always update the
-> events array, even though it will be unused for CCPI2. That's less
-> surprising, needs fewer special-cases, and we can use the hrtimer
-> function pointer alone to determine if we need to do any hrtimer work.
+>> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+>> index f3adea9ef400..74c4e15ebe52 100644
+>> --- a/drivers/net/phy/phy.c
+>> +++ b/drivers/net/phy/phy.c
+>> @@ -507,7 +507,7 @@ static int phy_config_aneg(struct phy_device *phydev)
+>>  	 * allowed to call genphy_config_aneg()
+>>  	 */
+>>  	if (phydev->is_c45 && !(phydev->c45_ids.devices_in_package & BIT(0)))
+>> -		return -EOPNOTSUPP;
+>> +		return genphy_c45_config_aneg(phydev);
+>>  
+>>  	return genphy_config_aneg(phydev);
+> 
+> So here we should be calling the driver config_aneg function. It can
+> then call genphy_c45_config_aneg(phydev) to do the generic parts.
+> 
+> Heiner, what do you think?
+> 
+As you say, C45 doesn't cover 1000BaseT, therefore for this mode a
+vendor-specific part is needed in the PHY driver always.
+That's the reason why genphy_c45_an_config_aneg is meant to be used
+within a PHY drivers config_aneg callback implementation, and why
+we don't have a generic C45 config_aneg function yet.
 
-tbf, my complaint was actually about some macros applying to the whole
-PMU whilst others refer only to DMC/L3C and this not being apparent from
-the naming:
+Use case for the new function could be cases where 1000BaseT support
+isn't needed, and it could serve as a fallback if there's no
+dedicated PHY driver yet e.g. for a new chip.
 
-https://lkml.org/lkml/2019/6/27/250
-
-so I'm fine having TX2_PMU_DMC_L3C_MAX_COUNTERS and
-TX2_PMU_CCPI2_MAX_COUNTERS, but that sort of naming needs to be consistent
-unless the macro/definition really applies to both. That fed the suggestion
-that GET_EVENTID could be generic and switch on the event type internally
-instead of at the caller.
-
-Will
+> 	Andrew
+> 
+Heiner
