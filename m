@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546FAC3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFBCC3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF5A216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C75D42332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:23:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="hooOr0gO"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="GM2M9DJe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfHUAXg (ORCPT
+        id S1726760AbfHUAXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 20:23:36 -0400
+        Tue, 20 Aug 2019 20:23:42 -0400
 Received: from mail-eopbgr680114.outbound.protection.outlook.com ([40.107.68.114]:56135
         "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726141AbfHUAXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 20:23:35 -0400
+        id S1726141AbfHUAXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 20:23:40 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EapbDJ36N4h7xqQVWdypd+hPRDaM5Uf8f0O/JBF++tceVIqkKkBDzUiT+cdV66xH9BjoZ79blSf6ojNnYC3yP0QJuw7Mf694f7zlBE04P70jr7Lh69ppT07/91j17zZwGTN76fakd0yQfVqg76biuGyDUHoX7IE1deGtnGDiAqSJ072Oasof6ALJ3IlP6mX9/AHlYRFjEGuVsvEQkuFXDpMoppbRMc/3A56euedvmxk+tzf1mN41g5BB/biuX4y/v+SbWiEgv05GD0kWpJaaI99TOwDZK5rtZkf+21boxPe2xA+vqTlzKsLJbK4gH6ba63hf6sEaSZ3UPMDpU2lUzQ==
+ b=EShL0ZDSBfGwO8Qgvcd2TFn3boLUaEBe4QEkGAAQ8eLXVcCNkYMUpFSdv03qWB6nmKiDNSce6pqRpJ6upWOCP5hA9BBgSSS2d5plOHHoEmf85vEpdyO+29vQCWLW9v1ri24XsAtYx9JyegOIjxAu8FkfpdLRHNirc/5hV2Ty+3Sh4oL1bTek/GiZW8p8lVZjrsr1gCSnykwmEJNpqFwRyAkRYL2ktWbTI6woZ3OZDvRq6Za7UeTXZb6kcngkD96t1s7SKJQRfmjd/3D6V6pPAz6aKqwKCtP8gjANyVwwQ6eP0twA2Twl5rF/KLxOm1YmpwQIuKXYpYFYsFRk3nFLrg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r8//GOpJEL/Hp72jQ11NhDe6pU7e08emO3MeJRroTew=;
- b=Np5srap+JJx87NpXITkWNFFVQYvO9tfoJipUnqBvQGUWBLBxEWhL40QlJxJmfryNkUEv7O28b5BER2Za3E5c9jrFMbXnRyWkdVZZkhQ6zQm8Q5TuhdVMJ9/BNopZBICldD2s3umbHZV/kmVEidu4u5EYV3isrnCEFqyHGkf4f90c7ruqDdKf5jglbvtw/ILd8tjzeZH187BxTcN4OKHQzkj/g1szS3sTvL0+2b93cQ4NRN7CmXN3GNOaTTRu3tQ8q/YUV1n9fhRAZjp/hxQ2nOs5bwt6wlLV+aEfY5Hb3PVxBSkV9hXL9gpeGmFRdH/rrQiP/su8w2CfIXmQrifDeQ==
+ bh=f95h9yNoJs6M/KfkEg5vCUlvrsdMDngwiSz2vZA6iSo=;
+ b=LGpjcx9OCQF+oH8SolGkDkfRGKppW6ZSym9imEgxy2h6CMmimbh72fNBAFTnd1RUGvglWGHOTG/cvg58MsYHbB784rkNUUl7gOQISbazPxNjKBNQWFn8qnXYwYyZtcJSNdwlFOUH/xBjAPho5HCPv6ILMNuB8fHtmt3bElD3WuCYwoJRW12W7l8kzpb8AFdRq5MlX/Bdtuc2AKq7CpY0uVtp+aA7LoFD15yk/WXREWK1UWii0pTw+ChYS+r73hhpnEVBCrqGU+b7tvctwIUs/UCz2JexbxWgnhJS5iARgU06Nhzgrgod7bWpy3mKPlqGty0VO23UCY+jYVMEgFxENw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r8//GOpJEL/Hp72jQ11NhDe6pU7e08emO3MeJRroTew=;
- b=hooOr0gOtLwTgdg1wAFE91cb6+dlidxnj1ccisBYm/i6aOLZ4JYahzADck8oF3lYilGGcpmgB7/QGIf5u76pjOA6rNDwu3lwOHKGJZfAv+fshSYPL/bHXRPzM8zjRKFWEobVJ1AXl/kHyXDfAaDGEBT6xJtg3AjL4lM60eCL9EA=
+ bh=f95h9yNoJs6M/KfkEg5vCUlvrsdMDngwiSz2vZA6iSo=;
+ b=GM2M9DJeYMfsfOuwvXVR6sCE6AvL6hhe/3lhpoGhS7ev7Lkv79p06IwpJ57Cz6uL0qVLuxAb/yg6U6sKQp/G1yiFNnF2cIaf+MrSyRbk2QLjgGVix0y2DZv8vFXvMgGOTsjv8YN7FEACmcHfTl57WYnidRQ/diAGukA808a1O6s=
 Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
  DM6PR21MB1450.namprd21.prod.outlook.com (10.255.109.212) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.3; Wed, 21 Aug 2019 00:23:29 +0000
+ 15.20.2220.3; Wed, 21 Aug 2019 00:23:35 +0000
 Received: from DM6PR21MB1242.namprd21.prod.outlook.com
  ([fe80::ddd:8e5b:2930:6726]) by DM6PR21MB1242.namprd21.prod.outlook.com
  ([fe80::ddd:8e5b:2930:6726%9]) with mapi id 15.20.2178.006; Wed, 21 Aug 2019
- 00:23:29 +0000
+ 00:23:35 +0000
 From:   Haiyang Zhang <haiyangz@microsoft.com>
 To:     "sashal@kernel.org" <sashal@kernel.org>,
         "davem@davemloft.net" <davem@davemloft.net>,
@@ -60,16 +60,14 @@ To:     "sashal@kernel.org" <sashal@kernel.org>,
 CC:     Haiyang Zhang <haiyangz@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Jake Oshins <jakeo@microsoft.com>
-Subject: [PATCH net-next,v3, 1/6] PCI: hv: Add a paravirtual backchannel in
- software
-Thread-Topic: [PATCH net-next,v3, 1/6] PCI: hv: Add a paravirtual backchannel
- in software
-Thread-Index: AQHVV7ao35gwvNDR5k2MY5d/NCA8og==
-Date:   Wed, 21 Aug 2019 00:23:29 +0000
-Message-ID: <1566346948-69497-2-git-send-email-haiyangz@microsoft.com>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next,v3, 3/6] net/mlx5: Add wrappers for HyperV PCIe
+ operations
+Thread-Topic: [PATCH net-next,v3, 3/6] net/mlx5: Add wrappers for HyperV PCIe
+ operations
+Thread-Index: AQHVV7ar9gXApn0byUGqBSTGbqhmBQ==
+Date:   Wed, 21 Aug 2019 00:23:34 +0000
+Message-ID: <1566346948-69497-4-git-send-email-haiyangz@microsoft.com>
 References: <1566346948-69497-1-git-send-email-haiyangz@microsoft.com>
 In-Reply-To: <1566346948-69497-1-git-send-email-haiyangz@microsoft.com>
 Accept-Language: en-US
@@ -85,464 +83,171 @@ x-ms-exchange-messagesentrepresentingtype: 2
 x-mailer: git-send-email 1.8.3.1
 x-originating-ip: [13.77.154.182]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a32ab2a1-a0a2-4aea-987e-08d725cdca95
+x-ms-office365-filtering-correlation-id: 075aba91-86c9-4968-a3f7-08d725cdcdcc
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1450;
 x-ms-traffictypediagnostic: DM6PR21MB1450:|DM6PR21MB1450:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR21MB145039538F670B025BF309A1ACAA0@DM6PR21MB1450.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-microsoft-antispam-prvs: <DM6PR21MB1450F970CF6167209330E9FDACAA0@DM6PR21MB1450.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
 x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(189003)(199004)(26005)(2906002)(71190400001)(71200400001)(6512007)(50226002)(186003)(36756003)(54906003)(8676002)(110136005)(6436002)(6392003)(7846003)(8936002)(99286004)(446003)(6506007)(81166006)(81156014)(2201001)(386003)(6486002)(76176011)(7416002)(66066001)(5660300002)(52116002)(102836004)(11346002)(316002)(53936002)(6116002)(3846002)(22452003)(30864003)(478600001)(4326008)(14444005)(256004)(66946007)(66476007)(66556008)(107886003)(64756008)(66446008)(2616005)(476003)(486006)(305945005)(25786009)(10090500001)(4720700003)(14454004)(10290500003)(2501003)(7736002)(921003)(142933001)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1450;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(189003)(199004)(26005)(2906002)(71190400001)(71200400001)(6512007)(50226002)(186003)(36756003)(54906003)(8676002)(110136005)(6436002)(6392003)(7846003)(8936002)(99286004)(446003)(6506007)(81166006)(81156014)(2201001)(386003)(6486002)(76176011)(7416002)(66066001)(5660300002)(52116002)(102836004)(11346002)(316002)(53936002)(6116002)(3846002)(22452003)(478600001)(4326008)(256004)(66946007)(66476007)(66556008)(64756008)(66446008)(2616005)(476003)(486006)(305945005)(25786009)(10090500001)(4720700003)(14454004)(10290500003)(2501003)(7736002)(921003)(142933001)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1450;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gDkFyqQYRWBEcr9UWsoptWb3RsjebiOS2eVNBOLhnXETc6R1vRZNAQrcchk7Rl3pgdrj1Uc5F0f2p0PWvp6NjuuefySB8ChW7Ajxe7fzk5FgXEDovzYThqC1X5fkGKoMIJSpuX1+hEmLQnyuIcVtGTkUcSCKjurWy8HikazoNZ4Wg2g/6V8aI1ztg57J8L7gBghANDFOQCnQBUfKOofTVhaZFYBl6dZLQpEa1IMWPaCggRrwHITdIZEFSR7X1VMKziDiXHvByb7XHyAUt2OeL/qR2HWLzj6LTxA2pTk8u8cGhNhOiPCG50vsZO7XRZuXPhhnLVicxzdNFMz2s/GzlEJIK/7MlDhSxnNxBiJAIocyi/qC81J9TqhV0LIuFX/fyVGL3p47PM5XdmLn70rr7b58FgT7tCcXpJ5XA+jp2lQ=
+x-microsoft-antispam-message-info: xHi5st3kGC4kshDcu48oQdapDUcRNoDMh26RH/nOPxkJpsMLjIReNc9jIKGOo3H3JOYAeYoSK+SJmJMNFU6y459e5s3Oikg2Ze036lwDG/4t0mGaKZ6ZLMOe9fZZMgHjEbe9+ZfzYBjvquUmPJ5cyNMm3B5Vh+QmDgbGwnuTT6gqT+R61jBBomFibOU+9xVFiR8k9nn7e/Gt1OoN+PVI2sVN6l8zd5FALYEOLk0hOZtAoAzg+BufanmYnOvhr8oyeDrxYPI343BcbTn+D7utOP+pcsH0rLh9pPVMX6d2PjrGbdlwJ/in+rfuF47o4vdBzsah7rZXS6M2qg0rDClFz/SkUo76ZItI5wEt9bQLe85z+TBUbtoEhWKoPT0O5cBaNVKbdMKht9U4oH6triYItty5qMt5Jq/xIQS1ZQldWC4=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a32ab2a1-a0a2-4aea-987e-08d725cdca95
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 00:23:29.5498
+X-MS-Exchange-CrossTenant-Network-Message-Id: 075aba91-86c9-4968-a3f7-08d725cdcdcc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 00:23:34.9487
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LFZZgcIK9vukdriOL6lQbilwovkF2G6ESls2TCqanR2b/Hr4gLXbwvjeYBVLZyjyGRRbJPO8wNUYjC4hcpdDLg==
+X-MS-Exchange-CrossTenant-userprincipalname: 9op4h0+nE/vGGXKqVZiXonkCVNhReeAF0pQszJRi4JLpgS96ftGepdEdSUYQTkp3fUdD19GegyVS9al4X1rYUQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1450
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Eran Ben Elisha <eranbe@mellanox.com>
 
-Windows SR-IOV provides a backchannel mechanism in software for communicati=
-on
-between a VF driver and a PF driver.  These "configuration blocks" are
-similar in concept to PCI configuration space, but instead of doing reads a=
-nd
-writes in 32-bit chunks through a very slow path, packets of up to 128 byte=
-s
-can be sent or received asynchronously.
+Add wrapper functions for HyperV PCIe read / write /
+block_invalidate_register operations.  This will be used as an
+infrastructure in the downstream patch for software communication.
 
-Nearly every SR-IOV device contains just such a communications channel in
-hardware, so using this one in software is usually optional.  Using the
-software channel, however, allows driver implementers to leverage software
-tools that fuzz the communications channel looking for vulnerabilities.
+This will be enabled by default if CONFIG_PCI_HYPERV_INTERFACE is set.
 
-The usage model for these packets puts the responsibility for reading or
-writing on the VF driver.  The VF driver sends a read or a write packet,
-indicating which "block" is being referred to by number.
-
-If the PF driver wishes to initiate communication, it can "invalidate" one =
-or
-more of the first 64 blocks.  This invalidation is delivered via a callback
-supplied by the VF driver by this driver.
-
-No protocol is implied, except that supplied by the PF and VF drivers.
-
-Signed-off-by: Jake Oshins <jakeo@microsoft.com>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: K. Y. Srinivasan <kys@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 ---
- drivers/pci/controller/pci-hyperv.c | 302 ++++++++++++++++++++++++++++++++=
+ drivers/net/ethernet/mellanox/mlx5/core/Makefile |  1 +
+ drivers/net/ethernet/mellanox/mlx5/core/lib/hv.c | 64 ++++++++++++++++++++=
 ++++
- include/linux/hyperv.h              |  15 ++
- 2 files changed, 317 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/lib/hv.h | 22 ++++++++
+ 3 files changed, 87 insertions(+)
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv.c
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv.h
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
-ci-hyperv.c
-index 40b6254..57adeca 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -365,6 +365,39 @@ struct pci_delete_interrupt {
- 	struct tran_int_desc int_desc;
- } __packed;
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net=
+/ethernet/mellanox/mlx5/core/Makefile
+index 8b7edaa..247295b 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
++++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+@@ -45,6 +45,7 @@ mlx5_core-$(CONFIG_MLX5_ESWITCH)   +=3D eswitch.o eswitch=
+_offloads.o eswitch_offlo
+ mlx5_core-$(CONFIG_MLX5_MPFS)      +=3D lib/mpfs.o
+ mlx5_core-$(CONFIG_VXLAN)          +=3D lib/vxlan.o
+ mlx5_core-$(CONFIG_PTP_1588_CLOCK) +=3D lib/clock.o
++mlx5_core-$(CONFIG_PCI_HYPERV_INTERFACE) +=3D lib/hv.o
 =20
-+/*
-+ * Note: the VM must pass a valid block id, wslot and bytes_requested.
-+ */
-+struct pci_read_block {
-+	struct pci_message message_type;
-+	u32 block_id;
-+	union win_slot_encoding wslot;
-+	u32 bytes_requested;
-+} __packed;
+ #
+ # Ipoib netdev
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv.c b/drivers/net=
+/ethernet/mellanox/mlx5/core/lib/hv.c
+new file mode 100644
+index 0000000..cf08d02
+--- /dev/null
++++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv.c
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
++// Copyright (c) 2018 Mellanox Technologies
 +
-+struct pci_read_block_response {
-+	struct vmpacket_descriptor hdr;
-+	u32 status;
-+	u8 bytes[HV_CONFIG_BLOCK_SIZE_MAX];
-+} __packed;
++#include <linux/hyperv.h>
++#include "mlx5_core.h"
++#include "lib/hv.h"
 +
-+/*
-+ * Note: the VM must pass a valid block id, wslot and byte_count.
-+ */
-+struct pci_write_block {
-+	struct pci_message message_type;
-+	u32 block_id;
-+	union win_slot_encoding wslot;
-+	u32 byte_count;
-+	u8 bytes[HV_CONFIG_BLOCK_SIZE_MAX];
-+} __packed;
-+
-+struct pci_dev_inval_block {
-+	struct pci_incoming_message incoming;
-+	union win_slot_encoding wslot;
-+	u64 block_mask;
-+} __packed;
-+
- struct pci_dev_incoming {
- 	struct pci_incoming_message incoming;
- 	union win_slot_encoding wslot;
-@@ -499,6 +532,9 @@ struct hv_pci_dev {
- 	struct hv_pcibus_device *hbus;
- 	struct work_struct wrk;
-=20
-+	void (*block_invalidate)(void *context, u64 block_mask);
-+	void *invalidate_context;
-+
- 	/*
- 	 * What would be observed if one wrote 0xFFFFFFFF to a BAR and then
- 	 * read it back, for each of the BAR offsets within config space.
-@@ -817,6 +853,256 @@ static int hv_pcifront_write_config(struct pci_bus *b=
-us, unsigned int devfn,
- 	.write =3D hv_pcifront_write_config,
- };
-=20
-+/*
-+ * Paravirtual backchannel
-+ *
-+ * Hyper-V SR-IOV provides a backchannel mechanism in software for
-+ * communication between a VF driver and a PF driver.  These
-+ * "configuration blocks" are similar in concept to PCI configuration spac=
-e,
-+ * but instead of doing reads and writes in 32-bit chunks through a very s=
-low
-+ * path, packets of up to 128 bytes can be sent or received asynchronously=
-.
-+ *
-+ * Nearly every SR-IOV device contains just such a communications channel =
-in
-+ * hardware, so using this one in software is usually optional.  Using the
-+ * software channel, however, allows driver implementers to leverage softw=
-are
-+ * tools that fuzz the communications channel looking for vulnerabilities.
-+ *
-+ * The usage model for these packets puts the responsibility for reading o=
-r
-+ * writing on the VF driver.  The VF driver sends a read or a write packet=
-,
-+ * indicating which "block" is being referred to by number.
-+ *
-+ * If the PF driver wishes to initiate communication, it can "invalidate" =
-one or
-+ * more of the first 64 blocks.  This invalidation is delivered via a call=
-back
-+ * supplied by the VF driver by this driver.
-+ *
-+ * No protocol is implied, except that supplied by the PF and VF drivers.
-+ */
-+
-+struct hv_read_config_compl {
-+	struct hv_pci_compl comp_pkt;
-+	void *buf;
-+	unsigned int len;
-+	unsigned int bytes_returned;
-+};
-+
-+/**
-+ * hv_pci_read_config_compl() - Invoked when a response packet
-+ * for a read config block operation arrives.
-+ * @context:		Identifies the read config operation
-+ * @resp:		The response packet itself
-+ * @resp_packet_size:	Size in bytes of the response packet
-+ */
-+static void hv_pci_read_config_compl(void *context, struct pci_response *r=
-esp,
-+				     int resp_packet_size)
++static int mlx5_hv_config_common(struct mlx5_core_dev *dev, void *buf, int=
+ len,
++				 int offset, bool read)
 +{
-+	struct hv_read_config_compl *comp =3D context;
-+	struct pci_read_block_response *read_resp =3D
-+		(struct pci_read_block_response *)resp;
-+	unsigned int data_len, hdr_len;
++	int rc =3D -EOPNOTSUPP;
++	int bytes_returned;
++	int block_id;
 +
-+	hdr_len =3D offsetof(struct pci_read_block_response, bytes);
-+	if (resp_packet_size < hdr_len) {
-+		comp->comp_pkt.completion_status =3D -1;
-+		goto out;
-+	}
-+
-+	data_len =3D resp_packet_size - hdr_len;
-+	if (data_len > 0 && read_resp->status =3D=3D 0) {
-+		comp->bytes_returned =3D min(comp->len, data_len);
-+		memcpy(comp->buf, read_resp->bytes, comp->bytes_returned);
-+	} else {
-+		comp->bytes_returned =3D 0;
-+	}
-+
-+	comp->comp_pkt.completion_status =3D read_resp->status;
-+out:
-+	complete(&comp->comp_pkt.host_event);
-+}
-+
-+/**
-+ * hv_read_config_block() - Sends a read config block request to
-+ * the back-end driver running in the Hyper-V parent partition.
-+ * @pdev:		The PCI driver's representation for this device.
-+ * @buf:		Buffer into which the config block will be copied.
-+ * @len:		Size in bytes of buf.
-+ * @block_id:		Identifies the config block which has been requested.
-+ * @bytes_returned:	Size which came back from the back-end driver.
-+ *
-+ * Return: 0 on success, -errno on failure
-+ */
-+int hv_read_config_block(struct pci_dev *pdev, void *buf, unsigned int len=
-,
-+			 unsigned int block_id, unsigned int *bytes_returned)
-+{
-+	struct hv_pcibus_device *hbus =3D
-+		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
-+			     sysdata);
-+	struct {
-+		struct pci_packet pkt;
-+		char buf[sizeof(struct pci_read_block)];
-+	} pkt;
-+	struct hv_read_config_compl comp_pkt;
-+	struct pci_read_block *read_blk;
-+	int ret;
-+
-+	if (len =3D=3D 0 || len > HV_CONFIG_BLOCK_SIZE_MAX)
++	if (offset % HV_CONFIG_BLOCK_SIZE_MAX || len % HV_CONFIG_BLOCK_SIZE_MAX)
 +		return -EINVAL;
 +
-+	init_completion(&comp_pkt.comp_pkt.host_event);
-+	comp_pkt.buf =3D buf;
-+	comp_pkt.len =3D len;
++	block_id =3D offset / HV_CONFIG_BLOCK_SIZE_MAX;
 +
-+	memset(&pkt, 0, sizeof(pkt));
-+	pkt.pkt.completion_func =3D hv_pci_read_config_compl;
-+	pkt.pkt.compl_ctxt =3D &comp_pkt;
-+	read_blk =3D (struct pci_read_block *)&pkt.pkt.message;
-+	read_blk->message_type.type =3D PCI_READ_BLOCK;
-+	read_blk->wslot.slot =3D devfn_to_wslot(pdev->devfn);
-+	read_blk->block_id =3D block_id;
-+	read_blk->bytes_requested =3D len;
++	rc =3D read ?
++	     hyperv_read_cfg_blk(dev->pdev, buf,
++				 HV_CONFIG_BLOCK_SIZE_MAX, block_id,
++				 &bytes_returned) :
++	     hyperv_write_cfg_blk(dev->pdev, buf,
++				  HV_CONFIG_BLOCK_SIZE_MAX, block_id);
 +
-+	ret =3D vmbus_sendpacket(hbus->hdev->channel, read_blk,
-+			       sizeof(*read_blk), (unsigned long)&pkt.pkt,
-+			       VM_PKT_DATA_INBAND,
-+			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
-+	if (ret)
-+		return ret;
++	/* Make sure len bytes were read successfully  */
++	if (read)
++		rc |=3D !(len =3D=3D bytes_returned);
 +
-+	ret =3D wait_for_response(hbus->hdev, &comp_pkt.comp_pkt.host_event);
-+	if (ret)
-+		return ret;
-+
-+	if (comp_pkt.comp_pkt.completion_status !=3D 0 ||
-+	    comp_pkt.bytes_returned =3D=3D 0) {
-+		dev_err(&hbus->hdev->device,
-+			"Read Config Block failed: 0x%x, bytes_returned=3D%d\n",
-+			comp_pkt.comp_pkt.completion_status,
-+			comp_pkt.bytes_returned);
-+		return -EIO;
-+	}
-+
-+	*bytes_returned =3D comp_pkt.bytes_returned;
-+	return 0;
-+}
-+EXPORT_SYMBOL(hv_read_config_block);
-+
-+/**
-+ * hv_pci_write_config_compl() - Invoked when a response packet for a writ=
-e
-+ * config block operation arrives.
-+ * @context:		Identifies the write config operation
-+ * @resp:		The response packet itself
-+ * @resp_packet_size:	Size in bytes of the response packet
-+ */
-+static void hv_pci_write_config_compl(void *context, struct pci_response *=
-resp,
-+				      int resp_packet_size)
-+{
-+	struct hv_pci_compl *comp_pkt =3D context;
-+
-+	comp_pkt->completion_status =3D resp->status;
-+	complete(&comp_pkt->host_event);
-+}
-+
-+/**
-+ * hv_write_config_block() - Sends a write config block request to the
-+ * back-end driver running in the Hyper-V parent partition.
-+ * @pdev:		The PCI driver's representation for this device.
-+ * @buf:		Buffer from which the config block will	be copied.
-+ * @len:		Size in bytes of buf.
-+ * @block_id:		Identifies the config block which is being written.
-+ *
-+ * Return: 0 on success, -errno on failure
-+ */
-+int hv_write_config_block(struct pci_dev *pdev, void *buf, unsigned int le=
-n,
-+			  unsigned int block_id)
-+{
-+	struct hv_pcibus_device *hbus =3D
-+		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
-+			     sysdata);
-+	struct {
-+		struct pci_packet pkt;
-+		char buf[sizeof(struct pci_write_block)];
-+		u32 reserved;
-+	} pkt;
-+	struct hv_pci_compl comp_pkt;
-+	struct pci_write_block *write_blk;
-+	u32 pkt_size;
-+	int ret;
-+
-+	if (len =3D=3D 0 || len > HV_CONFIG_BLOCK_SIZE_MAX)
-+		return -EINVAL;
-+
-+	init_completion(&comp_pkt.host_event);
-+
-+	memset(&pkt, 0, sizeof(pkt));
-+	pkt.pkt.completion_func =3D hv_pci_write_config_compl;
-+	pkt.pkt.compl_ctxt =3D &comp_pkt;
-+	write_blk =3D (struct pci_write_block *)&pkt.pkt.message;
-+	write_blk->message_type.type =3D PCI_WRITE_BLOCK;
-+	write_blk->wslot.slot =3D devfn_to_wslot(pdev->devfn);
-+	write_blk->block_id =3D block_id;
-+	write_blk->byte_count =3D len;
-+	memcpy(write_blk->bytes, buf, len);
-+	pkt_size =3D offsetof(struct pci_write_block, bytes) + len;
-+	/*
-+	 * This quirk is required on some hosts shipped around 2018, because
-+	 * these hosts don't check the pkt_size correctly (new hosts have been
-+	 * fixed since early 2019). The quirk is also safe on very old hosts
-+	 * and new hosts, because, on them, what really matters is the length
-+	 * specified in write_blk->byte_count.
-+	 */
-+	pkt_size +=3D sizeof(pkt.reserved);
-+
-+	ret =3D vmbus_sendpacket(hbus->hdev->channel, write_blk, pkt_size,
-+			       (unsigned long)&pkt.pkt, VM_PKT_DATA_INBAND,
-+			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
-+	if (ret)
-+		return ret;
-+
-+	ret =3D wait_for_response(hbus->hdev, &comp_pkt.host_event);
-+	if (ret)
-+		return ret;
-+
-+	if (comp_pkt.completion_status !=3D 0) {
-+		dev_err(&hbus->hdev->device,
-+			"Write Config Block failed: 0x%x\n",
-+			comp_pkt.completion_status);
-+		return -EIO;
++	if (rc) {
++		mlx5_core_err(dev, "Failed to %s hv config, err =3D %d, len =3D %d, offs=
+et =3D %d\n",
++			      read ? "read" : "write", rc, len,
++			      offset);
++		return rc;
 +	}
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL(hv_write_config_block);
 +
-+/**
-+ * hv_register_block_invalidate() - Invoked when a config block invalidati=
-on
-+ * arrives from the back-end driver.
-+ * @pdev:		The PCI driver's representation for this device.
-+ * @context:		Identifies the device.
-+ * @block_invalidate:	Identifies all of the blocks being invalidated.
-+ *
-+ * Return: 0 on success, -errno on failure
-+ */
-+int hv_register_block_invalidate(struct pci_dev *pdev, void *context,
-+				 void (*block_invalidate)(void *context,
-+							  u64 block_mask))
++int mlx5_hv_read_config(struct mlx5_core_dev *dev, void *buf, int len,
++			int offset)
 +{
-+	struct hv_pcibus_device *hbus =3D
-+		container_of(pdev->bus->sysdata, struct hv_pcibus_device,
-+			     sysdata);
-+	struct hv_pci_dev *hpdev;
-+
-+	hpdev =3D get_pcichild_wslot(hbus, devfn_to_wslot(pdev->devfn));
-+	if (!hpdev)
-+		return -ENODEV;
-+
-+	hpdev->block_invalidate =3D block_invalidate;
-+	hpdev->invalidate_context =3D context;
-+
-+	put_pcichild(hpdev);
-+	return 0;
-+
++	return mlx5_hv_config_common(dev, buf, len, offset, true);
 +}
-+EXPORT_SYMBOL(hv_register_block_invalidate);
 +
- /* Interrupt management hooks */
- static void hv_int_desc_free(struct hv_pci_dev *hpdev,
- 			     struct tran_int_desc *int_desc)
-@@ -1968,6 +2254,7 @@ static void hv_pci_onchannelcallback(void *context)
- 	struct pci_response *response;
- 	struct pci_incoming_message *new_message;
- 	struct pci_bus_relations *bus_rel;
-+	struct pci_dev_inval_block *inval;
- 	struct pci_dev_incoming *dev_message;
- 	struct hv_pci_dev *hpdev;
-=20
-@@ -2045,6 +2332,21 @@ static void hv_pci_onchannelcallback(void *context)
- 				}
- 				break;
-=20
-+			case PCI_INVALIDATE_BLOCK:
++int mlx5_hv_write_config(struct mlx5_core_dev *dev, void *buf, int len,
++			 int offset)
++{
++	return mlx5_hv_config_common(dev, buf, len, offset, false);
++}
 +
-+				inval =3D (struct pci_dev_inval_block *)buffer;
-+				hpdev =3D get_pcichild_wslot(hbus,
-+							   inval->wslot.slot);
-+				if (hpdev) {
-+					if (hpdev->block_invalidate) {
-+						hpdev->block_invalidate(
-+						    hpdev->invalidate_context,
-+						    inval->block_mask);
-+					}
-+					put_pcichild(hpdev);
-+				}
-+				break;
++int mlx5_hv_register_invalidate(struct mlx5_core_dev *dev, void *context,
++				void (*block_invalidate)(void *context,
++							 u64 block_mask))
++{
++	return hyperv_reg_block_invalidate(dev->pdev, context,
++					   block_invalidate);
++}
 +
- 			default:
- 				dev_warn(&hbus->hdev->device,
- 					"Unimplemented protocol message %x\n",
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 6256cc3..9d37f8c 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1578,4 +1578,19 @@ struct vmpacket_descriptor *
- 	for (pkt =3D hv_pkt_iter_first(channel); pkt; \
- 	    pkt =3D hv_pkt_iter_next(channel, pkt))
-=20
-+/*
-+ * Functions for passing data between SR-IOV PF and VF drivers.  The VF dr=
-iver
-+ * sends requests to read and write blocks. Each block must be 128 bytes o=
-r
-+ * smaller. Optionally, the VF driver can register a callback function whi=
-ch
-+ * will be invoked when the host says that one or more of the first 64 blo=
-ck
-+ * IDs is "invalid" which means that the VF driver should reread them.
-+ */
-+#define HV_CONFIG_BLOCK_SIZE_MAX 128
-+int hv_read_config_block(struct pci_dev *dev, void *buf, unsigned int buf_=
-len,
-+			 unsigned int block_id, unsigned int *bytes_returned);
-+int hv_write_config_block(struct pci_dev *dev, void *buf, unsigned int len=
-,
-+			  unsigned int block_id);
-+int hv_register_block_invalidate(struct pci_dev *dev, void *context,
-+				 void (*block_invalidate)(void *context,
-+							  u64 block_mask));
- #endif /* _HYPERV_H */
++void mlx5_hv_unregister_invalidate(struct mlx5_core_dev *dev)
++{
++	hyperv_reg_block_invalidate(dev->pdev, NULL, NULL);
++}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv.h b/drivers/net=
+/ethernet/mellanox/mlx5/core/lib/hv.h
+new file mode 100644
+index 0000000..f9a4557
+--- /dev/null
++++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
++/* Copyright (c) 2019 Mellanox Technologies. */
++
++#ifndef __LIB_HV_H__
++#define __LIB_HV_H__
++
++#if IS_ENABLED(CONFIG_PCI_HYPERV_INTERFACE)
++
++#include <linux/hyperv.h>
++#include <linux/mlx5/driver.h>
++
++int mlx5_hv_read_config(struct mlx5_core_dev *dev, void *buf, int len,
++			int offset);
++int mlx5_hv_write_config(struct mlx5_core_dev *dev, void *buf, int len,
++			 int offset);
++int mlx5_hv_register_invalidate(struct mlx5_core_dev *dev, void *context,
++				void (*block_invalidate)(void *context,
++							 u64 block_mask));
++void mlx5_hv_unregister_invalidate(struct mlx5_core_dev *dev);
++#endif
++
++#endif /* __LIB_HV_H__ */
 --=20
 1.8.3.1
 
