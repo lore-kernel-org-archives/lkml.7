@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0519C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3A8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C44A32339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B80A422DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbfHUPh1 (ORCPT
+        id S1729212AbfHUPhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:37:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:60398 "EHLO foss.arm.com"
+        Wed, 21 Aug 2019 11:37:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:60478 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730133AbfHUPhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:37:23 -0400
+        id S1730183AbfHUPhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:37:32 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84E53337;
-        Wed, 21 Aug 2019 08:37:22 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7168C1576;
+        Wed, 21 Aug 2019 08:37:31 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82F743F718;
-        Wed, 21 Aug 2019 08:37:20 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E6223F718;
+        Wed, 21 Aug 2019 08:37:29 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
@@ -39,9 +39,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         Suzuki K Pouloze <suzuki.poulose@arm.com>,
         Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 04/10] KVM: Implement kvm_put_guest()
-Date:   Wed, 21 Aug 2019 16:36:50 +0100
-Message-Id: <20190821153656.33429-5-steven.price@arm.com>
+Subject: [PATCH v3 08/10] arm/arm64: Provide a wrapper for SMCCC 1.1 calls
+Date:   Wed, 21 Aug 2019 16:36:54 +0100
+Message-Id: <20190821153656.33429-9-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190821153656.33429-1-steven.price@arm.com>
 References: <20190821153656.33429-1-steven.price@arm.com>
@@ -52,50 +52,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kvm_put_guest() is analogous to put_user() - it writes a single value to
-the guest physical address. The implementation is built upon put_user()
-and so it has the same single copy atomic properties.
+SMCCC 1.1 calls may use either HVC or SMC depending on the PSCI
+conduit. Rather than coding this in every call site provide a macro
+which uses the correct instruction. The macro also handles the case
+where no PSCI conduit is configured returning a not supported error
+in res, along with returning the conduit used for the call.
+
+This allow us to remove some duplicated code and will be useful later
+when adding paravirtualized time hypervisor calls.
 
 Signed-off-by: Steven Price <steven.price@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
 ---
- include/linux/kvm_host.h | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ include/linux/arm-smccc.h | 44 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index fcb46b3374c6..e154a1897e20 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -746,6 +746,30 @@ int kvm_write_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
- 				  unsigned long len);
- int kvm_gfn_to_hva_cache_init(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
- 			      gpa_t gpa, unsigned long len);
+diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+index e7f129f26ebd..eee1e832221d 100644
+--- a/include/linux/arm-smccc.h
++++ b/include/linux/arm-smccc.h
+@@ -303,6 +303,50 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+ #define SMCCC_RET_NOT_SUPPORTED			-1
+ #define SMCCC_RET_NOT_REQUIRED			-2
+ 
++/* Like arm_smccc_1_1* but always returns SMCCC_RET_NOT_SUPPORTED.
++ * Used when the PSCI conduit is not defined. The empty asm statement
++ * avoids compiler warnings about unused variables.
++ */
++#define __fail_smccc_1_1(...)						\
++	do {								\
++		__declare_args(__count_args(__VA_ARGS__), __VA_ARGS__);	\
++		asm ("" __constraints(__count_args(__VA_ARGS__)));	\
++		if (___res)						\
++			___res->a0 = SMCCC_RET_NOT_SUPPORTED;		\
++	} while (0)
 +
-+#define __kvm_put_guest(kvm, gfn, offset, value, type)			\
-+({									\
-+	unsigned long __addr = gfn_to_hva(kvm, gfn);			\
-+	type __user *__uaddr = (type __user *)(__addr + offset);	\
-+	int __ret = 0;							\
-+									\
-+	if (kvm_is_error_hva(__addr))					\
-+		__ret = -EFAULT;					\
-+	else								\
-+		__ret = put_user(value, __uaddr);			\
-+	if (!__ret)							\
-+		mark_page_dirty(kvm, gfn);				\
-+	__ret;								\
-+})
++/*
++ * arm_smccc_1_1_invoke() - make an SMCCC v1.1 compliant call
++ *
++ * This is a variadic macro taking one to eight source arguments, and
++ * an optional return structure.
++ *
++ * @a0-a7: arguments passed in registers 0 to 7
++ * @res: result values from registers 0 to 3
++ *
++ * This macro will make either an HVC call or an SMC call depending on the
++ * current PSCI conduit. If no valid conduit is available then -1
++ * (SMCCC_RET_NOT_SUPPORTED) is returned in @res.a0 (if supplied).
++ *
++ * The return value also provides the conduit that was used.
++ */
++#define arm_smccc_1_1_invoke(...) ({					\
++		int method = psci_ops.conduit;				\
++		switch (method) {					\
++		case PSCI_CONDUIT_HVC:					\
++			arm_smccc_1_1_hvc(__VA_ARGS__);			\
++			break;						\
++		case PSCI_CONDUIT_SMC:					\
++			arm_smccc_1_1_smc(__VA_ARGS__);			\
++			break;						\
++		default:						\
++			__fail_smccc_1_1(__VA_ARGS__);			\
++			method = PSCI_CONDUIT_NONE;			\
++			break;						\
++		}							\
++		method;							\
++	})
 +
-+#define kvm_put_guest(kvm, gpa, value, type)				\
-+({									\
-+	gpa_t __gpa = gpa;						\
-+	struct kvm *__kvm = kvm;					\
-+	__kvm_put_guest(__kvm, __gpa >> PAGE_SHIFT,			\
-+			offset_in_page(__gpa), (value), type);		\
-+})
-+
- int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
- int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
- struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
+ /* Paravirtualised time calls (defined by ARM DEN0057A) */
+ #define ARM_SMCCC_HV_PV_FEATURES				\
+ 	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,			\
 -- 
 2.20.1
 
