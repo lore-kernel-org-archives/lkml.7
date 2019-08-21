@@ -2,153 +2,334 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09694C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F77C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6EA022CE3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:59:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="hjH5olWM"
+	by mail.kernel.org (Postfix) with ESMTP id 58A2822D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566414092;
+	bh=kq5C/TB5QS0/1pcYDwY0WFF3EbDix3cS781XjCeHD6g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QsypwWR2jjQQZjovRA4oWqniAuyTUaWY+86qo7fHPYR7aZ3xXuFzzLx3rOOhZUohf
+	 VPdm1dkhT7Fn62j3SatBUyBsZa4UXDFiRTTNvtTDliYZo16RVjyOC7rByJV38jRDji
+	 vvb4O+kKfqOKmMPrMHhZhT5OFnqG09s1O2o7yLSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfHUS7j (ORCPT
+        id S1728949AbfHUTBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:59:39 -0400
-Received: from mail-eopbgr780081.outbound.protection.outlook.com ([40.107.78.81]:12288
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728716AbfHUS7j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:59:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=afE7aTivTngYiuZmjhxanqgHBPbv1fuKmguqa3Qw4QLVRkmBhRQWqfJxyLgUpdmjM/2SDZWogqscDv47OChs7JnSWFj6d+F23wlF1BxpHGXHARzrM/fOTrXVUNypseP3Yky9ScdYLyrww625uOcKOP5brI4Avy/IeWlwO0qloVdC06SIqve4mPT/NbOwY6L9HjoqJuvHLoCrtA2M6YL7qhOfAHoZM5He/O7oT4Q50L/9NYvKjfUW7Qg5kVbTILMZk0fgozAc3K/q5KvrlRG5A2yrdLOzr59YGDz2cWJItsZeHYPSvA9MzT4xSKApcna79RdCrrn3zjdQCnDadPkXFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bpsejHAG8GNGL6TGAsejnB71BUzlaZtpQTS4DQPTPrU=;
- b=GRks0D3aXBQHvuxOeEJvnVnJUDr5AI3sMTocq4j0QShZWMdW9ISIJIWrHJs1wu15uZxKxxq7J5MRL6NSquhgo1w98APf1ZLXnSPnGlBZFfk9l2c3OCQGDKT5NYVAQ/iIK/aC7cieU9Qi4+ijO6qKqbd93hmsGxSoGzi4yktbaNzcQgBkkHW4C+RRqvtUK6Cnaa4YyQsm0eU27Rs6seBVXnFhY0aS8QuP4urKwKqrjalkCbV5+6zaPce8Yw8gzIDQU0BADtwGiwvSBygkAHYp2BMPieKJ3LseMKLPSKOajmszid6E3m7HQEC/lbfjxknc8r46zZpe82+G6Ie+D1NL4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bpsejHAG8GNGL6TGAsejnB71BUzlaZtpQTS4DQPTPrU=;
- b=hjH5olWMCW3ei+2a1+oObp84YwFGQEETXo6ZqpXOwSwKslhlxQNroBkXezpzfRyYF/wZjaHtyLzuvAz5uFEJhXGomHoF57FskxN7qm0MdcNlBrRXcIIGhzQSj73xMfFFgJOJxg/afsf09d/w6F6hm7sEFSmU5ZUI+IgLqPmK8Ek=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB5687.namprd05.prod.outlook.com (20.178.1.220) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2199.11; Wed, 21 Aug 2019 18:59:33 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::1541:ed53:784a:6376]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::1541:ed53:784a:6376%5]) with mapi id 15.20.2199.011; Wed, 21 Aug 2019
- 18:59:33 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     David Hildenbrand <david@redhat.com>
-CC:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mm/balloon_compaction: Informative allocation warnings
-Thread-Topic: [PATCH v2] mm/balloon_compaction: Informative allocation
- warnings
-Thread-Index: AQHVWEJHWn7VmeZ5cEugJmetWObq/6cF9CyAgAAAcQA=
-Date:   Wed, 21 Aug 2019 18:59:32 +0000
-Message-ID: <4E10A342-9A51-4C1F-8E5A-8005AACEF4CE@vmware.com>
-References: <20190821094159.40795-1-namit@vmware.com>
- <75ff92c2-7ae2-c4a6-cd1f-44741e29d20e@redhat.com>
-In-Reply-To: <75ff92c2-7ae2-c4a6-cd1f-44741e29d20e@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e24b47ef-064e-4344-b982-08d72669b408
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR05MB5687;
-x-ms-traffictypediagnostic: BYAPR05MB5687:
-x-microsoft-antispam-prvs: <BYAPR05MB56876D6E8010ACA7769026F7D0AA0@BYAPR05MB5687.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1388;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(366004)(396003)(376002)(199004)(189003)(6486002)(66946007)(76116006)(6116002)(54906003)(3846002)(66446008)(64756008)(66556008)(66476007)(478600001)(6246003)(25786009)(6512007)(6436002)(14454004)(33656002)(4326008)(66066001)(229853002)(6916009)(53936002)(8936002)(446003)(81156014)(14444005)(36756003)(256004)(186003)(76176011)(71190400001)(81166006)(305945005)(5660300002)(86362001)(102836004)(476003)(7736002)(53546011)(6506007)(2616005)(486006)(8676002)(2906002)(316002)(71200400001)(99286004)(26005)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5687;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gTysi6YqWq1QF4DlvSS9bQZkK3D7e/pZiflpC+vAgruXNsTCPK6O+lhTRBb2wj51fv6cCsWU39v2dVhdKLUCY/3ToVE+1amAU4a+DPL34eIrJLVfB+9Jdm1X78Fx0Cfef+D5bVn6A8WWZVJisgzU3sZwZ5feYnL5x1hwHsYsyXXTjVGkcqG5ZmwT66j4LM81gsTd1TivZWr9/mbmNZxmr3dEy5Zii7/RS2nYR3M4sdPd4D7HsdwCfLVpcBrPf7BK1MBfanHp50q85UhERneNcjKuUrVXMDRVzvJUnNgKyifYLIIOMe/vYv15Cdu2vzu5gXKTcXH2QaEelXIUnOzzoAykyUGWq9A1OQI33Jp7mTrwf0f2ysMIgfHR9TfG7lIYohLbhlrTbWPO1i9I8OfxxF1UvuqIurS9RzaNLqoZ8KU=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3A38FA3954F90E49AB4A1D4968549FAF@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 21 Aug 2019 15:01:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727491AbfHUTBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 15:01:31 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA7D122CE3;
+        Wed, 21 Aug 2019 19:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566414090;
+        bh=kq5C/TB5QS0/1pcYDwY0WFF3EbDix3cS781XjCeHD6g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g8KcAsDJGoliNmm9//bxaw+UDmgCsuv+NGdt9Yq7ZZEjAjrC7LMSaqz7oSTzSIw/A
+         bJACOeLiH6lReeI8u/ZSLuw6QRmuPwuVgpftJEcvF+cn1J+AxLDofF7gcKimHfA7Uz
+         rVRMmdIPk9FrsPLaolT7TW/5nWsVAPQsTcAZn0yk=
+Date:   Wed, 21 Aug 2019 14:01:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
+        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
+ downstream component
+Message-ID: <20190821190128.GH14450@google.com>
+References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
+ <20190703133953.GK128603@google.com>
+ <20190703150341.GW2640@lahna.fi.intel.com>
+ <20190801215339.GF151852@google.com>
+ <20190806101230.GI2548@lahna.fi.intel.com>
+ <20190819235245.GX253360@google.com>
+ <20190820095820.GD19908@lahna.fi.intel.com>
+ <20190820141717.GA14450@google.com>
+ <20190821072833.GM19908@lahna.fi.intel.com>
+ <20190821143751.GW19908@lahna.fi.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e24b47ef-064e-4344-b982-08d72669b408
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 18:59:32.8997
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zhohh2xN6E6IypEHFzk2CM/yb7C76yfHc6QZY2s9U68v5PYGF5syks0tlsMEYjXzz1ewoBxE7RV8KQH3AH9hIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5687
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821143751.GW19908@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Aug 21, 2019, at 11:57 AM, David Hildenbrand <david@redhat.com> wrote:
->=20
-> On 21.08.19 11:41, Nadav Amit wrote:
->> There is no reason to print generic warnings when balloon memory
->> allocation fails, as failures are expected and can be handled
->> gracefully. Since VMware balloon now uses balloon-compaction
->> infrastructure, and suppressed these warnings before, it is also
->> beneficial to suppress these warnings to keep the same behavior that the
->> balloon had before.
->>=20
->> Since such warnings can still be useful to indicate that the balloon is
->> over-inflated, print more informative and less frightening warning if
->> allocation fails instead.
->>=20
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Jason Wang <jasowang@redhat.com>
->> Signed-off-by: Nadav Amit <namit@vmware.com>
->>=20
->> ---
->>=20
->> v1->v2:
->>  * Print informative warnings instead suppressing [David]
->> ---
->> mm/balloon_compaction.c | 7 ++++++-
->> 1 file changed, 6 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
->> index 798275a51887..0c1d1f7689f0 100644
->> --- a/mm/balloon_compaction.c
->> +++ b/mm/balloon_compaction.c
->> @@ -124,7 +124,12 @@ EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
->> struct page *balloon_page_alloc(void)
->> {
->> 	struct page *page =3D alloc_page(balloon_mapping_gfp_mask() |
->> -				       __GFP_NOMEMALLOC | __GFP_NORETRY);
->> +				       __GFP_NOMEMALLOC | __GFP_NORETRY |
->> +				       __GFP_NOWARN);
->> +
->> +	if (!page)
->> +		pr_warn_ratelimited("memory balloon: memory allocation failed");
->> +
->> 	return page;
->> }
->> EXPORT_SYMBOL_GPL(balloon_page_alloc);
->=20
-> Not sure if "memory balloon" is the right wording. hmmm.
->=20
-> Acked-by: David Hildenbrand <david@redhat.com>
+On Wed, Aug 21, 2019 at 05:37:51PM +0300, Mika Westerberg wrote:
+> On Wed, Aug 21, 2019 at 10:28:37AM +0300, Mika Westerberg wrote:
+> > > If we see a type of PCI_EXP_TYPE_ROOT_PORT or
+> > > PCI_EXP_TYPE_PCIE_BRIDGE, I think we have to assume that's accurate
+> > > (which we already do today -- for those types, we assume the device
+> > > has a secondary link).
+> > > 
+> > > For a device that claims to be PCI_EXP_TYPE_DOWNSTREAM, if a parent
+> > > device exists and is a Downstream Port (Root Port, Switch Downstream
+> > > Port, and I suppose a PCI-to-PCIe bridge (this is basically
+> > > pcie_downstream_port()), this device must actually be acting as a
+> > > PCI_EXP_TYPE_UPSTREAM device.
+> > > 
+> > > If a device claiming to be PCI_EXP_TYPE_UPSTREAM has a parent that is
+> > > PCI_EXP_TYPE_UPSTREAM, this device must actually be a
+> > > PCI_EXP_TYPE_DOWNSTREAM port.
+> > > 
+> > > For PCI_EXP_TYPE_DOWNSTREAM and PCI_EXP_TYPE_UPSTREAM devices that
+> > > don't have parents, we just have to assume they advertise the correct
+> > > type (as we do today).  There are sparc and virtualization configs
+> > > like this.
+> > 
+> > OK, thanks for the details. I'll try to make patch based on the above.
+> 
+> Something like the below patch? Only compile tested for now but I will
+> split it into a proper patch series and give it some testing if this is
+> what you were after.
 
-Do you have a better suggestion?
+This is great, thanks a lot for cleaning this up!  I feel bad for
+having introduced the has_secondary_link hack in the first place, so
+I'm really glad you're fixing it up.
 
+A couple minor nits below.
+
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 544922f097c0..2fccb5762c76 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -336,15 +336,6 @@ static inline int pcie_cap_version(const struct pci_dev *dev)
+>  	return pcie_caps_reg(dev) & PCI_EXP_FLAGS_VERS;
+>  }
+>  
+> -static bool pcie_downstream_port(const struct pci_dev *dev)
+> -{
+> -	int type = pci_pcie_type(dev);
+> -
+> -	return type == PCI_EXP_TYPE_ROOT_PORT ||
+> -	       type == PCI_EXP_TYPE_DOWNSTREAM ||
+> -	       type == PCI_EXP_TYPE_PCIE_BRIDGE;
+> -}
+> -
+>  bool pcie_cap_has_lnkctl(const struct pci_dev *dev)
+>  {
+>  	int type = pci_pcie_type(dev);
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 9ac50710f1d4..3c0672f1dfe7 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3577,7 +3577,7 @@ int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
+>  		}
+>  
+>  		/* Ensure upstream ports don't block AtomicOps on egress */
+> -		if (!bridge->has_secondary_link) {
+> +		if (pci_pcie_type(bridge) == PCI_EXP_TYPE_UPSTREAM) {
+>  			pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2,
+>  						   &ctl2);
+>  			if (ctl2 & PCI_EXP_DEVCTL2_ATOMIC_EGRESS_BLOCK)
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 9a83fcf612ca..ae8d839dca4f 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -118,6 +118,15 @@ static inline bool pci_power_manageable(struct pci_dev *pci_dev)
+>  	return !pci_has_subordinate(pci_dev) || pci_dev->bridge_d3;
+>  }
+>  
+> +static inline bool pcie_downstream_port(const struct pci_dev *dev)
+> +{
+> +	int type = pci_pcie_type(dev);
+> +
+> +	return type == PCI_EXP_TYPE_ROOT_PORT ||
+> +	       type == PCI_EXP_TYPE_DOWNSTREAM ||
+> +	       type == PCI_EXP_TYPE_PCIE_BRIDGE;
+> +}
+> +
+>  int pci_vpd_init(struct pci_dev *dev);
+>  void pci_vpd_release(struct pci_dev *dev);
+>  void pcie_vpd_create_sysfs_dev_files(struct pci_dev *dev);
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 464f8f92653f..db2d40e44c08 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -904,6 +904,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
+>  {
+>  	struct pcie_link_state *link;
+>  	int blacklist = !!pcie_aspm_sanity_check(pdev);
+> +	int type = pci_pcie_type(pdev);
+>  
+>  	if (!aspm_support_enabled)
+>  		return;
+> @@ -913,15 +914,14 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
+>  
+>  	/*
+>  	 * We allocate pcie_link_state for the component on the upstream
+> -	 * end of a Link, so there's nothing to do unless this device has a
+> -	 * Link on its secondary side.
+> +	 * end of a Link, so there's nothing to do unless this device is
+> +	 * downstream or root port.
+>  	 */
+> -	if (!pdev->has_secondary_link)
+> +	if (type != PCI_EXP_TYPE_ROOT_PORT && type != PCI_EXP_TYPE_DOWNSTREAM)
+
+I think this should use pcie_downstream_port(), since
+PCI_EXP_TYPE_PCIE_BRIDGE is a Downstream Port, and
+set_pcie_port_type() did set dev->has_secondary_link for PCIE_BRIDGE.
+
+>  		return;
+>  
+>  	/* VIA has a strange chipset, root port is under a bridge */
+> -	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT &&
+> -	    pdev->bus->self)
+> +	if (type == PCI_EXP_TYPE_ROOT_PORT && pdev->bus->self)
+>  		return;
+>  
+>  	down_read(&pci_bus_sem);
+> @@ -1070,7 +1070,8 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+>  	if (!pci_is_pcie(pdev))
+>  		return 0;
+>  
+> -	if (pdev->has_secondary_link)
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT ||
+> +	    pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)
+
+Same here.
+
+>  		parent = pdev;
+>  	if (!parent || !parent->link_state)
+>  		return -EINVAL;
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 773197a12568..b0e6048a9208 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -166,7 +166,7 @@ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
+>  	driver = pcie_port_find_service(dev, service);
+>  	if (driver && driver->reset_link) {
+>  		status = driver->reset_link(dev);
+> -	} else if (dev->has_secondary_link) {
+> +	} else if (pcie_downstream_port(dev)) {
+>  		status = default_reset_link(dev);
+>  	} else {
+>  		pci_printk(KERN_DEBUG, dev, "no link-reset support at upstream device %s\n",
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index a3c7338fad86..983a5612c548 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -1431,26 +1431,40 @@ void set_pcie_port_type(struct pci_dev *pdev)
+>  	pci_read_config_word(pdev, pos + PCI_EXP_DEVCAP, &reg16);
+>  	pdev->pcie_mpss = reg16 & PCI_EXP_DEVCAP_PAYLOAD;
+>  
+> +	parent = pci_upstream_bridge(pdev);
+> +	if (!parent)
+> +		return;
+> +
+>  	/*
+> -	 * A Root Port or a PCI-to-PCIe bridge is always the upstream end
+> -	 * of a Link.  No PCIe component has two Links.  Two Links are
+> -	 * connected by a Switch that has a Port on each Link and internal
+> -	 * logic to connect the two Ports.
+> +	 * Some systems do not identify their upstream/downstream ports
+> +	 * correctly so detect impossible configurations here and correct
+> +	 * the port type accordingly.
+>  	 */
+>  	type = pci_pcie_type(pdev);
+> -	if (type == PCI_EXP_TYPE_ROOT_PORT ||
+> -	    type == PCI_EXP_TYPE_PCIE_BRIDGE)
+> -		pdev->has_secondary_link = 1;
+> -	else if (type == PCI_EXP_TYPE_UPSTREAM ||
+> -		 type == PCI_EXP_TYPE_DOWNSTREAM) {
+> -		parent = pci_upstream_bridge(pdev);
+> -
+> +	if (type == PCI_EXP_TYPE_DOWNSTREAM) {
+>  		/*
+> -		 * Usually there's an upstream device (Root Port or Switch
+> -		 * Downstream Port), but we can't assume one exists.
+> +		 * If pdev claims to be downstream port but the parent
+> +		 * device is also downstream port assume pdev is actually
+> +		 * upstream port.
+>  		 */
+> -		if (parent && !parent->has_secondary_link)
+> -			pdev->has_secondary_link = 1;
+> +		if (pcie_downstream_port(parent)) {
+> +			dev_info(&pdev->dev,
+> +				"claims to be downstream port but is acting as upstream port, correcting type\n");
+
+You can use pci_info() here.  Since the text wraps anyway, I'd just
+remove the line break and put it all on one line.
+
+> +			pdev->pcie_flags_reg &= ~PCI_EXP_FLAGS_TYPE;
+> +			pdev->pcie_flags_reg |= PCI_EXP_TYPE_UPSTREAM;
+> +		}
+> +	} else if (type == PCI_EXP_TYPE_UPSTREAM) {
+> +		/*
+> +		 * If pdev claims to be upstream port but the parent
+> +		 * device is also upstream port assume pdev is actually
+> +		 * downstream port.
+> +		 */
+> +		if (pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
+> +			dev_info(&pdev->dev,
+> +				"claims to be upstream port but is acting as downstream port, correcting type\n");
+
+And here.
+
+> +			pdev->pcie_flags_reg &= ~PCI_EXP_FLAGS_TYPE;
+> +			pdev->pcie_flags_reg |= PCI_EXP_TYPE_DOWNSTREAM;
+> +		}
+>  	}
+>  }
+>  
+> @@ -2764,12 +2778,8 @@ static int only_one_child(struct pci_bus *bus)
+>  	 * A PCIe Downstream Port normally leads to a Link with only Device
+>  	 * 0 on it (PCIe spec r3.1, sec 7.3.1).  As an optimization, scan
+>  	 * only for Device 0 in that situation.
+> -	 *
+> -	 * Checking has_secondary_link is a hack to identify Downstream
+> -	 * Ports because sometimes Switches are configured such that the
+> -	 * PCIe Port Type labels are backwards.
+>  	 */
+> -	if (bridge && pci_is_pcie(bridge) && bridge->has_secondary_link)
+> +	if (bridge && pci_is_pcie(bridge) && pcie_downstream_port(bridge))
+>  		return 1;
+>  
+>  	return 0;
+> diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
+> index 5acd9c02683a..9ae9fb9339e8 100644
+> --- a/drivers/pci/vc.c
+> +++ b/drivers/pci/vc.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/pci_regs.h>
+>  #include <linux/types.h>
+>  
+> +#include "pci.h"
+> +
+>  /**
+>   * pci_vc_save_restore_dwords - Save or restore a series of dwords
+>   * @dev: device
+> @@ -105,7 +107,7 @@ static void pci_vc_enable(struct pci_dev *dev, int pos, int res)
+>  	struct pci_dev *link = NULL;
+>  
+>  	/* Enable VCs from the downstream device */
+> -	if (!dev->has_secondary_link)
+> +	if (!pci_is_pcie(dev) || !pcie_downstream_port(dev))
+>  		return;
+>  
+>  	ctrl_pos = pos + PCI_VC_RES_CTRL + (res * PCI_CAP_VC_PER_VC_SIZEOF);
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 82e4cd1b7ac3..2f8990246316 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -418,7 +418,6 @@ struct pci_dev {
+>  	unsigned int	broken_intx_masking:1;	/* INTx masking can't be used */
+>  	unsigned int	io_window_1k:1;		/* Intel bridge 1K I/O windows */
+>  	unsigned int	irq_managed:1;
+> -	unsigned int	has_secondary_link:1;
+>  	unsigned int	non_compliant_bars:1;	/* Broken BARs; ignore them */
+>  	unsigned int	is_probed:1;		/* Device probing in progress */
+>  	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
