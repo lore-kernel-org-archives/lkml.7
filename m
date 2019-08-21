@@ -2,158 +2,160 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45AAC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BC0C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA09D22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C6D12089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="LGwDntPU"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Wm3RKf7r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbfHUMkp (ORCPT
+        id S1728289AbfHUMl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 08:40:45 -0400
-Received: from mout.web.de ([212.227.15.14]:37623 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726484AbfHUMkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 08:40:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1566391239;
-        bh=j13ik0r9D3GxR/mCVO6BCOcAiygxrC3H4cfMTpAAChg=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=LGwDntPUxCpMC1LzBKSeCJduhhkw/eah7b+e5XA6+MhZ081mKSQOrtF/VTt5ynVMz
-         2V3bcphiiIVQTV96qfE3nHie0KCSd/n+ecDjyXIqoJoX6Fo4/X9kH2xn98J6tcMgzZ
-         LzeUKz7L+ZmN8XHBY98no+ajXjEV3y3M85krIPSQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.9.44]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MNcHy-1huL7726Go-007BvI; Wed, 21
- Aug 2019 14:40:39 +0200
-To:     devel@driverdev.osuosl.org,
-        Branden Bonaby <brandonbonaby94@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Himadri Pandya <himadri18.07@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Tim Collier <osdevtc@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: =?UTF-8?Q?=5bPATCH=5d_staging/wlan-ng/hfa384x=3a_Delete_an_unnecess?=
- =?UTF-8?Q?ary_check_before_the_macro_call_=e2=80=9cdev=5fkfree=5fskb?=
- =?UTF-8?B?4oCd?=
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <81d89576-512e-2374-2708-0d22400a37a3@web.de>
-Date:   Wed, 21 Aug 2019 14:40:38 +0200
+        Wed, 21 Aug 2019 08:41:26 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:39251 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727956AbfHUMlZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 08:41:25 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190821124123euoutp01c67da541b8b832a5499000d61a5284a7~88JLLgxCu3111731117euoutp019
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 12:41:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190821124123euoutp01c67da541b8b832a5499000d61a5284a7~88JLLgxCu3111731117euoutp019
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566391283;
+        bh=AWVH8ErKQTpBej/vG98z0OHhZ8Sbjr1RrRMUtFdjqBs=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Wm3RKf7rH0wUFAZZPqQbwO187t32Y7Ad/sUEllz+0+59j13bEdTNXqDwTwBRMLnb4
+         NQqjKfoCGBmYIGWyimpXeZz4OuS65vwjxCQMIW/DJXXs4CG/iEe6ZnOF22JxoI3lrS
+         J61Own9lr6ifGWitj+07w/GOqEd7QiaYa+gtLBCI=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190821124122eucas1p1c61d22736ae1d2d482271ec608f455ce~88JKft-Ul1714117141eucas1p1B;
+        Wed, 21 Aug 2019 12:41:22 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id BE.DB.04309.2FB3D5D5; Wed, 21
+        Aug 2019 13:41:22 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190821124121eucas1p29a471a96f26a9e2ec83f7785be6c6766~88JJkYuH92485024850eucas1p2j;
+        Wed, 21 Aug 2019 12:41:21 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190821124121eusmtrp224b366b1d01b12eb7caf90744d1af89a~88JJWK8z32343923439eusmtrp2y;
+        Wed, 21 Aug 2019 12:41:21 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-ce-5d5d3bf2a42e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 6A.D6.04117.1FB3D5D5; Wed, 21
+        Aug 2019 13:41:21 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190821124120eusmtip1748aeac163f204dbb76025899603aefa~88JIRL0bz1934619346eusmtip1G;
+        Wed, 21 Aug 2019 12:41:20 +0000 (GMT)
+Subject: Re: [PATCH v3 2/9] soc: samsung: Convert exynos-chipid driver to
+ use the regmap API
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Sylwester Nawrocki <snawrocki@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>, robh+dt@kernel.org,
+        vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org,
+        pankaj.dubey@samsung.com,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <537999b7-b0e8-33a7-4bdc-c6952a0a5d06@samsung.com>
+Date:   Wed, 21 Aug 2019 14:41:19 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Khr3WUzQjhOsIUOYqYf9Wl5vqN2OW/JZvszBYvvyKWx/XYdNoWB
- sK9b4A7o27NSAqPaSh+YekogEaaZsT0AKEH/LataRvVRd/9V+1+GhPlxZDMXZrfvf45Cmv5
- pZ7pNPBtXLM9yCjB9wm5oJvLkpgkkldfxPkrmW0YxJE3WuIYmWN7o/lSLdhXS8OTe9Xmjfu
- 5KXkiwN0X+utW4G7bHg6g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:urfMUckZqPE=:n+1FnxQOMqEwl7xYjwXKGq
- ezoEg04kcprkeMZnLg08sppDQcuqDIfaJF5kY3NEMcMtXgDoxOYZXXLtF7T7P95Z1M+Vu7BZM
- dmrX7I38hY1DwPA7sg1AL7XRIm6iTYfAuoSjCmqrM+Rzqc8/GrXzsQOt3EvHHo6TQTMYwUAtV
- aWT/C0PWUJTxsHzRNQzEwdKmyOVAtAbkFPiK77ONmNA1uWUGMAOXkQwrc936fFOhTevpP3KCk
- +CKVnplTs/yLFlHAuMurlJc9xHmpYkVWS0SRcsXdMcZ6BhqJwRqkzgau+jzXFdvbaqC29iXPU
- vL/34ISAFYUfB7Xwj39Obsi9OBOs3lIi/xo8McnrLXCfitTWMmCBZG/G8RYdh8zXpKLKiJ9zh
- nVnhIfV+u2sNP1iE5eCZTDojeLOAcG5gECSM1dta2MQFg84ujtPAP30kvLUHDE710wpfULGEN
- lODibzOQwvR9A4dnnVKJwbd/WiDX+4tAtr3PWUCLcyh16Tla8C8vbpJ404lfG8CeZRsyqRCk3
- MSjz68eAdUwWXpHvP6d/reS8VA8wj0Z7eroT6WBp3d5Pt0kYrQyXjfN6gXVzJWTwEGdy0NWEG
- qW5sHpdd/l6bHzlzWyD+PJJG6ebcP+RQelRdJZ1v2wTBMZCJIW5jOKqdcIrnjzOCY8kuUOqM5
- XezPGGRxD0dW0OsPxyA/Jjew3w7zwykUi0OUIMSWbNgTrqvBt6jB/+cy0UExkGXhEG7gFJFo0
- jitB4mw8KB91AVDxWWPaAmIRGiRBp1aUIRO4CBwD638gxCClRDHvHPyDFEfNcDWKLMpMbX5fR
- ZMkpOZln/CvUgnQkzwPhACBXG0v+hyFnpgS5z12fsg6Q4ZCAoXlbm4VOEoC1jyHAbtwj3ibeZ
- r53HtLA0C1IiDkvb3KEmYGKQGBxDpmK98+9u70dLLGel0KkpuoDXiQHW94S/DP2qp2ePkxm+D
- /+v/VJGpXWpA9zE2lU9UW7sagWI3jErYNxrdQTKJsRzIQtALsiC1y8WRIrJfmPTq+VFlT8bxJ
- JFgvxy5qINZnWigwhQ8BbX1knjhqdiImRAtcD6Y5Tlguyc+Zin4O7oYz1fe5THWZfD7Dn35kv
- z/N6PV9hUBxCA7WuMuZ9PjOnjLaUL5rprNzzK1GaLjyH36A7cs+jrNWvjCa8DStogtUN4CFQE
- /jzG8=
+In-Reply-To: <CAJKOXPdh9eHrAuCxHkQBvJMqEnUCeU2xwkK=9yyiJ6BuTLJ+_A@mail.gmail.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0iTYRTGe/2ujlavU/NgUjDqjwI1K+gLTSoKVkEUQZax8lO/VHIqm5p2
+        la7zMpMFamvgrLCchDrNW6Q55zSNVmgX6Dawi12mpAtqpeb8lPzvd855znmfB16WkL2mgtmU
+        tExBncanymkJ2WT/7Qgdi1Qq17zsWslN6O0MV19eS3EVticUd8Fwg+SuDH0jOIejjuEsQy8o
+        bqDNSHPjOhviyh3tPly+20Bzd21vGe7GPTfDXXxgY7jLH78QXIPTTm/Gij8ePVJYzPm0ouHW
+        WYXu/AitKG40I8W4ZdkeOlYSlSikpmQL6vDoOElyYWUrmdEtyfH07c5DHWwB8mUBr4f2Ghdd
+        gCSsDN9B0GsYJcTCjaD5+WtGLMYRWO1D5NxKcfEnUhzcRqD9WYTEwoXg52M35VX548PwznZ9
+        +jDLBmAeJod5r4bAOhJKjS0zl2gcAbruYuRlKY6G1gYn4WUSr4SrN2sYLwfiAzDm7KJEjR88
+        uvZhZtcX74W3wx7aywQOgnPuakrk5dDsMs5kADzBwEN9LyPa3gbOKb2PyP7wtadxth8CU60V
+        PuLCeQRF98XQgEsQvO8xIVEVCV09zyhvHAKvgtq2cC8C3gKDnetEXASvXH6ih0WgbyojxLYU
+        tJdk4o0V8MdcNusgGAo/TJElSG6Yl8wwL41hXhrD/2dNiDSjICFLo0oSNGvThONhGl6lyUpL
+        CktIV1nQ9Jfrn+xxt6C2v/FWhFkkXygtCVUqZRSfrclVWRGwhDxAmmOMVcqkiXzuCUGdfkSd
+        lSporGgpS8qDpCcXOA/JcBKfKRwThAxBPTf1YX2D81DJ9lb/TP1o31FrjD4mwbZxLNCQ5Lo0
+        ua9jsWcg25xSmnxwRNv1eW9dUPTjiaexF7MjTlee2tpr7zhnOkvmTXRWjcf/MFG5Gy0QVZXe
+        MZjxPS7jWI3i+RlPX3+jn2pd/S5Jxc7qph2JT/cvqR2QG8tbfi1vC9nk/+abdoPjjfa37qSc
+        1CTzEasJtYb/B8merxpuAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRmVeSWpSXmKPExsVy+t/xu7ofrWNjDWb807D4O+kYu8XGGetZ
+        LeYfOcdq0TJrEYtF/+PXzBbnz29gt9j0+BqrxeVdc9gsPvceYbSYcX4fk0Xnl1lsFmuP3GW3
+        WLT1C7tF694j7BbtT18yW2x+cIzNQcDj969JjB6bVnWyeWxeUu/R2/yOzaNvyypGj8+b5ALY
+        ovRsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyuhfu
+        ZCk4ylXx65RfA+N+ji5GTg4JAROJvr5nLF2MXBxCAksZJT6ce8HWxcgBlJCSmN+iBFEjLPHn
+        WhcbRM1rRom+hrfsIAlhgTiJZfefgdkiAokS064fYgcpYhboZZFY8vMBO0THG2aJjp/XwKrY
+        BAwleo/2MYLYvAJ2Ejs3P2AGsVkEVCUmL14NViMqECFxeMcsqBpBiZMzn7CA2JwCgRJ3X/xi
+        A7GZBdQl/sy7xAxhi0s0fVnJCmHLS2x/O4d5AqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnp
+        ucVGesWJucWleel6yfm5mxiBcb3t2M8tOxi73gUfYhTgYFTi4Z2gGxsrxJpYVlyZe4hRgoNZ
+        SYS3Yk5UrBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnA1NOXkm8oamhuYWlobmxubGZhZI4
+        b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGxvU/gg1zVlSFTXaUVFkla/E4173o4LfZb4wOtDB0
+        PD26u5bF4XYI283lGVYanX27Vv/RK97+ZpuY49Y1Z82NZN5ruVhqVn169vRL+QIF768zrQK5
+        Ohr0ExSiw3uu7+0QFYuYUP3v/slT6redL7kY1a8VWmapuuBl0POJ8hce1C/NPxI2zeWekxJL
+        cUaioRZzUXEiAH60K+8BAwAA
+X-CMS-MailID: 20190821124121eucas1p29a471a96f26a9e2ec83f7785be6c6766
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c
+References: <20190813150827.31972-1-s.nawrocki@samsung.com>
+        <CGME20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c@eucas1p2.samsung.com>
+        <20190813150827.31972-3-s.nawrocki@samsung.com>
+        <b5359603-b337-dcd8-b025-ca7dff5f4a06@nvidia.com>
+        <CAJKOXPf597CMx=M2JmSTWe2GzBfcHFefgzSJbJ+njZGp-WfR1A@mail.gmail.com>
+        <1e428c8e-f4b5-0810-77f9-2c899c040fc7@kernel.org>
+        <72eea1ea-2433-2f76-6265-5851554e845d@samsung.com>
+        <CAJKOXPdh9eHrAuCxHkQBvJMqEnUCeU2xwkK=9yyiJ6BuTLJ+_A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 21 Aug 2019 14:30:30 +0200
+On 8/21/19 14:16, Krzysztof Kozlowski wrote:
+>>> I'm also inclined to have it converted to a regular driver.  We already
+>>> have "exynos-asv" driver matching on the chipid node (patch 3/9).
+>>> The ASV patches will not be merged soon anyway, all this needs some more
+>>> thought. Krzysztof, can we abandon the chipid patches for now? Your
+>>
+>> chipid driver is good and useful on its own. The preferred solution
+>> IMHO would be to just revert "soc: samsung: Convert exynos-chipid
+>> driver to use the regmap API" commit.
+>
+> I queued the chipid as a dependency for ASV but ASV requires the
+> regmap. What would be left after reverting the regmap part? Simple
+> unused printk driver? No need for such. If reverting, then let's drop
+> entire driver and rework it offline.
 
-The dev_kfree_skb() function performs also input parameter validation.
-Thus the test around the call is not needed.
+In fact there is now no dependency between the chipid and the ASV 
+driver (patch 3/9), the regmap is provided by the syscon driver/API.
+I should have added "depends on REGMAP && MFD_SYSCON" to Kconfig.
+Both drivers (chipid, ASV) share the registers region so the regmap 
+API seemed appropriate here.
+Converting the chipid code to platform driver wouldn't make sense as
+it wouldn't be useful early in arch/arm/mach-exynos and we can't have
+two drivers for same device (the ASV driver matches on the chipid 
+compatible now).
 
-This issue was detected by using the Coccinelle software.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/staging/wlan-ng/hfa384x_usb.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/staging/wlan-ng/hfa384x_usb.c b/drivers/staging/wlan-=
-ng/hfa384x_usb.c
-index 28d372a0663a..54f631c4155a 100644
-=2D-- a/drivers/staging/wlan-ng/hfa384x_usb.c
-+++ b/drivers/staging/wlan-ng/hfa384x_usb.c
-@@ -3070,9 +3070,7 @@ static void hfa384x_usbin_callback(struct urb *urb)
- 	}			/* switch */
-
- exit:
--
--	if (skb)
--		dev_kfree_skb(skb);
-+	dev_kfree_skb(skb);
- }
-
- /*----------------------------------------------------------------
-=2D-
-2.23.0
-
+-- 
+Regards,
+Sylwester
