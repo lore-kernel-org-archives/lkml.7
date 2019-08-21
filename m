@@ -2,123 +2,116 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C96C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9765BC3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4602322DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6926C22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="m9uCBSoL"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="NEk9AynO";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="dcgieLOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfHUDFQ (ORCPT
+        id S1727025AbfHUDFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 23:05:16 -0400
-Received: from ozlabs.org ([203.11.71.1]:33053 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfHUDFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 23:05:15 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 20 Aug 2019 23:05:50 -0400
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:61449 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfHUDFt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 23:05:49 -0400
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id A761C8A379;
+        Tue, 20 Aug 2019 23:05:47 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:message-id:mime-version:content-type; s=sasl; bh=ZxI
+        vURfUzxLnUYB5+/O/lnXeBNQ=; b=NEk9AynOWdAxhHEuaamwmAc21DxGkHvXtCh
+        pzwGh86mluDnSOY3Dzz6GOnjmQ1XTk0UjjsKvcBDLVOXn/YkJ/1x8Cuu2eXWCQP6
+        TPmAXfeTapUZLTjZPaU6mmAOcoKFiKOMzcjSMh2MeLVHxsj75LuVDrJJStd2drlV
+        eZNxeKow=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id A0C378A378;
+        Tue, 20 Aug 2019 23:05:47 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:message-id:mime-version:content-type;
+ s=2016-12.pbsmtp; bh=te5ob5bTW6G+hGs7rK8exIibfwxyTydfDdqrb9ueLpE=;
+ b=dcgieLOwVE+O+fjR1wqEF9tKvkvrFWIpY+j/QXVPFhrlKt02NjdyV4yROcjLrI2xVBzzzMdOnZ9GVOkJVxJjSMGt2lBZ9H2cQOOwFdqvZsKX6rJ7bBMNtPp3OLXZWurPUi2kWkefNbBrzvu401CB2X6pQmoDKhkgMUuvBTBMk/M=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46CswT5BWNz9sBp;
-        Wed, 21 Aug 2019 13:05:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566356713;
-        bh=XXZbox/wA6/OK8GRkvZ5ULx8Cm0MOoQ4bG2fVsChO1k=;
-        h=Date:From:To:Cc:Subject:From;
-        b=m9uCBSoLhnN4DqezomzI8RmVFoo7h9j4k8V08OxGGXmWgdQcV8VIBxPpwcICpmGT0
-         u9aKlwlsolJHUxydu5u21Ymb3soI2AeiVY/PYx3J4UsfejpWofHdBBeiHI9R1V0jPn
-         3PtVvx/1pHIelkYmgZilog4O60Z+hXvDE1XBjAZQP8eSVneJXNb4qhA5qiEHx0IgaG
-         7NAnZSIt/pwPN8tLfYVMobZ1CqCU8bcdNzV4+i+wSq1N4C4Od3HvZVq/P6b85fk1sE
-         NKH+19VOPc6F2tVnwtFCaBmEAyTTwVhQX7w66gblvI+1oL36rzHteOcsPjiz84iX/w
-         44FR34jkfpfrA==
-Date:   Wed, 21 Aug 2019 13:05:13 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Morris <jmorris@namei.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Bohac <jbohac@suse.cz>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Subject: linux-next: manual merge of the security tree with Linus' tree
-Message-ID: <20190821130513.0038df28@canb.auug.org.au>
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id 8E4D18A377;
+        Tue, 20 Aug 2019 23:05:44 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id B60702DA0465;
+        Tue, 20 Aug 2019 23:05:42 -0400 (EDT)
+Date:   Tue, 20 Aug 2019 23:05:42 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] __div64_const32(): improve the generic C version
+Message-ID: <nycvar.YSQ.7.76.1908202301490.19480@knanqh.ubzr>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8vqIU6bFe5hyDfgeHgWgIbj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 91098A5C-C3C0-11E9-B86D-B0405B776F7B-78420484!pb-smtp20.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8vqIU6bFe5hyDfgeHgWgIbj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Let's rework that code to avoid large immediate values and convert some
+64-bit variables to 32-bit ones when possible. This allows gcc to
+produce smaller and better code. This even produces optimal code on
+RISC-V.
 
-Hi all,
+Signed-off-by: Nicolas Pitre <nico@fluxnic.net>
 
-Today's linux-next merge of the security tree got a conflict in:
-
-  security/integrity/ima/Kconfig
-
-between commit:
-
-  9e1e5d4372d6 ("x86/ima: fix the Kconfig dependency for IMA_ARCH_POLICY")
-
-from Linus' tree and commit:
-
-  99d5cadfde2b ("kexec_file: split KEXEC_VERIFY_SIG into KEXEC_SIG and KEXE=
-C_SIG_FORCE")
-
-from the security tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc security/integrity/ima/Kconfig
-index 2ced99dde694,32cd25fa44a5..000000000000
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@@ -160,8 -160,7 +160,8 @@@ config IMA_APPRAIS
- =20
-  config IMA_ARCH_POLICY
-          bool "Enable loading an IMA architecture specific policy"
--         depends on (KEXEC_VERIFY_SIG && IMA) || IMA_APPRAISE \
- -        depends on KEXEC_SIG || IMA_APPRAISE && INTEGRITY_ASYMMETRIC_KEYS
-++        depends on (KEXEC_SIG && IMA) || IMA_APPRAISE \
- +		   && INTEGRITY_ASYMMETRIC_KEYS
-          default n
-          help
-            This option enables loading an IMA architecture specific policy
-
---Sig_/8vqIU6bFe5hyDfgeHgWgIbj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1ctOkACgkQAVBC80lX
-0GxCIQf+KDzl3HckVnuSfbDdjRbNSARwWqEmHxCbdvvqD9ePhO6mbws0Yi9TZMC4
-nhwiBKRlh+DHnAKDLg2HYg4KfFAJUPferZB6etd/UG7UFdA7NQTMylbYmS3ACk5V
-z76mqu6jvmuiKZBty5I3mH8887Nq02PzyKCg1uUEPpR48PtWs7UeKgbzY3ibPGkC
-H4i5SCx3IPVWHR47dMrv9fdRd+Khd9POX+8eU1E0LcN1V+BivwjNZZB970m5Qtl8
-FrA395d60uXwUwMDORI2jdHvlug8J7CDlQL+Gs1IjZqMFS9nR1VIa2x67IQ/ccHU
-YzZmenm30hvuBic+TQ9aLnbB1ig4zA==
-=thOM
------END PGP SIGNATURE-----
-
---Sig_/8vqIU6bFe5hyDfgeHgWgIbj--
+diff --git a/include/asm-generic/div64.h b/include/asm-generic/div64.h
+index dc9726fdac..33358245b4 100644
+--- a/include/asm-generic/div64.h
++++ b/include/asm-generic/div64.h
+@@ -178,7 +178,8 @@ static inline uint64_t __arch_xprod_64(const uint64_t m, uint64_t n, bool bias)
+ 	uint32_t m_hi = m >> 32;
+ 	uint32_t n_lo = n;
+ 	uint32_t n_hi = n >> 32;
+-	uint64_t res, tmp;
++	uint64_t res;
++	uint32_t res_lo, res_hi, tmp;
+ 
+ 	if (!bias) {
+ 		res = ((uint64_t)m_lo * n_lo) >> 32;
+@@ -187,8 +188,9 @@ static inline uint64_t __arch_xprod_64(const uint64_t m, uint64_t n, bool bias)
+ 		res = (m + (uint64_t)m_lo * n_lo) >> 32;
+ 	} else {
+ 		res = m + (uint64_t)m_lo * n_lo;
+-		tmp = (res < m) ? (1ULL << 32) : 0;
+-		res = (res >> 32) + tmp;
++		res_lo = res >> 32;
++		res_hi = (res_lo < m_hi);
++		res = res_lo | ((uint64_t)res_hi << 32);
+ 	}
+ 
+ 	if (!(m & ((1ULL << 63) | (1ULL << 31)))) {
+@@ -197,10 +199,12 @@ static inline uint64_t __arch_xprod_64(const uint64_t m, uint64_t n, bool bias)
+ 		res += (uint64_t)m_hi * n_lo;
+ 		res >>= 32;
+ 	} else {
+-		tmp = res += (uint64_t)m_lo * n_hi;
++		res += (uint64_t)m_lo * n_hi;
++		tmp = res >> 32;
+ 		res += (uint64_t)m_hi * n_lo;
+-		tmp = (res < tmp) ? (1ULL << 32) : 0;
+-		res = (res >> 32) + tmp;
++		res_lo = res >> 32;
++		res_hi = (res_lo < tmp);
++		res = res_lo | ((uint64_t)res_hi << 32);
+ 	}
+ 
+ 	res += (uint64_t)m_hi * n_hi;
