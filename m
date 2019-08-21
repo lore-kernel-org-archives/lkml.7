@@ -2,74 +2,147 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84599C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BE3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F2C122D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA35922D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:34:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="WjjyvMXb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfHUFeX (ORCPT
+        id S1727339AbfHUFev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 01:34:23 -0400
-Received: from mga18.intel.com ([134.134.136.126]:18832 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbfHUFeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 01:34:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 22:34:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,411,1559545200"; 
-   d="scan'208";a="169308087"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 20 Aug 2019 22:34:22 -0700
-Received: from [10.226.38.21] (vramuthx-mobl1.gar.corp.intel.com [10.226.38.21])
-        by linux.intel.com (Postfix) with ESMTP id 432D95803FA;
-        Tue, 20 Aug 2019 22:34:20 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     kishon@ti.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, peter.harliman.liem@intel.com
-References: <20190820103133.53776-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190820103133.53776-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190820135602.GN30120@smile.fi.intel.com>
- <20190820135921.GO30120@smile.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <d9a793ae-e66c-a6ae-ab05-d253b8eb27d7@linux.intel.com>
-Date:   Wed, 21 Aug 2019 13:34:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190820135921.GO30120@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Wed, 21 Aug 2019 01:34:51 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:46254 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727075AbfHUFev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 01:34:51 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7L5WkW8014790;
+        Wed, 21 Aug 2019 01:34:24 -0400
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2055.outbound.protection.outlook.com [104.47.45.55])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2ug3mab7aq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 21 Aug 2019 01:34:24 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=c6I9DeXQTRRyQ5iSK61PKJ1vLABreRlp41e9VQT8DFJnIuwIoNlK2/JtYwFkMX0kHY7BUylPBY0+9DDLFV7WvuuWPGi2XAk5fa10S4yydubgTKO/f+S2KwHoI+p6phNr0qONyFTDosyv7FsSL3RuDx0eJjYmNHayI+SYbC7XCFgETG+R0xfQJRMP7VOTcq/Qo4ErjjkQa/hAXmQvy2ThtaWOCJHtN22ArwbR3FMDlcEzUYNc05icf1OXaA69x8pyR/k1X2juznLOe4nmGNvB6VDmhTDN+IG9dfxD1++TRYPpwoNfrl4xqXZBc3L17NGVBQwIN+xntt/pfwTbUDp3qQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xirPD+rtCNe8bUBn60WGSNnSAEPRvXka5c2bYpCjF8A=;
+ b=Cb1ovSu1TI/p8/LFLTf7c+su3TTlPDAUqspE54EviGcmRYvlNMQyJlFjKv1id/GkVi5tr/3ZITuX8R0rqWYc23bsEgkqssdQhwVLDfQgoLOP6d57h0nppfHJSPaXG8UG3ZWuuC1lVveCP2XKSI8QOSnbGNkH/I5Aj6tV4ntK1W+tMg/3Bl56x8ZaefXBHbAe3fAwRdEAoBaJFaljSfSfs8RlUV62y3O09oGbv0No4Y10AbXFZRSB4I/IKLnx3bE7neQMcKzt+C9sIBTrm0ZGRgAXz85tJwsiarFKIfCOmQ6PFgm+0jlueRBGWXbLGP3Fgr85cXD/TTJRjP3KflAC7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xirPD+rtCNe8bUBn60WGSNnSAEPRvXka5c2bYpCjF8A=;
+ b=WjjyvMXb2XQmV/c0bpDVwNXAqsAQo4cjBjmPwXMQ95cQ3eTpx5vQtQPpegmMk/V6sIoAXyhOi2S8DvE506R3GPq7QfSr+ay9gXuEh28pijw+8Rh/Yp6O30VSmyCTwK+YpNZ+I3UDh1jtzKiHOjAqJjes7hn2fHCQagQB6Lq61Tg=
+Received: from BN8PR03MB4770.namprd03.prod.outlook.com (20.179.64.223) by
+ BN8PR03MB4868.namprd03.prod.outlook.com (20.178.223.79) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Wed, 21 Aug 2019 05:34:22 +0000
+Received: from BN8PR03MB4770.namprd03.prod.outlook.com
+ ([fe80::d096:6c2e:91ac:39bb]) by BN8PR03MB4770.namprd03.prod.outlook.com
+ ([fe80::d096:6c2e:91ac:39bb%6]) with mapi id 15.20.2178.018; Wed, 21 Aug 2019
+ 05:34:22 +0000
+From:   "Togorean, Bogdan" <Bogdan.Togorean@analog.com>
+To:     "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "sam@ravnborg.org" <sam@ravnborg.org>
+CC:     "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "matt.redfearn@thinci.com" <matt.redfearn@thinci.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/2] drm: bridge: adv7511: Add support for ADV7535
+Thread-Topic: [PATCH v2 2/2] drm: bridge: adv7511: Add support for ADV7535
+Thread-Index: AQHVTr0hmVnX1zVUNEq8UIbUXOMh2qby78kAgA9LnQCAAB3GAIABctKAgAGM+wA=
+Date:   Wed, 21 Aug 2019 05:34:22 +0000
+Message-ID: <ccba9a66c6d5db8a295353b16084c6a1199f31dc.camel@analog.com>
+References: <20190809141611.9927-1-bogdan.togorean@analog.com>
+         <20190809141611.9927-3-bogdan.togorean@analog.com>
+         <20190809152510.GA23265@ravnborg.org>
+         <c99cfbd3dc45bb02618e7653c33022f3553e1cce.camel@analog.com>
+         <20190819104616.GA15890@ravnborg.org>
+         <20190820085329.GC11147@phenom.ffwll.local>
+In-Reply-To: <20190820085329.GC11147@phenom.ffwll.local>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9f362487-0ebb-4c4e-3897-08d725f938d0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BN8PR03MB4868;
+x-ms-traffictypediagnostic: BN8PR03MB4868:
+x-microsoft-antispam-prvs: <BN8PR03MB4868B74300A53F9EEA69AA5A9BAA0@BN8PR03MB4868.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0136C1DDA4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(39860400002)(396003)(346002)(136003)(189003)(199004)(476003)(446003)(11346002)(2616005)(486006)(478600001)(14454004)(6512007)(186003)(316002)(110136005)(229853002)(54906003)(99286004)(26005)(7416002)(71190400001)(71200400001)(6506007)(5660300002)(102836004)(76116006)(305945005)(6246003)(86362001)(4326008)(8676002)(36756003)(81166006)(81156014)(66066001)(118296001)(6116002)(3846002)(2501003)(91956017)(64756008)(66476007)(7736002)(66946007)(66446008)(66556008)(256004)(76176011)(6436002)(6486002)(53936002)(8936002)(25786009)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR03MB4868;H:BN8PR03MB4770.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: MyJSq99kDTZJVqBlKWe4npJjPySNVQQpC9aDMxhIg2vM+MHM4ucW8mowSmSWnXHp0eVnSNwSXwCp2yJdyL60K6PHyGlE4DxdNACIDaY4GO44hW1S4xAyjp5ldXT10+buKPRyiP0YRd5OlEHJQspCHCS4k8ziWTlUCMmnHsHsm05RJ7etBNo5C33aat0Cso9HxhJ51iTiAjgv7R6gYPC4CWSNq2U5gi4XPMjqBtbn5jn/zDEkTNamhC0Bv0Pb/+7efB09OOqB3Nka1xS/fK4pUOCIGPiy2T8QThO6SF01BGbVVGKe0Wp3qKTMk0FNkgFNYU9HG5BZC6pdKopl4u6LotPna0Qj2upnVsUuHXCthMFOym30MJmj6h66mgPgzDTfqzRy4HC//Dh2aAetL+YJ4WIatqyssugZ/GmR6CASGMM=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <98805991ABBC544694582903F3984374@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f362487-0ebb-4c4e-3897-08d725f938d0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 05:34:22.3990
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BtkERW8I/SAbf12VW+l0wW38HszfxW5RGbylTOfZrjTj0qlFuFsqjzyBI4IhwhNJOhn0jYvB9b5liHySKjrzE1L5hbUQco+j77cK3fK9vOw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR03MB4868
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908210060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/8/2019 9:59 PM, Andy Shevchenko wrote:
-> On Tue, Aug 20, 2019 at 04:56:02PM +0300, Andy Shevchenko wrote:
->> On Tue, Aug 20, 2019 at 06:31:33PM +0800, Ramuthevar,Vadivel MuruganX wrote:
->>> +#define DR_TY_50OHM(x)		((~(x) << 28) & DR_TY_MASK)
->> For consistency it should be
->>
->> #define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
->>
->> with explanation about 50 Ohm in the code below.
->>> +	/* Drive impedance: 50 Ohm */
->> Nice, you have already a comment here. Just use DR_TY_SHIFT(1)
-> It should be DR_TY_SHIFT(6) now since I dropped the negation.
-
-Thanks Andy, will update the review comments.
-
-Best Regards
-Vadivel
+T24gVHVlLCAyMDE5LTA4LTIwIGF0IDEwOjUzICswMjAwLCBEYW5pZWwgVmV0dGVyIHdyb3RlOg0K
+PiBbRXh0ZXJuYWxdDQo+IA0KPiBPbiBNb24sIEF1ZyAxOSwgMjAxOSBhdCAxMjo0NjoxNlBNICsw
+MjAwLCBTYW0gUmF2bmJvcmcgd3JvdGU6DQo+ID4gSGkgQm9nZGFuLg0KPiA+IA0KPiA+ID4gPiA+
+ICAJCWFkdjc1MzNfZGV0YWNoX2RzaShhZHY3NTExKTsNCj4gPiA+ID4gPiAgCWkyY191bnJlZ2lz
+dGVyX2RldmljZShhZHY3NTExLT5pMmNfY2VjKTsNCj4gPiA+ID4gPiAgCWlmIChhZHY3NTExLT5j
+ZWNfY2xrKQ0KPiA+ID4gPiA+IEBAIC0xMjY2LDggKzEyNzgsOSBAQCBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IGkyY19kZXZpY2VfaWQNCj4gPiA+ID4gPiBhZHY3NTExX2kyY19pZHNbXSA9IHsNCj4gPiA+
+ID4gPiAgCXsgImFkdjc1MTEiLCBBRFY3NTExIH0sDQo+ID4gPiA+ID4gIAl7ICJhZHY3NTExdyIs
+IEFEVjc1MTEgfSwNCj4gPiA+ID4gPiAgCXsgImFkdjc1MTMiLCBBRFY3NTExIH0sDQo+ID4gPiA+
+ID4gLSNpZmRlZiBDT05GSUdfRFJNX0kyQ19BRFY3NTMzDQo+ID4gPiA+ID4gKyNpZmRlZiBDT05G
+SUdfRFJNX0kyQ19BRFY3NTN4DQo+ID4gPiA+ID4gIAl7ICJhZHY3NTMzIiwgQURWNzUzMyB9LA0K
+PiA+ID4gPiA+ICsJeyAiYWR2NzUzNSIsIEFEVjc1MzUgfSwNCj4gPiA+ID4gPiAgI2VuZGlmDQo+
+ID4gPiA+IA0KPiA+ID4gPiBUaGlzIGlmZGVmIG1heSBub3QgYmUgbmVlZGVkPz8NCj4gPiA+ID4g
+SWYgd2UgZGlkIG5vdCBnZXQgdGhpcyB0eXBlIHdlIHdpbGwgbm90IGxvb2sgaXQgdXAuDQo+ID4g
+PiBCdXQgaWYgd2UgaGF2ZSBkZWZpbmVkIGluIERUIGFkdjc1MzMvNSBkZXZpY2UgYnV0DQo+ID4g
+PiBDT05GSUdfRFJNX0kyQ19BRFY3NTN4IG5vdCBzZWxlY3RlZCBwcm9iZSB3aWxsIGZhaWwgd2l0
+aCBFTk9ERVYuDQo+ID4gPiBUaGF0DQo+ID4gPiB3b3VsZCBiZSBvaz8NCj4gPiANCj4gPiBXaGF0
+IGRvIHdlIGdhaW4gZnJvbSB0aGlzIGNvbXBsZXhpdHkgaW4gdGhlIGVuZC4NCj4gPiBXaHkgbm90
+IGxldCB0aGUgZHJpdmVyIGFsd2F5cyBzdXBwb3J0IGFsbCB2YXJpYW50cy4NCj4gPiANCj4gPiBJ
+ZiB0aGlzIHJlc3VsdCBpbiBhIHNpbXBsZXIgZHJpdmVyLCBhbmQgbGVzcyBjaG9pY2VzIGluIEtj
+b25maWcNCj4gPiB0aGVuIGl0IGlzIGEgd2luLXdpbi4NCj4gDQo+IFllYWggaW4gZ2VuZXJhbCB3
+ZSBkb24ndCBLY29uZmlnIHdpdGhpbiBkcml2ZXJzIGluIGRybSB0byBkaXNhYmxlDQo+IHNwZWNp
+ZmljDQo+IGNvZGUtcGF0aHMuIEl0J3Mgbm90IHdvcnRoIHRoZSBwYWluLg0KQWNrLA0KVGhhbmsg
+eW91IGZvciBjbGFyaWZpY2F0aW9uLiBXaWxsIHJlbW92ZSBpbiBWMy4NCj4gLURhbmllbA0K
