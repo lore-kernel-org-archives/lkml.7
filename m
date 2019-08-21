@@ -2,85 +2,116 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5887AC3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24608C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238F82087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:54:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Js1Jfjif"
+	by mail.kernel.org (Postfix) with ESMTP id 02F9822D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbfHUAyX (ORCPT
+        id S1726637AbfHUA6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 20:54:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57558 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbfHUAyX (ORCPT
+        Tue, 20 Aug 2019 20:58:32 -0400
+Received: from smtprelay0112.hostedemail.com ([216.40.44.112]:60035 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726202AbfHUA6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 20:54:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=WOLUqTOBybrWu/WmLa0SVTrR0ZYSLugUxBFyMLxbqBk=; b=Js1JfjifrXDe1lW3QE0Yt1gQR
-        mUJPk4hesVY8anlPMG86AjT2E7bMJlzTIYmfRzQvg4GPxETvFoHfJyFd1r2jMVZIkrSFQTyV3tQOZ
-        N5vWvQ0H5Ev3QPSClW7ql5JmjrXRUrKTkQR2y5XKQ3Wa2qA5kEqCmpGQePKVUfvDn3h7JKQrJG7Rr
-        6PPyYLWeixe0Lc/05HHGE+hz9Wu27e1xsznb5nyyDY/7Y48C+hh6vV/SRWOSKTtFBXOLv1MNJUKgs
-        Rbb0Vzqql47R+Y8WMZZHhIwl/4gFyCLAMCUbSB6LmAw+tVryHKTyF4wzfNZJnC1vdyYjxR0ShVS4O
-        Ig8uakCow==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i0EtF-0004F5-It; Wed, 21 Aug 2019 00:54:17 +0000
-Date:   Tue, 20 Aug 2019 17:54:17 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        osalvador@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mm/mmap.c: extract __vma_unlink_list as counter part
- for __vma_link_list
-Message-ID: <20190821005417.GC18776@bombadil.infradead.org>
-References: <20190814021755.1977-1-richardw.yang@linux.intel.com>
- <20190814021755.1977-3-richardw.yang@linux.intel.com>
- <20190814051611.GA1958@infradead.org>
- <20190814065703.GA6433@richard>
- <2c5cdffd-f405-23b8-98f5-37b95ca9b027@suse.cz>
- <20190820172629.GB4949@bombadil.infradead.org>
- <20190821005234.GA5540@richard>
+        Tue, 20 Aug 2019 20:58:31 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id F224E18011250;
+        Wed, 21 Aug 2019 00:58:29 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: month89_fcc67fbeb43c
+X-Filterd-Recvd-Size: 3518
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 21 Aug 2019 00:58:28 +0000 (UTC)
+Message-ID: <b77a3752d9b9897b8e65003ad88991b18ee33029.camel@perches.com>
+Subject: stracpy
+From:   Joe Perches <joe@perches.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Date:   Tue, 20 Aug 2019 17:58:27 -0700
+In-Reply-To: <CAHk-=wg8vLmmwTGhXM51NpSWJW8RFEAKoXxG0Hu_Q9Uwbjj8kw@mail.gmail.com>
+References: <c0005a09c89c20093ac699c97e7420331ec46b01.camel@perches.com>
+         <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
+         <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
+         <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
+         <4398924f28a58fca296d101dae11e7accce80656.camel@perches.com>
+         <ad42da450ccafcb571cca9289dcf52840dbb53d3.camel@perches.com>
+         <20190820092451.791c85e5@canb.auug.org.au>
+         <14723fccc2c3362cc045df17fc8554f37c8a8529.camel@perches.com>
+         <CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com>
+         <edd8efd53fadd07992f804cc595c6ae5fdb60e73.camel@perches.com>
+         <CAHk-=wg8vLmmwTGhXM51NpSWJW8RFEAKoXxG0Hu_Q9Uwbjj8kw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821005234.GA5540@richard>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 08:52:34AM +0800, Wei Yang wrote:
-> On Tue, Aug 20, 2019 at 10:26:29AM -0700, Matthew Wilcox wrote:
-> >On Wed, Aug 14, 2019 at 11:19:37AM +0200, Vlastimil Babka wrote:
-> >> On 8/14/19 8:57 AM, Wei Yang wrote:
-> >> > On Tue, Aug 13, 2019 at 10:16:11PM -0700, Christoph Hellwig wrote:
-> >> >>Btw, is there any good reason we don't use a list_head for vma linkage?
-> >> > 
-> >> > Not sure, maybe there is some historical reason?
-> >> 
-> >> Seems it was single-linked until 2010 commit 297c5eee3724 ("mm: make the vma
-> >> list be doubly linked") and I guess it was just simpler to add the vm_prev link.
-> >> 
-> >> Conversion to list_head might be an interesting project for some "advanced
-> >> beginner" in the kernel :)
-> >
-> >I'm working to get rid of vm_prev and vm_next, so it would probably be
-> >wasted effort.
+On Tue, 2019-08-20 at 17:43 -0700, Linus Torvalds wrote:
+> On Tue, Aug 20, 2019 at 5:20 PM Joe Perches <joe@perches.com> wrote:
+> > Umm, btw: have you actually looked at stracpy?
 > 
-> You mean replace it with list_head?
+> Yes, Joe, I have.
+> 
+> What part of "there are now so many of them that no human being can
+> keep track of them" didn't you see as a problem?
 
-No, replace the rbtree with a new tree.  https://lwn.net/Articles/787629/
+Well, the actual post-conversion uses to stracpy make the old ones
+(strcpy/strlcpy/strncpy) exceptional uses that can be analyzed
+quite a bit more easily.
+
+btw: I really don't care what any convenience macro is named.
+
+Most all of the strlcpy and strscpy uses actually _do_ copy to
+a char array and strscpy is a simple interface that is somewhat
+frequently misused.
+
+> How many broken string functions are we going to do, adding yet
+> another one when you notice that the _last_ one wasn't great?
+>
+> We never seem to remove the broken ones. We just add yet another one,
+> and have a never-ending jumble of random letters.
+
+<shrug> Intermediate problems.
+
+> I would seriously suggest doing something like
+>  and 
+>    copy_string( dst, dstsize, src, srcsize, FLAGS );
+> 
+> where FLAGS migth be "pad" or whatever. Make it return the size of the
+> resulting string, because while it can be convenient to pass 'dst" on,
+> it's not useful.
+
+That's simply not convenient for pointers.
+
+Auditing the kernel for those unsized uses is a
+large scope problem.  Even anything that uses
+PAGE_SIZE sized allocations does sprintf
+instead of snprintf.  Any show_<foo> for instance.
+
+> And then maybe just add the helper macro that turns an array into a
+> "pointer, size" combination, rather than yet another letter jumble.
+
+Good luck with that when an unsized char pointer is the thing
+passed to a function.
+
+There are _way_ too many of those already in the kernel.
+Simple strcpy is already used > 2000 times.
+
+
+
