@@ -2,115 +2,94 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 696CEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293B2C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C54F2064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD062064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566415566;
-	bh=cVcEmiz8HyyaFQvybzpi/OrIgtwnoC5pBNUJfKQjPVg=;
+	s=default; t=1566415609;
+	bh=gg3dk0BOd2Fg7b9XmfIEvMSXA5B/GkZAN+0CAOklmeA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kpcIsaNZlOj2avXWNhXU2ClyMARieRXNBbVrXpDHq6DoQBIbqBq6pcgBxnockQPjM
-	 jxt/cY4blKVQD2WcWqkdTvGRELKf0qjGNUKj4INtsdxuA5CcXe5/LGMBVfTPZcT46n
-	 H2+CYOtTorooSrI+czW9VyddGTTjfwgB2VKeoBuo=
+	b=JNGUXKP6LkhmZIh/z2EshkuJQLmt9xw7ygN3+wBhq5EpibHaDoiZLJB9lYsJmj91E
+	 Vb4qQGG07EOzWOLYaQ900ix53iv4RdUIV3b6JvOA/7dAtSEkMx+pMqgH5w6qL5C4ih
+	 0eWNFogfNOPqiomw/LfhHjRSh08b3HuJco+Ykd04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbfHUT0F (ORCPT
+        id S1729892AbfHUT0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:26:05 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35299 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbfHUT0F (ORCPT
+        Wed, 21 Aug 2019 15:26:48 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39352 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729700AbfHUT0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:26:05 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g17so3171665otl.2;
-        Wed, 21 Aug 2019 12:26:04 -0700 (PDT)
+        Wed, 21 Aug 2019 15:26:47 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b1so3156864otp.6;
+        Wed, 21 Aug 2019 12:26:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=31kAASnlmey7+VCJviKm6PqV+O7d5lyZM9klemAH6PU=;
-        b=k+dycsrIIgTr4OMrQppvHOJ17hQ0d1gJsesQa/PUzRVhUe0znWT2C6MMJ5nDxITDV4
-         jnf9JZvwTMPh+Sz/QvD3j+Wa2mUfKWZMbzpO8RPnjhzHjo6KiAnPMubaaiyj8r+WIHz3
-         WmLTct+riup9vBATZrT0HtJGU9sn0GzqXpOJNSKSA4w6feadlu24Ziy0gRsNv5ThMne9
-         +bH6+yDrg01gw9LPERm78Pm3BI/q6jwZRBCTS2bAPoiZVEjpcQX/JBh6R52/eEDZ0Ea6
-         Ho+PVomzZEHsJJ9BgFm4XJFUzDzwR5xsu3UzYqCsbzJLfC4e/F3qQrYuOxoatNEEqw1l
-         +5ug==
-X-Gm-Message-State: APjAAAX5PbR86iTcSSO+vtYz6K8c5SkSvNxbybnfwPuFLU2GQcaBxjFm
-        FUPAA1Xw8kjMEOvMIgFd+g==
-X-Google-Smtp-Source: APXvYqzOtUjL/X6asaAboZrcr1v3bqEPjWihsqkP7DwCext8H0Eiet7bQrEZgyN6a2WJGFJwVFXJmQ==
-X-Received: by 2002:a9d:68d1:: with SMTP id i17mr14908615oto.84.1566415563945;
-        Wed, 21 Aug 2019 12:26:03 -0700 (PDT)
+        bh=10waZ0/ZkKGq42Av7UyfIsQLjaV5XyZlPq4+UDb3efY=;
+        b=Kl9JXevtUhrZ3Tl8A/NDkp2aZ2yoO6bHdVmhIKjilshkv2HxOM/obSpkzj/3EOoyiD
+         ACSo+42qm8I8aJpLFsjBtUjLYxW/iJ9YL28C4tGAOLL9MrXFcZu5O79Dpzch1mlqKVnY
+         qH5v/s5tIz8Y1bak6LWqB3hBxiG1qN5tMsYSz6tPKs3T10zcHGvpnMbIhK/Da2WD7bTa
+         zpzqMpqY81X3Zz7sSXiDSNobeQOGPz5k9EVINI9Q+aZUuaaTZdj2W1ym92+h6d6tF8oh
+         hQyPmJ+S+SiraO+faAqLcyT5zCDXvuhins7ym4pHXL3YxLVWAztKXPJMCwEJSGdzc8UI
+         EUUw==
+X-Gm-Message-State: APjAAAU4V64p1CzoIS7BSb0skm5VJCreaGsYgcyea+j0cvAj+DjzH6Jm
+        Y8MCULMOJZ1XEMiSx8MFsw==
+X-Google-Smtp-Source: APXvYqxLs6MFhoQAEH6ogwkzbZqevbuPU9pesTaxbtwOpkRdDuv+cpoUh2/qMzsEYRLg7/dteh3tjg==
+X-Received: by 2002:a9d:7b4e:: with SMTP id f14mr1554439oto.193.1566415606656;
+        Wed, 21 Aug 2019 12:26:46 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e22sm5992200oii.7.2019.08.21.12.26.03
+        by smtp.gmail.com with ESMTPSA id z16sm3139424oic.10.2019.08.21.12.26.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 12:26:03 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 14:26:02 -0500
+        Wed, 21 Aug 2019 12:26:46 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 14:26:45 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     agross@kernel.org, robdclark@gmail.com, sean@poorly.run,
-        bjorn.andersson@linaro.org, airlied@linux.ie, daniel@ffwll.ch,
-        mark.rutland@arm.com, jonathan@marek.ca,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org, jcrouse@codeaurora.org
-Subject: Re: [PATCH v5 2/7] dt-bindings: display: msm: gmu: add optional
- ocmem property
-Message-ID: <20190821192602.GA16243@bogus>
-References: <20190806002229.8304-1-masneyb@onstation.org>
- <20190806002229.8304-3-masneyb@onstation.org>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
+        lorenzo.pieralisi@arm.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, zhiqiang.hou@nxp.com, roy.zang@nxp.com,
+        kstewart@linuxfoundation.org, pombredanne@nexb.com,
+        shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: Re: [PATCHv3 1/3] dt-bindings: pci: layerscape-pci: add compatible
+ strings "fsl,ls1028a-pcie"
+Message-ID: <20190821192645.GA22618@bogus>
+References: <20190806061553.19934-1-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190806002229.8304-3-masneyb@onstation.org>
+In-Reply-To: <20190806061553.19934-1-xiaowei.bao@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 08:22:24PM -0400, Brian Masney wrote:
-> Some A3xx and A4xx Adreno GPUs do not have GMEM inside the GPU core and
-> must use the On Chip MEMory (OCMEM) in order to be functional. Add the
-> optional ocmem property to the Adreno Graphics Management Unit bindings.
+On Tue,  6 Aug 2019 14:15:51 +0800, Xiaowei Bao wrote:
+> Add the PCIe compatible string for LS1028A
 > 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > ---
-> Changes since v4:
-> - None
+> v2:
+>  - no change.
+> v3:
+>  - no change.
 > 
-> Changes since v3:
-> - correct link to qcom,ocmem.yaml
+>  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Changes since v2:
-> - Add a3xx example with OCMEM
-> 
-> Changes since v1:
-> - None
-> 
->  .../devicetree/bindings/display/msm/gmu.txt   | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> index 90af5b0a56a9..672d557caba4 100644
-> --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-> +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> @@ -31,6 +31,10 @@ Required properties:
->  - iommus: phandle to the adreno iommu
->  - operating-points-v2: phandle to the OPP operating points
->  
-> +Optional properties:
-> +- ocmem: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
-> +         SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
 
-Sigh, to repeat my comment on v1 and v3:
-
-We already have a couple of similar properties. Lets standardize on
-'sram' as that is what TI already uses.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
