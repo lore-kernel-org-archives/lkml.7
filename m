@@ -2,138 +2,115 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52957C3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B246BC3A59D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298C022DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8807C22DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:18:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XrnDrmLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727244AbfHUDN4 (ORCPT
+        id S1727152AbfHUDSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 23:13:56 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39192 "EHLO inva020.nxp.com"
+        Tue, 20 Aug 2019 23:18:06 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50677 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfHUDNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 23:13:54 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 783C71A04D4;
-        Wed, 21 Aug 2019 05:13:51 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 01FAE1A00DD;
-        Wed, 21 Aug 2019 05:13:45 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0157840314;
-        Wed, 21 Aug 2019 11:13:36 +0800 (SGT)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH v6 2/3] Documentation: dt: binding: fsl: Add 'little-endian' and update Chassis define
-Date:   Wed, 21 Aug 2019 11:15:36 +0800
-Message-Id: <20190821031537.46824-2-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190821031537.46824-1-ran.wang_1@nxp.com>
-References: <20190821031537.46824-1-ran.wang_1@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726463AbfHUDSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 23:18:06 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46CtCJ18Kzz9s4Y;
+        Wed, 21 Aug 2019 13:18:04 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566357484;
+        bh=LfTl3U3DXyFlaSZOQY3hHH00E096mRNPpjLKp1ypn74=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XrnDrmLnSkcA8P3yQB9A54gBWRNesjQ7BGBNa11mCA0npzYyqDNAVroeGMWHqCGeo
+         0WCrzi/Uh1pHaBUsp9sWROEeurgXW7O9BvtEVUAf06Pg06K3oNIKu2s1W1DCXUahKr
+         cov6rOP4JhrpiDwTi+0CfQ8o0wC/F3LIG+KptWu2nqNjBGQg3p8aN5hnxWTfLqu3Rd
+         WJYdnGvPIOLH20J918/7JBHOtCpRi2bM1O+lDGKfvsJdmTMz0sJDD2Xxb5I/mDiYgy
+         H7BTGwYgmtDMsDNWfB3Ur7d8re5akA2auarys0biMINhp2EYxOMrxUfG3T/wbEq/2A
+         Zlof1Sl5Q8nQQ==
+Date:   Wed, 21 Aug 2019 13:18:03 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     James Morris <jmorris@namei.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jiri Bohac <jbohac@suse.cz>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: linux-next: manual merge of the security tree with Linus' tree
+Message-ID: <20190821131803.1fc4f887@canb.auug.org.au>
+In-Reply-To: <20190821130106.0c794ddc@canb.auug.org.au>
+References: <20190821130106.0c794ddc@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/rPzYgtJ2zsml.U4.5TSJuRo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default, QorIQ SoC's RCPM register block is Big Endian. But
-there are some exceptions, such as LS1088A and LS2088A, are
-Little Endian. So add this optional property to help identify
-them.
+--Sig_/rPzYgtJ2zsml.U4.5TSJuRo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Actually LS2021A and other Layerscapes won't totally follow Chassis
-2.1, so separate them from powerpc SoC.
+Hi all,
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Change in v6:
-	- None.
+Just adding a couple of more Cc's
 
-Change in v5:
-	- Add 'Reviewed-by: Rob Herring <robh@kernel.org>' to commit message.
-	- Rename property 'fsl,#rcpm-wakeup-cells' to '#fsl,rcpm-wakeup-cells'.
-	please see https://lore.kernel.org/patchwork/patch/1101022/
+On Wed, 21 Aug 2019 13:01:06 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>=20
+> Today's linux-next merge of the security tree got conflicts in:
+>=20
+>   arch/s390/configs/debug_defconfig
+>   arch/s390/configs/defconfig
+>=20
+> between commit:
+>=20
+>   3361f3193c74 ("s390: update configs")
+>=20
+> from Linus' tree and commit:
+>=20
+>   99d5cadfde2b ("kexec_file: split KEXEC_VERIFY_SIG into KEXEC_SIG and KE=
+XEC_SIG_FORCE")
+>=20
+> from the security tree.
+>=20
+> I fixed it up (the former removed the CONFIG option updated by the latter)
+> and can carry the fix as necessary. This is now fixed as far as linux-next
+> is concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the conflicting
+> tree to minimise any particularly complex conflicts.
 
-Change in v4:
-	- Adjust indectation of 'ls1021a, ls1012a, ls1043a, ls1046a'.
+--=20
+Cheers,
+Stephen Rothwell
 
-Change in v3:
-	- None.
+--Sig_/rPzYgtJ2zsml.U4.5TSJuRo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Change in v2:
-	- None.
+-----BEGIN PGP SIGNATURE-----
 
- Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1ct+sACgkQAVBC80lX
+0Gx0iwf+JujmS7sDznWXEMvaSR+Y6gCItmJ/uhIjUW8McxCEbESFF7z4XtEmVl32
+3P60DXYi+YlbCfW8CLZ0W9NdCvNes+s00ktSbhmYejdx1rwN08g9e73yyd7faD9Q
+xxaNXS7dqJkfb7cSWq9pP53Rzz4FmLqij5dzsDnXbpECz5vpx/tTOrFmKdh2CyWl
+3OSNf/sQhOzOzeVsiH4c0F2RoEYg41wWMCALJAYZ4/SeBztoSchZWY1WWLmlnNXr
+WJowEjF0wRDWhBv3AMGkhWL6B3kZDYcB9ho9B5/wT1gzEvMqwHqBCFbLLMNZeToa
+SuspYCILrTc7vRardM0a9VuOlVwTUA==
+=lu/H
+-----END PGP SIGNATURE-----
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-index e284e4e..5a33619 100644
---- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-@@ -5,7 +5,7 @@ and power management.
- 
- Required properites:
-   - reg : Offset and length of the register set of the RCPM block.
--  - fsl,#rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
-+  - #fsl,rcpm-wakeup-cells : The number of IPPDEXPCR register cells in the
- 	fsl,rcpm-wakeup property.
-   - compatible : Must contain a chip-specific RCPM block compatible string
- 	and (if applicable) may contain a chassis-version RCPM compatible
-@@ -20,6 +20,7 @@ Required properites:
- 	* "fsl,qoriq-rcpm-1.0": for chassis 1.0 rcpm
- 	* "fsl,qoriq-rcpm-2.0": for chassis 2.0 rcpm
- 	* "fsl,qoriq-rcpm-2.1": for chassis 2.1 rcpm
-+	* "fsl,qoriq-rcpm-2.1+": for chassis 2.1+ rcpm
- 
- All references to "1.0" and "2.0" refer to the QorIQ chassis version to
- which the chip complies.
-@@ -27,14 +28,19 @@ Chassis Version		Example Chips
- ---------------		-------------------------------
- 1.0				p4080, p5020, p5040, p2041, p3041
- 2.0				t4240, b4860, b4420
--2.1				t1040, ls1021
-+2.1				t1040,
-+2.1+				ls1021a, ls1012a, ls1043a, ls1046a
-+
-+Optional properties:
-+ - little-endian : RCPM register block is Little Endian. Without it RCPM
-+   will be Big Endian (default case).
- 
- Example:
- The RCPM node for T4240:
- 	rcpm: global-utilities@e2000 {
- 		compatible = "fsl,t4240-rcpm", "fsl,qoriq-rcpm-2.0";
- 		reg = <0xe2000 0x1000>;
--		fsl,#rcpm-wakeup-cells = <2>;
-+		#fsl,rcpm-wakeup-cells = <2>;
- 	};
- 
- * Freescale RCPM Wakeup Source Device Tree Bindings
-@@ -44,7 +50,7 @@ can be used as a wakeup source.
- 
-   - fsl,rcpm-wakeup: Consists of a phandle to the rcpm node and the IPPDEXPCR
- 	register cells. The number of IPPDEXPCR register cells is defined in
--	"fsl,#rcpm-wakeup-cells" in the rcpm node. The first register cell is
-+	"#fsl,rcpm-wakeup-cells" in the rcpm node. The first register cell is
- 	the bit mask that should be set in IPPDEXPCR0, and the second register
- 	cell is for IPPDEXPCR1, and so on.
- 
--- 
-2.7.4
-
+--Sig_/rPzYgtJ2zsml.U4.5TSJuRo--
