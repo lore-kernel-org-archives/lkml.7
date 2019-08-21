@@ -2,88 +2,112 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74096C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FB5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 468BD22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D7422D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbfHURYa (ORCPT
+        id S1728332AbfHUR1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:24:30 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:55336 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727037AbfHURYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:24:30 -0400
-Received: from wsip-184-188-36-2.sd.sd.cox.net ([184.188.36.2] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1i0ULQ-0003jl-3C; Wed, 21 Aug 2019 19:24:24 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Maxime Ripard <maxime.ripard@free-electrons.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] dt-bindings: Convert Arm Mali GPUs to DT schema
-Date:   Wed, 21 Aug 2019 19:24:19 +0200
-Message-ID: <174045783.D6yh98NvXX@phil>
-In-Reply-To: <20190820195959.6126-1-robh@kernel.org>
-References: <20190820195959.6126-1-robh@kernel.org>
+        Wed, 21 Aug 2019 13:27:14 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:53884 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727266AbfHUR1N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:27:13 -0400
+Received: (qmail 6192 invoked by uid 2102); 21 Aug 2019 13:27:12 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 21 Aug 2019 13:27:12 -0400
+Date:   Wed, 21 Aug 2019 13:27:12 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Jiri Kosina <jikos@kernel.org>
+cc:     andreyknvl@google.com, <benjamin.tissoires@redhat.com>,
+        <linux-input@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: [PATCH] HID: hidraw: Fix invalid read in hidraw_ioctl
+In-Reply-To: <000000000000d45a4c0590a2d8bd@google.com>
+Message-ID: <Pine.LNX.4.44L0.1908211323030.1816-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 20. August 2019, 21:59:56 CEST schrieb Rob Herring:
-> This series converts the various Arm Mali GPU bindings to use the DT
-> schema format.
-> 
-> The Midgard and Bifrost bindings generate warnings on 'interrupt-names'
-> because there's all different ordering. The Utgard binding generates 
-> warnings on Rockchip platforms because 'clock-names' order is reversed.
+The syzbot fuzzer has reported a pair of problems in the
+hidraw_ioctl() function: slab-out-of-bounds read and use-after-free
+read.  An example of the first:
 
-Are you planning on sending fixes for these, should I just change the
-ordering myself?
+BUG: KASAN: slab-out-of-bounds in strlen+0x79/0x90 lib/string.c:525
+Read of size 1 at addr ffff8881c8035f38 by task syz-executor.4/2833
+
+CPU: 1 PID: 2833 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description+0x6a/0x32c mm/kasan/report.c:351
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+  kasan_report+0xe/0x12 mm/kasan/common.c:612
+  strlen+0x79/0x90 lib/string.c:525
+  strlen include/linux/string.h:281 [inline]
+  hidraw_ioctl+0x245/0xae0 drivers/hid/hidraw.c:446
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
+  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459829
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f7a68f6dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+RDX: 0000000000000000 RSI: 0000000080404805 RDI: 0000000000000004
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7a68f6e6d4
+R13: 00000000004c21de R14: 00000000004d5620 R15: 00000000ffffffff
+
+The two problems have the same cause: hidraw_ioctl() fails to test
+whether the device has been removed.  This patch adds the missing test.
+
+Reported-and-tested-by: syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+
+---
 
 
-> Rob Herring (3):
->   dt-bindings: Convert Arm Mali Midgard GPU to DT schema
->   dt-bindings: Convert Arm Mali Bifrost GPU to DT schema
->   dt-bindings: Convert Arm Mali Utgard GPU to DT schema
-
-Acked-by: Heiko Stuebner <heiko@sntech.de>
+[as1910.hidraw-ioctl-fix]
 
 
-Thanks for doing the conversion
-Heiko
+ drivers/hid/hidraw.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
->  .../bindings/gpu/arm,mali-bifrost.txt         |  92 ----------
->  .../bindings/gpu/arm,mali-bifrost.yaml        | 115 ++++++++++++
->  .../bindings/gpu/arm,mali-midgard.txt         | 119 -------------
->  .../bindings/gpu/arm,mali-midgard.yaml        | 165 +++++++++++++++++
->  .../bindings/gpu/arm,mali-utgard.txt          | 129 --------------
->  .../bindings/gpu/arm,mali-utgard.yaml         | 166 ++++++++++++++++++
->  6 files changed, 446 insertions(+), 340 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
->  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
->  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.yaml
-> 
-> 
-
-
-
+Index: usb-devel/drivers/hid/hidraw.c
+===================================================================
+--- usb-devel.orig/drivers/hid/hidraw.c
++++ usb-devel/drivers/hid/hidraw.c
+@@ -370,7 +370,7 @@ static long hidraw_ioctl(struct file *fi
+ 
+ 	mutex_lock(&minors_lock);
+ 	dev = hidraw_table[minor];
+-	if (!dev) {
++	if (!dev || !dev->exist) {
+ 		ret = -ENODEV;
+ 		goto out;
+ 	}
 
