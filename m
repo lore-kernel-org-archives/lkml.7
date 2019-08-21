@@ -2,95 +2,98 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D9AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D67C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7433122CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB15222CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:21:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HFUHr1mC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbfHUNQ5 (ORCPT
+        id S1728766AbfHUNVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 09:16:57 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55666 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfHUNQ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:16:56 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i0QTZ-0004mO-DE; Wed, 21 Aug 2019 15:16:33 +0200
-Date:   Wed, 21 Aug 2019 15:16:31 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-cc:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, tony.luck@intel.com, x86@kernel.org,
-        alan@linux.intel.com, rppt@linux.ibm.com,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-Subject: Re: [PATCH] x86/apic: Update virtual irq base for DT/OF based system
- as well
-In-Reply-To: <20190821123451.GY30120@smile.fi.intel.com>
-Message-ID: <alpine.DEB.2.21.1908211510390.2223@nanos.tec.linutronix.de>
-References: <20190821081330.1187-1-rahul.tanwar@linux.intel.com> <alpine.DEB.2.21.1908211028030.2223@nanos.tec.linutronix.de> <7b4db9f3-21da-5b5e-e219-0170e812a015@linux.intel.com> <alpine.DEB.2.21.1908211235180.2223@nanos.tec.linutronix.de>
- <20190821123451.GY30120@smile.fi.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 21 Aug 2019 09:21:10 -0400
+Received: from ozlabs.org ([203.11.71.1]:60273 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726371AbfHUNVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 09:21:09 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46D7b70shPz9s3Z;
+        Wed, 21 Aug 2019 23:21:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566393667;
+        bh=A3n2w+elgnVQa/Jv1MFvQCT0FgiohlYlMgcuvSnKApQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HFUHr1mCf3Au39dBxLalwFPWq39r/FIFrLTJ036VLVE7U/D1PjguabsLyPINvOcbH
+         MICbByJvTHjqAnim4IocTIswLTFeMFYg06x7hgfSJOUc6eXsyUQxdMV6x9ffDMbLvs
+         hf+F4Z/Kv7OkqZo/Yw1FT2ythBq6eR1oc8mJNOSuJ9is9fRUidhRxexSpzHcoAGdph
+         MEUxQJMZzurTN97zyS7K4vHeVupUewghfVzm4qUanpCo4Fwz7N3yMbmRxqXbeDw+6W
+         anOLxh6IQi228Dd4aofyH5xJhRXCLyRGrMZMseQsckjbVMxzZlzgW/qZGLMk+OHl8Q
+         2qYTOnp9JfrsA==
+Date:   Wed, 21 Aug 2019 23:21:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        KVM <kvm@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the kvm-fixes tree
+Message-ID: <20190821232106.634dfa36@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="Sig_/PVtkFaRcdxOh9yZnuy22eMc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019, Andy Shevchenko wrote:
-> On Wed, Aug 21, 2019 at 01:20:53PM +0200, Thomas Gleixner wrote:
-> > But x86 implements arch_dynirq_lower_bound() which overrides the core limit
-> > and because ioapic_dynirq_base is zero in the DT case it allows VIRQ 0 to
-> > be allocated which then causes of_irq*() to fail.
-> > 
-> > So your change prevents that by excluding the 'GSI' range from allocation,
-> > which means that the first irq number which is handed out is 24, assumed
-> > you have one IOAPIC with 24 pins.
-> 
-> I have tested this on the ACPI-based system where we have 55 lines of IOAPIC,
-> no PIC, and some GPIO lines. Overall I see that nr_irqs is 512 and shifting
-> by 55 freezes 10% of the space for nothing. Luckily we have SPARSE_IRQS
-> selected for any X86, so, it wouldn't waste memory.
->
-> I think we may do slightly better if we just limit the change to the certain
-> cases.
+--Sig_/PVtkFaRcdxOh9yZnuy22eMc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-For DT we can actually avoid that completely. See below.
+Hi all,
 
-For ACPI not unfortunately as the stupid GSI mapping is hard coded.
+In commit
 
-Thanks,
+  d012a06ab1d2 ("Revert "KVM: x86/mmu: Zap only the relevant pages when rem=
+oving a memslot"")
 
-	tglx
+Fixes tag
 
-8<-------------
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2438,7 +2438,13 @@ unsigned int arch_dynirq_lower_bound(uns
- 	 * dmar_alloc_hwirq() may be called before setup_IO_APIC(), so use
- 	 * gsi_top if ioapic_dynirq_base hasn't been initialized yet.
- 	 */
--	return ioapic_initialized ? ioapic_dynirq_base : gsi_top;
-+	if (!ioapic_initialized)
-+		return gsi_top;
-+	/*
-+	 * For DT enabled machines ioapic_dynirq_base is irrelevant and not
-+	 * updated. So simply return @from if ioapic_dynirq_base == 0.
-+	 */
-+	return ioapic_dynirq_base ? : from;
- }
- 
- #ifdef CONFIG_X86_32
+  Fixes: 4e103134b862 ("KVM: x86/mmu: Zap only the relevant pages when remo=
+ving a memslot", 2019-02-05)
+
+has these problem(s):
+
+  - The trailing date is unexpected
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/PVtkFaRcdxOh9yZnuy22eMc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1dRUIACgkQAVBC80lX
+0GxgKwgAjFOJIKX9ANOtuELn/W6DlkbXtrxcmnkHSdvP8Nuko6gocFU+djNjeV/U
+AQxGSywEMEUGTpuU2cuVUa6vPISn3TlgIU8hJvwy6ERjTsEDzPLggDE4A3AMkVcI
+H29kxzgxzdLeLhXAiiPQ0pOKm9s+ctBMae+2AWqLY0OEHG5EprkUHrllTlOzEEYi
+RJQM8BBb8M3rWjpIakmFiOt/8DcXnirj2kV6F68DVZTlDIFu5/3uufdDqYP4U46q
+H/o76fjl7td2IAZEnq0wYmiHBww/6NDdCFj5VjdyAr0UEZLa7QsvjzalFpAQd5nm
+VdUau+kSnKNPYfEMZiIoeC5iCYVQcg==
+=Sorq
+-----END PGP SIGNATURE-----
+
+--Sig_/PVtkFaRcdxOh9yZnuy22eMc--
