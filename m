@@ -2,98 +2,130 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A9DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821DDC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4800E216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 581D822DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="dDRVg5c1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bhJJa4E4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbfHUSbc (ORCPT
+        id S1729206AbfHUScF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:31:32 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60230 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfHUSbb (ORCPT
+        Wed, 21 Aug 2019 14:32:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41662 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfHUScF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:31:31 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AD03E33D;
-        Wed, 21 Aug 2019 20:31:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566412289;
-        bh=ZQMon4Bsj4tN2eCs+vBULpxfTnRnRgRzIrpjScdpz6k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dDRVg5c1btysM5JFkfuWc9O5A9rcr27yc0Szzqj0qaOcl5OB73V872vB9AKhOVjHC
-         CrG9BC6dXDYhH5ycwvtoY6vLMzT8o3eGiZagsGCH19ZciaV/6FadidKDRDJgowEabr
-         +WpvrnhnF7C00KNiQKEqPEtgpQRXnWd/KpkojuLU=
-Date:   Wed, 21 Aug 2019 21:31:23 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: OMAP DRM regression on N900
-Message-ID: <20190821183123.GC26759@pendragon.ideasonboard.com>
-References: <20190818140838.GC30291@darkstar.musicnaut.iki.fi>
+        Wed, 21 Aug 2019 14:32:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tVY1LXmdi32TE9w1SeLZsUhYLzjbIKh1g8jTSkv50s0=; b=bhJJa4E42SMEYiIa1DWA2XlMu
+        4vGjx+rsvfe+CrMjov5MKEqtLN+RI/AcK6Vs7e5E3E7S1/KeayvRFeJ14231xfrWhGN7WN000fvI1
+        wr6ARpqeyItdr4BeTOr4gIlYjDRXI9jQn/GdZuKv+i6EPx+OkN2r9RgSU//OsEDYyP+kQQNydRsEu
+        4dsQfkB04uYA3XjbDZZvaRh7ww+8QaF0H1Br4ZgkIHEftCSadBmxj336Y0i2uq2d8euohNvTMJYgr
+        ei8PQDJkEP29FLGm9feeESwlOZHZ9hxmFFSMYiF+iJ9olCPAoFo3nvHYqvnjl+ksRjTGX7ZIFtkAJ
+        prHujlgIw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0VOo-0003wh-HG; Wed, 21 Aug 2019 18:31:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E3F5F307456;
+        Wed, 21 Aug 2019 20:31:23 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5C7DE20F0FB1F; Wed, 21 Aug 2019 20:31:55 +0200 (CEST)
+Date:   Wed, 21 Aug 2019 20:31:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Daniel Xu <dxu@dxuuu.xyz>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add
+ PERF_EVENT_IOC_QUERY_PROBE ioctl
+Message-ID: <20190821183155.GE2349@hirez.programming.kicks-ass.net>
+References: <20190820144503.GV2332@hirez.programming.kicks-ass.net>
+ <BWENHQJIN885.216UOYEIWNGFU@dlxu-fedora-R90QNFJV>
+ <20190821110856.GB2349@hirez.programming.kicks-ass.net>
+ <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190818140838.GC30291@darkstar.musicnaut.iki.fi>
+In-Reply-To: <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aaro,
-
-On Sun, Aug 18, 2019 at 05:08:38PM +0300, Aaro Koskinen wrote:
-> Hi,
+On Wed, Aug 21, 2019 at 04:54:47PM +0000, Yonghong Song wrote:
+> Currently, in kernel/trace/bpf_trace.c, we have
 > 
-> I haven't got display working on N900 since v5.1. Bisected to:
+> unsigned int trace_call_bpf(struct trace_event_call *call, void *ctx)
+> {
+>          unsigned int ret;
 > 
-> d17eb4537a7eb16da9eafbfd5717e12b45b77251 is the first bad commit
-> commit d17eb4537a7eb16da9eafbfd5717e12b45b77251
-> Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Date:   Wed Sep 12 19:41:31 2018 +0300
+>          if (in_nmi()) /* not supported yet */
+>                  return 1;
 > 
->     drm/omap: Factor out common init/cleanup code for output devices
-
-Sorry :-(
-
-I'll send a tentative fix, I'd appreciate if you could test it.
-
-> looks like with this commit I get only the TV out:
+>          preempt_disable();
 > 
-> $ ls -l /sys/class/drm/
-> total 0
-> lrwxrwxrwx    1 root     root             0 Aug 18 16:15 card0 -> ../../devices/platform/omapdrm.0/drm/card0
-> lrwxrwxrwx    1 root     root             0 Aug 18 16:15 card0-SVIDEO-1 -> ../../devices/platform/omapdrm.0/drm/card0/card0-SVIDEO-1
-> lrwxrwxrwx    1 root     root             0 Aug 18 16:15 renderD128 -> ../../devices/platform/omapdrm.0/drm/renderD128
-> -r--r--r--    1 root     root          4096 Aug 18 16:15 version
-> 
-> with the previous commit both outputs are there:
-> 
-> $ ls -l /sys/class/drm/
-> total 0
-> lrwxrwxrwx    1 root     root             0 Aug 18 16:28 card0 -> ../../devices/platform/omapdrm.0/drm/card0
-> lrwxrwxrwx    1 root     root             0 Aug 18 16:28 card0-LVDS-1 -> ../../devices/platform/omapdrm.0/drm/card0/card0-LVDS-1
-> lrwxrwxrwx    1 root     root             0 Aug 18 16:28 card0-SVIDEO-1 -> ../../devices/platform/omapdrm.0/drm/card0/card0-SVIDEO-1
-> lrwxrwxrwx    1 root     root             0 Aug 18 16:28 renderD128 -> ../../devices/platform/omapdrm.0/drm/renderD128
-> -r--r--r--    1 root     root          4096 Aug 18 16:28 version
-> 
-> Used .config below.
+>          if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
 
-[snip]
+Yes, I'm aware of that.
 
--- 
-Regards,
+> In the above, the events with bpf program attached will be missed
+> if the context is nmi interrupt, or if some recursion happens even with 
+> the same or different bpf programs.
+> In case of recursion, the events will not be sent to ring buffer.
 
-Laurent Pinchart
+And while that is significantly worse than what ftrace/perf have, it is
+fundamentally the same thing.
+
+perf allows (and iirc ftrace does too) 4 nested context per CPU
+(task,softirq,irq,nmi) but any recursion within those context and we
+drop stuff.
+
+The BPF stuff is just more eager to drop things on the floor, but it is
+fundamentally the same.
+
+> A lot of bpf-based tracing programs uses maps to communicate and
+> do not allocate ring buffer at all.
+
+So extending PERF_RECORD_LOST doesn't work. But PERF_FORMAT_LOST might
+still work fine; but you get to implement it for all software events.
+
+> Maybe we can still use ioctl based approach which is light weighted
+> compared to ring buffer approach? If a fd has bpf attached, nhit/nmisses
+> means the kprobe is processed by bpf program or not.
+
+There is nothing kprobe specific here. Kprobes just appear to be the
+only one actually accounting the recursion cases, but everyone has
+them.
+
+> Currently, for debugfs, the nhit/nmisses info is exposed at
+> {k|u}probe_profile. Alternative, we could expose the nhit/nmisses
+> in /proc/self/fdinfo/<fd>. User can query this interface to
+> get numbers.
+
+No, we're not adding stuff to procfs for this.
