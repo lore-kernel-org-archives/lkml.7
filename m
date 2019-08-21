@@ -6,103 +6,75 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86A1C3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF50C3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FCA2087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD9D2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfHUAwQ (ORCPT
+        id S1726592AbfHUAxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 20:52:16 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:49275 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726254AbfHUAwN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 20:52:13 -0400
-Received: from callcc.thunk.org ([12.235.16.3])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7L0p5IJ020732
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 20 Aug 2019 20:51:06 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 85DAE420843; Tue, 20 Aug 2019 20:51:04 -0400 (EDT)
-Date:   Tue, 20 Aug 2019 20:51:04 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Gao Xiang <hsiangkao@aol.com>
-Cc:     Chao Yu <yuchao0@huawei.com>, Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Tue, 20 Aug 2019 20:53:00 -0400
+Received: from mga09.intel.com ([134.134.136.24]:36686 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726254AbfHUAxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 20:53:00 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2019 17:52:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,410,1559545200"; 
+   d="scan'208";a="178350826"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga008.fm.intel.com with ESMTP; 20 Aug 2019 17:52:57 -0700
+Date:   Wed, 21 Aug 2019 08:52:34 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Wei Yang <richardw.yang@linux.intel.com>,
         Christoph Hellwig <hch@infradead.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190821005104.GF10232@mit.edu>
-Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Gao Xiang <hsiangkao@aol.com>, Chao Yu <yuchao0@huawei.com>,
-        Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-References: <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
- <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
- <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
- <20190820155623.GA10232@mit.edu>
- <20190820163504.GA7780@hsiangkao-HP-ZHAN-66-Pro-G1>
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        osalvador@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] mm/mmap.c: extract __vma_unlink_list as counter part
+ for __vma_link_list
+Message-ID: <20190821005234.GA5540@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20190814021755.1977-1-richardw.yang@linux.intel.com>
+ <20190814021755.1977-3-richardw.yang@linux.intel.com>
+ <20190814051611.GA1958@infradead.org>
+ <20190814065703.GA6433@richard>
+ <2c5cdffd-f405-23b8-98f5-37b95ca9b027@suse.cz>
+ <20190820172629.GB4949@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820163504.GA7780@hsiangkao-HP-ZHAN-66-Pro-G1>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190820172629.GB4949@bombadil.infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 12:35:08AM +0800, Gao Xiang wrote:
-> 
-> For EROFS, it's a special case since it is a RO fs, and erofs mkfs
-> will generate reproducable images (which means, for one dir trees,
-> it only generates exact one result except for build time).
+On Tue, Aug 20, 2019 at 10:26:29AM -0700, Matthew Wilcox wrote:
+>On Wed, Aug 14, 2019 at 11:19:37AM +0200, Vlastimil Babka wrote:
+>> On 8/14/19 8:57 AM, Wei Yang wrote:
+>> > On Tue, Aug 13, 2019 at 10:16:11PM -0700, Christoph Hellwig wrote:
+>> >>Btw, is there any good reason we don't use a list_head for vma linkage?
+>> > 
+>> > Not sure, maybe there is some historical reason?
+>> 
+>> Seems it was single-linked until 2010 commit 297c5eee3724 ("mm: make the vma
+>> list be doubly linked") and I guess it was just simpler to add the vm_prev link.
+>> 
+>> Conversion to list_head might be an interesting project for some "advanced
+>> beginner" in the kernel :)
+>
+>I'm working to get rid of vm_prev and vm_next, so it would probably be
+>wasted effort.
 
-Agreed, and given that, doing the fuzzing in your mkfs tool makes
-perfect sense.  I wasn't surprised at all that you chose that path.
+You mean replace it with list_head?
 
-Cheers,
-
-						- Ted
+-- 
+Wei Yang
+Help you, Help me
