@@ -2,128 +2,212 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06225C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E34C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF34522DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:43:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PVj+qa4N"
+	by mail.kernel.org (Postfix) with ESMTP id BA0802332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfHUJnK (ORCPT
+        id S1727151AbfHUJo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:43:10 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41203 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726389AbfHUJnK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:43:10 -0400
-Received: by mail-wr1-f66.google.com with SMTP id j16so1369752wrr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 02:43:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yhh05Lx1Wiyqwc4CFdoUHwTxVsPR0zakJwfwav/HC18=;
-        b=PVj+qa4NJnbMWOZAIx9AAkNEG1Iyewb7tu5yt41xycqGFxGRF/KX2EdJ/JIMt2leC0
-         1p3aNbchhOtqTj/x+g6Cl2hRsTJUOHVLXriQ4dwCM/RUs/qHip/w6b+E77BnytnFDc0Z
-         19J9nubVPao7e85KC72Y+R3kBJOfQq6DVgrlhoNwpjerPNZh1HiRZx4AxRoYN2Kh2vHU
-         VQK2F3nYhu5dCJ8vRwOiQ8AnmUzk+qwJZBdjJsWrIepI8jzIUOhULXD8wiSQOKERyK8D
-         IJKJSQoIOvU/a/iP5cLohN82Uc+pfTj05bz5ma/MyknX60t3Lkp8+8LuG1uw24UbfDTl
-         cSnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yhh05Lx1Wiyqwc4CFdoUHwTxVsPR0zakJwfwav/HC18=;
-        b=qfCS+P213jwXQOeqblpXAdTO3qq7WnKiiOVgXq9cv9lnz3vm7/zTnOz/EySoRORvdE
-         mRuSfJdNIQ+yCnB4fcpsDcTqZMZW6Y+3/KyWhrILIurXWDL9ytzFWzkwRq+8v5oDjFzW
-         bNCamk3VbujpTFchFkADw83M5nxnHkRFdOVmH4XWGUMUb1wOUQ1ubDWCZIYT5bfGXMb9
-         7BX7Lrwn/9pqhhVgvgw51ajRFAIo/v0YtIx6OXtnDt8+bumHZCQYYus+5SR2aPsiLbd6
-         5k06p4/InHEjkx8gGjOKzzDxAzq9pPdOlgTSPGfOGe3XR80CY7MlatxULi25fbueC7Sb
-         ROjA==
-X-Gm-Message-State: APjAAAXrX5ztxELvbWWiSwYwzm6L2wOtKbNLbVx0Do0CtDQ/dGy12frB
-        FBfA/ft7eIL69YXat44nCG0emHB+6iWR+OfQbZvlgw==
-X-Google-Smtp-Source: APXvYqzgLiqDBoUMfrN5PU/uJb8XTsDfE3cVqCi/aYLhYzZuK+GnS16Vxrx3MfmlOp214llXnxta9V24a17Yg3La7Gw=
-X-Received: by 2002:adf:9e09:: with SMTP id u9mr7516435wre.169.1566380588039;
- Wed, 21 Aug 2019 02:43:08 -0700 (PDT)
+        Wed, 21 Aug 2019 05:44:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51936 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726353AbfHUJoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:44:25 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9D04B8980E4;
+        Wed, 21 Aug 2019 09:44:24 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-29.pek2.redhat.com [10.72.8.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 57DD82E07C;
+        Wed, 21 Aug 2019 09:44:11 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 17:44:07 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Long Li <longli@microsoft.com>
+Cc:     John Garry <john.garry@huawei.com>,
+        Ming Lei <tom.leiming@gmail.com>,
+        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
+        Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
+        chenxiang <chenxiang66@hisilicon.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 0/3] fix interrupt swamp in NVMe
+Message-ID: <20190821094406.GA28391@ming.t460p>
+References: <1566281669-48212-1-git-send-email-longli@linuxonhyperv.com>
+ <CACVXFVPCiTU0mtXKS0fyMccPXN6hAdZNHv6y-f8-tz=FE=BV=g@mail.gmail.com>
+ <fd7d6101-37f4-2d34-f2f7-cfeade610278@huawei.com>
+ <CY4PR21MB0741D1CD295AD572548E61D1CEAA0@CY4PR21MB0741.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190802053744.5519-1-clin@suse.com> <20190820115645.GP13294@shell.armlinux.org.uk>
- <CAKv+Gu_0wFw5Mjpdw7BEY7ewgetNgU=Ff1uvAsn0iHmJouyKqw@mail.gmail.com>
- <20190821061027.GA2828@linux-8mug> <CAKv+Gu8Yny8cVPck3rPwCPvJBvcZKMHti_9bkCTM4H4cZ_43fg@mail.gmail.com>
- <20190821071100.GA26713@rapoport-lnx> <CAKv+Gu99z3V1B68CU8qhNwwffqDxNBOM6t3Q8-V7qpbDkf-Cwg@mail.gmail.com>
- <20190821082927.GC26713@rapoport-lnx>
-In-Reply-To: <20190821082927.GC26713@rapoport-lnx>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 21 Aug 2019 12:42:56 +0300
-Message-ID: <CAKv+Gu91d3NrcEGsz6yapVnf3NV=F-cGeftdPo=H-cNTXCC2EA@mail.gmail.com>
-Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the kernel base
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Chester Lin <clin@suse.com>, Juergen Gross <JGross@suse.com>,
-        Joey Lee <JLee@suse.com>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "ren_guo@c-sky.com" <ren_guo@c-sky.com>, Gary Lin <GLin@suse.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY4PR21MB0741D1CD295AD572548E61D1CEAA0@CY4PR21MB0741.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Wed, 21 Aug 2019 09:44:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019 at 11:29, Mike Rapoport <rppt@linux.ibm.com> wrote:
->
-> On Wed, Aug 21, 2019 at 10:29:37AM +0300, Ard Biesheuvel wrote:
-> > On Wed, 21 Aug 2019 at 10:11, Mike Rapoport <rppt@linux.ibm.com> wrote:
-> > >
-...
-> > > I think the only missing part here is to ensure that non-reserved memory in
-> > > bank 0 starts from a PMD-aligned address. I believe this could be done if
-> > > EFI stub, but I'm not really familiar with it so this just a semi-educated
-> > > guess :)
-> > >
-> >
-> > Given that it is the ARM arch code that imposes this requirement, how
-> > about adding something like this to adjust_lowmem_bounds():
-> >
-> > if (memblock_start_of_DRAM() % PMD_SIZE)
-> >     memblock_mark_nomap(memblock_start_of_DRAM(),
-> >         PMD_SIZE - (memblock_start_of_DRAM() % PMD_SIZE));
->
-> memblock_start_of_DRAM() won't work here, as it returns the actual start of
-> the DRAM including NOMAP regions. Moreover, as we cannot mark a region
-> NOMAP inside for_each_memblock() this should be done beforehand.
->
-> I think something like this could work:
->
-> diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-> index 2f0f07e..f2b635b 100644
-> --- a/arch/arm/mm/mmu.c
-> +++ b/arch/arm/mm/mmu.c
-> @@ -1178,6 +1178,19 @@ void __init adjust_lowmem_bounds(void)
->          */
->         vmalloc_limit = (u64)(uintptr_t)vmalloc_min - PAGE_OFFSET + PHYS_OFFSET;
->
-> +       /*
-> +        * The first usable region must be PMD aligned. Mark its start
-> +        * as MEMBLOCK_NOMAP if it isn't
-> +        */
-> +       for_each_memblock(memory, reg) {
-> +               if (!memblock_is_nomap(reg) && (reg->base % PMD_SIZE)) {
-> +                       phys_addr_t size = PMD_SIZE - (reg->base % PMD_SIZE);
-> +
-> +                       memblock_mark_nomap(reg->base, size);
-> +                       break;
+On Wed, Aug 21, 2019 at 07:47:44AM +0000, Long Li wrote:
+> >>>Subject: Re: [PATCH 0/3] fix interrupt swamp in NVMe
+> >>>
+> >>>On 20/08/2019 09:25, Ming Lei wrote:
+> >>>> On Tue, Aug 20, 2019 at 2:14 PM <longli@linuxonhyperv.com> wrote:
+> >>>>>
+> >>>>> From: Long Li <longli@microsoft.com>
+> >>>>>
+> >>>>> This patch set tries to fix interrupt swamp in NVMe devices.
+> >>>>>
+> >>>>> On large systems with many CPUs, a number of CPUs may share one
+> >>>NVMe
+> >>>>> hardware queue. It may have this situation where several CPUs are
+> >>>>> issuing I/Os, and all the I/Os are returned on the CPU where the
+> >>>hardware queue is bound to.
+> >>>>> This may result in that CPU swamped by interrupts and stay in
+> >>>>> interrupt mode for extended time while other CPUs continue to issue
+> >>>>> I/O. This can trigger Watchdog and RCU timeout, and make the system
+> >>>unresponsive.
+> >>>>>
+> >>>>> This patch set addresses this by enforcing scheduling and throttling
+> >>>>> I/O when CPU is starved in this situation.
+> >>>>>
+> >>>>> Long Li (3):
+> >>>>>   sched: define a function to report the number of context switches on a
+> >>>>>     CPU
+> >>>>>   sched: export idle_cpu()
+> >>>>>   nvme: complete request in work queue on CPU with flooded interrupts
+> >>>>>
+> >>>>>  drivers/nvme/host/core.c | 57
+> >>>>> +++++++++++++++++++++++++++++++++++++++-
+> >>>>>  drivers/nvme/host/nvme.h |  1 +
+> >>>>>  include/linux/sched.h    |  2 ++
+> >>>>>  kernel/sched/core.c      |  7 +++++
+> >>>>>  4 files changed, 66 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> Another simpler solution may be to complete request in threaded
+> >>>> interrupt handler for this case. Meantime allow scheduler to run the
+> >>>> interrupt thread handler on CPUs specified by the irq affinity mask,
+> >>>> which was discussed by the following link:
+> >>>>
+> >>>>
+> >>>https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Flor
+> >>>e
+> >>>> .kernel.org%2Flkml%2Fe0e9478e-62a5-ca24-3b12-
+> >>>58f7d056383e%40huawei.com
+> >>>> %2F&amp;data=02%7C01%7Clongli%40microsoft.com%7Cc7f46d3e273f45
+> >>>176d1c08
+> >>>>
+> >>>d7254cc69e%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C6370188
+> >>>8401588
+> >>>>
+> >>>9866&amp;sdata=h5k6HoGoyDxuhmDfuKLZUwgmw17PU%2BT%2FCbawfxV
+> >>>Er3U%3D&amp;
+> >>>> reserved=0
+> >>>>
+> >>>> Could you try the above solution and see if the lockup can be avoided?
+> >>>> John Garry
+> >>>> should have workable patch.
+> >>>
+> >>>Yeah, so we experimented with changing the interrupt handling in the SCSI
+> >>>driver I maintain to use a threaded handler IRQ handler plus patch below,
+> >>>and saw a significant throughput boost:
+> >>>
+> >>>--->8
+> >>>
+> >>>Subject: [PATCH] genirq: Add support to allow thread to use hard irq affinity
+> >>>
+> >>>Currently the cpu allowed mask for the threaded part of a threaded irq
+> >>>handler will be set to the effective affinity of the hard irq.
+> >>>
+> >>>Typically the effective affinity of the hard irq will be for a single cpu. As such,
+> >>>the threaded handler would always run on the same cpu as the hard irq.
+> >>>
+> >>>We have seen scenarios in high data-rate throughput testing that the cpu
+> >>>handling the interrupt can be totally saturated handling both the hard
+> >>>interrupt and threaded handler parts, limiting throughput.
+> >>>
+> >>>Add IRQF_IRQ_AFFINITY flag to allow the driver requesting the threaded
+> >>>interrupt to decide on the policy of which cpu the threaded handler may run.
+> >>>
+> >>>Signed-off-by: John Garry <john.garry@huawei.com>
+> 
+> Thanks for pointing me to this patch. This fixed the interrupt swamp and make the system stable.
+> 
+> However I'm seeing reduced performance when using threaded interrupts.
+> 
+> Here are the test results on a system with 80 CPUs and 10 NVMe disks (32 hardware queues for each disk)
+> Benchmark tool is FIO, I/O pattern: 4k random reads on all NVMe disks, with queue depth = 64, num of jobs = 80, direct=1
+> 
+> With threaded interrupts: 1320k IOPS
+> With just interrupts: 3720k IOPS
+> With just interrupts and my patch: 3700k IOPS
 
-We should break on the first !NOMAP memblock, even if it is already
-PMD aligned, but beyond that, this looks ok to me.
+This gap looks too big wrt. threaded interrupts vs. interrupts.
+
+> 
+> At the peak IOPS, the overall CPU usage is at around 98-99%. I think the cost of doing wake up and context switch for NVMe threaded IRQ handler takes some CPU away.
+> 
+
+In theory, it shouldn't be so because most of times the thread should be running
+on CPUs of this hctx, and the wakeup cost shouldn't be so big. Maybe there is
+performance problem somewhere wrt. threaded interrupt.
+
+Could you share us your test script and environment? I will see if I can
+reproduce it in my environment.
+
+> In this test, I made the following change to make use of IRQF_IRQ_AFFINITY for NVMe:
+> 
+> diff --git a/drivers/pci/irq.c b/drivers/pci/irq.c
+> index a1de501a2729..3fb30d16464e 100644
+> --- a/drivers/pci/irq.c
+> +++ b/drivers/pci/irq.c
+> @@ -86,7 +86,7 @@ int pci_request_irq(struct pci_dev *dev, unsigned int nr, irq_handler_t handler,
+>         va_list ap;
+>         int ret;
+>         char *devname;
+> -       unsigned long irqflags = IRQF_SHARED;
+> +       unsigned long irqflags = IRQF_SHARED | IRQF_IRQ_AFFINITY;
+> 
+>         if (!handler)
+>                 irqflags |= IRQF_ONESHOT;
+> 
+
+I don't see why IRQF_IRQ_AFFINITY is needed.
+
+John, could you explain it a bit why you need changes on IRQF_IRQ_AFFINITY? 
+
+The following patch should be enough:
+
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index e8f7f179bf77..1e7cffc1c20c 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -968,7 +968,11 @@ irq_thread_check_affinity(struct irq_desc *desc, struct irqaction *action)
+ 	if (cpumask_available(desc->irq_common_data.affinity)) {
+ 		const struct cpumask *m;
+ 
+-		m = irq_data_get_effective_affinity_mask(&desc->irq_data);
++		if (irqd_affinity_is_managed(&desc->irq_data))
++			m = desc->irq_common_data.affinity;
++		else
++			m = irq_data_get_effective_affinity_mask(
++					&desc->irq_data);
+ 		cpumask_copy(mask, m);
+ 	} else {
+ 		valid = false;
+
+
+Thanks,
+Ming
