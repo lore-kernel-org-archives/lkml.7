@@ -2,157 +2,162 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE24C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED71FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D18E322DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:27:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UEGX7GLD"
+	by mail.kernel.org (Postfix) with ESMTP id BE09A2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566419491;
+	bh=qmr3EkBxegCW1cVj9TcBMOwuGqBhPKJInp6kC6+owFg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b2VB0L4+4yKt9/8kyDxQ+SY9jxGQ8f93e2fWif9FMUslIX6shvUK7BprbhV2kUH5H
+	 fDbcYteRvJbo9RrvxAWLaIA0JQFQq/VYw5N+NOiCXy/4D3VFhuOoldMO3HOmXln7Tl
+	 8XaOqnyWbJK/g7O8+mKSYJbwhFiao/Q4R7R/bci8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729280AbfHUU1G (ORCPT
+        id S1729704AbfHUUba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 16:27:06 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:45376 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbfHUU1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 16:27:06 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46DK2d1nKsz9txLD;
-        Wed, 21 Aug 2019 22:27:05 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=UEGX7GLD; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id omHAs3bIZtOR; Wed, 21 Aug 2019 22:27:05 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46DK2d0ct3z9txLC;
-        Wed, 21 Aug 2019 22:27:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566419225; bh=enIzX4gTmPO57E1bMI8/3i3N4dyfDt6FfgzQCgdsq8c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UEGX7GLD3G7m5UQVeRbUtXvlSn3u2/0mfAA/bWVbpbl0amwzLCj/Bvno6MzlW48Ht
-         fvD6s2zS7bjFRsNBLRNLJ/wy5O1Rw3WjXClo/3zfsZTXDjbGtB7n+jUN2kqpO1McrW
-         biIyhp/gI7U8HwthutgxFHrgzMNbYHdvaeSySXp4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2D27A8B7FA;
-        Wed, 21 Aug 2019 22:27:05 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id eD9Vv9KqC7Og; Wed, 21 Aug 2019 22:27:05 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C6A958B7F9;
-        Wed, 21 Aug 2019 22:27:04 +0200 (CEST)
-Subject: Re: [RFC PATCH] powerpc: Convert ____flush_dcache_icache_phys() to C
-To:     Alastair D'Silva <alastair@au1.ibm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <de7a813c71c4823797bb351bea8be15acae83be2.1565970465.git.christophe.leroy@c-s.fr>
- <9887dada07278cb39051941d1a47d50349d9fde0.camel@au1.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a0ad8dd8-2f5d-256d-9e88-e9c236335bb8@c-s.fr>
-Date:   Wed, 21 Aug 2019 22:27:04 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 16:31:30 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34295 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727014AbfHUUba (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 16:31:30 -0400
+Received: by mail-ot1-f65.google.com with SMTP id c7so3361351otp.1;
+        Wed, 21 Aug 2019 13:31:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iabTxjGtNwFPz618omlBwY8T1BonwpR5OPoPhDx+RAI=;
+        b=WYbOEE9Gy49PJrRZIF4UzXIVNnr3FJk4n4J+C/Tb1KQz9hvmb1uczkBPxMBKM/igic
+         0SNsn4mNhaeqU/Tb5AS8Ni2Rpxxh0j+0WWN/5WrfIZKcY5/63lI2NMfwf6PK3BVqdPN7
+         DLwab1EEfwZ9T2vS9ceWnkIJ9hGAkJy2bszpoRGNyKJsgu0XQj6i0Ig1ziJW4CM6RPau
+         cowsQARkeHukD1/vawY5anj2mN2vbrYwmeTtCyUQ84uswelQdf7WQIOBV64CU1Rw5I+W
+         CJAZry04iuRsvm0CC4NOIPbEQg/SmOfaANmd0lA+ZgZxDdT0rpkkQkqr2eWD+2GPtH/k
+         /45Q==
+X-Gm-Message-State: APjAAAVoW7QyrpPLjF+scMFmsL/Rg9cl9HWIKDAC+JUaS/iUwjv1Cu7P
+        0C+M/iPipBU9yGSzkHGDtA==
+X-Google-Smtp-Source: APXvYqxA5DddGYiMIluqgvMEXnIjXJXPtUYSn4UKKWLOHwak79bzGLItjFHyJqv8AZhca2/koFNGsw==
+X-Received: by 2002:a9d:7a5a:: with SMTP id z26mr26056383otm.348.1566419488855;
+        Wed, 21 Aug 2019 13:31:28 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d22sm6221319oic.23.2019.08.21.13.31.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 13:31:28 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 15:31:27 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     David Lechner <david@lechnology.com>
+Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] dt-bindings: counter: new bindings for TI eQEP
+Message-ID: <20190821203127.GA29308@bogus>
+References: <20190807194023.15318-1-david@lechnology.com>
+ <20190807194023.15318-3-david@lechnology.com>
 MIME-Version: 1.0
-In-Reply-To: <9887dada07278cb39051941d1a47d50349d9fde0.camel@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807194023.15318-3-david@lechnology.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 07, 2019 at 02:40:20PM -0500, David Lechner wrote:
+> This documents device tree binding for the Texas Instruments Enhanced
+> Quadrature Encoder Pulse (eQEP) Module found in various TI SoCs.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
+> ---
+> 
+> v2 changes:
+> - convert to .yaml format
+> - rename clock to "sysclkout"
+> 
+>  .../devicetree/bindings/counter/ti-eqep.yaml  | 50 +++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/counter/ti-eqep.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/counter/ti-eqep.yaml b/Documentation/devicetree/bindings/counter/ti-eqep.yaml
+> new file mode 100644
+> index 000000000000..8f8b2e87e5c3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/counter/ti-eqep.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/counter/ti-eqep.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments Enhanced Quadrature Encoder Pulse (eQEP) Module
+> +
+> +maintainers:
+> +  - David Lechner <david@lechnology.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: "ti,am3352-eqep"
 
+No need for quotes
 
-Le 20/08/2019 à 06:36, Alastair D'Silva a écrit :
-> On Fri, 2019-08-16 at 15:52 +0000, Christophe Leroy wrote:
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: The eQEP event interrupt
 
-[...]
+Don't really have to have a description when there is only 1 entry.
 
-> 
-> 
-> Thanks Christophe,
-> 
-> I'm trying a somewhat different approach that requires less knowledge
-> of assembler. Handling of CPU_FTR_COHERENT_ICACHE is outside this
-> function. The code below is not a patch as my tree is a bit messy,
-> sorry:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: The clock that determines the SYSCLKOUT rate for the eQEP
+> +                 peripheral.
 
-Can we be 100% sure that GCC won't add any code accessing some global 
-data or stack while the Data MMU is OFF ?
+Same here. 2 spaces in from description is the normal indentation.
 
-Christophe
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: sysclkout
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    eqep0: eqep@180 {
 
+counter@...
 
-> 
-> /**
->   * flush_dcache_icache_phys() - Flush a page by it's physical address
->   * @addr: the physical address of the page
->   */
-> static void flush_dcache_icache_phys(unsigned long addr)
-> {
-> 	register unsigned long msr;
-> 	register unsigned long dlines = PAGE_SIZE >> l1_dcache_shift();
-> 	register unsigned long dbytes = l1_dcache_bytes();
-> 	register unsigned long ilines = PAGE_SIZE >> l1_icache_shift();
-> 	register unsigned long ibytes = l1_icache_bytes();
-> 	register unsigned long i;
-> 	register unsigned long address = addr;
-> 
-> 	/*
-> 	 * Clear the DR bit so that we operate on physical
-> 	 * rather than virtual addresses
-> 	 */
-> 	msr = mfmsr();
-> 	mtmsr(msr & ~(MSR_DR));
-> 
-> 	/* Write out the data cache */
-> 	for (i = 0; i < dlines; i++, address += dbytes)
-> 		dcbst((void *)address);
-> 
-> 	/* Invalidate the instruction cache */
-> 	address = addr;
-> 	for (i = 0; i < ilines; i++, address += ibytes)
-> 		icbi((void *)address);
-> 
-> 	mtmsr(msr);
-> }
-> 
-> void test_flush_phys(unsigned long addr)
-> {
-> 	flush_dcache_icache_phys(addr);
-> }
-> 
-> 
-> This gives the following assembler (using pmac32_defconfig):
-> 000003cc <test_flush_phys>:
->   3cc:   94 21 ff f0     stwu    r1,-16(r1)
->   3d0:   7d 00 00 a6     mfmsr   r8
->   3d4:   55 09 07 34     rlwinm  r9,r8,0,28,26
->   3d8:   7d 20 01 24     mtmsr   r9
->   3dc:   39 20 00 80     li      r9,128
->   3e0:   7d 29 03 a6     mtctr   r9
->   3e4:   39 43 10 00     addi    r10,r3,4096
->   3e8:   7c 69 1b 78     mr      r9,r3
->   3ec:   7c 00 48 6c     dcbst   0,r9
->   3f0:   39 29 00 20     addi    r9,r9,32
->   3f4:   42 00 ff f8     bdnz    3ec <test_flush_phys+0x20>
->   3f8:   7c 00 1f ac     icbi    0,r3
->   3fc:   38 63 00 20     addi    r3,r3,32
->   400:   7f 8a 18 40     cmplw   cr7,r10,r3
->   404:   40 9e ff f4     bne     cr7,3f8 <test_flush_phys+0x2c>
->   408:   7d 00 01 24     mtmsr   r8
->   40c:   38 21 00 10     addi    r1,r1,16
->   410:   4e 80 00 20     blr
-> 
+> +        compatible = "ti,am3352-eqep";
+> +        reg = <0x180 0x80>;
+> +        clocks = <&l4ls_gclk>;
+> +        clock-names = "sysclkout";
+> +        interrupts = <79>;
+> +    };
+> +
+> +...
+> -- 
+> 2.17.1
 > 
