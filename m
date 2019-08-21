@@ -2,130 +2,90 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEECC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F37C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39A522CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C75C922CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yVsLm7ad"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldWhzNAa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbfHUHM4 (ORCPT
+        id S1728126AbfHUHNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 03:12:56 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33024 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727393AbfHUHM4 (ORCPT
+        Wed, 21 Aug 2019 03:13:43 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54311 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbfHUHNn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:12:56 -0400
-Received: by mail-wr1-f68.google.com with SMTP id u16so975970wrr.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 00:12:53 -0700 (PDT)
+        Wed, 21 Aug 2019 03:13:43 -0400
+Received: by mail-wm1-f66.google.com with SMTP id p74so971224wme.4;
+        Wed, 21 Aug 2019 00:13:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=elBvlvo8dX7CqSHYt4p3f0MBViCIJM8tOXmWVg0sLdM=;
-        b=yVsLm7ad73L3wG1eKKxmWt/v3Q24RCzOmYmNlsndJr9radZcmScqnvWyTGt+Pbq65k
-         47hwU6oUpA9kv8ip96mMhNHg7Iryj9GXfeO4GuogbtFkHCUhIWlHLRg0GNNQBFSpVSgz
-         UFj553ZsKzHe8jIZvhSgdHfDewvc+juALmz2OcYT9ayfNdW+/YtMOsM17Sxl6fx+fs65
-         r16xc/pcd6cdD17oJQWnC7efiy6BNdaXzEKrPOYh+xRYDuAYO07OUMBBAGD3U7fGmXzw
-         YuLHaSJhtwLtgugMZEgGl885DlCW/BpI2VL3AVsfwNJkLdDNVP5OddbQ9Q+0p28+FdRQ
-         PSMw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Q9Pp3P6mebAq/7LTBejRSucxiuJm75F/EssDgeC4nCQ=;
+        b=ldWhzNAapvhMjKdTX/2mxMNgcJJVYku9wj4cBuwbgoL417KFa4QKUQlWqyB8wPy09x
+         WipT5H0/oYML/nV46Vsc0C35cHdLUUv2DVfxj0tpwo0FaCr8lDL/1p0HHFdtUsVgsLXJ
+         qN58t1gwX42WLOfNiPwDpaazHZ3qvHgHzIlG4FiTv/IxWvnnVDzpE+u0NrrkmdIrat+a
+         113YLzpGXGEMgMpAJcAORWd+s1NHQqVJdCOWCUoWhMzLjaqBvnxAd7vYVpDrwIs1jFkb
+         VKUEfqQ6GFRicaklI0jmrkaLuj+Js9/E2/Ciq4eXrpPiTHbP7ZIjaBCjs2Yu85Vbs6oB
+         YeNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=elBvlvo8dX7CqSHYt4p3f0MBViCIJM8tOXmWVg0sLdM=;
-        b=VE0qO9cqbVUav+gsidwyLY74imEYPNd0JpcqCtqD/Yxr0g8EJM3bw/K8eDP6mYq6Wl
-         EzHo86gXUMMvQjhrf0a7O4WD+I2lC8nHTUk7f2og93p27vsUwMVyt5hDZ0QxZfwQEd+o
-         SLYn67eCaajy5m23UYTmBFVduhD9l6eSjhnLO6C39MxsOwtIMYk71GzBk6WK/DPd5CZj
-         Q870CaoMy+hLrS2G7HzfV69+9SrKQQDNQkMAP8VAJO2sNpL6T2dCwcbv8dV5ffj9AVWJ
-         4FBdwvQ7fBZo2HciXOort+DFfpRc5s8g02p6sj8dpfHiupS2df/VavzS9jInF3d33juF
-         JYSw==
-X-Gm-Message-State: APjAAAUsV8Hlof4g7BrYmJ9GgaOJAyPtZ+Ql60w9cBgUbvXRZxXxzdjP
-        hTEpygKsStR+W0G9DhU1pd8OIlxtKCsBHw==
-X-Google-Smtp-Source: APXvYqxLbyplT821dmtYErwaOPzAm5WQU+VRxJZpU4EvBJxDCqYmyMNPTWmsCIj8YviVKXyUPH6KIQ==
-X-Received: by 2002:a5d:460e:: with SMTP id t14mr40512674wrq.171.1566371571911;
-        Wed, 21 Aug 2019 00:12:51 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a142sm2873635wme.2.2019.08.21.00.12.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 00:12:51 -0700 (PDT)
-Subject: Re: [PATCH 1/3] dt-bindings: Convert Arm Mali Midgard GPU to DT
- schema
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q9Pp3P6mebAq/7LTBejRSucxiuJm75F/EssDgeC4nCQ=;
+        b=TSIR8qkJf/Dk4A4keFWA040eD/I+fHb5DYO1CSmjwvXH6sXkix73C5ICcDZ9V+B1wE
+         YQYptfP1gkc3o2gclF7CqDbs9i9GTyXXarm44YvQojysNk1iRpmqLXBInok1jOhl6Pcc
+         mSQPHp9wi84A4cqnmMEws/DRzPgayk/E4tav+Uf/Pz2hVngtrmKLkkcMfZVn+Trmkj+v
+         IKfXRiLmXto2Fj7kbfviGkRXXwZYfqyECmqwTslQ7I1YVxf/Lax7s4KvbdSVqxl32oZh
+         313oyttcKvw+/jDpYz5nY5u9F+WN0PHHd24s2qSm9FlGceLbS4tvK84+w6jXtob2Zsor
+         mLAQ==
+X-Gm-Message-State: APjAAAX0i3Bov3exTmHAHG7JKf1mQy1cqUNGyFWRhZ/pGFBQqXQ2H0nY
+        6/h6RJodeyp7Bm7Fsi90t3ZCmKT4Ggs=
+X-Google-Smtp-Source: APXvYqwXUbxrysJKl2hwZ/HLh6BnN0WXTupsVfEZQlfjHYI8XV4f+4GbWC/dPFDP9wrlBZPTHbF9wg==
+X-Received: by 2002:a1c:3944:: with SMTP id g65mr4392833wma.68.1566371618210;
+        Wed, 21 Aug 2019 00:13:38 -0700 (PDT)
+Received: from [10.43.17.44] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f197sm5687057wme.22.2019.08.21.00.13.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Aug 2019 00:13:37 -0700 (PDT)
+Subject: Re: [PATCH 6/9] dm crypt: support diskcipher
+To:     "boojin.kim" <boojin.kim@samsung.com>,
+        'Alasdair Kergon' <agk@redhat.com>,
+        'Mike Snitzer' <snitzer@redhat.com>, dm-devel@redhat.com,
         linux-kernel@vger.kernel.org
-References: <20190820195959.6126-1-robh@kernel.org>
- <20190820195959.6126-2-robh@kernel.org>
-From:   Neil Armstrong <narmstrong@baylibre.com>
+Cc:     'Herbert Xu' <herbert@gondor.apana.org.au>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        'Eric Biggers' <ebiggers@kernel.org>,
+        "'Theodore Y. Ts'o'" <tytso@mit.edu>, 'Chao Yu' <chao@kernel.org>,
+        'Jaegeuk Kim' <jaegeuk@kernel.org>,
+        'Andreas Dilger' <adilger.kernel@dilger.ca>,
+        'Jens Axboe' <axboe@kernel.dk>,
+        'Krzysztof Kozlowski' <krzk@kernel.org>,
+        'Kukjin Kim' <kgene@kernel.org>,
+        'Jaehoon Chung' <jh80.chung@samsung.com>,
+        'Ulf Hansson' <ulf.hansson@linaro.org>,
+        linux-crypto@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+References: <CGME20190821064230epcas2p1ad7301f2b1331bcab3126e6e37c0e272@epcas2p1.samsung.com>
+ <004201d557eb$9b0a4410$d11ecc30$@samsung.com>
+From:   Milan Broz <gmazyland@gmail.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <0ab5959e-fc6c-06c3-a3f1-ea5a1ebef87d@baylibre.com>
-Date:   Wed, 21 Aug 2019 09:12:50 +0200
+Message-ID: <cc484ef6-aacc-7864-0e6d-313b2e1c5d92@gmail.com>
+Date:   Wed, 21 Aug 2019 09:13:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190820195959.6126-2-robh@kernel.org>
+In-Reply-To: <004201d557eb$9b0a4410$d11ecc30$@samsung.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -134,320 +94,342 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 21/08/2019 08:42, boojin.kim wrote:
+> This patch supports dm-crypt to use diskcipher in a specific ivmode
+> (disk or fmp).
+> Dm-crypt allocates diskcipher and sets the key on it.
+> Then, dm-crypt sets diskcipher into BIO and submits the BIO without
+> any additional data encryption.
 
-On 20/08/2019 21:59, Rob Herring wrote:
-> Convert the Arm Midgard GPU binding to DT schema format.
+NACK.
+
+The whole principle of dm-crypt target is that it NEVER EVER submits
+plaintext data down the stack in bio.
+
+If you want to do some lower/higher layer encryption, use key management
+on a different layer.
+So here, just setup encryption for fs, do not stack it with dm-crypt.
+
+Also, dm-crypt is software-independent solution
+(software-based full disk encryption), it must not depend on
+any underlying hardware.
+Hardware can be of course used used for acceleration, but then
+just implement proper crypto API module that accelerates particular cipher.
+
+I really hope we do not want to repeat the same mistake like presented here
+https://www.ru.nl/english/news-agenda/news/vm/icis/cyber-security/2018/radboud-university-researchers-discover-security/
+
+Milan
+
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Alasdair Kergon <agk@redhat.com>
+> Cc: Mike Snitzer <snitzer@redhat.com>
+> Cc: dm-devel@redhat.com
+> Signed-off-by: Boojin Kim <boojin.kim@samsung.com>
 > ---
->  .../bindings/gpu/arm,mali-midgard.txt         | 119 -------------
->  .../bindings/gpu/arm,mali-midgard.yaml        | 165 ++++++++++++++++++
->  2 files changed, 165 insertions(+), 119 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+>  drivers/md/dm-crypt.c | 112
+> ++++++++++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 103 insertions(+), 9 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> deleted file mode 100644
-> index 9b298edec5b2..000000000000
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> +++ /dev/null
-> @@ -1,119 +0,0 @@
-> -ARM Mali Midgard GPU
-> -====================
-> -
-> -Required properties:
-> -
-> -- compatible :
-> -  * Must contain one of the following:
-> -    + "arm,mali-t604"
-> -    + "arm,mali-t624"
-> -    + "arm,mali-t628"
-> -    + "arm,mali-t720"
-> -    + "arm,mali-t760"
-> -    + "arm,mali-t820"
-> -    + "arm,mali-t830"
-> -    + "arm,mali-t860"
-> -    + "arm,mali-t880"
-> -  * which must be preceded by one of the following vendor specifics:
-> -    + "allwinner,sun50i-h6-mali"
-> -    + "amlogic,meson-gxm-mali"
-> -    + "samsung,exynos5433-mali"
-> -    + "rockchip,rk3288-mali"
-> -    + "rockchip,rk3399-mali"
-> -
-> -- reg : Physical base address of the device and length of the register area.
-> -
-> -- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
-> -
-> -- interrupt-names : Contains the names of IRQ resources in the order they were
-> -  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
-> -
-> -
-> -Optional properties:
-> -
-> -- clocks : Phandle to clock for the Mali Midgard device.
-> -
-> -- clock-names : Specify the names of the clocks specified in clocks
-> -  when multiple clocks are present.
-> -    * core: clock driving the GPU itself (When only one clock is present,
-> -      assume it's this clock.)
-> -    * bus: bus clock for the GPU
-> -
-> -- mali-supply : Phandle to regulator for the Mali device. Refer to
-> -  Documentation/devicetree/bindings/regulator/regulator.txt for details.
-> -
-> -- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
-> -  for details.
-> -
-> -- #cooling-cells: Refer to Documentation/devicetree/bindings/thermal/thermal.txt
-> -  for details.
-> -
-> -- resets : Phandle of the GPU reset line.
-> -
-> -Vendor-specific bindings
-> -------------------------
-> -
-> -The Mali GPU is integrated very differently from one SoC to
-> -another. In order to accommodate those differences, you have the option
-> -to specify one more vendor-specific compatible, among:
-> -
-> -- "allwinner,sun50i-h6-mali"
-> -  Required properties:
-> -  - clocks : phandles to core and bus clocks
-> -  - clock-names : must contain "core" and "bus"
-> -  - resets: phandle to GPU reset line
-> -
-> -- "amlogic,meson-gxm-mali"
-> -  Required properties:
-> -  - resets : Should contain phandles of :
-> -    + GPU reset line
-> -    + GPU APB glue reset line
-> -
-> -Example for a Mali-T760:
-> -
-> -gpu@ffa30000 {
-> -	compatible = "rockchip,rk3288-mali", "arm,mali-t760";
-> -	reg = <0xffa30000 0x10000>;
-> -	interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-> -		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> -	interrupt-names = "job", "mmu", "gpu";
-> -	clocks = <&cru ACLK_GPU>;
-> -	mali-supply = <&vdd_gpu>;
-> -	operating-points-v2 = <&gpu_opp_table>;
-> -	power-domains = <&power RK3288_PD_GPU>;
-> -	#cooling-cells = <2>;
-> -};
-> -
-> -gpu_opp_table: opp_table0 {
-> -	compatible = "operating-points-v2";
-> -
-> -	opp@533000000 {
-> -		opp-hz = /bits/ 64 <533000000>;
-> -		opp-microvolt = <1250000>;
-> -	};
-> -	opp@450000000 {
-> -		opp-hz = /bits/ 64 <450000000>;
-> -		opp-microvolt = <1150000>;
-> -	};
-> -	opp@400000000 {
-> -		opp-hz = /bits/ 64 <400000000>;
-> -		opp-microvolt = <1125000>;
-> -	};
-> -	opp@350000000 {
-> -		opp-hz = /bits/ 64 <350000000>;
-> -		opp-microvolt = <1075000>;
-> -	};
-> -	opp@266000000 {
-> -		opp-hz = /bits/ 64 <266000000>;
-> -		opp-microvolt = <1025000>;
-> -	};
-> -	opp@160000000 {
-> -		opp-hz = /bits/ 64 <160000000>;
-> -		opp-microvolt = <925000>;
-> -	};
-> -	opp@100000000 {
-> -		opp-hz = /bits/ 64 <100000000>;
-> -		opp-microvolt = <912500>;
-> -	};
-> -};
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> new file mode 100644
-> index 000000000000..24c4af74fb8d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> @@ -0,0 +1,165 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpu/arm,mali-midgard.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+> index 9f8b654..271cfcc 100644
+> --- a/drivers/md/dm-crypt.c
+> +++ b/drivers/md/dm-crypt.c
+> @@ -37,6 +37,7 @@
+>  #include <keys/user-type.h>
+>  
+>  #include <linux/device-mapper.h>
+> +#include <crypto/diskcipher.h>
+>  
+>  #define DM_MSG_PREFIX "crypt"
+>  
+> @@ -130,6 +131,8 @@ enum flags { DM_CRYPT_SUSPENDED, DM_CRYPT_KEY_VALID,
+>  enum cipher_flags {
+>  	CRYPT_MODE_INTEGRITY_AEAD,	/* Use authenticated mode for cihper
+> */
+>  	CRYPT_IV_LARGE_SECTORS,		/* Calculate IV from sector_size,
+> not 512B sectors */
+> +	CRYPT_MODE_DISKCIPHER,
+> +	CRYPT_MODE_SKCIPHER,
+>  };
+>  
+>  /*
+> @@ -170,6 +173,7 @@ struct crypt_config {
+>  	union {
+>  		struct crypto_skcipher **tfms;
+>  		struct crypto_aead **tfms_aead;
+> +		struct crypto_diskcipher **tfms_diskc;
+>  	} cipher_tfm;
+>  	unsigned tfms_count;
+>  	unsigned long cipher_flags;
+> @@ -955,6 +959,17 @@ static bool crypt_integrity_hmac(struct crypt_config
+> *cc)
+>  	return crypt_integrity_aead(cc) && cc->key_mac_size;
+>  }
+>  
+> +static bool crypt_mode_diskcipher(struct crypt_config *cc)
+> +{
+> +	return test_bit(CRYPT_MODE_DISKCIPHER, &cc->cipher_flags);
+> +}
 > +
-> +title: ARM Mali Midgard GPU
+> +static bool crypt_mode_skcipher(struct crypt_config *cc)
+> +{
+> +	return test_bit(CRYPT_MODE_SKCIPHER, &cc->cipher_flags);
+> +}
 > +
-> +maintainers:
-> +  - Rob Herring <robh@kernel.org>
 > +
-> +properties:
-> +  $nodename:
-> +    pattern: '^gpu@[a-f0-9]+$'
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +             - allwinner,sun50i-h6-mali
-> +          - const: arm,mali-t720
-> +      - items:
-> +          - enum:
-> +             - amlogic,meson-gxm-mali
-> +          - const: arm,mali-t820
-> +      - items:
-> +          - enum:
-> +             - rockchip,rk3288-mali
-> +          - const: arm,mali-t760
-> +      - items:
-> +          - enum:
-> +             - rockchip,rk3399-mali
-> +          - const: arm,mali-t860
-> +      - items:
-> +          - enum:
-> +             - samsung,exynos5433-mali
-> +          - const: arm,mali-t760
+>  /* Get sg containing data */
+>  static struct scatterlist *crypt_get_sg_data(struct crypt_config *cc,
+>  					     struct scatterlist *sg)
+> @@ -1573,13 +1588,13 @@ static void crypt_endio(struct bio *clone)
+>  	/*
+>  	 * free the processed pages
+>  	 */
+> -	if (rw == WRITE)
+> +	if ((rw == WRITE) && !crypt_mode_diskcipher(cc))
+>  		crypt_free_buffer_pages(cc, clone);
+>  
+>  	error = clone->bi_status;
+>  	bio_put(clone);
+>  
+> -	if (rw == READ && !error) {
+> +	if (rw == READ && !error && !crypt_mode_diskcipher(cc)) {
+>  		kcryptd_queue_crypt(io);
+>  		return;
+>  	}
+> @@ -1618,6 +1633,11 @@ static int kcryptd_io_read(struct dm_crypt_io *io,
+> gfp_t gfp)
+>  	crypt_inc_pending(io);
+>  
+>  	clone_init(io, clone);
 > +
-> +          # "arm,mali-t604"
-> +          # "arm,mali-t624"
-> +          # "arm,mali-t628"
-> +          # "arm,mali-t830"
-> +          # "arm,mali-t880"
+> +	if (crypt_mode_diskcipher(cc))
+> +		crypto_diskcipher_set(clone,
+> +			cc->cipher_tfm.tfms_diskc[0], NULL, 0);
 > +
-> +  reg:
-> +    maxItems: 1
+>  	clone->bi_iter.bi_sector = cc->start + io->sector;
+>  
+>  	if (dm_crypt_integrity_io_alloc(io, clone)) {
+> @@ -1907,10 +1927,29 @@ static void crypt_free_tfms_skcipher(struct
+> crypt_config *cc)
+>  	cc->cipher_tfm.tfms = NULL;
+>  }
+>  
+> +static void crypt_free_tfms_diskcipher(struct crypt_config *cc)
+> +{
+> +	if (!crypt_mode_diskcipher(cc))
+> +		return;
 > +
-> +  interrupts:
-> +    items:
-> +      - description: Job interrupt
-> +      - description: MMU interrupt
-> +      - description: GPU interrupt
+> +	if (cc->cipher_tfm.tfms_diskc[0] &&
+> +		!IS_ERR(cc->cipher_tfm.tfms_diskc[0])) {
+> +		crypto_diskcipher_clearkey(cc->cipher_tfm.tfms_diskc[0]);
+> +		crypto_free_diskcipher(cc->cipher_tfm.tfms_diskc[0]);
+> +		cc->cipher_tfm.tfms_diskc[0] = NULL;
+> +	}
 > +
-> +  interrupt-names:
-> +    items:
-> +      - const: job
-> +      - const: mmu
-> +      - const: gpu
+> +	kfree(cc->cipher_tfm.tfms_diskc);
+> +	cc->cipher_tfm.tfms_diskc = NULL;
+> +}
 > +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
 > +
-> +  clock-names:
-> +    minItems: 1
-> +    items:
-> +      - const: core
-> +      - const: bus
+>  static void crypt_free_tfms(struct crypt_config *cc)
+>  {
+>  	if (crypt_integrity_aead(cc))
+>  		crypt_free_tfms_aead(cc);
+> +	else if (crypt_mode_diskcipher(cc))
+> +		crypt_free_tfms_diskcipher(cc);
+>  	else
+>  		crypt_free_tfms_skcipher(cc);
+>  }
+> @@ -1934,6 +1973,7 @@ static int crypt_alloc_tfms_skcipher(struct
+> crypt_config *cc, char *ciphermode)
+>  			return err;
+>  		}
+>  	}
+> +	set_bit(CRYPT_MODE_SKCIPHER, &cc->cipher_flags);
+>  
+>  	/*
+>  	 * dm-crypt performance can vary greatly depending on which crypto
+> @@ -1965,10 +2005,34 @@ static int crypt_alloc_tfms_aead(struct crypt_config
+> *cc, char *ciphermode)
+>  	return 0;
+>  }
+>  
+> +static int crypt_alloc_tfms_diskcipher(struct crypt_config *cc,
+> +				char *ciphermode)
+> +{
+> +	int err;
 > +
-> +  mali-supply:
-> +    maxItems: 1
+> +	cc->cipher_tfm.tfms = kmalloc(sizeof(struct crypto_aead *),
+> GFP_KERNEL);
+> +	if (!cc->cipher_tfm.tfms)
+> +		return -ENOMEM;
 > +
-> +  resets:
-> +    minItems: 1
-> +    maxItems: 2
+> +	cc->cipher_tfm.tfms_diskc[0] =
+> +	    crypto_alloc_diskcipher(ciphermode, 0, 0, 1);
+> +	if (IS_ERR(cc->cipher_tfm.tfms_diskc[0])) {
+> +		err = PTR_ERR(cc->cipher_tfm.tfms_diskc[0]);
+> +		crypt_free_tfms(cc);
+> +		pr_err("%s: no diskcipher with %s\n", __func__, ciphermode);
+> +		return err;
+> +	}
+> +	pr_info("%s is done with %s\n", __func__, ciphermode);
 > +
-> +  operating-points-v2: true
+> +	return 0;
+> +}
 > +
-> +  "#cooling-cells":
-> +    const: 2
+>  static int crypt_alloc_tfms(struct crypt_config *cc, char *ciphermode)
+>  {
+>  	if (crypt_integrity_aead(cc))
+>  		return crypt_alloc_tfms_aead(cc, ciphermode);
+> +	else if (crypt_mode_diskcipher(cc))
+> +		return crypt_alloc_tfms_diskcipher(cc, ciphermode);
+>  	else
+>  		return crypt_alloc_tfms_skcipher(cc, ciphermode);
+>  }
+> @@ -2030,6 +2094,11 @@ static int crypt_setkey(struct crypt_config *cc)
+>  			r = crypto_aead_setkey(cc->cipher_tfm.tfms_aead[i],
+>  					       cc->key + (i * subkey_size),
+>  					       subkey_size);
+> +		else if (crypt_mode_diskcipher(cc))
+> +			r = crypto_diskcipher_setkey(
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-names
+> cc->cipher_tfm.tfms_diskc[i],
+> +						cc->key + (i * subkey_size),
+> +						subkey_size, 1);
+>  		else
+>  			r = crypto_skcipher_setkey(cc->cipher_tfm.tfms[i],
+>  						   cc->key + (i *
+> subkey_size),
+> @@ -2510,7 +2579,7 @@ static int crypt_ctr_cipher_new(struct dm_target *ti,
+> char *cipher_in, char *key
+>  			return -ENOMEM;
+>  		}
+>  		cc->iv_size = crypto_aead_ivsize(any_tfm_aead(cc));
+> -	} else
+> +	} else if (crypt_mode_skcipher(cc))
+>  		cc->iv_size = crypto_skcipher_ivsize(any_tfm(cc));
+>  
+>  	ret = crypt_ctr_blkdev_cipher(cc);
+> @@ -2560,6 +2629,9 @@ static int crypt_ctr_cipher_old(struct dm_target *ti,
+> char *cipher_in, char *key
+>  	chainmode = strsep(&tmp, "-");
+>  	*ivmode = strsep(&tmp, ":");
+>  	*ivopts = tmp;
+> +	if (*ivmode)
+> +		if (!strcmp(*ivmode, "disk") || !strcmp(*ivmode, "fmp"))
+> +			set_bit(CRYPT_MODE_DISKCIPHER, &cc->cipher_flags);
+>  
+>  	/*
+>  	 * For compatibility with the original dm-crypt mapping format, if
+> @@ -2621,9 +2693,11 @@ static int crypt_ctr_cipher(struct dm_target *ti,
+> char *cipher_in, char *key)
+>  		return ret;
+>  
+>  	/* Initialize IV */
+> -	ret = crypt_ctr_ivmode(ti, ivmode);
+> -	if (ret < 0)
+> -		return ret;
+> +	if (!crypt_mode_diskcipher(cc)) {
+> +		ret = crypt_ctr_ivmode(ti, ivmode);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+>  
+>  	/* Initialize and set key */
+>  	ret = crypt_set_key(cc, key);
+> @@ -2654,6 +2728,11 @@ static int crypt_ctr_cipher(struct dm_target *ti,
+> char *cipher_in, char *key)
+>  	if (cc->key_string)
+>  		memset(cc->key, 0, cc->key_size * sizeof(u8));
+>  
+> +	pr_info("%s with ivmode:%s, ivopts:%s, aead:%d, diskcipher:%d(%p),
+> skcipher:%d\n",
+> +			__func__, ivmode, ivopts, crypt_integrity_aead(cc),
+> +			crypt_mode_diskcipher(cc),
+> cc->cipher_tfm.tfms_diskc[0],
+> +			crypt_mode_skcipher(cc));
 > +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: allwinner,sun50i-h6-mali
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 2
-> +      required:
-> +        - clocks
-> +        - clock-names
-> +        - resets
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: amlogic,meson-gxm-mali
-> +    then:
-> +      properties:
-> +        resets:
-> +          minItems: 2
-> +      required:
-> +        - resets
-
-The original bindings was wrong, In fact, clocks should be required here aswell.
-Same for bifrost and utgard...
-
-Should I send a fixup patch ?
-
+>  	return ret;
+>  }
+>  
+> @@ -2788,11 +2867,15 @@ static int crypt_ctr(struct dm_target *ti, unsigned
+> int argc, char **argv)
+>  	ret = crypt_ctr_cipher(ti, argv[0], argv[1]);
+>  	if (ret < 0)
+>  		goto bad;
+> -
+>  	if (crypt_integrity_aead(cc)) {
+>  		cc->dmreq_start = sizeof(struct aead_request);
+>  		cc->dmreq_start += crypto_aead_reqsize(any_tfm_aead(cc));
+>  		align_mask = crypto_aead_alignmask(any_tfm_aead(cc));
+> +	} else if (crypt_mode_diskcipher(cc)) {
+> +		cc->per_bio_data_size = ti->per_io_data_size =
+> +			ALIGN(sizeof(struct dm_crypt_io),
+> +			ARCH_KMALLOC_MINALIGN);
+> +		goto get_bio;
+>  	} else {
+>  		cc->dmreq_start = sizeof(struct skcipher_request);
+>  		cc->dmreq_start += crypto_skcipher_reqsize(any_tfm(cc));
+> @@ -2836,6 +2919,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned
+> int argc, char **argv)
+>  		goto bad;
+>  	}
+>  
+> +get_bio:
+>  	ret = bioset_init(&cc->bs, MIN_IOS, 0, BIOSET_NEED_BVECS);
+>  	if (ret) {
+>  		ti->error = "Cannot allocate crypt bioset";
+> @@ -2893,6 +2977,12 @@ static int crypt_ctr(struct dm_target *ti, unsigned
+> int argc, char **argv)
+>  		goto bad;
+>  	}
+>  
+> +	if (crypt_mode_diskcipher(cc)) {
+> +		cc->crypt_queue = NULL;
+> +		cc->write_thread = NULL;
+> +		goto out;
+> +	}
 > +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  	if (test_bit(DM_CRYPT_SAME_CPU, &cc->flags))
+>  		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
+>  						  WQ_HIGHPRI |
+> WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
+> @@ -2918,6 +3008,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned
+> int argc, char **argv)
+>  	}
+>  	wake_up_process(cc->write_thread);
+>  
+> +out:
+>  	ti->num_flush_bios = 1;
+>  
+>  	return 0;
+> @@ -2981,10 +3072,10 @@ static int crypt_map(struct dm_target *ti, struct
+> bio *bio)
+>  
+>  	if (crypt_integrity_aead(cc))
+>  		io->ctx.r.req_aead = (struct aead_request *)(io + 1);
+> -	else
+> +	else if (crypt_mode_skcipher(cc))
+>  		io->ctx.r.req = (struct skcipher_request *)(io + 1);
+>  
+> -	if (bio_data_dir(io->base_bio) == READ) {
+> +	if ((bio_data_dir(io->base_bio) == READ) ||
+> crypt_mode_diskcipher(cc)) {
+>  		if (kcryptd_io_read(io, GFP_NOWAIT))
+>  			kcryptd_queue_read(io);
+>  	} else
+> @@ -3143,6 +3234,9 @@ static void crypt_io_hints(struct dm_target *ti,
+> struct queue_limits *limits)
+>  	limits->physical_block_size =
+>  		max_t(unsigned, limits->physical_block_size,
+> cc->sector_size);
+>  	limits->io_min = max_t(unsigned, limits->io_min, cc->sector_size);
 > +
-> +    gpu@ffa30000 {
-> +      compatible = "rockchip,rk3288-mali", "arm,mali-t760";
-> +      reg = <0xffa30000 0x10000>;
-> +      interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +             <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-> +             <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> +      interrupt-names = "job", "mmu", "gpu";
-> +      clocks = <&cru 0>;
-> +      mali-supply = <&vdd_gpu>;
-> +      operating-points-v2 = <&gpu_opp_table>;
-> +      power-domains = <&power 0>;
-> +      #cooling-cells = <2>;
-> +    };
-> +
-> +    gpu_opp_table: opp_table0 {
-> +      compatible = "operating-points-v2";
-> +
-> +      opp@533000000 {
-> +        opp-hz = /bits/ 64 <533000000>;
-> +        opp-microvolt = <1250000>;
-> +      };
-> +      opp@450000000 {
-> +        opp-hz = /bits/ 64 <450000000>;
-> +        opp-microvolt = <1150000>;
-> +      };
-> +      opp@400000000 {
-> +        opp-hz = /bits/ 64 <400000000>;
-> +        opp-microvolt = <1125000>;
-> +      };
-> +      opp@350000000 {
-> +        opp-hz = /bits/ 64 <350000000>;
-> +        opp-microvolt = <1075000>;
-> +      };
-> +      opp@266000000 {
-> +        opp-hz = /bits/ 64 <266000000>;
-> +        opp-microvolt = <1025000>;
-> +      };
-> +      opp@160000000 {
-> +        opp-hz = /bits/ 64 <160000000>;
-> +        opp-microvolt = <925000>;
-> +      };
-> +      opp@100000000 {
-> +        opp-hz = /bits/ 64 <100000000>;
-> +        opp-microvolt = <912500>;
-> +      };
-> +    };
-> +
-> +...
+> +	if (crypt_mode_diskcipher(cc))
+> +		limits->logical_block_size = PAGE_SIZE;
+>  }
+>  
+>  static struct target_type crypt_target = {
 > 
-Neil
+
