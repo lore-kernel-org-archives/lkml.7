@@ -2,134 +2,246 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB1BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B1AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 016DF22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:39:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OJBz3zUn"
+	by mail.kernel.org (Postfix) with ESMTP id F1B6522DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbfHUPjl (ORCPT
+        id S1728166AbfHUPkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:39:41 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:57814 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbfHUPjj (ORCPT
+        Wed, 21 Aug 2019 11:40:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53700 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726828AbfHUPkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:39:39 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190821153937euoutp027b885684c861967cec2c7dcf99f70f4d~8_ky4g60u0737007370euoutp02A
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:39:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190821153937euoutp027b885684c861967cec2c7dcf99f70f4d~8_ky4g60u0737007370euoutp02A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566401977;
-        bh=vl9eeLzvbk1o5YyBvdLkkw/r624gziAnAOA5EeDC/C8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OJBz3zUn3JTFvtdIi98ThEJuc2009ab28/ZnAeMjOZi9IdpI31cr6PyduT5VNW8N8
-         f00FYwFCIlfC19albLJhtZFJDgjX0T6ub1iT409k1gVOScX5zXc20o7AqnyLv6QtWt
-         0hWhIxQnrNHYSTE9H1/qhFsGyYrptc3hb3tMa+iQ=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190821153937eucas1p16714ac390b5c31100b9dff2a51b476cf~8_kyKcICu1998619986eucas1p1p;
-        Wed, 21 Aug 2019 15:39:37 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id E3.50.04469.8B56D5D5; Wed, 21
-        Aug 2019 16:39:36 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190821153936eucas1p22cd1a6105806cb5ad7b43252852fec05~8_kxSIdoF2217422174eucas1p2e;
-        Wed, 21 Aug 2019 15:39:36 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190821153935eusmtrp23caa3591e86f9cb41173542d1d732cee~8_kxEBkA31715517155eusmtrp2H;
-        Wed, 21 Aug 2019 15:39:35 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-a2-5d5d65b87058
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id A3.2B.04166.7B56D5D5; Wed, 21
-        Aug 2019 16:39:35 +0100 (BST)
-Received: from AMDC3061.DIGITAL.local (unknown [106.120.51.75]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190821153935eusmtip222d51bebca59adb50083fb20061c5e17~8_kwh5lPE0822808228eusmtip2Q;
-        Wed, 21 Aug 2019 15:39:35 +0000 (GMT)
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-To:     krzk@kernel.org
-Cc:     kgene@kernel.org, pankaj.dubey@samsung.com,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2] soc: samsung: Select missing dependency for
- EXYNOS_CHIPID
-Date:   Wed, 21 Aug 2019 17:39:26 +0200
-Message-Id: <20190821153926.12297-1-s.nawrocki@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190821150711.31398-1-s.nawrocki@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgleLIzCtJLcpLzFFi42LZduznOd0dqbGxBksm6FtsnLGe1aL/8Wtm
-        i/PnN7BbbHp8jdXi8q45bBYzzu9jslh75C67xaKtX9gtDr9pZ3Xg9Ni0qpPNY/OSeo++LasY
-        PT5vkgtgieKySUnNySxLLdK3S+DKeLC0n62gmbXi1sVulgbGaSxdjJwcEgImEjMfHmHqYuTi
-        EBJYwShx8OVdRgjnC6PEm13PmCGcz4wS06bsgWtpn3ufHSKxnFFiwamt7HAtK5deYAOpYhMw
-        lOg92scIYosICEvcW7ocrIhZ4A+jRPO9vawgCWEBf4njB68xgdgsAqoSZ96cBGvgFbCW6D/Z
-        wwyxTl5i9YYDYDangI3Euy1roM74zCbx/4IChO0isfDaaah6YYlXx7ewQ9gyEv93zgf7TkKg
-        mVGiZ/dtdghnAqPE/eMLGCGqrCUOH78IdBEH0HmaEut36UOEHSXO7v8NFpYQ4JO48VYQJMwM
-        ZE7aNp0ZIswr0dEmBFGtIvF71XQmCFtKovvJfxaIEg+Jw794IOHTzyjxdvpspgmM8rMQdi1g
-        ZFzFKJ5aWpybnlpsmJdarlecmFtcmpeul5yfu4kRmC5O/zv+aQfj10tJhxgFOBiVeHgn6MbG
-        CrEmlhVX5h5ilOBgVhLhrZgTFSvEm5JYWZValB9fVJqTWnyIUZqDRUmct5rhQbSQQHpiSWp2
-        ampBahFMlomDU6qBcavysy3Rtxviezr/2bvycFcLZJ16sEfnn1xHrI7Ej4IpbjdnrRNdHun0
-        YVGayoW83x53VSI9ZUOzr9zlVekMWVwqn8Q7R0e+51iIu0aVa/cSSbWDP+7JzrquvPp7VbDb
-        b8WrC41m1sTd1vHfMOXnBGu5hsNiLm99z0q5fixyb4oIVPmxzGenEktxRqKhFnNRcSIAn4Cg
-        zRMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrILMWRmVeSWpSXmKPExsVy+t/xe7rbU2NjDR6/MLLYOGM9q0X/49fM
-        FufPb2C32PT4GqvF5V1z2CxmnN/HZLH2yF12i0Vbv7BbHH7TzurA6bFpVSebx+Yl9R59W1Yx
-        enzeJBfAEqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRv
-        l6CX8WBpP1tBM2vFrYvdLA2M01i6GDk5JARMJNrn3mfvYuTiEBJYyihxY8sVIIcDKCElMb9F
-        CaJGWOLPtS42iJpPjBIbp69gBEmwCRhK9B7tA7NFgIruLV0ONohZoIVJYuWvJWwgCWEBX4lz
-        p94xg9gsAqoSZ96cBGvgFbCW6D/ZwwyxQV5i9YYDYDangI3Euy1rwK4TAqq5/uoh2wRGvgWM
-        DKsYRVJLi3PTc4sN9YoTc4tL89L1kvNzNzECg3fbsZ+bdzBe2hh8iFGAg1GJh3eCbmysEGti
-        WXFl7iFGCQ5mJRHeijlRsUK8KYmVValF+fFFpTmpxYcYTYGOmsgsJZqcD4ysvJJ4Q1NDcwtL
-        Q3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjM139qxlvCBh9/FozOzCjZVTViyP
-        DL3fXhj+dFZPRrWbg83SJmdd+e6nj2zE7eteML3u42dRNbpx5Wd6zz9ZLcHAvYLvVVKP3NQ0
-        en3r0JTwp+f3PWd/YzvllUPi4etnlgQvC+T8ktW+/oqaQ2HA1FM3pxhMPSjg8LZhrmJNeNy0
-        FQw+qtdNxZRYijMSDbWYi4oTAf7DBVx0AgAA
-X-CMS-MailID: 20190821153936eucas1p22cd1a6105806cb5ad7b43252852fec05
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190821153936eucas1p22cd1a6105806cb5ad7b43252852fec05
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190821153936eucas1p22cd1a6105806cb5ad7b43252852fec05
-References: <20190821150711.31398-1-s.nawrocki@samsung.com>
-        <CGME20190821153936eucas1p22cd1a6105806cb5ad7b43252852fec05@eucas1p2.samsung.com>
+        Wed, 21 Aug 2019 11:40:05 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LFMrSi117242
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:40:03 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uh88d9px0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:40:03 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 21 Aug 2019 16:40:02 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 21 Aug 2019 16:39:57 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LFdvqp55116286
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 15:39:57 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EE65BB205F;
+        Wed, 21 Aug 2019 15:39:56 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C1D6FB206B;
+        Wed, 21 Aug 2019 15:39:56 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 21 Aug 2019 15:39:56 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 7475E16C1775; Wed, 21 Aug 2019 08:39:57 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 08:39:57 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC v2] rcu/tree: Try to invoke_rcu_core() if in_irq() during
+ unlock
+Reply-To: paulmck@linux.ibm.com
+References: <20190818233839.GA160903@google.com>
+ <20190819012153.GR28441@linux.ibm.com>
+ <20190819014143.GB160903@google.com>
+ <20190819014623.GC160903@google.com>
+ <20190819022927.GS28441@linux.ibm.com>
+ <20190819125757.GA6946@linux.ibm.com>
+ <20190819143314.GT28441@linux.ibm.com>
+ <20190819154143.GA18470@linux.ibm.com>
+ <20190821143841.GC147977@google.com>
+ <20190821145617.GD147977@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821145617.GD147977@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19082115-2213-0000-0000-000003BE7B08
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011629; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01250048; UDB=6.00659949; IPR=6.01031602;
+ MB=3.00028262; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-21 15:40:00
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082115-2214-0000-0000-00005FB84B03
+Message-Id: <20190821153957.GG28441@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908210162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The chipid driver uses the MFD syscon API but it was not covered
-properly in Kconfig.
+On Wed, Aug 21, 2019 at 10:56:17AM -0400, Joel Fernandes wrote:
+> On Wed, Aug 21, 2019 at 10:38:41AM -0400, Joel Fernandes wrote:
+> > On Mon, Aug 19, 2019 at 08:41:43AM -0700, Paul E. McKenney wrote:
+> > > On Mon, Aug 19, 2019 at 07:33:14AM -0700, Paul E. McKenney wrote:
+> > > > On Mon, Aug 19, 2019 at 05:57:57AM -0700, Paul E. McKenney wrote:
+> > > > > On Sun, Aug 18, 2019 at 07:29:27PM -0700, Paul E. McKenney wrote:
+> > > > > > On Sun, Aug 18, 2019 at 09:46:23PM -0400, Joel Fernandes wrote:
+> > > > > > > On Sun, Aug 18, 2019 at 09:41:43PM -0400, Joel Fernandes wrote:
+> > > > > > > > On Sun, Aug 18, 2019 at 06:21:53PM -0700, Paul E. McKenney wrote:
+> > > > > > > [snip]
+> > > > > > > > > > > Also, your commit log's point #2 is "in_irq() implies in_interrupt()
+> > > > > > > > > > > which implies raising softirq will not do any wake ups."  This mention
+> > > > > > > > > > > of softirq seems a bit odd, given that we are going to wake up a rcuc
+> > > > > > > > > > > kthread.  Of course, this did nothing to quell my suspicions.  ;-)
+> > > > > > > > > > 
+> > > > > > > > > > Yes, I should delete this #2 from the changelog since it is not very relevant
+> > > > > > > > > > (I feel now). My point with #2 was that even if were to raise a softirq
+> > > > > > > > > > (which we are not), a scheduler wakeup of ksoftirqd is impossible in this
+> > > > > > > > > > path anyway since in_irq() implies in_interrupt().
+> > > > > > > > > 
+> > > > > > > > > Please!  Could you also add a first-principles explanation of why
+> > > > > > > > > the added condition is immune from scheduler deadlocks?
+> > > > > > > > 
+> > > > > > > > Sure I can add an example in the change log, however I was thinking of this
+> > > > > > > > example which you mentioned:
+> > > > > > > > https://lore.kernel.org/lkml/20190627173831.GW26519@linux.ibm.com/
+> > > > > > > > 
+> > > > > > > > 	previous_reader()
+> > > > > > > > 	{
+> > > > > > > > 		rcu_read_lock();
+> > > > > > > > 		do_something(); /* Preemption happened here. */
+> > > > > > > > 		local_irq_disable(); /* Cannot be the scheduler! */
+> > > > > > > > 		do_something_else();
+> > > > > > > > 		rcu_read_unlock();  /* Must defer QS, task still queued. */
+> > > > > > > > 		do_some_other_thing();
+> > > > > > > > 		local_irq_enable();
+> > > > > > > > 	}
+> > > > > > > > 
+> > > > > > > > 	current_reader() /* QS from previous_reader() is still deferred. */
+> > > > > > > > 	{
+> > > > > > > > 		local_irq_disable();  /* Might be the scheduler. */
+> > > > > > > > 		do_whatever();
+> > > > > > > > 		rcu_read_lock();
+> > > > > > > > 		do_whatever_else();
+> > > > > > > > 		rcu_read_unlock();  /* Must still defer reporting QS. */
+> > > > > > > > 		do_whatever_comes_to_mind();
+> > > > > > > > 		local_irq_enable();
+> > > > > > > > 	}
+> > > > > > > > 
+> > > > > > > > One modification of the example could be, previous_reader() could also do:
+> > > > > > > > 	previous_reader()
+> > > > > > > > 	{
+> > > > > > > > 		rcu_read_lock();
+> > > > > > > > 		do_something_that_takes_really_long(); /* causes need_qs in
+> > > > > > > > 							  the unlock_special_union to be set */
+> > > > > > > > 		local_irq_disable(); /* Cannot be the scheduler! */
+> > > > > > > > 		do_something_else();
+> > > > > > > > 		rcu_read_unlock();  /* Must defer QS, task still queued. */
+> > > > > > > > 		do_some_other_thing();
+> > > > > > > > 		local_irq_enable();
+> > > > > > > > 	}
+> > > > > > > 
+> > > > > > > The point you were making in that thread being, current_reader() ->
+> > > > > > > rcu_read_unlock() -> rcu_read_unlock_special() would not do any wakeups
+> > > > > > > because previous_reader() sets the deferred_qs bit.
+> > > > > > > 
+> > > > > > > Anyway, I will add all of this into the changelog.
+> > > > > > 
+> > > > > > Examples are good, but what makes it so that there are no examples of
+> > > > > > its being unsafe?
+> > > > > > 
+> > > > > > And a few questions along the way, some quick quiz, some more serious.
+> > > > > > Would it be safe if it checked in_interrupt() instead of in_irq()?
+> > > > > > If not, should the in_interrupt() in the "if" condition preceding the
+> > > > > > added "else if" be changed to in_irq()?  Would it make sense to add an
+> > > > > > "|| !irqs_were_disabled" do your new "else if" condition?  Would the
+> > > > > > body of the "else if" actually be executed in current mainline?
+> > > > > > 
+> > > > > > In an attempt to be at least a little constructive, I am doing some
+> > > > > > testing of this patch overnight, along with a WARN_ON_ONCE() to see if
+> > > > > > that invoke_rcu_core() is ever reached.
+> > > > > 
+> > > > > And that WARN_ON_ONCE() never triggered in two-hour rcutorture runs of
+> > > > > TREE01, TREE02, TREE03, and TREE09.  (These are the TREE variants in
+> > > > > CFLIST that have CONFIG_PREEMPT=y.)
+> > > > > 
+> > > > > This of course raises other questions.  But first, do you see that code
+> > > > > executing in your testing?
+> > > > 
+> > > > Never mind!  Idiot here forgot the "--bootargs rcutree.use_softirq"...
+> > > 
+> > > So this time I ran the test this way:
+> > > 
+> > > tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 10 --configs "TREE01 TREE02 TREE03 TREE09" --bootargs "rcutree.use_softirq=0"
+> > > 
+> > > Still no splats.  Though only 10-minute runs instead of the two-hour runs
+> > > I did last night.  (Got other stuff I need to do, sorry!)
+> > > 
+> > > My test version of your patch is shown below.  Please let me know if I messed
+> > > something up.
+> > 
+> > I think you also need to pass rcutorture.irqreader=1 ?
+> > 
+> > Otherwise seems all readers happen in process context AFAICS.
+> 
+> Which is the default setting for that, so that's not the issue.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- drivers/soc/samsung/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Yep!
 
-diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
-index 2905f5262197..33ad0de2de3c 100644
---- a/drivers/soc/samsung/Kconfig
-+++ b/drivers/soc/samsung/Kconfig
-@@ -10,6 +10,7 @@ if SOC_SAMSUNG
- config EXYNOS_CHIPID
- 	bool "Exynos Chipid controller driver" if COMPILE_TEST
- 	depends on ARCH_EXYNOS || COMPILE_TEST
-+	select MFD_SYSCON
- 	select SOC_BUS
- 
- config EXYNOS_PMU
--- 
-2.17.1
+> I think one reason could be, in_irq() is false when the timer callback
+> executes, since the timer callback is executing after a grace-period. The
+> stack is as follows:
+> 
+> Any reason why we cannot both test for call_rcu() and execute the RCU
+> callback from the timer hardirq handler?
+> 
+> In fact, I guess on use_nosoftirq systems, the callback will not even run
+> in softirq context.
+> 
+> [   20.553361]  => rcu_torture_timer_cb
+> [   20.553361]  => rcu_do_batch
+> [   20.553361]  => rcu_core
+> [   20.553361]  => __do_softirq
+> [   20.553361]  => do_softirq_own_stack
+> [   20.553361]  => do_softirq.part.16
+> [   20.553361]  => __local_bh_enable_ip
+> [   20.553361]  => rcutorture_one_extend
+> [   20.553361]  => rcu_torture_one_read
+> [   20.553361]  => rcu_torture_reader
+> [   20.553361]  => kthread
+> [   20.553361]  => ret_from_fork
+
+Well, it is rcu_read_lock() and rcu_read_unlock() that matters
+for this case rather than the callback.  But yes, given in_irq(),
+rcu_read_lock() and rcu_read_unlock() would need to have executed
+from a hardware interrupt handler.  And would need to get one of the
+->rcu_read_lock_special bits set somehow.
+
+But you can use smp_call_function() to invoke a function that runs in
+hardware interrupt handler context, and you can do this within either
+rcuperf or rcutorture.
+
+And yes, this line of reasoning did inform at least some of my skepticism
+surrounding your initial patch, in case you were wondering about some
+of my earlier questions.  ;-)
+
+							Thanx, Paul
 
