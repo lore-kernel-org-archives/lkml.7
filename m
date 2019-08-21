@@ -2,205 +2,160 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F613C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB56CC41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC6A2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E1D22CE3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TUqqHRU+"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="D+HMEZzb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730884AbfHUXun (ORCPT
+        id S1730912AbfHUXvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 19:50:43 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55431 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728304AbfHUXum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 19:50:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46DPYS5Jxfz9sBp;
-        Thu, 22 Aug 2019 09:50:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566431439;
-        bh=0IxaCMguw7mIywx2R9a7SL80AVSgxKu3pkkK/b5qwxA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TUqqHRU+J1iZV3fNWXZP07Qzg9lMnPwa62+T+ObBT5uAb/2acuR9ml16pzMp1KFc6
-         ZdsINKxsyvaf07NQwSStTjJBplOSxIczMLVZWW6K8cvu5v94s9p2XjYzedccXfvOoS
-         At55wLFM0JL+nQCrQ7pnNcDe0nz+2WkYHv40gDRQYlRTvU4Cq0Rt6yjkvqQLAy0EFH
-         kWy4F9U0sX9wKMDyt3Wghs7fJ4y5lq32ptvzHm7Nb5TU2zUEj536spgMsmeOhhsE8d
-         Fwuq4hRr9jG7EUJb+XcbEEHjbmhuVW1xnzrDi7kAr4bbzhyXcBUMzxgUIRwn8C7oX8
-         qwFZll2fRN+4g==
-Date:   Thu, 22 Aug 2019 09:50:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Wed, 21 Aug 2019 19:51:06 -0400
+Received: from mail-eopbgr150071.outbound.protection.outlook.com ([40.107.15.71]:38515
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728304AbfHUXvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 19:51:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EaGTxjEj+CwSG/XNx0WVf6F7/XvgOywqnqprTk+X54g+n7yml1T/WTHVMWQtTsoh5lET1IHys7yS2VQNA/9m6kG8shtOcjnpnpU/0iqodpBd0+8wrnPv1p7IvD5PUgOzw+5Fw1PH6vK+vi/in8OiHRki1hH8CrZADsI6W15d32oYem2rdDLXU+b4wcYbDx9YSL/ljpxHU2FRAjn4SN5jztpg1HWb0lLCzIhhP3Lir6k+eIm0GSkynXTEtm7DP0M6cnRhk6AHPrikTuYH5mP6O5tL1cFhbDsSQFK+AdlSdiuxWCf3oN1H1NvfRwdRQvlizqtGMIVgU/sit40PYgC5+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BD99CBVwfWfplQFNyhx/dmJLkrR1Rdt/Q/30tc6QT8o=;
+ b=BS4cZNVfKE06QXqVVG/MCeuydoH78OlWOF/X/X9JybWHcCP+V2stnYz440lHN+8YhRP1nanzJQTK66bzIdbm+4uhPw9cNNF/lxgcG/p8mrMIqQFT8ZfGXm2x2HAD2ZNQErW8mBuOJge2VcCi7yM8tAFyCHOSjyBFiak55a+r/xcX8yw9ERsr+lsqsSiJRdIgw++tk9j6f2wmPpUaPnAZRroY5HRE5y5Dsuaaa5XgkmkHNIeEbTxDBKVg/iswM7OU6bL/2DsuVCYD+Cf6afjBy8nBv1Nv8m88aE67Gfw8hCj6LFy5x9ET+v75r+wUgluTYgIYaIiLLSeScn6WpplQBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BD99CBVwfWfplQFNyhx/dmJLkrR1Rdt/Q/30tc6QT8o=;
+ b=D+HMEZzbkKXskCwej8+htiGn6+Gajl9dCXTDoe+m3ZQXNat5BUweS+Gni3IVmyzCMAnQbRJi2uyqBP75wGzxjzCmN6EHgI9LFifDG9ucBOXIwxAMmBRjGkg/2clAOoXHAHQaaBx+3onZr5Oy3ZIWnAxJlBfKnAqGDKRyYa5m8gI=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB3405.eurprd05.prod.outlook.com (10.170.238.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Wed, 21 Aug 2019 23:51:01 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1d6:9c67:ea2d:38a7%6]) with mapi id 15.20.2178.020; Wed, 21 Aug 2019
+ 23:51:01 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+CC:     Christoph Hellwig <hch@lst.de>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: linux-next: manual merge of the drm-misc tree with the drm and
- drm-intel trees
-Message-ID: <20190822095029.0fd063d4@canb.auug.org.au>
-In-Reply-To: <20190814125433.20147fb7@canb.auug.org.au>
-References: <20190814125433.20147fb7@canb.auug.org.au>
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH 2/4] memremap: remove the dev field in struct dev_pagemap
+Thread-Topic: [PATCH 2/4] memremap: remove the dev field in struct dev_pagemap
+Thread-Index: AQHVVaUUhGk4jDl8B02XMFt421bWy6cDRjIAgADEW4CAAOK+AIAA4TAAgAB8xoA=
+Date:   Wed, 21 Aug 2019 23:51:01 +0000
+Message-ID: <20190821235055.GQ8667@mellanox.com>
+References: <20190818090557.17853-1-hch@lst.de>
+ <20190818090557.17853-3-hch@lst.de>
+ <CAPcyv4iYytOoX3QMRmvNLbroxD0szrVLauXFjnQMvtQOH3as_w@mail.gmail.com>
+ <20190820132649.GD29225@mellanox.com>
+ <CAPcyv4hfowyD4L0W3eTJrrPK5rfrmU6G29_vBVV+ea54eoJenA@mail.gmail.com>
+ <20190821162420.GI8667@mellanox.com>
+In-Reply-To: <20190821162420.GI8667@mellanox.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQBPR0101CA0011.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00::24) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ff7de4e9-222d-439a-2e07-08d726926be3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR05MB3405;
+x-ms-traffictypediagnostic: VI1PR05MB3405:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR05MB3405C0BEDAE45C180F2B0520CFAA0@VI1PR05MB3405.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0136C1DDA4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(136003)(346002)(366004)(396003)(376002)(39860400002)(199004)(189003)(8676002)(81156014)(99286004)(81166006)(316002)(229853002)(66446008)(54906003)(66946007)(64756008)(66556008)(66476007)(7736002)(305945005)(52116002)(36756003)(26005)(66066001)(6116002)(3846002)(76176011)(2906002)(53546011)(6506007)(386003)(6486002)(8936002)(53936002)(102836004)(6916009)(71190400001)(966005)(71200400001)(14444005)(33656002)(256004)(4326008)(14454004)(6246003)(25786009)(6436002)(186003)(11346002)(446003)(478600001)(1076003)(86362001)(486006)(6306002)(5660300002)(476003)(2616005)(6512007)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3405;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: slGrQeYkySAxa73xEYqN4ELA/jv+A3z+GlBl0VtF+hmNWnPZztSuW1C49EPLKPdwUphLosHoVkD335T3BNKVRLTHUJ3BdZORtQWzgfNPWw7Qn3N0nB/dd7YG/eyLw3RSzwt9FKeLBtSsLMyDSI6VeWbVfglU3GMSonGgQr5bwfeNhbhj37aaoJNRMW2pm94yHYjRuwNSvg9ZZWP2p5Qn+2fUqp3iC5wT554nR3W+oCn3juxV0wZmL7c4RSUL0wHMbiyxFGb18Caxpooqns6RZCiZMZCLDT8CWiTOwiHqduGp9SGVcAItGtbqUcDr0QIeL2y30ArKjQh4iHYdKmGshX8Vq6xCYnTrSCK4VoYMM8EOnwM44eAuaw48cEkCIT/h3EcppX88pc//0n7c0ECnDqZP+KVizyPUeEdjUGz/8J0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <BA840F552473C345840D4DC31B1DBDC6@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pqDYB7qH+83yIm0QxI/PxPA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff7de4e9-222d-439a-2e07-08d726926be3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 23:51:01.5744
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OG0Q51siNn889gtpqWijjlXqfQEuaoX+J5YF1xxqvnEZWPVwJ2e5q3hcJxqvfIswSZxjYs3kVbHIsXo64hjjCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3405
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/pqDYB7qH+83yIm0QxI/PxPA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Wed, 14 Aug 2019 12:54:33 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the drm-misc tree got a conflict in:
+On Wed, Aug 21, 2019 at 01:24:20PM -0300, Jason Gunthorpe wrote:
+> On Tue, Aug 20, 2019 at 07:58:22PM -0700, Dan Williams wrote:
+> > On Tue, Aug 20, 2019 at 6:27 AM Jason Gunthorpe <jgg@mellanox.com> wrot=
+e:
+> > >
+> > > On Mon, Aug 19, 2019 at 06:44:02PM -0700, Dan Williams wrote:
+> > > > On Sun, Aug 18, 2019 at 2:12 AM Christoph Hellwig <hch@lst.de> wrot=
+e:
+> > > > >
+> > > > > The dev field in struct dev_pagemap is only used to print dev_nam=
+e in
+> > > > > two places, which are at best nice to have.  Just remove the fiel=
+d
+> > > > > and thus the name in those two messages.
+> > > > >
+> > > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > > >
+> > > > Needs the below as well.
+> > > >
+> > > > /me goes to check if he ever merged the fix to make the unit test
+> > > > stuff get built by default with COMPILE_TEST [1]. Argh! Nope, didn'=
+t
+> > > > submit it for 5.3-rc1, sorry for the thrash.
+> > > >
+> > > > You can otherwise add:
+> > > >
+> > > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > > >
+> > > > [1]: https://lore.kernel.org/lkml/156097224232.1086847.946386192468=
+3372741.stgit@dwillia2-desk3.amr.corp.intel.com/
+> > >
+> > > Can you get this merged? Do you want it to go with this series?
+> >=20
+> > Yeah, makes some sense to let you merge it so that you can get
+> > kbuild-robot reports about any follow-on memremap_pages() work that
+> > may trip up the build. Otherwise let me know and I'll get it queued
+> > with the other v5.4 libnvdimm pending bits.
 >=20
->   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
->   drivers/gpu/drm/i915/i915_vma.c
->   drivers/gpu/drm/i915/i915_gem_batch_pool.c
->   drivers/gpu/drm/i915/gem/i915_gem_object.c
->   drivers/gpu/drm/i915/gt/intel_engine_pool.c
->=20
-> between commits:
->=20
->   a93615f900bd ("drm/i915: Throw away the active object retirement comple=
-xity")
->   12c255b5dad1 ("drm/i915: Provide an i915_active.acquire callback")
->   cd2a4eaf8c79 ("drm/i915: Report resv_obj allocation failure")
->   b40d73784ffc ("drm/i915: Replace struct_mutex for batch pool serialisat=
-ion")
->   ab2f7a5c18b5 ("drm/amdgpu: Implement VRAM wipe on release")
->   0c159ffef628 ("drm/i915/gem: Defer obj->base.resv fini until RCU callba=
-ck")
->=20
-> from the drm and drm-intel trees and commit:
->=20
->   52791eeec1d9 ("dma-buf: rename reservation_object to dma_resv")
->=20
-> from the drm-misc tree.
->=20
-> I fixed it up (see below and I added the following merge fix patch) and
-> can carry the fix as necessary. This is now fixed as far as linux-next
-> is concerned, but any non trivial conflicts should be mentioned to your
-> upstream maintainer when your tree is submitted for merging.  You may
-> also want to consider cooperating with the maintainer of the
-> conflicting tree to minimise any particularly complex conflicts.
+> Done, I used it already to test build the last series from CH..
 
-So the parts of this that affected the drm tree are now fixed, but the
-conflicts between the drm-intel and drm-misc trees are now between the
-drm-intel and drm trees.
+It failed 0-day, I'm guessing some missing kconfig stuff
 
-The added patch becomes:
+For now I dropped it, but, if you send a v2 I can forward it toward
+0-day again!
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 14 Aug 2019 12:48:39 +1000
-Subject: [PATCH] drm: fix up fallout from "dma-buf: rename reservation_obje=
-ct to dma_resv"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/gpu/drm/i915/gt/intel_engine_pool.c | 8 ++++----
- 3 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/gt/intel_engine_pool.c b/drivers/gpu/drm/=
-i915/gt/intel_engine_pool.c
-index 03d90b49584a..4cd54c569911 100644
---- a/drivers/gpu/drm/i915/gt/intel_engine_pool.c
-+++ b/drivers/gpu/drm/i915/gt/intel_engine_pool.c
-@@ -43,12 +43,12 @@ static int pool_active(struct i915_active *ref)
- {
- 	struct intel_engine_pool_node *node =3D
- 		container_of(ref, typeof(*node), active);
--	struct reservation_object *resv =3D node->obj->base.resv;
-+	struct dma_resv *resv =3D node->obj->base.resv;
- 	int err;
-=20
--	if (reservation_object_trylock(resv)) {
--		reservation_object_add_excl_fence(resv, NULL);
--		reservation_object_unlock(resv);
-+	if (dma_resv_trylock(resv)) {
-+		dma_resv_add_excl_fence(resv, NULL);
-+		dma_resv_unlock(resv);
- 	}
-=20
- 	err =3D i915_gem_object_pin_pages(node->obj);
-
-I think the remaining merge resolution is:
-
-diff --cc drivers/gpu/drm/i915/i915_vma.c
-index 8be1bbef40e5,ebfd03d117cd..000000000000
---- a/drivers/gpu/drm/i915/i915_vma.c
-+++ b/drivers/gpu/drm/i915/i915_vma.c
-@@@ -911,21 -951,16 +911,21 @@@ int i915_vma_move_to_active(struct i915
-  		if (intel_fb_obj_invalidate(obj, ORIGIN_CS))
-  			__i915_active_request_set(&obj->frontbuffer_write, rq);
- =20
-- 		reservation_object_add_excl_fence(vma->resv, &rq->fence);
-++		dma_resv_add_excl_fence(vma->resv, &rq->fence);
- +		obj->write_domain =3D I915_GEM_DOMAIN_RENDER;
-  		obj->read_domains =3D 0;
- +	} else {
-- 		err =3D reservation_object_reserve_shared(vma->resv, 1);
-++		err =3D dma_resv_reserve_shared(vma->resv, 1);
- +		if (unlikely(err))
- +			return err;
- +
-- 		reservation_object_add_shared_fence(vma->resv, &rq->fence);
-++		dma_resv_add_shared_fence(vma->resv, &rq->fence);
- +		obj->write_domain =3D 0;
-  	}
-  	obj->read_domains |=3D I915_GEM_GPU_DOMAINS;
- +	obj->mm.dirty =3D true;
- =20
- -	if (flags & EXEC_OBJECT_NEEDS_FENCE)
- -		__i915_active_request_set(&vma->last_fence, rq);
- -
- -	export_fence(vma, rq, flags);
- +	GEM_BUG_ON(!i915_vma_is_active(vma));
-  	return 0;
-  }
- =20
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/pqDYB7qH+83yIm0QxI/PxPA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1d2MUACgkQAVBC80lX
-0GzVkAf+NS5yNROpnuYKxJ9NZMqwpXSwX1Lp8xFoFus6j8tDOmh5EmqfTc1GYGPG
-KEM6K0fwt917csvjAqIVZyg54e1EzOpUbhwX6VZ8dQ+FJ7WbxL3B0M6AKlvxUQ5f
-WNWZzSvh5md42plUh795v0M2F4kBBIIL66HNR52Cd7J7HaEtIa+XXdbIn4FYbQk2
-be7Z+ZNMqwypHzCorlneJHU18K6TcnoOF+LsiDG23xTXXx3j0lONPWGttvoSwlSw
-jBnlQyiv04eowSaBGcS9ohBu+lsF+aWT6gdmAOhyEjPoTZwLhevQhX0r+OZBsWtT
-it8Kp5BE7186KJcgnrlk6q0BY3VQLg==
-=kiwf
------END PGP SIGNATURE-----
-
---Sig_/pqDYB7qH+83yIm0QxI/PxPA--
+Thanks,
+Jason
