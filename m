@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61212C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21D3C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C342339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69792332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566416326;
-	bh=CLW308zmIPDgK1YuDu1+jq8uln+wGGnxfZkpX0F8w68=;
+	s=default; t=1566416342;
+	bh=15F/Rl+wBJM8Ed9jKHy/JSYfs4TMO/SsRiJvxbeUMps=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I3oxbudnR9GI9t7by1c/B8lnKNTVibt2tPZL7sV09b97VjdRoZGU7u+p/u6g8dqek
-	 wmPIbFV1LFdPk8TTqvHhpJyo2oeZk9+Y6YCqp0YvBdChCa7KDdKyorFiaGDHJegvat
-	 MeTJp9Y3n+7FBuG2f55JwkwWB4sicmwC7bOp8dhY=
+	b=oJM6saLBuV7e449Oc4MKvV7gOD8rSfAZPz7lIWXvnyGToeY+DWF6+aEUVch9smvqz
+	 330ixfuui3PjWpIAq/tHp7azSb74PGG9da5qjHEmp+Mio5b5lhRsYUE2bkJbO9t9t9
+	 aprNCz5L6+PNd8oosn10zgvs83dbYD6DjoM08qP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbfHUTip (ORCPT
+        id S1730009AbfHUTjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:38:45 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33004 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbfHUTip (ORCPT
+        Wed, 21 Aug 2019 15:39:02 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43990 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729817AbfHUTjB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:38:45 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q20so3219096otl.0;
-        Wed, 21 Aug 2019 12:38:44 -0700 (PDT)
+        Wed, 21 Aug 2019 15:39:01 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e12so3166533otp.10;
+        Wed, 21 Aug 2019 12:39:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mv6dI72x/ZXvKqd/O20ZyFYm3CG8hbvNxtD2JDUEGlU=;
-        b=NkvjiGC6W0h5S3osiG9W1S7tryyjol6Vovnd48QejELHP5SyuG68snh2wMHbaZeQbO
-         xW8njU3d2K4SgXPYxFn5VWbyyiY961EAgA2w25UVUCziXQn1AWkgRsQSE3hSLcOjiqak
-         PWX7sxMacR5OS4FRvR0KJ3L68744f5QgYN1z2dsIW2M4BMEzc2YjeoJ0dbZdmcouGTEM
-         0vycNEtdMHo/6CT/WaZZA1/rOFmyZVgcfjfU9Zn52jgGz9YoMV3Da8HbuVRyoCqAL39c
-         8I07dY73EoOLZCfVOliDVLTKbX/DsEjE+kWylrk7zRHVRdMxFz2VcIBJv1JlWcKB9XHr
-         0PlQ==
-X-Gm-Message-State: APjAAAWl8Xhm67Nl3MQNGSqg0tXNUnXiJ+d7VeHsx0jV5dj86qLlq6kY
-        R0inSm1dOjgCcErP6KKn4w==
-X-Google-Smtp-Source: APXvYqw2GeAaUgeC7gD0/NHi6drtkLwvg3qOGZhLgX0JMV+VBi1C+dza7sD4C8QLfAKWMJdu0DLGPA==
-X-Received: by 2002:a9d:5f1a:: with SMTP id f26mr28996466oti.91.1566416324214;
-        Wed, 21 Aug 2019 12:38:44 -0700 (PDT)
+        bh=8mSUBvKyZ2vGMMc++yVXStFOpJ1mZn6ZVsHLCooip10=;
+        b=De4QM4HqMq4c+LKzSY1t8z42h3S1u0634OfIS1wD0i0OQkXFwM7ktAVDat7fdhP/WE
+         tX67HR5SbYFF0fjRfwi41FIZS6K4ISkt850IPXMOVrO15fTSs6Y6el2UHxNv8qYJYTZZ
+         MoFMycOUizwrI+e8ZM5G0WqxKmxdXosJDN74iQDfnaFEINaW4/vIlXwlMItPdu/YLKFb
+         noocdz0TJ9dc/EGzpeP8fSScDjd7QdwsKCN1H6PdLphICOccfPUfIw8XWZQ7ViR8edWj
+         lMZXl2SI5DNaWM0RyyyfcjP1nllmPPKq9qRmkOZJ3PkGlm4v8MmkIjDqD+lhynj+dGJS
+         scaw==
+X-Gm-Message-State: APjAAAXyHeF/c0l+fqXoIFXdPxsmgyvmQacBF4/xihcVM5GIXjaRt+C1
+        6vYnXbnkiUJLoszNFBxAiA==
+X-Google-Smtp-Source: APXvYqwoLYGtfF56/vswmktteXtONurodUPUBZPKvAOpmRfHnkX4zAc3WGz12QNBgagn7e3WbidDFA==
+X-Received: by 2002:a05:6830:1b65:: with SMTP id d5mr28520331ote.278.1566416340440;
+        Wed, 21 Aug 2019 12:39:00 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t21sm5474909oic.6.2019.08.21.12.38.43
+        by smtp.gmail.com with ESMTPSA id 65sm7769301otw.2.2019.08.21.12.38.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 12:38:43 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 14:38:43 -0500
+        Wed, 21 Aug 2019 12:39:00 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 14:38:59 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Sibi Sankar <sibis@codeaurora.org>
 Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org, vkoul@kernel.org,
@@ -58,27 +58,27 @@ Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org, vkoul@kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
         clew@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 3/7] dt-bindings: firmware: scm: Add SM8150 and SC7180
- support
-Message-ID: <20190821193843.GA11984@bogus>
+Subject: Re: [PATCH v2 4/7] dt-bindings: mailbox: Add APSS shared for SM8150
+ and SC7180 SoCs
+Message-ID: <20190821193859.GA12514@bogus>
 References: <20190807070957.30655-1-sibis@codeaurora.org>
- <20190807070957.30655-4-sibis@codeaurora.org>
+ <20190807070957.30655-5-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190807070957.30655-4-sibis@codeaurora.org>
+In-Reply-To: <20190807070957.30655-5-sibis@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  7 Aug 2019 12:39:53 +0530, Sibi Sankar wrote:
-> Add compatible for SM8150 and SC7180 SoCs.
+On Wed,  7 Aug 2019 12:39:54 +0530, Sibi Sankar wrote:
+> Add SM8150 and SC7180 APSS shared to the list of possible bindings.
 > 
 > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/firmware/qcom,scm.txt | 2 ++
+>  .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt       | 2 ++
 >  1 file changed, 2 insertions(+)
 > 
 
