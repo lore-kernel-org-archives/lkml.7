@@ -2,89 +2,106 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A69C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4C5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3F6216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:35:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="n9LjiHkZ"
+	by mail.kernel.org (Postfix) with ESMTP id AC8C222D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:37:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566398227;
+	bh=LLHM3HLNnSTk9CIZqdIrW76ESIQASTQvj9y7JVMhEwU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GYw21V20JcbAZVS8JWRdBpyj876mjvZWkDBt/ijyBuVRyxVNP5IeCbcYcsDIl8EFY
+	 foZJC4GTZHBINMbbsz+MnYilOGWhrodLI2BvOO3/nKht8ZKkV4Y4WlvA7r5JXeuDNr
+	 aEZAkB821/Za3V7CV8KZOdI6LaqrtbqHO86Dr0xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbfHUOf4 (ORCPT
+        id S1729299AbfHUOhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:35:56 -0400
-Received: from sender4-of-o55.zoho.com ([136.143.188.55]:21580 "EHLO
-        sender4-of-o55.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728763AbfHUOfz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:35:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1566398145; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=VNRKugRJEyO5IqDtKrg6+UjxGs+9vxF6KJPUpO6H56xmqO+ibGwIfd0Xi9LXMHdrtG5hx2STjUqcdyO6/H5FXmScr2i4x1JfeQw4HD+hOIvEMrMIK83GRkEuYlVnTfOLSfIUVcAoyQ+ewAy65M+4WZ5P6WwxRpMT9P7H/n3fD9o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1566398145; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
-        bh=f22V/qNVlYw5I4WKBZDrjRWbTvWAuj4evwp6Q6Y8Qa8=; 
-        b=FUHcyRQhIEIOsLbFnGW6WKa6PcIX1BGuBwMZ4i30erG7QPdYrl7ytjc7J9AN2nV5XvFaGDIgSgavlwBFdTe7JoGbdwNiKuBxdcz3QnnTuhMbymIgRsSwgQFWW8+YCS5YaS9TuPMweXgb5Vstp3seowh5PKWY/vi84nGM1CQzz2E=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=brennan.io;
-        spf=pass  smtp.mailfrom=stephen@brennan.io;
-        dmarc=pass header.from=<stephen@brennan.io> header.from=<stephen@brennan.io>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1566398145;
-        s=selector01; d=brennan.io; i=stephen@brennan.io;
-        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        l=1232; bh=f22V/qNVlYw5I4WKBZDrjRWbTvWAuj4evwp6Q6Y8Qa8=;
-        b=n9LjiHkZc8f04AI3V+jiVd5f8coz/EHRnvw0jwlOvEhtg8Aou2/szd4VkKigg//m
-        FHKhuxIfrS8kjO6DHIhLgZK5ccWM8A1+1Vg0eGRn5qyg+9ZPoR51KOvzbqqZ27vfYCj
-        zjR/5lJziYHdxbVMS5RNE5Ja3hPzbl0WE/8blpmo=
-Received: from localhost (67.218.105.90 [67.218.105.90]) by mx.zohomail.com
-        with SMTPS id 1566398144866732.0878686594964; Wed, 21 Aug 2019 07:35:44 -0700 (PDT)
-From:   Stephen Brennan <stephen@brennan.io>
-To:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc:     Stephen Brennan <stephen@brennan.io>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, "Tobin C . Harding" <me@tobin.cc>
-Message-ID: <20190821143540.4501-1-stephen@brennan.io>
-Subject: [PATCH v2 0/3] staging: rtl8192u: coding style fixes in ieee80211
-Date:   Wed, 21 Aug 2019 07:35:37 -0700
-X-Mailer: git-send-email 2.22.0
+        Wed, 21 Aug 2019 10:37:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728724AbfHUOhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 10:37:06 -0400
+Received: from linux-8ccs (ip5f5ade6e.dynamic.kabel-deutschland.de [95.90.222.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6C2C206BA;
+        Wed, 21 Aug 2019 14:36:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566398225;
+        bh=LLHM3HLNnSTk9CIZqdIrW76ESIQASTQvj9y7JVMhEwU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tX0ldqZERDP4xQ8nTag6pfFnc82CxILalGtaetxbHG8xXXzAIW0JIHVE3CJGb/4E/
+         EMjrjUGonCrYNoOy6eDoS609WwM0Ddr/MJYcXij1vlsZAS6fj2xJ0YB3fwrJmrZor9
+         QEX8ufh6sVHXovTET4evmeAPBDKEozvv0a7cSA5A=
+Date:   Wed, 21 Aug 2019 16:36:55 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        arnd@arndb.de, geert@linux-m68k.org, hpa@zytor.com,
+        joel@joelfernandes.org, kstewart@linuxfoundation.org,
+        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-modules@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+        lucas.de.marchi@gmail.com, maco@android.com, maco@google.com,
+        michal.lkml@markovi.net, mingo@redhat.com, oneukum@suse.com,
+        pombredanne@nexb.com, sam@ravnborg.org, sspatil@google.com,
+        stern@rowland.harvard.edu, tglx@linutronix.de,
+        usb-storage@lists.one-eyed-alien.net, x86@kernel.org,
+        yamada.masahiro@socionext.com
+Subject: Re: [PATCH v3 10/11] RFC: usb-storage: export symbols in USB_STORAGE
+ namespace
+Message-ID: <20190821143655.GA13637@linux-8ccs>
+References: <20190813121733.52480-1-maennich@google.com>
+ <20190821114955.12788-1-maennich@google.com>
+ <20190821114955.12788-11-maennich@google.com>
+ <20190821123827.GB4059@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190821123827.GB4059@kroah.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Addressed some spacing, brace placement, and macro alignment in this
-driver. I do not have the relevant hardware, but I verified that the
-drivers/staging/rtl8192u module built between each patch. This time I've
-included proper patch descriptions, my apologies for the previous series.
++++ Greg KH [21/08/19 05:38 -0700]:
+>On Wed, Aug 21, 2019 at 12:49:25PM +0100, Matthias Maennich wrote:
+>> Modules using these symbols are required to explicitly import the
+>> namespace. This patch was generated with the following steps and serves
+>> as a reference to use the symbol namespace feature:
+>>
+>>  1) Define DEFAULT_SYMBOL_NAMESPACE in the corresponding Makefile
+>>  2) make  (see warnings during modpost about missing imports)
+>>  3) make nsdeps
+>>
+>> Instead of a DEFAULT_SYMBOL_NAMESPACE definition, the EXPORT_SYMBOL_NS
+>> variants can be used to explicitly specify the namespace. The advantage
+>> of the method used here is that newly added symbols are automatically
+>> exported and existing ones are exported without touching their
+>> respective EXPORT_SYMBOL macro expansion.
+>>
+>> Signed-off-by: Matthias Maennich <maennich@google.com>
+>
+>This looks good to me.  This can be included with the rest of this
+>series when/if it goes through the kbuild or module tree:
+>
+>Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+>Actually, which tree will this be going through?
 
-Stephen Brennan (3):
-  staging: rtl8192u: fix OPEN_BRACE errors in ieee80211
-  staging: rtl8192u: fix macro alignment in ieee80211
-  staging: rtl8192u: fix spacing in ieee80211
+I would be happy to take the patchset through the modules tree once it
+collects the appropriate ack/reviewed-by's and once I get a chance to
+sit down and review/test it next week :)
 
- drivers/staging/rtl8192u/ieee80211/dot11d.c   |  10 +-
- .../staging/rtl8192u/ieee80211/ieee80211.h    |  38 +++---
- .../rtl8192u/ieee80211/ieee80211_crypt.c      |   2 +-
- .../rtl8192u/ieee80211/ieee80211_crypt_tkip.c |  22 ++--
- .../rtl8192u/ieee80211/ieee80211_crypt_wep.c  |   4 +-
- .../staging/rtl8192u/ieee80211/ieee80211_rx.c | 118 ++++++-----------
- .../rtl8192u/ieee80211/ieee80211_softmac_wx.c |  14 +-
- .../staging/rtl8192u/ieee80211/ieee80211_tx.c | 121 ++++++++----------
- .../staging/rtl8192u/ieee80211/ieee80211_wx.c |  35 +++--
- .../rtl8192u/ieee80211/rtl819x_BAProc.c       |  12 +-
- .../staging/rtl8192u/ieee80211/rtl819x_HT.h   |  17 ++-
- .../rtl8192u/ieee80211/rtl819x_TSProc.c       |  14 +-
- 12 files changed, 174 insertions(+), 233 deletions(-)
+Thanks!
 
---=20
-2.22.0
-
-
-
+Jessica
