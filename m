@@ -2,228 +2,81 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E61DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B6FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B62122D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566379866;
-	bh=xOyBIYv/KhNaNYag7onhX+pNMUWyw+zIAfvYubsgGdc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AnfL/FZVJPNVTo9ulXUDQ62XWmlPfyGRziMFxIMwVq+QBYMuyMG/77/Njj/9hzKYC
-	 HoCKhIjLNSP4FE/V1QyOzjeLDyHpQtQQ8qnRGQgxn1o/L5e68js0LRC1cuBY3FaorC
-	 njUespvGnTEIz3BcilvU+VCG70Y7RC23r2ddZ2hE=
+	by mail.kernel.org (Postfix) with ESMTP id 1441A22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfHUJbF (ORCPT
+        id S1727336AbfHUJb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:31:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39008 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfHUJbF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:31:05 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 16so1089160oiq.6;
-        Wed, 21 Aug 2019 02:31:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/WIAml8JDcSIGDQFwUc/Q+oT5zHDcgjSrvToRRg1g9U=;
-        b=C0p/OjiwXgVzPbYtTWI5qWcaixCr8XQuyQxTylViWFYofv9YtVFGVT7j0hMTbRiRQO
-         bcG/czIGRgDfhbLtyYzl6ZL5N5oX/x0Dcecta6SIXYmYlwz6r7BYORNTeuyqq03/ncVj
-         MgBYeCJ7WVHMClM+er8epWOVJJyfQyvx/l/nftLs9jFlQJyZupWSsQgg0Mzv8K9ADhDR
-         O3WMrrTLvBR4c2j1r9OIsuNYXcZ8zMB3o3P1ZtpK31xZc7GZLTg2aB54qWcSCfSNfbcM
-         lUU2ZaWi/uuOr13fG8K9cEfCSnccgwydb8KnYufwxCJYvfSxpXxgKhq6Y3M/bcipNYKB
-         QoCA==
-X-Gm-Message-State: APjAAAV2g02j56N9a6MToplRwg9aRLI8heooRF1ijeHqm1Ecdh1AxiHe
-        2fUvTJOgMXMh31pKIQ/EQgLPGbPUg2lydqyTFPk=
-X-Google-Smtp-Source: APXvYqwTmbc1aFTYKWNhZR7Cxpux76gzmQImJQAIEnRyMWfTr9HJVP4pNSCW3fFvlI5UFKZrUApSzX5FdXteyLrCz64=
-X-Received: by 2002:aca:ab56:: with SMTP id u83mr3128312oie.57.1566379863524;
- Wed, 21 Aug 2019 02:31:03 -0700 (PDT)
+        Wed, 21 Aug 2019 05:31:28 -0400
+Received: from mga12.intel.com ([192.55.52.136]:11739 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbfHUJb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:31:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 02:31:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
+   d="scan'208";a="195961705"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Aug 2019 02:31:24 -0700
+Received: from [10.226.38.83] (rtanwar-mobl.gar.corp.intel.com [10.226.38.83])
+        by linux.intel.com (Postfix) with ESMTP id 970E85803FA;
+        Wed, 21 Aug 2019 02:31:21 -0700 (PDT)
+Subject: Re: [PATCH] x86/apic: Update virtual irq base for DT/OF based system
+ as well
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tony.luck@intel.com,
+        x86@kernel.org, andriy.shevchenko@intel.com, alan@linux.intel.com,
+        rppt@linux.ibm.com, linux-kernel@vger.kernel.org,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
+        rahul.tanwar@intel.com
+References: <20190821081330.1187-1-rahul.tanwar@linux.intel.com>
+ <alpine.DEB.2.21.1908211028030.2223@nanos.tec.linutronix.de>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <7b4db9f3-21da-5b5e-e219-0170e812a015@linux.intel.com>
+Date:   Wed, 21 Aug 2019 17:31:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <2671465.Ihf76VL9xe@kreacher> <20190821091927.GV30120@smile.fi.intel.com>
-In-Reply-To: <20190821091927.GV30120@smile.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 21 Aug 2019 11:30:51 +0200
-Message-ID: <CAJZ5v0iRH_2QDvZy+14Z_ws_05jjrrfUdoqKB6sFaJjD3Z1bow@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: PM: s2idle: Always set up EC GPE for system wakeup
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kristian Klausen <kristian@klausen.dk>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <alpine.DEB.2.21.1908211028030.2223@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 11:19 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Aug 21, 2019 at 10:06:09AM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Commit 10a08fd65ec1 ("ACPI: PM: Set up EC GPE for system wakeup from
-> > drivers that need it") assumed that the EC GPE would only need to be
-> > set up for system wakeup if either the intel-hid or the intel-vbtn
-> > driver was in use, but that turns out to be incorrect.  In particular,
-> > on ASUS Zenbook UX430UNR/i7-8550U, if the EC GPE is not enabled while
-> > suspended, the system cannot be woken up by opening the lid or
-> > pressing a key, and that machine doesn't use any of the drivers
-> > mentioned above.
-> >
-> > For this reason, always set up the EC GPE for system wakeup from
-> > suspend-to-idle by setting and clearing its wake mask in the ACPI
-> > suspend-to-idle callbacks.
->
-> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> Couple of minor comments below.
->
-> > Fixes: 10a08fd65ec1 ("ACPI: PM: Set up EC GPE for system wakeup from drivers that need it")
-> > Reported-by: Kristian Klausen <kristian@klausen.dk>
-> > Tested-by: Kristian Klausen <kristian@klausen.dk>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > Commit 10a08fd65ec1 is present in linux-next.
-> >
-> > ---
-> >  drivers/acpi/ec.c                 |    1 -
-> >  drivers/acpi/sleep.c              |   15 +++++++++++++--
-> >  drivers/platform/x86/intel-hid.c  |    5 +----
-> >  drivers/platform/x86/intel-vbtn.c |    5 +----
-> >  4 files changed, 15 insertions(+), 11 deletions(-)
-> >
-> > Index: linux-pm/drivers/acpi/sleep.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/acpi/sleep.c
-> > +++ linux-pm/drivers/acpi/sleep.c
-> > @@ -938,6 +938,13 @@ static int lps0_device_attach(struct acp
-> >       if (mem_sleep_default > PM_SUSPEND_MEM && !acpi_sleep_default_s3)
-> >               mem_sleep_current = PM_SUSPEND_TO_IDLE;
-> >
-> > +     /*
-> > +      * Some LPS0 systems, like ASUS Zenbook UX430UNR/i7-8550U, require the
-> > +      * EC GPE to be enabled while suspended for certain wakeup devices to
-> > +      * work, so mark it as wakeup-capable.
-> > +      */
-> > +     acpi_ec_mark_gpe_for_wake();
-> > +
-> >       return 0;
-> >  }
-> >
-> > @@ -954,8 +961,10 @@ static int acpi_s2idle_begin(void)
-> >
-> >  static int acpi_s2idle_prepare(void)
-> >  {
-> > -     if (acpi_sci_irq_valid())
-> > +     if (acpi_sci_irq_valid()) {
-> >               enable_irq_wake(acpi_sci_irq);
-> > +             acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
-> > +     }
-> >
-> >       acpi_enable_wakeup_devices(ACPI_STATE_S0);
-> >
-> > @@ -1034,8 +1043,10 @@ static void acpi_s2idle_restore(void)
-> >
-> >       acpi_disable_wakeup_devices(ACPI_STATE_S0);
-> >
-> > -     if (acpi_sci_irq_valid())
-> > +     if (acpi_sci_irq_valid()) {
-> > +             acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
-> >               disable_irq_wake(acpi_sci_irq);
-> > +     }
-> >  }
-> >
-> >  static void acpi_s2idle_end(void)
-> > Index: linux-pm/drivers/platform/x86/intel-hid.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/platform/x86/intel-hid.c
-> > +++ linux-pm/drivers/platform/x86/intel-hid.c
-> > @@ -257,7 +257,6 @@ static int intel_hid_pm_prepare(struct d
-> >               struct intel_hid_priv *priv = dev_get_drvdata(device);
-> >
-> >               priv->wakeup_mode = true;
-> > -             acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
-> >       }
-> >       return 0;
-> >  }
-> > @@ -266,10 +265,8 @@ static void intel_hid_pm_complete(struct
-> >  {
-> >       struct intel_hid_priv *priv = dev_get_drvdata(device);
-> >
-> > -     if (priv->wakeup_mode) {
-> > -             acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
->
-> > +     if (priv->wakeup_mode)
->
-> But this now seems does not add any value and we can assign unconditionally.
+On 21/8/2019 4:34 PM, Thomas Gleixner wrote:
 
-Indeed.
+> Secondly, this link is irrelevant. ioapic_dynirq_base has nothing to do
+> with virtual IRQ number 0. It's a boundary for the dynamic allocation of
+> virtual interrupt numbers so that the core allocator does not pick
+> interrupts out of the IOAPIC's fixed interrupt number space.
+>
+> This can be legitimately 0 when IOAPIC is not enabled at all.
+>
+> Can you please explain what kind of problem you were seing and what this
+> really fixes?
 
-I'll send a v2 shortly.
+The problem is that device tree infrastructure considers 0 IRQ value as 
+invalid/error
 
-Thanks!
+value whereas for ACPI, 0 is a valid value. Without this change, the 
+problem that we
+
+see is that the first driver using of_irq_get_xx() or its variants fails 
+because of 0 IRQ
+
+number. With this change, allocated IRQ number is never 0 so it works ok.
 
 
->
-> >               priv->wakeup_mode = false;
-> > -     }
-> >  }
-> >
-> >  static int intel_hid_pl_suspend_handler(struct device *device)
-> > Index: linux-pm/drivers/platform/x86/intel-vbtn.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/platform/x86/intel-vbtn.c
-> > +++ linux-pm/drivers/platform/x86/intel-vbtn.c
-> > @@ -205,7 +205,6 @@ static int intel_vbtn_pm_prepare(struct
-> >               struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
-> >
-> >               priv->wakeup_mode = true;
-> > -             acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
-> >       }
-> >       return 0;
-> >  }
-> > @@ -214,10 +213,8 @@ static void intel_vbtn_pm_complete(struc
-> >  {
-> >       struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
-> >
-> > -     if (priv->wakeup_mode) {
-> > -             acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
->
-> > +     if (priv->wakeup_mode)
->
-> Ditto.
->
-> >               priv->wakeup_mode = false;
-> > -     }
-> >  }
-> >
-> >  static int intel_vbtn_pm_resume(struct device *dev)
-> > Index: linux-pm/drivers/acpi/ec.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/acpi/ec.c
-> > +++ linux-pm/drivers/acpi/ec.c
-> > @@ -1970,7 +1970,6 @@ void acpi_ec_set_gpe_wake_mask(u8 action
-> >       if (pm_suspend_no_platform() && first_ec && !ec_no_wakeup)
-> >               acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
-> >  }
-> > -EXPORT_SYMBOL_GPL(acpi_ec_set_gpe_wake_mask);
-> >
-> >  bool acpi_ec_dispatch_gpe(void)
-> >  {
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
