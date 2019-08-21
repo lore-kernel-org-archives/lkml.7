@@ -2,143 +2,102 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BD6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14128C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE472339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:34:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="HZeQWZtH"
+	by mail.kernel.org (Postfix) with ESMTP id E5E1B206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbfHUPeP (ORCPT
+        id S1729911AbfHUPed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:34:15 -0400
-Received: from mail-eopbgr820085.outbound.protection.outlook.com ([40.107.82.85]:16096
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726885AbfHUPeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:34:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H2SFVj0iNPBrnhbDH0L17RxeUPtFXGKHiU9cml9oCTac5j2oWAV3pGSbtgivVnFyyEaPH+I6d8rs/cr71glyOmwBy5D7UE4bijKEgVS5LontGtV+vAHLCJmg1kCD1a7eO1eQ5GUzABbmr60H8tMT6GQambR4UOPZzVpUsTQntoztc9VmMoq4qQrFuG+7nyMaeWrtn+0Y+JL9F3AJEmrm9/YdXNrAbn1oadf1RB5H+V2ccbUxtrIfSJqaP90+jlL17jiBQBMLBfaFqs/FeAw8OHwLNnmmrHyXBb6PJOOFq3oAjeJ02kALa/FeFl7ZLVQg/zvpz4vAceyAXB6lSycjgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mli6jvBjbs/d2XkF6HGpkw/0hIMaNoWefem435ahKt0=;
- b=UUpnnXisL06+gAR4pnmpSq59ixIbxLjZgmI9piVq59lRMHc7g1jwpnznBl1E73IptszJBH5jGLWiLmrsiUq6eCB3N+5rt0aF8TjBOheL3xQlzA/5hWzFUzL7s+AIIW8Dto3nJufA7rra4DCE2hbgcjs7zKi3CkjjlVhgNGe4qbgnCiyM0xOEfK2boYpc7w//JVFEj+q+X0k/3B2T/+wSD/RzB8G761aaTrR6oczMMNVLjG4Jflp69EeGtNzRwvkxES0RjXIPTjf4+1KlvQkbKnWXRsNXx167gLrom9isZRj40dC630paxZpyCkJ88wle/NNMLrRofe5dpapxC1QwvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mli6jvBjbs/d2XkF6HGpkw/0hIMaNoWefem435ahKt0=;
- b=HZeQWZtHktEqbFYjPbtrbjw5zdQtENG0mdZtX1henMhs+vhcnsTwU3CUyGuAuBJp+7M4VAqTUvigzOYl/4hKTebCkJptLUBXbmcAYZV4e29wLmS4IVwwTYzIK3cHcNMjkwgBtDqQXl1WzyC7XyKAh5E44+Te/kklXcTw05Tycaw=
-Received: from DM6PR12MB3947.namprd12.prod.outlook.com (10.255.174.156) by
- DM6PR12MB3210.namprd12.prod.outlook.com (20.179.105.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.19; Wed, 21 Aug 2019 15:34:12 +0000
-Received: from DM6PR12MB3947.namprd12.prod.outlook.com
- ([fe80::1c82:54e7:589b:539c]) by DM6PR12MB3947.namprd12.prod.outlook.com
- ([fe80::1c82:54e7:589b:539c%5]) with mapi id 15.20.2178.018; Wed, 21 Aug 2019
- 15:34:12 +0000
-From:   "Kuehling, Felix" <Felix.Kuehling@amd.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Tree for Aug 19 (amdgpu)
-Thread-Topic: linux-next: Tree for Aug 19 (amdgpu)
-Thread-Index: AQHVVvkHnhljkcO1/U2zanY7nY0Cr6cD+eWAgAHD6IA=
-Date:   Wed, 21 Aug 2019 15:34:12 +0000
-Message-ID: <b60eb195-7263-2ba0-e8d9-8412c0de66e0@amd.com>
-References: <20190819191832.03f1a579@canb.auug.org.au>
- <ba3cde82-6163-12e5-2e77-36834454113a@infradead.org>
- <20190820114554.0e522651@canb.auug.org.au>
- <20190820123637.GB29225@mellanox.com>
-In-Reply-To: <20190820123637.GB29225@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [165.204.55.251]
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-clientproxiedby: YT1PR01CA0036.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::49)
- To DM6PR12MB3947.namprd12.prod.outlook.com (2603:10b6:5:1cb::28)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Felix.Kuehling@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 21d88906-7fbb-4ac3-3961-08d7264d040d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3210;
-x-ms-traffictypediagnostic: DM6PR12MB3210:
-x-ms-exchange-purlcount: 4
-x-microsoft-antispam-prvs: <DM6PR12MB32100880905B708D16C1930292AA0@DM6PR12MB3210.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1122;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(136003)(376002)(346002)(396003)(53754006)(189003)(199004)(256004)(486006)(2616005)(11346002)(8936002)(102836004)(7736002)(58126008)(316002)(26005)(305945005)(478600001)(110136005)(446003)(54906003)(386003)(6506007)(5024004)(36756003)(31686004)(53546011)(229853002)(52116002)(6436002)(8676002)(6486002)(186003)(6116002)(81156014)(4326008)(3846002)(86362001)(81166006)(6306002)(2906002)(71190400001)(65956001)(53936002)(99286004)(64756008)(66946007)(66556008)(25786009)(66446008)(66476007)(65806001)(5660300002)(476003)(71200400001)(14454004)(76176011)(31696002)(6246003)(66066001)(6512007)(966005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3210;H:DM6PR12MB3947.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: w0FBx5HiVrYdA0ptUAvB9pLzy4CiZl8VboF7DJewlHRdPVxhjcH6+K3uoJvgkKcsxzkaeqZYHJ2V9DycKfay1sY51+fNGH6W70fuaEcPeDRcS+9l+g4ztIozzMGfnkikMhrYAFXVMxseym6dbbiz4vmZymkF1cII827X0jzoJLotCCzQIkL1AdXvULfZa4TtYJkZ8OBsvobPEf6oewm/3ZIZNF1S7K/1dmBaLFquyI+eBzw5Fca4Ud8aiIwxcEQCx2hLgxENlEcx5SrXCaQ/EDOrIvkUcXlfb06/IEkQWiAyNpc4MAQYG68QkIs2sBNcmbWnxr9WtRWtkVUyGKlKRaaeWsPnO7ja6hQRxXEhlvHyXDbPRqlY0Ju9GVIdmwxGphJbr6ibPAnyiPA6tG5N1SStykOJ3e4im7qhoq532Rw=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <238BD86B5AD73E4A8AF2E505FC0AFC7D@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 21 Aug 2019 11:34:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:60232 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728557AbfHUPec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:34:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB655337;
+        Wed, 21 Aug 2019 08:34:31 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E11F53F718;
+        Wed, 21 Aug 2019 08:34:28 -0700 (PDT)
+Subject: Re: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support
+ PA[33:32] for MediaTek
+To:     Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        Tomasz Figa <tfiga@google.com>,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
+        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
+        Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com,
+        chao.hao@mediatek.com, ming-fan.chen@mediatek.com
+References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
+ <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
+ <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <22a79977-5074-7af1-97b8-8a3e549b23c1@arm.com>
+Date:   Wed, 21 Aug 2019 16:34:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21d88906-7fbb-4ac3-3961-08d7264d040d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 15:34:12.1035
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ODZcz4Hws2xux1OG3YHfzkUdwDEi+9fVsMvECwKIb8i+GrdjLs1dzhErQt+VP9RHBhDfnyemmOsxR9FKfVGXBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3210
+In-Reply-To: <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAyMDE5LTA4LTIwIDg6MzYgYS5tLiwgSmFzb24gR3VudGhvcnBlIHdyb3RlOg0KPiBPbiBU
-dWUsIEF1ZyAyMCwgMjAxOSBhdCAxMTo0NTo1NEFNICsxMDAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdy
-b3RlOg0KPj4gSGkgYWxsLA0KPj4NCj4+IE9uIE1vbiwgMTkgQXVnIDIwMTkgMTg6MzQ6NDEgLTA3
-MDAgUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+IHdyb3RlOg0KPj4+IE9uIDgv
-MTkvMTkgMjoxOCBBTSwgU3RlcGhlbiBSb3Rod2VsbCB3cm90ZToNCj4+Pj4gSGkgYWxsLA0KPj4+
-Pg0KPj4+PiBDaGFuZ2VzIHNpbmNlIDIwMTkwODE2Og0KPj4+PiAgICANCj4+PiBvbiB4ODZfNjQ6
-DQo+Pj4NCj4+PiAuLi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfZHJ2LmM6IElu
-IGZ1bmN0aW9uIOKAmGFtZGdwdV9leGl04oCZOg0KPj4+IC4uL2RyaXZlcnMvZ3B1L2RybS9hbWQv
-YW1kZ3B1L2FtZGdwdV9kcnYuYzoxNDcxOjI6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBv
-ZiBmdW5jdGlvbiDigJhtbXVfbm90aWZpZXJfc3luY2hyb25pemXigJk7IGRpZCB5b3UgbWVhbiDi
-gJhfX3N5bmNfc3luY2hyb25pemXigJk/IFstV2Vycm9yPWltcGxpY2l0LWZ1bmN0aW9uLWRlY2xh
-cmF0aW9uXQ0KPj4+ICAgIG1tdV9ub3RpZmllcl9zeW5jaHJvbml6ZSgpOw0KPj4+ICAgIF5+fn5+
-fn5+fn5+fn5+fn5+fn5+fn5+fg0KPj4+ICAgIF9fc3luY19zeW5jaHJvbml6ZQ0KPj4+DQo+Pj4N
-Cj4+PiBGdWxsIHJhbmRjb25maWcgZmlsZSBpcyBhdHRhY2hlZC4NCj4+IENhdXNlZCBieSBjb21t
-aXQNCj4+DQo+PiAgICA2ODMyYzlkYzgzNTggKCJobW06IHVzZSBtbXVfbm90aWZpZXJfZ2V0L3B1
-dCBmb3IgJ3N0cnVjdCBobW0nIikNCj4+DQo+PiBmcm9tIHRoZSBobW0gdHJlZS4NCj4+DQo+PiBk
-cml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfZHJ2LmMgbmVlZCB0byBpbmNsdWRlIGxp
-bnV4L21tdV9ub3RpZmllci5oDQo+IEFoIHllcywgdGhhbmtzLCBpdCBpcyBiZWNhdXNlIG9mICFD
-T05GSUdfSE1NX01JUlJPUiBpbiB0aGlzDQo+IHJhbmRjb25maWcuIEkndmUgZml4ZWQgaXQgdXAu
-DQoNClRoYW5rcyBKYXNvbi4gSSdtIHRyeWluZyB0byBmb2xsb3cgd2hhdCdzIGdvaW5nIG9uIGhl
-cmUsIGJ1dCBJIGNhbid0IA0KZmluZCB0aGUgY29tbWl0IGhhc2ggcXVvdGVkIGFib3ZlIGluIGFu
-eSBvZiB0aGUgcHVibGljIHJlcG9zaXRvcmllcyBJJ20gDQp0cmFja2luZzoNCg0KaHR0cHM6Ly9n
-aXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0
-DQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9uZXh0L2xp
-bnV4LW5leHQuZ2l0DQpodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVs
-L2dpdC9yZG1hL3JkbWEuZ2l0DQpzc2g6Ly9naXQuZnJlZWRlc2t0b3Aub3JnL2dpdC9kcm0vZHJt
-DQpzc2g6Ly9wZW9wbGUuZnJlZWRlc2t0b3Aub3JnL35hZ2Q1Zi9saW51eA0Kc3NoOi8vcGVvcGxl
-LmZyZWVkZXNrdG9wLm9yZy9+Z2xpc3NlL2xpbnV4DQoNCldoZXJlIGlzIHRoaXMgd29yayBoYXBw
-ZW5pbmc/DQoNClRoYW5rcywNCiDCoCBGZWxpeA0KDQoNCg0KPg0KPiBSZWdhcmRzLA0KPiBKYXNv
-bg0KPg0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0K
-PiBhbWQtZ2Z4IG1haWxpbmcgbGlzdA0KPiBhbWQtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0K
-PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2FtZC1nZngN
-Cg==
+On 21/08/2019 16:24, Will Deacon wrote:
+> On Wed, Aug 21, 2019 at 09:53:12PM +0800, Yong Wu wrote:
+>> MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
+>> the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
+>> respectively. Meanwhile the iova still is 32bits.
+>>
+>> Regarding whether the pagetable address could be over 4GB, the mt8183
+>> support it while the previous mt8173 don't, thus keep it as is.
+>>
+>> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+>> ---
+>>   drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
+>>   include/linux/io-pgtable.h         |  7 +++----
+>>   2 files changed, 28 insertions(+), 11 deletions(-)
+> 
+> [...]
+> 
+>> @@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+>>   {
+>>   	struct arm_v7s_io_pgtable *data;
+>>   
+>> -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
+>> +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
+>> +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
+>> +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
+> 
+> Please can you instead change arm_v7s_alloc_pgtable() so that it allows an
+> ias of up to 34 when the IO_PGTABLE_QUIRK_ARM_MTK_EXT is set?
+
+You mean oas, right? I believe the hardware *does* actually support a 
+32-bit ias as well, but we shouldn't pretend to support that while 
+__arm_v7s_alloc_table() still only knows how to allocate normal-sized 
+tables.
+
+Robin.
+
+> 
+> With that change:
+> 
+> Acked-by: Will Deacon <will@kernel.org>
+> 
+> Will
+> 
