@@ -2,91 +2,176 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6911DC3A59B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E78DC3A59B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E592332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5752332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbfHUJ6u convert rfc822-to-8bit (ORCPT
+        id S1727202AbfHUKBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:58:50 -0400
-Received: from correo.us.es ([193.147.175.20]:46162 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfHUJ6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:58:50 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 29D67BA1B1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:58:47 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 1B815B8004
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:58:47 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 1038EFB362; Wed, 21 Aug 2019 11:58:47 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 0DA74B7FF6;
-        Wed, 21 Aug 2019 11:58:45 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Wed, 21 Aug 2019 11:58:45 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [47.60.43.0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id C0F5F4265A2F;
-        Wed, 21 Aug 2019 11:58:44 +0200 (CEST)
-Date:   Wed, 21 Aug 2019 11:58:44 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Leonardo Bras <leonardo@linux.ibm.com>
-Cc:     Florian Westphal <fw@strlen.de>, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 1/1] netfilter: nf_tables: fib: Drop IPV6 packages if
- IPv6 is disabled on boot
-Message-ID: <20190821095844.me6kscvnfruinseu@salvia>
-References: <20190820005821.2644-1-leonardo@linux.ibm.com>
- <20190820053607.GL2588@breakpoint.cc>
- <793ce2e9b6200a033d44716749acc837aaf5e4e7.camel@linux.ibm.com>
+        Wed, 21 Aug 2019 06:01:11 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:56929 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfHUKBL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 06:01:11 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 511F46000D;
+        Wed, 21 Aug 2019 10:01:07 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 12:01:06 +0200
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Sabrina Dubroca <sd@queasysnail.net>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Igor Russkikh <Igor.Russkikh@aquantia.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
+        Pavel Belous <Pavel.Belous@aquantia.com>
+Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
+ infrastructure
+Message-ID: <20190821100106.GA3006@kwain>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-7-antoine.tenart@bootlin.com>
+ <e96fa4ae-1f2c-c1be-b2d8-060217d8e151@aquantia.com>
+ <20190813085817.GA3200@kwain>
+ <20190813131706.GE15047@lunn.ch>
+ <2e3c2307-d414-a531-26cb-064e05fa01fc@aquantia.com>
+ <20190816132959.GC8697@bistromath.localdomain>
+ <20190820100140.GA3292@kwain>
+ <20190820144119.GA28714@bistromath.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <793ce2e9b6200a033d44716749acc837aaf5e4e7.camel@linux.ibm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190820144119.GA28714@bistromath.localdomain>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 01:15:58PM -0300, Leonardo Bras wrote:
-> On Tue, 2019-08-20 at 07:36 +0200, Florian Westphal wrote:
-> > Wouldn't fib_netdev.c have the same problem?
-> Probably, but I haven't hit this issue yet.
-> 
-> > If so, might be better to place this test in both
-> > nft_fib6_eval_type and nft_fib6_eval.
->
-> I think that is possible, and not very hard to do.
-> 
-> But in my humble viewpoint, it looks like it's nft_fib_inet_eval() and
-> nft_fib_netdev_eval() have the responsibility to choose a valid
-> protocol or drop the package. 
-> I am not sure if it would be a good move to transfer this
-> responsibility to nft_fib6_eval_type() and nft_fib6_eval(), so I would
-> rather add the same test to nft_fib_netdev_eval().
-> 
-> Does it make sense?
+Hi Sabrina,
 
-Please, update common code to netdev and ip6 extensions as Florian
-suggests.
+On Tue, Aug 20, 2019 at 04:41:19PM +0200, Sabrina Dubroca wrote:
+> 2019-08-20, 12:01:40 +0200, Antoine Tenart wrote:
+> > So it seems the ability to enable or disable the offloading on a given
+> > interface is the main missing feature. I'll add that, however I'll
+> > probably (at least at first):
+> > 
+> > - Have the interface to be fully offloaded or fully handled in s/w (with
+> >   errors being thrown if a given configuration isn't supported). Having
+> >   both at the same time on a given interface would be tricky because of
+> >   the MACsec validation parameter.
+> > 
+> > - Won't allow to enable/disable the offloading of there are rules in
+> >   place, as we're not sure the same rules would be accepted by the other
+> >   implementation.
+> 
+> That's probably quite problematic actually, because to do that you
+> need to be able to resync the state between software and hardware,
+> particularly packet numbers. So, yeah, we're better off having it
+> completely blocked until we have a working implementation (if that
+> ever happens).
+> 
+> However, that means in case the user wants to set up something that's
+> not offloadable, they'll have to:
+>  - configure the offloaded version until EOPNOTSUPP
+>  - tear everything down
+>  - restart from scratch without offloading
+> 
+> That's inconvenient.
 
-Thanks.
+That's right, the user might have to replay the whole configuration if
+on rule failed to match the h/w requirements. It's inconvenient, but I
+think it's better to be safe until we have (if that happens) a working
+implementation of synchronizing the rules' state.
+
+> Talking about packet numbers, can you describe how PN exhaustion is
+> handled?  I couldn't find much about packet numbers at all in the
+> driver patches (I hope the hw doesn't wrap around from 2^32-1 to 0 on
+> the same SA).  At some point userspace needs to know that we're
+> getting close to 2^32 and that it's time to re-key.  Since the whole
+> TX path of the software implementation is bypassed, it looks like the
+> PN (as far as drivers/net/macsec.c is concerned) never increases, so
+> userspace can't know when to negotiate a new SA.
+
+That's a very good point. It actually was on my todo list for the next
+version (I wanted to discuss the other points first). We would also
+need to sync the stats at some point.
+
+> > I'm not sure if we should allow to mix the implementations on a given
+> > physical interface (by having two MACsec interfaces attached) as the
+> > validation would be impossible to do (we would have no idea if a
+> > packet was correctly handled by the offloading part or just not being
+> > a MACsec packet in the first place, in Rx).
+> 
+> That's something that really bothers me with this proposal. Quoting
+> from the commit message:
+> 
+> > the packets seen by the networking stack on both the physical and
+> > MACsec virtual interface are exactly the same
+
+That bothers me as well.
+
+> If the HW/driver is expected to strip the sectag, I don't see how we
+> could ever have multiple secy's at the same time and demultiplex
+> properly between them. That's part of the reason why I chose to have
+> virtual interfaces: without them, picking the right secy on TX gets
+> weird.
+> 
+> AFAICT, it means that any filters (tc, tcpdump) need to be different
+> between offloaded and non-offloaded cases.
+> 
+> And it's going to be confusing to the administrator when they look at
+> tcpdumps expecting to see MACsec frames.
+
+Right. I did not see how *not* to strip the sectag in the h/w back then,
+I'll have another look because that would improve things a lot.
+
+@all: do other MACsec offloading hardware allow not to stip the sectag?
+
+> I don't see how this implementation handles non-macsec traffic (on TX,
+> that would be packets sent directly through the real interface, for
+> example by wpa_supplicant - on RX, incoming MKA traffic for
+> wpa_supplicant). Unless I missed something, incoming MKA traffic will
+> end up on the macsec interface as well as the lower interface (not
+> entirely critical, as long as wpa_supplicant can grab it on the lower
+> device, but not consistent with the software implementation).
+
+That's right, as we have no way to tell if an Rx packet was MACsec or
+non-MACsec traffic, both will end up on both interfaces. Some h/w may be
+able to insert a custom header (or may allow not to strip the sectag),
+but I did not find anything related to this in mine (I'll double check).
+
+> How does the driver distinguish traffic that should pass through
+> unmodified from traffic that the HW needs to encapsulate and encrypt?
+
+At least in PHYs, packets go in a classification unit (that can match on
+multiple parts of the packet, given the hardware capabilities, eg. the
+MAC addresses). The result of the match is an action, which can be
+"bypass the MACsec block" or "go through it (which links the packet to a
+given configuration)". This is done in Rx and in Tx, and this is how the
+h/w block will know what to encapsulate and encrypt.
+
+Thanks,
+Antoine
+
+-- 
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
