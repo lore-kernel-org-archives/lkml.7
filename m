@@ -2,32 +2,33 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1EAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F216FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3BB2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BABCA2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729676AbfHUQrm (ORCPT
+        id S1729765AbfHUQr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:47:42 -0400
+        Wed, 21 Aug 2019 12:47:56 -0400
 Received: from mga04.intel.com ([192.55.52.120]:35655 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727416AbfHUQri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:47:38 -0400
+        id S1729673AbfHUQrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:47:42 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 09:47:38 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 09:47:41 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
-   d="scan'208";a="181083823"
+   d="scan'208";a="181083829"
 Received: from unknown (HELO pbossart-mobl3.intel.com) ([10.252.139.119])
-  by orsmga003.jf.intel.com with ESMTP; 21 Aug 2019 09:47:37 -0700
+  by orsmga003.jf.intel.com with ESMTP; 21 Aug 2019 09:47:39 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     tiwai@suse.de, broonie@kernel.org, devicetree@vger.kernel.org,
@@ -35,11 +36,10 @@ Cc:     tiwai@suse.de, broonie@kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, nicoleotsuka@gmail.com,
         robh+dt@kernel.org, linux-imx@nxp.com, viorel.suman@nxp.com,
         festevam@gmail.com, Daniel Baluta <daniel.baluta@nxp.com>,
-        Rob Herring <robh@kernel.org>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [PATCH v2 1/3] dt-bindings: dsp: fsl: Add DSP core binding support
-Date:   Wed, 21 Aug 2019 11:47:28 -0500
-Message-Id: <20190821164730.7385-2-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 3/3] ASoC: SOF: imx: Add i.MX8 HW support
+Date:   Wed, 21 Aug 2019 11:47:30 -0500
+Message-Id: <20190821164730.7385-4-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190821164730.7385-1-pierre-louis.bossart@linux.intel.com>
 References: <20190821164730.7385-1-pierre-louis.bossart@linux.intel.com>
@@ -52,110 +52,481 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Daniel Baluta <daniel.baluta@nxp.com>
 
-This describes the DSP device tree node.
+Add support for the audio DSP hardware found on NXP i.MX8 platform.
 
 Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- .../devicetree/bindings/dsp/fsl,dsp.yaml      | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+ sound/soc/sof/Kconfig      |   1 +
+ sound/soc/sof/Makefile     |   1 +
+ sound/soc/sof/imx/Kconfig  |  22 +++
+ sound/soc/sof/imx/Makefile |   4 +
+ sound/soc/sof/imx/imx8.c   | 394 +++++++++++++++++++++++++++++++++++++
+ 5 files changed, 422 insertions(+)
+ create mode 100644 sound/soc/sof/imx/Kconfig
+ create mode 100644 sound/soc/sof/imx/Makefile
+ create mode 100644 sound/soc/sof/imx/imx8.c
 
-diff --git a/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
+index 01acb580b817..bb8036ae567e 100644
+--- a/sound/soc/sof/Kconfig
++++ b/sound/soc/sof/Kconfig
+@@ -173,6 +173,7 @@ config SND_SOC_SOF_PROBE_WORK_QUEUE
+ 	  When selected, the probe is handled in two steps, for example to
+ 	  avoid lockdeps if request_module is used in the probe.
+ 
++source "sound/soc/sof/imx/Kconfig"
+ source "sound/soc/sof/intel/Kconfig"
+ source "sound/soc/sof/xtensa/Kconfig"
+ 
+diff --git a/sound/soc/sof/Makefile b/sound/soc/sof/Makefile
+index 772c452d1ae2..b0a6f01bdc44 100644
+--- a/sound/soc/sof/Makefile
++++ b/sound/soc/sof/Makefile
+@@ -18,4 +18,5 @@ obj-$(CONFIG_SND_SOC_SOF_OF) += snd-sof-of.o
+ obj-$(CONFIG_SND_SOC_SOF_PCI) += snd-sof-pci.o
+ 
+ obj-$(CONFIG_SND_SOC_SOF_INTEL_TOPLEVEL) += intel/
++obj-$(CONFIG_SND_SOC_SOF_IMX_TOPLEVEL) += imx/
+ obj-$(CONFIG_SND_SOC_SOF_XTENSA) += xtensa/
+diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
 new file mode 100644
-index 000000000000..3248595dc93c
+index 000000000000..fd73d8402dbf
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
-@@ -0,0 +1,88 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dsp/fsl,dsp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/sound/soc/sof/imx/Kconfig
+@@ -0,0 +1,22 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
 +
-+title: NXP i.MX8 DSP core
++config SND_SOC_SOF_IMX_TOPLEVEL
++	bool "SOF support for NXP i.MX audio DSPs"
++	depends on ARM64 && SND_SOC_SOF_OF || COMPILE_TEST
++	help
++          This adds support for Sound Open Firmware for NXP i.MX platforms.
++          Say Y if you have such a device.
++          If unsure select "N".
 +
-+maintainers:
-+  - Daniel Baluta <daniel.baluta@nxp.com>
++if SND_SOC_SOF_IMX_TOPLEVEL
 +
-+description: |
-+  Some boards from i.MX8 family contain a DSP core used for
-+  advanced pre- and post- audio processing.
++config SND_SOC_SOF_IMX8
++	tristate "SOF support for i.MX8"
++	depends on IMX_SCU
++	depends on IMX_DSP
++	help
++          This adds support for Sound Open Firmware for NXP i.MX8 platforms
++          Say Y if you have such a device.
++          If unsure select "N".
 +
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx8qxp-dsp
++endif ## SND_SOC_SOF_IMX_IMX_TOPLEVEL
+diff --git a/sound/soc/sof/imx/Makefile b/sound/soc/sof/imx/Makefile
+new file mode 100644
+index 000000000000..6ef908e8c807
+--- /dev/null
++++ b/sound/soc/sof/imx/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
++snd-sof-imx8-objs := imx8.o
 +
-+  reg:
-+    description: Should contain register location and length
++obj-$(CONFIG_SND_SOC_SOF_IMX8) += snd-sof-imx8.o
+diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
+new file mode 100644
+index 000000000000..e502f584207f
+--- /dev/null
++++ b/sound/soc/sof/imx/imx8.c
+@@ -0,0 +1,394 @@
++// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
++//
++// Copyright 2019 NXP
++//
++// Author: Daniel Baluta <daniel.baluta@nxp.com>
++//
++// Hardware interface for audio DSP on i.MX8
 +
-+  clocks:
-+    items:
-+      - description: ipg clock
-+      - description: ocram clock
-+      - description: core clock
++#include <linux/firmware.h>
++#include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/pm_domain.h>
 +
-+  clock-names:
-+    items:
-+      - const: ipg
-+      - const: ocram
-+      - const: core
++#include <linux/module.h>
++#include <sound/sof.h>
++#include <sound/sof/xtensa.h>
++#include <linux/firmware/imx/ipc.h>
++#include <linux/firmware/imx/dsp.h>
 +
-+  power-domains:
-+    description:
-+      List of phandle and PM domain specifier as documented in
-+      Documentation/devicetree/bindings/power/power_domain.txt
-+    maxItems: 4
++#include <linux/firmware/imx/svc/misc.h>
++#include <dt-bindings/firmware/imx/rsrc.h>
++#include "../ops.h"
 +
-+  mboxes:
-+    description:
-+      List of <&phandle type channel> - 2 channels for TXDB, 2 channels for RXDB
-+      (see mailbox/fsl,mu.txt)
-+    maxItems: 4
++/* DSP memories */
++#define IRAM_OFFSET		0x10000
++#define IRAM_SIZE		(2 * 1024)
++#define DRAM0_OFFSET		0x0
++#define DRAM0_SIZE		(32 * 1024)
++#define DRAM1_OFFSET		0x8000
++#define DRAM1_SIZE		(32 * 1024)
++#define SYSRAM_OFFSET		0x18000
++#define SYSRAM_SIZE		(256 * 1024)
++#define SYSROM_OFFSET		0x58000
++#define SYSROM_SIZE		(192 * 1024)
 +
-+  mbox-names:
-+    items:
-+      - const: txdb0
-+      - const: txdb1
-+      - const: rxdb0
-+      - const: rxdb1
++#define RESET_VECTOR_VADDR	0x596f8000
 +
-+  memory-region:
-+    description:
-+       phandle to a node describing reserved memory (System RAM memory)
-+       used by DSP (see bindings/reserved-memory/reserved-memory.txt)
-+    maxItems: 1
++#define MBOX_OFFSET	0x800000
++#define MBOX_SIZE	0x1000
 +
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - power-domains
-+  - mboxes
-+  - mbox-names
-+  - memory-region
++struct imx8_priv {
++	struct device *dev;
++	struct snd_sof_dev *sdev;
 +
-+examples:
-+  - |
-+    #include <dt-bindings/firmware/imx/rsrc.h>
-+    #include <dt-bindings/clock/imx8-clock.h>
-+    dsp@596e8000 {
-+        compatible = "fsl,imx8qxp-dsp";
-+        reg = <0x596e8000 0x88000>;
-+        clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
-+                 <&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
-+                 <&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
-+        clock-names = "ipg", "ocram", "core";
-+        power-domains = <&pd IMX_SC_R_MU_13A>,
-+                        <&pd IMX_SC_R_MU_13B>,
-+                        <&pd IMX_SC_R_DSP>,
-+                        <&pd IMX_SC_R_DSP_RAM>;
-+        mbox-names = "txdb0", "txdb1", "rxdb0", "rxdb1";
-+        mboxes = <&lsio_mu13 2 0>, <&lsio_mu13 2 1>, <&lsio_mu13 3 0>, <&lsio_mu13 3 1>;
-+    };
++	/* DSP IPC handler */
++	struct imx_dsp_ipc *dsp_ipc;
++	struct platform_device *ipc_dev;
++
++	/* System Controller IPC handler */
++	struct imx_sc_ipc *sc_ipc;
++
++	/* Power domain handling */
++	int num_domains;
++	struct device **pd_dev;
++	struct device_link **link;
++
++};
++
++static void imx8_get_reply(struct snd_sof_dev *sdev)
++{
++	struct snd_sof_ipc_msg *msg = sdev->msg;
++	struct sof_ipc_reply reply;
++	int ret = 0;
++
++	if (!msg) {
++		dev_warn(sdev->dev, "unexpected ipc interrupt\n");
++		return;
++	}
++
++	/* get reply */
++	sof_mailbox_read(sdev, sdev->host_box.offset, &reply, sizeof(reply));
++
++	if (reply.error < 0) {
++		memcpy(msg->reply_data, &reply, sizeof(reply));
++		ret = reply.error;
++	} else {
++		/* reply has correct size? */
++		if (reply.hdr.size != msg->reply_size) {
++			dev_err(sdev->dev, "error: reply expected %zu got %u bytes\n",
++				msg->reply_size, reply.hdr.size);
++			ret = -EINVAL;
++		}
++
++		/* read the message */
++		if (msg->reply_size > 0)
++			sof_mailbox_read(sdev, sdev->host_box.offset,
++					 msg->reply_data, msg->reply_size);
++	}
++
++	msg->reply_error = ret;
++}
++
++static int imx8_get_mailbox_offset(struct snd_sof_dev *sdev)
++{
++	return MBOX_OFFSET;
++}
++
++static int imx8_get_window_offset(struct snd_sof_dev *sdev, u32 id)
++{
++	return MBOX_OFFSET;
++}
++
++void imx8_dsp_handle_reply(struct imx_dsp_ipc *ipc)
++{
++	struct imx8_priv *priv = imx_dsp_get_data(ipc);
++	unsigned long flags;
++
++	spin_lock_irqsave(&priv->sdev->ipc_lock, flags);
++	imx8_get_reply(priv->sdev);
++	snd_sof_ipc_reply(priv->sdev, 0);
++	spin_unlock_irqrestore(&priv->sdev->ipc_lock, flags);
++}
++
++void imx8_dsp_handle_request(struct imx_dsp_ipc *ipc)
++{
++	struct imx8_priv *priv = imx_dsp_get_data(ipc);
++
++	snd_sof_ipc_msgs_rx(priv->sdev);
++}
++
++struct imx_dsp_ops dsp_ops = {
++	.handle_reply		= imx8_dsp_handle_reply,
++	.handle_request		= imx8_dsp_handle_request,
++};
++
++static int imx8_send_msg(struct snd_sof_dev *sdev, struct snd_sof_ipc_msg *msg)
++{
++	struct imx8_priv *priv = (struct imx8_priv *)sdev->private;
++
++	sof_mailbox_write(sdev, sdev->host_box.offset, msg->msg_data,
++			  msg->msg_size);
++	imx_dsp_ring_doorbell(priv->dsp_ipc, 0);
++
++	return 0;
++}
++
++/*
++ * DSP control.
++ */
++static int imx8_run(struct snd_sof_dev *sdev)
++{
++	struct imx8_priv *dsp_priv = (struct imx8_priv *)sdev->private;
++	int ret;
++
++	ret = imx_sc_misc_set_control(dsp_priv->sc_ipc, IMX_SC_R_DSP,
++				      IMX_SC_C_OFS_SEL, 1);
++	if (ret < 0) {
++		dev_err(sdev->dev, "Error system address offset source select\n");
++		return ret;
++	}
++
++	ret = imx_sc_misc_set_control(dsp_priv->sc_ipc, IMX_SC_R_DSP,
++				      IMX_SC_C_OFS_AUDIO, 0x80);
++	if (ret < 0) {
++		dev_err(sdev->dev, "Error system address offset of AUDIO\n");
++		return ret;
++	}
++
++	ret = imx_sc_misc_set_control(dsp_priv->sc_ipc, IMX_SC_R_DSP,
++				      IMX_SC_C_OFS_PERIPH, 0x5A);
++	if (ret < 0) {
++		dev_err(sdev->dev, "Error system address offset of PERIPH %d\n",
++			ret);
++		return ret;
++	}
++
++	ret = imx_sc_misc_set_control(dsp_priv->sc_ipc, IMX_SC_R_DSP,
++				      IMX_SC_C_OFS_IRQ, 0x51);
++	if (ret < 0) {
++		dev_err(sdev->dev, "Error system address offset of IRQ\n");
++		return ret;
++	}
++
++	imx_sc_pm_cpu_start(dsp_priv->sc_ipc, IMX_SC_R_DSP, true,
++			    RESET_VECTOR_VADDR);
++
++	return 0;
++}
++
++static int imx8_probe(struct snd_sof_dev *sdev)
++{
++	struct platform_device *pdev =
++		container_of(sdev->dev, struct platform_device, dev);
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *res_node;
++	struct resource *mmio;
++	struct imx8_priv *priv;
++	struct resource res;
++	u32 base, size;
++	int ret = 0;
++	int i;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	sdev->private = priv;
++	priv->dev = sdev->dev;
++	priv->sdev = sdev;
++
++	/* power up device associated power domains */
++	priv->num_domains = of_count_phandle_with_args(np, "power-domains",
++						       "#power-domain-cells");
++	if (priv->num_domains < 0) {
++		dev_err(sdev->dev, "no power-domains property in %pOF\n", np);
++		return priv->num_domains;
++	}
++
++	priv->pd_dev = devm_kmalloc_array(&pdev->dev, priv->num_domains,
++					  sizeof(*priv->pd_dev), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->link = devm_kmalloc_array(&pdev->dev, priv->num_domains,
++					sizeof(*priv->link), GFP_KERNEL);
++	if (!priv->link)
++		return -ENOMEM;
++
++	for (i = 0; i < priv->num_domains; i++) {
++		priv->pd_dev[i] = dev_pm_domain_attach_by_id(&pdev->dev, i);
++		if (IS_ERR(priv->pd_dev[i])) {
++			ret = PTR_ERR(priv->pd_dev[i]);
++			goto exit_unroll_pm;
++		}
++		priv->link[i] = device_link_add(&pdev->dev, priv->pd_dev[i],
++						DL_FLAG_STATELESS |
++						DL_FLAG_PM_RUNTIME |
++						DL_FLAG_RPM_ACTIVE);
++		if (IS_ERR(priv->link[i])) {
++			ret = PTR_ERR(priv->link[i]);
++			dev_pm_domain_detach(priv->pd_dev[i], false);
++			goto exit_unroll_pm;
++		}
++	}
++
++	ret = imx_scu_get_handle(&priv->sc_ipc);
++	if (ret) {
++		dev_err(sdev->dev, "Cannot obtain SCU handle (err = %d)\n",
++			ret);
++		goto exit_unroll_pm;
++	}
++
++	priv->ipc_dev = platform_device_register_data(sdev->dev, "imx-dsp",
++						      PLATFORM_DEVID_NONE,
++						      pdev, sizeof(*pdev));
++	if (IS_ERR(priv->ipc_dev)) {
++		ret = PTR_ERR(priv->ipc_dev);
++		goto exit_unroll_pm;
++	}
++
++	priv->dsp_ipc = dev_get_drvdata(&priv->ipc_dev->dev);
++	if (!priv->dsp_ipc) {
++		/* DSP IPC driver not probed yet, try later */
++		ret = -EPROBE_DEFER;
++		dev_err(sdev->dev, "Failed to get drvdata\n");
++		goto exit_pdev_unregister;
++	}
++
++	imx_dsp_set_data(priv->dsp_ipc, priv);
++	priv->dsp_ipc->ops = &dsp_ops;
++
++	/* DSP base */
++	mmio = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (mmio) {
++		base = mmio->start;
++		size = resource_size(mmio);
++	} else {
++		dev_err(sdev->dev, "error: failed to get DSP base at idx 0\n");
++		ret = -EINVAL;
++		goto exit_pdev_unregister;
++	}
++
++	sdev->bar[SOF_FW_BLK_TYPE_IRAM] = devm_ioremap(sdev->dev, base, size);
++	if (!sdev->bar[SOF_FW_BLK_TYPE_IRAM]) {
++		dev_err(sdev->dev, "failed to ioremap base 0x%x size 0x%x\n",
++			base, size);
++		ret = -ENODEV;
++		goto exit_pdev_unregister;
++	}
++	sdev->mmio_bar = SOF_FW_BLK_TYPE_IRAM;
++
++	res_node = of_parse_phandle(np, "memory-region", 0);
++	if (!res_node) {
++		dev_err(&pdev->dev, "failed to get memory region node\n");
++		ret = -ENODEV;
++		goto exit_pdev_unregister;
++	}
++
++	ret = of_address_to_resource(res_node, 0, &res);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to get reserved region address\n");
++		goto exit_pdev_unregister;
++	}
++
++	sdev->bar[SOF_FW_BLK_TYPE_SRAM] = devm_ioremap_wc(sdev->dev, res.start,
++							  res.end - res.start +
++							  1);
++	if (IS_ERR(sdev->bar[SOF_FW_BLK_TYPE_SRAM])) {
++		dev_err(sdev->dev, "failed to ioremap mem 0x%x size 0x%x\n",
++			base, size);
++		ret = PTR_ERR(sdev->bar[SOF_FW_BLK_TYPE_SRAM]);
++		goto exit_pdev_unregister;
++	}
++	sdev->mailbox_bar = SOF_FW_BLK_TYPE_SRAM;
++
++	return 0;
++
++exit_pdev_unregister:
++	platform_device_unregister(priv->ipc_dev);
++exit_unroll_pm:
++	while (--i >= 0) {
++		device_link_del(priv->link[i]);
++		dev_pm_domain_detach(priv->pd_dev[i], false);
++	}
++
++	return ret;
++}
++
++static int imx8_remove(struct snd_sof_dev *sdev)
++{
++	struct imx8_priv *priv = (struct imx8_priv *)sdev->private;
++	int i;
++
++	platform_device_unregister(priv->ipc_dev);
++
++	for (i = 0; i < priv->num_domains; i++) {
++		device_link_del(priv->link[i]);
++		dev_pm_domain_detach(priv->pd_dev[i], false);
++	}
++
++	return 0;
++}
++
++/* on i.MX8 there is 1 to 1 match between type and BAR idx */
++int imx8_get_bar_index(struct snd_sof_dev *sdev, u32 type)
++{
++	return type;
++}
++
++void imx8_ipc_msg_data(struct snd_sof_dev *sdev,
++		       struct snd_pcm_substream *substream,
++		       void *p, size_t sz)
++{
++	sof_mailbox_read(sdev, sdev->dsp_box.offset, p, sz);
++}
++
++int imx8_ipc_pcm_params(struct snd_sof_dev *sdev,
++			struct snd_pcm_substream *substream,
++			const struct sof_ipc_pcm_params_reply *reply)
++{
++	return 0;
++}
++
++static struct snd_soc_dai_driver imx8_dai[] = {
++{
++	.name = "esai-port",
++},
++};
++
++/* i.MX8  ops */
++struct snd_sof_dsp_ops sof_imx8_ops = {
++	/* probe and remove */
++	.probe		= imx8_probe,
++	.remove		= imx8_remove,
++	/* DSP core boot */
++	.run		= imx8_run,
++
++	/* Block IO */
++	.block_read	= sof_block_read,
++	.block_write	= sof_block_write,
++
++	/* ipc */
++	.send_msg	= imx8_send_msg,
++	.fw_ready	= sof_fw_ready,
++	.get_mailbox_offset	= imx8_get_mailbox_offset,
++	.get_window_offset	= imx8_get_window_offset,
++
++	.ipc_msg_data	= imx8_ipc_msg_data,
++	.ipc_pcm_params	= imx8_ipc_pcm_params,
++
++	/* module loading */
++	.load_module	= snd_sof_parse_module_memcpy,
++	.get_bar_index	= imx8_get_bar_index,
++	/* firmware loading */
++	.load_firmware	= snd_sof_load_firmware_memcpy,
++
++	/* DAI drivers */
++	.drv = imx8_dai,
++	.num_drv = 1, /* we have only 1 ESAI interface on i.MX8 */
++};
++EXPORT_SYMBOL(sof_imx8_ops);
++
++MODULE_LICENSE("Dual BSD/GPL");
 -- 
 2.20.1
 
