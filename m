@@ -2,83 +2,89 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B41CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE896C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70AC32339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48732339F
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:46:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566395212;
+	bh=1SBGubWHevGTaPku2q5p2VFb1E6YUKyo3XqPCp/g0/I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YipfkGDLvAYYXQh/R+n0UZE5Pz0V0aE3bBYOkbclLj+8ulvNUucEKPiDa7wlNs1GF
+	 6H1pe7tgHlQaSld+9pNqSRNfktbcrLk/bs9CuxE+rcqVsggK4+n3KBFoxcIWnQG4Ur
+	 qVxW5HmzMbbucNKTPcDvE8nkQSZt+Oi8sDBYNLLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbfHUNq3 (ORCPT
+        id S1729025AbfHUNqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 09:46:29 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4750 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728616AbfHUNq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:46:29 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D85065D313CC127B580F;
-        Wed, 21 Aug 2019 21:46:24 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 21 Aug 2019
- 21:46:18 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <opendmb@gmail.com>, <f.fainelli@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: systemport: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 21 Aug 2019 21:46:13 +0800
-Message-ID: <20190821134613.23276-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 21 Aug 2019 09:46:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33836 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728616AbfHUNqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 09:46:51 -0400
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FCBA2339F;
+        Wed, 21 Aug 2019 13:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566395210;
+        bh=1SBGubWHevGTaPku2q5p2VFb1E6YUKyo3XqPCp/g0/I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KKNovrSCCy+qxBBg+LQF1RxSdKIeUAor2DyyUj5ECkqeYKhur3RwCiqyuCLcvmilZ
+         AJWSreR6LpOWFF96w3iUmUUzcBmp74dGMM4P+pm0JvsyO8+iGZoEKDuOmw4lWp0S4o
+         7zyZ3AOden/ijNJ8D6jHxP+m5MlXrLZ0MMBG3090=
+Received: by mail-qt1-f170.google.com with SMTP id t12so3043921qtp.9;
+        Wed, 21 Aug 2019 06:46:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAXumeO3vEajpc68RHMqYcIXPZo6g8WEp/0uiwom4mSEBJy6qGkN
+        yVqcqNzEsi8NR+5tqJ4aVCh8LFelOz5HLE2/LA==
+X-Google-Smtp-Source: APXvYqzVcAdSEaO2BocJ4gK6VMRiGeLEnjs3XBBSPg8GhG/x28s2b9/g6MrsMfZlURkEkfCeqd6IZ4qdq3h8AExDMZE=
+X-Received: by 2002:aed:24f4:: with SMTP id u49mr31852907qtc.110.1566395209619;
+ Wed, 21 Aug 2019 06:46:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <20190821114121.10430-1-narmstrong@baylibre.com> <20190821114121.10430-2-narmstrong@baylibre.com>
+In-Reply-To: <20190821114121.10430-2-narmstrong@baylibre.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 21 Aug 2019 08:46:38 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLy9etZtUYTJdvBRCRGuxPN_eXJQT8_xwdST5TNparJug@mail.gmail.com>
+Message-ID: <CAL_JsqLy9etZtUYTJdvBRCRGuxPN_eXJQT8_xwdST5TNparJug@mail.gmail.com>
+Subject: Re: [PATCH 1/5] dt-bindings: power: add Amlogic Everything-Else power
+ domains bindings
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        devicetree@vger.kernel.org,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-amlogic@lists.infradead.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On Wed, Aug 21, 2019 at 6:41 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Add the bindings for the Amlogic Everything-Else power domains,
+> controlling the Everything-Else peripherals power domains.
+>
+> The bindings targets the Amlogic G12A and SM1 compatible SoCs,
+> support for earlier SoCs will be added later.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../bindings/power/amlogic,meson-ee-pwrc.yaml | 93 +++++++++++++++++++
+>  include/dt-bindings/power/meson-g12a-power.h  | 13 +++
+>  include/dt-bindings/power/meson-sm1-power.h   | 18 ++++
+>  3 files changed, 124 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-ee-pwrc.yaml
+>  create mode 100644 include/dt-bindings/power/meson-g12a-power.h
+>  create mode 100644 include/dt-bindings/power/meson-sm1-power.h
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/broadcom/bcmsysport.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
-index 9483553..cae66ba 100644
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -2420,12 +2420,10 @@ static int bcm_sysport_probe(struct platform_device *pdev)
- 	struct device_node *dn;
- 	struct net_device *dev;
- 	const void *macaddr;
--	struct resource *r;
- 	u32 txq, rxq;
- 	int ret;
- 
- 	dn = pdev->dev.of_node;
--	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	of_id = of_match_node(bcm_sysport_of_match, dn);
- 	if (!of_id || !of_id->data)
- 		return -EINVAL;
-@@ -2473,7 +2471,7 @@ static int bcm_sysport_probe(struct platform_device *pdev)
- 		goto err_free_netdev;
- 	}
- 
--	priv->base = devm_ioremap_resource(&pdev->dev, r);
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base)) {
- 		ret = PTR_ERR(priv->base);
- 		goto err_free_netdev;
--- 
-2.7.4
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
