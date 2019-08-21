@@ -6,155 +6,104 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1A4C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3E0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F81B2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381292070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730481AbfHUR6g (ORCPT
+        id S1730483AbfHUR6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:58:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49824 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 13:58:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58834 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729791AbfHUR5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729806AbfHUR5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 21 Aug 2019 13:57:39 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 04954315C009;
+        by mx1.redhat.com (Postfix) with ESMTPS id 2DE5330860B9;
         Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE5BA5D9D3;
-        Wed, 21 Aug 2019 17:57:38 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C7FD60600;
+        Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id C392F223D0A; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
+        id D78F9223D0E; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nvdimm@lists.01.org
 Cc:     virtio-fs@redhat.com, vgoyal@redhat.com, miklos@szeredi.hu,
         stefanha@redhat.com, dgilbert@redhat.com
-Subject: [PATCH 14/19] fuse, dax: Take ->i_mmap_sem lock during dax page fault
-Date:   Wed, 21 Aug 2019 13:57:15 -0400
-Message-Id: <20190821175720.25901-15-vgoyal@redhat.com>
+Subject: [PATCH 18/19] fuse: Release file in process context
+Date:   Wed, 21 Aug 2019 13:57:19 -0400
+Message-Id: <20190821175720.25901-19-vgoyal@redhat.com>
 In-Reply-To: <20190821175720.25901-1-vgoyal@redhat.com>
 References: <20190821175720.25901-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need some kind of locking mechanism here. Normal file systems like
-ext4 and xfs seems to take their own semaphore to protect agains
-truncate while fault is going on.
+fuse_file_put(sync) can be called with sync=true/false. If sync=true,
+it waits for release request response and then calls iput() in the
+caller's context. If sync=false, it does not wait for release request
+response, frees the fuse_file struct immediately and req->end function
+does the iput().
 
-We have additional requirement to protect against fuse dax memory range
-reclaim. When a range has been selected for reclaim, we need to make sure
-no other read/write/fault can try to access that memory range while
-reclaim is in progress. Once reclaim is complete, lock will be released
-and read/write/fault will trigger allocation of fresh dax range.
+iput() can be a problem with DAX if called in req->end context. If this
+is last reference to inode (VFS has let go its reference already), then
+iput() will clean DAX mappings as well and send REMOVEMAPPING requests
+and wait for completion. (All the the worker thread context which is
+processing fuse replies from daemon on the host).
 
-Taking inode_lock() is not an option in fault path as lockdep complains
-about circular dependencies. So define a new fuse_inode->i_mmap_sem.
+That means it blocks worker thread and it stops processing further
+replies and system deadlocks.
+
+So for now, force sync release of file in case of DAX inodes.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- fs/fuse/dir.c    |  2 ++
- fs/fuse/file.c   | 17 +++++++++++++----
- fs/fuse/fuse_i.h |  7 +++++++
- fs/fuse/inode.c  |  1 +
- 4 files changed, 23 insertions(+), 4 deletions(-)
+ fs/fuse/file.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index fd8636e67ae9..84c0b638affb 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -1559,8 +1559,10 @@ int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
- 	 */
- 	if ((is_truncate || !is_wb) &&
- 	    S_ISREG(inode->i_mode) && oldsize != outarg.attr.size) {
-+		down_write(&fi->i_mmap_sem);
- 		truncate_pagecache(inode, outarg.attr.size);
- 		invalidate_inode_pages2(inode->i_mapping);
-+		up_write(&fi->i_mmap_sem);
- 	}
- 
- 	clear_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
 diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index b8bcf49f007f..7b70b5ea7f94 100644
+index 2ff7624d58c0..e369a1f92d85 100644
 --- a/fs/fuse/file.c
 +++ b/fs/fuse/file.c
-@@ -2792,13 +2792,20 @@ static int __fuse_dax_fault(struct vm_fault *vmf, enum page_entry_size pe_size,
- 	if (write)
- 		sb_start_pagefault(sb);
+@@ -579,6 +579,7 @@ void fuse_release_common(struct file *file, bool isdir)
+ 	struct fuse_file *ff = file->private_data;
+ 	struct fuse_req *req = ff->reserved_req;
+ 	int opcode = isdir ? FUSE_RELEASEDIR : FUSE_RELEASE;
++	bool sync = false;
  
--	/* TODO inode semaphore to protect faults vs truncate */
--
-+	/*
-+	 * We need to serialize against not only truncate but also against
-+	 * fuse dax memory range reclaim. While a range is being reclaimed,
-+	 * we do not want any read/write/mmap to make progress and try
-+	 * to populate page cache or access memory we are trying to free.
-+	 */
-+	down_read(&get_fuse_inode(inode)->i_mmap_sem);
- 	ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL, &fuse_iomap_ops);
+ 	fuse_prepare_release(fi, ff, file->f_flags, opcode);
  
- 	if (ret & VM_FAULT_NEEDDSYNC)
- 		ret = dax_finish_sync_fault(vmf, pe_size, pfn);
- 
-+	up_read(&get_fuse_inode(inode)->i_mmap_sem);
-+
- 	if (write)
- 		sb_end_pagefault(sb);
- 
-@@ -3767,9 +3774,11 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
- 			file_update_time(file);
- 	}
- 
--	if (mode & FALLOC_FL_PUNCH_HOLE)
-+	if (mode & FALLOC_FL_PUNCH_HOLE) {
-+		down_write(&fi->i_mmap_sem);
- 		truncate_pagecache_range(inode, offset, offset + length - 1);
--
-+		up_write(&fi->i_mmap_sem);
-+	}
- 	fuse_invalidate_attr(inode);
- 
- out:
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 37b31c5435ff..125bb7123651 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -220,6 +220,13 @@ struct fuse_inode {
+@@ -599,8 +600,20 @@ void fuse_release_common(struct file *file, bool isdir)
+ 	 * Make the release synchronous if this is a fuseblk mount,
+ 	 * synchronous RELEASE is allowed (and desirable) in this case
+ 	 * because the server can be trusted not to screw up.
++	 *
++	 * For DAX, fuse server is trusted. So it should be fine to
++	 * do a sync file put. Doing async file put is creating
++	 * problems right now because when request finish, iput()
++	 * can lead to freeing of inode. That means it tears down
++	 * mappings backing DAX memory and sends REMOVEMAPPING message
++	 * to server and blocks for completion. Currently, waiting
++	 * in req->end context deadlocks the system as same worker thread
++	 * can't process REMOVEMAPPING reply it is waiting for.
  	 */
- 	struct rw_semaphore i_dmap_sem;
- 
-+	/**
-+	 * Can't take inode lock in fault path (leads to circular dependency).
-+	 * So take this in fuse dax fault path to make sure truncate and
-+	 * punch hole etc. can't make progress in parallel.
-+	 */
-+	struct rw_semaphore i_mmap_sem;
+-	fuse_file_put(ff, ff->fc->destroy_req != NULL, isdir);
++	if (IS_DAX(req->misc.release.inode) || ff->fc->destroy_req != NULL)
++		sync = true;
 +
- 	/** Sorted rb tree of struct fuse_dax_mapping elements */
- 	struct rb_root_cached dmap_tree;
- 	unsigned long nr_dmaps;
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 7e0ed5f3f7e6..52135b4616d2 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -83,6 +83,7 @@ static struct inode *fuse_alloc_inode(struct super_block *sb)
- 	fi->state = 0;
- 	fi->nr_dmaps = 0;
- 	mutex_init(&fi->mutex);
-+	init_rwsem(&fi->i_mmap_sem);
- 	init_rwsem(&fi->i_dmap_sem);
- 	spin_lock_init(&fi->lock);
- 	fi->forget = fuse_alloc_forget();
++	fuse_file_put(ff, sync, isdir);
+ }
+ 
+ static int fuse_open(struct inode *inode, struct file *file)
 -- 
 2.20.1
 
