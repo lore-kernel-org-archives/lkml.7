@@ -2,59 +2,139 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58492C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E04FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 367F22332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C5902332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:25:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="NP8pW7K/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730820AbfHUVYk (ORCPT
+        id S1730902AbfHUVY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 17:24:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57731 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbfHUVYk (ORCPT
+        Wed, 21 Aug 2019 17:24:58 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:60538 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728188AbfHUVY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 17:24:40 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i0Y5l-0005mc-Rl; Wed, 21 Aug 2019 23:24:29 +0200
-Date:   Wed, 21 Aug 2019 23:24:28 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Neil MacLeod <neil@nmacleod.com>
-cc:     John Hubbard <jhubbard@nvidia.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, gregkh@linuxfoundation.org,
-        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: Fix boot failure regression
-In-Reply-To: <CAFbqK8=BodLiMr4pdHjdqsZtk8iHUC_9oyRRALJt0xLz4y_4sQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1908212323290.1983@nanos.tec.linutronix.de>
-References: <CAFbqK8=RUaCnk_WkioodkdwLsDina=yW+eLvzckSbVx_3Py_-A@mail.gmail.com> <20190821192513.20126-1-jhubbard@nvidia.com> <CAFbqK8=BodLiMr4pdHjdqsZtk8iHUC_9oyRRALJt0xLz4y_4sQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 21 Aug 2019 17:24:58 -0400
+Received: from pps.filterd (m0170396.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LLAQZL000818;
+        Wed, 21 Aug 2019 17:24:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : subject :
+ date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=smtpout1; bh=IW/4zYgD443tA89Wg+OoQ6xbIDSw8ToEd3ox1kivyl0=;
+ b=NP8pW7K/UxhctC6VMfomtSLM2BVipafYSy8jg4itOTNjbbItaxTKAgQtp4DxUgwzmlBR
+ B9VZHKw+FkdGNCheKzDo2+FuWy9NnrIPVpmvwkP8JuTByI4+Yj/4l7EvpsHACNnNZapE
+ GekCPUF3q4zNXHE9TFuCjSbQApi1zS4WsdGCmHPwUshBk/q5k/3B2/U2YohU/bZuThID
+ jR5QFtPsQbxTCTmkKcLFfaFWmLql5AHdPXAdPopbBtexy2RH/RthY8fAmJi+ZCBMWQiA
+ Rfj2WaRAdi/hajA1jePtHdVJXcmZfGDNNSeG3NWX3YDx6YqoOMElmokWl7B0KOVmiMQe 2w== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 2ugh2s04gk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Aug 2019 17:24:56 -0400
+Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LLCuG0080700;
+        Wed, 21 Aug 2019 17:24:55 -0400
+Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
+        by mx0a-00154901.pphosted.com with ESMTP id 2uey0tn3a2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 17:24:55 -0400
+X-LoopCount0: from 10.166.135.94
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="450686217"
+From:   <Justin.Lee1@Dell.com>
+To:     <netdev@vger.kernel.org>, <openbmc@lists.ozlabs.org>,
+        <linux-kernel@vger.kernel.org>, <sam@mendozajonas.com>,
+        <davem@davemloft.net>
+Subject: [PATCH] net/ncsi: Fix the payload copying for the request coming from
+ Netlink
+Thread-Topic: [PATCH] net/ncsi: Fix the payload copying for the request coming
+ from Netlink
+Thread-Index: AdVYWI8OU3qkqsD+SsWDRcEtUwk7KQ==
+Date:   Wed, 21 Aug 2019 21:24:52 +0000
+Message-ID: <a94e5fa397a64ae3a676ec11ea09aaba@AUSX13MPS302.AMER.DELL.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Justin_Lee1@Dell.com;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-08-21T21:22:10.9472431Z;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
+ aiplabel=External Public
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.242.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=713 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908210208
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=869 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908210208
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019, Neil MacLeod wrote:
+The request coming from Netlink should use the OEM generic handler.
 
-> I can confirm 5.3-rc5 is booting again from internal M2 drive on
-> Skylake i5 NUC with this commit - many thanks!
+The standard command handler expects payload in bytes/words/dwords
+but the actual payload is stored in data if the request is coming from Netl=
+ink.
 
-I've queued that in x86/urgent and it's en route for rc6 and stable.
+Signed-off-by: Justin Lee <justin.lee1@dell.com>
 
-Thanks!
+---
+ net/ncsi/ncsi-cmd.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-	tglx
+diff --git a/net/ncsi/ncsi-cmd.c b/net/ncsi/ncsi-cmd.c
+index eab4346..0187e65 100644
+--- a/net/ncsi/ncsi-cmd.c
++++ b/net/ncsi/ncsi-cmd.c
+@@ -309,14 +309,21 @@ static struct ncsi_request *ncsi_alloc_command(struct=
+ ncsi_cmd_arg *nca)
+=20
+ int ncsi_xmit_cmd(struct ncsi_cmd_arg *nca)
+ {
++	struct ncsi_cmd_handler *nch =3D NULL;
+ 	struct ncsi_request *nr;
++	unsigned char type;
+ 	struct ethhdr *eh;
+-	struct ncsi_cmd_handler *nch =3D NULL;
+ 	int i, ret;
+=20
++	/* Use OEM generic handler for Netlink request */
++	if (nca->req_flags =3D=3D NCSI_REQ_FLAG_NETLINK_DRIVEN)
++		type =3D NCSI_PKT_CMD_OEM;
++	else
++		type =3D nca->type;
++
+ 	/* Search for the handler */
+ 	for (i =3D 0; i < ARRAY_SIZE(ncsi_cmd_handlers); i++) {
+-		if (ncsi_cmd_handlers[i].type =3D=3D nca->type) {
++		if (ncsi_cmd_handlers[i].type =3D=3D type) {
+ 			if (ncsi_cmd_handlers[i].handler)
+ 				nch =3D &ncsi_cmd_handlers[i];
+ 			else
+--=20
+2.9.3
