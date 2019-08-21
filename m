@@ -2,104 +2,117 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A73C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87659C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFF022D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9FE22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:50:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQ72Vsxx"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GjstqJzq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbfHUQuZ (ORCPT
+        id S1729612AbfHUQuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:50:25 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46158 "EHLO
+        Wed, 21 Aug 2019 12:50:40 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35542 "EHLO
         mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfHUQuY (ORCPT
+        with ESMTP id S1726828AbfHUQuj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:50:24 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c2so1619767plz.13
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 09:50:24 -0700 (PDT)
+        Wed, 21 Aug 2019 12:50:39 -0400
+Received: by mail-pl1-f196.google.com with SMTP id gn20so1639146plb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 09:50:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=vOsVwGQVH1pTZWvq9RI6vtuGHBdFwAhJmBlw43kNz3A=;
-        b=FQ72VsxxF827h9uCn8Oe0rXRQviu1GeO5KJ5ZnYaHmnTcsTrXDgA02aZoVxzzwkPnK
-         81t2/yP7/Lh7Oh0Aaia/sF/5LwkDv02xopWWgzbOzZzAZd50EtXiTyl8ujxFMnINCVbf
-         bJ18EY9IEauG17V36C72VrrrR0kF4F4iVOvPaEMCscYx0I/5U/sbOdyuxpKJXLf5d0Rf
-         d2do7MjrXdckd/cq/oaogcJm7m5J+Gz6XdjW9V/Ug+yxW5JpExkHXtgAIen8MeJGo0lG
-         +FspHDWBgJD0uJsy6EzwKkTQVTW7XYSVSxALZ8pbx0knLRoUVrbw+gJL0q6j+RM8EH2V
-         NCjQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dNLL8R5Ozl+yUbTTz0wtZ6BTtTLjEvK9s2CYPkCtL7o=;
+        b=GjstqJzqiWim4DDuwFd0g+cGejELz5UNq4QiK/WmnN0FNkrbmqOkdW9duNhHU8gZ8K
+         xVfQk91OUNALPQghxN4Aq/ItuVzKWI783T40f5LeRpverVYuRi+XzcMBCmmWaOhNE9bf
+         grRYIod7QwSfSnxzRMpSn6cDVgx30+dTKt+rzVulZduUmsXf0IkVIb8Qo3v4uLXv4hW5
+         38zk9tBVS7EFMKtZMdULMVMZmpqTkaV+kH0JHobeNMAUhdFPTIlVf5tmTMs8I3XEO9wz
+         1d4JWpi6iRZQzAdIHWwxJkd8JaKn89mF5AUHAt38THIZwALYKRnxmvi4S0s3wZG9KvbA
+         488g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vOsVwGQVH1pTZWvq9RI6vtuGHBdFwAhJmBlw43kNz3A=;
-        b=tIBi56EJtyan1sWqLxu1zKdiO5RHO3g23w/sEyzVP1Nwo8kLemZ0s2RgOUh0GrS4sE
-         q86p3HHVr0/0XUhq5i2G7AONBWXFwE48XRnq23MIj2UqOLU7wTZz1f7ON+Skx8Qu9BEU
-         8pVd1JowcIoqWjN22rcg1Pk7SFc5Yb3dpCZUjUWhj/DQ/Ekuax+uSLj14A1HJBklG6sL
-         OA7fdyql/jWt0m2JckdSkX+04AulHZcWtyA+E40KvNwCELxtVxNwqqtT7cVhlFTL5cS7
-         Y0JObIsGeuP9Dfc78izNT6sWylezFdnQUjoK4Y9qAIgIg3IQGXnOf4Xu3Y55uH4wmCVi
-         NwqQ==
-X-Gm-Message-State: APjAAAVlHrb4gbb0w+uzmGlvjyoaLQ8IW/3ly1ii+64UIO36FVk0xmsT
-        ibvwuchWb2oHuoxIcQpkSv0=
-X-Google-Smtp-Source: APXvYqysov090aoIXmaNouZ7wKZfGapTlQ8KNwROhLrDyXYtHem3aHvFouvEGUr5PJrADORE+bfYHg==
-X-Received: by 2002:a17:902:33a5:: with SMTP id b34mr2368689plc.286.1566406224148;
-        Wed, 21 Aug 2019 09:50:24 -0700 (PDT)
-Received: from localhost.localdomain (M106072039032.v4.enabler.ne.jp. [106.72.39.32])
-        by smtp.gmail.com with ESMTPSA id j187sm33956245pfg.178.2019.08.21.09.50.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 09:50:23 -0700 (PDT)
-From:   Tokunori Ikegami <ikegami.t@gmail.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     Tokunori Ikegami <ikegami.t@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Liu Jian <liujian56@huawei.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] mtd: cfi_cmdset_0002: Fix do_erase_chip() to get chip as erasing mode
-Date:   Thu, 22 Aug 2019 01:46:51 +0900
-Message-Id: <20190821164655.5860-1-ikegami.t@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dNLL8R5Ozl+yUbTTz0wtZ6BTtTLjEvK9s2CYPkCtL7o=;
+        b=fSfRMMkA3jZXRZHNCfNvo/FjB+5poJHM9bLEywcrOTMSYlqNt3841HNRn2JxZTB5a3
+         H/kDvz53rd4832JaXjXY2qHUNsV769wnCas9m/Pe2cnzTflz7KYaUdSeieXM9pPWBLw7
+         MqW73kY0svSfPkOev+RHDF2rSa5YLfdUMSYr0tF2UFnN2r8KZ9Se+mw/1vU51y8LQiwH
+         8yun7WFtEhFzbBxkUVcL94WxJmDuCgh+p1aOQKsvq9MLrSaismzjn7sSKgM8rXVeWl1J
+         SyeLcd+JlmRtXAEHUG1Waafg+DrV8xMOLX439oMsHgGdf1s8V0nhY2kPd62xmTFNyfi1
+         PRQw==
+X-Gm-Message-State: APjAAAXwL+rLE7Txu/p6cVb2XCTi9RwBeCMYikIkfcChhP16460DacoW
+        DLXI6gNmHjOuSgBMBF5k1NZgsdZuxxqbXeqXakXQ7w==
+X-Google-Smtp-Source: APXvYqwBHQIFOZROdviPAJyQpfy7Sdu0wRt4psMOkU0xAa072gIO1No42ZEB2yB7154bHv1rVbQaSGSFW9+M9hc6WRg=
+X-Received: by 2002:a17:902:ab96:: with SMTP id f22mr35635682plr.147.1566406238620;
+ Wed, 21 Aug 2019 09:50:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAAeHK+xQc5Ce6TwtERTmQ+6qSbuAmGikxCU5SNTdcDAynDEiig@mail.gmail.com>
+ <Pine.LNX.4.44L0.1908211223070.1816-100000@iolanthe.rowland.org> <CAAeHK+z-o9naQXZoxwTXRh2WWQzFiRU9XruabNTTm31_1AbjAw@mail.gmail.com>
+In-Reply-To: <CAAeHK+z-o9naQXZoxwTXRh2WWQzFiRU9XruabNTTm31_1AbjAw@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 21 Aug 2019 18:50:27 +0200
+Message-ID: <CAAeHK+w=iNkgfBx2BCO8qSYrgVA+E6z_WjoOnCqH0dDbT0v95Q@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in hidraw_ioctl
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The chip state is set to erasing by the function after getting chip.
-So it should be to get chip as erasing mode at first.
-But previously it was to get chip as writing mode then fix as erasing.
+On Wed, Aug 21, 2019 at 6:26 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> On Wed, Aug 21, 2019 at 6:24 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Wed, 21 Aug 2019, Andrey Konovalov wrote:
+> >
+> > > On Wed, Aug 21, 2019 at 3:37 PM syzbot
+> > > <syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com> wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > syzbot has tested the proposed patch but the reproducer still triggered
+> > > > crash:
+> > > > KASAN: slab-out-of-bounds Read in hidraw_ioctl
+> > >
+> > > Same here, a different bug.
+> >
+> > It looks like I've got the fix for both these bugs.  Testing now...
+>
+> Great! Do you think "BUG: bad usercopy in hidraw_ioctl" can also be
+> fixed by one of those fixes?
 
-Signed-off-by: Tokunori Ikegami <ikegami.t@gmail.com>
-Cc: linux-mtd@lists.infradead.org
----
- drivers/mtd/chips/cfi_cmdset_0002.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We actually have a bunch of other non reproducible bug reports that
+come from HID. I think I'll dup them into these two bugs that you've
+fixed, and we'll see if syzkaller triggers them again once the fixes
+are upstream.
 
-diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
-index f4da7bd552e9..74b07a0bdaa2 100644
---- a/drivers/mtd/chips/cfi_cmdset_0002.c
-+++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-@@ -2344,7 +2344,7 @@ static int __xipram do_erase_chip(struct map_info *map, struct flchip *chip)
- 	adr = cfi->addr_unlock1;
- 
- 	mutex_lock(&chip->mutex);
--	ret = get_chip(map, chip, adr, FL_WRITING);
-+	ret = get_chip(map, chip, adr, FL_ERASING);
- 	if (ret) {
- 		mutex_unlock(&chip->mutex);
- 		return ret;
--- 
-2.11.0
+>
+> >
+> > > > Tested on:
+> > > >
+> > > > commit:         e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+> > > > git tree:       https://github.com/google/kasan.git
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=14f14a1e600000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > patch:          https://syzkaller.appspot.com/x/patch.diff?x=171cd95a600000
+> >
+> > Why don't these patch-test reports include the dashboard link?  It sure
+> > would be handy to have a copy of it here.
 
+Sorry, didn't notice this comment. This should be easy to implement,
+I'll look into that, thanks!
