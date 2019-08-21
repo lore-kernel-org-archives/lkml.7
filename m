@@ -2,111 +2,154 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF63C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0505C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6D2233FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7606122D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:23:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="U/VJAIWr"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FPTPr7AK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbfHUOWC (ORCPT
+        id S1729069AbfHUOXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:22:02 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42869 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729315AbfHUOU5 (ORCPT
+        Wed, 21 Aug 2019 10:23:41 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34537 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728822AbfHUOXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:20:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id b16so2211676wrq.9
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:20:55 -0700 (PDT)
+        Wed, 21 Aug 2019 10:23:40 -0400
+Received: by mail-wm1-f65.google.com with SMTP id e8so4901438wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:23:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xBn+s7shYC39K9Spwq6+NMMR/jl0g0PIkiRbeqrATnM=;
-        b=U/VJAIWr87HIEPwTw6ElLTU+BjcfdWObT+soaik9zxpQDIVHoX/0bjZK/FOEiirw/M
-         SS69viIfEFVAfR6Q1dHPajmwVRdN9bo/ooyrTLtz9E3+TCcV8ngieuMQg0q18YgRFMqa
-         l6HgIUuyPsRBWKCIzcWjNtpf0k3KxlaTT40Pc4ri5V/wus7rC5QFXeJt4A5/5iQ3fXIs
-         5j8XdCSRKHz6eYplrYr/+QD+TlmN0GRfsBAWYjQTIMbWalua40oYT/Xjqm3lnJoIKz2F
-         I/scEtrhlncrq01IxhTSVmqfoUZO1dDtfVgovHbiDk05CeM40zvC5Ce4vsHJKC5eZi3g
-         VzPA==
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MeIRz49zUSO101yPFPumFneaHmwYwtM51Tjr9Kb8Aoc=;
+        b=FPTPr7AKFoEAtJgw6aZDY4psgNxe05guV8dT7zFJ9913dGTRk3fLE0lZXb7/GTqzsB
+         P1bJQCjPBEJXJ/2KUYAlCeFRRodlogIj47rjwM4J0xuscc6QoD/rs0Yt3PMuZE+mcUbW
+         jiCu9DNVIbZMkcj9TyV5RmLrlg90kXmveak6lOp3obcnjQe7hi1NeQTFjWZeMaiHF44Y
+         aVxuzJawYw+hVCIKFDqKkGvOImgavxfN+RoJCLq6G40aCx/NOLUNbJnf3M0X8EzOilVL
+         Q9riJeCWGx2TYavo/bSf5gMWJiHqgjxm+HbE7JxVry6GE0StuvkapL9qz+poy6Cicj6F
+         v+yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xBn+s7shYC39K9Spwq6+NMMR/jl0g0PIkiRbeqrATnM=;
-        b=G0xeXLNgVobZkYVqxKxxTq6cH2k3AqLuXAGZ3yqjzyiIkzya7ppVze6a1iSKMdG5LG
-         3PzfOAn9WuOZO0kOZQbpwyuTvSHJijNV7GpaZXL9iZGiHUz8tsWwKt7saKa6MMzQ+FxE
-         P0ol9r5Ti07fQLaX+wwDLcUY47kq8CvWm/S8lHuy44ahfnPhLaKLUPre9MJOazqCZorI
-         8SzsjVGcHr9T0z2BnRe9E8OHzp4BiADunx0KEan3tUYrSihN8yGdCnVZ9poIcCnoh6g8
-         UKr+uUISfNS1C3oVfhxTu8lG5bNuhPNY8EfxkS+Kjy2Q71behJkxOppDLEm2qTwR0uJt
-         RgHA==
-X-Gm-Message-State: APjAAAVyYnJEae5LbChYyUekG7h5xe3bOgYKOnfNDTsDILcxROrLHloF
-        6mb2j+Y7m0wH8o/0cSDtRlSamg==
-X-Google-Smtp-Source: APXvYqxy04ouXX3eyK6f9Fi/iYrgL3Vj5mFrNuT90x0YMz28UBE0Fi9V1zFuiKfoH/mxJeevShFsXQ==
-X-Received: by 2002:a5d:6911:: with SMTP id t17mr40633375wru.255.1566397255042;
-        Wed, 21 Aug 2019 07:20:55 -0700 (PDT)
-Received: from bender.baylibre.local (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id o9sm33418939wrm.88.2019.08.21.07.20.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 07:20:54 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MeIRz49zUSO101yPFPumFneaHmwYwtM51Tjr9Kb8Aoc=;
+        b=h+zHozjjmNAXmy0l1Q6zBC4aIQn0nzbz/vT/s2neX+WWBUjdT7QaOs8fecVJYGoMVg
+         PNZ4VLEvSPNg/oNFjVIg7Pa3shyK7W0cp5NYTwCtcpz46dwtlGDWajDKOBganPGnnsZg
+         0gUYBrj1Y0FG5ttFfJfP8D2t6X3em45UNykNQpSqrvUTQNcr9ThNT45FgWxQ4Hwl07Zp
+         PHCYKO/39ChZKj9wkuaSAjN33pvpqpuur4cIczG/1yB8Z+PGhvGqtlkfQO+VBihpLF8M
+         dpL4ZcvKmE5gROZHE/qCVpdMloGcVBXOs9cnP6diqBIbh2QmAAEU2G0HZXcins+QGtbd
+         7MfA==
+X-Gm-Message-State: APjAAAVbOw8scRw3I5cyw0VYsBjd0MBEfC0t3iayHtO5J04VEvoH/rSQ
+        vXMsej21xUy7pooAqdo0e8sv40R54J292Q==
+X-Google-Smtp-Source: APXvYqwKv6z6o5Sk44ujawNmgG37hFb2xCKq/VmQ3+kEMXDniE7TAfGXz/6GUulwX1aX76dOAmZ/zw==
+X-Received: by 2002:a05:600c:23cd:: with SMTP id p13mr322550wmb.86.1566397417626;
+        Wed, 21 Aug 2019 07:23:37 -0700 (PDT)
+Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id x20sm48967944wrg.10.2019.08.21.07.23.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 07:23:36 -0700 (PDT)
+Subject: Re: [PATCH 0/2] arm64: dts: meson: g12a: add tdm resets
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190820121551.18398-1-jbrunet@baylibre.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 02/14] arm64: dts: meson-gx: drop the vpu dmc memory cell
-Date:   Wed, 21 Aug 2019 16:20:31 +0200
-Message-Id: <20190821142043.14649-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190821142043.14649-1-narmstrong@baylibre.com>
-References: <20190821142043.14649-1-narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <69a85842-3933-3965-9f4b-9d6a8432f766@baylibre.com>
+Date:   Wed, 21 Aug 2019 16:23:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190820121551.18398-1-jbrunet@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes the following DT schemas check errors:
-meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: Additional items are not allowed ('dmc' was unexpected)
-meson-gxl-s805x-libretech-ac.dt.yaml: vpu@d0100000: reg-names: ['vpu', 'hhi', 'dmc'] is too long
+On 20/08/2019 14:15, Jerome Brunet wrote:
+> This patchset adds the dedicated reset of the tdm formatters which
+> have been added on the g12a SoC family. Using these help with the channel
+> mapping when the formatter uses more than 1 i2s lane.
+> 
+> Kevin, please note that to build, this patchset depends on the new reset
+> bindings of the audio clock controller. I've prepared a tag for you [0]
+> 
+> [0]: git://github.com/BayLibre/clk-meson.git - clk-meson-dt-v5.4-2
+> 
+> Jerome Brunet (2):
+>   arm64: dts: meson: g12a: audio clock controller provides resets
+>   arm64: dts: meson: g12a: add reset to tdm formatters
+> 
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
 
-The 'dmc' register area was replaced by the amlogic,canvas property
-which was introduced in commit f1726043426c73 ("arm64: dts: meson-gx:
-add dmcbus and canvas nodes.") and commit cf34287986d0b6 ("arm64: dts:
-meson-gx: Add canvas provider node to the vpu")
+For the serie,
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index faff77175486..c2d3fffea8a7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -528,9 +528,8 @@
- 		vpu: vpu@d0100000 {
- 			compatible = "amlogic,meson-gx-vpu";
- 			reg = <0x0 0xd0100000 0x0 0x100000>,
--			      <0x0 0xc883c000 0x0 0x1000>,
--			      <0x0 0xc8838000 0x0 0x1000>;
--			reg-names = "vpu", "hhi", "dmc";
-+			      <0x0 0xc883c000 0x0 0x1000>;
-+			reg-names = "vpu", "hhi";
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-2.22.0
-
+Neil
