@@ -6,32 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2945AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202FBC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEFA222DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6A722DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:39:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbfHUNh3 (ORCPT
+        id S1728980AbfHUNjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 09:37:29 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55296 "EHLO huawei.com"
+        Wed, 21 Aug 2019 09:39:19 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4748 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727949AbfHUNh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:37:28 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 97B5B46B22618961939D;
-        Wed, 21 Aug 2019 21:37:12 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 21 Aug 2019
- 21:37:02 +0800
+        id S1728567AbfHUNjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 09:39:18 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8C64CB48D585B239B4D7;
+        Wed, 21 Aug 2019 21:39:13 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 21 Aug 2019
+ 21:39:05 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <bigeasy@linutronix.de>
+To:     <davem@davemloft.net>, <andrew@lunn.ch>, <mcgrof@kernel.org>,
+        <tglx@linutronix.de>, <ynezz@true.cz>
 CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: mvneta: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 21 Aug 2019 21:33:02 +0800
-Message-ID: <20190821133302.72880-1-yuehaibing@huawei.com>
+Subject: [PATCH net-next] pxa168_eth: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 21 Aug 2019 21:38:54 +0800
+Message-ID: <20190821133854.4308-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -48,30 +49,23 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/net/ethernet/marvell/mvneta_bm.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/ethernet/marvell/pxa168_eth.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvneta_bm.c b/drivers/net/ethernet/marvell/mvneta_bm.c
-index 82ee2bc..46c942e 100644
---- a/drivers/net/ethernet/marvell/mvneta_bm.c
-+++ b/drivers/net/ethernet/marvell/mvneta_bm.c
-@@ -411,15 +411,13 @@ static int mvneta_bm_probe(struct platform_device *pdev)
- {
- 	struct device_node *dn = pdev->dev.of_node;
- 	struct mvneta_bm *priv;
--	struct resource *res;
- 	int err;
- 
- 	priv = devm_kzalloc(&pdev->dev, sizeof(struct mvneta_bm), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
+diff --git a/drivers/net/ethernet/marvell/pxa168_eth.c b/drivers/net/ethernet/marvell/pxa168_eth.c
+index 3aa9987..51b77c2 100644
+--- a/drivers/net/ethernet/marvell/pxa168_eth.c
++++ b/drivers/net/ethernet/marvell/pxa168_eth.c
+@@ -1425,8 +1425,7 @@ static int pxa168_eth_probe(struct platform_device *pdev)
+ 	pep->dev = dev;
+ 	pep->clk = clk;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->reg_base = devm_ioremap_resource(&pdev->dev, res);
-+	priv->reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->reg_base))
- 		return PTR_ERR(priv->reg_base);
- 
+-	pep->base = devm_ioremap_resource(&pdev->dev, res);
++	pep->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pep->base)) {
+ 		err = -ENOMEM;
+ 		goto err_netdev;
 -- 
 2.7.4
 
