@@ -2,187 +2,87 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9133BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ABCC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D29C2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 495CE2332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:13:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="eDrUlZ1s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LGr1j52G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731334AbfHUXMW (ORCPT
+        id S1731350AbfHUXNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 19:12:22 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46977 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729763AbfHUXMV (ORCPT
+        Wed, 21 Aug 2019 19:13:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54474 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729763AbfHUXNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 19:12:21 -0400
-Received: by mail-io1-f66.google.com with SMTP id x4so7998640iog.13
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 16:12:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0KVJzgs8EgORbeJXXQubNPgw1WiUGBr9OYGA7l6xlcE=;
-        b=eDrUlZ1sAmJkYbQSimlYWKmC1dUR+CGjg15fVmd1/JPfkySdGgd52llMp900L9A9hQ
-         xYCXspJbD486cUNWl0/vHQefQh4ROBps1vwmCGTQrj0xn4lK2BmEmSjR4zqihmxL0Vmv
-         v7SpuHz+28jBLO5xIB1jvjKV/0SjBjvjJG+fvcoP8THQk3rqzGv9l3FAHn1QHRoXwLPI
-         hJK4Zj3oUmIFYSV9I78tLqwFRk0/xZpZj76fvCFuDkXwwgXho67oM3Ir9m0oawERpcIJ
-         tjAwoiHFgGoi+9brArrSyzUTwbjpy9F5g9otqjnxC5V64fO44nqxNWscO/6okRf9PX0K
-         eq7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0KVJzgs8EgORbeJXXQubNPgw1WiUGBr9OYGA7l6xlcE=;
-        b=LrQopEKtsef6g4BfQAR55mtaySpuSVcOjtCEFQYjCu032lzlNuK2l2kppo0//Y2NL4
-         pm6mQWe11SkJVfO8iD7hZbGuOrwGn+mxOxNt6S40jxlbYOjuoMVdpuYyF8Oml9H1Yw1D
-         L5A+cnp6qLjZmGgKWXINC2qOzkkB77rn7emTlPHZj4ynY3wM9/mMCpwPD42JRPy5+qTj
-         abYKoRmLK6jp5F7EOL6dqrv6pNARhTKNiSmPZrHWBbv+rLTVkKZxowQRSjDlFityKW8J
-         uFfSK3cGn6+FZuXRm60GXvzKqwOXptoaFaLLWnx2Yc8hFYcfT8lHECZm+PZ1jIJSOJnB
-         LEgw==
-X-Gm-Message-State: APjAAAXgqun/avMgrHR7bQI8vsIKUDaKP8GtycmtfRIsOGsJ5r+A5D14
-        xRtiQSjLfc+ubmkG2d1CcfKz5Hy/Usr13iQ+xZikmQ==
-X-Google-Smtp-Source: APXvYqyloKzz7NgWTchmsnc7qXwItkNgE6mhmz6hYsrxditmjwnLHbvLORRpP5EyOywTjcrApKlY50azf7yp8TQmbak=
-X-Received: by 2002:a02:390c:: with SMTP id l12mr4178791jaa.76.1566429140549;
- Wed, 21 Aug 2019 16:12:20 -0700 (PDT)
+        Wed, 21 Aug 2019 19:13:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WM7SZ88kyqemBkIYTm2NML5mscgb3zmbfZeZ+GXNIXY=; b=LGr1j52GyKOw/HBHTEYaEj8Hb
+        uA7xSFH9W6skRCtnvb26k+BfEDOTMOQLZ5pwCWM8HwOXugtz2pCIoK6rLI6lixhEVzv4Z8m5yNnJz
+        Qx8xlXi5+HXyevRlwQE5FIV8mAWh+oXFTCQc8E8E9WmokfjsL7VKctjLPqGdsHTxW8ITHyfc3YTe8
+        b7Ai//7E3J9wDTuVpUe6vP3AQdrCPGkrkWfEIMECAmG0AVR4ecNuJUlt8XcUiFs9LkTVxX3TcFJ+I
+        p6RKEpo3+dmRQwHaD5q0tvwK50Ysnd7WrYD3oAvjPpTw9FoeKaVXP9N4ol7y0xXLVVwIDzISdxKDJ
+        wcG1XLSsg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0ZnF-00059G-IV; Wed, 21 Aug 2019 23:13:29 +0000
+Date:   Wed, 21 Aug 2019 16:13:29 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        arnd@arndb.de, geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        hpa@zytor.com, jeyu@kernel.org, joel@joelfernandes.org,
+        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
+        maco@android.com, maco@google.com, michal.lkml@markovi.net,
+        mingo@redhat.com, oneukum@suse.com, pombredanne@nexb.com,
+        sam@ravnborg.org, sspatil@google.com, stern@rowland.harvard.edu,
+        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
+        x86@kernel.org, yamada.masahiro@socionext.com
+Subject: Re: [PATCH v3 10/11] RFC: usb-storage: export symbols in USB_STORAGE
+ namespace
+Message-ID: <20190821231329.GA369@infradead.org>
+References: <20190813121733.52480-1-maennich@google.com>
+ <20190821114955.12788-1-maennich@google.com>
+ <20190821114955.12788-11-maennich@google.com>
 MIME-Version: 1.0
-References: <20190821001445.32114-1-echron@arista.com> <alpine.DEB.2.21.1908202024300.141379@chino.kir.corp.google.com>
- <20190821064732.GW3111@dhcp22.suse.cz> <alpine.DEB.2.21.1908210017320.177871@chino.kir.corp.google.com>
- <20190821074721.GY3111@dhcp22.suse.cz>
-In-Reply-To: <20190821074721.GY3111@dhcp22.suse.cz>
-From:   Edward Chron <echron@arista.com>
-Date:   Wed, 21 Aug 2019 16:12:08 -0700
-Message-ID: <CAM3twVR5Z1LG4+pqMF94mCw8R0sJ3VJtnggQnu+047c7jxJVug@mail.gmail.com>
-Subject: Re: [PATCH] mm/oom: Add oom_score_adj value to oom Killed process message
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821114955.12788-11-maennich@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 12:47 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Wed 21-08-19 00:19:37, David Rientjes wrote:
-> > On Wed, 21 Aug 2019, Michal Hocko wrote:
-> >
-> > > > vm.oom_dump_tasks is pretty useful, however, so it's curious why you
-> > > > haven't left it enabled :/
-> > >
-> > > Because it generates a lot of output potentially. Think of a workload
-> > > with too many tasks which is not uncommon.
-> >
-> > Probably better to always print all the info for the victim so we don't
-> > need to duplicate everything between dump_tasks() and dump_oom_summary().
->
-> I believe that the motivation was to have a one line summary that is already
-> parsed by log consumers. And that is in __oom_kill_process one.
->
+On Wed, Aug 21, 2019 at 12:49:25PM +0100, Matthias Maennich wrote:
+> Modules using these symbols are required to explicitly import the
+> namespace. This patch was generated with the following steps and serves
+> as a reference to use the symbol namespace feature:
+> 
+>  1) Define DEFAULT_SYMBOL_NAMESPACE in the corresponding Makefile
+>  2) make  (see warnings during modpost about missing imports)
+>  3) make nsdeps
+> 
+> Instead of a DEFAULT_SYMBOL_NAMESPACE definition, the EXPORT_SYMBOL_NS
+> variants can be used to explicitly specify the namespace. The advantage
+> of the method used here is that newly added symbols are automatically
+> exported and existing ones are exported without touching their
+> respective EXPORT_SYMBOL macro expansion.
 
-Yes the motivation was one line summary that the OOM Killed Process
-message supplies along
-with the fact it is error priority as I mentioned. It is a very
-desirable place to put summarized
-information.
-
-> Also I do not think this patch improves things much for two reasons
-> at leasts a) it doesn't really give you the whole list of killed tasks
-> (this might be the whole memcg) and b) we already do have most important
-> information in __oom_kill_process. If something is missing there I do
-> not see a strong reason we cannot add it there. Like in this case.
->
-
-This is a good point.
-
-Additionally (which you know, but mentioning for reference) the OOM
-output used to look like this:
-
-Nov 14 15:23:48 oldserver kernel: [337631.991218] Out of memory: Kill
-process 19961 (python) score 17 or sacrifice child
-Nov 14 15:23:48 oldserver kernel: [337631.991237] Killed process 31357
-(sh) total-vm:5400kB, anon-rss:252kB, file-rss:4kB, shmem-rss:0kB
-
-It now looks like this with 5.3.0-rc5 (minus the oom_score_adj):
-
-Jul 22 10:42:40 newserver kernel:
-oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,global_oom,task_memcg=/user.slice/user-10383.slice/user@10383.service,task=oomprocs,pid=3035,uid=10383
-Jul 22 10:42:40 newserver kernel: Out of memory: Killed process 3035
-(oomprocs) total-vm:1056800kB, anon-rss:8kB, file-rss:4kB,
-shmem-rss:0kB
-Jul 22 10:42:40 newserver kernel: oom_reaper: reaped process 3035
-(oomprocs), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
-
-The old output did explain that a oom_score of 17 must have either
-tied for highest or was the highest.
-This did document why OOM selected the process it did, even if ends up
-killing the related sh process.
-
-With the newer format that added constraint message, it does provide
-uid which can be helpful and
-the oom_reaper showing that the memory was reclaimed is certainly reassuring.
-
-My understanding now is that printing the oom_score is discouraged.
-This seems unfortunate.  The oom_score_adj can be adjusted
-appropriately if oom_score is known.
-So It would be useful to have both.
-
-But at least if oom_score_adj is printed you can confirm the value at
-the time of the OOM event.
-
-Thank-you,
--Edward Chron
-Arista Networks
-
-> > Edward, how about this?
-> >
-> > diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> > --- a/mm/oom_kill.c
-> > +++ b/mm/oom_kill.c
-> > @@ -420,11 +420,17 @@ static int dump_task(struct task_struct *p, void *arg)
-> >   * State information includes task's pid, uid, tgid, vm size, rss,
-> >   * pgtables_bytes, swapents, oom_score_adj value, and name.
-> >   */
-> > -static void dump_tasks(struct oom_control *oc)
-> > +static void dump_tasks(struct oom_control *oc, struct task_struct *victim)
-> >  {
-> >       pr_info("Tasks state (memory values in pages):\n");
-> >       pr_info("[  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n");
-> >
-> > +     /* If vm.oom_dump_tasks is disabled, only show the victim */
-> > +     if (!sysctl_oom_dump_tasks) {
-> > +             dump_task(victim, oc);
-> > +             return;
-> > +     }
-> > +
-> >       if (is_memcg_oom(oc))
-> >               mem_cgroup_scan_tasks(oc->memcg, dump_task, oc);
-> >       else {
-> > @@ -465,8 +471,8 @@ static void dump_header(struct oom_control *oc, struct task_struct *p)
-> >               if (is_dump_unreclaim_slabs())
-> >                       dump_unreclaimable_slab();
-> >       }
-> > -     if (sysctl_oom_dump_tasks)
-> > -             dump_tasks(oc);
-> > +     if (p || sysctl_oom_dump_tasks)
-> > +             dump_tasks(oc, p);
-> >       if (p)
-> >               dump_oom_summary(oc, p);
-> >  }
->
-> --
-> Michal Hocko
-> SUSE Labs
+So what is USB_STORAGE here?  It isn't a C string, so where does it
+come from?  To me using a C string would seem like the nicer interface
+vs a random cpp symbol that gets injected somewhere.
