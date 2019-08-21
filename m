@@ -2,188 +2,76 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84E6C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 894E0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ACB32082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566392834;
-	bh=eSW5sonthn00aXlq3sEz9PnmYO5sWVMvXRhzux/NTmk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HpoJRpTAAtYA2vBPXAFIFaMD8R6wJXjWT16g2j9B4Mpsmer45z2D494l+EXseNupN
-	 7Pguj3jbOKqpVxpK18yaCGjgL0JZ+AlZ6j3lMLPK5/rkZ/sTF8jgbH4agj+6VfpUSI
-	 e8V8kwgmbH9it+cyf+9M8qm9L3eoNZLnsKFR2eWU=
+	by mail.kernel.org (Postfix) with ESMTP id 5B1642082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfHUNHN (ORCPT
+        id S1728884AbfHUNJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 09:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbfHUNHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:07:10 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED79E2082F;
-        Wed, 21 Aug 2019 13:07:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566392829;
-        bh=eSW5sonthn00aXlq3sEz9PnmYO5sWVMvXRhzux/NTmk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xYjCEIIz20TVKTI18/ajVvJxgxHNChwRE7yKBWVpf5MHfJ9f3EAMKFZTnz4fasKUk
-         cc43jyfFrW8MNh0F5QOtpJYM8ZPFe5rhSHzd11FMrQdbIr9DcuxDZcJ10M8oRTXyNn
-         FL6OgoDD464E3SYzBW7K3323MmRq06j2PGLgL5rw=
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
-        lgirdwood@gmail.com, broonie@kernel.org
-Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        codekipper@gmail.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] ASoC: sun4i-i2s: Add support for DSP formats
-Date:   Wed, 21 Aug 2019 15:06:56 +0200
-Message-Id: <5562db1ac8759f12b1b87c3258223eed629ef771.1566392800.git-series.maxime.ripard@bootlin.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.6022d5fe61fb8a11565a71bee24d5280b0259c63.1566392800.git-series.maxime.ripard@bootlin.com>
-References: <cover.6022d5fe61fb8a11565a71bee24d5280b0259c63.1566392800.git-series.maxime.ripard@bootlin.com>
+        Wed, 21 Aug 2019 09:09:01 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:48781 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbfHUNJB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 09:09:01 -0400
+Received: by mail-io1-f70.google.com with SMTP id 67so2570351iob.15
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 06:09:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=MRdtoTfzHIwJVxhX35Sc59foQp09KDcPOWTOEZaO7x8=;
+        b=HqJzqeYGOEW5mqjPsi1jAV14UHfRBx+fMqmA13XTaGcSkAZPgVAq4BS8+LL0H29uua
+         iC7gKp8A8pUe5HsBAGZkFKHKLmC/pvQtXWlhn5KmMTJd7HSkVbZiX1+3TjNz5lm53hT/
+         WiU+K8YF8LaNZgeAlVHol82bIuvoZiTc13WiEZkuS2VB3lkeUJNSQ0KV+I4Mn0z2aSOy
+         HpKBnzmyZx4rq7PwhXZcbAxbER/wM894K6aK3myRhvSgMWa4jis52rFNnzZEop0a26dm
+         hTE9aTo2KwznLWAp1UdC+19ZceTDBbZGkJM8+mgPdFZJlGonRz/IY1R+JIiCAEhkaUDg
+         rCAg==
+X-Gm-Message-State: APjAAAU1nSnWOkaf80mihvsX8vTyfn1rfmK+wMx9MprV+yISliX0yc6u
+        ePobvQqcG0rWW6PDoUGESoD2rB/dwk7YCGkIJD3HJkwGy401
+X-Google-Smtp-Source: APXvYqzS78T/uhx6IUoEGdP0SfpaPU+rACUgLTB7aYQf7Q031U2NMTj0nJSIiooWOU5phAbHo/88+lym2ff9FXmSeqFbDw8yV1ST
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:310:: with SMTP id w16mr9829024jap.136.1566392940385;
+ Wed, 21 Aug 2019 06:09:00 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 06:09:00 -0700
+In-Reply-To: <CAAeHK+wkV7zpAHURRzdY_TMRkCv=P5=yfJqLf9tAoYJA35779A@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ca63880590a046e2@google.com>
+Subject: Re: WARNING in usbhid_raw_request/usb_submit_urb
+From:   syzbot <syzbot+a7a6b9c609b9457c62c6@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, hdanton@sina.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        oneukum@suse.com, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+Hello,
 
-In addition to the I2S format, the controller also supports the DSP_*
-formats.
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-This requires some extra care on the LRCK period calculation, since the
-controller, with the PCM formats, require that the value set is no longer
-the periods of LRCK for a single channel, but for all of them.
+Reported-and-tested-by:  
+syzbot+a7a6b9c609b9457c62c6@syzkaller.appspotmail.com
 
-Let's add the code to deal with this, and support the DSP_A and DSP_B
-formats.
+Tested on:
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- sound/soc/sunxi/sun4i-i2s.c | 44 ++++++++++++++++++++++++++++++--------
- 1 file changed, 35 insertions(+), 9 deletions(-)
+commit:         7f7867ff usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=140148ca600000
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 69162af9fd65..57bf2a33753e 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -130,7 +130,6 @@ struct sun4i_i2s;
-  * struct sun4i_i2s_quirks - Differences between SoC variants.
-  *
-  * @has_reset: SoC needs reset deasserted.
-- * @has_fmt_set_lrck_period: SoC requires lrclk period to be set.
-  * @reg_offset_txdata: offset of the tx fifo.
-  * @sun4i_i2s_regmap: regmap config to use.
-  * @field_clkdiv_mclk_en: regmap field to enable mclk output.
-@@ -139,7 +138,6 @@ struct sun4i_i2s;
-  */
- struct sun4i_i2s_quirks {
- 	bool				has_reset;
--	bool				has_fmt_set_lrck_period;
- 	unsigned int			reg_offset_txdata;	/* TX FIFO */
- 	const struct regmap_config	*sun4i_i2s_regmap;
- 
-@@ -167,6 +165,7 @@ struct sun4i_i2s {
- 	struct regmap	*regmap;
- 	struct reset_control *rst;
- 
-+	unsigned int	format;
- 	unsigned int	mclk_freq;
- 	unsigned int	slots;
- 	unsigned int	slot_width;
-@@ -355,12 +354,6 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
- 
- 	regmap_field_write(i2s->field_clkdiv_mclk_en, 1);
- 
--	/* Set sync period */
--	if (i2s->variant->has_fmt_set_lrck_period)
--		regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
--				   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
--				   SUN8I_I2S_FMT0_LRCK_PERIOD(slot_width));
--
- 	return 0;
- }
- 
-@@ -422,6 +415,7 @@ static int sun8i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
- {
- 	unsigned int channels = params_channels(params);
- 	unsigned int slots = channels;
-+	unsigned int lrck_period;
- 
- 	if (i2s->slots)
- 		slots = i2s->slots;
-@@ -445,6 +439,26 @@ static int sun8i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
- 			   SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM_MASK,
- 			   SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM(channels));
- 
-+	switch (i2s->format & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_DSP_A:
-+	case SND_SOC_DAIFMT_DSP_B:
-+	case SND_SOC_DAIFMT_LEFT_J:
-+	case SND_SOC_DAIFMT_RIGHT_J:
-+		lrck_period = params_physical_width(params) * slots;
-+		break;
-+
-+	case SND_SOC_DAIFMT_I2S:
-+		lrck_period = params_physical_width(params);
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
-+			   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
-+			   SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
-+
- 	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
- 			   SUN8I_I2S_TX_CHAN_EN_MASK,
- 			   SUN8I_I2S_TX_CHAN_EN(channels));
-@@ -616,6 +630,16 @@ static int sun8i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
- 
- 	/* DAI Mode */
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_DSP_A:
-+		mode = SUN8I_I2S_CTRL_MODE_PCM;
-+		offset = 1;
-+		break;
-+
-+	case SND_SOC_DAIFMT_DSP_B:
-+		mode = SUN8I_I2S_CTRL_MODE_PCM;
-+		offset = 0;
-+		break;
-+
- 	case SND_SOC_DAIFMT_I2S:
- 		mode = SUN8I_I2S_CTRL_MODE_LEFT;
- 		offset = 1;
-@@ -684,6 +708,9 @@ static int sun4i_i2s_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 			   SUN4I_I2S_FIFO_CTRL_RX_MODE_MASK,
- 			   SUN4I_I2S_FIFO_CTRL_TX_MODE(1) |
- 			   SUN4I_I2S_FIFO_CTRL_RX_MODE(1));
-+
-+	i2s->format = fmt;
-+
- 	return 0;
- }
- 
-@@ -1074,7 +1101,6 @@ static const struct sun4i_i2s_quirks sun8i_a83t_i2s_quirks = {
- 	.has_reset		= true,
- 	.reg_offset_txdata	= SUN8I_I2S_FIFO_TX_REG,
- 	.sun4i_i2s_regmap	= &sun4i_i2s_regmap_config,
--	.has_fmt_set_lrck_period = true,
- 	.field_clkdiv_mclk_en	= REG_FIELD(SUN4I_I2S_CLK_DIV_REG, 8, 8),
- 	.field_fmt_wss		= REG_FIELD(SUN4I_I2S_FMT0_REG, 0, 2),
- 	.field_fmt_sr		= REG_FIELD(SUN4I_I2S_FMT0_REG, 4, 6),
--- 
-git-series 0.9.1
+Note: testing is done by a robot and is best-effort only.
