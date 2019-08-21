@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2456AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60241C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28F420679
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E7642064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:30:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbfHUTa4 (ORCPT
+        id S1730114AbfHUTa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:30:56 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57195 "EHLO
+        Wed, 21 Aug 2019 15:30:58 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57229 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729988AbfHUTav (ORCPT
+        with ESMTP id S1730048AbfHUTay (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:30:51 -0400
+        Wed, 21 Aug 2019 15:30:54 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1i0WJk-0004BM-Ts; Wed, 21 Aug 2019 21:30:49 +0200
-Message-Id: <20190821192920.245357769@linutronix.de>
+        id 1i0WJp-0004CV-Al; Wed, 21 Aug 2019 21:30:53 +0200
+Message-Id: <20190821192920.729298382@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Wed, 21 Aug 2019 21:08:58 +0200
+Date:   Wed, 21 Aug 2019 21:09:03 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
@@ -35,8 +35,7 @@ Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         Frederic Weisbecker <frederic@kernel.org>,
         Anna-Maria Behnsen <anna-maria@linutronix.de>,
         Christoph Hellwig <hch@lst.de>
-Subject: [patch V2 11/38] posix-cpu-timers: Use clock ID in
- posix_cpu_timer_rearm()
+Subject: [patch V2 16/38] posix-cpu-timers: Move prof/virt_ticks into caller
 References: <20190821190847.665673890@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,42 +44,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extract the clock ID (PROF/VIRT/SCHED) from the clock selector and use it
-as argument to the sample functions. That allows to simplify them once all
-callers are fixed.
+The functions have only one caller left. No point in having them.
+
+Move the almost duplicated code into the caller and simplify it.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/time/posix-cpu-timers.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kernel/time/posix-cpu-timers.c |   30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
 
 --- a/kernel/time/posix-cpu-timers.c
 +++ b/kernel/time/posix-cpu-timers.c
-@@ -987,6 +987,7 @@ static void check_process_timers(struct
-  */
- static void posix_cpu_timer_rearm(struct k_itimer *timer)
+@@ -130,23 +130,6 @@ static inline int task_cputime_zero(cons
+ 	return 0;
+ }
+ 
+-static inline u64 prof_ticks(struct task_struct *p)
+-{
+-	u64 utime, stime;
+-
+-	task_cputime(p, &utime, &stime);
+-
+-	return utime + stime;
+-}
+-static inline u64 virt_ticks(struct task_struct *p)
+-{
+-	u64 utime, stime;
+-
+-	task_cputime(p, &utime, &stime);
+-
+-	return utime;
+-}
+-
+ static int
+ posix_cpu_clock_getres(const clockid_t which_clock, struct timespec64 *tp)
  {
-+	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
- 	struct task_struct *p = timer->it.cpu.task;
- 	struct sighand_struct *sighand;
- 	unsigned long flags;
-@@ -999,7 +1000,7 @@ static void posix_cpu_timer_rearm(struct
- 	 * Fetch the current sample and update the timer's expiry time.
- 	 */
- 	if (CPUCLOCK_PERTHREAD(timer->it_clock)) {
--		cpu_clock_sample(timer->it_clock, p, &now);
-+		cpu_clock_sample(clkid, p, &now);
- 		bump_cpu_timer(timer, now);
- 		if (unlikely(p->exit_state))
- 			return;
-@@ -1025,7 +1026,7 @@ static void posix_cpu_timer_rearm(struct
- 			/* If the process is dying, no need to rearm */
- 			goto unlock;
- 		}
--		cpu_clock_sample_group(timer->it_clock, p, &now, true);
-+		cpu_clock_sample_group(clkid, p, &now, true);
- 		bump_cpu_timer(timer, now);
- 		/* Leave the sighand locked for the call below.  */
+@@ -184,13 +167,18 @@ posix_cpu_clock_set(const clockid_t cloc
+  */
+ static u64 cpu_clock_sample(const clockid_t clkid, struct task_struct *p)
+ {
++	u64 utime, stime;
++
++	if (clkid == CPUCLOCK_SCHED)
++		return task_sched_runtime(p);
++
++	task_cputime(p, &utime, &stime);
++
+ 	switch (clkid) {
+ 	case CPUCLOCK_PROF:
+-		return prof_ticks(p);
++		return utime + stime;
+ 	case CPUCLOCK_VIRT:
+-		return virt_ticks(p);
+-	case CPUCLOCK_SCHED:
+-		return task_sched_runtime(p);
++		return utime;
+ 	default:
+ 		WARN_ON_ONCE(1);
  	}
 
 
