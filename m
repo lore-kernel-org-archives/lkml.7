@@ -2,211 +2,210 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816D1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE3AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5304F22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC3C22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfHUI3k (ORCPT
+        id S1727688AbfHUIad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 04:29:40 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38460 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727348AbfHUI3j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 04:29:39 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7L8MRJw082067
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 04:29:38 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uh19du3ut-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 04:29:38 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 21 Aug 2019 09:29:35 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 21 Aug 2019 09:29:31 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7L8TVPZ43385106
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 08:29:31 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EB57EA4040;
-        Wed, 21 Aug 2019 08:29:30 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E0E83A4051;
-        Wed, 21 Aug 2019 08:29:29 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.59])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 21 Aug 2019 08:29:29 +0000 (GMT)
-Date:   Wed, 21 Aug 2019 11:29:28 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Chester Lin <clin@suse.com>, Juergen Gross <JGross@suse.com>,
-        Joey Lee <JLee@suse.com>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "ren_guo@c-sky.com" <ren_guo@c-sky.com>, Gary Lin <GLin@suse.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the
- kernel base
-References: <20190802053744.5519-1-clin@suse.com>
- <20190820115645.GP13294@shell.armlinux.org.uk>
- <CAKv+Gu_0wFw5Mjpdw7BEY7ewgetNgU=Ff1uvAsn0iHmJouyKqw@mail.gmail.com>
- <20190821061027.GA2828@linux-8mug>
- <CAKv+Gu8Yny8cVPck3rPwCPvJBvcZKMHti_9bkCTM4H4cZ_43fg@mail.gmail.com>
- <20190821071100.GA26713@rapoport-lnx>
- <CAKv+Gu99z3V1B68CU8qhNwwffqDxNBOM6t3Q8-V7qpbDkf-Cwg@mail.gmail.com>
+        Wed, 21 Aug 2019 04:30:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35108 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727420AbfHUIac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 04:30:32 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 191A78AC6FF;
+        Wed, 21 Aug 2019 08:30:32 +0000 (UTC)
+Received: from [10.36.118.29] (unknown [10.36.118.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 464EF5D6B7;
+        Wed, 21 Aug 2019 08:30:30 +0000 (UTC)
+Subject: Re: [PATCH] vmw_balloon: Fix offline page marking with compaction
+To:     Nadav Amit <namit@vmware.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        linux-kernel@vger.kernel.org,
+        Thomas Hellstrom <thellstrom@vmware.com>
+References: <20190820160121.452-1-namit@vmware.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <291b8bcd-df68-3f5e-2985-fcaa46c1ff38@redhat.com>
+Date:   Wed, 21 Aug 2019 10:30:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu99z3V1B68CU8qhNwwffqDxNBOM6t3Q8-V7qpbDkf-Cwg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19082108-0012-0000-0000-000003410850
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082108-0013-0000-0000-0000217B2ED0
-Message-Id: <20190821082927.GC26713@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908210089
+In-Reply-To: <20190820160121.452-1-namit@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 21 Aug 2019 08:30:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 10:29:37AM +0300, Ard Biesheuvel wrote:
-> On Wed, 21 Aug 2019 at 10:11, Mike Rapoport <rppt@linux.ibm.com> wrote:
-> >
-> > On Wed, Aug 21, 2019 at 09:35:16AM +0300, Ard Biesheuvel wrote:
-> > > On Wed, 21 Aug 2019 at 09:11, Chester Lin <clin@suse.com> wrote:
-> > > >
-> > > > On Tue, Aug 20, 2019 at 03:28:25PM +0300, Ard Biesheuvel wrote:
-> > > > > On Tue, 20 Aug 2019 at 14:56, Russell King - ARM Linux admin
-> > > > > <linux@armlinux.org.uk> wrote:
-> > > > > >
-> > > > > > On Fri, Aug 02, 2019 at 05:38:54AM +0000, Chester Lin wrote:
-> > > > > > > diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-> > > > > > > index f3ce34113f89..909b11ba48d8 100644
-> > > > > > > --- a/arch/arm/mm/mmu.c
-> > > > > > > +++ b/arch/arm/mm/mmu.c
-> > > > > > > @@ -1184,6 +1184,9 @@ void __init adjust_lowmem_bounds(void)
-> > > > > > >               phys_addr_t block_start = reg->base;
-> > > > > > >               phys_addr_t block_end = reg->base + reg->size;
-> > > > > > >
-> > > > > > > +             if (memblock_is_nomap(reg))
-> > > > > > > +                     continue;
-> > > > > > > +
-> > > > > > >               if (reg->base < vmalloc_limit) {
-> > > > > > >                       if (block_end > lowmem_limit)
-> > > > > > >                               /*
-> > > > > >
-> > > > > > I think this hunk is sane - if the memory is marked nomap, then it isn't
-> > > > > > available for the kernel's use, so as far as calculating where the
-> > > > > > lowmem/highmem boundary is, it effectively doesn't exist and should be
-> > > > > > skipped.
-> > > > > >
-> > > > >
-> > > > > I agree.
-> > > > >
-> > > > > Chester, could you explain what you need beyond this change (and my
-> > > > > EFI stub change involving TEXT_OFFSET) to make things work on the
-> > > > > RPi2?
-> > > > >
-> > > >
-> > > > Hi Ard,
-> > > >
-> > > > In fact I am working with Guillaume to try booting zImage kernel and openSUSE
-> > > > from grub2.04 + arm32-efistub so that's why we get this issue on RPi2, which is
-> > > > one of the test machines we have. However we want a better solution for all
-> > > > cases but not just RPi2 since we don't want to affect other platforms as well.
-> > > >
-> > >
-> > > Thanks Chester, but that doesn't answer my question.
-> > >
-> > > Your fix is a single patch that changes various things that are only
-> > > vaguely related. We have already identified that we need to take
-> > > TEXT_OFFSET (minus some space used by the swapper page tables) into
-> > > account into the EFI stub if we want to ensure compatibility with many
-> > > different platforms, and as it turns out, this applies not only to
-> > > RPi2 but to other platforms as well, most notably the ones that
-> > > require a TEXT_OFFSET of 0x208000, since they also have reserved
-> > > regions at the base of RAM.
-> > >
-> > > My question was what else we need beyond:
-> > > - the EFI stub TEXT_OFFSET fix [0]
-> > > - the change to disregard NOMAP memblocks in adjust_lowmem_bounds()
-> > > - what else???
-> >
-> > I think the only missing part here is to ensure that non-reserved memory in
-> > bank 0 starts from a PMD-aligned address. I believe this could be done if
-> > EFI stub, but I'm not really familiar with it so this just a semi-educated
-> > guess :)
-> >
+On 20.08.19 18:01, Nadav Amit wrote:
+> The compaction code already marks pages as offline when it enqueues
+> pages in the ballooned page list, and removes the mapping when the pages
+> are removed from the list. VMware balloon also updates the flags,
+> instead of letting the balloon-compaction logic handle it, which causes
+> the assertion VM_BUG_ON_PAGE(!PageOffline(page)) to fire, when
+> __ClearPageOffline is called the second time. This causes the following
+> crash.
 > 
-> Given that it is the ARM arch code that imposes this requirement, how
-> about adding something like this to adjust_lowmem_bounds():
+> [  487.104520] kernel BUG at include/linux/page-flags.h:749!
+> [  487.106364] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC PTI
+> [  487.107681] CPU: 7 PID: 1106 Comm: kworker/7:3 Not tainted 5.3.0-rc5balloon #227
+> [  487.109196] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 12/12/2018
+> [  487.111452] Workqueue: events_freezable vmballoon_work [vmw_balloon]
+> [  487.112779] RIP: 0010:vmballoon_release_page_list+0xaa/0x100 [vmw_balloon]
+> [  487.114200] Code: fe 48 c1 e7 06 4c 01 c7 8b 47 30 41 89 c1 41 81 e1 00 01 00 f0 41 81 f9 00 00 00 f0 74 d3 48 c7 c6 08 a1 a1 c0 e8 06 0d e7 ea <0f> 0b 44 89 f6 4c 89 c7 e8 49 9c e9 ea 49 8d 75 08 49 8b 45 08 4d
+> [  487.118033] RSP: 0018:ffffb82f012bbc98 EFLAGS: 00010246
+> [  487.119135] RAX: 0000000000000037 RBX: 0000000000000001 RCX: 0000000000000006
+> [  487.120601] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff9a85b6bd7620
+> [  487.122071] RBP: ffffb82f012bbcc0 R08: 0000000000000001 R09: 0000000000000000
+> [  487.123536] R10: 0000000000000000 R11: 0000000000000000 R12: ffffb82f012bbd00
+> [  487.125002] R13: ffffe97f4598d9c0 R14: 0000000000000000 R15: ffffb82f012bbd34
+> [  487.126463] FS:  0000000000000000(0000) GS:ffff9a85b6bc0000(0000) knlGS:0000000000000000
+> [  487.128110] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  487.129316] CR2: 00007ffe6e413ea0 CR3: 0000000230b18001 CR4: 00000000003606e0
+> [  487.130812] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  487.132283] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  487.133749] Call Trace:
+> [  487.134333]  vmballoon_deflate+0x22c/0x390 [vmw_balloon]
+> [  487.135468]  vmballoon_work+0x6e7/0x913 [vmw_balloon]
+> [  487.136711]  ? process_one_work+0x21a/0x5e0
+> [  487.138581]  process_one_work+0x298/0x5e0
+> [  487.139926]  ? vmballoon_migratepage+0x310/0x310 [vmw_balloon]
+> [  487.141610]  ? process_one_work+0x298/0x5e0
+> [  487.143053]  worker_thread+0x41/0x400
+> [  487.144389]  kthread+0x12b/0x150
+> [  487.145582]  ? process_one_work+0x5e0/0x5e0
+> [  487.146937]  ? kthread_create_on_node+0x60/0x60
+> [  487.148637]  ret_from_fork+0x3a/0x50
 > 
-> if (memblock_start_of_DRAM() % PMD_SIZE)
->     memblock_mark_nomap(memblock_start_of_DRAM(),
->         PMD_SIZE - (memblock_start_of_DRAM() % PMD_SIZE));
+> Fix it by updating the PageOffline indication only when a 2MB page is
+> enqueued and dequeued. The 4KB pages will be handled correctly by the
+> balloon compaction logic.
+> 
+> Fixes: 83a8afa72e9c ("vmw_balloon: Compaction support")
+> Cc: David Hildenbrand <david@redhat.com>
+> Reported-by: Thomas Hellstrom <thellstrom@vmware.com>
+> Signed-off-by: Nadav Amit <namit@vmware.com>
+> ---
+>  drivers/misc/vmw_balloon.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
+> index 8840299420e0..5e6be1527571 100644
+> --- a/drivers/misc/vmw_balloon.c
+> +++ b/drivers/misc/vmw_balloon.c
+> @@ -691,7 +691,6 @@ static int vmballoon_alloc_page_list(struct vmballoon *b,
+>  		}
+>  
+>  		if (page) {
+> -			vmballoon_mark_page_offline(page, ctl->page_size);
+>  			/* Success. Add the page to the list and continue. */
+>  			list_add(&page->lru, &ctl->pages);
+>  			continue;
+> @@ -930,7 +929,6 @@ static void vmballoon_release_page_list(struct list_head *page_list,
+>  
+>  	list_for_each_entry_safe(page, tmp, page_list, lru) {
+>  		list_del(&page->lru);
+> -		vmballoon_mark_page_online(page, page_size);
+>  		__free_pages(page, vmballoon_page_order(page_size));
+>  	}
+>  
+> @@ -1005,6 +1003,7 @@ static void vmballoon_enqueue_page_list(struct vmballoon *b,
+>  					enum vmballoon_page_size_type page_size)
+>  {
+>  	unsigned long flags;
+> +	struct page *page;
+>  
+>  	if (page_size == VMW_BALLOON_4K_PAGE) {
+>  		balloon_page_list_enqueue(&b->b_dev_info, pages);
+> @@ -1014,6 +1013,11 @@ static void vmballoon_enqueue_page_list(struct vmballoon *b,
+>  		 * for the balloon compaction mechanism.
+>  		 */
+>  		spin_lock_irqsave(&b->b_dev_info.pages_lock, flags);
+> +
+> +		list_for_each_entry(page, pages, lru) {
+> +			vmballoon_mark_page_offline(page, VMW_BALLOON_2M_PAGE);
+> +		}
+> +
+>  		list_splice_init(pages, &b->huge_pages);
+>  		__count_vm_events(BALLOON_INFLATE, *n_pages *
+>  				  vmballoon_page_in_frames(VMW_BALLOON_2M_PAGE));
+> @@ -1056,6 +1060,8 @@ static void vmballoon_dequeue_page_list(struct vmballoon *b,
+>  	/* 2MB pages */
+>  	spin_lock_irqsave(&b->b_dev_info.pages_lock, flags);
+>  	list_for_each_entry_safe(page, tmp, &b->huge_pages, lru) {
+> +		vmballoon_mark_page_online(page, VMW_BALLOON_2M_PAGE);
+> +
+>  		list_move(&page->lru, pages);
+>  		if (++i == n_req_pages)
+>  			break;
+> 
 
-memblock_start_of_DRAM() won't work here, as it returns the actual start of
-the DRAM including NOMAP regions. Moreover, as we cannot mark a region
-NOMAP inside for_each_memblock() this should be done beforehand.
-
-I think something like this could work:
-
-diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-index 2f0f07e..f2b635b 100644
---- a/arch/arm/mm/mmu.c
-+++ b/arch/arm/mm/mmu.c
-@@ -1178,6 +1178,19 @@ void __init adjust_lowmem_bounds(void)
- 	 */
- 	vmalloc_limit = (u64)(uintptr_t)vmalloc_min - PAGE_OFFSET + PHYS_OFFSET;
- 
-+	/*
-+	 * The first usable region must be PMD aligned. Mark its start
-+	 * as MEMBLOCK_NOMAP if it isn't
-+	 */
-+	for_each_memblock(memory, reg) {
-+		if (!memblock_is_nomap(reg) && (reg->base % PMD_SIZE)) {
-+			phys_addr_t size = PMD_SIZE - (reg->base % PMD_SIZE);
-+
-+			memblock_mark_nomap(reg->base, size);
-+			break;
-+		}
-+	}
-+
- 	for_each_memblock(memory, reg) {
- 		phys_addr_t block_start = reg->base;
- 		phys_addr_t block_end = reg->base + reg->size;
-
-
-
- 
-> (and introduce the nomap check into the loop)
+Or check in vmballoon_mark_page_online/vmballoon_mark_page_offline if
+already properly marked, adding a comment. But what you have should also
+work.
 
 -- 
-Sincerely yours,
-Mike.
 
+Thanks,
+
+David / dhildenb
