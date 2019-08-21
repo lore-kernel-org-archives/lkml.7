@@ -2,219 +2,144 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D906DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC76EC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A01612339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566388663;
-	bh=vzV50aK7lDvwz6lMyupuXqdrTQf9pceOREc9MLPjXDA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BPZ75DSExki2LF+jAQiWf8C3+x1ShZk/t2M7CHaRavigOAjpG5D7DHWG5pQU4bzUY
-	 PNpOaIfDdjboFgSIkfquIHg6/af6jRkGMB1XB2iNpEQPYVfHy0ZgDRH+x9kg10MIU7
-	 nt0q1bE7/6bxlUt4o2i0DHg6YLxeIduWh3sapqsE=
+	by mail.kernel.org (Postfix) with ESMTP id ABF2C22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfHUL5m (ORCPT
+        id S1727168AbfHUL57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 07:57:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52192 "EHLO mail.kernel.org"
+        Wed, 21 Aug 2019 07:57:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41768 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbfHUL5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 07:57:42 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726960AbfHUL57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 07:57:59 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B17C206BB;
-        Wed, 21 Aug 2019 11:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566388661;
-        bh=vzV50aK7lDvwz6lMyupuXqdrTQf9pceOREc9MLPjXDA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ErsoLiwFvVa4rb4uLVibjPKKg37prkawlSogG246Bql64GbTFVcbjAdJEsqfxdtpg
-         t/T9fuApibipBMV5XIlwzJERndrgD1LMe2CEi1NiuSyrE3AAwO3y0t9vgPxVknuhr2
-         XIHNqq7kTNCvuIxF5g/OL1vLp3iqYReP6SqQdaso=
-Date:   Wed, 21 Aug 2019 13:57:38 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
-Message-ID: <20190821115738.3amrk5td544mhpwd@flea>
-References: <cover.b695c63cf668192aff5574a3005d483c601e77f6.1566300265.git-series.maxime.ripard@bootlin.com>
- <f490b35e62c5fd15174b5241ce1653e991c8fc9e.1566300265.git-series.maxime.ripard@bootlin.com>
- <20190820114849.GD5123@paasikivi.fi.intel.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 1BD3381106;
+        Wed, 21 Aug 2019 11:57:59 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.70.39.226])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B2E305D6B0;
+        Wed, 21 Aug 2019 11:57:56 +0000 (UTC)
+From:   xiubli@redhat.com
+To:     josef@toxicpanda.com, axboe@kernel.dk
+Cc:     mchristi@redhat.com, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kernel@vger.kernel.org,
+        Xiubo Li <xiubli@redhat.com>
+Subject: [PATCH v2] nbd: fix possible page fault for nbd disk
+Date:   Wed, 21 Aug 2019 17:27:53 +0530
+Message-Id: <20190821115753.3911-1-xiubli@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6ow4c2sufu6lsmjk"
-Content-Disposition: inline
-In-Reply-To: <20190820114849.GD5123@paasikivi.fi.intel.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 21 Aug 2019 11:57:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Xiubo Li <xiubli@redhat.com>
 
---6ow4c2sufu6lsmjk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+When the NBD_CFLAG_DESTROY_ON_DISCONNECT flag is set and at the same
+time when the socket is closed due to the server daemon is restarted,
+just before the last DISCONNET is totally done if we start a new connection
+by using the old nbd_index, there will be crashing randomly, like:
 
-Hi Sakari,
+<3>[  110.151949] block nbd1: Receive control failed (result -32)
+<1>[  110.152024] BUG: unable to handle page fault for address: 0000058000000840
+<1>[  110.152063] #PF: supervisor read access in kernel mode
+<1>[  110.152083] #PF: error_code(0x0000) - not-present page
+<6>[  110.152094] PGD 0 P4D 0
+<4>[  110.152106] Oops: 0000 [#1] SMP PTI
+<4>[  110.152120] CPU: 0 PID: 6698 Comm: kworker/u5:1 Kdump: loaded Not tainted 5.3.0-rc4+ #2
+<4>[  110.152136] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+<4>[  110.152166] Workqueue: knbd-recv recv_work [nbd]
+<4>[  110.152187] RIP: 0010:__dev_printk+0xd/0x67
+<4>[  110.152206] Code: 10 e8 c5 fd ff ff 48 8b 4c 24 18 65 48 33 0c 25 28 00 [...]
+<4>[  110.152244] RSP: 0018:ffffa41581f13d18 EFLAGS: 00010206
+<4>[  110.152256] RAX: ffffa41581f13d30 RBX: ffff96dd7374e900 RCX: 0000000000000000
+<4>[  110.152271] RDX: ffffa41581f13d20 RSI: 00000580000007f0 RDI: ffffffff970ec24f
+<4>[  110.152285] RBP: ffffa41581f13d80 R08: ffff96dd7fc17908 R09: 0000000000002e56
+<4>[  110.152299] R10: ffffffff970ec24f R11: 0000000000000003 R12: ffff96dd7374e900
+<4>[  110.152313] R13: 0000000000000000 R14: ffff96dd7374e9d8 R15: ffff96dd6e3b02c8
+<4>[  110.152329] FS:  0000000000000000(0000) GS:ffff96dd7fc00000(0000) knlGS:0000000000000000
+<4>[  110.152362] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[  110.152383] CR2: 0000058000000840 CR3: 0000000067cc6002 CR4: 00000000001606f0
+<4>[  110.152401] Call Trace:
+<4>[  110.152422]  _dev_err+0x6c/0x83
+<4>[  110.152435]  nbd_read_stat.cold+0xda/0x578 [nbd]
+<4>[  110.152448]  ? __switch_to_asm+0x34/0x70
+<4>[  110.152468]  ? __switch_to_asm+0x40/0x70
+<4>[  110.152478]  ? __switch_to_asm+0x34/0x70
+<4>[  110.152491]  ? __switch_to_asm+0x40/0x70
+<4>[  110.152501]  ? __switch_to_asm+0x34/0x70
+<4>[  110.152511]  ? __switch_to_asm+0x40/0x70
+<4>[  110.152522]  ? __switch_to_asm+0x34/0x70
+<4>[  110.152533]  recv_work+0x35/0x9e [nbd]
+<4>[  110.152547]  process_one_work+0x19d/0x340
+<4>[  110.152558]  worker_thread+0x50/0x3b0
+<4>[  110.152568]  kthread+0xfb/0x130
+<4>[  110.152577]  ? process_one_work+0x340/0x340
+<4>[  110.152609]  ? kthread_park+0x80/0x80
+<4>[  110.152637]  ret_from_fork+0x35/0x40
 
-On Tue, Aug 20, 2019 at 02:48:49PM +0300, Sakari Ailus wrote:
-> Hi Maxime,
->
-> On Tue, Aug 20, 2019 at 01:24:32PM +0200, Maxime Ripard wrote:
-> > From: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
-> > used in later (A10s, A13, A20, R8 and GR8) SoCs.
-> >
-> > On some SoCs, like the A10, there's multiple instances of that controller,
-> > with one instance supporting more channels and having an ISP.
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > ---
-> >  Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 107 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 107 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> > new file mode 100644
-> > index 000000000000..9000bca344f9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> > @@ -0,0 +1,107 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Chen-Yu Tsai <wens@csie.org>
-> > +  - Maxime Ripard <maxime.ripard@bootlin.com>
-> > +
-> > +description: |-
-> > +  The Allwinner A10 and later has a CMOS Sensor Interface to retrieve
-> > +  frames from a parallel or BT656 sensor.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: allwinner,sun7i-a20-csi0
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: The CSI interface clock
-> > +      - description: The CSI module clock
-> > +      - description: The CSI ISP clock
-> > +      - description: The CSI DRAM clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: bus
-> > +      - const: mod
-> > +      - const: isp
-> > +      - const: ram
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  port:
-> > +    type: object
-> > +    additionalProperties: false
-> > +
-> > +    properties:
-> > +      endpoint:
-> > +        properties:
-> > +          bus-width:
-> > +            const: 8
-> > +            description: Number of data lines actively used.
->
-> Are other values supported? If not, you could omit this.
+This is very easy to reproduce by running the nbd-runner.
 
-It can also support 16 bits data input, but this description is
-redundant anyway, I'll remove it.
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+---
+ drivers/block/nbd.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-> > +
-> > +          data-active: true
-> > +          hsync-active: true
-> > +          pclk-sample: true
-> > +          remote-endpoint: true
-> > +          vsync-active: true
-> > +
-> > +        required:
-> > +          - bus-width
-> > +          - data-active
-> > +          - hsync-active
-> > +          - pclk-sample
-> > +          - remote-endpoint
-> > +          - vsync-active
->
-> Some of these are not allowed in the Bt.656 mode (vsync-active and
-> hsync-active) while they're required in Bt.601 mode. Is there a way to tell
-> that in YAML-based bindings?
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index e21d2ded732b..b07b4452d696 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -112,6 +112,8 @@ struct nbd_device {
+ 	struct list_head list;
+ 	struct task_struct *task_recv;
+ 	struct task_struct *task_setup;
++
++	bool shutting_down;
+ };
+ 
+ #define NBD_CMD_REQUEUED	1
+@@ -230,8 +232,8 @@ static void nbd_put(struct nbd_device *nbd)
+ 	if (refcount_dec_and_mutex_lock(&nbd->refs,
+ 					&nbd_index_mutex)) {
+ 		idr_remove(&nbd_index_idr, nbd->index);
+-		mutex_unlock(&nbd_index_mutex);
+ 		nbd_dev_remove(nbd);
++		mutex_unlock(&nbd_index_mutex);
+ 	}
+ }
+ 
+@@ -1103,6 +1105,7 @@ static int nbd_disconnect(struct nbd_device *nbd)
+ 
+ 	dev_info(disk_to_dev(nbd->disk), "NBD_DISCONNECT\n");
+ 	set_bit(NBD_DISCONNECT_REQUESTED, &config->runtime_flags);
++	nbd->shutting_down = true;
+ 	send_disconnects(nbd);
+ 	return 0;
+ }
+@@ -1761,6 +1764,12 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
+ 		mutex_unlock(&nbd_index_mutex);
+ 		return -EINVAL;
+ 	}
++
++	if (nbd->shutting_down) {
++		mutex_unlock(&nbd_index_mutex);
++		goto again;
++	}
++
+ 	if (!refcount_inc_not_zero(&nbd->refs)) {
+ 		mutex_unlock(&nbd_index_mutex);
+ 		if (index == -1)
+-- 
+2.21.0
 
-You could, but that would be more suited in another schemas. The way
-schemas works is that you can have several layers of them, and each
-being validated in isolation from the others.
-
-Here, we're just listing the values usable by that binding, and it
-will be used only to validate that binding.
-
-Eventually, we'll want to have a video-interfaces schemas that will
-apply to all the OF graph users, with those constraints defined.
-
-This way, we can avoid a lot of duplication and just have the binding
-description.
-
-I guess I could just have the remote endpoint being required, and the
-rest will be in the generic part.
-
-> Similarly, video-interfaces.txt should be referenced from here, shouldn't
-> it?
-
-Sure.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---6ow4c2sufu6lsmjk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV0xsgAKCRDj7w1vZxhR
-xZRVAQCiMCXGC+Jhj5UArGqGUPo8RfUmzov8i8LF6Y+puf29bQD9FukZcvSbUwWP
-7Nb97AhXzuzAohNb4SnGTSQI6zT4lQQ=
-=wBTw
------END PGP SIGNATURE-----
-
---6ow4c2sufu6lsmjk--
