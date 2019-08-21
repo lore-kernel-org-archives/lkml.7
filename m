@@ -2,94 +2,146 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FBBC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006C7C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951F720856
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="M/JE1rZZ"
+	by mail.kernel.org (Postfix) with ESMTP id CF31B22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730079AbfHUPhD (ORCPT
+        id S1730087AbfHUPhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:37:03 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37825 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729287AbfHUPhD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:37:03 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c9so2149816lfh.4
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 08:37:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2619U9Tm5TYEgcBQkA05KbEPScI41FeuQa1aH7Sw3kQ=;
-        b=M/JE1rZZm/RfbqUxzJX37QJ/vamqziXn2XHNDm0iZw1yd9BEhyNhUIiTk3/KAhR54O
-         Y9PwNHb97zozoLcuUnc46BF0qDf6vA9b/F4w36fsU4uTtjjANfXa/vz/qSZ6leZcV1Mq
-         UvlMpumI9H33UjgxfvjEMHRYeTpcfDa+S9yLLhIY0T5Hkz4MK+2zpOxo0PLE5/FOI4tV
-         62pqd8EQo5WVNke4HmUwGQBrnWc+pi2V9UB082jC2pEynBpKZqbjRk9zV05e/pXaOWCA
-         rdvRY9J97Qr3Le4nJQfBpDoKXxG9vH6d6pCChNzkfbez6FOgfuABS4iKn3Wu8pEaG1Au
-         MDKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2619U9Tm5TYEgcBQkA05KbEPScI41FeuQa1aH7Sw3kQ=;
-        b=hoS9co+RZpGeaH6P+LBpZae5WatZEEtq4kUlNOT1Xm8HoxY230jkwbiR8jo6/aoh3d
-         b1XYrHR80EAFtXb8+di7PTkxU61BFhWgw8704AH3nQJwg30IbOGKgZBWUyFcu2E0HbpQ
-         0F4KGGEszZwvgvIBjoJ87jWu3vSzWqkZNplNJZ+HNe0FniGggvLZXIhKrX3eCVj75u1L
-         cF9fR4tMC4Gs+oYj7ahKx6qTS7BEs14o48eHVJrPZDoUKsxJ26LwFsHe4d1b5x5MG6Dw
-         3/qMuvWrNcIAVapgeExPjHZOdY9gnjJpJ0pKOZ0NhnoOhmwIgr/msvjjdUt+1bebRIdY
-         LH0w==
-X-Gm-Message-State: APjAAAUAKUMd0T+fkB6+07WTSzKaI7aitA/BtTW5g25kDOz2mwkAizgO
-        eJiHg/PzHmunsJ3HXBmDFamB6H/UBywE66pUBH8b
-X-Google-Smtp-Source: APXvYqwqThu91Iy3zjtydclgxUMDIcs4QNLzXbu5HbIKVhlNSP6g2YCGmjVSAy6XIf80VuoG1dcRm55IgYUdgInPglU=
-X-Received: by 2002:ac2:4c37:: with SMTP id u23mr437303lfq.119.1566401821240;
- Wed, 21 Aug 2019 08:37:01 -0700 (PDT)
+        Wed, 21 Aug 2019 11:37:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:60322 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728848AbfHUPhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:37:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C3FB337;
+        Wed, 21 Aug 2019 08:37:13 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 609123F718;
+        Wed, 21 Aug 2019 08:37:11 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Cc:     Steven Price <steven.price@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/10] arm64: Stolen time support
+Date:   Wed, 21 Aug 2019 16:36:46 +0100
+Message-Id: <20190821153656.33429-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <4997df37-4a80-5cf5-effc-0a6f040c4528@huawei.com>
-In-Reply-To: <4997df37-4a80-5cf5-effc-0a6f040c4528@huawei.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 21 Aug 2019 11:36:50 -0400
-Message-ID: <CAHC9VhS_DCBRX6kkmiSYBzq+ELN2AYRypRN6vR_J1+JOi2FDvw@mail.gmail.com>
-Subject: Re: [Question] audit_names use after delete in audit_filter_inodes
-To:     Chen Wandun <chenwandun@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-audit@redhat.com,
-        Eric Paris <eparis@redhat.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 5:31 AM Chen Wandun <chenwandun@huawei.com> wrote:
->
-> Hi,
-> Recently, I hit a use after delete in audit_filter_inodes,
+This series add support for paravirtualized time for arm64 guests and
+KVM hosts following the specification in Arm's document DEN 0057A:
 
-...
+https://developer.arm.com/docs/den0057/a
 
-> the call stack is below:
-> [321315.077117] CPU: 6 PID: 8944 Comm: DefSch0100 Tainted: G           OE  ----V-------   3.10.0-327.62.59.83.w75.x86_64 #1
-> [321315.077117] Hardware name: OpenStack Foundation OpenStack Nova, BIOS rel-1.8.1-0-g4adadbd-20170107_142945-9_64_246_229 04/01/2014
+It implements support for stolen time, allowing the guest to
+identify time when it is forcibly not executing.
 
-It looks like this is a vendor kernel and not an upstream kernel, yes?
- Assuming that is the case I would suggest you contact your distro for
-help/debugging/support; we simply don't know enough about your kernel
-(what patches are included, how was it built/configured/etc.) to
-comment with any certainty.
+It doesn't implement support for Live Physical Time (LPT) as there are
+some concerns about the overheads and approach in the above
+specification, and I expect an updated version of the specification to
+be released soon with just the stolen time parts.
 
-Linux Kernels based on v3.10.0 are extremely old from an upstream
-perspective, with a number of fixes and changes to the audit subsystem
-since v3.10.0 was released.  If you see the same problem on a modern
-upstream kernel please let us know, we'll be happy to help.
+NOTE: Patches 8 and 9 will conflict with Mark Rutland's series[1] cleaning
+up the SMCCC conduit. I do feel that the addition of an _invoke() call
+makes a number of call sites cleaner and it should be possible to
+integrate both this and Mark's other cleanups.
+
+[1] https://lore.kernel.org/linux-arm-kernel/20190809132245.43505-1-mark.rutland@arm.com/
+
+Also available as a git tree:
+git://linux-arm.org/linux-sp.git stolen_time/v3
+
+Changes from v2:
+https://lore.kernel.org/lkml/20190819140436.12207-1-steven.price@arm.com/
+ * Switched from using gfn_to_hva_cache to a new macro kvm_put_guest()
+   that can provide the single-copy atomicity required (on arm64). This
+   macro is added in patch 4.
+ * Tidied up the locking for kvm_update_stolen_time().
+   pagefault_disable() was unnecessary and the caller didn't need to
+   take kvm->srcu as the function does it itself.
+ * Removed struct kvm_arch_pvtime from the arm implementation, replaced
+   instead with inline static functions which are empty for arm.
+ * Fixed a few checkpatch --strict warnings.
+
+Changes from v1:
+https://lore.kernel.org/lkml/20190802145017.42543-1-steven.price@arm.com/
+ * Host kernel no longer allocates the stolen time structure, instead it
+   is allocated by user space. This means the save/restore functionality
+   can be removed.
+ * Refactored the code so arm has stub implementations and to avoid
+   initcall
+ * Rebased to pick up Documentation/{virt->virtual} change
+ * Bunch of typo fixes
+
+Christoffer Dall (1):
+  KVM: arm/arm64: Factor out hypercall handling from PSCI code
+
+Steven Price (9):
+  KVM: arm64: Document PV-time interface
+  KVM: arm64: Implement PV_FEATURES call
+  KVM: Implement kvm_put_guest()
+  KVM: arm64: Support stolen time reporting via shared structure
+  KVM: Allow kvm_device_ops to be const
+  KVM: arm64: Provide a PV_TIME device to user space
+  arm/arm64: Provide a wrapper for SMCCC 1.1 calls
+  arm/arm64: Make use of the SMCCC 1.1 wrapper
+  arm64: Retrieve stolen time as paravirtualized guest
+
+ Documentation/virt/kvm/arm/pvtime.txt | 100 ++++++++++++++
+ arch/arm/include/asm/kvm_host.h       |  30 +++++
+ arch/arm/kvm/Makefile                 |   2 +-
+ arch/arm/kvm/handle_exit.c            |   2 +-
+ arch/arm/mm/proc-v7-bugs.c            |  13 +-
+ arch/arm64/include/asm/kvm_host.h     |  28 +++-
+ arch/arm64/include/asm/paravirt.h     |   9 +-
+ arch/arm64/include/asm/pvclock-abi.h  |  17 +++
+ arch/arm64/include/uapi/asm/kvm.h     |   8 ++
+ arch/arm64/kernel/cpu_errata.c        |  80 ++++-------
+ arch/arm64/kernel/paravirt.c          | 148 +++++++++++++++++++++
+ arch/arm64/kernel/time.c              |   3 +
+ arch/arm64/kvm/Kconfig                |   1 +
+ arch/arm64/kvm/Makefile               |   2 +
+ arch/arm64/kvm/handle_exit.c          |   4 +-
+ include/kvm/arm_hypercalls.h          |  43 ++++++
+ include/kvm/arm_psci.h                |   2 +-
+ include/linux/arm-smccc.h             |  58 ++++++++
+ include/linux/cpuhotplug.h            |   1 +
+ include/linux/kvm_host.h              |  28 +++-
+ include/linux/kvm_types.h             |   2 +
+ include/uapi/linux/kvm.h              |   2 +
+ virt/kvm/arm/arm.c                    |  11 ++
+ virt/kvm/arm/hypercalls.c             |  68 ++++++++++
+ virt/kvm/arm/psci.c                   |  84 +-----------
+ virt/kvm/arm/pvtime.c                 | 182 ++++++++++++++++++++++++++
+ virt/kvm/kvm_main.c                   |   6 +-
+ 27 files changed, 780 insertions(+), 154 deletions(-)
+ create mode 100644 Documentation/virt/kvm/arm/pvtime.txt
+ create mode 100644 arch/arm64/include/asm/pvclock-abi.h
+ create mode 100644 include/kvm/arm_hypercalls.h
+ create mode 100644 virt/kvm/arm/hypercalls.c
+ create mode 100644 virt/kvm/arm/pvtime.c
 
 -- 
-paul moore
-www.paul-moore.com
+2.20.1
+
