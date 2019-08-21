@@ -2,110 +2,139 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C179BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0ABC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94781233A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566394376;
-	bh=8UZ7sUhD0uUW460zXnAKiEGlV69odyLV+7fBevexDSM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CRIrZtdx7FytzofHO+5aNPV2fCm8UVdoE+j2lfWBQW5hQJkviB+y/KXHGZta8S25u
-	 aJD1vQ5hIpbfeiUYAB6JrCMsTEdyfvguDrT5RDmi3FJgnhCmRQT+7Ddhj13OMS0wbg
-	 +1kcJV+L/MXbVA8oW4sAivwCaGzVOnaxjwtzTScc=
+	by mail.kernel.org (Postfix) with ESMTP id 5F89E20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:35:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MugviQXw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbfHUNcz (ORCPT
+        id S1728924AbfHUNfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 09:32:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728546AbfHUNcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:32:54 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49C24233A1;
-        Wed, 21 Aug 2019 13:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566394373;
-        bh=8UZ7sUhD0uUW460zXnAKiEGlV69odyLV+7fBevexDSM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TKdvOh3GEC+mSY2RlfFm3fjWgTG1iCONlGnPjECVgcz+rOoxhRiXinIDNu+IbF4O5
-         JS44pOO6w1XwHPTc6QHEQDN3lZWbQiJppVWIrbyddELzRuuwTH7DWkFuyZXvLFGs54
-         uE3JzKAD669fBsFDuvlVr2N2mgNbOrPcir4daemc=
-Date:   Wed, 21 Aug 2019 14:32:48 +0100
-From:   Will Deacon <will@kernel.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        rostedt <rostedt@goodmis.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
-Message-ID: <20190821133247.vke6fnndm64h2lla@willie-the-truck>
-References: <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
- <CAEXW_YQrh42N5bYMmQJCFb6xa0nwXH8jmZMEAnGVBMjGF8wR1Q@mail.gmail.com>
- <alpine.DEB.2.21.1908162245440.1923@nanos.tec.linutronix.de>
- <CAHk-=wh9qDFfWJscAQw_w+obDmZvcE5jWJRdYPKYP6YhgoGgGA@mail.gmail.com>
- <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
- <CAHk-=wgC4+kV9AiLokw7cPP429rKCU+vjA8cWAfyOjC3MtqC4A@mail.gmail.com>
- <20190820135612.GS2332@hirez.programming.kicks-ass.net>
- <20190820202932.GW28441@linux.ibm.com>
- <20190821103200.kpufwtviqhpbuv2n@willie-the-truck>
- <20190821132310.GC28441@linux.ibm.com>
+        Wed, 21 Aug 2019 09:35:24 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38461 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728557AbfHUNfX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 09:35:23 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m125so2165553wmm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 06:35:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0t4aa0Nv5R8QXQNa/4oL6xU4iyivDyRHdq6FaUcWExA=;
+        b=MugviQXwXIBfUUUyWP6IHkNeW27sYjjEDQvAu4Kqob99Oy6JHdWu/IdUGUPeGCGfzg
+         WFe8n/8fdU5BNw46pZoFnqoh17GFEAWHNYYMB5ey8cmfJyChzzPTerVgUwihnNtzfhsy
+         7oabi4p6oa09XswN7VE1sWLIwcfHKwBY3kxU36yVKXTtwqrYIsrKSf3YNHAAECz3jrKp
+         HCVNvRt/TRFJX6uK9kuKspP8m1jpIkq5AuZO4qt/oyLDdcgtuYSMq3DbN3nQGmCJxEZC
+         E1IwJhAeHhQ7mJ2e3Wx94g3emNxDJKAZ7M2SxHXeXgLDWGP3z7NPXU/m+tUvtVPkA/CB
+         EU5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0t4aa0Nv5R8QXQNa/4oL6xU4iyivDyRHdq6FaUcWExA=;
+        b=QJn6vmuF88zpXBtaTpustCsH3QY2otcAS0KWRGy7LsC6ptR6QWqpREfoQNftsq2+nO
+         hQFytQa0B3g1WxWjoXuCPmKnKK+FyRM5yEVhUlw2xmQuEpV88ZhI/SpalN8HhyZblf7a
+         Lpr+liTM0NEM30XFoOBdsQL+EX0/rG23TgZfQ/vSRYPeB++64fDq5uo9X9jIZvMYS3Nz
+         t5+4cGY2pDqEsU3OVfbU9wvupRFBNMQYX5X8hiJfgDj69JN49nEq9ZVPux09G+OEoUZa
+         Py/Q1SV4Fc3OLxahwWFvnXdcDYOLSgovuDqo8aiqnhwBwXcDsr8i4UXfck40WwdRwT+q
+         qFlw==
+X-Gm-Message-State: APjAAAX003lUhJZ3c+HXJpSFYyL2NolKePtFwJMsqkGdKF2+bIlnILqW
+        +g/LALBR/HTZLWqCyV2c3sAirQ==
+X-Google-Smtp-Source: APXvYqxyYX1ZXPcqBjaYYNfe+ZtSEDIc5N6dN5EPLYh8OWSHD3tWa0RpsBLVponQYB8w7c0bqO089Q==
+X-Received: by 2002:a1c:20c3:: with SMTP id g186mr33178wmg.15.1566394521017;
+        Wed, 21 Aug 2019 06:35:21 -0700 (PDT)
+Received: from bender.baylibre.local (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id g2sm38941908wru.27.2019.08.21.06.35.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 06:35:20 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     balbi@kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH] usb: dwc3: meson-g12a: fix suspend resume regulator unbalanced disables
+Date:   Wed, 21 Aug 2019 15:35:18 +0200
+Message-Id: <20190821133518.9671-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821132310.GC28441@linux.ibm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 06:23:10AM -0700, Paul E. McKenney wrote:
-> On Wed, Aug 21, 2019 at 11:32:01AM +0100, Will Deacon wrote:
-> > void bar(u64 *x)
-> > {
-> > 	*(volatile u64 *)x = 0xabcdef10abcdef10;
-> > }
-> > 
-> > then I get:
-> > 
-> > bar:
-> > 	mov	w1, 61200
-> > 	movk	w1, 0xabcd, lsl 16
-> > 	str	w1, [x0]
-> > 	str	w1, [x0, 4]
-> > 	ret
-> > 
-> > so I'm not sure that WRITE_ONCE would even help :/
-> 
-> Well, I can have the LWN article cite your email, then.  So thank you
-> very much!
-> 
-> Is generation of this code for a 64-bit volatile store considered a bug?
+When going in suspend, in Device mode, then resuming back leads
+to the following:
 
-I consider it a bug for the volatile case, and the one compiler person I've
-spoken to also seems to reckon it's a bug, so hopefully it will be fixed.
-I'm led to believe it's an optimisation in the AArch64 backend of GCC.
+unbalanced disables for USB_PWR_EN
+WARNING: CPU: 0 PID: 163 at ../drivers/regulator/core.c:2590 _regulator_disable+0x104/0x180
+Hardware name: Amlogic Meson G12A U200 Development Board (DT)
+[...]
+pc : _regulator_disable+0x104/0x180
+lr : _regulator_disable+0x104/0x180
+[...]
+Call trace:
+ _regulator_disable+0x104/0x180
+ regulator_disable+0x40/0x78
+ dwc3_meson_g12a_otg_mode_set+0x84/0xb0
+ dwc3_meson_g12a_irq_thread+0x58/0xb8
+ irq_thread_fn+0x28/0x80
+ irq_thread+0x118/0x1b8
+ kthread+0xf4/0x120
+ ret_from_fork+0x10/0x18
 
-> Or does ARMv8 exclude the possibility of 64-bit MMIO registers?  And I
-> would guess that Thomas and Linus would ask a similar bugginess question
-> for normal stores.  ;-)
+This disables the regulator if enabled on suspend, and the reverse on
+resume.
 
-We use inline asm for MMIO, fwiw.
+Fixes: c99993376f72 ("usb: dwc3: Add Amlogic G12A DWC3 glue")
+Reported-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/usb/dwc3/dwc3-meson-g12a.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-Will
+diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+index bca7e92a10e9..12dda04b004d 100644
+--- a/drivers/usb/dwc3/dwc3-meson-g12a.c
++++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
+@@ -564,7 +564,13 @@ static int __maybe_unused dwc3_meson_g12a_runtime_resume(struct device *dev)
+ static int __maybe_unused dwc3_meson_g12a_suspend(struct device *dev)
+ {
+ 	struct dwc3_meson_g12a *priv = dev_get_drvdata(dev);
+-	int i;
++	int i, ret;
++
++	if (priv->vbus && priv->otg_phy_mode == PHY_MODE_USB_HOST) {
++		ret = regulator_disable(priv->vbus);
++		if (ret)
++			return ret;
++	}
+ 
+ 	for (i = 0 ; i < PHY_COUNT ; ++i) {
+ 		phy_power_off(priv->phys[i]);
+@@ -599,6 +605,12 @@ static int __maybe_unused dwc3_meson_g12a_resume(struct device *dev)
+ 			return ret;
+ 	}
+ 
++       if (priv->vbus && priv->otg_phy_mode == PHY_MODE_USB_HOST) {
++               ret = regulator_enable(priv->vbus);
++		if (ret)
++			return ret;
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+2.22.0
+
