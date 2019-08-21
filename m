@@ -2,121 +2,116 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C68C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4323C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C31532332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:28:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BvIHC8jM"
+	by mail.kernel.org (Postfix) with ESMTP id 927A72339F
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbfHUH2I (ORCPT
+        id S1728126AbfHUH2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 03:28:08 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47769 "EHLO ozlabs.org"
+        Wed, 21 Aug 2019 03:28:38 -0400
+Received: from mga17.intel.com ([192.55.52.151]:9558 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbfHUH2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:28:08 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Czln1f9yz9s3Z;
-        Wed, 21 Aug 2019 17:28:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566372485;
-        bh=wPWeN1x/xnP2KeMD0qC6khrfGWbyj7Ob6i60Qp2pX38=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BvIHC8jM3AWxHvFBXed15QpJsxTc5Exq/T54DRsnbedQv7EWJu+9f+Sp+FTeQv0zX
-         AhzAiplFZidFgRPL1CCLpXNC/W445yzI2+Yl8q5eV7R0HXaiRd1YpLT1ZEmTLEIDue
-         YK0jsn/CZ4F3XA3X9e3yqTwFhOuDFLSg0KNUEvBka5E68hQ00PRr12UoY0fD/GwYYp
-         nTXLib6ER4XixIIMxSh8Li4mPYTQUvWD7aAcdtX3LQINZASrDw/kt1t7eT8QUPbYgo
-         rCxDArTKRTg20X0NiQkh1stpWV+hAoggETnLDVmblyqUru5Mvlavvojl1/uiLGewUT
-         OxU4NEGm8Sowg==
-Date:   Wed, 21 Aug 2019 17:28:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: linux-next: manual merge of the akpm-current tree with the
- dma-mapping tree
-Message-ID: <20190821172803.4dabc39a@canb.auug.org.au>
+        id S1727478AbfHUH2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 03:28:38 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 00:28:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,411,1559545200"; 
+   d="scan'208";a="195942515"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 21 Aug 2019 00:28:34 -0700
+Received: by lahna (sSMTP sendmail emulation); Wed, 21 Aug 2019 10:28:33 +0300
+Date:   Wed, 21 Aug 2019 10:28:33 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
+        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
+ downstream component
+Message-ID: <20190821072833.GM19908@lahna.fi.intel.com>
+References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
+ <20190703133953.GK128603@google.com>
+ <20190703150341.GW2640@lahna.fi.intel.com>
+ <20190801215339.GF151852@google.com>
+ <20190806101230.GI2548@lahna.fi.intel.com>
+ <20190819235245.GX253360@google.com>
+ <20190820095820.GD19908@lahna.fi.intel.com>
+ <20190820141717.GA14450@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/1s5hQAxbmcyWfp1DMq3QwL3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820141717.GA14450@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/1s5hQAxbmcyWfp1DMq3QwL3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 20, 2019 at 09:17:17AM -0500, Bjorn Helgaas wrote:
+> On Tue, Aug 20, 2019 at 12:58:20PM +0300, Mika Westerberg wrote:
+> > On Mon, Aug 19, 2019 at 06:52:45PM -0500, Bjorn Helgaas wrote:
+> > > > Right, it looks like we need some sort of flag there anyway.
+> > > 
+> > > Does this mean you're looking at getting rid of "has_secondary_link",
+> > > you think it's impossible, or you think it's not worth trying?
+> > 
+> > I was of thinking that we need some flag anyway for the downstream port
+> > (such as has_secondary_link) that tells us the which side of the port
+> > the link is.
+> > 
+> > > I'm pretty sure we could get rid of it by looking upstream, but I
+> > > haven't actually tried it.
+> > 
+> > So if we are downstream port, look at the parent and if it is also
+> > downstream port (or root port) we change the type to upstream port
+> > accordingly? That might work.
+> 
+> If we see a type of PCI_EXP_TYPE_ROOT_PORT or
+> PCI_EXP_TYPE_PCIE_BRIDGE, I think we have to assume that's accurate
+> (which we already do today -- for those types, we assume the device
+> has a secondary link).
+> 
+> For a device that claims to be PCI_EXP_TYPE_DOWNSTREAM, if a parent
+> device exists and is a Downstream Port (Root Port, Switch Downstream
+> Port, and I suppose a PCI-to-PCIe bridge (this is basically
+> pcie_downstream_port()), this device must actually be acting as a
+> PCI_EXP_TYPE_UPSTREAM device.
+> 
+> If a device claiming to be PCI_EXP_TYPE_UPSTREAM has a parent that is
+> PCI_EXP_TYPE_UPSTREAM, this device must actually be a
+> PCI_EXP_TYPE_DOWNSTREAM port.
+> 
+> For PCI_EXP_TYPE_DOWNSTREAM and PCI_EXP_TYPE_UPSTREAM devices that
+> don't have parents, we just have to assume they advertise the correct
+> type (as we do today).  There are sparc and virtualization configs
+> like this.
 
-Hi all,
+OK, thanks for the details. I'll try to make patch based on the above.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+> > Another option may be to just add a quirk for these ports.
+> 
+> I don't really like the quirk approach because then we have to rely on
+> user reports of something being broken.
+> 
+> > Only concern for both is that we have functions that rely on the type
+> > such as pcie_capability_read_word() so if we change the type do we end
+> > up breaking something? I did not check too closely, though.
+> 
+> I don't think we'll break anything that's not already broken because
+> the type will reflect exactly what has_secondary_link now tells us.
+> In fact, we might *fix* some things, e.g., pcie_capability_read_word()
+> should work better if we fix the type that pcie_downstream_port()
+> checks.
 
-  arch/arm/Kconfig
-
-between commit:
-
-  936376f88ff1 ("arm: select the dma-noncoherent symbols for all swiotlb bu=
-ilds")
-
-from the dma-mapping tree and commit:
-
-  83286f0dcb91 ("arm: use generic mmap top-down layout and brk randomizatio=
-n")
-
-from the akpm-current tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/arm/Kconfig
-index dcf46f0e45c2,81b08b027e4e..000000000000
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@@ -7,9 -7,6 +7,8 @@@ config AR
-  	select ARCH_HAS_BINFMT_FLAT
-  	select ARCH_HAS_DEBUG_VIRTUAL if MMU
-  	select ARCH_HAS_DEVMEM_IS_ALLOWED
- +	select ARCH_HAS_DMA_COHERENT_TO_PFN if SWIOTLB
- +	select ARCH_HAS_DMA_MMAP_PGPROT if SWIOTLB
-- 	select ARCH_HAS_ELF_RANDOMIZE
-  	select ARCH_HAS_FORTIFY_SOURCE
-  	select ARCH_HAS_KEEPINITRD
-  	select ARCH_HAS_KCOV
-
---Sig_/1s5hQAxbmcyWfp1DMq3QwL3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1c8oMACgkQAVBC80lX
-0GyvJAf+NUwZ4PS6pJ8uI8ebuOEGyGE3YBTnaPVIZgxwu9rI7UBZag0dnDQmf1N9
-VPqh8x3gegKhRFW+xUo0yqXcXpXJVOLg3k2RBMJXnZ9qS4IaG43+N9yb6aQLMeMF
-77juWGz+dlRU3Xyw7CYTjZ22e6AnwOPVzdUb9OliGFFNZ85oBobskx/A3rQ0q02F
-RFZ10BgG7oA4YX2fDwdQoQbthN9rlXr1VtzHL3HZyCchm9un3NQINaw+YVzH4mFr
-aj15iPx+SK04qU4sF1wVEwyQegKCFRStPHGdR3iz8JlV4V6Ib4mDEUk6cb0dkKJ+
-Zj4yA/BCKeFhVFTFOIHW2uWkD3of4A==
-=2tOc
------END PGP SIGNATURE-----
-
---Sig_/1s5hQAxbmcyWfp1DMq3QwL3--
+Fair enough :)
