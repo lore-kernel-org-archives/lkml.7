@@ -2,105 +2,149 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2E3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9093C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69707216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:13:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PQLC2I7t"
+	by mail.kernel.org (Postfix) with ESMTP id 75CD222DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfHUTNY (ORCPT
+        id S1729722AbfHUTNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:13:24 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42595 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728591AbfHUTNY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:13:24 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b16so3062250wrq.9
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 12:13:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ApyQLdi+gYbeJe3vyoHHnQmW9ptBIH59qh3KB/xbWCc=;
-        b=PQLC2I7tYSvd4myZXf2Ilp9iNr53YY66Eo0iCvmXj/DpSK/4QRW0AIe9OlDJg+p5lU
-         pXgANzFjfHh8P1vmSlcTVCJgGwCxSLWSG/40iztlI1oZsD14H4iaAJQfesp+FWmdWxBE
-         s9cBrKYbWVvwLek8XP9nQRkWpX1WR7/i2pCXkYBbwC2LWoPk6QQ3qXZrPxgFcycjOEQP
-         NnhcLm1iy08SrqFZpWr/1fdUqKq0j8RFZXFmDXhWBWzUlOyr0tRDeKWEKvGVWzyDKKPQ
-         Y4VExIwrShcvpJOETR+6wCS3Of1RGpsEPELd0UnHR22+bOAEr6WRcff0QhgUxGs7WzxC
-         2QhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ApyQLdi+gYbeJe3vyoHHnQmW9ptBIH59qh3KB/xbWCc=;
-        b=XRjzYYlrh1tqJujb59dEA7gAsahnB8Bhx6mjHj0iDnseQ7XY05vBbQhp5/Wegy9w5h
-         Z61Xv8SlnwJpCA7LgRsyiGvZbp9YFcZuv49djr09G2XaqLxJjisfD6iZALLuTe5VYDeS
-         8gxmRBceRf1nuieLFp5jjZnn28aZsUli/gkdFZWcs5JOZGJ90Z/bnKpb5pcdPeuihrdY
-         lrxIhRV4bnpX6jB++eGif3w2BPmQ9agctIg6g7C/9Fp80w9RYn92hPpmlMiEzIePPR2X
-         9DKXxSsZsJ+coGG0t0lha8vPEC/1PZ2mllpjO7nC9RLAjTtO58wgyFK32vrtXiM5KfbA
-         cuWw==
-X-Gm-Message-State: APjAAAWktlX9Nlc2SMpu+g5TqL8vUVpCbN2BKAT1noAMd1p5RpByYxJ6
-        8pKTLUabGhUdjUmJdqkvMg1rzW1k/Ry860O6G3b56w==
-X-Google-Smtp-Source: APXvYqwbY47BbnoK+28egtUMifMeXnSKEc9P9m8WLL3GflsH7HXxSqf4yPhOSzZmqRrE3NihPA6fLemHAEo5wBrLZEg=
-X-Received: by 2002:a5d:4b05:: with SMTP id v5mr3463137wrq.208.1566414801961;
- Wed, 21 Aug 2019 12:13:21 -0700 (PDT)
+        Wed, 21 Aug 2019 15:13:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60713 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727038AbfHUTNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 15:13:41 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 612CC30872DD;
+        Wed, 21 Aug 2019 19:13:41 +0000 (UTC)
+Received: from [10.36.118.29] (unknown [10.36.118.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BD21C60BF3;
+        Wed, 21 Aug 2019 19:13:37 +0000 (UTC)
+Subject: Re: [PATCH] mm/balloon_compaction: suppress allocation warnings
+To:     Nadav Amit <namit@vmware.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190820091646.29642-1-namit@vmware.com>
+ <ba01ec8c-19c3-847c-a315-2f70f4b1fe31@redhat.com>
+ <5BBC6CB3-2DCD-4A95-90C9-7C23482F9B32@vmware.com>
+ <85c72875-278f-fbab-69c9-92dc1873d407@redhat.com>
+ <FC42B62F-167F-4D7D-ADC5-926B36347E82@vmware.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <2aa52636-4ca7-0d47-c5bf-42408af3ea0f@redhat.com>
+Date:   Wed, 21 Aug 2019 21:13:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190820230626.23253-1-john.stultz@linaro.org> <20190821180412.GA8385@ravnborg.org>
-In-Reply-To: <20190821180412.GA8385@ravnborg.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 21 Aug 2019 12:13:11 -0700
-Message-ID: <CALAqxLVq0rV8DheoF9qy9O0XSQik1L3CeEEAGNh7adBJirNZJA@mail.gmail.com>
-Subject: Re: [PATCH v5 00/25] drm: Kirin driver cleanups to prep for Kirin960 support
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Xinliang Liu <z.liuxinliang@hisilicon.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <FC42B62F-167F-4D7D-ADC5-926B36347E82@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 21 Aug 2019 19:13:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 11:04 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi John.
->
-> On Tue, Aug 20, 2019 at 11:06:01PM +0000, John Stultz wrote:
-> > Sending this out again (apologies!), to address a few issues Sam
-> > found.
-> >
-> > This patchset contains one fix (in the front, so its easier to
-> > eventually backport), and a series of changes from YiPing to
-> > refactor the kirin drm driver so that it can be used on both
-> > kirin620 based devices (like the original HiKey board) as well
-> > as kirin960 based devices (like the HiKey960 board).
-> >
-> > The full kirin960 drm support is still being refactored, but as
-> > this base kirin rework was getting to be substantial, I wanted
-> > to send out the first chunk, so that the review burden wasn't
-> > overwhelming.
-> >
-> > The full HiKey960 patch stack can be found here:
-> >   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/hikey960-mainline-WIP
->
-> Applied from the mails - as this is what my tooling expect.
+On 21.08.19 18:34, Nadav Amit wrote:
+>> On Aug 21, 2019, at 9:29 AM, David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 21.08.19 18:23, Nadav Amit wrote:
+>>>> On Aug 21, 2019, at 9:05 AM, David Hildenbrand <david@redhat.com> wrote:
+>>>>
+>>>> On 20.08.19 11:16, Nadav Amit wrote:
+>>>>> There is no reason to print warnings when balloon page allocation fails,
+>>>>> as they are expected and can be handled gracefully.  Since VMware
+>>>>> balloon now uses balloon-compaction infrastructure, and suppressed these
+>>>>> warnings before, it is also beneficial to suppress these warnings to
+>>>>> keep the same behavior that the balloon had before.
+>>>>
+>>>> I am not sure if that's a good idea. The allocation warnings are usually
+>>>> the only trace of "the user/admin did something bad because he/she tried
+>>>> to inflate the balloon to an unsafe value". Believe me, I processed a
+>>>> couple of such bugreports related to virtio-balloon and the warning were
+>>>> very helpful for that.
+>>>
+>>> Ok, so a message is needed, but does it have to be a generic frightening
+>>> warning?
+>>>
+>>> How about using __GFP_NOWARN, and if allocation do something like:
+>>>
+>>>  pr_warn(“Balloon memory allocation failed”);
+>>>
+>>> Or even something more informative? This would surely be less intimidating
+>>> for common users.
+>>
+>> ratelimit would make sense :)
+>>
+>> And yes, this would certainly be nicer.
+> 
+> Thanks. I will post v2 of the patch.
+> 
 
-Oh yes, that URL was just for reference if anyone wanted to see what
-all the churn here was for.
+As discussed in v2, we already print a warning in virtio-balloon, so I
+am fine with this patch.
 
-> Pushed to drm-misc-next.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-Great! Thanks so much for all the review and fedback! I really
-appreciate your time helping!
--john
+-- 
+
+Thanks,
+
+David / dhildenb
