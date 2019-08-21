@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B21C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3B7C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F1C23401
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4304E22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566389738;
-	bh=O1TTt4Gv+D3orSPgd/eOC5epZzq5iJlWoztGIlXI8xE=;
+	s=default; t=1566389744;
+	bh=iRbZEaOdhaldfBActaaeMYj7hwVlyKuyYPrYYFZCXA0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=auESSdJyh2sbnhGEt3MVJZQi+J/7IqNtmy9owJEtX9zAgkM8Koz4hgn330O7XtbKC
-	 XCB2ELrPda9eOEEyI7Gsi8zrX5Ol8n3KC2Q3z08dfrMquvtugx6U729mmO/JFGfMUy
-	 TX5qxMbUtfd4Agm7FqrHLmDwipkvMHsf0YgtH7vM=
+	b=e8nbqa41xY28PCflAq36nO21kwwQ0zR8XZUDsSXT4+t24tcp1YNrbFhsIJX+ygIhA
+	 JHuCCf3HDzlbB4jTVz3+8NIyCJomQIAhQvyPnbT08fOcaMgPogWSQBY/78lnJv1ZVU
+	 cNhTgJAq0pFqXLMrk8OQMXCAT6z7AWkz6/Sk4CNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbfHUMPh (ORCPT
+        id S1728139AbfHUMPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 08:15:37 -0400
-Received: from mail-wr1-f98.google.com ([209.85.221.98]:45963 "EHLO
-        mail-wr1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfHUMPg (ORCPT
+        Wed, 21 Aug 2019 08:15:43 -0400
+Received: from mail-ed1-f97.google.com ([209.85.208.97]:46830 "EHLO
+        mail-ed1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfHUMPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 08:15:36 -0400
-Received: by mail-wr1-f98.google.com with SMTP id q12so1788399wrj.12
+        Wed, 21 Aug 2019 08:15:35 -0400
+Received: by mail-ed1-f97.google.com with SMTP id z51so2640501edz.13
         for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 05:15:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=nP0rewb3IBXjR8ah44Y3B+/Ww8/H0gkDfZYTICHG0rc=;
-        b=Ckc23aRgyvKEVQTIyUmujC43slUrN1KfuOU+M8xkmalcbSe/dXvjKEQEsxQmTpOqpN
-         YsZ/Z5uo7X6NsE/wODQ0cxIUcA/W7tIHmT7caElaSZHRlOju2WA/jBY5me4UlPMsP4yP
-         PPWI/mYB9XYkjT/6J61refZmuhdvLmyxZ8adRItzW09313wjTKmK7cgQ5jwFNnV8iNvi
-         Tgf3DN3yysssBJpexEmc88Coe7CtP71q9oNggUUBJJ/Qf6TJSQ5MMJtFzgfaePxuCb2L
-         1j+WTZcG991Fzs6RvA614why5nChMdDtfNZuSkw5RRg+yYnwrjFrUZKDJ/Qhi9dJWn2x
-         REpQ==
-X-Gm-Message-State: APjAAAWsul/gZifav7LzJdaFAFkHTnycgJkhHCIGvrRuJyXWffnntWo1
-        Zhy/XEQxVZnZr8ffkIdrlbxtXkrLh7tDyfYUTS7WymD70m3O/4V2MC7PjwnzHi8cvQ==
-X-Google-Smtp-Source: APXvYqyQSDa3qh0AJjqQXicye2RW0x9sVjyglot1pi4YsrC8rjE3vs+Ee79jSQBkTwqgRv3Hei+tz7XSNock
-X-Received: by 2002:a5d:408c:: with SMTP id o12mr38199196wrp.176.1566389733984;
+        bh=or+cvsSg6ceM9i70D6UPLNnCbWB/HWcr9PNQOtNGKXI=;
+        b=J8Vf8pLsZ4EiGqXNKHuT7l8WwEEvDNmqhGTj/bu+qrCZ2/A2X6ov8HYmd0h0Zw0SMF
+         brPw7UtG5Z7oSK8TBrUN3zYjC7EIFNkNIItU6Izhy+GRSq7qEcneH61LC5eAgi08kv2X
+         9tHMRmEykQljdjVN3MjlvVnTm4a0dGq4wQ358ljknS1em9da42Bvz/9ngYah8mvnBRXM
+         R6BJVXrjLsd7A0RmHWy+fubhVWThIMXtgT5Uw6PgizUJuVCbpiqWiV5NUm3B8NLbmpoi
+         w42zRQPAQTgMdqJnVUTjdMW9LdiX/I4SNvUtRi+vDJ8Wfh7mtIybl9TPJ35C7BK3TS5M
+         GG0A==
+X-Gm-Message-State: APjAAAVb47FlOP+s6/GVzlTz/KPo+ciLnxIwEj5uZx6PJoH6OCLNWBYX
+        tGnXesFkFFGH5Lt1jB4QWWgtHztb2iScHijK7ns4CXQu2fB7CQUUZRSma34gClk2CA==
+X-Google-Smtp-Source: APXvYqwnL6a2+Wqqe4N5q5Qp5yJbqPQ85mdzWn2tird1yFrGVdQAYor3bqrwIaYpo5lJWM5SLTNhALLptlV9
+X-Received: by 2002:a17:906:6c90:: with SMTP id s16mr31271826ejr.62.1566389733773;
         Wed, 21 Aug 2019 05:15:33 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id q3sm406651wrs.61.2019.08.21.05.15.33
+        by smtp-relay.gmail.com with ESMTPS id n20sm115894ejr.72.2019.08.21.05.15.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 21 Aug 2019 05:15:33 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
@@ -54,9 +54,9 @@ Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i0PWX-00077F-Lt; Wed, 21 Aug 2019 12:15:33 +0000
+        id 1i0PWX-00077D-F7; Wed, 21 Aug 2019 12:15:33 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id E3E7D2742BAE; Wed, 21 Aug 2019 13:15:32 +0100 (BST)
+        id B2DC62742FCD; Wed, 21 Aug 2019 13:15:32 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Daniel Baluta <daniel.baluta@nxp.com>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
@@ -64,10 +64,10 @@ Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
         nicoleotsuka@gmail.com, perex@perex.cz, robh+dt@kernel.org,
         shengjiu.wang@nxp.com, viorel.suman@nxp.com, Xiubo.Lee@gmail.com
-Subject: Applied "ASoC: fsl_sai: Add support for imx8qm" to the asoc tree
-In-Reply-To: <20190814082911.665-2-daniel.baluta@nxp.com>
+Subject: Applied "ASoC: dt-bindings: Introduce compatible string for imx8qm" to the asoc tree
+In-Reply-To: <20190814082911.665-3-daniel.baluta@nxp.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190821121532.E3E7D2742BAE@ypsilon.sirena.org.uk>
+Message-Id: <20190821121532.B2DC62742FCD@ypsilon.sirena.org.uk>
 Date:   Wed, 21 Aug 2019 13:15:32 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -76,7 +76,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: fsl_sai: Add support for imx8qm
+   ASoC: dt-bindings: Introduce compatible string for imx8qm
 
 has been applied to the asoc tree at
 
@@ -101,48 +101,35 @@ to this mail.
 Thanks,
 Mark
 
-From 6eeb60be5ebb73b2e5911e26fb1aed02940b7d09 Mon Sep 17 00:00:00 2001
+From c1fe93581ae9d85c3a783b5fad21912bb88a0f34 Mon Sep 17 00:00:00 2001
 From: Daniel Baluta <daniel.baluta@nxp.com>
-Date: Wed, 14 Aug 2019 11:29:10 +0300
-Subject: [PATCH] ASoC: fsl_sai: Add support for imx8qm
+Date: Wed, 14 Aug 2019 11:29:11 +0300
+Subject: [PATCH] ASoC: dt-bindings: Introduce compatible string for imx8qm
 
-SAI module on imx8qm features a register map similar with imx6 series
-(it doesn't have VERID and PARAM registers at the beginning
-of address spece).
-
-Also, it has one FIFO which can help up to 64 * 32 bit samples.
+Register map for i.MX8QM is similar with i.MX6 series. Integration
+of SAI IP into i.MX8QM SOC features a FIFO size of 64 X 32 bits samples.
 
 Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Link: https://lore.kernel.org/r/20190814082911.665-2-daniel.baluta@nxp.com
+Link: https://lore.kernel.org/r/20190814082911.665-3-daniel.baluta@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/fsl/fsl_sai.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/sound/fsl-sai.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index 4a346fcb5630..728307acab90 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -1031,12 +1031,19 @@ static const struct fsl_sai_soc_data fsl_sai_imx8mq_data = {
- 	.reg_offset = 8,
- };
+diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+index e61c0dc1fc0b..0dc83cc4a236 100644
+--- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
++++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+@@ -9,7 +9,8 @@ Required properties:
  
-+static const struct fsl_sai_soc_data fsl_sai_imx8qm_data = {
-+	.use_imx_pcm = true,
-+	.fifo_depth = 64,
-+	.reg_offset = 0,
-+};
-+
- static const struct of_device_id fsl_sai_ids[] = {
- 	{ .compatible = "fsl,vf610-sai", .data = &fsl_sai_vf610_data },
- 	{ .compatible = "fsl,imx6sx-sai", .data = &fsl_sai_imx6sx_data },
- 	{ .compatible = "fsl,imx6ul-sai", .data = &fsl_sai_imx6sx_data },
- 	{ .compatible = "fsl,imx7ulp-sai", .data = &fsl_sai_imx7ulp_data },
- 	{ .compatible = "fsl,imx8mq-sai", .data = &fsl_sai_imx8mq_data },
-+	{ .compatible = "fsl,imx8qm-sai", .data = &fsl_sai_imx8qm_data },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, fsl_sai_ids);
+   - compatible		: Compatible list, contains "fsl,vf610-sai",
+ 			  "fsl,imx6sx-sai", "fsl,imx6ul-sai",
+-			  "fsl,imx7ulp-sai" or "fsl,imx8mq-sai".
++			  "fsl,imx7ulp-sai", "fsl,imx8mq-sai" or
++			  "fsl,imx8qm-sai".
+ 
+   - reg			: Offset and length of the register set for the device.
+ 
 -- 
 2.20.1
 
