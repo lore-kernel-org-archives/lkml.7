@@ -2,79 +2,59 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0C7C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E741C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C588722DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171BA22DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:44:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbfHUNlo (ORCPT
+        id S1728917AbfHUNok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 09:41:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59238 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727918AbfHUNlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:41:44 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 68A73C05958A1CAF6083;
-        Wed, 21 Aug 2019 21:41:41 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 21 Aug 2019
- 21:41:34 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <opendmb@gmail.com>, <f.fainelli@gmail.com>,
-        <bcm-kernel-feedback-list@broadcom.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH net-next] net: bcmgenet: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 21 Aug 2019 21:41:31 +0800
-Message-ID: <20190821134131.57780-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 21 Aug 2019 09:44:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55771 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728616AbfHUNok (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 09:44:40 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1i0Quj-0005IB-Gn; Wed, 21 Aug 2019 15:44:37 +0200
+Date:   Wed, 21 Aug 2019 15:44:37 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     linux-rt-users@vger.kernel.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, maz@kernel.org, rostedt@goodmis.org
+Subject: Re: [RT PATCH 1/3] hrtimer: Use READ_ONCE to access timer->base in
+ hrimer_grab_expiry_lock()
+Message-ID: <20190821134437.efc3cs55o7uatrpj@linutronix.de>
+References: <20190821092409.13225-1-julien.grall@arm.com>
+ <20190821092409.13225-2-julien.grall@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190821092409.13225-2-julien.grall@arm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On 2019-08-21 10:24:07 [+0100], Julien Grall wrote:
+> The update to timer->base is protected by the base->cpu_base->lock().
+> However, hrtimer_grab_expirty_lock() does not access it with the lock.
+> 
+> So it would theorically be possible to have timer->base changed under
+> our feet. We need to prevent the compiler to refetch timer->base so the
+> check and the access is performed on the same base.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+It is not a problem if the timer's bases changes. We get here because we
+want to help the timer to complete its callback.
+The base can only change if the timer gets re-armed on another CPU which
+means is completed callback. In every case we can cancel the timer on
+the next iteration.
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index d3a0b61..2108e59 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -3437,7 +3437,6 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 	struct bcmgenet_priv *priv;
- 	struct net_device *dev;
- 	const void *macaddr;
--	struct resource *r;
- 	unsigned int i;
- 	int err = -EIO;
- 	const char *phy_mode_str;
-@@ -3477,8 +3476,7 @@ static int bcmgenet_probe(struct platform_device *pdev)
- 		macaddr = pd->mac_address;
- 	}
- 
--	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->base = devm_ioremap_resource(&pdev->dev, r);
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base)) {
- 		err = PTR_ERR(priv->base);
- 		goto err;
--- 
-2.7.4
-
-
+Sebastian
