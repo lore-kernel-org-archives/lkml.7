@@ -2,107 +2,147 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E5DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 755EEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE85F2339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:51:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566377470;
-	bh=f3s88lPNH/dY9osiPrQr5NXYKI7UrqZXDNRWl0J91sE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R+8TeB9paO9IzvYq9/qhFRkYPb+UrGXlpYvqdEUhnYV/XA0/CttT2/XN8nfUOeTWF
-	 qiTqQ/sA8JqkfxPuWDggBXz+INNk8moit+tqa759sDMOYsLPSkVscGEMRQ01nscibi
-	 lWPYzyjnG/6UVxG4ub5AD04JvTe3Dn7ZQaGcNInY=
+	by mail.kernel.org (Postfix) with ESMTP id 535E12339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbfHUIvJ (ORCPT
+        id S1726907AbfHUIye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 04:51:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55688 "EHLO mail.kernel.org"
+        Wed, 21 Aug 2019 04:54:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50036 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbfHUIvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 04:51:09 -0400
-Received: from linux-8ccs (unknown [92.117.239.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726648AbfHUIyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 04:54:33 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCC0422D6D;
-        Wed, 21 Aug 2019 08:51:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566377468;
-        bh=f3s88lPNH/dY9osiPrQr5NXYKI7UrqZXDNRWl0J91sE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mIMdrRd4TMB+wOCdZPMyZ+4XNb7X70hjjl6xdS3sK94U8F2PBXqHPvQ15uT2YqV+8
-         vCDT8XjvnFwxgJ84AHxPOVdBVKU+USmKm85TAic0a6IKdhBymW1OqG/YI6gugQ+vZl
-         k7aLEaPTU7qIuMIaBtKccr3a9gPlZTNWUA0peT5U=
-Date:   Wed, 21 Aug 2019 10:51:04 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     zhe.he@windriver.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] modules: page-align module section allocations only for
- arches supporting strict module rwx
-Message-ID: <20190821085104.GA8668@linux-8ccs>
-References: <1566312790-253213-1-git-send-email-zhe.he@windriver.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 31740C054907
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 08:54:32 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id v15so913902wrg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 01:54:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=+w6S/d4xE8RPcCnUmNNhlmM38FUwU6Cbxaxoa0JXU/s=;
+        b=sjLUYuAOpR3wxOryZ5UgzjHI9/+W+zcUufwnY4NWBjE/ERSVhbZfRlTKLfXaZMRkYH
+         /JdJVzXXoLfGfQ6i1PHmjtTknoXCSpRAj7USO8mUagXbp7RogHpJkSc7D1TM09izK7eN
+         FMzfpcu89/bAHE2r5i5oWQn+dfQIxPMKGtSIydl1djCbyzbKBPFGfzVNqvyO1kcwmKn8
+         vl9NEsk7ssEjC+Xz44yIDdpFJKoK495b3Sd2s2Vxqxm7JquICCTXlGIcUpGM/TPOQqjs
+         3uQ5IGYAD3lCsu0HJaOPyX48ZLlUtvFpUFdg0TLV8sIvnIrtwGqgS1pvQKvUAKLFGZjA
+         E0nA==
+X-Gm-Message-State: APjAAAVRieU8A5H+DNvjLoh+iulnWU0J8Yp2+FYffGsQ2eMDITDnBdSF
+        jkvNlrkeGcvgRqa7x6Duq+OhOpmBhmON9WWSkYziavvQcdbue2qtzVuAUMqtMA33P38KmNSOBna
+        9lwtiFZctB6j9nODiVUWlUHV5
+X-Received: by 2002:a1c:9d8c:: with SMTP id g134mr4872136wme.174.1566377670685;
+        Wed, 21 Aug 2019 01:54:30 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwJvqD1cl28+sp4QHLw+FNqBWCQTObXkxuvx4NlL/0iLvU5iNtqQtOMuGgDZJYc9msHKi9j9A==
+X-Received: by 2002:a1c:9d8c:: with SMTP id g134mr4872098wme.174.1566377670394;
+        Wed, 21 Aug 2019 01:54:30 -0700 (PDT)
+Received: from vitty.brq.redhat.com (ip-89-176-161-20.net.upcbroadband.cz. [89.176.161.20])
+        by smtp.gmail.com with ESMTPSA id m23sm3103680wml.41.2019.08.21.01.54.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 01:54:29 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <lantianyu1986@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-arch\@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger kernel org" <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: RE: [PATCH 0/2] clocksource/Hyper-V: Add Hyper-V specific sched clock function
+In-Reply-To: <87o90jq99w.fsf@vitty.brq.redhat.com>
+References: <20190729075243.22745-1-Tianyu.Lan@microsoft.com> <87zhkxksxd.fsf@vitty.brq.redhat.com> <20190729110927.GC31398@hirez.programming.kicks-ass.net> <87wog1kpib.fsf@vitty.brq.redhat.com> <CAOLK0py6ngy9kAnZcRMBK8U45s2L5Wo4X0NP_qPM0zv7WjeVQQ@mail.gmail.com> <DM5PR21MB0137E03AAD8C2EA61EC81ED7D7D30@DM5PR21MB0137.namprd21.prod.outlook.com> <87sgq5a2hq.fsf@vitty.brq.redhat.com> <DM5PR21MB013730EB79A17AF02C170BD7D7AB0@DM5PR21MB0137.namprd21.prod.outlook.com> <87o90jq99w.fsf@vitty.brq.redhat.com>
+Date:   Wed, 21 Aug 2019 10:54:28 +0200
+Message-ID: <87imqqrj97.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1566312790-253213-1-git-send-email-zhe.he@windriver.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ zhe.he@windriver.com [20/08/19 22:53 +0800]:
->From: He Zhe <zhe.he@windriver.com>
->
->We should keep the case of "#define debug_align(X) (X)" for all arches
->without CONFIG_HAS_STRICT_MODULE_RWX ability, which would save people, who
->are sensitive to system size, a lot of memory when using modules,
->especially for embedded systems. This is also the intention of the
->original #ifdef... statement and still valid for now.
->
->Note that this still keeps the effect of the fix of the following commit,
->38f054d549a8 ("modules: always page-align module section allocations"),
->since when CONFIG_ARCH_HAS_STRICT_MODULE_RWX is enabled, module pages are
->aligned.
->
->Signed-off-by: He Zhe <zhe.he@windriver.com>
->---
->This patch is based on the top of modules-next tree, 38f054d549a8.
+Vitaly Kuznetsov <vkuznets@redhat.com> writes:
 
-I've applied this. Thanks!
+> Michael Kelley <mikelley@microsoft.com> writes:
+>
+>> I talked to KY Srinivasan for any history about TSC page on 32-bit.  He said
+>> there was no technical reason not to implement it, but our focus was always
+>> 64-bit Linux, so the 32-bit was much less important.  Also, on 32-bit Linux,
+>> the required 64x64 multiply and shift is more complex and takes more
+>> more cycles (compare 32-bit implementation of mul_u64_u64_shr vs.
+>> the 64-bit implementation), so the win over a MSR read is less.  I
+>> don't know of any actual measurements being made to compare vs.
+>> MSR read.
+>
+> VMExit is 1000 CPU cycles or so, I would guess that TSC page
+> calculations are better. Let me try to build 32bit kernel and do some
+> quick measurements.
 
-Jessica
+So I tried and the difference is HUGE.
 
-> kernel/module.c | 7 ++++++-
-> 1 file changed, 6 insertions(+), 1 deletion(-)
->
->diff --git a/kernel/module.c b/kernel/module.c
->index cd8df51..9ee9342 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -64,9 +64,14 @@
->
-> /*
->  * Modules' sections will be aligned on page boundaries
->- * to ensure complete separation of code and data
->+ * to ensure complete separation of code and data, but
->+ * only when CONFIG_ARCH_HAS_STRICT_MODULE_RWX=y
->  */
->+#ifdef CONFIG_ARCH_HAS_STRICT_MODULE_RWX
-> # define debug_align(X) ALIGN(X, PAGE_SIZE)
->+#else
->+# define debug_align(X) (X)
->+#endif
->
-> /* If this is set, the section belongs in the init part of the module */
-> #define INIT_OFFSET_MASK (1UL << (BITS_PER_LONG-1))
->-- 
->2.7.4
->
+For in-kernel clocksource reads (like sched_clock()), the testing code
+was:
+
+        before = rdtsc_ordered();
+        for (i = 0; i < 1000; i++)
+             (void)read_hv_sched_clock_msr();
+        after = rdtsc_ordered();
+        printk("MSR based clocksource: %d cycles\n", ((u32)(after - before))/1000);
+
+        before = rdtsc_ordered();
+        for (i = 0; i < 1000; i++)
+            (void)read_hv_sched_clock_tsc();
+        after = rdtsc_ordered();
+        printk("TSC page clocksource: %d cycles\n", ((u32)(after - before))/1000);
+
+The result (WS2016) is:
+[    1.101910] MSR based clocksource: 3361 cycles
+[    1.105224] TSC page clocksource: 49 cycles
+
+For userspace reads the absolute difference is even bigger as TSC page
+gives us functional vDSO:
+
+Testing code:
+	before = rdtsc();
+	for (i = 0; i < COUNT; i++)
+		clock_gettime(CLOCK_REALTIME, &tp);
+	after = rdtsc();
+	printf("%d\n", (after - before)/COUNT);
+
+Result:
+
+TSC page:
+# ./gettime_cycles 
+131
+
+MSR:
+# ./gettime_cycles 
+5664
+
+With all that I see no reason for us to not enable TSC page on 32bit,
+even if the number of users is negligible, this will allow us to get rid
+of ugly #ifdef CONFIG_HYPERV_TSCPAGE in the code.
+
+I'll send a patch for discussion.
+
+-- 
+Vitaly
