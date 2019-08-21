@@ -2,141 +2,115 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDD5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6918BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8C423403
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B15D23403
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BAAvOyHf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qb4/QdgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbfHUUCm (ORCPT
+        id S1730319AbfHUUEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 16:02:42 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:16444 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727448AbfHUUCl (ORCPT
+        Wed, 21 Aug 2019 16:04:55 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36757 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730101AbfHUUEy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 16:02:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5da3610000>; Wed, 21 Aug 2019 13:02:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 21 Aug 2019 13:02:41 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 21 Aug 2019 13:02:41 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 20:02:40 +0000
-Received: from [10.2.161.131] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 20:02:40 +0000
-Subject: Re: Boot failure due to: x86/boot: Save fields explicitly, zero out
- everything else
-To:     Neil MacLeod <neil@nmacleod.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "x86@kernel.org" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, <gregkh@linuxfoundation.org>
-References: <CAFbqK8m=F_90531wTiwKT4J0R+EC-3ZmqHtKCwA_2th_nVYrpg@mail.gmail.com>
- <900a48bf-c9fc-09bd-52a3-9e16ff8baa19@nvidia.com>
- <alpine.DEB.2.21.1908212047140.1983@nanos.tec.linutronix.de>
- <5b9b4c36-c28b-1644-61fe-dbdfe3c4a1d2@nvidia.com>
- <CAFbqK8mG0-f9BpwTykXq+P_pAzMrn_4-5QJ_jawJ1aYSTMGR7w@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <a6630fa1-cbf9-4bee-3793-caad57a2a2c0@nvidia.com>
-Date:   Wed, 21 Aug 2019 13:00:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 16:04:54 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d23so3015923qko.3;
+        Wed, 21 Aug 2019 13:04:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PnHB8gyKyQN8X+3fWDRw3LLnwjDF9vWYPYJU7kI+Ljs=;
+        b=Qb4/QdgAopIiPsSKrI0Ml0FWuBhpglzWZIh34AIf9iP1mPAKLFYigjyoH+2SHsz34F
+         81taKwT3AOCD3UzL6iPnjsIIABaX//3Lb+s8TX4PxB8BzCZ4o4NkEPmgau+U5WV+UO+D
+         nMfmqHhkFKaY0sYs9lt3ejUsgNLbBu0rXaLEhlUWGP4HwThKtMrCeeFG3JXgIvGyZEEd
+         VXdW/LXakjSdP3TWg+coGg4lY6bBqwtGgDeJI/YihggwX/NMvQFokdp9kiJ0SJFKMOWe
+         7dOBsGnUKzNodvA9Mwc3NgTOecfTaAo17cBPqd87Vult6Ci2ciYoY+L1alA6zEIUyW+s
+         CQYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PnHB8gyKyQN8X+3fWDRw3LLnwjDF9vWYPYJU7kI+Ljs=;
+        b=TYkRRaJNUqU81uGIzh5/vm69uHk31MY/GSqHDEZJ+MLIafaTRx4zk4koBL4BgeO6fZ
+         g7+zpH0OvmF1iu0m6jZV1RtISxtWJcZxdz0tzQOFN2bcdiVMf1/HG0YAksYJkkoL9gzB
+         Wz+oPiBwl4kQSx24xQByBNiYWwqHzzHaY1jjOBmgcK22GN/HbGAwFLCizKPV+jefbJ7q
+         Vg4sRHfbD29Nj2eyKd0Sgib7TtPzj22hu2ap7tGzhnqz7ishaIwG23PKNDEV2ARUtg1p
+         qZbTTNYKiqAVSOf+hrsacyosSjAnSbSYj4l5CB4QALRn89xiUy5+ImsjAnb6UIq/vfZP
+         IXCw==
+X-Gm-Message-State: APjAAAX+0IEFO8Wd5TXPTS5/+yeJEqk/u5HGfbWLifzn68Y52pHpQI7Y
+        RAPgJ0BgSFX6JkGVQbhIdcw=
+X-Google-Smtp-Source: APXvYqzd/Qv9AuvHu75iKH8704islEG5IzXmqfXzwc75rcmXXQUqVMYv6u8IerQCnt47p1VJEYr0Ig==
+X-Received: by 2002:a37:2c41:: with SMTP id s62mr34120263qkh.415.1566417893345;
+        Wed, 21 Aug 2019 13:04:53 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.211.175])
+        by smtp.gmail.com with ESMTPSA id m194sm10497757qke.123.2019.08.21.13.04.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 13:04:52 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9B23B40340; Wed, 21 Aug 2019 17:04:43 -0300 (-03)
+Date:   Wed, 21 Aug 2019 17:04:43 -0300
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, Daniel Xu <dxu@dxuuu.xyz>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        Alexei Starovoitov <ast@fb.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add
+ PERF_EVENT_IOC_QUERY_PROBE ioctl
+Message-ID: <20190821200443.GH3929@kernel.org>
+References: <20190820144503.GV2332@hirez.programming.kicks-ass.net>
+ <BWENHQJIN885.216UOYEIWNGFU@dlxu-fedora-R90QNFJV>
+ <20190821110856.GB2349@hirez.programming.kicks-ass.net>
+ <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
+ <20190821183155.GE2349@hirez.programming.kicks-ass.net>
+ <5ecdcd72-255d-26d1-baf3-dc64498753c2@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFbqK8mG0-f9BpwTykXq+P_pAzMrn_4-5QJ_jawJ1aYSTMGR7w@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566417761; bh=nIvZiZMif2B4EoipCeGZQIqrYDZby4SIWMrDUGBINLk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BAAvOyHfVUrYnJGbAO+0XbAwRUJfvZBEHpbKHGUaJayMjtOlxxuKEwot2RCv1WEH8
-         pC1FOvDIhJHmUF7zQNwHu7RMT/uDu/RVBsqUnz7tp+3aZ62DFiUoHrPJVNXtk36R14
-         By6kXvDGzk22/aArVEoRmuNlIp4nowxTASDH2Ru1D5GrrlRHHYEXuGOiw/Sah+F5Mn
-         afnNU0AcFNBvlqnZfa09pcZfdgAYXMzcB1QysSNexAmBF3L0+tNtKAHFzmNd+Myf5U
-         CVfPsGtuWjDena8xI40EwSHr+8BMxWS+C8kB0xGc1I33BZpUsmaDsE2bOX/WszK7M8
-         jAL98k58/mwLw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ecdcd72-255d-26d1-baf3-dc64498753c2@fb.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/19 12:49 PM, Neil MacLeod wrote:
-> The fix looks good - many thanks for the quick turnaround!
+Em Wed, Aug 21, 2019 at 06:43:49PM +0000, Yonghong Song escreveu:
+> On 8/21/19 11:31 AM, Peter Zijlstra wrote:
+> > On Wed, Aug 21, 2019 at 04:54:47PM +0000, Yonghong Song wrote:
+> >> A lot of bpf-based tracing programs uses maps to communicate and
+> >> do not allocate ring buffer at all.
+> > 
+> > So extending PERF_RECORD_LOST doesn't work. But PERF_FORMAT_LOST might
+> > still work fine; but you get to implement it for all software events.
 > 
+> Could you give more specifics about PERF_FORMAT_LOST? Googling 
+> "PERF_FORMAT_LOST" only yields two emails which we are discussing here :-(
 
-Great news, and thanks for the bug report!
+Perhaps he's talking about using read(perf_event_fd, ...) after having set it
+up with perf_event_attr.read_format with the-to-be-implemented
+PERF_FORMAT_LOST bit?
 
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-> 
-> On Wed, 21 Aug 2019 at 19:56, John Hubbard <jhubbard@nvidia.com> wrote:
->>
->> On 8/21/19 11:51 AM, Thomas Gleixner wrote:
->>> On Wed, 21 Aug 2019, John Hubbard wrote:
->>>> On 8/21/19 10:05 AM, Neil MacLeod wrote:
->>>> static void sanitize_boot_params(struct boot_params *boot_params)
->>>> {
->>>> ...
->>>>               const struct boot_params_to_save to_save[] = {
->>>>                       BOOT_PARAM_PRESERVE(screen_info),
->>>>                       BOOT_PARAM_PRESERVE(apm_bios_info),
->>>>                       BOOT_PARAM_PRESERVE(tboot_addr),
->>>>                       BOOT_PARAM_PRESERVE(ist_info),
->>>>                       BOOT_PARAM_PRESERVE(acpi_rsdp_addr),
->>>>                       BOOT_PARAM_PRESERVE(hd0_info),
->>>>                       BOOT_PARAM_PRESERVE(hd1_info),
->>>>                       BOOT_PARAM_PRESERVE(sys_desc_table),
->>>>                       BOOT_PARAM_PRESERVE(olpc_ofw_header),
->>>>                       BOOT_PARAM_PRESERVE(efi_info),
->>>>                       BOOT_PARAM_PRESERVE(alt_mem_k),
->>>>                       BOOT_PARAM_PRESERVE(scratch),
->>>>                       BOOT_PARAM_PRESERVE(e820_entries),
->>>>                       BOOT_PARAM_PRESERVE(eddbuf_entries),
->>>>                       BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
->>>>                       BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
->>>>                       BOOT_PARAM_PRESERVE(e820_table),
->>>>                       BOOT_PARAM_PRESERVE(eddbuf),
->>>>               };
->>>
->>> I think I spotted it:
->>>
->>> -               boot_params->acpi_rsdp_addr = 0;
->>>
->>> +                     BOOT_PARAM_PRESERVE(acpi_rsdp_addr),
->>>
->>> And it does not preserve 'hdr'
->>>
->>> Grr. I surely was too tired when staring at this last time.
->>>
->>
->> ohhh man, that's embarrassing. Especially hdr, which was the center of
->> the whole thing...sigh. Patch coming shortly.
->>
->>
->> thanks,
->> --
->> John Hubbard
->> NVIDIA
+Look at perf_read() and perf_read_one() in kernel/events/core.c.
+ 
+- Arnaldo
