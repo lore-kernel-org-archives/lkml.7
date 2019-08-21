@@ -6,255 +6,134 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5882FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5F2C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0EE2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE6A2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730451AbfHUR6T (ORCPT
+        id S1729924AbfHUR5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:58:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53924 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 13:57:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33162 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbfHUR5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:57:43 -0400
+        id S1727014AbfHUR5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:57:38 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 181AD30821C2;
-        Wed, 21 Aug 2019 17:57:43 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6134B6763C;
+        by mx1.redhat.com (Postfix) with ESMTPS id 1FBC510F23F3;
         Wed, 21 Aug 2019 17:57:38 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EA8F05D9D3;
+        Wed, 21 Aug 2019 17:57:37 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id A2B9C223D04; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
+        id 94259223D01; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nvdimm@lists.01.org
 Cc:     virtio-fs@redhat.com, vgoyal@redhat.com, miklos@szeredi.hu,
         stefanha@redhat.com, dgilbert@redhat.com,
-        Peng Tao <tao.peng@linux.alibaba.com>
-Subject: [PATCH 08/19] fuse: Keep a list of free dax memory ranges
-Date:   Wed, 21 Aug 2019 13:57:09 -0400
-Message-Id: <20190821175720.25901-9-vgoyal@redhat.com>
+        Sebastien Boeuf <sebastien.boeuf@intel.com>,
+        kvm@vger.kernel.org
+Subject: [PATCH 05/19] virtio: Implement get_shm_region for MMIO transport
+Date:   Wed, 21 Aug 2019 13:57:06 -0400
+Message-Id: <20190821175720.25901-6-vgoyal@redhat.com>
 In-Reply-To: <20190821175720.25901-1-vgoyal@redhat.com>
 References: <20190821175720.25901-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 21 Aug 2019 17:57:43 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 21 Aug 2019 17:57:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Divide the dax memory range into fixed size ranges (2MB for now) and put
-them in a list. This will track free ranges. Once an inode requires a
-free range, we will take one from here and put it in interval-tree
-of ranges assigned to inode.
+From: Sebastien Boeuf <sebastien.boeuf@intel.com>
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-Signed-off-by: Peng Tao <tao.peng@linux.alibaba.com>
+On MMIO a new set of registers is defined for finding SHM
+regions.  Add their definitions and use them to find the region.
+
+Cc: kvm@vger.kernel.org
+Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
 ---
- fs/fuse/fuse_i.h    | 23 ++++++++++++
- fs/fuse/inode.c     | 86 +++++++++++++++++++++++++++++++++++++++++++++
- fs/fuse/virtio_fs.c |  2 ++
- 3 files changed, 111 insertions(+)
+ drivers/virtio/virtio_mmio.c     | 32 ++++++++++++++++++++++++++++++++
+ include/uapi/linux/virtio_mmio.h | 11 +++++++++++
+ 2 files changed, 43 insertions(+)
 
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 7b365a29b156..f1059b51c539 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -50,6 +50,10 @@
- /** Number of page pointers embedded in fuse_req */
- #define FUSE_REQ_INLINE_PAGES 1
+diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+index e09edb5c5e06..5c07985c8cb8 100644
+--- a/drivers/virtio/virtio_mmio.c
++++ b/drivers/virtio/virtio_mmio.c
+@@ -500,6 +500,37 @@ static const char *vm_bus_name(struct virtio_device *vdev)
+ 	return vm_dev->pdev->name;
+ }
  
-+/* Default memory range size, 2MB */
-+#define FUSE_DAX_MEM_RANGE_SZ	(2*1024*1024)
-+#define FUSE_DAX_MEM_RANGE_PAGES	(FUSE_DAX_MEM_RANGE_SZ/PAGE_SIZE)
++static bool vm_get_shm_region(struct virtio_device *vdev,
++			      struct virtio_shm_region *region, u8 id)
++{
++	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
++	u64 len, addr;
 +
- /** List of active connections */
- extern struct list_head fuse_conn_list;
- 
-@@ -97,6 +101,18 @@ struct fuse_forget_link {
- 	struct fuse_forget_link *next;
- };
- 
-+/** Translation information for file offsets to DAX window offsets */
-+struct fuse_dax_mapping {
-+	/* Will connect in fc->free_ranges to keep track of free memory */
-+	struct list_head list;
++	/* Select the region we're interested in */
++	writel(id, vm_dev->base + VIRTIO_MMIO_SHM_SEL);
 +
-+	/** Position in DAX window */
-+	u64 window_offset;
++	/* Read the region size */
++	len = (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_LOW);
++	len |= (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_HIGH) << 32;
 +
-+	/** Length of mapping, in bytes */
-+	loff_t length;
-+};
++	region->len = len;
 +
- /** FUSE inode */
- struct fuse_inode {
- 	/** Inode data */
-@@ -838,6 +854,13 @@ struct fuse_conn {
- 
- 	/** DAX device, non-NULL if DAX is supported */
- 	struct dax_device *dax_dev;
-+
-+	/*
-+	 * DAX Window Free Ranges. TODO: This might not be best place to store
-+	 * this free list
++	/* Check if region length is -1. If that's the case, the shared memory
++	 * region does not exist and there is no need to proceed further.
 +	 */
-+	long nr_free_ranges;
-+	struct list_head free_ranges;
++	if (len == ~(u64)0) {
++		return false;
++	}
++
++	/* Read the region base address */
++	addr = (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_BASE_LOW);
++	addr |= (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_BASE_HIGH) << 32;
++
++	region->addr = addr;
++
++	return true;
++}
++
+ static const struct virtio_config_ops virtio_mmio_config_ops = {
+ 	.get		= vm_get,
+ 	.set		= vm_set,
+@@ -512,6 +543,7 @@ static const struct virtio_config_ops virtio_mmio_config_ops = {
+ 	.get_features	= vm_get_features,
+ 	.finalize_features = vm_finalize_features,
+ 	.bus_name	= vm_bus_name,
++	.get_shm_region = vm_get_shm_region,
  };
  
- static inline struct fuse_conn *get_fuse_conn_super(struct super_block *sb)
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 0f58107a8269..0af147c70558 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -22,6 +22,8 @@
- #include <linux/exportfs.h>
- #include <linux/posix_acl.h>
- #include <linux/pid_namespace.h>
-+#include <linux/dax.h>
-+#include <linux/pfn_t.h>
  
- MODULE_AUTHOR("Miklos Szeredi <miklos@szeredi.hu>");
- MODULE_DESCRIPTION("Filesystem in Userspace");
-@@ -598,6 +600,76 @@ static void fuse_pqueue_init(struct fuse_pqueue *fpq)
- 	fpq->connected = 1;
- }
+diff --git a/include/uapi/linux/virtio_mmio.h b/include/uapi/linux/virtio_mmio.h
+index c4b09689ab64..0650f91bea6c 100644
+--- a/include/uapi/linux/virtio_mmio.h
++++ b/include/uapi/linux/virtio_mmio.h
+@@ -122,6 +122,17 @@
+ #define VIRTIO_MMIO_QUEUE_USED_LOW	0x0a0
+ #define VIRTIO_MMIO_QUEUE_USED_HIGH	0x0a4
  
-+static void fuse_free_dax_mem_ranges(struct list_head *mem_list)
-+{
-+	struct fuse_dax_mapping *range, *temp;
++/* Shared memory region id */
++#define VIRTIO_MMIO_SHM_SEL             0x0ac
 +
-+	/* Free All allocated elements */
-+	list_for_each_entry_safe(range, temp, mem_list, list) {
-+		list_del(&range->list);
-+		kfree(range);
-+	}
-+}
++/* Shared memory region length, 64 bits in two halves */
++#define VIRTIO_MMIO_SHM_LEN_LOW         0x0b0
++#define VIRTIO_MMIO_SHM_LEN_HIGH        0x0b4
 +
-+#ifdef CONFIG_FS_DAX
-+static int fuse_dax_mem_range_init(struct fuse_conn *fc,
-+				   struct dax_device *dax_dev)
-+{
-+	long nr_pages, nr_ranges;
-+	void *kaddr;
-+	pfn_t pfn;
-+	struct fuse_dax_mapping *range;
-+	LIST_HEAD(mem_ranges);
-+	phys_addr_t phys_addr;
-+	int ret = 0, id;
-+	size_t dax_size = -1;
-+	unsigned long i;
++/* Shared memory region base address, 64 bits in two halves */
++#define VIRTIO_MMIO_SHM_BASE_LOW        0x0b8
++#define VIRTIO_MMIO_SHM_BASE_HIGH       0x0bc
 +
-+	id = dax_read_lock();
-+	nr_pages = dax_direct_access(dax_dev, 0, PHYS_PFN(dax_size), &kaddr,
-+					&pfn);
-+	dax_read_unlock(id);
-+	if (nr_pages < 0) {
-+		pr_debug("dax_direct_access() returned %ld\n", nr_pages);
-+		return nr_pages;
-+	}
-+
-+	phys_addr = pfn_t_to_phys(pfn);
-+	nr_ranges = nr_pages/FUSE_DAX_MEM_RANGE_PAGES;
-+	printk("fuse_dax_mem_range_init(): dax mapped %ld pages. nr_ranges=%ld\n", nr_pages, nr_ranges);
-+
-+	for (i = 0; i < nr_ranges; i++) {
-+		range = kzalloc(sizeof(struct fuse_dax_mapping), GFP_KERNEL);
-+		if (!range) {
-+			pr_debug("memory allocation for mem_range failed.\n");
-+			ret = -ENOMEM;
-+			goto out_err;
-+		}
-+		/* TODO: This offset only works if virtio-fs driver is not
-+		 * having some memory hidden at the beginning. This needs
-+		 * better handling
-+		 */
-+		range->window_offset = i * FUSE_DAX_MEM_RANGE_SZ;
-+		range->length = FUSE_DAX_MEM_RANGE_SZ;
-+		list_add_tail(&range->list, &mem_ranges);
-+	}
-+
-+	list_replace_init(&mem_ranges, &fc->free_ranges);
-+	fc->nr_free_ranges = nr_ranges;
-+	return 0;
-+out_err:
-+	/* Free All allocated elements */
-+	fuse_free_dax_mem_ranges(&mem_ranges);
-+	return ret;
-+}
-+#else /* !CONFIG_FS_DAX */
-+static inline int fuse_dax_mem_range_init(struct fuse_conn *fc,
-+					  struct dax_device *dax_dev)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_FS_DAX */
-+
- void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
- 			struct dax_device *dax_dev,
- 			const struct fuse_iqueue_ops *fiq_ops, void *fiq_priv)
-@@ -628,6 +700,7 @@ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
- 	fc->dax_dev = dax_dev;
- 	fc->user_ns = get_user_ns(user_ns);
- 	fc->max_pages = FUSE_DEFAULT_MAX_PAGES_PER_REQ;
-+	INIT_LIST_HEAD(&fc->free_ranges);
- }
- EXPORT_SYMBOL_GPL(fuse_conn_init);
+ /* Configuration atomicity value */
+ #define VIRTIO_MMIO_CONFIG_GENERATION	0x0fc
  
-@@ -636,6 +709,8 @@ void fuse_conn_put(struct fuse_conn *fc)
- 	if (refcount_dec_and_test(&fc->count)) {
- 		if (fc->destroy_req)
- 			fuse_request_free(fc->destroy_req);
-+		if (fc->dax_dev)
-+			fuse_free_dax_mem_ranges(&fc->free_ranges);
- 		put_pid_ns(fc->pid_ns);
- 		put_user_ns(fc->user_ns);
- 		fc->release(fc);
-@@ -1147,6 +1222,14 @@ int fuse_fill_super_common(struct super_block *sb,
- 		fc->release = fuse_free_conn;
- 	}
- 
-+	if (mount_data->dax_dev) {
-+		err = fuse_dax_mem_range_init(fc, mount_data->dax_dev);
-+		if (err) {
-+			pr_debug("fuse_dax_mem_range_init() returned %d\n", err);
-+			goto err_free_ranges;
-+		}
-+	}
-+
- 	fud = fuse_dev_alloc_install(fc);
- 	if (!fud)
- 		goto err_put_conn;
-@@ -1208,6 +1291,9 @@ int fuse_fill_super_common(struct super_block *sb,
- 	dput(root_dentry);
-  err_dev_free:
- 	fuse_dev_free(fud);
-+ err_free_ranges:
-+	if (mount_data->dax_dev)
-+		fuse_free_dax_mem_ranges(&fc->free_ranges);
-  err_put_conn:
- 	fuse_conn_put(fc);
- 	sb->s_fs_info = NULL;
-diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index 32604722a7fb..9198c2b84677 100644
---- a/fs/fuse/virtio_fs.c
-+++ b/fs/fuse/virtio_fs.c
-@@ -453,6 +453,8 @@ static long virtio_fs_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
- 	phys_addr_t offset = PFN_PHYS(pgoff);
- 	size_t max_nr_pages = fs->window_len/PAGE_SIZE - pgoff;
- 
-+	pr_debug("virtio_fs_direct_access(): called. nr_pages=%ld max_nr_pages=%zu\n", nr_pages, max_nr_pages);
-+
- 	if (kaddr)
- 		*kaddr = fs->window_kaddr + offset;
- 	if (pfn)
 -- 
 2.20.1
 
