@@ -2,94 +2,86 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41528C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AB6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0DE206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF70206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566396396;
+	bh=k2aeA+9t09Cog1Nk1UWhL5LKdkxcT9cppvMiVBygP+A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V3wWAz62yE6qOZ/DSCT4OfpoNU7DB9aBayhOSc/bAJgkKDy84GDqbVP1ZmZlZgu//
+	 bvQHA8MO2OJ46cGyCO5sY1+A2+BGE7taLtFKwgOqk2GuKuZv8XnWQlwBrgvbRc9EKS
+	 lBYLNs3NMHivPf9go+IzdCfhy2esXTNDVbKfQeYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbfHUOF2 (ORCPT
+        id S1729136AbfHUOGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:05:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:58410 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727949AbfHUOF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:05:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF763337;
-        Wed, 21 Aug 2019 07:05:26 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 960F63F706;
-        Wed, 21 Aug 2019 07:05:25 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 15:05:20 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] PCI: tegra: tegra194: fix phy_count less than zero
- check
-Message-ID: <20190821140520.GA691@e121166-lin.cambridge.arm.com>
-References: <20190821120123.14223-1-colin.king@canonical.com>
+        Wed, 21 Aug 2019 10:06:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58646 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727949AbfHUOGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 10:06:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7C940AF59;
+        Wed, 21 Aug 2019 14:06:33 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 16:06:32 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
+        mgorman@techsingularity.net, dan.j.williams@intel.com,
+        osalvador@suse.de, richard.weiyang@gmail.com, hannes@cmpxchg.org,
+        arunks@codeaurora.org, rppt@linux.vnet.ibm.com, jgg@ziepe.ca,
+        amir73il@gmail.com, alexander.h.duyck@linux.intel.com,
+        linux-mm@kvack.org, linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] Add predictive memory reclamation and compaction
+Message-ID: <20190821140632.GI3111@dhcp22.suse.cz>
+References: <20190813014012.30232-1-khalid.aziz@oracle.com>
+ <20190813140553.GK17933@dhcp22.suse.cz>
+ <3cb0af00-f091-2f3e-d6cc-73a5171e6eda@oracle.com>
+ <20190814085831.GS17933@dhcp22.suse.cz>
+ <d3895804-7340-a7ae-d611-62913303e9c5@oracle.com>
+ <20190815170215.GQ9477@dhcp22.suse.cz>
+ <2668ad2e-ee52-8c88-22c0-1952243af5a1@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190821120123.14223-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <2668ad2e-ee52-8c88-22c0-1952243af5a1@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 01:01:23PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Thu 15-08-19 14:51:04, Khalid Aziz wrote:
+> Hi Michal,
 > 
-> The check for pcie->phy_count < 0 is always false because phy_count
-> is an unsigned int and can never be less than zero. Fix this by
-> assigning ret to the return from of_property_count_strings and
-> checking if this is less than zero instead.
-> 
-> Addresses-Coverity: ("Dead code")
-> Fixes: 6404441c8e13 ("PCI: tegra: Add Tegra194 PCIe support")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+> The smarts for tuning these knobs can be implemented in userspace and
+> more knobs added to allow for what is missing today, but we get back to
+> the same issue as before. That does nothing to make kernel self-tuning
+> and adds possibly even more knobs to userspace. Something so fundamental
+> to kernel memory management as making free pages available when they are
+> needed really should be taken care of in the kernel itself. Moving it to
+> userspace just means the kernel is hobbled unless one installs and tunes
+> a userspace package correctly.
 
-Squashed in the original commit (it is not merged yet), thanks
-for reporting it.
+From my past experience the existing autotunig works mostly ok for a
+vast variety of workloads. A more clever tuning is possible and people
+are doing that already. Especially for cases when the machine is heavily
+overcommited. There are different ways to achieve that. Your new
+in-kernel auto tuning would have to be tested on a large variety of
+workloads to be proven and riskless. So I am quite skeptical to be
+honest.
 
-Lorenzo
-
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index fc0dbeb31d78..b47ea3e68303 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -969,12 +969,13 @@ static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
->  		return ret;
->  	}
->  
-> -	pcie->phy_count = of_property_count_strings(np, "phy-names");
-> -	if (pcie->phy_count < 0) {
-> +	ret = of_property_count_strings(np, "phy-names");
-> +	if (ret < 0) {
->  		dev_err(pcie->dev, "Failed to find PHY entries: %d\n",
-> -			pcie->phy_count);
-> -		return pcie->phy_count;
-> +			ret);
-> +		return ret;
->  	}
-> +	pcie->phy_count = ret;
->  
->  	if (of_property_read_bool(np, "nvidia,update-fc-fixup"))
->  		pcie->update_fc_fixup = true;
-> -- 
-> 2.20.1
-> 
+Therefore I would really focus on discussing whether we have sufficient
+APIs to tune the kernel to do the right thing when needed. That requires
+to identify gaps in that area.
+-- 
+Michal Hocko
+SUSE Labs
