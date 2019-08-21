@@ -2,94 +2,95 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216C5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 458FFC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC74322DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D57320870
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:02:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WKZKmhCz"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="sLeJloAd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfHUPCW (ORCPT
+        id S1728782AbfHUPC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:02:22 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45476 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbfHUPCV (ORCPT
+        Wed, 21 Aug 2019 11:02:56 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:18132 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbfHUPCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:02:21 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7LF2H3Q115452;
-        Wed, 21 Aug 2019 10:02:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566399737;
-        bh=9U6VgUhs0WUhDkB5sgJHbbn7p+rrmYQHaH8DyLgbm0k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WKZKmhCzTM92U3edVWZZeYK4kHibPRD0XAY8t4dJraauANMKIyKyr1+385o/bgEGX
-         ueKkwTe+Q2z6jj6avJRaK4VH4oYZRpVGXZ6PJ2E3bXMbVV6OwfqWKvQy+B+uL0xpJW
-         trbrL78+ft4yyD/sbq/jPIEKYFfiU7HYvGhB9g5g=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7LF2H1R046792
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 21 Aug 2019 10:02:17 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 21
- Aug 2019 10:02:16 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 21 Aug 2019 10:02:17 -0500
-Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7LF2Eeg041638;
-        Wed, 21 Aug 2019 10:02:15 -0500
-Subject: Re: [PATCH net] net: cpsw: fix NULL pointer exception in the probe
- error path
-To:     Antoine Tenart <antoine.tenart@bootlin.com>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <maxime.chevallier@bootlin.com>
-References: <20190821144123.22248-1-antoine.tenart@bootlin.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <139cd66e-e8f8-0d18-a876-59e791bb8624@ti.com>
-Date:   Wed, 21 Aug 2019 18:02:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 11:02:55 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5d5d1e0000>; Wed, 21 Aug 2019 08:02:54 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 21 Aug 2019 08:02:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 21 Aug 2019 08:02:54 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
+ 2019 15:02:54 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 21 Aug 2019 15:02:54 +0000
+Received: from moonraker.nvidia.com (Not Verified[10.2.160.227]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d5d5d1e0000>; Wed, 21 Aug 2019 08:02:54 -0700
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+CC:     <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH 1/2] clocksource/drivers/timer-of: Do not warn on deferred probe
+Date:   Wed, 21 Aug 2019 16:02:40 +0100
+Message-ID: <20190821150241.31093-1-jonathanh@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <20190821144123.22248-1-antoine.tenart@bootlin.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566399774; bh=c+D10e7qyD/v8odq9Z4b64li+E5jzsQQuZpseZjoJdY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=sLeJloAdyAClgj5ykcwCZWoLQLqSPbEcPcqNvDq1OwNQjyVss1S0cm7SROcWSEjTo
+         Tsi+pPghQVzvD4+nZRBdYVNgcRtTwCiNCEPuyHwQeIH9kg+6/3ruz4bw3GXLQLOkMY
+         /UGmhTXlT6zAR5jBm7cyAo+6UlMSuLLeocMK6zpuXEl2aaCSp2BkIA9t5t2Ydj5iWb
+         8L3SNk4aBsJJumrHkazf/pWgCyP5iZ+mbHoWGjcGfN53jkMfpvoUVAmBNT2bARtwwv
+         YDfiqJ9xQBIDA37xMfwB5JGqXrZ4oe+8psNtHR1WWWggIv9JEfWmKr62rffo/4jJxg
+         y3If8llHulqDQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Deferred probe is an expected return value for clk_get() on many
+platforms. The driver deals with it properly, so there's no need
+to output a warning that may potentially confuse users.
 
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ drivers/clocksource/timer-of.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-On 21/08/2019 17:41, Antoine Tenart wrote:
-> In certain cases when the probe function fails the error path calls
-> cpsw_remove_dt() before calling platform_set_drvdata(). This is an
-> issue as cpsw_remove_dt() uses platform_get_drvdata() to retrieve the
-> cpsw_common data and leds to a NULL pointer exception. This patches
-> fixes it by calling platform_set_drvdata() earlier in the probe.
-> 
-> Fixes: 83a8471ba255 ("net: ethernet: ti: cpsw: refactor probe to group common hw initialization")
-> Reported-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
-> ---
->   drivers/net/ethernet/ti/cpsw.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-
-Thank you.
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-
+diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
+index 80542289fae7..d8c2bd4391d0 100644
+--- a/drivers/clocksource/timer-of.c
++++ b/drivers/clocksource/timer-of.c
+@@ -113,8 +113,10 @@ static __init int timer_of_clk_init(struct device_node *np,
+ 	of_clk->clk = of_clk->name ? of_clk_get_by_name(np, of_clk->name) :
+ 		of_clk_get(np, of_clk->index);
+ 	if (IS_ERR(of_clk->clk)) {
+-		pr_err("Failed to get clock for %pOF\n", np);
+-		return PTR_ERR(of_clk->clk);
++		ret = PTR_ERR(of_clk->clk);
++		if (ret != -EPROBE_DEFER)
++			pr_err("Failed to get clock for %pOF\n", np);
++		goto out;
+ 	}
+ 
+ 	ret = clk_prepare_enable(of_clk->clk);
 -- 
-Best regards,
-grygorii
+2.17.1
+
