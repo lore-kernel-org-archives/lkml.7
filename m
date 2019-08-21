@@ -2,92 +2,117 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B85C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CE8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 744E822CE3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:20:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6B98DFn"
+	by mail.kernel.org (Postfix) with ESMTP id 7041A22CE3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfHULUp (ORCPT
+        id S1727659AbfHULVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 07:20:45 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43043 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfHULUp (ORCPT
+        Wed, 21 Aug 2019 07:21:12 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:55288 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfHULVM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 07:20:45 -0400
-Received: by mail-pl1-f194.google.com with SMTP id 4so1165282pld.10
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 04:20:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sj3vybXlMQvoxOUao0lktce4iPTDPPDmKNm+ajxk4V8=;
-        b=I6B98DFnHujHQRvScmKkTNQY/o0aPuSa3GXtxYHjX+adoN//FqCUcVSxhNV91lcj3X
-         lMy3WtpEhhxi7MCEYfUxPbJHkzc+KE24cPGttnEqcKiD8H2z33nJ0Q7BBauJf11ufcoG
-         X9GpedEX3o5N+I7Epw1Tqydnkzkj3kFMFNPE1HeNC4QIQdRB3EYd9WQmDZUl1Yclisqe
-         VbeUSL+fTpxFAjVuXNA/DO2aHBBy4ecq7IINPGanWffC19pBXkxu7UfMbcLjcVMRc9PB
-         qCYfi9TIj5G0kkoKpUpAmizaT+mLRI024X+lDqS3lCMZBB5pEibQQpQitG1mMnlF9UOw
-         q29A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sj3vybXlMQvoxOUao0lktce4iPTDPPDmKNm+ajxk4V8=;
-        b=BczYIoZID5d76K8Y4aSZ9MxS4IEYJIU754niq18G9GZARMQJ9C/VzyCHUjzR52hapo
-         q3jcTuscGgESRlJU/DP3oAXCiN/77F4/hBCPDhTbXx7VSxE8GbptfXI2zxz2cklPYZnV
-         cpwV8TxijnzBSVZpszCeDa6cIMYL8Nnw5RodUQ3GZfMMNOKFWQ6JwpFlPeuWJ6MEeyyb
-         8YVnpBLuIgNM3y+SdE5/z4qTWBBC2QYoI5y3RbLGLZmlFKtZFehj6f53twxeA8hM938W
-         TSj7EJkxJ8jhfS/7WBwRH8T4nB5MOXSt726faR05eWzt1qjeS9zIyOUEClK9ZGweQNCE
-         WZeQ==
-X-Gm-Message-State: APjAAAVj0n3k7I0sMLWicdJdrAoqDKn6rAUMYa6DpvRJF0qFvMOM+9uf
-        8dZ7rVv5h3jAuFSOAb6ueM9dxCqC
-X-Google-Smtp-Source: APXvYqxLiwCbAhT6RtH96Edu0QuVNZ1lhSIMtzvsvplPUfEHlZPyPQkfpkiazOsNH/utUt5+AqbYxQ==
-X-Received: by 2002:a17:902:110b:: with SMTP id d11mr7155736pla.84.1566386444549;
-        Wed, 21 Aug 2019 04:20:44 -0700 (PDT)
-Received: from iZj6chx1xj0e0buvshuecpZ ([47.75.1.235])
-        by smtp.gmail.com with ESMTPSA id w26sm27216990pfq.100.2019.08.21.04.20.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 21 Aug 2019 04:20:43 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 19:20:40 +0800
-From:   Peng Liu <iwtbavbm@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com
-Subject: Re: [PATCH] sched/fair: eliminate redundant code in sched_slice()
-Message-ID: <20190821112040.GA32150@iZj6chx1xj0e0buvshuecpZ>
-References: <20190816141202.GA3135@iZj6chx1xj0e0buvshuecpZ>
- <20190820135055.GR2332@hirez.programming.kicks-ass.net>
+        Wed, 21 Aug 2019 07:21:12 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i0Off-0002N8-Dv; Wed, 21 Aug 2019 13:20:55 +0200
+Date:   Wed, 21 Aug 2019 13:20:53 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tony.luck@intel.com,
+        x86@kernel.org, andriy.shevchenko@intel.com, alan@linux.intel.com,
+        rppt@linux.ibm.com, linux-kernel@vger.kernel.org,
+        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
+        rahul.tanwar@intel.com
+Subject: Re: [PATCH] x86/apic: Update virtual irq base for DT/OF based system
+ as well
+In-Reply-To: <7b4db9f3-21da-5b5e-e219-0170e812a015@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1908211235180.2223@nanos.tec.linutronix.de>
+References: <20190821081330.1187-1-rahul.tanwar@linux.intel.com> <alpine.DEB.2.21.1908211028030.2223@nanos.tec.linutronix.de> <7b4db9f3-21da-5b5e-e219-0170e812a015@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820135055.GR2332@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 03:50:55PM +0200, Peter Zijlstra wrote:
-> On Fri, Aug 16, 2019 at 10:12:02PM +0800, Peng Liu wrote:
-> > Since sched_slice() is used in high frequency,
-> > small change should also make sense.
+On Wed, 21 Aug 2019, Tanwar, Rahul wrote:
+> On 21/8/2019 4:34 PM, Thomas Gleixner wrote:
 > 
-> An actual Changelog would also make sense; but alas.
+> > Secondly, this link is irrelevant. ioapic_dynirq_base has nothing to do
+> > with virtual IRQ number 0. It's a boundary for the dynamic allocation of
+> > virtual interrupt numbers so that the core allocator does not pick
+> > interrupts out of the IOAPIC's fixed interrupt number space.
+> > 
+> > This can be legitimately 0 when IOAPIC is not enabled at all.
+> > 
+> > Can you please explain what kind of problem you were seing and what this
+> > really fixes?
+>
+> The problem is that device tree infrastructure considers 0 IRQ value as
+> invalid/error value whereas for ACPI, 0 is a valid value.
 
-Thanks for your time!
+Sure.
 
-About the changelog, I admit that it makes little improvement to the whole,
-It is a so *short* function, I also don't think it can produce any visible
-improvement through any kernel test tools. But as you can see, the redundant
-intermediate operation indeed exists. There's no reason to let it exist any
-more - make code clear and easy to understand if possible.
+> Without this change, the problem that we see is that the first driver
+> using of_irq_get_xx() or its variants fails because of 0 IRQ number. With
+> this change, allocated IRQ number is never 0 so it works ok.
 
-Best Regards,
-Liu
+Well, this still is not a proper explanation. Just because it works does
+not make it correct in the first place.
+
+ioapic_dynirq_base is pretty much irrelevant for a DT machine. The reason
+why it exists is that for regular BIOS the interrupt numbers are hard
+mapped to the IOAPIC pins. ioapic_dynirq_base is used to protect this hard
+mapped interrupt number space. The core allocator does not allocate from
+that space unless it is explicitely told to do so, which is the case for
+IOAPIC_DOMAIN_STRICT where the allocation tells the core to allocate the
+associated GSI number.
+
+On DT the interrupt number is irrelevant as DT describes the irq controller
+and the pin to which a device is connected and does not make assumptions
+about the interrupt number. So the core can freely allocate any available
+interrupt number except 0. That's already prevented in the core code.
+
+But x86 implements arch_dynirq_lower_bound() which overrides the core limit
+and because ioapic_dynirq_base is zero in the DT case it allows VIRQ 0 to
+be allocated which then causes of_irq*() to fail.
+
+So your change prevents that by excluding the 'GSI' range from allocation,
+which means that the first irq number which is handed out is 24, assumed
+you have one IOAPIC with 24 pins.
+
+That's fine as the interrupt number space is big enough, but it needs
+
+    - a coherent explanation in the changelog
+
+    - proper comments to that effect in the code
+
+Also this is presumably a stable candidate and needs a Fixes: ... tag.
+
+Thanks,
+
+	tglx
+
+
+
+
+
+
+
+
+
+
