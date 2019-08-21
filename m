@@ -2,97 +2,119 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7F3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B86C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F7022D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:16:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RtYQqKzp"
+	by mail.kernel.org (Postfix) with ESMTP id 2742E216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfHUGQY (ORCPT
+        id S1727922AbfHUGUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 02:16:24 -0400
-Received: from ozlabs.org ([203.11.71.1]:33021 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726193AbfHUGQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 02:16:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Cy9057lqz9sDQ;
-        Wed, 21 Aug 2019 16:16:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566368180;
-        bh=C3JS9eWylw/jDZ7Js+18vZRRj+dDN5bTMZWNqK8bTzY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RtYQqKzpyo9C7ODEBV6Szw3s6PzkQSDxdOFgTvo93e/lKCFj8Soj9ctkrseYy96TW
-         aeV7RPrNZp9VH6OZ0x1Hv9wzpOSXzUwyxkeMsSYn0fQYMCy3vhhxhX+sNbXsXb9l1S
-         OgEygSqVky5F9KLUvUHU81+UggzUckyDArVd4SRHdFki1fz+E4YPcI+SEI9FtEhuj1
-         IeXX4aFXXaLGUmu0dPhWfsJjuANjVeMlwmZzKu7pu1QWTMPYNM4lYffxHEJXzctQo1
-         oTxh9dGH9+ool3lETzWikxMAkO7mipz5ubsQVjpBdI8jcLykip7JKpuOQUMM+6NLhM
-         zHYtlKPVxEfcQ==
-Date:   Wed, 21 Aug 2019 16:16:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the pinctrl tree
-Message-ID: <20190821161620.403f663c@canb.auug.org.au>
+        Wed, 21 Aug 2019 02:20:12 -0400
+Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:4644 "EHLO
+        hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfHUGUL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 02:20:11 -0400
+IronPort-SDR: 8V8EhrJCUuKyTElVrk+Etk8MRSkN3jFaTOcIXL2ySLd8T/kMnYbJLkp4/a8ZXluS2r5ezUsoIn
+ pibmHCVYXvHmMawGPM2NQzs/dHbFEI8ifb0RsvzGfuPfSsMPVmJkV8u16ce9v9Zn5yCPQC/0a+
+ nJ+/azIRxQUt+8Y+piWZwPFJqeftIelZfP/+/8z1/zIjv5A8DQH8x1ctAzyj+90SvlKWb4xOx8
+ hckWud2MNG3/cWzrgIV1HaAWIgZp8ELvdgD9u6ArUaOTUp6Un1SisPWpV2bzjc47TRFT2052uN
+ DhU=
+X-IronPort-AV: E=Sophos;i="5.64,411,1559509200"; 
+   d="scan'208";a="229121716"
+Subject: Re: [v2] rtc: pcf85363/pcf85263: fix error that failed to run hwclock
+ -w
+To:     Li Yang <leoyang.li@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Biwen Li <biwen.li@nxp.com>, a.zummo@towertech.it,
+        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+References: <20190816024636.34738-1-biwen.li@nxp.com>
+ <20190816080417.GB3545@piout.net>
+ <CADRPPNRkqbWzGEvUJyi0Qff3oS6biO0v7BTrK1Jiz9AMnOYF=Q@mail.gmail.com>
+ <20190816162825.GE3545@piout.net>
+ <CADRPPNQwcGrVXLm8eHbXKmyecMhT6Mt9rNGnspJA1+MnV4K8oQ@mail.gmail.com>
+From:   Nandor Han <nandor.han@vaisala.com>
+Message-ID: <ff198737-acb5-7186-7e14-a1e1cdc0f72c@vaisala.com>
+Date:   Wed, 21 Aug 2019 09:20:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/jB.TcCN=qHuU2IAp8DFPR0_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CADRPPNQwcGrVXLm8eHbXKmyecMhT6Mt9rNGnspJA1+MnV4K8oQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-OriginalArrivalTime: 21 Aug 2019 06:20:05.0337 (UTC) FILETIME=[791E8490:01D557E8]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jB.TcCN=qHuU2IAp8DFPR0_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 8/16/19 10:40 PM, Li Yang wrote:
+> On Fri, Aug 16, 2019 at 11:30 AM Alexandre Belloni
+> <alexandre.belloni@bootlin.com> wrote:
+>>
+>> On 16/08/2019 10:50:49-0500, Li Yang wrote:
+>>> On Fri, Aug 16, 2019 at 3:05 AM Alexandre Belloni
+>>> <alexandre.belloni@bootlin.com> wrote:
+>>>>
+>>>> On 16/08/2019 10:46:36+0800, Biwen Li wrote:
+>>>>> Issue:
+>>>>>      - # hwclock -w
+>>>>>        hwclock: RTC_SET_TIME: Invalid argument
+>>>>>
+>>>>> Why:
+>>>>>      - Relative patch: https://lkml.org/lkml/2019/4/3/55 , this patch
+>>>>>        will always check for unwritable registers, it will compare reg
+>>>>>        with max_register in regmap_writeable.
+>>>>>
+>>>>>      - In drivers/rtc/rtc-pcf85363.c, CTRL_STOP_EN is 0x2e, but DT_100THS
+>>>>>        is 0, max_regiter is 0x2f, then reg will be equal to 0x30,
+>>>>>        '0x30 < 0x2f' is false,so regmap_writeable will return false.
+>>>>>
+>>>>>      - Root cause: the buf[] was written to a wrong place in the file
+>>>>>        drivers/rtc/rtc-pcf85363.c
+>>>>>
+>>>>
+>>>> This is not true, the RTC wraps the register accesses properly and this
+>>>
+>>> This performance hack probably deserve some explanation in the code comment.  :)
+>>>
+>>>> is probably something that should be handled by regmap_writable.
+>>>
+>>> The address wrapping is specific to this RTC chip.  Is it also
+>>> commonly used by other I2C devices?  I'm not sure if regmap_writable
+>>> should handle the wrapping case if it is too special.
+>>>
+>>
+>> Most of the i2c RTCs do address wrapping which is sometimes the only way
+>> to properly set the time.
+> 
+> Adding Mark and Nandor to the loop.
+> 
+> Regards,
+> Leo
+> 
 
-Hi all,
+Hi,
+   `regmap` provides couple of ways to validate the registers: 
+max_register, callback function and write table. All of these are 
+optional, so it gives you the freedom to customize it as needed.
 
-After merging the pinctrl tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+In this situation probably you could:
+   1. Avoid using the wrapping feature of pcf85363 (you can just provide 
+separate calls for stop, reset and time confguration). In this way the 
+`max_register` validation method will work fine.
+   2. Replace `max_register` method validation with `callback function` 
+validation method, were you could make your own validation.
 
-drivers/pinctrl/pinctrl-st.c: In function 'st_pctl_dt_parse_groups':
-drivers/pinctrl/pinctrl-st.c:1212:15: error: implicit declaration of functi=
-on 'of_get_named_gpio'; did you mean 'of_get_address'? [-Werror=3Dimplicit-=
-function-declaration]
-   conf->pin =3D of_get_named_gpio(pins, pp->name, 0);
-               ^~~~~~~~~~~~~~~~~
-               of_get_address
 
-Probably caused by commit
+Regards,
+    Nandor
 
-  712dfdaf62b6 ("pinctrl: st: Include the right header")
 
-I have used the pinctrl tree from next-20190820 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/jB.TcCN=qHuU2IAp8DFPR0_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1c4bQACgkQAVBC80lX
-0Gz83Qf9FVaZ4yjDC89TBP5bTni3Ml3fr1UUPjKf4cbrD8MPBMDEeDx4bhhNf0qf
-TaaTbsLoq2dBZqVltVEtvkoun9D2sGxn+K8DA3bmwtgEzgAnyIjLLBpDcpTHlcNX
-cRuoLsE878127e5Ie66QxfvUqBX8lIK5KiMrN53aTe1/OoQqqXK0RwAzoG2hb+GQ
-k9murRf4c3gLUeK5q69/AAdDIQOMeQj+lDNCOQ6Teet0CNDg44FoiSRfQs3pmOj2
-pXXM5nUPvkeiW6CtNhbeDPLZL7bAQkZWhOFyxLYvBch3LFXS0Xmu2Nn8FplHaXRE
-MWP5ipV62DymQcxY9rgv2O0RPLZbTw==
-=GF+G
------END PGP SIGNATURE-----
-
---Sig_/jB.TcCN=qHuU2IAp8DFPR0_--
