@@ -2,100 +2,170 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABC8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C53C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB2D22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566373963;
-	bh=5nteA5+zrmgipnO474yy0n0FecWH31sdGUTtNAhVCSk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0hstm7850blEJ3L+qGW0AWuHw9dSqyGNhoZfqhoDT/CM9q5wsDw8faBTJPT39yVVp
-	 lHLeuEVwB+e3FeoajGZdS8H+Zq9albGjZiaHG6ihRztSWQVKI5s3P8ra0W1ShoPJWO
-	 hno7uNyiydIDQP8O6cgz6+k8hMA3kvVoNP1Mc63s=
+	by mail.kernel.org (Postfix) with ESMTP id 2A19D22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:53:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XJpPbfj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbfHUHwm (ORCPT
+        id S1726962AbfHUHx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 03:52:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726693AbfHUHwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:52:42 -0400
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3A00233A1;
-        Wed, 21 Aug 2019 07:52:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566373961;
-        bh=5nteA5+zrmgipnO474yy0n0FecWH31sdGUTtNAhVCSk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wRvhpXgKSWITJklv09moe+PnqURa1UxxUJsPW/u0u3+nvywwPXpKcmNEDe9jKS2ro
-         j1GHKu4zAcdFlYl0V55fHxrVytszz/tttZ4MvNOkLi49m4UX1l7mL7HFAcZTJDVryz
-         4eOsmgr1/VUr5co1rhk8I9tpjNEtaUGN69Wk0UuI=
-Received: by mail-lf1-f46.google.com with SMTP id b17so1080082lff.7;
-        Wed, 21 Aug 2019 00:52:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAXN+XDstM6HMACTozx3eZ0Ndw9AFuVevL+rOc4wGDri6x8O7LUd
-        D3rf6H12HiJDqNkbrbcrx4uwFoHhN71gt1Li7+s=
-X-Google-Smtp-Source: APXvYqyAP1YOkm4D4f2V9WUC7znA2zZ/37GCGmDoDp9GcPyr7juX3RDYpPhUNtI6GfUQhYUiYVaD26GcNbEHnr5PNB4=
-X-Received: by 2002:a19:c20b:: with SMTP id l11mr17713344lfc.106.1566373958980;
- Wed, 21 Aug 2019 00:52:38 -0700 (PDT)
+        Wed, 21 Aug 2019 03:53:26 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39973 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfHUHxZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 03:53:25 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b17so1081570lff.7
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 00:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4WkbNxIuQHcMyi/6jdTaT2GJS3hfGOuis/4XMY+Hqv0=;
+        b=XJpPbfj8P9QJPx+MXLpw/Zpk11zobJZrO2DKY2mgHVIboqYEIp2ho60EdmJ3Y6AYhx
+         QSp2QIWv3+2jDYAwohs4rK6Vso5/KH0plNFbkiVQOUBT0vvmNKlwTtmxhBUeNyVviVPx
+         n0fZo6b8dEC6PfFj/iWpjszsR9aKv8/foAkPe46cmiTYeN3GdlFzCc3FTBNrpw6P2R76
+         OT8VBJsJZ11Equt8nnFkW29jpyKvGrmiU9lOd3X/v46bDxzBHa36K1mJnZ5TV0a6SHaW
+         cM/oolufmA0f6Y6h+Se5FCifYLechXV2U57q5/+CIRUGI5wzReLVnaH0QEGrl+dt23hj
+         sLAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4WkbNxIuQHcMyi/6jdTaT2GJS3hfGOuis/4XMY+Hqv0=;
+        b=iTwuss/oy8uFk4kqGa2i/wcko/9pJmPrIRkiB1ESVSmquI13anxv9+L4wufK0ivzFM
+         oGelkAkzszGGiF0Xee4VEG84HLx9tqn0TeKpmipS3MwMSrFEfrm5IdVZsp3C+p0K7G+F
+         iebfDlsESElInFg/+8wtheRqLcLle4VJGXEsOIdoedxpdmAZEM37zgnrF0V3XIzbmJju
+         tRvPbXF5p9v2PEJ522NeXfCZc9QWQ/oc/fNNxPjQBh3tXA3YXQyHtv3Wkv6gikxf8yBR
+         OgvqM4z+h+ClUIdvwomIkgKfDmZJx7tg3MTrK1Bs5hb0l0ALazSAqm1AfuNGERz9rw1q
+         IvsQ==
+X-Gm-Message-State: APjAAAUdF541pgSndR6l15Sosjx5lpDsqRv4J+rzthXv3qYIQa9nw4AO
+        Rgt0y9SaP7FkAabv7TAUw61Nhg==
+X-Google-Smtp-Source: APXvYqyhZXLsc3Atd+lyJOsKNYthp6F6CwMZKFd5dNFZ+MASXA4v3XjQhoGKDCwuBYhc8sOqNq42Ww==
+X-Received: by 2002:ac2:4ac4:: with SMTP id m4mr17369662lfp.172.1566374003532;
+        Wed, 21 Aug 2019 00:53:23 -0700 (PDT)
+Received: from [192.168.27.209] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id p28sm3254972lfh.55.2019.08.21.00.53.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 00:53:22 -0700 (PDT)
+Subject: Re: [PATCH 1/2] venus: use on-chip interconnect API
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Vikash Garodia <vgarodia@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Aniket Masule <amasule@codeaurora.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+References: <20190814084701.25455-1-stanimir.varbanov@linaro.org>
+ <20190814084701.25455-2-stanimir.varbanov@linaro.org>
+ <cc85f55c-3d21-c3b2-6848-e48513263e39@linaro.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <939ace85-e006-db6d-02d2-b55385fa5043@linaro.org>
+Date:   Wed, 21 Aug 2019 10:53:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190816163042.6604-1-krzk@kernel.org> <20190816163042.6604-3-krzk@kernel.org>
-In-Reply-To: <20190816163042.6604-3-krzk@kernel.org>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 21 Aug 2019 09:52:27 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfdvzvomUfmxhGf0qjEQH3K8TADCneo9SM6m50k4b=Gyw@mail.gmail.com>
-Message-ID: <CAJKOXPfdvzvomUfmxhGf0qjEQH3K8TADCneo9SM6m50k4b=Gyw@mail.gmail.com>
-Subject: Re: [GIT PULL 2/3] ARM: samsung: mach for v5.4
-To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        arm@kernel.org, soc@kernel.org
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <cc85f55c-3d21-c3b2-6848-e48513263e39@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 16 Aug 2019 at 18:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
->
->   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
->
-> are available in the Git repository at:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-soc-5.4
->
-> for you to fetch changes up to 1fa70c7f49132513fb0da4afa7643395eedc7d35:
->
->   ARM: exynos: Enable exynos-chipid driver (2019-08-15 20:29:58 +0200)
->
-> ----------------------------------------------------------------
-> Samsung mach/soc changes for v5.4
->
-> 1. Minor fixup in plat code (S3C platforms),
-> 2. Enable exynos-chipid driver to provide SoC related information.
->
-> ----------------------------------------------------------------
-> Linus Walleij (1):
->       ARM: samsung: Include GPIO driver header
->
-> Pankaj Dubey (1):
->       ARM: exynos: Enable exynos-chipid driver
+Hi Georgi,
 
-This last patch should be dropped so I will rework the pull request
-and send later v2. Please ignore it for now.
+Thanks for the review!
 
-Best regards,
-Krzysztof
+On 8/20/19 12:34 PM, Georgi Djakov wrote:
+> Hi Stan,
+> 
+> On 8/14/19 11:47, Stanimir Varbanov wrote:
+>> This aims to add a requests for bandwidth scaling depending
+>> on the resolution and framerate (macroblocks per second). The
+>> exact value ff the requested bandwidth is get from a
+> 
+> s/ff/of/
+> 
+>> pre-calculated tables for encoder and decoder.
+>>
+>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> ---
+>>  drivers/media/platform/qcom/venus/core.c    | 34 +++++++++++
+>>  drivers/media/platform/qcom/venus/core.h    | 14 +++++
+>>  drivers/media/platform/qcom/venus/helpers.c | 67 ++++++++++++++++++++-
+>>  3 files changed, 114 insertions(+), 1 deletion(-)
+> 
+> It looks like venus can be built-in, so how about the case when venus is
+> built-in and the interconnect provider is a module? Maybe add a dependency in
+> Kconfig to depend on INTERCONNECT || !INTERCONNECT?
+
+yes, I forgot about that dependency.
+
+> 
+>>
+>> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
+>> index 0acc7576cc58..19cbe9d5d028 100644
+>> --- a/drivers/media/platform/qcom/venus/core.c
+>> +++ b/drivers/media/platform/qcom/venus/core.c
+>> @@ -5,6 +5,7 @@
+>>   */
+>>  #include <linux/clk.h>
+>>  #include <linux/init.h>
+>> +#include <linux/interconnect.h>
+>>  #include <linux/ioctl.h>
+>>  #include <linux/list.h>
+>>  #include <linux/module.h>
+>> @@ -239,6 +240,14 @@ static int venus_probe(struct platform_device *pdev)
+>>  	if (IS_ERR(core->base))
+>>  		return PTR_ERR(core->base);
+>>  
+>> +	core->video_path = of_icc_get(dev, "video-mem");
+>> +	if (IS_ERR(core->video_path))
+>> +		return PTR_ERR(core->video_path);
+>> +
+>> +	core->cpucfg_path = of_icc_get(dev, "cpu-cfg");
+>> +	if (IS_ERR(core->cpucfg_path))
+>> +		return PTR_ERR(core->cpucfg_path);
+>> +
+>>  	core->irq = platform_get_irq(pdev, 0);
+>>  	if (core->irq < 0)
+>>  		return core->irq;
+>> @@ -273,6 +282,10 @@ static int venus_probe(struct platform_device *pdev)
+>>  	if (ret)
+>>  		return ret;
+>>  
+>> +	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
+>> +	if (ret)
+>> +		return ret;
+>> +
+>>  	ret = hfi_create(core, &venus_core_ops);
+>>  	if (ret)
+>>  		return ret;
+>> @@ -355,6 +368,9 @@ static int venus_remove(struct platform_device *pdev)
+>>  	pm_runtime_put_sync(dev);
+>>  	pm_runtime_disable(dev);
+>>  
+>> +	icc_put(core->video_path);
+>> +	icc_put(core->cpucfg_path);
+>> +
+> 
+> Do you have any plans to scale the bandwidth on suspend/resume too?
+
+Yes, we definitely need that in suspend/resume, but I guess the plan
+should be add it once we implement pm_runtime autosuspend functionality
+in order to easily test that.
+
+-- 
+regards,
+Stan
