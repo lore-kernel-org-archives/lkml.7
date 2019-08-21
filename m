@@ -2,142 +2,256 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53B0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD686C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9919120870
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8741C20870
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:06:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ufFd0bhw"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="eod0gXNe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbfHUPFv (ORCPT
+        id S1729729AbfHUPGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:05:51 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:37931 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727918AbfHUPFv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:05:51 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190821150549euoutp0188c41e8b2e558ad29977ca83ccd3e04d~8_HSBjgGb1146911469euoutp01M
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:05:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190821150549euoutp0188c41e8b2e558ad29977ca83ccd3e04d~8_HSBjgGb1146911469euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566399949;
-        bh=TapZ50bINgSULFfnU/4MVBjZqPhc/IXiiaEUktjqsEE=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=ufFd0bhwAz8ob5XrL1qeAXe4tayQuapLAfw19Pc4SO40R2/Z+y0fesKNGp8kmebB2
-         24KgnEvBCG2VUi34IZwTAfXxET/Gp5dstEr5mmWhdNrwsuHKoZYFGbyMIGXCp43jtB
-         4fZtezbm/9svdGTE9OGqxve7MyedFpsOqzjQ5U9c=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190821150549eucas1p1a472ee908256a42b5d07673d4f48f5dc~8_HRcbJOw1287612876eucas1p1c;
-        Wed, 21 Aug 2019 15:05:49 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 55.0D.04469.CCD5D5D5; Wed, 21
-        Aug 2019 16:05:48 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190821150548eucas1p15139f733b00e3a1a107efe39f6712fe9~8_HQyGgsO2357223572eucas1p1w;
-        Wed, 21 Aug 2019 15:05:48 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190821150548eusmtrp29d9a9fd5759502b1257cb1e2dbb025d8~8_HQj_TcL3237532375eusmtrp2x;
-        Wed, 21 Aug 2019 15:05:48 +0000 (GMT)
-X-AuditID: cbfec7f2-569ff70000001175-d5-5d5d5dcc9c23
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 17.48.04166.CCD5D5D5; Wed, 21
-        Aug 2019 16:05:48 +0100 (BST)
-Received: from AMDC3061.DIGITAL.local (unknown [106.120.51.75]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190821150547eusmtip2964ecbfa743a4ea2c7438188a225e546~8_HQB7Cx52516525165eusmtip2a;
-        Wed, 21 Aug 2019 15:05:47 +0000 (GMT)
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-To:     krzk@kernel.org
-Cc:     jonathanh@nvidia.com, kgene@kernel.org, pankaj.dubey@samsung.com,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH] soc: samsung: chipid: Remove the regmap lookup error log
-Date:   Wed, 21 Aug 2019 17:05:39 +0200
-Message-Id: <20190821150539.31207-1-s.nawrocki@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRmVeSWpSXmKPExsWy7djP87pnYmNjDV41GlpsnLGe1aJl1iIW
-        i/7Hr5ktzp/fwG6x6fE1VovLu+awWcw4v4/JYu2Ru+wWi7Z+Ybc4/Kad1YHLY9OqTjaPzUvq
-        PXqb37F59G1ZxejxeZNcAGsUl01Kak5mWWqRvl0CV8b6y4eZCuZwVZx/vJmtgfEuRxcjJ4eE
-        gInE1K+z2LsYuTiEBFYwSkzZOoEZJCEk8IVRYvVzdwj7M6NE3w4fmIYr+xeyQ8SXM0osfVsB
-        0QxU3/h5PytIgk3AUKL3aB8jiC0iICxxb+lysAZmgUlMEjv61LsYOTiEBTwl2icGgoRZBFQl
-        bn87wgRi8wpYS/Q8m88KsUteYvWGA8wg8yUE3rNJTOqCWCwh4CLR/72BGcIWlnh1fAtUXEbi
-        /875TBANzYwSPbtvs0M4Exgl7h9fwAhRZS1x+PhFVpArmAU0Jdbv0ocIO0rMuf+AESQsIcAn
-        ceOtIMTNfBKTtk1nhgjzSnS0CUFUq0j8XjWdCcKWkuh+8p8FwvaQmDf9OxMkfGIlTj1YxD6B
-        UW4Wwq4FjIyrGMVTS4tz01OLDfNSy/WKE3OLS/PS9ZLzczcxAlPE6X/HP+1g/Hop6RCjAAej
-        Eg/vBN3YWCHWxLLiytxDjBIczEoivBVzomKFeFMSK6tSi/Lji0pzUosPMUpzsCiJ81YzPIgW
-        EkhPLEnNTk0tSC2CyTJxcEo1MGYeLQtUK3ufblfMKH50uf4zrZnLSmOfKG4Ka+Zcd7amK6bW
-        4Bjrgf+rtmZKT1dKa+RKsWoT1ajfn5JcuMLFk/9Yb3ez0oEF+8+widopqqxn8cjRivvdkxvY
-        lFAYtqHY8Iz+Xoc7N/jrpR59Dfb8L3Rx02PeVq6JTB7nOi8bXGDv8Ap2XGKmxFKckWioxVxU
-        nAgAt6K0Dw0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrELMWRmVeSWpSXmKPExsVy+t/xe7pnYmNjDV4dYrHYOGM9q0XLrEUs
-        Fv2PXzNbnD+/gd1i0+NrrBaXd81hs5hxfh+Txdojd9ktFm39wm5x+E07qwOXx6ZVnWwem5fU
-        e/Q2v2Pz6NuyitHj8ya5ANYoPZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9
-        O5uU1JzMstQifbsEvYz1lw8zFczhqjj/eDNbA+Ndji5GTg4JAROJK/sXsncxcnEICSxllOh7
-        PYexi5EDKCElMb9FCaJGWOLPtS42iJpPjBK75+1nAUmwCRhK9B7tYwSxRYCK7i1dDjaIWWAO
-        k8TDnklgg4QFPCXaJwaC1LAIqErc/naECcTmFbCW6Hk2nxVigbzE6g0HmCcw8ixgZFjFKJJa
-        WpybnltsqFecmFtcmpeul5yfu4kRGJ7bjv3cvIPx0sbgQ4wCHIxKPLwTdGNjhVgTy4orcw8x
-        SnAwK4nwVsyJihXiTUmsrEotyo8vKs1JLT7EaAq0fCKzlGhyPjB28kriDU0NzS0sDc2NzY3N
-        LJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MAa+rZUxevqi8rGg57aV39WqC59N7XZ/fuyK
-        dFnl+fONh6RmmITOVAr94qI787+U8Mqf9+3Cd6bcYliyVXXRC85zdbylN94fW7x0dexjn8wv
-        W05Xd8n4T18a41F+w/Tp8jz2dwWi675FhSxT98mYesqNYdUSt5aKs1YXjjtlhS6UOZ35I4/l
-        1jQlluKMREMt5qLiRACGWA8AZQIAAA==
-X-CMS-MailID: 20190821150548eucas1p15139f733b00e3a1a107efe39f6712fe9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190821150548eucas1p15139f733b00e3a1a107efe39f6712fe9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190821150548eucas1p15139f733b00e3a1a107efe39f6712fe9
-References: <CGME20190821150548eucas1p15139f733b00e3a1a107efe39f6712fe9@eucas1p1.samsung.com>
+        Wed, 21 Aug 2019 11:06:00 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:45809 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727918AbfHUPF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:05:58 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46D9w173vvz9v105;
+        Wed, 21 Aug 2019 17:05:53 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=eod0gXNe; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Vwq00iVmMvOk; Wed, 21 Aug 2019 17:05:53 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46D9w15r14z9v104;
+        Wed, 21 Aug 2019 17:05:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566399953; bh=3s4/1CenBEAPpHpMM7UHacKq7H2XNGMGF2S+PN3leiU=;
+        h=From:Subject:To:Cc:Date:From;
+        b=eod0gXNeM5oGzFjPXNUjAIA1RD3BvyXSvJMJTUcjKbWG+w42bwDAKpyOi3QuTmk60
+         SWcOdvzt3ngvKRJxOXN3IWwOzk4wdXXnJakVmo1Frd0nJlVjfZ9YfoMY/T/lmnlG//
+         mlU48Eq1rhuhNMEnCbZ4cGR0/Xj2Ah39wwkAhSOs=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1CDA08B7F6;
+        Wed, 21 Aug 2019 17:05:56 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id aA7bqXOM0T42; Wed, 21 Aug 2019 17:05:56 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id DF1C18B7EE;
+        Wed, 21 Aug 2019 17:05:55 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id B50CC6B6EE; Wed, 21 Aug 2019 15:05:55 +0000 (UTC)
+Message-Id: <c3157c8e8e0e7588312b40c853f65c02fe6c957a.1566399731.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2] btrfs: fix allocation of bitmap pages.
+To:     erhard_f@mailbox.org, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, stable@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Date:   Wed, 21 Aug 2019 15:05:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 40d8aff614f7 ("soc: samsung: chipid: Convert exynos-chipid
-driver to use the regmap API") of_find_compatible_node() call was
-substituted with syscon_regmap_lookup_by_compatible() but also an error
-log was added for case where lookup fails. On multiplatform the lookup
-will always fail on any non-samsung device so the log is incorrect.
-Remove the error log and just return an error code from
-syscon_regmap_lookup_by_compatible() which internally calls
-of_find_compatible_node().
+Various notifications of type "BUG kmalloc-4096 () : Redzone
+overwritten" have been observed recently in various parts of
+the kernel. After some time, it has been made a relation with
+the use of BTRFS filesystem.
 
-Reported-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+[   22.809700] BUG kmalloc-4096 (Tainted: G        W        ): Redzone overwritten
+[   22.809971] -----------------------------------------------------------------------------
+
+[   22.810286] INFO: 0xbe1a5921-0xfbfc06cd. First byte 0x0 instead of 0xcc
+[   22.810866] INFO: Allocated in __load_free_space_cache+0x588/0x780 [btrfs] age=22 cpu=0 pid=224
+[   22.811193] 	__slab_alloc.constprop.26+0x44/0x70
+[   22.811345] 	kmem_cache_alloc_trace+0xf0/0x2ec
+[   22.811588] 	__load_free_space_cache+0x588/0x780 [btrfs]
+[   22.811848] 	load_free_space_cache+0xf4/0x1b0 [btrfs]
+[   22.812090] 	cache_block_group+0x1d0/0x3d0 [btrfs]
+[   22.812321] 	find_free_extent+0x680/0x12a4 [btrfs]
+[   22.812549] 	btrfs_reserve_extent+0xec/0x220 [btrfs]
+[   22.812785] 	btrfs_alloc_tree_block+0x178/0x5f4 [btrfs]
+[   22.813032] 	__btrfs_cow_block+0x150/0x5d4 [btrfs]
+[   22.813262] 	btrfs_cow_block+0x194/0x298 [btrfs]
+[   22.813484] 	commit_cowonly_roots+0x44/0x294 [btrfs]
+[   22.813718] 	btrfs_commit_transaction+0x63c/0xc0c [btrfs]
+[   22.813973] 	close_ctree+0xf8/0x2a4 [btrfs]
+[   22.814107] 	generic_shutdown_super+0x80/0x110
+[   22.814250] 	kill_anon_super+0x18/0x30
+[   22.814437] 	btrfs_kill_super+0x18/0x90 [btrfs]
+[   22.814590] INFO: Freed in proc_cgroup_show+0xc0/0x248 age=41 cpu=0 pid=83
+[   22.814841] 	proc_cgroup_show+0xc0/0x248
+[   22.814967] 	proc_single_show+0x54/0x98
+[   22.815086] 	seq_read+0x278/0x45c
+[   22.815190] 	__vfs_read+0x28/0x17c
+[   22.815289] 	vfs_read+0xa8/0x14c
+[   22.815381] 	ksys_read+0x50/0x94
+[   22.815475] 	ret_from_syscall+0x0/0x38
+
+Commit 69d2480456d1 ("btrfs: use copy_page for copying pages instead
+of memcpy") changed the way bitmap blocks are copied. But allthough
+bitmaps have the size of a page, they were allocated with kzalloc().
+
+Most of the time, kzalloc() allocates aligned blocks of memory, so
+copy_page() can be used. But when some debug options like SLAB_DEBUG
+are activated, kzalloc() may return unaligned pointer.
+
+On powerpc, memcpy(), copy_page() and other copying functions use
+'dcbz' instruction which provides an entire zeroed cacheline to avoid
+memory read when the intention is to overwrite a full line. Functions
+like memcpy() are writen to care about partial cachelines at the start
+and end of the destination, but copy_page() assumes it gets pages. As
+pages are naturally cache aligned, copy_page() doesn't care about
+partial lines. This means that when copy_page() is called with a
+misaligned pointer, a few leading bytes are zeroed.
+
+To fix it, allocate bitmaps through kmem_cache instead of using kzalloc()
+The cache pool is created with PAGE_SIZE alignment constraint.
+
+Reported-by: Erhard F. <erhard_f@mailbox.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=204371
+Fixes: 69d2480456d1 ("btrfs: use copy_page for copying pages instead of memcpy")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- drivers/soc/samsung/exynos-chipid.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+v2: Using kmem_cache instead of get_zeroed_page() in order to benefit from SLAB debugging features like redzone.
+---
+ fs/btrfs/ctree.h            |  1 +
+ fs/btrfs/free-space-cache.c | 17 ++++++++++-------
+ fs/btrfs/inode.c            |  7 +++++++
+ 3 files changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/soc/samsung/exynos-chipid.c b/drivers/soc/samsung/exynos-chipid.c
-index 75b6b880d9ef..c55a47cfe617 100644
---- a/drivers/soc/samsung/exynos-chipid.c
-+++ b/drivers/soc/samsung/exynos-chipid.c
-@@ -56,10 +56,8 @@ int __init exynos_chipid_early_init(void)
- 	int ret;
+diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+index 299e11e6c554..26abb95becc9 100644
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -43,6 +43,7 @@ extern struct kmem_cache *btrfs_trans_handle_cachep;
+ extern struct kmem_cache *btrfs_bit_radix_cachep;
+ extern struct kmem_cache *btrfs_path_cachep;
+ extern struct kmem_cache *btrfs_free_space_cachep;
++extern struct kmem_cache *btrfs_bitmap_cachep;
+ struct btrfs_ordered_sum;
+ struct btrfs_ref;
  
- 	regmap = syscon_regmap_lookup_by_compatible("samsung,exynos4210-chipid");
--	if (IS_ERR(regmap)) {
--		pr_err("Failed to get CHIPID regmap\n");
-+	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
--	}
+diff --git a/fs/btrfs/free-space-cache.c b/fs/btrfs/free-space-cache.c
+index 062be9dde4c6..9a708e7920a0 100644
+--- a/fs/btrfs/free-space-cache.c
++++ b/fs/btrfs/free-space-cache.c
+@@ -764,7 +764,8 @@ static int __load_free_space_cache(struct btrfs_root *root, struct inode *inode,
+ 		} else {
+ 			ASSERT(num_bitmaps);
+ 			num_bitmaps--;
+-			e->bitmap = kzalloc(PAGE_SIZE, GFP_NOFS);
++			e->bitmap = kmem_cache_zalloc(btrfs_bitmap_cachep,
++						      GFP_NOFS);
+ 			if (!e->bitmap) {
+ 				kmem_cache_free(
+ 					btrfs_free_space_cachep, e);
+@@ -1881,7 +1882,7 @@ static void free_bitmap(struct btrfs_free_space_ctl *ctl,
+ 			struct btrfs_free_space *bitmap_info)
+ {
+ 	unlink_free_space(ctl, bitmap_info);
+-	kfree(bitmap_info->bitmap);
++	kmem_cache_free(btrfs_bitmap_cachep, bitmap_info->bitmap);
+ 	kmem_cache_free(btrfs_free_space_cachep, bitmap_info);
+ 	ctl->total_bitmaps--;
+ 	ctl->op->recalc_thresholds(ctl);
+@@ -2135,7 +2136,7 @@ static int insert_into_bitmap(struct btrfs_free_space_ctl *ctl,
+ 		}
  
- 	ret = regmap_read(regmap, EXYNOS_CHIPID_REG_PRO_ID, &product_id);
- 	if (ret < 0)
+ 		/* allocate the bitmap */
+-		info->bitmap = kzalloc(PAGE_SIZE, GFP_NOFS);
++		info->bitmap = kmem_cache_zalloc(btrfs_bitmap_cachep, GFP_NOFS);
+ 		spin_lock(&ctl->tree_lock);
+ 		if (!info->bitmap) {
+ 			ret = -ENOMEM;
+@@ -2146,7 +2147,8 @@ static int insert_into_bitmap(struct btrfs_free_space_ctl *ctl,
+ 
+ out:
+ 	if (info) {
+-		kfree(info->bitmap);
++		if (info->bitmap)
++			kmem_cache_free(btrfs_bitmap_cachep, info->bitmap);
+ 		kmem_cache_free(btrfs_free_space_cachep, info);
+ 	}
+ 
+@@ -2802,7 +2804,7 @@ u64 btrfs_alloc_from_cluster(struct btrfs_block_group_cache *block_group,
+ 	if (entry->bytes == 0) {
+ 		ctl->free_extents--;
+ 		if (entry->bitmap) {
+-			kfree(entry->bitmap);
++			kmem_cache_free(btrfs_bitmap_cachep, entry->bitmap);
+ 			ctl->total_bitmaps--;
+ 			ctl->op->recalc_thresholds(ctl);
+ 		}
+@@ -3606,7 +3608,7 @@ int test_add_free_space_entry(struct btrfs_block_group_cache *cache,
+ 	}
+ 
+ 	if (!map) {
+-		map = kzalloc(PAGE_SIZE, GFP_NOFS);
++		map = kmem_cache_zalloc(btrfs_bitmap_cachep, GFP_NOFS);
+ 		if (!map) {
+ 			kmem_cache_free(btrfs_free_space_cachep, info);
+ 			return -ENOMEM;
+@@ -3635,7 +3637,8 @@ int test_add_free_space_entry(struct btrfs_block_group_cache *cache,
+ 
+ 	if (info)
+ 		kmem_cache_free(btrfs_free_space_cachep, info);
+-	kfree(map);
++	if (map)
++		kmem_cache_free(btrfs_bitmap_cachep, map);
+ 	return 0;
+ }
+ 
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index ee582a36653d..da470af9d328 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -74,6 +74,7 @@ static struct kmem_cache *btrfs_inode_cachep;
+ struct kmem_cache *btrfs_trans_handle_cachep;
+ struct kmem_cache *btrfs_path_cachep;
+ struct kmem_cache *btrfs_free_space_cachep;
++struct kmem_cache *btrfs_bitmap_cachep;
+ 
+ static int btrfs_setsize(struct inode *inode, struct iattr *attr);
+ static int btrfs_truncate(struct inode *inode, bool skip_writeback);
+@@ -9380,6 +9381,7 @@ void __cold btrfs_destroy_cachep(void)
+ 	kmem_cache_destroy(btrfs_trans_handle_cachep);
+ 	kmem_cache_destroy(btrfs_path_cachep);
+ 	kmem_cache_destroy(btrfs_free_space_cachep);
++	kmem_cache_destroy(btrfs_bitmap_cachep);
+ }
+ 
+ int __init btrfs_init_cachep(void)
+@@ -9409,6 +9411,11 @@ int __init btrfs_init_cachep(void)
+ 	if (!btrfs_free_space_cachep)
+ 		goto fail;
+ 
++	btrfs_bitmap_cachep = kmem_cache_create("btrfs_bitmap", PAGE_SIZE,
++						PAGE_SIZE, SLAB_RED_ZONE, NULL);
++	if (!btrfs_bitmap_cachep)
++		goto fail;
++
+ 	return 0;
+ fail:
+ 	btrfs_destroy_cachep();
 -- 
-2.17.1
+2.13.3
 
