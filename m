@@ -2,191 +2,196 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E3DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6EFC3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3B522CE3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E1E2332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:50:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s+ipYvK/"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="E3pI+Ezm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfHUCqx (ORCPT
+        id S1726864AbfHUCu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 22:46:53 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42125 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfHUCqw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 22:46:52 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i30so388913pfk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 19:46:52 -0700 (PDT)
+        Tue, 20 Aug 2019 22:50:56 -0400
+Received: from mail-eopbgr690064.outbound.protection.outlook.com ([40.107.69.64]:51266
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726351AbfHUCuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 22:50:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F/3qvSrGTjkEgWeY4df7hRfinClfkVuToQkua4IGFh6COyf6peXRzgCdAQ0yJ02d291O9ATfEFyTQi0tgrgyawDi7z3Ptl+4HvXZRh9Y7oCt56NlQSc9WYXnb/ucLnuttUftecYu5ygmNK90Iqt3rSVwmqqD1smdrnF6Tz1RxKUKW5PoDYogmJUqCpKIHYBaGvs8anWbX6W3TBrxCLsdrwYEIUN0UCXLZO+G8ESGG4Yptvn+23dJ4XNSPyATLH8dAR5ShHwoBm/cpHD7VABBqzhsMr065DaPhJnBDI1WuC95PofEMPwZY4Y7hewC7K6Yv8XDlztuPooBm0E5RZ3F9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SSEe01lJKSGwrdqp+XWy/X703fpPJkGSOShx94rrULo=;
+ b=cZQpBTy448RrFc8jL7KI8VQqJ1cfuKGHshl57vg2YVwqwnu1UsgcTaN6VUqHvO8PJBKjYpkhh8gmzDTFS3G9jH/JtjmDOUFK38peXY+Ee9cotl3xmE0hdphKVmRaUrY4YAayqnymF/kyQA75psbdz47xUbEHqieV8MuGQbEBC317mcajaPrMgAMbCXbqSSiJ9egYJM8TVtTGTeiKCOt9IyJnRrSWqOL3SWasRXauX17A6hp3ibx03P92A6T2sqI3IkrJ/+3Pa7KllCTfpbzVP/JWn5atsNSsl/y5er0ozrPznTK2HP4KgnmzpAH3kX489wFQHG0DXj2BDiFuPAamPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rzA9S1AIz/6xQmIDVoSvFl0QH4KJ3JhpAFF3D1CfKh0=;
-        b=s+ipYvK/PXc0BFsqo5Tnmt2Vnc6JFR0aG8HAWklRvlWdQyin8D1mC7EnMGjfhhEy7O
-         qGmpCNR02TbHZhdQ/+2f7zpJJAJ1jyftQeKEWnNFTYymKnDuID4xnBxALF7r9DMvAiwe
-         f0n42KeMUI2n3utsk8x+EKkqiXYKo9BtU3xWPR22lQ7A5ThtHJ4rJxXSfg3+NguML63t
-         VL7nUXJe8KbLx36EXA0i4nQdDQtMmvRJADZbIrOPuBliIvCw/JEL+DYXdBh1cdLlpIyL
-         hs/gPjQSXzFGNPnsYytfIqvcVXjg2MxQ36l0r8Y1drjG/qqd4lziE/XKOvupAVPalNs9
-         iXWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rzA9S1AIz/6xQmIDVoSvFl0QH4KJ3JhpAFF3D1CfKh0=;
-        b=sGeq+xiPQvf9Cq34tlOUgm+3Q8/MmwelfsaqpH+wCQuwziJK4wW9+3svxRgJ5t/gxS
-         iYLBq41u+NlZTBVfLSmlixvmLVujQC4jErkCHsQvJV/hn6WcXW5+YPm0XfOtC5kVh5yd
-         kLwwBVhRFfk8JMDDNTIPuU4FWIKghggH5nh/HgerxKf4h3vYtZq/K08jLF05niqWhmC9
-         e2JFG0A0u5UozTwqScS6sK/sDdPZnAaTVL5zGTok4TyYBn2p3TJKCknXyl2LzyFdD1D0
-         86xcbVW/OV4dycGg4Kj93jAfV0dPxZ7CIysaiqsB+OcylYhML5gJV8GbV3so65G8nqVe
-         7QPQ==
-X-Gm-Message-State: APjAAAXmxSB8exCBYoAoC13+ZBnS22PgzdQnXj20D/nxKR9dIY0ZlehY
-        G4uHq1DTxy1cNs/izkYw92sBE+cdpw==
-X-Google-Smtp-Source: APXvYqxWjSAeaVO7l8MTk1p6uF2HhW/owqfIUdX/K1HMqNwAehrCyxIRk1mn/yYnS0T+S5vx1rqVzA==
-X-Received: by 2002:a17:90a:c24e:: with SMTP id d14mr3161488pjx.129.1566355611709;
-        Tue, 20 Aug 2019 19:46:51 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2405:204:7101:175:ddd7:6c31:ebc7:37e8])
-        by smtp.gmail.com with ESMTPSA id x2sm1517865pja.22.2019.08.20.19.46.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 20 Aug 2019 19:46:51 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 08:16:43 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     afaerber@suse.de
-Cc:     linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        thomas.liau@actions-semi.com, linux-actions@lists.infradead.org,
-        linus.walleij@linaro.org, linux-clk@vger.kernel.org,
-        ulf.hansson@linaro.org, robh+dt@kernel.org, sboyd@kernel.org
-Subject: Re: [PATCH v2 4/7] arm64: dts: actions: Add uSD and eMMC support for
- Bubblegum96
-Message-ID: <20190821024643.GA14176@Mani-XPS-13-9360>
-References: <20190821024014.14070-1-manivannan.sadhasivam@linaro.org>
- <20190821024014.14070-5-manivannan.sadhasivam@linaro.org>
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SSEe01lJKSGwrdqp+XWy/X703fpPJkGSOShx94rrULo=;
+ b=E3pI+EzmD7LGsZi8OCm6dfQlNTwQM/RbtaEnVomYQmzrzrTHIH1uRJMLDq6Lm+ApycT/s3Exe6/j2EiXoWVLSgGCF/gon1VBVBpky/5Fs+L9yKkdKFWZnmiyTLy3dOkbwSLJrhkFbyEfwo3+Z8u8R7dcYcRxQ0wklefa9DqQRpg=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB4134.namprd03.prod.outlook.com (20.177.184.95) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Wed, 21 Aug 2019 02:50:12 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::a517:3578:67bf:6c88]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::a517:3578:67bf:6c88%7]) with mapi id 15.20.2157.022; Wed, 21 Aug 2019
+ 02:50:12 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/3] kprobes: adjust kprobe addr for KPROBES_ON_FTRACE
+Thread-Topic: [PATCH v2 2/3] kprobes: adjust kprobe addr for KPROBES_ON_FTRACE
+Thread-Index: AQHVVwrOlWp5wQEBs0CTmAwXsgLkUqcE3FSAgAAIv4A=
+Date:   Wed, 21 Aug 2019 02:50:12 +0000
+Message-ID: <20190821103857.14d2a40d@xhacker.debian>
+References: <20190820113928.1971900c@xhacker.debian>
+        <20190820114224.0c8963c4@xhacker.debian>
+        <20190821110739.fb3ab6b69423dff64a3b4a29@kernel.org>
+In-Reply-To: <20190821110739.fb3ab6b69423dff64a3b4a29@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TY1PR01CA0158.jpnprd01.prod.outlook.com
+ (2603:1096:402:1::34) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bcb2cc99-586c-4500-c248-08d725e24999
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR03MB4134;
+x-ms-traffictypediagnostic: BYAPR03MB4134:
+x-microsoft-antispam-prvs: <BYAPR03MB4134C73B72F146E76CE139C5EDAA0@BYAPR03MB4134.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0136C1DDA4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(396003)(376002)(346002)(39860400002)(189003)(199004)(52116002)(71200400001)(14454004)(71190400001)(99286004)(2906002)(66946007)(66556008)(64756008)(66446008)(6486002)(66476007)(386003)(6506007)(229853002)(476003)(6116002)(3846002)(54906003)(256004)(1076003)(11346002)(86362001)(478600001)(446003)(486006)(6436002)(9686003)(6512007)(53936002)(6246003)(186003)(7736002)(26005)(25786009)(5660300002)(305945005)(4326008)(316002)(8936002)(7416002)(8676002)(81156014)(81166006)(102836004)(50226002)(6916009)(76176011)(66066001)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4134;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IpoFs2USXlJnGXGqJrA1oHlY9W17zu9bpgDB1oiFlwWSFJsFTmfko29+Nsf38IyEVI9+K9D+DIpl1cdLm1MmrZJZ0hW+etsS1RhtIXr/Hd9yVzTaPgUSlxxRrMQS2gcKG8zyf99G1pi3YoMTivrmRFd/TprPL1gvBKJiOFDcUB6GiPQK0/Nd4JBpie20KOqi359RfgQie3qPrAt3/tP3xrh2sGD30VtOlhAeajFD6XPZL4LntoObBPKB5273kdm7AcJvaMqe4h4JhqclJVOnNVsy/Zfg5J4Aj1oJNzDZvueTxXur+10DZXb9qt9PCmgoGFHIzl/OAE4M0XPwl4+06VpZ/ZO8M72TdNIDJjqBgq1Qg7cMkUDGbUtmTaSiBsgg80HnVXv/gF091lQQiEVNUYLARTc2W3P6NmEL+tL3IGw=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <729B9B6589E3D843922E38EC366DDC75@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821024014.14070-5-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bcb2cc99-586c-4500-c248-08d725e24999
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 02:50:12.6193
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: o7dkFLErusU4mcytO2IQxK6HafDLamLdzY0ZclNC7U4pBRcjhpcVk6UM0jWWZuTpaCDItfs2BJkNMM7EFdwIow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andreas,
+Hi,
 
-On Wed, Aug 21, 2019 at 08:10:11AM +0530, Manivannan Sadhasivam wrote:
-> Add uSD and eMMC support for Bubblegum96 board based on Actions Semi
-> Owl SoC. SD0 is connected to uSD slot and SD2 is connected to eMMC.
-> Since there is no PMIC support added yet, fixed regulator has been
-> used as a regulator node.
-> 
+On Wed, 21 Aug 2019 11:07:39 +0900 Masami Hiramatsu wrote:
 
-Just realised that I missed your review on the patch description here.
-Will either modify in next iteration (if needed) or modify it while
-applying.
+>=20
+>=20
+> Hi Jisheng,
+>=20
+> On Tue, 20 Aug 2019 03:53:31 +0000
+> Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
+>=20
+> > For KPROBES_ON_FTRACE case, we need to adjust the kprobe's addr
+> > correspondingly. =20
+>=20
+> Either KPROBES_ON_FTRACE=3Dy or not, ftrace_location() check must be
+> done correctly. If it failed, kprobes can modify the instruction
+> which can be modified by ftrace.
+>=20
+> >
+> > Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> > ---
+> >  kernel/kprobes.c | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index 9873fc627d61..3fd2f68644da 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -1484,15 +1484,19 @@ static inline int check_kprobe_rereg(struct kpr=
+obe *p)
+> >
+> >  int __weak arch_check_ftrace_location(struct kprobe *p)
+> >  {
+> > -     unsigned long ftrace_addr;
+> > +     unsigned long ftrace_addr, addr =3D (unsigned long)p->addr;
+> >
+> > -     ftrace_addr =3D ftrace_location((unsigned long)p->addr);
+> > +#ifdef CONFIG_KPROBES_ON_FTRACE
+> > +     addr =3D ftrace_call_adjust(addr);
+> > +#endif
+> > +     ftrace_addr =3D ftrace_location(addr); =20
+>=20
+> No, this is not right way to do. If we always need to adjust address
+> before calling ftrace_location(), something wrong with ftrace_location()
+> interface.
+> ftrace_location(addr) must check the address is within the range which
+> can be changed by ftrace. (dyn->ip <=3D addr <=3D dyn->ip+MCOUNT_INSN_SIZ=
+E)
 
-Sorry for that!
+yeah! I will try Naveen's suggestion, I.E patch kprobe_lookup_name() instea=
+d.
 
-Thanks,
-Mani
+Thanks
 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../boot/dts/actions/s900-bubblegum-96.dts    | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-> index 732daaa6e9d3..92376b71cb8f 100644
-> --- a/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-> +++ b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-> @@ -12,6 +12,9 @@
->  	model = "Bubblegum-96";
->  
->  	aliases {
-> +		mmc0 = &mmc0;
-> +		mmc1 = &mmc1;
-> +		mmc2 = &mmc2;
->  		serial5 = &uart5;
->  	};
->  
-> @@ -23,6 +26,22 @@
->  		device_type = "memory";
->  		reg = <0x0 0x0 0x0 0x80000000>;
->  	};
-> +
-> +	vcc_3v1: vcc-3v1 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "fixed-3.1V";
-> +		regulator-min-microvolt = <3100000>;
-> +		regulator-max-microvolt = <3100000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	sd_vcc: sd-vcc {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "fixed-3.1V";
-> +		regulator-min-microvolt = <3100000>;
-> +		regulator-max-microvolt = <3100000>;
-> +		regulator-always-on;
-> +	};
->  };
->  
->  &i2c0 {
-> @@ -241,6 +260,47 @@
->  			bias-pull-up;
->  		};
->  	};
-> +
-> +	mmc0_default: mmc0_default {
-> +		pinmux {
-> +			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
-> +				 "sd0_cmd_mfp", "sd0_clk_mfp";
-> +			function = "sd0";
-> +		};
-> +	};
-> +
-> +	mmc2_default: mmc2_default {
-> +		pinmux {
-> +			groups = "nand0_d0_ceb3_mfp";
-> +			function = "sd2";
-> +		};
-> +	};
-> +};
-> +
-> +/* uSD */
-> +&mmc0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc0_default>;
-> +	no-sdio;
-> +	no-mmc;
-> +	no-1-8-v;
-> +	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
-> +	bus-width = <4>;
-> +	vmmc-supply = <&sd_vcc>;
-> +	vqmmc-supply = <&sd_vcc>;
-> +};
-> +
-> +/* eMMC */
-> +&mmc2 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc2_default>;
-> +	no-sdio;
-> +	no-sd;
-> +	non-removable;
-> +	bus-width = <8>;
-> +	vmmc-supply = <&vcc_3v1>;
->  };
->  
->  &timer {
-> -- 
-> 2.17.1
-> 
+>=20
+>=20
+> >       if (ftrace_addr) {
+> >  #ifdef CONFIG_KPROBES_ON_FTRACE
+> >               /* Given address is not on the instruction boundary */
+> > -             if ((unsigned long)p->addr !=3D ftrace_addr)
+> > +             if (addr !=3D ftrace_addr)
+> >                       return -EILSEQ;
+> >               p->flags |=3D KPROBE_FLAG_FTRACE;
+> > +             p->addr =3D (kprobe_opcode_t *)addr; =20
+>=20
+> And again, please don't change the p->addr silently.
+>=20
+> Thank you,
+>=20
+> >  #else        /* !CONFIG_KPROBES_ON_FTRACE */
+> >               return -EINVAL;
+> >  #endif
+> > --
+> > 2.23.0.rc1
+> > =20
+>=20
+>=20
+> --
+> Masami Hiramatsu <mhiramat@kernel.org>
+
