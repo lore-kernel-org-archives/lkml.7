@@ -2,192 +2,120 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C126C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C53C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 273DE2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:57:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkRgj4Mi"
+	by mail.kernel.org (Postfix) with ESMTP id 9489D233A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbfHUQ51 (ORCPT
+        id S1729619AbfHUQ72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:57:27 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41980 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbfHUQ51 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:57:27 -0400
-Received: by mail-io1-f68.google.com with SMTP id j5so5954204ioj.8;
-        Wed, 21 Aug 2019 09:57:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wCEZNrYU/5ppBxRNJA9n1HgdSaVTKFRs/1eid1avNfw=;
-        b=dkRgj4Mi9Zklnd9c2qIHIa13rUDGB6PqiCoGPTawJV+toT1h8vw5oLAZOLnqbH+mGN
-         gvBnQ7GKEgVj9IJVyfEFoS7lSkgdfwWj5WqtAW3+7GJHalLUJManVBxHZKXyacE+Ibc6
-         6b9RO56Vz06OWsRWQwBEQ0/LKbtXsgyg0BOwabgh7Kmm8shbc7rshlxWEcRIl5t88Q43
-         y/hJmwUtSm4+Q+A4zYLMrj1ROhOUmrtVYhg+gvs04C4lFh2KiDsYcPheI1CxV73VwiXW
-         tdk1u0aKYY8b0VUgJ8LsDpx5StGoyqFXGLcKatH0zT3feX5IJ0eOivrwVrjCFOrc8Y5F
-         Re9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wCEZNrYU/5ppBxRNJA9n1HgdSaVTKFRs/1eid1avNfw=;
-        b=NR/jLoFL6xfdrIytsPQwUeUu0i1R4Bi1FyITsDN1TCtT7QhBl7QYa1LRkRy8CvohsX
-         /0g4Z9JYEznmHf8odT3ih2aSl6ANguSA7jgTFo+DHy/4QHdArGib24F1UkE+WasWfEN/
-         FIPWekupNJ1hG2xUcYNII6ZxcpcEX/HNkNCRMBfKQLSGeli6Kb8uSsUq9IQXsEX8GCLv
-         GknB0xuXy3vUXVvD5umUq8PB1kwJbadse4NDorkFW2eCLacIsNwv2ts1rGCWbaYqE1OH
-         3cTJ3Qp4lcZSN5EZhwcqmHz8DKWC+Wxb000scFQZ5NGRmbIjwcciMB5r2zhxUvw5/wy/
-         zMaA==
-X-Gm-Message-State: APjAAAW0PHIaIta0IAItej5x3KLZixgLbGZL/EvJQpO8H9KZPZYkrSwL
-        XStvxrv5CKNuWGBjnVM1Gn6ZiASCyyfSKnheeYI=
-X-Google-Smtp-Source: APXvYqy5ER/jZPFQpXJhtg7vrUBIju/JR5g17iCTaerGnhqLDbkPmYKy2G/d3Owf4mg8glr1mvcKJ65SkpcrEw9ExXg=
-X-Received: by 2002:a5e:8c11:: with SMTP id n17mr28082811ioj.64.1566406645836;
- Wed, 21 Aug 2019 09:57:25 -0700 (PDT)
+        Wed, 21 Aug 2019 12:59:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:33672 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726252AbfHUQ72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:59:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86E70337;
+        Wed, 21 Aug 2019 09:59:27 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D0933F718;
+        Wed, 21 Aug 2019 09:59:26 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 17:59:22 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, l.subrahmanya@mobiveil.co.in,
+        leoyang.li@nxp.com
+Subject: Re: [PATCHv7] PCI: mobiveil: Fix the CPU base address setup in
+ inbound window
+Message-ID: <20190821165922.GA3915@e121166-lin.cambridge.arm.com>
+References: <20190713141129.32249-1-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-References: <CGME20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce@eucas1p1.samsung.com>
- <20190820151611.10727-1-i.maximets@samsung.com> <CAKgT0Udn0D0_f=SOH2wpBRWV_u4rb1Qe2h7gguXnRNzJ_VkRzg@mail.gmail.com>
- <625791af-c656-1e42-b60e-b3a5cedcb4c4@samsung.com> <CAKgT0Uc27+ucd=a_sgTmv5g7_+ZTg1zK4isYJ0H7YWQj3d=Ejg@mail.gmail.com>
- <f7d0f7a5-e664-8b72-99c7-63275aff4c18@samsung.com>
-In-Reply-To: <f7d0f7a5-e664-8b72-99c7-63275aff4c18@samsung.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 21 Aug 2019 09:57:14 -0700
-Message-ID: <CAKgT0UcCKiM1Ys=vWxctprN7fzWcBCk-PCuKB-8=RThM=CqLSQ@mail.gmail.com>
-Subject: Re: [PATCH net] ixgbe: fix double clean of tx descriptors with xdp
-To:     Ilya Maximets <i.maximets@samsung.com>
-Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Eelco Chaudron <echaudro@redhat.com>,
-        William Tu <u9012063@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190713141129.32249-1-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 9:22 AM Ilya Maximets <i.maximets@samsung.com> wrot=
-e:
->
-> On 21.08.2019 4:17, Alexander Duyck wrote:
-> > On Tue, Aug 20, 2019 at 8:58 AM Ilya Maximets <i.maximets@samsung.com> =
-wrote:
-> >>
-> >> On 20.08.2019 18:35, Alexander Duyck wrote:
-> >>> On Tue, Aug 20, 2019 at 8:18 AM Ilya Maximets <i.maximets@samsung.com=
-> wrote:
-> >>>>
-> >>>> Tx code doesn't clear the descriptor status after cleaning.
-> >>>> So, if the budget is larger than number of used elems in a ring, som=
-e
-> >>>> descriptors will be accounted twice and xsk_umem_complete_tx will mo=
-ve
-> >>>> prod_tail far beyond the prod_head breaking the comletion queue ring=
-.
-> >>>>
-> >>>> Fix that by limiting the number of descriptors to clean by the numbe=
-r
-> >>>> of used descriptors in the tx ring.
-> >>>>
-> >>>> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
-> >>>> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-> >>>
-> >>> I'm not sure this is the best way to go. My preference would be to
-> >>> have something in the ring that would prevent us from racing which I
-> >>> don't think this really addresses. I am pretty sure this code is safe
-> >>> on x86 but I would be worried about weak ordered systems such as
-> >>> PowerPC.
-> >>>
-> >>> It might make sense to look at adding the eop_desc logic like we have
-> >>> in the regular path with a proper barrier before we write it and afte=
-r
-> >>> we read it. So for example we could hold of on writing the bytecount
-> >>> value until the end of an iteration and call smp_wmb before we write
-> >>> it. Then on the cleanup we could read it and if it is non-zero we tak=
-e
-> >>> an smp_rmb before proceeding further to process the Tx descriptor and
-> >>> clearing the value. Otherwise this code is going to just keep popping
-> >>> up with issues.
-> >>
-> >> But, unlike regular case, xdp zero-copy xmit and clean for particular
-> >> tx ring always happens in the same NAPI context and even on the same
-> >> CPU core.
-> >>
-> >> I saw the 'eop_desc' manipulations in regular case and yes, we could
-> >> use 'next_to_watch' field just as a flag of descriptor existence,
-> >> but it seems unnecessarily complicated. Am I missing something?
-> >>
-> >
-> > So is it always in the same NAPI context?. I forgot, I was thinking
-> > that somehow the socket could possibly make use of XDP for transmit.
->
-> AF_XDP socket only triggers tx interrupt on ndo_xsk_async_xmit() which
-> is used in zero-copy mode. Real xmit happens inside
-> ixgbe_poll()
->  -> ixgbe_clean_xdp_tx_irq()
->     -> ixgbe_xmit_zc()
->
-> This should be not possible to bound another XDP socket to the same netde=
-v
-> queue.
->
-> It also possible to xmit frames in xdp_ring while performing XDP_TX/REDIR=
-ECT
-> actions. REDIRECT could happen from different netdev with different NAPI
-> context, but this operation is bound to specific CPU core and each core h=
-as
-> its own xdp_ring.
->
-> However, I'm not an expert here.
-> Bj=C3=B6rn, maybe you could comment on this?
->
-> >
-> > As far as the logic to use I would be good with just using a value you
-> > are already setting such as the bytecount value. All that would need
-> > to happen is to guarantee that the value is cleared in the Tx path. So
-> > if you clear the bytecount in ixgbe_clean_xdp_tx_irq you could
-> > theoretically just use that as well to flag that a descriptor has been
-> > populated and is ready to be cleaned. Assuming the logic about this
-> > all being in the same NAPI context anyway you wouldn't need to mess
-> > with the barrier stuff I mentioned before.
->
-> Checking the number of used descs, i.e. next_to_use - next_to_clean,
-> makes iteration in this function logically equal to the iteration inside
-> 'ixgbe_xsk_clean_tx_ring()'. Do you think we need to change the later
-> function too to follow same 'bytecount' approach? I don't like having
-> two different ways to determine number of used descriptors in the same fi=
-le.
->
-> Best regards, Ilya Maximets.
+On Sat, Jul 13, 2019 at 10:11:29PM +0800, Hou Zhiqiang wrote:
+> The current code erroneously sets-up the CPU base address with
+> parameter 'pci_addr', which is passed to initialize the PCI
+> base address of the inbound window, and the upper 32-bit of the
+> CPU base address of the inbound window is not initialized. This
+> results in the current code only support 1:1 inbound window
+> with limitation that the base address must be < 4GB.
+> 
+> This patch introduces a new parameter 'u64 cpu_addr' to initialize
+> both lower 32-bit and upper 32-bit of the CPU base address to make
+> it can support non 1:1 inbound window and fix the base address must
+> be < 4GB limitation.
+> 
+> Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> ---
+> V7:
+>  - This patch is #25 of V6 patches, rewrote the changelog.
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 
-As far as ixgbe_clean_xdp_tx_irq() vs ixgbe_xsk_clean_tx_ring(), I
-would say that if you got rid of budget and framed things more like
-how ixgbe_xsk_clean_tx_ring was framed with the ntc !=3D ntu being
-obvious I would prefer to see us go that route.
+Applied to pci/mobiveil for v5.4, thanks.
 
-Really there is no need for budget in ixgbe_clean_xdp_tx_irq() if you
-are going to be working with a static ntu value since you will only
-ever process one iteration through the ring anyway. It might make more
-sense if you just went through and got rid of budget and i, and
-instead used ntc and ntu like what was done in
-ixgbe_xsk_clean_tx_ring().
+Lorenzo
 
-Thanks.
-
-- Alex
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index 672e633..a45a644 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -88,6 +88,7 @@
+>  #define  AMAP_CTRL_TYPE_MASK		3
+>  
+>  #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0, win)
+> +#define PAB_EXT_PEX_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0xb4a0, win)
+>  #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4, win)
+>  #define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x4ba8, win)
+>  #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac, win)
+> @@ -462,7 +463,7 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+>  }
+>  
+>  static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+> -			       u64 pci_addr, u32 type, u64 size)
+> +			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
+>  {
+>  	u32 value;
+>  	u64 size64 = ~(size - 1);
+> @@ -482,7 +483,10 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
+>  	csr_writel(pcie, upper_32_bits(size64),
+>  		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
+>  
+> -	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
+> +	csr_writel(pcie, lower_32_bits(cpu_addr),
+> +		   PAB_PEX_AMAP_AXI_WIN(win_num));
+> +	csr_writel(pcie, upper_32_bits(cpu_addr),
+> +		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
+>  
+>  	csr_writel(pcie, lower_32_bits(pci_addr),
+>  		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
+> @@ -624,7 +628,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+>  
+>  	/* memory inbound translation window */
+> -	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+> +	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+>  
+>  	/* Get the I/O and memory ranges from DT */
+>  	resource_list_for_each_entry(win, &pcie->resources) {
+> -- 
+> 2.9.5
+> 
