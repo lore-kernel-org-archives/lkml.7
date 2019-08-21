@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67300C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA437C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 398952339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D56233A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:55:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UV12l7FX";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="myMaWIMm"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BzYzyZVZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BklWjrZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfHUJzE (ORCPT
+        id S1727750AbfHUJzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:55:04 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41006 "EHLO
+        Wed, 21 Aug 2019 05:55:08 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41150 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfHUJzC (ORCPT
+        with ESMTP id S1725268AbfHUJzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:55:02 -0400
+        Wed, 21 Aug 2019 05:55:05 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6990560FEB; Wed, 21 Aug 2019 09:55:01 +0000 (UTC)
+        id 0944961156; Wed, 21 Aug 2019 09:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566381301;
-        bh=8HJgz7kd5z/mUOWEfiuNKP1ngD52TyjiUrtmNoJS8tM=;
+        s=default; t=1566381305;
+        bh=M4QvQKNwTCeogOruLJL18+5CPq7Ebj/0WayZROehIOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UV12l7FX1YgTZGsOGrgSpaIpgxLYwQHhcDvLR8u9rLCfv00PHKpDThd7L1fG5mhUu
-         +CjQ77IifWBB0NKkHLTegdUELuUXue+7cinBNrkHMnZR2uMjC49XxB5kbSlTOpRQ8R
-         zbFqa7Zme0riUGidPpoDgagdEud3S5/oxJAEyrPo=
+        b=BzYzyZVZ+YlMYGraIPW+vvTn5rTZth1jjfdV3GRNkBj48509ufMoVwQ9IF2iVlSKR
+         zNJhw/FPyB75I6OYRb2IFP+u2vc81zbUosS/r3W/GGNDVPI52F2WICbt1gU8cp0zWw
+         tBN3fovAOghIs3zqifIqc5gBJNtU9aveiEprE7SY=
 Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DEC6960E7A;
-        Wed, 21 Aug 2019 09:54:57 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6FADE60EA5;
+        Wed, 21 Aug 2019 09:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566381300;
-        bh=8HJgz7kd5z/mUOWEfiuNKP1ngD52TyjiUrtmNoJS8tM=;
+        s=default; t=1566381304;
+        bh=M4QvQKNwTCeogOruLJL18+5CPq7Ebj/0WayZROehIOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=myMaWIMmGZLjbQmbkQWFtVMGMwGRJYzDBLwrR/dozezafWDd/w+hhXeNlytchapOq
-         AxQss95hivyCJEYAET9yHZFYiHBLfsiYTcvouLKEhDYnBV4EYMT0F6I14wBds+HUcN
-         phro84VJ3xl7QsZfi+aCdiGlGweREAAOULZuBPIU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DEC6960E7A
+        b=BklWjrZZiZwQZQJ+Boa9gejaItzoRNJpLdnsFvzRXkUWzZGbNTBP8gYzDaPg3Z8Rg
+         Yrj4I74JbTlq8NEGaQW08A8L1POK4lkitg6unefGKFOR4uIZT3FA/67bVLSadCeAbV
+         Y2PogcBs6S2bCLBvfve3/SbwGt2jKiLhCNgXok5w=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6FADE60EA5
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -55,9 +55,9 @@ To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
 Cc:     agross@kernel.org, mark.rutland@arm.com,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 2/4] reset: qcom: aoss: Add support for SC7180 SoCs
-Date:   Wed, 21 Aug 2019 15:24:40 +0530
-Message-Id: <20190821095442.24495-3-sibis@codeaurora.org>
+Subject: [PATCH 3/4] dt-bindings: reset: pdc: Add PDC Global binding for SC7180 SoCs
+Date:   Wed, 21 Aug 2019 15:24:41 +0530
+Message-Id: <20190821095442.24495-4-sibis@codeaurora.org>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20190821095442.24495-1-sibis@codeaurora.org>
 References: <20190821095442.24495-1-sibis@codeaurora.org>
@@ -68,25 +68,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add AOSS reset support for SC7180 SoCs.
+Add SC7180 PDC global to the list of possible bindings.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- drivers/reset/reset-qcom-aoss.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/reset/qcom,pdc-global.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/reset/reset-qcom-aoss.c b/drivers/reset/reset-qcom-aoss.c
-index 36db967504507..a400db93eb7d2 100644
---- a/drivers/reset/reset-qcom-aoss.c
-+++ b/drivers/reset/reset-qcom-aoss.c
-@@ -115,6 +115,7 @@ static int qcom_aoss_reset_probe(struct platform_device *pdev)
- }
+diff --git a/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt b/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
+index a62a492843e70..1f1ff280b2d69 100644
+--- a/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
++++ b/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
+@@ -8,7 +8,8 @@ Required properties:
+ - compatible:
+ 	Usage: required
+ 	Value type: <string>
+-	Definition: must be:
++	Definition: must be one of:
++		    "qcom,sc7180-pdc-global"
+ 		    "qcom,sdm845-pdc-global"
  
- static const struct of_device_id qcom_aoss_reset_of_match[] = {
-+	{ .compatible = "qcom,sc7180-aoss-cc", .data = &sdm845_aoss_desc },
- 	{ .compatible = "qcom,sdm845-aoss-cc", .data = &sdm845_aoss_desc },
- 	{}
- };
+ - reg:
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
