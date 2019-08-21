@@ -2,119 +2,82 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F231DC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DA9C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E1E233A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:33:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="EAK9aWCo"
+	by mail.kernel.org (Postfix) with ESMTP id D5095216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566412454;
+	bh=6176p1EuuaKcL1e9/dTRawWYECKMySkbCjvgkM0Thpw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QXKdbQ9B9aotsawiK2GA8tpHA9DTM4e0OrJ0DoLhWwjTcsBr1NWn0+CUkZrjJ1v+4
+	 AktBVSEpDg1FR/wKN7Kl186DG2AzN8gobx4dyLuQR8Y8V5JrklgfKRn8k48ITKsn0L
+	 jRuZV/iCdQTF3a/0g6j3W2Gki8pV43y4oebkgHv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728609AbfHUSdb (ORCPT
+        id S1728998AbfHUSeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:33:31 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46497 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729111AbfHUScI (ORCPT
+        Wed, 21 Aug 2019 14:34:14 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44311 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727255AbfHUSeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:32:08 -0400
-Received: by mail-qk1-f196.google.com with SMTP id p13so2695853qkg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=KZlSM1+HYlx5AabYJySSHWoh4S6JQNg+E/eloF1WuIo=;
-        b=EAK9aWCollpH9xmdUtaiVBS6Ul8Grpce2v4a96pxnxYp2IBX8da/99b/wGOvABGtwu
-         YGsbf5Rf/sZVH8SNTtDy0XpnvFV5C9IC9WYVDSpYpMbwVzm7ArMz9PW52kFErZTTXCsL
-         WTyBvzhkpiiRAQw8xhZCkbesGdEv3+KaY8OAZ6E7bzieO3RZcGtLLT0Pz48c7wl8J3Zh
-         tOImm/Vrp/7Gj+QIPxNlt0oaaMZyfLcgYRPH40jynE+MITM4+xI0XYdvt3v88kfQeRO6
-         7KdjAnbtkEeJP3UjA9HD358p6hLYn9PO5svHWmEYjnXYtYqKE97d1nQSshP1W53Wo27L
-         IM5g==
+        Wed, 21 Aug 2019 14:34:13 -0400
+Received: by mail-oi1-f193.google.com with SMTP id k22so2347599oiw.11;
+        Wed, 21 Aug 2019 11:34:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KZlSM1+HYlx5AabYJySSHWoh4S6JQNg+E/eloF1WuIo=;
-        b=J/Czn4rb+VhESB69NVZqsX52xmjU48d6t9b64RAbpPCsT2w49DuDy/dIazQJ1Iidxx
-         94xwtWiXAH/4gLJvSgK08f8N2GIf5vq0niwgCdTy7Cwwp6TzvKui9AD75HMDeixJVKeO
-         QTsR/fzHVW60iL28VEwGYzt+AVzFE+DThJuB9DC0zKNeSRj2SrqczNbGzI2NMhO7IY8F
-         0AKafAwP2oMxkaHTLcVnEqU+8SzBhKvXzYdJGj+BCSuOJCTQWgWpTQh//xHZyV/+I5Y6
-         XIWyn/0b7g3sF8Ss75AfLkOwtlqA8G4+Noma2q/VrKZIsVfgzeu0WMBmUs3gnzNxD+ZK
-         3MxQ==
-X-Gm-Message-State: APjAAAUVOr5ZSX+Cvmr1sCFEOvmDvHPDX35RmC2YAduCb5kj8ZxFSBlK
-        DyPTeNiMKxQt/tLq4W5qM9+ZS0l7WDs=
-X-Google-Smtp-Source: APXvYqxa+1nBillHVTD1wUyey0q2i0nGT/ot1gRBODj0C6eDdzfP5MOz2GYbi9GTD87ibQ+3R7pbkA==
-X-Received: by 2002:a05:620a:4d4:: with SMTP id 20mr30837041qks.95.1566412327681;
-        Wed, 21 Aug 2019 11:32:07 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id q13sm10443332qkm.120.2019.08.21.11.32.06
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gi2BZPRlk0uA2JzVWQCJU+s6t1qhy8lKwkC+6999UAg=;
+        b=IsOv291JMyHDIF/Ml4tt/YNVWOBn6d86CqQUZZmPH7RbzjseJ34W7FXtuzs+Wm0YOD
+         SeekYwZKyUzfpoTG0HiWdQNLIyO8fM4Yg18KNGN1fNqutNqiLqGKpZFHyOMm3TyniTEL
+         zvo6MykN311SB27l8taZCELBSXLgdlZZ1b8BZctSReSYRbcuAAPvIlzgZ4OT31paSxuF
+         wCZA4SSIc8H89vu1SXYDA7T1gtvTcM6rnfJOPqulGiF0qDmBpXZ73KbQrM5S3ea5yf0i
+         jOJXmoe5+vqWVOz0GphNufXctte+0kPAcSNuAcUq1qgJJTBI23WCck/LXXXtXzVmNW3a
+         hDpw==
+X-Gm-Message-State: APjAAAXJn7o01Fm9E6F3E+GynBhVdKg58+7tuOXLAy19frPe8hrnHR5V
+        AoD/CCqrQUSKF3PkOlS47Q==
+X-Google-Smtp-Source: APXvYqx3DnJdbJxJ1b1jmrQ8KW6WnZtAF9psvXnB9Q4r34aJ0FaUBKFmSuJmxrnz4HGTVJO0BtdgUQ==
+X-Received: by 2002:aca:4f48:: with SMTP id d69mr1082979oib.74.1566412453047;
+        Wed, 21 Aug 2019 11:34:13 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v5sm8044571otk.64.2019.08.21.11.34.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 11:32:07 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        ebiederm@xmission.com, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        james.morse@arm.com, vladimir.murzin@arm.com,
-        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
-        mark.rutland@arm.com
-Subject: [PATCH v3 01/17] kexec: quiet down kexec reboot
-Date:   Wed, 21 Aug 2019 14:31:48 -0400
-Message-Id: <20190821183204.23576-2-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190821183204.23576-1-pasha.tatashin@soleen.com>
-References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
+        Wed, 21 Aug 2019 11:34:12 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 13:34:11 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Chuanhua Han <chuanhua.han@nxp.com>
+Cc:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Chuanhua Han <chuanhua.han@nxp.com>
+Subject: Re: [PATCH 1/3] dt-bindings: fsl: dspi: Add fsl,ls1088a-dspi
+ compatible string
+Message-ID: <20190821183411.GA26478@bogus>
+References: <20190801083105.30102-1-chuanhua.han@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801083105.30102-1-chuanhua.han@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here is a regular kexec command sequence and output:
-=====
-$ kexec --reuse-cmdline -i --load Image
-$ kexec -e
-[  161.342002] kexec_core: Starting new kernel
+On Thu,  1 Aug 2019 16:31:03 +0800, Chuanhua Han wrote:
+> new compatible string: "fsl,ls1088a-dspi".
+> 
+> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Welcome to Buildroot
-buildroot login:
-=====
-
-Even when "quiet" kernel parameter is specified, "kexec_core: Starting
-new kernel" is printed.
-
-This message has  KERN_EMERG level, but there is no emergency, it is a
-normal kexec operation, so quiet it down to appropriate KERN_NOTICE.
-
-Machines that have slow console baud rate benefit from less output.
-
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Simon Horman <horms@verge.net.au>
----
- kernel/kexec_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index d5870723b8ad..2c5b72863b7b 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1169,7 +1169,7 @@ int kernel_kexec(void)
- 		 * CPU hotplug again; so re-enable it here.
- 		 */
- 		cpu_hotplug_enable();
--		pr_emerg("Starting new kernel\n");
-+		pr_notice("Starting new kernel\n");
- 		machine_shutdown();
- 	}
- 
--- 
-2.23.0
-
+Acked-by: Rob Herring <robh@kernel.org>
