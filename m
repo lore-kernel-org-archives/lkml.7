@@ -2,102 +2,141 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14128C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8E1C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E1B206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307DD20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:36:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QCiPWfXp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbfHUPed (ORCPT
+        id S1729958AbfHUPgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:34:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:60232 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbfHUPec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:34:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB655337;
-        Wed, 21 Aug 2019 08:34:31 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E11F53F718;
-        Wed, 21 Aug 2019 08:34:28 -0700 (PDT)
-Subject: Re: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support
- PA[33:32] for MediaTek
-To:     Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, youlin.pei@mediatek.com,
-        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
-        Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com,
-        chao.hao@mediatek.com, ming-fan.chen@mediatek.com
-References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
- <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
- <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <22a79977-5074-7af1-97b8-8a3e549b23c1@arm.com>
-Date:   Wed, 21 Aug 2019 16:34:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 21 Aug 2019 11:36:13 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:47262 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728700AbfHUPgM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:36:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1566401771; x=1597937771;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=HeRAL57ZNMAXNMbqWA3TBa1f2AwnJdI9onh5PKgKyjI=;
+  b=QCiPWfXp9ipE0b+jMNeAmhI4DvYOMgo+YGXXijgWxh6ltUXMRJEP3f8x
+   IiMs68kM2J1GXR7I4IWk3kKLtVBgJjaDaOYhDLz7lvzB+bhjaYHmDiRro
+   Dx06NEVEuTNNpHblZgeJTyGzWjX6gd/FynY6cV7XWovviF8nLteZoEe8O
+   k=;
+X-IronPort-AV: E=Sophos;i="5.64,412,1559520000"; 
+   d="scan'208";a="696097733"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 21 Aug 2019 15:36:07 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 825411A2971;
+        Wed, 21 Aug 2019 15:36:07 +0000 (UTC)
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 21 Aug 2019 15:36:07 +0000
+Received: from u9ff250417f405e.ant.amazon.com (10.43.160.100) by
+ EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 21 Aug 2019 15:36:00 +0000
+From:   Jonathan Chocron <jonnyc@amazon.com>
+To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <andrew.murray@arm.com>, <dwmw@amazon.co.uk>,
+        <benh@kernel.crashing.org>, <alisaidi@amazon.com>,
+        <ronenk@amazon.com>, <barakw@amazon.com>, <talel@amazon.com>,
+        <hanochu@amazon.com>, <hhhawa@amazon.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
+Subject: [PATCH v4 0/7] Amazon's Annapurna Labs DT-based PCIe host controller driver
+Date:   Wed, 21 Aug 2019 18:35:40 +0300
+Message-ID: <20190821153545.17635-1-jonnyc@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.100]
+X-ClientProxiedBy: EX13D18UWC004.ant.amazon.com (10.43.162.77) To
+ EX13D13UWA001.ant.amazon.com (10.43.160.136)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/08/2019 16:24, Will Deacon wrote:
-> On Wed, Aug 21, 2019 at 09:53:12PM +0800, Yong Wu wrote:
->> MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
->> the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
->> respectively. Meanwhile the iova still is 32bits.
->>
->> Regarding whether the pagetable address could be over 4GB, the mt8183
->> support it while the previous mt8173 don't, thus keep it as is.
->>
->> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
->> ---
->>   drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
->>   include/linux/io-pgtable.h         |  7 +++----
->>   2 files changed, 28 insertions(+), 11 deletions(-)
-> 
-> [...]
-> 
->> @@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
->>   {
->>   	struct arm_v7s_io_pgtable *data;
->>   
->> -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
->> +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
->> +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
->> +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
-> 
-> Please can you instead change arm_v7s_alloc_pgtable() so that it allows an
-> ias of up to 34 when the IO_PGTABLE_QUIRK_ARM_MTK_EXT is set?
+This series adds support for Amazon's Annapurna Labs DT-based PCIe host
+controller driver.
+Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
 
-You mean oas, right? I believe the hardware *does* actually support a 
-32-bit ias as well, but we shouldn't pretend to support that while 
-__arm_v7s_alloc_table() still only knows how to allocate normal-sized 
-tables.
+Changes since v3:
+- Removed PATCH 8/8 since the usage of the PCI flags will be discussed
+  in the upcoming LPC
+- Align commit subject with the folder convention
+- Added explanation regarding ECAM "overload" mechanism
+- Switched to read/write{_relaxed} APIs
+- Modified a dev_err to dev_dbg
+- Removed unnecessary variable
+- Removed driver details from dt-binding description
+- Changed to SoC specific compatibles
+- Fixed typo in a commit message
+- Added comment regarding MSI in the MSI-X quirk
 
-Robin.
+Changes since v2:
+- Added al_pcie_controller_readl/writel() wrappers
+- Reorganized local vars in several functions according to reverse
+  tree structure
+- Removed unnecessary check of ret value
+- Changed return type of al_pcie_config_prepare() from int to void
+- Removed check if link is up from probe() [done internally in
+  dw_pcie_rd/wr_conf()]
 
-> 
-> With that change:
-> 
-> Acked-by: Will Deacon <will@kernel.org>
-> 
-> Will
-> 
+Changes since v1:
+- Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
+- Fixed different message/comment/print wordings
+- Added panic stacktrace to commit message of MSI-x quirk patch
+- Changed to pci_warn() instead of dev_warn()
+- Added unit_address after node_name in dt-binding
+- Updated Kconfig help description
+- Used GENMASK and FIELD_PREP/GET where appropriate
+- Removed leftover field from struct al_pcie and moved all ptrs to
+  the beginning
+- Re-wrapped function definitions and invocations to use fewer lines
+- Change %p to %px in dbg prints in rd/wr_conf() functions
+- Removed validation that the port is configured to RC mode (as this is
+  added generically in PATCH 7/8)
+- Removed unnecessary variable initializations
+- Swtiched to %pR for printing resources
+
+
+Ali Saidi (1):
+  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+
+Jonathan Chocron (6):
+  PCI: Add Amazon's Annapurna Labs vendor ID
+  PCI/VPD: Add VPD release quirk for Amazon's Annapurna Labs Root Port
+  PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
+    Root Port
+  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+  PCI: dwc: al: Add support for DW based driver type
+  PCI: dwc: Add validation that PCIe core is set to correct mode
+
+ .../devicetree/bindings/pci/pcie-al.txt       |  46 +++
+ MAINTAINERS                                   |   3 +-
+ drivers/pci/controller/dwc/Kconfig            |  12 +
+ drivers/pci/controller/dwc/pcie-al.c          | 365 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
+ .../pci/controller/dwc/pcie-designware-host.c |   8 +
+ drivers/pci/quirks.c                          |  37 ++
+ drivers/pci/vpd.c                             |  16 +
+ include/linux/pci_ids.h                       |   2 +
+ 9 files changed, 496 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+
+-- 
+2.17.1
+
