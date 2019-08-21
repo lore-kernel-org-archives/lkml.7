@@ -2,129 +2,81 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D962C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF95C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C2823404
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FC522DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:48:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="VF//ZkIg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q9iDAGEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbfHUTsN (ORCPT
+        id S1730214AbfHUTsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:48:13 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38771 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730113AbfHUTsM (ORCPT
+        Wed, 21 Aug 2019 15:48:45 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40710 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729951AbfHUTso (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:48:12 -0400
-Received: by mail-qt1-f196.google.com with SMTP id x4so4555350qts.5
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 12:48:12 -0700 (PDT)
+        Wed, 21 Aug 2019 15:48:44 -0400
+Received: by mail-io1-f66.google.com with SMTP id t6so7067625ios.7
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 12:48:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RKaQWnWiA/zCcExfi75lqB9ALEnDHuRristulqneTd4=;
-        b=VF//ZkIgb0ccMf/fYMR8ys1oZHmy5JRKO8S8IVnwY93iOCu/W7+tqrcWFw+5rldxNI
-         aOtLu3PsXm0Him3edXbZNXCIhRk5dw4XYfKu4e3yv8iN/mxXDcev7A64Goh60uRoeToj
-         KsbYARzI5dfW3WUW2nHR+o8WkktwHJGaehfIiJX8Npx8V5kKAL0zIUWne13iFi3yzfE0
-         Mr3GgB9fCwjOgBICH92Ndb17k2AjhI3vfLJVcZ59QAI/xkGuigPoWEVo0xwQOrmHgZvG
-         +llknKnaKUAXOzinx5ExtHyGDbPgE5bGB/pnb1FjLysYXUDhwnplOXXe90luAkrxNaEF
-         /MsQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W/FKUsI28DeU0RstFXTPREgngr4rJSTzC7of+9eSaSg=;
+        b=q9iDAGEX9A9tYk1Yt2FvedzkSFMe6vss8hgfcenSCqQ6Sq/xtfbroD62XrV9bz39Vp
+         CcANgaPV5Z06k7K7j6rABXBxExeAmH1IeZ1vLnB9AfmKe634584Ovfk8UBtLOLL+0u14
+         07XvYxyW4Z16F8N5HGCK0hs/KTDUNqk5/QH9AfAnETRIEzg3P6xPeCAVHNbq3UcaznZD
+         iTwH3ISsqo397BbsAbq9ZAHNbUohmVc01rbxJdYhE8rsqCBq54VRQHAaWd5+gTC0y6o7
+         Wuq4kAw0YavSoZ2iQ5s8x1lV8J6z0bYravmBVRmujYtpgYrrIELKqXFaq3wW6QUKF83X
+         6JIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RKaQWnWiA/zCcExfi75lqB9ALEnDHuRristulqneTd4=;
-        b=N2laYnVYd8yXyTps8GaI29QddtODkrNap7GgqgN7oTLzRlnq4nGveOIBxGBD+wA1CB
-         xzDZLSaE1UHS2lG8gLqAaZ/DpjDpty5v/CA9qIZCJZt5D2UCo4btNsPCgxeGO/GYv148
-         LKc4cBA1EU7fZfFHMY8VdUtNrCx2FP8tkU9XFMuaFoBIg0nKoNBNQTcd5q+JDkiZCn20
-         Tkod0YJTWoFrbmJw2hgdSOxV8dkkFKQcoc8i8W8ayUh4SHZiYu5vYEfXp54yBjdMolQn
-         Va/mQlxZFCEpq6kNvggx2cmWbZJhnv5zqE8nI1ADqKGs6sKQ3TZTybnTp04jakCeB/Xs
-         /SGw==
-X-Gm-Message-State: APjAAAVzQs/8zS2wBTA6tBrp/oGux/XzBu6Fop+e20p2FKa3EbOwVSpD
-        SYWmV/ZTDdyPPNfeKCw5plYJZQ==
-X-Google-Smtp-Source: APXvYqynnJZ0Zi7g4jGmr+xM0aj4NgAU3mYFQCm90qX+6uBLqZGFaKsA8ELnMbT3xzkDRjmj+/uCGg==
-X-Received: by 2002:ac8:468f:: with SMTP id g15mr33328922qto.353.1566416891773;
-        Wed, 21 Aug 2019 12:48:11 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id q62sm11253497qkb.69.2019.08.21.12.48.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 21 Aug 2019 12:48:11 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1i0WaY-0005kK-I1; Wed, 21 Aug 2019 16:48:10 -0300
-Date:   Wed, 21 Aug 2019 16:48:10 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190821194810.GI8653@ziepe.ca>
-References: <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190817022603.GW6129@dread.disaster.area>
- <20190819063412.GA20455@quack2.suse.cz>
- <20190819092409.GM7777@dread.disaster.area>
- <20190819123841.GC5058@ziepe.ca>
- <20190820011210.GP7777@dread.disaster.area>
- <20190820115515.GA29246@ziepe.ca>
- <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
- <20190821181343.GH8653@ziepe.ca>
- <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W/FKUsI28DeU0RstFXTPREgngr4rJSTzC7of+9eSaSg=;
+        b=o+gkF+nhaCEh3qPnOnoQLMDX2UYdMeL+BPa1ofyicT55FSJ58ZR05c91rZT5RxuqYx
+         roRKC+9Zi5KN8G6GBLOXWhpszZNciyli3AGmBGLVYH5PfIq6oTwp7CWHkhB+HuUT6Saj
+         PiemFcjqh7nNVSvzrq0td4reN8EaYz9qRApoKAkDzsQoUoPSecZIQjMJY0te/EguI2k5
+         93ixr2i91pwwdX75kKHo018OjVgtHrnohGyp0PtcS7f816Xz7akX6xr2b5PmjDAqDC1j
+         oU9twQVQ5ScrvXkxFW9h1zF9Jdm8gZAi2fUKJgxuFTZYSt2mexAT1QTgsn1hGIBYMu2V
+         uvaA==
+X-Gm-Message-State: APjAAAWsda8gEm7byiaoUlZmz9BzaZJimS70DNQnzCU4RyjZsqHktWky
+        VtM+J+IUl28xDf5n9hfK9h9m4k3hFg1jAnPL/YeCMQ==
+X-Google-Smtp-Source: APXvYqyza1onGK2ZL65dtOsaHuiPoV4r7myeGa1KIgljwyyjmR/zF9+g47qeVsrR1uxk1j7Drv/nVRXTvqNv7dE/IUY=
+X-Received: by 2002:a02:a809:: with SMTP id f9mr11872478jaj.111.1566416923268;
+ Wed, 21 Aug 2019 12:48:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1566376002-17121-1-git-send-email-pbonzini@redhat.com> <1566376002-17121-4-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <1566376002-17121-4-git-send-email-pbonzini@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 21 Aug 2019 12:48:32 -0700
+Message-ID: <CALMp9eQX5m-g=D-J=h86rTrkQCB_BdJi56jGuANrQqv_-gw_Nw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] KVM: x86: use Intel speculation bugs and features as
+ derived in generic x86 code
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>, jmattson@redhat.com,
+        Eduardo Habkost <ehabkost@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 11:57:03AM -0700, Ira Weiny wrote:
-
-> > Oh, I didn't think we were talking about that. Hanging the close of
-> > the datafile fd contingent on some other FD's closure is a recipe for
-> > deadlock..
-> 
-> The discussion between Jan and Dave was concerning what happens when a user
-> calls
-> 
-> fd = open()
-> fnctl(...getlease...)
-> addr = mmap(fd...)
-> ib_reg_mr() <pin>
-> munmap(addr...)
-> close(fd)
-
-I don't see how blocking close(fd) could work. Write it like this:
-
- fd = open()
- uverbs = open(/dev/uverbs)
- fnctl(...getlease...)
- addr = mmap(fd...)
- ib_reg_mr() <pin>
- munmap(addr...)
-  <sigkill>
-
-The order FD's are closed during sigkill is not deterministic, so when
-all the fputs happen during a kill'd exit we could end up blocking in
-close(fd) as close(uverbs) will come after in the close
-list. close(uverbs) is the thing that does the dereg_mr and releases
-the pin.
-
-We don't need complexity with dup to create problems.
-
-Jason
+On Wed, Aug 21, 2019 at 1:27 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> Similar to AMD bits, set the Intel bits from the vendor-independent
+> feature and bug flags, because KVM_GET_SUPPORTED_CPUID does not care
+> about the vendor and they should be set on AMD processors as well.
+>
+> Suggested-by: Jim Mattson <jmattson@google.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
