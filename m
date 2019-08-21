@@ -2,117 +2,130 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87659C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0953EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9FE22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:50:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GjstqJzq"
+	by mail.kernel.org (Postfix) with ESMTP id CA3042339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:53:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566406426;
+	bh=8EpYXOIJQ7TePwZ/ZCJnzDEkdpUgKmzzxBX02HTYDWc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eP1ObTpdXYkFsOmF5JUiYE0/F6G0sar+QPy83xI1K5bA8Q0EhhctkvQBD4YCjt2tQ
+	 HwXCvzDi8TEKFRIu+o/wTaDB0nRKDpxTDByaWjuodKUwcfjkmMwUhAKaouck+FU+VH
+	 vv9G7wTH+lJBspfVkFsjGgTFSRbn23kS2EnpfyeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729612AbfHUQuk (ORCPT
+        id S1729506AbfHUQxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:50:40 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35542 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfHUQuj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:50:39 -0400
-Received: by mail-pl1-f196.google.com with SMTP id gn20so1639146plb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 09:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dNLL8R5Ozl+yUbTTz0wtZ6BTtTLjEvK9s2CYPkCtL7o=;
-        b=GjstqJzqiWim4DDuwFd0g+cGejELz5UNq4QiK/WmnN0FNkrbmqOkdW9duNhHU8gZ8K
-         xVfQk91OUNALPQghxN4Aq/ItuVzKWI783T40f5LeRpverVYuRi+XzcMBCmmWaOhNE9bf
-         grRYIod7QwSfSnxzRMpSn6cDVgx30+dTKt+rzVulZduUmsXf0IkVIb8Qo3v4uLXv4hW5
-         38zk9tBVS7EFMKtZMdULMVMZmpqTkaV+kH0JHobeNMAUhdFPTIlVf5tmTMs8I3XEO9wz
-         1d4JWpi6iRZQzAdIHWwxJkd8JaKn89mF5AUHAt38THIZwALYKRnxmvi4S0s3wZG9KvbA
-         488g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dNLL8R5Ozl+yUbTTz0wtZ6BTtTLjEvK9s2CYPkCtL7o=;
-        b=fSfRMMkA3jZXRZHNCfNvo/FjB+5poJHM9bLEywcrOTMSYlqNt3841HNRn2JxZTB5a3
-         H/kDvz53rd4832JaXjXY2qHUNsV769wnCas9m/Pe2cnzTflz7KYaUdSeieXM9pPWBLw7
-         MqW73kY0svSfPkOev+RHDF2rSa5YLfdUMSYr0tF2UFnN2r8KZ9Se+mw/1vU51y8LQiwH
-         8yun7WFtEhFzbBxkUVcL94WxJmDuCgh+p1aOQKsvq9MLrSaismzjn7sSKgM8rXVeWl1J
-         SyeLcd+JlmRtXAEHUG1Waafg+DrV8xMOLX439oMsHgGdf1s8V0nhY2kPd62xmTFNyfi1
-         PRQw==
-X-Gm-Message-State: APjAAAXwL+rLE7Txu/p6cVb2XCTi9RwBeCMYikIkfcChhP16460DacoW
-        DLXI6gNmHjOuSgBMBF5k1NZgsdZuxxqbXeqXakXQ7w==
-X-Google-Smtp-Source: APXvYqwBHQIFOZROdviPAJyQpfy7Sdu0wRt4psMOkU0xAa072gIO1No42ZEB2yB7154bHv1rVbQaSGSFW9+M9hc6WRg=
-X-Received: by 2002:a17:902:ab96:: with SMTP id f22mr35635682plr.147.1566406238620;
- Wed, 21 Aug 2019 09:50:38 -0700 (PDT)
+        Wed, 21 Aug 2019 12:53:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726696AbfHUQxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:53:45 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9699122DD3;
+        Wed, 21 Aug 2019 16:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566406424;
+        bh=8EpYXOIJQ7TePwZ/ZCJnzDEkdpUgKmzzxBX02HTYDWc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mfA3TYZ5mReb6a41G+2FUsWZ4XDr3vM5MuLTd+xih2gFnd/B+p3syzRto7GLy1yCP
+         yNbNLlyJluiuGn/UDS0ljvkiKAsdh75khbDmuBybOByPBaXAfA3M/PM56Bd93ckdf7
+         Uz4JeqWNifNtxOjNgPEvRWiDgS+Ymy2V+CFJCsZE=
+Date:   Wed, 21 Aug 2019 17:53:39 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Ganapatrao Kulkarni <gklkml16@gmail.com>,
+        Ganapatrao Kulkarni <gkulkarni@marvell.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Jan Glauber <jglauber@marvell.com>
+Subject: Re: [PATCH v3 2/2] drivers/perf: Add CCPI2 PMU support in ThunderX2
+ UNCORE driver.
+Message-ID: <20190821165339.7gu4rxkvdjcr4mta@willie-the-truck>
+References: <1563873380-2003-1-git-send-email-gkulkarni@marvell.com>
+ <1563873380-2003-3-git-send-email-gkulkarni@marvell.com>
+ <20190812120125.GA50712@lakrids.cambridge.arm.com>
+ <CAKTKpr7juHd9Bgam28LESadihFadEAevRAhc-7w3PTMYY7HLNw@mail.gmail.com>
+ <20190813110345.GD866@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-References: <CAAeHK+xQc5Ce6TwtERTmQ+6qSbuAmGikxCU5SNTdcDAynDEiig@mail.gmail.com>
- <Pine.LNX.4.44L0.1908211223070.1816-100000@iolanthe.rowland.org> <CAAeHK+z-o9naQXZoxwTXRh2WWQzFiRU9XruabNTTm31_1AbjAw@mail.gmail.com>
-In-Reply-To: <CAAeHK+z-o9naQXZoxwTXRh2WWQzFiRU9XruabNTTm31_1AbjAw@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 21 Aug 2019 18:50:27 +0200
-Message-ID: <CAAeHK+w=iNkgfBx2BCO8qSYrgVA+E6z_WjoOnCqH0dDbT0v95Q@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in hidraw_ioctl
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190813110345.GD866@lakrids.cambridge.arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 6:26 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> On Wed, Aug 21, 2019 at 6:24 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > On Wed, 21 Aug 2019, Andrey Konovalov wrote:
-> >
-> > > On Wed, Aug 21, 2019 at 3:37 PM syzbot
-> > > <syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com> wrote:
-> > > >
-> > > > Hello,
-> > > >
-> > > > syzbot has tested the proposed patch but the reproducer still triggered
-> > > > crash:
-> > > > KASAN: slab-out-of-bounds Read in hidraw_ioctl
+On Tue, Aug 13, 2019 at 12:03:45PM +0100, Mark Rutland wrote:
+> On Tue, Aug 13, 2019 at 04:25:15PM +0530, Ganapatrao Kulkarni wrote:
+> > On Mon, Aug 12, 2019 at 5:31 PM Mark Rutland <mark.rutland@arm.com> wrote:
 > > >
-> > > Same here, a different bug.
-> >
-> > It looks like I've got the fix for both these bugs.  Testing now...
->
-> Great! Do you think "BUG: bad usercopy in hidraw_ioctl" can also be
-> fixed by one of those fixes?
-
-We actually have a bunch of other non reproducible bug reports that
-come from HID. I think I'll dup them into these two bugs that you've
-fixed, and we'll see if syzkaller triggers them again once the fixes
-are upstream.
-
->
-> >
-> > > > Tested on:
+> > > On Tue, Jul 23, 2019 at 09:16:28AM +0000, Ganapatrao Kulkarni wrote:
+> > > > CCPI2 is a low-latency high-bandwidth serial interface for connecting
+> > > > ThunderX2 processors. This patch adds support to capture CCPI2 perf events.
+> > >
+> > > It would be worth pointing out in the commit message how the CCPI2
+> > > counters differ from the others. I realise you have that in the body of
+> > > patch 1, but it's critical information when reviewing this patch...
+> > 
+> > Ok, I will add in next version.
+> > >
 > > > >
-> > > > commit:         e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> > > > git tree:       https://github.com/google/kasan.git
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=14f14a1e600000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > patch:          https://syzkaller.appspot.com/x/patch.diff?x=171cd95a600000
-> >
-> > Why don't these patch-test reports include the dashboard link?  It sure
-> > would be handy to have a copy of it here.
+> > > > Signed-off-by: Ganapatrao Kulkarni <gkulkarni@marvell.com>
+> > > > ---
+> > > >  drivers/perf/thunderx2_pmu.c | 248 ++++++++++++++++++++++++++++++-----
+> > > >  1 file changed, 214 insertions(+), 34 deletions(-)
+> > > >
+> > > > diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
+> > > > index 43d76c85da56..a4e1273eafa3 100644
+> > > > --- a/drivers/perf/thunderx2_pmu.c
+> > > > +++ b/drivers/perf/thunderx2_pmu.c
+> > > > @@ -17,22 +17,31 @@
+> > > >   */
+> > > >
+> > > >  #define TX2_PMU_MAX_COUNTERS         4
+> > >
+> > > Shouldn't this be 8 now?
+> > 
+> > It is kept unchanged to 4(as suggested by Will), which is same for
+> > both L3 and DMC.
+> > For CCPI2 this macro is not used.
+> 
+> Hmmm....
+> 
+> I disagree with that suggestion given that this also affects the
+> active_counters bitmap size (and thus it is not correctly sized as of
+> this patch), and it doesn't really save us much.
+> 
+> I think it would be better to bump this to 8 and always update the
+> events array, even though it will be unused for CCPI2. That's less
+> surprising, needs fewer special-cases, and we can use the hrtimer
+> function pointer alone to determine if we need to do any hrtimer work.
 
-Sorry, didn't notice this comment. This should be easy to implement,
-I'll look into that, thanks!
+tbf, my complaint was actually about some macros applying to the whole
+PMU whilst others refer only to DMC/L3C and this not being apparent from
+the naming:
+
+https://lkml.org/lkml/2019/6/27/250
+
+so I'm fine having TX2_PMU_DMC_L3C_MAX_COUNTERS and
+TX2_PMU_CCPI2_MAX_COUNTERS, but that sort of naming needs to be consistent
+unless the macro/definition really applies to both. That fed the suggestion
+that GET_EVENTID could be generic and switch on the event type internally
+instead of at the caller.
+
+Will
