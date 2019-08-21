@@ -2,186 +2,80 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F2BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF83C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 625DA22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:19:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566389950;
-	bh=2vTVijIKerGwLwYL3OK2HwY2DFPeS1bOXJsN7S4xNGw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=wrunPgx7wCtaq9NjKE6AYFzEk2vWpVxKM4yz1LJEIf5J/z9KwhSdePlU1LASuMbsS
-	 Lmjfbs7yObc54+a/TbWQCgB0on7eAm6BRiAssNvzZ6MJ5YWj8fdPkHFl077QNH5rNX
-	 H5QgTvXnGQieFL7ws2ZoRf4daQKME46m5VFMvnVc=
+	by mail.kernel.org (Postfix) with ESMTP id 3ACDA2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbfHUMTJ (ORCPT
+        id S1728226AbfHUMTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 08:19:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbfHUMTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 08:19:09 -0400
-Received: from localhost.localdomain (unknown [115.192.185.12])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 364E22064A;
-        Wed, 21 Aug 2019 12:18:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566389948;
-        bh=2vTVijIKerGwLwYL3OK2HwY2DFPeS1bOXJsN7S4xNGw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WCuKrc9o7kI2KV1JIfxjPbljZffvLhDuJTYAZwdcQQM125nzwWgEHMbJvde4lWE8w
-         cLVM0ljVYRY2ZJZQ1lxTm7rc1kkzLg9uau4LEbBIYuEnf5SIt2S5fiCYcbaFYoTA42
-         /4il9T6iT/48YLJ1yDhsoDD79Bf4ZZtdSI9twTPE=
-From:   guoren@kernel.org
-To:     arnd@arndb.de, hch@infradead.org
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-csky@vger.kernel.org, douzhk@nationalchip.com,
-        Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH] csky: Fixup 610 vipt cache flush mechanism
-Date:   Wed, 21 Aug 2019 20:18:16 +0800
-Message-Id: <1566389896-6972-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 21 Aug 2019 08:19:51 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4745 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726227AbfHUMTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 08:19:50 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CF30E66DE0F5DA9FA94C;
+        Wed, 21 Aug 2019 20:19:46 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 21 Aug 2019
+ 20:19:38 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>, <arnd@arndb.de>
+CC:     <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] dmaengine: iop-adma: remove set but not used variable 'slots_per_op'
+Date:   Wed, 21 Aug 2019 20:19:08 +0800
+Message-ID: <20190821121908.7468-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-610 has vipt aliasing issue, so we need to finish the cache flush
-apis mentioned in cachetlb.rst to avoid data corruption.
+drivers/dma/iop-adma.c: In function iop_adma_tx_submit:
+drivers/dma/iop-adma.c:367:6: warning:
+ variable slots_per_op set but not used [-Wunused-but-set-variable]
 
-Here is the list of modified apis in the patch:
+It is never used, so can be removed.
 
- - flush_kernel_dcache_page      (new add)
- - flush_dcache_mmap_lock        (new add)
- - flush_dcache_mmap_unlock      (new add)
- - flush_kernel_vmap_range       (new add)
- - invalidate_kernel_vmap_range  (new add)
- - flush_anon_page               (new add)
- - flush_cache_range             (new add)
- - flush_cache_vmap              (flush all)
- - flush_cache_vunmap            (flush all)
- - flush_cache_mm                (only dcache flush)
- - flush_icache_page             (just nop)
- - copy_from_user_page           (remove no need flush)
- - copy_to_user_page             (remove no need flush)
-
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Christoph Hellwig <hch@infradead.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/csky/abiv1/cacheflush.c         | 20 ++++++++++++++++++
- arch/csky/abiv1/inc/abi/cacheflush.h | 39 ++++++++++++++++++++++++++----------
- 2 files changed, 48 insertions(+), 11 deletions(-)
+ drivers/dma/iop-adma.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/csky/abiv1/cacheflush.c b/arch/csky/abiv1/cacheflush.c
-index fee99fc..9f1fe80 100644
---- a/arch/csky/abiv1/cacheflush.c
-+++ b/arch/csky/abiv1/cacheflush.c
-@@ -54,3 +54,23 @@ void update_mmu_cache(struct vm_area_struct *vma, unsigned long addr,
- 			icache_inv_all();
- 	}
- }
-+
-+void flush_kernel_dcache_page(struct page *page)
-+{
-+	struct address_space *mapping;
-+
-+	mapping = page_mapping_file(page);
-+
-+	if (!mapping || mapping_mapped(mapping))
-+		dcache_wbinv_all();
-+}
-+EXPORT_SYMBOL(flush_kernel_dcache_page);
-+
-+void flush_cache_range(struct vm_area_struct *vma, unsigned long start,
-+	unsigned long end)
-+{
-+	dcache_wbinv_all();
-+
-+	if (vma->vm_flags & VM_EXEC)
-+		icache_inv_all();
-+}
-diff --git a/arch/csky/abiv1/inc/abi/cacheflush.h b/arch/csky/abiv1/inc/abi/cacheflush.h
-index fce5604..17eeebe 100644
---- a/arch/csky/abiv1/inc/abi/cacheflush.h
-+++ b/arch/csky/abiv1/inc/abi/cacheflush.h
-@@ -11,19 +11,42 @@
- #define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
- extern void flush_dcache_page(struct page *);
+diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
+index 03f4a58..0dab7b7 100644
+--- a/drivers/dma/iop-adma.c
++++ b/drivers/dma/iop-adma.c
+@@ -364,13 +364,11 @@ iop_adma_tx_submit(struct dma_async_tx_descriptor *tx)
+ 	struct iop_adma_chan *iop_chan = to_iop_adma_chan(tx->chan);
+ 	struct iop_adma_desc_slot *grp_start, *old_chain_tail;
+ 	int slot_cnt;
+-	int slots_per_op;
+ 	dma_cookie_t cookie;
+ 	dma_addr_t next_dma;
  
--#define flush_cache_mm(mm)			cache_wbinv_all()
-+#define flush_cache_mm(mm)			dcache_wbinv_all()
- #define flush_cache_page(vma, page, pfn)	cache_wbinv_all()
- #define flush_cache_dup_mm(mm)			cache_wbinv_all()
+ 	grp_start = sw_desc->group_head;
+ 	slot_cnt = grp_start->slot_cnt;
+-	slots_per_op = grp_start->slots_per_op;
  
-+#define ARCH_HAS_FLUSH_KERNEL_DCACHE_PAGE
-+extern void flush_kernel_dcache_page(struct page *);
-+
-+#define flush_dcache_mmap_lock(mapping)   spin_lock_irq(&(mapping)->tree_lock)
-+#define flush_dcache_mmap_unlock(mapping) spin_unlock_irq(&(mapping)->tree_lock)
-+
-+static inline void flush_kernel_vmap_range(void *addr, int size)
-+{
-+	dcache_wbinv_all();
-+}
-+static inline void invalidate_kernel_vmap_range(void *addr, int size)
-+{
-+	dcache_wbinv_all();
-+}
-+
-+#define ARCH_HAS_FLUSH_ANON_PAGE
-+static inline void flush_anon_page(struct vm_area_struct *vma,
-+			 struct page *page, unsigned long vmaddr)
-+{
-+	if (PageAnon(page))
-+		cache_wbinv_all();
-+}
-+
- /*
-  * if (current_mm != vma->mm) cache_wbinv_range(start, end) will be broken.
-  * Use cache_wbinv_all() here and need to be improved in future.
-  */
--#define flush_cache_range(vma, start, end)	cache_wbinv_all()
--#define flush_cache_vmap(start, end)		cache_wbinv_range(start, end)
--#define flush_cache_vunmap(start, end)		cache_wbinv_range(start, end)
-+extern void flush_cache_range(struct vm_area_struct *vma, unsigned long start, unsigned long end);
-+#define flush_cache_vmap(start, end)		cache_wbinv_all()
-+#define flush_cache_vunmap(start, end)		cache_wbinv_all()
- 
--#define flush_icache_page(vma, page)		cache_wbinv_all()
-+#define flush_icache_page(vma, page)		do {} while (0);
- #define flush_icache_range(start, end)		cache_wbinv_range(start, end)
- 
- #define flush_icache_user_range(vma,page,addr,len) \
-@@ -31,19 +54,13 @@ extern void flush_dcache_page(struct page *);
- 
- #define copy_from_user_page(vma, page, vaddr, dst, src, len) \
- do { \
--	cache_wbinv_all(); \
- 	memcpy(dst, src, len); \
--	cache_wbinv_all(); \
- } while (0)
- 
- #define copy_to_user_page(vma, page, vaddr, dst, src, len) \
- do { \
--	cache_wbinv_all(); \
- 	memcpy(dst, src, len); \
- 	cache_wbinv_all(); \
- } while (0)
- 
--#define flush_dcache_mmap_lock(mapping)		do {} while (0)
--#define flush_dcache_mmap_unlock(mapping)	do {} while (0)
--
- #endif /* __ABI_CSKY_CACHEFLUSH_H */
+ 	spin_lock_bh(&iop_chan->lock);
+ 	cookie = dma_cookie_assign(tx);
 -- 
 2.7.4
+
 
