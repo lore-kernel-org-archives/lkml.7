@@ -2,129 +2,124 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9E5C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9654BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCBC22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 674FF204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:53:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="IKZ9Igu8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5HN6y3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfHUJtF (ORCPT
+        id S1727484AbfHUJx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:49:05 -0400
-Received: from mail-eopbgr700086.outbound.protection.outlook.com ([40.107.70.86]:29981
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726317AbfHUJtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:49:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mh/dV0iePQ+4k5/tUS/5aZaz+t2EEtdDYNWjZaEHIZ03qQi9zd9PbqglOctBnrNLbfYb6NbI+AEH0/IeNDQZqIuecnOdByV1DHeN7S6fEUppt+Qli1C9Op082xlpmObgKDnYEMj+us/NNK0koL/X++Uc/8FWPV3JXPUzYwxhcy5fIPEmwvfpXpvynXZQCy/O/VCzy0jNE4cwQ66moemAudOlfvJjJvRHTDAM6BN9PxFyPpRWS7kbKS8IsW63e+fpAmJK1U0OGUVCVSi7k3SvxrcZrL8sN7HepeXIJVcmkRKKxfKSbq7mNtNrJHT1Ze4jOznbcqid9DluErjPKZE76A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1gtHIjLItw7G5pBGRFD5QEmfvn5Iv+YxcTnHtjRBUkg=;
- b=WUQcj2PTomgtx6ygSOGdGBD5e3F1EGgoZef3YC/WWvkgna28Xdtqx14BQct1s/sGOmyGP5EAZLjOGxgS4lbUHGbpq6XHQzo+g/G5eec6QFfVpTe5c3TkegBKfEex1LN1fI8W9ltqALa6dNDP6uzhGkMqZMdmGJo1DwsuMr7hj/num+6Yo7lOJqNEg30nxuEre2YX+EP+KdpPI11lkrCd6U+ZBL7IFEPdtfV2upnPSxA3boBM8vgxQFfHYLs9vdSSxeS3x5G4Bmc0kNm7HBHBfodiMdzggO8RZMXl/KNz+n6yUlSu1OFr88kbPQs6Ia1RCl8LEOex4If/biAb31JikA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        Wed, 21 Aug 2019 05:53:26 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46826 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfHUJxZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:53:25 -0400
+Received: by mail-lf1-f65.google.com with SMTP id n19so1294948lfe.13;
+        Wed, 21 Aug 2019 02:53:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1gtHIjLItw7G5pBGRFD5QEmfvn5Iv+YxcTnHtjRBUkg=;
- b=IKZ9Igu8DDLhmYjEPz0uLT7eq4LiS+yC1yfzgZNTbxTop2W3hpXmz88c8t76Q5RcTOhfOQcz4H5m2Y5BrQ98+jEUTAlYnK/TScCDGltTOAkS9X2shx3DxMUsAKx0n0uQ8wbMyEIzF8xpAQYEpknwE4SjvkkhbQcS49xxGMVi7a4=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
- BYAPR03MB4216.namprd03.prod.outlook.com (20.177.185.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Wed, 21 Aug 2019 09:49:01 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::a517:3578:67bf:6c88]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::a517:3578:67bf:6c88%7]) with mapi id 15.20.2157.022; Wed, 21 Aug 2019
- 09:49:01 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ARM: ftrace: remove ftrace_caller_old() and ftrace_call_old()
-Thread-Topic: [PATCH] ARM: ftrace: remove ftrace_caller_old() and
- ftrace_call_old()
-Thread-Index: AQHVWAWpTPa2leot7U6qZ7id2aGviw==
-Date:   Wed, 21 Aug 2019 09:49:01 +0000
-Message-ID: <20190821173753.7b404335@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TY1PR01CA0172.jpnprd01.prod.outlook.com (2603:1096:402::24)
- To BYAPR03MB4773.namprd03.prod.outlook.com (2603:10b6:a03:134::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 54eb0223-d198-4e86-7967-08d7261ccb8a
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB4216;
-x-ms-traffictypediagnostic: BYAPR03MB4216:
-x-microsoft-antispam-prvs: <BYAPR03MB421687E670A034524E7EC7DAEDAA0@BYAPR03MB4216.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1388;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(396003)(39860400002)(366004)(376002)(346002)(136003)(199004)(189003)(476003)(86362001)(71190400001)(99286004)(71200400001)(26005)(66946007)(64756008)(66556008)(52116002)(486006)(256004)(186003)(4326008)(102836004)(8676002)(66446008)(81166006)(8936002)(81156014)(50226002)(386003)(6506007)(66476007)(25786009)(54906003)(110136005)(316002)(3846002)(6116002)(4744005)(2906002)(6436002)(5660300002)(305945005)(1076003)(53936002)(66066001)(14454004)(6512007)(9686003)(7736002)(6486002)(478600001)(39210200001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4216;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: IVaJ++UcfauEfpZo+Vci1daT1PbmRMVEt8zmDRQGT9nmq3GXdq1R7o+/RcsRCzgMchYgG0ppLmoz82twiS8MOoJF3Ah6auFRhR7AKTSJmYgyB0/g/I8EvnkDxQQkQIq6UQUrwWUUpxLdxAJErPv7jENXppeNaddgMqmV/LPx7+iF2NfiaFgODSBSZ2EcmURv4vzxVYNDUDEFHL2rRfbhN/ye9/Tg22J1SGv6KYXW2jeImaAImiFF82g/eGbQII9/pBBGlvSXkc5nd6/LX6aveZCGoGY+LEFyCzYJ6zWwS0BeoQOIn2B4oz27Hdo9zJ3oFyzHho90jjYNRGG1bS4KkgrcbIt5TuhRmj6e/EhY1x7rpasdjNjDGtAoT6XXmVV3/QPya4ypVGNjr1MYs+lTcNsMJTObwckMcpE7iJxqvv8=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0E319A5BA08B47438458B421F446FBD3@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZbCWqTCCmdG6rzrJdpHlHLL1ZK/pt1TUGb23KjeYCrk=;
+        b=Z5HN6y3Fa+X293x4mbXB/cpswIJKvrRzaBdoN8a0vCex6N9RFjd75IVaZrGGGxThbu
+         kTEarpXuQ6auBxtmlw3h5/uUguyAvlmydWP8FGaTBIhM1x0h5kR1s9G6k/xwpMLvljou
+         rcevtv9bADrjXZgUZ3UsA/h4xV6+GygrrjSmlcoqHswtAA8ghRVNutm+Nnl1wnfvu6In
+         XYuDjZFj04v9ijhlVexBIFIESS0EJLXPG1lDlc3HmAIvt4SGRnGlR5RFaYk8msVPOrDX
+         bKCocPpn7osUx4RGeytTuQZiL4AZG/4ehlidKIkfYKp8prhK6FewbmPcERn1qK8FxnMx
+         xqfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZbCWqTCCmdG6rzrJdpHlHLL1ZK/pt1TUGb23KjeYCrk=;
+        b=c2OgRVdeoGVsdV9Vaco5EdN57n7g/WsxVPTgXWvzGmOTQYMhfsiDWEt0ER/V7/lP2R
+         Mi1ASpCKKQFkLrIGINJphJH/OLgkNuc9FPx2jMi0Xi1+xCPj2T8Bv7nsb7i4snqZfN/2
+         8qMdibUIO2xvUY2voM3AvYZNnkEdLYBuqUKlD1v924dVXR0UR3F+Pqv1hLSGtOBDg70Y
+         RwsiGp9ugGLvW7hk0mKNZjbJ0ahhVCzzkuQ8YAWvjHb0m+og0e75iQJQcZdetaAGXGgW
+         MIzuAPlP/iby8BcLzSU2etTImr737/HW3DoBhr/icFqAvkeJeScLmPvMPHgqGp+Fa8cj
+         JiwQ==
+X-Gm-Message-State: APjAAAWKlogoXmIwUChkBc5VZdZ+RXsXnFrB9jdSAdeb4JrnjnhzQTcP
+        qF/sWnQulTmVCGxNDq04tsiz1IrVt8HfM1xWR5k=
+X-Google-Smtp-Source: APXvYqwb2rhw7Ep1aXg+5V7885VdFhKAbEOFcIsvVA/tDR61O6uv5lTq8FlL5kROb/mZjKV9MKTSsnQzjrJUIYUChrU=
+X-Received: by 2002:ac2:5976:: with SMTP id h22mr18101434lfp.79.1566381203762;
+ Wed, 21 Aug 2019 02:53:23 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54eb0223-d198-4e86-7967-08d7261ccb8a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 09:49:01.7451
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0/dTjsvvD07jeTu4OKdEAVyszBLJDaehc7wTJk8e7K+iV84xiY6EgCFs9Fi4u1Bgp7oAAa0LeM2GpzomIOwQnA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4216
+References: <20190820084833.6019-1-hubert.feurstein@vahle.at>
+ <20190820084833.6019-3-hubert.feurstein@vahle.at> <20190820094903.GI891@localhost>
+ <CAFfN3gW-4avfnrV7t-2nC+cVt3sgMD33L44P4PGU-MCAtuR+XA@mail.gmail.com>
+ <20190820142537.GL891@localhost> <20190820152306.GJ29991@lunn.ch>
+ <20190820154005.GM891@localhost> <CAFfN3gUgpzMebyUt8_-9e+5vpm3q-DVVszWdkUEFAgZQ8ex73w@mail.gmail.com>
+ <20190821080709.GO891@localhost>
+In-Reply-To: <20190821080709.GO891@localhost>
+From:   Hubert Feurstein <h.feurstein@gmail.com>
+Date:   Wed, 21 Aug 2019 11:53:12 +0200
+Message-ID: <CAFfN3gXtkv=YjoQixN+MdZ9vLZRPBMwg1mefuBTHFf1_QENPsg@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 2/4] net: mdio: add PTP offset compensation to mdiobus_write_sts
+To:     Miroslav Lichvar <mlichvar@redhat.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit d3c61619568c ("ARM: 8788/1: ftrace: remove old mcount support")
-removed the old mcount support, but forget to remove these two
-declarations. Remove them to clean up.
+Am Mi., 21. Aug. 2019 um 10:07 Uhr schrieb Miroslav Lichvar
+<mlichvar@redhat.com>:
+> > Currently I do not see the benefit from this. The original intention was to
+> > compensate for the remaining offset as good as possible.
+>
+> That's ok, but IMHO the change should not break the assumptions of
+> existing application and users.
+>
+> > The current code
+> > of phc2sys uses the delay only for the filtering of the measurement record
+> > with the shortest delay and for reporting and statistics. Why not simple shift
+> > the timestamps with the offset to the point where we expect the PHC timestamp
+> > to be captured, and we have a very good result compared to where we came
+> > from.
+>
+> Because those reports/statistics are important in calculation of
+> maximum error. If someone had a requirement for a clock to be accurate
+> to 1.5 microseconds and the ioctl returned a delay indicating a
+> sufficient accuracy when in reality it could be worse, that would be a
+> problem.
+>
+Ok, I understand your point. But including the MDIO completion into
+delay calculation
+will indicate a much wore precision as it actually is. When the MDIO
+driver implements
+the PTP system timestamping as follows ...
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- arch/arm/include/asm/ftrace.h | 3 ---
- 1 file changed, 3 deletions(-)
+  ptp_read_system_prets(bus->ptp_sts);
+  writel(value, mdio-reg)
+  ptp_read_system_postts(bus->ptp_sts);
 
-diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
-index 18b0197f2384..f67596427971 100644
---- a/arch/arm/include/asm/ftrace.h
-+++ b/arch/arm/include/asm/ftrace.h
-@@ -23,9 +23,6 @@ static inline unsigned long ftrace_call_adjust(unsigned l=
-ong addr)
- 	/* With Thumb-2, the recorded addresses have the lsb set */
- 	return addr & ~1;
- }
--
--extern void ftrace_caller_old(void);
--extern void ftrace_call_old(void);
- #endif
-=20
- #endif
---=20
-2.23.0.rc1
+... then we catch already the error caused by interrupts which hit the
+pre/post_ts section.
+Now we only have the additional error of one MDIO clock cycle
+(~400ns). Because I expect
+the MDIO controller to shift out the MDIO frame on the next MDIO clock
+cycle. So if I subtract
+one MDIO clock cycle from pre_ts and add one MDIO clock cycle to
+post_ts the error indication
+would be sufficiently corrected IMHO. And then we can shift both
+timestamps in the switch driver
+(in the gettimex handler) to compensate the switch depending offset.
+What do you think?
 
+Hubert
