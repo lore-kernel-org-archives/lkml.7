@@ -2,158 +2,260 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E342C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E35C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7403B2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:29:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kK904OuK"
+	by mail.kernel.org (Postfix) with ESMTP id CA8DA2339F
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:31:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566372670;
+	bh=KkWPkRHDf84/43nkGWW2IzVfyb8o6PvaBI7eDBO7Ceo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=A1hmtXMmT6nLtTQVPV2Aguo3GAv+u7UKbVSGDSyWnRwdYSEWIHZxapkvjTas+b2cE
+	 IjKZ2h7mdbtKYA4cR+dzvxFvGk6Zb0an0GTK5cRQ/DU0DAq85BYzPy1dXlrdaHVHl6
+	 eRRoH7Ts2pu+NmV2lLNe6YoZSTJ5gBFm+Q/ix0WQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbfHUH3s (ORCPT
+        id S1728275AbfHUHbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 03:29:48 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33079 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728235AbfHUH3s (ORCPT
+        Wed, 21 Aug 2019 03:31:09 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45470 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfHUHbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:29:48 -0400
-Received: by mail-wm1-f66.google.com with SMTP id p77so4112488wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 00:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nKOeCy3Qcia3Pbgp+4T8KWWXoItnNEc3EaF4utxPSx4=;
-        b=kK904OuKS3Z8eMv0x8Na8g7IPPgNprXCORczmb6V/kXExPgWnxBAxCQbxF+TAphd8J
-         nwjdYXpn0F7I+V4GIiKpnFEVTDThLbQ+OBnq3QrtTlGHq273IzR3HTTp2aO9cNm4qn4E
-         Vx6HjcgcZj3/l9DKUp7U69jiCwDJQ5J8Cq2gY/u+HwExBsYQx9jmguM8rg+5fMMRa58C
-         SGWtuI44qH0puyTaWmBrYyzulee73OvRhuNGjLxSZ/cxc1NO56LLMhvIPCdhr2Ba3aBT
-         J8aytWr9dUsMKirAYbKOBij174iq/ssCpyrAybzZGPiB7Gps00VjkACWNSO2a6jE4iUe
-         pfFw==
+        Wed, 21 Aug 2019 03:31:09 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v12so857949oic.12;
+        Wed, 21 Aug 2019 00:31:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nKOeCy3Qcia3Pbgp+4T8KWWXoItnNEc3EaF4utxPSx4=;
-        b=rnQF+pSox7caIY2oQvrreMjJ/wJ9PiCIgmTa9FSzvGKPeHpSqUKH31cbR0Gs0fAIkP
-         b9QKIvhl0NFCj6Ihg7sEtYema8OChdIYbcmQ72Cjb6gcadq58PI6W6mUL214IwAY+D6n
-         AQkZ32I2/NBceJCs7d7hfQyoU4Ax74ud/Y7pzsnn8I0n5xZyBA37DjoTfrDPkdye6LTa
-         uGTruyEae36gvZ38HqgCTZifpy/OoJTxmCkUR2xk8dSTaGSOdwI6tfIUOmzOi0E7n6D6
-         Ixq2l5JpB6Cme8+AO4D+8Xbn7PSB6ZyrJE0X+hdsJU8n9fSqrEjGz28ZXYEW9PuL7wng
-         Femg==
-X-Gm-Message-State: APjAAAWAAw//GCN/W72zeAxudZHcq5Q68B05YwSOwWIN52s0iBly3U3o
-        o9D/fNKH/93cP4dVzj7DGdbWJpsosgvFhJgLLbC20g==
-X-Google-Smtp-Source: APXvYqwr0nEjmLtPxp9jPzcCElAX7fest218vtFNqRK9Hh8HPkq4tF2BdQkHv6NmMu6fNQdhJczPGiJW0nzPMwhbGtg=
-X-Received: by 2002:a05:600c:231a:: with SMTP id 26mr4057110wmo.136.1566372585757;
- Wed, 21 Aug 2019 00:29:45 -0700 (PDT)
+        bh=loEkzu7PwyplZMOXsRg7Frr5hM30dLjiHBYgbEapcWA=;
+        b=aB414stHpERATSG/k84kfsZaRUmnk7cv4ZaLimsqTnxQ0errv5HgsIRAYQRsC14ePS
+         TVIK/V91N9zqc/jkEJt1rXx+JxwF5d110lswIzygJmHRDaIV46nlA25W57gT7l4vGvRp
+         odOK9c9AOZ7oMRIIdOtY3tI5LFpGghqwdb6S6bdoj4Z3Vob/ur4R1Ww5F5/k9mqNO/S9
+         Xr19p9Zq/w1RGswsLWfuvp6+BZ28P8FtkoLkskFgi1wP/kRuI2lZL37K8pdEytzUxs3s
+         yv7QBKARFXxhIqcqYiFgK1hBJqKUEcE8r+SI4XVQso90Qgbc8Gr/XPOEUFzzIXeTNrGc
+         PlDA==
+X-Gm-Message-State: APjAAAUTepBzw0b6dJeg6FXbeO3ElE55hyI2g0PPupx0SbmiVgp2MIiO
+        2uHjqkSHg+KLyQ225Zy18umib1GmeVTe851NuNA=
+X-Google-Smtp-Source: APXvYqyXZuk4UTeflcQnSodNJ+QlCdTV9vbeuFnz4F1sup7C/t5HSx/6LDox3grwfexywjcbDsv/7ZUbUkSd0u0Ul/Y=
+X-Received: by 2002:aca:cfcb:: with SMTP id f194mr2963097oig.103.1566372667391;
+ Wed, 21 Aug 2019 00:31:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190802053744.5519-1-clin@suse.com> <20190820115645.GP13294@shell.armlinux.org.uk>
- <CAKv+Gu_0wFw5Mjpdw7BEY7ewgetNgU=Ff1uvAsn0iHmJouyKqw@mail.gmail.com>
- <20190821061027.GA2828@linux-8mug> <CAKv+Gu8Yny8cVPck3rPwCPvJBvcZKMHti_9bkCTM4H4cZ_43fg@mail.gmail.com>
- <20190821071100.GA26713@rapoport-lnx>
-In-Reply-To: <20190821071100.GA26713@rapoport-lnx>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 21 Aug 2019 10:29:37 +0300
-Message-ID: <CAKv+Gu99z3V1B68CU8qhNwwffqDxNBOM6t3Q8-V7qpbDkf-Cwg@mail.gmail.com>
-Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the kernel base
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Chester Lin <clin@suse.com>, Juergen Gross <JGross@suse.com>,
-        Joey Lee <JLee@suse.com>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "ren_guo@c-sky.com" <ren_guo@c-sky.com>, Gary Lin <GLin@suse.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
+References: <5997740.FPbUVk04hV@kreacher> <cfe7952f-b80f-8c92-af1a-3adeffb22ce7@klausen.dk>
+ <CAJZ5v0hGYpvyo_8qZTkVUuSHZxogksjvHJgWD54yRbPiJRVodQ@mail.gmail.com>
+ <5499590.X6jXHfmChQ@kreacher> <5924084c-cd89-c213-5926-9f303dcd3b39@klausen.dk>
+In-Reply-To: <5924084c-cd89-c213-5926-9f303dcd3b39@klausen.dk>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 21 Aug 2019 09:30:55 +0200
+Message-ID: <CAJZ5v0gc82P_ZzCmgMxe1jNuqe0F3wzKUW=b5=CaWL2kmrguBg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/8] PM / ACPI: sleep: Additional changes related to suspend-to-idle
+To:     Kristian Klausen <kristian@klausen.dk>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019 at 10:11, Mike Rapoport <rppt@linux.ibm.com> wrote:
+On Wed, Aug 21, 2019 at 12:47 AM Kristian Klausen <kristian@klausen.dk> wrote:
 >
-> On Wed, Aug 21, 2019 at 09:35:16AM +0300, Ard Biesheuvel wrote:
-> > On Wed, 21 Aug 2019 at 09:11, Chester Lin <clin@suse.com> wrote:
-> > >
-> > > On Tue, Aug 20, 2019 at 03:28:25PM +0300, Ard Biesheuvel wrote:
-> > > > On Tue, 20 Aug 2019 at 14:56, Russell King - ARM Linux admin
-> > > > <linux@armlinux.org.uk> wrote:
-> > > > >
-> > > > > On Fri, Aug 02, 2019 at 05:38:54AM +0000, Chester Lin wrote:
-> > > > > > diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-> > > > > > index f3ce34113f89..909b11ba48d8 100644
-> > > > > > --- a/arch/arm/mm/mmu.c
-> > > > > > +++ b/arch/arm/mm/mmu.c
-> > > > > > @@ -1184,6 +1184,9 @@ void __init adjust_lowmem_bounds(void)
-> > > > > >               phys_addr_t block_start = reg->base;
-> > > > > >               phys_addr_t block_end = reg->base + reg->size;
-> > > > > >
-> > > > > > +             if (memblock_is_nomap(reg))
-> > > > > > +                     continue;
-> > > > > > +
-> > > > > >               if (reg->base < vmalloc_limit) {
-> > > > > >                       if (block_end > lowmem_limit)
-> > > > > >                               /*
-> > > > >
-> > > > > I think this hunk is sane - if the memory is marked nomap, then it isn't
-> > > > > available for the kernel's use, so as far as calculating where the
-> > > > > lowmem/highmem boundary is, it effectively doesn't exist and should be
-> > > > > skipped.
-> > > > >
-> > > >
-> > > > I agree.
-> > > >
-> > > > Chester, could you explain what you need beyond this change (and my
-> > > > EFI stub change involving TEXT_OFFSET) to make things work on the
-> > > > RPi2?
-> > > >
-> > >
-> > > Hi Ard,
-> > >
-> > > In fact I am working with Guillaume to try booting zImage kernel and openSUSE
-> > > from grub2.04 + arm32-efistub so that's why we get this issue on RPi2, which is
-> > > one of the test machines we have. However we want a better solution for all
-> > > cases but not just RPi2 since we don't want to affect other platforms as well.
-> > >
-> >
-> > Thanks Chester, but that doesn't answer my question.
-> >
-> > Your fix is a single patch that changes various things that are only
-> > vaguely related. We have already identified that we need to take
-> > TEXT_OFFSET (minus some space used by the swapper page tables) into
-> > account into the EFI stub if we want to ensure compatibility with many
-> > different platforms, and as it turns out, this applies not only to
-> > RPi2 but to other platforms as well, most notably the ones that
-> > require a TEXT_OFFSET of 0x208000, since they also have reserved
-> > regions at the base of RAM.
-> >
-> > My question was what else we need beyond:
-> > - the EFI stub TEXT_OFFSET fix [0]
-> > - the change to disregard NOMAP memblocks in adjust_lowmem_bounds()
-> > - what else???
->
-> I think the only missing part here is to ensure that non-reserved memory in
-> bank 0 starts from a PMD-aligned address. I believe this could be done if
-> EFI stub, but I'm not really familiar with it so this just a semi-educated
-> guess :)
->
+> On 20.08.2019 23.38, Rafael J. Wysocki wrote:
+> > On Tuesday, August 20, 2019 3:29:48 PM CEST Rafael J. Wysocki wrote:
+> >> On Tue, Aug 20, 2019 at 3:10 PM Kristian Klausen <kristian@klausen.dk> wrote:
+> >>> On 19.08.2019 22.41, Rafael J. Wysocki wrote:
+> >>>> On Mon, Aug 19, 2019 at 5:47 PM Kristian Klausen <kristian@klausen.dk> wrote:
+> >>>>> On 19.08.2019 11.05, Rafael J. Wysocki wrote:
+> >>>>>> On Monday, August 19, 2019 9:59:02 AM CEST Rafael J. Wysocki wrote:
+> >>>>>>> On Fri, Aug 16, 2019 at 10:26 PM Kristian Klausen <kristian@klausen.dk> wrote:
+> >>>>>>>> On 02.08.2019 12.33, Rafael J. Wysocki wrote:
+> >>>>>>>>> Hi All,
+> >>>>>>>>>
+> >>>>>>>>>>> On top of the "Simplify the suspend-to-idle control flow" patch series
+> >>>>>>>>>>> posted previously:
+> >>>>>>>>>>>
+> >>>>>>>>>>> https://lore.kernel.org/lkml/71085220.z6FKkvYQPX@kreacher/
+> >>>>>>>>>>>
+> >>>>>>>>>>> sanitize the suspend-to-idle flow even further.
+> >>>>>>>>>>>
+> >>>>>>>>>>> First off, decouple EC wakeup from the LPS0 _DSM processing (patch 1).
+> >>>>>>>>>>>
+> >>>>>>>>>>> Next, reorder the code to invoke LPS0 _DSM Functions 5 and 6 in the
+> >>>>>>>>>>> specification-compliant order with respect to suspending and resuming
+> >>>>>>>>>>> devices (patch 2).
+> >>>>>>>>>>>
+> >>>>>>>>>>> Finally, rearrange lps0_device_attach() (patch 3) and add a command line
+> >>>>>>>>>>> switch to prevent the LPS0 _DSM from being used.
+> >>>>>>>>>> The v2 is because I found a (minor) bug in patch 1, decided to use a module
+> >>>>>>>>>> parameter instead of a kernel command line option in patch 4.  Also, there
+> >>>>>>>>>> are 4 new patches:
+> >>>>>>>>>>
+> >>>>>>>>>> Patch 5: Switch the EC over to polling during "noirq" suspend and back
+> >>>>>>>>>> during "noirq" resume.
+> >>>>>>>>>>
+> >>>>>>>>>> Patch 6: Eliminate acpi_sleep_no_ec_events().
+> >>>>>>>>>>
+> >>>>>>>>>> Patch 7: Consolidate some EC code depending on PM_SLEEP.
+> >>>>>>>>>>
+> >>>>>>>>>> Patch 8: Add EC GPE dispatching debug message.
+> >>>>>>>>> The v3 is just a rearranged v2 so as to move the post sensitive patch (previous patch 2)
+> >>>>>>>>> to the end of the series.   [After applying the full series the code is the same as before.]
+> >>>>>>>>>
+> >>>>>>>>> For easier testing, the series (along with some previous patches depended on by it)
+> >>>>>>>>> is available in the pm-s2idle-testing branch of the linux-pm.git tree at kernel.org:
+> >>>>>>>>>
+> >>>>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/log/?h=pm-s2idle-testing
+> >>>>>>>> It was just testing this patch series(461fc1caed55), to see if it would
+> >>>>>>>> fix my charging issue
+> >>>>>>>> (https://bugzilla.kernel.org/show_bug.cgi?id=201307), which it didn't.
+> >>>>>>> It is unlikely to help in that case.
+> >>>>> Do you have any idea what the issue could be?
+> >>>> Basically, there are two possibilities: either the OS is expected to
+> >>>> handle the AC/battery switching events, or the platform firmware
+> >>>> should take care of them.  In the former case, the EC should generate
+> >>>> events to be handled by the OS and in the latter one there needs to be
+> >>>> a way to let the platform firmware that it needs to take care of those
+> >>>> events going forward.
+> >>>>
+> >>>> In either case there may be a platform-specific action to be carried
+> >>>> out during suspend and resume to set this up as expected which may be
+> >>>> missing.
+> >>> Thanks for the explanation. I don't think I have the expertise to solve
+> >>> the issue, but at least now I'm one step closer.
+> >>>>>>>> I did however notice that my laptop (ASUS Zenbook UX430UNR/i7-8550U)
+> >>>>>>>> won't wake when opening the lid or pressing a key, the only way to wake
+> >>>>>>>> the laptop is pressing the power button.
+> >>>>>>>>
+> >>>>>>>> I also tested mainline (5.3.0-rc4 b7e7c85dc7b0) and 5.2.8 and the laptop
+> >>>>>>>> wakes without issue when the lid is opened or a key is presed.
+> >>>>>>>>> Please refer to the changelogs for details.
+> >>>>>>> Thanks for your report.
+> >>>>>>>
+> >>>>>>> I seem to see a similar issue with respect to the lid on one of my
+> >>>>>>> test machines, looking into it right now.
+> >>>>>> Well, my lid issue seems to be unrelated as it doesn't result from any patches in the
+> >>>>>> series in question.
+> >>>>>>
+> >>>>>> First off, please clone 5.3-rc5 from kernel.org and double check if the issue is not
+> >>>>>> present in that one.
+> >>>>>>
+> >>>>>> If that's not the case, merge the pm-s2idle-rework branch from my tree on top of it
+> >>>>>> and retest.
+> >>>>>>
+> >>>>>> If you still see the issue then, apply the appended patch (on top of the pm-s2idle-reqork
+> >>>>>> branch ) and, after starting the kernel, do
+> >>>>>>
+> >>>>>> # echo 1 > /sys/power/pm_debug_messages
+> >>>>>>
+> >>>>>> suspend the system and try to wake it up through all of the ways that stopped working.
+> >>>>>>
+> >>>>>> Then, wake it up with the power button, save the output of dmesg and send it to me.
+> >>>>>>
+> >>>>>> Thanks!
+> >>>>> With 5.3-rc5 the laptops wakes up without any issue when pressing a key
+> >>>>> or opening the lid.
+> >>>>> With v5.3-rc5+pm-s2idle-testing I can only wake the laptop by pressing
+> >>>>> the power button.
+> >>>> OK, thanks for verifying.
+> >>>>
+> >>>> So it is unclear to me how the series can cause an issue like that to appear.
+> >>>>
+> >>>>> dmesg with pm_debug_messages=1 and your patch:
+> >>>>> [   55.646109] PM: suspend entry (s2idle)
+> >>>>> [   55.698559] Filesystems sync: 0.052 seconds
+> >>>>> [   55.698561] PM: Preparing system for sleep (s2idle)
+> >>>>> [   55.700661] Freezing user space processes ... (elapsed 0.210 seconds)
+> >>>>> done.
+> >>>>> [   55.911494] OOM killer disabled.
+> >>>>> [   55.911495] Freezing remaining freezable tasks ... (elapsed 0.001
+> >>>>> seconds) done.
+> >>>>> [   55.913192] PM: Suspending system (s2idle)
+> >>>>> [   55.913195] printk: Suspending console(s) (use no_console_suspend to
+> >>>>> debug)
+> >>>>> [   55.914778] [drm] CT: disabled
+> >>>>> [   55.916057] wlan0: deauthenticating from 64:70:02:a5:fd:02 by local
+> >>>>> choice (Reason: 3=DEAUTH_LEAVING)
+> >>>>> [   56.045634] sd 2:0:0:0: [sda] Synchronizing SCSI cache
+> >>>>> [   56.046650] sd 2:0:0:0: [sda] Stopping disk
+> >>>>> [   56.287622] PM: suspend of devices complete after 371.285 msecs
+> >>>>> [   56.287627] PM: start suspend of devices complete after 373.684 msecs
+> >>>>> [   56.307155] PM: late suspend of devices complete after 19.477 msecs
+> >>>>> [   56.312479] ACPI: EC: interrupt blocked
+> >>>>> [   56.352761] PM: noirq suspend of devices complete after 45.205 msecs
+> >>>>> [   56.352770] ACPI: \_PR_.PR00: LPI: Device not power manageable
+> >>>>> [   56.352774] ACPI: \_PR_.PR01: LPI: Device not power manageable
+> >>>>> [   56.352776] ACPI: \_PR_.PR02: LPI: Device not power manageable
+> >>>>> [   56.352779] ACPI: \_PR_.PR03: LPI: Device not power manageable
+> >>>>> [   56.352782] ACPI: \_PR_.PR04: LPI: Device not power manageable
+> >>>>> [   56.352785] ACPI: \_PR_.PR05: LPI: Device not power manageable
+> >>>>> [   56.352788] ACPI: \_PR_.PR06: LPI: Device not power manageable
+> >>>>> [   56.352790] ACPI: \_PR_.PR07: LPI: Device not power manageable
+> >>>>> [   56.352793] ACPI: \_SB_.PCI0.GFX0: LPI: Device not power manageable
+> >>>>> [   56.352800] ACPI: \_SB_.PCI0.RP06.PXSX: LPI: Device not power manageable
+> >>>>> [   56.357057] PM: suspend-to-idle
+> >>>>> [   69.338656] PM: Timekeeping suspended for 12.178 seconds
+> >>>>> [   69.338701] PM: irq_pm_check_wakeup: IRQ 9
+> >>>>> [   69.338704] PM: IRQ wakeup: IRQ 9
+> >>>> This clearly is the power button event causing the system to wake up.
+> >>>> The other actions, whatever they were, didn't cause any interrupts to
+> >>>> be triggered.
+> >>>>
+> >>>> I suspect that the issue is related to the EC, so please try to revert commit
+> >>>>
+> >>>> fcd0a04267ac ACPI: PM: s2idle: Switch EC over to polling during "noirq" suspend
+> >>>>
+> >>>> and see if that makes any difference (should revert cleanly).
+> >>>>
+> >>>> If that doesn't make any difference, please also try to revert commits
+> >>>> (on top of the above revert)
+> >>>>
+> >>>> 11f26633cccb PM: suspend: Fix platform_suspend_prepare_noirq()
+> >>>> ac9eafbe930a ACPI: PM: s2idle: Execute LPS0 _DSM functions with
+> >>>> suspended devices
+> >>>>
+> >>>> (in this order) and retest.
+> >>> Reverting the following commits, didn't fix the issue:
+> >>> fcd0a04267ac ACPI: PM: s2idle: Switch EC over to polling during "noirq"
+> >>> suspend
+> >>> 6e86633a791f ACPI: PM: s2idle: Eliminate acpi_sleep_no_ec_events()
+> >>> 11f26633cccb PM: suspend: Fix platform_suspend_prepare_noirq()
+> >>> ac9eafbe930a ACPI: PM: s2idle: Execute LPS0 _DSM functions with
+> >>> suspended devices
+> >>>
+> >>> I didn't bother reverting all the commits, so I did a checkout of:
+> >>> b605c44c30b5 PM: sleep: Drop dpm_noirq_begin() and dpm_noirq_end()
+> >>> and everything works, then I did a checkout of:
+> >>> 10a08fd65ec1 ACPI: PM: Set up EC GPE for system wakeup from drivers that
+> >>> need it
+> >>> and the laptop won't wake when opening the lid or pressing a key.
+> >>>
+> >>> So 10a08fd65ec1 must be the culprit.
+> >> Good job, thanks!
+> >>
+> >> The assumption in there was that the EC GPE would not need to be set
+> >> up for wakeup unless it is needed either by the intel-hid or by the
+> >> intel-vbtn driver.  On your platform it needs to be set up for wakeup
+> >> even though neither of these drivers is in use.
+> >>
+> >> Let me cut a fix patch and get back to you when it's ready.
+> > The appended patch should help, so please apply it (on top of
+> > v5.3-rc5+pm-s2idle-testing) and test.
+> It works, pressing a key or opening the lid the laptop wakes instantly.
+> Thanks!
 
-Given that it is the ARM arch code that imposes this requirement, how
-about adding something like this to adjust_lowmem_bounds():
+Thanks for the confirmation!
 
-if (memblock_start_of_DRAM() % PMD_SIZE)
-    memblock_mark_nomap(memblock_start_of_DRAM(),
-        PMD_SIZE - (memblock_start_of_DRAM() % PMD_SIZE));
-
-(and introduce the nomap check into the loop)
+I'll resend it with a changelog and tags, then.
