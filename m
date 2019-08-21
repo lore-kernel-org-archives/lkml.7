@@ -2,155 +2,95 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65877C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C33C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8FA22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C820233A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:30:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQwd3ES5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a8L4Dq/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfHUK2X (ORCPT
+        id S1727219AbfHUKaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:28:23 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38584 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726995AbfHUK2W (ORCPT
+        Wed, 21 Aug 2019 06:30:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54780 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfHUKaS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:28:22 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r12so2349141edo.5;
-        Wed, 21 Aug 2019 03:28:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tH4C4SHneA684UXc3D0kikroiEy/mW4WtnOuT96rGAM=;
-        b=BQwd3ES5iB5HttBbWB7MmvzhXgwGjN1tPwBc9rgjyI4dXXBt3RMxGIY+7W/suYq3NE
-         lWNbrFE/pp+XVvg3D7gmSet9mqwvmzVB/Z3+Pgv/kZ/y5fmwTz/JAKG3xI10dX1TXYnI
-         w/ODwpQpbHmD61JlwUh0Te793e6L6ezn1YCwjnAG8sEFuXhJNNzOMFLG3Tjb1eagSrNb
-         g5ZNNnaRAaP6GtB8MrOwh0crnBqjHYtXmbYLH+JoE2XSY+4YBV7VWkTYfEY57TOmsufz
-         k1VkjkKQaEbnV2JlDjwoXHnudSdDW+x6vX84e12dpNVk5y4WggJcR07ZgeAF8NTyLb1o
-         4KFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tH4C4SHneA684UXc3D0kikroiEy/mW4WtnOuT96rGAM=;
-        b=F79KTTxHHaa3L3dTvXrE/WQ4bRtDEAs/WG9Iaal/W3rQyMWleXpN/oQAGxtH+lZWlV
-         8C3Wx9ZgJ8zVMM+kpuPswKg+JoA/lx5uZiUATkYS8hdiGncy2iIljQFyJYK6ZmevKlvz
-         l1ILKUCtANtFjjeASuO0c8bqkimT1e9jM+/Be88QyFDDcp/PiKTLpk0L9wrwbTUngDZG
-         jgAd/MaQvkowoZhlQXBQwAaifCrErZuMCDgOM5A3TaxATXqfZqJAH2qw5QY8yeYA7pj6
-         fQYdSWlCDe0Heb74xaT0t8sgP1u2jT+GINeiym0/CnO2DWUCij5GUD5/DpC3rh+ze5ap
-         PDBw==
-X-Gm-Message-State: APjAAAUOX+bN9pqzlrcDyQywZgs8zCMBv+3ipkKS29swNqPwsvs2dRAv
-        4LurPPoct+PYzkQY3NMxNxX2UWGOReV0pteP8+8=
-X-Google-Smtp-Source: APXvYqzm1AMb1SdDCLl2PZqOX1rVW3GzxnXK3xzo7vqdb+GYSql0VNnjYrTZY+VKIhPl9/PtAF3T/yfx4M2nAKykGw8=
-X-Received: by 2002:a50:c385:: with SMTP id h5mr35182112edf.18.1566383300730;
- Wed, 21 Aug 2019 03:28:20 -0700 (PDT)
+        Wed, 21 Aug 2019 06:30:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8zp6S8Iv44NclUZi/IYCMzStVxccs6F1yCeJgKpoeH8=; b=a8L4Dq/aCr8gnwdzhMMrkGdX9
+        BskOgh+y9z0CTn/F6FSad/M/j6HHWwSy+ZqDnBzj2u9kTLwcuN+giohlH1nNtFjtmDXxRrhKefmHh
+        h3qH1yWlfgZLsJgrTF1Jji/uRxBau28zxmgLoHgetvsX4/H+sMV0xcrdLMQBHff1NKbICi8qAPKGn
+        g1arbtzq1HcniDUYbJmejwx1T4KCm+SZ810uMKz+he2jHRV8m3cQ8/CGnv74ayQk2zCYXNzVVIc+s
+        GdbdE0i7qc8DbfiHZW6VtwVNAUstNyfONn1rY7sDd/CJCG6pLDgSHje1hhbG4sI0it+T37usnkOOc
+        fCNzqpNUw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0Nsb-0002wj-V1; Wed, 21 Aug 2019 10:30:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 23ED2306B81;
+        Wed, 21 Aug 2019 12:29:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BA91920A21FC4; Wed, 21 Aug 2019 12:30:10 +0200 (CEST)
+Date:   Wed, 21 Aug 2019 12:30:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kernel-team@fb.com, stable@vger.kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v2] x86/mm/pti: in pti_clone_pgtable(), increase addr
+ properly
+Message-ID: <20190821103010.GJ2386@hirez.programming.kicks-ass.net>
+References: <20190820202314.1083149-1-songliubraving@fb.com>
+ <20190821101008.GX2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190820084833.6019-1-hubert.feurstein@vahle.at> <20190820084833.6019-5-hubert.feurstein@vahle.at>
-In-Reply-To: <20190820084833.6019-5-hubert.feurstein@vahle.at>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Wed, 21 Aug 2019 13:28:09 +0300
-Message-ID: <CA+h21ho6T=DdE-9XCCj00UBFZahe08oEMP4kbgv+CmfRYD5c_Q@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 4/4] net: fec: add support for PTP system
- timestamping for MDIO devices
-To:     Hubert Feurstein <h.feurstein@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Miroslav Lichvar <mlichvar@redhat.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821101008.GX2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019 at 11:49, Hubert Feurstein <h.feurstein@gmail.com> wrote:
->
-> From: Hubert Feurstein <h.feurstein@gmail.com>
->
-> In order to improve the synchronisation precision of phc2sys (from
-> the linuxptp project) for devices like switches which are attached
-> to the MDIO bus, it is necessary the get the system timestamps as
-> close as possible to the access which causes the PTP timestamp
-> register to be snapshotted in the switch hardware. Usually this is
-> triggered by an MDIO write access, the snapshotted timestamp is then
-> transferred by several MDIO reads.
->
-> The ptp_read_system_*ts functions already check the ptp_sts pointer.
->
-> Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
-> ---
->  drivers/net/ethernet/freescale/fec_main.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-> index c01d3ec3e9af..dd1253683ac0 100644
-> --- a/drivers/net/ethernet/freescale/fec_main.c
-> +++ b/drivers/net/ethernet/freescale/fec_main.c
-> @@ -1815,10 +1815,12 @@ static int fec_enet_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
->         reinit_completion(&fep->mdio_done);
->
->         /* start a write op */
-> +       ptp_read_system_prets(bus->ptp_sts);
->         writel(FEC_MMFR_ST | FEC_MMFR_OP_WRITE |
->                 FEC_MMFR_PA(mii_id) | FEC_MMFR_RA(regnum) |
->                 FEC_MMFR_TA | FEC_MMFR_DATA(value),
->                 fep->hwp + FEC_MII_DATA);
-> +       ptp_read_system_postts(bus->ptp_sts);
->
+On Wed, Aug 21, 2019 at 12:10:08PM +0200, Peter Zijlstra wrote:
+> On Tue, Aug 20, 2019 at 01:23:14PM -0700, Song Liu wrote:
 
-How do you know the core will not service an interrupt here?
-Why are you not disabling (postponing) local interrupts after this
-critical section? (which you were in the RFC)
-If the argument is that you didn't notice any issue with phc2sys -N 5,
-that's not a good argument. "Unlikely for a condition to happen" does
-not mean deterministic.
-Here is an example of the system servicing an interrupt during the
-transmission of a 12-byte SPI transfer (proof that they can occur
-anywhere where they aren't disabled):
-https://drive.google.com/file/d/1rUZpfkBKHJGwQN4orFUWks_5i70wn-mj/view?usp=sharing
+> > host-5.2-after # grep "x  pmd" /sys/kernel/debug/page_tables/dump_pid
+> > 0x0000000000600000-0x0000000000e00000           8M USR ro         PSE         x  pmd
+> > 0xffffffff81000000-0xffffffff81e00000          14M     ro         PSE     GLB x  pmd
+> > 
+> > So after this patch, the 5.2 based kernel has 7 PMDs instead of 1 PMD
+> > in 4.16 kernel.
+> 
+> This basically gives rise to more questions than it provides answers.
+> You seem to have 'forgotten' to provide the equivalent mappings on the
+> two older kernels. The fact that they're not PMD is evident, but it
+> would be very good to know what is mapped, and what -- if anything --
+> lives in the holes we've (accidentally) created.
+> 
+> Can you please provide more complete mappings? Basically provide the
+> whole cpu_entry_area mapping.
 
->         /* wait for end of transfer */
->         time_left = wait_for_completion_timeout(&fep->mdio_done,
-> @@ -1956,7 +1958,7 @@ static int fec_enet_mii_init(struct platform_device *pdev)
->         struct fec_enet_private *fep = netdev_priv(ndev);
->         struct device_node *node;
->         int err = -ENXIO;
-> -       u32 mii_speed, holdtime;
-> +       u32 mii_speed, mii_period, holdtime;
->
->         /*
->          * The i.MX28 dual fec interfaces are not equal.
-> @@ -1993,6 +1995,7 @@ static int fec_enet_mii_init(struct platform_device *pdev)
->          * document.
->          */
->         mii_speed = DIV_ROUND_UP(clk_get_rate(fep->clk_ipg), 5000000);
-> +       mii_period = div_u64((u64)mii_speed * 2 * NSEC_PER_SEC, clk_get_rate(fep->clk_ipg));
->         if (fep->quirks & FEC_QUIRK_ENET_MAC)
->                 mii_speed--;
->         if (mii_speed > 63) {
-> @@ -2034,6 +2037,8 @@ static int fec_enet_mii_init(struct platform_device *pdev)
->                 pdev->name, fep->dev_id + 1);
->         fep->mii_bus->priv = fep;
->         fep->mii_bus->parent = &pdev->dev;
-> +       fep->mii_bus->flags = MII_BUS_F_PTP_STS_SUPPORTED;
-> +       fep->mii_bus->ptp_sts_offset = 32 * mii_period;
->
->         node = of_get_child_by_name(pdev->dev.of_node, "mdio");
->         err = of_mdiobus_register(fep->mii_bus, node);
-> --
-> 2.22.1
->
+I tried on my local machine and:
 
-Regards,
--Vladimir
+  cat /debug/page_tables/kernel | awk '/^---/ { p=0 } /CPU entry/ { p=1 } { if (p) print $0 }' > ~/cea-{before,after}.txt
+
+resulted in _identical_ files ?!?!
+
+Can you share your before and after dumps?
