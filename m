@@ -2,99 +2,69 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B816C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E08C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EF6233FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:08:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dQsp2Dw2"
+	by mail.kernel.org (Postfix) with ESMTP id BA731233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566378535;
+	bh=dARJle9XFpL/iWHfz04Vacwn8mi//tSVCikWU24/Hr4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=boOFmSdAscZSDvLqh7mqRESXmm8VUkfSE3kg99REPE2ws/OO+YxQQj7Vv3Wz8Uc8L
+	 VQRZsXg9Twscnn3/i143hc1ZINlEDwgCKl3K8/y6PXaSP3lV1ZrY3U2dU98ampHd8a
+	 C9PFfdjU1t76lsGES0c13vzy8xN1XgJ0DXyWFh3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfHUJIk (ORCPT
+        id S1727175AbfHUJIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:08:40 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44985 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbfHUJIj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:08:39 -0400
-Received: by mail-pf1-f194.google.com with SMTP id c81so1002456pfc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 02:08:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=EpNyefDvziRpVKagmeTe6/DY7qk9smhH+f//3Sqbad0=;
-        b=dQsp2Dw2bertAm4zumWxD9PMW6WBKigYQx9sgBL6jxtTVSIeEX98WKxQ4hPjNdkb2N
-         CbtwwheE9joXr/a2e/xg0CdTt5ZlfsecT3J+FeeXP2a6QonRnp4J1RMPMrjm8ZSPLeHh
-         nYeuIctAUIbJEK3C1IXTrvE+IyNiEAiY0AjVPHcIWeSpUKLfCv2NlRGsdRLxl3myZHeu
-         qT65RPXcM+C+1ne4IF0+faAgxnpLc4zVbjnlvsQOSlY99IiFSSYFwbJjnelaFdISbU8s
-         gzaIljkMD/hnJGPTEuJouI835NBnLV+7WXsfuNgZAPd8OFpJILPEVTCiQLazw19YNpPB
-         S49Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=EpNyefDvziRpVKagmeTe6/DY7qk9smhH+f//3Sqbad0=;
-        b=TaucuSanhx1PgtqBGveGRygpbk0klkkBMRdqqQibcpFWvb/S6RcFFk9q2W1UF8U8QE
-         S6gfshJAIhmvQu2k8nPF/v4OfMC5l+UJa5lvVtrX/zysSdOFj7LqPpZJfgJUTE/+FQ4I
-         yFiboTKVoIJkXbJ9C83Glku4Oqgv7l5XNACPzxmgGEYGonWz42w8maB0HSFUrhPs31y5
-         mci4r7whfb1CFoOjzLXLYGxJAKWcjMHblFP29pFKkfM82mThIcpq3imbcJdnpoPvVKOq
-         +Ag9wgVO00+snenqJbBWCW6gC6RpG6cLzMdAQ7kyFJeWnsSp6Gzu2dyaFCKO2K5cQI4A
-         p7/w==
-X-Gm-Message-State: APjAAAVFpNBiUcRZvHX2fhhA3WtMJFMxeNocN2vFQ9IAQW6C6DPYFTzL
-        xKoAeKkwnU6D04ebpr+M9BLA2gVSwocShg==
-X-Google-Smtp-Source: APXvYqyKArjR2xo71GWtZw1TUowFuYt0l6yVGhFp4LeYfdoCxutYVSWM6jVKK2L6RPGuOF5l6U4+1g==
-X-Received: by 2002:aa7:8602:: with SMTP id p2mr34278306pfn.138.1566378518653;
-        Wed, 21 Aug 2019 02:08:38 -0700 (PDT)
-Received: from localhost ([114.143.126.83])
-        by smtp.gmail.com with ESMTPSA id x128sm39525090pfd.52.2019.08.21.02.08.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 21 Aug 2019 02:08:37 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, rui.zhang@intel.com,
-        linux-pm@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Add Amit Kucheria as reviewer for thermal
-Date:   Wed, 21 Aug 2019 14:38:31 +0530
-Message-Id: <dc11c8ac0892ac14f4fe66ed5336bf32d26e27c9.1566377984.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1566377984.git.amit.kucheria@linaro.org>
-References: <cover.1566377984.git.amit.kucheria@linaro.org>
+        Wed, 21 Aug 2019 05:08:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727041AbfHUJIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:08:54 -0400
+Received: from localhost (unknown [106.201.100.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD3DE22DA7;
+        Wed, 21 Aug 2019 09:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566378533;
+        bh=dARJle9XFpL/iWHfz04Vacwn8mi//tSVCikWU24/Hr4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KD29rFn9JgR460WTB/bgNXV7RsoP8JpcjiK6Qdmvn8XMm5z1rX9b97tMGt5Zy/fe8
+         LYFb+3cR1kPlIQSOhPpMIFXiC9o/Y19R8kW9Tx/RLeueZh+MZY7oEa/9bATPMYNqaH
+         8JVeEg9ZmoL2GczJMbVJRDAekUUsk+5PAERd1i8A=
+Date:   Wed, 21 Aug 2019 14:37:42 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        Blauciak@gmail-pop.l.google.com,
+        Slawomir <slawomir.blauciak@intel.com>
+Subject: Re: [PATCH 00/17] soundwire: fixes for 5.4
+Message-ID: <20190821090742.GI12733@vkoul-mobl.Dlink>
+References: <20190806005522.22642-1-pierre-louis.bossart@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190806005522.22642-1-pierre-louis.bossart@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Amit Kucheria as the reviewer for thermal as he would like to
-participate in the review process effort for the thermal framework.
+On 05-08-19, 19:55, Pierre-Louis Bossart wrote:
+> This series provides an update on the initial RFC. Debugfs and Intel
+> updates will be provided in follow-up patches. The order of patches
+> was changed since the RFC so detailed change logs are provided below.
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
-Hi thermal maintainers, I'd like to help out with reviewing patches to the
-thermal framework. I respectfully submit this patch for you to consider
-adding me to the MAINTAINERS file as a reviewer so I get cc'ed on the
-patches.
+Applied all except 14, which didnt apply, thanks
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e81e60bd7c26..75c510270eb2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15896,6 +15896,7 @@ THERMAL
- M:	Zhang Rui <rui.zhang@intel.com>
- M:	Eduardo Valentin <edubezval@gmail.com>
- R:	Daniel Lezcano <daniel.lezcano@linaro.org>
-+R:	Amit Kucheria <amit.kucheria@verdurent.com>
- L:	linux-pm@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rzhang/linux.git
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.git
 -- 
-2.17.1
-
+~Vinod
