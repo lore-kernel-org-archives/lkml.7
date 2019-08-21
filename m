@@ -2,91 +2,157 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B72C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE24C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B66422DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566419123;
-	bh=mjSVl53UoIsVTOrYRaRxq5TqXaw1pMbm12w2dubc0Cc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fh5X8FUXg1ZHv9162xlPFt6bRafcJQ2aMyRr8QdUttrZEv06PyZdRYVnB+zUeODax
-	 qbREq2wo8mVCB3M0QBMxvEyoTLs5AmMz/i0T06Jj6qilxWTWT2COvkh504MUraAeA/
-	 RmPSjhSIGnJ1hSawM5en7dBBPUgjkfHL9IgDVLvA=
+	by mail.kernel.org (Postfix) with ESMTP id D18E322DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UEGX7GLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbfHUUZW (ORCPT
+        id S1729280AbfHUU1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 16:25:22 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42879 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbfHUUZV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 16:25:21 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j7so3306362ota.9;
-        Wed, 21 Aug 2019 13:25:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iJg47cQbCHnK8ufMuIHABp/qu3hQILpmFLj0ngT5bIQ=;
-        b=bWTZTXAZGy3bVhx8KFAvNenPW8s+HOr51DOPCssSi9WRdxMt1A6CH+rlfNnkl56Xqi
-         IFK51wBbQ77eTuyHwOp8dH7L7D8F71mf74G6g7taSCkfQm4nuybPzFCUtYTar0DCsumk
-         GIehF38PDAQZxgRCInCYLLr6YXprQYrGAUnDfzREhrNLt6Z7NGXnhNij5J23TqD7im5l
-         rYcvDeKdNDDFgVUsih1Etoy97frn4pelcPCrALs92RhTiqWYWSjAGvzNtmq4gXF65sNz
-         EMUpPdu2yOXboABL1R5CGNVXY0iRpbc8G1oL4Z6luyeNSGM9KGF0HofBToAHs2cJ1Q6i
-         +CBA==
-X-Gm-Message-State: APjAAAV1aYIF5U+UwHJLtXjzPXbvVfhSvMqxczmQNOfJKlZdUU4npkFE
-        mLewJ4i9k2YDf6gELM1oJQ==
-X-Google-Smtp-Source: APXvYqwSwDIjlEYrjfOBpsOH2FMZcHzCO/vFpoXUufv4hyoncemTSLkRaVUBNRzsMdWOmbzBbC0Cmw==
-X-Received: by 2002:a9d:1cf:: with SMTP id e73mr26436891ote.38.1566419120376;
-        Wed, 21 Aug 2019 13:25:20 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a66sm7133353oii.15.2019.08.21.13.25.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 13:25:19 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 15:25:19 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
-        knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        paulmck@linux.ibm.com, mchehab+samsung@kernel.org,
-        linus.walleij@linaro.org, nicolas.ferre@microchip.com,
-        biabeniamin@outlook.com, Beniamin Bia <beniamin.bia@analog.com>
-Subject: Re: [PATCH v2 4/4] dt-bindings: iio: adc: Add AD7606B ADC
- documentation
-Message-ID: <20190821202519.GA28686@bogus>
-References: <20190807133137.11185-1-beniamin.bia@analog.com>
- <20190807133137.11185-4-beniamin.bia@analog.com>
+        Wed, 21 Aug 2019 16:27:06 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:45376 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726998AbfHUU1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 16:27:06 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46DK2d1nKsz9txLD;
+        Wed, 21 Aug 2019 22:27:05 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=UEGX7GLD; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id omHAs3bIZtOR; Wed, 21 Aug 2019 22:27:05 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46DK2d0ct3z9txLC;
+        Wed, 21 Aug 2019 22:27:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566419225; bh=enIzX4gTmPO57E1bMI8/3i3N4dyfDt6FfgzQCgdsq8c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=UEGX7GLD3G7m5UQVeRbUtXvlSn3u2/0mfAA/bWVbpbl0amwzLCj/Bvno6MzlW48Ht
+         fvD6s2zS7bjFRsNBLRNLJ/wy5O1Rw3WjXClo/3zfsZTXDjbGtB7n+jUN2kqpO1McrW
+         biIyhp/gI7U8HwthutgxFHrgzMNbYHdvaeSySXp4=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2D27A8B7FA;
+        Wed, 21 Aug 2019 22:27:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id eD9Vv9KqC7Og; Wed, 21 Aug 2019 22:27:05 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C6A958B7F9;
+        Wed, 21 Aug 2019 22:27:04 +0200 (CEST)
+Subject: Re: [RFC PATCH] powerpc: Convert ____flush_dcache_icache_phys() to C
+To:     Alastair D'Silva <alastair@au1.ibm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <de7a813c71c4823797bb351bea8be15acae83be2.1565970465.git.christophe.leroy@c-s.fr>
+ <9887dada07278cb39051941d1a47d50349d9fde0.camel@au1.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <a0ad8dd8-2f5d-256d-9e88-e9c236335bb8@c-s.fr>
+Date:   Wed, 21 Aug 2019 22:27:04 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190807133137.11185-4-beniamin.bia@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <9887dada07278cb39051941d1a47d50349d9fde0.camel@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 7 Aug 2019 16:31:37 +0300, Beniamin Bia wrote:
-> Documentation for AD7606B Analog to Digital Converter and software
-> mode was added.
-> 
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> ---
-> Changes in v2:
-> -nothing changed
-> 
->  Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+Le 20/08/2019 à 06:36, Alastair D'Silva a écrit :
+> On Fri, 2019-08-16 at 15:52 +0000, Christophe Leroy wrote:
+
+[...]
+
+> 
+> 
+> Thanks Christophe,
+> 
+> I'm trying a somewhat different approach that requires less knowledge
+> of assembler. Handling of CPU_FTR_COHERENT_ICACHE is outside this
+> function. The code below is not a patch as my tree is a bit messy,
+> sorry:
+
+Can we be 100% sure that GCC won't add any code accessing some global 
+data or stack while the Data MMU is OFF ?
+
+Christophe
+
+
+> 
+> /**
+>   * flush_dcache_icache_phys() - Flush a page by it's physical address
+>   * @addr: the physical address of the page
+>   */
+> static void flush_dcache_icache_phys(unsigned long addr)
+> {
+> 	register unsigned long msr;
+> 	register unsigned long dlines = PAGE_SIZE >> l1_dcache_shift();
+> 	register unsigned long dbytes = l1_dcache_bytes();
+> 	register unsigned long ilines = PAGE_SIZE >> l1_icache_shift();
+> 	register unsigned long ibytes = l1_icache_bytes();
+> 	register unsigned long i;
+> 	register unsigned long address = addr;
+> 
+> 	/*
+> 	 * Clear the DR bit so that we operate on physical
+> 	 * rather than virtual addresses
+> 	 */
+> 	msr = mfmsr();
+> 	mtmsr(msr & ~(MSR_DR));
+> 
+> 	/* Write out the data cache */
+> 	for (i = 0; i < dlines; i++, address += dbytes)
+> 		dcbst((void *)address);
+> 
+> 	/* Invalidate the instruction cache */
+> 	address = addr;
+> 	for (i = 0; i < ilines; i++, address += ibytes)
+> 		icbi((void *)address);
+> 
+> 	mtmsr(msr);
+> }
+> 
+> void test_flush_phys(unsigned long addr)
+> {
+> 	flush_dcache_icache_phys(addr);
+> }
+> 
+> 
+> This gives the following assembler (using pmac32_defconfig):
+> 000003cc <test_flush_phys>:
+>   3cc:   94 21 ff f0     stwu    r1,-16(r1)
+>   3d0:   7d 00 00 a6     mfmsr   r8
+>   3d4:   55 09 07 34     rlwinm  r9,r8,0,28,26
+>   3d8:   7d 20 01 24     mtmsr   r9
+>   3dc:   39 20 00 80     li      r9,128
+>   3e0:   7d 29 03 a6     mtctr   r9
+>   3e4:   39 43 10 00     addi    r10,r3,4096
+>   3e8:   7c 69 1b 78     mr      r9,r3
+>   3ec:   7c 00 48 6c     dcbst   0,r9
+>   3f0:   39 29 00 20     addi    r9,r9,32
+>   3f4:   42 00 ff f8     bdnz    3ec <test_flush_phys+0x20>
+>   3f8:   7c 00 1f ac     icbi    0,r3
+>   3fc:   38 63 00 20     addi    r3,r3,32
+>   400:   7f 8a 18 40     cmplw   cr7,r10,r3
+>   404:   40 9e ff f4     bne     cr7,3f8 <test_flush_phys+0x2c>
+>   408:   7d 00 01 24     mtmsr   r8
+>   40c:   38 21 00 10     addi    r1,r1,16
+>   410:   4e 80 00 20     blr
+> 
+> 
