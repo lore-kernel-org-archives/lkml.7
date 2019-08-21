@@ -2,133 +2,125 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A180C3A59B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479DDC3A59B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D16D22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:21:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JXBIHsFi"
+	by mail.kernel.org (Postfix) with ESMTP id 1557222DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbfHUKVA (ORCPT
+        id S1727956AbfHUKZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:21:00 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47128 "EHLO mail.skyhub.de"
+        Wed, 21 Aug 2019 06:25:39 -0400
+Received: from ozlabs.org ([203.11.71.1]:35609 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727669AbfHUKU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:20:59 -0400
-Received: from zn.tnic (p200300EC2F0A6300A5E08EBEFD6E27E2.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:6300:a5e0:8ebe:fd6e:27e2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726389AbfHUKZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 06:25:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 98A141EC0391;
-        Wed, 21 Aug 2019 12:20:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1566382857;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=5HldHmjPtVDsjJt+73zl6zmVCWyCnVG8ascf+hIMWGg=;
-        b=JXBIHsFigf7rf/+opBf5Rm5Ekjif6uD6SYKry/tXM+paMrS7u1OT6MDNykHTeDtw3w4T52
-        /9jl1C9BKsaRZUQLAG7PcRSTF5dnSSfdKFJCAibbfRt+91K6pBpvmPI2CjfeCy6tEAebCH
-        axlDog6P1OYaf3Z4gMdyoY7QGY034Vs=
-Date:   Wed, 21 Aug 2019 12:20:52 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v8 02/27] x86/cpufeatures: Add CET CPU feature flags for
- Control-flow Enforcement Technology (CET)
-Message-ID: <20190821102052.GD6752@zn.tnic>
-References: <20190813205225.12032-1-yu-cheng.yu@intel.com>
- <20190813205225.12032-3-yu-cheng.yu@intel.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46D3hP6b02z9sN4;
+        Wed, 21 Aug 2019 20:25:24 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiong Wang <jiong.wang@netronome.com>
+Cc:     bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Regression fix for bpf in v5.3 (was Re: [RFC PATCH] bpf: handle 32-bit zext during constant blinding)
+In-Reply-To: <20190813171018.28221-1-naveen.n.rao@linux.vnet.ibm.com>
+References: <20190813171018.28221-1-naveen.n.rao@linux.vnet.ibm.com>
+Date:   Wed, 21 Aug 2019 20:25:17 +1000
+Message-ID: <87d0gy6cj6.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190813205225.12032-3-yu-cheng.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 01:52:00PM -0700, Yu-cheng Yu wrote:
-> Add CPU feature flags for Control-flow Enforcement Technology (CET).
-> 
-> CPUID.(EAX=7,ECX=0):ECX[bit 7] Shadow stack
-> CPUID.(EAX=7,ECX=0):EDX[bit 20] Indirect branch tracking
-> 
-> Reviewed-by: Borislav Petkov <bp@suse.de>
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> writes:
+> Since BPF constant blinding is performed after the verifier pass, there
+> are certain ALU32 instructions inserted which don't have a corresponding
+> zext instruction inserted after. This is causing a kernel oops on
+> powerpc and can be reproduced by running 'test_cgroup_storage' with
+> bpf_jit_harden=2.
+>
+> Fix this by emitting BPF_ZEXT during constant blinding if
+> prog->aux->verifier_zext is set.
+>
+> Fixes: a4b1d3c1ddf6cb ("bpf: verifier: insert zero extension according to analysis result")
+> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
+> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 > ---
->  arch/x86/include/asm/cpufeatures.h | 2 ++
->  arch/x86/kernel/cpu/cpuid-deps.c   | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index e880f2408e29..122265ab46c1 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -334,6 +334,7 @@
->  #define X86_FEATURE_OSPKE		(16*32+ 4) /* OS Protection Keys Enable */
->  #define X86_FEATURE_WAITPKG		(16*32+ 5) /* UMONITOR/UMWAIT/TPAUSE Instructions */
->  #define X86_FEATURE_AVX512_VBMI2	(16*32+ 6) /* Additional AVX512 Vector Bit Manipulation Instructions */
-> +#define X86_FEATURE_SHSTK		(16*32+ 7) /* Shadow Stack */
->  #define X86_FEATURE_GFNI		(16*32+ 8) /* Galois Field New Instructions */
->  #define X86_FEATURE_VAES		(16*32+ 9) /* Vector AES */
->  #define X86_FEATURE_VPCLMULQDQ		(16*32+10) /* Carry-Less Multiplication Double Quadword */
-> @@ -358,6 +359,7 @@
->  #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
->  #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
->  #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
-> +#define X86_FEATURE_IBT			(18*32+20) /* Indirect Branch Tracking */
->  #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
->  #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
->  #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
-> diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-> index b5353244749b..9bf35f081080 100644
-> --- a/arch/x86/kernel/cpu/cpuid-deps.c
-> +++ b/arch/x86/kernel/cpu/cpuid-deps.c
-> @@ -68,6 +68,8 @@ static const struct cpuid_dep cpuid_deps[] = {
->  	{ X86_FEATURE_CQM_MBM_TOTAL,	X86_FEATURE_CQM_LLC   },
->  	{ X86_FEATURE_CQM_MBM_LOCAL,	X86_FEATURE_CQM_LLC   },
->  	{ X86_FEATURE_AVX512_BF16,	X86_FEATURE_AVX512VL  },
-> +	{ X86_FEATURE_SHSTK,		X86_FEATURE_XSAVES    },
-> +	{ X86_FEATURE_IBT,		X86_FEATURE_XSAVES    },
+> This approach (the location where zext is being introduced below, in 
+> particular) works for powerpc, but I am not entirely sure if this is 
+> sufficient for other architectures as well. This is broken on v5.3-rc4.
 
-This hunk needs re-tabbing after:
+Any comment on this?
 
-1e0c08e3034d ("cpu/cpuid-deps: Add a tab to cpuid dependent features")
+This is a regression in v5.3, which results in a kernel crash, it would
+be nice to get it fixed before the release please?
 
-Thx.
+cheers
 
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index 8191a7db2777..d84146e6fd9e 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -890,7 +890,8 @@ int bpf_jit_get_func_addr(const struct bpf_prog *prog,
+>  
+>  static int bpf_jit_blind_insn(const struct bpf_insn *from,
+>  			      const struct bpf_insn *aux,
+> -			      struct bpf_insn *to_buff)
+> +			      struct bpf_insn *to_buff,
+> +			      bool emit_zext)
+>  {
+>  	struct bpf_insn *to = to_buff;
+>  	u32 imm_rnd = get_random_int();
+> @@ -939,6 +940,8 @@ static int bpf_jit_blind_insn(const struct bpf_insn *from,
+>  		*to++ = BPF_ALU32_IMM(BPF_MOV, BPF_REG_AX, imm_rnd ^ from->imm);
+>  		*to++ = BPF_ALU32_IMM(BPF_XOR, BPF_REG_AX, imm_rnd);
+>  		*to++ = BPF_ALU32_REG(from->code, from->dst_reg, BPF_REG_AX);
+> +		if (emit_zext)
+> +			*to++ = BPF_ZEXT_REG(from->dst_reg);
+>  		break;
+>  
+>  	case BPF_ALU64 | BPF_ADD | BPF_K:
+> @@ -992,6 +995,10 @@ static int bpf_jit_blind_insn(const struct bpf_insn *from,
+>  			off -= 2;
+>  		*to++ = BPF_ALU32_IMM(BPF_MOV, BPF_REG_AX, imm_rnd ^ from->imm);
+>  		*to++ = BPF_ALU32_IMM(BPF_XOR, BPF_REG_AX, imm_rnd);
+> +		if (emit_zext) {
+> +			*to++ = BPF_ZEXT_REG(BPF_REG_AX);
+> +			off--;
+> +		}
+>  		*to++ = BPF_JMP32_REG(from->code, from->dst_reg, BPF_REG_AX,
+>  				      off);
+>  		break;
+> @@ -1005,6 +1012,8 @@ static int bpf_jit_blind_insn(const struct bpf_insn *from,
+>  	case 0: /* Part 2 of BPF_LD | BPF_IMM | BPF_DW. */
+>  		*to++ = BPF_ALU32_IMM(BPF_MOV, BPF_REG_AX, imm_rnd ^ aux[0].imm);
+>  		*to++ = BPF_ALU32_IMM(BPF_XOR, BPF_REG_AX, imm_rnd);
+> +		if (emit_zext)
+> +			*to++ = BPF_ZEXT_REG(BPF_REG_AX);
+>  		*to++ = BPF_ALU64_REG(BPF_OR,  aux[0].dst_reg, BPF_REG_AX);
+>  		break;
+>  
+> @@ -1088,7 +1097,8 @@ struct bpf_prog *bpf_jit_blind_constants(struct bpf_prog *prog)
+>  		    insn[1].code == 0)
+>  			memcpy(aux, insn, sizeof(aux));
+>  
+> -		rewritten = bpf_jit_blind_insn(insn, aux, insn_buff);
+> +		rewritten = bpf_jit_blind_insn(insn, aux, insn_buff,
+> +						clone->aux->verifier_zext);
+>  		if (!rewritten)
+>  			continue;
+>  
+> -- 
+> 2.22.0
