@@ -2,165 +2,113 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF70FC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA44CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFCE922CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD1622CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:11:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i06/gsNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbfHUHLM (ORCPT
+        id S1728108AbfHUHLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 03:11:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45092 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727191AbfHUHLM (ORCPT
+        Wed, 21 Aug 2019 03:11:40 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42480 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfHUHLj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:11:12 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7L78ZY3142059
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 03:11:10 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ugyqp3s8m-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 03:11:10 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 21 Aug 2019 08:11:08 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 21 Aug 2019 08:11:05 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7L7B46f58982482
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 07:11:04 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 049D6A4040;
-        Wed, 21 Aug 2019 07:11:04 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0275FA404D;
-        Wed, 21 Aug 2019 07:11:03 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.59])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 21 Aug 2019 07:11:02 +0000 (GMT)
-Date:   Wed, 21 Aug 2019 10:11:01 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Chester Lin <clin@suse.com>, Juergen Gross <JGross@suse.com>,
-        Joey Lee <JLee@suse.com>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "guillaume.gardet@arm.com" <guillaume.gardet@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "geert@linux-m68k.org" <geert@linux-m68k.org>,
-        "ren_guo@c-sky.com" <ren_guo@c-sky.com>, Gary Lin <GLin@suse.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] efi/arm: fix allocation failure when reserving the
- kernel base
-References: <20190802053744.5519-1-clin@suse.com>
- <20190820115645.GP13294@shell.armlinux.org.uk>
- <CAKv+Gu_0wFw5Mjpdw7BEY7ewgetNgU=Ff1uvAsn0iHmJouyKqw@mail.gmail.com>
- <20190821061027.GA2828@linux-8mug>
- <CAKv+Gu8Yny8cVPck3rPwCPvJBvcZKMHti_9bkCTM4H4cZ_43fg@mail.gmail.com>
+        Wed, 21 Aug 2019 03:11:39 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7L79J2u056994;
+        Wed, 21 Aug 2019 07:11:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2019-08-05; bh=PeEYBjRkrZrJgUlTahPbCoreypkCDfbVuOOIwHgF/4Q=;
+ b=i06/gsNJRNPbkEmrwV10HUGnXLN+rk7Dx1sGF860r5/YaJZuUJtMaYEr0x3O4/C9z9hr
+ a/Jr4eAA2Tp3yt1Awgn+mNUsp2BunUIeOzGmSdv1P9V7mmSJA5U7bLhCO4t2rk1lgE/9
+ g3m42HhoIExyjdk/vvpxsA0CgaDyX7yDy/o5C2OL1/lJEH2OB/jyusVH52B7q4WWGt5p
+ 8BpJ4dEo+kNTW7pbMSls+d+2/prICn0hnmofBYi97D39WvfSfUjFV50di9AUDIwnULtZ
+ tt95NzyBDB/Dr0go4vKNjlyG2F2CLqhMB2cVZvoG/ITNH+fXqv9NAXqstVWun4Hv1BP2 1g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2ue90tkhpq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 07:11:32 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7L77uju185152;
+        Wed, 21 Aug 2019 07:11:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2ug1ga8px0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 07:11:31 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7L7BT0N027931;
+        Wed, 21 Aug 2019 07:11:30 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 21 Aug 2019 00:11:29 -0700
+Date:   Wed, 21 Aug 2019 10:11:22 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH 4/4] misc: xilinx_sdfec: Prevent integer overflow in
+ xsdfec_table_write()
+Message-ID: <20190821071122.GD26957@mwanda>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu8Yny8cVPck3rPwCPvJBvcZKMHti_9bkCTM4H4cZ_43fg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19082107-0008-0000-0000-0000030B5CB5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082107-0009-0000-0000-00004A29864A
-Message-Id: <20190821071100.GA26713@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908210077
+In-Reply-To: <20190821070606.GA26957@mwanda>
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908210077
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908210077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:35:16AM +0300, Ard Biesheuvel wrote:
-> On Wed, 21 Aug 2019 at 09:11, Chester Lin <clin@suse.com> wrote:
-> >
-> > On Tue, Aug 20, 2019 at 03:28:25PM +0300, Ard Biesheuvel wrote:
-> > > On Tue, 20 Aug 2019 at 14:56, Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> wrote:
-> > > >
-> > > > On Fri, Aug 02, 2019 at 05:38:54AM +0000, Chester Lin wrote:
-> > > > > diff --git a/arch/arm/mm/mmu.c b/arch/arm/mm/mmu.c
-> > > > > index f3ce34113f89..909b11ba48d8 100644
-> > > > > --- a/arch/arm/mm/mmu.c
-> > > > > +++ b/arch/arm/mm/mmu.c
-> > > > > @@ -1184,6 +1184,9 @@ void __init adjust_lowmem_bounds(void)
-> > > > >               phys_addr_t block_start = reg->base;
-> > > > >               phys_addr_t block_end = reg->base + reg->size;
-> > > > >
-> > > > > +             if (memblock_is_nomap(reg))
-> > > > > +                     continue;
-> > > > > +
-> > > > >               if (reg->base < vmalloc_limit) {
-> > > > >                       if (block_end > lowmem_limit)
-> > > > >                               /*
-> > > >
-> > > > I think this hunk is sane - if the memory is marked nomap, then it isn't
-> > > > available for the kernel's use, so as far as calculating where the
-> > > > lowmem/highmem boundary is, it effectively doesn't exist and should be
-> > > > skipped.
-> > > >
-> > >
-> > > I agree.
-> > >
-> > > Chester, could you explain what you need beyond this change (and my
-> > > EFI stub change involving TEXT_OFFSET) to make things work on the
-> > > RPi2?
-> > >
-> >
-> > Hi Ard,
-> >
-> > In fact I am working with Guillaume to try booting zImage kernel and openSUSE
-> > from grub2.04 + arm32-efistub so that's why we get this issue on RPi2, which is
-> > one of the test machines we have. However we want a better solution for all
-> > cases but not just RPi2 since we don't want to affect other platforms as well.
-> >
-> 
-> Thanks Chester, but that doesn't answer my question.
-> 
-> Your fix is a single patch that changes various things that are only
-> vaguely related. We have already identified that we need to take
-> TEXT_OFFSET (minus some space used by the swapper page tables) into
-> account into the EFI stub if we want to ensure compatibility with many
-> different platforms, and as it turns out, this applies not only to
-> RPi2 but to other platforms as well, most notably the ones that
-> require a TEXT_OFFSET of 0x208000, since they also have reserved
-> regions at the base of RAM.
-> 
-> My question was what else we need beyond:
-> - the EFI stub TEXT_OFFSET fix [0]
-> - the change to disregard NOMAP memblocks in adjust_lowmem_bounds()
-> - what else???
+The checking here needs to handle integer overflows because "offset" and
+"len" come from the user.
 
-I think the only missing part here is to ensure that non-reserved memory in
-bank 0 starts from a PMD-aligned address. I believe this could be done if
-EFI stub, but I'm not really familiar with it so this just a semi-educated
-guess :)
- 
-> [0] https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/commit/?h=next&id=0eb7bad595e52666b642a02862ad996a0f9bfcc0
+Fixes: 20ec628e8007 ("misc: xilinx_sdfec: Add ability to configure LDPC")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/misc/xilinx_sdfec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index 3fc53d20abf3..0bf3bcc8e1ef 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -611,7 +611,9 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
+ 	 * Writes that go beyond the length of
+ 	 * Shared Scale(SC) table should fail
+ 	 */
+-	if ((XSDFEC_REG_WIDTH_JUMP * (offset + len)) > depth) {
++	if (offset > depth / XSDFEC_REG_WIDTH_JUMP ||
++	    len > depth / XSDFEC_REG_WIDTH_JUMP ||
++	    offset + len > depth / XSDFEC_REG_WIDTH_JUMP) {
+ 		dev_dbg(xsdfec->dev, "Write exceeds SC table length");
+ 		return -EINVAL;
+ 	}
 -- 
-Sincerely yours,
-Mike.
+2.20.1
 
