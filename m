@@ -2,209 +2,106 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A98C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE797C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BCE12339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:20:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566400830;
-	bh=9/75u3Tvm7n34viu09eAdOl3V9lhc9uG6Rxa1n05bT0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9vQ0J66Tl+TQ9K5Cg7VOsDSJYfEG7NJrU0P0CLqt9Ui50h03kvq2q3ioKHvA7YVp
-	 u0cFd+1/FA7oyP+IvVA4lcVkHjOyxqeaYCNW4rmKfnxOOL+cDcYOD6NTOOl8g5JPOE
-	 BkyRT/3pQWrnd988GUKUyUyjoaVWSrlsARPO49WQ=
+	by mail.kernel.org (Postfix) with ESMTP id A08C322DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:21:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="PfpbmyeO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbfHUPU2 (ORCPT
+        id S1728299AbfHUPV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:20:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57252 "EHLO mail.kernel.org"
+        Wed, 21 Aug 2019 11:21:57 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:21613 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726885AbfHUPUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:20:25 -0400
-Received: from localhost.localdomain (unknown [180.111.132.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 511DF22DD3;
-        Wed, 21 Aug 2019 15:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566400824;
-        bh=9/75u3Tvm7n34viu09eAdOl3V9lhc9uG6Rxa1n05bT0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bycgHQ+ZC/zGBc1mzQ6vqFT1gg42d40dW6R5OO/PHwzq1wPRurESaiqjSLy1zvAFB
-         5LZQhnI0dhW0/jdEEGrAC8DO+1STTTsfnpiiS7s23Iq8R6AAhWfohFbkBihJ0F52IR
-         XBrNLazBumveD69/bckbYeX6DDwFqL40+rzhonM0=
-From:   Chao Yu <chao@kernel.org>
-To:     jaegeuk@kernel.org
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 2/2] f2fs: optimize case-insensitive lookups
-Date:   Wed, 21 Aug 2019 23:13:35 +0800
-Message-Id: <20190821151335.21312-2-chao@kernel.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190821151335.21312-1-chao@kernel.org>
-References: <20190821151335.21312-1-chao@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726885AbfHUPV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:21:57 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46DBGT3qLvz9v10J;
+        Wed, 21 Aug 2019 17:21:53 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=PfpbmyeO; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Yea5GLHY7gcW; Wed, 21 Aug 2019 17:21:53 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46DBGT2m02z9v10H;
+        Wed, 21 Aug 2019 17:21:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566400913; bh=I8W+l3URIFEwj3Ss1WM0wfluCLpBRXTInP46mMV22d4=;
+        h=From:Subject:To:Cc:Date:From;
+        b=PfpbmyeOY7IMD4ZIOr8lWmZb7POGDj+V4KjBacdBHmV5U1bpIdw7UghNP/ClJ8x1L
+         hH6aYGyaO5yCq5uwuKQjWAGhn0/GukAbkfBDszDN+nClH2fiPh8g+bI5XKk9LiuZbG
+         jDMU7ro+YKk32+GM7Oe7WEXN8TTg+eY+zv0iNhWI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A00128B7F7;
+        Wed, 21 Aug 2019 17:21:55 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id gD5cCgbd2cwg; Wed, 21 Aug 2019 17:21:55 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7FDAB8B7EE;
+        Wed, 21 Aug 2019 17:21:55 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 70ADB6B708; Wed, 21 Aug 2019 15:21:55 +0000 (UTC)
+Message-Id: <4f88d7e6fda53b5f80a71040ab400242f6c8cb93.1566400889.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/mm: tell if a bad page fault on data is read or
+ write.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed, 21 Aug 2019 15:21:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+DSISR has a bit to tell if the fault is due to a read or a write.
 
-This patch ports below casefold enhancement patch from ext4 to f2fs
+Display it.
 
-commit 3ae72562ad91 ("ext4: optimize case-insensitive lookups")
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- fs/f2fs/dir.c  | 57 ++++++++++++++++++++++++++++++++++++++++++++------
- fs/f2fs/f2fs.h |  3 ++-
- 2 files changed, 53 insertions(+), 7 deletions(-)
+ arch/powerpc/mm/fault.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-index e34c17106084..7498b789518a 100644
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -112,13 +112,17 @@ static struct f2fs_dir_entry *find_in_block(struct inode *dir,
-  * doesn't match or less than zero on error.
-  */
- int f2fs_ci_compare(const struct inode *parent, const struct qstr *name,
--		    const struct qstr *entry)
-+				const struct qstr *entry, bool quick)
+diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+index 8432c281de92..b5047f9b5dec 100644
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -645,6 +645,7 @@ NOKPROBE_SYMBOL(do_page_fault);
+ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
  {
- 	const struct f2fs_sb_info *sbi = F2FS_SB(parent->i_sb);
- 	const struct unicode_map *um = sbi->s_encoding;
- 	int ret;
+ 	const struct exception_table_entry *entry;
++	int is_write = page_fault_is_write(regs->dsisr);
  
--	ret = utf8_strncasecmp(um, name, entry);
-+	if (quick)
-+		ret = utf8_strncasecmp_folded(um, name, entry);
-+	else
-+		ret = utf8_strncasecmp(um, name, entry);
-+
- 	if (ret < 0) {
- 		/* Handle invalid character sequence as either an error
- 		 * or as an opaque byte sequence.
-@@ -134,11 +138,36 @@ int f2fs_ci_compare(const struct inode *parent, const struct qstr *name,
- 
- 	return ret;
- }
-+
-+void f2fs_fname_setup_ci_filename(struct inode *dir,
-+					const struct qstr *iname,
-+					struct fscrypt_str *cf_name)
-+{
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(dir);
-+
-+	if (!IS_CASEFOLDED(dir)) {
-+		cf_name->name = NULL;
-+		return;
-+	}
-+
-+	cf_name->name = f2fs_kmalloc(sbi, F2FS_NAME_LEN, GFP_NOFS);
-+	if (!cf_name->name)
-+		return;
-+
-+	cf_name->len = utf8_casefold(sbi->s_encoding,
-+					iname, cf_name->name,
-+					F2FS_NAME_LEN);
-+	if (cf_name->len <= 0) {
-+		kvfree(cf_name->name);
-+		cf_name->name = NULL;
-+	}
-+}
- #endif
- 
- static inline bool f2fs_match_name(struct f2fs_dentry_ptr *d,
- 					struct f2fs_dir_entry *de,
- 					struct fscrypt_name *fname,
-+					struct fscrypt_str *cf_str,
- 					unsigned long bit_pos,
- 					f2fs_hash_t namehash)
- {
-@@ -155,8 +184,15 @@ static inline bool f2fs_match_name(struct f2fs_dentry_ptr *d,
- 	entry.name = d->filename[bit_pos];
- 	entry.len = de->name_len;
- 
--	if (sbi->s_encoding && IS_CASEFOLDED(parent))
--		return !f2fs_ci_compare(parent, fname->usr_fname, &entry);
-+	if (sbi->s_encoding && IS_CASEFOLDED(parent)) {
-+		if (cf_str->name) {
-+			struct qstr cf = {.name = cf_str->name,
-+					  .len = cf_str->len};
-+			return !f2fs_ci_compare(parent, &cf, &entry, true);
-+		}
-+		return !f2fs_ci_compare(parent, fname->usr_fname, &entry,
-+					false);
-+	}
- #endif
- 	if (fscrypt_match_name(fname, d->filename[bit_pos],
- 				le16_to_cpu(de->name_len)))
-@@ -169,9 +205,14 @@ struct f2fs_dir_entry *f2fs_find_target_dentry(struct fscrypt_name *fname,
- 			struct f2fs_dentry_ptr *d)
- {
- 	struct f2fs_dir_entry *de;
-+	struct fscrypt_str cf_str = { .name = NULL, .len = 0 };
- 	unsigned long bit_pos = 0;
- 	int max_len = 0;
- 
-+#ifdef CONFIG_UNICODE
-+	f2fs_fname_setup_ci_filename(d->inode, fname->usr_fname, &cf_str);
-+#endif
-+
- 	if (max_slots)
- 		*max_slots = 0;
- 	while (bit_pos < d->max) {
-@@ -188,7 +229,7 @@ struct f2fs_dir_entry *f2fs_find_target_dentry(struct fscrypt_name *fname,
- 			continue;
- 		}
- 
--		if (f2fs_match_name(d, de, fname, bit_pos, namehash))
-+		if (f2fs_match_name(d, de, fname, &cf_str, bit_pos, namehash))
- 			goto found;
- 
- 		if (max_slots && max_len > *max_slots)
-@@ -202,6 +243,10 @@ struct f2fs_dir_entry *f2fs_find_target_dentry(struct fscrypt_name *fname,
- found:
- 	if (max_slots && max_len > *max_slots)
- 		*max_slots = max_len;
-+
-+#ifdef CONFIG_UNICODE
-+	kvfree(cf_str.name);
-+#endif
- 	return de;
- }
- 
-@@ -1025,7 +1070,7 @@ static int f2fs_d_compare(const struct dentry *dentry, unsigned int len,
- 		return memcmp(str, name, len);
- 	}
- 
--	return f2fs_ci_compare(dentry->d_parent->d_inode, name, &qstr);
-+	return f2fs_ci_compare(dentry->d_parent->d_inode, name, &qstr, false);
- }
- 
- static int f2fs_d_hash(const struct dentry *dentry, struct qstr *str)
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 2d0cab0cd620..52174aae3299 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2951,7 +2951,8 @@ struct dentry *f2fs_get_parent(struct dentry *child);
- 
- extern int f2fs_ci_compare(const struct inode *parent,
- 			   const struct qstr *name,
--			   const struct qstr *entry);
-+			   const struct qstr *entry,
-+			   bool quick);
- 
- /*
-  * dir.c
+ 	/* Are we prepared to handle this fault?  */
+ 	if ((entry = search_exception_tables(regs->nip)) != NULL) {
+@@ -658,9 +659,10 @@ void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig)
+ 	case 0x300:
+ 	case 0x380:
+ 	case 0xe00:
+-		pr_alert("BUG: %s at 0x%08lx\n",
++		pr_alert("BUG: %s on %s at 0x%08lx\n",
+ 			 regs->dar < PAGE_SIZE ? "Kernel NULL pointer dereference" :
+-			 "Unable to handle kernel data access", regs->dar);
++			 "Unable to handle kernel data access",
++			 is_write ? "write" : "read", regs->dar);
+ 		break;
+ 	case 0x400:
+ 	case 0x480:
 -- 
-2.22.0
+2.13.3
 
