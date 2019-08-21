@@ -2,116 +2,168 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AADC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1148BC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF8322339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:34:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566426843;
-	bh=FhOdoG+uEuNHTTDbXbY6PhmljoTde5UcyxI0dUGbGzQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rPEikNw8aPXMB1qDfB4qWQT6U3PZ33SndFv90aZihpFIEQ3FMyw4WWoQ+jQHD9Nti
-	 qVnxD6HV6QUmwc1GC0D9wEVQtPce0fpyeoFUyQwBWG+ZNc58AMictih5jjSzUm7Y73
-	 LjWrkjzD9mQzORYKOqmoC82NGeOHm/v9gnnnst/8=
+	by mail.kernel.org (Postfix) with ESMTP id D8A652339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:38:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731084AbfHUWeB (ORCPT
+        id S1731243AbfHUWiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 18:34:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55828 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729090AbfHUWeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 18:34:01 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C223D2332A;
-        Wed, 21 Aug 2019 22:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566426840;
-        bh=FhOdoG+uEuNHTTDbXbY6PhmljoTde5UcyxI0dUGbGzQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tpcOoxbyCTO6OSPIk4s4E2UpgZeFQ8vkv4gGyDGHcZblGTO1LITs2QVeZuWns9jgZ
-         Yi9WeMrSwxLt/fH2vkrmemWxZGdFFInP+wcCL9ef6y2KV+4ZnKhflgzcXWkPV2fP/v
-         CK7FZ3lJ5A6ULzhIRV0uQT/3wC2HrQpblirbrWBM=
-Date:   Thu, 22 Aug 2019 00:33:57 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [patch V2 01/38] posix-cpu-timers: Provide task validation
- functions
-Message-ID: <20190821223356.GC22020@lenoir>
-References: <20190821190847.665673890@linutronix.de>
- <20190821192919.326097175@linutronix.de>
+        Wed, 21 Aug 2019 18:38:10 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:46095 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729857AbfHUWiJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 18:38:09 -0400
+Received: by mail-io1-f70.google.com with SMTP id e17so4202825ioh.13
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:38:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=BTtJUMszNrujEPFC3wQT6l7FYC6eZ4EtPS5uVqWHKZc=;
+        b=I8oSaEOJqFDx341OJW9MLiF0XBdqIaSU2uODgnq2CARsvzYITPa/mfLXnkAbWxrRR+
+         Yp2b7BIYYZ45adX9xY39smxz4gbceymLAZnNL3oUp23aBdHV6nYvffiRp8nb9V3dpJsz
+         zoYuu+Mx+erHSvqKKATir4SAWK5Z9OGNmoYWnHk++V9UOeRCdKt5oS4uxNqGpI35cdxk
+         Gq/oZBoUKAh8FMrBSngs0UwOtc3fJDRkCzwhbSC5nYynE3VOV2d3872K/+I68+LedFNx
+         Jb1i1SkTOXxxHmSgdx0n7dBd6c2bjU5MFLyitD9T2uaimrVIZ7uBmvC24xdDsl7Z3n7W
+         +fRQ==
+X-Gm-Message-State: APjAAAWzhgToYmfOx2G1YnQvssgppgaypTGMeH4lXOQ7zLf1p6cJnDRt
+        tjdSXca+KmI7VEGlQl8JkRD03/PbWICUXIG6cnaSG4tBgYmN
+X-Google-Smtp-Source: APXvYqzOluyNlTC3a21ScZvzJi76nxi43xLQVkD9qQOF0Qspti0r4r1Pja6nog2TC39cP1WafA+H4oMWutoHWRL5P1FhBGMyCnCU
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821192919.326097175@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a02:1441:: with SMTP id 62mr13101565jag.21.1566427087791;
+ Wed, 21 Aug 2019 15:38:07 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 15:38:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000226dc30590a83a39@google.com>
+Subject: KMSAN: uninit-value in batadv_iv_send_outstanding_bat_ogm_packet
+From:   syzbot <syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com>
+To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, glider@google.com,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        netdev@vger.kernel.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:08:48PM +0200, Thomas Gleixner wrote:
-> The code contains three slightly different copies of validating whether a
-> given clock resolves to a valid task and whether the current caller has
-> permissions to access it.
-> 
-> Create central functions. Replace check_clock() as a first step and rename
-> it to something sensible.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  kernel/time/posix-cpu-timers.c |   65 +++++++++++++++++++++++++++--------------
->  1 file changed, 44 insertions(+), 21 deletions(-)
-> 
-> --- a/kernel/time/posix-cpu-timers.c
-> +++ b/kernel/time/posix-cpu-timers.c
-> @@ -35,27 +35,52 @@ void update_rlimit_cpu(struct task_struc
->  	spin_unlock_irq(&task->sighand->siglock);
->  }
->  
-> -static int check_clock(const clockid_t which_clock)
-> +/*
-> + * Functions for validating access to tasks.
-> + */
-> +static struct task_struct *lookup_task(const pid_t pid, bool thread)
->  {
-> -	int error = 0;
->  	struct task_struct *p;
-> -	const pid_t pid = CPUCLOCK_PID(which_clock);
->  
-> -	if (CPUCLOCK_WHICH(which_clock) >= CPUCLOCK_MAX)
-> -		return -EINVAL;
-> +	if (!pid)
-> +		return thread ? current : current->group_leader;
->  
-> -	if (pid == 0)
-> -		return 0;
-> +	p = find_task_by_vpid(pid);
-> +	if (!p || p == current)
-> +		return p;
+Hello,
 
-What if (p == current && !thread && !has_group_leader_pid(p)) ?
+syzbot found the following crash on:
 
-> +	if (thread)
-> +		return same_thread_group(p, current) ? p : NULL;
-> +	if (p == current)
-> +		return p;
+HEAD commit:    61ccdad1 Revert "drm/bochs: Use shadow buffer for bochs fr..
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=13d6909c600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=27abc558ecb16a3b
+dashboard link: https://syzkaller.appspot.com/bug?extid=355cab184197dbbfa384
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1612b9d2600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d388ac600000
 
-You already checked that above.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
 
-> +	return has_group_leader_pid(p) ? p : NULL;
-> +}
+==================================================================
+BUG: KMSAN: uninit-value in batadv_iv_ogm_send_to_if  
+net/batman-adv/bat_iv_ogm.c:317 [inline]
+BUG: KMSAN: uninit-value in batadv_iv_ogm_emit  
+net/batman-adv/bat_iv_ogm.c:383 [inline]
+BUG: KMSAN: uninit-value in  
+batadv_iv_send_outstanding_bat_ogm_packet+0x6cd/0xcc0  
+net/batman-adv/bat_iv_ogm.c:1657
+CPU: 1 PID: 290 Comm: kworker/u4:7 Not tainted 5.3.0-rc3+ #17
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
+  batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:317 [inline]
+  batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:383 [inline]
+  batadv_iv_send_outstanding_bat_ogm_packet+0x6cd/0xcc0  
+net/batman-adv/bat_iv_ogm.c:1657
+  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
+  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
+  kthread+0x4b5/0x4f0 kernel/kthread.c:256
+  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
+
+Uninit was created at:
+  kmsan_save_stack_with_flags+0x37/0x70 mm/kmsan/kmsan.c:187
+  kmsan_internal_alloc_meta_for_pages+0x123/0x510 mm/kmsan/kmsan_hooks.c:114
+  kmsan_alloc_page+0x7a/0xf0 mm/kmsan/kmsan_hooks.c:244
+  __alloc_pages_nodemask+0x142d/0x5fa0 mm/page_alloc.c:4768
+  __alloc_pages include/linux/gfp.h:475 [inline]
+  __alloc_pages_node include/linux/gfp.h:488 [inline]
+  alloc_pages_node include/linux/gfp.h:502 [inline]
+  __page_frag_cache_refill mm/page_alloc.c:4843 [inline]
+  page_frag_alloc+0x35b/0x890 mm/page_alloc.c:4873
+  __napi_alloc_skb+0x195/0x980 net/core/skbuff.c:519
+  napi_alloc_skb include/linux/skbuff.h:2808 [inline]
+  page_to_skb+0x134/0x1150 drivers/net/virtio_net.c:384
+  receive_mergeable drivers/net/virtio_net.c:924 [inline]
+  receive_buf+0xe7b/0x8810 drivers/net/virtio_net.c:1033
+  virtnet_receive drivers/net/virtio_net.c:1323 [inline]
+  virtnet_poll+0x666/0x19d0 drivers/net/virtio_net.c:1428
+  napi_poll net/core/dev.c:6347 [inline]
+  net_rx_action+0x74b/0x1950 net/core/dev.c:6413
+  __do_softirq+0x4a1/0x83a kernel/softirq.c:293
+  invoke_softirq kernel/softirq.c:375 [inline]
+  irq_exit+0x230/0x280 kernel/softirq.c:416
+  exiting_irq arch/x86/include/asm/apic.h:537 [inline]
+  do_IRQ+0x20d/0x3a0 arch/x86/kernel/irq.c:259
+  ret_from_intr+0x0/0x33
+  kmsan_get_shadow_origin_ptr+0x6/0x3a0 mm/kmsan/kmsan.c:656
+  __msan_metadata_ptr_for_load_8+0x10/0x20 mm/kmsan/kmsan_instr.c:55
+  compound_head include/linux/compiler.h:206 [inline]
+  PageReferenced include/linux/page-flags.h:315 [inline]
+  mark_page_accessed+0x30c/0xa00 mm/swap.c:391
+  touch_buffer fs/buffer.c:60 [inline]
+  __find_get_block+0x1681/0x19e0 fs/buffer.c:1303
+  __getblk_gfp+0xc5/0x1080 fs/buffer.c:1321
+  sb_getblk include/linux/buffer_head.h:325 [inline]
+  __ext4_get_inode_loc+0x647/0x1c80 fs/ext4/inode.c:4611
+  ext4_get_inode_loc fs/ext4/inode.c:4726 [inline]
+  ext4_reserve_inode_write+0x15d/0x430 fs/ext4/inode.c:5919
+  ext4_mark_inode_dirty+0x2dd/0xca0 fs/ext4/inode.c:6071
+  ext4_dirty_inode+0x187/0x1d0 fs/ext4/inode.c:6110
+  __mark_inode_dirty+0x486/0x1380 fs/fs-writeback.c:2170
+  mark_inode_dirty include/linux/fs.h:2138 [inline]
+  generic_write_end+0x3f7/0x460 fs/buffer.c:2164
+  ext4_da_write_end+0x1050/0x1240 fs/ext4/inode.c:3217
+  generic_perform_write+0x618/0x990 mm/filemap.c:3341
+  __generic_file_write_iter+0x421/0xa30 mm/filemap.c:3459
+  ext4_file_write_iter+0xc97/0x2010 fs/ext4/file.c:270
+  call_write_iter include/linux/fs.h:1870 [inline]
+  new_sync_write fs/read_write.c:483 [inline]
+  __vfs_write+0xa2c/0xcb0 fs/read_write.c:496
+  vfs_write+0x481/0x920 fs/read_write.c:558
+  ksys_write+0x265/0x430 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write+0x92/0xb0 fs/read_write.c:620
+  __x64_sys_write+0x4a/0x70 fs/read_write.c:620
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
