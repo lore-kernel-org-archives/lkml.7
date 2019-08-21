@@ -6,83 +6,94 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58138C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB41C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B57E2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F9922DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:11:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfHUEHy (ORCPT
+        id S1727447AbfHUELM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:07:54 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37374 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbfHUEHw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:07:52 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f22so1283876edt.4
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 21:07:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2DH+Z8zu5DA8qxbFBSKsglzPr+woO5ZxUEZnrR+PcUs=;
-        b=bZl9KqUOtrujBg1QJQWFIxQj51sk2oB6tSyggrdmICn5ccEfv5VF/a4U4yfnCSl7JY
-         1FeIrZH/daAlzH9fAoA2AAdxr7yxpO8JB4WziIZe05IlRwIYDU+kOJcaM8oexqeE5F0e
-         yi84evrYO3awI9Fx2CeC/d2NAF6UNz/ptM0SICvYHd6/dnIbeUoqHs3j1YZA0cdn5Y01
-         k7ODXhg65AHvHifEKtkdsrtLfcF0CbSdqiQK8GScIjrYhMvjHtv5lS81Sp+vb5YrGMLW
-         fXL2fMoWAVOk/8cfYR3GAmAEbptJYtMwhkViKutA3rpViuszKggkHeP5XnzKwhH6R2Wb
-         2ffA==
-X-Gm-Message-State: APjAAAV6uqmbu8ZOqXC4AudjI89M7hDicWpByUDBjYtrW3yLpLhiKjx1
-        Ir2V+zBvkVfAlV9gVXCYV1IXGOlXQ9Y=
-X-Google-Smtp-Source: APXvYqxwx8FZA+a9CHC4BXrxz8DOU3y0C0lpgNUSzHim5ksXU2gwcueO/rNA5NmbO1ammjU3WaE92w==
-X-Received: by 2002:a50:ee0d:: with SMTP id g13mr34998002eds.113.1566360470438;
-        Tue, 20 Aug 2019 21:07:50 -0700 (PDT)
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com. [209.85.128.51])
-        by smtp.gmail.com with ESMTPSA id r27sm3892993edc.17.2019.08.20.21.07.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Aug 2019 21:07:50 -0700 (PDT)
-Received: by mail-wm1-f51.google.com with SMTP id g67so650472wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 21:07:49 -0700 (PDT)
-X-Received: by 2002:a7b:c8c5:: with SMTP id f5mr3226423wml.25.1566360469671;
- Tue, 20 Aug 2019 21:07:49 -0700 (PDT)
+        Wed, 21 Aug 2019 00:11:12 -0400
+Received: from ajax.cs.uga.edu ([128.192.4.6]:44078 "EHLO ajax.cs.uga.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbfHUELM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 00:11:12 -0400
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+        (authenticated bits=0)
+        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x7L4B95u068890
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 21 Aug 2019 00:11:10 -0400
+Received: by mail-lj1-f182.google.com with SMTP id e24so769093ljg.11;
+        Tue, 20 Aug 2019 21:11:10 -0700 (PDT)
+X-Gm-Message-State: APjAAAUq0yZzL6KKQVRoSD/MJUT2YKYwNFKyrZDwhnZCArGHxDque/jE
+        Hlxe7elNUqmlR79Bwfc1FqIPCqIVxhjkxtiCQIs=
+X-Google-Smtp-Source: APXvYqyyYoE6BFoFjTkA2zz1wluz3q243WVH3e1WosI+d49h5maVbSQ2ufFUYVzX6TSOO32UnCu5k7eQ/8WRsQuAzG8=
+X-Received: by 2002:a2e:3c12:: with SMTP id j18mr1434819lja.50.1566360669574;
+ Tue, 20 Aug 2019 21:11:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190814060854.26345-1-codekipper@gmail.com> <20190814060854.26345-10-codekipper@gmail.com>
-In-Reply-To: <20190814060854.26345-10-codekipper@gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 21 Aug 2019 12:07:37 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65+-OB4zEyW8f7hcWHkL7DtfEB1YK2B1nOKdgNdNqC0kQ@mail.gmail.com>
-Message-ID: <CAGb2v65+-OB4zEyW8f7hcWHkL7DtfEB1YK2B1nOKdgNdNqC0kQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v5 09/15] clk: sunxi-ng: h6: Allow I2S to
- change parent rate
-To:     Code Kipper <codekipper@gmail.com>
-Cc:     Maxime Ripard <maxime.ripard@free-electrons.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
+References: <CAAa=b7ft-crBJm+H9U7Bn2dcgfjQsE8o53p2ryBWK3seQoF3Cg@mail.gmail.com>
+ <20190815.134230.1028411309377288636.davem@davemloft.net> <CAAa=b7duRXsiVBfzbvHhoU000gGh53Mme3ZKCO5SoiTdgRaXtg@mail.gmail.com>
+ <20190815.135111.1048854967874803531.davem@davemloft.net>
+In-Reply-To: <20190815.135111.1048854967874803531.davem@davemloft.net>
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+Date:   Wed, 21 Aug 2019 00:10:33 -0400
+X-Gmail-Original-Message-ID: <CAAa=b7fc99q0JTcn2FaBaN4as3U_SMutG7J+AuqSa3xBHaPQ4Q@mail.gmail.com>
+Message-ID: <CAAa=b7fc99q0JTcn2FaBaN4as3U_SMutG7J+AuqSa3xBHaPQ4Q@mail.gmail.com>
+Subject: Re: [PATCH] net: pch_gbe: Fix memory leaks
+To:     David Miller <davem@davemloft.net>
+Cc:     Richard Fontana <rfontana@redhat.com>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Wenwen Wang <wenwen@cs.uga.edu>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 14, 2019 at 2:09 PM <codekipper@gmail.com> wrote:
+On Thu, Aug 15, 2019 at 4:51 PM David Miller <davem@davemloft.net> wrote:
 >
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
+> From: Wenwen Wang <wenwen@cs.uga.edu>
+> Date: Thu, 15 Aug 2019 16:46:05 -0400
 >
-> I2S doesn't work if parent rate couldn't be change. Difference between
-> wanted and actual rate is too big.
+> > On Thu, Aug 15, 2019 at 4:42 PM David Miller <davem@davemloft.net> wrote:
+> >>
+> >> From: Wenwen Wang <wenwen@cs.uga.edu>
+> >> Date: Thu, 15 Aug 2019 16:03:39 -0400
+> >>
+> >> > On Thu, Aug 15, 2019 at 3:34 PM David Miller <davem@davemloft.net> wrote:
+> >> >>
+> >> >> From: Wenwen Wang <wenwen@cs.uga.edu>
+> >> >> Date: Tue, 13 Aug 2019 20:33:45 -0500
+> >> >>
+> >> >> > In pch_gbe_set_ringparam(), if netif_running() returns false, 'tx_old' and
+> >> >> > 'rx_old' are not deallocated, leading to memory leaks. To fix this issue,
+> >> >> > move the free statements after the if branch.
+> >> >> >
+> >> >> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+> >> >>
+> >> >> Why would they be "deallocated"?  They are still assigned to
+> >> >> adapter->tx_ring and adapter->rx_ring.
+> >> >
+> >> > 'adapter->tx_ring' and 'adapter->rx_ring' has been covered by newly
+> >> > allocated 'txdr' and 'rxdr' respectively before this if statement.
+> >>
+> >> That only happens inside of the if() statement, that's why rx_old and
+> >> tx_old are only freed in that code path.
+> >
+> > That happens not only inside of the if statement, but also before the
+> > if statement, just after 'txdr' and 'rxdr' are allocated.
 >
-> Fix this by adding CLK_SET_RATE_PARENT flag to I2S clocks.
+> Then the assignments inside of the if() statement are redundant.
 >
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Something doesn't add up here, please make the code consistent.
 
-This lacks your SoB. Please reply and I can add it when applying.
+Thanks for your suggestion! I will remove the assignments inside of
+the if() statement.
 
-ChenYu
+Wenwen
