@@ -2,112 +2,125 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A871C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE017C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1592339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F30A22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:47:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566388047;
+	bh=GV01KeAUYlu4sipMh9vrahDwfavjDPrAODfAHT5mdks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PWIh7+wD4Y72LAxnvNankADXh/FnAe9MDu6p6atDSpCTGRVpAY1dBa7TtCrjsQ1m6
+	 +dKWDVFw8k/bo63bPF2NQRzXzNkIgIELqu4QouEv06QkSdvL3UBl/9cRYHGRN3+k6C
+	 5w/8QZckg+4fnxrb5JPmobNaM4unlP4sBa+NMtP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfHULrB (ORCPT
+        id S1727725AbfHULr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 07:47:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:56358 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfHULrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 07:47:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 388A828;
-        Wed, 21 Aug 2019 04:47:00 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 862603F718;
-        Wed, 21 Aug 2019 04:46:59 -0700 (PDT)
-Subject: Re: linux-next: manual merge of the gpio tree with the irqchip tree
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190821160335.09071cb5@canb.auug.org.au>
- <86zhk3lyw4.wl-marc.zyngier@arm.com>
- <CACRpkdbAR5JTcEmatQ1F0=fRWm4=1jUqaehA=vFtc8Y5=5V-VA@mail.gmail.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <c6615861-4c1e-783c-bcbe-a96443c216d9@arm.com>
-Date:   Wed, 21 Aug 2019 12:46:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 07:47:26 -0400
+Received: from mail-wr1-f100.google.com ([209.85.221.100]:46749 "EHLO
+        mail-wr1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbfHULrZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 07:47:25 -0400
+Received: by mail-wr1-f100.google.com with SMTP id z1so1706375wru.13
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 04:47:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zpJrwrxxvYiCGTqZfEB4v/W4+ZD+ic4TYT5QJIWQg24=;
+        b=MlUsoHQ0Ed3igUywx6DF+R0hVR9jrkSDsQ5ZpF4zZ5FDO+PCjYz1Iw5UqaEszUBksN
+         aXBLwNuHtrT8ri4QD6+p1rdSEiXCG8XJGEpNTZy/iFDUd68k8Hv+XB/rL9zVfs/cbue8
+         rDClF+KU4CCJ9mXSU6e3hKC+u0wwng5wFKHImf47bNiBVtZZQOD3ZnQeJMoqiP0zoz4K
+         3qIoE+uSaXMkx9nFKGSROcbauA1aqTSz66WSP3ehN1ZtlvWYiBzPAbAs61C1/vQy5thP
+         pHqPvqEqm0loGjmlS0bdMWbeH0xZWtQUwNq5j4B9XxP7yzTKDbYEch/ig+gzg30NLxcD
+         +NIQ==
+X-Gm-Message-State: APjAAAVBO5pw/W5TFpld41frg1/3EmlBSYuuW6AgSdDY+OpzCvJ/WrPB
+        3tPBTtIul1Yl60PSYNNdLucFUe9fiLSDyjSLU/kVEFUlXTuTqjlZruxa4o84nGzyUg==
+X-Google-Smtp-Source: APXvYqy6S33ATvjywxWeTuhiD5Fb+Z2qKdNNoejAraiL4FisZvzUQzMX7gH9xgiySUhnp06RCUuXFQWmdii5
+X-Received: by 2002:adf:ef07:: with SMTP id e7mr41792185wro.242.1566388044009;
+        Wed, 21 Aug 2019 04:47:24 -0700 (PDT)
+Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
+        by smtp-relay.gmail.com with ESMTPS id p1sm385228wrq.74.2019.08.21.04.47.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 04:47:23 -0700 (PDT)
+X-Relaying-Domain: sirena.org.uk
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i0P5H-00070S-Dq; Wed, 21 Aug 2019 11:47:23 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 4CBF52742FCD; Wed, 21 Aug 2019 12:47:22 +0100 (BST)
+Date:   Wed, 21 Aug 2019 12:47:22 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Li Yang <leoyang.li@nxp.com>, nandor.han@vaisala.com,
+        Biwen Li <biwen.li@nxp.com>, a.zummo@towertech.it,
+        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [v2] rtc: pcf85363/pcf85263: fix error that failed to run
+ hwclock -w
+Message-ID: <20190821114722.GF5128@sirena.co.uk>
+References: <20190816080417.GB3545@piout.net>
+ <CADRPPNRkqbWzGEvUJyi0Qff3oS6biO0v7BTrK1Jiz9AMnOYF=Q@mail.gmail.com>
+ <20190816162825.GE3545@piout.net>
+ <CADRPPNQwcGrVXLm8eHbXKmyecMhT6Mt9rNGnspJA1+MnV4K8oQ@mail.gmail.com>
+ <20190820182224.GI4738@sirena.co.uk>
+ <CADRPPNQ__XRW74e+Dq0BEjJq-onVi2dmb7qKrn2Lt_xr50VCCw@mail.gmail.com>
+ <20190821112142.GD5128@sirena.co.uk>
+ <20190821112413.GA27031@piout.net>
+ <20190821113029.GE5128@sirena.co.uk>
+ <20190821113856.GB27031@piout.net>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdbAR5JTcEmatQ1F0=fRWm4=1jUqaehA=vFtc8Y5=5V-VA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="twz1s1Hj1O0rHoT0"
+Content-Disposition: inline
+In-Reply-To: <20190821113856.GB27031@piout.net>
+X-Cookie: Sic transit gloria Monday!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/08/2019 12:30, Linus Walleij wrote:
-> On Wed, Aug 21, 2019 at 10:13 AM Marc Zyngier <marc.zyngier@arm.com> wrote:
-> 
->> Linus: do you want to take this patch (daa19fe5b082) through your tree
->> instead in order to avoid the conflict when this hit the other Linus?
->> It shouldn't create any havoc...
-> 
-> Is it completely independent from the rest? Then I will pick it
-> so we get less fuzz.
 
-Yup, it should be fine as a standalone patch. Let me know once you've
-taken it and I'll drop it from my tree.
+--twz1s1Hj1O0rHoT0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
+On Wed, Aug 21, 2019 at 01:38:56PM +0200, Alexandre Belloni wrote:
+> On 21/08/2019 12:30:29+0100, Mark Brown wrote:
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> > What's the mechanism here?  It's a very strange thing to require.
+
+> The clock control is on the first register, then you have sec, min,
+> hour, day, mon, year.
+
+> To be able to set the clock accurately, you need to first disable the
+> clock, then set the time and date and finally reenable the clock in the
+> first register. This should be done in a single i2c write.
+
+Ugh, right.  And of course it would be silly to put the enable register
+last or done some sort of strobe thing.
+
+--twz1s1Hj1O0rHoT0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1dL0kACgkQJNaLcl1U
+h9BTEAf/YlFxsc7WReXJQuZ/Rye8kuOEKdbkAyvoCO5qMHoHTI7tJ7JQWqXFRNRG
+PQkT/2cXa8Cun8QDL1q+dhU6VPWmJrBtoCnGLzKw8W4YpQAdWgbifOxxW5RqlzMK
+lrmWzOxIUgFgxFC3hXVEpKOMNA+qp3JPB1M3dOcdFpdSG1IjslckJuOZ9t8Gdom7
+rUfY5hbhQG+s9AHSvb/E2AmrlQUdbG3zD27fQ6NaiHC7u+lydsTdxqTwC0AghjVt
+jL55LgHPDosJThjiYAtxtEHvDCvl06/9fXz/sZDETIKK+S1BpFlcj2FHtNpY8mMf
+weRwLGDzmZSjzCBgjjnB3v8Srf6bKQ==
+=r0gN
+-----END PGP SIGNATURE-----
+
+--twz1s1Hj1O0rHoT0--
