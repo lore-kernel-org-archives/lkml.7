@@ -2,146 +2,170 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 022D2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CB9C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F6D22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8D222DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:00:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9oC5Vfz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ou25kIOk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbfHUQ75 (ORCPT
+        id S1729740AbfHURAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:59:57 -0400
-Received: from mail-pf1-f173.google.com ([209.85.210.173]:42146 "EHLO
-        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726252AbfHUQ74 (ORCPT
+        Wed, 21 Aug 2019 13:00:35 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:39788 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbfHURAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:59:56 -0400
-Received: by mail-pf1-f173.google.com with SMTP id i30so1808243pfk.9;
-        Wed, 21 Aug 2019 09:59:55 -0700 (PDT)
+        Wed, 21 Aug 2019 13:00:34 -0400
+Received: by mail-pl1-f195.google.com with SMTP id z3so1652681pln.6
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 10:00:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rU0HO2JJtDqURYnaTtFk9cmW0rQPqsr0HzcEm0KVNk0=;
-        b=Z9oC5VfzqQvaSI/28mHfZ8UqJyJHY7XZ9RBXXkTHXv4HV4/4bKmPYRxILB3BXuenmH
-         ZNHLKsFVLOyuN62vYcBZd0DLXTOpOPW/3XiPNSaUln4e5DF4bIDGdlGxNe2doHF5j7AA
-         l/qRZ7WUztfqBcg0oxSjGKP4zoqzmxXVRqpclOqMvr0D3+HseM0HTdYi3vqAViWxVfzJ
-         Sfi1hLmKDitDVWFDzgAW14TFZ/q6hUvYSmv1Wmjow2YuYxCRoGSa0tkykoBlDISmIuJs
-         /Bjvo7JIIBh4JhDGyn/remiZg1vlDezNi6GQnWJypyDAlwzO/qCyvTMiktdE7tv9UmTd
-         n4Xw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RsU08W9/afBmJ4GcGvCken8lWY/T5/5fZJ/HC8LpvYw=;
+        b=ou25kIOk9sINCo+3cRDcGt9yjLpvoQY0j1yl/H2/yK9357uz8Cus+F4SpUSuxcZXBL
+         +49O9FCuBVg8Kh48VfFTfWp2R8+fEYD+sevlBmUSbH83rSMnEqdKTzan8xGq8k/TaZeU
+         8DY43QLs4OgwW6rtiVlf4cwz+Fgx6NkDbbkVlQTBwHNizXvE8zqxZjYN97l1dS9suvOH
+         bMlpyHJO7dVxZcjL+0x6Kxyx/EYmfCPebZDcsEwsXgF5NvnSyLErqaeHuL9b27S0sTH2
+         1+DtBOILGq5e7/CEFiG6MvEa7khudljkYq46qcjJkINp6J8jukq1BmV0O4HC+NxviLD1
+         AliQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=rU0HO2JJtDqURYnaTtFk9cmW0rQPqsr0HzcEm0KVNk0=;
-        b=L4TPmNJTnkxYmeBV51OeLZXUl3zvYzomS/cF+UJWjJ1zSUEQ6oHmmsL1G3VWxoa8a4
-         ia1BklJtwC+ohxJLK1kL5oTqI7MDIbTlyhvEnEMQggX8kOY6JDkNjMEg6mLTA11Csf/x
-         8Ir+ZXNcZ1qfi83ODAP18ephI0R+XO5nvrsn7JC/Dx17S5b3AawuYsL4S2vHglQv69Gt
-         ChR8Iel+ntGwtCg6jB7/y1thgT5jJlVqXWOZ/UiVwscpgtc6vTzBG7wgO6CXHFtsOCk2
-         3e1vq0ZdWYeKGf8z9LgqpdKk9NDE5OpHy/gHM4reF+oQiRAWhXMni1OhF24C6li7zIcV
-         DkIg==
-X-Gm-Message-State: APjAAAXMr/DTYbEABj56twy3vYcLnNUfJkdZVONJeIMmpAqRiSfPsypM
-        BzjXaZYv3Q1Btzt19gCT0BoFAFUJ
-X-Google-Smtp-Source: APXvYqw0TUNBdp4O0vuq8L77jFqVIDmfTCzGkVSQxgcino3pZSOf2uAomBaFQnoK8jK9f+yS4RQl2A==
-X-Received: by 2002:aa7:9524:: with SMTP id c4mr37692765pfp.225.1566406795146;
-        Wed, 21 Aug 2019 09:59:55 -0700 (PDT)
-Received: from [10.67.49.31] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id q10sm29466437pfl.8.2019.08.21.09.59.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 09:59:54 -0700 (PDT)
-Subject: Re: [PATCH net-next] net: systemport: use
- devm_platform_ioremap_resource() to simplify code
-To:     YueHaibing <yuehaibing@huawei.com>, davem@davemloft.net,
-        opendmb@gmail.com, bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-References: <20190821134613.23276-1-yuehaibing@huawei.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <e1782f4c-a564-07e6-0d13-ccda0fc99e15@gmail.com>
-Date:   Wed, 21 Aug 2019 09:59:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RsU08W9/afBmJ4GcGvCken8lWY/T5/5fZJ/HC8LpvYw=;
+        b=uffiSW1dfmLE9VPIVPO+IaC8maWRWEZ4tqhQpBVnovINUDjePP6uuFbrKTRS8zPRQW
+         tt6vwI8SM4jrVnQKV/VEAVvVqws457P/46uSh6qfzkRAnSvT9XqQz5gWHJDZf6PFFGuL
+         yqcm1Kk+iCNh7BXfldkt6YgyOh3MAPbeC2gvjU7z6fHPZBg8PGo2Rve7SpsRRnIOPhqJ
+         x/SRirdbevcf3IDShSwNRz22F4Q9XavOWCNwbw6yPqmYfWJ3U2wrQATrTnsZVSXBPObB
+         BFKiSs2Lg7l+bhb1gNy3VAORSiMHCweyyApSEZ38Vwp2BGIUeJK3+OUZXhtPm2tfr7w7
+         6Elg==
+X-Gm-Message-State: APjAAAUvq6/eQVmPgLsU9mWM91WN+B/+4rwdS/zNpdjbFi3yY4tdHU4y
+        T05w4uK9t9rEUKm37ZH1mqSzqfBzSj610DWhJSJ7jBqwiVDBRA==
+X-Google-Smtp-Source: APXvYqy+5iaT7vro4zo8iyqIckXxgCTLhKcz3TBCgi/0JRfYsfYktT9XaTKZC22WeVRvW2OWrR/HksMeHNFxaPHpGWg=
+X-Received: by 2002:a17:902:ab96:: with SMTP id f22mr35670775plr.147.1566406833279;
+ Wed, 21 Aug 2019 10:00:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190821134613.23276-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <000000000000ce6527058f8bf0d0@google.com>
+In-Reply-To: <000000000000ce6527058f8bf0d0@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 21 Aug 2019 19:00:21 +0200
+Message-ID: <CAAeHK+yu=bN-HW-bgJ1OS3TDWpiieGi0Z5sbOuBYU2W=7CyNhQ@mail.gmail.com>
+Subject: Re: BUG: bad usercopy in hidraw_ioctl
+To:     syzbot <syzbot+3de312463756f656b47d@syzkaller.appspotmail.com>
+Cc:     allison@lohutok.net, Qian Cai <cai@lca.pw>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/19 6:46 AM, YueHaibing wrote:
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Wed, Aug 7, 2019 at 9:28 PM syzbot
+<syzbot+3de312463756f656b47d@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    e96407b4 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=151b2926600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=cfa2c18fb6a8068e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3de312463756f656b47d
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>
+> Unfortunately, I don't have any reproducer for this crash yet.
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+3de312463756f656b47d@syzkaller.appspotmail.com
+>
+> usercopy: Kernel memory exposure attempt detected from wrapped address
+> (offset 0, size 0)!
+> ------------[ cut here ]------------
+> kernel BUG at mm/usercopy.c:98!
+> invalid opcode: 0000 [#1] SMP KASAN
+> CPU: 1 PID: 2968 Comm: syz-executor.1 Not tainted 5.3.0-rc2+ #25
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:usercopy_abort+0xb9/0xbb mm/usercopy.c:98
+> Code: e8 c1 f7 d6 ff 49 89 d9 4d 89 e8 4c 89 e1 41 56 48 89 ee 48 c7 c7 e0
+> f3 cd 85 ff 74 24 08 41 57 48 8b 54 24 20 e8 15 98 c1 ff <0f> 0b e8 95 f7
+> d6 ff e8 80 9f fd ff 8b 54 24 04 49 89 d8 4c 89 e1
+> RSP: 0018:ffff8881b0f37be8 EFLAGS: 00010282
+> RAX: 000000000000005a RBX: ffffffff85cdf100 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed10361e6f6f
+> RBP: ffffffff85cdf2c0 R08: 000000000000005a R09: ffffed103b665d58
+> R10: ffffed103b665d57 R11: ffff8881db32eabf R12: ffffffff85cdf460
+> R13: ffffffff85cdf100 R14: 0000000000000000 R15: ffffffff85cdf100
+> FS:  00007f539a2a9700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000021237d0 CR3: 00000001d6ac6000 CR4: 00000000001406e0
+> Call Trace:
+>   check_bogus_address mm/usercopy.c:151 [inline]
+>   __check_object_size mm/usercopy.c:260 [inline]
+>   __check_object_size.cold+0xb2/0xba mm/usercopy.c:250
+>   check_object_size include/linux/thread_info.h:119 [inline]
+>   check_copy_size include/linux/thread_info.h:150 [inline]
+>   copy_to_user include/linux/uaccess.h:151 [inline]
+>   hidraw_ioctl+0x38c/0xae0 drivers/hid/hidraw.c:392
+>   vfs_ioctl fs/ioctl.c:46 [inline]
+>   file_ioctl fs/ioctl.c:509 [inline]
+>   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
+>   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
+>   __do_sys_ioctl fs/ioctl.c:720 [inline]
+>   __se_sys_ioctl fs/ioctl.c:718 [inline]
+>   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
+>   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x459829
+> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f539a2a8c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+> RDX: 0000000020000800 RSI: 0000000090044802 RDI: 0000000000000004
+> RBP: 000000000075c268 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f539a2a96d4
+> R13: 00000000004c21f3 R14: 00000000004d55b8 R15: 00000000ffffffff
+> Modules linked in:
+> ---[ end trace 24b9968555bf4653 ]---
+> RIP: 0010:usercopy_abort+0xb9/0xbb mm/usercopy.c:98
+> Code: e8 c1 f7 d6 ff 49 89 d9 4d 89 e8 4c 89 e1 41 56 48 89 ee 48 c7 c7 e0
+> f3 cd 85 ff 74 24 08 41 57 48 8b 54 24 20 e8 15 98 c1 ff <0f> 0b e8 95 f7
+> d6 ff e8 80 9f fd ff 8b 54 24 04 49 89 d8 4c 89 e1
+> RSP: 0018:ffff8881b0f37be8 EFLAGS: 00010282
+> RAX: 000000000000005a RBX: ffffffff85cdf100 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff8128a0fd RDI: ffffed10361e6f6f
+> RBP: ffffffff85cdf2c0 R08: 000000000000005a R09: ffffed103b665d58
+> R10: ffffed103b665d57 R11: ffff8881db32eabf R12: ffffffff85cdf460
+> R13: ffffffff85cdf100 R14: 0000000000000000 R15: ffffffff85cdf100
+> FS:  00007f539a2a9700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000021237d0 CR3: 00000001d6ac6000 CR4: 00000000001406e0
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Looks like the same bug:
+
+#syz dup: KASAN: slab-out-of-bounds Read in hidraw_ioctl
