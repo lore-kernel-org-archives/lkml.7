@@ -2,128 +2,139 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60026C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC88C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F8822DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:05:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566403548;
-	bh=TSiJc6Itq1ISqr1k1Zf70a5jFa8tEJy/SjqWstka1LA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V0HbtQA9i3IvmLlxJ+i9KjnRSloa6Pagy5xzKeEK8lVSVjpRJw8zo/+eWqUNKpJcD
-	 5bmgLakujrosTix6Hd+mTmuvKT0NQp9N8svkxdIt1ZGa/GcnhmMDSVujpYknCs0mYP
-	 /l/jnt+5qsxPdJ5ENoJYJ9U5so09D/U12SFesmyk=
+	by mail.kernel.org (Postfix) with ESMTP id BC0EE22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbfHUQFr (ORCPT
+        id S1728931AbfHUQF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48274 "EHLO mail.kernel.org"
+        Wed, 21 Aug 2019 12:05:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46068 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728467AbfHUQFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:05:46 -0400
-Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727222AbfHUQF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:05:59 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D533C22D6D;
-        Wed, 21 Aug 2019 16:05:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566403545;
-        bh=TSiJc6Itq1ISqr1k1Zf70a5jFa8tEJy/SjqWstka1LA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jLNIsTKw1fQ5EnHWm0pVCVckap1nkHg4mhFJlnPCnYVnUmLZ4V9CO2PKod6cJdFvc
-         VIqkp/HkEiZ1393V5uen5aKnv+ivYPVC2oJU3ykkjyJ8luziQxwpcL41geUMG2TGFT
-         MFLwMSJqoi8iHl19x32ek/upHoIFxI1gqXWKHHgE=
-Date:   Wed, 21 Aug 2019 09:05:42 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     zhangfei <zhangfei.gao@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>
-Subject: Re: [PATCH 2/2] uacce: add uacce module
-Message-ID: <20190821160542.GA14760@kroah.com>
-References: <1565775265-21212-1-git-send-email-zhangfei.gao@linaro.org>
- <1565775265-21212-3-git-send-email-zhangfei.gao@linaro.org>
- <20190815141351.GD23267@kroah.com>
- <6daab785-a8f9-684e-eb71-7a81604d3bb0@linaro.org>
- <20190820165947.GC3736@kroah.com>
- <5d5cf0fc.1c69fb81.ec57f.b853SMTPIN_ADDED_BROKEN@mx.google.com>
- <20190821091709.GA22914@kroah.com>
- <b88abb8d-50a9-b29e-d3e5-96cc585ecac4@linaro.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id 102D630832DC;
+        Wed, 21 Aug 2019 16:05:59 +0000 (UTC)
+Received: from [10.36.118.29] (unknown [10.36.118.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7AAF460603;
+        Wed, 21 Aug 2019 16:05:55 +0000 (UTC)
+Subject: Re: [PATCH] mm/balloon_compaction: suppress allocation warnings
+To:     Nadav Amit <namit@vmware.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190820091646.29642-1-namit@vmware.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
+ BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
+ 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
+ xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
+ jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
+ s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
+ m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
+ MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
+ z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
+ dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
+ UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
+ 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
+ uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
+ 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
+ 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
+ xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
+ 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
+ hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
+ u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
+ gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
+ rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
+ BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
+ KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
+ NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
+ YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
+ lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
+ qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
+ C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
+ W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
+ TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
+ +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <ba01ec8c-19c3-847c-a315-2f70f4b1fe31@redhat.com>
+Date:   Wed, 21 Aug 2019 18:05:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190820091646.29642-1-namit@vmware.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b88abb8d-50a9-b29e-d3e5-96cc585ecac4@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 21 Aug 2019 16:05:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 10:30:22PM +0800, zhangfei wrote:
+On 20.08.19 11:16, Nadav Amit wrote:
+> There is no reason to print warnings when balloon page allocation fails,
+> as they are expected and can be handled gracefully.  Since VMware
+> balloon now uses balloon-compaction infrastructure, and suppressed these
+> warnings before, it is also beneficial to suppress these warnings to
+> keep the same behavior that the balloon had before.
+
+I am not sure if that's a good idea. The allocation warnings are usually
+the only trace of "the user/admin did something bad because he/she tried
+to inflate the balloon to an unsafe value". Believe me, I processed a
+couple of such bugreports related to virtio-balloon and the warning were
+very helpful for that.
+
 > 
+> Cc: Jason Wang <jasowang@redhat.com>
+> Signed-off-by: Nadav Amit <namit@vmware.com>
+> ---
+>  mm/balloon_compaction.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> On 2019/8/21 下午5:17, Greg Kroah-Hartman wrote:
-> > On Wed, Aug 21, 2019 at 03:21:18PM +0800, zhangfei.gao@foxmail.com wrote:
-> > > Hi, Greg
-> > > 
-> > > On 2019/8/21 上午12:59, Greg Kroah-Hartman wrote:
-> > > > On Tue, Aug 20, 2019 at 09:08:55PM +0800, zhangfei wrote:
-> > > > > On 2019/8/15 下午10:13, Greg Kroah-Hartman wrote:
-> > > > > > On Wed, Aug 14, 2019 at 05:34:25PM +0800, Zhangfei Gao wrote:
-> > > > > > > +int uacce_register(struct uacce *uacce)
-> > > > > > > +{
-> > > > > > > +	int ret;
-> > > > > > > +
-> > > > > > > +	if (!uacce->pdev) {
-> > > > > > > +		pr_debug("uacce parent device not set\n");
-> > > > > > > +		return -ENODEV;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	if (uacce->flags & UACCE_DEV_NOIOMMU) {
-> > > > > > > +		add_taint(TAINT_CRAP, LOCKDEP_STILL_OK);
-> > > > > > > +		dev_warn(uacce->pdev,
-> > > > > > > +			 "Register to noiommu mode, which export kernel data to user space and may vulnerable to attack");
-> > > > > > > +	}
-> > > > > > THat is odd, why even offer this feature then if it is a major issue?
-> > > > > UACCE_DEV_NOIOMMU maybe confusing here.
-> > > > > 
-> > > > > In this mode, app use ioctl to get dma_handle from dma_alloc_coherent.
-> > > > That's odd, why not use the other default apis to do that?
-> > > > 
-> > > > > It does not matter iommu is enabled or not.
-> > > > > In case iommu is disabled, it maybe dangerous to kernel, so we added warning here, is it required?
-> > > > You should use the other documentated apis for this, don't create your
-> > > > own.
-> > > I am sorry, not understand here.
-> > > Do you mean there is a standard ioctl or standard api in user space, it can
-> > > get dma_handle from dma_alloc_coherent from kernel?
-> > There should be a standard way to get such a handle from userspace
-> > today.  Isn't that what the ion interface does?  DRM also does this, as
-> > does UIO I think.
-> Thanks Greg,
-> Still not find it, will do more search.
-> But this may introduce dependency in our lib, like depend on ion?
-> > Do you have a spec somewhere that shows exactly what you are trying to
-> > do here, along with example userspace code?  It's hard to determine it
-> > given you only have one "half" of the code here and no users of the apis
-> > you are creating.
-> > 
-> The purpose is doing dma in user space.
+> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+> index 798275a51887..26de020aae7b 100644
+> --- a/mm/balloon_compaction.c
+> +++ b/mm/balloon_compaction.c
+> @@ -124,7 +124,8 @@ EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
+>  struct page *balloon_page_alloc(void)
+>  {
+>  	struct page *page = alloc_page(balloon_mapping_gfp_mask() |
+> -				       __GFP_NOMEMALLOC | __GFP_NORETRY);
+> +				       __GFP_NOMEMALLOC | __GFP_NORETRY |
+> +				       __GFP_NOWARN);
+>  	return page;
+>  }
+>  EXPORT_SYMBOL_GPL(balloon_page_alloc);
+> 
 
-Oh no, please no.  Are you _SURE_ you want to do this?
 
-Again, look at how ION does this and how the DMAbuff stuff is replacing
-it.  Use that api please instead, otherwise you will get it wrong and we
-don't want to duplicate efforts.
+-- 
 
-thanks,
+Thanks,
 
-greg k-h
+David / dhildenb
