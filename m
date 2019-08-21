@@ -2,218 +2,130 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE3AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE9AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 889EB22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9212922D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:49:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="G1y/OSgj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2IrsROH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729011AbfHURre (ORCPT
+        id S1729122AbfHURtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:47:34 -0400
-Received: from mout.web.de ([212.227.15.4]:46117 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727683AbfHURre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:47:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1566409631;
-        bh=ZFDz5Uwxh5xJpbrXcIitmO9awwymC/HkpqKW4+5ZQ0Q=;
-        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
-        b=G1y/OSgjuh29TtHgCXx6i0i6d6mDd57sSfoiTQAZb/+z64bzTAEKhLSmppF9RawcK
-         2crvPhqMy3gzKHlr/fZ3Uftf950GZ9tA+SmyPm14VvParUVuVe477/P3tTmDP+DkPQ
-         /1Se97k+XuoABATjnxvYH8RxZ3deRDl7wxKgWqYg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.9.44]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M9GHu-1i6aZt28TO-00CfPa; Wed, 21
- Aug 2019 19:47:11 +0200
-To:     linux-rdma@vger.kernel.org, Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        Steve Wise <swise@opengridcomputing.com>,
-        Tatyana Nikolova <Tatyana.E.Nikolova@intel.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: =?UTF-8?Q?=5bPATCH=5d_RDMA/iwpm=3a_Delete_unnecessary_checks_before?=
- =?UTF-8?B?IHRoZSBtYWNybyBjYWxsIOKAnGRldl9rZnJlZV9za2LigJ0=?=
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <16df4c50-1f61-d7c4-3fc8-3073666d281d@web.de>
-Date:   Wed, 21 Aug 2019 19:47:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 13:49:01 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42583 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727416AbfHURtB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:49:01 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i30so1894474pfk.9;
+        Wed, 21 Aug 2019 10:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=cuc7KArAwEZwDVhK9UQGoIlx3cYOJWBMGimfd+D8qCg=;
+        b=Z2IrsROHrgGddTp70xQRuUmUImik5DFHyqPJBEP6guIEvSGDYKGOJna9rw7t2aVLZw
+         foYQrmnHtGq7Ki7PRB8NZf6Wscpv2fB8sQzAzCM3hvTSLmICTHHqRS6eGMXcU5XfWYil
+         U9xbtD0Eidq+jfFOoCyDwd5nP7gONspQC/4BXhg232blHOWG/686CZP4efQEqta+HQ6L
+         EaHUBPyG1vfuzRn9Ph84/Phanu0+JN9lEgn8ucc6f7+GYXaMNkJ3DJw6yU/BpUI1VEGV
+         mvBtumjQUGWk73sIGUkrpqkWO5LnqA0IRIeLsgHUZaNQswv/eJuVjfXUeRhwBupXGGI2
+         lq9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=cuc7KArAwEZwDVhK9UQGoIlx3cYOJWBMGimfd+D8qCg=;
+        b=b5qRgngRFTTI6vfxDoBXV1Yfbbka0hpr2rNyglfJ3koqQnZf3jmRvcNtaLBkyB9Hcn
+         avBhkjzR4bHMB5jnTtFcnRYFWIaCbM4wMC40cbN+5E4WWA3vLzV/w9Eoxoozo6SMfl5W
+         2tGan2IaL/X0OJazDjuGqEIhOIAn9JQEsdoamXbAHpKJYUHstHBNtHUdOJd1/awFu2Ct
+         ebIYMVITOBt2N4Ccux7YkeY5pEGBq+paDyB3N2/+2ZnASVqt8xPTHdezo8w3x6ksOHGt
+         gcGA6q8SrTafRsxO5VD6PdSCqqPrE7DtqYk3y+dtJrtjncT+G1hiP7Dt1P+ve6VfQy28
+         mOvA==
+X-Gm-Message-State: APjAAAUVpiras1mOqo/OhVnycSJIivyaZ88NudF6qThlx75RL/evaPp3
+        OZGCrO0KllHJ4Hm9vt0SPn0=
+X-Google-Smtp-Source: APXvYqx/voWIbNubBp2JnHr/iFkLr4llW1oBCP0mDz/dkwGM2Fjc8HNeHtK4u6PGmDt5386t4ke/Mw==
+X-Received: by 2002:a17:90a:dac3:: with SMTP id g3mr1165426pjx.45.1566409740377;
+        Wed, 21 Aug 2019 10:49:00 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id b5sm23381967pfo.149.2019.08.21.10.48.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 10:48:59 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 10:48:57 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net
+Subject: Re: [PATCH 2/2] drivers: input: mouse: alps: drop unneeded likely()
+ call around IS_ERR()
+Message-ID: <20190821174857.GD76194@dtor-ws>
+References: <1566298572-12409-1-git-send-email-info@metux.net>
+ <1566298572-12409-2-git-send-email-info@metux.net>
+ <20190820111719.7blyk5jstgwde2ae@pali>
+ <02f5b546-5c30-4998-19b2-76b816a35371@metux.net>
+ <20190820142204.x352bftlvnb7s57n@pali>
+ <2cd7178e-9713-7678-a02d-dde91e990c1e@metux.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:L6Ea/W8ve94X5vE4KMZPOVjjkD229CqsQL9fnPwPv+3LtnWC3Bo
- DUPxc6A/d7bM7atRIRs9bnTalQC0i8eLWydJNrmw8WGkTzjnZ2We0R2LeiJ2sN6oDZHBIdC
- ry8QbomXsRecWUwRVbPtP81H6f18q4EvBVNBDDpF8v6kzHgtEvDAvZZsxHyd5LYJ+cUUVIz
- fHoX9eQg2BKkFU4YhNBNw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gr2900Rzoi8=:RKnXqCiWm1OesEhtWrhpFZ
- geTFvX4x6sznHNcl9RvkmJp9wmH+olxXCGXYiORhQy1rdlRW1b8qc3Wl7gpJtnE0EHePw5pri
- iIejT5yLxgIKrWpwdVvp+75rVbNZ809L9atScMJZNV+XeOBU8T2ObGE9cgvYALz+1Von3bIsQ
- KDimBtyNTH1qsML2WbVZCgcJvYz1lvDkVXv1nfqAfblzcspZkTa9blXNfzjq/IXspJ3l2YmJr
- Uyfwq1bIHgZyyl5iiUKp6HBfKr6zKNEBOgyCEySzvwMDxWMvfrO7Zr15lPYceoPBmdHxiAKhE
- H0Qfeql/VJPqGijAmmMhA8GEfuO2L+VlZr2vK17sUL4feBOIPRujiDpc2ucSwiciiOWwUXSdR
- yvNRS3IcX2XStvYdz8fDboeNs03dU2+pQqzK5pX4S8HbAyLfslmvtM5tZDS+7V/pn45cuu83b
- FD0xC71z4jJuJ01vsaxWYb04Vikrk51cc3A8ZQwtVl4Mr8hh3M3UFmh4QjI8OV57CezhX0lOL
- 4XWYfaoiQ55JhK5cOjYgpVIjo8IcoSfW59iAZfNmEGkEncynsR9aGeeqr+SXA3TE/N80b2PqI
- buVE50rRkwR5ooJ/CRHVYs0GOW0CndIaWTgjyurnwfSuKdI7UCDdlmJJ3klUR667iZmuXpYn8
- laWtpPZ++fIUxJdfA6BrKpYOYmFBJw3AF1LZrHSH9OOmxeTB26dCBqJIzf1yJsjxyxKJG8eKd
- jj67xPav+FIMIPBoFSDLEHaWoQtjZr+ibbzz1AB5qWNhvvSOWuJ/V9OBx2TQH1VSdHGmwdnB1
- h8ercM6/oidl/OOQX6bEn+hg8TpOT+xpjrEcuAvIp4f3AXjACJFvmepYM6IqWmae0FYQgyaOV
- O2+MZkgPKvNWq87YKDvDpantsDbBxUAFYSHzwVLbtZsle1bUdHGUwjEAj0+sM633tPIojguNQ
- OcLqoqI5WxUHyZv3DbCoJIQ/3XTVCkxslMElU+IOZ+z/7rI84YfT6lbXJSO0bn2KcBWjpKpLc
- pFpju9mJpFKOkaNLURxQzrJfRZl7fninkBGHcUK1jJd4DXQiGRG2kU5TgjJY6vlm8xXyYfJ9Y
- il7X4Fy/UJe+7PamlCRdsx180rrCuEV4EJl8UhrzJWViwOVH5PScsczDBWPwlB085Za7+QFhz
- MXMCk=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2cd7178e-9713-7678-a02d-dde91e990c1e@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 21 Aug 2019 19:30:09 +0200
+Hi,
 
-The dev_kfree_skb() function performs also input parameter validation.
-Thus the test around the shown calls is not needed.
+On Wed, Aug 21, 2019 at 01:37:09PM +0200, Enrico Weigelt, metux IT consult wrote:
+> On 20.08.19 16:22, Pali Rohár wrote:
+> 
+> Hi,
+> 
+> > > In that case, wouldn't a comment be more suitable for that ?
+> > 
+> > And why to add comment if current state of code is more-readable and
+> > does not need it?
+> 
+> Readability is probably a bit subjective :p
+> 
+> With ongoing efforts of automatically identifying redundant code pathes,
+> the current situation causes the same discussion coming up over and over
+> again. Sooner or later somebody might get the idea to add a comment on
+> that line, that it's exactly as intented :o
+> 
+> OTOH, I'm unsure whether it's important to document that is particular
+> error path is unlikely, while we don't do it in thousands of other
+> places. IMHO, error pathes are supposed to be unlikely by nature,
+> otherwise we wouldn't call it an error situation ;-)
+> 
+> > People normally add comments to code which is problematic to understand
+> > or is somehow tricky, no so obvious or document how should code behave.
+> 
+> Yes, but isn't this case so obvious that it doesn't need any
+> documentation at all ? Is it so important to never ever forget that this
+> particular path is a rare situation ?
 
-This issue was detected by using the Coccinelle software.
+Because if I see "if (IS_ERR(...))" in an interrupt path I will try to
+see if it can be optimized out, but in this particular case we document
+it with explicit "unlikely" and I know that I do not need to bother.
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/infiniband/core/iwpm_msg.c  | 9 +++------
- drivers/infiniband/core/iwpm_util.c | 9 +++------
- 2 files changed, 6 insertions(+), 12 deletions(-)
+The fact that there is unlikely in IS_ERR is an implementation detail.
+It may be gone tomorrow. I do not want to have to remember all
+implementation details of all kernel APIs and readjust the code all the
+time as they are change underneath me.
 
-diff --git a/drivers/infiniband/core/iwpm_msg.c b/drivers/infiniband/core/=
-iwpm_msg.c
-index f1a873d4e842..46686990a827 100644
-=2D-- a/drivers/infiniband/core/iwpm_msg.c
-+++ b/drivers/infiniband/core/iwpm_msg.c
-@@ -124,8 +124,7 @@ int iwpm_register_pid(struct iwpm_dev_data *pm_msg, u8=
- nl_client)
- 	return ret;
- pid_query_error:
- 	pr_info("%s: %s (client =3D %d)\n", __func__, err_str, nl_client);
--	if (skb)
--		dev_kfree_skb(skb);
-+	dev_kfree_skb(skb);
- 	if (nlmsg_request)
- 		iwpm_free_nlmsg_request(&nlmsg_request->kref);
- 	return ret;
-@@ -214,8 +213,7 @@ int iwpm_add_mapping(struct iwpm_sa_data *pm_msg, u8 n=
-l_client)
- add_mapping_error:
- 	pr_info("%s: %s (client =3D %d)\n", __func__, err_str, nl_client);
- add_mapping_error_nowarn:
--	if (skb)
--		dev_kfree_skb(skb);
-+	dev_kfree_skb(skb);
- 	if (nlmsg_request)
- 		iwpm_free_nlmsg_request(&nlmsg_request->kref);
- 	return ret;
-@@ -308,8 +306,7 @@ int iwpm_add_and_query_mapping(struct iwpm_sa_data *pm=
-_msg, u8 nl_client)
- query_mapping_error:
- 	pr_info("%s: %s (client =3D %d)\n", __func__, err_str, nl_client);
- query_mapping_error_nowarn:
--	if (skb)
--		dev_kfree_skb(skb);
-+	dev_kfree_skb(skb);
- 	if (nlmsg_request)
- 		iwpm_free_nlmsg_request(&nlmsg_request->kref);
- 	return ret;
-diff --git a/drivers/infiniband/core/iwpm_util.c b/drivers/infiniband/core=
-/iwpm_util.c
-index c7ad3499228c..13495b43dbc1 100644
-=2D-- a/drivers/infiniband/core/iwpm_util.c
-+++ b/drivers/infiniband/core/iwpm_util.c
-@@ -655,8 +655,7 @@ static int send_mapinfo_num(u32 mapping_num, u8 nl_cli=
-ent, int iwpm_pid)
- 	return 0;
- mapinfo_num_error:
- 	pr_info("%s: %s\n", __func__, err_str);
--	if (skb)
--		dev_kfree_skb(skb);
-+	dev_kfree_skb(skb);
- 	return ret;
- }
+Thanks.
 
-@@ -778,8 +777,7 @@ int iwpm_send_mapinfo(u8 nl_client, int iwpm_pid)
- send_mapping_info_exit:
- 	if (ret) {
- 		pr_warn("%s: %s (ret =3D %d)\n", __func__, err_str, ret);
--		if (skb)
--			dev_kfree_skb(skb);
-+		dev_kfree_skb(skb);
- 		return ret;
- 	}
- 	send_nlmsg_done(skb, nl_client, iwpm_pid);
-@@ -834,7 +832,6 @@ int iwpm_send_hello(u8 nl_client, int iwpm_pid, u16 ab=
-i_version)
- 	return 0;
- hello_num_error:
- 	pr_info("%s: %s\n", __func__, err_str);
--	if (skb)
--		dev_kfree_skb(skb);
-+	dev_kfree_skb(skb);
- 	return ret;
- }
-=2D-
-2.23.0
-
+-- 
+Dmitry
