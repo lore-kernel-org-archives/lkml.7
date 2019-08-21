@@ -2,128 +2,84 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5770C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7256C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1C622D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:43:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M/U8Rn5H"
+	by mail.kernel.org (Postfix) with ESMTP id 82DBB2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:44:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbfHUMnn (ORCPT
+        id S1728126AbfHUMow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 08:43:43 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40646 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726371AbfHUMnn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 08:43:43 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c5so1791744wmb.5;
-        Wed, 21 Aug 2019 05:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lRUmeZkZP/Okav86pMnI5msjxJq756sD1Md11UkW10Q=;
-        b=M/U8Rn5H/vzvj9u02bNKbrAwSEgzepOgy7KpgvdjpIn7rtTnns5etUIDKaLzODa3XO
-         H3mTzzhS/AQPXnyn8m3yVyqM6SXnA6PJjqEoQl205pufGlZA9cOvfe1jWTawuVdDkVzg
-         HNPk4oL3Uw55LAUdH28PhpvTp1cBrpsoz+bGi2+9DPdUoX0TeuUgAVgtZAqj3NxBOF0X
-         SnZNo90gytM83lNdnoVHFs/cyqSJI/tcsnfmNiMXvG132HuBReJ34N/TUubgj6JPthA3
-         HlN04lsscJSM62VO0+YEeZDfC+AvS0JDGWBxQnizEbxwARgChSCpDuyc9Qy1qIlvXmzI
-         fx7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lRUmeZkZP/Okav86pMnI5msjxJq756sD1Md11UkW10Q=;
-        b=YzJ/4U+V2AV2KJ8/fWkvoTq4D0aGQbbfyFnk4/OI6e5wx96fSw0Ah5iwrVzl+6mee6
-         DbK7Y28CxBt31vzicUYA0M0fUpc5Z62NpYfVQL714dBXmalpgc0OESXYP0SoVPqOD4YL
-         4eqqZ/8dOHAagHQeGzW0eSdMRR/YMQBHt2WRsJGwjXtZzsR9IBll6iWJR9brFPXSmGwP
-         qQhYabwGQT061aBpSbHpVBlsbOBTNo/JeEwA7J9mc4HQOGCstoZmW2opQi+xfDsr5mEb
-         yY8natNWjBSqHAnpMW7RVzyQyPVrrpvkCviIPcuStG6br9JVrlUrOka3K1dhK5Qu5Sxn
-         0g/A==
-X-Gm-Message-State: APjAAAXC8xd/MOVGJnRqQ7hpEbwO3MaLrnSzVKhaWx3Odm9rUmUkoe4q
-        EYSVFgLMJUC5afKxktAHIvs=
-X-Google-Smtp-Source: APXvYqwaq1Yy4wokzmvl6Eg9zpUcD3xgJLsczGSFflfUptDZe2PuC0S6zpYoPCC69O2e8WFtVnwZSQ==
-X-Received: by 2002:a1c:1a56:: with SMTP id a83mr5974279wma.44.1566391420467;
-        Wed, 21 Aug 2019 05:43:40 -0700 (PDT)
-Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
-        by smtp.gmail.com with ESMTPSA id g7sm4842135wme.17.2019.08.21.05.43.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 05:43:39 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 14:43:37 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] PCI: tegra: tegra194: fix phy_count less than zero
- check
-Message-ID: <20190821124337.GB21839@ulmo>
-References: <20190821120123.14223-1-colin.king@canonical.com>
+        Wed, 21 Aug 2019 08:44:52 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34052 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726835AbfHUMov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 08:44:51 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 8AC5CFC93AB497548E20;
+        Wed, 21 Aug 2019 20:28:24 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 21 Aug 2019
+ 20:28:17 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <turnerzdp@gmail.com>,
+        <contact@christina-quast.de>, <ebiggers@google.com>
+CC:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] staging: rtl8192e: remove set but not used variable 'data_len'
+Date:   Wed, 21 Aug 2019 20:28:02 +0800
+Message-ID: <20190821122802.44028-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
-Content-Disposition: inline
-In-Reply-To: <20190821120123.14223-1-colin.king@canonical.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fixes gcc '-Wunused-but-set-variable' warning:
 
---6sX45UoQRIJXqkqR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ In function ieee80211_ccmp_encrypt:
+drivers/staging/rtl8192u/ieee80211/ieee80211_crypt_ccmp.c:162:6:
+ warning: variable data_len set but not used [-Wunused-but-set-variable]
 
-On Wed, Aug 21, 2019 at 01:01:23PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->=20
-> The check for pcie->phy_count < 0 is always false because phy_count
-> is an unsigned int and can never be less than zero. Fix this by
-> assigning ret to the return from of_property_count_strings and
-> checking if this is less than zero instead.
->=20
-> Addresses-Coverity: ("Dead code")
-> Fixes: 6404441c8e13 ("PCI: tegra: Add Tegra194 PCIe support")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+It is not used since commit 5ee5265674ce ("staging:
+rtl8192e: rtllib_crypt_ccmp.c: Use crypto API ccm(aes)")
 
-Good catch!
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/staging/rtl8192e/rtllib_crypt_ccmp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+diff --git a/drivers/staging/rtl8192e/rtllib_crypt_ccmp.c b/drivers/staging/rtl8192e/rtllib_crypt_ccmp.c
+index 44ec45d..0cbf4a1 100644
+--- a/drivers/staging/rtl8192e/rtllib_crypt_ccmp.c
++++ b/drivers/staging/rtl8192e/rtllib_crypt_ccmp.c
+@@ -153,7 +153,7 @@ static int ccmp_init_iv_and_aad(struct rtllib_hdr_4addr *hdr,
+ static int rtllib_ccmp_encrypt(struct sk_buff *skb, int hdr_len, void *priv)
+ {
+ 	struct rtllib_ccmp_data *key = priv;
+-	int data_len, i;
++	int i;
+ 	u8 *pos;
+ 	struct rtllib_hdr_4addr *hdr;
+ 	struct cb_desc *tcb_desc = (struct cb_desc *)(skb->cb +
+@@ -163,7 +163,6 @@ static int rtllib_ccmp_encrypt(struct sk_buff *skb, int hdr_len, void *priv)
+ 	    skb->len < hdr_len)
+ 		return -1;
+ 
+-	data_len = skb->len - hdr_len;
+ 	pos = skb_push(skb, CCMP_HDR_LEN);
+ 	memmove(pos, pos + CCMP_HDR_LEN, hdr_len);
+ 	pos += hdr_len;
+-- 
+2.7.4
 
---6sX45UoQRIJXqkqR
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1dPHIACgkQ3SOs138+
-s6Ho9xAAwUKuZi8iVfSdVTIm8t3Z0hjhCUBry2XL8mKbnYiq3Bb7U6+PwonQ34xY
-EEY29C7cEjDhFWugnN1kS5unXAYdPZRu1VC6E89/rBkFOLogQcBBl4X1b/ziGEkC
-zq3J5xkmakn/8O2vxvvEFFkYmXYdBZaEIG8kIg/by6ONb5wwIv/jzdIuhDhAAVSl
-SikW0Gz2uDXiNev7cNnEFOgbGeAix9Y6w4nfAELuYn4kRLKul11avGyRf/t02FwB
-vkyW5D3iyGTe5eJ9dANXIDVxUZhk8dy04X+rbs4q6Y+O3IYOE6dJ9K/8U9v2a6WM
-U0uBDfrwsuDwOEyviarkQhaTin+51wbdx9dv7cgIaELb66pm6wq08IYKORPBe2J/
-YAQxxlzjwlcLUZ2eHv1XH4Ra5mxdK3wWwO31WHB9/gIMsQgRhVF8aywjewYesJje
-6AQcE7WvPcw3quTEiln1muXbJRDJY0zxBGDMdhB90x0n/60afHPwSNvlIzTJtQ6u
-jHbKgfw1/ay4A9TY3O8KW8AdVWZLP/5qKQF4uvjapwNRWBHKwHQ7DFJGD/aUTWrz
-EZL06MO809iUSFjS63LJo+oLhWs+g7gvzH4NSZchHJsuT86rS8qUQH8P9z2dLYlO
-/PmMNaOcASfxYT2vMskY9xKO6Dq7PV7SFNe2DKRQpsRQj4swqN8=
-=JGRC
------END PGP SIGNATURE-----
-
---6sX45UoQRIJXqkqR--
