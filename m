@@ -2,163 +2,117 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD3FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834E9C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85DDF22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599CD23401
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:39:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gYmBNd9T"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="znM/oClH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbfHUXiR (ORCPT
+        id S1730676AbfHUXji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 19:38:17 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43516 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfHUXiQ (ORCPT
+        Wed, 21 Aug 2019 19:39:38 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39446 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728042AbfHUXji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 19:38:16 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v12so2510638pfn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 16:38:16 -0700 (PDT)
+        Wed, 21 Aug 2019 19:39:38 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u17so2286409pgi.6
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 16:39:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8Ed/y/emZGSZF5km37/z89Ry407jB+L5UcRsFI/paoA=;
-        b=gYmBNd9T5K/R/1oat0Aeuypqm0J/PbkHD4CifiFDCi+RQ6d229g/b8EhbMk7msuu63
-         QJtBEVe0N81ndsTt4abdGi1dpee8Wq3fJyuAPwtQ4z/8uRjHB+VJaq9+le69LXoED8oy
-         0uHo/R/wcXK3+APJ0gDTO+EA5IA7vofnzoM69RHO7F9WBvlPM6keAvmvcfoRrvak5mVT
-         4LM8Uh50Fp8YvOM+9EjLEB/CouJaOtg7+Y3xqsTS/U7Kc8kSA1loMMxOaMawp/g8ACQD
-         SL4go1+JKss3CJbzZde1VnAYSc4UBeC6ZXou2AwSBmC0VsMFE7EYWbTwEdN6lmRv8+rZ
-         ggIg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=RoJLziPgJY9mLs+fRu2lKqTyEaUKSYiiOnVn7t9lzGo=;
+        b=znM/oClHkBR6pN7RG6wDMkQnx6pbsRIaoNYQc2ceYPiPEl7hq69Qo14MyokFBCw2Xe
+         FQ20sImAG9QaU+NbtIppKgexVWzDXK7u3I2TJkT7ch4fu0lhJyBfxEQnkTfHBDvjMSBK
+         SBjbbFjeIO1/Uug6SqmyTdB2c9tIYDcPZZc5y1rgtbC2kpInFxWKmChK9bLwT7GvdFbD
+         zXk4Lw6gFtHp+EJz64710+rpjuMARq6Zx3BHACB26ZRCfJoRZD+X+W7tc6iRJTi2dOXi
+         K6vTKICEJmVxIQEBRpUEaBsT6/s5TODqCjYQ7Ba0Bc8KTkwktqpTmNnvQe18Qg4JtDPr
+         HDmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Ed/y/emZGSZF5km37/z89Ry407jB+L5UcRsFI/paoA=;
-        b=NDpHzsEXraXS38m5qKiS2tNlHnRZh1N8HMU/U0QWx607Z/btEl6WKVdIQvcpuYAbnc
-         Nc9WDi0+TseQSJAqX9qxpwcSAqNmBlhsdTsKhrO8qcwJJoVrnkTOLy8SQjQYRD+jH5gu
-         tJa2KgqSeQvS8CdQbaKDUix5hd8MQrRzunaHUywGMxO2dme1dRTTC4tqtFEnatlL68vj
-         MmFv54b9tRwhSpUbL8DQXau2orPZFiRv4tFFjtKaza8eK4zUKv22Lc6/0I/q89xmik0a
-         NwGxdARcYsbeQ/hz4rE9TsOvowuyGVEdx1s96NLPU3XPy8z01DrJR7NkXvcrDwYlHTWf
-         zIpQ==
-X-Gm-Message-State: APjAAAU3MDG5BYRy/cx6XCQvbt5OPs4XJAQowJkcm38yKoJiHSPVwjMD
-        XcutN6kUCQEAsmcLxFo6xAWxcjn5Nbp/8LIzeSV3FA==
-X-Google-Smtp-Source: APXvYqy5xABFa+NpZkB60jucf8WiyzK28DP162BTS7ZMU571bHVUYTyKNnSALTVWuGr6FdgEnCpaE6Tt6nsFMpAjEVc=
-X-Received: by 2002:aa7:9e0a:: with SMTP id y10mr37938375pfq.93.1566430695426;
- Wed, 21 Aug 2019 16:38:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=RoJLziPgJY9mLs+fRu2lKqTyEaUKSYiiOnVn7t9lzGo=;
+        b=fXx8zTpePyQrak3wcSUN7Dk6bY5DTLUchFriwMzZotj7FhWdSWv8lGe3LcUjIE/125
+         OiFaC/kPWYi/Hb8emS31bHrVNkn0zQatR3Wh9uB8nOBGP0/iDOPWZ6IAmxtcUBJ6CGB6
+         2/FmQJ7KKSOi8h9nTfCniJ63zF4AbH3yzxDzsCGtv9na6AnUvxl73D2SuvbCQmv2VddL
+         9+CtORqIuSuUFYH4DHo6DxwGzQctoiqa0L4PTSXEgE1uPOXGwAEe/uzKDajp0Z504Ooy
+         GzSlbnE4vR3w6WVgjv7t7YjKzHX98um1Cp9wPt6TrewhojQULrl2rYLeebc5Uze2B3nd
+         6ezw==
+X-Gm-Message-State: APjAAAUk3spIMQHNv4JWBKgrSSLPyK+bllxdS9z2ZEzCNMCZXfhOkBe8
+        D43U9kPgoEgF4JaOZzpPzXAgew==
+X-Google-Smtp-Source: APXvYqxbUoVvUvpMfuvIMtOftEIUIVFxHRXscpTOlg7Xd4x9nP3Em83MNj+d7QIroKxxfU76f9qS/w==
+X-Received: by 2002:a17:90a:d793:: with SMTP id z19mr2480702pju.36.1566430777357;
+        Wed, 21 Aug 2019 16:39:37 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id s5sm24549074pfm.97.2019.08.21.16.39.36
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 21 Aug 2019 16:39:36 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Guillaume La Roque <glaroque@baylibre.com>, rui.zhang@intel.com,
+        edubezval@gmail.com, daniel.lezcano@linaro.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v4 0/6] Add support of New Amlogic temperature sensor for G12 SoCs
+In-Reply-To: <20190821222421.30242-1-glaroque@baylibre.com>
+References: <20190821222421.30242-1-glaroque@baylibre.com>
+Date:   Wed, 21 Aug 2019 16:39:36 -0700
+Message-ID: <7hk1b65brb.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <0000000000003728c00590a83aa5@google.com>
-In-Reply-To: <0000000000003728c00590a83aa5@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 22 Aug 2019 01:38:04 +0200
-Message-ID: <CAAeHK+yom=jre4KwxmUtm=6_5ksLQvj1vF+Tn5udZMKe4g5GCA@mail.gmail.com>
-Subject: Re: WARNING: bad usercopy in hidraw_ioctl
-To:     syzbot <syzbot+fc7106c3bcd1cb7b165c@syzkaller.appspotmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, Qian Cai <cai@lca.pw>,
-        isaacm@codeaurora.org, Kees Cook <keescook@chromium.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        USB list <linux-usb@vger.kernel.org>, psodagud@codeaurora.org,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 12:38 AM syzbot
-<syzbot+fc7106c3bcd1cb7b165c@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    eea39f24 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=128c664c600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=fc7106c3bcd1cb7b165c
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+fc7106c3bcd1cb7b165c@syzkaller.appspotmail.com
->
-> ------------[ cut here ]------------
-> Bad or missing usercopy whitelist? Kernel memory exposure attempt detected
-> from SLUB object 'shmem_inode_cache' (offset 88, size 33)!
-> WARNING: CPU: 0 PID: 3101 at mm/usercopy.c:74 usercopy_warn+0xe8/0x110
-> mm/usercopy.c:74
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 3101 Comm: syz-executor.0 Not tainted 5.3.0-rc5+ #28
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   panic+0x2a3/0x6da kernel/panic.c:219
->   __warn.cold+0x20/0x4a kernel/panic.c:576
->   report_bug+0x262/0x2a0 lib/bug.c:186
->   fixup_bug arch/x86/kernel/traps.c:179 [inline]
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
->   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
->   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-> RIP: 0010:usercopy_warn+0xe8/0x110 mm/usercopy.c:74
-> Code: e8 bd f8 d6 ff 49 89 e9 4c 89 e1 48 89 de 41 57 48 c7 c7 40 f5 cd 85
-> 41 55 41 56 4c 8b 44 24 20 48 8b 54 24 18 e8 9d de ac ff <0f> 0b 48 83 c4
-> 18 e9 45 ff ff ff 48 c7 c5 40 f3 cd 85 49 89 ee 49
-> RSP: 0018:ffff8881c5d07be8 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: ffffffff85cdf500 RCX: 0000000000000000
-> RDX: 0000000000008303 RSI: ffffffff81288cfd RDI: ffffed1038ba0f6f
-> RBP: ffffffff85cc2ca0 R08: ffff8881c79b0000 R09: ffffed103b645d58
-> R10: ffffed103b645d57 R11: ffff8881db22eabf R12: ffffffff86a6b0c8
-> R13: 0000000000000058 R14: ffffffff85cdf380 R15: 0000000000000021
->   check_heap_object mm/usercopy.c:234 [inline]
->   __check_object_size mm/usercopy.c:280 [inline]
->   __check_object_size+0x327/0x39a mm/usercopy.c:250
->   check_object_size include/linux/thread_info.h:119 [inline]
->   check_copy_size include/linux/thread_info.h:150 [inline]
->   copy_to_user include/linux/uaccess.h:151 [inline]
->   hidraw_ioctl+0x65f/0xae0 drivers/hid/hidraw.c:440
->   vfs_ioctl fs/ioctl.c:46 [inline]
->   file_ioctl fs/ioctl.c:509 [inline]
->   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
->   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
->   __do_sys_ioctl fs/ioctl.c:720 [inline]
->   __se_sys_ioctl fs/ioctl.c:718 [inline]
->   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
->   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x459829
-> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f75e27c6c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-> RDX: 00000000200000c0 RSI: 0000000080404804 RDI: 0000000000000003
-> RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f75e27c76d4
-> R13: 00000000004c21c9 R14: 00000000004d5628 R15: 00000000ffffffff
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Guillaume La Roque <glaroque@baylibre.com> writes:
 
-#syz dup: BUG: bad usercopy in hidraw_ioctl
+> This patchs series add support of New Amlogic temperature sensor and minimal
+> thermal zone for SEI510 and ODROID-N2 boards.
+>
+> First implementation was doing on IIO[1] but after comments i move on thermal framework.
+> Formulas and calibration values come from amlogic.
+>
+> Changes since v3:
+>   - Add cooling map and trip point for hot type
+>   - move compatible on g12a instead of g12 to be aligned with others
+>   - add all reviewer, sorry for this mistake
+>
+> Changes since v2:
+>   - fix yaml documention
+>   - remove unneeded status variable for temperature-sensor node
+>   - rework driver after Martin review
+>   - add some information in commit message
+>
+> Changes since v1:
+>   - fix enum vs const in documentation
+>   - fix error with thermal-sensor-cells value set to 1 instead of 0
+>   - add some dependencies needed to add cooling-maps
+>
+> Dependencies :
+> - patch 3,4 & 5: depends on Neil's patch and series :
+>               - missing dwc2 phy-names[2]
+>               - patchsets to add DVFS on G12a[3] which have deps on [4] and [5]
+>
+> [1] https://lore.kernel.org/linux-amlogic/20190604144714.2009-1-glaroque@baylibre.com/
+> [2] https://lore.kernel.org/linux-amlogic/20190625123647.26117-1-narmstrong@baylibre.com/
+> [3] https://lore.kernel.org/linux-amlogic/20190729132622.7566-1-narmstrong@baylibre.com/
+> [4] https://lore.kernel.org/linux-amlogic/20190731084019.8451-5-narmstrong@baylibre.com/
+> [5] https://lore.kernel.org/linux-amlogic/20190729132622.7566-3-narmstrong@baylibre.com/
+>
+>
+> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+
+nit: you should put these on the individual patches, since the cover
+letter does not get applied to any tree, any tags here get lost.
+
+Kevin
