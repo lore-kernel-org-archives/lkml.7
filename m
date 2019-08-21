@@ -2,100 +2,193 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EDDC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CFEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9C9520870
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:07:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bKoPdm41"
+	by mail.kernel.org (Postfix) with ESMTP id 9699C20870
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbfHUPHy (ORCPT
+        id S1729792AbfHUPIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:07:54 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:46234 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728756AbfHUPHy (ORCPT
+        Wed, 21 Aug 2019 11:08:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16204 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729780AbfHUPIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:07:54 -0400
-Received: by mail-vk1-f196.google.com with SMTP id b64so618741vke.13
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 08:07:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Yoz2RIEoekI97TGDwNDb2cYuY4j2KA9YLKzO29oxa68=;
-        b=bKoPdm41C+rt86wgtJEZwgf4WpRLlu7uiVMYEdZBNxIo2ki8MFlGUKMbhVAMe3ieZ1
-         SNjpNYLICJ2KbpkDWAm2FWLMqMa+zirJcbb5DwZEqVav4uuxU75qfxkKsNGI+232Fz9s
-         W+Nj5uoncJ1iZrtPOlwkzEsBmJgZxnVmGNxO6gNjBFQA1uXHa3TNhZ0/UlEfnrCa8016
-         KyX4cHo9xAUIC5oOeui0GM4OhIt21o6BHDroDDUjZYT8CweLAeNBjndyIgwf2smXi16G
-         D/EX3MYhAJHrNkw3JEnJ2k7WXEckjsLY9fzCgQJoB7LTSaNvFKwoYvXOEaSEO4pp1IZ5
-         YqXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yoz2RIEoekI97TGDwNDb2cYuY4j2KA9YLKzO29oxa68=;
-        b=FD5+62ilXLTqs/MDru4G5lHifvQ//cXwsRxiW7Leo+lPiCPh8J+RP7L66kATOfMmUN
-         6ZjBVnWV2jiCRfhO7OKsqmoUFJrBS3ETmAfHX+TCzY8KJ7Q16lBkJCW+4AbgRpBZRKhn
-         JwZVIJKaYxml5wkyP5YKkZdHvm5Nkb5YXm7sp7Qz2Gl6aFm1q2xcD59FLUXLHjA0sRme
-         vJagxmC63i5Wpy1TXhzPZUPdC7icYe9OM6s3yo9Dx8RYPUacN1GIRC/BqBlRMN/gq/6T
-         BVEk6M6e6cJIrKzF6yK6GDHNvxul27ANxGJRT3pMf0Fi0aMT39Fqug4BRWjshuNj3adi
-         hcIg==
-X-Gm-Message-State: APjAAAXY59C5/K+x/S0o5c/8x1i70xIPGvC5LIJsw9vcQij6ClMty7BM
-        kOeT/8ihzc+WqdDM7rlGsRrVjB/1mNAFTrP/GFOHgA==
-X-Google-Smtp-Source: APXvYqxIjlgM9kgim++G2hEIL2HAfU2N3YDY1R7j00eUtzDimP4T6y7m2Y4h8FTVzBRX/pvG3mUHIeFRN6musNiwflc=
-X-Received: by 2002:ac5:c4f7:: with SMTP id b23mr5297907vkl.17.1566400073181;
- Wed, 21 Aug 2019 08:07:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <1558252637-10556-1-git-send-email-chaotian.jing@mediatek.com> <1559438591.25015.0.camel@mhfsdcap03>
-In-Reply-To: <1559438591.25015.0.camel@mhfsdcap03>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 21 Aug 2019 17:07:17 +0200
-Message-ID: <CAPDyKFofoJKqnchJT-Bty9MMLDviiBWupf+MPmMtv+mRemVXLw@mail.gmail.com>
-Subject: Re: fix controller busy issue and add 24bits segment support
-To:     Chaotian Jing <chaotian.jing@mediatek.com>
-Cc:     srv_heupstream <srv_heupstream@mediatek.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 21 Aug 2019 11:08:47 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LF0kWY015207
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:08:46 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uh87kghpj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:08:45 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Wed, 21 Aug 2019 16:08:44 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 21 Aug 2019 16:08:34 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LF8CWh35521010
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 15:08:12 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76275A4040;
+        Wed, 21 Aug 2019 15:08:32 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6E20BA4069;
+        Wed, 21 Aug 2019 15:08:29 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.85.158.102])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 21 Aug 2019 15:08:29 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v2 0/4] powerpc: expose secure variables to the kernel and userspace 
+Date:   Wed, 21 Aug 2019 11:08:19 -0400
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19082115-0008-0000-0000-0000030B7F05
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082115-0009-0000-0000-00004A29AA99
+Message-Id: <1566400103-18201-1-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908210160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2 Jun 2019 at 03:23, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
->
-> Hi Ulf,
->
-> Gentle ping for this patch.
+In order to verify the OS kernel on PowerNV systems, secure boot requires
+X.509 certificates trusted by the platform. These are stored in secure
+variables controlled by OPAL, called OPAL secure variables. In order to
+enable users to manage the keys, the secure variables need to be exposed
+to userspace.
 
-For some reason these patches didn't reach the patchtracker, hence I
-have just not seen them.
+OPAL provides the runtime services for the kernel to be able to access the
+secure variables[1]. This patchset defines the kernel interface for the
+OPAL APIs. These APIs are used by the hooks, which load these variables
+to the keyring and expose them to the userspace for reading/writing.
 
-Could you please re-post this so we can get this merged?
+The previous version[2] of the patchset added support only for the sysfs
+interface. This patch adds two more patches that involves loading of
+the firmware trusted keys to the kernel keyring. This patchset is
+dependent on the base CONFIG PPC_SECURE_BOOT added by ima arch specific
+patches for POWER[3]
 
-Kind regards
-Uffe
+Overall, this patchset adds the following support:
 
->
-> On Sun, 2019-05-19 at 15:57 +0800, Chaotian Jing wrote:
-> > the below 2 patches fix controller busy issue when plug out SD card
-> > and add 24bits segment size support.
-> >
-> > Chaotian Jing (2):
-> >   mmc: mediatek: fix controller busy when plug out SD
-> >   mmc: mediatek: support 24bits segment size
-> >
-> >  drivers/mmc/host/mtk-sd.c | 24 ++++++++++++++++++------
-> >  1 file changed, 18 insertions(+), 6 deletions(-)
-> >
->
->
+* expose secure variables to the kernel via OPAL Runtime API interface
+* expose secure variables to the userspace via kernel sysfs interface
+* load kernel verification and revocation keys to .platform and
+.blacklist keyring respectively.
+
+The secure variables can be read/written using simple linux utilities
+cat/hexdump.
+
+For example:
+Path to the secure variables is:
+/sys/firmware/secvar/vars
+
+Each secure variable is listed as directory. 
+$ ls -l
+total 0
+drwxr-xr-x. 2 root root 0 Aug 20 21:20 db
+drwxr-xr-x. 2 root root 0 Aug 20 21:20 KEK
+drwxr-xr-x. 2 root root 0 Aug 20 21:20 PK
+
+The attributes of each of the secure variables are(for example: PK):
+[PK]$ ls -l
+total 0
+-r--r--r--. 1 root root 32000 Aug 21 08:28 data
+-r--r--r--. 1 root root 65536 Aug 21 08:28 name
+-r--r--r--. 1 root root 65536 Aug 21 08:28 size
+--w-------. 1 root root 32000 Aug 21 08:28 update
+
+The "data" is used to read the existing variable value using hexdump. The
+data is stored in ESL format.
+The "update" is used to write a new value using cat. The update is
+to be submitted as AUTH file.
+
+[1] Depends on skiboot OPAL API changes which removes metadata from
+the API. The new version with the changes are going to be posted soon.
+[2] https://lkml.org/lkml/2019/6/13/1644
+[3] https://lkml.org/lkml/2019/8/19/402
+
+Changelog:
+
+v2:
+* removes complete efi-sms from the sysfs implementation and is simplified
+* includes Greg's and Oliver's feedbacks:
+ * adds sysfs documentation
+ * moves sysfs code to arch/powerpc
+ * other code related feedbacks.
+* adds two new patches to load keys to .platform and .blacklist keyring.
+These patches are added to this series as they are also dependent on
+OPAL APIs.
+
+Nayna Jain (4):
+  powerpc/powernv: Add OPAL API interface to access secure variable
+  powerpc: expose secure variables to userspace via sysfs
+  x86/efi: move common keyring handler functions to new file
+  powerpc: load firmware trusted keys into kernel keyring
+
+ Documentation/ABI/testing/sysfs-secvar        |  27 +++
+ arch/powerpc/Kconfig                          |   9 +
+ arch/powerpc/include/asm/opal-api.h           |   5 +-
+ arch/powerpc/include/asm/opal.h               |   6 +
+ arch/powerpc/include/asm/secvar.h             |  55 +++++
+ arch/powerpc/kernel/Makefile                  |   3 +-
+ arch/powerpc/kernel/secvar-ops.c              |  25 +++
+ arch/powerpc/kernel/secvar-sysfs.c            | 210 ++++++++++++++++++
+ arch/powerpc/platforms/powernv/Kconfig        |   6 +
+ arch/powerpc/platforms/powernv/Makefile       |   1 +
+ arch/powerpc/platforms/powernv/opal-call.c    |   3 +
+ arch/powerpc/platforms/powernv/opal-secvar.c  | 102 +++++++++
+ arch/powerpc/platforms/powernv/opal.c         |   5 +
+ security/integrity/Kconfig                    |   9 +
+ security/integrity/Makefile                   |   6 +-
+ .../platform_certs/keyring_handler.c          |  80 +++++++
+ .../platform_certs/keyring_handler.h          |  35 +++
+ .../integrity/platform_certs/load_powerpc.c   |  94 ++++++++
+ security/integrity/platform_certs/load_uefi.c |  67 +-----
+ 19 files changed, 679 insertions(+), 69 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-secvar
+ create mode 100644 arch/powerpc/include/asm/secvar.h
+ create mode 100644 arch/powerpc/kernel/secvar-ops.c
+ create mode 100644 arch/powerpc/kernel/secvar-sysfs.c
+ create mode 100644 arch/powerpc/platforms/powernv/opal-secvar.c
+ create mode 100644 security/integrity/platform_certs/keyring_handler.c
+ create mode 100644 security/integrity/platform_certs/keyring_handler.h
+ create mode 100644 security/integrity/platform_certs/load_powerpc.c
+
+-- 
+2.20.1
+
