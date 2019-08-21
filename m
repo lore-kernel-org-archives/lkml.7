@@ -2,406 +2,182 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A97C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1426C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 827DB22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4D322DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:12:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="o9fP3sBF";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aWcm5lgV"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SRF7txpT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbfHUJL7 (ORCPT
+        id S1727314AbfHUJMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:11:59 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44626 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbfHUJLz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:11:55 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8E35E60F3B; Wed, 21 Aug 2019 09:11:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566378714;
-        bh=E3NZkdxvukGaW2Q9onpOCB1snyeY1FpBOVDCkdKb4E0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o9fP3sBFURvDuKfN94EZLwuRRA+2Nz24UhM3gvJrBCtMRpmA73b3E/aVAIge3/VPk
-         sauMOyX8LutPaiYESXo/4F9QiYJsJ6f5P9sJMKigWbA5fwL91DddldVbM+yCmdNiNI
-         0S6AFLq57hTEAnS5tRAjfMhtR9+2Nw0bgMwUoiKo=
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BBE1060F3B;
-        Wed, 21 Aug 2019 09:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566378713;
-        bh=E3NZkdxvukGaW2Q9onpOCB1snyeY1FpBOVDCkdKb4E0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aWcm5lgVZQ12WPW8bvNJBk4O+iv6iN/D4LbDqjFWuZOQ76FGUXbvxiyml+1jY9mh3
-         cfESQSimdbuhRdp542h1MyeIDxms7TQRYMpp43dnP7o3IVaqAkX0updrqCmdKAK+q+
-         gc59zJfXOKKKPmGvuZhyA/YFEEQ4bJFEBuON9uRQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BBE1060F3B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     robh+dt@kernel.org, georgi.djakov@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 2/2] interconnect: qcom: Add OSM L3 interconnect provider support
-Date:   Wed, 21 Aug 2019 14:41:32 +0530
-Message-Id: <20190821091132.14994-3-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190821091132.14994-1-sibis@codeaurora.org>
-References: <20190821091132.14994-1-sibis@codeaurora.org>
+        Wed, 21 Aug 2019 05:12:23 -0400
+Received: from mail-eopbgr700057.outbound.protection.outlook.com ([40.107.70.57]:57472
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726227AbfHUJMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:12:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YbB0EqQGv/XPJXd0uSn+kiAjWarSq3iuhJZID26adsrRY2mEfCExkbw73X1K9IHCsHxqjPWCN6VPbNCaSJiQYjNFefbowtH+TIDdr6sybNiFxf6hnB35MlYmgN88P29fhJ+1QdZdAia8juyhUZzziXo999vzG7fbb0n+YCaNoziCJ/fuC8ge38ngu7oc+TBJFSMBdHUIBkj1aKNBqww+IKGfKPOtTRG9ZBk48ZSQueM1J8DV9lw987cZfn38DBHiowy3W9GK/7LxXR4rOOmZfQ9eJyo3MD0SN7rLLjsMNkSf+8gPerKxv5RbjNHQu3+PHOqsn9EuIVnrNljt44OzVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wIzmignZqShhqYYoKk9eBnoGqar1Lya9Kfay9bVwLic=;
+ b=KQhkCgPUmtPJO8V0oOj3/q2dublA9zBjwJ9L3VxmFrhnwzfYOQ2rNHvLb6qt2uwsEGdd1afmcPivtX3ZFdXGgfSnKLpDG3oX9z5/elfTLjSeFNewC5j9+dRZZACj4BACdMEXaiPSN8WI/D6u8vuzKgs4Lni/JVxv6C9zVkDMQKZrezJq/Eh6Rk/uZRp+l9wddL1jqhftjhMZPf4X74PERcA2vPECm2sVY86BjTZQid1OSLpu9ImSd8vlxcVa02mmgSLNDpzd/GBJd7mBIZpNDLoq9uCuWySa5if0wDfGBgR9uzk+XBv0d5rgG6hvveTPxyuWbv3Ja0HtHFqztqqZiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.100) smtp.rcpttodomain=electromag.com.au smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wIzmignZqShhqYYoKk9eBnoGqar1Lya9Kfay9bVwLic=;
+ b=SRF7txpToEuzqvTVAsiSV7TYu+y/ARdFga0e6vSapQkjhbInFAqSLe1FnHwbqHt1J4B+BDPZPd4F5SluFCG5a6olTjxgilwLNp/I36X8DrwuJZCJG0DKgiuBltcOMXaI/04Gw8ePe65TtbzjNKSBgNYMYEwgB288mBKHvsdCDqs=
+Received: from MWHPR02CA0013.namprd02.prod.outlook.com (2603:10b6:300:4b::23)
+ by BYAPR02MB5303.namprd02.prod.outlook.com (2603:10b6:a03:67::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.18; Wed, 21 Aug
+ 2019 09:12:20 +0000
+Received: from BL2NAM02FT007.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::207) by MWHPR02CA0013.outlook.office365.com
+ (2603:10b6:300:4b::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2199.14 via Frontend
+ Transport; Wed, 21 Aug 2019 09:12:19 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+ smtp.mailfrom=xilinx.com; electromag.com.au; dkim=none (message not signed)
+ header.d=none;electromag.com.au; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ BL2NAM02FT007.mail.protection.outlook.com (10.152.77.46) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2178.16
+ via Frontend Transport; Wed, 21 Aug 2019 09:12:18 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:34442 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1i0MfB-00025w-LM; Wed, 21 Aug 2019 02:12:17 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1i0Mf6-0005jV-Hl; Wed, 21 Aug 2019 02:12:12 -0700
+Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x7L9C4gR012429;
+        Wed, 21 Aug 2019 02:12:04 -0700
+Received: from [172.30.17.116]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1i0Mey-0005bl-DI; Wed, 21 Aug 2019 02:12:04 -0700
+Subject: Re: [PATCH 4/4] iio: adc: ina2xx: Use label proper for device
+ identification
+To:     Phil Reid <preid@electromag.com.au>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, monstr@monstr.eu, linux@roeck-us.net
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        linux-iio@vger.kernel.org,
+        =?UTF-8?Q?Stefan_Br=c3=bcns?= <stefan.bruens@rwth-aachen.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>
+References: <cover.1566310292.git.michal.simek@xilinx.com>
+ <0542b562a813c5c22c42484ac24bbb626ac3c022.1566310292.git.michal.simek@xilinx.com>
+ <970c3988-24e4-26c2-9027-d8ff40c3a9bb@electromag.com.au>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <bca73b6d-87ae-f8cc-b9f4-3b0a558942d9@xilinx.com>
+Date:   Wed, 21 Aug 2019 11:12:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <970c3988-24e4-26c2-9027-d8ff40c3a9bb@electromag.com.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(376002)(346002)(396003)(2980300002)(199004)(189003)(31686004)(52146003)(4326008)(2486003)(70206006)(229853002)(76176011)(26005)(356004)(23676004)(11346002)(486006)(476003)(2616005)(336012)(6666004)(44832011)(2906002)(70586007)(126002)(446003)(8936002)(426003)(186003)(14444005)(53546011)(5660300002)(316002)(9786002)(7416002)(106002)(81166006)(81156014)(31696002)(8676002)(2870700001)(36386004)(58126008)(65956001)(6246003)(65806001)(305945005)(36756003)(54906003)(47776003)(50466002)(110136005)(478600001)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB5303;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 52df10bb-b351-4ed7-571d-08d72617aa95
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709080)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:BYAPR02MB5303;
+X-MS-TrafficTypeDiagnostic: BYAPR02MB5303:
+X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+X-Microsoft-Antispam-PRVS: <BYAPR02MB5303C481828DDE8EC28F9ECDC6AA0@BYAPR02MB5303.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:480;
+X-Forefront-PRVS: 0136C1DDA4
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: vyyzriMOl2jEEPUUpwOAdXQdYRf8630tV4LVOFuNA+Nr4ID99unr+xRxKHxYxy1ITStsLh3x7w2eIfeYRgxuaA2JoCOk1tQi/ByRzJdXk6H6YYTVqEVVtdU68IDMBMFBFMxWVqLBtWdpbtmzDDA8hrgZcb8KndEtffZHBXr1Ez6ebKYMJajDpFikc8H3dwb+kunmtvLxt1M5ZwV3Jxtlpw6Vy0aZXa9KjZaBHW46PmJTx7mIt4XtCv7CjF/+vcTMTsLKVMnb1QSreN+QL0xEgISxqnmLsF+AmJLUUFY/PqUvi9nJETO0EZoU2c06jjiUR/aeXZnt8ToX/+gEFJgCMjnzsk7DF1mSGk1YIHnklcRCQncaeEpJ75NO3AaPGnDjWNEobG+DbLuLcB1/EF1uoHgEkGEwLgVRyva9X8kMzgk=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2019 09:12:18.2420
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52df10bb-b351-4ed7-571d-08d72617aa95
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5303
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some Qualcomm SoCs, Operating State Manager (OSM) controls the
-resources of scaling L3 caches. Add a driver to handle bandwidth
-requests to OSM L3 from CPU/GPU.
+On 21. 08. 19 4:11, Phil Reid wrote:
+> On 20/08/2019 22:11, Michal Simek wrote:
+>> Add support for using label property for easier device identification via
+>> iio framework.
+>>
+>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>> ---
+>>
+>>   drivers/iio/adc/ina2xx-adc.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/iio/adc/ina2xx-adc.c b/drivers/iio/adc/ina2xx-adc.c
+>> index 7c7c63677bf4..077c54915f70 100644
+>> --- a/drivers/iio/adc/ina2xx-adc.c
+>> +++ b/drivers/iio/adc/ina2xx-adc.c
+>> @@ -1033,7 +1033,7 @@ static int ina2xx_probe(struct i2c_client *client,
+>>       snprintf(chip->name, sizeof(chip->name), "%s-%s",
+>>            client->name, dev_name(&client->dev));
+>>   -    indio_dev->name = chip->name;
+>> +    indio_dev->name = of_get_property(np, "label", NULL) ? : chip->name;
+>>       indio_dev->setup_ops = &ina2xx_setup_ops;
+>>         buffer = devm_iio_kfifo_allocate(&indio_dev->dev);
+>>
+> I like this personally. It'd be nice if it was a core function so
+> it could be an opt in to any iio device.
+> 
+> Don't know how well received that'd be thou.
+> 
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/interconnect/qcom/Kconfig  |   7 +
- drivers/interconnect/qcom/Makefile |   2 +
- drivers/interconnect/qcom/osm-l3.c | 284 +++++++++++++++++++++++++++++
- 3 files changed, 293 insertions(+)
- create mode 100644 drivers/interconnect/qcom/osm-l3.c
+Something like this?
 
-diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-index d5e70ebc24108..f6c2a11a1a2c9 100644
---- a/drivers/interconnect/qcom/Kconfig
-+++ b/drivers/interconnect/qcom/Kconfig
-@@ -5,6 +5,13 @@ config INTERCONNECT_QCOM
- 	help
- 	  Support for Qualcomm's Network-on-Chip interconnect hardware.
- 
-+config INTERCONNECT_QCOM_OSM_L3
-+	tristate "Qualcomm OSM L3 interconnect driver"
-+	depends on INTERCONNECT_QCOM || COMPILE_TEST
-+	help
-+	  Say y here to support the Operating State Manager (OSM) interconnect
-+	  driver which controls the scaling of L3 caches on Qualcomm SoCs.
-+
- config INTERCONNECT_QCOM_SDM845
- 	tristate "Qualcomm SDM845 interconnect driver"
- 	depends on INTERCONNECT_QCOM
-diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-index 1c1cea690f922..9078af5fed109 100644
---- a/drivers/interconnect/qcom/Makefile
-+++ b/drivers/interconnect/qcom/Makefile
-@@ -1,5 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- 
-+icc-osm-l3-objs				:= osm-l3.o
- qnoc-sdm845-objs			:= sdm845.o
- 
-+obj-$(CONFIG_INTERCONNECT_QCOM_OSM_L3) += icc-osm-l3.o
- obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
-diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
-new file mode 100644
-index 0000000000000..db2202ebd1e9a
---- /dev/null
-+++ b/drivers/interconnect/qcom/osm-l3.c
-@@ -0,0 +1,284 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ *
-+ */
-+
-+#include <dt-bindings/interconnect/qcom,osm-l3.h>
-+#include <dt-bindings/interconnect/qcom,sdm845.h>
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/interconnect-provider.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+
-+#define LUT_MAX_ENTRIES			40U
-+#define LUT_SRC				GENMASK(31, 30)
-+#define LUT_L_VAL			GENMASK(7, 0)
-+#define LUT_ROW_SIZE			32
-+#define CLK_HW_DIV			2
-+
-+/* Register offsets */
-+#define REG_ENABLE			0x0
-+#define REG_FREQ_LUT			0x110
-+#define REG_PERF_STATE			0x920
-+
-+#define OSM_L3_MAX_LINKS		1
-+
-+#define to_qcom_provider(_provider) \
-+	container_of(_provider, struct qcom_osm_l3_icc_provider, provider)
-+
-+enum {
-+	SDM845_MASTER_OSM_L3_APPS = SLAVE_TCU + 1,
-+	SDM845_SLAVE_OSM_L3,
-+};
-+
-+struct qcom_osm_l3_icc_provider {
-+	void __iomem *base;
-+	unsigned int max_state;
-+	unsigned long lut_tables[LUT_MAX_ENTRIES];
-+	struct icc_provider provider;
-+};
-+
-+/**
-+ * struct qcom_icc_node - Qualcomm specific interconnect nodes
-+ * @name: the node name used in debugfs
-+ * @links: an array of nodes where we can go next while traversing
-+ * @id: a unique node identifier
-+ * @num_links: the total number of @links
-+ * @buswidth: width of the interconnect between a node and the bus
-+ */
-+struct qcom_icc_node {
-+	const char *name;
-+	u16 links[OSM_L3_MAX_LINKS];
-+	u16 id;
-+	u16 num_links;
-+	u16 buswidth;
-+};
-+
-+struct qcom_icc_desc {
-+	struct qcom_icc_node **nodes;
-+	size_t num_nodes;
-+};
-+
-+#define DEFINE_QNODE(_name, _id, _buswidth, ...)			\
-+		static struct qcom_icc_node _name = {			\
-+		.name = #_name,						\
-+		.id = _id,						\
-+		.buswidth = _buswidth,					\
-+		.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),	\
-+		.links = { __VA_ARGS__ },				\
-+	}
-+
-+DEFINE_QNODE(osm_apps_l3, SDM845_MASTER_OSM_L3_APPS, 16, SDM845_SLAVE_OSM_L3);
-+DEFINE_QNODE(osm_l3, SDM845_SLAVE_OSM_L3, 16);
-+
-+static struct qcom_icc_node *sdm845_osm_l3_nodes[] = {
-+	[MASTER_OSM_L3_APPS] = &osm_apps_l3,
-+	[SLAVE_OSM_L3] = &osm_l3,
-+};
-+
-+static struct qcom_icc_desc sdm845_osm_l3 = {
-+	.nodes = sdm845_osm_l3_nodes,
-+	.num_nodes = ARRAY_SIZE(sdm845_osm_l3_nodes),
-+};
-+
-+static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw,
-+			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-+{
-+	*agg_avg += avg_bw;
-+	*agg_peak = max_t(u32, *agg_peak, peak_bw);
-+
-+	return 0;
-+}
-+
-+static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-+{
-+	struct qcom_osm_l3_icc_provider *qp;
-+	struct icc_provider *provider;
-+	struct qcom_icc_node *qn;
-+	struct icc_node *n;
-+	unsigned int index;
-+	u32 agg_peak = 0;
-+	u32 agg_avg = 0;
-+	u64 rate;
-+
-+	qn = src->data;
-+	provider = src->provider;
-+	qp = to_qcom_provider(provider);
-+
-+	list_for_each_entry(n, &provider->nodes, node_list)
-+		qcom_icc_aggregate(n, n->avg_bw, n->peak_bw,
-+				   &agg_avg, &agg_peak);
-+
-+	rate = max(agg_avg, agg_peak);
-+	rate = icc_units_to_bps(rate);
-+	do_div(rate, qn->buswidth);
-+
-+	for (index = 0; index < qp->max_state; index++) {
-+		if (qp->lut_tables[index] >= rate)
-+			break;
-+	}
-+
-+	writel_relaxed(index, qp->base + REG_PERF_STATE);
-+
-+	return 0;
-+}
-+
-+static int qcom_osm_l3_remove(struct platform_device *pdev)
-+{
-+	struct qcom_osm_l3_icc_provider *qp = platform_get_drvdata(pdev);
-+	struct icc_provider *provider = &qp->provider;
-+	struct icc_node *n;
-+
-+	list_for_each_entry(n, &provider->nodes, node_list) {
-+		icc_node_del(n);
-+		icc_node_destroy(n->id);
-+	}
-+
-+	return icc_provider_del(provider);
-+}
-+
-+static int qcom_osm_l3_probe(struct platform_device *pdev)
-+{
-+	u32 info, src, lval, i, prev_freq = 0, freq;
-+	static unsigned long hw_rate, xo_rate;
-+	struct qcom_osm_l3_icc_provider *qp;
-+	const struct qcom_icc_desc *desc;
-+	struct icc_onecell_data *data;
-+	struct icc_provider *provider;
-+	struct qcom_icc_node **qnodes;
-+	struct icc_node *node;
-+	size_t num_nodes;
-+	struct clk *clk;
-+	int ret;
-+
-+	clk = clk_get(&pdev->dev, "xo");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	xo_rate = clk_get_rate(clk);
-+	clk_put(clk);
-+
-+	clk = clk_get(&pdev->dev, "alternate");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	hw_rate = clk_get_rate(clk) / CLK_HW_DIV;
-+	clk_put(clk);
-+
-+	qp = devm_kzalloc(&pdev->dev, sizeof(*qp), GFP_KERNEL);
-+	if (!qp)
-+		return -ENOMEM;
-+
-+	qp->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(qp->base))
-+		return PTR_ERR(qp->base);
-+
-+	/* HW should be in enabled state to proceed */
-+	if (!(readl_relaxed(qp->base + REG_ENABLE) & 0x1)) {
-+		dev_err(&pdev->dev, "error hardware not enabled\n");
-+		return -ENODEV;
-+	}
-+
-+	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-+		info = readl_relaxed(qp->base + REG_FREQ_LUT +
-+				     i * LUT_ROW_SIZE);
-+		src = FIELD_GET(LUT_SRC, info);
-+		lval = FIELD_GET(LUT_L_VAL, info);
-+		if (src)
-+			freq = xo_rate * lval;
-+		else
-+			freq = hw_rate;
-+
-+		/*
-+		 * Two of the same frequencies with the same core counts means
-+		 * end of table
-+		 */
-+		if (i > 0 && prev_freq == freq)
-+			break;
-+
-+		qp->lut_tables[i] = freq;
-+		prev_freq = freq;
-+	}
-+	qp->max_state = i;
-+
-+	desc = of_device_get_match_data(&pdev->dev);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	qnodes = desc->nodes;
-+	num_nodes = desc->num_nodes;
-+
-+	data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	provider = &qp->provider;
-+	provider->dev = &pdev->dev;
-+	provider->set = qcom_icc_set;
-+	provider->aggregate = qcom_icc_aggregate;
-+	provider->xlate = of_icc_xlate_onecell;
-+	INIT_LIST_HEAD(&provider->nodes);
-+	provider->data = data;
-+
-+	ret = icc_provider_add(provider);
-+	if (ret) {
-+		dev_err(&pdev->dev, "error adding interconnect provider\n");
-+		return ret;
-+	}
-+
-+	for (i = 0; i < num_nodes; i++) {
-+		size_t j;
-+
-+		node = icc_node_create(qnodes[i]->id);
-+		if (IS_ERR(node)) {
-+			ret = PTR_ERR(node);
-+			goto err;
-+		}
-+
-+		node->name = qnodes[i]->name;
-+		node->data = qnodes[i];
-+		icc_node_add(node, provider);
-+
-+		dev_dbg(&pdev->dev, "registered node %p %s %d\n", node,
-+			qnodes[i]->name, node->id);
-+
-+		/* populate links */
-+		for (j = 0; j < qnodes[i]->num_links; j++)
-+			icc_link_create(node, qnodes[i]->links[j]);
-+
-+		data->nodes[i] = node;
-+	}
-+	data->num_nodes = num_nodes;
-+
-+	platform_set_drvdata(pdev, qp);
-+
-+	return ret;
-+err:
-+	qcom_osm_l3_remove(pdev);
-+	return ret;
-+}
-+
-+static const struct of_device_id osm_l3_of_match[] = {
-+	{ .compatible = "qcom,sdm845-osm-l3", .data = &sdm845_osm_l3 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, osm_l3_of_match);
-+
-+static struct platform_driver osm_l3_driver = {
-+	.probe = qcom_osm_l3_probe,
-+	.remove = qcom_osm_l3_remove,
-+	.driver = {
-+		.name = "osm-l3",
-+		.of_match_table = osm_l3_of_match,
-+	},
-+};
-+module_platform_driver(osm_l3_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm OSM L3 interconnect driver");
-+MODULE_LICENSE("GPL v2");
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+diff --git a/drivers/iio/industrialio-core.c
+b/drivers/iio/industrialio-core.c
+index 524a686077ca..d21b495d36a1 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -1647,6 +1647,9 @@ int __iio_device_register(struct iio_dev
+*indio_dev, struct module *this_mod)
+        if (!indio_dev->dev.of_node && indio_dev->dev.parent)
+                indio_dev->dev.of_node = indio_dev->dev.parent->of_node;
 
++       indio_dev->name = of_get_property(indio_dev->dev.of_node,
+"label", NULL) ? :
++                                         indio_dev->name;
++
+        ret = iio_check_unique_scan_index(indio_dev);
+        if (ret < 0)
+                return ret;
+
+
+M
