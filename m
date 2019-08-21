@@ -2,401 +2,146 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E0CC3A59B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA16C3A59B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEAC322D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD1422D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="E29dEd83"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfHUKLa (ORCPT
+        id S1727781AbfHUKMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:11:30 -0400
-Received: from mga04.intel.com ([192.55.52.120]:2669 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbfHUKL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:11:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 03:11:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
-   d="scan'208";a="207683406"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Aug 2019 03:11:25 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     kishon@ti.com
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, peter.harliman.liem@intel.com,
-        vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: [PATCH v3 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-Date:   Wed, 21 Aug 2019 18:11:18 +0800
-Message-Id: <20190821101118.42774-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190821101118.42774-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20190821101118.42774-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Wed, 21 Aug 2019 06:12:10 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:33088 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbfHUKMJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 06:12:09 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7LAC6hW037490;
+        Wed, 21 Aug 2019 05:12:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566382326;
+        bh=WNO04hK4EhcDleF0FXAgtkk2jCq84VoSQz9dZLs15O0=;
+        h=From:To:CC:Subject:Date;
+        b=E29dEd83zaZhDw5xBCNJzTwnO1xluZUhiiTMmv1bg4nVlJw48r4D5HBGR5igMseg2
+         CZpfnngfNnissZYmVKrf9SuMs4jlWJ5ZsMzs+qCb1d0La7hWHTimnpZhGOSdbKNNE/
+         wXZ+YCeZOPx/oTpKJ0S0cHfs8vOHAma+QUeN0bQI=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7LAC6Lt003432
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 21 Aug 2019 05:12:06 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 21
+ Aug 2019 05:12:05 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 21 Aug 2019 05:12:05 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7LAC3o8085916;
+        Wed, 21 Aug 2019 05:12:04 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <balbi@kernel.org>, <stern@rowland.harvard.edu>
+CC:     <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] usb: gadget: udc: core: Fix error case while binding pending gadget drivers
+Date:   Wed, 21 Aug 2019 13:12:01 +0300
+Message-ID: <20190821101201.5377-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+If binding a pending gadget driver fails we should not
+remove it from the pending driver list, otherwise it
+will cause a segmentation fault later when the gadget driver is
+unloaded.
 
-Add support for eMMC PHY on Intel's Lightning Mountain SoC.
+Test case:
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+- Make sure no UDC is available
+- modprobe g_mass_storage file=wrongfile
+- Load UDC driver so it becomes available
+	lun0: unable to open backing file: wrongfile
+- modprobe -r g_mass_storage
+
+[   60.900431] Unable to handle kernel paging request at virtual address dead000000000108
+[   60.908346] Mem abort info:
+[   60.911145]   ESR = 0x96000044
+[   60.914227]   Exception class = DABT (current EL), IL = 32 bits
+[   60.920162]   SET = 0, FnV = 0
+[   60.923217]   EA = 0, S1PTW = 0
+[   60.926354] Data abort info:
+[   60.929228]   ISV = 0, ISS = 0x00000044
+[   60.933058]   CM = 0, WnR = 1
+[   60.936011] [dead000000000108] address between user and kernel address ranges
+[   60.943136] Internal error: Oops: 96000044 [#1] PREEMPT SMP
+[   60.948691] Modules linked in: g_mass_storage(-) usb_f_mass_storage libcomposite xhci_plat_hcd xhci_hcd usbcore ti_am335x_adc kfifo_buf omap_rng cdns3 rng_core udc_core crc32_ce xfrm_user crct10dif_ce snd_so6
+[   60.993995] Process modprobe (pid: 834, stack limit = 0x00000000c2aebc69)
+[   61.000765] CPU: 0 PID: 834 Comm: modprobe Not tainted 4.19.59-01963-g065f42a60499 #92
+[   61.008658] Hardware name: Texas Instruments SoC (DT)
+[   61.014472] pstate: 60000005 (nZCv daif -PAN -UAO)
+[   61.019253] pc : usb_gadget_unregister_driver+0x7c/0x108 [udc_core]
+[   61.025503] lr : usb_gadget_unregister_driver+0x30/0x108 [udc_core]
+[   61.031750] sp : ffff00001338fda0
+[   61.035049] x29: ffff00001338fda0 x28: ffff800846d40000
+[   61.040346] x27: 0000000000000000 x26: 0000000000000000
+[   61.045642] x25: 0000000056000000 x24: 0000000000000800
+[   61.050938] x23: ffff000008d7b0d0 x22: ffff0000088b07c8
+[   61.056234] x21: ffff000001100000 x20: ffff000002020260
+[   61.061530] x19: ffff0000010ffd28 x18: 0000000000000000
+[   61.066825] x17: 0000000000000000 x16: 0000000000000000
+[   61.072121] x15: 0000000000000000 x14: 0000000000000000
+[   61.077417] x13: ffff000000000000 x12: ffffffffffffffff
+[   61.082712] x11: 0000000000000030 x10: 7f7f7f7f7f7f7f7f
+[   61.088008] x9 : fefefefefefefeff x8 : 0000000000000000
+[   61.093304] x7 : ffffffffffffffff x6 : 000000000000ffff
+[   61.098599] x5 : 8080000000000000 x4 : 0000000000000000
+[   61.103895] x3 : ffff000001100020 x2 : ffff800846d40000
+[   61.109190] x1 : dead000000000100 x0 : dead000000000200
+[   61.114486] Call trace:
+[   61.116922]  usb_gadget_unregister_driver+0x7c/0x108 [udc_core]
+[   61.122828]  usb_composite_unregister+0x10/0x18 [libcomposite]
+[   61.128643]  msg_cleanup+0x18/0xfce0 [g_mass_storage]
+[   61.133682]  __arm64_sys_delete_module+0x17c/0x1f0
+[   61.138458]  el0_svc_common+0x90/0x158
+[   61.142192]  el0_svc_handler+0x2c/0x80
+[   61.145926]  el0_svc+0x8/0xc
+[   61.148794] Code: eb03003f d10be033 54ffff21 a94d0281 (f9000420)
+[   61.154869] ---[ end trace afb22e9b637bd9a7 ]---
+Segmentation fault
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
 ---
-changes in v3:
- - As per Andy's review comments macro optimization,aligned
-   function call in proper order and udelay added.
+ drivers/usb/gadget/udc/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-changes in v2:
- - optimize IS_CALDONE() and IS_DLLRDY() macro
- - remove unneccessary comment
- - remove redundant assignment
- - add return the error ptr
----
- drivers/phy/Kconfig                |   1 +
- drivers/phy/Makefile               |   1 +
- drivers/phy/intel/Kconfig          |   8 ++
- drivers/phy/intel/Makefile         |   2 +
- drivers/phy/intel/phy-intel-emmc.c | 274 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 286 insertions(+)
- create mode 100644 drivers/phy/intel/Kconfig
- create mode 100644 drivers/phy/intel/Makefile
- create mode 100644 drivers/phy/intel/phy-intel-emmc.c
-
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 0263db2ac874..b3ed94b98d9b 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -69,5 +69,6 @@ source "drivers/phy/socionext/Kconfig"
- source "drivers/phy/st/Kconfig"
- source "drivers/phy/tegra/Kconfig"
- source "drivers/phy/ti/Kconfig"
-+source "drivers/phy/intel/Kconfig"
- 
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 0d9fddc498a6..3f1fc9efbbed 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -19,6 +19,7 @@ obj-y					+= broadcom/	\
- 					   cadence/	\
- 					   freescale/	\
- 					   hisilicon/	\
-+					   intel/	\
- 					   marvell/	\
- 					   motorola/	\
- 					   mscc/	\
-diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-new file mode 100644
-index 000000000000..aa34e0fa9824
---- /dev/null
-+++ b/drivers/phy/intel/Kconfig
-@@ -0,0 +1,8 @@
-+#
-+# Phy drivers for Intel X86 LGM platform
-+#
-+config PHY_INTEL_EMMC
-+	tristate "Intel EMMC PHY driver"
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support the Intel EMMC PHY
-diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-new file mode 100644
-index 000000000000..6b876a75599d
---- /dev/null
-+++ b/drivers/phy/intel/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
-diff --git a/drivers/phy/intel/phy-intel-emmc.c b/drivers/phy/intel/phy-intel-emmc.c
-new file mode 100644
-index 000000000000..4197d464f8d7
---- /dev/null
-+++ b/drivers/phy/intel/phy-intel-emmc.c
-@@ -0,0 +1,274 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel eMMC PHY driver
-+ * Copyright (C) 2019 Intel, Corp.
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* eMMC phy register definitions */
-+#define EMMC_PHYCTRL0_REG	0xa8
-+#define DR_TY_MASK		GENMASK(30, 28)
-+#define DR_TY_SHIFT(x)		(((x) << 28) & DR_TY_MASK)
-+#define OTAPDLYENA		BIT(14)
-+#define OTAPDLYSEL_MASK		GENMASK(13, 10)
-+#define OTAPDLYSEL_SHIFT(x)	(((x) << 10) & OTAPDLYSEL_MASK)
-+
-+#define EMMC_PHYCTRL1_REG	0xac
-+#define PDB_MASK		BIT(0)
-+#define PDB_SHIFT(x)		(((x) << 0) & PDB_MASK)
-+#define ENDLL_MASK		BIT(7)
-+#define ENDLL_SHIFT(x)		(((x) << 7) & ENDLL_MASK)
-+
-+#define EMMC_PHYCTRL2_REG	0xb0
-+#define FRQSEL_25M		0
-+#define FRQSEL_150M		3
-+#define FRQSEL_MASK		GENMASK(24, 22)
-+#define FRQSEL_SHIFT(x)		(((x) << 22) & FRQSEL_MASK)
-+
-+#define EMMC_PHYSTAT_REG	0xbc
-+#define CALDONE_MASK		BIT(9)
-+#define DLLRDY_MASK		BIT(8)
-+#define IS_CALDONE(x)	((x) & CALDONE_MASK)
-+#define IS_DLLRDY(x)	((x) & DLLRDY_MASK)
-+
-+struct intel_emmc_phy {
-+	struct regmap *syscfg;
-+	struct clk *emmcclk;
-+};
-+
-+static int intel_emmc_phy_power(struct phy *phy, bool on_off)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+	unsigned int caldone;
-+	unsigned int dllrdy;
-+	unsigned int freqsel = 0;
-+	unsigned long rate;
-+	int ret, quot;
-+
-+	/*
-+	 * Keep phyctrl_pdb and phyctrl_endll low to allow
-+	 * initialization of CALIO state M/C DFFs
-+	 */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK,
-+				 PDB_SHIFT(0));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Already finish power_off above */
-+	if (!on_off)
-+		return 0;
-+
-+	rate = clk_get_rate(priv->emmcclk);
-+	quot = DIV_ROUND_CLOSEST(rate, 50000000);
-+	if (quot > FRQSEL_150M)
-+		dev_warn(&phy->dev, "Unsupported rate: %lu\n", rate);
-+	freqsel = clamp_t(int, quot, FRQSEL_25M, FRQSEL_150M);
-+
-+	/*
-+	 * According to the user manual, calpad calibration
-+	 * cycle takes more than 2us without the minimal recommended
-+	 * value, so we may need a little margin here
-+	 */
-+	udelay(5);
-+	regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, PDB_MASK, 1);
-+
-+	/*
-+	 * According to the user manual, it asks driver to wait 5us for
-+	 * calpad busy trimming. However it is documented that this value is
-+	 * PVT(A.K.A process,voltage and temperature) relevant, so some
-+	 * failure cases are found which indicates we should be more tolerant
-+	 * to calpad busy trimming.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, EMMC_PHYSTAT_REG,
-+				       caldone, IS_CALDONE(caldone),
-+				       0, 50);
-+	if (ret) {
-+		dev_err(&phy->dev, "caldone failed, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Set the frequency of the DLL operation */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL2_REG, FRQSEL_MASK,
-+				 FRQSEL_SHIFT(freqsel));
-+	if (ret) {
-+		dev_err(&phy->dev, "set the frequency of dll failed:%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Turn on the DLL */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL1_REG, ENDLL_MASK,
-+				 ENDLL_SHIFT(1));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn on the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * After enabling analog DLL circuits docs say that we need 10.2 us if
-+	 * our source clock is at 50 MHz and that lock time scales linearly
-+	 * with clock speed.  If we are powering on the PHY and the card clock
-+	 * is super slow (like 100 kHZ) this could take as long as 5.1 ms as
-+	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
-+	 * Hopefully we won't be running at 100 kHz, but we should still make
-+	 * sure we wait long enough.
-+	 *
-+	 * NOTE: There appear to be corner cases where the DLL seems to take
-+	 * extra long to lock for reasons that aren't understood.  In some
-+	 * extreme cases we've seen it take up to over 10ms (!).  We'll be
-+	 * generous and give it 50ms.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg,
-+				       EMMC_PHYSTAT_REG,
-+				       dllrdy, IS_DLLRDY(dllrdy),
-+				       0, 50 * USEC_PER_MSEC);
-+	if (ret) {
-+		dev_err(&phy->dev, "dllrdy failed. ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_init(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	/*
-+	 * We purposely get the clock here and not in probe to avoid the
-+	 * circular dependency problem.  We expect:
-+	 * - PHY driver to probe
-+	 * - SDHCI driver to start probe
-+	 * - SDHCI driver to register it's clock
-+	 * - SDHCI driver to get the PHY
-+	 * - SDHCI driver to init the PHY
-+	 *
-+	 * The clock is optional, so upon any error just return it like
-+	 * any other error to user.
-+	 *
-+	 */
-+	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
-+	if (IS_ERR(priv->emmcclk)) {
-+		dev_err(&phy->dev, "ERROR: getting emmcclk\n");
-+		return PTR_ERR(priv->emmcclk);
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_exit(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	clk_put(priv->emmcclk);
-+
-+	return 0;
-+}
-+
-+static int intel_emmc_phy_power_on(struct phy *phy)
-+{
-+	struct intel_emmc_phy *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	/* Drive impedance: 50 Ohm */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, DR_TY_MASK,
-+				 DR_TY_SHIFT(6));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR set drive-impednce-50ohm: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay: disable */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG, OTAPDLYENA, 0);
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR Set output tap delay : %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay */
-+	ret = regmap_update_bits(priv->syscfg, EMMC_PHYCTRL0_REG,
-+				 OTAPDLYSEL_MASK, OTAPDLYSEL_SHIFT(4));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap dly select: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Power up eMMC phy analog blocks */
-+	return intel_emmc_phy_power(phy, true);
-+}
-+
-+static int intel_emmc_phy_power_off(struct phy *phy)
-+{
-+	/* Power down eMMC phy analog blocks */
-+	return intel_emmc_phy_power(phy, false);
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= intel_emmc_phy_init,
-+	.exit		= intel_emmc_phy_exit,
-+	.power_on	= intel_emmc_phy_power_on,
-+	.power_off	= intel_emmc_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int intel_emmc_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct intel_emmc_phy *priv;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+	struct device_node *np = dev->of_node;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	/* Get eMMC phy (accessed via chiptop) regmap */
-+	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "intel,syscon");
-+	if (IS_ERR(priv->syscfg)) {
-+		dev_err(dev, "failed to find syscon\n");
-+		return PTR_ERR(priv->syscfg);
-+	}
-+
-+	generic_phy = devm_phy_create(dev, np, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id intel_emmc_phy_dt_ids[] = {
-+	{ .compatible = "intel,lgm-emmc-phy" },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, intel_emmc_phy_dt_ids);
-+
-+static struct platform_driver intel_emmc_driver = {
-+	.probe		= intel_emmc_phy_probe,
-+	.driver		= {
-+		.name	= "intel-emmc-phy",
-+		.of_match_table = intel_emmc_phy_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(intel_emmc_driver);
-+
-+MODULE_AUTHOR("Peter Harliman Liem <peter.harliman.liem@intel.com>");
-+MODULE_DESCRIPTION("Intel eMMC PHY driver");
+diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
+index 7cf34beb50df..c272c8014772 100644
+--- a/drivers/usb/gadget/udc/core.c
++++ b/drivers/usb/gadget/udc/core.c
+@@ -1142,7 +1142,7 @@ static int check_pending_gadget_drivers(struct usb_udc *udc)
+ 		if (!driver->udc_name || strcmp(driver->udc_name,
+ 						dev_name(&udc->dev)) == 0) {
+ 			ret = udc_bind_to_driver(udc, driver);
+-			if (ret != -EPROBE_DEFER)
++			if (!ret)
+ 				list_del(&driver->pending);
+ 			break;
+ 		}
 -- 
-2.11.0
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
