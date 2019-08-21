@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17438C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B21C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09BF233A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F1C23401
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566389736;
-	bh=z8GpUnHxe4DPTYTlWCksnNVEN8JhV88zCoOJnScCekU=;
+	s=default; t=1566389738;
+	bh=O1TTt4Gv+D3orSPgd/eOC5epZzq5iJlWoztGIlXI8xE=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=UAvFVTxGT23f748vQ4N4Nr3xEnCH/CcPYVddyXDDP/u0TcaGpqdL8PAedsOSe8fsI
-	 W6XPkt5FSNPiLtOvPAeIT9B0vuQE085fIPoFUSdisKgT0+KajE+4uR9cRK3Mmmtcxm
-	 UfMArzV76uaE0gRyT4QfowiThj38s1k6PN9UXMjQ=
+	b=auESSdJyh2sbnhGEt3MVJZQi+J/7IqNtmy9owJEtX9zAgkM8Koz4hgn330O7XtbKC
+	 XCB2ELrPda9eOEEyI7Gsi8zrX5Ol8n3KC2Q3z08dfrMquvtugx6U729mmO/JFGfMUy
+	 TX5qxMbUtfd4Agm7FqrHLmDwipkvMHsf0YgtH7vM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbfHUMPf (ORCPT
+        id S1728115AbfHUMPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 08:15:35 -0400
-Received: from mail-ed1-f98.google.com ([209.85.208.98]:42062 "EHLO
-        mail-ed1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfHUMPf (ORCPT
+        Wed, 21 Aug 2019 08:15:37 -0400
+Received: from mail-wr1-f98.google.com ([209.85.221.98]:45963 "EHLO
+        mail-wr1-f98.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbfHUMPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 08:15:35 -0400
-Received: by mail-ed1-f98.google.com with SMTP id m44so2664460edd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 05:15:33 -0700 (PDT)
+        Wed, 21 Aug 2019 08:15:36 -0400
+Received: by mail-wr1-f98.google.com with SMTP id q12so1788399wrj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 05:15:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:message-id:date;
-        bh=k289+UQdb0wqQEwx6q0SK2SU4kG2QQx1UHCebGGvX40=;
-        b=OctC9oWu8wLf6L64z+FymYTUt83mNsG0SMIANL1+DctlOV7efeDBDG0s4VAj6cKGXO
-         BMW3aEbr2MFO0tRfm4Jutk4uEZtxAae3Rm0ZrYSKVQrJmcCdDidfPHP2wzsUO9Mn8mm3
-         T8KxslM8/fY7VBLZNlka1sINfWmG+gOKSWU5nPGU7axPXKjNDTkrrhgQVRMZdoXFg+ku
-         hyqZDNTP0mm1leyzxku8jtXZT1yU/cdAGhXi0GTYVF3NG+kvpDzl0ajbLKRLx6HX6nU6
-         XKkCdo/m3PZFqnyyWhDr6NdTWVPl3qNzNOvm/xll+lg/ouLoUTQ+X/2MqUEl2AhCoI17
-         qT4Q==
-X-Gm-Message-State: APjAAAVA2yN16ZszGpiK3jYvc+xbzyC8Uz8R/5FbrcqHeczHdHYYai4T
-        LmsUi4grOfFNrueYcsSTSr3Aq7K4oYIbPiK34Rfb24wXUzERzbwk08CgnLCWFHe5jA==
-X-Google-Smtp-Source: APXvYqxemBvnGhrYqvB0zgpm980Eih485gmWiHKCun5oIIJmdz0Fc3/+4ucl+1xOP2OLUQqKIf6a9df73Lv3
-X-Received: by 2002:a17:906:f2d0:: with SMTP id gz16mr29860515ejb.21.1566389733011;
+        bh=nP0rewb3IBXjR8ah44Y3B+/Ww8/H0gkDfZYTICHG0rc=;
+        b=Ckc23aRgyvKEVQTIyUmujC43slUrN1KfuOU+M8xkmalcbSe/dXvjKEQEsxQmTpOqpN
+         YsZ/Z5uo7X6NsE/wODQ0cxIUcA/W7tIHmT7caElaSZHRlOju2WA/jBY5me4UlPMsP4yP
+         PPWI/mYB9XYkjT/6J61refZmuhdvLmyxZ8adRItzW09313wjTKmK7cgQ5jwFNnV8iNvi
+         Tgf3DN3yysssBJpexEmc88Coe7CtP71q9oNggUUBJJ/Qf6TJSQ5MMJtFzgfaePxuCb2L
+         1j+WTZcG991Fzs6RvA614why5nChMdDtfNZuSkw5RRg+yYnwrjFrUZKDJ/Qhi9dJWn2x
+         REpQ==
+X-Gm-Message-State: APjAAAWsul/gZifav7LzJdaFAFkHTnycgJkhHCIGvrRuJyXWffnntWo1
+        Zhy/XEQxVZnZr8ffkIdrlbxtXkrLh7tDyfYUTS7WymD70m3O/4V2MC7PjwnzHi8cvQ==
+X-Google-Smtp-Source: APXvYqyQSDa3qh0AJjqQXicye2RW0x9sVjyglot1pi4YsrC8rjE3vs+Ee79jSQBkTwqgRv3Hei+tz7XSNock
+X-Received: by 2002:a5d:408c:: with SMTP id o12mr38199196wrp.176.1566389733984;
         Wed, 21 Aug 2019 05:15:33 -0700 (PDT)
 Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id m12sm340610edq.41.2019.08.21.05.15.32
+        by smtp-relay.gmail.com with ESMTPS id q3sm406651wrs.61.2019.08.21.05.15.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 05:15:32 -0700 (PDT)
+        Wed, 21 Aug 2019 05:15:33 -0700 (PDT)
 X-Relaying-Domain: sirena.org.uk
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i0PWW-000774-IS; Wed, 21 Aug 2019 12:15:32 +0000
+        id 1i0PWX-00077F-Lt; Wed, 21 Aug 2019 12:15:33 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 0757D2742FCD; Wed, 21 Aug 2019 13:15:31 +0100 (BST)
+        id E3E7D2742BAE; Wed, 21 Aug 2019 13:15:32 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        Chen-Yu Tsai <wens@csie.org>, codekipper@gmail.com,
-        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, festevam@gmail.com, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Applied "ASoC: sun4i-i2s: Add support for TDM slots" to the asoc tree
-In-Reply-To: <26392af30b3e7b31ee48d5b867d45be8675db046.1566242458.git-series.maxime.ripard@bootlin.com>
+        nicoleotsuka@gmail.com, perex@perex.cz, robh+dt@kernel.org,
+        shengjiu.wang@nxp.com, viorel.suman@nxp.com, Xiubo.Lee@gmail.com
+Subject: Applied "ASoC: fsl_sai: Add support for imx8qm" to the asoc tree
+In-Reply-To: <20190814082911.665-2-daniel.baluta@nxp.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190821121532.0757D2742FCD@ypsilon.sirena.org.uk>
-Date:   Wed, 21 Aug 2019 13:15:31 +0100 (BST)
+Message-Id: <20190821121532.E3E7D2742BAE@ypsilon.sirena.org.uk>
+Date:   Wed, 21 Aug 2019 13:15:32 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,7 +76,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: sun4i-i2s: Add support for TDM slots
+   ASoC: fsl_sai: Add support for imx8qm
 
 has been applied to the asoc tree at
 
@@ -101,135 +101,48 @@ to this mail.
 Thanks,
 Mark
 
-From 137befe19f310400a8b20fd8a4ce8c4141aafde0 Mon Sep 17 00:00:00 2001
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Date: Mon, 19 Aug 2019 21:25:27 +0200
-Subject: [PATCH] ASoC: sun4i-i2s: Add support for TDM slots
+From 6eeb60be5ebb73b2e5911e26fb1aed02940b7d09 Mon Sep 17 00:00:00 2001
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Date: Wed, 14 Aug 2019 11:29:10 +0300
+Subject: [PATCH] ASoC: fsl_sai: Add support for imx8qm
 
-The i2s controller supports TDM, for up to 8 slots. Let's support the TDM
-API.
+SAI module on imx8qm features a register map similar with imx6 series
+(it doesn't have VERID and PARAM registers at the beginning
+of address spece).
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://lore.kernel.org/r/26392af30b3e7b31ee48d5b867d45be8675db046.1566242458.git-series.maxime.ripard@bootlin.com
+Also, it has one FIFO which can help up to 64 * 32 bit samples.
+
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Link: https://lore.kernel.org/r/20190814082911.665-2-daniel.baluta@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sunxi/sun4i-i2s.c | 40 +++++++++++++++++++++++++++++++------
- 1 file changed, 34 insertions(+), 6 deletions(-)
+ sound/soc/fsl/fsl_sai.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index 9e691baee1e8..8326b8cfa569 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -168,6 +168,8 @@ struct sun4i_i2s {
- 	struct reset_control *rst;
- 
- 	unsigned int	mclk_freq;
-+	unsigned int	slots;
-+	unsigned int	slot_width;
- 
- 	struct snd_dmaengine_dai_dma_data	capture_dma_data;
- 	struct snd_dmaengine_dai_dma_data	playback_dma_data;
-@@ -287,7 +289,7 @@ static bool sun4i_i2s_oversample_is_valid(unsigned int oversample)
- 
- static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
- 				  unsigned int rate,
--				  unsigned int channels,
-+				  unsigned int slots,
- 				  unsigned int word_size)
- {
- 	struct sun4i_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-@@ -335,7 +337,7 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
- 
- 	bclk_parent_rate = i2s->variant->get_bclk_parent_rate(i2s);
- 	bclk_div = sun4i_i2s_get_bclk_div(i2s, bclk_parent_rate,
--					  rate, channels, word_size);
-+					  rate, slots, word_size);
- 	if (bclk_div < 0) {
- 		dev_err(dai->dev, "Unsupported BCLK divider: %d\n", bclk_div);
- 		return -EINVAL;
-@@ -419,6 +421,10 @@ static int sun8i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
- 				  const struct snd_pcm_hw_params *params)
- {
- 	unsigned int channels = params_channels(params);
-+	unsigned int slots = channels;
-+
-+	if (i2s->slots)
-+		slots = i2s->slots;
- 
- 	/* Map the channels for playback and capture */
- 	regmap_write(i2s->regmap, SUN8I_I2S_TX_CHAN_MAP_REG, 0x76543210);
-@@ -428,7 +434,6 @@ static int sun8i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
- 	regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
- 			   SUN4I_I2S_CHAN_SEL_MASK,
- 			   SUN4I_I2S_CHAN_SEL(channels));
--
- 	regmap_update_bits(i2s->regmap, SUN8I_I2S_RX_CHAN_SEL_REG,
- 			   SUN4I_I2S_CHAN_SEL_MASK,
- 			   SUN4I_I2S_CHAN_SEL(channels));
-@@ -452,10 +457,18 @@ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
- 			       struct snd_soc_dai *dai)
- {
- 	struct sun4i_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-+	unsigned int word_size = params_width(params);
- 	unsigned int channels = params_channels(params);
-+	unsigned int slots = channels;
- 	int ret, sr, wss;
- 	u32 width;
- 
-+	if (i2s->slots)
-+		slots = i2s->slots;
-+
-+	if (i2s->slot_width)
-+		word_size = i2s->slot_width;
-+
- 	ret = i2s->variant->set_chan_cfg(i2s, params);
- 	if (ret < 0) {
- 		dev_err(dai->dev, "Invalid channel configuration\n");
-@@ -477,15 +490,14 @@ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
- 	if (sr < 0)
- 		return -EINVAL;
- 
--	wss = i2s->variant->get_wss(i2s, params_width(params));
-+	wss = i2s->variant->get_wss(i2s, word_size);
- 	if (wss < 0)
- 		return -EINVAL;
- 
- 	regmap_field_write(i2s->field_fmt_wss, wss);
- 	regmap_field_write(i2s->field_fmt_sr, sr);
- 
--	return sun4i_i2s_set_clk_rate(dai, params_rate(params),
--				      channels, params_width(params));
-+	return sun4i_i2s_set_clk_rate(dai, params_rate(params), slots, word_size);
- }
- 
- static int sun4i_i2s_set_soc_fmt(const struct sun4i_i2s *i2s,
-@@ -785,10 +797,26 @@ static int sun4i_i2s_set_sysclk(struct snd_soc_dai *dai, int clk_id,
- 	return 0;
- }
- 
-+static int sun4i_i2s_set_tdm_slot(struct snd_soc_dai *dai,
-+				  unsigned int tx_mask, unsigned int rx_mask,
-+				  int slots, int slot_width)
-+{
-+	struct sun4i_i2s *i2s = snd_soc_dai_get_drvdata(dai);
-+
-+	if (slots > 8)
-+		return -EINVAL;
-+
-+	i2s->slots = slots;
-+	i2s->slot_width = slot_width;
-+
-+	return 0;
-+}
-+
- static const struct snd_soc_dai_ops sun4i_i2s_dai_ops = {
- 	.hw_params	= sun4i_i2s_hw_params,
- 	.set_fmt	= sun4i_i2s_set_fmt,
- 	.set_sysclk	= sun4i_i2s_set_sysclk,
-+	.set_tdm_slot	= sun4i_i2s_set_tdm_slot,
- 	.trigger	= sun4i_i2s_trigger,
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 4a346fcb5630..728307acab90 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -1031,12 +1031,19 @@ static const struct fsl_sai_soc_data fsl_sai_imx8mq_data = {
+ 	.reg_offset = 8,
  };
  
++static const struct fsl_sai_soc_data fsl_sai_imx8qm_data = {
++	.use_imx_pcm = true,
++	.fifo_depth = 64,
++	.reg_offset = 0,
++};
++
+ static const struct of_device_id fsl_sai_ids[] = {
+ 	{ .compatible = "fsl,vf610-sai", .data = &fsl_sai_vf610_data },
+ 	{ .compatible = "fsl,imx6sx-sai", .data = &fsl_sai_imx6sx_data },
+ 	{ .compatible = "fsl,imx6ul-sai", .data = &fsl_sai_imx6sx_data },
+ 	{ .compatible = "fsl,imx7ulp-sai", .data = &fsl_sai_imx7ulp_data },
+ 	{ .compatible = "fsl,imx8mq-sai", .data = &fsl_sai_imx8mq_data },
++	{ .compatible = "fsl,imx8qm-sai", .data = &fsl_sai_imx8qm_data },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, fsl_sai_ids);
 -- 
 2.20.1
 
