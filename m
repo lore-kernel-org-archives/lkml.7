@@ -2,145 +2,81 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38EADC41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D482C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1830B22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19AB122DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:48:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="azVQoxxs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfHUDsB (ORCPT
+        id S1727201AbfHUDsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 23:48:01 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34667 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726601AbfHUDsA (ORCPT
+        Tue, 20 Aug 2019 23:48:51 -0400
+Received: from mail-oi1-f180.google.com ([209.85.167.180]:46833 "EHLO
+        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726601AbfHUDsv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 23:48:00 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so517244pgc.1;
-        Tue, 20 Aug 2019 20:48:00 -0700 (PDT)
+        Tue, 20 Aug 2019 23:48:51 -0400
+Received: by mail-oi1-f180.google.com with SMTP id t24so541467oij.13
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 20:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DNeO2I5P7X1Lbvd2VIQqSVnNMPmHOfkiBxbwoy7aOis=;
+        b=azVQoxxsK3C5RN9SSDKAjKCwrJ0JFXMJwQyItUs9Zy8d7o/ESF6YdgOmKmQLYJQfoM
+         RKK84QFCZEtiDvhegDfz+K5VcCdHPfSJbbsrn/uYTzBivfivh2rnieZqD4+C6NFv8WuK
+         hqEkJJmFhXlZJlacoTpIc1YMg7/eLH6ogRIy5nFBGMaYRTn9qKE3AlRE65skc7cy7R0Y
+         R15phWfS3qXDepRKz7kscbeL3M4soYteIn3Ozk6sHIgMAUnPK010dtqpJgk0JDNtPaeS
+         ahmjzFe/Ra1AERPQnu+ocANaEttZ1yfR+9uSmMnHrzq+8pMTxSM+qD8pUTdc4v2B+mvJ
+         1Fxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SrFWC17xwJEJa4p6/Sn5RGFtwj8GJ2HsGVtuMd6BeF0=;
-        b=H6nCqaybrrOeV9XvO7rt6Q3es1Zko3lz2dO9Ruy9O7q2eDWqZEQ9y6fLuUzqca/i9g
-         xjDTfyN4Sm4uhsz3UADSDm4eziMTV+WCv1gwp0+jSK6B5txqOO1UIsj3twmuWbqE+Y1S
-         L9LvJevNIjvPyrgwySEtz32/NaFx6YNtzXa5s41IMngBawzItd8LwuMa9+QlnGHEG4p4
-         NQoEcUZubz3+xrlbO71oIV37aO5yAXqHSpz6p9MvI+/2SzBdSn8foR0Frs34A0+bXxKH
-         PRiMxxKVJOCTFuOppQdsTBaU6aGKpFh1JODVeEWIsa8tqLVkvkC3MmNZAjMOcD9SNnaW
-         8yZg==
-X-Gm-Message-State: APjAAAVjQqFAD9IL1MG0WBgwfNJF1Rze0Uer2b52wD3C1HRD5ZP8lwQm
-        FhPt2v2RLYxegm9xmKQNriTf0xIJL8t5sg==
-X-Google-Smtp-Source: APXvYqxnVHzSylWdbGFrfTRQIBfuFgjU/wa/Q5L6gf8yTQNp7Kq6vOaWdHQINUtasyA8c/pHoVwnAw==
-X-Received: by 2002:a17:90a:33ed:: with SMTP id n100mr3307855pjb.19.1566359279798;
-        Tue, 20 Aug 2019 20:47:59 -0700 (PDT)
-Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id j12sm20315167pff.4.2019.08.20.20.47.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 20:47:59 -0700 (PDT)
-From:   Nadav Amit <namit@vmware.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Francois Rigault <rigault.francois@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Vishnu DASA <vdasa@vmware.com>, stable@vger.kernel.org
-Subject: [PATCH] VMCI: Release resource if the work is already queued
-Date:   Tue, 20 Aug 2019 13:26:38 -0700
-Message-Id: <20190820202638.49003-1-namit@vmware.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DNeO2I5P7X1Lbvd2VIQqSVnNMPmHOfkiBxbwoy7aOis=;
+        b=VbGZDqHn1n95/HwrqVYGUGu4IRJLUooJHFasd3IaAJRFcxnYAp4b5ldPcgvs0TDUlG
+         OBoWiMqmY5SpJ7KqlTCytlaO5W2Cg2puykU310dXXEQLwjhHhrvD2Ir3p0uTALvFsyAI
+         hyAnpO15nz8FTLHNsGVp1yTB2vpeariotAeZhb9BKV3Jg2sbFZWwqTNOWuAXNlvV4/v5
+         MU0dEPuUTeQMI7puuxnqu8wlGEnVqeWu1SfSM0pzHzEjtZL6z00TL/bkp2wv3cDo292o
+         QKVHbFKzLHuVNjZEBclXItWCbAD98brOGU9iCbrVKzl2q3UeqnaLrsjYH96RQaZF3x9+
+         xQ4g==
+X-Gm-Message-State: APjAAAWKTNsmA+76ZLSj+9Pw0ilqcljg1lgeqQyx1EBqNtg30AmuvgXM
+        0NZVqCetSjdtg0S17k39i+Y+aZNPB+5UNPEHGzMgSg==
+X-Google-Smtp-Source: APXvYqzAxxh0GTyz2p6TU6M3TxnFZxOT+XsgGtpQK1Nfz7TEWwmtVmKCu8mBDHODmhXoIT1MWpOrBWDCDod/7kCyI+k=
+X-Received: by 2002:aca:d558:: with SMTP id m85mr2482178oig.0.1566359330468;
+ Tue, 20 Aug 2019 20:48:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <72e41dc2-b4cf-a5dd-a365-d26ba1257ef9@oracle.com>
+In-Reply-To: <72e41dc2-b4cf-a5dd-a365-d26ba1257ef9@oracle.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 20 Aug 2019 20:48:39 -0700
+Message-ID: <CAPcyv4iPuTpk9bifyX5yQxO8gT0fRhYXPrwk-obazWA=Dou3iQ@mail.gmail.com>
+Subject: Re: kernel panic in 5.3-rc5, nfsd_reply_cache_stats_show+0x11
+To:     Jane Chu <jane.chu@oracle.com>
+Cc:     CHUCK_LEVER <chuck.lever@oracle.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-nfs@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Francois reported that VMware balloon gets stuck after a balloon reset,
-when the VMCI doorbell is removed. A similar error can occur when the
-balloon driver is removed with the following splat:
+On Tue, Aug 20, 2019 at 6:39 PM <jane.chu@oracle.com> wrote:
+>
+> Hi,
+>
+> Apology if there is a better channel reporting the issue, if so, please
+> let me know.
+>
+> I just saw below regression in 5.3-rc5 kernel, but not in 5.2-rc7 or
+> earlier kernels.
 
-[ 1088.622000] INFO: task modprobe:3565 blocked for more than 120 seconds.
-[ 1088.622035]       Tainted: G        W         5.2.0 #4
-[ 1088.622087] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1088.622205] modprobe        D    0  3565   1450 0x00000000
-[ 1088.622210] Call Trace:
-[ 1088.622246]  __schedule+0x2a8/0x690
-[ 1088.622248]  schedule+0x2d/0x90
-[ 1088.622250]  schedule_timeout+0x1d3/0x2f0
-[ 1088.622252]  wait_for_completion+0xba/0x140
-[ 1088.622320]  ? wake_up_q+0x80/0x80
-[ 1088.622370]  vmci_resource_remove+0xb9/0xc0 [vmw_vmci]
-[ 1088.622373]  vmci_doorbell_destroy+0x9e/0xd0 [vmw_vmci]
-[ 1088.622379]  vmballoon_vmci_cleanup+0x6e/0xf0 [vmw_balloon]
-[ 1088.622381]  vmballoon_exit+0x18/0xcc8 [vmw_balloon]
-[ 1088.622394]  __x64_sys_delete_module+0x146/0x280
-[ 1088.622408]  do_syscall_64+0x5a/0x130
-[ 1088.622410]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 1088.622415] RIP: 0033:0x7f54f62791b7
-[ 1088.622421] Code: Bad RIP value.
-[ 1088.622421] RSP: 002b:00007fff2a949008 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-[ 1088.622426] RAX: ffffffffffffffda RBX: 000055dff8b55d00 RCX: 00007f54f62791b7
-[ 1088.622426] RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055dff8b55d68
-[ 1088.622427] RBP: 000055dff8b55d00 R08: 00007fff2a947fb1 R09: 0000000000000000
-[ 1088.622427] R10: 00007f54f62f5cc0 R11: 0000000000000206 R12: 000055dff8b55d68
-[ 1088.622428] R13: 0000000000000001 R14: 000055dff8b55d68 R15: 00007fff2a94a3f0
-
-The cause for the bug is that when the "delayed" doorbell is invoked, it
-takes a reference on the doorbell entry and schedules work that is
-supposed to run the appropriate code and drop the doorbell entry
-reference. The code ignores the fact that if the work is already queued,
-it will not be scheduled to run one more time. As a result one of the
-references would not be dropped. When the code waits for the reference
-to get to zero, during balloon reset or module removal, it gets stuck.
-
-Fix it. Drop the reference if schedule_work() indicates that the work is
-already queued.
-
-Note that this bug got more apparent (or apparent at all) due to
-commit ce664331b248 ("vmw_balloon: VMCI_DOORBELL_SET does not check status").
-
-Fixes: 83e2ec765be03 ("VMCI: doorbell implementation.")
-Reported-by: Francois Rigault <rigault.francois@gmail.com>
-Cc: Jorgen Hansen <jhansen@vmware.com>
-Cc: Adit Ranadive <aditr@vmware.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Vishnu DASA <vdasa@vmware.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Nadav Amit <namit@vmware.com>
----
- drivers/misc/vmw_vmci/vmci_doorbell.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/misc/vmw_vmci/vmci_doorbell.c b/drivers/misc/vmw_vmci/vmci_doorbell.c
-index bad89b6e0802..345addd9306d 100644
---- a/drivers/misc/vmw_vmci/vmci_doorbell.c
-+++ b/drivers/misc/vmw_vmci/vmci_doorbell.c
-@@ -310,7 +310,8 @@ int vmci_dbell_host_context_notify(u32 src_cid, struct vmci_handle handle)
- 
- 	entry = container_of(resource, struct dbell_entry, resource);
- 	if (entry->run_delayed) {
--		schedule_work(&entry->work);
-+		if (!schedule_work(&entry->work))
-+			vmci_resource_put(resource);
- 	} else {
- 		entry->notify_cb(entry->client_data);
- 		vmci_resource_put(resource);
-@@ -361,7 +362,8 @@ static void dbell_fire_entries(u32 notify_idx)
- 		    atomic_read(&dbell->active) == 1) {
- 			if (dbell->run_delayed) {
- 				vmci_resource_get(&dbell->resource);
--				schedule_work(&dbell->work);
-+				if (!schedule_work(&dbell->work))
-+					vmci_resource_put(&dbell->resource);
- 			} else {
- 				dbell->notify_cb(dbell->client_data);
- 			}
--- 
-2.19.1
-
+Is the error stable enough to bisect?
