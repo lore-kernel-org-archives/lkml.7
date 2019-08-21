@@ -3,33 +3,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01753C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28B8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5EFD2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:43:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A7A2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727408AbfHUFnH (ORCPT
+        id S1727430AbfHUFqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 01:43:07 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53723 "EHLO
+        Wed, 21 Aug 2019 01:46:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53735 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbfHUFnG (ORCPT
+        with ESMTP id S1726693AbfHUFqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 01:43:06 -0400
+        Wed, 21 Aug 2019 01:46:37 -0400
 Received: from localhost ([127.0.0.1] helo=vostro.local)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <john.ogness@linutronix.de>)
-        id 1i0JOe-0003aJ-D2; Wed, 21 Aug 2019 07:43:00 +0200
+        id 1i0JS2-0003gk-4V; Wed, 21 Aug 2019 07:46:30 +0200
 From:   John Ogness <john.ogness@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org,
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
         Andrea Parri <andrea.parri@amarulasolutions.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Brendan Higgins <brendanhiggins@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -40,8 +39,10 @@ Subject: Re: comments style: Re: [RFC PATCH v4 1/9] printk-rb: add a new printk 
 References: <20190807222634.1723-1-john.ogness@linutronix.de>
         <20190807222634.1723-2-john.ogness@linutronix.de>
         <20190820085554.deuejmxn4kbqnq7n@pathway.suse.cz>
-Date:   Wed, 21 Aug 2019 07:42:57 +0200
-Message-ID: <87h86bf50e.fsf@linutronix.de>
+        <20190820092731.GA14137@jagdpanzerIV>
+Date:   Wed, 21 Aug 2019 07:46:28 +0200
+Message-ID: <87a7c3f4uj.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
@@ -49,155 +50,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-20, Petr Mladek <pmladek@suse.com> wrote:
->> --- /dev/null
->> +++ b/kernel/printk/dataring.c
->> +/**
->> + * _datablock_valid() - Check if given positions yield a valid data block.
->> + *
->> + * @dr:         The associated data ringbuffer.
->> + *
->> + * @head_lpos:  The newest data logical position.
->> + *
->> + * @tail_lpos:  The oldest data logical position.
->> + *
->> + * @begin_lpos: The beginning logical position of the data block to check.
->> + *
->> + * @next_lpos:  The logical position of the next adjacent data block.
->> + *              This value is used to identify the end of the data block.
->> + *
+On 2019-08-20, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+> [..]
+>> > +	 *
+>> > +	 * Memory barrier involvement:
+>> > +	 *
+>> > +	 * If dB reads from gA, then dC reads from fG.
+>> > +	 * If dB reads from gA, then dD reads from fH.
+>> > +	 * If dB reads from gA, then dE reads from fE.
+>> > +	 *
+>> > +	 * Note that if dB reads from gA, then dC cannot read from fC.
+>> > +	 * Note that if dB reads from gA, then dD cannot read from fD.
+>> > +	 *
+>> > +	 * Relies on:
+>> > +	 *
+>> > +	 * RELEASE from fG to gA
+>> > +	 *    matching
+>> > +	 * ADDRESS DEP. from dB to dC
+>> > +	 *
+>> > +	 * RELEASE from fH to gA
+>> > +	 *    matching
+>> > +	 * ADDRESS DEP. from dB to dD
+>> > +	 *
+>> > +	 * RELEASE from fE to gA
+>> > +	 *    matching
+>> > +	 * ACQUIRE from dB to dE
+>> > +	 */
+>> 
+>> But I am not sure how much this is useful. It would take ages to decrypt
+>> all these shortcuts (signs) and translate them into something
+>> human readable. Also it might get outdated easily.
+>> 
+>> That said, I haven't found yet if there was a system in all
+>> the shortcuts. I mean if they can be descrypted easily
+>> out of head. Also I am not familiar with the notation
+>> of the dependencies.
 >
-> Please remove the empty lines between arguments description. They make
-> the comments too scattered.
-
-Your feedback is contradicting what PeterZ requested[0]. Particularly
-when multiple lines are involved with a description, I find the spacing
-helpful. I've grown to like the spacing, but I won't fight for it.
-
->> +	/*
->> +	 * dB:
->> +	 *
->> +	 * When a writer has completed accessing its data block, it sets the
->> +	 * @id thus making the data block available for invalidation. This
->> +	 * _acquire() ensures that this task sees all data ringbuffer and
->> +	 * descriptor values seen by the writer as @id was set. This is
->> +	 * necessary to ensure that the data block can be correctly identified
->> +	 * as valid (i.e. @begin_lpos, @next_lpos, @head_lpos are at least the
->> +	 * values seen by that writer, which yielded a valid data block at
->> +	 * that time). It is not enough to rely on the address dependency of
->> +	 * @desc to @id because @head_lpos is not depedent on @id. This pairs
->> +	 * with the _release() in dataring_datablock_setid().
+> Does not appear to be systematic to me, but maybe I'm missing something
+> obvious. For chains like
 >
-> This human readable description is really useful.
+> 		jA->cD->hA to jB
 >
->> +	 *
->> +	 * Memory barrier involvement:
->> +	 *
->> +	 * If dB reads from gA, then dC reads from fG.
->> +	 * If dB reads from gA, then dD reads from fH.
->> +	 * If dB reads from gA, then dE reads from fE.
->> +	 *
->> +	 * Note that if dB reads from gA, then dC cannot read from fC.
->> +	 * Note that if dB reads from gA, then dD cannot read from fD.
->> +	 *
->> +	 * Relies on:
->> +	 *
->> +	 * RELEASE from fG to gA
->> +	 *    matching
->> +	 * ADDRESS DEP. from dB to dC
->> +	 *
->> +	 * RELEASE from fH to gA
->> +	 *    matching
->> +	 * ADDRESS DEP. from dB to dD
->> +	 *
->> +	 * RELEASE from fE to gA
->> +	 *    matching
->> +	 * ACQUIRE from dB to dE
->> +	 */
+> I haven't found anything better than just git grep jA kernel/printk/
+> so far.
+
+I really struggled to find a way to label the code in order to document
+the memory barriers. By grepping on "jA:" you will land at the exact
+location.
+
+> But once you'll grep for label cD, for instance, you'd see
+> that it's not defined. It's mentioned but not defined
 >
-> But I am not sure how much this is useful.
+> 	kernel/printk/ringbuffer.c:      * jA->cD->hA.
+> 	kernel/printk/ringbuffer.c:      * RELEASE from jA->cD->hA to jB
 
-When I was first implementing RFCv3, the "human-readable" text version
-was very useful for me. However, now it is the formal descriptions that
-I find more useful. They provide the proof and a far more detailed
-description.
+I tried to be very careful about the labeling, but you just found an
+error. cD is supposed to be cC. (I probably refactored the labels and
+missed this one.) Particularly with referencing labels from other files
+I was not happy (which is the case with cC). This is one area that I
+think it would be really helpful if the kernel guidelines had some
+format.
 
-> It would take ages to decrypt all these shortcuts (signs) and
-> translate them into something human readable. Also it might get
-> outdated easily.
+The labels are necessary for the technical documentation of the
+barriers. And, after spending much time in this, I find them very
+useful. But I agree that there needs to be a better way to assign label
+names.
+
+FWIW, I chose a lowercase letter for each function and an uppercase
+letter for each label within that function. The camel case (followed by
+the colon) created a pair that was unique for grepping.
+
+Petr, in case you missed it, this comment language came from my
+discussion[0] with AndreaP.
+
+> I was thinking about renaming labels. E.g.
 >
-> That said, I haven't found yet if there was a system in all
-> the shortcuts. I mean if they can be descrypted easily
-> out of head. Also I am not familiar with the notation
-> of the dependencies.
-
-I'll respond to this part in Sergey's followup post.
-
-> If this is really needed then I am really scared of some barriers
-> that guard too many things. This one is a good example.
+> 	dataring_desc_init()
+> 	{
+> 		/* di1 */
+> 		WRITE_ONCE(desc->begin_lpos, 1);
+> 		/* di2 */
+> 		WRITE_ONCE(desc->next_lpos, 1);
+> 	}
 >
->> +	desc = dr->getdesc(smp_load_acquire(&db->id), dr->getdesc_arg);
-
-The variable's value (in this case db->id) is doing the guarding. The
-barriers ensure that db->id is read first (and set last).
-
->> +
->> +	/* dD: */
+> Where di stands for descriptor init.
 >
-> It would be great if all these shortcuts (signs) are followed with
-> something human readable. Few words might be enough.
-
-I'll respond to this part in Sergey's followup post.
-
->> +	next_lpos = READ_ONCE(desc->next_lpos);
->> +
->> +	if (!_datablock_valid(dr,
->> +			      /* dE: */
->> +			      atomic_long_read(&dr->head_lpos),
->> +			      tail_lpos, begin_lpos, next_lpos)) {
->> +		/* Another task has already invalidated the data block. */
->> +		goto out;
->> +	}
->> +
->> +
->> +++ b/kernel/printk/numlist.c
->> +bool numlist_read(struct numlist *nl, unsigned long id, unsigned long *seq,
->> +		  unsigned long *next_id)
->> +
->> +	struct nl_node *n;
->> +
->> +	n = nl->node(id, nl->node_arg);
->> +	if (!n)
->> +		return false;
->> +
->> +	if (seq) {
->> +		/*
->> +		 * aA:
->> +		 *
->> +		 * Adresss dependency on @id.
->> +		 */
+> 	dataring_push()
+> 	{
+> 		/* dp1 */
+> 		ret = get_new_lpos(dr, size, &begin_lpos, &next_lpos);
+> 		...
+> 		/* dp2 */
+> 		smp_mb();
+> 		...
+> 	}
 >
-> This is too scattered. If we really need so many shortcuts (signs)
-> then we should find a better style. The following looks perfectly
-> fine to me:
->
-> 		/* aA: Adresss dependency on @id. */
+> Where dp stands for descriptor push. For dataring we can add a 'dr'
+> prefix, to avoid confusion with desc barriers, which have 'd' prefix.
+> And so on. Dunno.
 
-I'll respond to this part in Sergey's followup post.
+Yeah, I spent a lot of time going in circles on this one.
 
->> +		*seq = READ_ONCE(n->seq);
->> +	}
->> +
->> +	if (next_id) {
->> +		/*
->> +		 * aB:
->> +		 *
->> +		 * Adresss dependency on @id.
->> +		 */
->> +		*next_id = READ_ONCE(n->next_id);
->> +	}
->> +
+I hope that we can agree that the labels are important. And that a
+formal documentation of the barriers is also important. Yes, they are a
+lot of work, but I find it makes it a lot easier to go back to the code
+after I've been away for a while. Even now, as I go through your
+feedback on code that I wrote over a month ago, I find the formal
+comments critical to quickly understand _exactly_ why the memory
+barriers exist.
+
+Perhaps we should choose labels that are more clear, like:
+
+    dataring_push:A
+    dataring_push:B
+
+Then we would see comments like:
+
+    Memory barrier involvement:
+
+    If _dataring_pop:B reads from dataring_datablock_setid:A, then
+    _dataring_pop:C reads from dataring_push:G.
+
+    If _dataring_pop:B reads from dataring_datablock_setid:A, then
+    _dataring_pop:D reads from dataring_push:H.
+
+    If _dataring_pop:B reads from dataring_datablock_setid:A, then
+    _dataring_pop:E reads from dataring_push:E.
+
+    Note that if _dataring_pop:B reads from dataring_datablock_setid:A, then
+    _dataring_pop:C cannot read from dataring_push:C->dataring_desc_init:A.
+
+    Note that if _dataring_pop:B reads from dataring_datablock_setid:A, then
+    _dataring_pop:D cannot read from dataring_push:C->dataring_desc_init:B.
+
+    Relies on:
+
+    RELEASE from dataring_push:G to dataring_datablock_setid:A
+       matching
+    ADDRESS DEP. from _dataring_pop:B to _dataring_pop:C
+
+    RELEASE from dataring_push:H to dataring_datablock_setid:A
+       matching
+    ADDRESS DEP. from _dataring_pop:B to _dataring_pop:D
+
+    RELEASE from dataring_push:E to dataring_datablock_setid:A
+       matching
+    ACQUIRE from _dataring_pop:B to _dataring_pop:E
+
+But then how should the labels in the code look? Just the letter looks
+simple in code, but cannot be grepped.
+
+    dataring_push()
+    {
+        ...
+        /* E */
+        ...
+    }
+
+The full label can be grepped, but is redundant with the function name.
+
+    dataring_push()
+    {
+        ...
+        /* dataring_push:E */
+        ...
+    }
+
+Andrea suggested that the documentation should be within the code, which
+I think is a good idea. Even if it means we have more comments than
+code.
+
+I am open to suggestions.
 
 John Ogness
 
-[0] https://lkml.kernel.org/r/20190618111215.GO3436@hirez.programming.kicks-ass.net
+[0] https://lkml.kernel.org/r/20190630140855.GA6005@andrea
