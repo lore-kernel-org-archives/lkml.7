@@ -2,129 +2,165 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C467C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CEEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4282339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:27:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dEvzziXb"
+	by mail.kernel.org (Postfix) with ESMTP id 9143B22DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:27:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfHUK1j (ORCPT
+        id S1727887AbfHUK14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:27:39 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50596 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbfHUK1i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:27:38 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v15so1554937wml.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 03:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DfcFoGCu+Bqv0m26SvG5wMf49FCbhYgNKFtc/Mu7ArM=;
-        b=dEvzziXbyDYjihHBHAQ4og/g6Ul+JzM+1X3WiZ89KPRoO5AfTMcUKgbTjavvmz7+CO
-         Mdl5Hq0ZNiWwCuznT9fT4WPGFNLthr/+bIK8/Tns7fW8NXKl0htemLGe87xYMmtp370V
-         08UAUrkyuCQ8MuatWKWGV89mJ+b7XPLIQUF2gLDsNlHRayxNHffm6CtrEeynf6a2/E0C
-         4ooE1iftKfXqUkdYU+RMGlm8/NZLU4DRnAjbhpUWrqF4NfXaGyOyYAZ13pD/xyDjKWPj
-         EBO56Bx2nVKiVj7Vfb3d68rHOjPG/lK3IDWZS4FQeT5yiIjAJrUKBWafViFlOTIi5H8k
-         SPkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DfcFoGCu+Bqv0m26SvG5wMf49FCbhYgNKFtc/Mu7ArM=;
-        b=QNNoeMPL6Q3h7sdXGXeCxiaL1wVr2fWHvCFHP7lNLCuaRPqO1jqOiLu5HQEsTI74fD
-         HcoCP2AtiYPEPKqAFwd87V6RSqXwkjohPGzWN17JGMWldcmaWhHS9pGKiw48EP6bkHd9
-         T5JOKESSE0ObnVintaDweYnGaEguEplxqzDgqSHuTaYA+53Fcf2BinEcw9r/XV0dd3fS
-         WWCKx6kXtRDMOSF5WEkZXu0Mepu38LV/XO5FXcxu/GmWnlzVVG4WDL9Dl418ClHlA+4Q
-         kr2AP+0yU+CuneWrMPEPVa9Vag26OOwAcUM45seWFQ4TP08jXz/Jll4kjQz/GNhDOlGV
-         /WqQ==
-X-Gm-Message-State: APjAAAX4frGzuryrPswp4J4ci8lCEcj6MpdAMuVGKC+9Bl/f5XizFTu4
-        J7vaJ9eosImWbC4rByA/aBWBFQ==
-X-Google-Smtp-Source: APXvYqy4ImYkCTgqYv5UHwmc2VUZxv6qDWNrqq312b932pdxf7IsrXoWsMHBZbM4Y0whtwt6pa1bkg==
-X-Received: by 2002:a1c:9648:: with SMTP id y69mr4928650wmd.122.1566383257348;
-        Wed, 21 Aug 2019 03:27:37 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id p186sm3475079wme.9.2019.08.21.03.27.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 03:27:36 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org, tiwai@suse.de
-Cc:     bgoswami@codeaurora.org, plai@codeaurora.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, Vidyakumar Athota <vathota@codeaurora.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] ALSA: pcm: add support for 352.8KHz and 384KHz sample rate
-Date:   Wed, 21 Aug 2019 11:27:05 +0100
-Message-Id: <20190821102705.18382-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 21 Aug 2019 06:27:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:55726 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbfHUK1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 06:27:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A83B28;
+        Wed, 21 Aug 2019 03:27:55 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B57B3F706;
+        Wed, 21 Aug 2019 03:27:53 -0700 (PDT)
+Subject: Re: [PATCH v2 4/9] KVM: arm64: Support stolen time reporting via
+ shared structure
+To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190819140436.12207-1-steven.price@arm.com>
+ <20190819140436.12207-5-steven.price@arm.com>
+ <f6fad4fa-323d-306c-c582-de07464f4d00@kernel.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <4703baa7-0116-f5d6-291e-1e669a36545d@arm.com>
+Date:   Wed, 21 Aug 2019 11:27:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <f6fad4fa-323d-306c-c582-de07464f4d00@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vidyakumar Athota <vathota@codeaurora.org>
+On 19/08/2019 17:40, Marc Zyngier wrote:
+> Hi Steven,
+> 
+> On 19/08/2019 15:04, Steven Price wrote:
+>> Implement the service call for configuring a shared structure between a
+>> VCPU and the hypervisor in which the hypervisor can write the time
+>> stolen from the VCPU's execution time by other tasks on the host.
+>>
+>> The hypervisor allocates memory which is placed at an IPA chosen by user
+>> space. The hypervisor then uses WRITE_ONCE() to update the shared
+>> structure ensuring single copy atomicity of the 64-bit unsigned value
+>> that reports stolen time in nanoseconds.
+>>
+>> Whenever stolen time is enabled by the guest, the stolen time counter is
+>> reset.
+>>
+>> The stolen time itself is retrieved from the sched_info structure
+>> maintained by the Linux scheduler code. We enable SCHEDSTATS when
+>> selecting KVM Kconfig to ensure this value is meaningful.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>  arch/arm/include/asm/kvm_host.h   | 15 +++++++
+>>  arch/arm64/include/asm/kvm_host.h | 16 ++++++-
+>>  arch/arm64/kvm/Kconfig            |  1 +
+>>  include/linux/kvm_types.h         |  2 +
+>>  virt/kvm/arm/arm.c                | 19 +++++++++
+>>  virt/kvm/arm/hypercalls.c         |  3 ++
+>>  virt/kvm/arm/pvtime.c             | 71 +++++++++++++++++++++++++++++++
+>>  7 files changed, 126 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
+>> index 369b5d2d54bf..14d61a84c270 100644
+>> --- a/arch/arm/include/asm/kvm_host.h
+>> +++ b/arch/arm/include/asm/kvm_host.h
+>> @@ -39,6 +39,7 @@
+>>  	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+>>  #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
+>>  #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
+>> +#define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
+>>  
+>>  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
+>>  
+>> @@ -77,6 +78,12 @@ struct kvm_arch {
+>>  
+>>  	/* Mandated version of PSCI */
+>>  	u32 psci_version;
+>> +
+>> +	struct kvm_arch_pvtime {
+>> +		struct gfn_to_hva_cache st_ghc;
+>> +		gpa_t st_base;
+>> +		u64 st_size;
+>> +	} pvtime;
+> 
+> It'd be good if we could avoid having this in the 32bit vcpu structure,
+> given that it serves no real purpose (other than being able to compile
+> things).
 
-Most of the modern codecs supports 352.8KHz and 384KHz sample rates.
-Currently HW params fails to set 352.8Kz and 384KHz sample rate
-as these are not in known rates list.
-Add these new rates to known list to allow them.
+Good point - I think I can fix that with a couple more static inline
+functions... It's a little tricky due to header file include order, but
+I think I can make it work.
 
-This patch also adds defines in pcm.h so that drivers can use it.
+[...]
+>> +int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init)
+>> +{
+>> +	struct kvm *kvm = vcpu->kvm;
+>> +	struct kvm_arch_pvtime *pvtime = &kvm->arch.pvtime;
+>> +	u64 steal;
+>> +	u64 steal_le;
+>> +	u64 offset;
+>> +	int idx;
+>> +	const int stride = sizeof(struct pvclock_vcpu_stolen_time);
+>> +
+>> +	if (pvtime->st_base == GPA_INVALID)
+>> +		return -ENOTSUPP;
+>> +
+>> +	/* Let's do the local bookkeeping */
+>> +	steal = vcpu->arch.steal.steal;
+>> +	steal += current->sched_info.run_delay - vcpu->arch.steal.last_steal;
+>> +	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
+>> +	vcpu->arch.steal.steal = steal;
+>> +
+>> +	offset = stride * kvm_vcpu_get_idx(vcpu);
+>> +
+>> +	if (unlikely(offset + stride > pvtime->st_size))
+>> +		return -EINVAL;
+>> +
+>> +	steal_le = cpu_to_le64(steal);
+>> +	pagefault_disable();
+> 
+> What's the reason for doing a pagefault_disable()? What I'd expect is
+> for the userspace page to be faulted in and written to, and doing a
+> pagefault_disable() seems to be going against this idea.
 
-Signed-off-by: Vidyakumar Athota <vathota@codeaurora.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- include/sound/pcm.h     | 5 +++++
- sound/core/pcm_native.c | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+Umm... this is me screwing up the locking...
 
-diff --git a/include/sound/pcm.h b/include/sound/pcm.h
-index 1e9bb1c91770..bbe6eb1ff5d2 100644
---- a/include/sound/pcm.h
-+++ b/include/sound/pcm.h
-@@ -117,6 +117,8 @@ struct snd_pcm_ops {
- #define SNDRV_PCM_RATE_96000		(1<<10)		/* 96000Hz */
- #define SNDRV_PCM_RATE_176400		(1<<11)		/* 176400Hz */
- #define SNDRV_PCM_RATE_192000		(1<<12)		/* 192000Hz */
-+#define SNDRV_PCM_RATE_352800		(1<<13)		/* 352800Hz */
-+#define SNDRV_PCM_RATE_384000		(1<<14)		/* 384000Hz */
- 
- #define SNDRV_PCM_RATE_CONTINUOUS	(1<<30)		/* continuous range */
- #define SNDRV_PCM_RATE_KNOT		(1<<31)		/* supports more non-continuos rates */
-@@ -129,6 +131,9 @@ struct snd_pcm_ops {
- 					 SNDRV_PCM_RATE_88200|SNDRV_PCM_RATE_96000)
- #define SNDRV_PCM_RATE_8000_192000	(SNDRV_PCM_RATE_8000_96000|SNDRV_PCM_RATE_176400|\
- 					 SNDRV_PCM_RATE_192000)
-+#define SNDRV_PCM_RATE_8000_384000	(SNDRV_PCM_RATE_8000_192000|\
-+					 SNDRV_PCM_RATE_352800|\
-+					 SNDRV_PCM_RATE_384000)
- #define _SNDRV_PCM_FMTBIT(fmt)		(1ULL << (__force int)SNDRV_PCM_FORMAT_##fmt)
- #define SNDRV_PCM_FMTBIT_S8		_SNDRV_PCM_FMTBIT(S8)
- #define SNDRV_PCM_FMTBIT_U8		_SNDRV_PCM_FMTBIT(U8)
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index 703857aab00f..11e653c8aa0e 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -2170,7 +2170,7 @@ static int snd_pcm_hw_rule_sample_bits(struct snd_pcm_hw_params *params,
- 
- static const unsigned int rates[] = {
- 	5512, 8000, 11025, 16000, 22050, 32000, 44100,
--	48000, 64000, 88200, 96000, 176400, 192000
-+	48000, 64000, 88200, 96000, 176400, 192000, 352800, 384000
- };
- 
- const struct snd_pcm_hw_constraint_list snd_pcm_known_rates = {
--- 
-2.21.0
+The current code is very confused about which locks should/can be held
+when kvm_update_stolen_time() is called. vcpu_req_record_steal()
+explicitly takes the kvm->srcu read lock - which is then taken again
+here. But kvm_hypercall_stolen_time doesn't hold any lock. And obviously
+at some point in time I expected this to be called in atomic context...
 
+In general the page is likely to be faulted in (as a guest which is
+using stolen time is surely looking at the numbers there). But there's
+no need for the pagefault_disable(). It also shouldn't be the callers
+responsibility to hold kvm->srcu.
+
+Steve
