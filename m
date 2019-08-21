@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04812C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B1EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5522339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB507214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566413062;
-	bh=MH7aCXOtgP6JdJSFdMV7Lsp/vhD9jRbCbOMgglwiDHI=;
+	s=default; t=1566413065;
+	bh=lA7mFEKysJjHKo4nB5lYSbTCshSJwNxXj0rtmarFzok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RTbEapqTldviXalQeesyey99JGCrPxSM9werUZn7abXNHudtKti0c8ZrHzYAy2/Hi
-	 zYJgqttjsfiMuOuAydWMKP4XLZXiDix3/mTebFSZU5rX2RuEhNjzgg1h/QV6pWaJYy
-	 m5W5GlaZdJjip7+IlxXz/jEVh5nCE0CAjC4LgNfQ=
+	b=kNUZA25FWLpkELnL8B3g8GHRx0qydemzgMg5mpnT75yYLSLNizFxRpJ53gHIMshO8
+	 V7DQhjHh98FiHwNZmb8bCa0OMDNpJPpnt8skWPr6D5Bme6EOx9Cfka24mhxwsZsoBj
+	 y8cttFg8T1zMeQmkdPGkKeF7PGDm05BiKDQuUEkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbfHUSoV (ORCPT
+        id S1728967AbfHUSoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:44:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39980 "EHLO mail.kernel.org"
+        Wed, 21 Aug 2019 14:44:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728653AbfHUSoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:44:18 -0400
+        id S1727795AbfHUSoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 14:44:22 -0400
 Received: from localhost.localdomain (unknown [106.201.100.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3FD822DD3;
-        Wed, 21 Aug 2019 18:44:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36916214DA;
+        Wed, 21 Aug 2019 18:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566413057;
-        bh=MH7aCXOtgP6JdJSFdMV7Lsp/vhD9jRbCbOMgglwiDHI=;
+        s=default; t=1566413061;
+        bh=lA7mFEKysJjHKo4nB5lYSbTCshSJwNxXj0rtmarFzok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mZgAmIaf6ZlQrwuJDVCC9rLt9Wgo7ThZc5u3w0HfN9RvY37cAF2Z6p2vtCb8yF7Lf
-         w5oC00rv6GmCCVlhrLUv1rg0fyvcetpemfAWNke4MLucb38fiBdubBoQNwSGDu4tD2
-         5AWRInQVBLvWyI5V0aZLhZoFR8DJhvARsoRKoCG0=
+        b=u8+MgHcm2wea77yRMXB5nTVO7V00jgDGVTh9Z4yii5vcyvhLC2ZEh/rCbORcUSs2p
+         4oKg0xN0CwSmFBTiC2zaAPSRnQbn4nlXmEXHo2PpjH5iqQVN0kEIKGogw2aI+1TrK5
+         udGudYdtpUPfLR3a+lzMTWnX5hPU2D5GOAn/rrHo=
 From:   Vinod Koul <vkoul@kernel.org>
 To:     Andy Gross <agross@kernel.org>
 Cc:     linux-arm-msm@vger.kernel.org,
@@ -50,9 +50,9 @@ Cc:     linux-arm-msm@vger.kernel.org,
         Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH v4 3/8] arm64: dts: qcom: pm8150b: Add base dts file
-Date:   Thu, 22 Aug 2019 00:12:34 +0530
-Message-Id: <20190821184239.12364-4-vkoul@kernel.org>
+Subject: [PATCH v4 4/8] arm64: dts: qcom: pm8150l: Add base dts file
+Date:   Thu, 22 Aug 2019 00:12:35 +0530
+Message-Id: <20190821184239.12364-5-vkoul@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190821184239.12364-1-vkoul@kernel.org>
 References: <20190821184239.12364-1-vkoul@kernel.org>
@@ -63,22 +63,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PMIC pm8150b is a slave pmic and this adds base DTS file for pm8150b
-with power-on, adc, and gpio nodes
+PMIC pm8150l is a slave pmic and this adds base DTS file for pm8150l
+with power-on, adc and gpio nodes
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/pm8150b.dtsi | 86 +++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/pm8150b.dtsi
+ arch/arm64/boot/dts/qcom/pm8150l.dtsi | 80 +++++++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm8150l.dtsi
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+diff --git a/arch/arm64/boot/dts/qcom/pm8150l.dtsi b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
 new file mode 100644
-index 000000000000..322379d5c31f
+index 000000000000..eb0e9a090e42
 --- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
-@@ -0,0 +1,86 @@
++++ b/arch/arm64/boot/dts/qcom/pm8150l.dtsi
+@@ -0,0 +1,80 @@
 +// SPDX-License-Identifier: BSD-3-Clause
 +/*
 + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
@@ -90,9 +90,9 @@ index 000000000000..322379d5c31f
 +#include <dt-bindings/spmi/spmi.h>
 +
 +&spmi_bus {
-+	pmic@2 {
-+		compatible = "qcom,pm8150b", "qcom,spmi-pmic";
-+		reg = <0x2 SPMI_USID>;
++	pmic@4 {
++		compatible = "qcom,pm8150l", "qcom,spmi-pmic";
++		reg = <0x4 SPMI_USID>;
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
@@ -109,7 +109,7 @@ index 000000000000..322379d5c31f
 +			#address-cells = <1>;
 +			#size-cells = <0>;
 +			#io-channel-cells = <1>;
-+			interrupts = <0x2 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <0x4 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
 +
 +			status = "disabled";
 +
@@ -130,37 +130,31 @@ index 000000000000..322379d5c31f
 +				qcom,pre-scaling = <1 1>;
 +				label = "die_temp";
 +			};
-+
-+			chg-temp@9 {
-+				reg = <ADC5_CHG_TEMP>;
-+				qcom,pre-scaling = <1 1>;
-+				label = "chg_temp";
-+			};
 +		};
 +
-+		pm8150b_gpios: gpio@c000 {
-+			compatible = "qcom,pm8150b-gpio";
++		pm8150l_gpios: gpio@c000 {
++			compatible = "qcom,pm8150l-gpio";
 +			reg = <0xc000>;
 +			gpio-controller;
 +			#gpio-cells = <2>;
-+			interrupts = <0x2 0xc0 0x0 IRQ_TYPE_NONE>,
-+				     <0x2 0xc1 0x0 IRQ_TYPE_NONE>,
-+				     <0x2 0xc2 0x0 IRQ_TYPE_NONE>,
-+				     <0x2 0xc3 0x0 IRQ_TYPE_NONE>,
-+				     <0x2 0xc4 0x0 IRQ_TYPE_NONE>,
-+				     <0x2 0xc5 0x0 IRQ_TYPE_NONE>,
-+				     <0x2 0xc6 0x0 IRQ_TYPE_NONE>,
-+				     <0x2 0xc7 0x0 IRQ_TYPE_NONE>,
-+				     <0x2 0xc8 0x0 IRQ_TYPE_NONE>,
-+				     <0x2 0xc9 0x0 IRQ_TYPE_NONE>,
-+				     <0x2 0xca 0x0 IRQ_TYPE_NONE>,
-+				     <0x2 0xcb 0x0 IRQ_TYPE_NONE>;
++			interrupts = <0x4 0xc0 0x0 IRQ_TYPE_NONE>,
++				     <0x4 0xc1 0x0 IRQ_TYPE_NONE>,
++				     <0x4 0xc2 0x0 IRQ_TYPE_NONE>,
++				     <0x4 0xc3 0x0 IRQ_TYPE_NONE>,
++				     <0x4 0xc4 0x0 IRQ_TYPE_NONE>,
++				     <0x4 0xc5 0x0 IRQ_TYPE_NONE>,
++				     <0x4 0xc6 0x0 IRQ_TYPE_NONE>,
++				     <0x4 0xc7 0x0 IRQ_TYPE_NONE>,
++				     <0x4 0xc8 0x0 IRQ_TYPE_NONE>,
++				     <0x4 0xc9 0x0 IRQ_TYPE_NONE>,
++				     <0x4 0xca 0x0 IRQ_TYPE_NONE>,
++				     <0x4 0xcb 0x0 IRQ_TYPE_NONE>;
 +		};
 +	};
 +
-+	pmic@3 {
-+		compatible = "qcom,pm8150b", "qcom,spmi-pmic";
-+		reg = <0x3 SPMI_USID>;
++	pmic@5 {
++		compatible = "qcom,pm8150l", "qcom,spmi-pmic";
++		reg = <0x5 SPMI_USID>;
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +	};
