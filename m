@@ -2,139 +2,237 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC88C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59865C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0EE22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C7FA20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbfHUQF7 (ORCPT
+        id S1728759AbfHUQK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:05:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46068 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfHUQF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:05:59 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 102D630832DC;
-        Wed, 21 Aug 2019 16:05:59 +0000 (UTC)
-Received: from [10.36.118.29] (unknown [10.36.118.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7AAF460603;
-        Wed, 21 Aug 2019 16:05:55 +0000 (UTC)
-Subject: Re: [PATCH] mm/balloon_compaction: suppress allocation warnings
-To:     Nadav Amit <namit@vmware.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190820091646.29642-1-namit@vmware.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <ba01ec8c-19c3-847c-a315-2f70f4b1fe31@redhat.com>
-Date:   Wed, 21 Aug 2019 18:05:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 12:10:26 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:58161 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728194AbfHUQKZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:10:25 -0400
+X-Originating-IP: 87.18.63.98
+Received: from uno.localdomain (unknown [87.18.63.98])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 3716F1C0006;
+        Wed, 21 Aug 2019 16:10:21 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 18:11:50 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] media: add pixel_size control
+Message-ID: <20190821161150.hcbxzxcjvbkoqyb3@uno.localdomain>
+References: <20190819121720.31345-1-ribalda@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190820091646.29642-1-namit@vmware.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 21 Aug 2019 16:05:59 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i2qbawnsbkak4g6z"
+Content-Disposition: inline
+In-Reply-To: <20190819121720.31345-1-ribalda@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.08.19 11:16, Nadav Amit wrote:
-> There is no reason to print warnings when balloon page allocation fails,
-> as they are expected and can be handled gracefully.  Since VMware
-> balloon now uses balloon-compaction infrastructure, and suppressed these
-> warnings before, it is also beneficial to suppress these warnings to
-> keep the same behavior that the balloon had before.
 
-I am not sure if that's a good idea. The allocation warnings are usually
-the only trace of "the user/admin did something bad because he/she tried
-to inflate the balloon to an unsafe value". Believe me, I processed a
-couple of such bugreports related to virtio-balloon and the warning were
-very helpful for that.
+--i2qbawnsbkak4g6z
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-> 
-> Cc: Jason Wang <jasowang@redhat.com>
-> Signed-off-by: Nadav Amit <namit@vmware.com>
+Hi Ricardo,
+
+On Mon, Aug 19, 2019 at 02:17:18PM +0200, Ricardo Ribalda Delgado wrote:
+> This control returns the pixel size in nanometres. The struct provides
+> the width and the height in separated fields to take into consideration
+> asymmetric pixels and/or hardware binning.
+> This control is required for automatic calibration of the sensor.
+>
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 > ---
->  mm/balloon_compaction.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
-> index 798275a51887..26de020aae7b 100644
-> --- a/mm/balloon_compaction.c
-> +++ b/mm/balloon_compaction.c
-> @@ -124,7 +124,8 @@ EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
->  struct page *balloon_page_alloc(void)
->  {
->  	struct page *page = alloc_page(balloon_mapping_gfp_mask() |
-> -				       __GFP_NOMEMALLOC | __GFP_NORETRY);
-> +				       __GFP_NOMEMALLOC | __GFP_NORETRY |
-> +				       __GFP_NOWARN);
->  	return page;
->  }
->  EXPORT_SYMBOL_GPL(balloon_page_alloc);
-> 
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 11 +++++++++++
+>  include/media/v4l2-ctrls.h           |  2 ++
+>  include/uapi/linux/v4l2-controls.h   |  3 +++
+>  include/uapi/linux/videodev2.h       | 11 +++++++++++
+>  4 files changed, 27 insertions(+)
+>
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index cd1ae016706f..a3a0086c96ff 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -978,6 +978,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+>  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+>  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
+> +	case V4L2_CID_PIXEL_SIZE:		return "Pixel Size";
 
+Is this a camera class control or an image source one ?
+Also, isn't pixel size a bit too generic? I would somehow specify this is
+the physical pixel size
 
--- 
+>
+>  	/* FM Radio Modulator controls */
+>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+> @@ -1357,6 +1358,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+>  		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+>  		break;
+> +	case V4L2_CID_PIXEL_SIZE:
+> +		*type = V4L2_CTRL_TYPE_PIXEL_SIZE;
 
-Thanks,
+Isn't this a read-only control?
 
-David / dhildenb
+> +		break;
+>  	default:
+>  		*type = V4L2_CTRL_TYPE_INTEGER;
+>  		break;
+> @@ -1423,6 +1427,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_RDS_RX_TRAFFIC_ANNOUNCEMENT:
+>  	case V4L2_CID_RDS_RX_TRAFFIC_PROGRAM:
+>  	case V4L2_CID_RDS_RX_MUSIC_SPEECH:
+> +	case V4L2_CID_PIXEL_SIZE:
+>  		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+
+Ah yes, you set flags here... I don't get why we have two switches
+here.. Anyway, I would set both type and flags in a single case,
+otherwise one should jump back and forth...
+
+>  		break;
+>  	case V4L2_CID_RF_TUNER_PLL_LOCK:
+> @@ -1705,6 +1710,9 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+>  	case V4L2_CTRL_TYPE_FWHT_PARAMS:
+>  		break;
+>
+> +	case V4L2_CTRL_TYPE_PIXEL_SIZE:
+> +		break;
+> +
+>  	case V4L2_CTRL_TYPE_H264_SPS:
+>  	case V4L2_CTRL_TYPE_H264_PPS:
+>  	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
+> @@ -2403,6 +2411,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+>  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+>  		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+>  		break;
+> +	case V4L2_CTRL_TYPE_PIXEL_SIZE:
+> +		elem_size = sizeof(struct v4l2_pixel_size);
+> +		break;
+>  	default:
+>  		if (type < V4L2_CTRL_COMPOUND_TYPES)
+>  			elem_size = sizeof(s32);
+> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> index 570ff4b0205a..63de780398b8 100644
+> --- a/include/media/v4l2-ctrls.h
+> +++ b/include/media/v4l2-ctrls.h
+> @@ -50,6 +50,7 @@ struct poll_table_struct;
+>   * @p_h264_slice_params:	Pointer to a struct v4l2_ctrl_h264_slice_params.
+>   * @p_h264_decode_params:	Pointer to a struct v4l2_ctrl_h264_decode_params.
+>   * @p_vp8_frame_header:		Pointer to a VP8 frame header structure.
+> + * @p_pixel_size:		Pointer to a pixel_size value.
+>   * @p:				Pointer to a compound value.
+>   */
+>  union v4l2_ctrl_ptr {
+> @@ -68,6 +69,7 @@ union v4l2_ctrl_ptr {
+>  	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
+>  	struct v4l2_ctrl_h264_decode_params *p_h264_decode_params;
+>  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
+> +	struct v4l2_pixel_size *p_pixel_size;
+>  	void *p;
+>  };
+>
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index a2669b79b294..13f0410df4c6 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -912,6 +912,9 @@ enum v4l2_auto_focus_range {
+>  #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
+>  #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
+>
+> +#define V4L2_CID_PIXEL_SIZE			(V4L2_CID_CAMERA_CLASS_BASE+34)
+> +
+> +
+
+Double empty line
+
+>  /* FM Modulator class control IDs */
+>
+>  #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 2427bc4d8eba..21f4846dca0b 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -422,6 +422,11 @@ struct v4l2_fract {
+>  	__u32   denominator;
+>  };
+>
+> +struct v4l2_pixel_size {
+
+I wonder if instead of defining a 'pixel size' this shouldn't be a
+more generic v4l2_size or something similar. Or even a v4l2_rect with
+left=top=0.
+
+> +	__u32   width;
+> +	__u32   height;
+> +};
+> +
+>  /**
+>    * struct v4l2_capability - Describes V4L2 device caps returned by VIDIOC_QUERYCAP
+>    *
+> @@ -1718,6 +1723,12 @@ enum v4l2_ctrl_type {
+>  	V4L2_CTRL_TYPE_U8	     = 0x0100,
+>  	V4L2_CTRL_TYPE_U16	     = 0x0101,
+>  	V4L2_CTRL_TYPE_U32	     = 0x0102,
+> +	/*
+> +	 * V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS = 0x0103,
+> +	 * V4L2_CTRL_TYPE_MPEG2_QUANTIZATION = 0x0104,
+> +	 * V4L2_CTRL_TYPE_FWHT_PARAMS = 0x0105,
+> +	 */
+
+leftovers ?
+
+> +	V4L2_CTRL_TYPE_PIXEL_SIZE    = 0x0106,
+
+I don't see other compound controls with a custom payload adding their
+types here. What am I missing?
+
+Thanks
+  j
+
+>  };
+>
+>  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
+> --
+> 2.23.0.rc1
+>
+
+--i2qbawnsbkak4g6z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1dbUYACgkQcjQGjxah
+VjzMSg//T3Z0Pn/MM4rl0d9E08+UhovwymM92g/k2giBnTTDmLyZSanh4wJ5z95z
+CcySqDqSdsgk4oe7BSMR3+kaK/O0M9o7wkzNUIzpgT0H2zPIkhLo4rkYN97W2XCj
+eVIcUkdK0YSRpJLUYXP4PyTYMNhwwmP8ugCtfnhdMnVP5ly5H/jHcH9PVlBUVpaq
+qrZVRmfzX7N6jt5L3QE7EMXnH0OouQuZRE7c0RqcRYkFwtsyDtu7Wc9cfAxQGKW2
+Udkx387YTsLGTvh3TgVyiR28fonYxfo48lj8YPM49O53stwsqgMeg667UJ6HPzko
+RY6QUwbz9Yo5ThnMhfIRqIP88wPTYyd+gls8Hs6PJ+LZx5AGYavfBvtWI15NuRSc
++VKrN9s2pqrO4SJsZvtxR0P4he6SeGPNDjozLv2rgtrJDlWstPKe97fwoRWBhFwd
+xb8dHGD6LD5X6bDiJNWFNs5gMti3lMH92CfXC36S2OktV40EVAXWQCryQWohH3cm
+hvFbS8odj2AvXP+1ogErP5QgZe4iI+kDct1kUxt1TjE3iWjbvIENpjgTU9WUvM70
+VY6YcW58J1vk+DZHORiEbB5lA/8cDeoWYSVTROKq9FPrfGxOybwzLzcVfo5N37QO
+JaPhMfm1TLiecZV2w8KdpdfHsEJF3QEGDy9pBztLV/B8FCw7xA0=
+=+EdP
+-----END PGP SIGNATURE-----
+
+--i2qbawnsbkak4g6z--
