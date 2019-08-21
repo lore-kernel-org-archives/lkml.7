@@ -2,202 +2,130 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9739CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745C2C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6265C233A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7F32339F
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:01:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tkfoMKNl"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ieAJQEap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbfHUPAq (ORCPT
+        id S1728636AbfHUPBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:00:46 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33271 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728437AbfHUPAp (ORCPT
+        Wed, 21 Aug 2019 11:01:50 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18390 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbfHUPBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:00:45 -0400
-Received: by mail-pl1-f195.google.com with SMTP id go14so1483077plb.0;
-        Wed, 21 Aug 2019 08:00:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=R9EIePxtKgh7rutMNGBvqWvR/nyIQIv1yBQVlI6lc80=;
-        b=tkfoMKNl6R00u1CGr4goVFrz53AHxoV7hFxDcGeUp0tOZUCo+74t/zt8j+2QopIgxI
-         EZ3M3c24Jl9SrsJM+dTZwK8SGp7tO2O/0yx89/oESAn4+Y33U06VmjCAJUF8WYGRwZeO
-         eKjbkMOiSUf3GOoqrhSS+vgoRMpgqZeesnV5hVjONU4VcpdOzOxTu/6+rYJJelofQ2l3
-         KrIWCI8aXlUCizR5/hSFEMJ0SFD0wRsscqpCzcEa6q+HWASFrKQeuvC0VTIT8+HbR6/e
-         kIbuzlNFr7cnr7aQG0JZ89EPMqXTXef7jzZr4LRARx074pduHcDo0oZ2TTBh+XMIA1it
-         tJhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=R9EIePxtKgh7rutMNGBvqWvR/nyIQIv1yBQVlI6lc80=;
-        b=N8uG4VLyAj2C8zZPu4NrH8iGwhXcdjEiiN5HJmGYr+sm3PFBf/Pyzwt7HlAussmJX5
-         uuh2KCr/NVRpy/FCOi4MwQd/OjeyaG2OR1Prv6rNAAk3VCQa6B55H+LD3STNIPCi1otN
-         ykB7gkK/YLqjz7ob2TZDlZU7vWNgQR9d+qUHujcnJSQdsgcvcGVQE5NLZ6+8G+Hka4+R
-         NgWg86abCUhMb7jJ8pmBCKhxdY64hKNz8X7+E7iSTRQOeM4rCZ5ba3X0eyJNxES/XU/R
-         +KrTvGKM/ZyRferwN3DMFc7JTQDKpqGCiY8HFxFU1wHvGGA1xuJUvu+W0FfDi0C/UOfc
-         68hA==
-X-Gm-Message-State: APjAAAXVraNnOmuk8yYcq4qFXu8idC4wI7b7ymwx4ZYuxqXc9CKUqeu1
-        1PajkZFJpfKCBbJiJUsRzaHgqvXN
-X-Google-Smtp-Source: APXvYqzGZGBxE2Kux8cFfIoXPTej4Y3Rq0bhdauQWIpL/YOuwEUcP9xBJA0wE9MgWkUpeYVOa9xJ2g==
-X-Received: by 2002:a17:902:6843:: with SMTP id f3mr31726895pln.97.1566399645002;
-        Wed, 21 Aug 2019 08:00:45 -0700 (PDT)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id b19sm14248033pgs.10.2019.08.21.08.00.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 08:00:44 -0700 (PDT)
-Subject: [PATCH v6 QEMU 3/3] virtio-balloon: Provide a interface for unused
- page reporting
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     nitesh@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
-        david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, virtio-dev@lists.oasis-open.org
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
-        konrad.wilk@oracle.com, willy@infradead.org,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, mhocko@kernel.org,
-        alexander.h.duyck@linux.intel.com, osalvador@suse.de
-Date:   Wed, 21 Aug 2019 08:00:43 -0700
-Message-ID: <20190821150043.21485.84756.stgit@localhost.localdomain>
-In-Reply-To: <20190821145806.20926.22448.stgit@localhost.localdomain>
-References: <20190821145806.20926.22448.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        Wed, 21 Aug 2019 11:01:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5d5cde0000>; Wed, 21 Aug 2019 08:01:50 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 21 Aug 2019 08:01:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 21 Aug 2019 08:01:49 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
+ 2019 15:01:48 +0000
+Received: from [10.25.74.119] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
+ 2019 15:01:45 +0000
+Subject: Re: [PATCH][next] PCI: tegra: tegra194: fix phy_count less than zero
+ check
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Colin King <colin.king@canonical.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190821120123.14223-1-colin.king@canonical.com>
+ <20190821140520.GA691@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <b9f4dc94-a3d6-5748-128d-9df6dc990eb8@nvidia.com>
+Date:   Wed, 21 Aug 2019 20:31:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190821140520.GA691@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566399710; bh=pVlgGlKM4Jh1fIne7Jt+bEk9BU5YPhXW/fJ0EL5D3i0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ieAJQEapTwKUlGo+Q8ZuJRxc3YyGSLmWch2L8LcayRGH5N0ErNoOpMcrvwQHFPZG1
+         ufkTAF8FE2/xnJakffaGEHr4XV4cfPpFpV75oQ2TZGd6EbEMNXqXY3RWmwUj5ctkYM
+         o6FrcfLw+K0XjJZV7I3R38nNpMyx8SkbPVFBIRZa1lXVAiYT61pI6IhUXjUdDr9Wn0
+         6/y6mHm8cCQLQSq+alPn9TFftPTcMCEs/bIlOqN3fI7TpzVS+M5FL+qgz++YxzllEJ
+         ka43K4LBbsYZKHcAmQtTckmwY54/ZYkH7VpcLDFvv0U6x0sJuWSfGH4cdmDi21fX8u
+         TMThaA3dSQwDw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On 8/21/2019 7:35 PM, Lorenzo Pieralisi wrote:
+> On Wed, Aug 21, 2019 at 01:01:23PM +0100, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> The check for pcie->phy_count < 0 is always false because phy_count
+>> is an unsigned int and can never be less than zero. Fix this by
+>> assigning ret to the return from of_property_count_strings and
+>> checking if this is less than zero instead.
+>>
+>> Addresses-Coverity: ("Dead code")
+>> Fixes: 6404441c8e13 ("PCI: tegra: Add Tegra194 PCIe support")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-tegra194.c | 9 +++++----
+>>   1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> Squashed in the original commit (it is not merged yet), thanks
+> for reporting it.
+Thanks Colin for catching it and pushing a fix also.
+Thanks Lorenzo for merging it.
+Apologies for missing this in my patch series.
 
-Add support for what I am referring to as "unused page reporting".
-Basically the idea is to function very similar to how the balloon works
-in that we basically end up madvising the page as not being used. However
-we don't really need to bother with any deflate type logic since the page
-will be faulted back into the guest when it is read or written to.
-
-This is meant to be a simplification of the existing balloon interface
-to use for providing hints to what memory needs to be freed. I am assuming
-this is safe to do as the deflate logic does not actually appear to do very
-much other than tracking what subpages have been released and which ones
-haven't.
-
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- hw/virtio/virtio-balloon.c         |   46 ++++++++++++++++++++++++++++++++++--
- include/hw/virtio/virtio-balloon.h |    2 +-
- 2 files changed, 45 insertions(+), 3 deletions(-)
-
-diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-index 003b3ebcfdfb..7a30df63bc77 100644
---- a/hw/virtio/virtio-balloon.c
-+++ b/hw/virtio/virtio-balloon.c
-@@ -320,6 +320,40 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
-     balloon_stats_change_timer(s, 0);
- }
- 
-+static void virtio_balloon_handle_report(VirtIODevice *vdev, VirtQueue *vq)
-+{
-+    VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
-+    VirtQueueElement *elem;
-+
-+    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
-+    	unsigned int i;
-+
-+        for (i = 0; i < elem->in_num; i++) {
-+            void *addr = elem->in_sg[i].iov_base;
-+            size_t size = elem->in_sg[i].iov_len;
-+            ram_addr_t ram_offset;
-+            size_t rb_page_size;
-+            RAMBlock *rb;
-+
-+            if (qemu_balloon_is_inhibited() || dev->poison_val)
-+                continue;
-+
-+            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
-+            rb_page_size = qemu_ram_pagesize(rb);
-+
-+            /* For now we will simply ignore unaligned memory regions */
-+            if ((ram_offset | size) & (rb_page_size - 1))
-+                continue;
-+
-+            ram_block_discard_range(rb, ram_offset, size);
-+        }
-+
-+        virtqueue_push(vq, elem, 0);
-+        virtio_notify(vdev, vq);
-+        g_free(elem);
-+    }
-+}
-+
- static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
- {
-     VirtIOBalloon *s = VIRTIO_BALLOON(vdev);
-@@ -627,7 +661,8 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
-         return sizeof(struct virtio_balloon_config);
-     }
-     if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON) ||
--        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-+        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
-+        virtio_has_feature(features, VIRTIO_BALLOON_F_REPORTING)) {
-         return sizeof(struct virtio_balloon_config);
-     }
-     return offsetof(struct virtio_balloon_config, free_page_report_cmd_id);
-@@ -715,7 +750,8 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
-     VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
-     f |= dev->host_features;
-     virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
--    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-+    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
-+        virtio_has_feature(f, VIRTIO_BALLOON_F_REPORTING)) {
-         virtio_add_feature(&f, VIRTIO_BALLOON_F_PAGE_POISON);
-     }
- 
-@@ -805,6 +841,10 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
-     s->dvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
-     s->svq = virtio_add_queue(vdev, 128, virtio_balloon_receive_stats);
- 
-+    if (virtio_has_feature(s->host_features, VIRTIO_BALLOON_F_REPORTING)) {
-+        s->rvq = virtio_add_queue(vdev, 32, virtio_balloon_handle_report);
-+    }
-+
-     if (virtio_has_feature(s->host_features,
-                            VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-         s->free_page_vq = virtio_add_queue(vdev, VIRTQUEUE_MAX_SIZE,
-@@ -931,6 +971,8 @@ static Property virtio_balloon_properties[] = {
-      */
-     DEFINE_PROP_BOOL("qemu-4-0-config-size", VirtIOBalloon,
-                      qemu_4_0_config_size, false),
-+    DEFINE_PROP_BIT("unused-page-reporting", VirtIOBalloon, host_features,
-+                    VIRTIO_BALLOON_F_REPORTING, true),
-     DEFINE_PROP_LINK("iothread", VirtIOBalloon, iothread, TYPE_IOTHREAD,
-                      IOThread *),
-     DEFINE_PROP_END_OF_LIST(),
-diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
-index 7fe78e5c14d7..db5bf7127112 100644
---- a/include/hw/virtio/virtio-balloon.h
-+++ b/include/hw/virtio/virtio-balloon.h
-@@ -42,7 +42,7 @@ enum virtio_balloon_free_page_report_status {
- 
- typedef struct VirtIOBalloon {
-     VirtIODevice parent_obj;
--    VirtQueue *ivq, *dvq, *svq, *free_page_vq;
-+    VirtQueue *ivq, *dvq, *svq, *free_page_vq, *rvq;
-     uint32_t free_page_report_status;
-     uint32_t num_pages;
-     uint32_t actual;
+> 
+> Lorenzo
+> 
+>> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+>> index fc0dbeb31d78..b47ea3e68303 100644
+>> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+>> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+>> @@ -969,12 +969,13 @@ static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
+>>   		return ret;
+>>   	}
+>>   
+>> -	pcie->phy_count = of_property_count_strings(np, "phy-names");
+>> -	if (pcie->phy_count < 0) {
+>> +	ret = of_property_count_strings(np, "phy-names");
+>> +	if (ret < 0) {
+>>   		dev_err(pcie->dev, "Failed to find PHY entries: %d\n",
+>> -			pcie->phy_count);
+>> -		return pcie->phy_count;
+>> +			ret);
+>> +		return ret;
+>>   	}
+>> +	pcie->phy_count = ret;
+>>   
+>>   	if (of_property_read_bool(np, "nvidia,update-fc-fixup"))
+>>   		pcie->update_fc_fixup = true;
+>> -- 
+>> 2.20.1
+>>
 
