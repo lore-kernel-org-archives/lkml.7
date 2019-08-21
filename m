@@ -2,189 +2,121 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8991BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22974C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6326822CE3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8D922CE3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:16:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="lecystT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbfHUQOe (ORCPT
+        id S1728637AbfHUQQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:14:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10344 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727222AbfHUQOe (ORCPT
+        Wed, 21 Aug 2019 12:16:37 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37737 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfHUQQh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:14:34 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LG5hft074632
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 12:14:32 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uh81xv6r0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 12:14:32 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 21 Aug 2019 17:14:31 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 21 Aug 2019 17:14:26 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LGEPaa54460926
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 16:14:25 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C858EB2068;
-        Wed, 21 Aug 2019 16:14:25 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 983EEB205F;
-        Wed, 21 Aug 2019 16:14:25 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 21 Aug 2019 16:14:25 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 5276E16C65BA; Wed, 21 Aug 2019 09:14:26 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 09:14:26 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        rostedt <rostedt@goodmis.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
-Reply-To: paulmck@linux.ibm.com
-References: <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
- <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
- <CAHk-=wgC4+kV9AiLokw7cPP429rKCU+vjA8cWAfyOjC3MtqC4A@mail.gmail.com>
- <20190820135612.GS2332@hirez.programming.kicks-ass.net>
- <20190820202932.GW28441@linux.ibm.com>
- <20190821103200.kpufwtviqhpbuv2n@willie-the-truck>
- <20190821132310.GC28441@linux.ibm.com>
- <20190821153325.GD2349@hirez.programming.kicks-ass.net>
- <52600272.1909.1566402523680.JavaMail.zimbra@efficios.com>
+        Wed, 21 Aug 2019 12:16:37 -0400
+Received: by mail-qt1-f196.google.com with SMTP id y26so3724095qto.4
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 09:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rSelPuss6Rio+zLxmeT3lHQjONOPz6ghCteSl79uvc4=;
+        b=lecystT5pa2A6yo8Axdj1KSsLU40VESQnnpU2Rk1L1SzDdZmYUbd4PsiNU+5iLOE7j
+         zbD6bbLCGebQwx9lcXa2B+HW9DoD5q7uBa/gZ7ygQPx77wQQIQ1GmTexMMrPCdK7kyCX
+         dcyjDO+jw/ZpT3eBIlbTDS/F9lvZmJkfsIhEr9N+LJxXNscIOIrGwF+RrgQg/pAcfw/v
+         C6mD6PK7XpC9IuEvG2lpMuOD0oHl5qpDhT5vYuAjCVMq7SKO6jJn1/Yli0UUb+PtB3VS
+         3uspvkistGavDwQta/lD1VQQk7IwUnquCu4OISrFvHvchWTZq1eeFmMkErGSgo9qyGp1
+         hN0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rSelPuss6Rio+zLxmeT3lHQjONOPz6ghCteSl79uvc4=;
+        b=JaSxiW0+eaZ8gKQR+RlEXVmb1jBCZcZEWTI1mcYO2bUoJ1jaojlTD2Z2Nye21M4RNV
+         tYLouUUnZqRCp+QAyVQ0dSCj6UqMdLkWb8+XzZBU5Ussk6lwPQ3j3N/31jbELRIKzzry
+         xreiEUTC6T1FI5/YJhSUwM3hQKBWwTwJfAxw5Fe8wtabv7fWDbt9FmyYa3TFjjevo1R3
+         EOIbEXZDkck4hKDbe85WgZ0a5AHw+QrVHSFxZBd/kaPmGc4aQQjK2hhKNvKNbi/cD6Ra
+         slfqxSjMcbg+4fdkG9QHgkah0Tt7rMVh3YNjkz1QFE1fTuobszjscXr/AXIDdcfG7Bwx
+         mKGQ==
+X-Gm-Message-State: APjAAAWx6lhVP63olFIUTpejnzPqY2PulwDcRjMrbuATfjWqg5KgJANK
+        i/6W+eCaoDQHMRgAK2mMGdsfBGbb7rQ=
+X-Google-Smtp-Source: APXvYqypokR94+w8NKN6DkdxQ9oFTavnyiG1VlybQkUXWne93Jd3wfqkFsQtWY3s57Jl+U7ZTrZ3aQ==
+X-Received: by 2002:ac8:7696:: with SMTP id g22mr31568522qtr.208.1566404196241;
+        Wed, 21 Aug 2019 09:16:36 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id y194sm10143420qkb.111.2019.08.21.09.16.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 21 Aug 2019 09:16:35 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1i0THn-0008UM-3g; Wed, 21 Aug 2019 13:16:35 -0300
+Date:   Wed, 21 Aug 2019 13:16:35 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 4/4] mm, notifier: Catch sleeping/blocking for !blockable
+Message-ID: <20190821161635.GC8653@ziepe.ca>
+References: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
+ <20190820081902.24815-5-daniel.vetter@ffwll.ch>
+ <20190820133418.GG29246@ziepe.ca>
+ <20190820151810.GG11147@phenom.ffwll.local>
+ <20190821154151.GK11147@phenom.ffwll.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <52600272.1909.1566402523680.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19082116-2213-0000-0000-000003BE7CD7
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011629; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01250059; UDB=6.00659956; IPR=6.01031613;
- MB=3.00028262; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-21 16:14:30
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082116-2214-0000-0000-00005FB85AB8
-Message-Id: <20190821161426.GK28441@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=919 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908210167
+In-Reply-To: <20190821154151.GK11147@phenom.ffwll.local>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 11:48:43AM -0400, Mathieu Desnoyers wrote:
-> ----- On Aug 21, 2019, at 8:33 AM, Peter Zijlstra peterz@infradead.org wrote:
-> 
-> > On Wed, Aug 21, 2019 at 06:23:10AM -0700, Paul E. McKenney wrote:
-> >> On Wed, Aug 21, 2019 at 11:32:01AM +0100, Will Deacon wrote:
-> > 
-> >> > and so it is using a store-pair instruction to reduce the complexity in
-> >> > the immediate generation. Thus, the 64-bit store will only have 32-bit
-> >> > atomicity. In fact, this is scary because if I change bar to:
-> >> > 
-> >> > void bar(u64 *x)
-> >> > {
-> >> > 	*(volatile u64 *)x = 0xabcdef10abcdef10;
-> >> > }
-> >> > 
-> >> > then I get:
-> >> > 
-> >> > bar:
-> >> > 	mov	w1, 61200
-> >> > 	movk	w1, 0xabcd, lsl 16
-> >> > 	str	w1, [x0]
-> >> > 	str	w1, [x0, 4]
-> >> > 	ret
-> >> > 
-> >> > so I'm not sure that WRITE_ONCE would even help :/
-> >> 
-> >> Well, I can have the LWN article cite your email, then.  So thank you
-> >> very much!
-> >> 
-> >> Is generation of this code for a 64-bit volatile store considered a bug?
-> >> Or does ARMv8 exclude the possibility of 64-bit MMIO registers?  And I
-> >> would guess that Thomas and Linus would ask a similar bugginess question
-> >> for normal stores.  ;-)
-> > 
-> > I'm calling this a compiler bug; the way I understand volatile this is
-> > very much against the intentended use case. That is, this is buggy even
-> > on UP vs signals or MMIO.
-> 
-> And here is a simpler reproducer on my gcc-8.3.0 (aarch64) compiled with O2:
-> 
-> volatile unsigned long a;
->  
-> void fct(void)
-> {
->         a = 0x1234567812345678ULL;
-> }
-> 
-> void fct(void)
-> {
->         a = 0x1234567812345678ULL;
->    0:   90000000        adrp    x0, 8 <fct+0x8>
->    4:   528acf01        mov     w1, #0x5678                     // #22136
->    8:   72a24681        movk    w1, #0x1234, lsl #16
->    c:   f9400000        ldr     x0, [x0]
->   10:   b9000001        str     w1, [x0]
->   14:   b9000401        str     w1, [x0, #4]
-> }
->   18:   d65f03c0        ret
-> 
-> And the non-volatile case uses stp (is it a single store to memory ?):
-> 
-> unsigned long a;
->   
-> void fct(void)
-> {
->         a = 0x1234567812345678ULL;
-> }
-> 
-> void fct(void)
-> {
->         a = 0x1234567812345678ULL;
->    0:   90000000        adrp    x0, 8 <fct+0x8>
->    4:   528acf01        mov     w1, #0x5678                     // #22136
->    8:   72a24681        movk    w1, #0x1234, lsl #16
->    c:   f9400000        ldr     x0, [x0]
->   10:   29000401        stp     w1, w1, [x0]
-> }
->   14:   d65f03c0        ret
-> 
-> It would probably be a good idea to audit other architectures, since this
-> is done by the compiler backend.
+On Wed, Aug 21, 2019 at 05:41:51PM +0200, Daniel Vetter wrote:
 
-That does seem like a very good idea!
+> > Hm, I thought the page table locks we're holding there already prevent any
+> > sleeping, so would be redundant? But reading through code I think that's
+> > not guaranteed, so yeah makes sense to add it for invalidate_range_end
+> > too. I'll respin once I have the ack/nack from scheduler people.
+> 
+> So I started to look into this, and I'm a bit confused. There's no
+> _nonblock version of this, so does this means blocking is never allowed,
+> or always allowed?
 
-							Thanx, Paul
+RDMA has a mutex:
 
+ib_umem_notifier_invalidate_range_end
+  rbt_ib_umem_for_each_in_range
+   invalidate_range_start_trampoline
+    ib_umem_notifier_end_account
+      mutex_lock(&umem_odp->umem_mutex);
+
+I'm working to delete this path though!
+
+nonblocking or not follows the start, the same flag gets placed into
+the mmu_notifier_range struct passed to end.
+
+> From a quick look through implementations I've only seen spinlocks, and
+> one up_read. So I guess I should wrape this callback in some unconditional
+> non_block_start/end, but I'm not sure.
+
+For now, we should keep it the same as start, conditionally blocking.
+
+Hopefully before LPC I can send a RFC series that eliminates most
+invalidate_range_end users in favor of common locking..
+
+Jason
