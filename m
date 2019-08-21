@@ -2,50 +2,50 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0925DC3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B29C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84E122DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 596C122DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:24:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="j1zwvUIf"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="HGiQhOZ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfHUAXx (ORCPT
+        id S1726741AbfHUAXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 20:23:53 -0400
+        Tue, 20 Aug 2019 20:23:41 -0400
 Received: from mail-eopbgr680114.outbound.protection.outlook.com ([40.107.68.114]:56135
         "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726694AbfHUAXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 20:23:46 -0400
+        id S1726327AbfHUAXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 20:23:38 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b+HlrFytrUZBctdgqJmrgkv5xNmpEnW+lBTzIJuBNU/nzPC3eHk0VWGw2aBzKs3KeA8jYUnLYURngBy/jKhmmvOYN7jSWHD70Z6AYPRBns4e/dBl4w32BTt+z1MK5aPZQ9Wwddjt1uamN3YRoH2m4dPt6qFYNlBC8Jx/x+At0K8lZzbH6FtljZUWC5M+s9XzZcslwqkDITpDh2q3gzdqZO3xMq2+sLt5gb7er0Eip+dMgpU0UeaIR12d0VYGpiqbxkjc5KnixJ7q/pO+1l/0So2XWu46c90CivKRRYcfgRryhkiayWC23J21ynGGrZ+jKNkORPMcUMQJFwM5BWqSkg==
+ b=LfF3rTAp+6AmSdbH9V+fcswzeZ+D2UtqHCfvpTW/EUkSOmC6aO7NdtXjYGWXxcnrwEfWpBUzPmiftgYDGEG5A0irQhB2SEUeErbMgNVVqFrgpEol9edMm/qAeZ1JvjvS5ODVzYbUXU4i8hhLl1A4SRo8XHmSRoyd1n10BtfStZdhaE/sq6ZNcwVTO9m8ucD5wduxOQWidfOHN/uxsk5pLitfj5KpNrJwKfQod7nrKvQSA1oiUXJVSn7pebzZHDbhwahEvGQZ8bvfaAnJLP3rwmKRV2q7sCuohkN0KnMN8qSlPXfR0MfBTGl2U/rNRRjq+Vk0gcGcXTcZTAI9m7JuMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GrTeVtIfqKLr/QNHMpMnBZ29NF9U6t8j5qPvzR09P60=;
- b=ZMCCamXzbZM7/HbBfEIUhCgDziR7JNo10z2qvFOlIxRrev9j1LjT+VhcHsOOQ8UVY5fxNTBPrCGUKOJrLc+2C7krfFV2ki8fRHlU+OZfjp1LXmtFUdEqKaSQjM/qgAZHj00T6v+MGPzqsOZK8nwc3zxWi1Zt/eP9b5AIM2EcjJ0eZXj3Ipp3KaGYevIzZWZiloqNx9A4WCxAA1Uu2Bvqu7vW3ngVauTo/m01ibWVlkk1clK+/6S7fEp8FvR5l8WUlSibtPgEgJ0tPuNAaF1xXKGdy3gWp6l22+ORGrliPzOfI1ihFH4XtEvJnhkDWLrA5oUfBfyjEIjWDgi6OJKkQw==
+ bh=oFZZ4diWljvlc20ZEICjYDsjPSJzxnBOllgrHtDKK6A=;
+ b=XKaZNmCqwfP2apVYpf/Xn8Ah47qFwFSGIZODsydm1LAllIIenSNV1CvRl4c2lryMqX0k4cqdq+Z/tSgadioNXwUfj9QQgsd4kuArS2StyTEF6G43x09jndmSTdW6dYvTWD6HWgTrQv9WqhPdFsS9PcmyV+sDleKEmq5XK+4/Y4Illrdvc8aP4yrVfE6KzpV1mVuA8RelMk/Mp2aulyvfR1MiskvZWLJL9ndc/BWMBCKPtyTHi+iNffOZ3sCj+J4rklW3vRHppkIfp7AYL9UjQ2AUMoCKKT5Plpln4MsUHQE7EAOGuCTKM4slMm0jgoc8XJLTyD5JRgXasgdSzK0h3g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GrTeVtIfqKLr/QNHMpMnBZ29NF9U6t8j5qPvzR09P60=;
- b=j1zwvUIf6WbeqTIViC8anSBZ/CXQceS9hoMhWxVpHHPEnoVFq89cwHOugky8oGsVDrza+00fkMxPPtTGu83A1sskvAlxfD73ZLfmG8khOixuFesYhChBnvm46LS5hWPeZD+FZzNwggMBBqa6+eV/3dv9u2jPJfLweW1WEfb7vvE=
+ bh=oFZZ4diWljvlc20ZEICjYDsjPSJzxnBOllgrHtDKK6A=;
+ b=HGiQhOZ0yNFJdj4quCRmetLfIul24MO/eWkZesDpI1l+Cl6FmQPuGFRNhQFBwQUjuq01YSlJhom4xk7797Ap3c2o2xf/y4BYbmjhu2Kw2TTbwYR2+HzPdTDJm0Iaph3QP/DGWuqJxQCFKnQAxkM7RCIl1ZSnXYcS8iy75LBCFmw=
 Received: from DM6PR21MB1242.namprd21.prod.outlook.com (20.179.50.86) by
  DM6PR21MB1450.namprd21.prod.outlook.com (10.255.109.212) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.3; Wed, 21 Aug 2019 00:23:41 +0000
+ 15.20.2220.3; Wed, 21 Aug 2019 00:23:33 +0000
 Received: from DM6PR21MB1242.namprd21.prod.outlook.com
  ([fe80::ddd:8e5b:2930:6726]) by DM6PR21MB1242.namprd21.prod.outlook.com
  ([fe80::ddd:8e5b:2930:6726%9]) with mapi id 15.20.2178.006; Wed, 21 Aug 2019
- 00:23:41 +0000
+ 00:23:33 +0000
 From:   Haiyang Zhang <haiyangz@microsoft.com>
 To:     "sashal@kernel.org" <sashal@kernel.org>,
         "davem@davemloft.net" <davem@davemloft.net>,
@@ -61,12 +61,13 @@ CC:     Haiyang Zhang <haiyangz@microsoft.com>,
         KY Srinivasan <kys@microsoft.com>,
         Stephen Hemminger <sthemmin@microsoft.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next,v3, 6/6] net/mlx5e: Add mlx5e HV VHCA stats agent
-Thread-Topic: [PATCH net-next,v3, 6/6] net/mlx5e: Add mlx5e HV VHCA stats
- agent
-Thread-Index: AQHVV7av9jr7MS48YkejvVIIdNN5EA==
-Date:   Wed, 21 Aug 2019 00:23:41 +0000
-Message-ID: <1566346948-69497-7-git-send-email-haiyangz@microsoft.com>
+Subject: [PATCH net-next,v3, 2/6] PCI: hv: Add a Hyper-V PCI interface driver
+ for software backchannel interface
+Thread-Topic: [PATCH net-next,v3, 2/6] PCI: hv: Add a Hyper-V PCI interface
+ driver for software backchannel interface
+Thread-Index: AQHVV7aqTXaW6mDaBE2Uols+NDE8ew==
+Date:   Wed, 21 Aug 2019 00:23:32 +0000
+Message-ID: <1566346948-69497-3-git-send-email-haiyangz@microsoft.com>
 References: <1566346948-69497-1-git-send-email-haiyangz@microsoft.com>
 In-Reply-To: <1566346948-69497-1-git-send-email-haiyangz@microsoft.com>
 Accept-Language: en-US
@@ -82,365 +83,292 @@ x-ms-exchange-messagesentrepresentingtype: 2
 x-mailer: git-send-email 1.8.3.1
 x-originating-ip: [13.77.154.182]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2be0adb0-564b-44c7-3b05-08d725cdd174
+x-ms-office365-filtering-correlation-id: b1281573-a2a9-4d35-06f5-08d725cdcca4
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR21MB1450;
 x-ms-traffictypediagnostic: DM6PR21MB1450:|DM6PR21MB1450:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR21MB14504F2E1C8ADD3AFBBF6FFBACAA0@DM6PR21MB1450.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-microsoft-antispam-prvs: <DM6PR21MB1450D3823F123267ACA47209ACAA0@DM6PR21MB1450.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
 x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(189003)(199004)(26005)(2906002)(71190400001)(71200400001)(6512007)(50226002)(186003)(36756003)(54906003)(8676002)(110136005)(6436002)(6392003)(7846003)(8936002)(99286004)(446003)(6506007)(81166006)(81156014)(2201001)(386003)(6486002)(76176011)(7416002)(66066001)(5660300002)(52116002)(102836004)(11346002)(316002)(53936002)(6116002)(3846002)(22452003)(478600001)(4326008)(14444005)(256004)(66946007)(66476007)(66556008)(64756008)(66446008)(2616005)(476003)(486006)(305945005)(25786009)(10090500001)(4720700003)(14454004)(10290500003)(2501003)(7736002)(42413003)(32563001)(921003)(142933001)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1450;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(189003)(199004)(26005)(2906002)(71190400001)(71200400001)(6512007)(50226002)(186003)(36756003)(54906003)(8676002)(110136005)(6436002)(6392003)(7846003)(8936002)(99286004)(446003)(6506007)(81166006)(81156014)(2201001)(386003)(6486002)(76176011)(7416002)(66066001)(5660300002)(52116002)(102836004)(11346002)(316002)(53936002)(6116002)(3846002)(22452003)(478600001)(4326008)(256004)(66946007)(66476007)(66556008)(64756008)(66446008)(2616005)(476003)(486006)(305945005)(25786009)(10090500001)(4720700003)(14454004)(10290500003)(2501003)(7736002)(921003)(142933001)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1450;H:DM6PR21MB1242.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: INTJ2w6CjS5vTmz6fxk5O9TrHIMiLtHxnLDJ0hO7hMf1Lr+ttwTILtj3GVnbDDcH9MvNseqi4x5cJAj4auwrONMMLPnt08kkWTKvbK0E/xIVVDwXgq2VivOEGKD6MYiWMu4riFSt0zhMLzdSjmaNsIAC68IbLU8L3mhdL/W+v9WbMjuvSqMC56sz0jRztn1dCFPwggqNWmk57gti00lEx89WMOlExJpsccIIktxG4/EQ+FhZDpmjNGzRbKBhDJ95R9xnSAVXzacvoUvt/KLll2dZMdg8+UavFpQkTiOYGroEiM/9aeZ49k1tDupTq4JX0E4lkMm5wC6/Y2hd9Td+Fb+FT7eq/JiH+0pJkrYn+cBb7ZVnYswsVHF3hT1+3yTpdWCiJ4f6e0iSqDnonl02lZ1nijl830z5dcx5Kf3kBP4=
+x-microsoft-antispam-message-info: m7p6oUHLvOpPXk6jkSuwjQqvXYML2EkyaAb3Fl9DdasUnjfJOttwrbiPZr49NXkYroVypLda+GbVVnm8puSqWhFUtS4UdS0lWjwYQo7UhZ95Duilq/OLnHJgcMzEyPoZJxLxDEVph2WT0nPA9+UOrtq/1ORj5atomSPxXGW4sTJ3N68Nn9FxxWBYEIy7iJAg0fF1kttRIXeI4sJHJvY/DvDRcPz85SbbLY8HoYRFy5Teh2myD4lXqkylX4Mg8DvUm2DZiYEvzt3mr1KJfmir5mt5+TDJr7g8DJpfDfSC7ZybI1zeNoyuRBip6rQJOmTr43J1QUhpVL+WYllF59S4tZEmv+qKSTX8E1lKGQnKOdUG4WoTJZ6t5agujDnK4Jc01scYeYWnV6QAKIL371IdMmCoOQgWUgLHRMARXaNu4Rg=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2be0adb0-564b-44c7-3b05-08d725cdd174
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 00:23:41.0422
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1281573-a2a9-4d35-06f5-08d725cdcca4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 00:23:32.9778
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dF3nuxBd6IbRwyOGOhB7ZvAUQI34O1UrcecT474NI8Ut3B+xmUag9WoDJ/bVF5K+ml+PWjSOMiEgwySxtbWGQg==
+X-MS-Exchange-CrossTenant-userprincipalname: 0Tn5dp5QosrciQRlwO086N9L5GukNR2t75QJxcN4m1VqQuLc9yzg7+9O0RysOqfSNJPQ7Mi9AC8UwKKzfaOpRg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1450
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eran Ben Elisha <eranbe@mellanox.com>
+This interface driver is a helper driver allows other drivers to
+have a common interface with the Hyper-V PCI frontend driver.
 
-HV VHCA stats agent is responsible on running a preiodic rx/tx
-packets/bytes stats update. Currently the supported format is version
-MLX5_HV_VHCA_STATS_VERSION. Block ID 1 is dedicated for statistics data
-transfer from the VF to the PF.
-
-The reporter fetch the statistics data from all opened channels, fill it
-in a buffer and send it to mlx5_hv_vhca_write_agent.
-
-As the stats layer should include some metadata per block (sequence and
-offset), the HV VHCA layer shall modify the buffer before actually send it
-over block 1.
-
-Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/Makefile   |   1 +
- drivers/net/ethernet/mellanox/mlx5/core/en.h       |  13 ++
- .../ethernet/mellanox/mlx5/core/en/hv_vhca_stats.c | 162 +++++++++++++++++=
+ MAINTAINERS                              |  1 +
+ drivers/pci/Kconfig                      |  1 +
+ drivers/pci/controller/Kconfig           |  7 ++++
+ drivers/pci/controller/Makefile          |  1 +
+ drivers/pci/controller/pci-hyperv-intf.c | 67 ++++++++++++++++++++++++++++=
 ++++
- .../ethernet/mellanox/mlx5/core/en/hv_vhca_stats.h |  25 ++++
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |   3 +
- .../net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h  |   1 +
- 6 files changed, 205 insertions(+)
- create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stat=
-s.c
- create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stat=
-s.h
+ drivers/pci/controller/pci-hyperv.c      | 12 ++++--
+ include/linux/hyperv.h                   | 30 ++++++++++----
+ 7 files changed, 108 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/pci/controller/pci-hyperv-intf.c
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net=
-/ethernet/mellanox/mlx5/core/Makefile
-index fc59a40..a889a38 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-@@ -36,6 +36,7 @@ mlx5_core-$(CONFIG_MLX5_CORE_EN_DCB) +=3D en_dcbnl.o en/p=
-ort_buffer.o
- mlx5_core-$(CONFIG_MLX5_ESWITCH)     +=3D en_rep.o en_tc.o en/tc_tun.o lib=
-/port_tun.o lag_mp.o \
- 					lib/geneve.o en/tc_tun_vxlan.o en/tc_tun_gre.o \
- 					en/tc_tun_geneve.o
-+mlx5_core-$(CONFIG_PCI_HYPERV_INTERFACE) +=3D en/hv_vhca_stats.o
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e352550..866ae88 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7453,6 +7453,7 @@ F:	drivers/hid/hid-hyperv.c
+ F:	drivers/hv/
+ F:	drivers/input/serio/hyperv-keyboard.c
+ F:	drivers/pci/controller/pci-hyperv.c
++F:	drivers/pci/controller/pci-hyperv-intf.c
+ F:	drivers/net/hyperv/
+ F:	drivers/scsi/storvsc_drv.c
+ F:	drivers/uio/uio_hv_generic.c
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 2ab9240..c313de9 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -182,6 +182,7 @@ config PCI_LABEL
+ config PCI_HYPERV
+         tristate "Hyper-V PCI Frontend"
+         depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_6=
+4
++	select PCI_HYPERV_INTERFACE
+         help
+           The PCI device frontend driver allows the kernel to import arbit=
+rary
+           PCI devices from a PCI backend to support PCI driver domains.
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfi=
+g
+index fe9f9f1..70e0782 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -281,5 +281,12 @@ config VMD
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called vmd.
 =20
- #
- # Core extra
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/eth=
-ernet/mellanox/mlx5/core/en.h
-index 8fc5107..4a8008b 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -54,6 +54,7 @@
- #include "mlx5_core.h"
- #include "en_stats.h"
- #include "en/fs.h"
-+#include "lib/hv_vhca.h"
-=20
- extern const struct net_device_ops mlx5e_netdev_ops;
- struct page_pool;
-@@ -777,6 +778,15 @@ struct mlx5e_modify_sq_param {
- 	int rl_index;
- };
-=20
-+#if IS_ENABLED(CONFIG_PCI_HYPERV_INTERFACE)
-+struct mlx5e_hv_vhca_stats_agent {
-+	struct mlx5_hv_vhca_agent *agent;
-+	struct delayed_work        work;
-+	u16                        delay;
-+	void                      *buf;
-+};
-+#endif
++config PCI_HYPERV_INTERFACE
++	tristate "Hyper-V PCI Interface"
++	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
++	help
++	  The Hyper-V PCI Interface is a helper driver allows other drivers to
++	  have a common interface with the Hyper-V PCI frontend driver.
 +
- struct mlx5e_xsk {
- 	/* UMEMs are stored separately from channels, because we don't want to
- 	 * lose them when channels are recreated. The kernel also stores UMEMs,
-@@ -848,6 +858,9 @@ struct mlx5e_priv {
- 	struct devlink_health_reporter *tx_reporter;
- 	struct devlink_health_reporter *rx_reporter;
- 	struct mlx5e_xsk           xsk;
-+#if IS_ENABLED(CONFIG_PCI_HYPERV_INTERFACE)
-+	struct mlx5e_hv_vhca_stats_agent stats_agent;
-+#endif
- };
-=20
- struct mlx5e_profile {
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.c b/d=
-rivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.c
+ source "drivers/pci/controller/dwc/Kconfig"
+ endmenu
+diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makef=
+ile
+index d56a507..a2a22c9 100644
+--- a/drivers/pci/controller/Makefile
++++ b/drivers/pci/controller/Makefile
+@@ -4,6 +4,7 @@ obj-$(CONFIG_PCIE_CADENCE_HOST) +=3D pcie-cadence-host.o
+ obj-$(CONFIG_PCIE_CADENCE_EP) +=3D pcie-cadence-ep.o
+ obj-$(CONFIG_PCI_FTPCI100) +=3D pci-ftpci100.o
+ obj-$(CONFIG_PCI_HYPERV) +=3D pci-hyperv.o
++obj-$(CONFIG_PCI_HYPERV_INTERFACE) +=3D pci-hyperv-intf.o
+ obj-$(CONFIG_PCI_MVEBU) +=3D pci-mvebu.o
+ obj-$(CONFIG_PCI_AARDVARK) +=3D pci-aardvark.o
+ obj-$(CONFIG_PCI_TEGRA) +=3D pci-tegra.o
+diff --git a/drivers/pci/controller/pci-hyperv-intf.c b/drivers/pci/control=
+ler/pci-hyperv-intf.c
 new file mode 100644
-index 0000000..c37b4ac
+index 0000000..cc96be4
 --- /dev/null
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.c
-@@ -0,0 +1,162 @@
-+// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
-+// Copyright (c) 2018 Mellanox Technologies
++++ b/drivers/pci/controller/pci-hyperv-intf.c
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) Microsoft Corporation.
++ *
++ * Author:
++ *   Haiyang Zhang <haiyangz@microsoft.com>
++ *
++ * This small module is a helper driver allows other drivers to
++ * have a common interface with the Hyper-V PCI frontend driver.
++ */
 +
-+#include "en.h"
-+#include "en/hv_vhca_stats.h"
-+#include "lib/hv_vhca.h"
-+#include "lib/hv.h"
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+struct mlx5e_hv_vhca_per_ring_stats {
-+	u64     rx_packets;
-+	u64     rx_bytes;
-+	u64     tx_packets;
-+	u64     tx_bytes;
-+};
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/hyperv.h>
 +
-+static void
-+mlx5e_hv_vhca_fill_ring_stats(struct mlx5e_priv *priv, int ch,
-+			      struct mlx5e_hv_vhca_per_ring_stats *data)
++struct hyperv_pci_block_ops hvpci_block_ops;
++EXPORT_SYMBOL_GPL(hvpci_block_ops);
++
++int hyperv_read_cfg_blk(struct pci_dev *dev, void *buf, unsigned int buf_l=
+en,
++			unsigned int block_id, unsigned int *bytes_returned)
 +{
-+	struct mlx5e_channel_stats *stats;
-+	int tc;
++	if (!hvpci_block_ops.read_block)
++		return -EOPNOTSUPP;
 +
-+	stats =3D &priv->channel_stats[ch];
-+	data->rx_packets =3D stats->rq.packets;
-+	data->rx_bytes   =3D stats->rq.bytes;
++	return hvpci_block_ops.read_block(dev, buf, buf_len, block_id,
++					  bytes_returned);
++}
++EXPORT_SYMBOL_GPL(hyperv_read_cfg_blk);
 +
-+	for (tc =3D 0; tc < priv->max_opened_tc; tc++) {
-+		data->tx_packets +=3D stats->sq[tc].packets;
-+		data->tx_bytes   +=3D stats->sq[tc].bytes;
-+	}
++int hyperv_write_cfg_blk(struct pci_dev *dev, void *buf, unsigned int len,
++			 unsigned int block_id)
++{
++	if (!hvpci_block_ops.write_block)
++		return -EOPNOTSUPP;
++
++	return hvpci_block_ops.write_block(dev, buf, len, block_id);
++}
++EXPORT_SYMBOL_GPL(hyperv_write_cfg_blk);
++
++int hyperv_reg_block_invalidate(struct pci_dev *dev, void *context,
++				void (*block_invalidate)(void *context,
++							 u64 block_mask))
++{
++	if (!hvpci_block_ops.reg_blk_invalidate)
++		return -EOPNOTSUPP;
++
++	return hvpci_block_ops.reg_blk_invalidate(dev, context,
++						  block_invalidate);
++}
++EXPORT_SYMBOL_GPL(hyperv_reg_block_invalidate);
++
++static void __exit exit_hv_pci_intf(void)
++{
 +}
 +
-+static void mlx5e_hv_vhca_fill_stats(struct mlx5e_priv *priv, u64 *data,
-+				     int buf_len)
-+{
-+	int ch, i =3D 0;
-+
-+	for (ch =3D 0; ch < priv->max_nch; ch++) {
-+		u64 *buf =3D data + i;
-+
-+		if (WARN_ON_ONCE(buf +
-+				 sizeof(struct mlx5e_hv_vhca_per_ring_stats) >
-+				 data + buf_len))
-+			return;
-+
-+		mlx5e_hv_vhca_fill_ring_stats(priv, ch,
-+					      (struct mlx5e_hv_vhca_per_ring_stats *)buf);
-+		i +=3D sizeof(struct mlx5e_hv_vhca_per_ring_stats) / sizeof(u64);
-+	}
-+}
-+
-+static int mlx5e_hv_vhca_stats_buf_size(struct mlx5e_priv *priv)
-+{
-+	return (sizeof(struct mlx5e_hv_vhca_per_ring_stats) *
-+		priv->max_nch);
-+}
-+
-+static void mlx5e_hv_vhca_stats_work(struct work_struct *work)
-+{
-+	struct mlx5e_hv_vhca_stats_agent *sagent;
-+	struct mlx5_hv_vhca_agent *agent;
-+	struct delayed_work *dwork;
-+	struct mlx5e_priv *priv;
-+	int buf_len, rc;
-+	void *buf;
-+
-+	dwork =3D to_delayed_work(work);
-+	sagent =3D container_of(dwork, struct mlx5e_hv_vhca_stats_agent, work);
-+	priv =3D container_of(sagent, struct mlx5e_priv, stats_agent);
-+	buf_len =3D mlx5e_hv_vhca_stats_buf_size(priv);
-+	agent =3D sagent->agent;
-+	buf =3D sagent->buf;
-+
-+	memset(buf, 0, buf_len);
-+	mlx5e_hv_vhca_fill_stats(priv, buf, buf_len);
-+
-+	rc =3D mlx5_hv_vhca_agent_write(agent, buf, buf_len);
-+	if (rc) {
-+		mlx5_core_err(priv->mdev,
-+			      "%s: Failed to write stats, err =3D %d\n",
-+			      __func__, rc);
-+		return;
-+	}
-+
-+	if (sagent->delay)
-+		queue_delayed_work(priv->wq, &sagent->work, sagent->delay);
-+}
-+
-+enum {
-+	MLX5_HV_VHCA_STATS_VERSION     =3D 1,
-+	MLX5_HV_VHCA_STATS_UPDATE_ONCE =3D 0xFFFF,
-+};
-+
-+static void mlx5e_hv_vhca_stats_control(struct mlx5_hv_vhca_agent *agent,
-+					struct mlx5_hv_vhca_control_block *block)
-+{
-+	struct mlx5e_hv_vhca_stats_agent *sagent;
-+	struct mlx5e_priv *priv;
-+
-+	priv =3D mlx5_hv_vhca_agent_priv(agent);
-+	sagent =3D &priv->stats_agent;
-+
-+	block->version =3D MLX5_HV_VHCA_STATS_VERSION;
-+	block->rings   =3D priv->max_nch;
-+
-+	if (!block->command) {
-+		cancel_delayed_work_sync(&priv->stats_agent.work);
-+		return;
-+	}
-+
-+	sagent->delay =3D block->command =3D=3D MLX5_HV_VHCA_STATS_UPDATE_ONCE ? =
-0 :
-+			msecs_to_jiffies(block->command * 100);
-+
-+	queue_delayed_work(priv->wq, &sagent->work, sagent->delay);
-+}
-+
-+static void mlx5e_hv_vhca_stats_cleanup(struct mlx5_hv_vhca_agent *agent)
-+{
-+	struct mlx5e_priv *priv =3D mlx5_hv_vhca_agent_priv(agent);
-+
-+	cancel_delayed_work_sync(&priv->stats_agent.work);
-+}
-+
-+int mlx5e_hv_vhca_stats_create(struct mlx5e_priv *priv)
-+{
-+	int buf_len =3D mlx5e_hv_vhca_stats_buf_size(priv);
-+	struct mlx5_hv_vhca_agent *agent;
-+
-+	priv->stats_agent.buf =3D kvzalloc(buf_len, GFP_KERNEL);
-+	if (!priv->stats_agent.buf)
-+		return -ENOMEM;
-+
-+	agent =3D mlx5_hv_vhca_agent_create(priv->mdev->hv_vhca,
-+					  MLX5_HV_VHCA_AGENT_STATS,
-+					  mlx5e_hv_vhca_stats_control, NULL,
-+					  mlx5e_hv_vhca_stats_cleanup,
-+					  priv);
-+
-+	if (IS_ERR_OR_NULL(agent)) {
-+		if (IS_ERR(agent))
-+			netdev_warn(priv->netdev,
-+				    "Failed to create hv vhca stats agent, err =3D %ld\n",
-+				    PTR_ERR(agent));
-+
-+		kfree(priv->stats_agent.buf);
-+		return IS_ERR_OR_NULL(agent);
-+	}
-+
-+	priv->stats_agent.agent =3D agent;
-+	INIT_DELAYED_WORK(&priv->stats_agent.work, mlx5e_hv_vhca_stats_work);
-+
-+	return 0;
-+}
-+
-+void mlx5e_hv_vhca_stats_destroy(struct mlx5e_priv *priv)
-+{
-+	if (IS_ERR_OR_NULL(priv->stats_agent.agent))
-+		return;
-+
-+	mlx5_hv_vhca_agent_destroy(priv->stats_agent.agent);
-+	kfree(priv->stats_agent.buf);
-+}
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.h b/d=
-rivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.h
-new file mode 100644
-index 0000000..664463f
---- /dev/null
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stats.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
-+/* Copyright (c) 2019 Mellanox Technologies. */
-+
-+#ifndef __MLX5_EN_STATS_VHCA_H__
-+#define __MLX5_EN_STATS_VHCA_H__
-+#include "en.h"
-+
-+#if IS_ENABLED(CONFIG_PCI_HYPERV_INTERFACE)
-+
-+int mlx5e_hv_vhca_stats_create(struct mlx5e_priv *priv);
-+void mlx5e_hv_vhca_stats_destroy(struct mlx5e_priv *priv);
-+
-+#else
-+
-+static inline int mlx5e_hv_vhca_stats_create(struct mlx5e_priv *priv)
++static int __init init_hv_pci_intf(void)
 +{
 +	return 0;
 +}
 +
-+static inline void mlx5e_hv_vhca_stats_destroy(struct mlx5e_priv *priv)
-+{
-+}
-+#endif
++module_init(init_hv_pci_intf);
++module_exit(exit_hv_pci_intf);
 +
-+#endif /* __MLX5_EN_STATS_VHCA_H__ */
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/ne=
-t/ethernet/mellanox/mlx5/core/en_main.c
-index 5721d3d..fac8455 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -64,6 +64,7 @@
- #include "en/xsk/setup.h"
- #include "en/xsk/rx.h"
- #include "en/xsk/tx.h"
-+#include "en/hv_vhca_stats.h"
++MODULE_DESCRIPTION("Hyper-V PCI Interface");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
+ci-hyperv.c
+index 57adeca..9c93ac2 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -983,7 +983,6 @@ int hv_read_config_block(struct pci_dev *pdev, void *bu=
+f, unsigned int len,
+ 	*bytes_returned =3D comp_pkt.bytes_returned;
+ 	return 0;
+ }
+-EXPORT_SYMBOL(hv_read_config_block);
 =20
+ /**
+  * hv_pci_write_config_compl() - Invoked when a response packet for a writ=
+e
+@@ -1070,7 +1069,6 @@ int hv_write_config_block(struct pci_dev *pdev, void =
+*buf, unsigned int len,
 =20
- bool mlx5e_check_fragmented_striding_rq_cap(struct mlx5_core_dev *mdev)
-@@ -5103,6 +5104,7 @@ static void mlx5e_nic_enable(struct mlx5e_priv *priv)
- 	if (mlx5e_monitor_counter_supported(priv))
- 		mlx5e_monitor_counter_init(priv);
+ 	return 0;
+ }
+-EXPORT_SYMBOL(hv_write_config_block);
 =20
-+	mlx5e_hv_vhca_stats_create(priv);
- 	if (netdev->reg_state !=3D NETREG_REGISTERED)
- 		return;
- #ifdef CONFIG_MLX5_CORE_EN_DCB
-@@ -5135,6 +5137,7 @@ static void mlx5e_nic_disable(struct mlx5e_priv *priv=
-)
+ /**
+  * hv_register_block_invalidate() - Invoked when a config block invalidati=
+on
+@@ -1101,7 +1099,6 @@ int hv_register_block_invalidate(struct pci_dev *pdev=
+, void *context,
+ 	return 0;
 =20
- 	queue_work(priv->wq, &priv->set_rx_mode_work);
+ }
+-EXPORT_SYMBOL(hv_register_block_invalidate);
 =20
-+	mlx5e_hv_vhca_stats_destroy(priv);
- 	if (mlx5e_monitor_counter_supported(priv))
- 		mlx5e_monitor_counter_cleanup(priv);
+ /* Interrupt management hooks */
+ static void hv_int_desc_free(struct hv_pci_dev *hpdev,
+@@ -3045,10 +3042,19 @@ static int hv_pci_remove(struct hv_device *hdev)
+ static void __exit exit_hv_pci_drv(void)
+ {
+ 	vmbus_driver_unregister(&hv_pci_drv);
++
++	hvpci_block_ops.read_block =3D NULL;
++	hvpci_block_ops.write_block =3D NULL;
++	hvpci_block_ops.reg_blk_invalidate =3D NULL;
+ }
 =20
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h b/driver=
-s/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
-index 984e7ad..4bad6a5 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
-@@ -13,6 +13,7 @@
+ static int __init init_hv_pci_drv(void)
+ {
++	/* Initialize PCI block r/w interface */
++	hvpci_block_ops.read_block =3D hv_read_config_block;
++	hvpci_block_ops.write_block =3D hv_write_config_block;
++	hvpci_block_ops.reg_blk_invalidate =3D hv_register_block_invalidate;
++
+ 	return vmbus_driver_register(&hv_pci_drv);
+ }
 =20
- enum mlx5_hv_vhca_agent_type {
- 	MLX5_HV_VHCA_AGENT_CONTROL =3D 0,
-+	MLX5_HV_VHCA_AGENT_STATS   =3D 1,
- 	MLX5_HV_VHCA_AGENT_MAX =3D 32,
- };
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 9d37f8c..2afe6fd 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -1579,18 +1579,32 @@ struct vmpacket_descriptor *
+ 	    pkt =3D hv_pkt_iter_next(channel, pkt))
 =20
+ /*
+- * Functions for passing data between SR-IOV PF and VF drivers.  The VF dr=
+iver
++ * Interface for passing data between SR-IOV PF and VF drivers. The VF dri=
+ver
+  * sends requests to read and write blocks. Each block must be 128 bytes o=
+r
+  * smaller. Optionally, the VF driver can register a callback function whi=
+ch
+  * will be invoked when the host says that one or more of the first 64 blo=
+ck
+  * IDs is "invalid" which means that the VF driver should reread them.
+  */
+ #define HV_CONFIG_BLOCK_SIZE_MAX 128
+-int hv_read_config_block(struct pci_dev *dev, void *buf, unsigned int buf_=
+len,
+-			 unsigned int block_id, unsigned int *bytes_returned);
+-int hv_write_config_block(struct pci_dev *dev, void *buf, unsigned int len=
+,
+-			  unsigned int block_id);
+-int hv_register_block_invalidate(struct pci_dev *dev, void *context,
+-				 void (*block_invalidate)(void *context,
+-							  u64 block_mask));
++
++int hyperv_read_cfg_blk(struct pci_dev *dev, void *buf, unsigned int buf_l=
+en,
++			unsigned int block_id, unsigned int *bytes_returned);
++int hyperv_write_cfg_blk(struct pci_dev *dev, void *buf, unsigned int len,
++			 unsigned int block_id);
++int hyperv_reg_block_invalidate(struct pci_dev *dev, void *context,
++				void (*block_invalidate)(void *context,
++							 u64 block_mask));
++
++struct hyperv_pci_block_ops {
++	int (*read_block)(struct pci_dev *dev, void *buf, unsigned int buf_len,
++			  unsigned int block_id, unsigned int *bytes_returned);
++	int (*write_block)(struct pci_dev *dev, void *buf, unsigned int len,
++			   unsigned int block_id);
++	int (*reg_blk_invalidate)(struct pci_dev *dev, void *context,
++				  void (*block_invalidate)(void *context,
++							   u64 block_mask));
++};
++
++extern struct hyperv_pci_block_ops hvpci_block_ops;
++
+ #endif /* _HYPERV_H */
 --=20
 1.8.3.1
 
