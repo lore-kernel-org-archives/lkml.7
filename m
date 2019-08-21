@@ -2,110 +2,121 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0512C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0040EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22F7206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA02022DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="otT/vRdp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AO1lwW7G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbfHUENW (ORCPT
+        id S1727630AbfHUEOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:13:22 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:47118 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbfHUENV (ORCPT
+        Wed, 21 Aug 2019 00:14:33 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54868 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbfHUEOd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:13:21 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x7L4CeQC002060;
-        Wed, 21 Aug 2019 13:12:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x7L4CeQC002060
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566360762;
-        bh=rG1uzD+ZsouFnScMd+YS+lbLIqKukipCyXFlBuBls/8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=otT/vRdpFvNnROJNxtb+yU1E8OIA+ohk3ZhRjZVkvdwKeQK3pyBNLr257cnxw4aV9
-         BY5C3ijhHysdD8e1TMUJwFmlzkA3oV2Tl5bHUtGSQusH1VGiKzzjsIRP9+2T5teMNK
-         iRvkAMXe6eY38W2otcXUIRKhHcq3Mt/8Et9sKxWb6gIM/FH0qTFIo8bXRs6oom2mAA
-         77iz3S6axA0pmj66S+0HDqul4F81OSvxXXymEbMlUJdAlzGzWrRVILuHMmtYpA+eLQ
-         MN1GGOfFzrLdEa7pLkv0w7/xYT9H2Xua4SqWnoWrC9wymBHG2hth4SaTF9NtDHLq2y
-         8Kh4660PXf+Yw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/4] video/logo: do not generate unneeded logo C files
-Date:   Wed, 21 Aug 2019 13:12:35 +0900
-Message-Id: <20190821041237.23197-3-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190821041237.23197-1-yamada.masahiro@socionext.com>
-References: <20190821041237.23197-1-yamada.masahiro@socionext.com>
+        Wed, 21 Aug 2019 00:14:33 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7L4DvZE120885;
+        Wed, 21 Aug 2019 04:14:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : subject : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=e3kgDvccVDLzNMMeR9/zH2eW+3aMX6c/MhJZaprZC3E=;
+ b=AO1lwW7GB+SWC6UPk9BqflMxYl14SNqeX+eyW3uvmZUOzdDTu47HI0bDdNgfDT6NXNQP
+ 7aHQrgyy5FBkfD4ui/eDYnz/ywy0+Cksn3IyiwqxTbgH7wg/0DKIFk2iRvkvriey1wvM
+ UFy33uW2amPTLoZVlGFWR5aGWJ6VSOR/sNsDmBDxIa/PyLcaTuCADvO0PUKK77nVOISc
+ kDsElmn5RyYZeqYmS0sYT57vxMED0MoQ3DNRcFcRv2kfifLsJ/wYknivca4EbhZcFaqb
+ 2jTs7aD7WhJRYGo77E7TJjZRL6WSVTO3P4f2ZcgRNyBWZ37DSd/rwb4H3agPD5kex4ir 8A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2uea7qtjje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 04:14:22 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7L4D9n0141955;
+        Wed, 21 Aug 2019 04:14:22 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2ug1ga34eb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 04:14:22 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7L4EKYn029840;
+        Wed, 21 Aug 2019 04:14:20 GMT
+Received: from [192.168.1.218] (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 20 Aug 2019 21:14:19 -0700
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: Re: [PATCH 1/2] padata: always acquire cpu_hotplug_lock before
+ pinst->lock
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190809192857.26585-1-daniel.m.jordan@oracle.com>
+ <20190815051518.GB24982@gondor.apana.org.au>
+Message-ID: <f25cc77e-d467-c7a9-415c-eb9f46ac8493@oracle.com>
+Date:   Wed, 21 Aug 2019 00:14:19 -0400
+MIME-Version: 1.0
+In-Reply-To: <20190815051518.GB24982@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908210044
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908210044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, all the logo C files are generated irrespective of the
-CONFIG options. Adding them to extra-y is wrong. What we need to do
-here is to add them to 'targets' so that if_changed works properly.
+[sorry for late reply, moved to new place in past week]
 
-Files listed in 'targets' are cleaned, so clean-files is unneeded.
+On 8/15/19 1:15 AM, Herbert Xu wrote:
+> On Fri, Aug 09, 2019 at 03:28:56PM -0400, Daniel Jordan wrote:
+>> padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
+>> order.  Which should be first?  CPU hotplug calls into padata with
+>> cpu_hotplug_lock already held, so it should have priority.
+> 
+> Yeah this is clearly a bug but I think we need tackle something
+> else first.
+>   
+>> diff --git a/kernel/padata.c b/kernel/padata.c
+>> index b60cc3dcee58..d056276a96ce 100644
+>> --- a/kernel/padata.c
+>> +++ b/kernel/padata.c
+>> @@ -487,9 +487,7 @@ static void __padata_stop(struct padata_instance *pinst)
+>>   
+>>   	synchronize_rcu();
+>>   
+>> -	get_online_cpus();
+>>   	padata_flush_queues(pinst->pd);
+>> -	put_online_cpus();
+>>   }
+> 
+> As I pointed earlier, the whole concept of flushing the queues is
+> suspect.  So we should tackle that first and it may obviate the need
+> to do get_online_cpus completely if the flush call disappears.
+>
+> My main worry is that you're adding an extra lock around synchronize_rcu
+> and that is always something that should be done only after careful
+> investigation.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Agreed, padata_stop may not need to do get_online_cpus() if we stop an instance in a way that plays well with async crypto.
 
-Changes in v2:
-  - Fix commit log
+I'll try fixing the flushing with Steffen's refcounting idea assuming he hasn't already started on that.  So we're on the same page, the problem is that if padata's ->parallel() punts to a cryptd thread, flushing the parallel work will return immediately without necessarily indicating the parallel job is finished, so flushing is pointless and padata_replace needs to wait till the instance's refcount drops to 0.  Did I get it right?
 
- drivers/video/logo/Makefile | 21 ++-------------------
- 1 file changed, 2 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/video/logo/Makefile b/drivers/video/logo/Makefile
-index 10b75ce3ce09..16f60c1e1766 100644
---- a/drivers/video/logo/Makefile
-+++ b/drivers/video/logo/Makefile
-@@ -18,23 +18,6 @@ obj-$(CONFIG_SPU_BASE)			+= logo_spe_clut224.o
- 
- # How to generate logo's
- 
--# Use logo-cfiles to retrieve list of .c files to be built
--logo-cfiles = $(notdir $(patsubst %.$(2), %.c, \
--              $(wildcard $(srctree)/$(src)/*$(1).$(2))))
--
--
--# Mono logos
--extra-y += $(call logo-cfiles,_mono,pbm)
--
--# VGA16 logos
--extra-y += $(call logo-cfiles,_vga16,ppm)
--
--# 224 Logos
--extra-y += $(call logo-cfiles,_clut224,ppm)
--
--# Gray 256
--extra-y += $(call logo-cfiles,_gray256,pgm)
--
- pnmtologo := scripts/pnmtologo
- 
- # Create commands like "pnmtologo -t mono -n logo_mac_mono -o ..."
-@@ -55,5 +38,5 @@ $(obj)/%_clut224.c: $(src)/%_clut224.ppm $(pnmtologo) FORCE
- $(obj)/%_gray256.c: $(src)/%_gray256.pgm $(pnmtologo) FORCE
- 	$(call if_changed,logo)
- 
--# Files generated that shall be removed upon make clean
--clean-files := *_mono.c *_vga16.c *_clut224.c *_gray256.c
-+# generated C files
-+targets += *_mono.c *_vga16.c *_clut224.c *_gray256.c
--- 
-2.17.1
-
+Daniel
