@@ -2,170 +2,168 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C53C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B4EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A19D22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 592DC22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:54:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XJpPbfj8"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="B5jxDUEk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfHUHx0 (ORCPT
+        id S1726826AbfHUHyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 03:53:26 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39973 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfHUHxZ (ORCPT
+        Wed, 21 Aug 2019 03:54:39 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:56500 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfHUHyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:53:25 -0400
-Received: by mail-lf1-f65.google.com with SMTP id b17so1081570lff.7
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 00:53:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4WkbNxIuQHcMyi/6jdTaT2GJS3hfGOuis/4XMY+Hqv0=;
-        b=XJpPbfj8P9QJPx+MXLpw/Zpk11zobJZrO2DKY2mgHVIboqYEIp2ho60EdmJ3Y6AYhx
-         QSp2QIWv3+2jDYAwohs4rK6Vso5/KH0plNFbkiVQOUBT0vvmNKlwTtmxhBUeNyVviVPx
-         n0fZo6b8dEC6PfFj/iWpjszsR9aKv8/foAkPe46cmiTYeN3GdlFzCc3FTBNrpw6P2R76
-         OT8VBJsJZ11Equt8nnFkW29jpyKvGrmiU9lOd3X/v46bDxzBHa36K1mJnZ5TV0a6SHaW
-         cM/oolufmA0f6Y6h+Se5FCifYLechXV2U57q5/+CIRUGI5wzReLVnaH0QEGrl+dt23hj
-         sLAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4WkbNxIuQHcMyi/6jdTaT2GJS3hfGOuis/4XMY+Hqv0=;
-        b=iTwuss/oy8uFk4kqGa2i/wcko/9pJmPrIRkiB1ESVSmquI13anxv9+L4wufK0ivzFM
-         oGelkAkzszGGiF0Xee4VEG84HLx9tqn0TeKpmipS3MwMSrFEfrm5IdVZsp3C+p0K7G+F
-         iebfDlsESElInFg/+8wtheRqLcLle4VJGXEsOIdoedxpdmAZEM37zgnrF0V3XIzbmJju
-         tRvPbXF5p9v2PEJ522NeXfCZc9QWQ/oc/fNNxPjQBh3tXA3YXQyHtv3Wkv6gikxf8yBR
-         OgvqM4z+h+ClUIdvwomIkgKfDmZJx7tg3MTrK1Bs5hb0l0ALazSAqm1AfuNGERz9rw1q
-         IvsQ==
-X-Gm-Message-State: APjAAAUdF541pgSndR6l15Sosjx5lpDsqRv4J+rzthXv3qYIQa9nw4AO
-        Rgt0y9SaP7FkAabv7TAUw61Nhg==
-X-Google-Smtp-Source: APXvYqyhZXLsc3Atd+lyJOsKNYthp6F6CwMZKFd5dNFZ+MASXA4v3XjQhoGKDCwuBYhc8sOqNq42Ww==
-X-Received: by 2002:ac2:4ac4:: with SMTP id m4mr17369662lfp.172.1566374003532;
-        Wed, 21 Aug 2019 00:53:23 -0700 (PDT)
-Received: from [192.168.27.209] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id p28sm3254972lfh.55.2019.08.21.00.53.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 00:53:22 -0700 (PDT)
-Subject: Re: [PATCH 1/2] venus: use on-chip interconnect API
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Vikash Garodia <vgarodia@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Aniket Masule <amasule@codeaurora.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-References: <20190814084701.25455-1-stanimir.varbanov@linaro.org>
- <20190814084701.25455-2-stanimir.varbanov@linaro.org>
- <cc85f55c-3d21-c3b2-6848-e48513263e39@linaro.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <939ace85-e006-db6d-02d2-b55385fa5043@linaro.org>
-Date:   Wed, 21 Aug 2019 10:53:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 03:54:39 -0400
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190821075436epoutp02619b2293f2cc621cd420c3fe57ea83e5~84Oxjj0H62084820848epoutp02d
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:54:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190821075436epoutp02619b2293f2cc621cd420c3fe57ea83e5~84Oxjj0H62084820848epoutp02d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566374076;
+        bh=HTqJmzQb78c+WqBPB/TdiHvNXR8CCp1GserLHPcAGAM=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=B5jxDUEk9/Wv2ZsXCfJ0XkAJm9DIHY27cqGo72ZywbwCE+aVOvTsvyScwL4p6sybM
+         owql64lYHWS43PFd/HInQdLPv83SRaGXip0WkjESDr2vLz6mjff1A3/7j7+O7TOWyK
+         7NAk6jkpVH93RiwuqnuxfGH0LViWO/nOoUaD+g4w=
+Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20190821075435epcas2p2329ac0d31488e7667c632810cc878449~84Ow2IQSF1069310693epcas2p2D;
+        Wed, 21 Aug 2019 07:54:35 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.40.182]) by
+        epsnrtp5.localdomain (Postfix) with ESMTP id 46D0LK1qCszMqYkr; Wed, 21 Aug
+        2019 07:54:33 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D2.06.04112.9B8FC5D5; Wed, 21 Aug 2019 16:54:33 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190821075432epcas2p3758bf7b07f209fb4094d79bf46c8f4e9~84OuTKtNR3087030870epcas2p3N;
+        Wed, 21 Aug 2019 07:54:32 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190821075432epsmtrp11638c73e7bcdf5c06195a2218aa9d41f~84OuR59zE2895328953epsmtrp1D;
+        Wed, 21 Aug 2019 07:54:32 +0000 (GMT)
+X-AuditID: b6c32a48-f37ff70000001010-86-5d5cf8b9dcde
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D3.79.03706.8B8FC5D5; Wed, 21 Aug 2019 16:54:32 +0900 (KST)
+Received: from KORDO035251 (unknown [12.36.165.204]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20190821075432epsmtip253f2d9c05d500f90970ebcdc57e310bc~84Ot-od_T3239432394epsmtip2r;
+        Wed, 21 Aug 2019 07:54:32 +0000 (GMT)
+From:   "boojin.kim" <boojin.kim@samsung.com>
+To:     "'Mike Snitzer'" <snitzer@redhat.com>
+Cc:     "'Herbert Xu'" <herbert@gondor.apana.org.au>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Eric Biggers'" <ebiggers@kernel.org>,
+        "'Theodore Y. Ts'o'" <tytso@mit.edu>,
+        "'Chao Yu'" <chao@kernel.org>,
+        "'Jaegeuk Kim'" <jaegeuk@kernel.org>,
+        "'Andreas Dilger'" <adilger.kernel@dilger.ca>,
+        "'Theodore Ts'o'" <tytso@mit.edu>, <dm-devel@redhat.com>,
+        "'Mike Snitzer'" <snitzer@redhat.com>,
+        "'Alasdair Kergon'" <agk@redhat.com>,
+        "'Jens Axboe'" <axboe@kernel.dk>,
+        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Kukjin Kim'" <kgene@kernel.org>,
+        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
+        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fscrypt@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 6/9] dm crypt: support diskcipher
+Date:   Wed, 21 Aug 2019 16:54:32 +0900
+Message-ID: <001a01d557f5$ab0a4a40$011edec0$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <cc85f55c-3d21-c3b2-6848-e48513263e39@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Content-Language: ko
+Thread-Index: AdVX9QyEG4+5qw7KRk2/gqnMxtuMUA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf0xTVxT29r2+9wBLrhXntZrZvWkWJGCLll0WmVt0+jJNrNkSo4LdC7wA
+        WX+tr3WwZJNtWBGadZopUruGuWm0C0ELCigYRzs7hl11qJOquEXiIvhrKAR/jbV9mPHfOd/5
+        vnvOd08OQyjraRVTbrYLNjNvZKlU8kQwE2d3jBcWaRqHUvHooxoSN/96lsA/XndTuHdPRIa9
+        0WoSd93bL8dNnc8IXDc0Dw82ewh85YlTjt03hwkcjR6lceDmZTnuimXhGwOPZbjBd43Cvx9Y
+        jYd8YyTu7Oohcd9JL4VDE26A90VPy7Dz2CjA212PaRxu2vDWHK71SL+Mq275mDtxZiHXF3Fw
+        Af9Oirt2uZPiWn7Yxp1qfCjjvjj3M8HdP32J4r5q9QPuYeBl/fRNxmVlAl8i2NSCudhSUm4u
+        LWDXvGdYYdDlabTZ2nz8Oqs28yahgF25Vp+9qtwY986qt/JGRxzS86LILn5zmc3isAvqMoto
+        L2AFa4nRqtVac0TeJDrMpTnFFtMbWo0mVxdnfmAsi9XVU9Z9TIXzSoCoAiGqFqQwCC5F4RsB
+        UAtSGSVsB8gd9E8mIwBVj18nEywlHAMoun12LWCSir0PUiVOF0C7XbspKbkN0K3zz5ICCmah
+        lnDipRQmA2aiX65+I0+QCPgvjQZHupOkmVCHBkJ1yTlIuBAd/Pt+PKYZBcxHA4YEqoAzUE/D
+        YJJNwPmo7a6XkKZWo/bIMJDwDLR/p5OQWuWgCx2PyEQrBD9n0E/hKloSrESH97pkUjwTDYVb
+        J3EVuu12Tsbb0KVD39OS2AXQuScvCkuQ59YOkHBPxM00n1wsfcSrKBSbnC0d1QSf0xKsQDVO
+        pSRcgL4d6ZNJsAo9cH0mwRy62DtOfg1e8Uwx6Zli0jPFmOf/to2A9IOXBKtoKhXEXOvSqZsO
+        gORRLOLawZnf1nYDyAB2uqK9f3ORUs5vFStN3QAxBJuhqPBuKlIqSvjKTwSbxWBzGAWxG+ji
+        G9hFqGYVW+InZrYbtLrcvDxNvg7r8nIxO1sRSOsvVMJS3i58KAhWwfZCJ2NSVFXg+LyNF1t7
+        vcsVc97u2LyhPgidT6/Oivas2LOmAjR9dzyYJYxX3gG+daubjvlnLFHb/3QMn/0y8sdcIT1t
+        7N77Wy483XX+VKT5n/mFfemv8b627Mwdbe8uyPRNlK9/Z9rdjZ+G//poeb0exg6v00+7g7wT
+        oVhaAxyDwVDWKLeq4kAnzZJiGa9dRNhE/j+QRa7/KgQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRmVeSWpSXmKPExsWy7bCSvO6OHzGxBjNXaFh8/dLBYrH+1DFm
+        i9V3+9ksTk89y2Qx53wLi8Xed7NZLdbu+cNs0f1KxuLJ+lnMFjd+tbFa9D9+zWxx/vwGdotN
+        j6+xWuy9pW1x/95PJouZ8+6wWVxa5G7xat43Fos9e0+yWFzeNYfN4sj/fkaLGef3MVm0bfzK
+        aNHa85Pd4vjacAdJjy0rbzJ5tGwu99h2QNXj8tlSj02rOtk87lzbw+axeUm9x+4Fn5k8ms4c
+        ZfZ4v+8qm0ffllWMHp83yQXwRHHZpKTmZJalFunbJXBl3OqezlYwg6Oi7cYm5gbGI2xdjBwc
+        EgImEtM+cHUxcnEICexmlFg16QZjFyMnUFxKYmv7HmYIW1jifssRVoii54wSD39eBUuwCWhL
+        bD6+CqxBREBT4sTtKawgNrPANA6JXR/EQWxhAVOJe0e62UBsFgFViaXP3wPZ7By8ApYS9+JB
+        orwCghInZz5hATmHWUBPom0jI8QQeYntb+dAXaAgsePsa6i4iMTszjZmiKV6Ehd3fmGZwCg4
+        C8mkWQiTZiGZNAtJ9wJGllWMkqkFxbnpucWGBYZ5qeV6xYm5xaV56XrJ+bmbGMHxr6W5g/Hy
+        kvhDjAIcjEo8vDtuRscKsSaWFVfmHmKU4GBWEuGtmBMVK8SbklhZlVqUH19UmpNafIhRmoNF
+        SZz3ad6xSCGB9MSS1OzU1ILUIpgsEwenVANjcVNZnlGXxD0pT0sbo+QV7PNEp90NOvP9wOXl
+        ubMDp85MW/HfyaitQ3zr5d+zitTdAy4m308+t/jIDR2XdxHl6Z+vt8UuT9421zd+h6Nl/q0M
+        kb2LZ/13SKt+cPrVkmu7X2bIhQV+j9rfcVJoQtHaO/kTVjnKxt+va+/TC6x/3Pk19WTu8yNT
+        lFiKMxINtZiLihMBBGnmbfsCAAA=
+X-CMS-MailID: 20190821075432epcas2p3758bf7b07f209fb4094d79bf46c8f4e9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190821075432epcas2p3758bf7b07f209fb4094d79bf46c8f4e9
+References: <CGME20190821075432epcas2p3758bf7b07f209fb4094d79bf46c8f4e9@epcas2p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Georgi,
-
-Thanks for the review!
-
-On 8/20/19 12:34 PM, Georgi Djakov wrote:
-> Hi Stan,
+On Wed, Aug 21, 2019 at 09:13:36AM +0200, Milan Broz wrote: 
+>
+> NACK.
 > 
-> On 8/14/19 11:47, Stanimir Varbanov wrote:
->> This aims to add a requests for bandwidth scaling depending
->> on the resolution and framerate (macroblocks per second). The
->> exact value ff the requested bandwidth is get from a
+> The whole principle of dm-crypt target is that it NEVER EVER submits
+> plaintext data down the stack in bio.
 > 
-> s/ff/of/
+> If you want to do some lower/higher layer encryption, use key management
+> on a different layer.
+> So here, just setup encryption for fs, do not stack it with dm-crypt.
 > 
->> pre-calculated tables for encoder and decoder.
->>
->> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->> ---
->>  drivers/media/platform/qcom/venus/core.c    | 34 +++++++++++
->>  drivers/media/platform/qcom/venus/core.h    | 14 +++++
->>  drivers/media/platform/qcom/venus/helpers.c | 67 ++++++++++++++++++++-
->>  3 files changed, 114 insertions(+), 1 deletion(-)
-> 
-> It looks like venus can be built-in, so how about the case when venus is
-> built-in and the interconnect provider is a module? Maybe add a dependency in
-> Kconfig to depend on INTERCONNECT || !INTERCONNECT?
+> Also, dm-crypt is software-independent solution
+> (software-based full disk encryption), it must not depend on
+> any underlying hardware.
+> Hardware can be of course used used for acceleration, but then
+> just implement proper crypto API module that accelerates particular
+cipher.
 
-yes, I forgot about that dependency.
+I'm sorry for breaking the basic rules of dm-crypt. 
+But, if I want to use the H/W crypto accelerator running in storage
+controller,
+I have to drop plaintext to bio.
+I think the "proper crypto API module" that you mentioned is diskcipher
+because diskcipher isn't only for FMP.
+Diskcipher is a crypto API that supports encryption on storage controllers.
 
-> 
->>
->> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
->> index 0acc7576cc58..19cbe9d5d028 100644
->> --- a/drivers/media/platform/qcom/venus/core.c
->> +++ b/drivers/media/platform/qcom/venus/core.c
->> @@ -5,6 +5,7 @@
->>   */
->>  #include <linux/clk.h>
->>  #include <linux/init.h>
->> +#include <linux/interconnect.h>
->>  #include <linux/ioctl.h>
->>  #include <linux/list.h>
->>  #include <linux/module.h>
->> @@ -239,6 +240,14 @@ static int venus_probe(struct platform_device *pdev)
->>  	if (IS_ERR(core->base))
->>  		return PTR_ERR(core->base);
->>  
->> +	core->video_path = of_icc_get(dev, "video-mem");
->> +	if (IS_ERR(core->video_path))
->> +		return PTR_ERR(core->video_path);
->> +
->> +	core->cpucfg_path = of_icc_get(dev, "cpu-cfg");
->> +	if (IS_ERR(core->cpucfg_path))
->> +		return PTR_ERR(core->cpucfg_path);
->> +
->>  	core->irq = platform_get_irq(pdev, 0);
->>  	if (core->irq < 0)
->>  		return core->irq;
->> @@ -273,6 +282,10 @@ static int venus_probe(struct platform_device *pdev)
->>  	if (ret)
->>  		return ret;
->>  
->> +	ret = icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
->> +	if (ret)
->> +		return ret;
->> +
->>  	ret = hfi_create(core, &venus_core_ops);
->>  	if (ret)
->>  		return ret;
->> @@ -355,6 +368,9 @@ static int venus_remove(struct platform_device *pdev)
->>  	pm_runtime_put_sync(dev);
->>  	pm_runtime_disable(dev);
->>  
->> +	icc_put(core->video_path);
->> +	icc_put(core->cpucfg_path);
->> +
-> 
-> Do you have any plans to scale the bandwidth on suspend/resume too?
+Thanks
+Boojin Kim
 
-Yes, we definitely need that in suspend/resume, but I guess the plan
-should be add it once we implement pm_runtime autosuspend functionality
-in order to easily test that.
-
--- 
-regards,
-Stan
