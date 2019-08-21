@@ -2,168 +2,143 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B4EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773A0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 592DC22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:54:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="B5jxDUEk"
+	by mail.kernel.org (Postfix) with ESMTP id 51B5022D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbfHUHyj (ORCPT
+        id S1726865AbfHUHzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 03:54:39 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:56500 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726591AbfHUHyj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:54:39 -0400
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190821075436epoutp02619b2293f2cc621cd420c3fe57ea83e5~84Oxjj0H62084820848epoutp02d
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:54:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190821075436epoutp02619b2293f2cc621cd420c3fe57ea83e5~84Oxjj0H62084820848epoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566374076;
-        bh=HTqJmzQb78c+WqBPB/TdiHvNXR8CCp1GserLHPcAGAM=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=B5jxDUEk9/Wv2ZsXCfJ0XkAJm9DIHY27cqGo72ZywbwCE+aVOvTsvyScwL4p6sybM
-         owql64lYHWS43PFd/HInQdLPv83SRaGXip0WkjESDr2vLz6mjff1A3/7j7+O7TOWyK
-         7NAk6jkpVH93RiwuqnuxfGH0LViWO/nOoUaD+g4w=
-Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20190821075435epcas2p2329ac0d31488e7667c632810cc878449~84Ow2IQSF1069310693epcas2p2D;
-        Wed, 21 Aug 2019 07:54:35 +0000 (GMT)
-Received: from epsmges2p4.samsung.com (unknown [182.195.40.182]) by
-        epsnrtp5.localdomain (Postfix) with ESMTP id 46D0LK1qCszMqYkr; Wed, 21 Aug
-        2019 07:54:33 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D2.06.04112.9B8FC5D5; Wed, 21 Aug 2019 16:54:33 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-        20190821075432epcas2p3758bf7b07f209fb4094d79bf46c8f4e9~84OuTKtNR3087030870epcas2p3N;
-        Wed, 21 Aug 2019 07:54:32 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190821075432epsmtrp11638c73e7bcdf5c06195a2218aa9d41f~84OuR59zE2895328953epsmtrp1D;
-        Wed, 21 Aug 2019 07:54:32 +0000 (GMT)
-X-AuditID: b6c32a48-f37ff70000001010-86-5d5cf8b9dcde
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D3.79.03706.8B8FC5D5; Wed, 21 Aug 2019 16:54:32 +0900 (KST)
-Received: from KORDO035251 (unknown [12.36.165.204]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20190821075432epsmtip253f2d9c05d500f90970ebcdc57e310bc~84Ot-od_T3239432394epsmtip2r;
-        Wed, 21 Aug 2019 07:54:32 +0000 (GMT)
-From:   "boojin.kim" <boojin.kim@samsung.com>
-To:     "'Mike Snitzer'" <snitzer@redhat.com>
-Cc:     "'Herbert Xu'" <herbert@gondor.apana.org.au>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Eric Biggers'" <ebiggers@kernel.org>,
-        "'Theodore Y. Ts'o'" <tytso@mit.edu>,
-        "'Chao Yu'" <chao@kernel.org>,
-        "'Jaegeuk Kim'" <jaegeuk@kernel.org>,
-        "'Andreas Dilger'" <adilger.kernel@dilger.ca>,
-        "'Theodore Ts'o'" <tytso@mit.edu>, <dm-devel@redhat.com>,
-        "'Mike Snitzer'" <snitzer@redhat.com>,
-        "'Alasdair Kergon'" <agk@redhat.com>,
-        "'Jens Axboe'" <axboe@kernel.dk>,
-        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
-        "'Kukjin Kim'" <kgene@kernel.org>,
-        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
-        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-fscrypt@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-samsung-soc@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 6/9] dm crypt: support diskcipher
-Date:   Wed, 21 Aug 2019 16:54:32 +0900
-Message-ID: <001a01d557f5$ab0a4a40$011edec0$@samsung.com>
+        Wed, 21 Aug 2019 03:55:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48726 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbfHUHzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 03:55:46 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7EBA07BDA7
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:55:46 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id s18so830596wrt.21
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 00:55:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4vtDy+oYLccEJv8Sb5ysrn3Ll8TQTjQAuhILZtXY+9Y=;
+        b=ke6SzsuRsJBuTCqmr1P610alFwd/Eu+QGheCEhHo2MPWVemx73zj08CT1W3PZn5hsZ
+         CUILYAvPM5y/z7R0I5ItcgvvKZtmChsQ0PNrTETsNH80M5JYRVhvv9C892DonlBUgkDL
+         GmoqDdVFyY58+Vg9kyozXCg4i5PQDk+6s3mmUYawfouYvhVVrR27f3tQhySiTktP3c8Q
+         6QakmtH4AcRU4M2/rgNjAZblSgKugxKZ82zBOVoSK1/p78wl8JIzE/WrGBqk9bflYUwI
+         IO4eB38Ppb7Hi5NlCRXqYpmbyQ+i5E24xGNc++tZWOIPuhqGg5HTquGZ5Qye4qq5aCaV
+         p0Yw==
+X-Gm-Message-State: APjAAAXwECo2b+/ue0uGCmsRDiXexbYizHAuTZQAgIJDwFfgjLmFL0Bl
+        dpIxIV+bE+uFQRDyPc8t93M4EeMmDkL9+a6kMzfoqr9xfd0icbXbOUV6ssKqDn2SudHQjOD/c4t
+        bJUTj2z3BnD3pYrY6uTADCv6j
+X-Received: by 2002:a05:600c:2292:: with SMTP id 18mr4365234wmf.156.1566374145081;
+        Wed, 21 Aug 2019 00:55:45 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxPOU17u3ZFYZ4bFYLjxyE5sHSLsZn1vvHBoeWKtl1lscdeLHgbtn5lCkRgGZUrPGmi4kuUpQ==
+X-Received: by 2002:a05:600c:2292:: with SMTP id 18mr4365223wmf.156.1566374144777;
+        Wed, 21 Aug 2019 00:55:44 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:56e1:adff:fed9:caf0? ([2001:b07:6468:f312:56e1:adff:fed9:caf0])
+        by smtp.gmail.com with ESMTPSA id f10sm17994990wrm.31.2019.08.21.00.55.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Aug 2019 00:55:44 -0700 (PDT)
+Subject: Re: [PATCH RESEND] i386/kvm: support guest access CORE cstate
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Eduardo Habkost <ehabkost@redhat.com>
+References: <1563154124-18579-1-git-send-email-wanpengli@tencent.com>
+ <ba3ae595-7f82-d17b-e8ed-6e86e9195ce5@redhat.com>
+ <CANRm+Cx1bEOXBx50K9gv08UWEGadKOCtCbAwVo0CFC-g1gS+Xg@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <82a0eb75-5710-3b03-cf8e-a00b156ee275@redhat.com>
+Date:   Wed, 21 Aug 2019 09:55:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Content-Language: ko
-Thread-Index: AdVX9QyEG4+5qw7KRk2/gqnMxtuMUA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf0xTVxT29r2+9wBLrhXntZrZvWkWJGCLll0WmVt0+jJNrNkSo4LdC7wA
-        WX+tr3WwZJNtWBGadZopUruGuWm0C0ELCigYRzs7hl11qJOquEXiIvhrKAR/jbV9mPHfOd/5
-        vnvOd08OQyjraRVTbrYLNjNvZKlU8kQwE2d3jBcWaRqHUvHooxoSN/96lsA/XndTuHdPRIa9
-        0WoSd93bL8dNnc8IXDc0Dw82ewh85YlTjt03hwkcjR6lceDmZTnuimXhGwOPZbjBd43Cvx9Y
-        jYd8YyTu7Oohcd9JL4VDE26A90VPy7Dz2CjA212PaRxu2vDWHK71SL+Mq275mDtxZiHXF3Fw
-        Af9Oirt2uZPiWn7Yxp1qfCjjvjj3M8HdP32J4r5q9QPuYeBl/fRNxmVlAl8i2NSCudhSUm4u
-        LWDXvGdYYdDlabTZ2nz8Oqs28yahgF25Vp+9qtwY986qt/JGRxzS86LILn5zmc3isAvqMoto
-        L2AFa4nRqtVac0TeJDrMpTnFFtMbWo0mVxdnfmAsi9XVU9Z9TIXzSoCoAiGqFqQwCC5F4RsB
-        UAtSGSVsB8gd9E8mIwBVj18nEywlHAMoun12LWCSir0PUiVOF0C7XbspKbkN0K3zz5ICCmah
-        lnDipRQmA2aiX65+I0+QCPgvjQZHupOkmVCHBkJ1yTlIuBAd/Pt+PKYZBcxHA4YEqoAzUE/D
-        YJJNwPmo7a6XkKZWo/bIMJDwDLR/p5OQWuWgCx2PyEQrBD9n0E/hKloSrESH97pkUjwTDYVb
-        J3EVuu12Tsbb0KVD39OS2AXQuScvCkuQ59YOkHBPxM00n1wsfcSrKBSbnC0d1QSf0xKsQDVO
-        pSRcgL4d6ZNJsAo9cH0mwRy62DtOfg1e8Uwx6Zli0jPFmOf/to2A9IOXBKtoKhXEXOvSqZsO
-        gORRLOLawZnf1nYDyAB2uqK9f3ORUs5vFStN3QAxBJuhqPBuKlIqSvjKTwSbxWBzGAWxG+ji
-        G9hFqGYVW+InZrYbtLrcvDxNvg7r8nIxO1sRSOsvVMJS3i58KAhWwfZCJ2NSVFXg+LyNF1t7
-        vcsVc97u2LyhPgidT6/Oivas2LOmAjR9dzyYJYxX3gG+daubjvlnLFHb/3QMn/0y8sdcIT1t
-        7N77Wy483XX+VKT5n/mFfemv8b627Mwdbe8uyPRNlK9/Z9rdjZ+G//poeb0exg6v00+7g7wT
-        oVhaAxyDwVDWKLeq4kAnzZJiGa9dRNhE/j+QRa7/KgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRmVeSWpSXmKPExsWy7bCSvO6OHzGxBjNXaFh8/dLBYrH+1DFm
-        i9V3+9ksTk89y2Qx53wLi8Xed7NZLdbu+cNs0f1KxuLJ+lnMFjd+tbFa9D9+zWxx/vwGdotN
-        j6+xWuy9pW1x/95PJouZ8+6wWVxa5G7xat43Fos9e0+yWFzeNYfN4sj/fkaLGef3MVm0bfzK
-        aNHa85Pd4vjacAdJjy0rbzJ5tGwu99h2QNXj8tlSj02rOtk87lzbw+axeUm9x+4Fn5k8ms4c
-        ZfZ4v+8qm0ffllWMHp83yQXwRHHZpKTmZJalFunbJXBl3OqezlYwg6Oi7cYm5gbGI2xdjBwc
-        EgImEtM+cHUxcnEICexmlFg16QZjFyMnUFxKYmv7HmYIW1jifssRVoii54wSD39eBUuwCWhL
-        bD6+CqxBREBT4sTtKawgNrPANA6JXR/EQWxhAVOJe0e62UBsFgFViaXP3wPZ7By8ApYS9+JB
-        orwCghInZz5hATmHWUBPom0jI8QQeYntb+dAXaAgsePsa6i4iMTszjZmiKV6Ehd3fmGZwCg4
-        C8mkWQiTZiGZNAtJ9wJGllWMkqkFxbnpucWGBYZ5qeV6xYm5xaV56XrJ+bmbGMHxr6W5g/Hy
-        kvhDjAIcjEo8vDtuRscKsSaWFVfmHmKU4GBWEuGtmBMVK8SbklhZlVqUH19UmpNafIhRmoNF
-        SZz3ad6xSCGB9MSS1OzU1ILUIpgsEwenVANjcVNZnlGXxD0pT0sbo+QV7PNEp90NOvP9wOXl
-        ubMDp85MW/HfyaitQ3zr5d+zitTdAy4m308+t/jIDR2XdxHl6Z+vt8UuT9421zd+h6Nl/q0M
-        kb2LZ/13SKt+cPrVkmu7X2bIhQV+j9rfcVJoQtHaO/kTVjnKxt+va+/TC6x/3Pk19WTu8yNT
-        lFiKMxINtZiLihMBBGnmbfsCAAA=
-X-CMS-MailID: 20190821075432epcas2p3758bf7b07f209fb4094d79bf46c8f4e9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190821075432epcas2p3758bf7b07f209fb4094d79bf46c8f4e9
-References: <CGME20190821075432epcas2p3758bf7b07f209fb4094d79bf46c8f4e9@epcas2p3.samsung.com>
+In-Reply-To: <CANRm+Cx1bEOXBx50K9gv08UWEGadKOCtCbAwVo0CFC-g1gS+Xg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:13:36AM +0200, Milan Broz wrote: 
->
-> NACK.
-> 
-> The whole principle of dm-crypt target is that it NEVER EVER submits
-> plaintext data down the stack in bio.
-> 
-> If you want to do some lower/higher layer encryption, use key management
-> on a different layer.
-> So here, just setup encryption for fs, do not stack it with dm-crypt.
-> 
-> Also, dm-crypt is software-independent solution
-> (software-based full disk encryption), it must not depend on
-> any underlying hardware.
-> Hardware can be of course used used for acceleration, but then
-> just implement proper crypto API module that accelerates particular
-cipher.
+On 20/08/19 09:16, Wanpeng Li wrote:
+> Kindly reminder, :)
 
-I'm sorry for breaking the basic rules of dm-crypt. 
-But, if I want to use the H/W crypto accelerator running in storage
-controller,
-I have to drop plaintext to bio.
-I think the "proper crypto API module" that you mentioned is diskcipher
-because diskcipher isn't only for FMP.
-Diskcipher is a crypto API that supports encryption on storage controllers.
+It's already in my pull request from yesterday.
 
-Thanks
-Boojin Kim
+Palo
+
+> On Mon, 15 Jul 2019 at 17:16, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>>
+>> On 15/07/19 03:28, Wanpeng Li wrote:
+>>> From: Wanpeng Li <wanpengli@tencent.com>
+>>>
+>>> Allow guest reads CORE cstate when exposing host CPU power management capabilities
+>>> to the guest. PKG cstate is restricted to avoid a guest to get the whole package
+>>> information in multi-tenant scenario.
+>>>
+>>> Cc: Eduardo Habkost <ehabkost@redhat.com>
+>>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+>>> Cc: Radim Krčmář <rkrcmar@redhat.com>
+>>> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>>
+>> Hi,
+>>
+>> QEMU is in hard freeze now.  This will be applied after the release.
+>>
+>> Thanks,
+>>
+>> Paolo
+>>
+>>> ---
+>>>  linux-headers/linux/kvm.h | 4 +++-
+>>>  target/i386/kvm.c         | 3 ++-
+>>>  2 files changed, 5 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/linux-headers/linux/kvm.h b/linux-headers/linux/kvm.h
+>>> index b53ee59..d648fde 100644
+>>> --- a/linux-headers/linux/kvm.h
+>>> +++ b/linux-headers/linux/kvm.h
+>>> @@ -696,9 +696,11 @@ struct kvm_ioeventfd {
+>>>  #define KVM_X86_DISABLE_EXITS_MWAIT          (1 << 0)
+>>>  #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
+>>>  #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
+>>> +#define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
+>>>  #define KVM_X86_DISABLE_VALID_EXITS          (KVM_X86_DISABLE_EXITS_MWAIT | \
+>>>                                                KVM_X86_DISABLE_EXITS_HLT | \
+>>> -                                              KVM_X86_DISABLE_EXITS_PAUSE)
+>>> +                                              KVM_X86_DISABLE_EXITS_PAUSE | \
+>>> +                                              KVM_X86_DISABLE_EXITS_CSTATE)
+>>>
+>>>  /* for KVM_ENABLE_CAP */
+>>>  struct kvm_enable_cap {
+>>> diff --git a/target/i386/kvm.c b/target/i386/kvm.c
+>>> index 3b29ce5..49a0cc1 100644
+>>> --- a/target/i386/kvm.c
+>>> +++ b/target/i386/kvm.c
+>>> @@ -1645,7 +1645,8 @@ int kvm_arch_init(MachineState *ms, KVMState *s)
+>>>          if (disable_exits) {
+>>>              disable_exits &= (KVM_X86_DISABLE_EXITS_MWAIT |
+>>>                                KVM_X86_DISABLE_EXITS_HLT |
+>>> -                              KVM_X86_DISABLE_EXITS_PAUSE);
+>>> +                              KVM_X86_DISABLE_EXITS_PAUSE |
+>>> +                              KVM_X86_DISABLE_EXITS_CSTATE);
+>>>          }
+>>>
+>>>          ret = kvm_vm_enable_cap(s, KVM_CAP_X86_DISABLE_EXITS, 0,
+>>>
+>>
 
