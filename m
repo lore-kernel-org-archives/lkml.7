@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D538AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043A4C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7F222DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E98216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:32:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Z9XdTfPQ"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="S8Ph5X/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbfHUScX (ORCPT
+        id S1729962AbfHUSc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:32:23 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46374 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729526AbfHUScV (ORCPT
+        Wed, 21 Aug 2019 14:32:58 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43667 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729635AbfHUScY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:32:21 -0400
-Received: by mail-qt1-f193.google.com with SMTP id j15so4201315qtl.13
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:32:21 -0700 (PDT)
+        Wed, 21 Aug 2019 14:32:24 -0400
+Received: by mail-qk1-f194.google.com with SMTP id m2so2701111qkd.10
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=zx3wi4rxE69hFoeINMbvlrOQdd3v0rMCcWlwgMe+7ro=;
-        b=Z9XdTfPQsqrX+ihCr/4v6ItjEm2fTEBbeWz31i5BDIZiOLzaaHMtsuH2gtjkTF6ELA
-         7yXqP1MI/fSXDCZ14zn/alA5HSSTPmUHomhmG+JDDkx1iLsTl7o/Iqcn9rPRE3VmTc/X
-         /ox8ZTwPDgqdEsBMlW32tnbBoHwMhgBeTxLUP0uouGygQ/O3Fa5pNUVp9reQpI62FyCX
-         R3eJo+7FXskAW2/gAKFmeWDiSo7F5wlSMNy8J29CwUOFu7Obx7iEVrbyGTfDJ4oC7JZx
-         oOnvCDR8AxKmVTLp02PdeBuOzlYNu4WasPK9T7Aj8+N3bmKh30clQWsDfamV/Ov+aWlZ
-         y0Ow==
+        bh=ksR9xp0U0gVZu5yAF7PYymq+gEdUwe+c7E47Th0fsxc=;
+        b=S8Ph5X/in9QeZhKZShUNmP6k2QaJ3hKTjre5+EqRcapJytZCXaoEmP+cy1RR5PYlit
+         YFnL4BLZNfVWIa9f1YBiGO+PWTknBsAGdcCVWhTHsqDQmGjMqshd9FSL0uzIhgCepTul
+         0ac8HqtZwfN7Gknx1VizkXQ/xAccS2nub9T1gfXD+8/iprt1BG+soJ3rJZXnJVEC4mTh
+         v/v8bjI7kgQVR0HdVN+1yWJpCegksG4qyYp4ZYMZzStsiRcS0kkxgDrdqcJm1oyneD6u
+         iC9HQmGHKzLBr1tLUXIK7NVSL4CYro/qpoDA9s4BaXZjCA2D1I88Gcrhvw4JQdbwh6w0
+         YsuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zx3wi4rxE69hFoeINMbvlrOQdd3v0rMCcWlwgMe+7ro=;
-        b=UNSixenfksBby+eYTpGe5zp5Mep4LwhczVxD1fd9h+1fA98LpUl7jXbvC3JN4sb9Zh
-         FINDodRyuc28S2irds+2UPrJN15L2W2joyesDbnPDiTBnv9eDjaWHDGA5e1JrxDsziiq
-         uthqHTaWyKzLlR/0sTZBWtKvKaiIFXCCQ7ap6qd2/pgSSCsjVhfevAYn+S8y/ccSuk6+
-         BkDC9CfSMxiurrcUa5uuk++A2rV8umAOHoL2kdFCocfE2DNEssgaLJCr+Zltqv/0JBks
-         LC3AFWuF/D4ogVaQCCv0C8TZdJT2EJqBRiE0LKqcqV1o++FvwnURlGCfRuqJvRNfxR3B
-         m3gQ==
-X-Gm-Message-State: APjAAAUh9wfXTK4BBjnABA17Hwc4DbGOfgHVMlxi2fZ3VE7FWNNHYuIn
-        /04Doa9TnZqwlvDZ/gchndqRpw==
-X-Google-Smtp-Source: APXvYqwWbwptxQVbDLDq/ThfodFBbNa157DjIxH5pnCxaJLPGWLsptjdu2SMPi7VujUE6fDJ2uoQLg==
-X-Received: by 2002:ad4:45e3:: with SMTP id q3mr19092758qvu.140.1566412340641;
-        Wed, 21 Aug 2019 11:32:20 -0700 (PDT)
+        bh=ksR9xp0U0gVZu5yAF7PYymq+gEdUwe+c7E47Th0fsxc=;
+        b=Fus8G80PmD0ecYt2XIgyyXQXffQuDyVM33lt4yqzhw5TuoorfR7yFpkUfYyfNqR/dy
+         Rnx6VGVeSCRfDcEdQ9so+tTMtQRA6eW3dKK/Z1KrqYf+631xgNg5iVodsYLqWpx12fRJ
+         WH1XBzAOYfhw216BQuwO0kYOxDGg3FCzYzMFPV3mPwzg2z0DWuWjBXuVN1B6nlTwhtXk
+         RsDMYOeNFCU26wHKpa/uJYQgzOiiQZqVSopEzisrCDaehQdhzOeCSGoQSK+bgL0MJTb5
+         fNNgU44ZyYsP+CwcZuYhfhu1X+KgaMZCc/TORqzcHxZ+JoApRLhmUkPVGLsno10iy27J
+         Optw==
+X-Gm-Message-State: APjAAAVr0uDHC9DBrpRyMWaKpyP66FSaJcWAD8C9WXzE1TKTGZw9DNTu
+        1MDW7ATcnXpENGIfvkuSLFIkZyJ27fY=
+X-Google-Smtp-Source: APXvYqwmiZKW750IQ6F3/v/nNdiOXrrwA8yH3qVIWUdWB0CRR7pVV1emTiriHCZzhOC5wTx53UWEuA==
+X-Received: by 2002:a37:b4c4:: with SMTP id d187mr31068784qkf.459.1566412343453;
+        Wed, 21 Aug 2019 11:32:23 -0700 (PDT)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id q13sm10443332qkm.120.2019.08.21.11.32.19
+        by smtp.gmail.com with ESMTPSA id q13sm10443332qkm.120.2019.08.21.11.32.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 11:32:20 -0700 (PDT)
+        Wed, 21 Aug 2019 11:32:22 -0700 (PDT)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         ebiederm@xmission.com, kexec@lists.infradead.org,
@@ -65,9 +65,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         james.morse@arm.com, vladimir.murzin@arm.com,
         matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
         mark.rutland@arm.com
-Subject: [PATCH v3 10/17] arm64, trans_pgd: adjust trans_pgd_create_copy interface
-Date:   Wed, 21 Aug 2019 14:31:57 -0400
-Message-Id: <20190821183204.23576-11-pasha.tatashin@soleen.com>
+Subject: [PATCH v3 12/17] arm64, trans_pgd: complete generalization of trans_pgds
+Date:   Wed, 21 Aug 2019 14:31:59 -0400
+Message-Id: <20190821183204.23576-13-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190821183204.23576-1-pasha.tatashin@soleen.com>
 References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
@@ -78,119 +78,276 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make trans_pgd_create_copy inline with the other functions in
-trans_pgd: use the trans_pgd_info argument, and also use the
-trans_pgd_create_empty.
+Make the last private functions in page table copy path generlized for use
+outside of hibernate.
 
-Note, that the functions that are called by trans_pgd_create_copy are
-not yet adjusted to be compliant with trans_pgd: they do not yet use
-the provided allocator, do not check for generic errors, and do not yet
-use the flags in info argument.
+Switch to use the provided allocator, flags, and source page table. Also,
+unify all copy function implementations to reduce the possibility of bugs.
+All page table levels are implemented symmetrically.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/include/asm/trans_pgd.h |  7 ++++++-
- arch/arm64/kernel/hibernate.c      | 31 ++++++++++++++++++++++++++++--
- arch/arm64/mm/trans_pgd.c          | 17 ++++++----------
- 3 files changed, 41 insertions(+), 14 deletions(-)
+ arch/arm64/mm/trans_pgd.c | 200 +++++++++++++++++++++-----------------
+ 1 file changed, 109 insertions(+), 91 deletions(-)
 
-diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-index 26e5a63676b5..f4a5f255d4a7 100644
---- a/arch/arm64/include/asm/trans_pgd.h
-+++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -43,7 +43,12 @@ struct trans_pgd_info {
- /* Create and empty trans_pgd page table */
- int trans_pgd_create_empty(struct trans_pgd_info *info, pgd_t **trans_pgd);
- 
--int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
-+/*
-+ * Create trans_pgd and copy entries from from_table to trans_pgd in range
-+ * [start, end)
-+ */
-+int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
-+			  pgd_t *from_table, unsigned long start,
- 			  unsigned long end);
- 
- /*
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 8c2641a9bb09..8bb602e91065 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -323,15 +323,42 @@ int swsusp_arch_resume(void)
- 	phys_addr_t phys_hibernate_exit;
- 	void __noreturn (*hibernate_exit)(phys_addr_t, phys_addr_t, void *,
- 					  void *, phys_addr_t, phys_addr_t);
-+	struct trans_pgd_info trans_info = {
-+		.trans_alloc_page	= hibernate_page_alloc,
-+		.trans_alloc_arg	= (void *)GFP_ATOMIC,
-+		/*
-+		 * Resume will overwrite areas that may be marked read only
-+		 * (code, rodata). Clear the RDONLY bit from the temporary
-+		 * mappings we use during restore.
-+		 */
-+		.trans_flags		= TRANS_MKWRITE,
-+	};
-+
-+	/*
-+	 * debug_pagealloc will removed the PTE_VALID bit if the page isn't in
-+	 * use by the resume kernel. It may have been in use by the original
-+	 * kernel, in which case we need to put it back in our copy to do the
-+	 * restore.
-+	 *
-+	 * Before marking this entry valid, check the pfn should be mapped.
-+	 */
-+	if (debug_pagealloc_enabled())
-+		trans_info.trans_flags |= (TRANS_MKVALID | TRANS_CHECKPFN);
- 
- 	/*
- 	 * Restoring the memory image will overwrite the ttbr1 page tables.
- 	 * Create a second copy of just the linear map, and use this when
- 	 * restoring.
- 	 */
--	rc = trans_pgd_create_copy(&tmp_pg_dir, PAGE_OFFSET, 0);
--	if (rc)
-+	rc = trans_pgd_create_copy(&trans_info, &tmp_pg_dir, init_mm.pgd,
-+				   PAGE_OFFSET, 0);
-+	if (rc) {
-+		if (rc == -ENOMEM)
-+			pr_err("Failed to allocate memory for temporary page tables.\n");
-+		else if (rc == -ENXIO)
-+			pr_err("Tried to set PTE for PFN that does not exist\n");
- 		goto out;
-+	}
- 
- 	/*
- 	 * We need a zero page that is zero before & after resume in order to
 diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index ece797aa1841..7d8734709b61 100644
+index efd42509d069..ccd9900f8edb 100644
 --- a/arch/arm64/mm/trans_pgd.c
 +++ b/arch/arm64/mm/trans_pgd.c
-@@ -176,22 +176,17 @@ int trans_pgd_create_empty(struct trans_pgd_info *info, pgd_t **trans_pgd)
+@@ -27,139 +27,157 @@ static void *trans_alloc(struct trans_pgd_info *info)
+ 	return page;
+ }
+ 
+-static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
++static int copy_pte(struct trans_pgd_info *info, pte_t *dst_ptep,
++		    pte_t *src_ptep, unsigned long start, unsigned long end)
+ {
+-	pte_t pte = READ_ONCE(*src_ptep);
+-
+-	if (pte_valid(pte)) {
+-		/*
+-		 * Resume will overwrite areas that may be marked
+-		 * read only (code, rodata). Clear the RDONLY bit from
+-		 * the temporary mappings we use during restore.
+-		 */
+-		set_pte(dst_ptep, pte_mkwrite(pte));
+-	} else if (debug_pagealloc_enabled() && !pte_none(pte)) {
+-		/*
+-		 * debug_pagealloc will removed the PTE_VALID bit if
+-		 * the page isn't in use by the resume kernel. It may have
+-		 * been in use by the original kernel, in which case we need
+-		 * to put it back in our copy to do the restore.
+-		 *
+-		 * Before marking this entry valid, check the pfn should
+-		 * be mapped.
+-		 */
+-		BUG_ON(!pfn_valid(pte_pfn(pte)));
+-
+-		set_pte(dst_ptep, pte_mkpresent(pte_mkwrite(pte)));
+-	}
+-}
+-
+-static int copy_pte(pmd_t *dst_pmdp, pmd_t *src_pmdp, unsigned long start,
+-		    unsigned long end)
+-{
+-	pte_t *src_ptep;
+-	pte_t *dst_ptep;
+ 	unsigned long addr = start;
++	int i = pte_index(addr);
+ 
+-	dst_ptep = (pte_t *)get_safe_page(GFP_ATOMIC);
+-	if (!dst_ptep)
+-		return -ENOMEM;
+-	pmd_populate_kernel(&init_mm, dst_pmdp, dst_ptep);
+-	dst_ptep = pte_offset_kernel(dst_pmdp, start);
+-
+-	src_ptep = pte_offset_kernel(src_pmdp, start);
+ 	do {
+-		_copy_pte(dst_ptep, src_ptep, addr);
+-	} while (dst_ptep++, src_ptep++, addr += PAGE_SIZE, addr != end);
++		pte_t src_pte = READ_ONCE(src_ptep[i]);
++
++		if (pte_none(src_pte))
++			continue;
++		if (info->trans_flags & TRANS_MKWRITE)
++			src_pte = pte_mkwrite(src_pte);
++		if (info->trans_flags & TRANS_MKVALID)
++			src_pte = pte_mkpresent(src_pte);
++		if (info->trans_flags & TRANS_CHECKPFN) {
++			if (!pfn_valid(pte_pfn(src_pte)))
++				return -ENXIO;
++		}
++		set_pte(&dst_ptep[i], src_pte);
++	} while (addr += PAGE_SIZE, i++, addr != end && i < PTRS_PER_PTE);
+ 
  	return 0;
  }
  
--int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
-+int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
-+			  pgd_t *from_table, unsigned long start,
- 			  unsigned long end)
+-static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
+-		    unsigned long end)
++static int copy_pmd(struct trans_pgd_info *info, pmd_t *dst_pmdp,
++		    pmd_t *src_pmdp, unsigned long start, unsigned long end)
  {
- 	int rc;
--	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
+-	pmd_t *src_pmdp;
+-	pmd_t *dst_pmdp;
+ 	unsigned long next;
+ 	unsigned long addr = start;
++	int i = pmd_index(addr);
++	int rc;
  
--	if (!trans_pgd) {
--		pr_err("Failed to allocate memory for temporary page tables.\n");
--		return -ENOMEM;
+-	if (pud_none(READ_ONCE(*dst_pudp))) {
+-		dst_pmdp = (pmd_t *)get_safe_page(GFP_ATOMIC);
+-		if (!dst_pmdp)
+-			return -ENOMEM;
+-		pud_populate(&init_mm, dst_pudp, dst_pmdp);
 -	}
+-	dst_pmdp = pmd_offset(dst_pudp, start);
 -
--	rc = copy_page_tables(trans_pgd, start, end);
--	if (!rc)
--		*dst_pgdp = trans_pgd;
-+	rc = trans_pgd_create_empty(info, trans_pgd);
-+	if (rc)
-+		return rc;
+-	src_pmdp = pmd_offset(src_pudp, start);
+ 	do {
+-		pmd_t pmd = READ_ONCE(*src_pmdp);
++		pmd_t src_pmd = READ_ONCE(src_pmdp[i]);
++		pmd_t dst_pmd = READ_ONCE(dst_pmdp[i]);
++		pte_t *dst_ptep, *src_ptep;
  
--	return rc;
-+	return copy_page_tables(*trans_pgd, start, end);
+ 		next = pmd_addr_end(addr, end);
+-		if (pmd_none(pmd))
++		if (pmd_none(src_pmd))
++			continue;
++
++		if (!pmd_table(src_pmd)) {
++			if (info->trans_flags & TRANS_MKWRITE)
++				pmd_val(src_pmd) &= ~PMD_SECT_RDONLY;
++			set_pmd(&dst_pmdp[i], src_pmd);
+ 			continue;
+-		if (pmd_table(pmd)) {
+-			if (copy_pte(dst_pmdp, src_pmdp, addr, next))
++		}
++
++		if (pmd_none(dst_pmd)) {
++			pte_t *t = trans_alloc(info);
++
++			if (!t)
+ 				return -ENOMEM;
+-		} else {
+-			set_pmd(dst_pmdp,
+-				__pmd(pmd_val(pmd) & ~PMD_SECT_RDONLY));
++
++			__pmd_populate(&dst_pmdp[i], __pa(t), PTE_TYPE_PAGE);
++			dst_pmd = READ_ONCE(dst_pmdp[i]);
+ 		}
+-	} while (dst_pmdp++, src_pmdp++, addr = next, addr != end);
++
++		src_ptep = __va(pmd_page_paddr(src_pmd));
++		dst_ptep = __va(pmd_page_paddr(dst_pmd));
++
++		rc = copy_pte(info, dst_ptep, src_ptep, addr, next);
++		if (rc)
++			return rc;
++	} while (addr = next, i++, addr != end && i < PTRS_PER_PMD);
+ 
+ 	return 0;
+ }
+ 
+-static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
+-		    unsigned long end)
++static int copy_pud(struct trans_pgd_info *info, pud_t *dst_pudp,
++		    pud_t *src_pudp, unsigned long start, unsigned long end)
+ {
+-	pud_t *dst_pudp;
+-	pud_t *src_pudp;
+ 	unsigned long next;
+ 	unsigned long addr = start;
++	int i = pud_index(addr);
++	int rc;
+ 
+-	if (pgd_none(READ_ONCE(*dst_pgdp))) {
+-		dst_pudp = (pud_t *)get_safe_page(GFP_ATOMIC);
+-		if (!dst_pudp)
+-			return -ENOMEM;
+-		pgd_populate(&init_mm, dst_pgdp, dst_pudp);
+-	}
+-	dst_pudp = pud_offset(dst_pgdp, start);
+-
+-	src_pudp = pud_offset(src_pgdp, start);
+ 	do {
+-		pud_t pud = READ_ONCE(*src_pudp);
++		pud_t src_pud = READ_ONCE(src_pudp[i]);
++		pud_t dst_pud = READ_ONCE(dst_pudp[i]);
++		pmd_t *dst_pmdp, *src_pmdp;
+ 
+ 		next = pud_addr_end(addr, end);
+-		if (pud_none(pud))
++		if (pud_none(src_pud))
+ 			continue;
+-		if (pud_table(pud)) {
+-			if (copy_pmd(dst_pudp, src_pudp, addr, next))
++
++		if (!pud_table(src_pud)) {
++			if (info->trans_flags & TRANS_MKWRITE)
++				pud_val(src_pud) &= ~PUD_SECT_RDONLY;
++			set_pud(&dst_pudp[i], src_pud);
++			continue;
++		}
++
++		if (pud_none(dst_pud)) {
++			pmd_t *t = trans_alloc(info);
++
++			if (!t)
+ 				return -ENOMEM;
+-		} else {
+-			set_pud(dst_pudp,
+-				__pud(pud_val(pud) & ~PUD_SECT_RDONLY));
++
++			__pud_populate(&dst_pudp[i], __pa(t), PMD_TYPE_TABLE);
++			dst_pud = READ_ONCE(dst_pudp[i]);
+ 		}
+-	} while (dst_pudp++, src_pudp++, addr = next, addr != end);
++
++		src_pmdp = __va(pud_page_paddr(src_pud));
++		dst_pmdp = __va(pud_page_paddr(dst_pud));
++
++		rc = copy_pmd(info, dst_pmdp, src_pmdp, addr, next);
++		if (rc)
++			return rc;
++	} while (addr = next, i++, addr != end && i < PTRS_PER_PUD);
+ 
+ 	return 0;
+ }
+ 
+-static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
+-			    unsigned long end)
++static int copy_pgd(struct trans_pgd_info *info, pgd_t *dst_pgdp,
++		    pgd_t *src_pgdp, unsigned long start, unsigned long end)
+ {
+ 	unsigned long next;
+ 	unsigned long addr = start;
+-	pgd_t *src_pgdp = pgd_offset_k(start);
++	int i = pgd_index(addr);
++	int rc;
+ 
+-	dst_pgdp = pgd_offset_raw(dst_pgdp, start);
+ 	do {
++		pgd_t src_pgd;
++		pgd_t dst_pgd;
++		pud_t *dst_pudp, *src_pudp;
++
++		src_pgd = READ_ONCE(src_pgdp[i]);
++		dst_pgd = READ_ONCE(dst_pgdp[i]);
+ 		next = pgd_addr_end(addr, end);
+-		if (pgd_none(READ_ONCE(*src_pgdp)))
++		if (pgd_none(src_pgd))
+ 			continue;
+-		if (copy_pud(dst_pgdp, src_pgdp, addr, next))
+-			return -ENOMEM;
+-	} while (dst_pgdp++, src_pgdp++, addr = next, addr != end);
++
++		if (pgd_none(dst_pgd)) {
++			pud_t *t = trans_alloc(info);
++
++			if (!t)
++				return -ENOMEM;
++
++			__pgd_populate(&dst_pgdp[i], __pa(t), PUD_TYPE_TABLE);
++			dst_pgd = READ_ONCE(dst_pgdp[i]);
++		}
++
++		src_pudp = __va(pgd_page_paddr(src_pgd));
++		dst_pudp = __va(pgd_page_paddr(dst_pgd));
++
++		rc = copy_pud(info, dst_pudp, src_pudp, addr, next);
++		if (rc)
++			return rc;
++	} while (addr = next, i++, addr != end && i < PTRS_PER_PGD);
+ 
+ 	return 0;
+ }
+@@ -186,7 +204,7 @@ int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
+ 	if (rc)
+ 		return rc;
+ 
+-	return copy_page_tables(*trans_pgd, start, end);
++	return copy_pgd(info, *trans_pgd, from_table, start, end);
  }
  
  int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
