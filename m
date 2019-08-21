@@ -2,97 +2,116 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F245C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6E6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5978622DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566402690;
-	bh=goM8/MfDDt7plG+VlIxG+HH8lndGGP/l2/1zTb4jU7o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LCIbMZ5YY8CdvE3Aj9zLObOrMHAYZE1owsMn0u+ShgVDwt1UPLZH+B8A+fQfFWTJJ
-	 s4SlhuwH4f3u3D3qcWIyWmqr0Rnmqq8fGPBtKgIzlzR/0Hr9U41TjofrnGsofiX2n7
-	 5ZX6HUNPyiREaZomMLDc6t6osgd2h7w7ZOtmFpUs=
+	by mail.kernel.org (Postfix) with ESMTP id A2C1722CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:52:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="tpWLkJHv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbfHUPv3 (ORCPT
+        id S1728194AbfHUPwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:51:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbfHUPv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:51:28 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E9CF22DD3;
-        Wed, 21 Aug 2019 15:51:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566402687;
-        bh=goM8/MfDDt7plG+VlIxG+HH8lndGGP/l2/1zTb4jU7o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X8pSkhINd9uFeYoIS5Vie2INPFPgj5Bk0zN9YCgvDXVihwJCNhG1x76CsydaQCRGy
-         3wQ7VG6NgUvmmcyxv83FN27K3SssyddE6ISO6mhJUtq1nKk6ZFqccJlfEE/5YzCT/d
-         Rufel1BOQxBHVrh0Y5pkztZj2X+WwJzHhHrxOhgM=
-Date:   Wed, 21 Aug 2019 17:51:25 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: Re: [patch 04/44] posix-cpu-timers: Fixup stale comment
-Message-ID: <20190821155125.GB22020@lenoir>
-References: <20190819143141.221906747@linutronix.de>
- <20190819143801.747233612@linutronix.de>
- <20190820142658.GG2093@lenoir>
- <alpine.DEB.2.21.1908201946320.2223@nanos.tec.linutronix.de>
- <20190820204803.GH2093@lenoir>
- <alpine.DEB.2.21.1908202331080.2223@nanos.tec.linutronix.de>
- <20190820225604.GI2093@lenoir>
- <alpine.DEB.2.21.1908211525150.2223@nanos.tec.linutronix.de>
+        Wed, 21 Aug 2019 11:52:19 -0400
+Received: from sonic314-19.consmr.mail.gq1.yahoo.com ([98.137.69.82]:43637
+        "EHLO sonic314-19.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726762AbfHUPwT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:52:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1566402738; bh=iTroMwNCz0Ok+97McvMjs1IUkl8f42sTIG9Axgs6bb8=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=tpWLkJHvp5wDL9lOErA+mK5oaMKtJi0s4i09AHBLHbf95o6w5ASKzs6O/9dKtvC5Pa/wp+acouUpwhClDxofcjmsVmABXh4l45rl0wVMz6viNMNt9ihbZTNDQD6PYeHWieJtCzbHxHWxZGk8rimEdbOi5aF9CUHlkQh2pTiHzCkRDt1IQRyfyTP794vvDGOZOmuud/xj30fkkl+it+3IJDlhTNu/v+2cfSO5x1LltfcEeeSEvpQYAQ2ZPduS13fRUWdYxiSF8dvHQ7nB2AKhRTHfOlL8Y34q1adsdmNPxmFylGk2ctfX3Je8iJ8QTw5cRtpUHrBAoDxlwgF0SrX28Q==
+X-YMail-OSG: ACr3z4gVM1nQcSJWKwDoFqS9sY8unHRHRiwM9wt_EilF9KlIPY1BSkpT9aqvnq8
+ NHM1x8Yzu3SZPqv6Loh.JKQsZN.qZGVhNBBisiIACy1lnFbWqd_mEFFCDSyvgBMPgDiW0NMSgJnV
+ Vywe6hfL15SYBJ.Nj4lUpjpbPBxCxoLa94lr08SfRDRmmYl7JQCcT0ih.iuxckBLtlKJ0ALw9AlM
+ 5BFHSJ9BTMS9pHgX07eLgozEoakSvBbE1DiVovzTF34Q6Z9t2V_rXeAJ4HJsHFRfmIhqhXABuj5w
+ J6qOqdbdv2oP0VHnSmtJZFJpnlwrobY5qzoPUHaCpRzuY2Dnnrxi_CtxAR_Ojo2tWFC2Juh9IBZa
+ KaiJw4rAKHL.1Od2mzdmf1Pg1Dcm3XYwblQk71jU8jMS7o8J9aYiqt6wHNdjoSEL3wL_vyr2Yqc6
+ TaBeOe2ePbE1tOplYVPjZQPwZHgh8OBhoQS6HaIgd6Ej5D27QpKYNum3OO91VQ2y1nzLBsNwelmP
+ AZCRO1DF8rR1EBzytFg8nAtFRZ2c3A11JFjQi4E18RbleqsUWD6x0NKXDqOrLGNoVQ4ZMX__br9M
+ 7cVRZJstjrv10E7G9Onsdd1Xd0DJbnNy36u1mCMr26k0yscqul4BYP2D1PN_YHq65HrVCA5q1_x6
+ GKpy5N.VSrbERBBVaUemEBK.eAnzkD0vftwdXp0bMh.fkPkkdWeqdH_d8ym0zBCy7XIN1sArvI2t
+ 7lmmg4AgJ0Q.dxn6ZI8dMTFSFwuJXkWOFeeMvrZZoqwIAElwRcU3cCwTpnjciR_CaV8B0pIZBi0U
+ JLXSsUVCu.N11CuwbRm8e4gGzB6HWjfOYnCug0FQRfDilv7_88oLkudbdRPzhhQDW7Ij6GC_Y2yg
+ OkpS9uO59tlPbq3Q0ZagSxx5CWzpxyVd1F1s4dzWHeonvvC_JfG3XwRVlUgKfArQRpyC73P20Abd
+ huyiX.nUI1u7.Utfo8RTX6gt2hUaC6Sjr.B5bQoSeaN7jQlrY19Ipk3dkVC7vyfGwcItJ5ju4Yt1
+ Kk4Zo46YSt6jwUtRv6YvJapziBmjHQ46k0_yxhDqAeAalOdXtzDy37LDtSNt4R8_8fUnrvjiB9T0
+ a4FcIse013QugDOgvyGmVdHmMkj.PxauN4XPqdGHu04SEpWiHH53XDyMhz6BtXXWpjT7.6PZB_44
+ .MMyM1l6w1xYeWYq01w.7kcvqCFhcIifG4kT1Jz0eLh2FYh9wPepNH1IPMgNhgli_0gPGkaM5SVN
+ yjKYGiCAbGpiQ9cR71Tzp7N7acQ--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.gq1.yahoo.com with HTTP; Wed, 21 Aug 2019 15:52:18 +0000
+Received: by smtp403.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 49078682cac6f4c277a5635d11b259eb;
+          Wed, 21 Aug 2019 15:52:17 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 23:52:09 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     "Tobin C. Harding" <me@tobin.cc>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>, devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>,
+        linux-erofs@lists.ozlabs.org, Caitlyn <caitlynannefinn@gmail.com>
+Subject: Re: [PATCH 2/2] staging/erofs: Balanced braces around a few
+ conditional statements.
+Message-ID: <20190821155205.GB5060@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <1566346700-28536-1-git-send-email-caitlynannefinn@gmail.com>
+ <1566346700-28536-3-git-send-email-caitlynannefinn@gmail.com>
+ <7aaca457a3d3feb951082d0659eec568a908971f.camel@perches.com>
+ <20190821023122.GA159802@architecture4>
+ <20190821151241.GF12461@ares>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908211525150.2223@nanos.tec.linutronix.de>
+In-Reply-To: <20190821151241.GF12461@ares>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 03:31:39PM +0200, Thomas Gleixner wrote:
-> On Wed, 21 Aug 2019, Frederic Weisbecker wrote:
-> > So I propose to change the behaviour of case 1) so that $TARGET doesn't call
-> > posix_cpu_timers_exit(). We instead wait for $OWNER to exit and call
-> > exit_itimers()  -> timer_delete_hook($ITIMER) -> posix_cpu_timer_del($ITIMER).
-> > It is going to find $TARGET as the target of $ITIMER but no more sighand. Then
-> > finally it removes $ITIMER from $TARGET->cputime_expires.
-> > We basically do the same thing as in 2) but without locking sighand since it's NULL
-> > on $TARGET at this time.
-> 
-> But what do we win with that? Horrors like this:
-> 
-> task A		task B	   	task C
-> 
->      		arm_timer(A)	arm_timer(A)
-> 
-> do_exit()
-> 
-> 		del_timer(A)	del_timer(A)
-> 		no sighand	no_sighand
-> 		 list_del()       list_del()
-> 
-> Guess how well concurrent list deletion works.
-> 
-> We must remove armed timers from the task/signal _before_ dropping sighand,
-> really.
+Hi Tobin,
 
-Ah right, there can be concurrent owners, nevermind.
+On Wed, Aug 21, 2019 at 08:13:35AM -0700, Tobin C. Harding wrote:
+> On Wed, Aug 21, 2019 at 10:31:22AM +0800, Gao Xiang wrote:
+> > On Tue, Aug 20, 2019 at 07:26:46PM -0700, Joe Perches wrote:
+> > > On Tue, 2019-08-20 at 20:18 -0400, Caitlyn wrote:
+> > > > Balanced braces to fix some checkpath warnings in inode.c and
+> > > > unzip_vle.c
+> > > []
+> > > > diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+> > > []
+> > > > @@ -915,21 +915,21 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+> > > >  	mutex_lock(&work->lock);
+> > > >  	nr_pages = work->nr_pages;
+> > > >  
+> > > > -	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES))
+> > > > +	if (likely(nr_pages <= Z_EROFS_VLE_VMAP_ONSTACK_PAGES)) {
+> > > >  		pages = pages_onstack;
+> > > > -	else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
+> > > > -		 mutex_trylock(&z_pagemap_global_lock))
+> > > > +	} else if (nr_pages <= Z_EROFS_VLE_VMAP_GLOBAL_PAGES &&
+> > > > +		 mutex_trylock(&z_pagemap_global_lock)) {
+> > > 
+> > > Extra space after tab
+> > 
+> > There is actually balanced braces in linux-next.
+> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/staging/erofs/zdata.c#n762
+> 
+> Which tree did these changes go in through please Gao?  I believe
+> Caitlyn was working off of the staging-next branch of Greg's staging
+> tree.
+
+I don't think so, the reason is that unzip_vle.c was renamed to zdata.c
+months ago, see:
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/tree/drivers/staging/erofs?h=staging-next
+
+so I think the patch is outdated when I first look at it.
+
+Thanks,
+Gao Xiang
+
+> 
+> thanks,
+> Tobin.
