@@ -2,140 +2,98 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E98C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E24DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1D122DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C9622DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="FWFJ4Bai"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="ecCdMDUX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbfHUPsZ (ORCPT
+        id S1729005AbfHUPsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:48:25 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:62916 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728840AbfHUPsY (ORCPT
+        Wed, 21 Aug 2019 11:48:30 -0400
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:29549 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbfHUPs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:48:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566402504; x=1597938504;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=sNQOZhJUfbz+nC7+KNBC3O+NbzfXKJgSiWivUBW5VoI=;
-  b=FWFJ4Bai+EpJzhnh5LgUCeDRIj6YxMOWk7vJxLOMUavZXFqqQ2L0N2a2
-   6HsK4iKRqzTCjKPe5KIRlm/R2ZNtwPJTQRsMT4WbY7EInynRxpXPi8iuK
-   j+syS+xl4e2pnFiANmL4OHJC8pZHYKOunYhpd+39I/xgla93BIAnoERid
-   0=;
-X-IronPort-AV: E=Sophos;i="5.64,412,1559520000"; 
-   d="scan'208";a="822280226"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 21 Aug 2019 15:48:21 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-e34f1ddc.us-east-1.amazon.com (Postfix) with ESMTPS id 7648AA2680;
-        Wed, 21 Aug 2019 15:48:17 +0000 (UTC)
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 21 Aug 2019 15:48:17 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.43.161.230) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 21 Aug 2019 15:48:10 +0000
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <andrew.murray@arm.com>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <alisaidi@amazon.com>,
-        <ronenk@amazon.com>, <barakw@amazon.com>, <talel@amazon.com>,
-        <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Subject: [PATCH v4 7/7] PCI: dwc: Add validation that PCIe core is set to correct mode
-Date:   Wed, 21 Aug 2019 18:47:45 +0300
-Message-ID: <20190821154745.31834-3-jonnyc@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190821153545.17635-1-jonnyc@amazon.com>
-References: <20190821153545.17635-1-jonnyc@amazon.com>
+        Wed, 21 Aug 2019 11:48:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 319A93F6FD;
+        Wed, 21 Aug 2019 17:48:26 +0200 (CEST)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=ecCdMDUX;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 5_BESL_KmbX2; Wed, 21 Aug 2019 17:48:25 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id B41E23F6DC;
+        Wed, 21 Aug 2019 17:48:24 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id EB2EA3602D6;
+        Wed, 21 Aug 2019 17:48:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1566402504; bh=fcgSl5DKVkYug+EcSMguajG35Q4SWrsZPSDglOO5M/I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ecCdMDUXP+o2fIzs4cRai9GmFjJWyqXjqO7bcLjHnOTjhjkzH167yNCB8CYywNbMi
+         iEf4XMgEk9k4bQsljRIdtpdEucWmIkckNcA7e1O+aDpOe82ub7qGTfMIyfPepJB51+
+         OIn5udOtHF0ggr4ekNoMg9EaTOS+dRcgZCrPxZFE=
+Subject: Re: [PATCH 4/4] input/vmmouse: Update the backdoor call with support
+ for new instructions
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        linux-input@vger.kernel.org, Doug Covelli <dcovelli@vmware.com>
+References: <20190818143316.4906-1-thomas_os@shipmail.org>
+ <20190818143316.4906-5-thomas_os@shipmail.org> <20190821050925.GA566@penguin>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <027a55d6-ab26-ef9c-bd89-93a38f96160b@shipmail.org>
+Date:   Wed, 21 Aug 2019 17:48:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.230]
-X-ClientProxiedBy: EX13D12UWA002.ant.amazon.com (10.43.160.88) To
- EX13D13UWA001.ant.amazon.com (10.43.160.136)
+In-Reply-To: <20190821050925.GA566@penguin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some PCIe controllers can be set to either Host or EP according to some
-early boot FW. To make sure there is no discrepancy (e.g. FW configured
-the port to EP mode while the DT specifies it as a host bridge or vice
-versa), a check has been added for each mode.
+On 8/21/19 7:09 AM, Dmitry Torokhov wrote:
+> On Sun, Aug 18, 2019 at 04:33:16PM +0200, Thomas Hellström (VMware) wrote:
+>> From: Thomas Hellstrom <thellstrom@vmware.com>
+>>
+>> Use the definition provided by include/asm/vmware.h
+>>
+>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Cc: <linux-input@vger.kernel.org>
+>> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+>> Reviewed-by: Doug Covelli <dcovelli@vmware.com>
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>
+> Please feel free to merge with the rest of the patches introducing
+> VMWARE_HYPERCALL.
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c   | 8 ++++++++
- drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
- 2 files changed, 16 insertions(+)
+Thanks, Dmitry!
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 2bf5a35c0570..00e59a134b93 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -531,6 +531,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	int ret;
- 	u32 reg;
- 	void *addr;
-+	u8 hdr_type;
- 	unsigned int nbars;
- 	unsigned int offset;
- 	struct pci_epc *epc;
-@@ -543,6 +544,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 		return -EINVAL;
- 	}
- 
-+	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-+	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-+		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
-+			hdr_type);
-+		return -EIO;
-+	}
-+
- 	ret = of_property_read_u32(np, "num-ib-windows", &ep->num_ib_windows);
- 	if (ret < 0) {
- 		dev_err(dev, "Unable to read *num-ib-windows* property\n");
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index f93252d0da5b..d2ca748e4c85 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	struct pci_bus *child;
- 	struct pci_host_bridge *bridge;
- 	struct resource *cfg_res;
-+	u8 hdr_type;
- 	int ret;
- 
- 	raw_spin_lock_init(&pci->pp.lock);
-@@ -396,6 +397,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 		}
- 	}
- 
-+	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-+	if (hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-+		dev_err(pci->dev, "PCIe controller is not set to bridge type (hdr_type: 0x%x)!\n",
-+			hdr_type);
-+		return -EIO;
-+	}
-+
- 	pp->mem_base = pp->mem->start;
- 
- 	if (!pp->va_cfg0_base) {
--- 
-2.17.1
+I have a version 2 of the patch were the only difference is that edx is 
+initialized to zero which is default for vmcall / vmmcall. Can I use 
+your ack for that one as well?
+
+Thanks,
+
+Thomas
+
 
