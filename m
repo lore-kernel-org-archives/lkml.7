@@ -2,63 +2,147 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DC9C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1A2C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B4B2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A1D22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbfHUJYQ (ORCPT
+        id S1727191AbfHUJ1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:24:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:55040 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbfHUJYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:24:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9824428;
-        Wed, 21 Aug 2019 02:24:14 -0700 (PDT)
-Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AADA3F706;
-        Wed, 21 Aug 2019 02:24:13 -0700 (PDT)
-From:   Julien Grall <julien.grall@arm.com>
-To:     linux-rt-users@vger.kernel.org
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, maz@kernel.org,
-        bigeasy@linutronix.de, rostedt@goodmis.org,
-        Julien Grall <julien.grall@arm.com>
-Subject: [RT PATCH 0/3] hrtimer: RT fixes for hrtimer_grab_expiry_lock()
-Date:   Wed, 21 Aug 2019 10:24:06 +0100
-Message-Id: <20190821092409.13225-1-julien.grall@arm.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 21 Aug 2019 05:27:45 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:53778 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfHUJ1p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:27:45 -0400
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: 1fZPvctk3M5E6OBH/1XNx7MwexqUr1pyi08/BFFgG3fIzmxLB7YZF9+6gua8wu7j1VvWUoKYL/
+ PElMhrlM76A8pBrGG+Ffwbs9UoMSaukahzYL8y5BC2zZdwqEJ3psZ8ElH2ImoSoZ2pqhYlnzz5
+ lR5mdsNWe5PLIQx3yST6Tb7RbJmHhUrIhivNDDxFA7McNpsvyNLubHjYbOxEbv04siFmX/5lpE
+ HFdur53dAUhHO8fVeJtP8Tc8/5jyIGDEW6I54c5F6tD7qmvMhVV7IxYntg0UwMx6ezL9hgu3Ni
+ 9SU=
+X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
+   d="scan'208";a="47356862"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 21 Aug 2019 02:27:28 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 21 Aug 2019 02:27:28 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Wed, 21 Aug 2019 02:27:27 -0700
+Date:   Wed, 21 Aug 2019 11:27:27 +0200
+From:   "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>
+To:     Igor Russkikh <Igor.Russkikh@aquantia.com>
+CC:     Sabrina Dubroca <sd@queasysnail.net>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
+        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
+        Pavel Belous <Pavel.Belous@aquantia.com>
+Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
+ infrastructure
+Message-ID: <20190821092726.do4nmtimizqmagkh@lx-anielsen.microsemi.net>
+References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
+ <20190808140600.21477-7-antoine.tenart@bootlin.com>
+ <e96fa4ae-1f2c-c1be-b2d8-060217d8e151@aquantia.com>
+ <20190813085817.GA3200@kwain>
+ <20190813131706.GE15047@lunn.ch>
+ <2e3c2307-d414-a531-26cb-064e05fa01fc@aquantia.com>
+ <20190816132959.GC8697@bistromath.localdomain>
+ <20190820100140.GA3292@kwain>
+ <20190820144119.GA28714@bistromath.localdomain>
+ <81ec0497-58cd-1f4c-faa3-c057693cd50e@aquantia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <81ec0497-58cd-1f4c-faa3-c057693cd50e@aquantia.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+The 08/21/2019 09:20, Igor Russkikh wrote:
+> > Talking about packet numbers, can you describe how PN exhaustion is
+> > handled?  I couldn't find much about packet numbers at all in the
+> > driver patches (I hope the hw doesn't wrap around from 2^32-1 to 0 on
+> > the same SA).  At some point userspace needs to know that we're
+> > getting close to 2^32 and that it's time to re-key.  Since the whole
+> > TX path of the software implementation is bypassed, it looks like the
+> > PN (as far as drivers/net/macsec.c is concerned) never increases, so
+> > userspace can't know when to negotiate a new SA.
+> 
+> I think there should be driver specific implementation of this functionality.
+> As an example, our macsec HW issues an interrupt towards the host to indicate
+> PN threshold has reached and it's time for userspace to change the keys.
+> 
+> In contrast, current SW macsec implementation just stops this SA/secy.
+> 
+> > I don't see how this implementation handles non-macsec traffic (on TX,
+> > that would be packets sent directly through the real interface, for
+> > example by wpa_supplicant - on RX, incoming MKA traffic for
+> > wpa_supplicant). Unless I missed something, incoming MKA traffic will
+> > end up on the macsec interface as well as the lower interface (not
+> > entirely critical, as long as wpa_supplicant can grab it on the lower
+> > device, but not consistent with the software implementation). How does
+> > the driver distinguish traffic that should pass through unmodified
+> > from traffic that the HW needs to encapsulate and encrypt?
+> 
+> I can comment on our HW engine - where it has special bypass rules
+> for configured ethertypes. This way macsec engine skips encryption on TX and
+> passes in RX unencrypted for the selected control packets.
+In our case it is a TCAM which can look at various fields (including ethertype),
+but is sounds like we have a vary similar design.
 
-This small series contains a few fixes for the hrtimer code in RT linux
-(v5.2.9-rt3-rebase).
+> But thats true, realdev driver is hard to distinguish encrypted/unencrypted
+> packets. In case realdev should make a decision where to put RX packet,
+> it only may do some heuristic (since after macsec decription all the
+> macsec related info is dropped. Thats true at least for our HW implementation).
+Same for ours.
 
-The patch #2 contains a error I managed to reproduce. The other two are
-were found while looking at the code.
+> > If you look at IPsec offloading, the networking stack builds up the
+> > ESP header, and passes the unencrypted data down to the driver. I'm
+> > wondering if the same would be possible with MACsec offloading: the
+> > macsec virtual interface adds the header (and maybe a dummy ICV), and
+> > then the HW does the encryption. In case of HW that needs to add the
+> > sectag itself, the driver would first strip the headers that the stack
+> > created. On receive, the driver would recreate a sectag and the macsec
+> > interface would just skip all verification (decrypt, PN).
+> 
+> I don't think this way is good, as driver have to do per packet header mangling.
+> That'll harm linerate performance heavily.
+Agree, and it will also prevent MACsec offload in offloaded bridge devices.
 
-Cheers,
-
-Julien Grall (3):
-  hrtimer: Use READ_ONCE to access timer->base in
-    hrimer_grab_expiry_lock()
-  hrtimer: Don't grab the expiry lock for non-soft hrtimer
-  hrtimer: Prevent using uninitialized spin_lock in
-    hrtimer_grab_expiry_lock()
-
- kernel/time/hrtimer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
--- 
-2.11.0
-
+/Allan
