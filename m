@@ -2,106 +2,106 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D598C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E04C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60C322CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:52:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="XuASEHZZ"
+	by mail.kernel.org (Postfix) with ESMTP id CF92E2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbfHUPw0 (ORCPT
+        id S1728345AbfHUPxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:52:26 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:58182 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726762AbfHUPwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:52:25 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 2E05142ED0;
-        Wed, 21 Aug 2019 15:52:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:date:date:from:from:subject:subject
-        :message-id:received:received:received; s=mta-01; t=1566402743;
-         x=1568217144; bh=pOc3KLiQCgqwQcr8n6hsHD5m1EFrOU7bcNFQtatabT8=; b=
-        XuASEHZZRwvvUATkU2u1FcGIrD4HSAQKr07D8arfRKO8d3PH4qoMl113V/7VG+qt
-        DFvR4RSpUEGrdWp5nnKj6cizV5AaCtOdq83kVRJ3xEm7rxLJc6xVc862i9q+47mr
-        NfHev9oMvRc3WK1Nkm5/pAJnatYzgwjPBFT1CoMBivo=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 4SUR6-yrjwhX; Wed, 21 Aug 2019 18:52:23 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id E51774120B;
-        Wed, 21 Aug 2019 18:52:22 +0300 (MSK)
-Received: from localhost.localdomain (172.17.15.69) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Wed, 21 Aug 2019 18:52:22 +0300
-Message-ID: <f27c52df7ddd460695d6ed1d7823a65a72012361.camel@yadro.com>
-Subject: [PATCH 0/3] add dual-boot support
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-CC:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        "Alexander Amelkin" <a.amelkin@yadro.com>
-Date:   Wed, 21 Aug 2019 18:52:22 +0300
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 21 Aug 2019 11:53:52 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:53670 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727873AbfHUPxw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:53:52 -0400
+Received: (qmail 5312 invoked by uid 2102); 21 Aug 2019 11:53:51 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 21 Aug 2019 11:53:51 -0400
+Date:   Wed, 21 Aug 2019 11:53:51 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <benjamin.tissoires@redhat.com>,
+        <jikos@kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in hidraw_ioctl
+In-Reply-To: <000000000000940ec30590a1b35e@google.com>
+Message-ID: <Pine.LNX.4.44L0.1908211152230.1816-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.17.15.69]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ASPEED SoCs support dual-boot feature for SPI Flash.
-When strapped appropriately, the SoC starts wdt2 (/dev/watchdog1)
-and if within a minute it is not disabled, it goes off and reboots
-the SoC from an alternate SPI Flash chip by changing CS0 controls
-to actually drive CS1 line.
+On Wed, 21 Aug 2019, syzbot wrote:
 
-When booted from alternate chip, in order to access the main chip
-at CS0, the user must reset the appropriate bit in the watchdog
-hardware. There is no interface that would allow to do that from
-an embedded firmware startup script.
+> Hello,
+> 
+> syzbot has tested the proposed patch but the reproducer still triggered  
+> crash:
+> KASAN: slab-out-of-bounds Read in hidraw_ioctl
+> 
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in strlen+0x79/0x90 lib/string.c:525
+> Read of size 1 at addr ffff8881d619df38 by task syz-executor.5/2984
+> 
+> CPU: 0 PID: 2984 Comm: syz-executor.5 Not tainted 5.3.0-rc2+ #1
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description+0x6a/0x32c mm/kasan/report.c:351
+>   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+>   kasan_report+0xe/0x12 mm/kasan/common.c:612
+>   strlen+0x79/0x90 lib/string.c:525
+>   strlen include/linux/string.h:281 [inline]
+>   hidraw_ioctl+0x245/0xae0 drivers/hid/hidraw.c:446
+>   vfs_ioctl fs/ioctl.c:46 [inline]
+>   file_ioctl fs/ioctl.c:509 [inline]
+>   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
+>   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
+>   __do_sys_ioctl fs/ioctl.c:720 [inline]
+>   __se_sys_ioctl fs/ioctl.c:718 [inline]
+>   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
+>   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x459829
+> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f19881acc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+> RDX: 0000000000000000 RSI: 0000000080404805 RDI: 0000000000000004
+> RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f19881ad6d4
+> R13: 00000000004c21de R14: 00000000004d5620 R15: 00000000ffffffff
 
-This commit implements support for that feature:
+Looks like a test is missing in hidraw_ioctl.
 
-* Enable 'alt-boot' option for wdt2
+Alan Stern
 
-* Enable secondary SPI flash chip
+#syz test: https://github.com/google/kasan.git e96407b4
 
-* Make it possible to get access to the primary SPI flash chip at CS0
-  after booting from the alternate chip at CS1. A sysfs interface is added
-  to provide an easy way for embedded firmware startup scripts to clear
-  the chip select bit to gain access to the primary flash chip in order
-  to allow for recovery of its contents.
-
-Ivan Mikhaylov (3):
-  vesnin: add wdt2 section with alt-boot option
-  vesnin: add secondary SPI flash chip
-  watchdog/aspeed: add support for dual boot
-
- arch/arm/boot/dts/aspeed-bmc-opp-vesnin.dts | 12 +++++++++
- drivers/watchdog/aspeed_wdt.c               | 30 +++++++++++++++++++++
- 2 files changed, 42 insertions(+)
-
--- 
-2.20.1
-
+Index: usb-devel/drivers/hid/hidraw.c
+===================================================================
+--- usb-devel.orig/drivers/hid/hidraw.c
++++ usb-devel/drivers/hid/hidraw.c
+@@ -370,7 +370,7 @@ static long hidraw_ioctl(struct file *fi
+ 
+ 	mutex_lock(&minors_lock);
+ 	dev = hidraw_table[minor];
+-	if (!dev) {
++	if (!dev || !dev->exist) {
+ 		ret = -ENODEV;
+ 		goto out;
+ 	}
 
