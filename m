@@ -2,147 +2,79 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49B0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC77C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A58862339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566406005;
-	bh=WQ2BlRv9mAl/kq+zQd+AH1qq87Y+Uvy3hDKIZvT8V28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=062t144walJMmQMMtSdjVvsSukBZ/9YTLqzbNh2PIhGct4h6+DrJFb3Fa9WWGKpr7
-	 4t6eAHByMdcBwA0eNXnRPZZ6GR5YrQcFGcQDH8MisIXdzktyaiqnmdLu3g+TZnrH3a
-	 j7BqvKxOMlGc/m3PBYEpJZOyEV7PjAR3ewndX780=
+	by mail.kernel.org (Postfix) with ESMTP id D1C042339F
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729526AbfHUQqo (ORCPT
+        id S1729650AbfHUQri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:46:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59620 "EHLO mail.kernel.org"
+        Wed, 21 Aug 2019 12:47:38 -0400
+Received: from mga04.intel.com ([192.55.52.120]:35655 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727862AbfHUQqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:46:44 -0400
-Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3487D22D6D;
-        Wed, 21 Aug 2019 16:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566406003;
-        bh=WQ2BlRv9mAl/kq+zQd+AH1qq87Y+Uvy3hDKIZvT8V28=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V+bfxgzitOAgmD3JoQz1FwTEvVsSra+bN8CblJi8UOvJ1nxyg0FOHGtPtAo758uIN
-         b0c1KihRa1iKO2CDB3W4YkzKzYugI9s0tXhUxYuWu8tkx5bHWcqAyWfxUaerqSwdWL
-         DwkJKMGD+XsH0HINst1IbsxbD8j3b5Ykc9ZEMbqg=
-Date:   Wed, 21 Aug 2019 09:32:24 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nayna Jain <nayna@linux.ibm.com>
-Cc:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>
-Subject: Re: [PATCH v2 4/4] powerpc: load firmware trusted keys into kernel
- keyring
-Message-ID: <20190821163224.GC28571@kroah.com>
-References: <1566400103-18201-1-git-send-email-nayna@linux.ibm.com>
- <1566400103-18201-5-git-send-email-nayna@linux.ibm.com>
+        id S1727416AbfHUQrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:47:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 09:47:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
+   d="scan'208";a="181083817"
+Received: from unknown (HELO pbossart-mobl3.intel.com) ([10.252.139.119])
+  by orsmga003.jf.intel.com with ESMTP; 21 Aug 2019 09:47:35 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     tiwai@suse.de, broonie@kernel.org, devicetree@vger.kernel.org,
+        Xiubo.Lee@gmail.com, shengjiu.wang@nxp.com,
+        linux-kernel@vger.kernel.org, nicoleotsuka@gmail.com,
+        robh+dt@kernel.org, linux-imx@nxp.com, viorel.suman@nxp.com,
+        festevam@gmail.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 0/3] ASoC: SOF: initial support for i.MX8
+Date:   Wed, 21 Aug 2019 11:47:27 -0500
+Message-Id: <20190821164730.7385-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566400103-18201-5-git-send-email-nayna@linux.ibm.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 11:08:23AM -0400, Nayna Jain wrote:
-> The keys used to verify the Host OS kernel are managed by OPAL as secure
-> variables. This patch loads the verification keys into the .platform
-> keyring and revocation keys into .blacklist keyring. This enables
-> verification and loading of the kernels signed by the boot time keys which
-> are trusted by firmware.
-> 
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> ---
->  security/integrity/Kconfig                    |  9 ++
->  security/integrity/Makefile                   |  3 +
->  .../integrity/platform_certs/load_powerpc.c   | 94 +++++++++++++++++++
->  3 files changed, 106 insertions(+)
->  create mode 100644 security/integrity/platform_certs/load_powerpc.c
-> 
-> diff --git a/security/integrity/Kconfig b/security/integrity/Kconfig
-> index 0bae6adb63a9..2b4109c157e2 100644
-> --- a/security/integrity/Kconfig
-> +++ b/security/integrity/Kconfig
-> @@ -72,6 +72,15 @@ config LOAD_IPL_KEYS
->         depends on S390
->         def_bool y
->  
-> +config LOAD_PPC_KEYS
-> +	bool "Enable loading of platform and revocation keys for POWER"
-> +	depends on INTEGRITY_PLATFORM_KEYRING
-> +	depends on PPC_SECURE_BOOT
-> +	def_bool y
+The reviews for these patches took place already on mailing lists and
+GitHub, and the code is already integrated in the SOF tree (along with
+dependencies already accepted in the i.MX tree)
 
-def_bool y only for things that the system will not boot if it is not
-enabled because you added a new feature.  Otherwise just do not set the
-default.
+Changes since v1:
+As agreed with Daniel and Mark, this v2 series includes the DT
+bindings (Fixed 'compatible' typo in examples)
+The SAI/ESAI support was merged separately so dropped from this set.
 
-> +	help
-> +	  Enable loading of db keys to the .platform keyring and dbx keys to
-> +	  the .blacklist keyring for powerpc based platforms.
-> +
->  config INTEGRITY_AUDIT
->  	bool "Enables integrity auditing support "
->  	depends on AUDIT
-> diff --git a/security/integrity/Makefile b/security/integrity/Makefile
-> index 525bf1d6e0db..9eeb6b053de3 100644
-> --- a/security/integrity/Makefile
-> +++ b/security/integrity/Makefile
-> @@ -14,6 +14,9 @@ integrity-$(CONFIG_LOAD_UEFI_KEYS) += platform_certs/efi_parser.o \
->  				      platform_certs/load_uefi.o \
->  				      platform_certs/keyring_handler.o
->  integrity-$(CONFIG_LOAD_IPL_KEYS) += platform_certs/load_ipl_s390.o
-> +integrity-$(CONFIG_LOAD_PPC_KEYS) += platform_certs/efi_parser.o \
-> +					 platform_certs/load_powerpc.o \
-> +					 platform_certs/keyring_handler.o
->  $(obj)/load_uefi.o: KBUILD_CFLAGS += -fshort-wchar
-  
->  subdir-$(CONFIG_IMA)			+= ima
-> diff --git a/security/integrity/platform_certs/load_powerpc.c b/security/integrity/platform_certs/load_powerpc.c
-> new file mode 100644
-> index 000000000000..f4d869171062
-> --- /dev/null
-> +++ b/security/integrity/platform_certs/load_powerpc.c
-> @@ -0,0 +1,94 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Nayna Jain <nayna@linux.ibm.com>
-> + *
-> + * load_powernv.c
+Daniel Baluta (3):
+  dt-bindings: dsp: fsl: Add DSP core binding support
+  ASoC: SOF: Add OF DSP device support
+  ASoC: SOF: imx: Add i.MX8 HW support
 
-That's not the name of this file :(
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      |  88 ++++
+ sound/soc/sof/Kconfig                         |  11 +
+ sound/soc/sof/Makefile                        |   4 +
+ sound/soc/sof/imx/Kconfig                     |  22 +
+ sound/soc/sof/imx/Makefile                    |   4 +
+ sound/soc/sof/imx/imx8.c                      | 394 ++++++++++++++++++
+ sound/soc/sof/sof-of-dev.c                    | 143 +++++++
+ 7 files changed, 666 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+ create mode 100644 sound/soc/sof/imx/Kconfig
+ create mode 100644 sound/soc/sof/imx/Makefile
+ create mode 100644 sound/soc/sof/imx/imx8.c
+ create mode 100644 sound/soc/sof/sof-of-dev.c
 
-And the perfect example of why you NEVER have the name of the file in
-the file itself, as it's not needed and easy to get wrong :)
+-- 
+2.20.1
 
-thanks,
-
-greg k-h
