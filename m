@@ -2,178 +2,154 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1919C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9FEC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C962339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7294C2339F
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T1To62xz"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qXbjAUdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbfHUKoA (ORCPT
+        id S1728474AbfHUKoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:44:00 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35084 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728239AbfHUKnX (ORCPT
+        Wed, 21 Aug 2019 06:44:07 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:53261 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727297AbfHUKnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:43:23 -0400
-Received: by mail-io1-f67.google.com with SMTP id i22so3580632ioh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 03:43:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=21mfaxXpzzpcpjFxLsuOaE64M3Kk3ik/0tTAJe54ZzM=;
-        b=T1To62xzjvEzr+9ni5+lpN2/GgC8rIsJ+fA7ZZG22Eib4BoVxDScW9e1mqvuWFc3Tt
-         8/TUJ1PcvRC7h0FtQJP7KCPLUXakXY8sZjMnMC0HoAZW9AQs+9cNJGiHbPMyuhWALN3H
-         AxKQvPM3cJdyFLqk78GlGCjS/fnp+HKZJGVZXAll95v7op+6lFP2nBem63fteWtn1G7M
-         vuRBZ9F2DPrCF2YviqYUCo3rGBb4dVeV9CydJ1Q8Wlhx5gXzgDauAp2ItU0qeCdKdJBn
-         30n9Ndn3jEBd3+f8rRS+NDForNpmmj3Wgbmiox77JD4ghaAdl7k/ZPakI46yskWOw1Tv
-         66gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=21mfaxXpzzpcpjFxLsuOaE64M3Kk3ik/0tTAJe54ZzM=;
-        b=prI5Sxnv0z6qebM+tkaKYyd6Q3B5T5CsKeADq+hQ/NDJOW142GbhGrPwdfmMj4aq0n
-         1fwqLZdIY7US+0pcUser4XRaop1c66jQILpC4LWbdstelIQf2P6tG7IYGwa7qlpabXVX
-         DJKKAgvttl1dOg3BsEtTGk8M8/Kmi/WsHCM31LTZcYagnqS0C518cwy2hKePw9hPldWa
-         Tj1kzvVRcLUY4QXsG3WRj4uIXudIPanuTd1+pL2bqOcxGRhESsFnBp+fIKoPkdsAazwR
-         Q1g0k/EztiGPyZ+fPHzqsS+mKWHnQCVhtEfVSZc3DobnZbg3Qoehk8BIBXOLaWY87vQn
-         p7nw==
-X-Gm-Message-State: APjAAAXksVMO+8l417/Gu1Q3xae0aWWfsBHusrqG0Plwn6faOa3yAo9C
-        /ZThQ+oZjR+0IJrpUJpo3Iopyregn2jaBDcYwQ==
-X-Google-Smtp-Source: APXvYqwW95LjpMO9piBiCEl4iZLPGgAKcSDCHDXwI9uuYqLMnZH3/UMptPpMLWSQk2fEzw/SOVaaxgRnFzC+JtGR5cg=
-X-Received: by 2002:a05:6638:303:: with SMTP id w3mr8829447jap.103.1566384202422;
- Wed, 21 Aug 2019 03:43:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190729170354.202374-1-avifishman70@gmail.com> <744188a1-d11a-7edc-79cd-e3c7dbcf6e86@linaro.org>
-In-Reply-To: <744188a1-d11a-7edc-79cd-e3c7dbcf6e86@linaro.org>
-From:   Avi Fishman <avifishman70@gmail.com>
-Date:   Wed, 21 Aug 2019 13:42:27 +0300
-Message-ID: <CAKKbWA72VX4LnLM0on2=bj787J53GUwkh6PTU2+0fvP+gPu+Xg@mail.gmail.com>
-Subject: Re: [PATCH] [v5] clocksource/drivers/npcm: fix GENMASK and timer operation
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 21 Aug 2019 06:43:22 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190821104320euoutp010b61f3f157960a4562dd624ad74f1a4f~86iGFX07i0665906659euoutp01J
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 10:43:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190821104320euoutp010b61f3f157960a4562dd624ad74f1a4f~86iGFX07i0665906659euoutp01J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566384200;
+        bh=Q/+AVLIuT+hp4vYMuUP4aL41jpAGDZPWXeXLXgkKE2s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qXbjAUdlL/dg8Yw2RjjZ2haB2aliZvxnCSxmgTG+zjqOSFcA1UCJZqlpWbj479OM6
+         T1jbNJTW8ZW/OaCkJ9UtJxJs0WKM+XT28OYB5KHlhl4mUBYWljJ9cDc6aI2ilIBnhF
+         //IKYS1j6p0+jMujRMabOwoGl5ti10l3sNcvyYis=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190821104319eucas1p22915aa532a3cde552f31d52ce60d05ed~86iFJrNsd0983609836eucas1p25;
+        Wed, 21 Aug 2019 10:43:19 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 0A.48.04469.6402D5D5; Wed, 21
+        Aug 2019 11:43:18 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190821104318eucas1p1065a4a9d8366095e4d758519f88e8aba~86iESgvTP1320113201eucas1p1r;
+        Wed, 21 Aug 2019 10:43:18 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190821104317eusmtrp23097d2e210a06edb66307cacf4d23123~86iEEEfUE2827428274eusmtrp23;
+        Wed, 21 Aug 2019 10:43:17 +0000 (GMT)
+X-AuditID: cbfec7f2-994db9c000001175-23-5d5d20466d48
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 37.38.04117.5402D5D5; Wed, 21
+        Aug 2019 11:43:17 +0100 (BST)
+Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190821104316eusmtip2ef5a25d421588eff26411d58636276ab~86iDAzoLZ1276412764eusmtip2b;
+        Wed, 21 Aug 2019 10:43:16 +0000 (GMT)
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
+        willy.mh.wolff.ml@gmail.com,
+        Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v13 1/8] dt-bindings: ddr: rename lpddr2 directory
+Date:   Wed, 21 Aug 2019 12:42:56 +0200
+Message-Id: <20190821104303.32079-2-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190821104303.32079-1-l.luba@partner.samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSWUwTURT1zbQz02pxbIk+V7BR4xIRl+AzrhgwI4mJiT9ErTrqCERatWNd
+        wMQqVgRbN4w2SkVjoFCrLYgNEjdKtUhRLBhcwaUmbnXBAhE1KGWq/p17lntuXh6Fy9vFw6gM
+        zVZOq2EzlYRU5LrT3Th5UaxKFf88bzoqNzvE6FHHWzEq8twXowvtAYByzjsIVFBvwVDDQTU6
+        HPiIo8ZGJ4nu7Q2S6Kl+BGo3tolRc3UhgUImD0DmxhsYuuhpJVHxIz+G/PXJ6NmeUgIZrntI
+        VBvMFaOelnIRuvkwBT37GYW66l6DBUMZ+xk7YLo6j4mYL48NJHNa7xcxV0+1kkyFLY9gblrs
+        JGPK+UwwNZ+vYcyhShtgLvuymVDFqKUDlkvnrOcyM7Zx2inz1kjTbTU2fPM+2Q679QquB9f7
+        5wMJBekZsLnzuDgfSCk5XQpgW1kNIQwdAPpMHbgwhAD8afLifyO1HxtIQbAC6N3zhPwXaX5z
+        oHcZRRF0HKyybQkHomkzgKffLQt7cPoVDg9dLARhQUEvhKZqIxbGInosrAu2gHBWRs+H5luz
+        hLIYeMF5q69YQi+APUfu9t0K6WIKmozvCMGUBAteNGECVsAP3kpSwCPg76tFEZ6HetM5IOBd
+        MHDYEvHMhrVef9/NOD0BOqqnCHQibN3n66MhHQUffxoUpvFeeMx1EhdoGTywXy64x8NK44NI
+        0WBotZ+ILGfg/Wo7JrxOAYAlZVewIyDm1P+yswDYwBBOx6vTOH6qhtsex7NqXqdJi1u3SV0B
+        ej+ir8f7rQp0Nq11A5oCygGyqicrVHIxu43fqXYDSOHKaNmOwuUquWw9uzOL025ardVlcrwb
+        DKdEyiGy7H4vV8jpNHYrt5HjNnPavypGSYbpgW1LwY/dA3XWhIQ1TV20vDshN5CVP6bfW1Vq
+        5/D545wvko4aN9zOTsQc3mTfzFCyJJj1KbHMpThomJ2TweaWt4UaVo3URqW/sqZs/K5Dl8aa
+        Fz/clUd9dTNuLHba2vclR7+MnlS85Lfa4LSsTEk1uBRz47tbfmlcoxZJ+8dH82+UIj6dnToR
+        1/LsH7p9s/yEAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCIsWRmVeSWpSXmKPExsVy+t/xe7quCrGxBltWmFtsnLGe1eL6l+es
+        FvOPnGO1WP3xMaNF8+L1bBaTT81lsjjTnWvR//g1s8X58xvYLc42vWG3uNUgY/Gx5x6rxeVd
+        c9gsPvceYbSYcX4fk8XaI3fZLZZev8hkcfGUq8XtxhVsFq17j7BbHH7Tzmrx79pGFov9V7ws
+        bv/ms/h24hGjg6THmnlrGD2+fZ3E4vH+Riu7x+yGiyweO2fdZffYtKqTzWP/3DXsHr3N79g8
+        Dr7bw+TRt2UVo8fm09UenzfJBfBE6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZ
+        mSrp29mkpOZklqUW6dsl6GWsOriKuaCFt2LN8q3MDYx7ubsYOTkkBEwkDr8+w97FyMUhJLCU
+        UeJjxyQ2iISYxKR929khbGGJP9e62CCKPjFKbNnQz9zFyMHBJqAnsWNVIUhcRGAOo8TPrm2M
+        IA6zwG9miYN3+8G6hQWcJHp39TCB2CwCqhIn3lxjBGnmFbCXmHHAEmKBvMTqDQeYQWxOAQeJ
+        fxNOsoLYQkAlUze8ZZ3AyLeAkWEVo0hqaXFuem6xkV5xYm5xaV66XnJ+7iZGYIxuO/Zzyw7G
+        rnfBhxgFOBiVeHh33IyOFWJNLCuuzD3EKMHBrCTCWzEnKlaINyWxsiq1KD++qDQntfgQoynQ
+        TROZpUST84HpI68k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA6NY
+        nPV66cIHcVsXBv5pUDANKHqqweh9fce1zH8CZituGwX/danSm7T5Bo/HEm7JaN2Xj1680uRr
+        /X47JuRtvgXTpgeflq/f6tq2tcZr59urexgY/whbH5giZ3tsiQ5b+u7b3svq+jmf+S5V39t4
+        mE/vIG/7/4Om38R+NhxewCv+8tCiRXvifeWVWIozEg21mIuKEwHtua9Z5wIAAA==
+X-CMS-MailID: 20190821104318eucas1p1065a4a9d8366095e4d758519f88e8aba
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190821104318eucas1p1065a4a9d8366095e4d758519f88e8aba
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190821104318eucas1p1065a4a9d8366095e4d758519f88e8aba
+References: <20190821104303.32079-1-l.luba@partner.samsung.com>
+        <CGME20190821104318eucas1p1065a4a9d8366095e4d758519f88e8aba@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Daniel,
+Change directory name to be ready for new types of memories.
 
-It seems more clear now :)
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+---
+ .../devicetree/bindings/{lpddr2 => ddr}/lpddr2-timings.txt      | 0
+ Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt    | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2-timings.txt (100%)
+ rename Documentation/devicetree/bindings/{lpddr2 => ddr}/lpddr2.txt (96%)
 
-Good to know about the need for Fixes tag.
+diff --git a/Documentation/devicetree/bindings/lpddr2/lpddr2-timings.txt b/Documentation/devicetree/bindings/ddr/lpddr2-timings.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/lpddr2/lpddr2-timings.txt
+rename to Documentation/devicetree/bindings/ddr/lpddr2-timings.txt
+diff --git a/Documentation/devicetree/bindings/lpddr2/lpddr2.txt b/Documentation/devicetree/bindings/ddr/lpddr2.txt
+similarity index 96%
+rename from Documentation/devicetree/bindings/lpddr2/lpddr2.txt
+rename to Documentation/devicetree/bindings/ddr/lpddr2.txt
+index 58354a075e13..ddd40121e6f6 100644
+--- a/Documentation/devicetree/bindings/lpddr2/lpddr2.txt
++++ b/Documentation/devicetree/bindings/ddr/lpddr2.txt
+@@ -36,7 +36,7 @@ Child nodes:
+   "lpddr2-timings" provides AC timing parameters of the device for
+   a given speed-bin. The user may provide the timings for as many
+   speed-bins as is required. Please see Documentation/devicetree/
+-  bindings/lpddr2/lpddr2-timings.txt for more information on "lpddr2-timings"
++  bindings/ddr/lpddr2-timings.txt for more information on "lpddr2-timings"
+ 
+ Example:
+ 
+-- 
+2.17.1
 
-On Wed, Aug 21, 2019 at 1:11 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> On 29/07/2019 19:03, Avi Fishman wrote:
-> > NPCM7XX_Tx_OPER GENMASK bits where wrong,
-> > Since NPCM7XX_REG_TICR0 register reset value of those bits was 0,
-> > it did not cause an issue.
-> > in npcm7xx_timer_oneshot() the original NPCM7XX_REG_TCSR0 register was
-> > read again after masking it with ~NPCM7XX_Tx_OPER so the masking didn't
-> > take effect.
-> >
-> > npcm7xx_timer_periodic() was not wrong but it wrote to NPCM7XX_REG_TICR=
-0
-> > in a middle of read modify write to NPCM7XX_REG_TCSR0 which is
-> > confusing.
-> > npcm7xx_timer_oneshot() did wrong calculation
-> >
-> > Signed-off-by: Avi Fishman <avifishman70@gmail.com>
->
-> I've applied the patch and massaged the changelog [1].
->
-> Let me know if you disagree with it.
->
-> Please, in the future take care of adding the Fixes tag.
->
-> Thanks
->
->   -- Daniel
->
-> [1]
-> https://git.linaro.org/people/daniel.lezcano/linux.git/commit/?h=3Dclocke=
-vents/next&id=3Da5f6679fc81e42fcbef0184770d8a3b04c0f153e
->
-> > ---
-> >  drivers/clocksource/timer-npcm7xx.c | 9 +++------
-> >  1 file changed, 3 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/clocksource/timer-npcm7xx.c b/drivers/clocksource/=
-timer-npcm7xx.c
-> > index 8a30da7f083b..9780ffd8010e 100644
-> > --- a/drivers/clocksource/timer-npcm7xx.c
-> > +++ b/drivers/clocksource/timer-npcm7xx.c
-> > @@ -32,7 +32,7 @@
-> >  #define NPCM7XX_Tx_INTEN             BIT(29)
-> >  #define NPCM7XX_Tx_COUNTEN           BIT(30)
-> >  #define NPCM7XX_Tx_ONESHOT           0x0
-> > -#define NPCM7XX_Tx_OPER                      GENMASK(27, 3)
-> > +#define NPCM7XX_Tx_OPER                      GENMASK(28, 27)
-> >  #define NPCM7XX_Tx_MIN_PRESCALE              0x1
-> >  #define NPCM7XX_Tx_TDR_MASK_BITS     24
-> >  #define NPCM7XX_Tx_MAX_CNT           0xFFFFFF
-> > @@ -84,8 +84,6 @@ static int npcm7xx_timer_oneshot(struct clock_event_d=
-evice *evt)
-> >
-> >       val =3D readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-> >       val &=3D ~NPCM7XX_Tx_OPER;
-> > -
-> > -     val =3D readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-> >       val |=3D NPCM7XX_START_ONESHOT_Tx;
-> >       writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
-> >
-> > @@ -97,12 +95,11 @@ static int npcm7xx_timer_periodic(struct clock_even=
-t_device *evt)
-> >       struct timer_of *to =3D to_timer_of(evt);
-> >       u32 val;
-> >
-> > +     writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0=
-);
-> > +
-> >       val =3D readl(timer_of_base(to) + NPCM7XX_REG_TCSR0);
-> >       val &=3D ~NPCM7XX_Tx_OPER;
-> > -
-> > -     writel(timer_of_period(to), timer_of_base(to) + NPCM7XX_REG_TICR0=
-);
-> >       val |=3D NPCM7XX_START_PERIODIC_Tx;
-> > -
-> >       writel(val, timer_of_base(to) + NPCM7XX_REG_TCSR0);
-> >
-> >       return 0;
-> >
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
-
-
---=20
-Regards,
-Avi
