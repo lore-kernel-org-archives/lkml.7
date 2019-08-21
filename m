@@ -2,101 +2,90 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB59C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A7DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC7B6206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE312070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:46:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iKZudid9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbfHUKoM (ORCPT
+        id S1726715AbfHUKqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:44:12 -0400
-Received: from gofer.mess.org ([88.97.38.141]:56295 "EHLO gofer.mess.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbfHUKoL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:44:11 -0400
-Received: by gofer.mess.org (Postfix, from userid 1000)
-        id CE6D660628; Wed, 21 Aug 2019 11:44:08 +0100 (BST)
-Date:   Wed, 21 Aug 2019 11:44:08 +0100
-From:   Sean Young <sean@mess.org>
-To:     Hui Peng <benquike@gmail.com>
-Cc:     security@kernel.org, Mathias Payer <mathias.payer@nebelwelt.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Kees Cook <keescook@chromium.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fix an OOB access bug in technisat_usb2_get_ir
-Message-ID: <20190821104408.w7krumcglxo6fz5q@gofer.mess.org>
-References: <20190820181921.7921-1-benquike@gmail.com>
+        Wed, 21 Aug 2019 06:46:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60716 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfHUKqu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 06:46:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pQ2Wv/KrpNQLYBZ94T0F4LpmsjFVcLACEl2TET9qJzw=; b=iKZudid9Djsq/hKG3KK+PUj33
+        7A60449jHZXVtMRzMaKQqDPA1iwfOrRSl7dy/3WMDEsOo47k7WzBjhvG3PAbziLfhDQAAYPGtmeL0
+        e5nyIjeDLpi9SNBVmzdfOn9INaGwtXA5OQRBoJN5voGV95JaNNGuZ8Vz/YV7v5605opAEWzxdBg/N
+        WpFyBDRozoOSYS7G6R3+Nso3qGwo+5QmH+sMLYVHTjiby39FRvoWwzjhCEVsA5wcN3d2p2QiNSsQY
+        Z79bOEqEdbtGmWbTKQupd4tuiYHaoFrmmGn/DxPZdmlcXKI9n8VKSuIkXCY1js6NDVWI8kPD8LSa2
+        teGmLRB0w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0O8c-0000Uh-2Q; Wed, 21 Aug 2019 10:46:46 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4C6C9307456;
+        Wed, 21 Aug 2019 12:46:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E0F9620C3BF31; Wed, 21 Aug 2019 12:46:43 +0200 (CEST)
+Date:   Wed, 21 Aug 2019 12:46:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     c00423981 <caomeng5@huawei.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpustat: print watchdog time and statistics of soft and
+ hard interrupts in soft lockup scenes
+Message-ID: <20190821104643.GA2349@hirez.programming.kicks-ass.net>
+References: <60319e82-3c2b-ff24-4ba7-4d58048130ff@huawei.com>
+ <20190820110430.GL2332@hirez.programming.kicks-ass.net>
+ <4eb6b499-b6b0-602a-ae89-0c1dceaa5088@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820181921.7921-1-benquike@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <4eb6b499-b6b0-602a-ae89-0c1dceaa5088@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 02:19:16PM -0400, Hui Peng wrote:
-> In the while loop of technisat_usb2_get_ir, it scans through
-> a fix-sized buffer read from the device side, the termination
-> condition of the loop is `*b == 0xff`. If no `0xff` byte is read
-> from the device side, OOB access happens.
+
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
+
+On Wed, Aug 21, 2019 at 04:26:17PM +0800, c00423981 wrote:
+> Sorry, I cannot understand this problem accurately. I try to understand it and I guess what you want
+> to express is that the return value type should be cputime64_t but not u64, just like as follows:
 > 
-> This patch fixes the bug by adding an upper bound in the while loop.
-
-This issue was fixed in:
-
- https://git.linuxtv.org/media_tree.git/commit/drivers/media/usb/dvb-usb/technisat-usb2.c?id=0c4df39e504bf925ab666132ac3c98d6cbbe380b
-
-Note this limits the loop to the size of the buffer; using the ret
-return value might be better.
-
-
-Sean
-
-
+> +static cputime64_t cpustat_curr_cputime(int cpu, int index)
+> +{
+> +	cputime64_t time;
+> +
+> +	if (index == CPUTIME_IDLE)
+> +		time = get_idle_time(cpu);
+> +	else if (index == CPUTIME_IOWAIT)
+> +		time = get_iowait_time(cpu);
 > 
-> Reported-by: Hui Peng <benquike@gmail.com>
-> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-> Signed-off-by: Hui Peng <benquike@gmail.com>
-> ---
->  drivers/media/usb/dvb-usb/technisat-usb2.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/media/usb/dvb-usb/technisat-usb2.c b/drivers/media/usb/dvb-usb/technisat-usb2.c
-> index c659e18b358b..181f5f97af45 100644
-> --- a/drivers/media/usb/dvb-usb/technisat-usb2.c
-> +++ b/drivers/media/usb/dvb-usb/technisat-usb2.c
-> @@ -612,6 +612,7 @@ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
->  	u8 *b;
->  	int ret;
->  	struct ir_raw_event ev;
-> +	int i = 0;
->  
->  	buf[0] = GET_IR_DATA_VENDOR_REQUEST;
->  	buf[1] = 0x08;
-> @@ -656,11 +657,15 @@ static int technisat_usb2_get_ir(struct dvb_usb_device *d)
->  
->  	ev.pulse = 0;
->  	while (1) {
-> +		// only `ret` bytes are read from the device side
-> +		if (i >= ret)
-> +			break;
->  		ev.pulse = !ev.pulse;
->  		ev.duration = (*b * FIRMWARE_CLOCK_DIVISOR * FIRMWARE_CLOCK_TICK) / 1000;
->  		ir_raw_event_store(d->rc_dev, &ev);
->  
->  		b++;
-> +		i++;
->  		if (*b == 0xff) {
->  			ev.pulse = 0;
->  			ev.duration = 888888*2;
-> -- 
-> 2.23.0
+> I don't know if I understand it correctly. Looking forward to your answer.
+
+get_iowait_time(cpu) is terminally broken, see commit:
+
+  e33a9bba85a8 ("sched/core: move IO scheduling accounting from io_schedule_timeout() into scheduler")
