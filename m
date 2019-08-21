@@ -2,107 +2,301 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B94B3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BD1C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D56E206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6FAA206BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:43:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jG6t86WO"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hNKmox1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbfHUKgU (ORCPT
+        id S1728280AbfHUKnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:36:20 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:45570 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfHUKgT (ORCPT
+        Wed, 21 Aug 2019 06:43:23 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:35674 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728210AbfHUKnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:36:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Tldozir3hxCrQJu+NVCjOH2d97IbRf87LUeutIb5FiQ=; b=jG6t86WOSVCNMaVwDWUGZo2pL
-        Ux37bTeG8CrV32myBhFEv6CAH0d1zEmj6bsdXlLKCMfo4PsBCY/kXY+3hIfnoHgFB7BnfsPY3YpZW
-        T/qnYlRnJFfK3Ou2KHD4WUZHLvabb6fjd5IIPNtTx9bTcFh/QA0iIGizeimXpkSFCa1WUAcDhuvLT
-        0m1oSxXBLjxmVcRiou6DBmxgGvSmUJ/22qCssvX0UctgH2YjM8y4tgDQSjRoXryTPPm7E7qoEJpsE
-        WlXxCBlGpbdUpzaDiN3UHGzAhq1k1esOrDfvAqMkpgbXUEEPgFph7zDVq0mNX4etitjxggI83Jlzq
-        YP5WL3Sjw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i0NyD-00052V-Ae; Wed, 21 Aug 2019 10:36:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D351D306B81;
-        Wed, 21 Aug 2019 12:35:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7EE1F20A21FCB; Wed, 21 Aug 2019 12:35:59 +0200 (CEST)
-Date:   Wed, 21 Aug 2019 12:35:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Long Li <longli@microsoft.com>
-Cc:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] nvme: complete request in work queue on CPU with
- flooded interrupts
-Message-ID: <20190821103559.GZ2349@hirez.programming.kicks-ass.net>
-References: <1566281669-48212-1-git-send-email-longli@linuxonhyperv.com>
- <1566281669-48212-4-git-send-email-longli@linuxonhyperv.com>
- <20190820095240.GH2332@hirez.programming.kicks-ass.net>
- <CY4PR21MB0741A817BEB880C8DC526ECFCEAA0@CY4PR21MB0741.namprd21.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY4PR21MB0741A817BEB880C8DC526ECFCEAA0@CY4PR21MB0741.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 21 Aug 2019 06:43:22 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190821104321euoutp02f0f999a9aa84e99fe93cb38b4e6446b3~86iHMO-h40225802258euoutp02h
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 10:43:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190821104321euoutp02f0f999a9aa84e99fe93cb38b4e6446b3~86iHMO-h40225802258euoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566384201;
+        bh=V2RxqnmrrTg838z/OUohhOWlIB6UFsk0++imMcaiW7Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hNKmox1N5UytW/PTTA1ZEZzT2V2yOzFq/U0BSumeGjczHamUQZovbKI3BwcmNZR1F
+         piExUVYIYhE2zNqUIBTmNUrzYrfWzCTKH0I5Z8SJ5Deqqpo6zIZdxVRORzzm2ry34f
+         Iuxy2lhwYNqx5pzVKkJP0NgQM3NFCPAQIWu2dr+8=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190821104320eucas1p1ed71e72e6e8ab4265f7d91cb2dd0cb4e~86iGPaL5F0727407274eucas1p1u;
+        Wed, 21 Aug 2019 10:43:20 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id B4.0C.04309.7402D5D5; Wed, 21
+        Aug 2019 11:43:19 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190821104319eucas1p10db51f7a181cae024465cc775292d2b1~86iFZ3PL41124011240eucas1p1V;
+        Wed, 21 Aug 2019 10:43:19 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190821104319eusmtrp2c9ef838381444376c27fa59dbf91f273~86iFLr9sM2827428274eusmtrp26;
+        Wed, 21 Aug 2019 10:43:19 +0000 (GMT)
+X-AuditID: cbfec7f4-ae1ff700000010d5-3d-5d5d20474f9e
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 39.38.04117.6402D5D5; Wed, 21
+        Aug 2019 11:43:19 +0100 (BST)
+Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190821104317eusmtip221f1e7e384a831f5024b51e5df9568a7~86iEEROLI1735217352eusmtip2q;
+        Wed, 21 Aug 2019 10:43:17 +0000 (GMT)
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
+        willy.mh.wolff.ml@gmail.com,
+        Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v13 2/8] dt-bindings: ddr: add LPDDR3 memories
+Date:   Wed, 21 Aug 2019 12:42:57 +0200
+Message-Id: <20190821104303.32079-3-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190821104303.32079-1-l.luba@partner.samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSa1CMYRTHPfte22nNa4XjFtYwruU25nEZYlye8cGYCR80YfFOpXbLvoow
+        ZlnXVSFNorJkyGybLppUE6V2RKXk1tII5bKzym3TjMFiexfffuec//n/zzzz8JT6EzOMj9Jv
+        Fw16bYyGVdKlt781TV0+Ojx8mss5BxdlFDC4tecdgy32Jgbnfe5E2HSxgMWn6rMVuPGYDh/v
+        fE/h5uZCDt/b38XhZ8YR+HNSO4MfVmSx2J1sRzij+aYC59ufc/hSa4sCt9QvxW37rrD44A07
+        h2u7DjPY86SIxlWPVuC27/1x750OFDKU2M7ZEOn9mkqTj46DHMk0ttCk/OxzjhRbj7KkKtvG
+        kWTTB5bc+lCpICklVkSuNewm7uLAVf7rlPO3iDFRCaIheMFGZWRyRgMbVzR+50/XD86IXgSa
+        kR8PwiyorKllzUjJq4UrCF7fuuErehA4O9IouXAjSHd/RGbE96007tsm93MRnHQ70L+N7O63
+        fSJWCIIy6zZvRICQgSDTGerVUMIrClLys5B3MFBYACntXxgv08I46LGk97FKWAiWtExavm8U
+        5BVWU172E0LAc+Iu4zUC4QIPrxxtlHzREnj8YrWsHwiuuhJO5hHwq9yikFkCY/IFJPMe6Dye
+        7dPMg9q6FsZrQwkToaAiWG4vgpL6HEZ27w+O7gHeNvUHU0tP+0JVcOSQWlZPgJKk+76gwZBr
+        S/eZE8jx5Pue8BSCXkc1fQKNOvs/7DxCVjREjJd0EaI0Qy/uCJK0OileHxG0OVZXjP78wwZP
+        XU8ZqvixqQYJPNL4q8qehoWrGW2ClKirQcBTmgDVzqx14WrVFm3iLtEQu8EQHyNKNWg4T2uG
+        qHb3exmmFiK028VoUYwTDX+nCt5vmBEdDU2LTNy7VYDmkJxWTc65VXbF17wgDKlR0ctYK0o4
+        9qZh6GzPmY6AkSbTgZFjnF2XmhpdsfujJn9f7CxNW7po9ZwplcHUmfa3l7vWF1omx4XN6J4b
+        ekRZ3FhlWRhpJrZq84Hocv/xSabc6ysfEG3g3ZV3yKA19NqwqzNd7fqxRENLkdrpkyiDpP0N
+        VCdrOYMDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCIsWRmVeSWpSXmKPExsVy+t/xe7ruCrGxBhu3MFlsnLGe1eL6l+es
+        FvOPnGO1WP3xMaNF8+L1bBaTT81lsjjTnWvR//g1s8X58xvYLc42vWG3uNUgY/Gx5x6rxeVd
+        c9gsPvceYbSYcX4fk8XaI3fZLZZev8hkcfGUq8XtxhVsFq17j7BbHH7Tzmrx79pGFov9V7ws
+        bv/ms/h24hGjg6THmnlrGD2+fZ3E4vH+Riu7x+yGiyweO2fdZffYtKqTzWP/3DXsHr3N79g8
+        Dr7bw+TRt2UVo8fm09UenzfJBfBE6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZ
+        mSrp29mkpOZklqUW6dsl6GX0zjjNVrBRreLvqz/sDYz35boYOTgkBEwkzjQWdjFycQgJLGWU
+        WLntCmMXIydQXExi0r7t7BC2sMSfa11sEEWfGCW+ze1gA2lmE9CT2LEKrFlEYA6jxM+ubYwg
+        DrPAb2aJg3f7wbqFBewk+u59YgWxWQRUJb7MnwZm8wrYS8yfMpsFYoO8xOoNB5hBbE4BB4l/
+        E06C1QgB1Uzd8JZ1AiPfAkaGVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIExuu3Yzy07GLve
+        BR9iFOBgVOLh3XEzOlaINbGsuDL3EKMEB7OSCG/FnKhYId6UxMqq1KL8+KLSnNTiQ4ymQEdN
+        ZJYSTc4Hpo+8knhDU0NzC0tDc2NzYzMLJXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2MOnNs
+        S59YTOf80THJQfdoRlpCqOTqYIFjT79OzEy8sFzzwazHJ4oFs43KjcrXGe6/x+ThtaktwPXS
+        HE6V2dsXa/J12UnW391lYjPL4MDCa/Mv3cqIi1/AsJKnpF3oxjG5ay55xfbxvzLq2mdOOpS3
+        p4zr22czFcWDd5VEGTYnXu7MvLCvqPCWEktxRqKhFnNRcSIAFojHLucCAAA=
+X-CMS-MailID: 20190821104319eucas1p10db51f7a181cae024465cc775292d2b1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190821104319eucas1p10db51f7a181cae024465cc775292d2b1
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190821104319eucas1p10db51f7a181cae024465cc775292d2b1
+References: <20190821104303.32079-1-l.luba@partner.samsung.com>
+        <CGME20190821104319eucas1p10db51f7a181cae024465cc775292d2b1@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 08:37:55AM +0000, Long Li wrote:
-> >>>Subject: Re: [PATCH 3/3] nvme: complete request in work queue on CPU
-> >>>with flooded interrupts
-> >>>
-> >>>On Mon, Aug 19, 2019 at 11:14:29PM -0700, longli@linuxonhyperv.com
-> >>>wrote:
-> >>>> From: Long Li <longli@microsoft.com>
-> >>>>
-> >>>> When a NVMe hardware queue is mapped to several CPU queues, it is
-> >>>> possible that the CPU this hardware queue is bound to is flooded by
-> >>>> returning I/O for other CPUs.
-> >>>>
-> >>>> For example, consider the following scenario:
-> >>>> 1. CPU 0, 1, 2 and 3 share the same hardware queue 2. the hardware
-> >>>> queue interrupts CPU 0 for I/O response 3. processes from CPU 1, 2 and
-> >>>> 3 keep sending I/Os
-> >>>>
-> >>>> CPU 0 may be flooded with interrupts from NVMe device that are I/O
-> >>>> responses for CPU 1, 2 and 3. Under heavy I/O load, it is possible
-> >>>> that CPU 0 spends all the time serving NVMe and other system
-> >>>> interrupts, but doesn't have a chance to run in process context.
-> >>>
-> >>>Ideally -- and there is some code to affect this, the load-balancer will move
-> >>>tasks away from this CPU.
-> >>>
-> >>>> To fix this, CPU 0 can schedule a work to complete the I/O request
-> >>>> when it detects the scheduler is not making progress. This serves multiple
-> >>>purposes:
-> >>>
-> >>>Suppose the task waiting for the IO completion is a RT task, and you've just
-> >>>queued it to a regular work. This is an instant priority inversion.
-> 
-> This is a choice. We can either not "lock up" the CPU, or finish the I/O on time from IRQ handler. I think throttling only happens in extreme conditions, which is rare. The purpose is to make the whole system responsive and happy.
+Specifies the AC timing parameters of the LPDDR3 memory device.
 
-Can you please use a sane MUA.. this is unreadable garbage.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+---
+ .../bindings/ddr/lpddr3-timings.txt           | 58 +++++++++++
+ .../devicetree/bindings/ddr/lpddr3.txt        | 97 +++++++++++++++++++
+ 2 files changed, 155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
+ create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3.txt
+
+diff --git a/Documentation/devicetree/bindings/ddr/lpddr3-timings.txt b/Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
+new file mode 100644
+index 000000000000..84705e50a3fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
+@@ -0,0 +1,58 @@
++* AC timing parameters of LPDDR3 memories for a given speed-bin.
++
++The structures are based on LPDDR2 and extended where needed.
++
++Required properties:
++- compatible : Should be "jedec,lpddr3-timings"
++- min-freq : minimum DDR clock frequency for the speed-bin. Type is <u32>
++- reg : maximum DDR clock frequency for the speed-bin. Type is <u32>
++
++Optional properties:
++
++The following properties represent AC timing parameters from the memory
++data-sheet of the device for a given speed-bin. All these properties are
++of type <u32> and the default unit is ps (pico seconds).
++- tRFC
++- tRRD
++- tRPab
++- tRPpb
++- tRCD
++- tRC
++- tRAS
++- tWTR
++- tWR
++- tRTP
++- tW2W-C2C
++- tR2R-C2C
++- tFAW
++- tXSR
++- tXP
++- tCKE
++- tCKESR
++- tMRD
++
++Example:
++
++timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@800000000 {
++	compatible	= "jedec,lpddr3-timings";
++	reg		= <800000000>; /* workaround: it shows max-freq */
++	min-freq	= <100000000>;
++	tRFC		= <65000>;
++	tRRD		= <6000>;
++	tRPab		= <12000>;
++	tRPpb		= <12000>;
++	tRCD		= <10000>;
++	tRC		= <33750>;
++	tRAS		= <23000>;
++	tWTR		= <3750>;
++	tWR		= <7500>;
++	tRTP		= <3750>;
++	tW2W-C2C	= <0>;
++	tR2R-C2C	= <0>;
++	tFAW		= <25000>;
++	tXSR		= <70000>;
++	tXP		= <3750>;
++	tCKE		= <3750>;
++	tCKESR		= <3750>;
++	tMRD		= <7000>;
++};
+diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+new file mode 100644
+index 000000000000..3b2485b84b3f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+@@ -0,0 +1,97 @@
++* LPDDR3 SDRAM memories compliant to JEDEC JESD209-3C
++
++Required properties:
++- compatible : Should be  - "jedec,lpddr3"
++- density  : <u32> representing density in Mb (Mega bits)
++- io-width : <u32> representing bus width. Possible values are 8, 16, 32, 64
++- #address-cells: Must be set to 1
++- #size-cells: Must be set to 0
++
++Optional properties:
++
++The following optional properties represent the minimum value of some AC
++timing parameters of the DDR device in terms of number of clock cycles.
++These values shall be obtained from the device data-sheet.
++- tRFC-min-tck
++- tRRD-min-tck
++- tRPab-min-tck
++- tRPpb-min-tck
++- tRCD-min-tck
++- tRC-min-tck
++- tRAS-min-tck
++- tWTR-min-tck
++- tWR-min-tck
++- tRTP-min-tck
++- tW2W-C2C-min-tck
++- tR2R-C2C-min-tck
++- tWL-min-tck
++- tDQSCK-min-tck
++- tRL-min-tck
++- tFAW-min-tck
++- tXSR-min-tck
++- tXP-min-tck
++- tCKE-min-tck
++- tCKESR-min-tck
++- tMRD-min-tck
++
++Child nodes:
++- The lpddr3 node may have one or more child nodes of type "lpddr3-timings".
++  "lpddr3-timings" provides AC timing parameters of the device for
++  a given speed-bin. Please see Documentation/devicetree/
++  bindings/ddr/lpddr3-timings.txt for more information on "lpddr3-timings"
++
++Example:
++
++samsung_K3QF2F20DB: lpddr3 {
++	compatible	= "Samsung,K3QF2F20DB", "jedec,lpddr3";
++	density		= <16384>;
++	io-width	= <32>;
++	#address-cells	= <1>;
++	#size-cells	= <0>;
++
++	tRFC-min-tck		= <17>;
++	tRRD-min-tck		= <2>;
++	tRPab-min-tck		= <2>;
++	tRPpb-min-tck		= <2>;
++	tRCD-min-tck		= <3>;
++	tRC-min-tck		= <6>;
++	tRAS-min-tck		= <5>;
++	tWTR-min-tck		= <2>;
++	tWR-min-tck		= <7>;
++	tRTP-min-tck		= <2>;
++	tW2W-C2C-min-tck	= <0>;
++	tR2R-C2C-min-tck	= <0>;
++	tWL-min-tck		= <8>;
++	tDQSCK-min-tck		= <5>;
++	tRL-min-tck		= <14>;
++	tFAW-min-tck		= <5>;
++	tXSR-min-tck		= <12>;
++	tXP-min-tck		= <2>;
++	tCKE-min-tck		= <2>;
++	tCKESR-min-tck		= <2>;
++	tMRD-min-tck		= <5>;
++
++	timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@800000000 {
++		compatible	= "jedec,lpddr3-timings";
++		reg		= <800000000>; /* workaround: it shows max-freq */
++		min-freq	= <100000000>;
++		tRFC		= <65000>;
++		tRRD		= <6000>;
++		tRPab		= <12000>;
++		tRPpb		= <12000>;
++		tRCD		= <10000>;
++		tRC		= <33750>;
++		tRAS		= <23000>;
++		tWTR		= <3750>;
++		tWR		= <7500>;
++		tRTP		= <3750>;
++		tW2W-C2C	= <0>;
++		tR2R-C2C	= <0>;
++		tFAW		= <25000>;
++		tXSR		= <70000>;
++		tXP		= <3750>;
++		tCKE		= <3750>;
++		tCKESR		= <3750>;
++		tMRD		= <7000>;
++	};
++}
+-- 
+2.17.1
+
