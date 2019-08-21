@@ -2,160 +2,128 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BC0C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5770C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6D12089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1C622D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:43:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Wm3RKf7r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M/U8Rn5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbfHUMl0 (ORCPT
+        id S1728026AbfHUMnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 08:41:26 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:39251 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727956AbfHUMlZ (ORCPT
+        Wed, 21 Aug 2019 08:43:43 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40646 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726371AbfHUMnn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 08:41:25 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190821124123euoutp01c67da541b8b832a5499000d61a5284a7~88JLLgxCu3111731117euoutp019
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 12:41:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190821124123euoutp01c67da541b8b832a5499000d61a5284a7~88JLLgxCu3111731117euoutp019
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566391283;
-        bh=AWVH8ErKQTpBej/vG98z0OHhZ8Sbjr1RrRMUtFdjqBs=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Wm3RKf7rH0wUFAZZPqQbwO187t32Y7Ad/sUEllz+0+59j13bEdTNXqDwTwBRMLnb4
-         NQqjKfoCGBmYIGWyimpXeZz4OuS65vwjxCQMIW/DJXXs4CG/iEe6ZnOF22JxoI3lrS
-         J61Own9lr6ifGWitj+07w/GOqEd7QiaYa+gtLBCI=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190821124122eucas1p1c61d22736ae1d2d482271ec608f455ce~88JKft-Ul1714117141eucas1p1B;
-        Wed, 21 Aug 2019 12:41:22 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id BE.DB.04309.2FB3D5D5; Wed, 21
-        Aug 2019 13:41:22 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190821124121eucas1p29a471a96f26a9e2ec83f7785be6c6766~88JJkYuH92485024850eucas1p2j;
-        Wed, 21 Aug 2019 12:41:21 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190821124121eusmtrp224b366b1d01b12eb7caf90744d1af89a~88JJWK8z32343923439eusmtrp2y;
-        Wed, 21 Aug 2019 12:41:21 +0000 (GMT)
-X-AuditID: cbfec7f4-ae1ff700000010d5-ce-5d5d3bf2a42e
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 6A.D6.04117.1FB3D5D5; Wed, 21
-        Aug 2019 13:41:21 +0100 (BST)
-Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190821124120eusmtip1748aeac163f204dbb76025899603aefa~88JIRL0bz1934619346eusmtip1G;
-        Wed, 21 Aug 2019 12:41:20 +0000 (GMT)
-Subject: Re: [PATCH v3 2/9] soc: samsung: Convert exynos-chipid driver to
- use the regmap API
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Sylwester Nawrocki <snawrocki@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, robh+dt@kernel.org,
-        vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org,
-        pankaj.dubey@samsung.com,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <537999b7-b0e8-33a7-4bdc-c6952a0a5d06@samsung.com>
-Date:   Wed, 21 Aug 2019 14:41:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Wed, 21 Aug 2019 08:43:43 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c5so1791744wmb.5;
+        Wed, 21 Aug 2019 05:43:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lRUmeZkZP/Okav86pMnI5msjxJq756sD1Md11UkW10Q=;
+        b=M/U8Rn5H/vzvj9u02bNKbrAwSEgzepOgy7KpgvdjpIn7rtTnns5etUIDKaLzODa3XO
+         H3mTzzhS/AQPXnyn8m3yVyqM6SXnA6PJjqEoQl205pufGlZA9cOvfe1jWTawuVdDkVzg
+         HNPk4oL3Uw55LAUdH28PhpvTp1cBrpsoz+bGi2+9DPdUoX0TeuUgAVgtZAqj3NxBOF0X
+         SnZNo90gytM83lNdnoVHFs/cyqSJI/tcsnfmNiMXvG132HuBReJ34N/TUubgj6JPthA3
+         HlN04lsscJSM62VO0+YEeZDfC+AvS0JDGWBxQnizEbxwARgChSCpDuyc9Qy1qIlvXmzI
+         fx7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lRUmeZkZP/Okav86pMnI5msjxJq756sD1Md11UkW10Q=;
+        b=YzJ/4U+V2AV2KJ8/fWkvoTq4D0aGQbbfyFnk4/OI6e5wx96fSw0Ah5iwrVzl+6mee6
+         DbK7Y28CxBt31vzicUYA0M0fUpc5Z62NpYfVQL714dBXmalpgc0OESXYP0SoVPqOD4YL
+         4eqqZ/8dOHAagHQeGzW0eSdMRR/YMQBHt2WRsJGwjXtZzsR9IBll6iWJR9brFPXSmGwP
+         qQhYabwGQT061aBpSbHpVBlsbOBTNo/JeEwA7J9mc4HQOGCstoZmW2opQi+xfDsr5mEb
+         yY8natNWjBSqHAnpMW7RVzyQyPVrrpvkCviIPcuStG6br9JVrlUrOka3K1dhK5Qu5Sxn
+         0g/A==
+X-Gm-Message-State: APjAAAXC8xd/MOVGJnRqQ7hpEbwO3MaLrnSzVKhaWx3Odm9rUmUkoe4q
+        EYSVFgLMJUC5afKxktAHIvs=
+X-Google-Smtp-Source: APXvYqwaq1Yy4wokzmvl6Eg9zpUcD3xgJLsczGSFflfUptDZe2PuC0S6zpYoPCC69O2e8WFtVnwZSQ==
+X-Received: by 2002:a1c:1a56:: with SMTP id a83mr5974279wma.44.1566391420467;
+        Wed, 21 Aug 2019 05:43:40 -0700 (PDT)
+Received: from localhost (pD9E51890.dip0.t-ipconnect.de. [217.229.24.144])
+        by smtp.gmail.com with ESMTPSA id g7sm4842135wme.17.2019.08.21.05.43.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 05:43:39 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 14:43:37 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] PCI: tegra: tegra194: fix phy_count less than zero
+ check
+Message-ID: <20190821124337.GB21839@ulmo>
+References: <20190821120123.14223-1-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPdh9eHrAuCxHkQBvJMqEnUCeU2xwkK=9yyiJ6BuTLJ+_A@mail.gmail.com>
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0iTYRTGe/2ujlavU/NgUjDqjwI1K+gLTSoKVkEUQZax8lO/VHIqm5p2
-        la7zMpMFamvgrLCchDrNW6Q55zSNVmgX6Dawi12mpAtqpeb8lPzvd855znmfB16WkL2mgtmU
-        tExBncanymkJ2WT/7Qgdi1Qq17zsWslN6O0MV19eS3EVticUd8Fwg+SuDH0jOIejjuEsQy8o
-        bqDNSHPjOhviyh3tPly+20Bzd21vGe7GPTfDXXxgY7jLH78QXIPTTm/Gij8ePVJYzPm0ouHW
-        WYXu/AitKG40I8W4ZdkeOlYSlSikpmQL6vDoOElyYWUrmdEtyfH07c5DHWwB8mUBr4f2Ghdd
-        gCSsDN9B0GsYJcTCjaD5+WtGLMYRWO1D5NxKcfEnUhzcRqD9WYTEwoXg52M35VX548PwznZ9
-        +jDLBmAeJod5r4bAOhJKjS0zl2gcAbruYuRlKY6G1gYn4WUSr4SrN2sYLwfiAzDm7KJEjR88
-        uvZhZtcX74W3wx7aywQOgnPuakrk5dDsMs5kADzBwEN9LyPa3gbOKb2PyP7wtadxth8CU60V
-        PuLCeQRF98XQgEsQvO8xIVEVCV09zyhvHAKvgtq2cC8C3gKDnetEXASvXH6ih0WgbyojxLYU
-        tJdk4o0V8MdcNusgGAo/TJElSG6Yl8wwL41hXhrD/2dNiDSjICFLo0oSNGvThONhGl6lyUpL
-        CktIV1nQ9Jfrn+xxt6C2v/FWhFkkXygtCVUqZRSfrclVWRGwhDxAmmOMVcqkiXzuCUGdfkSd
-        lSporGgpS8qDpCcXOA/JcBKfKRwThAxBPTf1YX2D81DJ9lb/TP1o31FrjD4mwbZxLNCQ5Lo0
-        ua9jsWcg25xSmnxwRNv1eW9dUPTjiaexF7MjTlee2tpr7zhnOkvmTXRWjcf/MFG5Gy0QVZXe
-        MZjxPS7jWI3i+RlPX3+jn2pd/S5Jxc7qph2JT/cvqR2QG8tbfi1vC9nk/+abdoPjjfa37qSc
-        1CTzEasJtYb/B8merxpuAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRmVeSWpSXmKPExsVy+t/xu7ofrWNjDWb807D4O+kYu8XGGetZ
-        LeYfOcdq0TJrEYtF/+PXzBbnz29gt9j0+BqrxeVdc9gsPvceYbSYcX4fk0Xnl1lsFmuP3GW3
-        WLT1C7tF694j7BbtT18yW2x+cIzNQcDj969JjB6bVnWyeWxeUu/R2/yOzaNvyypGj8+b5ALY
-        ovRsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyuhfu
-        ZCk4ylXx65RfA+N+ji5GTg4JAROJvr5nLF2MXBxCAksZJT6ce8HWxcgBlJCSmN+iBFEjLPHn
-        WhcbRM1rRom+hrfsIAlhgTiJZfefgdkiAokS064fYgcpYhboZZFY8vMBO0THG2aJjp/XwKrY
-        BAwleo/2MYLYvAJ2Ejs3P2AGsVkEVCUmL14NViMqECFxeMcsqBpBiZMzn7CA2JwCgRJ3X/xi
-        A7GZBdQl/sy7xAxhi0s0fVnJCmHLS2x/O4d5AqPQLCTts5C0zELSMgtJywJGllWMIqmlxbnp
-        ucVGesWJucWleel6yfm5mxiBcb3t2M8tOxi73gUfYhTgYFTi4Z2gGxsrxJpYVlyZe4hRgoNZ
-        SYS3Yk5UrBBvSmJlVWpRfnxRaU5q8SFGU6DnJjJLiSbnA1NOXkm8oamhuYWlobmxubGZhZI4
-        b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGxvU/gg1zVlSFTXaUVFkla/E4173o4LfZb4wOtDB0
-        PD26u5bF4XYI283lGVYanX27Vv/RK97+ZpuY49Y1Z82NZN5ruVhqVn169vRL+QIF768zrQK5
-        Ohr0ExSiw3uu7+0QFYuYUP3v/slT6redL7kY1a8VWmapuuBl0POJ8hce1C/NPxI2zeWekxJL
-        cUaioRZzUXEiAH60K+8BAwAA
-X-CMS-MailID: 20190821124121eucas1p29a471a96f26a9e2ec83f7785be6c6766
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c
-References: <20190813150827.31972-1-s.nawrocki@samsung.com>
-        <CGME20190813150852eucas1p2be4c0ab5ec2c079e3daf1af24283b27c@eucas1p2.samsung.com>
-        <20190813150827.31972-3-s.nawrocki@samsung.com>
-        <b5359603-b337-dcd8-b025-ca7dff5f4a06@nvidia.com>
-        <CAJKOXPf597CMx=M2JmSTWe2GzBfcHFefgzSJbJ+njZGp-WfR1A@mail.gmail.com>
-        <1e428c8e-f4b5-0810-77f9-2c899c040fc7@kernel.org>
-        <72eea1ea-2433-2f76-6265-5851554e845d@samsung.com>
-        <CAJKOXPdh9eHrAuCxHkQBvJMqEnUCeU2xwkK=9yyiJ6BuTLJ+_A@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
+Content-Disposition: inline
+In-Reply-To: <20190821120123.14223-1-colin.king@canonical.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/19 14:16, Krzysztof Kozlowski wrote:
->>> I'm also inclined to have it converted to a regular driver.  We already
->>> have "exynos-asv" driver matching on the chipid node (patch 3/9).
->>> The ASV patches will not be merged soon anyway, all this needs some more
->>> thought. Krzysztof, can we abandon the chipid patches for now? Your
->>
->> chipid driver is good and useful on its own. The preferred solution
->> IMHO would be to just revert "soc: samsung: Convert exynos-chipid
->> driver to use the regmap API" commit.
->
-> I queued the chipid as a dependency for ASV but ASV requires the
-> regmap. What would be left after reverting the regmap part? Simple
-> unused printk driver? No need for such. If reverting, then let's drop
-> entire driver and rework it offline.
 
-In fact there is now no dependency between the chipid and the ASV 
-driver (patch 3/9), the regmap is provided by the syscon driver/API.
-I should have added "depends on REGMAP && MFD_SYSCON" to Kconfig.
-Both drivers (chipid, ASV) share the registers region so the regmap 
-API seemed appropriate here.
-Converting the chipid code to platform driver wouldn't make sense as
-it wouldn't be useful early in arch/arm/mach-exynos and we can't have
-two drivers for same device (the ASV driver matches on the chipid 
-compatible now).
+--6sX45UoQRIJXqkqR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Regards,
-Sylwester
+On Wed, Aug 21, 2019 at 01:01:23PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> The check for pcie->phy_count < 0 is always false because phy_count
+> is an unsigned int and can never be less than zero. Fix this by
+> assigning ret to the return from of_property_count_strings and
+> checking if this is less than zero instead.
+>=20
+> Addresses-Coverity: ("Dead code")
+> Fixes: 6404441c8e13 ("PCI: tegra: Add Tegra194 PCIe support")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+
+Good catch!
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--6sX45UoQRIJXqkqR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1dPHIACgkQ3SOs138+
+s6Ho9xAAwUKuZi8iVfSdVTIm8t3Z0hjhCUBry2XL8mKbnYiq3Bb7U6+PwonQ34xY
+EEY29C7cEjDhFWugnN1kS5unXAYdPZRu1VC6E89/rBkFOLogQcBBl4X1b/ziGEkC
+zq3J5xkmakn/8O2vxvvEFFkYmXYdBZaEIG8kIg/by6ONb5wwIv/jzdIuhDhAAVSl
+SikW0Gz2uDXiNev7cNnEFOgbGeAix9Y6w4nfAELuYn4kRLKul11avGyRf/t02FwB
+vkyW5D3iyGTe5eJ9dANXIDVxUZhk8dy04X+rbs4q6Y+O3IYOE6dJ9K/8U9v2a6WM
+U0uBDfrwsuDwOEyviarkQhaTin+51wbdx9dv7cgIaELb66pm6wq08IYKORPBe2J/
+YAQxxlzjwlcLUZ2eHv1XH4Ra5mxdK3wWwO31WHB9/gIMsQgRhVF8aywjewYesJje
+6AQcE7WvPcw3quTEiln1muXbJRDJY0zxBGDMdhB90x0n/60afHPwSNvlIzTJtQ6u
+jHbKgfw1/ay4A9TY3O8KW8AdVWZLP/5qKQF4uvjapwNRWBHKwHQ7DFJGD/aUTWrz
+EZL06MO809iUSFjS63LJo+oLhWs+g7gvzH4NSZchHJsuT86rS8qUQH8P9z2dLYlO
+/PmMNaOcASfxYT2vMskY9xKO6Dq7PV7SFNe2DKRQpsRQj4swqN8=
+=JGRC
+-----END PGP SIGNATURE-----
+
+--6sX45UoQRIJXqkqR--
