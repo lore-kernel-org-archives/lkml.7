@@ -2,166 +2,216 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3F2C3A5A0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCDDC41514
 	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9E222DA7
+	by mail.kernel.org (Postfix) with ESMTP id 5A7D22341A
 	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=AQUANTIA1COM.onmicrosoft.com header.i=@AQUANTIA1COM.onmicrosoft.com header.b="L3ShqL6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbfHUJUM (ORCPT
+        id S1727125AbfHUJUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:20:12 -0400
-Received: from mail-eopbgr800084.outbound.protection.outlook.com ([40.107.80.84]:10855
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726463AbfHUJUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:20:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZQoJDhaaUr1dD2vWtRyi1CctAgB1vmK4fFMI0HXjYj94IrEnmUs6I7nW9S0P9zcVZp/HFT0FP5XKQKSmEI0/6rWu78nEqMyZgRjlXfooONV6nEnYC9ikqyQaVP/8vPOKkyxrKZCmUHV7ZSds4f7QW4dtO7yeDRMAABWr4q3MdZU25SUFSo9Q5u8d1vCY0mpzuVLSNaU4YmemC9hBy/IXBpPmIBwhPFdIjMAGQ6P85F0kG5uuglsqw6PCLRcNDZbFxjvuqNWQk8UhN01wp3kxbPvQFymK2wTTpkxQwOr2lLXhPGu3xOcP/LfH0w7YhV01EW0gxQLWzSPErR4djbRHOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pG+wx42gEn3RgnksMTOkUsmRfSysBCg4r8qTzD4lXxc=;
- b=Tv558NB/730E8FsY9oj+RjewMlyNmwibdNtk5UIi7eW8/Dd3jsOUqVrJ6l4BDZ2dicx6PqpRh2LnQHYz2Kir5kVe6gGuhInq/s5ZyIS9dqVsec4mA5A+pEJqcbGVDWh7DRb6vLnQqVckMQEZmbbm8wVAaI3ubQiVGA2DR/2/rOICfbQgWt9rIuPa6Al0DCkVighSdgLXRTrHIERPnn8vj4V8CgjpVEqazsoPgxAnSe9APuOJ7bkml2yn0ZiO78eDhPktWqTQsNEvCY4xTH8IPvhj55Sr5WIPuPtgjz7zOJIhLcOebmXdVRh+fqffpCerTYEr6R9ScCFOBPDX50JnOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aquantia.com; dmarc=pass action=none header.from=aquantia.com;
- dkim=pass header.d=aquantia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=AQUANTIA1COM.onmicrosoft.com; s=selector2-AQUANTIA1COM-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pG+wx42gEn3RgnksMTOkUsmRfSysBCg4r8qTzD4lXxc=;
- b=L3ShqL6lkTgfpCRyiufNhhBiACwFIjyc+jtLvG6wqmHNZeQHOv9Qwc7tk6/I2Ybemvtuer/KpbDWQukwXzqZ89lAdtm6nFHwfFnCrar/H0eciEKZjOtEspvpfhEariCE8RYwXb8cQPwzdRWD/bAf8qPvp4gLtyOUqQaj2jf8Nyc=
-Received: from BN6PR11MB4081.namprd11.prod.outlook.com (10.255.128.166) by
- BN6PR11MB1267.namprd11.prod.outlook.com (10.173.26.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Wed, 21 Aug 2019 09:20:05 +0000
-Received: from BN6PR11MB4081.namprd11.prod.outlook.com
- ([fe80::8438:d0c6:4446:68af]) by BN6PR11MB4081.namprd11.prod.outlook.com
- ([fe80::8438:d0c6:4446:68af%6]) with mapi id 15.20.2178.020; Wed, 21 Aug 2019
- 09:20:05 +0000
-From:   Igor Russkikh <Igor.Russkikh@aquantia.com>
-To:     Sabrina Dubroca <sd@queasysnail.net>,
-        Antoine Tenart <antoine.tenart@bootlin.com>
-CC:     Andrew Lunn <andrew@lunn.ch>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
-        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
-        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
-        Pavel Belous <Pavel.Belous@aquantia.com>
-Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
- infrastructure
-Thread-Topic: [PATCH net-next v2 6/9] net: macsec: hardware offloading
- infrastructure
-Thread-Index: AQHVT35ck9O2Ca3OL0uT1Xyfcpu+c6b9zmmAgAYPIACAAE4igIABOIaA
-Date:   Wed, 21 Aug 2019 09:20:05 +0000
-Message-ID: <81ec0497-58cd-1f4c-faa3-c057693cd50e@aquantia.com>
-References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
- <20190808140600.21477-7-antoine.tenart@bootlin.com>
- <e96fa4ae-1f2c-c1be-b2d8-060217d8e151@aquantia.com>
- <20190813085817.GA3200@kwain> <20190813131706.GE15047@lunn.ch>
- <2e3c2307-d414-a531-26cb-064e05fa01fc@aquantia.com>
- <20190816132959.GC8697@bistromath.localdomain> <20190820100140.GA3292@kwain>
- <20190820144119.GA28714@bistromath.localdomain>
-In-Reply-To: <20190820144119.GA28714@bistromath.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR1001CA0013.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:3:f7::23) To BN6PR11MB4081.namprd11.prod.outlook.com
- (2603:10b6:405:78::38)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Igor.Russkikh@aquantia.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [95.79.108.179]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: efcbecdd-c50d-4fe5-f3a1-08d72618c09d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6PR11MB1267;
-x-ms-traffictypediagnostic: BN6PR11MB1267:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN6PR11MB126725CF4C640A433AAD8E9F98AA0@BN6PR11MB1267.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(136003)(39850400004)(189003)(199004)(52116002)(44832011)(11346002)(446003)(486006)(476003)(2616005)(31696002)(71190400001)(305945005)(7736002)(71200400001)(186003)(66066001)(86362001)(5660300002)(386003)(6506007)(102836004)(26005)(31686004)(6246003)(6486002)(110136005)(36756003)(66946007)(6436002)(107886003)(229853002)(76176011)(478600001)(99286004)(2906002)(54906003)(8936002)(4326008)(3846002)(53936002)(25786009)(6116002)(81156014)(81166006)(8676002)(66476007)(6512007)(64756008)(66556008)(14444005)(316002)(66446008)(256004)(7416002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1267;H:BN6PR11MB4081.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: aquantia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: H6Qlk8cD59fKtnLfdqICyWYp120BvCR6y2CTsoAfiXvbTWRJLJVhS9i2GjAs7O21oiKnmAPcP6bN7/7Gp+IefisjyaiqXYNE3JhcUtKz8dZPuNPVD7rTs4bR8pFT8DiiD+5SoXdv9qQZ1bD534MvFLBLsdYy2+NwkYVCbjbCgK5LdFK03nmRq/nvNZl7tdYFgRCi8DmKD907chn5xNRd+m5C/U2nxFHJdq18MPrz/E4mFgK3ANG+qllzGeU/d+YS3TjpXdKClFdKWAGsPQ2xeTs9V+purw7Pb5cdYw5fzxGetCEcURsNvnDEvMORvpTMm/qu6dPlVh0l0eeLHbqR0k9J2UzBIPB6fSiNmORo93b5Qdm+7zOcdrhf0kTHPJclu44nvybyE958nYsdUxJ19GQ62aRZFGQI2U+9Co5b3vU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9AD6B3AAB827434B9241AE50CDDA861C@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 21 Aug 2019 05:20:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:54986 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbfHUJUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:20:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9566C28;
+        Wed, 21 Aug 2019 02:20:12 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A67B3F706;
+        Wed, 21 Aug 2019 02:20:11 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 10:20:09 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH 2/2] ELF: Add ELF program property parsing support
+Message-ID: <20190821092007.GC27757@arm.com>
+References: <1566295063-7387-1-git-send-email-Dave.Martin@arm.com>
+ <1566295063-7387-3-git-send-email-Dave.Martin@arm.com>
+ <bd4caadd8a9110bbbcfb4e8748d0bb416161d8e3.camel@intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: aquantia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efcbecdd-c50d-4fe5-f3a1-08d72618c09d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 09:20:05.0451
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 83e2e134-991c-4ede-8ced-34d47e38e6b1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Yy7Kdn8J4PUYzLGCWStR4BKziYMLDak0z8gNBxRQUYfM3t8PL1y7USlTndggorOlscut0t/GdldSIrnAE5ig8w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1267
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bd4caadd8a9110bbbcfb4e8748d0bb416161d8e3.camel@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IA0KPiBUYWxraW5nIGFib3V0IHBhY2tldCBudW1iZXJzLCBjYW4geW91IGRlc2NyaWJlIGhv
-dyBQTiBleGhhdXN0aW9uIGlzDQo+IGhhbmRsZWQ/ICBJIGNvdWxkbid0IGZpbmQgbXVjaCBhYm91
-dCBwYWNrZXQgbnVtYmVycyBhdCBhbGwgaW4gdGhlDQo+IGRyaXZlciBwYXRjaGVzIChJIGhvcGUg
-dGhlIGh3IGRvZXNuJ3Qgd3JhcCBhcm91bmQgZnJvbSAyXjMyLTEgdG8gMCBvbg0KPiB0aGUgc2Ft
-ZSBTQSkuICBBdCBzb21lIHBvaW50IHVzZXJzcGFjZSBuZWVkcyB0byBrbm93IHRoYXQgd2UncmUN
-Cj4gZ2V0dGluZyBjbG9zZSB0byAyXjMyIGFuZCB0aGF0IGl0J3MgdGltZSB0byByZS1rZXkuICBT
-aW5jZSB0aGUgd2hvbGUNCj4gVFggcGF0aCBvZiB0aGUgc29mdHdhcmUgaW1wbGVtZW50YXRpb24g
-aXMgYnlwYXNzZWQsIGl0IGxvb2tzIGxpa2UgdGhlDQo+IFBOIChhcyBmYXIgYXMgZHJpdmVycy9u
-ZXQvbWFjc2VjLmMgaXMgY29uY2VybmVkKSBuZXZlciBpbmNyZWFzZXMsIHNvDQo+IHVzZXJzcGFj
-ZSBjYW4ndCBrbm93IHdoZW4gdG8gbmVnb3RpYXRlIGEgbmV3IFNBLg0KDQpJIHRoaW5rIHRoZXJl
-IHNob3VsZCBiZSBkcml2ZXIgc3BlY2lmaWMgaW1wbGVtZW50YXRpb24gb2YgdGhpcyBmdW5jdGlv
-bmFsaXR5Lg0KQXMgYW4gZXhhbXBsZSwgb3VyIG1hY3NlYyBIVyBpc3N1ZXMgYW4gaW50ZXJydXB0
-IHRvd2FyZHMgdGhlIGhvc3QgdG8gaW5kaWNhdGUNClBOIHRocmVzaG9sZCBoYXMgcmVhY2hlZCBh
-bmQgaXQncyB0aW1lIGZvciB1c2Vyc3BhY2UgdG8gY2hhbmdlIHRoZSBrZXlzLg0KDQpJbiBjb250
-cmFzdCwgY3VycmVudCBTVyBtYWNzZWMgaW1wbGVtZW50YXRpb24ganVzdCBzdG9wcyB0aGlzIFNB
-L3NlY3kuDQoNCj4gSSBkb24ndCBzZWUgaG93IHRoaXMgaW1wbGVtZW50YXRpb24gaGFuZGxlcyBu
-b24tbWFjc2VjIHRyYWZmaWMgKG9uIFRYLA0KPiB0aGF0IHdvdWxkIGJlIHBhY2tldHMgc2VudCBk
-aXJlY3RseSB0aHJvdWdoIHRoZSByZWFsIGludGVyZmFjZSwgZm9yDQo+IGV4YW1wbGUgYnkgd3Bh
-X3N1cHBsaWNhbnQgLSBvbiBSWCwgaW5jb21pbmcgTUtBIHRyYWZmaWMgZm9yDQo+IHdwYV9zdXBw
-bGljYW50KS4gVW5sZXNzIEkgbWlzc2VkIHNvbWV0aGluZywgaW5jb21pbmcgTUtBIHRyYWZmaWMg
-d2lsbA0KPiBlbmQgdXAgb24gdGhlIG1hY3NlYyBpbnRlcmZhY2UgYXMgd2VsbCBhcyB0aGUgbG93
-ZXIgaW50ZXJmYWNlIChub3QNCj4gZW50aXJlbHkgY3JpdGljYWwsIGFzIGxvbmcgYXMgd3BhX3N1
-cHBsaWNhbnQgY2FuIGdyYWIgaXQgb24gdGhlIGxvd2VyDQo+IGRldmljZSwgYnV0IG5vdCBjb25z
-aXN0ZW50IHdpdGggdGhlIHNvZnR3YXJlIGltcGxlbWVudGF0aW9uKS4gSG93IGRvZXMNCj4gdGhl
-IGRyaXZlciBkaXN0aW5ndWlzaCB0cmFmZmljIHRoYXQgc2hvdWxkIHBhc3MgdGhyb3VnaCB1bm1v
-ZGlmaWVkDQo+IGZyb20gdHJhZmZpYyB0aGF0IHRoZSBIVyBuZWVkcyB0byBlbmNhcHN1bGF0ZSBh
-bmQgZW5jcnlwdD8NCg0KSSBjYW4gY29tbWVudCBvbiBvdXIgSFcgZW5naW5lIC0gd2hlcmUgaXQg
-aGFzIHNwZWNpYWwgYnlwYXNzIHJ1bGVzDQpmb3IgY29uZmlndXJlZCBldGhlcnR5cGVzLiBUaGlz
-IHdheSBtYWNzZWMgZW5naW5lIHNraXBzIGVuY3J5cHRpb24gb24gVFggYW5kDQpwYXNzZXMgaW4g
-UlggdW5lbmNyeXB0ZWQgZm9yIHRoZSBzZWxlY3RlZCBjb250cm9sIHBhY2tldHMuDQoNCkJ1dCB0
-aGF0cyB0cnVlLCByZWFsZGV2IGRyaXZlciBpcyBoYXJkIHRvIGRpc3Rpbmd1aXNoIGVuY3J5cHRl
-ZC91bmVuY3J5cHRlZA0KcGFja2V0cy4gSW4gY2FzZSByZWFsZGV2IHNob3VsZCBtYWtlIGEgZGVj
-aXNpb24gd2hlcmUgdG8gcHV0IFJYIHBhY2tldCwNCml0IG9ubHkgbWF5IGRvIHNvbWUgaGV1cmlz
-dGljIChzaW5jZSBhZnRlciBtYWNzZWMgZGVjcmlwdGlvbiBhbGwgdGhlDQptYWNzZWMgcmVsYXRl
-ZCBpbmZvIGlzIGRyb3BwZWQuIFRoYXRzIHRydWUgYXQgbGVhc3QgZm9yIG91ciBIVyBpbXBsZW1l
-bnRhdGlvbikuDQoNCj4gSWYgeW91IGxvb2sgYXQgSVBzZWMgb2ZmbG9hZGluZywgdGhlIG5ldHdv
-cmtpbmcgc3RhY2sgYnVpbGRzIHVwIHRoZQ0KPiBFU1AgaGVhZGVyLCBhbmQgcGFzc2VzIHRoZSB1
-bmVuY3J5cHRlZCBkYXRhIGRvd24gdG8gdGhlIGRyaXZlci4gSSdtDQo+IHdvbmRlcmluZyBpZiB0
-aGUgc2FtZSB3b3VsZCBiZSBwb3NzaWJsZSB3aXRoIE1BQ3NlYyBvZmZsb2FkaW5nOiB0aGUNCj4g
-bWFjc2VjIHZpcnR1YWwgaW50ZXJmYWNlIGFkZHMgdGhlIGhlYWRlciAoYW5kIG1heWJlIGEgZHVt
-bXkgSUNWKSwgYW5kDQo+IHRoZW4gdGhlIEhXIGRvZXMgdGhlIGVuY3J5cHRpb24uIEluIGNhc2Ug
-b2YgSFcgdGhhdCBuZWVkcyB0byBhZGQgdGhlDQo+IHNlY3RhZyBpdHNlbGYsIHRoZSBkcml2ZXIg
-d291bGQgZmlyc3Qgc3RyaXAgdGhlIGhlYWRlcnMgdGhhdCB0aGUgc3RhY2sNCj4gY3JlYXRlZC4g
-T24gcmVjZWl2ZSwgdGhlIGRyaXZlciB3b3VsZCByZWNyZWF0ZSBhIHNlY3RhZyBhbmQgdGhlIG1h
-Y3NlYw0KPiBpbnRlcmZhY2Ugd291bGQganVzdCBza2lwIGFsbCB2ZXJpZmljYXRpb24gKGRlY3J5
-cHQsIFBOKS4NCg0KSSBkb24ndCB0aGluayB0aGlzIHdheSBpcyBnb29kLCBhcyBkcml2ZXIgaGF2
-ZSB0byBkbyBwZXIgcGFja2V0IGhlYWRlciBtYW5nbGluZy4NClRoYXQnbGwgaGFybSBsaW5lcmF0
-ZSBwZXJmb3JtYW5jZSBoZWF2aWx5Lg0KDQpSZWdhcmRzLA0KICAgSWdvcg0K
+On Tue, Aug 20, 2019 at 10:40:54PM +0100, Yu-cheng Yu wrote:
+> On Tue, 2019-08-20 at 10:57 +0100, Dave Martin wrote:
+> > ELF program properties will needed for detecting whether to enable
+> > optional architecture or ABI features for a new ELF process.
+> > 
+> > For now, there are no generic properties that we care about, so do
+> > nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
+> > 
+> > Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
+> > phdrs entry (if any), and notify each property to the arch code.
+> > 
+> > For now, the added code is not used.
+> > 
+> > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
+> > ---
+> >  fs/binfmt_elf.c          | 109
+> > +++++++++++++++++++++++++++++++++++++++++++++++
+> >  fs/compat_binfmt_elf.c   |   4 ++
+> >  include/linux/elf.h      |  21 +++++++++
+> >  include/uapi/linux/elf.h |   4 ++
+> >  4 files changed, 138 insertions(+)
+> > 
+> > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> > index d4e11b2..52f4b96 100644
+> > --- a/fs/binfmt_elf.c
+> > +++ b/fs/binfmt_elf.c
+> > @@ -39,12 +39,18 @@
+> >  #include <linux/sched/coredump.h>
+> >  #include <linux/sched/task_stack.h>
+> >  #include <linux/sched/cputime.h>
+> > +#include <linux/sizes.h>
+> > +#include <linux/types.h>
+> >  #include <linux/cred.h>
+> >  #include <linux/dax.h>
+> >  #include <linux/uaccess.h>
+> >  #include <asm/param.h>
+> >  #include <asm/page.h>
+> >  
+> > +#ifndef ELF_COMPAT
+> > +#define ELF_COMPAT 0
+> > +#endif
+> > +
+> >  #ifndef user_long_t
+> >  #define user_long_t long
+> >  #endif
+> > @@ -690,6 +696,93 @@ static unsigned long randomize_stack_top(unsigned long
+> > stack_top)
+> >  #endif
+> >  }
+> >  
+> > +static int parse_elf_property(const void **prop, size_t *notesz,
+> > +			      struct arch_elf_state *arch)
+> > +{
+> > +	const struct gnu_property *pr = *prop;
+> > +	size_t sz = *notesz;
+> > +	int ret;
+> > +	size_t step;
+> > +
+> > +	BUG_ON(sz < sizeof(*pr));
+> > +
+> > +	if (sizeof(*pr) > sz)
+> > +		return -EIO;
+> > +
+> > +	if (pr->pr_datasz > sz - sizeof(*pr))
+> > +		return -EIO;
+> > +
+> > +	step = round_up(sizeof(*pr) + pr->pr_datasz, elf_gnu_property_align);
+> > +	if (step > sz)
+> > +		return -EIO;
+> > +
+> > +	ret = arch_parse_elf_property(pr->pr_type, *prop + sizeof(*pr),
+> > +				      pr->pr_datasz, ELF_COMPAT, arch);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	*prop += step;
+> > +	*notesz -= step;
+> > +	return 0;
+> > +}
+> > +
+> > +#define NOTE_DATA_SZ SZ_1K
+> > +#define GNU_PROPERTY_TYPE_0_NAME "GNU"
+> > +#define NOTE_NAME_SZ (sizeof(GNU_PROPERTY_TYPE_0_NAME))
+> > +
+> > +static int parse_elf_properties(struct file *f, const struct elf_phdr *phdr,
+> > +				struct arch_elf_state *arch)
+> > +{
+> > +	ssize_t n;
+> > +	loff_t pos = phdr->p_offset;
+> > +	union {
+> > +		struct elf_note nhdr;
+> > +		char data[NOTE_DATA_SZ];
+> > +	} note;
+> > +	size_t off, notesz;
+> > +	const void *prop;
+> > +	int ret;
+> > +
+> > +	if (!IS_ENABLED(ARCH_USE_GNU_PROPERTY))
+> > +		return 0;
+> > +
+> > +	BUG_ON(phdr->p_type != PT_GNU_PROPERTY);
+> > +
+> > +	/* If the properties are crazy large, that's too bad (for now): */
+> > +	if (phdr->p_filesz > sizeof(note))
+> > +		return -ENOEXEC;
+> > +	n = kernel_read(f, &note, phdr->p_filesz, &pos);
+> > +
+> > +	BUILD_BUG_ON(sizeof(note) < sizeof(note.nhdr) + NOTE_NAME_SZ);
+> > +	if (n < 0 || n < sizeof(note.nhdr) + NOTE_NAME_SZ)
+> > +		return -EIO;
+> > +
+> > +	if (note.nhdr.n_type != NT_GNU_PROPERTY_TYPE_0 ||
+> > +	    note.nhdr.n_namesz != NOTE_NAME_SZ ||
+> > +	    strncmp(note.data + sizeof(note.nhdr),
+> > +		    GNU_PROPERTY_TYPE_0_NAME, n - sizeof(note.nhdr)))
+> > +		return -EIO;
+> > +
+> > +	off = round_up(sizeof(note.nhdr) + NOTE_NAME_SZ,
+> > +		       elf_gnu_property_align);
+> > +	if (off > n)
+> > +		return -EIO;
+> > +
+> > +	prop = (const struct gnu_property *)(note.data + off);
+> > +	notesz = n - off;
+> > +	if (note.nhdr.n_descsz > notesz)
+> > +		return -EIO;
+> > +
+> > +	while (notesz) {
+> > +		BUG_ON(((char *)prop - note.data) % elf_gnu_property_align);
+> > +		ret = parse_elf_property(&prop, &notesz, arch);
+> 
+> Properties need to be in ascending order.  Can we keep track of it from here.
+
+We could, but do we need to?  If this order is violated, the ELF file is
+invalid and it doesn't matter what we do, providing that the kernel
+doesn't go wrong.
+
+In general, the ELF loader already doesn't try to detect invalid ELF
+files: for example EM_386 with ELFCLASS64 would just be executed as a
+32-bit binary.  Of course, if the file is really structured as a 64-bit
+ELF we'll probably fail to parse the file before we get as far as
+executing it.
+
+Here, we just care that a particular property is there.  If the
+properties are shuffled, we will find the same set of properties
+regardless.
+
+The kernel isn't really responsible for debugging broken linkers...
+
+OTOH the check would be trivial and I don't have a strong objection to
+adding it.
+
+> Also, can we replace BUG_ON with returning an error.
+
+Sure, those BUG_ON() are for development purposes only.  I'd intended to
+remove them, but I forgot to comment on it.
+
+This BUG_ON() should be ensured by the round_up() logic in
+parse_elf_property().
+
+Thanks for taking a look!
+
+Cheers
+---Dave
