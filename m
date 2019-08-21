@@ -2,180 +2,83 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1609BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9B9C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B4422CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5725222CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbfHUNyZ (ORCPT
+        id S1729064AbfHUNy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 09:54:25 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:14274 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726371AbfHUNyY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:54:24 -0400
-X-UUID: e531514177674f01b90270ddada60273-20190821
-X-UUID: e531514177674f01b90270ddada60273-20190821
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 38697783; Wed, 21 Aug 2019 21:54:17 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 21 Aug 2019 21:54:15 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 21 Aug 2019 21:54:13 +0800
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
+        Wed, 21 Aug 2019 09:54:28 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42176 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727696AbfHUNy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 09:54:26 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 832E3FF73DB123757664;
+        Wed, 21 Aug 2019 21:54:21 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 21 Aug 2019
+ 21:54:12 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <peppe.cavallaro@st.com>,
+        <alexandre.torgue@st.com>, <joabreu@synopsys.com>,
+        <khilman@baylibre.com>, <mcoquelin.stm32@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yong.wu@mediatek.com>,
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>,
-        <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
-        <ming-fan.chen@mediatek.com>
-Subject: [PATCH v10 02/23] iommu/mediatek: Use a struct as the platform data
-Date:   Wed, 21 Aug 2019 21:53:05 +0800
-Message-ID: <1566395606-7975-3-git-send-email-yong.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
-References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
+        <linux-amlogic@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] net: stmmac: dwmac-meson: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 21 Aug 2019 21:54:06 +0800
+Message-ID: <20190821135406.26200-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MTK:  N
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a struct as the platform special data instead of the enumeration.
-This is a prepare patch for adding mt8183 iommu support.
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Reviewed-by: Evan Green <evgreen@chromium.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/iommu/mtk_iommu.c | 24 ++++++++++++++++--------
- drivers/iommu/mtk_iommu.h |  6 +++++-
- 2 files changed, 21 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-meson.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 82e4be4..c6e6dc3 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -46,7 +46,7 @@
- #define REG_MMU_CTRL_REG			0x110
- #define F_MMU_PREFETCH_RT_REPLACE_MOD		BIT(4)
- #define F_MMU_TF_PROTECT_SEL_SHIFT(data) \
--	((data)->m4u_plat == M4U_MT2712 ? 4 : 5)
-+	((data)->plat_data->m4u_plat == M4U_MT2712 ? 4 : 5)
- /* It's named by F_MMU_TF_PROT_SEL in mt2712. */
- #define F_MMU_TF_PROTECT_SEL(prot, data) \
- 	(((prot) & 0x3) << F_MMU_TF_PROTECT_SEL_SHIFT(data))
-@@ -512,7 +512,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson.c
+index 88eb169..bbc16b5 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-meson.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-meson.c
+@@ -46,7 +46,6 @@ static int meson6_dwmac_probe(struct platform_device *pdev)
+ 	struct plat_stmmacenet_data *plat_dat;
+ 	struct stmmac_resources stmmac_res;
+ 	struct meson_dwmac *dwmac;
+-	struct resource *res;
+ 	int ret;
+ 
+ 	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
+@@ -63,8 +62,7 @@ static int meson6_dwmac_probe(struct platform_device *pdev)
+ 		goto err_remove_config_dt;
  	}
  
- 	regval = F_MMU_TF_PROTECT_SEL(2, data);
--	if (data->m4u_plat == M4U_MT8173)
-+	if (data->plat_data->m4u_plat == M4U_MT8173)
- 		regval |= F_MMU_PREFETCH_RT_REPLACE_MOD;
- 	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
- 
-@@ -533,14 +533,14 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
- 		F_INT_PRETETCH_TRANSATION_FIFO_FAULT;
- 	writel_relaxed(regval, data->base + REG_MMU_INT_MAIN_CONTROL);
- 
--	if (data->m4u_plat == M4U_MT8173)
-+	if (data->plat_data->m4u_plat == M4U_MT8173)
- 		regval = (data->protect_base >> 1) | (data->enable_4GB << 31);
- 	else
- 		regval = lower_32_bits(data->protect_base) |
- 			 upper_32_bits(data->protect_base);
- 	writel_relaxed(regval, data->base + REG_MMU_IVRP_PADDR);
- 
--	if (data->enable_4GB && data->m4u_plat != M4U_MT8173) {
-+	if (data->enable_4GB && data->plat_data->m4u_plat != M4U_MT8173) {
- 		/*
- 		 * If 4GB mode is enabled, the validate PA range is from
- 		 * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
-@@ -551,7 +551,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
- 	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
- 
- 	/* It's MISC control register whose default value is ok except mt8173.*/
--	if (data->m4u_plat == M4U_MT8173)
-+	if (data->plat_data->m4u_plat == M4U_MT8173)
- 		writel_relaxed(0, data->base + REG_MMU_STANDARD_AXI_MODE);
- 
- 	if (devm_request_irq(data->dev, data->irq, mtk_iommu_isr, 0,
-@@ -584,7 +584,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 	data->dev = dev;
--	data->m4u_plat = (enum mtk_iommu_plat)of_device_get_match_data(dev);
-+	data->plat_data = of_device_get_match_data(dev);
- 
- 	/* Protect memory. HW will access here while translation fault.*/
- 	protect = devm_kzalloc(dev, MTK_PROTECT_PA_ALIGN * 2, GFP_KERNEL);
-@@ -732,9 +732,17 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
- 	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_iommu_suspend, mtk_iommu_resume)
- };
- 
-+static const struct mtk_iommu_plat_data mt2712_data = {
-+	.m4u_plat     = M4U_MT2712,
-+};
-+
-+static const struct mtk_iommu_plat_data mt8173_data = {
-+	.m4u_plat     = M4U_MT8173,
-+};
-+
- static const struct of_device_id mtk_iommu_of_ids[] = {
--	{ .compatible = "mediatek,mt2712-m4u", .data = (void *)M4U_MT2712},
--	{ .compatible = "mediatek,mt8173-m4u", .data = (void *)M4U_MT8173},
-+	{ .compatible = "mediatek,mt2712-m4u", .data = &mt2712_data},
-+	{ .compatible = "mediatek,mt8173-m4u", .data = &mt8173_data},
- 	{}
- };
- 
-diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-index 59337323..9725b08 100644
---- a/drivers/iommu/mtk_iommu.h
-+++ b/drivers/iommu/mtk_iommu.h
-@@ -32,6 +32,10 @@ enum mtk_iommu_plat {
- 	M4U_MT8173,
- };
- 
-+struct mtk_iommu_plat_data {
-+	enum mtk_iommu_plat m4u_plat;
-+};
-+
- struct mtk_iommu_domain;
- 
- struct mtk_iommu_data {
-@@ -48,7 +52,7 @@ struct mtk_iommu_data {
- 	bool				tlb_flush_active;
- 
- 	struct iommu_device		iommu;
--	enum mtk_iommu_plat		m4u_plat;
-+	const struct mtk_iommu_plat_data *plat_data;
- 
- 	struct list_head		list;
- };
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	dwmac->reg = devm_ioremap_resource(&pdev->dev, res);
++	dwmac->reg = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(dwmac->reg)) {
+ 		ret = PTR_ERR(dwmac->reg);
+ 		goto err_remove_config_dt;
 -- 
-1.9.1
+2.7.4
+
 
