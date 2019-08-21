@@ -2,120 +2,146 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C53C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114BFC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9489D233A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9DC22DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:59:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EBhtQtcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbfHUQ72 (ORCPT
+        id S1729672AbfHUQ7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:59:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:33672 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726252AbfHUQ72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:59:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86E70337;
-        Wed, 21 Aug 2019 09:59:27 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D0933F718;
-        Wed, 21 Aug 2019 09:59:26 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 17:59:22 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, l.subrahmanya@mobiveil.co.in,
-        leoyang.li@nxp.com
-Subject: Re: [PATCHv7] PCI: mobiveil: Fix the CPU base address setup in
- inbound window
-Message-ID: <20190821165922.GA3915@e121166-lin.cambridge.arm.com>
-References: <20190713141129.32249-1-Zhiqiang.Hou@nxp.com>
+        Wed, 21 Aug 2019 12:59:44 -0400
+Received: from mail-pl1-f169.google.com ([209.85.214.169]:44585 "EHLO
+        mail-pl1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfHUQ7o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:59:44 -0400
+Received: by mail-pl1-f169.google.com with SMTP id t14so1629475plr.11;
+        Wed, 21 Aug 2019 09:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4uOROZjzWLE63MFAiLg2kSsfaU3fOmnwbM8CBKbVHmw=;
+        b=EBhtQtcZEDIlim8PjUJDPh732WKNhbgoaOf4kKFyGqE51t7flztG8HaXocNLReVX7A
+         /MuadADeisUHJoTDwJpUZVBDpfxWGo5AAtVhyRU1BcI5OTaz2Pmk0kzOkB5pPTfMZ4uL
+         T7/WvB0K5e2Zk8cY60uGqdGuMUX4HAXi/abUgGDMf3cRt72Ncw6UbZupD8WQQmbiJ9Qa
+         QPlIs4bY5xsAwbfyrwAQyRjbsLWIkFfLnlhUJEd9/doXLJo5qRsPAf+r35w6lEzQRdVL
+         MnqoEXZXinimreO9YEM5MBcNihPtiU4foAA+6y98W1rI8qZPisIpbIzw/2cU99R95czc
+         EtCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=4uOROZjzWLE63MFAiLg2kSsfaU3fOmnwbM8CBKbVHmw=;
+        b=dmyY9aghakYWkm764ZwjYDVN4AeYmqOSRGmicuDlhILjll8NhniVOeoonxEJtzoT5k
+         90aWYh5c2DDa5vtBtNYGF3VanuygOLRbd08+ufI+QRReyK/2W5Yw+vXgE4vY2Wx2drOc
+         di5FIp6QTzwZXsxzWwMn9BT74WUO+9FeHt4pZtYou6+FhcQjPI8fN2sxioJR+TCuwDEB
+         HhMdqjeaQrfWwh7Dp/wkBgr5SQgI4tj992U5XibdDNtEMd262fsFxKZvjW2Hn9610p4v
+         D+Vw19Gj9cyloBEMVIoao3uXkHeJFCLKQZ1cFG/2r+SIDODK0AFO/g4nrTkT4SOHDOL0
+         7kXg==
+X-Gm-Message-State: APjAAAUAZ0iZq3rUVa1D4rHUghgo8RdkuvcVUzYTqfuuXobKL0ovQI9q
+        Jw7z/uh89Yn5PHV0ax4JJOaMs80J
+X-Google-Smtp-Source: APXvYqzYK6owRbgloi5jpaLE+QsvybLU+/HLEWR8mBFcnULUUMf0laEpTnH8XWF1sQWZJyW+GJPcBg==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24mr35845747plp.14.1566406782766;
+        Wed, 21 Aug 2019 09:59:42 -0700 (PDT)
+Received: from [10.67.49.31] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id m145sm28044644pfd.68.2019.08.21.09.59.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 09:59:42 -0700 (PDT)
+Subject: Re: [PATCH net-next] net: bcmgenet: use
+ devm_platform_ioremap_resource() to simplify code
+To:     YueHaibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        opendmb@gmail.com, bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20190821134131.57780-1-yuehaibing@huawei.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <fc2639df-2930-46a9-537c-01930d2a2252@gmail.com>
+Date:   Wed, 21 Aug 2019 09:59:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190713141129.32249-1-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190821134131.57780-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 13, 2019 at 10:11:29PM +0800, Hou Zhiqiang wrote:
-> The current code erroneously sets-up the CPU base address with
-> parameter 'pci_addr', which is passed to initialize the PCI
-> base address of the inbound window, and the upper 32-bit of the
-> CPU base address of the inbound window is not initialized. This
-> results in the current code only support 1:1 inbound window
-> with limitation that the base address must be < 4GB.
+On 8/21/19 6:41 AM, YueHaibing wrote:
+> Use devm_platform_ioremap_resource() to simplify the code a bit.
+> This is detected by coccinelle.
 > 
-> This patch introduces a new parameter 'u64 cpu_addr' to initialize
-> both lower 32-bit and upper 32-bit of the CPU base address to make
-> it can support non 1:1 inbound window and fix the base address must
-> be < 4GB limitation.
-> 
-> Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> ---
-> V7:
->  - This patch is #25 of V6 patches, rewrote the changelog.
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Applied to pci/mobiveil for v5.4, thanks.
-
-Lorenzo
-
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 672e633..a45a644 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -88,6 +88,7 @@
->  #define  AMAP_CTRL_TYPE_MASK		3
->  
->  #define PAB_EXT_PEX_AMAP_SIZEN(win)	PAB_EXT_REG_ADDR(0xbef0, win)
-> +#define PAB_EXT_PEX_AMAP_AXI_WIN(win)	PAB_EXT_REG_ADDR(0xb4a0, win)
->  #define PAB_PEX_AMAP_AXI_WIN(win)	PAB_REG_ADDR(0x4ba4, win)
->  #define PAB_PEX_AMAP_PEX_WIN_L(win)	PAB_REG_ADDR(0x4ba8, win)
->  #define PAB_PEX_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x4bac, win)
-> @@ -462,7 +463,7 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
->  }
->  
->  static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
-> -			       u64 pci_addr, u32 type, u64 size)
-> +			       u64 cpu_addr, u64 pci_addr, u32 type, u64 size)
->  {
->  	u32 value;
->  	u64 size64 = ~(size - 1);
-> @@ -482,7 +483,10 @@ static void program_ib_windows(struct mobiveil_pcie *pcie, int win_num,
->  	csr_writel(pcie, upper_32_bits(size64),
->  		   PAB_EXT_PEX_AMAP_SIZEN(win_num));
->  
-> -	csr_writel(pcie, pci_addr, PAB_PEX_AMAP_AXI_WIN(win_num));
-> +	csr_writel(pcie, lower_32_bits(cpu_addr),
-> +		   PAB_PEX_AMAP_AXI_WIN(win_num));
-> +	csr_writel(pcie, upper_32_bits(cpu_addr),
-> +		   PAB_EXT_PEX_AMAP_AXI_WIN(win_num));
->  
->  	csr_writel(pcie, lower_32_bits(pci_addr),
->  		   PAB_PEX_AMAP_PEX_WIN_L(win_num));
-> @@ -624,7 +628,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
->  
->  	/* memory inbound translation window */
-> -	program_ib_windows(pcie, WIN_NUM_0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
-> +	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
->  
->  	/* Get the I/O and memory ranges from DT */
->  	resource_list_for_each_entry(win, &pcie->resources) {
-> -- 
-> 2.9.5
-> 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
