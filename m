@@ -2,109 +2,83 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D49C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C68C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F06522DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE6C22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfHUEcZ (ORCPT
+        id S1727473AbfHUEgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:32:25 -0400
-Received: from ajax.cs.uga.edu ([128.192.4.6]:44158 "EHLO ajax.cs.uga.edu"
+        Wed, 21 Aug 2019 00:36:01 -0400
+Received: from gate.crashing.org ([63.228.1.57]:53878 "EHLO gate.crashing.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbfHUEcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:32:25 -0400
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-        (authenticated bits=0)
-        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x7L4WMoe069266
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 21 Aug 2019 00:32:23 -0400
-Received: by mail-lj1-f171.google.com with SMTP id l1so795910lji.12;
-        Tue, 20 Aug 2019 21:32:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAUL11Gw39KpL4NYef24UhbT582GgezPL+E++gdp13coDwblbYkw
-        n40Psyg8TDmXil8gmZGOkJRWycFg3HeKMPxzbJM=
-X-Google-Smtp-Source: APXvYqwJHnVp3pdE4Bg3YqrbSEYEU0E+uUeX0LYZnhept2ioLf2LEA9SBYVSnw5rPgmOuKsCzmsz5ZDPTJNOx9P70bM=
-X-Received: by 2002:a2e:5c5:: with SMTP id 188mr2582725ljf.166.1566361942335;
- Tue, 20 Aug 2019 21:32:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <1565690709-3186-1-git-send-email-wenwen@cs.uga.edu> <MN2PR18MB2528D8046DFC6BB880D8EFF6D3D20@MN2PR18MB2528.namprd18.prod.outlook.com>
-In-Reply-To: <MN2PR18MB2528D8046DFC6BB880D8EFF6D3D20@MN2PR18MB2528.namprd18.prod.outlook.com>
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-Date:   Wed, 21 Aug 2019 00:31:46 -0400
-X-Gmail-Original-Message-ID: <CAAa=b7dKCjCRU3gik3ZPVP7WWMfEYqEmq_4rd7vnSLoOiK5nOw@mail.gmail.com>
-Message-ID: <CAAa=b7dKCjCRU3gik3ZPVP7WWMfEYqEmq_4rd7vnSLoOiK5nOw@mail.gmail.com>
-Subject: Re: [EXT] [PATCH] qed: Add cleanup in qed_slowpath_start()
-To:     Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Cc:     Ariel Elior <aelior@marvell.com>,
-        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:QLOGIC QL4xxx ETHERNET DRIVER" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Wenwen Wang <wenwen@cs.uga.edu>
+        id S1726388AbfHUEgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 00:36:01 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x7L4Zr77013135;
+        Tue, 20 Aug 2019 23:35:54 -0500
+Message-ID: <a1cbb068b3b264c22792fda5f62f4fe9f1f1733b.camel@kernel.crashing.org>
+Subject: Re: [PATCH] fsi: scom: Don't abort operations for minor errors
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org
+Date:   Wed, 21 Aug 2019 14:35:53 +1000
+In-Reply-To: <1565896134-22749-1-git-send-email-eajames@linux.ibm.com>
+References: <1565896134-22749-1-git-send-email-eajames@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 6:46 AM Sudarsana Reddy Kalluru
-<skalluru@marvell.com> wrote:
->
-> > -----Original Message-----
-> > From: Wenwen Wang <wenwen@cs.uga.edu>
-> > Sent: Tuesday, August 13, 2019 3:35 PM
-> > To: Wenwen Wang <wenwen@cs.uga.edu>
-> > Cc: Ariel Elior <aelior@marvell.com>; GR-everest-linux-l2 <GR-everest-linux-
-> > l2@marvell.com>; David S. Miller <davem@davemloft.net>; open
-> > list:QLOGIC QL4xxx ETHERNET DRIVER <netdev@vger.kernel.org>; open list
-> > <linux-kernel@vger.kernel.org>
-> > Subject: [EXT] [PATCH] qed: Add cleanup in qed_slowpath_start()
-> >
-> > External Email
-> >
-> > ----------------------------------------------------------------------
-> > If qed_mcp_send_drv_version() fails, no cleanup is executed, leading to
-> > memory leaks. To fix this issue, redirect the execution to the label 'err3'
-> > before returning the error.
-> >
-> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> > ---
-> >  drivers/net/ethernet/qlogic/qed/qed_main.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c
-> > b/drivers/net/ethernet/qlogic/qed/qed_main.c
-> > index 829dd60..d16a251 100644
-> > --- a/drivers/net/ethernet/qlogic/qed/qed_main.c
-> > +++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
-> > @@ -1325,7 +1325,7 @@ static int qed_slowpath_start(struct qed_dev
-> > *cdev,
-> >                                             &drv_version);
-> >               if (rc) {
-> >                       DP_NOTICE(cdev, "Failed sending drv version
-> > command\n");
-> > -                     return rc;
-> > +                     goto err3;
->
-> In this case, we might need to free the ll2-buf allocated at the below path (?),
-> 1312         /* Allocate LL2 interface if needed */
-> 1313         if (QED_LEADING_HWFN(cdev)->using_ll2) {
-> 1314                 rc = qed_ll2_alloc_if(cdev);
-> May be by adding a new goto label 'err4'.
+On Thu, 2019-08-15 at 14:08 -0500, Eddie James wrote:
+> The scom driver currently fails out of operations if certain system
+> errors are flagged in the status register; system checkstop, special
+> attention, or recoverable error. These errors won't impact the ability
+> of the scom engine to perform operations, so the driver should continue
+> under these conditions.
+> Also, don't do a PIB reset for these conditions, since it won't help.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 
-Thanks for your suggestion! I will rework the patch.
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
-Wenwen
+> ---
+>  drivers/fsi/fsi-scom.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/drivers/fsi/fsi-scom.c b/drivers/fsi/fsi-scom.c
+> index 343153d..004dc03 100644
+> --- a/drivers/fsi/fsi-scom.c
+> +++ b/drivers/fsi/fsi-scom.c
+> @@ -38,8 +38,7 @@
+>  #define SCOM_STATUS_PIB_RESP_MASK	0x00007000
+>  #define SCOM_STATUS_PIB_RESP_SHIFT	12
+>  
+> -#define SCOM_STATUS_ANY_ERR		(SCOM_STATUS_ERR_SUMMARY | \
+> -					 SCOM_STATUS_PROTECTION | \
+> +#define SCOM_STATUS_ANY_ERR		(SCOM_STATUS_PROTECTION | \
+>  					 SCOM_STATUS_PARITY |	  \
+>  					 SCOM_STATUS_PIB_ABORT | \
+>  					 SCOM_STATUS_PIB_RESP_MASK)
+> @@ -251,11 +250,6 @@ static int handle_fsi2pib_status(struct scom_device *scom, uint32_t status)
+>  	/* Return -EBUSY on PIB abort to force a retry */
+>  	if (status & SCOM_STATUS_PIB_ABORT)
+>  		return -EBUSY;
+> -	if (status & SCOM_STATUS_ERR_SUMMARY) {
+> -		fsi_device_write(scom->fsi_dev, SCOM_FSI2PIB_RESET_REG, &dummy,
+> -				 sizeof(uint32_t));
+> -		return -EIO;
+> -	}
+>  	return 0;
+>  }
+>  
 
->
-> >               }
-> >       }
-> >
-> > --
-> > 2.7.4
->
