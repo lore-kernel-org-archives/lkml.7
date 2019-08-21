@@ -2,116 +2,92 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14A9C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C28DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30DC22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:44:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qkBxCppP"
+	by mail.kernel.org (Postfix) with ESMTP id 32FB122DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:44:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfHUDoS (ORCPT
+        id S1727403AbfHUDo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 23:44:18 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:43322 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfHUDoS (ORCPT
+        Tue, 20 Aug 2019 23:44:27 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:42809 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfHUDo0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 23:44:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mKEAQVe8pGeZG2unL0rDaPgFTJavZFuc/xTAFuOwVBE=; b=qkBxCppP0eq7zZvXrM0k7tNLaT
-        KiYXt2hUP+V1+XDENHP5LdPNjJ6lDzjdcZwvIRdwFUJZSQTQl2trfzaXOH2uTVNlK2yBGJmDyPI++
-        LcEkyb2sZoub5EvgflUfqufUQJcfAd/vvI6GrTdILYov7xeZQxD3ceyv4ZBvfz0RiZRbYslm87e2+
-        Mu3CVD5KxG7U2EGL6KpD2/mBKKJX99ZIHP8WcCeD2ozCtdOmxUDzfHvh6AuJvbVdLd61q4DVwLCat
-        8WqheE4qMG3np+1xCLI+Og6+EDCQgTrIYAn3F0zEJj/eGDqsF5qQ4H98BklKkCwH60J9OZkpBrB64
-        Z11N/cBQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=[192.168.1.17])
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i0HXi-0000zD-Ih; Wed, 21 Aug 2019 03:44:14 +0000
-Subject: Re: [PATCH] drm/amd/display: Fix 32-bit divide error in
- wait_for_alt_mode
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20190820235713.3429-1-natechancellor@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <fdb89dea-8da7-12af-fc73-aa3c13929e83@infradead.org>
-Date:   Tue, 20 Aug 2019 20:44:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190820235713.3429-1-natechancellor@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 20 Aug 2019 23:44:26 -0400
+Received: by mail-yb1-f195.google.com with SMTP id h8so449588ybq.9;
+        Tue, 20 Aug 2019 20:44:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YcggR1HawStyBJ3k10IaNabkt2WXu5RxAJT3QmaxLtw=;
+        b=m+FIr9uSKbH7TJMP0Ahdc94aI/pr99eGNU/kAzDAh3MaNrzNOSjlxvzpVn/OD4oYo9
+         30CgE+tg7iQR8wpq2gXKpSPiquntA3zhWCInmr2+VmkvEhQ1EPddJZwb5XzY++l7lSCK
+         9SZ3kXmyo8j5dWUGmKz1vnQ2Q3XtA9ZrNW9t7KvpigmIN+qkS3EiWT9CaKQgVIFEvMXq
+         yKWtUHLdZMB0x7KHUYm5DSGOCdg+99V5JLnE83AjeuU6YshOqYt4T7uE8If7o/HZT3g5
+         CCjjAk+6Gr2iQET1ri5jFUIYRauRglzfdTaJd2mzfa60ITU5dyp5oZuOJyMuys4fiAuP
+         LOMg==
+X-Gm-Message-State: APjAAAXQu5R41qYXKFrKgv8zbfJbSFGUTuFaZhb+jV/iUxhlZ95lLsMn
+        oYIMsCsv7WcULCZVGzvbrB8=
+X-Google-Smtp-Source: APXvYqzD5ET7RLLtceKCPwcALRHEUhK2tgGJTNOyhKZAwigWcvAuQ9Tfc2ujNrO3jyeGZsInKdTieQ==
+X-Received: by 2002:a25:dc87:: with SMTP id y129mr13167422ybe.424.1566359065921;
+        Tue, 20 Aug 2019 20:44:25 -0700 (PDT)
+Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
+        by smtp.gmail.com with ESMTPSA id q65sm4017227ywc.11.2019.08.20.20.44.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 20 Aug 2019 20:44:25 -0700 (PDT)
+From:   Wenwen Wang <wenwen@cs.uga.edu>
+To:     Wenwen Wang <wenwen@cs.uga.edu>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+        linux-acpi@vger.kernel.org (open list:ACPI),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] ACPI / PCI: fix acpi_pci_irq_enable() memory leak
+Date:   Tue, 20 Aug 2019 22:44:19 -0500
+Message-Id: <1566359059-4844-1-git-send-email-wenwen@cs.uga.edu>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/19 4:57 PM, Nathan Chancellor wrote:
-> When building arm32 allyesconfig:
-> 
-> ld.lld: error: undefined symbol: __aeabi_uldivmod
->>>> referenced by dc_link.c
->>>> gpu/drm/amd/display/dc/core/dc_link.o:(wait_for_alt_mode) in archive drivers/built-in.a
->>>> referenced by dc_link.c
->>>> gpu/drm/amd/display/dc/core/dc_link.o:(wait_for_alt_mode) in archive drivers/built-in.a
-> 
-> time_taken_in_ns is of type unsigned long long so we need to use div_u64
-> to avoid this error.
-> 
-> Fixes: b5b1f4554904 ("drm/amd/display: Enable type C hotplug")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+In acpi_pci_irq_enable(), 'entry' is allocated by kzalloc() in
+acpi_pci_irq_check_entry() (invoked from acpi_pci_irq_lookup()). However,
+it is not deallocated if acpi_pci_irq_valid() returns false, leading to a
+memory leak. To fix this issue, free 'entry' before returning 0.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Fixes: e237a5518425 ("x86/ACPI/PCI: Recognize that Interrupt Line 255 means
+"not connected"")
 
-Thanks.
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+---
+ drivers/acpi/pci_irq.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> ---
->  drivers/gpu/drm/amd/display/dc/core/dc_link.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> index f2d78d7b089e..8634923b4444 100644
-> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> @@ -721,7 +721,7 @@ bool wait_for_alt_mode(struct dc_link *link)
->  			time_taken_in_ns = dm_get_elapse_time_in_ns(
->  				link->ctx, finish_timestamp, enter_timestamp);
->  			DC_LOG_WARNING("Alt mode entered finished after %llu ms\n",
-> -				       time_taken_in_ns / 1000000);
-> +				       div_u64(time_taken_in_ns, 1000000));
->  			return true;
->  		}
->  
-> @@ -730,7 +730,7 @@ bool wait_for_alt_mode(struct dc_link *link)
->  	time_taken_in_ns = dm_get_elapse_time_in_ns(link->ctx, finish_timestamp,
->  						    enter_timestamp);
->  	DC_LOG_WARNING("Alt mode has timed out after %llu ms\n",
-> -			time_taken_in_ns / 1000000);
-> +			div_u64(time_taken_in_ns, 1000000));
->  	return false;
->  }
->  
-> 
-
-
+diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+index d2549ae..dea8a60 100644
+--- a/drivers/acpi/pci_irq.c
++++ b/drivers/acpi/pci_irq.c
+@@ -449,8 +449,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+ 		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
+ 		 * driver reported one, then use it. Exit in any case.
+ 		 */
+-		if (!acpi_pci_irq_valid(dev, pin))
++		if (!acpi_pci_irq_valid(dev, pin)) {
++			kfree(entry);
+ 			return 0;
++		}
+ 
+ 		if (acpi_isa_register_gsi(dev))
+ 			dev_warn(&dev->dev, "PCI INT %c: no GSI\n",
 -- 
-~Randy
+2.7.4
+
