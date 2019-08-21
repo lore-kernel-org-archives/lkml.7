@@ -2,217 +2,134 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBF0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6D0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1DB422D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854F522D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfHURkc (ORCPT
+        id S1727689AbfHURmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:40:32 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51892 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727310AbfHURkc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:40:32 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 4DA1828BD6C
-Subject: Re: [PATCH v5 08/11] mfd: cros_ec: Add convenience struct to define
- dedicated CrOS EC MCUs
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        Wed, 21 Aug 2019 13:42:13 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:39390 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726785AbfHURmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:42:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 65FA6FB03;
+        Wed, 21 Aug 2019 19:42:10 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id h-xhcMPhWSrc; Wed, 21 Aug 2019 19:42:08 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 50A8642A70; Wed, 21 Aug 2019 19:42:08 +0200 (CEST)
+Date:   Wed, 21 Aug 2019 19:42:08 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Neil Armstrong <narmstrong@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Collabora kernel ML <kernel@collabora.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gwendal Grignou <gwendal@chromium.org>
-References: <20190722133257.9336-1-enric.balletbo@collabora.com>
- <20190722133257.9336-9-enric.balletbo@collabora.com>
- <20190812071639.GC4594@dell>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <0c6bd716-34d2-ec3f-4380-eb2457f97f9f@collabora.com>
-Date:   Wed, 21 Aug 2019 19:40:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        David Airlie <airlied@linux.ie>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/3] arm64: imx8mq: add imx8mq iomux-gpr field defines
+Message-ID: <20190821174208.GA9486@bogon.m.sigxcpu.org>
+References: <cover.1565367567.git.agx@sigxcpu.org>
+ <e0562d8bb4098dc4cdb4023b41fb75b312be22a5.1565367567.git.agx@sigxcpu.org>
+ <CAK8P3a3Vrd+sttJrQwD-jA9p_egG4x-hc41eGK8H-_aVm-uoYw@mail.gmail.com>
+ <20190813101057.GB10751@bogon.m.sigxcpu.org>
+ <CAK8P3a1q9G8VKgNKh+6khzoW3bFTVR_Zorygy=Qqsq-PYzM4=g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190812071639.GC4594@dell>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a1q9G8VKgNKh+6khzoW3bFTVR_Zorygy=Qqsq-PYzM4=g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
-
-On 12/8/19 9:16, Lee Jones wrote:
-> On Mon, 22 Jul 2019, Enric Balletbo i Serra wrote:
+Hi,
+On Tue, Aug 13, 2019 at 01:07:52PM +0200, Arnd Bergmann wrote:
+> On Tue, Aug 13, 2019 at 12:10 PM Guido Günther <agx@sigxcpu.org> wrote:
+> > On Tue, Aug 13, 2019 at 10:08:44AM +0200, Arnd Bergmann wrote:
+> > > On Fri, Aug 9, 2019 at 6:24 PM Guido Günther <agx@sigxcpu.org> wrote:
+> > > >
+> > > > This adds all the gpr registers and the define needed for selecting
+> > > > the input source in the imx-nwl drm bridge.
+> > > >
+> > > > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > > > +
+> > > > +#define IOMUXC_GPR0    0x00
+> > > > +#define IOMUXC_GPR1    0x04
+> > > > +#define IOMUXC_GPR2    0x08
+> > > > +#define IOMUXC_GPR3    0x0c
+> > > > +#define IOMUXC_GPR4    0x10
+> > > > +#define IOMUXC_GPR5    0x14
+> > > > +#define IOMUXC_GPR6    0x18
+> > > > +#define IOMUXC_GPR7    0x1c
+> > > (more of the same)
+> > >
+> > > huh?
+> >
+> > These are the names from the imx8MQ reference manual (general purpose
+> > registers, they lump together all sorts of things), it's the same on
+> > imx6/imx7):
+> >
+> >     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+> >     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
+> >
+> > > > +/* i.MX8Mq iomux gpr register field defines */
+> > > > +#define IMX8MQ_GPR13_MIPI_MUX_SEL              BIT(2)
+> > >
+> > > I think this define should probably be local to the pinctrl driver, to
+> > > ensure that no other drivers fiddle with the registers manually.
+> >
+> > The purpose of these bits is for a driver to fiddle with them to select
+> > the input source. Similar on imx7 it's already used for e.g. the phy
+> > refclk in the pci controller:
+> >
+> >     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pci-imx6.c#n638
 > 
->> With the increasing use of dedicated CrOS EC MCUs, it takes a fair amount
->> of boiler plate code to add those devices, add a struct that can be used
->> to specify a dedicated CrOS EC MCU so we can just add a new item to it to
->> define a new dedicated MCU.
->>
->> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
->> Tested-by: Gwendal Grignou <gwendal@chromium.org>
->> ---
->>
->> Changes in v5: None
->> Changes in v4: None
->> Changes in v3: None
->> Changes in v2: None
->>
->>  drivers/mfd/cros_ec_dev.c | 87 +++++++++++++++++++++------------------
->>  1 file changed, 48 insertions(+), 39 deletions(-)
->>
->> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
->> index c6bf52d795f2..e0e18c0eb9f5 100644
->> --- a/drivers/mfd/cros_ec_dev.c
->> +++ b/drivers/mfd/cros_ec_dev.c
->> @@ -22,6 +22,41 @@ static struct class cros_class = {
->>  	.name           = "chromeos",
->>  };
->>  
->> +/**
->> + * cros_feature_to_name - CrOS feature id to name/short description.
->> + * @id: The feature identifier.
->> + * @name: Device name associated with the feature id.
->> + * @desc: Short name that will be displayed.
->> + */
->> +struct cros_feature_to_name {
->> +	unsigned int id;
->> +	const char *name;
->> +	const char *desc;
->> +};
->> +
->> +static const struct cros_feature_to_name cros_mcu_devices[] = {
->> +	{
->> +		.id	= EC_FEATURE_FINGERPRINT,
->> +		.name	= CROS_EC_DEV_FP_NAME,
->> +		.desc	= "Fingerprint",
->> +	},
->> +	{
->> +		.id	= EC_FEATURE_ISH,
->> +		.name	= CROS_EC_DEV_ISH_NAME,
->> +		.desc	= "Integrated Sensor Hub",
->> +	},
->> +	{
->> +		.id	= EC_FEATURE_SCP,
->> +		.name	= CROS_EC_DEV_SCP_NAME,
->> +		.desc	= "System Control Processor",
->> +	},
->> +	{
->> +		.id	= EC_FEATURE_TOUCHPAD,
->> +		.name	= CROS_EC_DEV_TP_NAME,
->> +		.desc	= "Touchpad",
->> +	},
->> +};
->> +
->>  static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
->>  {
->>  	struct cros_ec_command *msg;
->> @@ -278,6 +313,7 @@ static int ec_device_probe(struct platform_device *pdev)
->>  	struct device *dev = &pdev->dev;
->>  	struct cros_ec_platform *ec_platform = dev_get_platdata(dev);
->>  	struct cros_ec_dev *ec = kzalloc(sizeof(*ec), GFP_KERNEL);
->> +	int i;
->>  
->>  	if (!ec)
->>  		return retval;
->> @@ -290,47 +326,20 @@ static int ec_device_probe(struct platform_device *pdev)
->>  	ec->features[1] = -1U; /* Not cached yet */
->>  	device_initialize(&ec->class_dev);
->>  
->> -	/* Check whether this is actually a Fingerprint MCU rather than an EC */
->> -	if (cros_ec_check_features(ec, EC_FEATURE_FINGERPRINT)) {
->> -		dev_info(dev, "CrOS Fingerprint MCU detected.\n");
->> -		/*
->> -		 * Help userspace differentiating ECs from FP MCU,
->> -		 * regardless of the probing order.
->> -		 */
->> -		ec_platform->ec_name = CROS_EC_DEV_FP_NAME;
->> -	}
->> -
->> -	/*
->> -	 * Check whether this is actually an Integrated Sensor Hub (ISH)
->> -	 * rather than an EC.
->> -	 */
->> -	if (cros_ec_check_features(ec, EC_FEATURE_ISH)) {
->> -		dev_info(dev, "CrOS ISH MCU detected.\n");
->> -		/*
->> -		 * Help userspace differentiating ECs from ISH MCU,
->> -		 * regardless of the probing order.
->> -		 */
->> -		ec_platform->ec_name = CROS_EC_DEV_ISH_NAME;
->> -	}
->> -
->> -	/* Check whether this is actually a Touchpad MCU rather than an EC */
->> -	if (cros_ec_check_features(ec, EC_FEATURE_TOUCHPAD)) {
->> -		dev_info(dev, "CrOS Touchpad MCU detected.\n");
->> +	for (i = 0; i < ARRAY_SIZE(cros_mcu_devices); i++) {
->>  		/*
->> -		 * Help userspace differentiating ECs from TP MCU,
->> -		 * regardless of the probing order.
->> +		 * Check whether this is actually a dedicated MCU rather
->> +		 * than an standard EC.
->>  		 */
->> -		ec_platform->ec_name = CROS_EC_DEV_TP_NAME;
->> -	}
->> -
->> -	/* Check whether this is actually a SCP rather than an EC. */
->> -	if (cros_ec_check_features(ec, EC_FEATURE_SCP)) {
->> -		dev_info(dev, "CrOS SCP MCU detected.\n");
->> -		/*
->> -		 * Help userspace differentiating ECs from SCP,
->> -		 * regardless of the probing order.
->> -		 */
->> -		ec_platform->ec_name = CROS_EC_DEV_SCP_NAME;
->> +		if (cros_ec_check_features(ec, cros_mcu_devices[i].id)) {
->> +			dev_info(dev, "CrOS %s MCU detected\n",
->> +				 cros_mcu_devices[i].desc);
->> +			/*
->> +			 * Help userspace differentiating ECs from other MCU,
->> +			 * regardless of the probing order.
->> +			 */
->> +			ec_platform->ec_name = cros_mcu_devices[i].name;
+> That one should likely use either the clk interface or the phy
+> interface instead.
 > 
-> I assume by "dedicated MCU", you mean it can only support one of these
-> at a time?  If so, please make that clear by adding a break statement
-> once the MCU type has been determined.
+> > The GPRs are not about pad configuration but gather all sorts of things
+> > (section 8.2.4 of the imx8mq reference manual): pcie setup, dsi related
+> > bits so I don't think this should be done via a pinctrl
+> > driver. Should we handle that differently than on imx6/7?
 > 
-
-Right, will done in next version
-
-Thanks,
-Enric
-
-
->> +		}
->>  	}
->>  
->>  	/*
+> It would be nice to fix the existing code as well, but for the moment,
+> I only think we should not add more of that.
 > 
+> Generally speaking, we can use syscon to do random things that don't
+> have a subsystem of their own, but we should not use it to do things
+> that have an existing driver framework like pinctrl, clock, reset, phy
+> etc.
+
+Since it's not an external pin i opted to use MUX_MMIO instead which
+seems like a good fit here. Does that make sense?
+Cheers,
+ -- Guido
