@@ -8,103 +8,106 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6F2C3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E173C3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4558C22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D171722D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:39:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=kontais@zoho.com header.b="Lq+ncVyE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbJFB5Bl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfHUBjr (ORCPT
+        id S1726961AbfHUBj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 21:39:47 -0400
-Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25534 "EHLO
-        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfHUBjr (ORCPT
+        Tue, 20 Aug 2019 21:39:58 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37437 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbfHUBj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 21:39:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1566351579; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=fp8j31Xa/U150l7Y6Fbp1R1Sgruh3tmrn7l8PPam2TDipyKsUCznK+wYJYB0oLjpxnKqrj1iBni6Yyb6QccD2kgnL9VySTEr8RDZ0fY+EJRTQSB6TtIGb3K7aZY5v0IVgxmLaSA8m9C3snw9nszXo7vK9Gr6D5+VZ9DmDjzMufY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1566351579; h=Cc:Date:From:Message-ID:Subject:To:ARC-Authentication-Results; 
-        bh=X1s7c/q2LhXifg1IRo4YM5sxau9UteN88ivBRni95ns=; 
-        b=akJ+PnPqyhzoo0FohsHlhOFPprxL8hWejLAIkEahbv7t/ZQBUJ5PrCSijBmgiBM6W9Dg5r1aE7I6+cr9fknT0DRXj3xeG8RWqe+sAKPrTXWMgsKLPWJ6lCsHLXeaZRWn3DUPPZiXGCDztsVLfUdnqFSfpCt8Oj7MqInou2fUsD4=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=kontais@zoho.com;
-        dmarc=pass header.from=<kontais@zoho.com> header.from=<kontais@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id; 
-  b=knMUgmONZ2y/YuDnv7B7dUtCXn8BCbophzl4idit5x/E7rEhfi4A9PzcP1aSMu3bfcbBSQqgJxba
-    tJTQJl9+V2oW/czn9qtl1hoaSjPXsYEzn4SapA+3X+28AGv3LyVa  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1566351579;
-        s=zm2019; d=zoho.com; i=kontais@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id; l=1322;
-        bh=X1s7c/q2LhXifg1IRo4YM5sxau9UteN88ivBRni95ns=;
-        b=Lq+ncVyE9B0GiDGyQwLxVAJe2SkVKTdmQ24y96S+aHwDOwAPnX9ExnIR7aEtAhe+
-        dW5Z7lXicQVW/7DdSaJUIQEe5HVyhwSBl1zBbuj6LMVoUB52IP7ouSkzRlPOP36ECmo
-        AirHUhjOybKTub605M8Tzlqh1vhHcJCQUXGpdyqc=
-Received: from dev31.localdomain (103.244.59.4 [103.244.59.4]) by mx.zohomail.com
-        with SMTPS id 1566351578120361.08327538001834; Tue, 20 Aug 2019 18:39:38 -0700 (PDT)
-From:   Zhang Tao <kontais@zoho.com>
-To:     agk@redhat.com, snitzer@redhat.com
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        Zhang Tao <zhangtao27@lenovo.com>
-Subject: [PATCH] dm table: fix a potential array out of bounds
-Date:   Wed, 21 Aug 2019 09:33:31 +0800
-Message-Id: <1566351211-13280-1-git-send-email-kontais@zoho.com>
-X-Mailer: git-send-email 1.8.3.1
-X-ZohoMailClient: External
+        Tue, 20 Aug 2019 21:39:58 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bj8so402199plb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 18:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SqqKzrWZ2qS6dkegXVibW8kuKykZZ/rF7T52aZbqzg8=;
+        b=bbJFB5BlSAycA6QyAKp6liX5bCCkHw6nKRuM37P1r6OdDcraPKjWnmWclRCV/MQOtV
+         bzB9GhxXasVkGbfiddRw5PkD6dKN+BSruFLwouI2YaH8WNuGPoMaYgia41Uoaez1xmVg
+         E9dB0GT/myQ2vaChXNgSkFLl19h+Dz9LTsS1UrhnJpRS5+OqkOkBU5pZ7/8Jg8K+ADs2
+         1h0w7kxtye7pYMmzW9RrsYgF4l8zZSfAuttNxKqf9OYzEphkTETl74KqVyoOURO0wuT4
+         S8MXZ3z136bKE/BYCz24idCgEZrgA4WqupO23T12PXcp9gn1UZqV0Tfd7A3eFhO83KEd
+         j2pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SqqKzrWZ2qS6dkegXVibW8kuKykZZ/rF7T52aZbqzg8=;
+        b=toEZnDVZblhsLDhCOkLRg8fI6hTCTWUCUuzQubijqZ3izWl8EXT1ICaaPGsn+S64Yq
+         tzUhGpurZPp2PULB1+RhuZ1yshGZp5mbF1k1lp0zSDtlZRKtcGoHVViIlMag49jNLje1
+         lJuhQmLLwThZ/LjImHEtswdB8WCUXUicho1uSS1MNxXEHn+kFBj3dh+cZpZBeiqmciEW
+         8WxfpkPKHj8laQ30BhWDqjrEbrhn5Ocx1mME8j6liJZRdo/o68uk7Ph9yB2efJC7oaha
+         NG3rr0++nJKLadodIX0buxYnWNLFodTmmwHssN2OBkwefalP2TMIPjm4Jev+whz6LpaO
+         5nvw==
+X-Gm-Message-State: APjAAAVPQk1c5uByCtLsaXvQOTSZ7q8Pc91A9ap0JdUssVChlx9NDHBp
+        HXyYmAPeGqI79MUvB+V2mHY=
+X-Google-Smtp-Source: APXvYqyekUZD4O/1faXol7aGwG8dEb17vfvxxK3EHSMCKJsevlinncbzs1Jrt5AqrPAeV69oLmkbvQ==
+X-Received: by 2002:a17:902:9a8d:: with SMTP id w13mr30762630plp.157.1566351597472;
+        Tue, 20 Aug 2019 18:39:57 -0700 (PDT)
+Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
+        by smtp.gmail.com with ESMTPSA id 143sm23155295pgc.6.2019.08.20.18.39.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 18:39:56 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ARM: dts: vf610-zii-cfu1: Slow I2C0 down to 100 kHz
+Date:   Tue, 20 Aug 2019 18:39:36 -0700
+Message-Id: <20190821013936.12223-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Tao <zhangtao27@lenovo.com>
+Fiber-optic modules attached to the bus are only rated to work at
+100 kHz, so decrease the bus frequency to accommodate that.
 
-allocate num + 1 for target and offset array, n_highs need num + 1
-elements, the last element will be used for node lookup in function
-dm_table_find_target.
-
-Signed-off-by: Zhang Tao <zhangtao27@lenovo.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/md/dm-table.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 7b6c3ee..fd7f604 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -160,20 +160,22 @@ static int alloc_targets(struct dm_table *t, unsigned int num)
- {
- 	sector_t *n_highs;
- 	struct dm_target *n_targets;
-+	unsigned int alloc_num;
+Changes since [v1]:
+
+ - Spelling fixes
+
+[v1] lore.kernel.org/lkml/20190820030804.8892-1-andrew.smirnov@gmail.com
+
+ arch/arm/boot/dts/vf610-zii-cfu1.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+index ff460a1de85a..28732249cfc0 100644
+--- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
++++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+@@ -207,7 +207,7 @@
+ };
  
- 	/*
- 	 * Allocate both the target array and offset array at once.
- 	 * Append an empty entry to catch sectors beyond the end of
- 	 * the device.
- 	 */
--	n_highs = (sector_t *) dm_vcalloc(num + 1, sizeof(struct dm_target) +
-+	alloc_num = num + 1;
-+	n_highs = (sector_t *) dm_vcalloc(alloc_num, sizeof(struct dm_target) +
- 					  sizeof(sector_t));
- 	if (!n_highs)
- 		return -ENOMEM;
- 
--	n_targets = (struct dm_target *) (n_highs + num);
-+	n_targets = (struct dm_target *) (n_highs + alloc_num);
- 
--	memset(n_highs, -1, sizeof(*n_highs) * num);
-+	memset(n_highs, -1, sizeof(*n_highs) * alloc_num);
- 	vfree(t->highs);
- 
- 	t->num_allocated = num;
+ &i2c0 {
+-	clock-frequency = <400000>;
++	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c0>;
+ 	status = "okay";
 -- 
-1.8.3.1
-
+2.21.0
 
