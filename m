@@ -2,257 +2,116 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5274C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F059C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9793B2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA732332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729713AbfHUQro (ORCPT
+        id S1729730AbfHUQrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:47:44 -0400
-Received: from mga04.intel.com ([192.55.52.120]:35655 "EHLO mga04.intel.com"
+        Wed, 21 Aug 2019 12:47:46 -0400
+Received: from mga17.intel.com ([192.55.52.151]:56846 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729657AbfHUQrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:47:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1729703AbfHUQro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:47:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 09:47:39 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 09:47:44 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
-   d="scan'208";a="181083827"
-Received: from unknown (HELO pbossart-mobl3.intel.com) ([10.252.139.119])
-  by orsmga003.jf.intel.com with ESMTP; 21 Aug 2019 09:47:38 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     tiwai@suse.de, broonie@kernel.org, devicetree@vger.kernel.org,
-        Xiubo.Lee@gmail.com, shengjiu.wang@nxp.com,
-        linux-kernel@vger.kernel.org, nicoleotsuka@gmail.com,
-        robh+dt@kernel.org, linux-imx@nxp.com, viorel.suman@nxp.com,
-        festevam@gmail.com, Daniel Baluta <daniel.baluta@nxp.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [PATCH v2 2/3] ASoC: SOF: Add OF DSP device support
-Date:   Wed, 21 Aug 2019 11:47:29 -0500
-Message-Id: <20190821164730.7385-3-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190821164730.7385-1-pierre-louis.bossart@linux.intel.com>
-References: <20190821164730.7385-1-pierre-louis.bossart@linux.intel.com>
+   d="scan'208";a="196031589"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Aug 2019 09:47:41 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1i0Tlq-0002mP-Dl; Wed, 21 Aug 2019 19:47:38 +0300
+Date:   Wed, 21 Aug 2019 19:47:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, tony.luck@intel.com, x86@kernel.org,
+        alan@linux.intel.com, rppt@linux.ibm.com,
+        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
+Subject: Re: [PATCH] x86/apic: Update virtual irq base for DT/OF based system
+ as well
+Message-ID: <20190821164738.GA30120@smile.fi.intel.com>
+References: <20190821081330.1187-1-rahul.tanwar@linux.intel.com>
+ <alpine.DEB.2.21.1908211028030.2223@nanos.tec.linutronix.de>
+ <7b4db9f3-21da-5b5e-e219-0170e812a015@linux.intel.com>
+ <alpine.DEB.2.21.1908211235180.2223@nanos.tec.linutronix.de>
+ <20190821123451.GY30120@smile.fi.intel.com>
+ <alpine.DEB.2.21.1908211510390.2223@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908211510390.2223@nanos.tec.linutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+On Wed, Aug 21, 2019 at 03:16:31PM +0200, Thomas Gleixner wrote:
+> On Wed, 21 Aug 2019, Andy Shevchenko wrote:
+> > On Wed, Aug 21, 2019 at 01:20:53PM +0200, Thomas Gleixner wrote:
+> > > But x86 implements arch_dynirq_lower_bound() which overrides the core limit
+> > > and because ioapic_dynirq_base is zero in the DT case it allows VIRQ 0 to
+> > > be allocated which then causes of_irq*() to fail.
+> > > 
+> > > So your change prevents that by excluding the 'GSI' range from allocation,
+> > > which means that the first irq number which is handed out is 24, assumed
+> > > you have one IOAPIC with 24 pins.
+> > 
+> > I have tested this on the ACPI-based system where we have 55 lines of IOAPIC,
+> > no PIC, and some GPIO lines. Overall I see that nr_irqs is 512 and shifting
+> > by 55 freezes 10% of the space for nothing. Luckily we have SPARSE_IRQS
+> > selected for any X86, so, it wouldn't waste memory.
+> >
+> > I think we may do slightly better if we just limit the change to the certain
+> > cases.
+> 
+> For DT we can actually avoid that completely. See below.
+> 
+> For ACPI not unfortunately as the stupid GSI mapping is hard coded.
 
-Add support for device tree based SOF DSP devices.
+The below works better for my case, so, if you are going with that
+Tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- sound/soc/sof/Kconfig      |  10 +++
- sound/soc/sof/Makefile     |   3 +
- sound/soc/sof/sof-of-dev.c | 143 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 156 insertions(+)
- create mode 100644 sound/soc/sof/sof-of-dev.c
+> 
+> Thanks,
+> 
+> 	tglx
+> 
+> 8<-------------
+> --- a/arch/x86/kernel/apic/io_apic.c
+> +++ b/arch/x86/kernel/apic/io_apic.c
+> @@ -2438,7 +2438,13 @@ unsigned int arch_dynirq_lower_bound(uns
+>  	 * dmar_alloc_hwirq() may be called before setup_IO_APIC(), so use
+>  	 * gsi_top if ioapic_dynirq_base hasn't been initialized yet.
+>  	 */
+> -	return ioapic_initialized ? ioapic_dynirq_base : gsi_top;
+> +	if (!ioapic_initialized)
+> +		return gsi_top;
+> +	/*
+> +	 * For DT enabled machines ioapic_dynirq_base is irrelevant and not
+> +	 * updated. So simply return @from if ioapic_dynirq_base == 0.
+> +	 */
+> +	return ioapic_dynirq_base ? : from;
+>  }
+>  
+>  #ifdef CONFIG_X86_32
 
-diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
-index fb01f0ca6027..01acb580b817 100644
---- a/sound/soc/sof/Kconfig
-+++ b/sound/soc/sof/Kconfig
-@@ -36,6 +36,16 @@ config SND_SOC_SOF_ACPI
- 	  Say Y if you need this option
- 	  If unsure select "N".
- 
-+config SND_SOC_SOF_OF
-+	tristate "SOF OF enumeration support"
-+	depends on OF || COMPILE_TEST
-+	select SND_SOC_SOF
-+	select SND_SOC_SOF_OPTIONS
-+	help
-+	  This adds support for Device Tree enumeration. This option is
-+	  required to enable i.MX8 devices.
-+	  Say Y if you need this option. If unsure select "N".
-+
- config SND_SOC_SOF_OPTIONS
- 	tristate
- 	help
-diff --git a/sound/soc/sof/Makefile b/sound/soc/sof/Makefile
-index 585fb6917489..772c452d1ae2 100644
---- a/sound/soc/sof/Makefile
-+++ b/sound/soc/sof/Makefile
-@@ -5,6 +5,8 @@ snd-sof-objs := core.o ops.o loader.o ipc.o pcm.o pm.o debug.o topology.o\
- 
- snd-sof-pci-objs := sof-pci-dev.o
- snd-sof-acpi-objs := sof-acpi-dev.o
-+snd-sof-of-objs := sof-of-dev.o
-+
- snd-sof-nocodec-objs := nocodec.o
- 
- obj-$(CONFIG_SND_SOC_SOF) += snd-sof.o
-@@ -12,6 +14,7 @@ obj-$(CONFIG_SND_SOC_SOF_NOCODEC) += snd-sof-nocodec.o
- 
- 
- obj-$(CONFIG_SND_SOC_SOF_ACPI) += snd-sof-acpi.o
-+obj-$(CONFIG_SND_SOC_SOF_OF) += snd-sof-of.o
- obj-$(CONFIG_SND_SOC_SOF_PCI) += snd-sof-pci.o
- 
- obj-$(CONFIG_SND_SOC_SOF_INTEL_TOPLEVEL) += intel/
-diff --git a/sound/soc/sof/sof-of-dev.c b/sound/soc/sof/sof-of-dev.c
-new file mode 100644
-index 000000000000..28a9692974e5
---- /dev/null
-+++ b/sound/soc/sof/sof-of-dev.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-+//
-+// Copyright 2019 NXP
-+//
-+// Author: Daniel Baluta <daniel.baluta@nxp.com>
-+//
-+
-+#include <linux/firmware.h>
-+#include <linux/module.h>
-+#include <linux/pm_runtime.h>
-+#include <sound/sof.h>
-+
-+#include "ops.h"
-+
-+extern struct snd_sof_dsp_ops sof_imx8_ops;
-+
-+/* platform specific devices */
-+#if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
-+static struct sof_dev_desc sof_of_imx8qxp_desc = {
-+	.default_fw_path = "imx/sof",
-+	.default_tplg_path = "imx/sof-tplg",
-+	.nocodec_fw_filename = "sof-imx8.ri",
-+	.nocodec_tplg_filename = "sof-imx8-nocodec.tplg",
-+	.ops = &sof_imx8_ops,
-+};
-+#endif
-+
-+static const struct dev_pm_ops sof_of_pm = {
-+	SET_SYSTEM_SLEEP_PM_OPS(snd_sof_suspend, snd_sof_resume)
-+	SET_RUNTIME_PM_OPS(snd_sof_runtime_suspend, snd_sof_runtime_resume,
-+			   NULL)
-+};
-+
-+static void sof_of_probe_complete(struct device *dev)
-+{
-+	/* allow runtime_pm */
-+	pm_runtime_set_autosuspend_delay(dev, SND_SOF_SUSPEND_DELAY_MS);
-+	pm_runtime_use_autosuspend(dev);
-+	pm_runtime_enable(dev);
-+}
-+
-+static int sof_of_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	const struct sof_dev_desc *desc;
-+	/*TODO: create a generic snd_soc_xxx_mach */
-+	struct snd_soc_acpi_mach *mach;
-+	struct snd_sof_pdata *sof_pdata;
-+	const struct snd_sof_dsp_ops *ops;
-+	int ret;
-+
-+	dev_info(&pdev->dev, "DT DSP detected");
-+
-+	sof_pdata = devm_kzalloc(dev, sizeof(*sof_pdata), GFP_KERNEL);
-+	if (!sof_pdata)
-+		return -ENOMEM;
-+
-+	desc = device_get_match_data(dev);
-+	if (!desc)
-+		return -ENODEV;
-+
-+	/* get ops for platform */
-+	ops = desc->ops;
-+	if (!ops) {
-+		dev_err(dev, "error: no matching DT descriptor ops\n");
-+		return -ENODEV;
-+	}
-+
-+#if IS_ENABLED(CONFIG_SND_SOC_SOF_FORCE_NOCODEC_MODE)
-+	/* force nocodec mode */
-+	dev_warn(dev, "Force to use nocodec mode\n");
-+	mach = devm_kzalloc(dev, sizeof(*mach), GFP_KERNEL);
-+	if (!mach)
-+		return -ENOMEM;
-+	ret = sof_nocodec_setup(dev, sof_pdata, mach, desc, ops);
-+	if (ret < 0)
-+		return ret;
-+#else
-+	/* TODO: implement case where we actually have a codec */
-+	return -ENODEV;
-+#endif
-+
-+	if (mach)
-+		mach->mach_params.platform = dev_name(dev);
-+
-+	sof_pdata->machine = mach;
-+	sof_pdata->desc = desc;
-+	sof_pdata->dev = &pdev->dev;
-+	sof_pdata->platform = dev_name(dev);
-+
-+	/* TODO: read alternate fw and tplg filenames from DT */
-+	sof_pdata->fw_filename_prefix = sof_pdata->desc->default_fw_path;
-+	sof_pdata->tplg_filename_prefix = sof_pdata->desc->default_tplg_path;
-+
-+#if IS_ENABLED(CONFIG_SND_SOC_SOF_PROBE_WORK_QUEUE)
-+	/* set callback to enable runtime_pm */
-+	sof_pdata->sof_probe_complete = sof_of_probe_complete;
-+#endif
-+	 /* call sof helper for DSP hardware probe */
-+	ret = snd_sof_device_probe(dev, sof_pdata);
-+	if (ret) {
-+		dev_err(dev, "error: failed to probe DSP hardware\n");
-+		return ret;
-+	}
-+
-+#if !IS_ENABLED(CONFIG_SND_SOC_SOF_PROBE_WORK_QUEUE)
-+	sof_of_probe_complete(dev);
-+#endif
-+
-+	return ret;
-+}
-+
-+static int sof_of_remove(struct platform_device *pdev)
-+{
-+	pm_runtime_disable(&pdev->dev);
-+
-+	/* call sof helper for DSP hardware remove */
-+	snd_sof_device_remove(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sof_of_ids[] = {
-+#if IS_ENABLED(CONFIG_SND_SOC_SOF_IMX8)
-+	{ .compatible = "fsl,imx8qxp-dsp", .data = &sof_of_imx8qxp_desc},
-+#endif
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sof_of_ids);
-+
-+/* DT driver definition */
-+static struct platform_driver snd_sof_of_driver = {
-+	.probe = sof_of_probe,
-+	.remove = sof_of_remove,
-+	.driver = {
-+		.name = "sof-audio-of",
-+		.pm = &sof_of_pm,
-+		.of_match_table = sof_of_ids,
-+	},
-+};
-+module_platform_driver(snd_sof_of_driver);
-+
-+MODULE_LICENSE("Dual BSD/GPL");
 -- 
-2.20.1
+With Best Regards,
+Andy Shevchenko
+
 
