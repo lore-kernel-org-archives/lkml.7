@@ -2,119 +2,115 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F8EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0871C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED9422DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8023D22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:04:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ejyl/X8L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfHUEBx (ORCPT
+        id S1727286AbfHUED7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:01:53 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:28798 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbfHUEBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:01:53 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x7L41OHU009738;
-        Wed, 21 Aug 2019 06:01:24 +0200
-Date:   Wed, 21 Aug 2019 06:01:24 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Joe Perches <joe@perches.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: rfc: treewide scripted patch mechanism? (was: Re: [PATCH]
- Makefile: Convert -Wimplicit-fallthrough=3 to just -Wimplicit-fallthrough
- for clang)QUILT
-Message-ID: <20190821040124.GA9608@1wt.eu>
-References: <9c7a79b4d21aea52464d00c8fa4e4b92638560b6.camel@perches.com>
- <CAHk-=wiL7jqYNfYrNikgBw3byY+Zn37-8D8yR=WUu0x=_2BpZA@mail.gmail.com>
- <6a5f470c1375289908c37632572c4aa60d6486fa.camel@perches.com>
- <4398924f28a58fca296d101dae11e7accce80656.camel@perches.com>
- <ad42da450ccafcb571cca9289dcf52840dbb53d3.camel@perches.com>
- <20190820092451.791c85e5@canb.auug.org.au>
- <14723fccc2c3362cc045df17fc8554f37c8a8529.camel@perches.com>
- <CAHk-=wgqQKoAnhmhGE-2PBFt7oQs9LLAATKbYa573UO=DPBE0Q@mail.gmail.com>
- <edd8efd53fadd07992f804cc595c6ae5fdb60e73.camel@perches.com>
- <CAHk-=wg8vLmmwTGhXM51NpSWJW8RFEAKoXxG0Hu_Q9Uwbjj8kw@mail.gmail.com>
+        Wed, 21 Aug 2019 00:03:59 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:18780 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbfHUED7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 00:03:59 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5cc2ad0002>; Tue, 20 Aug 2019 21:03:57 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 20 Aug 2019 21:03:57 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 20 Aug 2019 21:03:57 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
+ 2019 04:03:57 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 21 Aug 2019 04:03:57 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d5cc2ac0001>; Tue, 20 Aug 2019 21:03:56 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 2/4] For Ira: tiny formatting tweak to kerneldoc
+Date:   Tue, 20 Aug 2019 21:03:53 -0700
+Message-ID: <20190821040355.19566-2-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <20190821040355.19566-1-jhubbard@nvidia.com>
+References: <20190821040355.19566-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wg8vLmmwTGhXM51NpSWJW8RFEAKoXxG0Hu_Q9Uwbjj8kw@mail.gmail.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566360237; bh=N6ccyzf5PMKW+koaJVWa/WJ5yd4Gtcd+1v71ttVDCNg=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=ejyl/X8LGp01d3V/HJlJwY+MWLCCvGZ39TTEg9R9pYbOpOmFI0ccB+jQnpnh9VgIH
+         dhWOd9LD5FqATRk2iyAHYsquSGNX0Xo2wNigIAsNVWdBCRelcHUQQsxpIQxXl0Rs3j
+         aJKpdDavlZNbpn9cPq29Qnxefgfefjf45gDj4mhxS9r1YIpIiIiRhBbZyOALotnhL/
+         zCqK+dG9WRz+1OGythS2WTZ2NiWsRhGnj9KI4bY1dIRXHMU9RMxxX2OYaE9obDVejW
+         OYakeTAaS4XHjrpRPDWfyhbjQJ5nbOyzY6cO75mhq/xJwCHEtDrt8CK+tNaRkhsIpa
+         pEMwZF6ZD4oTQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 05:43:27PM -0700, Linus Torvalds wrote:
-> I would seriously suggest doing something like
-> 
->    copy_string( dst, dstsize, src, srcsize, FLAGS );
-> 
-> where FLAGS migth be "pad" or whatever. Make it return the size of the
-> resulting string, because while it can be convenient to pass 'dst" on,
-> it's not useful.
+For your vaddr_pin_pages() and vaddr_unpin_pages().
+Just merge it into wherever it goes please. Didn't want to
+cause merge problems so it's a separate patch-let.
 
-I actually like this a lot. FLAGS could also indicate whether or not a
-zero before srcsize ends the copy or not, allowing to copy substrings
-of known length or known valid strings of unknown length by passing ~0
-in srcsize. And it could also indicate whether the returned value should
-indicate how much was copied or how much would have been needed for the
-copy to work (so that testing (result <= dstsize) indicates truncation).
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ mm/gup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> And then maybe just add the helper macro that turns an array into a
-> "pointer, size" combination, rather than yet another letter jumble.
+diff --git a/mm/gup.c b/mm/gup.c
+index 56421b880325..e49096d012ea 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2465,7 +2465,7 @@ int get_user_pages_fast(unsigned long start, int nr_p=
+ages,
+ EXPORT_SYMBOL_GPL(get_user_pages_fast);
+=20
+ /**
+- * vaddr_pin_pages pin pages by virtual address and return the pages to th=
+e
++ * vaddr_pin_pages() - pin pages by virtual address and return the pages t=
+o the
+  * user.
+  *
+  * @addr: start address
+@@ -2505,7 +2505,7 @@ long vaddr_pin_pages(unsigned long addr, unsigned lon=
+g nr_pages,
+ EXPORT_SYMBOL(vaddr_pin_pages);
+=20
+ /**
+- * vaddr_unpin_pages - counterpart to vaddr_pin_pages
++ * vaddr_unpin_pages() - counterpart to vaddr_pin_pages
+  *
+  * @pages: array of pages returned
+  * @nr_pages: number of pages in pages
+--=20
+2.22.1
 
-I did exactly this in some of my projects including haproxy, I called
-the lib "ist" for "indirect string", and found it extremely convenient
-to use because many functions now return an ist or take an ist as an
-argument. Passing a structure of only two elements results in passing
-only two registers, and that's the same for the return value. Moreover,
-the compiler is smart enough to eliminate a *lot* of manipulations, and
-to replace pointer dereferences with direct register manipulations. I
-do have a lot of ist("foo") spread everywhere in the code, which makes
-a struct ist from the string and its length, and when you look at the
-code, the compiler used immediate values for both the string and its
-length. It's also extremely convenient for string comparisons and
-lookups because you start by checking the length and can eliminate
-lookups and dereferences, making keyword parsers very efficient. It
-also allows us to have an istcat() function doing like strncat() but
-with the output size always known so that there's no risk of appending
-past the end when the starting point doesn't match the beginning of a
-string.
-
-I must confess that I became quite addict to using this because it's
-so much convenient not to have to care about string length nor zero
-termination anymore, without the overhead of calling strlen() on
-resulting values!
-
-For illustration of the simplicity the code is here :
-    http://git.haproxy.org/?p=haproxy.git;a=blob_plain;f=include/common/ist.h
-
-And here are a few examples of usage:
-  - declaration in arrays:
-    http://git.haproxy.org/?p=haproxy.git;a=blob;f=contrib/prometheus-exporter/service-prometheus.c;h=9b9ef2ea8e2e8ee0cc63364500d39fc08009fb8d;hb=HEAD#l644
-  - appending to a string:
-    http://git.haproxy.org/?p=haproxy.git;a=blob;f=contrib/prometheus-exporter/service-prometheus.c;h=9b9ef2ea8e2e8ee0cc63364500d39fc08009fb8d;hb=HEAD#l1112
-  - passing as function arguments:
-    http://git.haproxy.org/?p=haproxy.git;a=blob;f=src/http_ana.c;h=b2069e3ead59e7bcde45ac76a1c6b0b6b5fb3882;hb=HEAD#l2468
-    http://git.haproxy.org/?p=haproxy.git;a=blob;f=src/http_ana.c;h=b2069e3ead59e7bcde45ac76a1c6b0b6b5fb3882;hb=HEAD#l2602
-  - checking for known values:
-    http://git.haproxy.org/?p=haproxy.git;a=blob;f=src/h2.c;h=c41da8e5ee116e75e4719709527511c299a3657c;hb=HEAD#l295
-
-I'm personally totally convinced by this approach and am slowly improving
-this interface to progressively use it everywhere, and quite frankly I
-can only strongly recommend going into the same direction for ease of
-use, safety, and efficiency.
-
-Willy
