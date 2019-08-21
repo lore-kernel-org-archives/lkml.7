@@ -2,98 +2,98 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB41C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A83C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10F9922DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18762206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:13:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OR1LHhnA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfHUELM (ORCPT
+        id S1727539AbfHUENY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:11:12 -0400
-Received: from ajax.cs.uga.edu ([128.192.4.6]:44078 "EHLO ajax.cs.uga.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbfHUELM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:11:12 -0400
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-        (authenticated bits=0)
-        by ajax.cs.uga.edu (8.14.4/8.14.4) with ESMTP id x7L4B95u068890
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 21 Aug 2019 00:11:10 -0400
-Received: by mail-lj1-f182.google.com with SMTP id e24so769093ljg.11;
-        Tue, 20 Aug 2019 21:11:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAUq0yZzL6KKQVRoSD/MJUT2YKYwNFKyrZDwhnZCArGHxDque/jE
-        Hlxe7elNUqmlR79Bwfc1FqIPCqIVxhjkxtiCQIs=
-X-Google-Smtp-Source: APXvYqyyYoE6BFoFjTkA2zz1wluz3q243WVH3e1WosI+d49h5maVbSQ2ufFUYVzX6TSOO32UnCu5k7eQ/8WRsQuAzG8=
-X-Received: by 2002:a2e:3c12:: with SMTP id j18mr1434819lja.50.1566360669574;
- Tue, 20 Aug 2019 21:11:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAAa=b7ft-crBJm+H9U7Bn2dcgfjQsE8o53p2ryBWK3seQoF3Cg@mail.gmail.com>
- <20190815.134230.1028411309377288636.davem@davemloft.net> <CAAa=b7duRXsiVBfzbvHhoU000gGh53Mme3ZKCO5SoiTdgRaXtg@mail.gmail.com>
- <20190815.135111.1048854967874803531.davem@davemloft.net>
-In-Reply-To: <20190815.135111.1048854967874803531.davem@davemloft.net>
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-Date:   Wed, 21 Aug 2019 00:10:33 -0400
-X-Gmail-Original-Message-ID: <CAAa=b7fc99q0JTcn2FaBaN4as3U_SMutG7J+AuqSa3xBHaPQ4Q@mail.gmail.com>
-Message-ID: <CAAa=b7fc99q0JTcn2FaBaN4as3U_SMutG7J+AuqSa3xBHaPQ4Q@mail.gmail.com>
-Subject: Re: [PATCH] net: pch_gbe: Fix memory leaks
-To:     David Miller <davem@davemloft.net>
-Cc:     Richard Fontana <rfontana@redhat.com>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Wenwen Wang <wenwen@cs.uga.edu>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 21 Aug 2019 00:13:24 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:47122 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbfHUENW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 00:13:22 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id x7L4CeQD002060;
+        Wed, 21 Aug 2019 13:12:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x7L4CeQD002060
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566360763;
+        bh=Ffstt/8PGJwwxtxBre1W6DSDJ2YVkbwk2UqRJAoaJEE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OR1LHhnA+Er5vOgGTRCZgC6jIKc4dC9Cg8YnqwHrVxpuDe1cNnaqI+14NwtxYfVRM
+         sXbQVJgkzv+jrrZWYk5cwFWdJnrFLYbiKlbcRVlGB4OU2sASwY/0aC4spw1ahBK3aB
+         e5zW3Y8TYY/PBBBGydwMY5kGdhT0Ow/lQ3l7p/+x80OGDAFNPMkssOAb2O35zeG7f8
+         WacOTdhvNMquR4qzPDRi5Nu6/9ZR3MnMC7lp1gjAm5EWlTpFRdf+81xf9jVNMwFt/5
+         GsFcVcsNDNWllRzXFsknLgQPhPatzS5EOUyKz3XDlw3QX1EAq7vPFn5/VLv48xHoM+
+         xD48ux/rBy3kQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/4] video/logo: simplify cmd_logo
+Date:   Wed, 21 Aug 2019 13:12:36 +0900
+Message-Id: <20190821041237.23197-4-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190821041237.23197-1-yamada.masahiro@socionext.com>
+References: <20190821041237.23197-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 4:51 PM David Miller <davem@davemloft.net> wrote:
->
-> From: Wenwen Wang <wenwen@cs.uga.edu>
-> Date: Thu, 15 Aug 2019 16:46:05 -0400
->
-> > On Thu, Aug 15, 2019 at 4:42 PM David Miller <davem@davemloft.net> wrote:
-> >>
-> >> From: Wenwen Wang <wenwen@cs.uga.edu>
-> >> Date: Thu, 15 Aug 2019 16:03:39 -0400
-> >>
-> >> > On Thu, Aug 15, 2019 at 3:34 PM David Miller <davem@davemloft.net> wrote:
-> >> >>
-> >> >> From: Wenwen Wang <wenwen@cs.uga.edu>
-> >> >> Date: Tue, 13 Aug 2019 20:33:45 -0500
-> >> >>
-> >> >> > In pch_gbe_set_ringparam(), if netif_running() returns false, 'tx_old' and
-> >> >> > 'rx_old' are not deallocated, leading to memory leaks. To fix this issue,
-> >> >> > move the free statements after the if branch.
-> >> >> >
-> >> >> > Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-> >> >>
-> >> >> Why would they be "deallocated"?  They are still assigned to
-> >> >> adapter->tx_ring and adapter->rx_ring.
-> >> >
-> >> > 'adapter->tx_ring' and 'adapter->rx_ring' has been covered by newly
-> >> > allocated 'txdr' and 'rxdr' respectively before this if statement.
-> >>
-> >> That only happens inside of the if() statement, that's why rx_old and
-> >> tx_old are only freed in that code path.
-> >
-> > That happens not only inside of the if statement, but also before the
-> > if statement, just after 'txdr' and 'rxdr' are allocated.
->
-> Then the assignments inside of the if() statement are redundant.
->
-> Something doesn't add up here, please make the code consistent.
+Shorten the code. It still works in the same way.
 
-Thanks for your suggestion! I will remove the assignments inside of
-the if() statement.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Wenwen
+Changes in v2: None
+
+ drivers/video/logo/Makefile | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/video/logo/Makefile b/drivers/video/logo/Makefile
+index 16f60c1e1766..7d672d40bf01 100644
+--- a/drivers/video/logo/Makefile
++++ b/drivers/video/logo/Makefile
+@@ -22,20 +22,15 @@ pnmtologo := scripts/pnmtologo
+ 
+ # Create commands like "pnmtologo -t mono -n logo_mac_mono -o ..."
+ quiet_cmd_logo = LOGO    $@
+-	cmd_logo = $(pnmtologo) \
+-			-t $(patsubst $*_%,%,$(notdir $(basename $<))) \
+-			-n $(notdir $(basename $<)) -o $@ $<
++      cmd_logo = $(pnmtologo) -t $(lastword $(subst _, ,$*)) -n $* -o $@ $<
+ 
+-$(obj)/%_mono.c: $(src)/%_mono.pbm $(pnmtologo) FORCE
++$(obj)/%.c: $(src)/%.pbm $(pnmtologo) FORCE
+ 	$(call if_changed,logo)
+ 
+-$(obj)/%_vga16.c: $(src)/%_vga16.ppm $(pnmtologo) FORCE
++$(obj)/%.c: $(src)/%.ppm $(pnmtologo) FORCE
+ 	$(call if_changed,logo)
+ 
+-$(obj)/%_clut224.c: $(src)/%_clut224.ppm $(pnmtologo) FORCE
+-	$(call if_changed,logo)
+-
+-$(obj)/%_gray256.c: $(src)/%_gray256.pgm $(pnmtologo) FORCE
++$(obj)/%.c: $(src)/%.pgm $(pnmtologo) FORCE
+ 	$(call if_changed,logo)
+ 
+ # generated C files
+-- 
+2.17.1
+
