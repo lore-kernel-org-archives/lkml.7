@@ -2,68 +2,92 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661FFC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0326C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370E52339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B73233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566419710;
-	bh=byosRMy9yjMEJVYHDr9LnIWQHMeLco4XAsvQgbkT8HY=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Rgz1blWhp7mVgQ13Pneg7H/5rRPPjF303hetzb6vmBnrPZrWubnN5Zv2f8sJiKodl
-	 Sr1YL8r/phuNWIZKKsIkt9v+HIKosOLSk3iP56DP2OuW/wjJyR31exSG51Eh1MCQki
-	 +V2dermPj+XBlCoOFE7e0p3oZqYo/DowBj1cCc4Q=
+	s=default; t=1566419722;
+	bh=gOqJS1q/idvMELRUuxUqrOgXTwrpAjDPdLAiccrknkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b9ZLX5qvZPGwlMBvwwMM5DjLfzuGhm8RCqnTOCl2f1tpUpJLKN4NRqUzHnwOWmAP9
+	 jr2dCL9SxHffJG5bNvIJ9jwtUuOH/OVjxFsg1z6jZ2/1y9T6XGduY5/Xt08ANtAp1l
+	 7KAWbi+iK3WD7etZSaJNt5D1n9l4yPJRisFQPxBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730290AbfHUUfJ (ORCPT
+        id S1730447AbfHUUfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 16:35:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728485AbfHUUfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 16:35:08 -0400
-Subject: Re: [GIT PULL] KVM fixes for Linux 5.3-rc6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566419707;
-        bh=byosRMy9yjMEJVYHDr9LnIWQHMeLco4XAsvQgbkT8HY=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Ayqb/KU+hHEIHw1CjpGfMeF40sfB+fL/9XSzryNzRObID2ozCvf2MYukfXeMmn95+
-         sq6Etz3BBMqYCdKVHzw7pnldfZH8yRBylaULEecIg3LwO9yNrxIvBjYFWCKlUqRl5J
-         mBx+N2TL/iZyVGHaswHb7d/nrMCR9vQa2YVMe9io=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1566409010-50104-1-git-send-email-pbonzini@redhat.com>
-References: <1566409010-50104-1-git-send-email-pbonzini@redhat.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1566409010-50104-1-git-send-email-pbonzini@redhat.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/virt/kvm/kvm.git
- tags/for-linus
-X-PR-Tracked-Commit-Id: e4427372398c31f57450565de277f861a4db5b3b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: bb7ba8069de933d69cb45dd0a5806b61033796a3
-Message-Id: <156641970785.4116.12918708167716551553.pr-tracker-bot@kernel.org>
-Date:   Wed, 21 Aug 2019 20:35:07 +0000
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        rkrcmar@redhat.com, kvm@vger.kernel.org
+        Wed, 21 Aug 2019 16:35:21 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36087 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730350AbfHUUfV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 16:35:21 -0400
+Received: by mail-oi1-f194.google.com with SMTP id n1so2658933oic.3;
+        Wed, 21 Aug 2019 13:35:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h2MDZ1JBql5nn79XJfoA+yrBiCUG11jsLb+GXd+rHrM=;
+        b=ZL0oax6d3PNkHuoF4FltAGleXI4dXwiewS6H1WKkHSmiVzNJ7e/M4Zo6Zc+nBe1MRr
+         1qL0M0u/QN8/4mYQOLKkXM0fIkZkoUzBlvDvJ7RfjoaCcoXbca0Qh3E1BCYo3+i2brsX
+         BsHaPxPoAXT9oULvjlkdBgNQ5vwhUW2wa9s9+PnvPyYjvSeQs0d0yAmQF7IXhB+7Yx+j
+         Veomo89JaE75jlwChplaczWQdVf/bbPUdtX/ov/VKi8krxgEj52GnGWIVNxVXynKEwYV
+         mNBZIOAcq35cnAAcKfVQdIxBnyNe6gTUQ92JP+9RSHAJjqtMbyS38GRMmE2OmBLTOORQ
+         C8Gw==
+X-Gm-Message-State: APjAAAUh7h6M5LM+uuE782Yap/qg1t9ZbGhIT9hUZwQp/YNmC8RmD3mC
+        uF9RPH1HfRnkObQcQtkPEg==
+X-Google-Smtp-Source: APXvYqwILWH5tWD+Ejh/Q5e8CQ+0m5rPo0bGWRzfqOdxJnwtqq4DpPe/5Sg2e6S6WGL2EmpEOUmWpg==
+X-Received: by 2002:aca:d650:: with SMTP id n77mr1414451oig.129.1566419720019;
+        Wed, 21 Aug 2019 13:35:20 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r8sm7788484oti.76.2019.08.21.13.35.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 13:35:19 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 15:35:18 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Subject: Re: [RESEND PATCH v5 4/4] dt-bindings: devfreq: exynos-bus: remove
+ unused property
+Message-ID: <20190821203518.GA12770@bogus>
+References: <20190808090234.12577-1-k.konieczny@partner.samsung.com>
+ <CGME20190808090252eucas1p1be186b7a34fa75073fddca120c292f04@eucas1p1.samsung.com>
+ <20190808090234.12577-5-k.konieczny@partner.samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808090234.12577-5-k.konieczny@partner.samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 21 Aug 2019 19:36:50 +0200:
+On Thu, Aug 08, 2019 at 11:02:34AM +0200, Kamil Konieczny wrote:
+> Remove unused DT property "exynos,voltage-tolerance".
+> 
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/devfreq/exynos-bus.txt | 2 --
+>  1 file changed, 2 deletions(-)
 
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bb7ba8069de933d69cb45dd0a5806b61033796a3
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Acked-by: Rob Herring <robh@kernel.org>
