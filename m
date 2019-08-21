@@ -2,99 +2,110 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B95EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4757FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0968022DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10D8122DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BEhNKnjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfHUSg0 (ORCPT
+        id S1727689AbfHUShX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:36:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56843 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbfHUSg0 (ORCPT
+        Wed, 21 Aug 2019 14:37:23 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49656 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfHUShX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:36:26 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i0VSx-0003HL-QR; Wed, 21 Aug 2019 20:36:15 +0200
-Date:   Wed, 21 Aug 2019 20:36:14 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: consolidate pgtable_cache_init() and
- pgd_cache_init()
-In-Reply-To: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
-Message-ID: <alpine.DEB.2.21.1908212035200.1983@nanos.tec.linutronix.de>
-References: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 21 Aug 2019 14:37:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kf5RXBkUmZn7pYyHjsUy7iUP0/zAm+AtDOJimInXYXs=; b=BEhNKnjIl46aLd+b4OgF/NX5h
+        ViFJqdjHv2mz1fZq9Ct4OdFlbFaTh/+EY5D4JsJOLnbizBXD2BsHmoUaIbPBUSMjPodqk7/g7LNmp
+        1uxQjBeGnINhsh9WmGcBH69M3N4RtkBqn8o3ahkrevXa4z3MU9P2yQisVu/1cQbQxpnUxhTewbP5h
+        YJVraVRCnStM8Z5Vu5E2pVzO2AKRp6+U/qyivZfCd8L+rzQUBJ6Mh1m9XeFHnrAXBE50x+c/3Rwkh
+        +RhygbFOwCMDeachMiUjqAUhAo201m3r19dlg6ont+NIiHacLx1cB8QmitQOML8Ky2SzPvzkpX24C
+        3a+t0A1Ig==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0VTx-0002D2-G4; Wed, 21 Aug 2019 18:37:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6AD5F307456;
+        Wed, 21 Aug 2019 20:36:42 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 040CD20A978FE; Wed, 21 Aug 2019 20:37:13 +0200 (CEST)
+Date:   Wed, 21 Aug 2019 20:37:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Peng Liu <iwtbavbm@gmail.com>, linux-kernel@vger.kernel.org,
+        mingo@redhat.com
+Subject: Re: [PATCH] sched/fair: eliminate redundant code in sched_slice()
+Message-ID: <20190821183713.GF2349@hirez.programming.kicks-ass.net>
+References: <20190816141202.GA3135@iZj6chx1xj0e0buvshuecpZ>
+ <20190821151523.lwazjd2d6rp5otdh@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821151523.lwazjd2d6rp5otdh@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019, Mike Rapoport wrote:
-> diff --git a/arch/x86/include/asm/pgtable_32.h b/arch/x86/include/asm/pgtable_32.h
-> index b9b9f8a..0dca7f7 100644
-> --- a/arch/x86/include/asm/pgtable_32.h
-> +++ b/arch/x86/include/asm/pgtable_32.h
-> @@ -29,7 +29,6 @@ extern pgd_t swapper_pg_dir[1024];
->  extern pgd_t initial_page_table[1024];
->  extern pmd_t initial_pg_pmd[];
->  
-> -static inline void pgtable_cache_init(void) { }
->  void paging_init(void);
->  void sync_initial_page_table(void);
->  
-> diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
-> index a26d2d5..0b6c4042 100644
-> --- a/arch/x86/include/asm/pgtable_64.h
-> +++ b/arch/x86/include/asm/pgtable_64.h
-> @@ -241,8 +241,6 @@ extern void cleanup_highmap(void);
->  #define HAVE_ARCH_UNMAPPED_AREA
->  #define HAVE_ARCH_UNMAPPED_AREA_TOPDOWN
->  
-> -#define pgtable_cache_init()   do { } while (0)
-> -
->  #define PAGE_AGP    PAGE_KERNEL_NOCACHE
->  #define HAVE_PAGE_AGP 1
->  
-> diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-> index 73757bc..3e4b903 100644
-> --- a/arch/x86/mm/pgtable.c
-> +++ b/arch/x86/mm/pgtable.c
-> @@ -357,7 +357,7 @@ static void pgd_prepopulate_user_pmd(struct mm_struct *mm,
->  
->  static struct kmem_cache *pgd_cache;
->  
-> -void __init pgd_cache_init(void)
-> +void __init pgtable_cache_init(void)
->  {
->  	/*
->  	 * When PAE kernel is running as a Xen domain, it does not use
-> @@ -402,10 +402,6 @@ static inline void _pgd_free(pgd_t *pgd)
->  }
->  #else
->  
-> -void __init pgd_cache_init(void)
-> -{
-> -}
+On Wed, Aug 21, 2019 at 04:15:24PM +0100, Qais Yousef wrote:
+> On 08/16/19 22:12, Peng Liu wrote:
+> > Since sched_slice() is used in high frequency,
+> > small change should also make sense.
+> > 
+> > Signed-off-by: Peng Liu <iwtbavbm@gmail.com>
+> > ---
+> >  kernel/sched/fair.c | 11 ++++-------
+> >  1 file changed, 4 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 1054d2cf6aaa..6ae2a507aac0 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -694,19 +694,16 @@ static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+> >  	u64 slice = __sched_period(cfs_rq->nr_running + !se->on_rq);
+> >  
+> >  	for_each_sched_entity(se) {
+> > -		struct load_weight *load;
+> >  		struct load_weight lw;
+> >  
+> >  		cfs_rq = cfs_rq_of(se);
+> > -		load = &cfs_rq->load;
+> > +		lw = cfs_rq->load;
+> >  
+> > -		if (unlikely(!se->on_rq)) {
+> > +		if (unlikely(!se->on_rq))
+> >  			lw = cfs_rq->load;
+> >  
+> > -			update_load_add(&lw, se->load.weight);
+> > -			load = &lw;
+> > -		}
+> > -		slice = __calc_delta(slice, se->load.weight, load);
+> > +		update_load_add(&lw, se->load.weight);
+> > +		slice = __calc_delta(slice, se->load.weight, &lw);
+> 
+> Unless I misread the diff, you changed the behavior.
+> 
+> update_load_add() is only called if (unlikely(!se->on_rq)), but with your
+> change it is called unconditionally. And lw is set twice.
+> 
+> I think what you intended is this?
 
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+So I'd really rather hold off on this; Rik is poking at getting rid of
+all of this hierarchical crud in one go.
