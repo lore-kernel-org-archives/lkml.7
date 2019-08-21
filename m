@@ -2,89 +2,87 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB980C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CB3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5642082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85CA23426
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566391043;
+	bh=sQtc99n9rRVj8D9SFfy24t3qFQlV+7rKUNuVbRXs2Po=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DVtpuP26jzTpPtiXwLkDYNq5C22nKt5Ui156No6Of4N8EXymUU18vI55ZBrO0OEnA
+	 x8vBiOqKMPd4cBdLSQSAvWVu0n0aPsJXjRTYG0SL/8GlTa3KH6gxB71+2+iXIbmuEy
+	 Wr1CnD5FCdPC0cSWNzbkOFbOaI/udTeeOvW4aBe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbfHUMfc (ORCPT
+        id S1728445AbfHUMhW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 08:35:32 -0400
-Received: from www62.your-server.de ([213.133.104.62]:42416 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726227AbfHUMfc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 08:35:32 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1i0Ppg-0007MX-QA; Wed, 21 Aug 2019 14:35:20 +0200
-Received: from [2a02:120b:2c12:c120:71a0:62dd:894c:fd0e] (helo=pc-66.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1i0Ppg-000PkR-Hr; Wed, 21 Aug 2019 14:35:20 +0200
-Subject: Re: [PATCH bpf-next v2 0/3] xdpsock: allow mmap2 usage for 32bits
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        magnus.karlsson@intel.com, bjorn.topel@intel.com
-Cc:     davem@davemloft.net, hawk@kernel.org, john.fastabend@gmail.com,
-        jakub.kicinski@netronome.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, xdp-newbies@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jlemon@flugsvamp.com, yhs@fb.com,
-        andrii.nakryiko@gmail.com
-References: <20190815121356.8848-1-ivan.khoronzhuk@linaro.org>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <95fb201c-1623-149b-a72e-ed4860f742e1@iogearbox.net>
-Date:   Wed, 21 Aug 2019 14:35:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 21 Aug 2019 08:37:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbfHUMhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 08:37:22 -0400
+Received: from localhost (unknown [12.166.174.13])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A3C22089E;
+        Wed, 21 Aug 2019 12:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566391041;
+        bh=sQtc99n9rRVj8D9SFfy24t3qFQlV+7rKUNuVbRXs2Po=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1zvQJ/1pwLq4AnhKEGIvvGaPF0Li5LSZSjzUGFx0viyRSwCik522s2wjgIHXBXKcr
+         hHqFRhr8K+C5+X9suJ4rd2Ea62nBiQCc861xei+lorhE/g8U8TlxVfBCBYd9MDkQXh
+         tWaU7R/YY8+3fEgL5goOhw2WcLaeTXsglmjMb2Lk=
+Date:   Wed, 21 Aug 2019 05:37:20 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Matthias Maennich <maennich@google.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        arnd@arndb.de, geert@linux-m68k.org, hpa@zytor.com,
+        jeyu@kernel.org, joel@joelfernandes.org,
+        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
+        maco@android.com, maco@google.com, michal.lkml@markovi.net,
+        mingo@redhat.com, oneukum@suse.com, pombredanne@nexb.com,
+        sam@ravnborg.org, sspatil@google.com, stern@rowland.harvard.edu,
+        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
+        x86@kernel.org, yamada.masahiro@socionext.com
+Subject: Re: [PATCH v3 09/11] usb-storage: remove single-use define for
+ debugging
+Message-ID: <20190821123720.GA4059@kroah.com>
+References: <20190813121733.52480-1-maennich@google.com>
+ <20190821114955.12788-1-maennich@google.com>
+ <20190821114955.12788-10-maennich@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190815121356.8848-1-ivan.khoronzhuk@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25548/Wed Aug 21 10:27:18 2019)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821114955.12788-10-maennich@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/15/19 2:13 PM, Ivan Khoronzhuk wrote:
-> This patchset contains several improvements for af_xdp socket umem
-> mappings for 32bit systems. Also, there is one more patch outside of
-> this series that on linux-next tree and related to mmap2 af_xdp umem
-> offsets: "mm: mmap: increase sockets maximum memory size pgoff for 32bits"
-> https://lkml.org/lkml/2019/8/12/549
+On Wed, Aug 21, 2019 at 12:49:24PM +0100, Matthias Maennich wrote:
+> USB_STORAGE was defined as "usb-storage: " and used in a single location
+> as argument to printk. In order to be able to use the name
+> 'USB_STORAGE', drop the definition and use the string directly for the
+> printk call.
 > 
-> Based on bpf-next/master
-> 
-> Prev: https://lkml.org/lkml/2019/8/13/437
-> 
-> v2..v1:
-> 	- replaced "libbpf: add asm/unistd.h to xsk to get __NR_mmap2" on
-> 	 "libbpf: use LFS (_FILE_OFFSET_BITS) instead of direct mmap2
-> 	 syscall"
-> 	- use vmap along with page_address to avoid overkill
-> 	- define mmap syscall trace5 for mmap if defined
-> 
-> Ivan Khoronzhuk (3):
->    libbpf: use LFS (_FILE_OFFSET_BITS) instead of direct mmap2 syscall
->    xdp: xdp_umem: replace kmap on vmap for umem map
->    samples: bpf: syscal_nrs: use mmap2 if defined
-> 
->   net/xdp/xdp_umem.c         | 36 +++++++++++++++++++++++-----
->   samples/bpf/syscall_nrs.c  |  6 +++++
->   samples/bpf/tracex5_kern.c | 13 ++++++++++
->   tools/lib/bpf/Makefile     |  1 +
->   tools/lib/bpf/xsk.c        | 49 +++++++++++---------------------------
->   5 files changed, 64 insertions(+), 41 deletions(-)
-> 
+> Signed-off-by: Matthias Maennich <maennich@google.com>
 
-Applied, and fixed up typo in last one's subject, thanks!
+As you know, this patch is already in the usb-next tree, and will be in
+the 5.4-rc1 merge.
+
+But, as this series will end up going through a different tree than the
+usb tree, here's my reviewed-by so that it can be included with the rest
+of these patches:
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
