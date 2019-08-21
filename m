@@ -2,112 +2,88 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4176C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B5AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C44214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:51:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FF/X3xYQ"
+	by mail.kernel.org (Postfix) with ESMTP id 2B17622CE3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfHUSvf (ORCPT
+        id S1729009AbfHUSwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:51:35 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60450 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727491AbfHUSvf (ORCPT
+        Wed, 21 Aug 2019 14:52:06 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56883 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbfHUSwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:51:35 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D726153E;
-        Wed, 21 Aug 2019 20:51:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566413493;
-        bh=uyEkXtlwR/bW4mOjE8+U4TKPedBfZX8cpfEwLT8Arss=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FF/X3xYQOw4kUXu+3AkovRkLqS3XRZhVDwJVAQmjew1baXRT2W50pkhZxQbAyUMql
-         bFZqI4LJrNAwSpYSOQHMWGKq1ul4nRz7DOVbhnzdNU4n+YNg7yyEDPXC7Tm4HYjyRw
-         kbl7mIOdrLrfdfxsca+iXx8/hxgGvl6XLVE5wfmQ=
-Date:   Wed, 21 Aug 2019 21:51:27 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: OMAP DRM regression on N900
-Message-ID: <20190821185127.GD26759@pendragon.ideasonboard.com>
-References: <20190818140838.GC30291@darkstar.musicnaut.iki.fi>
- <20190821183123.GC26759@pendragon.ideasonboard.com>
- <CAHCN7xLEiH6PttR6707dSVvi4N4qZM9UyXj4b-TUqOJSboi71g@mail.gmail.com>
+        Wed, 21 Aug 2019 14:52:06 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i0Vi8-0003VO-TM; Wed, 21 Aug 2019 20:51:57 +0200
+Date:   Wed, 21 Aug 2019 20:51:55 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     John Hubbard <jhubbard@nvidia.com>
+cc:     Neil MacLeod <neil@nmacleod.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, gregkh@linuxfoundation.org
+Subject: Re: Boot failure due to: x86/boot: Save fields explicitly, zero out
+ everything else
+In-Reply-To: <900a48bf-c9fc-09bd-52a3-9e16ff8baa19@nvidia.com>
+Message-ID: <alpine.DEB.2.21.1908212047140.1983@nanos.tec.linutronix.de>
+References: <CAFbqK8m=F_90531wTiwKT4J0R+EC-3ZmqHtKCwA_2th_nVYrpg@mail.gmail.com> <900a48bf-c9fc-09bd-52a3-9e16ff8baa19@nvidia.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xLEiH6PttR6707dSVvi4N4qZM9UyXj4b-TUqOJSboi71g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+On Wed, 21 Aug 2019, John Hubbard wrote:
+> On 8/21/19 10:05 AM, Neil MacLeod wrote:
+> static void sanitize_boot_params(struct boot_params *boot_params)
+> {
+> ...
+> 		const struct boot_params_to_save to_save[] = {
+> 			BOOT_PARAM_PRESERVE(screen_info),
+> 			BOOT_PARAM_PRESERVE(apm_bios_info),
+> 			BOOT_PARAM_PRESERVE(tboot_addr),
+> 			BOOT_PARAM_PRESERVE(ist_info),
+> 			BOOT_PARAM_PRESERVE(acpi_rsdp_addr),
+> 			BOOT_PARAM_PRESERVE(hd0_info),
+> 			BOOT_PARAM_PRESERVE(hd1_info),
+> 			BOOT_PARAM_PRESERVE(sys_desc_table),
+> 			BOOT_PARAM_PRESERVE(olpc_ofw_header),
+> 			BOOT_PARAM_PRESERVE(efi_info),
+> 			BOOT_PARAM_PRESERVE(alt_mem_k),
+> 			BOOT_PARAM_PRESERVE(scratch),
+> 			BOOT_PARAM_PRESERVE(e820_entries),
+> 			BOOT_PARAM_PRESERVE(eddbuf_entries),
+> 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
+> 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
+> 			BOOT_PARAM_PRESERVE(e820_table),
+> 			BOOT_PARAM_PRESERVE(eddbuf),
+> 		};
 
-On Wed, Aug 21, 2019 at 01:45:28PM -0500, Adam Ford wrote:
-> On Wed, Aug 21, 2019 at 1:37 PM Laurent Pinchart wrote:
-> > On Sun, Aug 18, 2019 at 05:08:38PM +0300, Aaro Koskinen wrote:
-> > > Hi,
-> > >
-> > > I haven't got display working on N900 since v5.1. Bisected to:
-> > >
-> > > d17eb4537a7eb16da9eafbfd5717e12b45b77251 is the first bad commit
-> > > commit d17eb4537a7eb16da9eafbfd5717e12b45b77251
-> > > Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Date:   Wed Sep 12 19:41:31 2018 +0300
-> > >
-> > >     drm/omap: Factor out common init/cleanup code for output devices
-> >
-> > Sorry :-(
-> >
-> > I'll send a tentative fix, I'd appreciate if you could test it.
-> 
-> Can you point me to this patch?  I was in the process of
-> troubleshooting both a DM37, OMAP35 and AM35 board who all have blank
-> screens.  I'd like to try this patch too.
+I think I spotted it:
 
-https://lists.freedesktop.org/archives/dri-devel/2019-August/232222.html
+-               boot_params->acpi_rsdp_addr = 0;
 
-I forgot to CC linux-omap, I'll bounce the patch to do so now.
++ 			BOOT_PARAM_PRESERVE(acpi_rsdp_addr),
 
-> > > looks like with this commit I get only the TV out:
-> > >
-> > > $ ls -l /sys/class/drm/
-> > > total 0
-> > > lrwxrwxrwx    1 root     root             0 Aug 18 16:15 card0 -> ../../devices/platform/omapdrm.0/drm/card0
-> > > lrwxrwxrwx    1 root     root             0 Aug 18 16:15 card0-SVIDEO-1 -> ../../devices/platform/omapdrm.0/drm/card0/card0-SVIDEO-1
-> > > lrwxrwxrwx    1 root     root             0 Aug 18 16:15 renderD128 -> ../../devices/platform/omapdrm.0/drm/renderD128
-> > > -r--r--r--    1 root     root          4096 Aug 18 16:15 version
-> > >
-> > > with the previous commit both outputs are there:
-> > >
-> > > $ ls -l /sys/class/drm/
-> > > total 0
-> > > lrwxrwxrwx    1 root     root             0 Aug 18 16:28 card0 -> ../../devices/platform/omapdrm.0/drm/card0
-> > > lrwxrwxrwx    1 root     root             0 Aug 18 16:28 card0-LVDS-1 -> ../../devices/platform/omapdrm.0/drm/card0/card0-LVDS-1
-> > > lrwxrwxrwx    1 root     root             0 Aug 18 16:28 card0-SVIDEO-1 -> ../../devices/platform/omapdrm.0/drm/card0/card0-SVIDEO-1
-> > > lrwxrwxrwx    1 root     root             0 Aug 18 16:28 renderD128 -> ../../devices/platform/omapdrm.0/drm/renderD128
-> > > -r--r--r--    1 root     root          4096 Aug 18 16:28 version
-> > >
-> > > Used .config below.
-> >
-> > [snip]
+And it does not preserve 'hdr'
 
--- 
-Regards,
+Grr. I surely was too tired when staring at this last time.
 
-Laurent Pinchart
+Thanks,
+
+	tglx
