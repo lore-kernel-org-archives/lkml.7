@@ -2,313 +2,141 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 957D1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEE5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538B02070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3223A22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:48:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="c70RR87Q"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="etrBidu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbfHUKry (ORCPT
+        id S1726960AbfHUKr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:47:54 -0400
-Received: from mail-eopbgr800052.outbound.protection.outlook.com ([40.107.80.52]:31925
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726227AbfHUKrx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:47:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eLzMeCXSgrwwkMCtGbNoGiH8zWwZgMxaTguzwvVe38PWE9YFfkSO6tN6iQr/uqZSLdACkJlQvNuTpNdmLIgvevP7NSfbGYMJdzG1lyfjOt+1K079N0D2UeMlY/a6mtg2QrjS+zLzBRrGSayofU5C5RkzRgvEdM7x0KBUC31yd9vEco4QR1voF+ItptkpvMI4RJ3tLHhj+L381unXaOMlySF+e/9Dh2JeYeEgSA+z7HLnx0lV1pTFodXvVcLefbhxPjXeqJb4hv5UmktCg+2d6Xfwj/t5whl1t2TY9Az06lyuyy95nGHXNlWFIoK2OH93PxRYBeGEvlogqIRQo3eBdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JBnjKdWEUPgAVTKohrnzW5mmI8y/rqi3KnJeAGB3Zrs=;
- b=iIqrLcpf7heF0YTDsnV3+0v/NfCbR9x6m702t6P214W9q58IwNEn4Unu5pUgpBPvzvvhPL1gLPzHir+TH9G+GOOozXjCDplIUw4KKI7Sg2WOlI5Xfh8uQQNZD8eUSkwQ8y1vXbKweNLJJtSZrM1zwIZ+2qfeDwPLFXLfmWhVzRVOkhRzo81FJVC8gxm4txbBrclleianwyCAx6D7VLYLPsFJ5pFa/ThPqeTkjh2/VmE/iHMt+aGVHer9+zjZh1NfQ7pEuYIJRUqmuS19pL9aMvwgdzu4n79YDStagph5Wj6CIoQXCxs2bYXGwMX65HSLCr0+J/kXCCRidqmgo0NFSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JBnjKdWEUPgAVTKohrnzW5mmI8y/rqi3KnJeAGB3Zrs=;
- b=c70RR87QvNXsmUUi//1i1t+Hni4X6ht9gYD3CD0V66e0x5NxL0X9RaGUVVEJyuWu7mTwIGkkoFoRNFMJEGdKLSihM4ixm/euRpNx2JAlCcna5DIXFZBPfhHubNMIVVW+zCzgfcTtSjI8wV3MMlmcaQR2/oNHQLbI8YJ3PMW+XGg=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
- BYAPR03MB4821.namprd03.prod.outlook.com (20.179.93.78) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Wed, 21 Aug 2019 10:46:09 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::a517:3578:67bf:6c88]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::a517:3578:67bf:6c88%7]) with mapi id 15.20.2157.022; Wed, 21 Aug 2019
- 10:46:09 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH v3] arm64: implement KPROBES_ON_FTRACE
-Thread-Topic: [PATCH v3] arm64: implement KPROBES_ON_FTRACE
-Thread-Index: AQHVWA2kl73GxVYq50+boIG26+/rXA==
-Date:   Wed, 21 Aug 2019 10:46:09 +0000
-Message-ID: <20190821183501.33588dd8@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TYAPR01CA0022.jpnprd01.prod.outlook.com (2603:1096:404::34)
- To BYAPR03MB4773.namprd03.prod.outlook.com (2603:10b6:a03:134::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 113a43d8-d113-4612-f353-08d72624c69e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB4821;
-x-ms-traffictypediagnostic: BYAPR03MB4821:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <BYAPR03MB48214077AA6106577C7F76B6EDAA0@BYAPR03MB4821.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(396003)(366004)(39860400002)(189003)(199004)(54534003)(66446008)(64756008)(66556008)(66476007)(66946007)(966005)(53936002)(8936002)(81166006)(81156014)(25786009)(8676002)(6116002)(305945005)(4326008)(7736002)(7416002)(476003)(3846002)(26005)(54906003)(6512007)(110136005)(6306002)(1076003)(9686003)(5660300002)(256004)(66066001)(14444005)(2906002)(50226002)(71200400001)(71190400001)(6486002)(6506007)(186003)(316002)(486006)(14454004)(99286004)(102836004)(386003)(86362001)(6436002)(478600001)(52116002)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4821;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wMLARI07gkWMLIX+gnZAUhS+6K15ZQsCq5VDgnrGHOh4LrGadDH14dGMOUx1+rIQwEGwHj4gNWjDvbPqMf6C+eQZbRlL00JEfgSo14SOzzdcdfGTpmiDSS842ruRf9uwuS5anJsaeZV3yf8ePD0aYjKBHO5o2nL0w6AbNNsKIu2uXRj9u3oO7kFMDvGvo63+LijhCubnKaouZE3/FewCg0gOPp7QhNrl4OjNzJlzPRA/ET/exA4IfzJU8JNhJOQB0QykSb6MjFga3OyY32sKmfe14Ogbgw/cSZftvBXxGXl3Q9b3l5SAPGnBlm4IWR1o5tRCcipV2Rk6PqqDEk8Ha6FvzGXJk09OlzotIl1FN28uEvS1M9y94bEeZtlZ32YaP0a71/PlQ50bdsqf/RHf3q6ZrLlv7326WwaoX62S8OY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D877B70412FA9140AAC95F2EFA9450DA@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 21 Aug 2019 06:47:59 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:38820 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726227AbfHUKr7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 06:47:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1566384475; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bCAftt3lJ09+T5g6O8rgBlvklX6m4wsgkMOQe1tylGQ=;
+        b=etrBidu99dqcPni2DzX+1LekMpTbWLg2CzthJsiYXn5GFm0I9aILx7OGWMnWHW7FJFmVFU
+        s666lbabp6Q709Lxw4JvMVyeLtuFPnYNxhGOPayz1UhuvaCQkMAy7XSZPpWCG3S1DZtWbB
+        VPyMOdqq8827JcgFK5dPmMpdV0xicEQ=
+Date:   Wed, 21 Aug 2019 12:47:39 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Document JZ47xx VPU auxiliary
+ processor
+To:     Rob Herring <robh@kernel.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Burton <paul.burton@mips.com>, od@zcrc.me,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1566384459.1884.0@crapouillou.net>
+In-Reply-To: <20190820205044.GA1223@bogus>
+References: <20190729183109.18283-1-paul@crapouillou.net>
+        <20190820205044.GA1223@bogus>
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 113a43d8-d113-4612-f353-08d72624c69e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 10:46:09.1107
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DTQKeoA0hXR8Nsjm76x1ezpNuPmfu99OHIWMBVIurrQnEdfnlk0iIdA88VdsKDSdMhpUGD43guDB7Or3alNAOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4821
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KPROBES_ON_FTRACE avoids much of the overhead with regular kprobes as it
-eliminates the need for a trap, as well as the need to emulate or
-single-step instructions.
-
-Tested on berlin arm64 platform.
-
-~ # mount -t debugfs debugfs /sys/kernel/debug/
-~ # cd /sys/kernel/debug/
-/sys/kernel/debug # echo 'p _do_fork' > tracing/kprobe_events
-
-before the patch:
-
-/sys/kernel/debug # cat kprobes/list
-ffffff801009fe28  k  _do_fork+0x0    [DISABLED]
-
-after the patch:
-
-/sys/kernel/debug # cat kprobes/list
-ffffff801009ff54  k  _do_fork+0x4    [DISABLED][FTRACE]
-
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
-KPROBES_ON_FTRACE avoids much of the overhead with regular kprobes as it
-eliminates the need for a trap, as well as the need to emulate or
-single-step instructions.
-
-Applied after arm64 FTRACE_WITH_REGS:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2019-August/674404.ht=
-ml
-
-Changes since v2:
-  - remove patch1, make it a single cleanup patch
-  - remove "This patch" in the change log
-  - implement arm64's kprobe_lookup_name() and arch_kprobe_on_func_entry in=
-stead
-    patching the common kprobes code
-
-Changes since v1:
-  - make the kprobes/x86: use instruction_pointer and instruction_pointer_s=
-et
-    as patch1
-  - add Masami's ACK to patch1
-  - add some description about KPROBES_ON_FTRACE and why we need it on
-    arm64
-  - correct the log before the patch
-  - remove the consolidation patch, make it as TODO
-  - only adjust kprobe's addr when KPROBE_FLAG_FTRACE is set
-  - if KPROBES_ON_FTRACE, ftrace_call_adjust() the kprobe's addr before
-    calling ftrace_location()
-  - update the kprobes-on-ftrace/arch-support.txt in doc
+Hi Rob,
 
 
- .../debug/kprobes-on-ftrace/arch-support.txt  |  2 +-
- arch/arm64/Kconfig                            |  1 +
- arch/arm64/kernel/probes/Makefile             |  1 +
- arch/arm64/kernel/probes/ftrace.c             | 60 +++++++++++++++++++
- arch/arm64/kernel/probes/kprobes.c            | 23 +++++++
- 5 files changed, 86 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/kernel/probes/ftrace.c
+Le mar. 20 ao=FBt 2019 =E0 22:50, Rob Herring <robh@kernel.org> a =E9crit :
+> On Mon, Jul 29, 2019 at 02:31:07PM -0400, Paul Cercueil wrote:
+>>  Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs=20
+>> from
+>>  Ingenic is a second Xburst MIPS CPU very similar to the main core.
+>>  This document describes the devicetree bindings for this auxiliary
+>>  processor.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2: Update TCSM0 address in example
+>>=20
+>>   .../bindings/remoteproc/ingenic,vpu.txt       | 36=20
+>> +++++++++++++++++++
+>>   1 file changed, 36 insertions(+)
+>>   create mode 100644=20
+>> Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
+>>=20
+>>  diff --git=20
+>> a/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt=20
+>> b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
+>>  new file mode 100644
+>>  index 000000000000..576f9e582780
+>>  --- /dev/null
+>>  +++ b/Documentation/devicetree/bindings/remoteproc/ingenic,vpu.txt
+>>  @@ -0,0 +1,36 @@
+>>  +* Ingenic JZ47xx auxiliary processor
+>>  +
+>>  +Inside the Video Processing Unit (VPU) of the recent JZ47xx SoCs=20
+>> from Ingenic
+>>  +is a second Xburst MIPS CPU very similar to the main core.
+>>  +This document describes the devicetree bindings for this auxiliary=20
+>> processor.
+>>  +
+>>  +Required properties:
+>>  +- compatible: Should be "ingenic,jz4770-vpu-rproc"
+>>  +- reg: Must contain the registers location and length for:
+>>  +  * the auxiliary processor,
+>>  +  * the Tightly Coupled Shared Memory 0 (TCSM0),
+>>  +  * the Tightly Coupled Shared Memory 1 (TCSM1),
+>>  +  * the shared SRAM.
+>>  +- reg-names: Must contain "aux", "tcsm0", "tcsm1", "sram".
+>>  +- clocks: Clock specifier for the AUX and VPU clocks.
+>>  +- clock-names: Must contain "aux", "vpu".
+>>  +- interrupts: Interrupt specifier for the VPU hardware block.
+>>  +
+>>  +Example:
+>>  +
+>>  +vpu: cpu@132a0000 {
+>=20
+> cpu is reserved for CPUs under /cpus/. Use video-codec or=20
+> video-decoder
+> or ?? It's not clear what type of video processing this does.
 
-diff --git a/Documentation/features/debug/kprobes-on-ftrace/arch-support.tx=
-t b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
-index 68f266944d5f..e8358a38981c 100644
---- a/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
-+++ b/Documentation/features/debug/kprobes-on-ftrace/arch-support.txt
-@@ -9,7 +9,7 @@
-     |       alpha: | TODO |
-     |         arc: | TODO |
-     |         arm: | TODO |
--    |       arm64: | TODO |
-+    |       arm64: |  ok  |
-     |         c6x: | TODO |
-     |        csky: | TODO |
-     |       h8300: | TODO |
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 663392d1eae2..928700f15e23 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -167,6 +167,7 @@ config ARM64
- 	select HAVE_STACKPROTECTOR
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_KPROBES
-+	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_KRETPROBES
- 	select HAVE_GENERIC_VDSO
- 	select IOMMU_DMA if IOMMU_SUPPORT
-diff --git a/arch/arm64/kernel/probes/Makefile b/arch/arm64/kernel/probes/M=
-akefile
-index 8e4be92e25b1..4020cfc66564 100644
---- a/arch/arm64/kernel/probes/Makefile
-+++ b/arch/arm64/kernel/probes/Makefile
-@@ -4,3 +4,4 @@ obj-$(CONFIG_KPROBES)		+=3D kprobes.o decode-insn.o	\
- 				   simulate-insn.o
- obj-$(CONFIG_UPROBES)		+=3D uprobes.o decode-insn.o	\
- 				   simulate-insn.o
-+obj-$(CONFIG_KPROBES_ON_FTRACE)	+=3D ftrace.o
-diff --git a/arch/arm64/kernel/probes/ftrace.c b/arch/arm64/kernel/probes/f=
-trace.c
-new file mode 100644
-index 000000000000..1f0c09d02bb8
---- /dev/null
-+++ b/arch/arm64/kernel/probes/ftrace.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Dynamic Ftrace based Kprobes Optimization
-+ *
-+ * Copyright (C) Hitachi Ltd., 2012
-+ * Copyright (C) 2019 Jisheng Zhang <jszhang@kernel.org>
-+ *		      Synaptics Incorporated
-+ */
-+
-+#include <linux/kprobes.h>
-+
-+/* Ftrace callback handler for kprobes -- called under preepmt disabed */
-+void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_ip,
-+			   struct ftrace_ops *ops, struct pt_regs *regs)
-+{
-+	struct kprobe *p;
-+	struct kprobe_ctlblk *kcb;
-+
-+	/* Preempt is disabled by ftrace */
-+	p =3D get_kprobe((kprobe_opcode_t *)ip);
-+	if (unlikely(!p) || kprobe_disabled(p))
-+		return;
-+
-+	kcb =3D get_kprobe_ctlblk();
-+	if (kprobe_running()) {
-+		kprobes_inc_nmissed_count(p);
-+	} else {
-+		unsigned long orig_ip =3D instruction_pointer(regs);
-+		/* Kprobe handler expects regs->pc =3D pc + 4 as breakpoint hit */
-+		instruction_pointer_set(regs, ip + sizeof(kprobe_opcode_t));
-+
-+		__this_cpu_write(current_kprobe, p);
-+		kcb->kprobe_status =3D KPROBE_HIT_ACTIVE;
-+		if (!p->pre_handler || !p->pre_handler(p, regs)) {
-+			/*
-+			 * Emulate singlestep (and also recover regs->pc)
-+			 * as if there is a nop
-+			 */
-+			instruction_pointer_set(regs,
-+				(unsigned long)p->addr + MCOUNT_INSN_SIZE);
-+			if (unlikely(p->post_handler)) {
-+				kcb->kprobe_status =3D KPROBE_HIT_SSDONE;
-+				p->post_handler(p, regs, 0);
-+			}
-+			instruction_pointer_set(regs, orig_ip);
-+		}
-+		/*
-+		 * If pre_handler returns !0, it changes regs->pc. We have to
-+		 * skip emulating post_handler.
-+		 */
-+		__this_cpu_write(current_kprobe, NULL);
-+	}
-+}
-+NOKPROBE_SYMBOL(kprobe_ftrace_handler);
-+
-+int arch_prepare_kprobe_ftrace(struct kprobe *p)
-+{
-+	p->ainsn.api.insn =3D NULL;
-+	return 0;
-+}
-diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/=
-kprobes.c
-index c4452827419b..f2bf8c70da79 100644
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -551,6 +551,29 @@ void __kprobes __used *trampoline_probe_handler(struct=
- pt_regs *regs)
- 	return (void *)orig_ret_address;
- }
-=20
-+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
-+kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset)
-+{
-+	unsigned long addr =3D kallsyms_lookup_name(name);
-+	unsigned long faddr;
-+
-+	/*
-+	 * with -fpatchable-function-entry=3D2, the first 4 bytes is the
-+	 * LR saver, then the actual call insn. So ftrace location is
-+	 * always on the first 4 bytes offset.
-+	 */
-+	faddr =3D ftrace_location_range(addr, addr + AARCH64_INSN_SIZE);
-+	if (faddr)
-+		return (kprobe_opcode_t *)faddr;
-+	return (kprobe_opcode_t *)addr;
-+}
-+
-+bool arch_kprobe_on_func_entry(unsigned long offset)
-+{
-+	return offset <=3D AARCH64_INSN_SIZE;
-+}
-+#endif
-+
- void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
- 				      struct pt_regs *regs)
- {
---=20
-2.23.0.rc1
+Hardware decode and encode of mpeg-2 and h264. I guess I'll use=20
+'video-decoder' then.
 
 
+>=20
+>>  +	compatible =3D "ingenic,jz4770-vpu-rproc";
+>>  +
+>>  +	reg =3D <0x132a0000 0x20 /* AUX */
+>>  +		   0x132b0000 0x4000 /* TCSM0 */
+>>  +		   0x132c0000 0xc000 /* TCSM1 */
+>>  +		   0x132f0000 0x7000 /* SRAM */
+>>  +	>;
+>>  +	reg-names =3D "aux", "tcsm0", "tcsm1", "sram";
+>>  +
+>>  +	clocks =3D <&cgu JZ4770_CLK_AUX>, <&cgu JZ4770_CLK_VPU>;
+>>  +	clock-names =3D "aux", "vpu";
+>>  +
+>>  +	interrupt-parent =3D <&cpuintc>;
+>>  +	interrupts =3D <3>;
+>>  +};
+>>  --
+>>  2.21.0.593.g511ec345e18
+>>=20
+
+=
 
