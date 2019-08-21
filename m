@@ -2,169 +2,347 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EE0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF9EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B062322DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0726822DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:16:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jq+sbN/+"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ifox4zov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfHUEQh (ORCPT
+        id S1727649AbfHUEQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:16:37 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44525 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfHUEQh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:16:37 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k22so584823oiw.11;
-        Tue, 20 Aug 2019 21:16:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pMRXLSyAlcMfdfwoL80Y2c2YUHOyJGNHzi4KrIYHFcc=;
-        b=Jq+sbN/+uLDU2tt+BkRA3cof6F2A03Y5A6lujqXWYzzoSjg7uXRsGMz8LlJGz5FJ9f
-         zrxHAqcUx0hdhnrPdKJ2C+t5QFQwR342kVCqVM7+h9RRKwA6SEL7L5I4b/KmzUe4n78U
-         vQayfqLL7i/OUjE2Exlz4uYpYxZDpL+Y5+FJEASd0dx6VrCs/sfYgl3vQOGkgSMhFbdf
-         B1hvW+q6Ocn9yVEqwrdJahms0es20CxOvBSIXr87HbKn6XBVU1HMnCwovjYaK7yezu81
-         6AcR10Q5poPrSSAjXlnu2Xuzdn/AubtxkBzcGFWcGzoUW5MbRI1ewDbWHtyxoFLwLZg3
-         eETQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pMRXLSyAlcMfdfwoL80Y2c2YUHOyJGNHzi4KrIYHFcc=;
-        b=gEKbVLv8HBpRR0eSfa3BbBlM7qJjEjHYu04MFGkYKu9rXoZjjOxugcygu6qaMBR2C3
-         wCefXCxO39LEe4Yptpuoy4Tv1oNP6AJ5bkkVWQ0SC8wsC0bPoXtC+JNNXbQwNNPzBKIL
-         Y6gfEMqSYl89a0bqQ/jAUezvFdzffodQ4RBkIPew4zCTaW7JMUpSyxqTKP8lnwfv/m4/
-         Cw4ZFdt8XXlrpIOa7qdVxyQ5vVORYmoEhdlM+9UlYKZ11loD37rj/tyZZLsB8KiyrU6L
-         CFCOncQPWfDnyYRwZEtyFxkm9TgqQBevxoHegqTiR83j3au13SDyc62YMlgd5BrX1kxf
-         uG2w==
-X-Gm-Message-State: APjAAAWFaKnb4YI2W2rlF9dlu7PZRvw2GYPdSik2LuTHh64RozPGNx5y
-        zeTH7m8iVEk/+Gz+QzA72jn36U8mRolsdmOFIR/n1M0P
-X-Google-Smtp-Source: APXvYqzRADenjJAm6FhIzYAtAI/ifRbBkWNV2p7ZeXbg8KUqtUaK4H3cIg7DcF+cY2K7Ou3hs6aklm7MZnIISGZX9X4=
-X-Received: by 2002:aca:c449:: with SMTP id u70mr2525647oif.5.1566360995565;
- Tue, 20 Aug 2019 21:16:35 -0700 (PDT)
+        Wed, 21 Aug 2019 00:16:48 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56795 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727457AbfHUEQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 00:16:47 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46CvVx2lDPz9s3Z;
+        Wed, 21 Aug 2019 14:16:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566361003;
+        bh=YnvDxWQMkwXci5nApLHjLHJ7S09LLcbKy26yMzcEK9s=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Ifox4zovovh5uHxJhM5NmVCkWR388kOxuK6YxVCcqUvnL3JjsT1eI5lnIPNSiI7t2
+         TsERwtaFDJiUy1LqrN0Z980QMNYpuihVg3XKk0oYWsHRpFz0xabvXk5AlEtwfv8G/d
+         rDXFUvTncE0BM6PmS2slEKhA1jzIbx6tdvuP0GpT3chsg3m2b3mw4qt8xuNVCabIKA
+         zjULZFKkzZMhphQdJSCbkbdKJ4m9CEjzauqYzm31ghjJ0hRf/kzpvlKS9vIX0eKv7X
+         4/lZJLcx4l6uCb62NcPGegk3aqkjug6L+HVjqaMFS9aT8fGmam/o7AKuLBGpE4CUiB
+         OiQblBcUnAQtg==
+Date:   Wed, 21 Aug 2019 14:16:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Joerg Roedel <joro@8bytes.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>
+Subject: linux-next: manual merge of the iommu tree with the drm-misc tree
+Message-ID: <20190821141640.7967ddcc@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1562376411-3533-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1562376411-3533-1-git-send-email-wanpengli@tencent.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 21 Aug 2019 12:16:03 +0800
-Message-ID: <CANRm+CwU6vVj80TKhhy_tR=HVMsEeboFPYTE1s9Jm+k2bvd3rg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] KVM: LAPIC: Implement Exitless Timer
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/n04PXGM89qVzXJ9V2Le85iP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 6 Jul 2019 at 09:26, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> Dedicated instances are currently disturbed by unnecessary jitter due
-> to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
-> There is no hardware virtual timer on Intel for guest like ARM. Both
-> programming timer in guest and the emulated timer fires incur vmexits.
-> This patchset tries to avoid vmexit which is incurred by the emulated
-> timer fires in dedicated instance scenario.
->
-> When nohz_full is enabled in dedicated instances scenario, the unpinned
-> timer will be moved to the nearest busy housekeepers after commit
-> 9642d18eee2cd (nohz: Affine unpinned timers to housekeepers) and commit
-> 444969223c8 ("sched/nohz: Fix affine unpinned timers mess"). However,
-> KVM always makes lapic timer pinned to the pCPU which vCPU residents, the
-> reason is explained by commit 61abdbe0 (kvm: x86: make lapic hrtimer
-> pinned). Actually, these emulated timers can be offload to the housekeepi=
-ng
-> cpus since APICv is really common in recent years. The guest timer interr=
-upt
-> is injected by posted-interrupt which is delivered by housekeeping cpu
-> once the emulated timer fires.
->
-> The host admin should fine tuned, e.g. dedicated instances scenario w/
-> nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus
-> for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-roo=
-t
-> mode, ~3% redis performance benefit can be observed on Skylake server.
->
-> w/o patchset:
->
->             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg =
-time
->
-> EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71=
-us ( +-   1.09% )
->
-> w/ patchset:
->
->             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time       =
-  Avg time
->
-> EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72=
-us ( +-   4.02% )
->
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> Cc: Marcelo Tosatti <mtosatti@redhat.com>
->
-> v6 -> v7:
->  * remove bool argument
->
-> v5 -> v6:
->  * don't overwrites whatever the user specified
->  * introduce kvm_can_post_timer_interrupt and kvm_use_posted_timer_interr=
-upt
->  * remove kvm_hlt_in_guest() condition
->  * squash all of 2/3/4 together
->
-> v4 -> v5:
->  * update patch description in patch 1/4
->  * feed latest apic->lapic_timer.expired_tscdeadline to kvm_wait_lapic_ex=
-pire()
->  * squash advance timer handling to patch 2/4
->
-> v3 -> v4:
->  * drop the HRTIMER_MODE_ABS_PINNED, add kick after set pending timer
->  * don't posted inject already-expired timer
->
-> v2 -> v3:
->  * disarming the vmx preemption timer when posted_interrupt_inject_timer_=
-enabled()
->  * check kvm_hlt_in_guest instead
->
-> v1 -> v2:
->  * check vcpu_halt_in_guest
->  * move module parameter from kvm-intel to kvm
->  * add housekeeping_enabled
->  * rename apic_timer_expired_pi to kvm_apic_inject_pending_timer_irqs
->
->
-> Wanpeng Li (2):
->   KVM: LAPIC: Make lapic timer unpinned
->   KVM: LAPIC: Inject timer interrupt via posted interrupt
+--Sig_/n04PXGM89qVzXJ9V2Le85iP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-There is a further optimization for this feature in houseeking/hrtimer
-subsystem.
+Hi all,
 
-[1] https://lkml.org/lkml/2019/7/25/963
-[2] https://lkml.org/lkml/2019/6/28/231
+Today's linux-next merge of the iommu tree got a conflict in:
 
-The [2] patch tries to optimize the worst case, however, it will not
-be merged by maintainers and get offline confirm, Thomas will refactor
-this to avoid to predict the future on every timer enqueue. Anyway, it
-still should be considered to be backported to product environment as
-long as get_nohz_timer_target() is using.
+  drivers/gpu/drm/panfrost/panfrost_mmu.c
 
-Regards,
-Wanpeng Li
+between commit:
+
+  187d2929206e ("drm/panfrost: Add support for GPU heap allocations")
+
+from the drm-misc tree and commit:
+
+  a2d3a382d6c6 ("iommu/io-pgtable: Pass struct iommu_iotlb_gather to ->unma=
+p()")
+
+from the iommu tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/panfrost/panfrost_mmu.c
+index 842bdd7cf6be,6e8145c36e93..000000000000
+--- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
++++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+@@@ -310,18 -222,18 +310,18 @@@ void panfrost_mmu_unmap(struct panfrost
+  		size_t unmapped_page;
+  		size_t pgsize =3D get_pgsize(iova, len - unmapped_len);
+ =20
+ -		unmapped_page =3D ops->unmap(ops, iova, pgsize, NULL);
+ -		if (!unmapped_page)
+ -			break;
+ -
+ -		iova +=3D unmapped_page;
+ -		unmapped_len +=3D unmapped_page;
+ +		if (ops->iova_to_phys(ops, iova)) {
+- 			unmapped_page =3D ops->unmap(ops, iova, pgsize);
+++			unmapped_page =3D ops->unmap(ops, iova, pgsize, NULL);
+ +			WARN_ON(unmapped_page !=3D pgsize);
+ +		}
+ +		iova +=3D pgsize;
+ +		unmapped_len +=3D pgsize;
+  	}
+ =20
+ -	mmu_hw_do_operation(pfdev, 0, bo->node.start << PAGE_SHIFT,
+ +	mmu_hw_do_operation(pfdev, bo->mmu, bo->node.start << PAGE_SHIFT,
+  			    bo->node.size << PAGE_SHIFT, AS_COMMAND_FLUSH_PT);
+ =20
+ -	mutex_unlock(&pfdev->mmu->lock);
+ +	mutex_unlock(&bo->mmu->lock);
+ =20
+  	pm_runtime_mark_last_busy(pfdev->dev);
+  	pm_runtime_put_autosuspend(pfdev->dev);
+@@@ -330,184 -242,35 +330,192 @@@
+ =20
+  static void mmu_tlb_inv_context_s1(void *cookie)
+  {
+ -	struct panfrost_device *pfdev =3D cookie;
+ +	struct panfrost_file_priv *priv =3D cookie;
+ =20
+ -	mmu_hw_do_operation(pfdev, 0, 0, ~0UL, AS_COMMAND_FLUSH_MEM);
+ +	mmu_hw_do_operation(priv->pfdev, &priv->mmu, 0, ~0UL, AS_COMMAND_FLUSH_M=
+EM);
+  }
+ =20
+- static void mmu_tlb_inv_range_nosync(unsigned long iova, size_t size,
+- 				     size_t granule, bool leaf, void *cookie)
+- {}
+-=20
+  static void mmu_tlb_sync_context(void *cookie)
+  {
+  	//struct panfrost_device *pfdev =3D cookie;
+  	// TODO: Wait 1000 GPU cycles for HW_ISSUE_6367/T60X
+  }
+ =20
+- static const struct iommu_gather_ops mmu_tlb_ops =3D {
++ static void mmu_tlb_flush_walk(unsigned long iova, size_t size, size_t gr=
+anule,
++ 			       void *cookie)
++ {
++ 	mmu_tlb_sync_context(cookie);
++ }
++=20
++ static void mmu_tlb_flush_leaf(unsigned long iova, size_t size, size_t gr=
+anule,
++ 			       void *cookie)
++ {
++ 	mmu_tlb_sync_context(cookie);
++ }
++=20
++ static const struct iommu_flush_ops mmu_tlb_ops =3D {
+  	.tlb_flush_all	=3D mmu_tlb_inv_context_s1,
+- 	.tlb_add_flush	=3D mmu_tlb_inv_range_nosync,
+- 	.tlb_sync	=3D mmu_tlb_sync_context,
++ 	.tlb_flush_walk =3D mmu_tlb_flush_walk,
++ 	.tlb_flush_leaf =3D mmu_tlb_flush_leaf,
+  };
+ =20
+ +int panfrost_mmu_pgtable_alloc(struct panfrost_file_priv *priv)
+ +{
+ +	struct panfrost_mmu *mmu =3D &priv->mmu;
+ +	struct panfrost_device *pfdev =3D priv->pfdev;
+ +
+ +	mutex_init(&mmu->lock);
+ +	INIT_LIST_HEAD(&mmu->list);
+ +	mmu->as =3D -1;
+ +
+ +	mmu->pgtbl_cfg =3D (struct io_pgtable_cfg) {
+ +		.pgsize_bitmap	=3D SZ_4K | SZ_2M,
+ +		.ias		=3D FIELD_GET(0xff, pfdev->features.mmu_features),
+ +		.oas		=3D FIELD_GET(0xff00, pfdev->features.mmu_features),
+ +		.tlb		=3D &mmu_tlb_ops,
+ +		.iommu_dev	=3D pfdev->dev,
+ +	};
+ +
+ +	mmu->pgtbl_ops =3D alloc_io_pgtable_ops(ARM_MALI_LPAE, &mmu->pgtbl_cfg,
+ +					      priv);
+ +	if (!mmu->pgtbl_ops)
+ +		return -EINVAL;
+ +
+ +	return 0;
+ +}
+ +
+ +void panfrost_mmu_pgtable_free(struct panfrost_file_priv *priv)
+ +{
+ +	struct panfrost_device *pfdev =3D priv->pfdev;
+ +	struct panfrost_mmu *mmu =3D &priv->mmu;
+ +
+ +	spin_lock(&pfdev->as_lock);
+ +	if (mmu->as >=3D 0) {
+ +		clear_bit(mmu->as, &pfdev->as_alloc_mask);
+ +		clear_bit(mmu->as, &pfdev->as_in_use_mask);
+ +		list_del(&mmu->list);
+ +	}
+ +	spin_unlock(&pfdev->as_lock);
+ +
+ +	free_io_pgtable_ops(mmu->pgtbl_ops);
+ +}
+ +
+ +static struct drm_mm_node *addr_to_drm_mm_node(struct panfrost_device *pf=
+dev, int as, u64 addr)
+ +{
+ +	struct drm_mm_node *node =3D NULL;
+ +	u64 offset =3D addr >> PAGE_SHIFT;
+ +	struct panfrost_mmu *mmu;
+ +
+ +	spin_lock(&pfdev->as_lock);
+ +	list_for_each_entry(mmu, &pfdev->as_lru_list, list) {
+ +		struct panfrost_file_priv *priv;
+ +		if (as !=3D mmu->as)
+ +			continue;
+ +
+ +		priv =3D container_of(mmu, struct panfrost_file_priv, mmu);
+ +		drm_mm_for_each_node(node, &priv->mm) {
+ +			if (offset >=3D node->start && offset < (node->start + node->size))
+ +				goto out;
+ +		}
+ +	}
+ +
+ +out:
+ +	spin_unlock(&pfdev->as_lock);
+ +	return node;
+ +}
+ +
+ +#define NUM_FAULT_PAGES (SZ_2M / PAGE_SIZE)
+ +
+ +int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u6=
+4 addr)
+ +{
+ +	int ret, i;
+ +	struct drm_mm_node *node;
+ +	struct panfrost_gem_object *bo;
+ +	struct address_space *mapping;
+ +	pgoff_t page_offset;
+ +	struct sg_table *sgt;
+ +	struct page **pages;
+ +
+ +	node =3D addr_to_drm_mm_node(pfdev, as, addr);
+ +	if (!node)
+ +		return -ENOENT;
+ +
+ +	bo =3D drm_mm_node_to_panfrost_bo(node);
+ +	if (!bo->is_heap) {
+ +		dev_WARN(pfdev->dev, "matching BO is not heap type (GPU VA =3D %llx)",
+ +			 node->start << PAGE_SHIFT);
+ +		return -EINVAL;
+ +	}
+ +	WARN_ON(bo->mmu->as !=3D as);
+ +
+ +	/* Assume 2MB alignment and size multiple */
+ +	addr &=3D ~((u64)SZ_2M - 1);
+ +	page_offset =3D addr >> PAGE_SHIFT;
+ +	page_offset -=3D node->start;
+ +
+ +	mutex_lock(&bo->base.pages_lock);
+ +
+ +	if (!bo->base.pages) {
+ +		bo->sgts =3D kvmalloc_array(bo->base.base.size / SZ_2M,
+ +				     sizeof(struct sg_table), GFP_KERNEL | __GFP_ZERO);
+ +		if (!bo->sgts) {
+ +			mutex_unlock(&bo->base.pages_lock);
+ +			return -ENOMEM;
+ +		}
+ +
+ +		pages =3D kvmalloc_array(bo->base.base.size >> PAGE_SHIFT,
+ +				       sizeof(struct page *), GFP_KERNEL | __GFP_ZERO);
+ +		if (!pages) {
+ +			kfree(bo->sgts);
+ +			bo->sgts =3D NULL;
+ +			mutex_unlock(&bo->base.pages_lock);
+ +			return -ENOMEM;
+ +		}
+ +		bo->base.pages =3D pages;
+ +		bo->base.pages_use_count =3D 1;
+ +	} else
+ +		pages =3D bo->base.pages;
+ +
+ +	mapping =3D bo->base.base.filp->f_mapping;
+ +	mapping_set_unevictable(mapping);
+ +
+ +	for (i =3D page_offset; i < page_offset + NUM_FAULT_PAGES; i++) {
+ +		pages[i] =3D shmem_read_mapping_page(mapping, i);
+ +		if (IS_ERR(pages[i])) {
+ +			mutex_unlock(&bo->base.pages_lock);
+ +			ret =3D PTR_ERR(pages[i]);
+ +			goto err_pages;
+ +		}
+ +	}
+ +
+ +	mutex_unlock(&bo->base.pages_lock);
+ +
+ +	sgt =3D &bo->sgts[page_offset / (SZ_2M / PAGE_SIZE)];
+ +	ret =3D sg_alloc_table_from_pages(sgt, pages + page_offset,
+ +					NUM_FAULT_PAGES, 0, SZ_2M, GFP_KERNEL);
+ +	if (ret)
+ +		goto err_pages;
+ +
+ +	if (!dma_map_sg(pfdev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL)) {
+ +		ret =3D -EINVAL;
+ +		goto err_map;
+ +	}
+ +
+ +	mmu_map_sg(pfdev, bo->mmu, addr, IOMMU_WRITE | IOMMU_READ | IOMMU_NOEXEC=
+, sgt);
+ +
+ +	bo->is_mapped =3D true;
+ +
+ +	dev_dbg(pfdev->dev, "mapped page fault @ AS%d %llx", as, addr);
+ +
+ +	return 0;
+ +
+ +err_map:
+ +	sg_free_table(sgt);
+ +err_pages:
+ +	drm_gem_shmem_put_pages(&bo->base);
+ +	return ret;
+ +}
+ +
+  static const char *access_type_name(struct panfrost_device *pfdev,
+  		u32 fault_status)
+  {
+
+--Sig_/n04PXGM89qVzXJ9V2Le85iP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1cxagACgkQAVBC80lX
+0GwzYAf9GAsEjo5vhQgiQ5uGI/MqmbRSqmr0KmHxGvZlQLSjgPq3c2F9IH8yZOtb
+azBGbf9FKUdiZphmkAtU56t11kezwbWUIOvdYDrOy2Q8zQOMSGorZNvEEk/cwTlv
+hMJDECSchTPU3Do1HDVqusNggj3aYtkEsZsHmZb3k1skSHucYKkSYsf036ZUQKVa
+sCRpkCyfRnTcouVgdDGHSaKldh8qtBrnLinhaW9lWX+W6Ezuc+fWhLujK4ym4tXA
+vKyyiQREDiW4T1dvILErGTmT7e6jWcdx46+JSS02twLTk87ak5OtNi0AvpcmVjJR
+6+N0zY9xTJUxJRMKGmfY6UH14M7nUQ==
+=Hc8m
+-----END PGP SIGNATURE-----
+
+--Sig_/n04PXGM89qVzXJ9V2Le85iP--
