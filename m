@@ -2,239 +2,201 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4261EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC58C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 098BB22CF4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3617E22CF4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="muIvEPwl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfHUK5J (ORCPT
+        id S1727211AbfHULBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:57:09 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:48000 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726330AbfHUK5J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:57:09 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.258884-0.00885615-0.73226;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=7;RT=7;SR=0;TI=SMTPD_---.FFrRGz4_1566385024;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.FFrRGz4_1566385024)
-          by smtp.aliyun-inc.com(10.147.40.44);
-          Wed, 21 Aug 2019 18:57:04 +0800
-Date:   Wed, 21 Aug 2019 18:57:04 +0800
-From:   Mao Han <han_mao@c-sky.com>
-To:     Greentime Hu <green.hu@gmail.com>
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        paul.walmsley@sifive.com, palmer@sifive.com, hch@lst.de,
-        linux-csky@vegr.kernel.org
-Subject: Re: [PATCH V4 1/3] riscv: Add perf callchain support
-Message-ID: <20190821105704.GA8431@vmh-VirtualBox>
-References: <cover.1566290744.git.han_mao@c-sky.com>
- <820d80272fc5627b8d00e684663a614470217606.1566290744.git.han_mao@c-sky.com>
- <CAEbi=3cBu8pbHZQk9ff79DLzHurKTSAwABEfW3aT=v-1brqppg@mail.gmail.com>
+        Wed, 21 Aug 2019 07:01:30 -0400
+Received: from mail-eopbgr150047.outbound.protection.outlook.com ([40.107.15.47]:17415
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726227AbfHULB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 07:01:29 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ef0FTbP1xipACDjvKc0h5oatxzq9+XZlEYxLOR3+LA5eTEqmeVSvIGvlzAle3xMYZcwZRIcASIHO9tto5zdw8c2s7JnBVwIK/4CfqOpFMviA/lsFiLIYhoNQkpAhFpSJltupWLezyzUjKf41Sd9FcpsLcvfuOGSBKthWNMVzsM46UQ4YBFBWDlCpHKVLNe9ok2gEpDLPjK+qNqJoCWFtoeQw/K2DN5jiBXOYrFfRkiJ0d71EGfVmwhBFsr5B8qmqKk32dvyk9Gn7xKHNmV08/jakFJyLuG0zuzadqGW4EE3kcQWnWU5FuzsxEBvfU/EuWeT6qglwxKtj0Zd7M88AHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5TSkfeiTQmRDE7PvC668ZhQkKc9HMgNcYPyNDWyb9rE=;
+ b=jvars5obAaVz/WYnhbA09mUYx//E21oNjU9mmh32DZpiNJZg+iXqBIP/e+fqBirIQQuebXq1tdDEoJiWQltXMMN7Pk9puoX2PA0GNVn2RQTbZq/TFw6pFmQ9qIZaushQfX0Q5lGhTroMIWM4FMkceKL5BKtlXcBoTA6kTJGzPoAK/GI2uuqxlExmAeLdqbNlGyJWOaOMtvbgAi+fab6Tn2xzc9waD0C+YNdUxLfzuJK+3Jvjx8sHwoClVgIr1LpXcyJdDPlskhNDNQQiDTjo3zVW482S5vCt00H/PTj+x+Cno2mRFEbotg+D/6STEZ9EoEW25i6+l0K42oXYTFLlfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5TSkfeiTQmRDE7PvC668ZhQkKc9HMgNcYPyNDWyb9rE=;
+ b=muIvEPwln4jHRlQU3UcrDjs7P3Pub+vGPzF8X1Z0C3Cr30JBSbTE8f28a3G7zVUJsY2gojWDBpjDk7DDpgJRL+ikMXtaPLCqFXRrcW41uw+2iY+TdnnHzj+63xK51UMWJq6F6icalrEXdgNDoU73gv5HWaMgrqWL+St+iOLI8Ww=
+Received: from DB6PR0402MB2936.eurprd04.prod.outlook.com (10.172.248.19) by
+ DB6PR0402MB2789.eurprd04.prod.outlook.com (10.172.245.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Wed, 21 Aug 2019 11:00:46 +0000
+Received: from DB6PR0402MB2936.eurprd04.prod.outlook.com
+ ([fe80::3519:c2fc:4322:4f90]) by DB6PR0402MB2936.eurprd04.prod.outlook.com
+ ([fe80::3519:c2fc:4322:4f90%2]) with mapi id 15.20.2178.020; Wed, 21 Aug 2019
+ 11:00:46 +0000
+From:   Marco Hartmann <marco.hartmann@nxp.com>
+To:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marco Hartmann <marco.hartmann@nxp.com>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: [PATCH v2 net] Add genphy_c45_config_aneg() function to phy-c45.c
+Thread-Topic: [PATCH v2 net] Add genphy_c45_config_aneg() function to
+ phy-c45.c
+Thread-Index: AQHVWA+vyzqZh0jaqEeC/2XCAuPAwQ==
+Date:   Wed, 21 Aug 2019 11:00:46 +0000
+Message-ID: <1566385208-23523-1-git-send-email-marco.hartmann@nxp.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR04CA0022.eurprd04.prod.outlook.com
+ (2603:10a6:208:122::35) To DB6PR0402MB2936.eurprd04.prod.outlook.com
+ (2603:10a6:4:9a::19)
+x-mailer: git-send-email 2.7.4
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=marco.hartmann@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [217.111.68.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b5000d28-b5a8-4a05-ebf9-08d72626d196
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0402MB2789;
+x-ms-traffictypediagnostic: DB6PR0402MB2789:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0402MB2789A524C7DBCA69D5BD47E98CAA0@DB6PR0402MB2789.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1332;
+x-forefront-prvs: 0136C1DDA4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(346002)(396003)(136003)(189003)(199004)(64756008)(71200400001)(6512007)(486006)(71190400001)(52116002)(476003)(2616005)(3846002)(316002)(110136005)(7736002)(478600001)(6636002)(102836004)(6116002)(2501003)(53936002)(26005)(6436002)(2906002)(66556008)(44832011)(2201001)(6486002)(305945005)(55236004)(6506007)(99286004)(5660300002)(386003)(256004)(14444005)(81156014)(8676002)(66066001)(81166006)(14454004)(25786009)(66446008)(186003)(50226002)(36756003)(86362001)(66946007)(8936002)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0402MB2789;H:DB6PR0402MB2936.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: TWXpq/+jk7X8LhH6aQVuXFIuHzPtabaVNYssrjAMQfQGvtv5Jo6pi1FxwE/rg3decITc+QQU6Ndv7zgou0NZUXiwFlJDX1OMipwpubP1vABhY59rIDUual1KPLvqxq+n+yt0136R1qYkbmtMrRBNVFFvHiHMpMh0hRSDBXBSK5UoKrkOtT3HB1XTkfW9+haA1YkM+JdpCntvcBgnc2DgbU9rHBP4m18ogf7nECqXk6egqHzRoQV/VZCulY8Tg4EWvaEHOHmUV1MOJbdjGCNtoyiw7viQaP0zn+y3nhDvcJk9u2ySWOk7wQ0eIPE/68BwsKBkkuffL3Qr8yIYGiNQ/e58hfELGf5ONKGy3NEE9wzC4f9uB7Hsx2p1Spl4GAkMsKnq5SemSGGfZTgMLQeTgJvgsw6VBe9G7u4OUuJ9HMw=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <46A97D2268DB7C44A9D949A4337247ED@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEbi=3cBu8pbHZQk9ff79DLzHurKTSAwABEfW3aT=v-1brqppg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5000d28-b5a8-4a05-ebf9-08d72626d196
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 11:00:46.5125
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ksdBB8sgM+NXFs80X9pt98Y5Kjxa8nGm1KHctx0fK+oIzg6jLfycWIM1yG3NL7BHB6TVqzfyNBcfeyKKQkxyEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2789
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greentime,
-On Wed, Aug 21, 2019 at 05:16:13PM +0800, Greentime Hu wrote:
-> Hi Mao,
-> 
-> Mao Han <han_mao@c-sky.com> 於 2019年8月20日 週二 下午4:57寫道：
-> >
-> > This patch add support for perf callchain sampling on riscv platform.
-> > The return address of leaf function is retrieved from pt_regs as
-> > it is not saved in the outmost frame.
-> >
-> >
-> 
-> Not sure if I did something wrong. I encounter a build error when I
-> try to build tools/perf/tests
-> 
->   CC       arch/riscv/util/dwarf-regs.o
-> arch/riscv/util/dwarf-regs.c:64:5: error: no previous prototype for
-> ‘regs_query_register_offset’ [-Werror=missing-prototypes]
->
+Commit 34786005eca3 ("net: phy: prevent PHYs w/o Clause 22 regs from callin=
+g
+genphy_config_aneg") introduced a check that aborts phy_config_aneg()
+if the phy is a C45 phy.
+This causes phy_state_machine() to call phy_error() so that the phy
+ends up in PHY_HALTED state.
 
-This seems becasue I didn't add PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET
-in tools/perf/arch/riscv/Makefile so the prototype in
-./util/include/dwarf-regs.h is not declared. I'll add that in the next
-version.
- 
-> I simply add its prototype and it could be built pass.
-> This is my testing results.
-> # ./perf test
->  1: vmlinux symtab matches kallsyms                       : Skip
->  2: Detect openat syscall event                           : FAILED!
->  3: Detect openat syscall event on all cpus               : FAILED!
->  4: Read samples using the mmap interface                 : FAILED!
->  5: Test data source output                               : Ok
->  6: Parse event definition strings                        : FAILED!
->  7: Simple expression parser                              : Ok
->  8: PERF_RECORD_* events & perf_sample fields             : FAILED!
->  9: Parse perf pmu format                                 : Ok
-> 10: DSO data read                                         : Ok
-> 11: DSO data cache                                        : Ok
-> 12: DSO data reopen                                       : Ok
-> 13: Roundtrip evsel->name                                 : Ok
-> 14: Parse sched tracepoints fields                        : FAILED!
-> 15: syscalls:sys_enter_openat event fields                : FAILED!
-> 16: Setup struct perf_event_attr                          : FAILED!
-> 17: Match and link multiple hists                         : Ok
-> 18: 'import perf' in python                               : FAILED!
-> 
-> 19: Breakpoint overflow signal handler                    : FAILED!
-> 20: Breakpoint overflow sampling                          : FAILED!
-> 21: Breakpoint accounting                                 : Skip
-> 22: Watchpoint                                            :
-> 22.1: Read Only Watchpoint                                : FAILED!
-> 22.2: Write Only Watchpoint                               : FAILED!
-> 22.3: Read / Write Watchpoint                             : FAILED!
-> 22.4: Modify Watchpoint                                   : FAILED!
-> 23: Number of exit events of a simple workload            : Ok
-> 24: Software clock events period values                   : Ok
-> 25: Object code reading                                   : Ok
-> 26: Sample parsing                                        : Ok
-> 27: Use a dummy software event to keep tracking           : Ok
-> 28: Parse with no sample_id_all bit set                   : Ok
-> 29: Filter hist entries                                   : Ok
-> 30: Lookup mmap thread                                    : Ok
-> 31: Share thread mg                                       : Ok
-> 32: Sort output of hist entries                           : Ok
-> 33: Cumulate child hist entries                           : Ok
-> 34: Track with sched_switch                               : Ok
-> 35: Filter fds with revents mask in a fdarray             : Ok
-> 36: Add fd to a fdarray, making it autogrow               : Ok
-> 37: kmod_path__parse                                      : Ok
-> 38: Thread map                                            : Ok
-> 39: LLVM search and compile                               :
-> 39.1: Basic BPF llvm compile                              : Skip
-> 39.2: kbuild searching                                    : Skip
-> 39.3: Compile source for BPF prologue generation          : Skip
-> 39.4: Compile source for BPF relocation                   : Skip
-> 40: Session topology                                      : FAILED!
-> 41: BPF filter                                            :
-> 41.1: Basic BPF filtering                                 : Skip
-> 41.2: BPF pinning                                         : Skip
-> 41.3: BPF relocation checker                              : Skip
-> 42: Synthesize thread map                                 : Ok
-> 43: Remove thread map                                     : Ok
-> 44: Synthesize cpu map                                    : Ok
-> 45: Synthesize stat config                                : Ok
-> 46: Synthesize stat                                       : Ok
-> 47: Synthesize stat round                                 : Ok
-> 48: Synthesize attr update                                : Ok
-> 49: Event times                                           : Ok
-> 50: Read backward ring buffer                             : Skip
-> 51: Print cpu map                                         : Ok
-> 52: Probe SDT events                                      : Skip
-> 53: is_printable_array                                    : Ok
-> 54: Print bitmap                                          : Ok
-> 55: perf hooks                                            : Ok
-> 56: builtin clang support                                 : Skip (not
-> compiled in)
-> 57: unit_number__scnprintf                                : Ok
-> 58: mem2node                                              : Ok
-> 59: time utils                                            : Ok
-> 60: map_groups__merge_in                                  : Ok
-> 61: probe libc's inet_pton & backtrace it with ping       : FAILED!
-> 62: Add vfs_getname probe to get syscall args filenames   : FAILED!
-> 63: Check open filename arg using perf trace + vfs_getname: Skip
-> 64: Use vfs_getname probe to get syscall args filenames   : FAILED!
-> 65: Zstd perf.data compression/decompression              : Skip
->
+Instead of returning -EOPNOTSUPP, call genphy_c45_config_aneg()
+(analogous to the C22 case) so that the state machine can run
+correctly.
 
-The perf test result I got is quiet similar to yours, but with 5
-less testcases.
+genphy_c45_config_aneg() closely resembles mv3310_config_aneg()
+in drivers/net/phy/marvell10g.c, excluding vendor specific
+configurations for 1000BaseT.
 
- 1: vmlinux symtab matches kallsyms            : Skip
- 2: Detect openat syscall event                : FAILED!
- 3: Detect openat syscall event on all cpus    : FAILED!
- 4: Read samples using the mmap interface      : FAILED!
- 5: Test data source output                    : Ok
- 6: Parse event definition strings             : FAILED!
- 7: Simple expression parser                   : Ok
- 8: PERF_RECORD_* events & perf_sample fields  : FAILED!
- 9: Parse perf pmu format                      : Ok
-10: DSO data read                              : Ok
-11: DSO data cache                             : Ok
-12: DSO data reopen                            : Ok
-13: Roundtrip evsel->name                      : Ok
-14: Parse sched tracepoints fields             : FAILED!
-15: syscalls:sys_enter_openat event fields     : FAILED!
-16: Setup struct perf_event_attr               : Skip
-17: Match and link multiple hists              : Ok
-18: 'import perf' in python                    : Ok
-19: Breakpoint overflow signal handler         : FAILED!
-20: Breakpoint overflow sampling               : FAILED!
-21: Breakpoint accounting                      : Skip
-22: Watchpoint                                 :
-22.1: Read Only Watchpoint                     : FAILED!
-22.2: Write Only Watchpoint                    : FAILED!
-22.3: Read / Write Watchpoint                  : FAILED!
-22.4: Modify Watchpoint                        : FAILED!
-23: Number of exit events of a simple workload : Ok
-24: Software clock events period values        : Ok
-25: Object code reading                        : Ok
-26: Sample parsing                             : Ok
-27: Use a dummy software event to keep tracking: Ok
-28: Parse with no sample_id_all bit set        : Ok
-29: Filter hist entries                        : Ok
-30: Lookup mmap thread                         : Ok
-31: Share thread mg                            : Ok
-32: Sort output of hist entries                : Ok
-33: Cumulate child hist entries                : Ok
-34: Track with sched_switch                    : Ok
-35: Filter fds with revents mask in a fdarray  : Ok
-36: Add fd to a fdarray, making it autogrow    : Ok
-37: kmod_path__parse                           : Ok
-38: Thread map                                 : Ok
-39: LLVM search and compile                    :
-39.1: Basic BPF llvm compile                    : Skip
-39.2: kbuild searching                          : Skip
-39.3: Compile source for BPF prologue generation: Skip
-39.4: Compile source for BPF relocation         : Skip
-40: Session topology                           : FAILED!
-41: BPF filter                                 :
-41.1: Basic BPF filtering                      : Skip
-41.2: BPF pinning                              : Skip
-41.3: BPF relocation checker                   : Skip
-42: Synthesize thread map                      : Ok
-43: Remove thread map                          : Ok
-44: Synthesize cpu map                         : Ok
-45: Synthesize stat config                     : Ok
-46: Synthesize stat                            : Ok
-47: Synthesize stat round                      : Ok
-48: Synthesize attr update                     : Ok
-49: Event times                                : Ok
-50: Read backward ring buffer                  : Skip
-51: Print cpu map                              : Ok
-52: Probe SDT events                           : Skip
-53: is_printable_array                         : Ok
-54: Print bitmap                               : Ok
-55: perf hooks                                 : Ok
-56: builtin clang support                      : Skip (not compiled in)
-57: unit_number__scnprintf                     : Ok
-58: mem2node                                   : Ok
-59: time utils                                 : Ok
-60: map_groups__merge_in                       : Ok
+Fixes: 22b56e827093 ("net: phy: replace genphy_10g_driver with genphy_c45_d=
+river")
 
-The comparison before/after applied this patch set:
-
-/tools/perf/util# diff perf_test_before perf_test_after
-1d0
-< # perf test
-8c7
-<  7: Simple expression parser                   : FAILED!
+Signed-off-by: Marco Hartmann <marco.hartmann@nxp.com>
 ---
->  7: Simple expression parser                   : Ok
+Changes in v2:
+- corrected commit message
+- reordered variables
+---
+---
+ drivers/net/phy/phy-c45.c | 26 ++++++++++++++++++++++++++
+ drivers/net/phy/phy.c     |  2 +-
+ include/linux/phy.h       |  1 +
+ 3 files changed, 28 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
+index 58bb25e4af10..7935593debb1 100644
+--- a/drivers/net/phy/phy-c45.c
++++ b/drivers/net/phy/phy-c45.c
+@@ -523,6 +523,32 @@ int genphy_c45_read_status(struct phy_device *phydev)
+ }
+ EXPORT_SYMBOL_GPL(genphy_c45_read_status);
+=20
++/**
++ * genphy_c45_config_aneg - restart auto-negotiation or forced setup
++ * @phydev: target phy_device struct
++ *
++ * Description: If auto-negotiation is enabled, we configure the
++ *   advertising, and then restart auto-negotiation.  If it is not
++ *   enabled, then we force a configuration.
++ */
++int genphy_c45_config_aneg(struct phy_device *phydev)
++{
++	bool changed =3D false;
++	int ret;
++
++	if (phydev->autoneg =3D=3D AUTONEG_DISABLE)
++		return genphy_c45_pma_setup_forced(phydev);
++
++	ret =3D genphy_c45_an_config_aneg(phydev);
++	if (ret < 0)
++		return ret;
++	if (ret > 0)
++		changed =3D true;
++
++	return genphy_c45_check_and_restart_aneg(phydev, changed);
++}
++EXPORT_SYMBOL_GPL(genphy_c45_config_aneg);
++
+ /* The gen10g_* functions are the old Clause 45 stub */
+=20
+ int gen10g_config_aneg(struct phy_device *phydev)
+diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+index f3adea9ef400..74c4e15ebe52 100644
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -507,7 +507,7 @@ static int phy_config_aneg(struct phy_device *phydev)
+ 	 * allowed to call genphy_config_aneg()
+ 	 */
+ 	if (phydev->is_c45 && !(phydev->c45_ids.devices_in_package & BIT(0)))
+-		return -EOPNOTSUPP;
++		return genphy_c45_config_aneg(phydev);
+=20
+ 	return genphy_config_aneg(phydev);
+ }
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index d26779f1fb6b..a7ecbe0e55aa 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1117,6 +1117,7 @@ int genphy_c45_an_disable_aneg(struct phy_device *phy=
+dev);
+ int genphy_c45_read_mdix(struct phy_device *phydev);
+ int genphy_c45_pma_read_abilities(struct phy_device *phydev);
+ int genphy_c45_read_status(struct phy_device *phydev);
++int genphy_c45_config_aneg(struct phy_device *phydev);
+=20
+ /* The gen10g_* functions are the old Clause 45 stub */
+ int gen10g_config_aneg(struct phy_device *phydev);
+--=20
+2.7.4
+
