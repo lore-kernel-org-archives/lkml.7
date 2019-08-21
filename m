@@ -2,124 +2,84 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9654BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73946C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 674FF204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35071204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:54:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5HN6y3F"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Mzqj6gwE";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kAt1JtlH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfHUJx0 (ORCPT
+        id S1727558AbfHUJy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:53:26 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46826 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbfHUJxZ (ORCPT
+        Wed, 21 Aug 2019 05:54:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40750 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfHUJy4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:53:25 -0400
-Received: by mail-lf1-f65.google.com with SMTP id n19so1294948lfe.13;
-        Wed, 21 Aug 2019 02:53:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZbCWqTCCmdG6rzrJdpHlHLL1ZK/pt1TUGb23KjeYCrk=;
-        b=Z5HN6y3Fa+X293x4mbXB/cpswIJKvrRzaBdoN8a0vCex6N9RFjd75IVaZrGGGxThbu
-         kTEarpXuQ6auBxtmlw3h5/uUguyAvlmydWP8FGaTBIhM1x0h5kR1s9G6k/xwpMLvljou
-         rcevtv9bADrjXZgUZ3UsA/h4xV6+GygrrjSmlcoqHswtAA8ghRVNutm+Nnl1wnfvu6In
-         XYuDjZFj04v9ijhlVexBIFIESS0EJLXPG1lDlc3HmAIvt4SGRnGlR5RFaYk8msVPOrDX
-         bKCocPpn7osUx4RGeytTuQZiL4AZG/4ehlidKIkfYKp8prhK6FewbmPcERn1qK8FxnMx
-         xqfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZbCWqTCCmdG6rzrJdpHlHLL1ZK/pt1TUGb23KjeYCrk=;
-        b=c2OgRVdeoGVsdV9Vaco5EdN57n7g/WsxVPTgXWvzGmOTQYMhfsiDWEt0ER/V7/lP2R
-         Mi1ASpCKKQFkLrIGINJphJH/OLgkNuc9FPx2jMi0Xi1+xCPj2T8Bv7nsb7i4snqZfN/2
-         8qMdibUIO2xvUY2voM3AvYZNnkEdLYBuqUKlD1v924dVXR0UR3F+Pqv1hLSGtOBDg70Y
-         RwsiGp9ugGLvW7hk0mKNZjbJ0ahhVCzzkuQ8YAWvjHb0m+og0e75iQJQcZdetaAGXGgW
-         MIzuAPlP/iby8BcLzSU2etTImr737/HW3DoBhr/icFqAvkeJeScLmPvMPHgqGp+Fa8cj
-         JiwQ==
-X-Gm-Message-State: APjAAAWKlogoXmIwUChkBc5VZdZ+RXsXnFrB9jdSAdeb4JrnjnhzQTcP
-        qF/sWnQulTmVCGxNDq04tsiz1IrVt8HfM1xWR5k=
-X-Google-Smtp-Source: APXvYqwb2rhw7Ep1aXg+5V7885VdFhKAbEOFcIsvVA/tDR61O6uv5lTq8FlL5kROb/mZjKV9MKTSsnQzjrJUIYUChrU=
-X-Received: by 2002:ac2:5976:: with SMTP id h22mr18101434lfp.79.1566381203762;
- Wed, 21 Aug 2019 02:53:23 -0700 (PDT)
+        Wed, 21 Aug 2019 05:54:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 5811860E57; Wed, 21 Aug 2019 09:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566381294;
+        bh=+m6PesI85VHRiyOvLz4vKiz1s9xONy9t4Unf/P+i/es=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Mzqj6gwE1WbRejVhIVuj5i7SJhGI6N1V6BudengeY1TE31EEg+H1VnkmQDuYEjPcL
+         Rqo6Fj+BIIp3YabcGLggGPr8QyXuBaEbBiZalxbiRoTKUAsFXB3s+v7EtRVbwC/Se+
+         FuhfFkxk8NdxUKfjtpC3EIR25bnnOHZjVcE1onP8=
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C56FE602CA;
+        Wed, 21 Aug 2019 09:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566381293;
+        bh=+m6PesI85VHRiyOvLz4vKiz1s9xONy9t4Unf/P+i/es=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kAt1JtlHa+gG1FNGE+721h2rMCY5fpLc+2XB6L1yxIQpF+KXGT4drsjiD7ThrYZ2r
+         YkIqSMYGIbkVaRVf14j6LJcTnOKW4b4waMzwpNSL+p7jgJXVLr736Bs/ml8mbnE2Q5
+         XkgnFLNB3ret93y939U+3lE9uweqTr0d6fvNgfyY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C56FE602CA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 0/4] Add PDC Global and AOSS reset support
+Date:   Wed, 21 Aug 2019 15:24:38 +0530
+Message-Id: <20190821095442.24495-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
-References: <20190820084833.6019-1-hubert.feurstein@vahle.at>
- <20190820084833.6019-3-hubert.feurstein@vahle.at> <20190820094903.GI891@localhost>
- <CAFfN3gW-4avfnrV7t-2nC+cVt3sgMD33L44P4PGU-MCAtuR+XA@mail.gmail.com>
- <20190820142537.GL891@localhost> <20190820152306.GJ29991@lunn.ch>
- <20190820154005.GM891@localhost> <CAFfN3gUgpzMebyUt8_-9e+5vpm3q-DVVszWdkUEFAgZQ8ex73w@mail.gmail.com>
- <20190821080709.GO891@localhost>
-In-Reply-To: <20190821080709.GO891@localhost>
-From:   Hubert Feurstein <h.feurstein@gmail.com>
-Date:   Wed, 21 Aug 2019 11:53:12 +0200
-Message-ID: <CAFfN3gXtkv=YjoQixN+MdZ9vLZRPBMwg1mefuBTHFf1_QENPsg@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 2/4] net: mdio: add PTP offset compensation to mdiobus_write_sts
-To:     Miroslav Lichvar <mlichvar@redhat.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mi., 21. Aug. 2019 um 10:07 Uhr schrieb Miroslav Lichvar
-<mlichvar@redhat.com>:
-> > Currently I do not see the benefit from this. The original intention was to
-> > compensate for the remaining offset as good as possible.
->
-> That's ok, but IMHO the change should not break the assumptions of
-> existing application and users.
->
-> > The current code
-> > of phc2sys uses the delay only for the filtering of the measurement record
-> > with the shortest delay and for reporting and statistics. Why not simple shift
-> > the timestamps with the offset to the point where we expect the PHC timestamp
-> > to be captured, and we have a very good result compared to where we came
-> > from.
->
-> Because those reports/statistics are important in calculation of
-> maximum error. If someone had a requirement for a clock to be accurate
-> to 1.5 microseconds and the ioctl returned a delay indicating a
-> sufficient accuracy when in reality it could be worse, that would be a
-> problem.
->
-Ok, I understand your point. But including the MDIO completion into
-delay calculation
-will indicate a much wore precision as it actually is. When the MDIO
-driver implements
-the PTP system timestamping as follows ...
+This patch series adds PDC Global and AOSS reset support on SC7180 SoCs.
 
-  ptp_read_system_prets(bus->ptp_sts);
-  writel(value, mdio-reg)
-  ptp_read_system_postts(bus->ptp_sts);
+Sibi Sankar (4):
+  dt-bindings: reset: aoss: Add AOSS reset binding for SC7180 SoCs
+  reset: qcom: aoss: Add support for SC7180 SoCs
+  dt-bindings: reset: pdc: Add PDC Global binding for SC7180 SoCs
+  reset: qcom: pdc: Add support for SC7180 SoCs
 
-... then we catch already the error caused by interrupts which hit the
-pre/post_ts section.
-Now we only have the additional error of one MDIO clock cycle
-(~400ns). Because I expect
-the MDIO controller to shift out the MDIO frame on the next MDIO clock
-cycle. So if I subtract
-one MDIO clock cycle from pre_ts and add one MDIO clock cycle to
-post_ts the error indication
-would be sufficiently corrected IMHO. And then we can shift both
-timestamps in the switch driver
-(in the gettimex handler) to compensate the switch depending offset.
-What do you think?
+ Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt | 3 ++-
+ Documentation/devicetree/bindings/reset/qcom,pdc-global.txt | 3 ++-
+ drivers/reset/reset-qcom-aoss.c                             | 1 +
+ drivers/reset/reset-qcom-pdc.c                              | 1 +
+ 4 files changed, 6 insertions(+), 2 deletions(-)
 
-Hubert
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
