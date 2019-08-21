@@ -2,114 +2,217 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C82C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBF0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B5A22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1DB422D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbfHURjV (ORCPT
+        id S1727843AbfHURkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:39:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:24418 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728044AbfHURiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:38:20 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7E112307D930;
-        Wed, 21 Aug 2019 17:38:20 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 126AA60E1C;
-        Wed, 21 Aug 2019 17:38:15 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 9CC60223CFD; Wed, 21 Aug 2019 13:38:14 -0400 (EDT)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        miklos@szeredi.hu
-Cc:     virtio-fs@redhat.com, vgoyal@redhat.com, stefanha@redhat.com,
-        dgilbert@redhat.com, Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 01/13] fuse: delete dentry if timeout is zero
-Date:   Wed, 21 Aug 2019 13:37:30 -0400
-Message-Id: <20190821173742.24574-2-vgoyal@redhat.com>
-In-Reply-To: <20190821173742.24574-1-vgoyal@redhat.com>
-References: <20190821173742.24574-1-vgoyal@redhat.com>
+        Wed, 21 Aug 2019 13:40:32 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51892 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727310AbfHURkc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:40:32 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 4DA1828BD6C
+Subject: Re: [PATCH v5 08/11] mfd: cros_ec: Add convenience struct to define
+ dedicated CrOS EC MCUs
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Collabora kernel ML <kernel@collabora.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gwendal Grignou <gwendal@chromium.org>
+References: <20190722133257.9336-1-enric.balletbo@collabora.com>
+ <20190722133257.9336-9-enric.balletbo@collabora.com>
+ <20190812071639.GC4594@dell>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <0c6bd716-34d2-ec3f-4380-eb2457f97f9f@collabora.com>
+Date:   Wed, 21 Aug 2019 19:40:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 21 Aug 2019 17:38:20 +0000 (UTC)
+In-Reply-To: <20190812071639.GC4594@dell>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+Hi Lee,
 
-Don't hold onto dentry in lru list if need to re-lookup it anyway at next
-access.
+On 12/8/19 9:16, Lee Jones wrote:
+> On Mon, 22 Jul 2019, Enric Balletbo i Serra wrote:
+> 
+>> With the increasing use of dedicated CrOS EC MCUs, it takes a fair amount
+>> of boiler plate code to add those devices, add a struct that can be used
+>> to specify a dedicated CrOS EC MCU so we can just add a new item to it to
+>> define a new dedicated MCU.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+>> Tested-by: Gwendal Grignou <gwendal@chromium.org>
+>> ---
+>>
+>> Changes in v5: None
+>> Changes in v4: None
+>> Changes in v3: None
+>> Changes in v2: None
+>>
+>>  drivers/mfd/cros_ec_dev.c | 87 +++++++++++++++++++++------------------
+>>  1 file changed, 48 insertions(+), 39 deletions(-)
+>>
+>> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+>> index c6bf52d795f2..e0e18c0eb9f5 100644
+>> --- a/drivers/mfd/cros_ec_dev.c
+>> +++ b/drivers/mfd/cros_ec_dev.c
+>> @@ -22,6 +22,41 @@ static struct class cros_class = {
+>>  	.name           = "chromeos",
+>>  };
+>>  
+>> +/**
+>> + * cros_feature_to_name - CrOS feature id to name/short description.
+>> + * @id: The feature identifier.
+>> + * @name: Device name associated with the feature id.
+>> + * @desc: Short name that will be displayed.
+>> + */
+>> +struct cros_feature_to_name {
+>> +	unsigned int id;
+>> +	const char *name;
+>> +	const char *desc;
+>> +};
+>> +
+>> +static const struct cros_feature_to_name cros_mcu_devices[] = {
+>> +	{
+>> +		.id	= EC_FEATURE_FINGERPRINT,
+>> +		.name	= CROS_EC_DEV_FP_NAME,
+>> +		.desc	= "Fingerprint",
+>> +	},
+>> +	{
+>> +		.id	= EC_FEATURE_ISH,
+>> +		.name	= CROS_EC_DEV_ISH_NAME,
+>> +		.desc	= "Integrated Sensor Hub",
+>> +	},
+>> +	{
+>> +		.id	= EC_FEATURE_SCP,
+>> +		.name	= CROS_EC_DEV_SCP_NAME,
+>> +		.desc	= "System Control Processor",
+>> +	},
+>> +	{
+>> +		.id	= EC_FEATURE_TOUCHPAD,
+>> +		.name	= CROS_EC_DEV_TP_NAME,
+>> +		.desc	= "Touchpad",
+>> +	},
+>> +};
+>> +
+>>  static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+>>  {
+>>  	struct cros_ec_command *msg;
+>> @@ -278,6 +313,7 @@ static int ec_device_probe(struct platform_device *pdev)
+>>  	struct device *dev = &pdev->dev;
+>>  	struct cros_ec_platform *ec_platform = dev_get_platdata(dev);
+>>  	struct cros_ec_dev *ec = kzalloc(sizeof(*ec), GFP_KERNEL);
+>> +	int i;
+>>  
+>>  	if (!ec)
+>>  		return retval;
+>> @@ -290,47 +326,20 @@ static int ec_device_probe(struct platform_device *pdev)
+>>  	ec->features[1] = -1U; /* Not cached yet */
+>>  	device_initialize(&ec->class_dev);
+>>  
+>> -	/* Check whether this is actually a Fingerprint MCU rather than an EC */
+>> -	if (cros_ec_check_features(ec, EC_FEATURE_FINGERPRINT)) {
+>> -		dev_info(dev, "CrOS Fingerprint MCU detected.\n");
+>> -		/*
+>> -		 * Help userspace differentiating ECs from FP MCU,
+>> -		 * regardless of the probing order.
+>> -		 */
+>> -		ec_platform->ec_name = CROS_EC_DEV_FP_NAME;
+>> -	}
+>> -
+>> -	/*
+>> -	 * Check whether this is actually an Integrated Sensor Hub (ISH)
+>> -	 * rather than an EC.
+>> -	 */
+>> -	if (cros_ec_check_features(ec, EC_FEATURE_ISH)) {
+>> -		dev_info(dev, "CrOS ISH MCU detected.\n");
+>> -		/*
+>> -		 * Help userspace differentiating ECs from ISH MCU,
+>> -		 * regardless of the probing order.
+>> -		 */
+>> -		ec_platform->ec_name = CROS_EC_DEV_ISH_NAME;
+>> -	}
+>> -
+>> -	/* Check whether this is actually a Touchpad MCU rather than an EC */
+>> -	if (cros_ec_check_features(ec, EC_FEATURE_TOUCHPAD)) {
+>> -		dev_info(dev, "CrOS Touchpad MCU detected.\n");
+>> +	for (i = 0; i < ARRAY_SIZE(cros_mcu_devices); i++) {
+>>  		/*
+>> -		 * Help userspace differentiating ECs from TP MCU,
+>> -		 * regardless of the probing order.
+>> +		 * Check whether this is actually a dedicated MCU rather
+>> +		 * than an standard EC.
+>>  		 */
+>> -		ec_platform->ec_name = CROS_EC_DEV_TP_NAME;
+>> -	}
+>> -
+>> -	/* Check whether this is actually a SCP rather than an EC. */
+>> -	if (cros_ec_check_features(ec, EC_FEATURE_SCP)) {
+>> -		dev_info(dev, "CrOS SCP MCU detected.\n");
+>> -		/*
+>> -		 * Help userspace differentiating ECs from SCP,
+>> -		 * regardless of the probing order.
+>> -		 */
+>> -		ec_platform->ec_name = CROS_EC_DEV_SCP_NAME;
+>> +		if (cros_ec_check_features(ec, cros_mcu_devices[i].id)) {
+>> +			dev_info(dev, "CrOS %s MCU detected\n",
+>> +				 cros_mcu_devices[i].desc);
+>> +			/*
+>> +			 * Help userspace differentiating ECs from other MCU,
+>> +			 * regardless of the probing order.
+>> +			 */
+>> +			ec_platform->ec_name = cros_mcu_devices[i].name;
+> 
+> I assume by "dedicated MCU", you mean it can only support one of these
+> at a time?  If so, please make that clear by adding a break statement
+> once the MCU type has been determined.
+> 
 
-More advanced version of this patch would periodically flush out dentries
-from the lru which have gone stale.
+Right, will done in next version
 
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
----
- fs/fuse/dir.c | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+Thanks,
+Enric
 
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index dd0f64f7bc06..fd8636e67ae9 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -29,12 +29,26 @@ union fuse_dentry {
- 	struct rcu_head rcu;
- };
- 
--static inline void fuse_dentry_settime(struct dentry *entry, u64 time)
-+static void fuse_dentry_settime(struct dentry *dentry, u64 time)
- {
--	((union fuse_dentry *) entry->d_fsdata)->time = time;
-+	/*
-+	 * Mess with DCACHE_OP_DELETE because dput() will be faster without it.
-+	 *  Don't care about races, either way it's just an optimization
-+	 */
-+	if ((time && (dentry->d_flags & DCACHE_OP_DELETE)) ||
-+	    (!time && !(dentry->d_flags & DCACHE_OP_DELETE))) {
-+		spin_lock(&dentry->d_lock);
-+		if (time)
-+			dentry->d_flags &= ~DCACHE_OP_DELETE;
-+		else
-+			dentry->d_flags |= DCACHE_OP_DELETE;
-+		spin_unlock(&dentry->d_lock);
-+	}
-+
-+	((union fuse_dentry *) dentry->d_fsdata)->time = time;
- }
- 
--static inline u64 fuse_dentry_time(struct dentry *entry)
-+static inline u64 fuse_dentry_time(const struct dentry *entry)
- {
- 	return ((union fuse_dentry *) entry->d_fsdata)->time;
- }
-@@ -255,8 +269,14 @@ static void fuse_dentry_release(struct dentry *dentry)
- 	kfree_rcu(fd, rcu);
- }
- 
-+static int fuse_dentry_delete(const struct dentry *dentry)
-+{
-+	return time_before64(fuse_dentry_time(dentry), get_jiffies_64());
-+}
-+
- const struct dentry_operations fuse_dentry_operations = {
- 	.d_revalidate	= fuse_dentry_revalidate,
-+	.d_delete	= fuse_dentry_delete,
- 	.d_init		= fuse_dentry_init,
- 	.d_release	= fuse_dentry_release,
- };
--- 
-2.20.1
 
+>> +		}
+>>  	}
+>>  
+>>  	/*
+> 
