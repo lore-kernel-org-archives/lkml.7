@@ -2,96 +2,103 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140F0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9593FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05A42332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688072332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbfHUIHO (ORCPT
+        id S1727122AbfHUIJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 04:07:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:1773 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 04:09:30 -0400
+Received: from mga17.intel.com ([192.55.52.151]:13135 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbfHUIHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 04:07:14 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2148D7F742;
-        Wed, 21 Aug 2019 08:07:14 +0000 (UTC)
-Received: from localhost (holly.tpb.lab.eng.brq.redhat.com [10.43.134.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 482E65F74;
-        Wed, 21 Aug 2019 08:07:12 +0000 (UTC)
-Date:   Wed, 21 Aug 2019 10:07:09 +0200
-From:   Miroslav Lichvar <mlichvar@redhat.com>
-To:     Hubert Feurstein <h.feurstein@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net-next v3 2/4] net: mdio: add PTP offset compensation
- to mdiobus_write_sts
-Message-ID: <20190821080709.GO891@localhost>
-References: <20190820084833.6019-1-hubert.feurstein@vahle.at>
- <20190820084833.6019-3-hubert.feurstein@vahle.at>
- <20190820094903.GI891@localhost>
- <CAFfN3gW-4avfnrV7t-2nC+cVt3sgMD33L44P4PGU-MCAtuR+XA@mail.gmail.com>
- <20190820142537.GL891@localhost>
- <20190820152306.GJ29991@lunn.ch>
- <20190820154005.GM891@localhost>
- <CAFfN3gUgpzMebyUt8_-9e+5vpm3q-DVVszWdkUEFAgZQ8ex73w@mail.gmail.com>
+        id S1726224AbfHUIJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 04:09:30 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 01:09:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
+   d="scan'208";a="378061526"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Aug 2019 01:09:28 -0700
+Date:   Wed, 21 Aug 2019 16:09:04 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        osalvador@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] mm/mmap.c: extract __vma_unlink_list as counter part
+ for __vma_link_list
+Message-ID: <20190821080904.GA29221@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20190814021755.1977-1-richardw.yang@linux.intel.com>
+ <20190814021755.1977-3-richardw.yang@linux.intel.com>
+ <20190814051611.GA1958@infradead.org>
+ <20190814065703.GA6433@richard>
+ <2c5cdffd-f405-23b8-98f5-37b95ca9b027@suse.cz>
+ <20190820172629.GB4949@bombadil.infradead.org>
+ <20190821005234.GA5540@richard>
+ <20190821005417.GC18776@bombadil.infradead.org>
+ <20190821012244.GA13653@richard>
+ <20190821015939.GA28819@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFfN3gUgpzMebyUt8_-9e+5vpm3q-DVVszWdkUEFAgZQ8ex73w@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 21 Aug 2019 08:07:14 +0000 (UTC)
+In-Reply-To: <20190821015939.GA28819@bombadil.infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 06:56:56PM +0200, Hubert Feurstein wrote:
-> Am Di., 20. Aug. 2019 um 17:40 Uhr schrieb Miroslav Lichvar
-> > I think a large jitter is ok in this case. We just need to timestamp
-> > something that we know for sure happened after the PHC timestamp. It
-> > should have no impact on the offset and its stability, just the
-> > reported delay. A test with phc2sys should be able to confirm that.
-> > phc2sys selects the measurement with the shortest delay, which has
-> > least uncertainty. I'd say that applies to both interrupt and polling.
-> >
-> > If it is difficult to specify the minimum interrupt delay, I'd still
-> > prefer an overly pessimistic interval assuming a zero delay.
-> >
-> Currently I do not see the benefit from this. The original intention was to
-> compensate for the remaining offset as good as possible.
+On Tue, Aug 20, 2019 at 06:59:39PM -0700, Matthew Wilcox wrote:
+>On Wed, Aug 21, 2019 at 09:22:44AM +0800, Wei Yang wrote:
+>> On Tue, Aug 20, 2019 at 05:54:17PM -0700, Matthew Wilcox wrote:
+>> >On Wed, Aug 21, 2019 at 08:52:34AM +0800, Wei Yang wrote:
+>> >> On Tue, Aug 20, 2019 at 10:26:29AM -0700, Matthew Wilcox wrote:
+>> >> >On Wed, Aug 14, 2019 at 11:19:37AM +0200, Vlastimil Babka wrote:
+>> >> >> On 8/14/19 8:57 AM, Wei Yang wrote:
+>> >> >> > On Tue, Aug 13, 2019 at 10:16:11PM -0700, Christoph Hellwig wrote:
+>> >> >> >>Btw, is there any good reason we don't use a list_head for vma linkage?
+>> >> >> > 
+>> >> >> > Not sure, maybe there is some historical reason?
+>> >> >> 
+>> >> >> Seems it was single-linked until 2010 commit 297c5eee3724 ("mm: make the vma
+>> >> >> list be doubly linked") and I guess it was just simpler to add the vm_prev link.
+>> >> >> 
+>> >> >> Conversion to list_head might be an interesting project for some "advanced
+>> >> >> beginner" in the kernel :)
+>> >> >
+>> >> >I'm working to get rid of vm_prev and vm_next, so it would probably be
+>> >> >wasted effort.
+>> >> 
+>> >> You mean replace it with list_head?
+>> >
+>> >No, replace the rbtree with a new tree.  https://lwn.net/Articles/787629/
+>> 
+>> Sounds interesting.
+>> 
+>> While I am not sure the plan is settled down, and how long it would take to
+>> replace the rb_tree with maple tree. I guess it would probably take some time
+>> to get merged upstream.
+>> 
+>> IMHO, it would be good to have this cleanup in current kernel. Do you agree?
+>
+>The three cleanups you've posted are fine.  Doing more work (ie the
+>list_head) seems like wasted effort to me.
 
-That's ok, but IMHO the change should not break the assumptions of
-existing application and users.
-
-> The current code
-> of phc2sys uses the delay only for the filtering of the measurement record
-> with the shortest delay and for reporting and statistics. Why not simple shift
-> the timestamps with the offset to the point where we expect the PHC timestamp
-> to be captured, and we have a very good result compared to where we came
-> from.
-
-Because those reports/statistics are important in calculation of
-maximum error. If someone had a requirement for a clock to be accurate
-to 1.5 microseconds and the ioctl returned a delay indicating a
-sufficient accuracy when in reality it could be worse, that would be a
-problem.
-
-BTW, phc2sys is not the only user of the ioctl.
+Ah, got your point. I misunderstand it.
 
 -- 
-Miroslav Lichvar
+Wei Yang
+Help you, Help me
