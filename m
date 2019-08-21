@@ -2,95 +2,169 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14546C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EE0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6EA22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B062322DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:16:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OA8QEXLt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jq+sbN/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfHUEPq (ORCPT
+        id S1727606AbfHUEQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:15:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39010 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfHUEPp (ORCPT
+        Wed, 21 Aug 2019 00:16:37 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44525 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfHUEQh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:15:45 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7L4E1Jk135181;
-        Wed, 21 Aug 2019 04:15:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=s9qTOfA4d5BMcENzLGFCUjg8Btuu3dasH6vLkzDj+6M=;
- b=OA8QEXLt5yyXLtF09f5Wi8wrSSo5fLPm/h2eMnBBCyUzHRS5k5RTsDBj8D7zLPuKRKQI
- zrIjrOcceYtn3nH1RPMNsr44A5AcP8YFctSJdBgB9Z7i1oIIWHGhrtqC+neh2CGRHJHX
- U3oooCXHfxedTEQlbatlj5zqG3KtP4+699QVojGavN+0qRLkZVki1bUsshSfiOwtuR2W
- AHx+o3EI7BCTsLiJuSUt+ICy1Rl51q1TO1Ynzg7Tnofc6zFpUZ8blhELDF8eStzyUnG3
- 22/Ztjf2LbnYZgT/YTlXDLgxNnslyGxq5osit0uqxmh+/g/VjCx+suKOVq+mlWVzp4PD Ng== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2ue9hpjjb6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 04:15:22 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7L4Dqha143352;
-        Wed, 21 Aug 2019 04:15:22 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2ugj7peb84-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 04:15:22 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7L4FKrh024184;
-        Wed, 21 Aug 2019 04:15:20 GMT
-Received: from [192.168.1.218] (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 20 Aug 2019 21:15:19 -0700
-Subject: Re: [PATCH 0/9] padata: use unbound workqueues for parallel jobs
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190813005224.30779-1-daniel.m.jordan@oracle.com>
- <20190820060726.GL2879@gauss3.secunet.de>
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-Message-ID: <dd6a7e57-d4ed-c27e-4450-8850762ef042@oracle.com>
-Date:   Wed, 21 Aug 2019 00:15:18 -0400
+        Wed, 21 Aug 2019 00:16:37 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k22so584823oiw.11;
+        Tue, 20 Aug 2019 21:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pMRXLSyAlcMfdfwoL80Y2c2YUHOyJGNHzi4KrIYHFcc=;
+        b=Jq+sbN/+uLDU2tt+BkRA3cof6F2A03Y5A6lujqXWYzzoSjg7uXRsGMz8LlJGz5FJ9f
+         zrxHAqcUx0hdhnrPdKJ2C+t5QFQwR342kVCqVM7+h9RRKwA6SEL7L5I4b/KmzUe4n78U
+         vQayfqLL7i/OUjE2Exlz4uYpYxZDpL+Y5+FJEASd0dx6VrCs/sfYgl3vQOGkgSMhFbdf
+         B1hvW+q6Ocn9yVEqwrdJahms0es20CxOvBSIXr87HbKn6XBVU1HMnCwovjYaK7yezu81
+         6AcR10Q5poPrSSAjXlnu2Xuzdn/AubtxkBzcGFWcGzoUW5MbRI1ewDbWHtyxoFLwLZg3
+         eETQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pMRXLSyAlcMfdfwoL80Y2c2YUHOyJGNHzi4KrIYHFcc=;
+        b=gEKbVLv8HBpRR0eSfa3BbBlM7qJjEjHYu04MFGkYKu9rXoZjjOxugcygu6qaMBR2C3
+         wCefXCxO39LEe4Yptpuoy4Tv1oNP6AJ5bkkVWQ0SC8wsC0bPoXtC+JNNXbQwNNPzBKIL
+         Y6gfEMqSYl89a0bqQ/jAUezvFdzffodQ4RBkIPew4zCTaW7JMUpSyxqTKP8lnwfv/m4/
+         Cw4ZFdt8XXlrpIOa7qdVxyQ5vVORYmoEhdlM+9UlYKZ11loD37rj/tyZZLsB8KiyrU6L
+         CFCOncQPWfDnyYRwZEtyFxkm9TgqQBevxoHegqTiR83j3au13SDyc62YMlgd5BrX1kxf
+         uG2w==
+X-Gm-Message-State: APjAAAWFaKnb4YI2W2rlF9dlu7PZRvw2GYPdSik2LuTHh64RozPGNx5y
+        zeTH7m8iVEk/+Gz+QzA72jn36U8mRolsdmOFIR/n1M0P
+X-Google-Smtp-Source: APXvYqzRADenjJAm6FhIzYAtAI/ifRbBkWNV2p7ZeXbg8KUqtUaK4H3cIg7DcF+cY2K7Ou3hs6aklm7MZnIISGZX9X4=
+X-Received: by 2002:aca:c449:: with SMTP id u70mr2525647oif.5.1566360995565;
+ Tue, 20 Aug 2019 21:16:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190820060726.GL2879@gauss3.secunet.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908210044
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908210044
+References: <1562376411-3533-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <1562376411-3533-1-git-send-email-wanpengli@tencent.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 21 Aug 2019 12:16:03 +0800
+Message-ID: <CANRm+CwU6vVj80TKhhy_tR=HVMsEeboFPYTE1s9Jm+k2bvd3rg@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] KVM: LAPIC: Implement Exitless Timer
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/19 2:07 AM, Steffen Klassert wrote:
-> Looks good!
-> 
-> I did a test with IPsec pcrypt and it seems to work as expected.
-> Crypto load gets distributed, no network packet reordering.
-> 
-> Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
+On Sat, 6 Jul 2019 at 09:26, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> Dedicated instances are currently disturbed by unnecessary jitter due
+> to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
+> There is no hardware virtual timer on Intel for guest like ARM. Both
+> programming timer in guest and the emulated timer fires incur vmexits.
+> This patchset tries to avoid vmexit which is incurred by the emulated
+> timer fires in dedicated instance scenario.
+>
+> When nohz_full is enabled in dedicated instances scenario, the unpinned
+> timer will be moved to the nearest busy housekeepers after commit
+> 9642d18eee2cd (nohz: Affine unpinned timers to housekeepers) and commit
+> 444969223c8 ("sched/nohz: Fix affine unpinned timers mess"). However,
+> KVM always makes lapic timer pinned to the pCPU which vCPU residents, the
+> reason is explained by commit 61abdbe0 (kvm: x86: make lapic hrtimer
+> pinned). Actually, these emulated timers can be offload to the housekeepi=
+ng
+> cpus since APICv is really common in recent years. The guest timer interr=
+upt
+> is injected by posted-interrupt which is delivered by housekeeping cpu
+> once the emulated timer fires.
+>
+> The host admin should fine tuned, e.g. dedicated instances scenario w/
+> nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus
+> for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-roo=
+t
+> mode, ~3% redis performance benefit can be observed on Skylake server.
+>
+> w/o patchset:
+>
+>             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg =
+time
+>
+> EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71=
+us ( +-   1.09% )
+>
+> w/ patchset:
+>
+>             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time       =
+  Avg time
+>
+> EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72=
+us ( +-   4.02% )
+>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+>
+> v6 -> v7:
+>  * remove bool argument
+>
+> v5 -> v6:
+>  * don't overwrites whatever the user specified
+>  * introduce kvm_can_post_timer_interrupt and kvm_use_posted_timer_interr=
+upt
+>  * remove kvm_hlt_in_guest() condition
+>  * squash all of 2/3/4 together
+>
+> v4 -> v5:
+>  * update patch description in patch 1/4
+>  * feed latest apic->lapic_timer.expired_tscdeadline to kvm_wait_lapic_ex=
+pire()
+>  * squash advance timer handling to patch 2/4
+>
+> v3 -> v4:
+>  * drop the HRTIMER_MODE_ABS_PINNED, add kick after set pending timer
+>  * don't posted inject already-expired timer
+>
+> v2 -> v3:
+>  * disarming the vmx preemption timer when posted_interrupt_inject_timer_=
+enabled()
+>  * check kvm_hlt_in_guest instead
+>
+> v1 -> v2:
+>  * check vcpu_halt_in_guest
+>  * move module parameter from kvm-intel to kvm
+>  * add housekeeping_enabled
+>  * rename apic_timer_expired_pi to kvm_apic_inject_pending_timer_irqs
+>
+>
+> Wanpeng Li (2):
+>   KVM: LAPIC: Make lapic timer unpinned
+>   KVM: LAPIC: Inject timer interrupt via posted interrupt
 
-Thanks for testing this, Steffen!
+There is a further optimization for this feature in houseeking/hrtimer
+subsystem.
+
+[1] https://lkml.org/lkml/2019/7/25/963
+[2] https://lkml.org/lkml/2019/6/28/231
+
+The [2] patch tries to optimize the worst case, however, it will not
+be merged by maintainers and get offline confirm, Thomas will refactor
+this to avoid to predict the future on every timer enqueue. Anyway, it
+still should be considered to be backported to product environment as
+long as get_nohz_timer_target() is using.
+
+Regards,
+Wanpeng Li
