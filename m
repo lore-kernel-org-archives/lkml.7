@@ -2,113 +2,205 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337EDC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F613C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABED233A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC6A2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:50:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gPyjbbOl"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TUqqHRU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbfHUXts (ORCPT
+        id S1730884AbfHUXun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 19:49:48 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34673 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730817AbfHUXtr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 19:49:47 -0400
-Received: by mail-qt1-f196.google.com with SMTP id q4so5368663qtp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 16:49:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8Dz6lpgjK94wsk5MHL4jboQE1NnpsCOBFBvUAahO07A=;
-        b=gPyjbbOlWbFMNLNEHlm3dVB7Uzz3AKtizx4gilO4AsJS5UDSi7tKtuKLliMJh4+rPu
-         1Jf/sMigbAhn4QGVmiCQ6jvV0hXBmnUimeqP0xUMpcAFxLHy5mSvYZ2fitBb6fMv1QEd
-         cZ2rJhYAzO91SSmOVmphbBBxbh+HSxrYlvJ3tgnRnP1JDEhZkz5GiMo9UEiNo9GyVRUF
-         8WnH6kAl7p/wnpPhgEWF5q/2JAvm1wPyF94nsUIZ3Nn/qacJn/LeA6n513wpAcQCJroq
-         gRk02pguSic3ESpZjlGMGpJT0L4SvQqRx3eSvDn9QgwMdBegopEE9vJkJ6UvTjj8CtPC
-         e/+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8Dz6lpgjK94wsk5MHL4jboQE1NnpsCOBFBvUAahO07A=;
-        b=ZkR/3ZX0pTeqkTJgamLoiY7YWOUM+EHUQwKqb5wvRTGRDUTuq5xxOz9kZEUp2cXKkS
-         lcmAnC3XVSLKvDovP/K/V2943ik+s0HC7n4fYI/Pf2xSkWqd05kb/DHAsv4vUPpKLOn5
-         x9VjMkZ/Co1ebWW7xwUWIp4o3XRlin7MEPR08XI3XbleBULR6MP+H3EMhl9fRa2edDM2
-         dP2pknEDuSOn9Kv04GQ144mhFcYGBMm1bKxrUtuy4DRqnTq9zamcFv1hz6yNRyFmczh0
-         /jgpKEvFqtc8x+JSSk/J0Rosh2B6dyCBhodXVpjjYbRstCXMDOR3xTC5dUKkQ1+SGoIF
-         1H1w==
-X-Gm-Message-State: APjAAAVS3Ws0MLGXTjzj9FNRqCy8Ibu1WicV4pSK5i1GI/g3Jz1y/wWy
-        4+DDCK8s4kKNeIHG+WMbYwfGeQ==
-X-Google-Smtp-Source: APXvYqydXtesxNmJNprP51Mg7fYbplLAQObHr5i5Uy4KKN0cJaAIkir0EBD/uw5rTQeKc1g+BuOcEQ==
-X-Received: by 2002:ac8:22ac:: with SMTP id f41mr33955957qta.362.1566431386704;
-        Wed, 21 Aug 2019 16:49:46 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id 125sm11156870qkl.36.2019.08.21.16.49.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 21 Aug 2019 16:49:46 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1i0aML-0008RC-Ks; Wed, 21 Aug 2019 20:49:45 -0300
-Date:   Wed, 21 Aug 2019 20:49:45 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-Message-ID: <20190821234945.GA31944@ziepe.ca>
-References: <20190819063412.GA20455@quack2.suse.cz>
- <20190819092409.GM7777@dread.disaster.area>
- <20190819123841.GC5058@ziepe.ca>
- <20190820011210.GP7777@dread.disaster.area>
- <20190820115515.GA29246@ziepe.ca>
- <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
- <20190821181343.GH8653@ziepe.ca>
- <20190821185703.GB5965@iweiny-DESK2.sc.intel.com>
- <20190821194810.GI8653@ziepe.ca>
- <20190821204421.GE5965@iweiny-DESK2.sc.intel.com>
+        Wed, 21 Aug 2019 19:50:43 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55431 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728304AbfHUXum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 19:50:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46DPYS5Jxfz9sBp;
+        Thu, 22 Aug 2019 09:50:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566431439;
+        bh=0IxaCMguw7mIywx2R9a7SL80AVSgxKu3pkkK/b5qwxA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TUqqHRU+J1iZV3fNWXZP07Qzg9lMnPwa62+T+ObBT5uAb/2acuR9ml16pzMp1KFc6
+         ZdsINKxsyvaf07NQwSStTjJBplOSxIczMLVZWW6K8cvu5v94s9p2XjYzedccXfvOoS
+         At55wLFM0JL+nQCrQ7pnNcDe0nz+2WkYHv40gDRQYlRTvU4Cq0Rt6yjkvqQLAy0EFH
+         kWy4F9U0sX9wKMDyt3Wghs7fJ4y5lq32ptvzHm7Nb5TU2zUEj536spgMsmeOhhsE8d
+         Fwuq4hRr9jG7EUJb+XcbEEHjbmhuVW1xnzrDi7kAr4bbzhyXcBUMzxgUIRwn8C7oX8
+         qwFZll2fRN+4g==
+Date:   Thu, 22 Aug 2019 09:50:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: Re: linux-next: manual merge of the drm-misc tree with the drm and
+ drm-intel trees
+Message-ID: <20190822095029.0fd063d4@canb.auug.org.au>
+In-Reply-To: <20190814125433.20147fb7@canb.auug.org.au>
+References: <20190814125433.20147fb7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821204421.GE5965@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/pqDYB7qH+83yIm0QxI/PxPA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 01:44:21PM -0700, Ira Weiny wrote:
+--Sig_/pqDYB7qH+83yIm0QxI/PxPA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > The order FD's are closed during sigkill is not deterministic, so when
-> > all the fputs happen during a kill'd exit we could end up blocking in
-> > close(fd) as close(uverbs) will come after in the close
-> > list. close(uverbs) is the thing that does the dereg_mr and releases
-> > the pin.
-> 
-> Of course, that is a different scenario which needs to be fixed in my patch
-> set.  Now that my servers are back up I can hopefully make progress.  (Power
-> was down for them yesterday).
+Hi all,
 
-It isn't really a different scenario, the problem is that the
-filesystem fd must be closable independenly of fencing the MR to avoid
-deadlock cycles. Once you resolve that the issue of the uverbs FD out
-living it won't matter one bit if it is in the same process or
-another.
+On Wed, 14 Aug 2019 12:54:33 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the drm-misc tree got a conflict in:
+>=20
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+>   drivers/gpu/drm/i915/i915_vma.c
+>   drivers/gpu/drm/i915/i915_gem_batch_pool.c
+>   drivers/gpu/drm/i915/gem/i915_gem_object.c
+>   drivers/gpu/drm/i915/gt/intel_engine_pool.c
+>=20
+> between commits:
+>=20
+>   a93615f900bd ("drm/i915: Throw away the active object retirement comple=
+xity")
+>   12c255b5dad1 ("drm/i915: Provide an i915_active.acquire callback")
+>   cd2a4eaf8c79 ("drm/i915: Report resv_obj allocation failure")
+>   b40d73784ffc ("drm/i915: Replace struct_mutex for batch pool serialisat=
+ion")
+>   ab2f7a5c18b5 ("drm/amdgpu: Implement VRAM wipe on release")
+>   0c159ffef628 ("drm/i915/gem: Defer obj->base.resv fini until RCU callba=
+ck")
+>=20
+> from the drm and drm-intel trees and commit:
+>=20
+>   52791eeec1d9 ("dma-buf: rename reservation_object to dma_resv")
+>=20
+> from the drm-misc tree.
+>=20
+> I fixed it up (see below and I added the following merge fix patch) and
+> can carry the fix as necessary. This is now fixed as far as linux-next
+> is concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the
+> conflicting tree to minimise any particularly complex conflicts.
 
-Jason
+So the parts of this that affected the drm tree are now fixed, but the
+conflicts between the drm-intel and drm-misc trees are now between the
+drm-intel and drm trees.
+
+The added patch becomes:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 14 Aug 2019 12:48:39 +1000
+Subject: [PATCH] drm: fix up fallout from "dma-buf: rename reservation_obje=
+ct to dma_resv"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/i915/gt/intel_engine_pool.c | 8 ++++----
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/gt/intel_engine_pool.c b/drivers/gpu/drm/=
+i915/gt/intel_engine_pool.c
+index 03d90b49584a..4cd54c569911 100644
+--- a/drivers/gpu/drm/i915/gt/intel_engine_pool.c
++++ b/drivers/gpu/drm/i915/gt/intel_engine_pool.c
+@@ -43,12 +43,12 @@ static int pool_active(struct i915_active *ref)
+ {
+ 	struct intel_engine_pool_node *node =3D
+ 		container_of(ref, typeof(*node), active);
+-	struct reservation_object *resv =3D node->obj->base.resv;
++	struct dma_resv *resv =3D node->obj->base.resv;
+ 	int err;
+=20
+-	if (reservation_object_trylock(resv)) {
+-		reservation_object_add_excl_fence(resv, NULL);
+-		reservation_object_unlock(resv);
++	if (dma_resv_trylock(resv)) {
++		dma_resv_add_excl_fence(resv, NULL);
++		dma_resv_unlock(resv);
+ 	}
+=20
+ 	err =3D i915_gem_object_pin_pages(node->obj);
+
+I think the remaining merge resolution is:
+
+diff --cc drivers/gpu/drm/i915/i915_vma.c
+index 8be1bbef40e5,ebfd03d117cd..000000000000
+--- a/drivers/gpu/drm/i915/i915_vma.c
++++ b/drivers/gpu/drm/i915/i915_vma.c
+@@@ -911,21 -951,16 +911,21 @@@ int i915_vma_move_to_active(struct i915
+  		if (intel_fb_obj_invalidate(obj, ORIGIN_CS))
+  			__i915_active_request_set(&obj->frontbuffer_write, rq);
+ =20
+- 		reservation_object_add_excl_fence(vma->resv, &rq->fence);
+++		dma_resv_add_excl_fence(vma->resv, &rq->fence);
+ +		obj->write_domain =3D I915_GEM_DOMAIN_RENDER;
+  		obj->read_domains =3D 0;
+ +	} else {
+- 		err =3D reservation_object_reserve_shared(vma->resv, 1);
+++		err =3D dma_resv_reserve_shared(vma->resv, 1);
+ +		if (unlikely(err))
+ +			return err;
+ +
+- 		reservation_object_add_shared_fence(vma->resv, &rq->fence);
+++		dma_resv_add_shared_fence(vma->resv, &rq->fence);
+ +		obj->write_domain =3D 0;
+  	}
+  	obj->read_domains |=3D I915_GEM_GPU_DOMAINS;
+ +	obj->mm.dirty =3D true;
+ =20
+ -	if (flags & EXEC_OBJECT_NEEDS_FENCE)
+ -		__i915_active_request_set(&vma->last_fence, rq);
+ -
+ -	export_fence(vma, rq, flags);
+ +	GEM_BUG_ON(!i915_vma_is_active(vma));
+  	return 0;
+  }
+ =20
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/pqDYB7qH+83yIm0QxI/PxPA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1d2MUACgkQAVBC80lX
+0GzVkAf+NS5yNROpnuYKxJ9NZMqwpXSwX1Lp8xFoFus6j8tDOmh5EmqfTc1GYGPG
+KEM6K0fwt917csvjAqIVZyg54e1EzOpUbhwX6VZ8dQ+FJ7WbxL3B0M6AKlvxUQ5f
+WNWZzSvh5md42plUh795v0M2F4kBBIIL66HNR52Cd7J7HaEtIa+XXdbIn4FYbQk2
+be7Z+ZNMqwypHzCorlneJHU18K6TcnoOF+LsiDG23xTXXx3j0lONPWGttvoSwlSw
+jBnlQyiv04eowSaBGcS9ohBu+lsF+aWT6gdmAOhyEjPoTZwLhevQhX0r+OZBsWtT
+it8Kp5BE7186KJcgnrlk6q0BY3VQLg==
+=kiwf
+-----END PGP SIGNATURE-----
+
+--Sig_/pqDYB7qH+83yIm0QxI/PxPA--
