@@ -2,133 +2,91 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B0DC3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 154E3C3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CE82332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC8322DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:35:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDro1+YO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfHUBeN (ORCPT
+        id S1726832AbfHUBfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 21:34:13 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4741 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726484AbfHUBeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 21:34:13 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 7E40CECFBE302ADD17A5;
-        Wed, 21 Aug 2019 09:34:10 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 21 Aug
- 2019 09:34:04 +0800
-Subject: Re: [PATCH] erofs: move erofs out of staging
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        Gao Xiang <hsiangkao@aol.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Jaegeuk Kim" <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Li Guifu" <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, "Pavel Machek" <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-References: <20190818161638.GE1118@sol.localdomain>
- <20190818162201.GA16269@infradead.org>
- <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
- <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
- <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
- <20190820155623.GA10232@mit.edu>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <9d8f88ee-4b81-bdfa-b0d7-9c7d5d54e70a@huawei.com>
-Date:   Wed, 21 Aug 2019 09:34:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 20 Aug 2019 21:35:53 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38360 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfHUBfx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 21:35:53 -0400
+Received: by mail-io1-f68.google.com with SMTP id p12so1357533iog.5
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 18:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZDgziPohWADEElmbUwXxheNxG1YHZXMADSP7m0rXEeM=;
+        b=TDro1+YOlLRwEz2x+hVIva0NLZYpDkw3j6J/eDF3Hi98b1r+Z3u35q2AKgmdeacGhM
+         2XKwKFQPXHWH8lSSJQNwFvrPa20kWXAzZr+ruKlkZmdxiKKxTE6fOwCfH+wMTI2xSX9K
+         6tfNv6efBXqYkBavG8PB+p4aLfz6cL+Bh/00xe3T4ZibXeo/Ub5B9sF+2AINBHF9agcG
+         TogAsURqAWC5l6AKTFHqyrpweZMgZKmSm+KkXT926gKOyqKWcSNB3jgX9t3y7f9VigIH
+         tH1Voekk3JuyeBXs+74IygFEjxl/+CkyKKIgXIF+1g03uy4t0CkM3zKg6xL2l6BBlt0O
+         yThg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZDgziPohWADEElmbUwXxheNxG1YHZXMADSP7m0rXEeM=;
+        b=FxKClTILl4e7CwsH1/l1i7zr98Js5n57Y6BHasYLXNAuOS693mDU1bNaQpT9Tb2ive
+         3TTT93L5j6E8Jlhw2WiZK7VUn4IQ2EO2++mER/1TkBL4AXFhmsIIhN/iqdD7GGJiEBLY
+         28YHTE1cyay70oSVIk+GgUWaPRu1TUOBfR7guo26iwm4Uf2ZQeH5fQoHyJBEnDrbO0PH
+         WpZV9cq8LZgppLJFwcl0OdPjJmXcVe8WaXZCA9NEit521Ai5aAUSHZklFXkHrs+C+wdZ
+         CN+A4HOug9hp9aHpJsZQDevqLH4Dd7Dz8HtfS1gRu9h6b9sa4bE4tw7l2kX3JQCP2MLY
+         3cIg==
+X-Gm-Message-State: APjAAAU+s13jytDZAJ+lYCgi5HPpoFjLK0juTwrYLAmCtW6qumtlYMy1
+        g3zSZOAZW0LjnMS3RMqEZeJBF289sVxFyeTioc4=
+X-Google-Smtp-Source: APXvYqzGkWkC1ql6DLZKPAVJGxobBSSWVEse2A37iCP/RxU0eQUfxK/dzMTVThVz57XsmXKb4DJnE8wZpvnDg7w1K4M=
+X-Received: by 2002:a6b:720e:: with SMTP id n14mr37064857ioc.139.1566351352532;
+ Tue, 20 Aug 2019 18:35:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190820155623.GA10232@mit.edu>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+References: <20190820030804.8892-1-andrew.smirnov@gmail.com> <20190820152928.GK29991@lunn.ch>
+In-Reply-To: <20190820152928.GK29991@lunn.ch>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Tue, 20 Aug 2019 18:35:40 -0700
+Message-ID: <CAHQ1cqHhF6_2Mx3B=w7GEUWDa0RegpUwe=ETCr71PXsDjKRJDQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-cfu1: Slow I2C0 down to 100kHz
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/20 23:56, Theodore Y. Ts'o wrote:
-> The reason why there needs to be at least some file system specific
-> code for fuzz testing is because for efficiency's sake, you don't want
-> to fuzz every single bit in the file system, but just the ones which
-> are most interesting (e.g., the metadata blocks).  For file systems
-> which use checksum to protect against accidental corruption, the file
-> system fuzzer needs to also fix up the checksums (since you can be
-> sure malicious attackers will do this).
+On Tue, Aug 20, 2019 at 8:29 AM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Mon, Aug 19, 2019 at 08:08:04PM -0700, Andrey Smirnov wrote:
+> > Fiber-optic module attached to the bus is only rated to work at
+> > 100kHz, so drop the bus frequncy to accomodate that.
+>
+> Hi Andrey
+>
+> Did you review all the other ZII platforms? I could imaging the same
+> problem happening else where.
+>
 
-Yup, IMO, if we really want such tool, it needs to:
-- move all generic fuzz codes (trigger random fuzzing in meta/data area) into
-that tool, and
-- make filesystem generic fs_meta/file_node lookup/inject/pack function as a
-callback, such as
- * .find_fs_sb
- * .inject_fs_sb
- * .pack_fs_sb
- * .find_fs_bitmap
- * .inject_fs_bitmap
- * .find_fs_inode_bitmap
- * .inject_fs_inode_bitmap
- * .find_inode_by_num
- * .inject_inode
- * .pack_inode
- * .find_tree_node_by_level
-...
-then specific filesystem can fill the callback to tell how the tool can locate a
-field in inode or a metadata in tree node and then trigger the designed fuzz.
+Yes, AFAICT, fiber-optic modules are present only on SCU4
+(vf610-zii-scu4-aib.dts), CFU1 (vf610-zii-cfu1.dts) and VF610 Dev
+board rev. B/C (vf610-zii-dev*.dts[i]). Of all three only CFU1 has
+corresponding I2C bus running @ 400 kHz.
 
-It will be easier to rewrite whole generic fwk for each filesystem, because
-existed filesystem userspace tool should has included above callback's detail
-codes...
-
-> On Tue, Aug 20, 2019 at 10:24:11AM +0800, Chao Yu wrote:
->> filesystem fill the tool's callback to seek a node/block and supported fields
->> can be fuzzed in inode.
-
-> 
-> What you *can* do is to make the file system specific portion of the
-> work as small as possible.  Great work in this area is Professor Kim's
-> Janus[1][2] and Hydra[2] work.  (Hydra is about to be published at SOSP 19,
-> and was partially funded from a Google Faculty Research Work.)
-> 
-> [1] https://taesoo.kim/pubs/2019/xu:janus.pdf
-> [2] https://github.com/sslab-gatech/janus
-> [3] https://github.com/sslab-gatech/hydra
-
-Thanks for the information!
-
-It looks like janus and hydra alreay have generic compress/decompress function
-across different filesystems, it's really a good job, I do think it may be the
-one once it becomes more generic.
-
-Thanks
-
-> 
+Thanks,
+Andrey Smirnov
