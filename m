@@ -2,334 +2,182 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F77C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1206C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A2822D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566414092;
-	bh=kq5C/TB5QS0/1pcYDwY0WFF3EbDix3cS781XjCeHD6g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QsypwWR2jjQQZjovRA4oWqniAuyTUaWY+86qo7fHPYR7aZ3xXuFzzLx3rOOhZUohf
-	 VPdm1dkhT7Fn62j3SatBUyBsZa4UXDFiRTTNvtTDliYZo16RVjyOC7rByJV38jRDji
-	 vvb4O+kKfqOKmMPrMHhZhT5OFnqG09s1O2o7yLSA=
+	by mail.kernel.org (Postfix) with ESMTP id 54E4322D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:03:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="FvOJljDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbfHUTBb (ORCPT
+        id S1728986AbfHUTDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:01:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727491AbfHUTBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:01:31 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA7D122CE3;
-        Wed, 21 Aug 2019 19:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566414090;
-        bh=kq5C/TB5QS0/1pcYDwY0WFF3EbDix3cS781XjCeHD6g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g8KcAsDJGoliNmm9//bxaw+UDmgCsuv+NGdt9Yq7ZZEjAjrC7LMSaqz7oSTzSIw/A
-         bJACOeLiH6lReeI8u/ZSLuw6QRmuPwuVgpftJEcvF+cn1J+AxLDofF7gcKimHfA7Uz
-         rVRMmdIPk9FrsPLaolT7TW/5nWsVAPQsTcAZn0yk=
-Date:   Wed, 21 Aug 2019 14:01:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>, linux-pci@vger.kernel.org,
-        Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add sysfs attribute for disabling PCIe link to
- downstream component
-Message-ID: <20190821190128.GH14450@google.com>
-References: <20190529104942.74991-1-mika.westerberg@linux.intel.com>
- <20190703133953.GK128603@google.com>
- <20190703150341.GW2640@lahna.fi.intel.com>
- <20190801215339.GF151852@google.com>
- <20190806101230.GI2548@lahna.fi.intel.com>
- <20190819235245.GX253360@google.com>
- <20190820095820.GD19908@lahna.fi.intel.com>
- <20190820141717.GA14450@google.com>
- <20190821072833.GM19908@lahna.fi.intel.com>
- <20190821143751.GW19908@lahna.fi.intel.com>
+        Wed, 21 Aug 2019 15:03:50 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38768 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfHUTDt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 15:03:49 -0400
+Received: by mail-pf1-f195.google.com with SMTP id o70so2033718pfg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 12:03:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JFQEqMXiHoOXFmfgJoDBfu82dbaZ9sv4TW7nsXwUw5o=;
+        b=FvOJljDT+DhzXONemiuiRBuI25xz7IPoozAtQwv7flCDgAaW2KYnrHEjvXXOSkvNye
+         XfJnMByk8CYDZ2kpXYbVrQ6GqEX8fec3bXfaZWPc8e/6T9wjKTCco7ycdVPbMjA9Rf0Z
+         57/G7SBYImn+BOzo6dRwFyaXgyDenjG8TC5y0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JFQEqMXiHoOXFmfgJoDBfu82dbaZ9sv4TW7nsXwUw5o=;
+        b=bxBdj/LdLgMTlFY3mcZoR8TsSNu7/8K0NrJi127d2/YH5LWPSr27x+P9yOIUw6wBOv
+         YuvdKZcBeKKYIGUWgcwa77TDZZ+mYaVVoq93xa7RbEUWlH42Eoswc+EjfDM/F056EKU8
+         pDKdtDGy55mZEGNyNkZSGS3L9MnXMXUMi8LsRyV+FlIcxk+XMk+1jTj80ieKaypNpF4t
+         ptFkS7d53TCRpTwMEUQn4Ovw7/nWKZRQ+BroeneemKR9AJn+ecq4zOTT2Mbq7NIdO66A
+         CxuwYC8xBaMRBghOPe2z+cnGrKQ1r+aNRi0nH8glR6UK8EIcnQ7ZjmAeJ6qSn1ZPcZXX
+         69fg==
+X-Gm-Message-State: APjAAAUXWiE3Yx071/4NNCYDvl3fps75mktO7laIsh+iVh1qU9zxg30m
+        0Wsg8X7oSmCsYt+EIqAqIWH5Ig==
+X-Google-Smtp-Source: APXvYqydKEytctc0ry70dhpI5Zsq3I+NWD57aezyMs0hej/M0aBJRFLsZORDdgd4+9ayXviH3KsZNw==
+X-Received: by 2002:a62:26c4:: with SMTP id m187mr38407322pfm.49.1566414228909;
+        Wed, 21 Aug 2019 12:03:48 -0700 (PDT)
+Received: from localhost ([172.19.216.18])
+        by smtp.gmail.com with ESMTPSA id s24sm21898805pgm.3.2019.08.21.12.03.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 12:03:48 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 15:03:31 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>, Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        rostedt <rostedt@goodmis.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+Message-ID: <20190821190331.GA113711@google.com>
+References: <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org>
+ <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com>
+ <CAHk-=wgC4+kV9AiLokw7cPP429rKCU+vjA8cWAfyOjC3MtqC4A@mail.gmail.com>
+ <20190820135612.GS2332@hirez.programming.kicks-ass.net>
+ <20190820202932.GW28441@linux.ibm.com>
+ <20190821103200.kpufwtviqhpbuv2n@willie-the-truck>
+ <20190821132310.GC28441@linux.ibm.com>
+ <20190821153325.GD2349@hirez.programming.kicks-ass.net>
+ <52600272.1909.1566402523680.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190821143751.GW19908@lahna.fi.intel.com>
+In-Reply-To: <52600272.1909.1566402523680.JavaMail.zimbra@efficios.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 05:37:51PM +0300, Mika Westerberg wrote:
-> On Wed, Aug 21, 2019 at 10:28:37AM +0300, Mika Westerberg wrote:
-> > > If we see a type of PCI_EXP_TYPE_ROOT_PORT or
-> > > PCI_EXP_TYPE_PCIE_BRIDGE, I think we have to assume that's accurate
-> > > (which we already do today -- for those types, we assume the device
-> > > has a secondary link).
-> > > 
-> > > For a device that claims to be PCI_EXP_TYPE_DOWNSTREAM, if a parent
-> > > device exists and is a Downstream Port (Root Port, Switch Downstream
-> > > Port, and I suppose a PCI-to-PCIe bridge (this is basically
-> > > pcie_downstream_port()), this device must actually be acting as a
-> > > PCI_EXP_TYPE_UPSTREAM device.
-> > > 
-> > > If a device claiming to be PCI_EXP_TYPE_UPSTREAM has a parent that is
-> > > PCI_EXP_TYPE_UPSTREAM, this device must actually be a
-> > > PCI_EXP_TYPE_DOWNSTREAM port.
-> > > 
-> > > For PCI_EXP_TYPE_DOWNSTREAM and PCI_EXP_TYPE_UPSTREAM devices that
-> > > don't have parents, we just have to assume they advertise the correct
-> > > type (as we do today).  There are sparc and virtualization configs
-> > > like this.
-> > 
-> > OK, thanks for the details. I'll try to make patch based on the above.
+On Wed, Aug 21, 2019 at 11:48:43AM -0400, Mathieu Desnoyers wrote:
+> ----- On Aug 21, 2019, at 8:33 AM, Peter Zijlstra peterz@infradead.org wrote:
 > 
-> Something like the below patch? Only compile tested for now but I will
-> split it into a proper patch series and give it some testing if this is
-> what you were after.
+> > On Wed, Aug 21, 2019 at 06:23:10AM -0700, Paul E. McKenney wrote:
+> >> On Wed, Aug 21, 2019 at 11:32:01AM +0100, Will Deacon wrote:
+> > 
+> >> > and so it is using a store-pair instruction to reduce the complexity in
+> >> > the immediate generation. Thus, the 64-bit store will only have 32-bit
+> >> > atomicity. In fact, this is scary because if I change bar to:
+> >> > 
+> >> > void bar(u64 *x)
+> >> > {
+> >> > 	*(volatile u64 *)x = 0xabcdef10abcdef10;
+> >> > }
+> >> > 
+> >> > then I get:
+> >> > 
+> >> > bar:
+> >> > 	mov	w1, 61200
+> >> > 	movk	w1, 0xabcd, lsl 16
+> >> > 	str	w1, [x0]
+> >> > 	str	w1, [x0, 4]
+> >> > 	ret
+> >> > 
+> >> > so I'm not sure that WRITE_ONCE would even help :/
+> >> 
+> >> Well, I can have the LWN article cite your email, then.  So thank you
+> >> very much!
+> >> 
+> >> Is generation of this code for a 64-bit volatile store considered a bug?
+> >> Or does ARMv8 exclude the possibility of 64-bit MMIO registers?  And I
+> >> would guess that Thomas and Linus would ask a similar bugginess question
+> >> for normal stores.  ;-)
+> > 
+> > I'm calling this a compiler bug; the way I understand volatile this is
+> > very much against the intentended use case. That is, this is buggy even
+> > on UP vs signals or MMIO.
+> 
+> And here is a simpler reproducer on my gcc-8.3.0 (aarch64) compiled with O2:
+> 
+> volatile unsigned long a;
+>  
+> void fct(void)
+> {
+>         a = 0x1234567812345678ULL;
+> }
+> 
+> void fct(void)
+> {
+>         a = 0x1234567812345678ULL;
+>    0:   90000000        adrp    x0, 8 <fct+0x8>
+>    4:   528acf01        mov     w1, #0x5678                     // #22136
+>    8:   72a24681        movk    w1, #0x1234, lsl #16
+>    c:   f9400000        ldr     x0, [x0]
+>   10:   b9000001        str     w1, [x0]
+>   14:   b9000401        str     w1, [x0, #4]
+> }
+>   18:   d65f03c0        ret
 
-This is great, thanks a lot for cleaning this up!  I feel bad for
-having introduced the has_secondary_link hack in the first place, so
-I'm really glad you're fixing it up.
+Fwiw, and, interestingly, on clang v7.0.1-8 (aarch64), I get a proper 64-bit
+str with the above example (even when not using volatile):
 
-A couple minor nits below.
+0000000000000000 <nonvol>:
+   0:	d28acf08 	mov	x8, #0x5678                	// #22136
+   4:	f2a24688 	movk	x8, #0x1234, lsl #16
+   8:	f2cacf08 	movk	x8, #0x5678, lsl #32
+   c:	f2e24688 	movk	x8, #0x1234, lsl #48
+  10:	90000009 	adrp	x9, 8 <nonvol+0x8>
+  14:	91000129 	add	x9, x9, #0x0
+  18:	f9000128 	str	x8, [x9]
+  1c:	d65f03c0 	ret
 
-> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> index 544922f097c0..2fccb5762c76 100644
-> --- a/drivers/pci/access.c
-> +++ b/drivers/pci/access.c
-> @@ -336,15 +336,6 @@ static inline int pcie_cap_version(const struct pci_dev *dev)
->  	return pcie_caps_reg(dev) & PCI_EXP_FLAGS_VERS;
->  }
->  
-> -static bool pcie_downstream_port(const struct pci_dev *dev)
-> -{
-> -	int type = pci_pcie_type(dev);
-> -
-> -	return type == PCI_EXP_TYPE_ROOT_PORT ||
-> -	       type == PCI_EXP_TYPE_DOWNSTREAM ||
-> -	       type == PCI_EXP_TYPE_PCIE_BRIDGE;
-> -}
-> -
->  bool pcie_cap_has_lnkctl(const struct pci_dev *dev)
->  {
->  	int type = pci_pcie_type(dev);
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 9ac50710f1d4..3c0672f1dfe7 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3577,7 +3577,7 @@ int pci_enable_atomic_ops_to_root(struct pci_dev *dev, u32 cap_mask)
->  		}
->  
->  		/* Ensure upstream ports don't block AtomicOps on egress */
-> -		if (!bridge->has_secondary_link) {
-> +		if (pci_pcie_type(bridge) == PCI_EXP_TYPE_UPSTREAM) {
->  			pcie_capability_read_dword(bridge, PCI_EXP_DEVCTL2,
->  						   &ctl2);
->  			if (ctl2 & PCI_EXP_DEVCTL2_ATOMIC_EGRESS_BLOCK)
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 9a83fcf612ca..ae8d839dca4f 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -118,6 +118,15 @@ static inline bool pci_power_manageable(struct pci_dev *pci_dev)
->  	return !pci_has_subordinate(pci_dev) || pci_dev->bridge_d3;
->  }
->  
-> +static inline bool pcie_downstream_port(const struct pci_dev *dev)
-> +{
-> +	int type = pci_pcie_type(dev);
-> +
-> +	return type == PCI_EXP_TYPE_ROOT_PORT ||
-> +	       type == PCI_EXP_TYPE_DOWNSTREAM ||
-> +	       type == PCI_EXP_TYPE_PCIE_BRIDGE;
-> +}
-> +
->  int pci_vpd_init(struct pci_dev *dev);
->  void pci_vpd_release(struct pci_dev *dev);
->  void pcie_vpd_create_sysfs_dev_files(struct pci_dev *dev);
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 464f8f92653f..db2d40e44c08 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -904,6 +904,7 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
->  {
->  	struct pcie_link_state *link;
->  	int blacklist = !!pcie_aspm_sanity_check(pdev);
-> +	int type = pci_pcie_type(pdev);
->  
->  	if (!aspm_support_enabled)
->  		return;
-> @@ -913,15 +914,14 @@ void pcie_aspm_init_link_state(struct pci_dev *pdev)
->  
->  	/*
->  	 * We allocate pcie_link_state for the component on the upstream
-> -	 * end of a Link, so there's nothing to do unless this device has a
-> -	 * Link on its secondary side.
-> +	 * end of a Link, so there's nothing to do unless this device is
-> +	 * downstream or root port.
->  	 */
-> -	if (!pdev->has_secondary_link)
-> +	if (type != PCI_EXP_TYPE_ROOT_PORT && type != PCI_EXP_TYPE_DOWNSTREAM)
+test1.o:     file format elf64-littleaarch64
 
-I think this should use pcie_downstream_port(), since
-PCI_EXP_TYPE_PCIE_BRIDGE is a Downstream Port, and
-set_pcie_port_type() did set dev->has_secondary_link for PCIE_BRIDGE.
 
->  		return;
->  
->  	/* VIA has a strange chipset, root port is under a bridge */
-> -	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT &&
-> -	    pdev->bus->self)
-> +	if (type == PCI_EXP_TYPE_ROOT_PORT && pdev->bus->self)
->  		return;
->  
->  	down_read(&pci_bus_sem);
-> @@ -1070,7 +1070,8 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
->  	if (!pci_is_pcie(pdev))
->  		return 0;
->  
-> -	if (pdev->has_secondary_link)
-> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT ||
-> +	    pci_pcie_type(pdev) == PCI_EXP_TYPE_DOWNSTREAM)
+And even with -O2 it is a single store:
 
-Same here.
+Disassembly of section .text:
 
->  		parent = pdev;
->  	if (!parent || !parent->link_state)
->  		return -EINVAL;
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 773197a12568..b0e6048a9208 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -166,7 +166,7 @@ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
->  	driver = pcie_port_find_service(dev, service);
->  	if (driver && driver->reset_link) {
->  		status = driver->reset_link(dev);
-> -	} else if (dev->has_secondary_link) {
-> +	} else if (pcie_downstream_port(dev)) {
->  		status = default_reset_link(dev);
->  	} else {
->  		pci_printk(KERN_DEBUG, dev, "no link-reset support at upstream device %s\n",
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index a3c7338fad86..983a5612c548 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -1431,26 +1431,40 @@ void set_pcie_port_type(struct pci_dev *pdev)
->  	pci_read_config_word(pdev, pos + PCI_EXP_DEVCAP, &reg16);
->  	pdev->pcie_mpss = reg16 & PCI_EXP_DEVCAP_PAYLOAD;
->  
-> +	parent = pci_upstream_bridge(pdev);
-> +	if (!parent)
-> +		return;
-> +
->  	/*
-> -	 * A Root Port or a PCI-to-PCIe bridge is always the upstream end
-> -	 * of a Link.  No PCIe component has two Links.  Two Links are
-> -	 * connected by a Switch that has a Port on each Link and internal
-> -	 * logic to connect the two Ports.
-> +	 * Some systems do not identify their upstream/downstream ports
-> +	 * correctly so detect impossible configurations here and correct
-> +	 * the port type accordingly.
->  	 */
->  	type = pci_pcie_type(pdev);
-> -	if (type == PCI_EXP_TYPE_ROOT_PORT ||
-> -	    type == PCI_EXP_TYPE_PCIE_BRIDGE)
-> -		pdev->has_secondary_link = 1;
-> -	else if (type == PCI_EXP_TYPE_UPSTREAM ||
-> -		 type == PCI_EXP_TYPE_DOWNSTREAM) {
-> -		parent = pci_upstream_bridge(pdev);
-> -
-> +	if (type == PCI_EXP_TYPE_DOWNSTREAM) {
->  		/*
-> -		 * Usually there's an upstream device (Root Port or Switch
-> -		 * Downstream Port), but we can't assume one exists.
-> +		 * If pdev claims to be downstream port but the parent
-> +		 * device is also downstream port assume pdev is actually
-> +		 * upstream port.
->  		 */
-> -		if (parent && !parent->has_secondary_link)
-> -			pdev->has_secondary_link = 1;
-> +		if (pcie_downstream_port(parent)) {
-> +			dev_info(&pdev->dev,
-> +				"claims to be downstream port but is acting as upstream port, correcting type\n");
+0000000000000000 <nonvol>:
+   0:	d28acf09 	mov	x9, #0x5678                	// #22136
+   4:	f2a24689 	movk	x9, #0x1234, lsl #16
+   8:	f2cacf09 	movk	x9, #0x5678, lsl #32
+   c:	90000008 	adrp	x8, 8 <nonvol+0x8>
+  10:	f2e24689 	movk	x9, #0x1234, lsl #48
+  14:	f9000109 	str	x9, [x8]
+  18:	d65f03c0 	ret
 
-You can use pci_info() here.  Since the text wraps anyway, I'd just
-remove the line break and put it all on one line.
+thanks,
 
-> +			pdev->pcie_flags_reg &= ~PCI_EXP_FLAGS_TYPE;
-> +			pdev->pcie_flags_reg |= PCI_EXP_TYPE_UPSTREAM;
-> +		}
-> +	} else if (type == PCI_EXP_TYPE_UPSTREAM) {
-> +		/*
-> +		 * If pdev claims to be upstream port but the parent
-> +		 * device is also upstream port assume pdev is actually
-> +		 * downstream port.
-> +		 */
-> +		if (pci_pcie_type(parent) == PCI_EXP_TYPE_UPSTREAM) {
-> +			dev_info(&pdev->dev,
-> +				"claims to be upstream port but is acting as downstream port, correcting type\n");
+ - Joel
 
-And here.
-
-> +			pdev->pcie_flags_reg &= ~PCI_EXP_FLAGS_TYPE;
-> +			pdev->pcie_flags_reg |= PCI_EXP_TYPE_DOWNSTREAM;
-> +		}
->  	}
->  }
->  
-> @@ -2764,12 +2778,8 @@ static int only_one_child(struct pci_bus *bus)
->  	 * A PCIe Downstream Port normally leads to a Link with only Device
->  	 * 0 on it (PCIe spec r3.1, sec 7.3.1).  As an optimization, scan
->  	 * only for Device 0 in that situation.
-> -	 *
-> -	 * Checking has_secondary_link is a hack to identify Downstream
-> -	 * Ports because sometimes Switches are configured such that the
-> -	 * PCIe Port Type labels are backwards.
->  	 */
-> -	if (bridge && pci_is_pcie(bridge) && bridge->has_secondary_link)
-> +	if (bridge && pci_is_pcie(bridge) && pcie_downstream_port(bridge))
->  		return 1;
->  
->  	return 0;
-> diff --git a/drivers/pci/vc.c b/drivers/pci/vc.c
-> index 5acd9c02683a..9ae9fb9339e8 100644
-> --- a/drivers/pci/vc.c
-> +++ b/drivers/pci/vc.c
-> @@ -13,6 +13,8 @@
->  #include <linux/pci_regs.h>
->  #include <linux/types.h>
->  
-> +#include "pci.h"
-> +
->  /**
->   * pci_vc_save_restore_dwords - Save or restore a series of dwords
->   * @dev: device
-> @@ -105,7 +107,7 @@ static void pci_vc_enable(struct pci_dev *dev, int pos, int res)
->  	struct pci_dev *link = NULL;
->  
->  	/* Enable VCs from the downstream device */
-> -	if (!dev->has_secondary_link)
-> +	if (!pci_is_pcie(dev) || !pcie_downstream_port(dev))
->  		return;
->  
->  	ctrl_pos = pos + PCI_VC_RES_CTRL + (res * PCI_CAP_VC_PER_VC_SIZEOF);
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 82e4cd1b7ac3..2f8990246316 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -418,7 +418,6 @@ struct pci_dev {
->  	unsigned int	broken_intx_masking:1;	/* INTx masking can't be used */
->  	unsigned int	io_window_1k:1;		/* Intel bridge 1K I/O windows */
->  	unsigned int	irq_managed:1;
-> -	unsigned int	has_secondary_link:1;
->  	unsigned int	non_compliant_bars:1;	/* Broken BARs; ignore them */
->  	unsigned int	is_probed:1;		/* Device probing in progress */
->  	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
+[...]
