@@ -2,74 +2,66 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7620C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA02C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23DE217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2896B217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbfHUXzj (ORCPT
+        id S1730921AbfHUX7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 19:55:39 -0400
-Received: from verein.lst.de ([213.95.11.211]:41853 "EHLO verein.lst.de"
+        Wed, 21 Aug 2019 19:59:21 -0400
+Received: from verein.lst.de ([213.95.11.211]:41874 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728872AbfHUXzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 19:55:39 -0400
+        id S1728124AbfHUX7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 19:59:20 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6803368BFE; Thu, 22 Aug 2019 01:55:35 +0200 (CEST)
-Date:   Thu, 22 Aug 2019 01:55:34 +0200
+        id 2757568C7B; Thu, 22 Aug 2019 01:59:17 +0200 (CEST)
+Date:   Thu, 22 Aug 2019 01:59:16 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Guillem Jover <guillem@hadrons.org>
-Cc:     linux-aio@kvack.org, Christoph Hellwig <hch@lst.de>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Benjamin LaHaise <bcrl@kvack.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] aio: Fix io_pgetevents() struct __compat_aio_sigset
- layout
-Message-ID: <20190821235534.GA9511@lst.de>
-References: <20190821033820.14155-1-guillem@hadrons.org>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Marta Rybczynska <mrybczyn@kalray.eu>,
+        Christoph Hellwig <hch@lst.de>, axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Samuel Jones <sjones@kalray.eu>,
+        Guillaume Missonnier <gmissonnier@kalray.eu>
+Subject: Re: [PATCH v2] nvme: allow 64-bit results in passthru commands
+Message-ID: <20190821235916.GE9511@lst.de>
+References: <89520652.56920183.1565948841909.JavaMail.zimbra@kalray.eu> <20190816131606.GA26191@lst.de> <469829119.56970464.1566198383932.JavaMail.zimbra@kalray.eu> <20190819144922.GC6883@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190821033820.14155-1-guillem@hadrons.org>
+In-Reply-To: <20190819144922.GC6883@localhost.localdomain>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 05:38:20AM +0200, Guillem Jover wrote:
-> This type is used to pass the sigset_t from userland to the kernel,
-> but it was using the kernel native pointer type for the member
-> representing the compat userland pointer to the userland sigset_t.
+On Mon, Aug 19, 2019 at 08:49:22AM -0600, Keith Busch wrote:
+> On Mon, Aug 19, 2019 at 12:06:23AM -0700, Marta Rybczynska wrote:
+> > ----- On 16 Aug, 2019, at 15:16, Christoph Hellwig hch@lst.de wrote:
+> > > Sorry for not replying to the earlier version, and thanks for doing
+> > > this work.
+> > > 
+> > > I wonder if instead of using our own structure we'd just use
+> > > a full nvme SQE for the input and CQE for that output.  Even if we
+> > > reserve a few fields that means we are ready for any newly used
+> > > field (at least until the SQE/CQE sizes are expanded..).
+> > 
+> > We could do that, nvme_command and nvme_completion are already UAPI.
+> > On the other hand that would mean not filling out certain fields like
+> > command_id. Can do an approach like this.
 > 
-> This messes up the layout, and makes the kernel eat up both the
-> userland pointer and the size members into the kernel pointer, and
-> then reads garbage into the kernel sigsetsize. Which makes the sigset_t
-> size consistency check fail, and consequently the syscall always
-> returns -EINVAL.
-> 
-> This breaks both libaio and strace on 32-bit userland running on 64-bit
-> kernels. And there are apparently no users in the wild of the current
-> broken layout (at least according to codesearch.debian.org and a brief
-> check over github.com search). So it looks safe to fix this directly
-> in the kernel, instead of either letting userland deal with this
-> permanently with the additional overhead or trying to make the syscall
-> infer what layout userland used, even though this is also being worked
-> around in libaio to temporarily cope with kernels that have not yet
-> been fixed.
-> 
-> We use a proper compat_uptr_t instead of a compat_sigset_t pointer.
-> 
-> Fixes: 7a074e96 ("aio: implement io_pgetevents")
-> Signed-off-by: Guillem Jover <guillem@hadrons.org>
+> Well, we need to pass user space addresses and lengths, which isn't
+> captured in struct nvme_command.
 
-Looks good,
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Well, the address would fit into the data pointer.  But yes, the lack
+of a command length concept in nvme makes this idea a mess and not
+really workable.
