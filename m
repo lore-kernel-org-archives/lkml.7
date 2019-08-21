@@ -2,130 +2,188 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 821DDC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E31C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 581D822DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 708D3233A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:32:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bhJJa4E4"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="HHJukI5c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbfHUScF (ORCPT
+        id S1729290AbfHUScJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:32:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41662 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfHUScF (ORCPT
+        Wed, 21 Aug 2019 14:32:09 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37692 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfHUScH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:32:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tVY1LXmdi32TE9w1SeLZsUhYLzjbIKh1g8jTSkv50s0=; b=bhJJa4E42SMEYiIa1DWA2XlMu
-        4vGjx+rsvfe+CrMjov5MKEqtLN+RI/AcK6Vs7e5E3E7S1/KeayvRFeJ14231xfrWhGN7WN000fvI1
-        wr6ARpqeyItdr4BeTOr4gIlYjDRXI9jQn/GdZuKv+i6EPx+OkN2r9RgSU//OsEDYyP+kQQNydRsEu
-        4dsQfkB04uYA3XjbDZZvaRh7ww+8QaF0H1Br4ZgkIHEftCSadBmxj336Y0i2uq2d8euohNvTMJYgr
-        ei8PQDJkEP29FLGm9feeESwlOZHZ9hxmFFSMYiF+iJ9olCPAoFo3nvHYqvnjl+ksRjTGX7ZIFtkAJ
-        prHujlgIw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i0VOo-0003wh-HG; Wed, 21 Aug 2019 18:31:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E3F5F307456;
-        Wed, 21 Aug 2019 20:31:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5C7DE20F0FB1F; Wed, 21 Aug 2019 20:31:55 +0200 (CEST)
-Date:   Wed, 21 Aug 2019 20:31:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Daniel Xu <dxu@dxuuu.xyz>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add
- PERF_EVENT_IOC_QUERY_PROBE ioctl
-Message-ID: <20190821183155.GE2349@hirez.programming.kicks-ass.net>
-References: <20190820144503.GV2332@hirez.programming.kicks-ass.net>
- <BWENHQJIN885.216UOYEIWNGFU@dlxu-fedora-R90QNFJV>
- <20190821110856.GB2349@hirez.programming.kicks-ass.net>
- <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
+        Wed, 21 Aug 2019 14:32:07 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s14so2734965qkm.4
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3VISVZWuGNTiVd6JKqfbutJFN34lrqN05fvYPH9Kreg=;
+        b=HHJukI5cKFcu78i/O1Yn8iw05mYEjKQotNnDCY7uW/VDROaso248Cz4QQVCEUqJcRv
+         EBzDUyZOfUDX0OqfFfNYvmLzaOIniVyftuF2AgycrkM0czlodTpOiI5hsWSB3EmJ2IOF
+         Sdf0QIF5vjVVnt5v/fb4faCNkExE0O0J9E/u7OrVqBv3KwAkDQY25mF4NF6uZGiJmJaq
+         V5rSY+0126UdxSnVxgCpzdNP9IOeLPAdBIaRSaDqEYxUJRdmoxnf7zCcQdaMR1gPUppS
+         eit1DPkEzoQPfq6qmFm0NeeZa9yVUmAjXHBjiWUl8i01GTKsv8qd8JE2lN5bdfa1Jkf4
+         TRIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3VISVZWuGNTiVd6JKqfbutJFN34lrqN05fvYPH9Kreg=;
+        b=jOaO+BWIwb2q1ZzPOkBeGfIJznIbw1iXZGt42sbX+CuBFmuYLNs72W4JyzX6+/yBHv
+         Al+x0ewmu9HiUxKYTCMpbVggAAek3jTyKD6dg9hUppE8rn3H6zR06jlqEgJv4AEVoYCj
+         9A2j+8AwzDdBS0r/Id3/lH0kmoIBLouER8yd+Qnl616iRPYejvbBDH8M+W0jmyhelhVa
+         t9YHxNtF05aDpBOiH2s9eE7bNNiaoLJdrH35ja+A+f1ZeuopctmnKPqnYwBeqwSLDiXG
+         x9bgoySE1X6N1Qjoe2G4IBGTHBAVtFnxIe3lVwQ07P4U2NfGvIqsNMeHUt6xC7DCYVwx
+         NrEA==
+X-Gm-Message-State: APjAAAWlwRf2ADXQ+Sag6Gr21/DPdZpCkFazR0KYEBPnEnHxP6dTDns9
+        KKYNiW3Zx/rskLZFf92sTR2O7g==
+X-Google-Smtp-Source: APXvYqxQXpDqPyZwJQWEPUkusjd/UilDz4Mpzt+wUtcrvVVsDPsRqQ1Np6P1GcXQU3ssA/+pWMdUqw==
+X-Received: by 2002:a37:a9c6:: with SMTP id s189mr32305161qke.191.1566412326277;
+        Wed, 21 Aug 2019 11:32:06 -0700 (PDT)
+Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
+        by smtp.gmail.com with ESMTPSA id q13sm10443332qkm.120.2019.08.21.11.32.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 11:32:05 -0700 (PDT)
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
+        ebiederm@xmission.com, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
+        james.morse@arm.com, vladimir.murzin@arm.com,
+        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
+        mark.rutland@arm.com
+Subject: [PATCH v3 00/17] arm64: MMU enabled kexec relocation
+Date:   Wed, 21 Aug 2019 14:31:47 -0400
+Message-Id: <20190821183204.23576-1-pasha.tatashin@soleen.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 04:54:47PM +0000, Yonghong Song wrote:
-> Currently, in kernel/trace/bpf_trace.c, we have
-> 
-> unsigned int trace_call_bpf(struct trace_event_call *call, void *ctx)
-> {
->          unsigned int ret;
-> 
->          if (in_nmi()) /* not supported yet */
->                  return 1;
-> 
->          preempt_disable();
-> 
->          if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
+Changelog:
+v3:
+	- Split changes to create_safe_exec_page() into several patches for
+	  easier review as request by Mark Rutland. This is why this series
+	  has 3 more patches.
+	- Renamed trans_table to tans_pgd as agreed with Mark. The header
+	  comment in trans_pgd.c explains that trans stands for
+	  transitional page tables. Meaning they are used in transition
+	  between two kernels.
+v2:
+	- Fixed hibernate bug reported by James Morse
+	- Addressed comments from James Morse:
+	  * More incremental changes to trans_table
+	  * Removed TRANS_FORCEMAP
+	  * Added kexec reboot data for image with 380M in size.
 
-Yes, I'm aware of that.
+Enable MMU during kexec relocation in order to improve reboot performance.
 
-> In the above, the events with bpf program attached will be missed
-> if the context is nmi interrupt, or if some recursion happens even with 
-> the same or different bpf programs.
-> In case of recursion, the events will not be sent to ring buffer.
+If kexec functionality is used for a fast system update, with a minimal
+downtime, the relocation of kernel + initramfs takes a significant portion
+of reboot.
 
-And while that is significantly worse than what ftrace/perf have, it is
-fundamentally the same thing.
+The reason for slow relocation is because it is done without MMU, and thus
+not benefiting from D-Cache.
 
-perf allows (and iirc ftrace does too) 4 nested context per CPU
-(task,softirq,irq,nmi) but any recursion within those context and we
-drop stuff.
+Performance data
+----------------
+For this experiment, the size of kernel plus initramfs is small, only 25M.
+If initramfs was larger, than the improvements would be greater, as time
+spent in relocation is proportional to the size of relocation.
 
-The BPF stuff is just more eager to drop things on the floor, but it is
-fundamentally the same.
+Previously:
+kernel shutdown	0.022131328s
+relocation	0.440510736s
+kernel startup	0.294706768s
 
-> A lot of bpf-based tracing programs uses maps to communicate and
-> do not allocate ring buffer at all.
+Relocation was taking: 58.2% of reboot time
 
-So extending PERF_RECORD_LOST doesn't work. But PERF_FORMAT_LOST might
-still work fine; but you get to implement it for all software events.
+Now:
+kernel shutdown	0.032066576s
+relocation	0.022158152s
+kernel startup	0.296055880s
 
-> Maybe we can still use ioctl based approach which is light weighted
-> compared to ring buffer approach? If a fd has bpf attached, nhit/nmisses
-> means the kprobe is processed by bpf program or not.
+Now: Relocation takes 6.3% of reboot time
 
-There is nothing kprobe specific here. Kprobes just appear to be the
-only one actually accounting the recursion cases, but everyone has
-them.
+Total reboot is x2.16 times faster.
 
-> Currently, for debugfs, the nhit/nmisses info is exposed at
-> {k|u}probe_profile. Alternative, we could expose the nhit/nmisses
-> in /proc/self/fdinfo/<fd>. User can query this interface to
-> get numbers.
+With bigger userland (fitImage 380M), the reboot time is improved by 3.57s,
+and is reduced from 3.9s down to 0.33s
 
-No, we're not adding stuff to procfs for this.
+Previous approaches and discussions
+-----------------------------------
+https://lore.kernel.org/lkml/20190817024629.26611-1-pasha.tatashin@soleen.com
+version 2 of this series
+
+https://lore.kernel.org/lkml/20190801152439.11363-1-pasha.tatashin@soleen.com
+version 1 of this series
+
+https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
+reserve space for kexec to avoid relocation, involves changes to generic code
+to optimize a problem that exists on arm64 only:
+
+https://lore.kernel.org/lkml/20190716165641.6990-1-pasha.tatashin@soleen.com
+The first attempt to enable MMU, some bugs that prevented performance
+improvement. The page tables unnecessary configured idmap for the whole
+physical space.
+
+https://lore.kernel.org/lkml/20190731153857.4045-1-pasha.tatashin@soleen.com
+No linear copy, bug with EL2 reboots.
+
+Pavel Tatashin (17):
+  kexec: quiet down kexec reboot
+  arm64, hibernate: use get_safe_page directly
+  arm64, hibernate: remove gotos in create_safe_exec_page
+  arm64, hibernate: rename dst to page in create_safe_exec_page
+  arm64, hibernate: check pgd table allocation
+  arm64, hibernate: add trans_pgd public functions
+  arm64, hibernate: move page handling function to new trans_pgd.c
+  arm64, trans_pgd: make trans_pgd_map_page generic
+  arm64, trans_pgd: add trans_pgd_create_empty
+  arm64, trans_pgd: adjust trans_pgd_create_copy interface
+  arm64, trans_pgd: add PUD_SECT_RDONLY
+  arm64, trans_pgd: complete generalization of trans_pgds
+  kexec: add machine_kexec_post_load()
+  arm64, kexec: move relocation function setup and clean up
+  arm64, kexec: add expandable argument to relocation function
+  arm64, kexec: configure trans_pgd page table for kexec
+  arm64, kexec: enable MMU during kexec relocation
+
+ arch/arm64/Kconfig                     |   4 +
+ arch/arm64/include/asm/kexec.h         |  51 ++++-
+ arch/arm64/include/asm/pgtable-hwdef.h |   1 +
+ arch/arm64/include/asm/trans_pgd.h     |  63 ++++++
+ arch/arm64/kernel/asm-offsets.c        |  14 ++
+ arch/arm64/kernel/cpu-reset.S          |   4 +-
+ arch/arm64/kernel/cpu-reset.h          |   8 +-
+ arch/arm64/kernel/hibernate.c          | 261 ++++++------------------
+ arch/arm64/kernel/machine_kexec.c      | 199 ++++++++++++++----
+ arch/arm64/kernel/relocate_kernel.S    | 196 +++++++++---------
+ arch/arm64/mm/Makefile                 |   1 +
+ arch/arm64/mm/trans_pgd.c              | 270 +++++++++++++++++++++++++
+ kernel/kexec.c                         |   4 +
+ kernel/kexec_core.c                    |   8 +-
+ kernel/kexec_file.c                    |   4 +
+ kernel/kexec_internal.h                |   2 +
+ 16 files changed, 750 insertions(+), 340 deletions(-)
+ create mode 100644 arch/arm64/include/asm/trans_pgd.h
+ create mode 100644 arch/arm64/mm/trans_pgd.c
+
+-- 
+2.23.0
+
