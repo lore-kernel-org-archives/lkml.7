@@ -2,113 +2,138 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149CEC3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02FEDC3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84E7206BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:05:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LfFvEtaK"
+	by mail.kernel.org (Postfix) with ESMTP id CCECD22DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566353267;
+	bh=Zqudwk65vUNNG7cwLAF4ZWtWBzan/Kk8MUshf8f8kpk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wER3Zp2oscRdA7xJXECKP+Wwoq53sJmCqyYNMHX6/eRsn9+Ewq0uQi2zKkf8yR7NG
+	 jNLzKLWu1mZn+C2ANik/U5yUEbvMJutW9N9K7HaxZFs2odIP381JOLLPhJoNiomE39
+	 0YnFMLyTTUXuRw2RkRJXyDPSuh6MNGd9Gy6jqdRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfHUCFc (ORCPT
+        id S1727070AbfHUCHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 22:05:32 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35499 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbfHUCFc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 22:05:32 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a127so450029oii.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 19:05:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aECHzRB/hHOnNhkyg0hcP6TqPV/BPLJX25nl4/kfLns=;
-        b=LfFvEtaKz/MgOTqdRv1rJkql8UwyYbQOxvJXvNoK3Mn+wHkFi3tb0YRdooiH2LPpAB
-         3pBMrvenzf40kj3c0bGPkhTLVNeINDXo6CefSOdqnKyDsHU++6XPJNT/vAZWyo2CUPuT
-         8YDoSTk+MZzGCsuhRV1DWXQJfXgwSZKdaSkyaQmex9jTZLxznZN+FjEe6reMpf7p70cN
-         BO8vfPBxytYygI9qgBFg5RnA/ccKzXfp+UJr/FP17pk0s0MWazS2ttN/Ik2vDTmDFLU8
-         wrmfSMny9atqcMuw5998c1t9x3PC7WzMfdC1lZ2uOjRtQ3nOQJMahW7VCrsfQDTftA2G
-         yluA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aECHzRB/hHOnNhkyg0hcP6TqPV/BPLJX25nl4/kfLns=;
-        b=NzTRSq22jrIbfCVv9VJ+c5RITfvSkqsmeaRT5+AVxt+4XJ+XGZ+jXAPdX0N02u/o3n
-         Vz3TJCgTo53u4P+cjYsaLh8fe3hFU6SC1eh3pGCQU5Da06nFD5gevtlMhakm1wUffkkn
-         IoQtKlIhqkxDqEFJZc3BMScwjZ5sO22zKo1BZM506F53mubQI1lZhlH0bzsfJDTx2Ixn
-         KmswQc+JLPOkaKfLlEOolQnWa3pIZfJMe2NbCNOeY7nGG6jxgZ2a2nueZUpo0AZOuzyo
-         3mR4rt+f6lVJlqGu7G87dcjTFWMkgMCqKWGxHt4+zne+TMqdErkqtWspBbc1PHxahJZY
-         4VYQ==
-X-Gm-Message-State: APjAAAW74I1FyYUj12DFeJX5ttYSEUADunBKuFwnXXAShiLB+QCrdwnP
-        Fw8vp6xXinUnqagdPDMnEPWMTkiWW4Ite62YTqHtSg==
-X-Google-Smtp-Source: APXvYqwjAc4xDxKyNYNWOg9299FUKrDuYN3O2kRVASRSQmeY0y3XYLMcOLMmDqyOpj3sjogsk08EhELKlu5sxmSS2xI=
-X-Received: by 2002:aca:cc81:: with SMTP id c123mr2269211oig.30.1566353131286;
- Tue, 20 Aug 2019 19:05:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190724001100.133423-1-saravanak@google.com> <20190724001100.133423-2-saravanak@google.com>
- <32a8abd2-b6a4-67df-eee9-0f006310e81e@gmail.com> <CAGETcx8Q27+Jnz+rHtt33muMV6U+S3cmKh02Ok_Ds_ZzfBqhrg@mail.gmail.com>
- <522e8375-5070-f579-6509-3e44fe66768e@gmail.com> <CAGETcx-9Bera+nU-3=ZNpHqdqKxO0TmNuVUsCMQ-yDm1VXn5zA@mail.gmail.com>
- <a4c139c1-c9d1-3e5a-f47f-cd790b42da1f@gmail.com> <CAGETcx-J7+d3pcArMZvO5zQbUhAhRW+1=FUf7C1fV9-QhkckBw@mail.gmail.com>
- <6028b35b-a4ca-18de-84c6-4a22dbd987c9@gmail.com> <20190821015647.GA12237@kroah.com>
-In-Reply-To: <20190821015647.GA12237@kroah.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 20 Aug 2019 19:04:55 -0700
-Message-ID: <CAGETcx9fB7FuubqR-hNeCjrE3Far+xu6avqpT8egHMUFHPH8PQ@mail.gmail.com>
-Subject: Re: [PATCH v7 1/7] driver core: Add support for linking devices
- during device addition
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        David Collins <collinsd@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 20 Aug 2019 22:07:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726804AbfHUCHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 22:07:46 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E84E422DA7;
+        Wed, 21 Aug 2019 02:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566353265;
+        bh=Zqudwk65vUNNG7cwLAF4ZWtWBzan/Kk8MUshf8f8kpk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Ahk39hs1grZsNJL1+z7+Stu7VoJZ6O9TIOL6aijYhsOVJd9K6tq6DKj/KQriJd21r
+         svftHv/8MJx99tArPBUKMT+U7s4YdKHNLSSKQpMISNCjo/gzLMrZLMkqHq+Ug/srgk
+         ncfFglDJPhJxDZGJ/AK4fNUdUy2nxumdQ2pKTRsQ=
+Date:   Wed, 21 Aug 2019 11:07:39 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 2/3] kprobes: adjust kprobe addr for
+ KPROBES_ON_FTRACE
+Message-Id: <20190821110739.fb3ab6b69423dff64a3b4a29@kernel.org>
+In-Reply-To: <20190820114224.0c8963c4@xhacker.debian>
+References: <20190820113928.1971900c@xhacker.debian>
+        <20190820114224.0c8963c4@xhacker.debian>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 6:56 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Aug 20, 2019 at 06:06:55PM -0700, Frank Rowand wrote:
-> > On 8/20/19 3:10 PM, Saravana Kannan wrote:
-> > > On Mon, Aug 19, 2019 at 9:25 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> > >>
-> > >> On 8/19/19 5:00 PM, Saravana Kannan wrote:
-> > >>> On Sun, Aug 18, 2019 at 8:38 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> > >>>>
-> > >>>> On 8/15/19 6:50 PM, Saravana Kannan wrote:
-> > >>>>> On Wed, Aug 7, 2019 at 7:04 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> > >>>>>>
-> > >>>>>>> Date: Tue, 23 Jul 2019 17:10:54 -0700
-> > >>>>>>> Subject: [PATCH v7 1/7] driver core: Add support for linking devices during
-> > >>>>>>>  device addition
-> > >>>>>>> From: Saravana Kannan <saravanak@google.com>
->
-> This is a "fun" thread :(
->
-> You two should get together in person this week and talk.  I think you
-> both will be at ELC, can we do this tomorrow or Thursday so we can hash
-> it out in a way that doesn't end up talking past each other, like I feel
-> is happening here right now?
->
+Hi Jisheng,
 
-Resending again due to HTML (Sorry, was a mobile reply)
+On Tue, 20 Aug 2019 03:53:31 +0000
+Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
 
-That would be great. Wednesday would be better for me. I might not
-make it to ELC on Thursday. Let us know Frank.
+> For KPROBES_ON_FTRACE case, we need to adjust the kprobe's addr
+> correspondingly.
 
-Thanks,
-Saravana
+Either KPROBES_ON_FTRACE=y or not, ftrace_location() check must be
+done correctly. If it failed, kprobes can modify the instruction
+which can be modified by ftrace.
+
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> ---
+>  kernel/kprobes.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 9873fc627d61..3fd2f68644da 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1484,15 +1484,19 @@ static inline int check_kprobe_rereg(struct kprobe *p)
+>  
+>  int __weak arch_check_ftrace_location(struct kprobe *p)
+>  {
+> -	unsigned long ftrace_addr;
+> +	unsigned long ftrace_addr, addr = (unsigned long)p->addr;
+>  
+> -	ftrace_addr = ftrace_location((unsigned long)p->addr);
+> +#ifdef CONFIG_KPROBES_ON_FTRACE
+> +	addr = ftrace_call_adjust(addr);
+> +#endif
+> +	ftrace_addr = ftrace_location(addr);
+
+No, this is not right way to do. If we always need to adjust address
+before calling ftrace_location(), something wrong with ftrace_location()
+interface.
+ftrace_location(addr) must check the address is within the range which
+can be changed by ftrace. (dyn->ip <= addr <= dyn->ip+MCOUNT_INSN_SIZE)
+
+
+>  	if (ftrace_addr) {
+>  #ifdef CONFIG_KPROBES_ON_FTRACE
+>  		/* Given address is not on the instruction boundary */
+> -		if ((unsigned long)p->addr != ftrace_addr)
+> +		if (addr != ftrace_addr)
+>  			return -EILSEQ;
+>  		p->flags |= KPROBE_FLAG_FTRACE;
+> +		p->addr = (kprobe_opcode_t *)addr;
+
+And again, please don't change the p->addr silently.
+
+Thank you,
+
+>  #else	/* !CONFIG_KPROBES_ON_FTRACE */
+>  		return -EINVAL;
+>  #endif
+> -- 
+> 2.23.0.rc1
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
