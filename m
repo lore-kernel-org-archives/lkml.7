@@ -2,57 +2,78 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EC8C41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D3FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62FE22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE9D206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbfHUOmf (ORCPT
+        id S1729512AbfHUOox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:42:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55868 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728995AbfHUOme (ORCPT
+        Wed, 21 Aug 2019 10:44:53 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:57355 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728608AbfHUOox (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:42:34 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1i0Rol-00074o-0s; Wed, 21 Aug 2019 16:42:31 +0200
-Date:   Wed, 21 Aug 2019 16:42:30 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Alexander Dahl <ada@thorsis.com>, linux-rt-users@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [ANNOUNCE] v5.2.9-rt3
-Message-ID: <20190821144230.knlyrnxz62d75hcb@linutronix.de>
-References: <20190816153616.fbridfzjkmfg4dnr@linutronix.de>
- <2182739.9IRgZpf3R8@ada>
- <20190820154418.GM3545@piout.net>
- <20190821132553.gjvya5lu6j2dfyo5@linutronix.de>
- <20190821142110.GC27031@piout.net>
+        Wed, 21 Aug 2019 10:44:53 -0400
+X-Originating-IP: 86.250.200.211
+Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 0CBD61BF20F;
+        Wed, 21 Aug 2019 14:44:50 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, grygorii.strashko@ti.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, maxime.chevallier@bootlin.com
+Subject: [PATCH net] net: cpsw: fix NULL pointer exception in the probe error path
+Date:   Wed, 21 Aug 2019 16:41:23 +0200
+Message-Id: <20190821144123.22248-1-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190821142110.GC27031@piout.net>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-08-21 16:21:10 [+0200], Alexandre Belloni wrote:
-> I'm not sure it is worth it as the issue is introduced by
-> clocksource-tclib-allow-higher-clockrates.patch. Shouldn't we fix it
-> directly?
+In certain cases when the probe function fails the error path calls
+cpsw_remove_dt() before calling platform_set_drvdata(). This is an
+issue as cpsw_remove_dt() uses platform_get_drvdata() to retrieve the
+cpsw_common data and leds to a NULL pointer exception. This patches
+fixes it by calling platform_set_drvdata() earlier in the probe.
 
-you want to get rid of CONFIG_ATMEL_TCB_CLKSRC_USE_SLOW_CLOCK and use
-the highest possible frequency by default? 
+Fixes: 83a8471ba255 ("net: ethernet: ti: cpsw: refactor probe to group common hw initialization")
+Reported-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
+ drivers/net/ethernet/ti/cpsw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sebastian
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 32a89744972d..a46b8b2e44e1 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -2775,6 +2775,7 @@ static int cpsw_probe(struct platform_device *pdev)
+ 	if (!cpsw)
+ 		return -ENOMEM;
+ 
++	platform_set_drvdata(pdev, cpsw);
+ 	cpsw->dev = dev;
+ 
+ 	mode = devm_gpiod_get_array_optional(dev, "mode", GPIOD_OUT_LOW);
+@@ -2879,7 +2880,6 @@ static int cpsw_probe(struct platform_device *pdev)
+ 		goto clean_cpts;
+ 	}
+ 
+-	platform_set_drvdata(pdev, cpsw);
+ 	priv = netdev_priv(ndev);
+ 	priv->cpsw = cpsw;
+ 	priv->ndev = ndev;
+-- 
+2.21.0
+
