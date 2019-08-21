@@ -2,126 +2,127 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9DDC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A45C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9970422DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF3222D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:38:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbfHURid (ORCPT
+        id S1730196AbfHURij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:38:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44471 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 13:38:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49046 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730079AbfHURi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:38:26 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1730087AbfHURi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:38:27 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 42D67300BC78;
-        Wed, 21 Aug 2019 17:38:26 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0C90C91761;
+        Wed, 21 Aug 2019 17:38:27 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0DB015D9D3;
-        Wed, 21 Aug 2019 17:38:21 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F57416D41;
+        Wed, 21 Aug 2019 17:38:15 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id DA1F4223D08; Wed, 21 Aug 2019 13:38:14 -0400 (EDT)
+        id A400D223CFE; Wed, 21 Aug 2019 13:38:14 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         miklos@szeredi.hu
 Cc:     virtio-fs@redhat.com, vgoyal@redhat.com, stefanha@redhat.com,
-        dgilbert@redhat.com
-Subject: [PATCH 12/13] virtio-fs: Do not provide abort interface in fusectl
-Date:   Wed, 21 Aug 2019 13:37:41 -0400
-Message-Id: <20190821173742.24574-13-vgoyal@redhat.com>
+        dgilbert@redhat.com, Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 02/13] fuse: Use default_file_splice_read for direct IO
+Date:   Wed, 21 Aug 2019 13:37:31 -0400
+Message-Id: <20190821173742.24574-3-vgoyal@redhat.com>
 In-Reply-To: <20190821173742.24574-1-vgoyal@redhat.com>
 References: <20190821173742.24574-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 21 Aug 2019 17:38:26 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 21 Aug 2019 17:38:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtio-fs does not support aborting requests which are being processed. That
-is requests which have been sent to fuse daemon on host.
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-So do not provide "abort" interface for virtio-fs in fusectl.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- fs/fuse/control.c   | 4 ++--
- fs/fuse/fuse_i.h    | 4 ++++
- fs/fuse/inode.c     | 1 +
- fs/fuse/virtio_fs.c | 1 +
- 4 files changed, 8 insertions(+), 2 deletions(-)
+ fs/fuse/file.c     | 15 ++++++++++++++-
+ fs/splice.c        |  3 ++-
+ include/linux/fs.h |  2 ++
+ 3 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-index c23f6f243ad4..c4681efc5ece 100644
---- a/fs/fuse/control.c
-+++ b/fs/fuse/control.c
-@@ -279,8 +279,8 @@ int fuse_ctl_add_conn(struct fuse_conn *fc)
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 5ae2828beb00..c45ffe6f1ecb 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2172,6 +2172,19 @@ static int fuse_file_mmap(struct file *file, struct vm_area_struct *vma)
+ 	return 0;
+ }
  
- 	if (!fuse_ctl_add_dentry(parent, fc, "waiting", S_IFREG | 0400, 1,
- 				 NULL, &fuse_ctl_waiting_ops) ||
--	    !fuse_ctl_add_dentry(parent, fc, "abort", S_IFREG | 0200, 1,
--				 NULL, &fuse_ctl_abort_ops) ||
-+	    (!fc->no_abort && !fuse_ctl_add_dentry(parent, fc, "abort",
-+			S_IFREG | 0200, 1, NULL, &fuse_ctl_abort_ops)) ||
- 	    !fuse_ctl_add_dentry(parent, fc, "max_background", S_IFREG | 0600,
- 				 1, NULL, &fuse_conn_max_background_ops) ||
- 	    !fuse_ctl_add_dentry(parent, fc, "congestion_threshold",
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 73b23421b48e..25a6da6ee8c3 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -73,6 +73,7 @@ struct fuse_mount_data {
- 	unsigned default_permissions:1;
- 	unsigned allow_other:1;
- 	unsigned destroy:1;
-+	unsigned no_abort:1;
- 	unsigned max_read;
- 	unsigned blksize;
- 
-@@ -789,6 +790,9 @@ struct fuse_conn {
- 	/** Does the filesystem support copy_file_range? */
- 	unsigned no_copy_file_range:1;
- 
-+	/** Do not create abort file in fuse control fs */
-+	unsigned no_abort:1;
++static ssize_t fuse_file_splice_read(struct file *in, loff_t *ppos,
++				     struct pipe_inode_info *pipe, size_t len,
++				     unsigned int flags)
++{
++	struct fuse_file *ff = in->private_data;
 +
- 	/** The number of requests waiting for completion */
- 	atomic_t num_waiting;
++	if (ff->open_flags & FOPEN_DIRECT_IO)
++		return default_file_splice_read(in, ppos, pipe, len, flags);
++	else
++		return generic_file_splice_read(in, ppos, pipe, len, flags);
++
++}
++
+ static int convert_fuse_file_lock(struct fuse_conn *fc,
+ 				  const struct fuse_file_lock *ffl,
+ 				  struct file_lock *fl)
+@@ -3228,7 +3241,7 @@ static const struct file_operations fuse_file_operations = {
+ 	.fsync		= fuse_fsync,
+ 	.lock		= fuse_file_lock,
+ 	.flock		= fuse_file_flock,
+-	.splice_read	= generic_file_splice_read,
++	.splice_read	= fuse_file_splice_read,
+ 	.splice_write	= iter_file_splice_write,
+ 	.unlocked_ioctl	= fuse_file_ioctl,
+ 	.compat_ioctl	= fuse_file_compat_ioctl,
+diff --git a/fs/splice.c b/fs/splice.c
+index 98412721f056..652f541d953d 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -362,7 +362,7 @@ static ssize_t kernel_readv(struct file *file, const struct kvec *vec,
+ 	return res;
+ }
  
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index fca81c40b2d7..16bcf0f95979 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -1157,6 +1157,7 @@ int fuse_fill_super_common(struct super_block *sb,
- 	fc->user_id = mount_data->user_id;
- 	fc->group_id = mount_data->group_id;
- 	fc->max_read = max_t(unsigned, 4096, mount_data->max_read);
-+	fc->no_abort = mount_data->no_abort;
+-static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
++ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
+ 				 struct pipe_inode_info *pipe, size_t len,
+ 				 unsigned int flags)
+ {
+@@ -426,6 +426,7 @@ static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
+ 	iov_iter_advance(&to, copied);	/* truncates and discards */
+ 	return res;
+ }
++EXPORT_SYMBOL(default_file_splice_read);
  
- 	/* Used by get_root_inode() */
- 	sb->s_fs_info = fc;
-diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index ce6b76598e74..ce1de9acde84 100644
---- a/fs/fuse/virtio_fs.c
-+++ b/fs/fuse/virtio_fs.c
-@@ -886,6 +886,7 @@ static int virtio_fs_fill_super(struct super_block *sb, char *opts,
- 
- 	d->fudptr = (void **)&fs->vqs[VQ_REQUEST].fud;
- 	d->destroy = true; /* Send destroy request on unmount */
-+	d->no_abort = 1;
- 	err = fuse_fill_super_common(sb, d);
- 	if (err < 0)
- 		goto err_free_init_req;
+ /*
+  * Send 'sd->len' bytes to socket from 'sd->file' at position 'sd->pos'
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 997a530ff4e9..15ae8f5dd24e 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3062,6 +3062,8 @@ extern void block_sync_page(struct page *page);
+ /* fs/splice.c */
+ extern ssize_t generic_file_splice_read(struct file *, loff_t *,
+ 		struct pipe_inode_info *, size_t, unsigned int);
++extern ssize_t default_file_splice_read(struct file *, loff_t *,
++		struct pipe_inode_info *, size_t, unsigned int);
+ extern ssize_t iter_file_splice_write(struct pipe_inode_info *,
+ 		struct file *, loff_t *, size_t, unsigned int);
+ extern ssize_t generic_splice_sendpage(struct pipe_inode_info *pipe,
 -- 
 2.20.1
 
