@@ -2,93 +2,97 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6043DC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BA6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355182339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29BE22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UQjd8jt/";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UQjd8jt/"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OCWv7bX8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfHUJLr (ORCPT
+        id S1727234AbfHUJLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:11:47 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:43714 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbfHUJLq (ORCPT
+        Wed, 21 Aug 2019 05:11:52 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:18541 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727200AbfHUJLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:11:46 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C454260E57; Wed, 21 Aug 2019 09:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566378705;
-        bh=2pr9GsFvXQZE/Ux0QOjzu/XyhJcWbvJ4f0XnBsenS9U=;
+        Wed, 21 Aug 2019 05:11:51 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x7L9BLsk025020;
+        Wed, 21 Aug 2019 18:11:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x7L9BLsk025020
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566378682;
+        bh=Y1VwZdO6Ru05gQk/29DwsFczvGNl4wiiOoEN8zKEUSA=;
         h=From:To:Cc:Subject:Date:From;
-        b=UQjd8jt/z12GiWGnchz09OYDL9p9pwatGGbpK2HknwqQYkSauoMv/fNxqGbmolgUQ
-         npySgwSn3aZmihuka1QQiUXjuc/hd94vZfiE0AUZh2uzlzq1+cubc8OLJU0JZeDEzR
-         /AtwWnVyVV6kDoONCL7BGr8FE9Fi5W5YE7QR3NT4=
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 53B8D60CED;
-        Wed, 21 Aug 2019 09:11:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1566378705;
-        bh=2pr9GsFvXQZE/Ux0QOjzu/XyhJcWbvJ4f0XnBsenS9U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UQjd8jt/z12GiWGnchz09OYDL9p9pwatGGbpK2HknwqQYkSauoMv/fNxqGbmolgUQ
-         npySgwSn3aZmihuka1QQiUXjuc/hd94vZfiE0AUZh2uzlzq1+cubc8OLJU0JZeDEzR
-         /AtwWnVyVV6kDoONCL7BGr8FE9Fi5W5YE7QR3NT4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 53B8D60CED
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     robh+dt@kernel.org, georgi.djakov@linaro.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        evgreen@chromium.org, daidavid1@codeaurora.org,
-        saravanak@google.com, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 0/2] Add OSM L3 Interconnect Provider
-Date:   Wed, 21 Aug 2019 14:41:30 +0530
-Message-Id: <20190821091132.14994-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.22.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        b=OCWv7bX8zKjVb3P5hcq+uFD0oh1wi2o6X9ItcCPJPpgPh/MoHNGxniSEy5UDTnkn3
+         2G3YS5UJVmEpZvr2x2/YbKCp+O7M+cKASteXh9YcatcXtsEdnQdzrFnxEl1x1iFvIh
+         kSFmki8wWPfYPVw4n36rU+RzjTx8OVdP//DR3SPdBXvhnkiX2zjsu9xL24mTo/EZZV
+         HkEsgXEB2CVROPQ8DIuuh42wO2jflyHpmUOZ8R1mbXUeJcqOs7Zo975iZjdERSOC7h
+         8EV28AoOrKInvz225IqTCTL8Ol/ut5TnonFy/j3xq4Hk1HrT9DtJYYe6QPw8qQlc4U
+         4AMTANgj88z8Q==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: add arch/arm64/Kbuild
+Date:   Wed, 21 Aug 2019 18:11:17 +0900
+Message-Id: <20190821091117.7310-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series aims to add Operating State Manager (OSM) L3
-interconnect provider support on SDM845 SoCs to handle bandwidth
-requests from CPU to scale L3 caches.
+Use the standard obj-y form to specify the sub-directories under
+arch/arm64/. No functional change intended.
 
-v2:
- * addressed review comments from Evan
- * dropped unused gpu icc node on SDM845 SoC
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Sibi Sankar (2):
-  dt-bindings: interconnect: Add OSM L3 DT bindings
-  interconnect: qcom: Add OSM L3 interconnect provider support
+ arch/arm64/Kbuild   | 6 ++++++
+ arch/arm64/Makefile | 6 +-----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm64/Kbuild
 
- .../bindings/interconnect/qcom,osm-l3.yaml    |  56 ++++
- drivers/interconnect/qcom/Kconfig             |   7 +
- drivers/interconnect/qcom/Makefile            |   2 +
- drivers/interconnect/qcom/osm-l3.c            | 284 ++++++++++++++++++
- .../dt-bindings/interconnect/qcom,osm-l3.h    |  12 +
- 5 files changed, 361 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
- create mode 100644 drivers/interconnect/qcom/osm-l3.c
- create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
-
+diff --git a/arch/arm64/Kbuild b/arch/arm64/Kbuild
+new file mode 100644
+index 000000000000..d6465823b281
+--- /dev/null
++++ b/arch/arm64/Kbuild
+@@ -0,0 +1,6 @@
++# SPDX-License-Identifier: GPL-2.0-only
++obj-y			+= kernel/ mm/
++obj-$(CONFIG_NET)	+= net/
++obj-$(CONFIG_KVM)	+= kvm/
++obj-$(CONFIG_XEN)	+= xen/
++obj-$(CONFIG_CRYPTO)	+= crypto/
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index d4ed1869e536..fd6714a585f7 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -136,11 +136,7 @@ KASAN_SHADOW_OFFSET := $(shell printf "0x%08x00000000\n" $$(( \
+ 
+ export	TEXT_OFFSET GZFLAGS
+ 
+-core-y		+= arch/arm64/kernel/ arch/arm64/mm/
+-core-$(CONFIG_NET) += arch/arm64/net/
+-core-$(CONFIG_KVM) += arch/arm64/kvm/
+-core-$(CONFIG_XEN) += arch/arm64/xen/
+-core-$(CONFIG_CRYPTO) += arch/arm64/crypto/
++core-y		+= arch/arm64/
+ libs-y		:= arch/arm64/lib/ $(libs-y)
+ core-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+ 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.1
 
