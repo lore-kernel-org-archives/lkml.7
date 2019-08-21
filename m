@@ -2,49 +2,41 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBE3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58492C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E34052332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367F22332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 21:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbfHUVXP (ORCPT
+        id S1730820AbfHUVYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 17:23:15 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57713 "EHLO
+        Wed, 21 Aug 2019 17:24:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57731 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbfHUVXP (ORCPT
+        with ESMTP id S1728188AbfHUVYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 17:23:15 -0400
+        Wed, 21 Aug 2019 17:24:40 -0400
 Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1i0Y4W-0005ll-3z; Wed, 21 Aug 2019 23:23:12 +0200
-Date:   Wed, 21 Aug 2019 23:23:11 +0200 (CEST)
+        id 1i0Y5l-0005mc-Rl; Wed, 21 Aug 2019 23:24:29 +0200
+Date:   Wed, 21 Aug 2019 23:24:28 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] x86/hyper-v: enable TSC page clocksource on 32bit
-In-Reply-To: <alpine.DEB.2.21.1908212316040.1983@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1908212321320.1983@nanos.tec.linutronix.de>
-References: <20190821095650.1841-1-vkuznets@redhat.com> <alpine.DEB.2.21.1908212316040.1983@nanos.tec.linutronix.de>
+To:     Neil MacLeod <neil@nmacleod.com>
+cc:     John Hubbard <jhubbard@nvidia.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, gregkh@linuxfoundation.org,
+        x86@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] x86/boot: Fix boot failure regression
+In-Reply-To: <CAFbqK8=BodLiMr4pdHjdqsZtk8iHUC_9oyRRALJt0xLz4y_4sQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1908212323290.1983@nanos.tec.linutronix.de>
+References: <CAFbqK8=RUaCnk_WkioodkdwLsDina=yW+eLvzckSbVx_3Py_-A@mail.gmail.com> <20190821192513.20126-1-jhubbard@nvidia.com> <CAFbqK8=BodLiMr4pdHjdqsZtk8iHUC_9oyRRALJt0xLz4y_4sQ@mail.gmail.com>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -56,46 +48,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019, Thomas Gleixner wrote:
+On Wed, 21 Aug 2019, Neil MacLeod wrote:
 
-> On Wed, 21 Aug 2019, Vitaly Kuznetsov wrote:
-> 
-> > There is no particular reason to not enable TSC page clocksource
-> > on 32-bit. mul_u64_u64_shr() is available and despite the increased
-> > computational complexity (compared to 64bit) TSC page is still a huge
-> > win compared to MSR-based clocksource.
-> > 
-> > In-kernel reads:
-> >   MSR based clocksource: 3361 cycles
-> >   TSC page clocksource: 49 cycles
-> > 
-> > Reads from userspace (unilizing vDSO in case of TSC page):
-> >   MSR based clocksource: 5664 cycles
-> >   TSC page clocksource: 131 cycles
-> > 
-> > Enabling TSC page on 32bits allows us to get rid of CONFIG_HYPERV_TSCPAGE
-> 
-> s/allows us/allows/
-> 
-> > as it is now not any different from CONFIG_HYPERV_TIMER.
-> > 
-> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> > ---
-> >  arch/x86/include/asm/vdso/gettimeofday.h |  6 +++---
-> >  drivers/clocksource/hyperv_timer.c       | 11 -----------
-> >  drivers/hv/Kconfig                       |  3 ---
-> >  include/clocksource/hyperv_timer.h       |  6 ++----
-> >  4 files changed, 5 insertions(+), 21 deletions(-)
-> 
-> Really nice cleanup as a side effect of adding functionality.
+> I can confirm 5.3-rc5 is booting again from internal M2 drive on
+> Skylake i5 NUC with this commit - many thanks!
 
-That said, could you please rebase that on
+I've queued that in x86/urgent and it's en route for rc6 and stable.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
-
-as I just applied the TSC page patches there and this conflicts left and
-right.
-
-Thanks,
+Thanks!
 
 	tglx
