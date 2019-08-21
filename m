@@ -2,113 +2,147 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC29DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAF2C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4262339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566405634;
-	bh=eLVhmjLNhIMLZZjdqWDukswrRlkV0kuXO3dS9QrC/aU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q9TVQ3VgKyrcvHDya2TMsVu9MlDv7LrI/XGAv4s0KZDKA7Kv6uSNbzLbCIgRCjd3r
-	 f0gbHx/fCeLFE3+PgZ0FbLX1NmMcWdFLAqeLjETrwyAh64Zf2pV3p6Mcg/jXmilFOX
-	 6Zr4M4aOEdKVVNXQRqTS1BME82WYT3ZuxTdu3BZo=
+	by mail.kernel.org (Postfix) with ESMTP id BE2D822D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbfHUQkd (ORCPT
+        id S1729206AbfHUQnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:40:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57608 "EHLO mail.kernel.org"
+        Wed, 21 Aug 2019 12:43:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44068 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728806AbfHUQkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:40:33 -0400
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726828AbfHUQnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:43:06 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27AE22339F;
-        Wed, 21 Aug 2019 16:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566405632;
-        bh=eLVhmjLNhIMLZZjdqWDukswrRlkV0kuXO3dS9QrC/aU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IdqhTaUrH8ylMxq2eaVChVjp1DLFMiNAP91pxJOzldiPcbNQ1FLreYnx8wWl5YtIK
-         EsjjJj69ldHa/PgtAsQw7+NgLs1xqf+0XnGGTYXRfNPLdAe/N9vPCppd6gVvMRllRD
-         weTqJ/6/+iGvy6EpFqWFjL3xf2DxzQ8EnzjwjnY0=
-Received: by mail-lf1-f48.google.com with SMTP id b17so2292799lff.7;
-        Wed, 21 Aug 2019 09:40:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAX3xqocWgcOf5RgBzc13tgMYxSN2beSrRi5rwfyqzQTmAUqnuii
-        J/e1znW5SMdLX4HLNwojn1tqOOiJKhaoftn8jkY=
-X-Google-Smtp-Source: APXvYqwT/36UbVBX6mo7+xkO8e2JanFOODu9B3xjLG9XlzyxH4yIuiugMn/CvKnM9WXnCEWyDwVmzXHNJGzCDTOl6Lg=
-X-Received: by 2002:a19:82c3:: with SMTP id e186mr18643045lfd.18.1566405630317;
- Wed, 21 Aug 2019 09:40:30 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 51A0D89AC8;
+        Wed, 21 Aug 2019 16:43:05 +0000 (UTC)
+Received: from [10.10.125.147] (ovpn-125-147.rdu2.redhat.com [10.10.125.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 334325DA32;
+        Wed, 21 Aug 2019 16:43:04 +0000 (UTC)
+Subject: Re: [PATCH v2] nbd: fix possible page fault for nbd disk
+To:     xiubli@redhat.com, josef@toxicpanda.com, axboe@kernel.dk
+References: <20190821115753.3911-1-xiubli@redhat.com>
+Cc:     linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org
+From:   Mike Christie <mchristi@redhat.com>
+Message-ID: <5D5D7497.9020203@redhat.com>
+Date:   Wed, 21 Aug 2019 11:43:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.6.0
 MIME-Version: 1.0
-References: <20190820094027.4144-1-ribalda@kernel.org> <20190820094027.4144-2-ribalda@kernel.org>
- <1566315769.3030.20.camel@pengutronix.de>
-In-Reply-To: <1566315769.3030.20.camel@pengutronix.de>
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date:   Wed, 21 Aug 2019 18:40:13 +0200
-X-Gmail-Original-Message-ID: <CAPybu_0bNN7E6wqYXZkFC=5y=rHxteHVsMd0moeVWb7m8yy3NA@mail.gmail.com>
-Message-ID: <CAPybu_0bNN7E6wqYXZkFC=5y=rHxteHVsMd0moeVWb7m8yy3NA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] Documentation: media: Describe V4L2_CID_UNIT_CELL_SIZE
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190821115753.3911-1-xiubli@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 21 Aug 2019 16:43:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philipp
+On 08/21/2019 06:57 AM, xiubli@redhat.com wrote:
+> From: Xiubo Li <xiubli@redhat.com>
+> 
+> When the NBD_CFLAG_DESTROY_ON_DISCONNECT flag is set and at the same
+> time when the socket is closed due to the server daemon is restarted,
+> just before the last DISCONNET is totally done if we start a new connection
+> by using the old nbd_index, there will be crashing randomly, like:
+> 
+> <3>[  110.151949] block nbd1: Receive control failed (result -32)
+> <1>[  110.152024] BUG: unable to handle page fault for address: 0000058000000840
+> <1>[  110.152063] #PF: supervisor read access in kernel mode
+> <1>[  110.152083] #PF: error_code(0x0000) - not-present page
+> <6>[  110.152094] PGD 0 P4D 0
+> <4>[  110.152106] Oops: 0000 [#1] SMP PTI
+> <4>[  110.152120] CPU: 0 PID: 6698 Comm: kworker/u5:1 Kdump: loaded Not tainted 5.3.0-rc4+ #2
+> <4>[  110.152136] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+> <4>[  110.152166] Workqueue: knbd-recv recv_work [nbd]
+> <4>[  110.152187] RIP: 0010:__dev_printk+0xd/0x67
+> <4>[  110.152206] Code: 10 e8 c5 fd ff ff 48 8b 4c 24 18 65 48 33 0c 25 28 00 [...]
+> <4>[  110.152244] RSP: 0018:ffffa41581f13d18 EFLAGS: 00010206
+> <4>[  110.152256] RAX: ffffa41581f13d30 RBX: ffff96dd7374e900 RCX: 0000000000000000
+> <4>[  110.152271] RDX: ffffa41581f13d20 RSI: 00000580000007f0 RDI: ffffffff970ec24f
+> <4>[  110.152285] RBP: ffffa41581f13d80 R08: ffff96dd7fc17908 R09: 0000000000002e56
+> <4>[  110.152299] R10: ffffffff970ec24f R11: 0000000000000003 R12: ffff96dd7374e900
+> <4>[  110.152313] R13: 0000000000000000 R14: ffff96dd7374e9d8 R15: ffff96dd6e3b02c8
+> <4>[  110.152329] FS:  0000000000000000(0000) GS:ffff96dd7fc00000(0000) knlGS:0000000000000000
+> <4>[  110.152362] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> <4>[  110.152383] CR2: 0000058000000840 CR3: 0000000067cc6002 CR4: 00000000001606f0
+> <4>[  110.152401] Call Trace:
+> <4>[  110.152422]  _dev_err+0x6c/0x83
+> <4>[  110.152435]  nbd_read_stat.cold+0xda/0x578 [nbd]
+> <4>[  110.152448]  ? __switch_to_asm+0x34/0x70
+> <4>[  110.152468]  ? __switch_to_asm+0x40/0x70
+> <4>[  110.152478]  ? __switch_to_asm+0x34/0x70
+> <4>[  110.152491]  ? __switch_to_asm+0x40/0x70
+> <4>[  110.152501]  ? __switch_to_asm+0x34/0x70
+> <4>[  110.152511]  ? __switch_to_asm+0x40/0x70
+> <4>[  110.152522]  ? __switch_to_asm+0x34/0x70
+> <4>[  110.152533]  recv_work+0x35/0x9e [nbd]
+> <4>[  110.152547]  process_one_work+0x19d/0x340
+> <4>[  110.152558]  worker_thread+0x50/0x3b0
+> <4>[  110.152568]  kthread+0xfb/0x130
+> <4>[  110.152577]  ? process_one_work+0x340/0x340
+> <4>[  110.152609]  ? kthread_park+0x80/0x80
+> <4>[  110.152637]  ret_from_fork+0x35/0x40
+> 
+> This is very easy to reproduce by running the nbd-runner.
+> 
+> Signed-off-by: Xiubo Li <xiubli@redhat.com>
+> ---
+>  drivers/block/nbd.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+> index e21d2ded732b..b07b4452d696 100644
+> --- a/drivers/block/nbd.c
+> +++ b/drivers/block/nbd.c
+> @@ -112,6 +112,8 @@ struct nbd_device {
+>  	struct list_head list;
+>  	struct task_struct *task_recv;
+>  	struct task_struct *task_setup;
+> +
+> +	bool shutting_down;
+>  };
+>  
+>  #define NBD_CMD_REQUEUED	1
+> @@ -230,8 +232,8 @@ static void nbd_put(struct nbd_device *nbd)
+>  	if (refcount_dec_and_mutex_lock(&nbd->refs,
+>  					&nbd_index_mutex)) {
+>  		idr_remove(&nbd_index_idr, nbd->index);
+> -		mutex_unlock(&nbd_index_mutex);
+>  		nbd_dev_remove(nbd);
+> +		mutex_unlock(&nbd_index_mutex);
+>  	}
+>  }
+>  
+> @@ -1103,6 +1105,7 @@ static int nbd_disconnect(struct nbd_device *nbd)
+>  
+>  	dev_info(disk_to_dev(nbd->disk), "NBD_DISCONNECT\n");
+>  	set_bit(NBD_DISCONNECT_REQUESTED, &config->runtime_flags);
+> +	nbd->shutting_down = true;
+>  	send_disconnects(nbd);
+>  	return 0;
+>  }
+> @@ -1761,6 +1764,12 @@ static int nbd_genl_connect(struct sk_buff *skb, struct genl_info *info)
+>  		mutex_unlock(&nbd_index_mutex);
+>  		return -EINVAL;
+>  	}
+> +
+> +	if (nbd->shutting_down) {
+> +		mutex_unlock(&nbd_index_mutex);
+> +		goto again;
+> +	}
 
-On Tue, Aug 20, 2019 at 5:42 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
->
-> On Tue, 2019-08-20 at 11:40 +0200, Ricardo Ribalda Delgado wrote:
-> > New control to pass to userspace the width/height of a pixel. Which is
-> > needed for calibration and lens selection.
-> >
-> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> > ---
-> >  Documentation/media/uapi/v4l/ext-ctrls-camera.rst | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > index 51c1d5c9eb00..b43047d4e7a1 100644
-> > --- a/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > +++ b/Documentation/media/uapi/v4l/ext-ctrls-camera.rst
-> > @@ -510,6 +510,14 @@ enum v4l2_scene_mode -
-> >      value down. A value of zero stops the motion if one is in progress
-> >      and has no effect otherwise.
-> >
-> > +``V4L2_CID_UNIT_CELL_SIZE (struct)``
-> > +    This control returns the unit cell size in nanometres. The struct provides
-> > +    the width and the height in separated fields to take into consideration
-> > +    asymmetric pixels and/or hardware binning.
-> > +    The unit cell consist on the whole area of the pixel, sensitive and
-> > +    non-sensitive.
->
-> "consists of", otherwise this looks unambiguous to me.
->
-Thanks, fixing on v3. Will send after I get more feedback
-
-
-
-> I'm not sure if it is required to add a table for struct v4l2_area,
-> similarly to the other compound controls.
->
-> > +    This control is required for automatic calibration sensors/cameras.
-> > +
-> >  .. [#f1]
-> >     This control may be changed to a menu control in the future, if more
-> >     options are required.
->
-> regards
-> Philipp
+How does shutting_down get set back to false for the case where
+NBD_CFLAG_DESTROY_ON_DISCONNECT is not set, we have done a
+nbd_disconnect and now the connect has the nbd index of that existing
+device. It seems like the flag is going to be stuck as set.
