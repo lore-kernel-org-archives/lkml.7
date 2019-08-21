@@ -2,104 +2,104 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331C3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBAEC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070E823403
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:07:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cATKvr0x"
+	by mail.kernel.org (Postfix) with ESMTP id F128423404
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbfHUUHJ (ORCPT
+        id S1728687AbfHUUJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 16:07:09 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42403 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbfHUUHI (ORCPT
+        Wed, 21 Aug 2019 16:09:26 -0400
+Received: from www381.your-server.de ([78.46.137.84]:38792 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfHUUJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 16:07:08 -0400
-Received: by mail-qt1-f196.google.com with SMTP id t12so4612151qtp.9;
-        Wed, 21 Aug 2019 13:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ncn6eYm4JSkQlweNtA3S5RYrt/VpHG9HsAGzGWdObeM=;
-        b=cATKvr0xSWCkFzxywIUjL6lQn9V6IunbrJZkXS/gQl+YK0zoqooppTi4ndkH/MW5g2
-         kFlCNBoe6jvpzfU3jL0u3XiuF8XilYu35MqtRxfEaR9igu+1JDRG+fbAUOC/H3KZ9lOE
-         +UhP6sD25uXWkBRrDaaTXaSmihyzfD4aDPa6hBxwExsVBkWTyn08gw73lP54nORkWBw+
-         7x6XRzMenV+sFHT2Tuo3e6e6/j75sdpz8Y7Q3NKsnICEd4u0sKLS5cxzC39xVUanvnYy
-         Y4fRdyXDbvaWN64K+P7+V0tLZKZleGLRYmSx8cJ3OSTNv6L6Xl2ApAGESnHMHC7d2yF7
-         Cc2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ncn6eYm4JSkQlweNtA3S5RYrt/VpHG9HsAGzGWdObeM=;
-        b=JGGqx8jecws5Aw9eYYbYglzyLHTlkSGSzAPbVk/Sb9bZuGJOrzVdhtw4RKt3kbJYmQ
-         hP9TvHfMiiHKv5zxSASo3ujmMx0AeZs8G0l1iSpphTfbapQ6Y3kCcRPlfFKmDfad/Mo8
-         qDcZ2vzYV7TFIphb9uHVuVHlci8hhxKyKdMOY4ycj8dcRBGyPbINBZpNOzO8bJoKnJLK
-         lPHGp00WhXRuBQ9rX+xLARJ305DMGeTXK9NwyB396xkC3oT1FwKUVOUieQKKfwUiTRVw
-         lqz6/SJjV8ZnkYXgvF34C72SiPPmd1K+y/Xc2sxl+LLTk64eTITlFCCdZmArpQ5ducjB
-         3oZg==
-X-Gm-Message-State: APjAAAWzmGskZ9/R+2yXHdZ0N31dMW1drpskBFeirzC9IbqvagWHADlj
-        n57adlZS+wht/hK5q+U+Rzo8EgBdJ30=
-X-Google-Smtp-Source: APXvYqzFBpvKYFLywp49wq7pnQMywApD6zvVMaIqNjWR9zl6SZTds2nNI0IEyhyUbFu++TjNucYitw==
-X-Received: by 2002:aed:2a86:: with SMTP id t6mr32542840qtd.391.1566418027658;
-        Wed, 21 Aug 2019 13:07:07 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.211.175])
-        by smtp.gmail.com with ESMTPSA id t13sm10559914qkm.117.2019.08.21.13.07.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 13:07:06 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 30FE140340; Wed, 21 Aug 2019 17:07:01 -0300 (-03)
-Date:   Wed, 21 Aug 2019 17:07:01 -0300
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, Daniel Xu <dxu@dxuuu.xyz>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        Alexei Starovoitov <ast@fb.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add
- PERF_EVENT_IOC_QUERY_PROBE ioctl
-Message-ID: <20190821200701.GI3929@kernel.org>
-References: <20190820144503.GV2332@hirez.programming.kicks-ass.net>
- <BWENHQJIN885.216UOYEIWNGFU@dlxu-fedora-R90QNFJV>
- <20190821110856.GB2349@hirez.programming.kicks-ass.net>
- <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
+        Wed, 21 Aug 2019 16:09:26 -0400
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1i0Wv4-0004sC-KZ; Wed, 21 Aug 2019 22:09:22 +0200
+Received: from [93.104.96.205] (helo=[192.168.178.20])
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <lars@metafoo.de>)
+        id 1i0Wv4-0006yU-D3; Wed, 21 Aug 2019 22:09:22 +0200
+Subject: Re: [PATCH 1/1] iio: core: Fix fractional format generation
+To:     Alexander Stein <alexander.stein@systec-electronic.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190821155023.6333-1-alexander.stein@systec-electronic.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <0a9920f8-8546-1138-78d8-755f0a43c930@metafoo.de>
+Date:   Wed, 21 Aug 2019 22:09:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190821155023.6333-1-alexander.stein@systec-electronic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25548/Wed Aug 21 10:27:18 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Aug 21, 2019 at 04:54:47PM +0000, Yonghong Song escreveu:
-> Arnaldo has a question on bcc mailing list about the hit/miss
-> counting of bpf program missed to process events.
- 
-> https://lists.iovisor.org/g/iovisor-dev/message/1783
+On 8/21/19 5:50 PM, Alexander Stein wrote:
+> In case the result is -0.3252 tmp0 is 0 after the div_s64_rem, so tmp0 is
+> non-negative which results in an output of 0.3252.
+> Fix this by explicitly handling the negative sign ourselves.
 
-PERF_FORMAT_LOST seems to be a good answer to that? See my other reply
-to this thread.
+Hi,
 
-- Arnaldo
+Thanks for you patch. Some comments inline.
+
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@systec-electronic.com>
+> ---
+>  drivers/iio/industrialio-core.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 245b5844028d..18350c1959ae 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -568,6 +568,7 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
+>  {
+>  	unsigned long long tmp;
+>  	int tmp0, tmp1;
+> +	const char *sign = vals[0] < 0 ? "-" : "";
+>  	bool scale_db = false;
+>  
+>  	switch (type) {
+> @@ -593,11 +594,11 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
+>  		tmp = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
+>  		tmp1 = vals[1];
+>  		tmp0 = (int)div_s64_rem(tmp, 1000000000, &tmp1);
+> -		return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
+> +		return snprintf(buf, len, "%s%u.%09u", sign, abs(tmp0), abs(tmp1));
+
+I think this breaks the case where vals[1] is negative, but vals[0] is
+positive. Maybe we can use a similar approach as for
+IIO_VAL_INT_PLUS_NANO. Maybe even put this into a small helper function.
+
+>  	case IIO_VAL_FRACTIONAL_LOG2:
+>  		tmp = shift_right((s64)vals[0] * 1000000000LL, vals[1]);
+>  		tmp0 = (int)div_s64_rem(tmp, 1000000000LL, &tmp1);
+> -		return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
+> +		return snprintf(buf, len, "%s%u.%09u", sign, abs(tmp0), abs(tmp1));
+>  	case IIO_VAL_INT_MULTIPLE:
+>  	{
+>  		int i;
+> 
+
