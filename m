@@ -2,110 +2,101 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16719C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49D5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D960022CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:04:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhDkcYFG"
+	by mail.kernel.org (Postfix) with ESMTP id 96BD92339F
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566403475;
+	bh=KF4ylo3kCKBHAk1AFfcHDCAAl5qTya2CfQYF7CXKCus=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Kwz76dKKgX2TcYQN/MLg7xIPhZRdShrs97wxsNLGzvEh03sXNizgOOc98fpdeLlTi
+	 KH04Evgv4YneEkRasZdXqA7njTO5plAszg/lvbNP93drKc/vlO0n6WyREy59rCeOJG
+	 kcTE9/a1YWo5pzicBwklNa/Fq9NOd+OZG+7+QkSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbfHUQD7 (ORCPT
+        id S1728797AbfHUQEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:03:59 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37240 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbfHUQD5 (ORCPT
+        Wed, 21 Aug 2019 12:04:34 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43769 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbfHUQEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:03:57 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bj8so1567453plb.4;
-        Wed, 21 Aug 2019 09:03:56 -0700 (PDT)
+        Wed, 21 Aug 2019 12:04:34 -0400
+Received: by mail-qt1-f196.google.com with SMTP id b11so3630990qtp.10;
+        Wed, 21 Aug 2019 09:04:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=sK36cCquOF5JpYDhHcSG882sVJ66GrerDAKUpKFlmIE=;
-        b=IhDkcYFGbn1FO+a2df3L+AbR0/WlPpfhzlf2+iWjRX/wBpscNkz0csaFfwGDd+URM3
-         4DlOPjjAAw7NPlmjwg7u5XqjdXUAgORMHpnUUWwuAQQjMOzhQuDCV9cNleTI5RHP9fDQ
-         vXRtFdI9V0QwEjW64jbjcj+jlHudt6UjQpDvXpIj3qrhzoE2v6fByR4dTTRVx7hAj3/P
-         P6TEEvo6w7IVflPOvpI6sBCrxNQDKAfE+6M+fthXVlAFyd8eUY2htE6odPeUtHq9PeCW
-         IcNlg25akBgBMZNTBNiHP+8l4rBbvX9SocgAwTaFBx9TyvLbDgPNnr1W14w/VyZ0E4rJ
-         IDCA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pSYvDILhSH8fJWFn1Ay93bkSas+NlIGIDDL+tHz2nnY=;
+        b=FcPaI0pBK/tsTJ85fkJV0GzNaa0VI6xq2/3C77dJ9Ksg2LPi+NeYin58kEZaHWQ4+c
+         yNts5ywVYjfMNCER2xvTfME0oKqC0YC2I4+K1tsuNpQiaJjKZTyj3LDo3/o+40aLy1b3
+         xFROy6h268Qz/2709NunEce2lWelxf9pFlX7BM8kPI3y5yOWd5UyF8HaxBcv8mpUorwb
+         8wJ1/du7AiJGYKqbpfRUjO9rT+TCM/8hnViWhPuAotTO6NOkCjN1Clp8ecE6hIl6tYqF
+         MHer6bExHhfCK5pjD900mPPO3BKg9ILIPrD3FA13M/iRdL1oZqc+Ge1OIPSGrhdITT6H
+         MvGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=sK36cCquOF5JpYDhHcSG882sVJ66GrerDAKUpKFlmIE=;
-        b=KuqgKg9RdX7+rGPKNbBmR5bm6HVOkibcW8IVEoWVsGhg3v+f/D7ApsYSmFGq4byXNN
-         Sm8vHG0X06MXIRZo5iFriSjotGYFYj/bMTd+qoACrPbilsXvSCyVb6Z5cdhS420xfR1z
-         JVhwF4UoZH8hVMDE8hHUNoZSiJH9DxW2FJE6w7P5G5z9D3Cp410ioPQe5+xPW+lyGnCH
-         mhK7wQERdhKuDVv9Pr7narCChPf4O0xlQuMQy9bOCYvpsiEZHuHg79m7eVNDZq3EzXJW
-         /eq8YjYNu5x10sxUntYFAUN843VDFzw66lzBW27BTYktqaJaBx9mzePz8opn8Nyzpdod
-         2gEg==
-X-Gm-Message-State: APjAAAUerWWRRgcrDBa0XpdWBUKqnV6D1Ej9R4BHU30/Tm27l/ji1t/c
-        NJlOqCqXvDeo2t0yur9Ml4Q=
-X-Google-Smtp-Source: APXvYqzNqXSENxzGkZjNibXp0JX98LVS/d77pjQZhkQt3ndUJTQnJfzh95dd/VhbttVkaAPoXOz7WA==
-X-Received: by 2002:a17:902:1123:: with SMTP id d32mr3649506pla.218.1566403436201;
-        Wed, 21 Aug 2019 09:03:56 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id e9sm32640892pfh.155.2019.08.21.09.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 09:03:53 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 09:03:51 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        linux-input@vger.kernel.org, Doug Covelli <dcovelli@vmware.com>
-Subject: Re: [PATCH 4/4] input/vmmouse: Update the backdoor call with support
- for new instructions
-Message-ID: <20190821160351.GA76194@dtor-ws>
-References: <20190818143316.4906-1-thomas_os@shipmail.org>
- <20190818143316.4906-5-thomas_os@shipmail.org>
- <20190821050925.GA566@penguin>
- <027a55d6-ab26-ef9c-bd89-93a38f96160b@shipmail.org>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pSYvDILhSH8fJWFn1Ay93bkSas+NlIGIDDL+tHz2nnY=;
+        b=MPxfueIILTWXOUzpA+Z0oV1cWWEcBMtN+G/Vs2jwKy89V0dG1gg+05X5HgrU6UkPw9
+         w+na9w4JaEBfEp9rZ3fJZ7YJbSblKg59j+WC1nEetRvV5j73u2HbFsRH4b+y7/RsY3EI
+         Tkts2Mn8dP5s3Wujb2S5TGbbR59x820Wtuw6d3E/UtAuIHrVIfZjvoDpzbfzxECN6bpi
+         HbckURyFhBT5525tD8fT7cBHsvQ8kc7tB0XKmeT7vY63ek0qAma35Tt+XqzAHwsgl/vp
+         EagHObKFIBFAf4UopwBtkoFRTmf+eeepFAciZ+VP5rwHFu0nxkR2eW68/qotVogXWO2d
+         EzVQ==
+X-Gm-Message-State: APjAAAWJEw5RBtXNw0i1drRcZTSGtdL1HPiF09aFzepx5WV6Oytkv4dw
+        5sUhikAyYYl9L4gzjo7D93WIQfdE
+X-Google-Smtp-Source: APXvYqxpFrzdsIp5vYz/r7TIVsm3AF8l2qHkWaxK1IbWJsfJxsILknQZQre8GqBdTdcjbqhL1sL5hQ==
+X-Received: by 2002:a0c:edcb:: with SMTP id i11mr18388359qvr.206.1566403473118;
+        Wed, 21 Aug 2019 09:04:33 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:1f05])
+        by smtp.gmail.com with ESMTPSA id v126sm10464175qkh.3.2019.08.21.09.04.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 09:04:32 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 09:04:30 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     axboe@kernel.dk, hannes@cmpxchg.org, mhocko@kernel.org,
+        vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH 5/5] writeback, memcg: Implement foreign dirty flushing
+Message-ID: <20190821160430.GL2263813@devbig004.ftw2.facebook.com>
+References: <20190815195619.GA2263813@devbig004.ftw2.facebook.com>
+ <20190815195930.GF2263813@devbig004.ftw2.facebook.com>
+ <20190816160256.GI3041@quack2.suse.cz>
+ <20190821160037.GK2263813@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <027a55d6-ab26-ef9c-bd89-93a38f96160b@shipmail.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190821160037.GK2263813@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 05:48:23PM +0200, Thomas Hellström (VMware) wrote:
-> On 8/21/19 7:09 AM, Dmitry Torokhov wrote:
-> > On Sun, Aug 18, 2019 at 04:33:16PM +0200, Thomas Hellström (VMware) wrote:
-> > > From: Thomas Hellstrom <thellstrom@vmware.com>
-> > > 
-> > > Use the definition provided by include/asm/vmware.h
-> > > 
-> > > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > Cc: <linux-input@vger.kernel.org>
-> > > Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-> > > Reviewed-by: Doug Covelli <dcovelli@vmware.com>
-> > Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > 
-> > Please feel free to merge with the rest of the patches introducing
-> > VMWARE_HYPERCALL.
+On Wed, Aug 21, 2019 at 09:00:37AM -0700, Tejun Heo wrote:
+> > 2) When you invalidate frn entry here by writing 0 to 'at', it's likely to get
+> > reused soon. Possibly while the writeback is still running. And then you
+> > won't start any writeback for the new entry because of the
+> > atomic_read(&frn->done.cnt) == 1 check. This seems like it could happen
+> > pretty frequently?
 > 
-> Thanks, Dmitry!
-> 
-> I have a version 2 of the patch were the only difference is that edx is
-> initialized to zero which is default for vmcall / vmmcall. Can I use your
-> ack for that one as well?
+> Hmm... yeah, the clearing might not make sense.  I'll remove that.
 
-Yes, sure.
+Oh, the reuse logic checks whether done.cnt == 1 and only reuse if no
+writeback is still in flight, so this one should be fine.
+
+Thanks.
 
 -- 
-Dmitry
+tejun
