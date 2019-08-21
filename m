@@ -2,87 +2,98 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7966BC41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB39C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4088F233A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7272332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:55:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566420840;
-	bh=WVv7OC/wjSPYjgZPpA23H9SG+kB2lX2pXPtA5l+Bz9Q=;
+	s=default; t=1566420934;
+	bh=3N06S7d+IJH7fPcRuLFfhOA0WbN6iEVHSUEKzhUzAFw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0g965FH0WnsXSn1K+7dPJhY2cIEbSjorFh75J2ENcZLpQJLIOGleXHQQzm43TYQmb
-	 jOY1gxThcWlfzyej55ANXH0I5U/8DIISGnpfNIgDD2LcXGoLHhW7NrnBECKa8yLxuH
-	 ZReNuRKouImGh77r7lVLlrnzu5oThJYmBnZOwAFY=
+	b=IaDtIdz3veNr/N0I3SasYH9LfPXnbUliYw+02vS7rgmBeB0GPIpeMBpIPJO5pl3OT
+	 SkyMyrnEYk2ENDaP6TaRyMYWEcG1OHRLDHnkaRf/aHLnL/6fNbWZwdo9zSjSl6p00J
+	 u7zOPWqYBIrXo4xy0BfWP/ckdJR8peMjbDIgmfnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbfHUUx7 (ORCPT
+        id S1729962AbfHUUzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 16:53:59 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:43939 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfHUUx6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 16:53:58 -0400
-Received: by mail-oi1-f196.google.com with SMTP id y8so2672252oih.10;
-        Wed, 21 Aug 2019 13:53:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iN2Cyapy/c+udG8GVjOneUf6PsDSAtIb74EbQ1qpId0=;
-        b=Ogkhw6Le/V+YH83ya5C8oBdBxJzDljPFl0zrlCDPxJsOJFhYtn9ukoGQCqC8rGAkz4
-         qZ/iJCyAb78i4Yy0PaXVxMvAl0wuCMb/ZUs3aIP64NL8ltXIkJnEt1X61MLneO+CWGR2
-         WPGA20HAVZwVaw+Zgr0S07o1tPY1Y+N++WAwxTYqbINmkK7/9f+Zx+YcuNfkS1UQke7i
-         O48xu2fYzV1ODMcnWIaFKOW1ZM3iVyHqW/U4kUA33KdaGAVjFUwEFSE7sXmYv9mDEXkl
-         ObGXrwStFlol2PS9gfM0+0jSkh8zKIGwgCy0zKlqCGhWsDNChHWyGZyTPUTubBmp8qBe
-         u1Eg==
-X-Gm-Message-State: APjAAAUfm4t6OcICkVW8yI+C5Q/rOqbat8QzrxcwY5fGWau6I2WHk3fy
-        iipADvnz2Z/jXKoHx/w8vA==
-X-Google-Smtp-Source: APXvYqyF7OdLJMF4z4ZxUcRUJPQqxFX+w2EQg50WBPyrjB+YPmYit8gOvuo6+I7+ymbPoLac9h5cgA==
-X-Received: by 2002:aca:f256:: with SMTP id q83mr1290528oih.99.1566420837625;
-        Wed, 21 Aug 2019 13:53:57 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p2sm7799009otl.59.2019.08.21.13.53.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 13:53:57 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 15:53:56 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: Re: [PATCH v1 1/3] gpio: mpc8xxx: add ls1088a platform gpio node DT
- binding description
-Message-ID: <20190821205356.GA14637@bogus>
-References: <20190808101628.36782-1-hui.song_1@nxp.com>
+        Wed, 21 Aug 2019 16:55:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726998AbfHUUzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 16:55:33 -0400
+Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBC4E22CF7;
+        Wed, 21 Aug 2019 20:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566420932;
+        bh=3N06S7d+IJH7fPcRuLFfhOA0WbN6iEVHSUEKzhUzAFw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Op0ZTlKcQ72uPdMScK1pmE2ol9RArOow9WNasYr/64DCACbauO36mqWDk3iXoHlAp
+         o2KArwFsS+X1aoDsVU5Dh3+T0ztd+dbqfJOPuN6Q6wQ03QK4YTgyvNawohH8pDEe7I
+         JNVuPjfYpIi+AKrbyigMwNEKXcxJQbjK3xpgb5Lc=
+Date:   Wed, 21 Aug 2019 13:55:31 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Jerry Chuang <jerry-chuang@realtek.com>,
+        John Whitmore <johnfwhitmore@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: Added Realtek rtl8192u driver to staging - static analysis
+ report.
+Message-ID: <20190821205531.GC17415@kroah.com>
+References: <cb1222a8-4c67-8fac-f1d9-755e97699caa@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190808101628.36782-1-hui.song_1@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cb1222a8-4c67-8fac-f1d9-755e97699caa@canonical.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  8 Aug 2019 18:16:26 +0800, Hui Song wrote:
-> From: Song Hui <hui.song_1@nxp.com>
+On Wed, Aug 21, 2019 at 07:18:39PM +0100, Colin Ian King wrote:
+> Hi,
 > 
-> ls1088a and ls1028a platform share common gpio node.
+> Static analysis of linux-next picked up an issue with the following commit:
 > 
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-mpc8xxx.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> commit 8fc8598e61f6f384f3eaf1d9b09500c12af47b37
+> Author: Jerry Chuang <jerry-chuang@realtek.com>
+> Date:   Tue Nov 3 07:17:11 2009 -0200
 > 
+>     Staging: Added Realtek rtl8192u driver to staging
+> 
+> In drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c we have:
+> 
+> CID 48331 (#1 of 1): Unused value (UNUSED_VALUE) assigned_pointer
+> 
+> Assigning value from ieee->crypt[ieee->tx_keyidx] to crypt here, but
+> that stored value is not used.
+> 
+> 746        crypt = ieee->crypt[ieee->tx_keyidx];
+> 747        if (encrypt)
+> 748                beacon_buf->capability |=
+> cpu_to_le16(WLAN_CAPABILITY_PRIVACY);
+> 
+> Pointer crypt is being assigned but is never used afterwards.  Now
+> either this is a redundant assignment and can be removed OR maybe crypt
+> should be checked and there is a typo, e.g.:
+> 
+> 	crypt = ieee->crypt[ieee->tx_keyidx];
+> 	if (crypt)
+> 		...
+> 
+> Either way, it's not clear to me and I think the code needs cleaning up.
+> Any ideas?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+10+ year old code, yeah!!!
+
+Just guess, who knows, no one seems to care :(
+
+greg k-h
