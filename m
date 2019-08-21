@@ -2,197 +2,336 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1A0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9319CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC1A2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E59C2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:28:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566394102;
+	bh=i5OSWlioycaF2Znxi7uMbWMmm2fZgjZElmT5IOPeXtA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aThMXxqYTplODGboPzEYWCI45mUme26PNcrpQta3G45XloH6mNOKS5RXanze22dQC
+	 uQUqKh/j+R5+JCaa3gQjSFCSXt9RUAF27ZwnjuEwgOjyxm/ihONSdhFrxP6bLxQ2cW
+	 kXI3RnTtIEfE2W79FEWD7BDr4gSpk07Qk2AwBI5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfHUN1B (ORCPT
+        id S1728854AbfHUN2V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 09:27:01 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:42094 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727696AbfHUN1B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:27:01 -0400
-Received: by mail-io1-f69.google.com with SMTP id x9so2649635ior.9
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 06:27:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=cFJ3omL+zEjkFfNBonJUb3cvcSeAFDdbUASu9pfggqo=;
-        b=eB4Nlq5rkc63nPmEd30W+DfR7K157C3idQ12S+tnV8+088Xvytti2NfPB4korf79Xx
-         nlMKjBfe+KS0PQ3bhzF9sTBxwuPztLObEI+hd8kI+6+slmandZeR7OAGB9aiTejsSCby
-         eNvvoS9Ka5nncaxQjxnyMyhZc08FkpDs+5g66QIhsvk8YmRrEzlesUPq6jliuh1XnGJt
-         ayv70rz5c5LiN8ks2OVc8zckbtWmiWUFK3Lb8M2VEVWqKn5sGmQSnZcrsiYQGyBQcYUE
-         n35mAUFo+qFNYkMneBzFi1kwkOd55/PrWf7i+00m+waunumaxw3GToGJmmM3tcj3b7rL
-         ZjWQ==
-X-Gm-Message-State: APjAAAW1YqQNUmgcqll4LNnBp4iFUTET7/t9KSf4ZQz7y6lEC05BtaAq
-        Ub67DU6vx2Rm1cuqoREhnzbeNjosotKrpwoQqBcxxtpaDbXY
-X-Google-Smtp-Source: APXvYqzqr1x143JJnalmQoTBPbZR29NiWAk+2FEHAeNfYrKJSl+N9v09BktxICWsSPbRo4fMiOdubqFLMq6Em3X6XBERcpBCSK0b
+        Wed, 21 Aug 2019 09:28:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726484AbfHUN2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 09:28:21 -0400
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F14E7233A1;
+        Wed, 21 Aug 2019 13:28:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566394100;
+        bh=i5OSWlioycaF2Znxi7uMbWMmm2fZgjZElmT5IOPeXtA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=t6Xz1n0Nk1LrGg7AltwDRbxtIXhE07BH99OfT01zbaf0tJObd6DQIs69LhFVO90AO
+         crMBgjBKafVYM9XboXhg5tIfVvl8nRpUUZH0h3qqq49jJfcPzahiSltdjKB1FObqoi
+         DRymR5/HpqHl0CkloXLp2UONEbE5GSDBW9VI1yu8=
+Received: by mail-qt1-f180.google.com with SMTP id b11so2958732qtp.10;
+        Wed, 21 Aug 2019 06:28:19 -0700 (PDT)
+X-Gm-Message-State: APjAAAWBqo+kpBRCp/ybwAVXOIw5mYrv4e7IjQcjEnVXZE/jiRmLkiBZ
+        p+nqEKXzwwSUXSNd+a3YXm/WPcPZnfRaAwNIEA==
+X-Google-Smtp-Source: APXvYqyZ8fsK6kGZwgr/fYxzi8cJ+hkrMeSsTdRTwMYv70RA5TletRh85GG86B60S3n03t8C6AAOpjBUMIzbxQONMXQ=
+X-Received: by 2002:ac8:44c4:: with SMTP id b4mr30978115qto.224.1566394099123;
+ Wed, 21 Aug 2019 06:28:19 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:6a68:: with SMTP id m40mr9521677jaf.135.1566394020244;
- Wed, 21 Aug 2019 06:27:00 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 06:27:00 -0700
-In-Reply-To: <CAAeHK+yEUO0f7qgTgWYRp0nv=LY2cX12=gK54yHzPkxZT0SyHQ@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000027b5750590a087dc@google.com>
-Subject: Re: KASAN: use-after-free Read in hidraw_ioctl
-From:   syzbot <syzbot+ded1794a717e3b235226@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190820195959.6126-1-robh@kernel.org> <20190820195959.6126-2-robh@kernel.org>
+ <0ab5959e-fc6c-06c3-a3f1-ea5a1ebef87d@baylibre.com>
+In-Reply-To: <0ab5959e-fc6c-06c3-a3f1-ea5a1ebef87d@baylibre.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 21 Aug 2019 08:28:07 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL=qCVfbKnNK6q_au2PXKcOpZ6584gungRgz7T0oXNFdg@mail.gmail.com>
+Message-ID: <CAL_JsqL=qCVfbKnNK6q_au2PXKcOpZ6584gungRgz7T0oXNFdg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Convert Arm Mali Midgard GPU to DT schema
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Maxime Ripard <maxime.ripard@free-electrons.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Aug 21, 2019 at 2:12 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Hi Rob,
+>
+> On 20/08/2019 21:59, Rob Herring wrote:
+> > Convert the Arm Midgard GPU binding to DT schema format.
+> >
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../bindings/gpu/arm,mali-midgard.txt         | 119 -------------
+> >  .../bindings/gpu/arm,mali-midgard.yaml        | 165 ++++++++++++++++++
+> >  2 files changed, 165 insertions(+), 119 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> >  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> > deleted file mode 100644
+> > index 9b298edec5b2..000000000000
+> > --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> > +++ /dev/null
+> > @@ -1,119 +0,0 @@
+> > -ARM Mali Midgard GPU
+> > -====================
+> > -
+> > -Required properties:
+> > -
+> > -- compatible :
+> > -  * Must contain one of the following:
+> > -    + "arm,mali-t604"
+> > -    + "arm,mali-t624"
+> > -    + "arm,mali-t628"
+> > -    + "arm,mali-t720"
+> > -    + "arm,mali-t760"
+> > -    + "arm,mali-t820"
+> > -    + "arm,mali-t830"
+> > -    + "arm,mali-t860"
+> > -    + "arm,mali-t880"
+> > -  * which must be preceded by one of the following vendor specifics:
+> > -    + "allwinner,sun50i-h6-mali"
+> > -    + "amlogic,meson-gxm-mali"
+> > -    + "samsung,exynos5433-mali"
+> > -    + "rockchip,rk3288-mali"
+> > -    + "rockchip,rk3399-mali"
+> > -
+> > -- reg : Physical base address of the device and length of the register area.
+> > -
+> > -- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
+> > -
+> > -- interrupt-names : Contains the names of IRQ resources in the order they were
+> > -  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
+> > -
+> > -
+> > -Optional properties:
+> > -
+> > -- clocks : Phandle to clock for the Mali Midgard device.
+> > -
+> > -- clock-names : Specify the names of the clocks specified in clocks
+> > -  when multiple clocks are present.
+> > -    * core: clock driving the GPU itself (When only one clock is present,
+> > -      assume it's this clock.)
+> > -    * bus: bus clock for the GPU
+> > -
+> > -- mali-supply : Phandle to regulator for the Mali device. Refer to
+> > -  Documentation/devicetree/bindings/regulator/regulator.txt for details.
+> > -
+> > -- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
+> > -  for details.
+> > -
+> > -- #cooling-cells: Refer to Documentation/devicetree/bindings/thermal/thermal.txt
+> > -  for details.
+> > -
+> > -- resets : Phandle of the GPU reset line.
+> > -
+> > -Vendor-specific bindings
+> > -------------------------
+> > -
+> > -The Mali GPU is integrated very differently from one SoC to
+> > -another. In order to accommodate those differences, you have the option
+> > -to specify one more vendor-specific compatible, among:
+> > -
+> > -- "allwinner,sun50i-h6-mali"
+> > -  Required properties:
+> > -  - clocks : phandles to core and bus clocks
+> > -  - clock-names : must contain "core" and "bus"
+> > -  - resets: phandle to GPU reset line
+> > -
+> > -- "amlogic,meson-gxm-mali"
+> > -  Required properties:
+> > -  - resets : Should contain phandles of :
+> > -    + GPU reset line
+> > -    + GPU APB glue reset line
+> > -
+> > -Example for a Mali-T760:
+> > -
+> > -gpu@ffa30000 {
+> > -     compatible = "rockchip,rk3288-mali", "arm,mali-t760";
+> > -     reg = <0xffa30000 0x10000>;
+> > -     interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> > -                  <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> > -                  <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> > -     interrupt-names = "job", "mmu", "gpu";
+> > -     clocks = <&cru ACLK_GPU>;
+> > -     mali-supply = <&vdd_gpu>;
+> > -     operating-points-v2 = <&gpu_opp_table>;
+> > -     power-domains = <&power RK3288_PD_GPU>;
+> > -     #cooling-cells = <2>;
+> > -};
+> > -
+> > -gpu_opp_table: opp_table0 {
+> > -     compatible = "operating-points-v2";
+> > -
+> > -     opp@533000000 {
+> > -             opp-hz = /bits/ 64 <533000000>;
+> > -             opp-microvolt = <1250000>;
+> > -     };
+> > -     opp@450000000 {
+> > -             opp-hz = /bits/ 64 <450000000>;
+> > -             opp-microvolt = <1150000>;
+> > -     };
+> > -     opp@400000000 {
+> > -             opp-hz = /bits/ 64 <400000000>;
+> > -             opp-microvolt = <1125000>;
+> > -     };
+> > -     opp@350000000 {
+> > -             opp-hz = /bits/ 64 <350000000>;
+> > -             opp-microvolt = <1075000>;
+> > -     };
+> > -     opp@266000000 {
+> > -             opp-hz = /bits/ 64 <266000000>;
+> > -             opp-microvolt = <1025000>;
+> > -     };
+> > -     opp@160000000 {
+> > -             opp-hz = /bits/ 64 <160000000>;
+> > -             opp-microvolt = <925000>;
+> > -     };
+> > -     opp@100000000 {
+> > -             opp-hz = /bits/ 64 <100000000>;
+> > -             opp-microvolt = <912500>;
+> > -     };
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> > new file mode 100644
+> > index 000000000000..24c4af74fb8d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> > @@ -0,0 +1,165 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/gpu/arm,mali-midgard.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ARM Mali Midgard GPU
+> > +
+> > +maintainers:
+> > +  - Rob Herring <robh@kernel.org>
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: '^gpu@[a-f0-9]+$'
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +             - allwinner,sun50i-h6-mali
+> > +          - const: arm,mali-t720
+> > +      - items:
+> > +          - enum:
+> > +             - amlogic,meson-gxm-mali
+> > +          - const: arm,mali-t820
+> > +      - items:
+> > +          - enum:
+> > +             - rockchip,rk3288-mali
+> > +          - const: arm,mali-t760
+> > +      - items:
+> > +          - enum:
+> > +             - rockchip,rk3399-mali
+> > +          - const: arm,mali-t860
+> > +      - items:
+> > +          - enum:
+> > +             - samsung,exynos5433-mali
+> > +          - const: arm,mali-t760
+> > +
+> > +          # "arm,mali-t604"
+> > +          # "arm,mali-t624"
+> > +          # "arm,mali-t628"
+> > +          # "arm,mali-t830"
+> > +          # "arm,mali-t880"
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    items:
+> > +      - description: Job interrupt
+> > +      - description: MMU interrupt
+> > +      - description: GPU interrupt
+> > +
+> > +  interrupt-names:
+> > +    items:
+> > +      - const: job
+> > +      - const: mmu
+> > +      - const: gpu
+> > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    minItems: 1
+> > +    items:
+> > +      - const: core
+> > +      - const: bus
+> > +
+> > +  mali-supply:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  operating-points-v2: true
+> > +
+> > +  "#cooling-cells":
+> > +    const: 2
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - interrupt-names
+> > +
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: allwinner,sun50i-h6-mali
+> > +    then:
+> > +      properties:
+> > +        clocks:
+> > +          minItems: 2
+> > +      required:
+> > +        - clocks
+> > +        - clock-names
+> > +        - resets
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: amlogic,meson-gxm-mali
+> > +    then:
+> > +      properties:
+> > +        resets:
+> > +          minItems: 2
+> > +      required:
+> > +        - resets
+>
+> The original bindings was wrong, In fact, clocks should be required here aswell.
+> Same for bifrost and utgard...
+>
+> Should I send a fixup patch ?
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-KASAN: use-after-free Read in hidraw_ioctl
+I think we should just make clocks required. I can't imagine anyone
+not using the clock binding.
 
-==================================================================
-BUG: KASAN: use-after-free in hidraw_ioctl+0x609/0xaf0  
-drivers/hid/hidraw.c:380
-Read of size 4 at addr ffff8881d2db4218 by task syz-executor.1/3343
-
-CPU: 1 PID: 3343 Comm: syz-executor.1 Not tainted 5.2.0-rc6+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x67/0x231 mm/kasan/report.c:188
-  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
-  kasan_report+0xe/0x20 mm/kasan/common.c:614
-  hidraw_ioctl+0x609/0xaf0 drivers/hid/hidraw.c:380
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xcda/0x12e0 fs/ioctl.c:696
-  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459829
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fac801dac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-RDX: 00000000200015c0 RSI: 0000000080044801 RDI: 0000000000000005
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fac801db6d4
-R13: 00000000004c21ee R14: 00000000004d53f8 R15: 00000000ffffffff
-
-Allocated by task 2911:
-  save_stack+0x1b/0x80 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
-  kmalloc include/linux/slab.h:547 [inline]
-  kzalloc include/linux/slab.h:742 [inline]
-  hid_allocate_device+0x3e/0x480 drivers/hid/hid-core.c:2389
-  usbhid_probe+0x23e/0xfa0 drivers/hid/usbhid/hid-core.c:1321
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x660 drivers/base/dd.c:509
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:670
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
-  bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:843
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2111
-  usb_new_device.cold+0x6a4/0xe61 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1abd/0x3550 drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 2895:
-  save_stack+0x1b/0x80 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
-  slab_free_hook mm/slub.c:1421 [inline]
-  slab_free_freelist_hook mm/slub.c:1448 [inline]
-  slab_free mm/slub.c:2994 [inline]
-  kfree+0xd7/0x280 mm/slub.c:3949
-  device_release+0x71/0x200 drivers/base/core.c:1064
-  kobject_cleanup lib/kobject.c:691 [inline]
-  kobject_release lib/kobject.c:720 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  kobject_put+0x171/0x280 lib/kobject.c:737
-  put_device+0x1b/0x30 drivers/base/core.c:2210
-  usbhid_disconnect+0x90/0xd0 drivers/hid/usbhid/hid-core.c:1413
-  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-  __device_release_driver drivers/base/dd.c:1081 [inline]
-  device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1112
-  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
-  device_del+0x460/0xb80 drivers/base/core.c:2274
-  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-  usb_disconnect+0x284/0x830 drivers/usb/core/hub.c:2199
-  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x13bd/0x3550 drivers/usb/core/hub.c:5441
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff8881d2db4200
-  which belongs to the cache kmalloc-8k of size 8192
-The buggy address is located 24 bytes inside of
-  8192-byte region [ffff8881d2db4200, ffff8881d2db6200)
-The buggy address belongs to the page:
-page:ffffea00074b6c00 refcount:1 mapcount:0 mapping:ffff8881dac02400  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 ffffea0007176e00 0000000300000003 ffff8881dac02400
-raw: 0000000000000000 0000000000030003 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881d2db4100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8881d2db4180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ffff8881d2db4200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                             ^
-  ffff8881d2db4280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881d2db4300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
-Tested on:
-
-commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=1637707a600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15db9586600000
-
+Rob
