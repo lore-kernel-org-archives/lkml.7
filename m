@@ -2,189 +2,132 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58813C3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16786C3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3BB22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:49:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FDvr2ftW"
+	by mail.kernel.org (Postfix) with ESMTP id D7BAC2332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:52:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566352375;
+	bh=Fk4BuAJQ/UfY9FS0/yq7nmtZd1hFBjcyaLZT6Qsj3rQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kyL64bHvrg+07g5hrwFKGKTLmEytaWqaG0+RpLj+Z8Jnd81hSp5nAdAQIce6HrD4O
+	 yVh1R9tl6eNV+eDR9wLtrx+VL+VWoInKOXCyQ7fKhCwQ64M3Zcran7kFYbaeD1bgVm
+	 Y4xS3MTL7AhpO7+9VfeCkEwm8k/PFPRaj8OLaRpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfHUBtj (ORCPT
+        id S1727086AbfHUBwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 21:49:39 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44368 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfHUBti (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 21:49:38 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7L1maqI195217;
-        Wed, 21 Aug 2019 01:48:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=X9xsyFLEY3yP4I676i8c4HP6MyP9BTNfKYIf1szA01g=;
- b=FDvr2ftWIxB85iRzNRLX28ilXAxY2wJDdWiEmq2fe9iT7rmrVElxprVWE3C5+XdZc6qC
- U/iqsoHuNOLrYhpmMmJUEPNonvgADpoomNLODoeYqn6yfMrz7SRu43ruFUJ7cMCTeoyQ
- IfeJd/KbLMa49UoE49T9PsGKpmqmHjcgTv2/Ayx4SVQEafcaSeGLoFqUWQwNBGp0b0Gy
- 8aLSXJr/bOWkdMMhPy+pwq04FtpOV9dh10pTmayXhVSM3jVDjz8+pp2eRxhXwrpWpZy7
- 3lzAKXsZgg9i+fRePnrjMuHFJwPdsIQRAJrE5g7oswzwcPRIHwwgK2ZnYedcf7SB7pds 3w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2ue90tj9fx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 01:48:35 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7L1lUY3193680;
-        Wed, 21 Aug 2019 01:48:35 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2ug269de77-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 01:48:35 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7L1mLEr028154;
-        Wed, 21 Aug 2019 01:48:21 GMT
-Received: from localhost (/10.159.156.31)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 20 Aug 2019 18:48:21 -0700
-Date:   Tue, 20 Aug 2019 18:48:18 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        Gao Xiang <hsiangkao@aol.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, Pavel Machek <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] erofs: move erofs out of staging
-Message-ID: <20190821014818.GB1037422@magnolia>
-References: <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
- <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
- <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
- <20190820155623.GA10232@mit.edu>
- <9d8f88ee-4b81-bdfa-b0d7-9c7d5d54e70a@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d8f88ee-4b81-bdfa-b0d7-9c7d5d54e70a@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908210015
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908210015
+        Tue, 20 Aug 2019 21:52:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726608AbfHUBwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 21:52:55 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFADC22DD3;
+        Wed, 21 Aug 2019 01:52:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566352374;
+        bh=Fk4BuAJQ/UfY9FS0/yq7nmtZd1hFBjcyaLZT6Qsj3rQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k4TG6qwivdIYF+iiueoI0OgTmUJAFVF88b4Py7H64RPYZqf4RhvPKeCawLZ2wpM1r
+         mMb3j5D0cEZm0+cLYXJ8ZcxeoV2G6H3MiJ5foTHnoGmWyIRNDTdujFYW/2KQsb9v0+
+         O5CPI4WDm44Zd1wOt/HIKUhDpSEy/rbt0NfRv/cs=
+Date:   Wed, 21 Aug 2019 10:52:47 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 1/3] kprobes/x86: use instruction_pointer and
+ instruction_pointer_set
+Message-Id: <20190821105247.f0236d2c04b2c0c4d4e1847e@kernel.org>
+In-Reply-To: <20190820165152.20275268@xhacker.debian>
+References: <20190820113928.1971900c@xhacker.debian>
+        <20190820114109.4624d56b@xhacker.debian>
+        <alpine.DEB.2.21.1908201050370.2223@nanos.tec.linutronix.de>
+        <20190820165152.20275268@xhacker.debian>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:34:02AM +0800, Chao Yu wrote:
-> On 2019/8/20 23:56, Theodore Y. Ts'o wrote:
-> > The reason why there needs to be at least some file system specific
-> > code for fuzz testing is because for efficiency's sake, you don't want
-> > to fuzz every single bit in the file system, but just the ones which
-> > are most interesting (e.g., the metadata blocks).  For file systems
-> > which use checksum to protect against accidental corruption, the file
-> > system fuzzer needs to also fix up the checksums (since you can be
-> > sure malicious attackers will do this).
+Hi Jisheng,
+
+On Tue, 20 Aug 2019 09:02:59 +0000
+Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
+
+> Hi Thomas,
 > 
-> Yup, IMO, if we really want such tool, it needs to:
-> - move all generic fuzz codes (trigger random fuzzing in meta/data area) into
-> that tool, and
-> - make filesystem generic fs_meta/file_node lookup/inject/pack function as a
-> callback, such as
->  * .find_fs_sb
->  * .inject_fs_sb
->  * .pack_fs_sb
-
-What about group descriptors?  AG headers?  The AGFLWTFBBQLOL?
-
->  * .find_fs_bitmap
->  * .inject_fs_bitmap
-
-Probably want an find/inject for log blocks too.
-
-Oh, wait, XFS doesn't log blocks like jbd2 does. :) :)
-
->  * .find_fs_inode_bitmap
->  * .inject_fs_inode_bitmap
-
-XFS has an inode bitmap? ;)
-
-(This is why there's no generic fuzz tool; every fs is different enough
-that doing so would be sort of a mess.)
-
-((Granted, you could also look at how xfstests uses the xfs_db fuzz
-command so at least it would be systematic...))
-
->  * .find_inode_by_num
->  * .inject_inode
->  * .pack_inode
->  * .find_tree_node_by_level
-> ...
-
-What about the name/value btrees?  (Ok, I'll stop now.)
-
---D
-
-> then specific filesystem can fill the callback to tell how the tool can locate a
-> field in inode or a metadata in tree node and then trigger the designed fuzz.
-> 
-> It will be easier to rewrite whole generic fwk for each filesystem, because
-> existed filesystem userspace tool should has included above callback's detail
-> codes...
-> 
-> > On Tue, Aug 20, 2019 at 10:24:11AM +0800, Chao Yu wrote:
-> >> filesystem fill the tool's callback to seek a node/block and supported fields
-> >> can be fuzzed in inode.
+> On Tue, 20 Aug 2019 10:53:58 +0200 (CEST) Thomas Gleixner wrote:
 > 
 > > 
-> > What you *can* do is to make the file system specific portion of the
-> > work as small as possible.  Great work in this area is Professor Kim's
-> > Janus[1][2] and Hydra[2] work.  (Hydra is about to be published at SOSP 19,
-> > and was partially funded from a Google Faculty Research Work.)
 > > 
-> > [1] https://taesoo.kim/pubs/2019/xu:janus.pdf
-> > [2] https://github.com/sslab-gatech/janus
-> > [3] https://github.com/sslab-gatech/hydra
+> > On Tue, 20 Aug 2019, Jisheng Zhang wrote:
+> > 
+> > > This is to make the x86 kprobe_ftrace_handler() more common so that
+> > > the code could be reused in future.  
+> > 
+> > While I agree with the change in general, I can't find anything which
+> > reuses that code. So the change log is pretty useless and I have no idea
+> > how this is related to the rest of the series.
 > 
-> Thanks for the information!
+> In v1, this code is moved from x86 to common kprobes.c [1]
+> But I agree with Masami, consolidation could be done when arm64 kprobes
+> on ftrace is stable.
+
+We'll revisit to consolidate the code after we got 3rd or 4th clones.
+
 > 
-> It looks like janus and hydra alreay have generic compress/decompress function
-> across different filesystems, it's really a good job, I do think it may be the
-> one once it becomes more generic.
+> In v2, actually, the arm64 version's kprobe_ftrace_handler() is the same
+> as x86's, the only difference is comment, e.g
+> 
+> /* Kprobe handler expects regs->ip = ip + 1 as breakpoint hit */
+> 
+> while in arm64
+> 
+> /* Kprobe handler expects regs->pc = ip + 1 as breakpoint hit */
+
+As Peter pointed, on arm64, is that really 1 or 4 bytes?
+This part is heavily depends on the processor software-breakpoint
+implementation.
+
+> 
+> 
+> W/ above, any suggestion about the suitable change log?
+
+I think you just need to keep the first half of the description.
+Since this patch itself is not related to the series, could you update
+the description and resend it as a single cleanup patch out of the series?
+
+Thank you!
+
 > 
 > Thanks
 > 
-> > 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-August/674417.html
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
