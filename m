@@ -2,141 +2,110 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A4CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7C6C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1070120856
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC84B2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:48:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fn83oNtn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731269AbfHUWie (ORCPT
+        id S1730066AbfHUWsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 18:38:34 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:34482 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731100AbfHUWiJ (ORCPT
+        Wed, 21 Aug 2019 18:48:47 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44251 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729820AbfHUWsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 18:38:09 -0400
-Received: by mail-io1-f70.google.com with SMTP id u84so4239312iod.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:38:08 -0700 (PDT)
+        Wed, 21 Aug 2019 18:48:46 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c81so2419858pfc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=teKoEoZBkGuWM1am+bLxrzg6jS/TPSFr7t15zPBCNd0=;
+        b=fn83oNtnI1C2eL/2sCStFsle3PKFMa1Tz57GE6Dkhr7A7QS4lH9XiGvffGi10XTFKV
+         UsdNPY7I+LpQATbTGIgv7S0LftxvcXeDTKQffKaWrtb9vVR4wU7TNoHVG9WeC+HwjzJI
+         ehriVN2QCZnH5FkGXbZeAx8QYXrakhPnYv9qBGrdxpVcW/tfmSVS/FYsKRbPfDglqMzN
+         eJ44IDYR6NuXCBuB+dxB347ZfCQ2qbmNR+Tl6X6FSUASKblhb4KeDqVFDxY/vvnyFFVL
+         WNyAX1XfPO3sD473CoaKkJaYn05hbRcw9nOyI3JOnVaIYLdm1qyvwWDqaLnUhH0pvsto
+         F4AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=OvcLDGlyZApcuXSWwLIJL3Pm5pdGHjKfI+ox2HXsl2s=;
-        b=Eo2pAtoR3hOPL3QNfKqvzlNnn9f0es3LwkvENS6Y0L0HK557+hR9tXQEEnTfHM6Rqr
-         wPrM4g41pafQoDEmhsOdK0Jc/NnIL4M828Ge+XqPJmtoE8D7//w7g2FLvISerHoJqhlM
-         ZoL1WvjXjedlYv59SExcoAqt7rMip+jDBeumqKHZ7gV3/2MCvIHLG035zVq810PwBO47
-         yp96JBuEUo5m0W6r4ivxsxgvP6BsmrWCUflrbkt2Hg/DY7VSilNHaTZozCIuueYTzO9J
-         R/OjNnHHdW6hH5g86fcBQYBeGBItXw7TdwlDHpXnfNYKlJrSptm2kUIVWzwQHoxTZoLY
-         LE1A==
-X-Gm-Message-State: APjAAAWr/yQkn3moI1GwDEhcz/1B/eLoCXxXYzIyK4zvXIWvTE9vH2Z9
-        R4E3i5OouB+/vQ1fqykNXH+FNB5FdcxpyidqNKDl9pkwKqyk
-X-Google-Smtp-Source: APXvYqzF6S4ovYIYizRMwKjYTxeAyYAFuZ3RLPgkDuWmKuaomtU0MLwdY0zj/iSpH2Nmhra60tQ1pRLr2dt1szURo0+kIj/j+tKV
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=teKoEoZBkGuWM1am+bLxrzg6jS/TPSFr7t15zPBCNd0=;
+        b=ITgeF3pTmxT5D/u2eQf/q0ewpCM4kRsiX43Nm0sbprNoi08lV5YjwGIbgp720n0mpn
+         5wJ7CQli6/IyNtMFJTWiC8ddeAraZthd94ofbtXOzUZkPO4uEHzN8Xs3wIxlC22AfhVw
+         ZRfKRGdUoDXHG1LsKYCbo4UjzJohrfdFbgEdKQD0k+LnhvtAxiZZhXLIF1zIpxpYTy7p
+         krbXiOeVqDvGyTbzltoJ/PopxR7ceH2NmA6i5fsX1LB2bNyA0+b317S2OOnw1WLEILaF
+         gBAMh87XI4NNLorTK9wbLdGkPjVmIqeZLg/H7VFDUn268hnHQTeDRRt4Roffx3p3HTAg
+         bq3w==
+X-Gm-Message-State: APjAAAV3KLqonj0kpt8NphKHITGOTWnObaelleNDgJm6BPbhxa+8ClS4
+        kBo5ZaBmadmRWf04q/fp6UDV/A==
+X-Google-Smtp-Source: APXvYqze4CscdkpN+NmoXK9M3820ciVP/ebbyCnpT1BSOyOKbjJX/1IXyEnQhdqXoEY4Czkz9iK+jw==
+X-Received: by 2002:a63:e54f:: with SMTP id z15mr30949865pgj.4.1566427725453;
+        Wed, 21 Aug 2019 15:48:45 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 5sm21909049pgh.93.2019.08.21.15.48.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 15:48:44 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 15:50:31 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     robh+dt@kernel.org, vkoul@kernel.org, aneela@codeaurora.org,
+        mark.rutland@arm.com, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
+        clew@codeaurora.org
+Subject: Re: [PATCH v2 5/7] mailbox: qcom: Add support for Qualcomm SM8150
+ and SC7180 SoCs
+Message-ID: <20190821225031.GA1892@tuxbook-pro>
+References: <20190807070957.30655-1-sibis@codeaurora.org>
+ <20190807070957.30655-6-sibis@codeaurora.org>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:a90f:: with SMTP id c15mr1900814iod.41.1566427088386;
- Wed, 21 Aug 2019 15:38:08 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 15:38:08 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002b81b70590a83ad7@google.com>
-Subject: KASAN: null-ptr-deref Write in queue_work_on
-From:   syzbot <syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        wg@grandegger.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190807070957.30655-6-sibis@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed 07 Aug 00:09 PDT 2019, Sibi Sankar wrote:
 
-syzbot found the following crash on:
+> Add the corresponding APSS shared offset for SM8150 and SC7180 SoCs.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 
-HEAD commit:    6e625a1a Merge tag 'xtensa-20190816' of git://github.com/j..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=174e04ac600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3ff364e429585cf2
-dashboard link: https://syzkaller.appspot.com/bug?extid=017e491ae13c0068598a
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1327d9e2600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16c4fc4c600000
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Bisection is inconclusive: the first bad commit could be any of:
-
-569dbb88 Linux 4.13
-  that is not the commit
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17520702600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+017e491ae13c0068598a@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: null-ptr-deref in test_and_set_bit  
-include/asm-generic/bitops-instrumented.h:143 [inline]
-BUG: KASAN: null-ptr-deref in queue_work_on+0xa6/0x210  
-kernel/workqueue.c:1517
-Write of size 8 at addr 0000000000000050 by task syz-executor935/9691
-
-CPU: 0 PID: 9691 Comm: syz-executor935 Not tainted 5.3.0-rc4+ #113
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  __kasan_report.cold+0x5/0x36 mm/kasan/report.c:486
-  kasan_report+0x12/0x17 mm/kasan/common.c:612
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
-  __kasan_check_write+0x14/0x20 mm/kasan/common.c:98
-  test_and_set_bit include/asm-generic/bitops-instrumented.h:143 [inline]
-  queue_work_on+0xa6/0x210 kernel/workqueue.c:1517
-  queue_work include/linux/workqueue.h:490 [inline]
-  schedule_work include/linux/workqueue.h:548 [inline]
-  slcan_write_wakeup+0x66/0x90 drivers/net/can/slcan.c:348
-  tty_wakeup+0xe9/0x120 drivers/tty/tty_io.c:535
-  pty_unthrottle+0x37/0x60 drivers/tty/pty.c:95
-  tty_unthrottle+0xab/0x110 drivers/tty/tty_ioctl.c:139
-  __tty_perform_flush+0x1b3/0x200 drivers/tty/tty_ioctl.c:861
-  n_tty_ioctl_helper+0x1cc/0x3b0 drivers/tty/tty_ioctl.c:937
-  n_tty_ioctl+0x59/0x370 drivers/tty/n_tty.c:2466
-  tty_ioctl+0xaf9/0x14f0 drivers/tty/tty_io.c:2666
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
-  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446859
-Code: e8 9c b4 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 eb 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f17a0a3fd18 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 0000000000446859
-RDX: 0000000000000000 RSI: 000000000000540b RDI: 0000000000000003
-RBP: 00000000006dbc30 R08: 00007f17a0a40700 R09: 0000000000000000
-R10: 00007f17a0a40700 R11: 0000000000000246 R12: 00000000006dbc3c
-R13: 00007ffdfd0bdb5f R14: 00007f17a0a409c0 R15: 20c49ba5e353f7cf
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> ---
+>  drivers/mailbox/qcom-apcs-ipc-mailbox.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> index 705e17a5479cc..2dfd288fe720d 100644
+> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> @@ -118,7 +118,9 @@ static const struct of_device_id qcom_apcs_ipc_of_match[] = {
+>  	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = (void *)16 },
+>  	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = (void *)8 },
+>  	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = (void *)8 },
+> +	{ .compatible = "qcom,sc7180-apss-shared", .data = (void *)12 },
+>  	{ .compatible = "qcom,sdm845-apss-shared", .data = (void *)12 },
+> +	{ .compatible = "qcom,sm8150-apss-shared", .data = (void *)12 },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, qcom_apcs_ipc_of_match);
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
