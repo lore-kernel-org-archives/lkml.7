@@ -2,198 +2,96 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 883D1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F99C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DE72339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745D42339F
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfHUN0A (ORCPT
+        id S1728955AbfHUN0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 09:26:00 -0400
-Received: from comms.puri.sm ([159.203.221.185]:44952 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728866AbfHUNZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:25:58 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id A8C05DF916;
-        Wed, 21 Aug 2019 06:25:57 -0700 (PDT)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TUKCMW9f2kc0; Wed, 21 Aug 2019 06:25:56 -0700 (PDT)
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-To:     lorenzo.bianconi83@gmail.com, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: [PATCH v5 2/4] iio: imu: st_lsm6sdx: move register definitions to sensor_settings struct
-Date:   Wed, 21 Aug 2019 15:25:18 +0200
-Message-Id: <20190821132520.28225-3-martin.kepplinger@puri.sm>
-In-Reply-To: <20190821132520.28225-1-martin.kepplinger@puri.sm>
-References: <20190821132520.28225-1-martin.kepplinger@puri.sm>
-Content-Transfer-Encoding: 8bit
+        Wed, 21 Aug 2019 09:26:40 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:40784 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727696AbfHUN0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 09:26:40 -0400
+IronPort-SDR: 7j2Z56FFfIepJyetTZovoxgviVJOH7ipw3hJQMdBeVoPswvP5Ti4MNfOcxb3AWgQL34enU5IJY
+ r5wAMHittg4puQiq+vUegD2ITNodIFy0Kqg8B348eavI8F1NC0q6v1eYQMBBwY2bsYjEBqbBZU
+ o5BBAFJYCleyE/66vtzoZTR1dNHDZxpkpwuf7PCUpjo6XukvcwVUCclIi3Yz28SC4BXdLRCqnp
+ BpfgFwGEuoGFrKO6vseINY8iWOEcSbBbA3eehKui5StzwGqglksVA3z/dqLZlNRMr5QE6GBvRS
+ CIk=
+X-IronPort-AV: E=Sophos;i="5.64,412,1559548800"; 
+   d="scan'208";a="42441806"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa1.mentor.iphmx.com with ESMTP; 21 Aug 2019 05:26:39 -0800
+IronPort-SDR: 0Vak9Dte74vvmXy+EK/D6kEgdUPzQJTOQHvY9KYoCb8EXdCalOfxT9m75zsu3YrybU+jjvqRyG
+ Y49rCq9p82P/N3Mhm+etbys7AMIWIjM40tdKmSmf4O3k+xmRB9Z9UhW+AXyZ5zkGn+tnvDLrXs
+ smweiatWLsRpA+YdlxyCHYMa94L+agNIN/7L6be8AO+ckym/qW5i4DdvE6ndESeadDbBfX37Mw
+ eRRWgqRGkTiR/LmzST43hS64Dm39UQ5+B5o0szZXW1jYwJ//ZK1lq1KFewI0Pm9VPIaNa6bCWX
+ WmY=
+Subject: Re: [PATCH v1 03/63] Input: atmel_mxt_ts - only read messages in
+ mxt_acquire_irq() when necessary
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     <nick@shmanahar.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <george_davis@mentor.com>
+References: <20190816082952.17985-1-jiada_wang@mentor.com>
+ <20190816082952.17985-4-jiada_wang@mentor.com>
+ <20190816171622.GF121898@dtor-ws>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <558e1227-7671-0838-d4e0-f234833c0973@mentor.com>
+Date:   Wed, 21 Aug 2019 22:26:31 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190816171622.GF121898@dtor-ws>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move some register definitions to the per-device array of struct
-st_lsm6dsx_sensor_settings in order to simplify adding new sensor
-devices to the driver.
+Hi Dmitry
 
-Also, remove completely unused register definitions.
+On 2019/08/17 2:16, Dmitry Torokhov wrote:
+> On Fri, Aug 16, 2019 at 05:28:52PM +0900, Jiada Wang wrote:
+>> From: Nick Dyer <nick.dyer@itdev.co.uk>
+>>
+>> The workaround of reading all messages until an invalid is received is a
+>> way of forcing the CHG line high, which means that when using
+>> edge-triggered interrupts the interrupt can be acquired.
+>>
+>> With level-triggered interrupts the workaround is unnecessary.
+>>
+>> Also, most recent maXTouch chips have a feature called RETRIGEN which, when
+>> enabled, reasserts the interrupt line every cycle if there are messages
+>> waiting. This also makes the workaround unnecessary.
+>>
+>> Note: the RETRIGEN feature is only in some firmware versions/chips, it's
+>> not valid simply to enable the bit.
+> 
+> Instead of trying to work around of misconfiguration for IRQ/firmware,
+> can we simply error out of probe if we see a level interrupt with
+> !RETRIGEN firmware?
+> 
+I think for old firmwares, which doesn't support RETRIGEN feature, this 
+workaround is needed, otherwise we will break all old firmwares, which 
+configured with edge-triggered IRQ
 
-Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  6 ++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 31 ++++++++++++++------
- 2 files changed, 28 insertions(+), 9 deletions(-)
+for recent firmwares which support RETRIGEN feature, we can fail probe, 
+if RETRIGEN is not enabled, and configured with edge-triggered IRQ.
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index 055e52dec36a..090b7bd3c5b0 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -203,6 +203,9 @@ struct st_lsm6dsx_ext_dev_settings {
- /**
-  * struct st_lsm6dsx_settings - ST IMU sensor settings
-  * @wai: Sensor WhoAmI default value.
-+ * @int1_addr: Control Register address for INT1
-+ * @int2_addr: Control Register address for INT2
-+ * @reset_addr: register address for reset/reboot
-  * @max_fifo_size: Sensor max fifo length in FIFO words.
-  * @id: List of hw id/device name supported by the driver configuration.
-  * @channels: IIO channels supported by the device.
-@@ -216,6 +219,9 @@ struct st_lsm6dsx_ext_dev_settings {
-  */
- struct st_lsm6dsx_settings {
- 	u8 wai;
-+	u8 int1_addr;
-+	u8 int2_addr;
-+	u8 reset_addr;
- 	u16 max_fifo_size;
- 	struct {
- 		enum st_lsm6dsx_hw_id hw_id;
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 0aa93b45d772..1b46d9dc2089 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -49,17 +49,12 @@
- 
- #include "st_lsm6dsx.h"
- 
--#define ST_LSM6DSX_REG_INT1_ADDR		0x0d
--#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
- #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
- #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
--#define ST_LSM6DSX_REG_RESET_ADDR		0x12
- #define ST_LSM6DSX_REG_RESET_MASK		BIT(0)
- #define ST_LSM6DSX_REG_BOOT_MASK		BIT(7)
- #define ST_LSM6DSX_REG_BDU_ADDR			0x12
- #define ST_LSM6DSX_REG_BDU_MASK			BIT(6)
--#define ST_LSM6DSX_REG_INT2_ON_INT1_ADDR	0x13
--#define ST_LSM6DSX_REG_INT2_ON_INT1_MASK	BIT(5)
- 
- static const struct iio_chan_spec st_lsm6dsx_acc_channels[] = {
- 	ST_LSM6DSX_CHANNEL(IIO_ACCEL, 0x28, IIO_MOD_X, 0),
-@@ -78,6 +73,9 @@ static const struct iio_chan_spec st_lsm6dsx_gyro_channels[] = {
- static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	{
- 		.wai = 0x69,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 1365,
- 		.id = {
- 			{
-@@ -187,6 +185,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	},
- 	{
- 		.wai = 0x69,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 682,
- 		.id = {
- 			{
-@@ -296,6 +297,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	},
- 	{
- 		.wai = 0x6a,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 682,
- 		.id = {
- 			{
-@@ -414,6 +418,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	},
- 	{
- 		.wai = 0x6c,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 512,
- 		.id = {
- 			{
-@@ -544,6 +551,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	},
- 	{
- 		.wai = 0x6b,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 512,
- 		.id = {
- 			{
-@@ -645,6 +655,9 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	},
- 	{
- 		.wai = 0x6b,
-+		.int1_addr = 0x0d,
-+		.int2_addr = 0x0e,
-+		.reset_addr = 0x12,
- 		.max_fifo_size = 512,
- 		.id = {
- 			{
-@@ -1172,10 +1185,10 @@ static int st_lsm6dsx_get_drdy_reg(struct st_lsm6dsx_hw *hw, u8 *drdy_reg)
- 
- 	switch (drdy_pin) {
- 	case 1:
--		*drdy_reg = ST_LSM6DSX_REG_INT1_ADDR;
-+		*drdy_reg = hw->settings->int1_addr;
- 		break;
- 	case 2:
--		*drdy_reg = ST_LSM6DSX_REG_INT2_ADDR;
-+		*drdy_reg = hw->settings->int2_addr;
- 		break;
- 	default:
- 		dev_err(hw->dev, "unsupported data ready pin\n");
-@@ -1275,7 +1288,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
- 	int err;
- 
- 	/* device sw reset */
--	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-+	err = regmap_update_bits(hw->regmap, hw->settings->reset_addr,
- 				 ST_LSM6DSX_REG_RESET_MASK,
- 				 FIELD_PREP(ST_LSM6DSX_REG_RESET_MASK, 1));
- 	if (err < 0)
-@@ -1284,7 +1297,7 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
- 	msleep(50);
- 
- 	/* reload trimming parameter */
--	err = regmap_update_bits(hw->regmap, ST_LSM6DSX_REG_RESET_ADDR,
-+	err = regmap_update_bits(hw->regmap, hw->settings->reset_addr,
- 				 ST_LSM6DSX_REG_BOOT_MASK,
- 				 FIELD_PREP(ST_LSM6DSX_REG_BOOT_MASK, 1));
- 	if (err < 0)
--- 
-2.20.1
+what is your thought?
 
+Thanks,
+Jiada
+> Thanks.
+> 
