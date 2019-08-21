@@ -2,147 +2,149 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13D7C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E020C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A119E22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F58222CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:54:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MibkJfl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbfHURym convert rfc822-to-8bit (ORCPT
+        id S1729506AbfHURyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:54:42 -0400
-Received: from mail-oln040092065099.outbound.protection.outlook.com ([40.92.65.99]:29141
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726252AbfHURym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:54:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BwLj7SIEAPRBvxxzjsjEqMlgslqDfTd6mvM6kWaBfMuALkRhDzQXHG8R2+sdtlsWzTZl+rfDOwonOZfRj6/sviqtspby8XEklusfhPCpKXxhM06O9sO0N7eMnnISdtG/4xN5ePfwAtNryGaSNgI1SOTp+4mmtnqt/gT6hGbftOXXy1MvGZBOBATJxrFiBGS7Eps6aM6QEWrP/vhzx2cVCv9S42Ydy+/m67G95UKSqtwntuwM+u2Q7wUiIAS8Wvv+OsNcCbTM0GYng1Rc9ITkF0Xyyy/re4vI635SuQ8xd0zNtq7lTPvn+XnVRhGPooqe80ZihATtvzlxi5GKDG1yjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2C9CDOUkw5AUgGLevr93sIeG2zpXiizo6oJblli579c=;
- b=EMpAD0dTHaEXxyfk6VH+uKi/pN5oJ4nEWu9ZXu+MySFsZEkvmXduImrbIrKdZ+XnRDqQb9JxqtQw8Vvm/4bH1qkIcG7KnM6DVOUFJHe63qP4dvSoO1gf0NAkrZXQ1tspmRukS1mpKRHrgc6DInxiBMvsF2MZUwvikTBn/YneaC8NLaI0FOUGKtdnXkL4H4DUqEkrjjolr8lNOGTg7pawO9nGYd655s+RatBb8ao/gPloHqEB3LGOBXPco2XAClQRqYo5XhrtG3ptvpZIZHG2vnSMi65xmedip3LBeoWIVDTP/vkkeNTokxwmzQboKud4/4WuyH3LdE4UE+MezfFORQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DB5EUR01FT062.eop-EUR01.prod.protection.outlook.com
- (10.152.4.57) by DB5EUR01HT118.eop-EUR01.prod.protection.outlook.com
- (10.152.5.110) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2199.13; Wed, 21 Aug
- 2019 17:54:38 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.4.57) by
- DB5EUR01FT062.mail.protection.outlook.com (10.152.5.167) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2178.16 via Frontend Transport; Wed, 21 Aug 2019 17:54:38 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::a0ba:e766:2a23:2088]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::a0ba:e766:2a23:2088%3]) with mapi id 15.20.2178.020; Wed, 21 Aug 2019
- 17:54:38 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Heiko Stuebner <heiko@sntech.de>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Wed, 21 Aug 2019 13:54:47 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38295 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfHURyr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:54:47 -0400
+Received: by mail-pf1-f196.google.com with SMTP id o70so1915307pfg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 10:54:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=GFAV8pilcC1llj60Idd3qdxSrJ9XJ4F1Bsi8o/Z7L3Y=;
+        b=MibkJfl7NKH/Ky1f2m047yCyVn5HDj4h6BknsBFQMSfENX5y0PQ1W2NTQ79Rop+fDk
+         gnrHmhmIEMZizhSk2NF/hIQ/HpvS/o5x2Nbx/X1esXKSnNTeFbO+j+uJtqljh4W5syWV
+         zYCuAvwFSC1KrO2UM9p5N40NAGb1ptPkpwdf5lhOhSbkXDgnaxDdfrz3VGEb6cS+CUgM
+         gX40QJmY1GD41LsOkBft2oDXHTnDcW8yl4srOLdUWZytc4t1Se/aA0FieLoQ25xCJ+1S
+         afVz7Gsmink0LcorkG1DT2UEyiSP7dzs6QYHk0RM36cmpaXaCUd5adGSbzNoby5UChKH
+         jcYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=GFAV8pilcC1llj60Idd3qdxSrJ9XJ4F1Bsi8o/Z7L3Y=;
+        b=baRhlr49DuBTvPx3KrZfj9NEYRWRaHVQKeEPTEcoYACO57sz6B14JggCzD38DzPEFb
+         s82twVltXSsMtcCL+mhmRBMB8PoMfzP+mAniLX6V7y1q9rC2DCLOGPgBtfVKkkXAFN0X
+         FHGXsBXPFBt+rP1CEhDr0Ax2xScJIoyLxU60BspHBrWlpCjJowpQ8tMsBmDL8QjUzSle
+         HyxWqbN+bJTZqn4PuITG+vmdTTADSLCAz3PFgeEOL5QjPxeJoyYenvxxR2VCMv0T2RxT
+         2AAKGU8CEorNQwlXi4QTMR22cUlwrVC9hkNif2ZhTGx7Eg+YK5gKbPa8uBtn32/YU7tt
+         Lb7g==
+X-Gm-Message-State: APjAAAWhTjbglQuUpgwoYWmDe0XF9AksKqZR6s82tmS8/oYhyYK92Xy1
+        rNuzHtnXjgs3dlh6mSyHQGMZKDi/C7I=
+X-Google-Smtp-Source: APXvYqzvv2yyxmIZr/MR3cUYyWoZfEcDhy3LLFAqmSRfCTCiHwpo72LGfKqsh5kqmA7eStyCHOlaoQ==
+X-Received: by 2002:aa7:9d07:: with SMTP id k7mr36355208pfp.94.1566410086221;
+        Wed, 21 Aug 2019 10:54:46 -0700 (PDT)
+Received: from [10.17.0.244] ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id e26sm26762008pfd.14.2019.08.21.10.54.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 10:54:45 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Subject: Re: [PATCH 15/15] riscv: disable the EFI PECOFF header for M-mode
+From:   Troy Benjegerdes <troy.benjegerdes@sifive.com>
+In-Reply-To: <4f1677e24a5fcdfd2fda714cdd66f4dbe7817284.camel@wdc.com>
+Date:   Wed, 21 Aug 2019 10:54:44 -0700
+Cc:     "hch@lst.de" <hch@lst.de>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonas Karlman <jonas@kwiboo.se>
-Subject: [RESEND PATCH] arm64: dts: rockchip: add rk3328 VPU node
-Thread-Topic: [RESEND PATCH] arm64: dts: rockchip: add rk3328 VPU node
-Thread-Index: AQHVWEmA6lvnoZnzvUCVSolIcGQxRQ==
-Date:   Wed, 21 Aug 2019 17:54:38 +0000
-Message-ID: <HE1PR06MB4011C8496657B2C267A66327ACAA0@HE1PR06MB4011.eurprd06.prod.outlook.com>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1P192CA0024.EURP192.PROD.OUTLOOK.COM (2603:10a6:3:fe::34)
- To HE1PR06MB4011.eurprd06.prod.outlook.com (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:8C597AB4DD1E128AEEBEA014BF3F741B080DA9DBA481AC4D4EF99701F697DA34;UpperCasedChecksum:DDD5D99217A2DE2D00F8877F259A52C93BE75208C2E67B43BC98D7A94D9CF410;SizeAsReceived:7564;Count:48
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [qMVoivsCgaVQsd1Esgpq1b+VOhhNa+a3]
-x-microsoft-original-message-id: <20190821175425.17132-1-jonas@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 48
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119158)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:DB5EUR01HT118;
-x-ms-traffictypediagnostic: DB5EUR01HT118:
-x-microsoft-antispam-message-info: GBcsDMx76XzvwoMP4GtlUNcLXJFEX3mAah4xw5woDVmuwKp04Hqo3vTzrMA/KxK1UQoRRF35RerY/BQcKXyUhiJGNQ17BackEswPkwQpMtBBb2+XWE/IYaJGm6kkZ5QUUmgSAqGaTbZsBU30ZrSxnM+pm8dbAGwGZjpOvjoGai0BN6qndomE2aoq3M3SFGlQ
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd19aa3b-26be-46c0-8ccf-08d72660a25d
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 17:54:38.2018
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR01HT118
+        "palmer@sifive.com" <palmer@sifive.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <F4C28F0F-7385-432E-A766-64A3F8B8C381@sifive.com>
+References: <20190813154747.24256-1-hch@lst.de>
+ <20190813154747.24256-16-hch@lst.de>
+ <3BF39A0F-558D-40E0-880D-27829486F9F0@sifive.com>
+ <4f1677e24a5fcdfd2fda714cdd66f4dbe7817284.camel@wdc.com>
+To:     Atish Patra <Atish.Patra@wdc.com>
+X-Mailer: Apple Mail (2.3445.9.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add a VPU device node for rk3328.
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
-It would be great if this can be considered for v5.4,
-related dt-bindings commit has been merged in media tree for v5.4.
 
-Decoding using hantro driver has been tested on a Pine64 Rock64 RK3328 device.
----
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+> On Aug 21, 2019, at 10:31 AM, Atish Patra <Atish.Patra@wdc.com> wrote:
+>=20
+> On Tue, 2019-08-20 at 21:14 -0700, Troy Benjegerdes wrote:
+>>> On Aug 13, 2019, at 8:47 AM, Christoph Hellwig <hch@lst.de> wrote:
+>>>=20
+>>> No point in bloating the kernel image with a bootloader header if
+>>> we run bare metal.
+>>=20
+>> I would say the same for S-mode. EFI booting should be an option, not
+>> a requirement.=20
+>=20
+> EFI booting is never a requirement on any board. When EFI stub will be
+> added for kernel, it will be enabled with CONFIG_EFI_STUB only.=20
+>=20
+> The current additional header is only 64 bytes and also required for
+> booti in U-boot. So it shouldn't disabled for S-mode.
+>=20
+> Disabling it for M-Mode Linux is okay because of memory constraint and
+> M-Mode linux won't use U-boot anyways.
+>=20
+>> I have M-mode U-boot working with bootelf to start BBL,
+>> and at some point, I=E2=80=99m hoping we can have a M-mode linux =
+kernel be
+>> the SBI provider for S-mode kernels,=20
+>=20
+> Why do you want bloat a M-Mode software with Linux just for SBI
+> implementation?
+>=20
+> Using Linux as a last stage boot loader i.e. LinuxBoot may make sense
+> though.
+>=20
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index e9fefd8a7e02..4a175fff2861 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -278,6 +278,7 @@
- 			};
- 			pd_vpu@RK3328_PD_VPU {
- 				reg = <RK3328_PD_VPU>;
-+				clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
- 			};
- 		};
- 
-@@ -596,6 +597,17 @@
- 		status = "disabled";
- 	};
- 
-+	vpu: video-codec@ff350000 {
-+		compatible = "rockchip,rk3328-vpu";
-+		reg = <0x0 0xff350000 0x0 0x800>;
-+		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "vdpu";
-+		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
-+		clock-names = "aclk", "hclk";
-+		iommus = <&vpu_mmu>;
-+		power-domains = <&power RK3328_PD_VPU>;
-+	};
-+
- 	vpu_mmu: iommu@ff350800 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff350800 0x0 0x40>;
-@@ -604,7 +616,7 @@
- 		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
- 		clock-names = "aclk", "iface";
- 		#iommu-cells = <0>;
--		status = "disabled";
-+		power-domains = <&power RK3328_PD_VPU>;
- 	};
- 
- 	rkvdec_mmu: iommu@ff360480 {
--- 
-2.17.1
+Boot time, and ease of development, and simplified system management.
 
+Having M-mode linux as a supervisor/boot kernel can get us to responding
+to HTTPS/SSH/etc requests within seconds of power-on, while the =
+=E2=80=98boot=E2=80=99
+kernel can be loading guest S-mode kernels from things like NVME flash
+drives that are going to be a lot more code and development to support =
+in
+U-boot or any other non-linux dedicated boot loader.
+
+There=E2=80=99s also a very strong security argument, as Linux is going =
+to get the
+largest and broadest security review, and will likely get software =
+updates
+a lot faster than dedicated boot firmwares will.
+
+Another reason would be sharing the same kernel binary (elf file) for =
+both
+M-mode, and S-mode, and using the device tree passed to each to specify
+which mode it should be running it. There are probably a bunch of =
+gotchas
+with this idea, and even so I suspect someone will decide to go ahead =
+and
+just do it eventually because it could make testing, validation, and =
+security
+updates a lot easier from an operational/deployment point of view.
+
+Linuxbios convinced me that if you want to do a really large cluster,
+you can build, manage, and run such a thing with fewer people and
+engineering cost than if you have all these extra layers of boot =
+firmware
+that require some company to have firmware engineers and lots of extra
+system testing on the firmware.=
