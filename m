@@ -2,172 +2,151 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73884C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B522C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EDCA22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED8222DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:57:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Te7AorPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfHUH5Y (ORCPT
+        id S1727194AbfHUH5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 03:57:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55288 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726899AbfHUH5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:57:22 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 50C48307D88D;
-        Wed, 21 Aug 2019 07:57:22 +0000 (UTC)
-Received: from [10.72.12.72] (ovpn-12-72.pek2.redhat.com [10.72.12.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F1D5E2C8D2;
-        Wed, 21 Aug 2019 07:57:19 +0000 (UTC)
-Subject: Re: [PATCH] nbd: fix possible page fault for nbd disk
-To:     josef@toxicpanda.com, axboe@kernel.dk
-Cc:     mchristi@redhat.com, linux-block@vger.kernel.org,
-        nbd@other.debian.org, linux-kernel@vger.kernel.org
-References: <20190821070148.8502-1-xiubli@redhat.com>
-From:   Xiubo Li <xiubli@redhat.com>
-Message-ID: <042aed1d-9a42-a27d-fad9-47cdf35c38af@redhat.com>
-Date:   Wed, 21 Aug 2019 15:57:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 03:57:51 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:58798 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfHUH5u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 03:57:50 -0400
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190821075746epoutp027c04df9b0a3052fe8faf83a4503938ef~84Riw6W2o2489224892epoutp02Y
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:57:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190821075746epoutp027c04df9b0a3052fe8faf83a4503938ef~84Riw6W2o2489224892epoutp02Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566374266;
+        bh=ozhdgcpKWdJ9STHx0/l4UukvGXSFa8gUQOw9uROJorw=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Te7AorPt/qgkuEhu7rtZoJJ/4J2N3dZgeKLWGsbDPOWoh6Pd9U47Q+WaQqJ7H44k4
+         Z51RruAKWu+b+jize4UCFr2NATWriMVJhGDms/0EnUmnOnpOW8JELIj4/XTJYrj/66
+         lIJT/Lu2kn95Mo304e74T9fzUwCtTtD4EGZh+/iM=
+Received: from epsnrtp5.localdomain (unknown [182.195.42.166]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20190821075745epcas2p23a902d93d70a249b07900f5ff2742fad~84RhyryS60392603926epcas2p2K;
+        Wed, 21 Aug 2019 07:57:45 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.40.183]) by
+        epsnrtp5.localdomain (Postfix) with ESMTP id 46D0Pz1WwGzMqYkj; Wed, 21 Aug
+        2019 07:57:43 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        80.76.04156.779FC5D5; Wed, 21 Aug 2019 16:57:43 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20190821075742epcas2p4b9104e8249067c048d4050f2888da0a9~84RfNOmwq0945209452epcas2p4w;
+        Wed, 21 Aug 2019 07:57:42 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190821075742epsmtrp1c0bda618eef3e376a7e2738bb69573b3~84RfMAFUf3112831128epsmtrp1X;
+        Wed, 21 Aug 2019 07:57:42 +0000 (GMT)
+X-AuditID: b6c32a45-ddfff7000000103c-b1-5d5cf977fb70
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8D.C9.03706.679FC5D5; Wed, 21 Aug 2019 16:57:42 +0900 (KST)
+Received: from KORDO035251 (unknown [12.36.165.204]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20190821075742epsmtip1a675fb73939b515803f3ca44f0e6b4ec~84Re0K2Zg1561515615epsmtip1q;
+        Wed, 21 Aug 2019 07:57:42 +0000 (GMT)
+From:   "boojin.kim" <boojin.kim@samsung.com>
+To:     "'Herbert Xu'" <herbert@gondor.apana.org.au>
+Cc:     "'Herbert Xu'" <herbert@gondor.apana.org.au>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Eric Biggers'" <ebiggers@kernel.org>,
+        "'Theodore Y. Ts'o'" <tytso@mit.edu>,
+        "'Chao Yu'" <chao@kernel.org>,
+        "'Jaegeuk Kim'" <jaegeuk@kernel.org>,
+        "'Andreas Dilger'" <adilger.kernel@dilger.ca>,
+        "'Theodore Ts'o'" <tytso@mit.edu>, <dm-devel@redhat.com>,
+        "'Mike Snitzer'" <snitzer@redhat.com>,
+        "'Alasdair Kergon'" <agk@redhat.com>,
+        "'Jens Axboe'" <axboe@kernel.dk>,
+        "'Krzysztof Kozlowski'" <krzk@kernel.org>,
+        "'Kukjin Kim'" <kgene@kernel.org>,
+        "'Jaehoon Chung'" <jh80.chung@samsung.com>,
+        "'Ulf Hansson'" <ulf.hansson@linaro.org>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fscrypt@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-samsung-soc@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-samsung-soc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 6/9] dm crypt: support diskcipher
+Date:   Wed, 21 Aug 2019 16:57:41 +0900
+Message-ID: <001b01d557f6$1c49fd40$54ddf7c0$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20190821070148.8502-1-xiubli@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 21 Aug 2019 07:57:22 +0000 (UTC)
+X-Mailer: Microsoft Outlook 14.0
+Content-Language: ko
+Thread-Index: AdVX9gnaDYeXFhMoSci3o9XSTfBUaA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf0xbZRTN1/f6XrdR89Yx/WyM1KfEbQzWVls+DBgjqE+3GJLNzBCa7oW+
+        ALG/7GvHpsnGcHZlNC0zMULXTdItJnYio7CV8WObhUpAkLgK2XBjU/BHQZ0Cw3VuatsHkf/O
+        PfeenHtycyWYzEfKJdVmO2czs0aaWIuf79+sya1JlOuUM0MkurPowlHb8JcYOnPDS6CvPhwV
+        If/YYRz1/X5cjFp772OoYfYxNNPmw9DVe04x8k7PYWhs7CyJQtMTYtQ3mYNuTiVEqPnkdQJd
+        CbyCZk8u4ai3bwhHsW4/gQb+9QLUNHZRhJztdwB6350g0WDr7hceZTo/vSZiDnfUMOcvZzOx
+        UQcTCtYTzPWJXoLpOH2Q6WlZEDF1I1GMuX1xnGA8nUHALIQeL80oMxZWcayBsyk4c4XFUG2u
+        LKK379QX6zVapSpXVYDyaYWZNXFFdMmO0tyXq43J7LRiL2t0JKlSlufpbc8X2iwOO6eosvD2
+        IpqzGoxWlcqax7Mm3mGuzKuwmJ5TKZVqTXJyj7Hqwt2Y2Poetq83OkHUgm7RUbBGAqlnYbT/
+        Y3AUrJXIqC4Aw8fuY0IxD6A37MaFYgnAc79cEq9I5hbqyBSWUX0ANn5hFobiAC56mtJDBJUD
+        OwaDIIUzKSUMh/5Oe2DUPyScmY/gqcYGSgOnBhqIFMapbBhzB9ICKVUA464psYDXw6HmmfQ8
+        RmXB8G9+TNhCAbtG54DAZ8Lj9U5MMMuDN0ai4pQZpB6QcLz/DCkISuCfk4PL4g1wdrBzmZfD
+        uNe5jA/C8U9OkYLYDeDIvZXGM9D305GkmyTpthm2dW9LQUg9CQcml3d7CLr6H5ACLYUup0wQ
+        PgVPzMdEAi2Hf7gPCDQDb9cdwhrBE75VIX2rQvpWBfP9b9sC8CB4mLPypkqOV1tVq48dAum/
+        2PJSF2j6ekcEUBJAZ0gT5eU6mZjdy+83RQCUYHSmdJ+/TCeTGtj973A2i97mMHJ8BGiSNziG
+        yTdWWJJfZrbrVRq1Vqss0CCNVo3oR6Qd666Vy6hK1s69xXFWzraiE0nWyGvBgWm1pdblS/x6
+        pLh+djLn9e28/9tg/uUr45tCb7TtvHrztVvZLecWnlZEPvjhm4jB4zldF4993p6/6cfG1u+z
+        9BeK49/1GP+6FQgfyuqpKbm7GKh5sf1EA7ZbO/x22XDhq5cUgXd/tnwm+ehNT6dcEV03iumW
+        dMpdwz1bMzaKGl1S2EzjfBWr2oLZePY/dew/Ay0EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNIsWRmVeSWpSXmKPExsWy7bCSnG7Zz5hYg1edmhZfv3SwWKw/dYzZ
+        YvXdfjaL01PPMlnMOd/CYrH33WxWi7V7/jBbdL+SsXiyfhazxY1fbawW/Y9fM1ucP7+B3WLT
+        42usFntvaVvcv/eTyWLmvDtsFpcWuVu8mveNxWLP3pMsFpd3zWGzOPK/n9Fixvl9TBZtG78y
+        WrT2/GS3OL423EHSY8vKm0weLZvLPbYdUPW4fLbUY9OqTjaPO9f2sHlsXlLvsXvBZyaPpjNH
+        mT3e77vK5tG3ZRWjx+dNcgE8UVw2Kak5mWWpRfp2CVwZO39cZi1oZq7Yc/QaWwPjLqYuRk4O
+        CQETidefm9i7GLk4hAR2M0qsvbyLBSIhJbG1fQ8zhC0scb/lCCtE0XNGifPrD4F1swloS2w+
+        vooRxBYRMJDYvuk3mM0sMI1DYtcHcRBbWMBU4t6RbjYQm0VAVeJyzyKwGl4BS4mXHfdYIWxB
+        iZMznwAt5gDq1ZNo2wg1Rl5i+9s5UDcoSOw4+xoqLiIxu7ONGWKtnsTdM0dZJzAKzkIyaRbC
+        pFlIJs1C0r2AkWUVo2RqQXFuem6xYYFhXmq5XnFibnFpXrpecn7uJkZwEtDS3MF4eUn8IUYB
+        DkYlHt4dN6NjhVgTy4orcw8xSnAwK4nwVsyJihXiTUmsrEotyo8vKs1JLT7EKM3BoiTO+zTv
+        WKSQQHpiSWp2ampBahFMlomDU6qBsbrk4svrTNERm2+ttP3R+VVg/8oXjwW/e6o+W62+5Nun
+        Cp2guesvXr+QdiuAM+zKUw69JmlLjbWFzOIbHOOf9SrkP1i2xm/F6o1PfgkfqvCbv0Cs+Mjd
+        5/Pnznw488rq9maZA3925rPqSzDMem3n4Phz0pOmPZqLD23W1/JRnvpqjv8aTvbrrDOVWIoz
+        Eg21mIuKEwH4Sucq/gIAAA==
+X-CMS-MailID: 20190821075742epcas2p4b9104e8249067c048d4050f2888da0a9
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190821075742epcas2p4b9104e8249067c048d4050f2888da0a9
+References: <CGME20190821075742epcas2p4b9104e8249067c048d4050f2888da0a9@epcas2p4.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FYI.
+On Wed, Aug 21, 2019 at 09:35:36AM +0200, Herbert Xu Herbert wrote:
 
-This patch still have some problems.
+> I agree.  Please take a look at the recent ESSIV patches on
+> linux-crypto and build multi-block operations on top of them
+> which can then be implemented by the hardware.
+>
+> Cheers,
 
-Will check it more.
-Thanks.
-
-On 2019/8/21 15:01, xiubli@redhat.com wrote:
-> From: Xiubo Li <xiubli@redhat.com>
->
-> When the NBD_CFLAG_DESTROY_ON_DISCONNECT flag is set and at the same
-> time when the socket is closed due to the server daemon is restarted,
-> there will be crashing randomly, like:
->
-> <3>[  110.151949] block nbd1: Receive control failed (result -32)
-> <1>[  110.152024] BUG: unable to handle page fault for address: 0000058000000840
-> <1>[  110.152063] #PF: supervisor read access in kernel mode
-> <1>[  110.152083] #PF: error_code(0x0000) - not-present page
-> <6>[  110.152094] PGD 0 P4D 0
-> <4>[  110.152106] Oops: 0000 [#1] SMP PTI
-> <4>[  110.152120] CPU: 0 PID: 6698 Comm: kworker/u5:1 Kdump: loaded Not tainted 5.3.0-rc4+ #2
-> <4>[  110.152136] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-> <4>[  110.152166] Workqueue: knbd-recv recv_work [nbd]
-> <4>[  110.152187] RIP: 0010:__dev_printk+0xd/0x67
-> <4>[  110.152206] Code: 10 e8 c5 fd ff ff 48 8b 4c 24 18 65 48 33 0c 25 28 00 [...]
-> <4>[  110.152244] RSP: 0018:ffffa41581f13d18 EFLAGS: 00010206
-> <4>[  110.152256] RAX: ffffa41581f13d30 RBX: ffff96dd7374e900 RCX: 0000000000000000
-> <4>[  110.152271] RDX: ffffa41581f13d20 RSI: 00000580000007f0 RDI: ffffffff970ec24f
-> <4>[  110.152285] RBP: ffffa41581f13d80 R08: ffff96dd7fc17908 R09: 0000000000002e56
-> <4>[  110.152299] R10: ffffffff970ec24f R11: 0000000000000003 R12: ffff96dd7374e900
-> <4>[  110.152313] R13: 0000000000000000 R14: ffff96dd7374e9d8 R15: ffff96dd6e3b02c8
-> <4>[  110.152329] FS:  0000000000000000(0000) GS:ffff96dd7fc00000(0000) knlGS:0000000000000000
-> <4>[  110.152362] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> <4>[  110.152383] CR2: 0000058000000840 CR3: 0000000067cc6002 CR4: 00000000001606f0
-> <4>[  110.152401] Call Trace:
-> <4>[  110.152422]  _dev_err+0x6c/0x83
-> <4>[  110.152435]  nbd_read_stat.cold+0xda/0x578 [nbd]
-> <4>[  110.152448]  ? __switch_to_asm+0x34/0x70
-> <4>[  110.152468]  ? __switch_to_asm+0x40/0x70
-> <4>[  110.152478]  ? __switch_to_asm+0x34/0x70
-> <4>[  110.152491]  ? __switch_to_asm+0x40/0x70
-> <4>[  110.152501]  ? __switch_to_asm+0x34/0x70
-> <4>[  110.152511]  ? __switch_to_asm+0x40/0x70
-> <4>[  110.152522]  ? __switch_to_asm+0x34/0x70
-> <4>[  110.152533]  recv_work+0x35/0x9e [nbd]
-> <4>[  110.152547]  process_one_work+0x19d/0x340
-> <4>[  110.152558]  worker_thread+0x50/0x3b0
-> <4>[  110.152568]  kthread+0xfb/0x130
-> <4>[  110.152577]  ? process_one_work+0x340/0x340
-> <4>[  110.152609]  ? kthread_park+0x80/0x80
-> <4>[  110.152637]  ret_from_fork+0x35/0x40
->
-> This is very easy to reproduce by running the nbd-runner.
->
-> Signed-off-by: Xiubo Li <xiubli@redhat.com>
-> ---
->   drivers/block/nbd.c | 15 +++++++++++++--
->   1 file changed, 13 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-> index e21d2ded732b..bf5e4227c54d 100644
-> --- a/drivers/block/nbd.c
-> +++ b/drivers/block/nbd.c
-> @@ -26,6 +26,7 @@
->   #include <linux/ioctl.h>
->   #include <linux/mutex.h>
->   #include <linux/compiler.h>
-> +#include <linux/completion.h>
->   #include <linux/err.h>
->   #include <linux/kernel.h>
->   #include <linux/slab.h>
-> @@ -112,6 +113,8 @@ struct nbd_device {
->   	struct list_head list;
->   	struct task_struct *task_recv;
->   	struct task_struct *task_setup;
-> +
-> +	struct completion complete;
->   };
->   
->   #define NBD_CMD_REQUEUED	1
-> @@ -231,6 +234,13 @@ static void nbd_put(struct nbd_device *nbd)
->   					&nbd_index_mutex)) {
->   		idr_remove(&nbd_index_idr, nbd->index);
->   		mutex_unlock(&nbd_index_mutex);
-> +
-> +		/* Wait untill the recv_work exit */
-> +		wait_for_completion(&nbd->complete);
-> +
-> +		kfree(nbd->config);
-> +		nbd->config = NULL;
-> +
->   		nbd_dev_remove(nbd);
->   	}
->   }
-> @@ -1134,8 +1144,6 @@ static void nbd_config_put(struct nbd_device *nbd)
->   			}
->   			kfree(config->socks);
->   		}
-> -		kfree(nbd->config);
-> -		nbd->config = NULL;
->   
->   		nbd->tag_set.timeout = 0;
->   		nbd->disk->queue->limits.discard_granularity = 0;
-> @@ -1143,6 +1151,8 @@ static void nbd_config_put(struct nbd_device *nbd)
->   		blk_queue_max_discard_sectors(nbd->disk->queue, UINT_MAX);
->   		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, nbd->disk->queue);
->   
-> +		complete(&nbd->complete);
-> +
->   		mutex_unlock(&nbd->config_lock);
->   		nbd_put(nbd);
->   		module_put(THIS_MODULE);
-> @@ -1596,6 +1606,7 @@ static int nbd_dev_add(int index)
->   	nbd->tag_set.flags = BLK_MQ_F_SHOULD_MERGE |
->   		BLK_MQ_F_BLOCKING;
->   	nbd->tag_set.driver_data = nbd;
-> +	init_completion(&nbd->complete);
->   
->   	err = blk_mq_alloc_tag_set(&nbd->tag_set);
->   	if (err)
-
+Can you tell me which patch you mentioned? Is this?
+https://patches.linaro.org/project/linux-crypto/list/?series=22762
 
