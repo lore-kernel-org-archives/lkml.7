@@ -2,137 +2,404 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3BEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5805C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32B02206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 828A122DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566405022;
+	bh=3zWshCSgl5Ja3NydnUFdksqCinpsT1cQYzJyEXEfzMs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YRmtt3VwA9dFkJ4kH4OgWN3e9zav86hTkFTeP4S2JWYTRwQRxmcjxzfZVNul9V1E0
+	 ThDJOdczqzl7jVnVybTf/VMlB/g+1qpyqg1SfMOMnAip/zY/4IY1axVnYpCNBZoYcO
+	 jazQuuIaHoh8A0jBGCqk+gI2n2iG8Thpf3BIKAxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbfHUQ3M (ORCPT
+        id S1729212AbfHUQaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:29:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42990 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 12:30:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbfHUQ3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:29:12 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727222AbfHUQaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:30:21 -0400
+Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5AC227F752;
-        Wed, 21 Aug 2019 16:29:11 +0000 (UTC)
-Received: from [10.36.118.29] (unknown [10.36.118.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB03960126;
-        Wed, 21 Aug 2019 16:29:04 +0000 (UTC)
-Subject: Re: [PATCH] mm/balloon_compaction: suppress allocation warnings
-To:     Nadav Amit <namit@vmware.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190820091646.29642-1-namit@vmware.com>
- <ba01ec8c-19c3-847c-a315-2f70f4b1fe31@redhat.com>
- <5BBC6CB3-2DCD-4A95-90C9-7C23482F9B32@vmware.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <85c72875-278f-fbab-69c9-92dc1873d407@redhat.com>
-Date:   Wed, 21 Aug 2019 18:29:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id BD6ED216F4;
+        Wed, 21 Aug 2019 16:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566405020;
+        bh=3zWshCSgl5Ja3NydnUFdksqCinpsT1cQYzJyEXEfzMs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0ZNSZ2GJ0xyBQTfKrOFJ/IXhRr/M3FKO/47C/90FPZUbZNbRcN1vWnkezzFFAk7FF
+         LGP6tlxjh9QtWkDSxKrvqNDJHG88Ge/n8x4tYmoEdP2WjPLEuQENAWD53SfHosT437
+         42o+Pp7SCHvc5mKfKodFZFUL1P/7nl/FHDe6V1ws=
+Date:   Wed, 21 Aug 2019 09:30:18 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Nayna Jain <nayna@linux.ibm.com>
+Cc:     linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>
+Subject: Re: [PATCH v2 2/4] powerpc: expose secure variables to userspace via
+ sysfs
+Message-ID: <20190821163018.GA28571@kroah.com>
+References: <1566400103-18201-1-git-send-email-nayna@linux.ibm.com>
+ <1566400103-18201-3-git-send-email-nayna@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <5BBC6CB3-2DCD-4A95-90C9-7C23482F9B32@vmware.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 21 Aug 2019 16:29:11 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566400103-18201-3-git-send-email-nayna@linux.ibm.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.08.19 18:23, Nadav Amit wrote:
->> On Aug 21, 2019, at 9:05 AM, David Hildenbrand <david@redhat.com> wrote:
->>
->> On 20.08.19 11:16, Nadav Amit wrote:
->>> There is no reason to print warnings when balloon page allocation fails,
->>> as they are expected and can be handled gracefully.  Since VMware
->>> balloon now uses balloon-compaction infrastructure, and suppressed these
->>> warnings before, it is also beneficial to suppress these warnings to
->>> keep the same behavior that the balloon had before.
->>
->> I am not sure if that's a good idea. The allocation warnings are usually
->> the only trace of "the user/admin did something bad because he/she tried
->> to inflate the balloon to an unsafe value". Believe me, I processed a
->> couple of such bugreports related to virtio-balloon and the warning were
->> very helpful for that.
-> 
-> Ok, so a message is needed, but does it have to be a generic frightening
-> warning?
-> 
-> How about using __GFP_NOWARN, and if allocation do something like:
-> 
->   pr_warn(“Balloon memory allocation failed”);
-> 
-> Or even something more informative? This would surely be less intimidating
-> for common users.
-> 
+On Wed, Aug 21, 2019 at 11:08:21AM -0400, Nayna Jain wrote:
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-secvar
+> @@ -0,0 +1,27 @@
+> +What:		/sys/firmware/secvar
+> +Date:		August 2019
+> +Contact:	Nayna Jain <nayna@linux.ibm.com>
+> +Description:
+> +		This directory exposes interfaces for interacting with
+> +		the secure variables managed by OPAL firmware.
+> +
+> +		This is only for the powerpc/powernv platform.
+> +
+> +		Directory:
+> +		vars:		This directory lists all the variables that
+> +				are supported by the OPAL. The variables are
+> +				represented in the form of directories with
+> +				their variable names. The variable name is
+> +				unique and is in ASCII representation. The data
+> +				and size can be determined by reading their
+> +				respective attribute files.
+> +
+> +		Each variable directory has the following files:
+> +		name:		An ASCII representation of the variable name
+> +		data:		A read-only file containing the value of the
+> +				variable
+> +		size:		An integer representation of the size of the
+> +				content of the variable. In other works, it
+> +				represents the size of the data
+> +		update:		A write-only file that is used to submit the new
+> +				value for the variable.
 
-ratelimit would make sense :)
+Can you break this out into one-entry-per-file like most other entries
+are defined?  That makes it easier for tools to parse (specifically the
+tool in the tree right now...)
 
-And yes, this would certainly be nicer.
 
--- 
 
-Thanks,
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 42109682b727..b4bdf77837b2 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -925,6 +925,15 @@ config PPC_SECURE_BOOT
+>  	  allows user to enable OS Secure Boot on PowerPC systems that
+>  	  have firmware secure boot support.
+>  
+> +config SECVAR_SYSFS
+> +        tristate "Enable sysfs interface for POWER secure variables"
+> +        depends on PPC_SECURE_BOOT
 
-David / dhildenb
+No depends on SYSFS?
+
+> +        help
+> +          POWER secure variables are managed and controlled by firmware.
+> +          These variables are exposed to userspace via sysfs to enable
+> +          read/write operations on these variables. Say Y if you have
+> +	  secure boot enabled and want to expose variables to userspace.
+
+Mix of tabs and spaces :(
+
+> +
+>  endmenu
+>  
+>  config ISA_DMA_API
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index 9041563f1c74..4ea7b738c3a3 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -158,6 +158,7 @@ obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
+>  obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
+>  
+>  obj-$(CONFIG_PPC_SECURE_BOOT)	+= secboot.o ima_arch.o secvar-ops.o
+> +obj-$(CONFIG_SECVAR_SYSFS)     += secvar-sysfs.o
+
+No tab?
+
+>  
+>  # Disable GCOV, KCOV & sanitizers in odd or sensitive code
+>  GCOV_PROFILE_prom_init.o := n
+> diff --git a/arch/powerpc/kernel/secvar-sysfs.c b/arch/powerpc/kernel/secvar-sysfs.c
+> new file mode 100644
+> index 000000000000..e46986bb29a0
+> --- /dev/null
+> +++ b/arch/powerpc/kernel/secvar-sysfs.c
+> @@ -0,0 +1,210 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2019 IBM Corporation <nayna@linux.ibm.com>
+> + *
+> + * This code exposes secure variables to user via sysfs
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/compat.h>
+> +#include <linux/string.h>
+> +#include <asm/opal.h>
+> +#include <asm/secvar.h>
+> +
+> +//Approximating it for now, it is bound to change.
+
+" " before "A" here please.
+
+> +#define VARIABLE_MAX_SIZE  32000
+> +
+> +static struct kobject *powerpc_kobj;
+> +static struct secvar_operations *secvarops;
+> +struct kset *secvar_kset;
+> +
+> +static ssize_t name_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +			 char *buf)
+> +{
+> +	return sprintf(buf, "%s", kobj->name);
+> +}
+
+Why do you need this entry as it is the directory name?  Userspace
+already "knows" it if they can open this file.
+
+
+> +
+> +static ssize_t size_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +			 char *buf)
+> +{
+> +	unsigned long dsize;
+> +	int rc;
+> +
+> +	rc = secvarops->get_variable(kobj->name, strlen(kobj->name) + 1, NULL,
+> +				     &dsize);
+> +	if (rc) {
+> +		pr_err("Error retrieving variable size %d\n", rc);
+> +		return rc;
+> +	}
+> +
+> +	rc = sprintf(buf, "%ld", dsize);
+> +
+> +	return rc;
+> +}
+> +
+> +static ssize_t data_read(struct file *filep, struct kobject *kobj,
+> +			 struct bin_attribute *attr, char *buf, loff_t off,
+> +			 size_t count)
+> +{
+> +	unsigned long dsize;
+> +	int rc;
+> +	char *data;
+> +
+> +	rc = secvarops->get_variable(kobj->name, strlen(kobj->name) + 1, NULL,
+> +				     &dsize);
+> +	if (rc) {
+> +		pr_err("Error getting variable size %d\n", rc);
+> +		return rc;
+> +	}
+> +	pr_debug("dsize is %ld\n", dsize);
+> +
+> +	data = kzalloc(dsize, GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	rc = secvarops->get_variable(kobj->name, strlen(kobj->name)+1, data,
+> +				     &dsize);
+> +	if (rc) {
+> +		pr_err("Error getting variable %d\n", rc);
+> +		goto data_fail;
+> +	}
+> +
+> +	rc = memory_read_from_buffer(buf, count, &off, data, dsize);
+> +
+> +data_fail:
+> +	kfree(data);
+> +	return rc;
+> +}
+> +
+> +static ssize_t update_write(struct file *filep, struct kobject *kobj,
+> +			    struct bin_attribute *attr, char *buf, loff_t off,
+> +			    size_t count)
+> +{
+> +	int rc;
+> +
+> +	pr_debug("count is %ld\n", count);
+> +	rc = secvarops->set_variable(kobj->name, strlen(kobj->name)+1, buf,
+> +				     count);
+> +	if (rc) {
+> +		pr_err("Error setting the variable %s\n", kobj->name);
+> +		return rc;
+> +	}
+> +
+> +	return count;
+> +}
+> +
+> +static struct kobj_attribute name_attr =
+> +__ATTR(name, 0444, name_show, NULL);
+
+__ATTR_RO()?
+
+> +
+> +static struct kobj_attribute size_attr =
+> +__ATTR(size, 0444, size_show, NULL);
+
+__ATTR_RO()?
+
+> +
+> +static struct bin_attribute data_attr = {
+> +	.attr = {.name = "data", .mode = 0444},
+> +	.size = VARIABLE_MAX_SIZE,
+> +	.read = data_read,
+> +};
+
+__BIN_ATTR_RO()?
+
+> +
+> +
+> +static struct bin_attribute update_attr = {
+> +	.attr = {.name = "update", .mode = 0200},
+> +	.size = VARIABLE_MAX_SIZE,
+> +	.write = update_write,
+> +};
+
+__BIN_ATTR_RO()?
+
+
+> +
+> +static struct bin_attribute  *secvar_bin_attrs[] = {
+> +	&data_attr,
+> +	&update_attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute *secvar_attrs[] = {
+> +	&name_attr.attr,
+> +	&size_attr.attr,
+> +	NULL,
+> +};
+> +
+> +const struct attribute_group secvar_attr_group = {
+> +	.attrs = secvar_attrs,
+> +	.bin_attrs = secvar_bin_attrs,
+> +};
+
+static?
+
+> +
+> +int secvar_sysfs_load(void)
+> +{
+> +
+> +	char *name;
+
+No blank line.  You didn't run this this through checkpatch, did you :(
+
+
+> +	unsigned long namesize;
+> +	struct kobject *kobj;
+> +	int status;
+> +	int rc = 0;
+> +
+> +	name = kzalloc(1024, GFP_KERNEL);
+
+Why 1024?
+
+> +	if (!name)
+> +		return -ENOMEM;
+> +
+> +	do {
+> +
+> +		status = secvarops->get_next_variable(name, &namesize, 1024);
+> +		if (status != OPAL_SUCCESS)
+> +			break;
+> +
+> +		pr_info("name is %s\n", name);
+
+Please delete debugging messages.
+
+> +		kobj = kobject_create_and_add(name, &(secvar_kset->kobj));
+> +		if (kobj) {
+> +			rc = sysfs_create_group(kobj, &secvar_attr_group);
+
+You just raced userspace and lost :(
+
+If you set your kobj_type to have the attribute group you will not race
+and loose, the core will handle it for you.
+
+
+> +			if (rc)
+> +				pr_err("Error creating attributes for %s variable\n",
+> +				name);
+> +		} else {
+> +			pr_err("Error creating sysfs entry for %s variable\n",
+> +				name);
+> +			rc = -EINVAL;
+> +		}
+> +
+> +	} while ((status == OPAL_SUCCESS) && (rc == 0));
+> +
+> +	kfree(name);
+> +	return rc;
+> +}
+> +
+> +int secvar_sysfs_init(void)
+> +{
+> +	powerpc_kobj = kobject_create_and_add("secvar", firmware_kobj);
+> +	if (!powerpc_kobj) {
+> +		pr_err("secvar: Failed to create firmware kobj\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	secvar_kset = kset_create_and_add("vars", NULL, powerpc_kobj);
+> +	if (!secvar_kset) {
+> +		pr_err("secvar: sysfs kobject registration failed.\n");
+
+You juat leaked a kobject :(
+
+> +		return -ENODEV;
+> +	}
+> +
+> +	secvarops = get_secvar_ops();
+> +	if (!secvarops) {
+> +		kobject_put(powerpc_kobj);
+> +		pr_err("secvar: failed to retrieve secvar operations.\n");
+> +		return -ENODEV;
+
+You just leaked 2 things from above :(
+
+> +	}
+> +
+> +	secvar_sysfs_load();
+> +	pr_info("Secure variables sysfs initialized");
+
+Do not be noisy when all goes just fine.  The kernel log should be quiet
+when all goes well.
+
+thanks,
+
+greg k-h
