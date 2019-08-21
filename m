@@ -2,73 +2,135 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407E6C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2E4C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14834206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79189206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbfHUOC6 (ORCPT
+        id S1729212AbfHUODF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:02:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55800 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfHUOC5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:02:57 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i0RCQ-0005xS-UK; Wed, 21 Aug 2019 16:02:55 +0200
-Date:   Wed, 21 Aug 2019 16:02:54 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Julien Grall <julien.grall@arm.com>
-cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maz@kernel.org, bigeasy@linutronix.de, rostedt@goodmis.org
-Subject: Re: [RT PATCH 3/3] hrtimer: Prevent using uninitialized spin_lock
- in hrtimer_grab_expiry_lock()
-In-Reply-To: <20190821092409.13225-4-julien.grall@arm.com>
-Message-ID: <alpine.DEB.2.21.1908211557420.2223@nanos.tec.linutronix.de>
-References: <20190821092409.13225-1-julien.grall@arm.com> <20190821092409.13225-4-julien.grall@arm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 21 Aug 2019 10:03:05 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50194 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726484AbfHUODF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 10:03:05 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 37A035C532598535888E;
+        Wed, 21 Aug 2019 22:02:46 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 21 Aug
+ 2019 22:02:30 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Chao Yu <chao@kernel.org>, <devel@driverdev.osuosl.org>,
+        Miao Xie <miaoxie@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>, <weidu.du@huawei.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        Gao Xiang <gaoxiang25@huawei.com>, <stable@vger.kernel.org>
+Subject: [PATCH v2 5/6] staging: erofs: detect potential multiref due to corrupted images
+Date:   Wed, 21 Aug 2019 22:01:52 +0800
+Message-ID: <20190821140152.229648-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190821021942.GA14087@kroah.com>
+References: <20190821021942.GA14087@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019, Julien Grall wrote:
+As reported by erofs-utils fuzzer, currently, multiref
+(ondisk deduplication) hasn't been supported for now,
+we should forbid it properly.
 
-> migration_base is used as a placeholder when an hrtimer is switching
-> between base (see switch_hrtimer_timer_base). It is possible
-> theoritically possible to have timer->base equal to migration_base.
-> 
-> Even if it is a placeholder, it would pass all the current check in
-> hrtimer_grab_expiry_lock() leading to use softirq_expiry_lock
-> uninitialized.
->
-> This is can be prevented by checking whether the base is equal to
-> the placeholder (i.e. migration_base).
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
 
-That's a lame argument. The point is that it does not make sense to do that
-on migration base, but not for the reason you are giving (uninitialized
-lock).
+changelog from v1:
+ - change err = -EFSCORRUPTED as well as Chao suggested;
+   [ the difference between adding err or not to [PATCH 5/6] is just whether
+     we error out the whole compressed cluster or partial of them (since some
+     pages could be decompressed successfully), it's an undefined behavior
+     for these corrupted compressed images... ]
 
-If base == migration_base then there is no point to lock soft_expiry_lock
-simply because the timer is not executing the callback in soft irq context
-and the whole lock/unlock dance can be avoided.
+Hi Chao,
+ Could you kindly review it again? Thanks!
 
-But, yes. Good catch.
+Hi Greg,
+ This is [PATCH 5/6] of the original patchset, and I fix as what Chao suggested...
+ But I'm not sure whether it should be merged right now, it is up to you. :)
 
 Thanks,
+Gao Xiang
 
-	tglx
+
+ drivers/staging/erofs/zdata.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/erofs/zdata.c b/drivers/staging/erofs/zdata.c
+index 4d6faaab04f5..60d7c20db87d 100644
+--- a/drivers/staging/erofs/zdata.c
++++ b/drivers/staging/erofs/zdata.c
+@@ -798,6 +798,7 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+ 	for (i = 0; i < nr_pages; ++i)
+ 		pages[i] = NULL;
+ 
++	err = 0;
+ 	z_erofs_pagevec_ctor_init(&ctor, Z_EROFS_NR_INLINE_PAGEVECS,
+ 				  cl->pagevec, 0);
+ 
+@@ -819,8 +820,17 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+ 			pagenr = z_erofs_onlinepage_index(page);
+ 
+ 		DBG_BUGON(pagenr >= nr_pages);
+-		DBG_BUGON(pages[pagenr]);
+ 
++		/*
++		 * currently EROFS doesn't support multiref(dedup),
++		 * so here erroring out one multiref page.
++		 */
++		if (unlikely(pages[pagenr])) {
++			DBG_BUGON(1);
++			SetPageError(pages[pagenr]);
++			z_erofs_onlinepage_endio(pages[pagenr]);
++			err = -EFSCORRUPTED;
++		}
+ 		pages[pagenr] = page;
+ 	}
+ 	z_erofs_pagevec_ctor_exit(&ctor, true);
+@@ -828,7 +838,6 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+ 	overlapped = false;
+ 	compressed_pages = pcl->compressed_pages;
+ 
+-	err = 0;
+ 	for (i = 0; i < clusterpages; ++i) {
+ 		unsigned int pagenr;
+ 
+@@ -852,7 +861,12 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+ 			pagenr = z_erofs_onlinepage_index(page);
+ 
+ 			DBG_BUGON(pagenr >= nr_pages);
+-			DBG_BUGON(pages[pagenr]);
++			if (unlikely(pages[pagenr])) {
++				DBG_BUGON(1);
++				SetPageError(pages[pagenr]);
++				z_erofs_onlinepage_endio(pages[pagenr]);
++				err = -EFSCORRUPTED;
++			}
+ 			pages[pagenr] = page;
+ 
+ 			overlapped = true;
+-- 
+2.17.1
+
