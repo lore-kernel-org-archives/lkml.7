@@ -2,72 +2,173 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA8FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E280DC41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7571D22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:17:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VKHzMGGz"
+	by mail.kernel.org (Postfix) with ESMTP id C0F0522DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfHUCRn (ORCPT
+        id S1727031AbfHUCSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 22:17:43 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53830 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfHUCRm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 22:17:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=x0KsQxDJ6UzbBe97a0jSJDgAMBuv/qkUKnrZnnyaHkk=; b=VKHzMGGz4ESmSfpJnl8OA8mFc
-        a1QmyFZ6npDIF7i3DJx2ZoZHrOMl93Pxn6aTTpZdyTXjUrK9LBzjuTfHPcDSyfQQmCGO1Edvh1y/n
-        cQ7QmZv+RavMPkwmqz2UX+5FXsixpThM3u7GhHm3cToF0xyjFesuAEgnXrkWLj87seYgpuabQZF0W
-        p3pal6vpIjVv3NOwYbjWEcd+klxulnR0QVpxo0Al6xGCOgzUs0aB+uPbXYNAXama48B2YI1tLIkf6
-        1hGcxEwrEjOGLaQrI2HdYJgPRl/rdpX1Ht+EVhK0sX61l9WPhxTUGU/RMyZEF3ynaegkpdwqrObAi
-        kw0h0Exxw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i0GBx-0003dA-VB; Wed, 21 Aug 2019 02:17:41 +0000
-Date:   Tue, 20 Aug 2019 19:17:41 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     guoren@kernel.org
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org,
-        douzhk@nationalchip.com, Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH 3/3] csky: Support kernel non-aligned access
-Message-ID: <20190821021741.GB32710@infradead.org>
-References: <1566304469-5601-1-git-send-email-guoren@kernel.org>
- <1566304469-5601-3-git-send-email-guoren@kernel.org>
+        Tue, 20 Aug 2019 22:18:14 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53904 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726329AbfHUCSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 22:18:14 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 875DA282536BF636B30A;
+        Wed, 21 Aug 2019 09:57:36 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 21 Aug
+ 2019 09:57:30 +0800
+Subject: Re: [PATCH] erofs: move erofs out of staging
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+CC:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Qu Wenruo <quwenruo.btrfs@gmx.com>,
+        Gao Xiang <hsiangkao@aol.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Eric Biggers" <ebiggers@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Jan Kara <jack@suse.cz>, "Dave Chinner" <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Li Guifu" <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, "Pavel Machek" <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+References: <20190818172938.GA14413@sol.localdomain>
+ <20190818174702.GA17633@infradead.org>
+ <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190819160923.GG15198@magnolia>
+ <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
+ <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
+ <20190820155623.GA10232@mit.edu>
+ <9d8f88ee-4b81-bdfa-b0d7-9c7d5d54e70a@huawei.com>
+ <20190821014818.GB1037422@magnolia>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <8ae23b55-eb3f-e6e8-4cfb-5ce2885d8ff8@huawei.com>
+Date:   Wed, 21 Aug 2019 09:57:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566304469-5601-3-git-send-email-guoren@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190821014818.GB1037422@magnolia>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 08:34:29PM +0800, guoren@kernel.org wrote:
-> From: Guo Ren <ren_guo@c-sky.com>
+On 2019/8/21 9:48, Darrick J. Wong wrote:
+> On Wed, Aug 21, 2019 at 09:34:02AM +0800, Chao Yu wrote:
+>> On 2019/8/20 23:56, Theodore Y. Ts'o wrote:
+>>> The reason why there needs to be at least some file system specific
+>>> code for fuzz testing is because for efficiency's sake, you don't want
+>>> to fuzz every single bit in the file system, but just the ones which
+>>> are most interesting (e.g., the metadata blocks).  For file systems
+>>> which use checksum to protect against accidental corruption, the file
+>>> system fuzzer needs to also fix up the checksums (since you can be
+>>> sure malicious attackers will do this).
+>>
+>> Yup, IMO, if we really want such tool, it needs to:
+>> - move all generic fuzz codes (trigger random fuzzing in meta/data area) into
+>> that tool, and
+>> - make filesystem generic fs_meta/file_node lookup/inject/pack function as a
+>> callback, such as
+>>  * .find_fs_sb
+>>  * .inject_fs_sb
+>>  * .pack_fs_sb
 > 
-> We prohibit non-aligned access in kernel mode, but some special NIC
-> driver needs to support kernel-state unaligned access. For example,
-> when the bus does not support unaligned access, IP header parsing
-> will cause non-aligned access and driver does not recopy the skb
-> buffer to dma for performance reasons.
+> What about group descriptors?  AG headers?  The AGFLWTFBBQLOL?
 > 
-> Added kernel_enable & user_enable to control unaligned access and
-> added kernel_count  & user_count for statistical unaligned access.
+>>  * .find_fs_bitmap
+>>  * .inject_fs_bitmap
+> 
+> Probably want an find/inject for log blocks too.
+> 
+> Oh, wait, XFS doesn't log blocks like jbd2 does. :) :)
 
-If the NIC drivers requires this it is buggy.  Kernel code must
-use the get_unaligned* / put_unaligned* helpers for that.
+Yes, I admit that I should miss a lot of fs meta type here, but that's just a
+simple example here, we should not treat it as a full design.... :)
+
+> 
+>>  * .find_fs_inode_bitmap
+>>  * .inject_fs_inode_bitmap
+> 
+> XFS has an inode bitmap? ;)
+
+We can leave callback as NULL? ;)
+
+> 
+> (This is why there's no generic fuzz tool; every fs is different enough
+> that doing so would be sort of a mess.)
+
+Yes, I just wonder if there is any possible we can save some redundant work.
+
+> 
+> ((Granted, you could also look at how xfstests uses the xfs_db fuzz
+> command so at least it would be systematic...))
+Okay, I will check that.
+
+Thanks,
+
+> 
+>>  * .find_inode_by_num
+>>  * .inject_inode
+>>  * .pack_inode
+>>  * .find_tree_node_by_level
+>> ...
+> 
+> What about the name/value btrees?  (Ok, I'll stop now.)
+> 
+> --D
+> 
+>> then specific filesystem can fill the callback to tell how the tool can locate a
+>> field in inode or a metadata in tree node and then trigger the designed fuzz.
+>>
+>> It will be easier to rewrite whole generic fwk for each filesystem, because
+>> existed filesystem userspace tool should has included above callback's detail
+>> codes...
+>>
+>>> On Tue, Aug 20, 2019 at 10:24:11AM +0800, Chao Yu wrote:
+>>>> filesystem fill the tool's callback to seek a node/block and supported fields
+>>>> can be fuzzed in inode.
+>>
+>>>
+>>> What you *can* do is to make the file system specific portion of the
+>>> work as small as possible.  Great work in this area is Professor Kim's
+>>> Janus[1][2] and Hydra[2] work.  (Hydra is about to be published at SOSP 19,
+>>> and was partially funded from a Google Faculty Research Work.)
+>>>
+>>> [1] https://taesoo.kim/pubs/2019/xu:janus.pdf
+>>> [2] https://github.com/sslab-gatech/janus
+>>> [3] https://github.com/sslab-gatech/hydra
+>>
+>> Thanks for the information!
+>>
+>> It looks like janus and hydra alreay have generic compress/decompress function
+>> across different filesystems, it's really a good job, I do think it may be the
+>> one once it becomes more generic.
+>>
+>> Thanks
+>>
+>>>
+> .
+> 
