@@ -2,83 +2,89 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C1FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F37C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC21206DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D582064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfHUMPz (ORCPT
+        id S1727758AbfHUMQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 08:15:55 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:4744 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726894AbfHUMPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 08:15:55 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9B3DE709F13984C0D1AA;
-        Wed, 21 Aug 2019 20:15:51 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 21 Aug 2019
- 20:15:45 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <agross@kernel.org>, <rjw@rjwysocki.net>,
-        <viresh.kumar@linaro.org>, <sibis@codeaurora.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] cpufreq: qcom-hw: remove set but not used variable 'prev_cc'
-Date:   Wed, 21 Aug 2019 20:14:45 +0800
-Message-ID: <20190821121445.72588-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 21 Aug 2019 08:16:15 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43592 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbfHUMQO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 08:16:14 -0400
+Received: by mail-ot1-f68.google.com with SMTP id e12so1795198otp.10;
+        Wed, 21 Aug 2019 05:16:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JM8+7Ec7A9MDZFRreGMwQwNOR9ozJM3D4xQgDyyrkY8=;
+        b=hgRNU+yACEowbjcxbWTnCEEK+U31A9QLlckVkwbHgQ6fQR0vHXqRlS0VVM3LTPat+Z
+         kvHbA8rBGMUUYHwXntgh8DyBYrGE82Vk3EEpEJvvQ1jBxvH280MjAniRo9IVk+tcWfWf
+         fiP8wGwZhUOZ492PoyEH7J2xypRfg7fGsLHg5G1q+aCDC/jyz6lghD3/l/96SIi8D9wy
+         3/KgI+fOoPg1+cfSwWpjgW909LBWcECPOe0jFTPyQEB/zmohKRLUOZn2Pgkopodr3mBL
+         uVi0GMWfPu5bo+t+hw9tPZRp7YaWJQZYG4qlJ9HAQUuPPAJOmCMz2qI4UYPpna9C2FEH
+         6Chg==
+X-Gm-Message-State: APjAAAXfZ+/YNUJrUw/EJrLg08gC78iRUfUjlRhj8Mr0+yWZIVfPJnBr
+        UuWqESpWXLmJfBf2cYTMxivIpxR+1si9sP9/5KM=
+X-Google-Smtp-Source: APXvYqwp73cyWDJ24i8HRDQI70zVub6GzQTzwRLYNV8E2VXhehGjEEulwajAQyMYsZSNEAJiaw5euZ2SPNlpndY3P2g=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr26414408otk.145.1566389774076;
+ Wed, 21 Aug 2019 05:16:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org> <20190706140746.29132-4-jacopo+renesas@jmondi.org>
+In-Reply-To: <20190706140746.29132-4-jacopo+renesas@jmondi.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 21 Aug 2019 14:16:02 +0200
+Message-ID: <CAMuHMdVXQaqFg-m3a4xTiKLWQLz+itKQgGEBAQpHtG+MkTNzQw@mail.gmail.com>
+Subject: Re: [PATCH v2 03/19] arm64: renesas: Update 'vsps' property
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/cpufreq/qcom-cpufreq-hw.c: In function qcom_cpufreq_hw_read_lut:
-drivers/cpufreq/qcom-cpufreq-hw.c:89:38: warning:
- variable prev_cc set but not used [-Wunused-but-set-variable]
+On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Update the 'vsps' property in the R-Car Gen3 SoC device tree files to
+> match what's in in the documentation example.
 
-It is not used since commit 3003e75a5045 ("cpufreq:
-qcom-hw: Update logic to detect turbo frequency")
+double in (no worries, I'll fix that up myself)
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/cpufreq/qcom-cpufreq-hw.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-index 3eea197..a9ae2f8 100644
---- a/drivers/cpufreq/qcom-cpufreq-hw.c
-+++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-@@ -86,7 +86,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
- 				    struct cpufreq_policy *policy,
- 				    void __iomem *base)
- {
--	u32 data, src, lval, i, core_count, prev_cc = 0, prev_freq = 0, freq;
-+	u32 data, src, lval, i, core_count, prev_freq = 0, freq;
- 	u32 volt;
- 	struct cpufreq_frequency_table	*table;
- 
-@@ -139,7 +139,6 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
- 			break;
- 		}
- 
--		prev_cc = core_count;
- 		prev_freq = freq;
- 	}
- 
+Thanks!
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.4.
+
+BTW, any plans to add channel indices to the vsps properties in the
+remaining DTS files?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
