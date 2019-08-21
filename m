@@ -2,216 +2,128 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCDDC41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8FBC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7D22341A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2794822D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:24:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="k6ZdTrjO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfHUJUP (ORCPT
+        id S1726912AbfHUJX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:20:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:54986 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbfHUJUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:20:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9566C28;
-        Wed, 21 Aug 2019 02:20:12 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A67B3F706;
-        Wed, 21 Aug 2019 02:20:11 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 10:20:09 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH 2/2] ELF: Add ELF program property parsing support
-Message-ID: <20190821092007.GC27757@arm.com>
-References: <1566295063-7387-1-git-send-email-Dave.Martin@arm.com>
- <1566295063-7387-3-git-send-email-Dave.Martin@arm.com>
- <bd4caadd8a9110bbbcfb4e8748d0bb416161d8e3.camel@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bd4caadd8a9110bbbcfb4e8748d0bb416161d8e3.camel@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Wed, 21 Aug 2019 05:23:59 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34499 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbfHUJX6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:23:58 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so988875pgc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 02:23:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=WXbOIV/PPnZXH5Oc2xbiQaU6gpzCgh5LD6kBid8zVsA=;
+        b=k6ZdTrjOyX6/Zkg+v/eumDTkOMoX0cDzEk/+N+cSipXCBUg5Ewl+I/0l4ynujhqCze
+         N4ohG9Ii1D8knSNi6L0Ec6olYpTIHsnQTKQwMgrD0IF4x91LPIAsOqVVYi3zOqB18jbH
+         wrSyWUytB6HonPktkMHa2K9hd9dELtUJrBdEsxUVFu+JhUjBkXx9RENqcp2ncHHI06Hl
+         DdL7PXSKO2tu5z9HmL2agE6Ktw1i6OMSMeOFUC2L/L1JrpISjas4YAoRJNS1rjsm6+v2
+         CpjdbO2zACkVLoREccR+o0Y98SummfnKh258G9S0vOkRxtpKcp6oCjOfzn6NKlCJiHAP
+         NV0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WXbOIV/PPnZXH5Oc2xbiQaU6gpzCgh5LD6kBid8zVsA=;
+        b=co+6K9kEpdDmiWVw/jxzoHS31wI43OBkMx/omOd32IpfZK4bLX4Lb6LgNaBXzsGmD7
+         cM9skhcMUwHeUOK+rJboE1pAeRdlcSQStdH5PtaRTM0fMqOt3qFT2p9cpbVIJ0a4HgrF
+         Dwc7b+SFwnFMK+eWzgnfPA6qVcAE2pWC0J8bdY1hwWk4wEUFkam+p8vpYLCM0oITEvOF
+         qmWvnb02qAYjfK2xSAwqlzLGJUy0E+ylxFPASZHevsCICMiAdLukcsTccBfNWmH2VozP
+         ZFIEgFoYSR84S/Px3tdeoTNzWQnG9HlnEi47Uof2THuPyT7XxTxviZOycUiHbHjU6YAt
+         4/bw==
+X-Gm-Message-State: APjAAAUXww3zN5X2cgUzLus50fbk1NA0UMHu5hjY7X+1rpto1ikndvAH
+        zxaFip17m565ke4N0ypr+PmImw==
+X-Google-Smtp-Source: APXvYqzunXgF31zpY1az1veH6ySJAQHsK32XBPJ//0IqOBTv828KbyMMDM8C1V6Iwrp5vB7Bf2/XWg==
+X-Received: by 2002:a62:fb15:: with SMTP id x21mr35726157pfm.233.1566379437943;
+        Wed, 21 Aug 2019 02:23:57 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id s7sm25721327pfb.138.2019.08.21.02.23.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 21 Aug 2019 02:23:57 -0700 (PDT)
+From:   Yash Shah <yash.shah@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, paul.walmsley@sifive.com
+Cc:     palmer@sifive.com, aou@eecs.berkeley.edu, bmeng.cn@gmail.com,
+        sagar.kadam@sifive.com, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH] riscv: dts: Add DT support for SiFive FU540 PWM driver
+Date:   Wed, 21 Aug 2019 14:53:40 +0530
+Message-Id: <1566379420-26762-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 10:40:54PM +0100, Yu-cheng Yu wrote:
-> On Tue, 2019-08-20 at 10:57 +0100, Dave Martin wrote:
-> > ELF program properties will needed for detecting whether to enable
-> > optional architecture or ABI features for a new ELF process.
-> > 
-> > For now, there are no generic properties that we care about, so do
-> > nothing unless CONFIG_ARCH_USE_GNU_PROPERTY=y.
-> > 
-> > Otherwise, the presence of properties using the PT_PROGRAM_PROPERTY
-> > phdrs entry (if any), and notify each property to the arch code.
-> > 
-> > For now, the added code is not used.
-> > 
-> > Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-> > ---
-> >  fs/binfmt_elf.c          | 109
-> > +++++++++++++++++++++++++++++++++++++++++++++++
-> >  fs/compat_binfmt_elf.c   |   4 ++
-> >  include/linux/elf.h      |  21 +++++++++
-> >  include/uapi/linux/elf.h |   4 ++
-> >  4 files changed, 138 insertions(+)
-> > 
-> > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> > index d4e11b2..52f4b96 100644
-> > --- a/fs/binfmt_elf.c
-> > +++ b/fs/binfmt_elf.c
-> > @@ -39,12 +39,18 @@
-> >  #include <linux/sched/coredump.h>
-> >  #include <linux/sched/task_stack.h>
-> >  #include <linux/sched/cputime.h>
-> > +#include <linux/sizes.h>
-> > +#include <linux/types.h>
-> >  #include <linux/cred.h>
-> >  #include <linux/dax.h>
-> >  #include <linux/uaccess.h>
-> >  #include <asm/param.h>
-> >  #include <asm/page.h>
-> >  
-> > +#ifndef ELF_COMPAT
-> > +#define ELF_COMPAT 0
-> > +#endif
-> > +
-> >  #ifndef user_long_t
-> >  #define user_long_t long
-> >  #endif
-> > @@ -690,6 +696,93 @@ static unsigned long randomize_stack_top(unsigned long
-> > stack_top)
-> >  #endif
-> >  }
-> >  
-> > +static int parse_elf_property(const void **prop, size_t *notesz,
-> > +			      struct arch_elf_state *arch)
-> > +{
-> > +	const struct gnu_property *pr = *prop;
-> > +	size_t sz = *notesz;
-> > +	int ret;
-> > +	size_t step;
-> > +
-> > +	BUG_ON(sz < sizeof(*pr));
-> > +
-> > +	if (sizeof(*pr) > sz)
-> > +		return -EIO;
-> > +
-> > +	if (pr->pr_datasz > sz - sizeof(*pr))
-> > +		return -EIO;
-> > +
-> > +	step = round_up(sizeof(*pr) + pr->pr_datasz, elf_gnu_property_align);
-> > +	if (step > sz)
-> > +		return -EIO;
-> > +
-> > +	ret = arch_parse_elf_property(pr->pr_type, *prop + sizeof(*pr),
-> > +				      pr->pr_datasz, ELF_COMPAT, arch);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	*prop += step;
-> > +	*notesz -= step;
-> > +	return 0;
-> > +}
-> > +
-> > +#define NOTE_DATA_SZ SZ_1K
-> > +#define GNU_PROPERTY_TYPE_0_NAME "GNU"
-> > +#define NOTE_NAME_SZ (sizeof(GNU_PROPERTY_TYPE_0_NAME))
-> > +
-> > +static int parse_elf_properties(struct file *f, const struct elf_phdr *phdr,
-> > +				struct arch_elf_state *arch)
-> > +{
-> > +	ssize_t n;
-> > +	loff_t pos = phdr->p_offset;
-> > +	union {
-> > +		struct elf_note nhdr;
-> > +		char data[NOTE_DATA_SZ];
-> > +	} note;
-> > +	size_t off, notesz;
-> > +	const void *prop;
-> > +	int ret;
-> > +
-> > +	if (!IS_ENABLED(ARCH_USE_GNU_PROPERTY))
-> > +		return 0;
-> > +
-> > +	BUG_ON(phdr->p_type != PT_GNU_PROPERTY);
-> > +
-> > +	/* If the properties are crazy large, that's too bad (for now): */
-> > +	if (phdr->p_filesz > sizeof(note))
-> > +		return -ENOEXEC;
-> > +	n = kernel_read(f, &note, phdr->p_filesz, &pos);
-> > +
-> > +	BUILD_BUG_ON(sizeof(note) < sizeof(note.nhdr) + NOTE_NAME_SZ);
-> > +	if (n < 0 || n < sizeof(note.nhdr) + NOTE_NAME_SZ)
-> > +		return -EIO;
-> > +
-> > +	if (note.nhdr.n_type != NT_GNU_PROPERTY_TYPE_0 ||
-> > +	    note.nhdr.n_namesz != NOTE_NAME_SZ ||
-> > +	    strncmp(note.data + sizeof(note.nhdr),
-> > +		    GNU_PROPERTY_TYPE_0_NAME, n - sizeof(note.nhdr)))
-> > +		return -EIO;
-> > +
-> > +	off = round_up(sizeof(note.nhdr) + NOTE_NAME_SZ,
-> > +		       elf_gnu_property_align);
-> > +	if (off > n)
-> > +		return -EIO;
-> > +
-> > +	prop = (const struct gnu_property *)(note.data + off);
-> > +	notesz = n - off;
-> > +	if (note.nhdr.n_descsz > notesz)
-> > +		return -EIO;
-> > +
-> > +	while (notesz) {
-> > +		BUG_ON(((char *)prop - note.data) % elf_gnu_property_align);
-> > +		ret = parse_elf_property(&prop, &notesz, arch);
-> 
-> Properties need to be in ascending order.  Can we keep track of it from here.
+Add the PWM DT node in SiFive FU540 soc-specific DT file.
+Enable the PWM nodes in HiFive Unleashed board-specific DT file.
 
-We could, but do we need to?  If this order is violated, the ELF file is
-invalid and it doesn't matter what we do, providing that the kernel
-doesn't go wrong.
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+---
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 19 +++++++++++++++++++
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++++++
+ 2 files changed, 27 insertions(+)
 
-In general, the ELF loader already doesn't try to detect invalid ELF
-files: for example EM_386 with ELFCLASS64 would just be executed as a
-32-bit binary.  Of course, if the file is really structured as a 64-bit
-ELF we'll probably fail to parse the file before we get as far as
-executing it.
+diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+index 42b5ec2..bb422db 100644
+--- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
++++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+@@ -230,6 +230,25 @@
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
++		pwm0: pwm@10020000 {
++			compatible = "sifive,pwm0";
++			reg = <0x0 0x10020000 0x0 0x1000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <42 43 44 45>;
++			clocks = <&prci PRCI_CLK_TLCLK>;
++			#pwm-cells = <3>;
++			status = "disabled";
++		};
++		pwm1: pwm@10021000 {
++			compatible = "sifive,pwm0";
++			reg = <0x0 0x10021000 0x0 0x1000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <46 47 48 49>;
++			reg-names = "control";
++			clocks = <&prci PRCI_CLK_TLCLK>;
++			#pwm-cells = <3>;
++			status = "disabled";
++		};
+ 
+ 	};
+ };
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+index 93d68cb..104d334 100644
+--- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
++++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+@@ -85,3 +85,11 @@
+ 		reg = <0>;
+ 	};
+ };
++
++&pwm0 {
++	status = "okay";
++};
++
++&pwm1 {
++	status = "okay";
++};
+-- 
+1.9.1
 
-Here, we just care that a particular property is there.  If the
-properties are shuffled, we will find the same set of properties
-regardless.
-
-The kernel isn't really responsible for debugging broken linkers...
-
-OTOH the check would be trivial and I don't have a strong objection to
-adding it.
-
-> Also, can we replace BUG_ON with returning an error.
-
-Sure, those BUG_ON() are for development purposes only.  I'd intended to
-remove them, but I forgot to comment on it.
-
-This BUG_ON() should be ensured by the round_up() logic in
-parse_elf_property().
-
-Thanks for taking a look!
-
-Cheers
----Dave
