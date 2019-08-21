@@ -2,98 +2,260 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E24DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F5AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C9622DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="ecCdMDUX"
+	by mail.kernel.org (Postfix) with ESMTP id F21E62339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbfHUPsa (ORCPT
+        id S1729111AbfHUPsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:48:30 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:29549 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728840AbfHUPs3 (ORCPT
+        Wed, 21 Aug 2019 11:48:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38174 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728459AbfHUPsh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:48:29 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 319A93F6FD;
-        Wed, 21 Aug 2019 17:48:26 +0200 (CEST)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=ecCdMDUX;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5_BESL_KmbX2; Wed, 21 Aug 2019 17:48:25 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id B41E23F6DC;
-        Wed, 21 Aug 2019 17:48:24 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id EB2EA3602D6;
-        Wed, 21 Aug 2019 17:48:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1566402504; bh=fcgSl5DKVkYug+EcSMguajG35Q4SWrsZPSDglOO5M/I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ecCdMDUXP+o2fIzs4cRai9GmFjJWyqXjqO7bcLjHnOTjhjkzH167yNCB8CYywNbMi
-         iEf4XMgEk9k4bQsljRIdtpdEucWmIkckNcA7e1O+aDpOe82ub7qGTfMIyfPepJB51+
-         OIn5udOtHF0ggr4ekNoMg9EaTOS+dRcgZCrPxZFE=
-Subject: Re: [PATCH 4/4] input/vmmouse: Update the backdoor call with support
- for new instructions
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        linux-input@vger.kernel.org, Doug Covelli <dcovelli@vmware.com>
-References: <20190818143316.4906-1-thomas_os@shipmail.org>
- <20190818143316.4906-5-thomas_os@shipmail.org> <20190821050925.GA566@penguin>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <027a55d6-ab26-ef9c-bd89-93a38f96160b@shipmail.org>
-Date:   Wed, 21 Aug 2019 17:48:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 21 Aug 2019 11:48:37 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LFlxWv061321;
+        Wed, 21 Aug 2019 11:48:06 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uh88da239-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Aug 2019 11:48:06 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7LFm5hM061893;
+        Wed, 21 Aug 2019 11:48:06 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uh88da1v9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Aug 2019 11:48:05 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7LFjTdf023320;
+        Wed, 21 Aug 2019 15:47:55 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma05wdc.us.ibm.com with ESMTP id 2ue9764ust-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Aug 2019 15:47:55 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LFltZF52887930
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 15:47:55 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64E96B205F;
+        Wed, 21 Aug 2019 15:47:55 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 36928B2064;
+        Wed, 21 Aug 2019 15:47:55 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 21 Aug 2019 15:47:55 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id DE51416C1775; Wed, 21 Aug 2019 08:47:55 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 08:47:55 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC v2] rcu/tree: Try to invoke_rcu_core() if in_irq() during
+ unlock
+Message-ID: <20190821154755.GH28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190819012153.GR28441@linux.ibm.com>
+ <20190819014143.GB160903@google.com>
+ <20190819014623.GC160903@google.com>
+ <20190819022927.GS28441@linux.ibm.com>
+ <20190819125757.GA6946@linux.ibm.com>
+ <20190819143314.GT28441@linux.ibm.com>
+ <20190819154143.GA18470@linux.ibm.com>
+ <20190821143841.GC147977@google.com>
+ <20190821145617.GD147977@google.com>
+ <20190821152638.GF147977@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190821050925.GA566@penguin>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821152638.GF147977@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908210164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/19 7:09 AM, Dmitry Torokhov wrote:
-> On Sun, Aug 18, 2019 at 04:33:16PM +0200, Thomas Hellström (VMware) wrote:
->> From: Thomas Hellstrom <thellstrom@vmware.com>
->>
->> Use the definition provided by include/asm/vmware.h
->>
->> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> Cc: <linux-input@vger.kernel.org>
->> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
->> Reviewed-by: Doug Covelli <dcovelli@vmware.com>
-> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->
-> Please feel free to merge with the rest of the patches introducing
-> VMWARE_HYPERCALL.
+On Wed, Aug 21, 2019 at 11:26:38AM -0400, Joel Fernandes wrote:
+> On Wed, Aug 21, 2019 at 10:56:17AM -0400, Joel Fernandes wrote:
+> > On Wed, Aug 21, 2019 at 10:38:41AM -0400, Joel Fernandes wrote:
+> > > On Mon, Aug 19, 2019 at 08:41:43AM -0700, Paul E. McKenney wrote:
+> > > > On Mon, Aug 19, 2019 at 07:33:14AM -0700, Paul E. McKenney wrote:
+> > > > > On Mon, Aug 19, 2019 at 05:57:57AM -0700, Paul E. McKenney wrote:
+> > > > > > On Sun, Aug 18, 2019 at 07:29:27PM -0700, Paul E. McKenney wrote:
+> > > > > > > On Sun, Aug 18, 2019 at 09:46:23PM -0400, Joel Fernandes wrote:
+> > > > > > > > On Sun, Aug 18, 2019 at 09:41:43PM -0400, Joel Fernandes wrote:
+> > > > > > > > > On Sun, Aug 18, 2019 at 06:21:53PM -0700, Paul E. McKenney wrote:
+> > > > > > > > [snip]
+> > > > > > > > > > > > Also, your commit log's point #2 is "in_irq() implies in_interrupt()
+> > > > > > > > > > > > which implies raising softirq will not do any wake ups."  This mention
+> > > > > > > > > > > > of softirq seems a bit odd, given that we are going to wake up a rcuc
+> > > > > > > > > > > > kthread.  Of course, this did nothing to quell my suspicions.  ;-)
+> > > > > > > > > > > 
+> > > > > > > > > > > Yes, I should delete this #2 from the changelog since it is not very relevant
+> > > > > > > > > > > (I feel now). My point with #2 was that even if were to raise a softirq
+> > > > > > > > > > > (which we are not), a scheduler wakeup of ksoftirqd is impossible in this
+> > > > > > > > > > > path anyway since in_irq() implies in_interrupt().
+> > > > > > > > > > 
+> > > > > > > > > > Please!  Could you also add a first-principles explanation of why
+> > > > > > > > > > the added condition is immune from scheduler deadlocks?
+> > > > > > > > > 
+> > > > > > > > > Sure I can add an example in the change log, however I was thinking of this
+> > > > > > > > > example which you mentioned:
+> > > > > > > > > https://lore.kernel.org/lkml/20190627173831.GW26519@linux.ibm.com/
+> > > > > > > > > 
+> > > > > > > > > 	previous_reader()
+> > > > > > > > > 	{
+> > > > > > > > > 		rcu_read_lock();
+> > > > > > > > > 		do_something(); /* Preemption happened here. */
+> > > > > > > > > 		local_irq_disable(); /* Cannot be the scheduler! */
+> > > > > > > > > 		do_something_else();
+> > > > > > > > > 		rcu_read_unlock();  /* Must defer QS, task still queued. */
+> > > > > > > > > 		do_some_other_thing();
+> > > > > > > > > 		local_irq_enable();
+> > > > > > > > > 	}
+> > > > > > > > > 
+> > > > > > > > > 	current_reader() /* QS from previous_reader() is still deferred. */
+> > > > > > > > > 	{
+> > > > > > > > > 		local_irq_disable();  /* Might be the scheduler. */
+> > > > > > > > > 		do_whatever();
+> > > > > > > > > 		rcu_read_lock();
+> > > > > > > > > 		do_whatever_else();
+> > > > > > > > > 		rcu_read_unlock();  /* Must still defer reporting QS. */
+> > > > > > > > > 		do_whatever_comes_to_mind();
+> > > > > > > > > 		local_irq_enable();
+> > > > > > > > > 	}
+> > > > > > > > > 
+> > > > > > > > > One modification of the example could be, previous_reader() could also do:
+> > > > > > > > > 	previous_reader()
+> > > > > > > > > 	{
+> > > > > > > > > 		rcu_read_lock();
+> > > > > > > > > 		do_something_that_takes_really_long(); /* causes need_qs in
+> > > > > > > > > 							  the unlock_special_union to be set */
+> > > > > > > > > 		local_irq_disable(); /* Cannot be the scheduler! */
+> > > > > > > > > 		do_something_else();
+> > > > > > > > > 		rcu_read_unlock();  /* Must defer QS, task still queued. */
+> > > > > > > > > 		do_some_other_thing();
+> > > > > > > > > 		local_irq_enable();
+> > > > > > > > > 	}
+> > > > > > > > 
+> > > > > > > > The point you were making in that thread being, current_reader() ->
+> > > > > > > > rcu_read_unlock() -> rcu_read_unlock_special() would not do any wakeups
+> > > > > > > > because previous_reader() sets the deferred_qs bit.
+> > > > > > > > 
+> > > > > > > > Anyway, I will add all of this into the changelog.
+> > > > > > > 
+> > > > > > > Examples are good, but what makes it so that there are no examples of
+> > > > > > > its being unsafe?
+> > > > > > > 
+> > > > > > > And a few questions along the way, some quick quiz, some more serious.
+> > > > > > > Would it be safe if it checked in_interrupt() instead of in_irq()?
+> > > > > > > If not, should the in_interrupt() in the "if" condition preceding the
+> > > > > > > added "else if" be changed to in_irq()?  Would it make sense to add an
+> > > > > > > "|| !irqs_were_disabled" do your new "else if" condition?  Would the
+> > > > > > > body of the "else if" actually be executed in current mainline?
+> > > > > > > 
+> > > > > > > In an attempt to be at least a little constructive, I am doing some
+> > > > > > > testing of this patch overnight, along with a WARN_ON_ONCE() to see if
+> > > > > > > that invoke_rcu_core() is ever reached.
+> > > > > > 
+> > > > > > And that WARN_ON_ONCE() never triggered in two-hour rcutorture runs of
+> > > > > > TREE01, TREE02, TREE03, and TREE09.  (These are the TREE variants in
+> > > > > > CFLIST that have CONFIG_PREEMPT=y.)
+> > > > > > 
+> > > > > > This of course raises other questions.  But first, do you see that code
+> > > > > > executing in your testing?
+> > > > > 
+> > > > > Never mind!  Idiot here forgot the "--bootargs rcutree.use_softirq"...
+> > > > 
+> > > > So this time I ran the test this way:
+> > > > 
+> > > > tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 10 --configs "TREE01 TREE02 TREE03 TREE09" --bootargs "rcutree.use_softirq=0"
+> > > > 
+> > > > Still no splats.  Though only 10-minute runs instead of the two-hour runs
+> > > > I did last night.  (Got other stuff I need to do, sorry!)
+> > > > 
+> > > > My test version of your patch is shown below.  Please let me know if I messed
+> > > > something up.
+> > > 
+> > > I think you also need to pass rcutorture.irqreader=1 ?
+> > > 
+> > > Otherwise seems all readers happen in process context AFAICS.
+> > 
+> > Which is the default setting for that, so that's not the issue.
+> > 
+> > I think one reason could be, in_irq() is false when the timer callback
+> > executes, since the timer callback is executing after a grace-period. The
+> > stack is as follows:
+> > 
+> > Any reason why we cannot both test for call_rcu() and execute the RCU
+> > callback from the timer hardirq handler?
+> > 
+> > In fact, I guess on use_nosoftirq systems, the callback will not even run
+> > in softirq context.
+> > 
+> > [   20.553361]  => rcu_torture_timer_cb
+> > [   20.553361]  => rcu_do_batch
+> > [   20.553361]  => rcu_core
+> > [   20.553361]  => __do_softirq
+> > [   20.553361]  => do_softirq_own_stack
+> > [   20.553361]  => do_softirq.part.16
+> > [   20.553361]  => __local_bh_enable_ip
+> > [   20.553361]  => rcutorture_one_extend
+> > [   20.553361]  => rcu_torture_one_read
+> > [   20.553361]  => rcu_torture_reader
+> > [   20.553361]  => kthread
+> > [   20.553361]  => ret_from_fork
+> 
+> Oops! wrong stack trace, this is the one where it shows that the timer handler
+> is running from softirq, not hardirq. Both the rcu_torture_timer() and
+> rcu_torture_timer_cb() run from softirq context. ftrace confirms:
+> 
+> [   27.949671] rcu_tort-182     8..s1 7268705us : <stack trace>
+> [   27.949671]  => __ftrace_trace_stack
+> [   27.949671]  => rcu_torture_timer
+> [   27.949671]  => call_timer_fn
+> [   27.949671]  => run_timer_softirq
+> [   27.949671]  => __do_softirq
+> [   27.949671]  => irq_exit
+> [   27.949671]  => smp_apic_timer_interrupt
+> [   27.949671]  => apic_timer_interrupt
+> [   27.949671]  => rcutorture_one_extend
+> [   27.949671]  => rcu_torture_one_read
+> [   27.949671]  => rcu_torture_reader
+> [   27.949671]  => kthread
+> [   27.949671]  => ret_from_fork
+> 
+> So looks like torture testing modifications are called for, to run them in
+> hard interrupt context as well to provide this additional coverage.. Or am I
+> way off in the woods?
 
-Thanks, Dmitry!
+That actually might be worth doing.
 
-I have a version 2 of the patch were the only difference is that edx is 
-initialized to zero which is default for vmcall / vmmcall. Can I use 
-your ack for that one as well?
+The reason I didn't bother is that in the common case, timer softirq
+generates exactly the same race conditions as would a hard interrupt
+handler.  You can see this in your stack trace, where the call is
+coming from irq_exit(), that is, from the trailing edge of a hardware
+interrupt.
 
-Thanks,
-
-Thomas
-
-
+							Thanx, Paul
