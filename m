@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53C4C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47AFC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 817242332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 779712332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:24:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mlNmHTuJ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JIROksQB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731184AbfHUWYd (ORCPT
+        id S1731209AbfHUWYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 18:24:33 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45579 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731141AbfHUWYa (ORCPT
+        Wed, 21 Aug 2019 18:24:38 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40343 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731158AbfHUWYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 18:24:30 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q12so3456219wrj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:24:28 -0700 (PDT)
+        Wed, 21 Aug 2019 18:24:32 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c5so3505197wmb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:24:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LEBx2vHRiP3hDZBSXgO5N6WbayFm3N+ToBekBZ2ae80=;
-        b=mlNmHTuJUeaodKjc91t3wg+4JlBjT/LH+VA758Zj6nkiE7hXrsWI/mSxhdJF3LlIfN
-         KGTZ59i6+y2dJ/rTaDixhBoJB3jwQWQ6Qk1P9wL8pX3ki70kmJQA6PaumDOSdqxM1sJw
-         RBX29FFspJP8EmIp98jni0A8vu8/y3PXcfWROn+QcuL44TG6kAnFtk89g890x2IWr9As
-         stZpX47MV0NOEajpdVd7wmyFvRp7rKyf7xnXNRwoAgoVrisjSFgKOSSdF16OERnyjwHV
-         to4DG4Odnat6/NCIvXuA24WV4w6iWwdkokI9KY2AprKRkD+NAWfrO2kkQuXkmHbfNtKJ
-         oaKA==
+        bh=SZfK4Hg91c5el5MGv7c8euoA+RwD5KE0S9Rh7Yj1wX0=;
+        b=JIROksQBn/wUgB6FfkE6PFnGUae4NRfjwm9rLA/bGdOTN4cOWEAV9H/tDUTkkgfXc1
+         UpywIfXpUBBOvOm832InIZl9nO+GI37O1mhhEQ8uLOFHxrUNYrOwHTwKWRH+SJv9g7VS
+         fad6UaQKVoNBYp9l1E+8dPJJ3YMCEZxaYniuAhvj2EBzEZAgihX4xSbTCkBye5NrtSIe
+         lG7mFSnqTcmPGcmne+/qNo5CV5+OiGLEptTnn/v3ZzLBWpV1in83BdZlMAcPjwOCYGVg
+         ak0WFEfRiE6eMm24s/lFnc2aZv1zlMXyc+rUWoFpWHVevd5tcqsuMMjc79K5Gro/gLYF
+         Q+Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=LEBx2vHRiP3hDZBSXgO5N6WbayFm3N+ToBekBZ2ae80=;
-        b=ZHzpiDbjyCiszT7Te6E/MaItJsbchvs2XbZ0NTn2sXzb/++aGUCkf1r3ZORQN/PD4d
-         Zah8tKRnAV42VZa4dC8r+a6Kwmds1fqcmwEuLtTd8JJV+DR51/nVVi0ejwme/Hin0REG
-         dIV7/BoNLBBBicwCyvCwG8ctCWfApruJ0qzz1zbOsth42IwD6hgIN15tr7vNFA/MK5r5
-         YU6QvyFCZFlo+uDfYn2Ue6K1cxCR3pJU09RUG1+phLlgEAu5MizSt1XSvWbkYPU2tV1W
-         zo/7CsSrLQ4b/8rqsXIB3QKgzmJ+nvA4y0rtiyNCWOvfvAIrPHHcf3MY5VagrCAcHgEh
-         oHUQ==
-X-Gm-Message-State: APjAAAW+tdOwydI4SD9TVTgHtZ7M9J4zqeXcprqcB3WsEz9w2rVk8kft
-        hafinfcbHFcC6SNVZXxPTmN0zw==
-X-Google-Smtp-Source: APXvYqw01wEmbQ6VScaWNUUHN/sT9b2JnBtntU+d7a3SpWfg23SXzSKw7uEKuW+VufQEHQl/yQQFog==
-X-Received: by 2002:adf:e787:: with SMTP id n7mr19204372wrm.57.1566426268223;
-        Wed, 21 Aug 2019 15:24:28 -0700 (PDT)
+        bh=SZfK4Hg91c5el5MGv7c8euoA+RwD5KE0S9Rh7Yj1wX0=;
+        b=ez7NVggxZeXzCYGOIKbdQBGbkCpO9O330A6rXOU0noMpfXx2tC8FBJpcPN52Pw2N8g
+         JCeL+tP5URU9a0tu3Y/tKUZE4p/x6gNfzDh1Un9DoHQTx5R/UxW8ruckV13aEtLJxhDH
+         do54+gCSlw/7uMwGiaMwAGJYZr5hR+11T686xdnRzG/Svtmn7UdzWWGyAeXMuqk202Ov
+         cQNBqWFj0N6dRAuk56RDOHxynPNSgzNalLBp8uEpjmauIVJvsVI/Kc2bfHQnCTzdlsHX
+         IkQStEoUhQhTqi7Ql1pFQKadwozN9ppGWRB4uBbL92BkvGAX9EdPhh4MHttT7StuhbAc
+         s4Eg==
+X-Gm-Message-State: APjAAAU45U8Ok+3mv0tfniXHoxfV1iB3Oc0CJTQVaoNr1QMQdKsfmDXv
+        gAnp0EnKfS5MKf15XMwpC5hHrcUBPO0=
+X-Google-Smtp-Source: APXvYqwXk/S55RI20FFYfg0q6r9Dp40s4hg452KGkBolKibnp7pp/4XabfkKiDeYLIelawNN91iDFQ==
+X-Received: by 2002:a1c:61d4:: with SMTP id v203mr2444338wmb.164.1566426269301;
+        Wed, 21 Aug 2019 15:24:29 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
-        by smtp.gmail.com with ESMTPSA id f197sm3548549wme.22.2019.08.21.15.24.27
+        by smtp.gmail.com with ESMTPSA id f197sm3548549wme.22.2019.08.21.15.24.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 15:24:27 -0700 (PDT)
+        Wed, 21 Aug 2019 15:24:28 -0700 (PDT)
 From:   Guillaume La Roque <glaroque@baylibre.com>
 To:     rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
 Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org
-Subject: [PATCH v4 4/6] arm64: dts: meson: sei510: Add minimal thermal zone
-Date:   Thu, 22 Aug 2019 00:24:19 +0200
-Message-Id: <20190821222421.30242-5-glaroque@baylibre.com>
+Subject: [PATCH v4 5/6] arm64: dts: amlogic: odroid-n2: add minimal thermal zone
+Date:   Thu, 22 Aug 2019 00:24:20 +0200
+Message-Id: <20190821222421.30242-6-glaroque@baylibre.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190821222421.30242-1-glaroque@baylibre.com>
 References: <20190821222421.30242-1-glaroque@baylibre.com>
@@ -78,13 +78,13 @@ located close to the PLLs (between the CPU and GPU)
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../boot/dts/amlogic/meson-g12a-sei510.dts    | 70 +++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts | 76 +++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-index c9fa23a56562..35d2ebbd6d4e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+index 777bfb938854..8d7c73bad4aa 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
 @@ -10,6 +10,7 @@
  #include <dt-bindings/input/input.h>
  #include <dt-bindings/gpio/meson-g12a-gpio.h>
@@ -92,8 +92,8 @@ index c9fa23a56562..35d2ebbd6d4e 100644
 +#include <dt-bindings/thermal/thermal.h>
  
  / {
- 	compatible = "seirobotics,sei510", "amlogic,g12a";
-@@ -33,6 +34,67 @@
+ 	compatible = "hardkernel,odroid-n2", "amlogic,g12b";
+@@ -20,6 +21,71 @@
  		ethernet0 = &ethmac;
  	};
  
@@ -122,16 +122,20 @@ index c9fa23a56562..35d2ebbd6d4e 100644
 +					trip = <&cpu_hot>;
 +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
 +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++							 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +				};
 +
 +				map1 {
 +					trip = <&cpu_critical>;
 +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
 +							 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++							 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++							 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +				};
 +			};
 +		};
@@ -158,43 +162,59 @@ index c9fa23a56562..35d2ebbd6d4e 100644
 +		};
 +	};
 +
- 	mono_dac: audio-codec-0 {
- 		compatible = "maxim,max98357a";
- 		#sound-dai-cells = <0>;
-@@ -321,6 +383,7 @@
- 	operating-points-v2 = <&cpu_opp_table>;
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+@@ -289,6 +355,7 @@
+ 	operating-points-v2 = <&cpu_opp_table_0>;
  	clocks = <&clkc CLKID_CPU_CLK>;
  	clock-latency = <50000>;
 +	#cooling-cells = <2>;
  };
  
  &cpu1 {
-@@ -328,6 +391,7 @@
- 	operating-points-v2 = <&cpu_opp_table>;
+@@ -296,6 +363,7 @@
+ 	operating-points-v2 = <&cpu_opp_table_0>;
  	clocks = <&clkc CLKID_CPU_CLK>;
  	clock-latency = <50000>;
 +	#cooling-cells = <2>;
  };
  
- &cpu2 {
-@@ -335,6 +399,7 @@
- 	operating-points-v2 = <&cpu_opp_table>;
- 	clocks = <&clkc CLKID_CPU_CLK>;
+ &cpu100 {
+@@ -303,6 +371,7 @@
+ 	operating-points-v2 = <&cpub_opp_table_1>;
+ 	clocks = <&clkc CLKID_CPUB_CLK>;
  	clock-latency = <50000>;
 +	#cooling-cells = <2>;
  };
  
- &cpu3 {
-@@ -342,6 +407,7 @@
- 	operating-points-v2 = <&cpu_opp_table>;
- 	clocks = <&clkc CLKID_CPU_CLK>;
+ &cpu101 {
+@@ -310,6 +379,7 @@
+ 	operating-points-v2 = <&cpub_opp_table_1>;
+ 	clocks = <&clkc CLKID_CPUB_CLK>;
  	clock-latency = <50000>;
 +	#cooling-cells = <2>;
  };
  
- &cvbs_vdac_port {
-@@ -368,6 +434,10 @@
- 	status = "okay";
+ &cpu102 {
+@@ -317,6 +387,7 @@
+ 	operating-points-v2 = <&cpub_opp_table_1>;
+ 	clocks = <&clkc CLKID_CPUB_CLK>;
+ 	clock-latency = <50000>;
++	#cooling-cells = <2>;
+ };
+ 
+ &cpu103 {
+@@ -324,6 +395,7 @@
+ 	operating-points-v2 = <&cpub_opp_table_1>;
+ 	clocks = <&clkc CLKID_CPUB_CLK>;
+ 	clock-latency = <50000>;
++	#cooling-cells = <2>;
+ };
+ 
+ &ext_mdio {
+@@ -378,6 +450,10 @@
+ 	};
  };
  
 +&mali {
