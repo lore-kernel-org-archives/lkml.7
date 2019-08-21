@@ -2,219 +2,103 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689BBC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA485C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399952070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC022070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:56:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566410175;
+	bh=O1oO7hBPokTOMjbBA1jwycaR+6b03oInAg14L2G/waU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rEJvyU4jXNX/po+b6ed1QEmr/QCWi8XSWtq1ZWD34nL7RNfH9NXvBpSF4ds0K1ITS
+	 SV1eUYzXupuKsJbC3E2g2kuKLtLm1V4ulbbwMkEaRPI6CvRhpLrHkuc6GJCx3fb9Ll
+	 H5m+9KYFP46Fz4Xz06rR6x7DQUSt8n83i+Y7rImU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbfHURzf (ORCPT
+        id S1729700AbfHUR4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:55:35 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:33342 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728591AbfHURze (ORCPT
+        Wed, 21 Aug 2019 13:56:14 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36883 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfHUR4O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:55:34 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0Ta4JjET_1566410125;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Ta4JjET_1566410125)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 22 Aug 2019 01:55:31 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     mhocko@suse.com, kirill.shutemov@linux.intel.com,
-        hannes@cmpxchg.org, vbabka@suse.cz, rientjes@google.com,
-        akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
-Date:   Thu, 22 Aug 2019 01:55:25 +0800
-Message-Id: <1566410125-66011-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 21 Aug 2019 13:56:14 -0400
+Received: by mail-wr1-f67.google.com with SMTP id z11so2891680wrt.4;
+        Wed, 21 Aug 2019 10:56:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3QMcAbdO89j9hbCFCxKjPRn72B52n9H62i2qWyUrTKc=;
+        b=snzrhD7EB4z6LYL/mp6+EUIR3cu1H/A2q7j+xjU2NXvQ36a15qGXC7vgV5VqppSn5/
+         QJtApAFI86b3KbrAWO7c/U83+TGdisXtXTR2qo3EoBsMpQAJ9iQv4dzIh61vI1PyPg+r
+         GrOJbatLNUJ74duYlFTaT1XVE8CcEDfudAO1Jj3Fnq4lq4uCf0zhSl0zSkY+IjOrJQ3D
+         AefDg6teIbi094gV4UJ0l3jamRHluoj5yGcz/EYZpDV3dS7Hkonb6CaLCsy/j9JPl+n2
+         G4tzRc2rVnrYVJc0fRhXOPDWMX7W9HeaRkSmq/otsMNxUHWyFgrPsse9IlhLhay1BCne
+         6ziw==
+X-Gm-Message-State: APjAAAVYYJ4k7rl5SLWt+o+aP9xAWtuLy6ffEqtqxbj3YPZ6yB93poFX
+        ysvSNlGNizm5XdKA1g/RzVg=
+X-Google-Smtp-Source: APXvYqyXIbUhXlGcLLVFLun1i20quC+8O/1XUZRT3UwzRWmduyZeM2r2J5aRsbF9VA1AfHqIAQiZ8g==
+X-Received: by 2002:adf:f1cc:: with SMTP id z12mr4554250wro.125.1566410171806;
+        Wed, 21 Aug 2019 10:56:11 -0700 (PDT)
+Received: from kozik-lap ([194.230.147.11])
+        by smtp.googlemail.com with ESMTPSA id g12sm25434578wrv.9.2019.08.21.10.56.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 21 Aug 2019 10:56:11 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 19:56:09 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH] ARM: s3c64xx: squash samsung_usb_phy.h into
+ setup-usb-phy.c
+Message-ID: <20190821175609.GA6768@kozik-lap>
+References: <20190819155602.20843-1-yamada.masahiro@socionext.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190819155602.20843-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Available memory is one of the most important metrics for memory
-pressure.  Currently, the deferred split THPs are not accounted into
-available memory, but they are reclaimable actually, like reclaimable
-slabs.
+On Tue, Aug 20, 2019 at 12:56:02AM +0900, Masahiro Yamada wrote:
+> This is only used by arch/arm/mach-s3c64xx/setup-usb-phy.c
+> 
+> $ git grep samsung_usb_phy_type
+> include/linux/usb/samsung_usb_phy.h:enum samsung_usb_phy_type {
+> $ git grep USB_PHY_TYPE_DEVICE
+> arch/arm/mach-s3c64xx/setup-usb-phy.c:  if (type == USB_PHY_TYPE_DEVICE)
+> arch/arm/mach-s3c64xx/setup-usb-phy.c:  if (type == USB_PHY_TYPE_DEVICE)
+> include/linux/usb/samsung_usb_phy.h:    USB_PHY_TYPE_DEVICE,
+> $ git grep USB_PHY_TYPE_HOST
+> include/linux/usb/samsung_usb_phy.h:    USB_PHY_TYPE_HOST,
+> 
+> Actually, 'enum samsung_usb_phy_type' is unused; the 'type' parameter
+> has 'int' type. Anyway, there is no need to declare this enum in the
+> globally visible header. Squash the header.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  arch/arm/mach-s3c64xx/setup-usb-phy.c        |  5 +++++
+>  arch/arm/plat-samsung/include/plat/usb-phy.h |  2 --
+>  include/linux/usb/samsung_usb_phy.h          | 17 -----------------
+>  3 files changed, 5 insertions(+), 19 deletions(-)
 
-And, they seems very common with the common workloads when THP is
-enabled.  A simple run with MariaDB test of mmtest with THP enabled as
-always shows it could generate over fifteen thousand deferred split THPs
-(accumulated around 30G in one hour run, 75% of 40G memory for my VM).
-It looks worth accounting in MemAvailable.
+Thanks, applied.
 
-Record the number of freeable normal pages of deferred split THPs into
-the second tail page, and account it into KReclaimable.  Although THP
-allocations are not exactly "kernel allocations", once they are unmapped,
-they are in fact kernel-only.  KReclaimable has been accounted into
-MemAvailable.
-
-When the deferred split THPs get split due to memory pressure or freed,
-just decrease by the recorded number.
-
-With this change when running program which populates 1G address space
-then madvise(MADV_DONTNEED) 511 pages for every THP, /proc/meminfo would
-show the deferred split THPs are accounted properly.
-
-Populated by before calling madvise(MADV_DONTNEED):
-MemAvailable:   43531960 kB
-AnonPages:       1096660 kB
-KReclaimable:      26156 kB
-AnonHugePages:   1056768 kB
-
-After calling madvise(MADV_DONTNEED):
-MemAvailable:   44411164 kB
-AnonPages:         50140 kB
-KReclaimable:    1070640 kB
-AnonHugePages:     10240 kB
-
-Suggested-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: David Rientjes <rientjes@google.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
- Documentation/filesystems/proc.txt |  4 ++--
- include/linux/huge_mm.h            |  7 +++++--
- include/linux/mm_types.h           |  3 ++-
- mm/huge_memory.c                   | 13 ++++++++++++-
- mm/rmap.c                          |  4 ++--
- 5 files changed, 23 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-index 99ca040..93fc183 100644
---- a/Documentation/filesystems/proc.txt
-+++ b/Documentation/filesystems/proc.txt
-@@ -968,8 +968,8 @@ ShmemHugePages: Memory used by shared memory (shmem) and tmpfs allocated
-               with huge pages
- ShmemPmdMapped: Shared memory mapped into userspace with huge pages
- KReclaimable: Kernel allocations that the kernel will attempt to reclaim
--              under memory pressure. Includes SReclaimable (below), and other
--              direct allocations with a shrinker.
-+              under memory pressure. Includes SReclaimable (below), deferred
-+              split THPs, and other direct allocations with a shrinker.
-         Slab: in-kernel data structures cache
- SReclaimable: Part of Slab, that might be reclaimed, such as caches
-   SUnreclaim: Part of Slab, that cannot be reclaimed on memory pressure
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 61c9ffd..c194630 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -162,7 +162,7 @@ static inline int split_huge_page(struct page *page)
- {
- 	return split_huge_page_to_list(page, NULL);
- }
--void deferred_split_huge_page(struct page *page);
-+void deferred_split_huge_page(struct page *page, unsigned int nr);
- 
- void __split_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
- 		unsigned long address, bool freeze, struct page *page);
-@@ -324,7 +324,10 @@ static inline int split_huge_page(struct page *page)
- {
- 	return 0;
- }
--static inline void deferred_split_huge_page(struct page *page) {}
-+static inline void deferred_split_huge_page(struct page *page, unsigned int nr)
-+{
-+}
-+
- #define split_huge_pmd(__vma, __pmd, __address)	\
- 	do { } while (0)
- 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 156640c..17e0fc5 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -138,7 +138,8 @@ struct page {
- 		};
- 		struct {	/* Second tail page of compound page */
- 			unsigned long _compound_pad_1;	/* compound_head */
--			unsigned long _compound_pad_2;
-+			/* Freeable normal pages for deferred split shrinker */
-+			unsigned long nr_freeable;
- 			/* For both global and memcg */
- 			struct list_head deferred_list;
- 		};
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index c9a596e..e04ac4d 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -524,6 +524,7 @@ void prep_transhuge_page(struct page *page)
- 
- 	INIT_LIST_HEAD(page_deferred_list(page));
- 	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
-+	page[2].nr_freeable = 0;
- }
- 
- static unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
-@@ -2766,6 +2767,10 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 		if (!list_empty(page_deferred_list(head))) {
- 			ds_queue->split_queue_len--;
- 			list_del(page_deferred_list(head));
-+			__mod_node_page_state(page_pgdat(page),
-+					NR_KERNEL_MISC_RECLAIMABLE,
-+					-head[2].nr_freeable);
-+			head[2].nr_freeable = 0;
- 		}
- 		if (mapping)
- 			__dec_node_page_state(page, NR_SHMEM_THPS);
-@@ -2816,11 +2821,14 @@ void free_transhuge_page(struct page *page)
- 		ds_queue->split_queue_len--;
- 		list_del(page_deferred_list(page));
- 	}
-+	__mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
-+			      -page[2].nr_freeable);
-+	page[2].nr_freeable = 0;
- 	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
- 	free_compound_page(page);
- }
- 
--void deferred_split_huge_page(struct page *page)
-+void deferred_split_huge_page(struct page *page, unsigned int nr)
- {
- 	struct deferred_split *ds_queue = get_deferred_split_queue(page);
- #ifdef CONFIG_MEMCG
-@@ -2844,6 +2852,9 @@ void deferred_split_huge_page(struct page *page)
- 		return;
- 
- 	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
-+	page[2].nr_freeable += nr;
-+	__mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
-+			      nr);
- 	if (list_empty(page_deferred_list(page))) {
- 		count_vm_event(THP_DEFERRED_SPLIT_PAGE);
- 		list_add_tail(page_deferred_list(page), &ds_queue->split_queue);
-diff --git a/mm/rmap.c b/mm/rmap.c
-index e5dfe2a..6008fab 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1286,7 +1286,7 @@ static void page_remove_anon_compound_rmap(struct page *page)
- 
- 	if (nr) {
- 		__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, -nr);
--		deferred_split_huge_page(page);
-+		deferred_split_huge_page(page, nr);
- 	}
- }
- 
-@@ -1320,7 +1320,7 @@ void page_remove_rmap(struct page *page, bool compound)
- 		clear_page_mlock(page);
- 
- 	if (PageTransCompound(page))
--		deferred_split_huge_page(compound_head(page));
-+		deferred_split_huge_page(compound_head(page), 1);
- 
- 	/*
- 	 * It would be tidy to reset the PageAnon mapping here,
--- 
-1.8.3.1
+Best regards,
+Krzysztof
 
