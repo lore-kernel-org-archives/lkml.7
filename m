@@ -2,120 +2,191 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83518C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F161C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEF8216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE87A216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbfHUTM1 convert rfc822-to-8bit (ORCPT
+        id S1729616AbfHUTMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:12:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14762 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727685AbfHUTM1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:12:27 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LJCQ8a027579
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:12:26 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhb5y1q1h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:12:25 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Wed, 21 Aug 2019 20:12:17 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 21 Aug 2019 20:12:15 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LJCE5f48169192
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 19:12:14 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D7D64C044;
-        Wed, 21 Aug 2019 19:12:14 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3280F4C040;
-        Wed, 21 Aug 2019 19:12:14 +0000 (GMT)
-Received: from localhost (unknown [9.85.72.179])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 21 Aug 2019 19:12:13 +0000 (GMT)
-Date:   Thu, 22 Aug 2019 00:42:12 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: Regression fix for bpf in v5.3 (was Re: [RFC PATCH] bpf: handle
- 32-bit zext during constant blinding)
-To:     Jiong Wang <jiong.wang@netronome.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        bpf@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        netdev@vger.kernel.org
-References: <20190813171018.28221-1-naveen.n.rao@linux.vnet.ibm.com>
-        <87d0gy6cj6.fsf@concordia.ellerman.id.au> <87k1b6yeh1.fsf@netronome.com>
-In-Reply-To: <87k1b6yeh1.fsf@netronome.com>
+        Wed, 21 Aug 2019 15:12:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36268 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727685AbfHUTMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 15:12:39 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AB93B3082128;
+        Wed, 21 Aug 2019 19:12:38 +0000 (UTC)
+Received: from [10.36.118.29] (unknown [10.36.118.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1086A46;
+        Wed, 21 Aug 2019 19:12:34 +0000 (UTC)
+Subject: Re: [PATCH v2] mm/balloon_compaction: Informative allocation warnings
+To:     Nadav Amit <namit@vmware.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190821094159.40795-1-namit@vmware.com>
+ <75ff92c2-7ae2-c4a6-cd1f-44741e29d20e@redhat.com>
+ <4E10A342-9A51-4C1F-8E5A-8005AACEF4CE@vmware.com>
+ <497b1189-8e1d-2926-ee5e-9077fcceb04b@redhat.com>
+ <36AC2460-9E88-4BAF-B793-A14A00E41617@vmware.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <3873b6ab-de6d-cac2-90e8-541fe86e2005@redhat.com>
+Date:   Wed, 21 Aug 2019 21:12:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19082119-0028-0000-0000-0000039234C0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082119-0029-0000-0000-000024545D62
-Message-Id: <1566414605.l9kcxxdjo7.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=781 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908210184
+In-Reply-To: <36AC2460-9E88-4BAF-B793-A14A00E41617@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 21 Aug 2019 19:12:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jiong Wang wrote:
-> 
-> Michael Ellerman writes:
-> 
->> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> writes:
->>> Since BPF constant blinding is performed after the verifier pass, there
->>> are certain ALU32 instructions inserted which don't have a corresponding
->>> zext instruction inserted after. This is causing a kernel oops on
->>> powerpc and can be reproduced by running 'test_cgroup_storage' with
->>> bpf_jit_harden=2.
->>>
->>> Fix this by emitting BPF_ZEXT during constant blinding if
->>> prog->aux->verifier_zext is set.
->>>
->>> Fixes: a4b1d3c1ddf6cb ("bpf: verifier: insert zero extension according to analysis result")
->>> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
->>> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
->>> ---
->>> This approach (the location where zext is being introduced below, in 
->>> particular) works for powerpc, but I am not entirely sure if this is 
->>> sufficient for other architectures as well. This is broken on v5.3-rc4.
+On 21.08.19 21:10, Nadav Amit wrote:
+>> On Aug 21, 2019, at 12:06 PM, David Hildenbrand <david@redhat.com> wrote:
 >>
->> Any comment on this?
+>> On 21.08.19 20:59, Nadav Amit wrote:
+>>>> On Aug 21, 2019, at 11:57 AM, David Hildenbrand <david@redhat.com> wrote:
+>>>>
+>>>> On 21.08.19 11:41, Nadav Amit wrote:
+>>>>> There is no reason to print generic warnings when balloon memory
+>>>>> allocation fails, as failures are expected and can be handled
+>>>>> gracefully. Since VMware balloon now uses balloon-compaction
+>>>>> infrastructure, and suppressed these warnings before, it is also
+>>>>> beneficial to suppress these warnings to keep the same behavior that the
+>>>>> balloon had before.
+>>>>>
+>>>>> Since such warnings can still be useful to indicate that the balloon is
+>>>>> over-inflated, print more informative and less frightening warning if
+>>>>> allocation fails instead.
+>>>>>
+>>>>> Cc: David Hildenbrand <david@redhat.com>
+>>>>> Cc: Jason Wang <jasowang@redhat.com>
+>>>>> Signed-off-by: Nadav Amit <namit@vmware.com>
+>>>>>
+>>>>> ---
+>>>>>
+>>>>> v1->v2:
+>>>>> * Print informative warnings instead suppressing [David]
+>>>>> ---
+>>>>> mm/balloon_compaction.c | 7 ++++++-
+>>>>> 1 file changed, 6 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+>>>>> index 798275a51887..0c1d1f7689f0 100644
+>>>>> --- a/mm/balloon_compaction.c
+>>>>> +++ b/mm/balloon_compaction.c
+>>>>> @@ -124,7 +124,12 @@ EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
+>>>>> struct page *balloon_page_alloc(void)
+>>>>> {
+>>>>> 	struct page *page = alloc_page(balloon_mapping_gfp_mask() |
+>>>>> -				       __GFP_NOMEMALLOC | __GFP_NORETRY);
+>>>>> +				       __GFP_NOMEMALLOC | __GFP_NORETRY |
+>>>>> +				       __GFP_NOWARN);
+>>>>> +
+>>>>> +	if (!page)
+>>>>> +		pr_warn_ratelimited("memory balloon: memory allocation failed");
+>>>>> +
+>>>>> 	return page;
+>>>>> }
+>>>>> EXPORT_SYMBOL_GPL(balloon_page_alloc);
+>>>>
+>>>> Not sure if "memory balloon" is the right wording. hmmm.
+>>>>
+>>>> Acked-by: David Hildenbrand <david@redhat.com>
+>>>
+>>> Do you have a better suggestion?
+>>
+>> Not really - that's why I ack'ed :)
+>>
+>> However, thinking about it - what about moving the check + print to the
+>> caller and then using dev_warn... or sth. like simple "virtio_balloon:
+>> ..." ? You can then drop the warning for vmware balloon if you feel like
+>> not needing it.
 > 
-> Have commented on https://marc.info/?l=linux-netdev&m=156637836024743&w=2
+> Actually, there is already a warning that is printed by the virtue_balloon
+> in fill_balloon():
 > 
-> The fix looks correct to me on "BPF_LD | BPF_IMM | BPF_DW", but looks
-> unnecessary on two other places. It would be great if you or Naveen could
-> confirm it.
+>                 struct page *page = balloon_page_alloc();
+> 
+>                 if (!page) {
+>                         dev_info_ratelimited(&vb->vdev->dev,
+>                                              "Out of puff! Can't get %u pages\n",
+>                                              VIRTIO_BALLOON_PAGES_PER_PAGE);
+>                         /* Sleep for at least 1/5 of a second before retry. */
+>                         msleep(200);
+>                         break;
+>                 }
+> 
+> So are you ok with going back to v1?
+> 
 
-Jiong,
-Thanks for the review. I can now see why the other two changes are not 
-necessary. I will post a follow-on patch.
+Whoops, I missed that - sorry - usually the warnings scream louder at me :D
 
-Thanks!
-- Naveen
+Yes, v1 is fine with me!
 
+-- 
+
+Thanks,
+
+David / dhildenb
