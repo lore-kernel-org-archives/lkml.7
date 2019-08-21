@@ -2,108 +2,130 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1D2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E4EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3556D2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E15122D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:34:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="RWdDCknA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfHUJbr (ORCPT
+        id S1727261AbfHUJeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:31:47 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43700 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726447AbfHUJbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:31:47 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B9D67FB12728DFC5AF07;
-        Wed, 21 Aug 2019 17:31:45 +0800 (CST)
-Received: from [127.0.0.1] (10.119.195.53) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 21 Aug 2019
- 17:31:35 +0800
-To:     <linux-kernel@vger.kernel.org>, <linux-audit@redhat.com>,
-        <paul@paul-moore.com>, <eparis@redhat.com>
-From:   Chen Wandun <chenwandun@huawei.com>
-Subject: [Question] audit_names use after delete in audit_filter_inodes
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Message-ID: <4997df37-4a80-5cf5-effc-0a6f040c4528@huawei.com>
-Date:   Wed, 21 Aug 2019 17:32:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 21 Aug 2019 05:34:19 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41393 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726239AbfHUJeT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:34:19 -0400
+Received: by mail-oi1-f194.google.com with SMTP id g7so1085290oia.8
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 02:34:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jrMnd9Dw4BIbl105NPubLNKMx+vt1yB2bVw1jRY/PoI=;
+        b=RWdDCknAmMlPEQ9u6yUMbaKojAWU9G+zSGrTlsA+5Fkb6D5PPhV3wXAdyHPQHxX3o2
+         vq6qCQtWx7WMlW8Wcwk/fdYFN48LUhyp1O9fbzd3V40UTaKzdmNXguxv3DgFH0nqPlyM
+         j37eomYfP4oBSb5y02UJPiGrztvAL9IJTDwk4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jrMnd9Dw4BIbl105NPubLNKMx+vt1yB2bVw1jRY/PoI=;
+        b=F8JC6JCUJii1/1AHV438y3COkjhbqhYPXjGhSZOOGC8UyzyItV0NMebcKE4UHs4dHH
+         +TGgo0VTH+ySWM1/E6PkMIj97snDDSV67FKXzxopBvwmyjro1oqwT1ifDR64bCb1ozyI
+         mEQaa2K/vn7aYkVQ5uH6aUAzhFjupFSpw2Xi+Qu/DInRyoVpYFpze1hKUeI2AmPibktx
+         tIr5k8Hsy5W9h9qCzYWpiSFqF6uP16b/FVE/ayDKDHpJejHpq4YXs8votXCrBYwuTIRr
+         j28XCPGs4HYasBR7KGOLnE8USH0QUS6PLDic+Iza212b5t/tSIGI5dIumw+FoIJvJH+V
+         Jycw==
+X-Gm-Message-State: APjAAAVG9Fl8koXd2okhFURv7tuu0jXY486g4G8Za+qYMFL68cJ2/x95
+        z9iQTN6boDlIj15WD8RYbfO4F5Isgm7wQ5HM+mzlbA==
+X-Google-Smtp-Source: APXvYqz6Xkt/CCbaeKtV6kQUpHjgnS2QNd5FOt7p4vifuidxlIYHRXgS2fDGVa3/892Mj7QMqJOfxhRNKJMmZoX5PgE=
+X-Received: by 2002:aca:da08:: with SMTP id r8mr2776211oig.101.1566380058381;
+ Wed, 21 Aug 2019 02:34:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.119.195.53]
-X-CFilter-Loop: Reflected
+References: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
+ <20190820081902.24815-5-daniel.vetter@ffwll.ch> <20190820133418.GG29246@ziepe.ca>
+ <20190820151810.GG11147@phenom.ffwll.local> <20190820152712.GH29246@ziepe.ca>
+In-Reply-To: <20190820152712.GH29246@ziepe.ca>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 21 Aug 2019 11:34:06 +0200
+Message-ID: <CAKMK7uGuH_Lvzf+M3Vast-RFS6Dr70F+Q4U_aSHuR1TpJg02SQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] mm, notifier: Catch sleeping/blocking for !blockable
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-Recently, I hit a use after delete in audit_filter_inodes,
+On Wed, Aug 21, 2019 at 9:33 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Tue, Aug 20, 2019 at 05:18:10PM +0200, Daniel Vetter wrote:
+> > > > diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+> > > > index 538d3bb87f9b..856636d06ee0 100644
+> > > > +++ b/mm/mmu_notifier.c
+> > > > @@ -181,7 +181,13 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
+> > > >   id = srcu_read_lock(&srcu);
+> > > >   hlist_for_each_entry_rcu(mn, &range->mm->mmu_notifier_mm->list, hlist) {
+> > > >           if (mn->ops->invalidate_range_start) {
+> > > > -                 int _ret = mn->ops->invalidate_range_start(mn, range);
+> > > > +                 int _ret;
+> > > > +
+> > > > +                 if (!mmu_notifier_range_blockable(range))
+> > > > +                         non_block_start();
+> > > > +                 _ret = mn->ops->invalidate_range_start(mn, range);
+> > > > +                 if (!mmu_notifier_range_blockable(range))
+> > > > +                         non_block_end();
+> > >
+> > > If someone Acks all the sched changes then I can pick this for
+> > > hmm.git, but I still think the existing pre-emption debugging is fine
+> > > for this use case.
+> >
+> > Ok, I'll ping Peter Z. for an ack, iirc he was involved.
+> >
+> > > Also, same comment as for the lockdep map, this needs to apply to the
+> > > non-blocking range_end also.
+> >
+> > Hm, I thought the page table locks we're holding there already prevent any
+> > sleeping, so would be redundant?
+>
+> AFAIK no. All callers of invalidate_range_start/end pairs do so a few
+> lines apart and don't change their locking in between - thus since
+> start can block so can end.
+>
+> Would love to know if that is not true??
 
-In this case, I found audit_names->list->next is dead000000000100, when enumerate each
-audit_names on list context->names_list.
+Yeah I reviewed them, I think I mixed up a discussion I had a while
+ago with Jerome. It's a bit tricky to follow in the code since in some
+places ->invalidate_range and ->invalidate_range_end seem to be called
+from the same place, in others not at all.
 
-void audit_filter_inodes(struct task_struct *tsk, struct audit_context *ctx)
-{
-         struct audit_names *n;
+> Similarly I've also been idly wondering if we should add a
+> 'might_sleep()' to invalidate_rangestart/end() to make this constraint
+> clear & tested to the mm side?
 
-         if (audit_pid && tsk->tgid == audit_pid)
-                 return;
-
-         rcu_read_lock();
-
-         list_for_each_entry(n, &ctx->names_list, list) {
-                 if (audit_filter_inode_name(tsk, n, ctx))
-                         break;
-         }
-         rcu_read_unlock();
-}
-
-it seem like the audit_names was already delete from context->names_list.
-
-In source code, there is no any protection on context->names_list when read and write,
-is there any race in read and write?
-
-Unfortunately, there is no way to reproduce it.
-
-the call stack is below:
-[321315.077117] CPU: 6 PID: 8944 Comm: DefSch0100 Tainted: G           OE  ----V-------   3.10.0-327.62.59.83.w75.x86_64 #1
-[321315.077117] Hardware name: OpenStack Foundation OpenStack Nova, BIOS rel-1.8.1-0-g4adadbd-20170107_142945-9_64_246_229 04/01/2014
-[321315.113772] task: ffff8804061c4500 ti: ffff8804021d8000 task.ti: ffff8804021d8000
-[321315.113772] RIP: 0010:[<ffffffff8110f038>]  [<ffffffff8110f038>] audit_filter_inodes+0x68/0x130
-[321315.113772] RSP: 0018:ffff8804021dbef0  EFLAGS: 00010297
-[321315.113772] RAX: ffff88040632aa48 RBX: ffff88040632a800 RCX: 000000000000000a
-[321315.113772] RDX: 00000000000000c0 RSI: ffff88040632a800 RDI: ffff8804061c4500
-[321315.132068] RBP: ffff8804021dbf40 R08: 0000000000000000 R09: 0000000000000000
-[321315.132068] R10: 00007fd38197ac00 R11: 0000000000000206 R12: dead000000000100
-[321315.132068] R13: ffff8804061c4500 R14: 00000000ffffffff R15: ffff88040632a800
-[321315.132068] FS:  00007fd38197b700(0000) GS:ffff88053c380000(0000) knlGS:0000000000000000
-[321315.132068] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[321315.132068] CR2: 00007fe48936d156 CR3: 0000000098b50000 CR4: 00000000001407e0
-[321315.149373] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[321315.149373] DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
-[321315.149373] Stack:
-[321315.149373]  ffff88040632aa48 ffff8804061c4500 ffff8804021dbf78 ffffffff819a6260
-[321315.149373]  00000000aefb5477 ffff88040632a800 00007fd3d6e80690 ffff8804061c4500
-[321315.149373]  00007fd38197ac70 00007fd3f218d008 ffff8804021dbf78 ffffffff8110f7d5
-[321315.149373] Call Trace:
-[321315.149373]  [<ffffffff8110f7d5>] __audit_syscall_exit+0x245/0x280
-[321315.149373]  [<ffffffff8165316b>] sysret_audit+0x17/0x21
-[321315.149373] Code: 84 be 00 00 00 4d 8b a7 48 02 00 00 49 8d 87 48 02 00 00 48 89 45 b0 49 39 c4 0f 84 a3 00 00 00 41 be ff ff ff ff 0f 1f 44 00 00 <49> 8b 44 24 20 83 e0 1f 48 c1 e0 04 4c 8d a8 e0 5e df 81 48 8b
-[321315.149373] RIP  [<ffffffff8110f038>] audit_filter_inodes+0x68/0x130
-[321315.149373]  RSP <ffff8804021dbef0>
-[321315.196242] ---[ end trace e1b43c8e59447f0a ]---
-
-I am unfamiliar with audit. I will be appreciated if you could give me some suggestion.
-
-Thanks
-ChenWandun
-
+Hm, sounds like a useful idea. Since in general you wont test with mmu
+notifiers, but they could happen, and then they will block for at
+least some mutex usually. I'll throw that as an idea on top for the
+next round.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
