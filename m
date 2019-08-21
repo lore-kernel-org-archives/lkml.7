@@ -2,121 +2,258 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBFDC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F4CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C355722DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="YrdLKKCm"
+	by mail.kernel.org (Postfix) with ESMTP id AD8A3233FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730254AbfHUPhv (ORCPT
+        id S1730276AbfHUPhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:37:51 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:49066 "EHLO vps0.lunn.ch"
+        Wed, 21 Aug 2019 11:37:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:60462 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729352AbfHUPht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:37:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=xuBrmteC5AYtTtwM4c0/q/0f+0lPdxUwwmCp9CFt+9M=; b=YrdLKKCmA4/6woR3hIeUZHQxq7
-        kyE3TevbpdsOOEaHwfN3v/P2QzgOWi+s2iyYsmtn3yJXTV5uXeyRJtD6BUl15Ynmx8hn6dR7hhAk2
-        uYrBeJ4z+3i/a/ErtyLSAWa1fGUZt/20xbTlp4bpIFhakXjUli92V032szvaxkYMRAFo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i0Sg8-0005rs-Ug; Wed, 21 Aug 2019 17:37:40 +0200
-Date:   Wed, 21 Aug 2019 17:37:40 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Marco Hartmann <marco.hartmann@nxp.com>
-Cc:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christian Herber <christian.herber@nxp.com>
-Subject: Re: [PATCH v2 net] Add genphy_c45_config_aneg() function to phy-c45.c
-Message-ID: <20190821153740.GB22091@lunn.ch>
-References: <1566385208-23523-1-git-send-email-marco.hartmann@nxp.com>
+        id S1730161AbfHUPh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:37:29 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3829C1596;
+        Wed, 21 Aug 2019 08:37:29 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 366A03F718;
+        Wed, 21 Aug 2019 08:37:27 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Cc:     Steven Price <steven.price@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 07/10] KVM: arm64: Provide a PV_TIME device to user space
+Date:   Wed, 21 Aug 2019 16:36:53 +0100
+Message-Id: <20190821153656.33429-8-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190821153656.33429-1-steven.price@arm.com>
+References: <20190821153656.33429-1-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566385208-23523-1-git-send-email-marco.hartmann@nxp.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 11:00:46AM +0000, Marco Hartmann wrote:
-> Commit 34786005eca3 ("net: phy: prevent PHYs w/o Clause 22 regs from calling
-> genphy_config_aneg") introduced a check that aborts phy_config_aneg()
-> if the phy is a C45 phy.
-> This causes phy_state_machine() to call phy_error() so that the phy
-> ends up in PHY_HALTED state.
-> 
-> Instead of returning -EOPNOTSUPP, call genphy_c45_config_aneg()
-> (analogous to the C22 case) so that the state machine can run
-> correctly.
-> 
-> genphy_c45_config_aneg() closely resembles mv3310_config_aneg()
-> in drivers/net/phy/marvell10g.c, excluding vendor specific
-> configurations for 1000BaseT.
+Allow user space to inform the KVM host where in the physical memory
+map the paravirtualized time structures should be located.
 
-> +/**
-> + * genphy_c45_config_aneg - restart auto-negotiation or forced setup
-> + * @phydev: target phy_device struct
-> + *
-> + * Description: If auto-negotiation is enabled, we configure the
-> + *   advertising, and then restart auto-negotiation.  If it is not
-> + *   enabled, then we force a configuration.
-> + */
-> +int genphy_c45_config_aneg(struct phy_device *phydev)
-> +{
-> +	bool changed = false;
-> +	int ret;
-> +
-> +	if (phydev->autoneg == AUTONEG_DISABLE)
-> +		return genphy_c45_pma_setup_forced(phydev);
-> +
-> +	ret = genphy_c45_an_config_aneg(phydev);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret > 0)
-> +		changed = true;
-> +
-> +	return genphy_c45_check_and_restart_aneg(phydev, changed);
-> +}
-> +EXPORT_SYMBOL_GPL(genphy_c45_config_aneg);
+A device is created which provides the base address of an array of
+Stolen Time (ST) structures, one for each VCPU. There must be (64 *
+total number of VCPUs) bytes of memory available at this location.
 
-The vendor parts for 1000BaseT makes this interesting. Do we expect to
-see an C45 PHYs which don't support 1000BaseT? I think that
-unlikely. So all C45 PHYs are going to implement their own config_aneg
-callback so they can set their vendor registers for 1000BaseT.
+The address is given in terms of the physical address visible to
+the guest and must be page aligned. The guest will discover the address
+via a hypercall.
 
-> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> index f3adea9ef400..74c4e15ebe52 100644
-> --- a/drivers/net/phy/phy.c
-> +++ b/drivers/net/phy/phy.c
-> @@ -507,7 +507,7 @@ static int phy_config_aneg(struct phy_device *phydev)
->  	 * allowed to call genphy_config_aneg()
->  	 */
->  	if (phydev->is_c45 && !(phydev->c45_ids.devices_in_package & BIT(0)))
-> -		return -EOPNOTSUPP;
-> +		return genphy_c45_config_aneg(phydev);
->  
->  	return genphy_config_aneg(phydev);
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ arch/arm/include/asm/kvm_host.h   |  4 ++
+ arch/arm64/include/asm/kvm_host.h |  1 +
+ arch/arm64/include/uapi/asm/kvm.h |  8 +++
+ include/uapi/linux/kvm.h          |  2 +
+ virt/kvm/arm/arm.c                |  1 +
+ virt/kvm/arm/pvtime.c             | 94 +++++++++++++++++++++++++++++++
+ 6 files changed, 110 insertions(+)
 
-So here we should be calling the driver config_aneg function. It can
-then call genphy_c45_config_aneg(phydev) to do the generic parts.
+diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
+index 47d2ced99421..b6c8dbc0556b 100644
+--- a/arch/arm/include/asm/kvm_host.h
++++ b/arch/arm/include/asm/kvm_host.h
+@@ -325,6 +325,10 @@ static inline int kvm_arch_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ int kvm_perf_init(void);
+ int kvm_perf_teardown(void);
+ 
++static inline void kvm_pvtime_init(void)
++{
++}
++
+ static inline int kvm_hypercall_pv_features(struct kvm_vcpu *vcpu)
+ {
+ 	return SMCCC_RET_NOT_SUPPORTED;
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index b6fa7beffd8a..7b2147f62c16 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -489,6 +489,7 @@ void handle_exit_early(struct kvm_vcpu *vcpu, struct kvm_run *run,
+ int kvm_perf_init(void);
+ int kvm_perf_teardown(void);
+ 
++void kvm_pvtime_init(void);
+ int kvm_hypercall_pv_features(struct kvm_vcpu *vcpu);
+ int kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu);
+ int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init);
+diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+index 9a507716ae2f..209c4de67306 100644
+--- a/arch/arm64/include/uapi/asm/kvm.h
++++ b/arch/arm64/include/uapi/asm/kvm.h
+@@ -367,6 +367,14 @@ struct kvm_vcpu_events {
+ #define KVM_PSCI_RET_INVAL		PSCI_RET_INVALID_PARAMS
+ #define KVM_PSCI_RET_DENIED		PSCI_RET_DENIED
+ 
++/* Device Control API: PV_TIME */
++#define KVM_DEV_ARM_PV_TIME_REGION	0
++#define  KVM_DEV_ARM_PV_TIME_ST		0
++struct kvm_dev_arm_st_region {
++	__u64 gpa;
++	__u64 size;
++};
++
+ #endif
+ 
+ #endif /* __ARM_KVM_H__ */
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 5e3f12d5359e..265156a984f2 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1222,6 +1222,8 @@ enum kvm_device_type {
+ #define KVM_DEV_TYPE_ARM_VGIC_ITS	KVM_DEV_TYPE_ARM_VGIC_ITS
+ 	KVM_DEV_TYPE_XIVE,
+ #define KVM_DEV_TYPE_XIVE		KVM_DEV_TYPE_XIVE
++	KVM_DEV_TYPE_ARM_PV_TIME,
++#define KVM_DEV_TYPE_ARM_PV_TIME	KVM_DEV_TYPE_ARM_PV_TIME
+ 	KVM_DEV_TYPE_MAX,
+ };
+ 
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 5e8343e2dd62..bfb5a842e6ab 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -1494,6 +1494,7 @@ static int init_subsystems(void)
+ 
+ 	kvm_perf_init();
+ 	kvm_coproc_table_init();
++	kvm_pvtime_init();
+ 
+ out:
+ 	on_each_cpu(_kvm_arch_hardware_disable, NULL, 1);
+diff --git a/virt/kvm/arm/pvtime.c b/virt/kvm/arm/pvtime.c
+index 28603689f6e0..3e55c1fb6a49 100644
+--- a/virt/kvm/arm/pvtime.c
++++ b/virt/kvm/arm/pvtime.c
+@@ -2,7 +2,9 @@
+ // Copyright (C) 2019 Arm Ltd.
+ 
+ #include <linux/arm-smccc.h>
++#include <linux/kvm_host.h>
+ 
++#include <asm/kvm_mmu.h>
+ #include <asm/pvclock-abi.h>
+ 
+ #include <kvm/arm_hypercalls.h>
+@@ -86,3 +88,95 @@ int kvm_hypercall_stolen_time(struct kvm_vcpu *vcpu)
+ 
+ 	return ret;
+ }
++
++static int kvm_arm_pvtime_create(struct kvm_device *dev, u32 type)
++{
++	return 0;
++}
++
++static void kvm_arm_pvtime_destroy(struct kvm_device *dev)
++{
++	struct kvm_arch_pvtime *pvtime = &dev->kvm->arch.pvtime;
++
++	pvtime->st_base = GPA_INVALID;
++	kfree(dev);
++}
++
++static int kvm_arm_pvtime_set_attr(struct kvm_device *dev,
++				   struct kvm_device_attr *attr)
++{
++	struct kvm *kvm = dev->kvm;
++	struct kvm_arch_pvtime *pvtime = &kvm->arch.pvtime;
++	u64 __user *user = (u64 __user *)attr->addr;
++	struct kvm_dev_arm_st_region region;
++
++	switch (attr->group) {
++	case KVM_DEV_ARM_PV_TIME_REGION:
++		if (copy_from_user(&region, user, sizeof(region)))
++			return -EFAULT;
++		if (region.gpa & ~PAGE_MASK)
++			return -EINVAL;
++		if (region.size & ~PAGE_MASK)
++			return -EINVAL;
++		switch (attr->attr) {
++		case KVM_DEV_ARM_PV_TIME_ST:
++			if (pvtime->st_base != GPA_INVALID)
++				return -EEXIST;
++			pvtime->st_base = region.gpa;
++			pvtime->st_size = region.size;
++			return 0;
++		}
++		break;
++	}
++	return -ENXIO;
++}
++
++static int kvm_arm_pvtime_get_attr(struct kvm_device *dev,
++				   struct kvm_device_attr *attr)
++{
++	struct kvm_arch_pvtime *pvtime = &dev->kvm->arch.pvtime;
++	u64 __user *user = (u64 __user *)attr->addr;
++	struct kvm_dev_arm_st_region region;
++
++	switch (attr->group) {
++	case KVM_DEV_ARM_PV_TIME_REGION:
++		switch (attr->attr) {
++		case KVM_DEV_ARM_PV_TIME_ST:
++			region.gpa = pvtime->st_base;
++			region.size = pvtime->st_size;
++			if (copy_to_user(user, &region, sizeof(region)))
++				return -EFAULT;
++			return 0;
++		}
++		break;
++	}
++	return -ENXIO;
++}
++
++static int kvm_arm_pvtime_has_attr(struct kvm_device *dev,
++				   struct kvm_device_attr *attr)
++{
++	switch (attr->group) {
++	case KVM_DEV_ARM_PV_TIME_REGION:
++		switch (attr->attr) {
++		case KVM_DEV_ARM_PV_TIME_ST:
++			return 0;
++		}
++		break;
++	}
++	return -ENXIO;
++}
++
++static const struct kvm_device_ops pvtime_ops = {
++	"Arm PV time",
++	.create = kvm_arm_pvtime_create,
++	.destroy = kvm_arm_pvtime_destroy,
++	.set_attr = kvm_arm_pvtime_set_attr,
++	.get_attr = kvm_arm_pvtime_get_attr,
++	.has_attr = kvm_arm_pvtime_has_attr
++};
++
++void kvm_pvtime_init(void)
++{
++	kvm_register_device_ops(&pvtime_ops, KVM_DEV_TYPE_ARM_PV_TIME);
++}
+-- 
+2.20.1
 
-Heiner, what do you think?
-
-	Andrew
