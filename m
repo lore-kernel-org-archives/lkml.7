@@ -2,142 +2,164 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48654C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E7DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D2F12339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C91A22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ms3BJi46"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="mtHid4fI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfHUI04 (ORCPT
+        id S1727571AbfHUI3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 04:26:56 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37065 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726409AbfHUI0s (ORCPT
+        Wed, 21 Aug 2019 04:29:12 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:41450 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727359AbfHUI3L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 04:26:48 -0400
-Received: by mail-wm1-f66.google.com with SMTP id d16so1200039wme.2;
-        Wed, 21 Aug 2019 01:26:47 -0700 (PDT)
+        Wed, 21 Aug 2019 04:29:11 -0400
+Received: by mail-vs1-f65.google.com with SMTP id m62so766457vsc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 01:29:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ZVtvs8aoMj7QTvzMN1wgA3FYSaFdOhLuHmxR1kxixVM=;
-        b=Ms3BJi46cOgN3pTo6ofz5yGM2VxaVWe9jdE/51BzXO80cpAlQf7wwUN796eodXSMj6
-         oVYahD3zOtwBIct35oFxGkytbVTt7GNek+i0kgV4WdsI7BVEB0DXWqCT0wnCodjouP7x
-         wbwWMdeyEYh54w9YydE4/+6laaIIXK40g5K2CDNDFQRbLu/kCTSAYCtRqyndAO//GYjw
-         gB1sGlIHskIYMEPuyLjTtm0ynKJAYrfAU2/9bWhZRVrce2a5chO9WYfz+E7Y1YPUTkjW
-         mfQ9NsitoVsak40G+qbQ3DO0vEFZ1fioNdtMnjjYR6GfctYfNKHg+ccDM7MvEGnKLStm
-         5SFw==
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SUO9A4l3IfX0BlcDjJGE9UTcfydGN+ATiaQcy0Ok630=;
+        b=mtHid4fIRJBF1KgK1ORVUgVi130Qk5dhCtY9XJmivMq1x4zdyLroy2KcuhKSZAxYjI
+         9XVAtxvhY0CoxhsHQDsrDYOryjyTQbG8+XhUxjKTkbrSUdL2cINzJmCLozYSWdxd0eDE
+         4Ds2x98xlIPrmc+nJjHWT51Ajpsc96ud33Jp3Gc6THTBgFMDnaSAOUr1XoySaWNPqNXT
+         BmiLogl44KCvqzEw7zUR42Qbjra4jHITvvpMye81DKIoVrxomHxc2uXP3AT0dca5UpJd
+         MXPp+OtygXsRPPdWSOe1X54tjIOQHJ/cHA+AFL105vdC0KST9FywtcwIncegrJoDOzQ0
+         VZjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=ZVtvs8aoMj7QTvzMN1wgA3FYSaFdOhLuHmxR1kxixVM=;
-        b=TPtaS8Esu/F04jR+uAd+fnZ5CJoBn/U51VUUTG6St/oopdh/CKYKEknxYgFmEmLWn8
-         qJ/sL8CtWR3kevho39KzzeztBA9TYmB2vM3YkFWvWyvpfgsak/GWxhaf5hV8wVNJcenH
-         vpzsL7PsyvMwdEZEFu1YRLTjv59TzB+smNMDV4Sq6U8+v2Z50b2e0N3KmELHBpkVAKwo
-         kX8HO+BAXF7jTS8CmZqB23LW6JkNwGM4HeI83jMI1x1nm1rRrz9EXKRk+VX16z5lBWvw
-         FPbvjkHpZDR/xpOQXh3Dyiq9c89OKmYHYKTlnmVQ9ACc9d+yakGz9HCyH/+ND3WrUAow
-         6dbQ==
-X-Gm-Message-State: APjAAAWsJZ7HWLOLzWZegLNZwOhOW3OzkHY8qqo54uRQ+peswoRfJQS4
-        +RACsS1zQo5mGdKDb9r6N4rHsWxJbN8=
-X-Google-Smtp-Source: APXvYqyGnNk53xFt+keZcSaEml9lLPA+oaKPBtoKKpF3Rxa4fpSbvVbnG92HflTY3dZyHk8XmfV6Ag==
-X-Received: by 2002:a7b:c95a:: with SMTP id i26mr4762139wml.175.1566376006653;
-        Wed, 21 Aug 2019 01:26:46 -0700 (PDT)
-Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id w5sm2931892wmm.43.2019.08.21.01.26.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 01:26:46 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     jmattson@redhat.com, ehabkost@redhat.com, konrad.wilk@oracle.com
-Subject: [PATCH 2/3] KVM: x86: always expose VIRT_SSBD to guests
-Date:   Wed, 21 Aug 2019 10:26:41 +0200
-Message-Id: <1566376002-17121-3-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
-References: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SUO9A4l3IfX0BlcDjJGE9UTcfydGN+ATiaQcy0Ok630=;
+        b=ULTCWDAqwpxRX8WKrehSM1ApWU+IY8t696nY7NnZykg4v2sG2A7wRVuAk6ml1OgYRW
+         j59RHMjfZxe8bmVn0X5fjs0H9e21cCbio2VJ1zRYtyRvVYMmHDplUEKkVBzO0S9JVbaS
+         QIQFrGgnrnzlf/sPdj0qDErPRbRqLiOEZm82xXVtLgir5adl1UbGrLVsoXSueRFTVnmJ
+         O7wxaOXBdA7d9iMP1RSsDl5jwQ+iblzpOKzCfuAW3YB4+RCWAqCodZsJ4XAxeRSHoMIC
+         APDQiB0UCrpLoo6XzM6PO+Z/QjvYE+2PyxTA2klvo+BNwfj7jeqi+rMjL2pu6oUmPSF5
+         N81Q==
+X-Gm-Message-State: APjAAAXX29ree51VX8vGxueM9tTVyyywfoIoy0Z3+R94JUZShV1qJeQD
+        TvUknyIJtpoEVBO77Ldnkep+2J+zvm6JtxyL3YoQ5Q==
+X-Google-Smtp-Source: APXvYqzPlqc2KEsTtkq7U9A3ZJZcmf3UbjlldfSSa8wVqepcd4DoaZaQ2lc/Udlux9Sn+rpIu1TYvoN7MhVgwloZBFo=
+X-Received: by 2002:a67:2e0e:: with SMTP id u14mr20554451vsu.182.1566376150531;
+ Wed, 21 Aug 2019 01:29:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190820172351.24145-1-vkoul@kernel.org> <20190820172351.24145-7-vkoul@kernel.org>
+In-Reply-To: <20190820172351.24145-7-vkoul@kernel.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Wed, 21 Aug 2019 13:58:58 +0530
+Message-ID: <CAHLCerP-VP=SguQz4nA2ZFMiKBsNajO9E-CqQivdQm-iviqToQ@mail.gmail.com>
+Subject: Re: [PATCH v3 5/8] arm64: dts: qcom: sm8150-mtp: add base dts file
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even though it is preferrable to use SPEC_CTRL (represented by
-X86_FEATURE_AMD_SSBD) instead of VIRT_SPEC, VIRT_SPEC is always
-supported anyway because otherwise it would be impossible to
-migrate from old to new CPUs.  Make this apparent in the
-result of KVM_GET_SUPPORTED_CPUID as well.
+On Tue, Aug 20, 2019 at 10:55 PM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> This add base DTS file for sm8150-mtp and enables boot to console, adds
+> tlmm reserved range, resin node, volume down key and also includes pmic
+> file.
 
-While at it, reuse X86_FEATURE_* constants for the SVM leaf too.
-
-However, we need to hide the bit on Intel processors, so move
-the setting to svm_set_supported_cpuid.
-
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Reported-by: Eduardo Habkost <ehabkost@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/svm.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index e3d3b2128f2b..c5120a9519f3 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -68,10 +68,8 @@
- #define SEG_TYPE_LDT 2
- #define SEG_TYPE_BUSY_TSS16 3
- 
--#define SVM_FEATURE_NPT            (1 <<  0)
- #define SVM_FEATURE_LBRV           (1 <<  1)
- #define SVM_FEATURE_SVML           (1 <<  2)
--#define SVM_FEATURE_NRIP           (1 <<  3)
- #define SVM_FEATURE_TSC_RATE       (1 <<  4)
- #define SVM_FEATURE_VMCB_CLEAN     (1 <<  5)
- #define SVM_FEATURE_FLUSH_ASID     (1 <<  6)
-@@ -5933,6 +5931,8 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
- 	guest_cpuid_clear(vcpu, X86_FEATURE_X2APIC);
- }
- 
-+#define F(x) bit(X86_FEATURE_##x)
-+
- static void svm_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
- {
- 	switch (func) {
-@@ -5944,6 +5944,11 @@ static void svm_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
- 		if (nested)
- 			entry->ecx |= (1 << 2); /* Set SVM bit */
- 		break;
-+	case 0x80000008:
-+		if (boot_cpu_has(X86_FEATURE_LS_CFG_SSBD) ||
-+		     boot_cpu_has(X86_FEATURE_AMD_SSBD))
-+			entry->ebx |= F(VIRT_SSBD);
-+		break;
- 	case 0x8000000A:
- 		entry->eax = 1; /* SVM revision 1 */
- 		entry->ebx = 8; /* Lets support 8 ASIDs in case we add proper
-@@ -5954,11 +5959,11 @@ static void svm_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
- 
- 		/* Support next_rip if host supports it */
- 		if (boot_cpu_has(X86_FEATURE_NRIPS))
--			entry->edx |= SVM_FEATURE_NRIP;
-+			entry->edx |= F(NRIPS);
- 
- 		/* Support NPT for the guest if enabled */
- 		if (npt_enabled)
--			entry->edx |= SVM_FEATURE_NPT;
-+			entry->edx |= F(NPT);
- 
- 		break;
- 	case 0x8000001F:
--- 
-1.8.3.1
+For some reason, your mailer sent out 2 patches 5/8. I was wondering
+why the patch 5 failed to apply, but it seems the two are identical.
+Lore seems to show the same.
 
 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile       |  1 +
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 51 +++++++++++++++++++++++++
+>  2 files changed, 52 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+>
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 0a7e5dfce6f7..1964dacaf19b 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)       += sdm845-cheza-r2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += sdm845-cheza-r3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += sdm845-db845c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += sdm845-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)        += sm8150-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-1000.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-4000.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150-mtp.dts b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> new file mode 100644
+> index 000000000000..6f5777f530ae
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+> @@ -0,0 +1,51 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2019, Linaro Limited
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sm8150.dtsi"
+> +#include "pm8150.dtsi"
+> +#include "pm8150b.dtsi"
+> +#include "pm8150l.dtsi"
+> +
+> +/ {
+> +       model = "Qualcomm Technologies, Inc. SM8150 MTP";
+> +       compatible = "qcom,sm8150-mtp";
+> +
+> +       aliases {
+> +               serial0 = &uart2;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +};
+> +
+> +&qupv3_id_1 {
+> +       status = "okay";
+> +};
+> +
+> +&pon {
+> +       pwrkey {
+> +               status = "okay";
+> +       };
+> +
+> +       resin {
+> +               compatible = "qcom,pm8941-resin";
+> +               interrupts = <0x0 0x8 0x1 IRQ_TYPE_EDGE_BOTH>;
+> +               debounce = <15625>;
+> +               bias-pull-up;
+> +               linux,code = <KEY_VOLUMEDOWN>;
+> +       };
+> +};
+> +
+> +&tlmm {
+> +       gpio-reserved-ranges = <0 4>, <126 4>;
+> +};
+> +
+> +&uart2 {
+> +       status = "okay";
+> +};
+> --
+> 2.20.1
+>
