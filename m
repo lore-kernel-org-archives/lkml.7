@@ -2,177 +2,96 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52537C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140F0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C50C22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05A42332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfHUIGO (ORCPT
+        id S1726988AbfHUIHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 04:06:14 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63686 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfHUIGN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 04:06:13 -0400
-Received: from 79.184.254.79.ipv4.supernova.orange.pl (79.184.254.79) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
- id 365a6345488f7933; Wed, 21 Aug 2019 10:06:10 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kristian Klausen <kristian@klausen.dk>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] ACPI: PM: s2idle: Always set up EC GPE for system wakeup
-Date:   Wed, 21 Aug 2019 10:06:09 +0200
-Message-ID: <2671465.Ihf76VL9xe@kreacher>
+        Wed, 21 Aug 2019 04:07:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:1773 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726317AbfHUIHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 04:07:14 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2148D7F742;
+        Wed, 21 Aug 2019 08:07:14 +0000 (UTC)
+Received: from localhost (holly.tpb.lab.eng.brq.redhat.com [10.43.134.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 482E65F74;
+        Wed, 21 Aug 2019 08:07:12 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 10:07:09 +0200
+From:   Miroslav Lichvar <mlichvar@redhat.com>
+To:     Hubert Feurstein <h.feurstein@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next v3 2/4] net: mdio: add PTP offset compensation
+ to mdiobus_write_sts
+Message-ID: <20190821080709.GO891@localhost>
+References: <20190820084833.6019-1-hubert.feurstein@vahle.at>
+ <20190820084833.6019-3-hubert.feurstein@vahle.at>
+ <20190820094903.GI891@localhost>
+ <CAFfN3gW-4avfnrV7t-2nC+cVt3sgMD33L44P4PGU-MCAtuR+XA@mail.gmail.com>
+ <20190820142537.GL891@localhost>
+ <20190820152306.GJ29991@lunn.ch>
+ <20190820154005.GM891@localhost>
+ <CAFfN3gUgpzMebyUt8_-9e+5vpm3q-DVVszWdkUEFAgZQ8ex73w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFfN3gUgpzMebyUt8_-9e+5vpm3q-DVVszWdkUEFAgZQ8ex73w@mail.gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 21 Aug 2019 08:07:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, Aug 20, 2019 at 06:56:56PM +0200, Hubert Feurstein wrote:
+> Am Di., 20. Aug. 2019 um 17:40 Uhr schrieb Miroslav Lichvar
+> > I think a large jitter is ok in this case. We just need to timestamp
+> > something that we know for sure happened after the PHC timestamp. It
+> > should have no impact on the offset and its stability, just the
+> > reported delay. A test with phc2sys should be able to confirm that.
+> > phc2sys selects the measurement with the shortest delay, which has
+> > least uncertainty. I'd say that applies to both interrupt and polling.
+> >
+> > If it is difficult to specify the minimum interrupt delay, I'd still
+> > prefer an overly pessimistic interval assuming a zero delay.
+> >
+> Currently I do not see the benefit from this. The original intention was to
+> compensate for the remaining offset as good as possible.
 
-Commit 10a08fd65ec1 ("ACPI: PM: Set up EC GPE for system wakeup from
-drivers that need it") assumed that the EC GPE would only need to be
-set up for system wakeup if either the intel-hid or the intel-vbtn
-driver was in use, but that turns out to be incorrect.  In particular,
-on ASUS Zenbook UX430UNR/i7-8550U, if the EC GPE is not enabled while
-suspended, the system cannot be woken up by opening the lid or
-pressing a key, and that machine doesn't use any of the drivers
-mentioned above.
+That's ok, but IMHO the change should not break the assumptions of
+existing application and users.
 
-For this reason, always set up the EC GPE for system wakeup from
-suspend-to-idle by setting and clearing its wake mask in the ACPI
-suspend-to-idle callbacks.
+> The current code
+> of phc2sys uses the delay only for the filtering of the measurement record
+> with the shortest delay and for reporting and statistics. Why not simple shift
+> the timestamps with the offset to the point where we expect the PHC timestamp
+> to be captured, and we have a very good result compared to where we came
+> from.
 
-Fixes: 10a08fd65ec1 ("ACPI: PM: Set up EC GPE for system wakeup from drivers that need it")
-Reported-by: Kristian Klausen <kristian@klausen.dk>
-Tested-by: Kristian Klausen <kristian@klausen.dk>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
+Because those reports/statistics are important in calculation of
+maximum error. If someone had a requirement for a clock to be accurate
+to 1.5 microseconds and the ioctl returned a delay indicating a
+sufficient accuracy when in reality it could be worse, that would be a
+problem.
 
-Commit 10a08fd65ec1 is present in linux-next.
+BTW, phc2sys is not the only user of the ioctl.
 
----
- drivers/acpi/ec.c                 |    1 -
- drivers/acpi/sleep.c              |   15 +++++++++++++--
- drivers/platform/x86/intel-hid.c  |    5 +----
- drivers/platform/x86/intel-vbtn.c |    5 +----
- 4 files changed, 15 insertions(+), 11 deletions(-)
-
-Index: linux-pm/drivers/acpi/sleep.c
-===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -938,6 +938,13 @@ static int lps0_device_attach(struct acp
- 	if (mem_sleep_default > PM_SUSPEND_MEM && !acpi_sleep_default_s3)
- 		mem_sleep_current = PM_SUSPEND_TO_IDLE;
- 
-+	/*
-+	 * Some LPS0 systems, like ASUS Zenbook UX430UNR/i7-8550U, require the
-+	 * EC GPE to be enabled while suspended for certain wakeup devices to
-+	 * work, so mark it as wakeup-capable.
-+	 */
-+	acpi_ec_mark_gpe_for_wake();
-+
- 	return 0;
- }
- 
-@@ -954,8 +961,10 @@ static int acpi_s2idle_begin(void)
- 
- static int acpi_s2idle_prepare(void)
- {
--	if (acpi_sci_irq_valid())
-+	if (acpi_sci_irq_valid()) {
- 		enable_irq_wake(acpi_sci_irq);
-+		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
-+	}
- 
- 	acpi_enable_wakeup_devices(ACPI_STATE_S0);
- 
-@@ -1034,8 +1043,10 @@ static void acpi_s2idle_restore(void)
- 
- 	acpi_disable_wakeup_devices(ACPI_STATE_S0);
- 
--	if (acpi_sci_irq_valid())
-+	if (acpi_sci_irq_valid()) {
-+		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
- 		disable_irq_wake(acpi_sci_irq);
-+	}
- }
- 
- static void acpi_s2idle_end(void)
-Index: linux-pm/drivers/platform/x86/intel-hid.c
-===================================================================
---- linux-pm.orig/drivers/platform/x86/intel-hid.c
-+++ linux-pm/drivers/platform/x86/intel-hid.c
-@@ -257,7 +257,6 @@ static int intel_hid_pm_prepare(struct d
- 		struct intel_hid_priv *priv = dev_get_drvdata(device);
- 
- 		priv->wakeup_mode = true;
--		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
- 	}
- 	return 0;
- }
-@@ -266,10 +265,8 @@ static void intel_hid_pm_complete(struct
- {
- 	struct intel_hid_priv *priv = dev_get_drvdata(device);
- 
--	if (priv->wakeup_mode) {
--		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
-+	if (priv->wakeup_mode)
- 		priv->wakeup_mode = false;
--	}
- }
- 
- static int intel_hid_pl_suspend_handler(struct device *device)
-Index: linux-pm/drivers/platform/x86/intel-vbtn.c
-===================================================================
---- linux-pm.orig/drivers/platform/x86/intel-vbtn.c
-+++ linux-pm/drivers/platform/x86/intel-vbtn.c
-@@ -205,7 +205,6 @@ static int intel_vbtn_pm_prepare(struct
- 		struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
- 
- 		priv->wakeup_mode = true;
--		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
- 	}
- 	return 0;
- }
-@@ -214,10 +213,8 @@ static void intel_vbtn_pm_complete(struc
- {
- 	struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
- 
--	if (priv->wakeup_mode) {
--		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
-+	if (priv->wakeup_mode)
- 		priv->wakeup_mode = false;
--	}
- }
- 
- static int intel_vbtn_pm_resume(struct device *dev)
-Index: linux-pm/drivers/acpi/ec.c
-===================================================================
---- linux-pm.orig/drivers/acpi/ec.c
-+++ linux-pm/drivers/acpi/ec.c
-@@ -1970,7 +1970,6 @@ void acpi_ec_set_gpe_wake_mask(u8 action
- 	if (pm_suspend_no_platform() && first_ec && !ec_no_wakeup)
- 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
- }
--EXPORT_SYMBOL_GPL(acpi_ec_set_gpe_wake_mask);
- 
- bool acpi_ec_dispatch_gpe(void)
- {
-
-
-
+-- 
+Miroslav Lichvar
