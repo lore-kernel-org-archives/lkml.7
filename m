@@ -2,106 +2,204 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A0AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545C0C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5834A233FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:17:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566415027;
-	bh=8BSnsiIQxaT7aot50+/SfzQqBeGBE6xm0yv8squrEb4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QiJ2yldsdOZsUR/AE5JrA5tOIlX6txWxTD1ijQxgYPhpO3onF2xxmW3yXHaxd1Z8R
-	 QwdyPV83u7H0HESWyLGNOIg9lwJlgEhh3G5OL7PXjW9vnYOEOhcbwG0vkRvcZxZ3Wf
-	 w0Q0sg+7kEERwKOh3kVWqy5vuO7xGlXQV4HOKEFo=
+	by mail.kernel.org (Postfix) with ESMTP id 1D329233A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:19:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="PBtD5w2K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfHUTRG (ORCPT
+        id S1729704AbfHUTTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:17:06 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39460 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729221AbfHUTRG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:17:06 -0400
-Received: by mail-ot1-f67.google.com with SMTP id b1so3129779otp.6;
-        Wed, 21 Aug 2019 12:17:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1QMM6X86ZE4m7WOOCA+numF1SrsPevg8RcLzZaNb79Q=;
-        b=mUhrwKZpFNyp3beHAxz5rIMZHI454dEots5EeGYo83UaPbwqzTbB6C2GioR5Ej3pvz
-         9UF/YHIySpqVxOkRr96NJI6BKMQOClosP40RR6VwD/WTezXEtBCBIITFisvEFWIxLCx3
-         StLO9N9VlY1xFQz4pBPoyJZLOQ5AlbtU7sJrQ0Wy2lLAg1YMLHpgN3FX2jezPrgsAtv6
-         suim87k7P+zQmGmMIaV/CVsib2Q/4RWV46VOUTtBF/fVk9Aw0pyGwyVX9DAAW72vkhnv
-         GGfLPcefJNh0jTw9AwOhNZiHtdsmgd6X8uSOeDKMnz4BfZYYkXYpwx6ZhQ8qrsX839Ip
-         F90Q==
-X-Gm-Message-State: APjAAAUkmQKfICnBUgIAsOO9qudrtzSFjoPd8ujk4Fi5oLALJGh/bN+L
-        sKG8qTcAdmuxz10fvjfKNga9RIk=
-X-Google-Smtp-Source: APXvYqx5PsTrBTUQAs9a8a7CgH0vWalbythAh/rmzUtUPMUX/sEYOLsQEUc3KVzZmH5LtUFbIRsbjQ==
-X-Received: by 2002:a9d:7d04:: with SMTP id v4mr9302990otn.329.1566415025136;
-        Wed, 21 Aug 2019 12:17:05 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b188sm6531532oia.57.2019.08.21.12.17.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 12:17:04 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 14:17:04 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Hanna Hawa <hhhawa@amazon.com>
-Cc:     mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org,
-        james.morse@arm.com, davem@davemloft.net,
-        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
-        Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com,
-        paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com,
-        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
-        hanochu@amazon.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1
- EDAC
-Message-ID: <20190821191704.GA32425@bogus>
-References: <20190805143911.12185-1-hhhawa@amazon.com>
- <20190805143911.12185-2-hhhawa@amazon.com>
+        Wed, 21 Aug 2019 15:19:23 -0400
+Received: from mail-eopbgr760053.outbound.protection.outlook.com ([40.107.76.53]:13956
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726903AbfHUTTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 15:19:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W6zoWVRyRWv8NT117LIHNpoW0573KB1pE8VM6Kl05fu/a/+fkSNGvgkLbybMH2P3Vv18LK0Lr23Ph3/UbvDpkDsmVoi7uDGKSLeGWXGPHNRiZMwTC71xFDo6idNcQPt/EYVnncDvQqCr1wJWO2bNmH6H2iztIbDxUyllZMkrxnWIv9R13n3MjKCbjmbeVEc37K2JTCaIMC0WMgXn9GLRBIvfKgRuiMv9+pjwLswY4Awc40LySq8ZArokbOqypxYT88mbnjAB0II40eqlNut+jagCax4UgxxYn82YvMsowIgTF9V6zBANQ6dmrMuRmey3eekF4acQOau5ysP+zPFWlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XS3OAXApQLJ/1wXmSZOjcV1W9UopVbrzv6+XGmjbVls=;
+ b=igXxl4750RPR/IP4Q8+P2M19i9YK9LGInGf6y/IHjauzDSK4bHOl/wR9sRIyvH3oaIqUN1yHIAqWRyG929iFBDG1D0IrZL7eSrRKUXXUwrVOWPrjwVp7iDHinl5l18ngc3+iylKZhEE8ULHovxknVQggRXcTc/9uwHrOqn1kUpu/HMzf8tmPKOd9q3D2emGQ20mN5iJRMz8LRYZ5dFjXqh1s1YAq5ZK2MKwRkKixj+gU7fnyphoxa0BFYYVUUMJfHR1F0yKSnJrzVGGcEWYVQaG1RuiR9Rteyq0mKPbd7cOABxz3t9n/zO+TbXAjTxeq6FIHVOdPqw1G2E+RJWeCWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XS3OAXApQLJ/1wXmSZOjcV1W9UopVbrzv6+XGmjbVls=;
+ b=PBtD5w2KXIIgS+hUZFEa49DifjZYC/vyaBY4iyHjiFXWT0Q8An1Tf3I7EMSiFbtdsIOaOyYefPLOS6kQkeLhoIQT06pvtTT6352U5MMC6LBws/gx0CkNKff50HhdXVeADYO8RHWimBo+hoOvwwDPGBDW3W82WJe6/2Fa8X1Vj7Q=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB3925.namprd05.prod.outlook.com (52.135.195.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.7; Wed, 21 Aug 2019 19:19:18 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::1541:ed53:784a:6376]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::1541:ed53:784a:6376%5]) with mapi id 15.20.2199.011; Wed, 21 Aug 2019
+ 19:19:18 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     David Hildenbrand <david@redhat.com>
+CC:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] mm/balloon_compaction: Informative allocation warnings
+Thread-Topic: [PATCH v2] mm/balloon_compaction: Informative allocation
+ warnings
+Thread-Index: AQHVWEJHWn7VmeZ5cEugJmetWObq/6cF9CyAgAAAcQCAAAHXgIAAATcAgAAAlgCAAAHhgA==
+Date:   Wed, 21 Aug 2019 19:19:18 +0000
+Message-ID: <9DDD9A0D-C88C-4EEF-A41B-E5646BDEF414@vmware.com>
+References: <20190821094159.40795-1-namit@vmware.com>
+ <75ff92c2-7ae2-c4a6-cd1f-44741e29d20e@redhat.com>
+ <4E10A342-9A51-4C1F-8E5A-8005AACEF4CE@vmware.com>
+ <497b1189-8e1d-2926-ee5e-9077fcceb04b@redhat.com>
+ <36AC2460-9E88-4BAF-B793-A14A00E41617@vmware.com>
+ <3873b6ab-de6d-cac2-90e8-541fe86e2005@redhat.com>
+In-Reply-To: <3873b6ab-de6d-cac2-90e8-541fe86e2005@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 47b123e6-436a-4c10-2780-08d7266c76bc
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB3925;
+x-ms-traffictypediagnostic: BYAPR05MB3925:
+x-microsoft-antispam-prvs: <BYAPR05MB392575DA11B2F6C2CAC38183D0AA0@BYAPR05MB3925.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0136C1DDA4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(136003)(39860400002)(376002)(396003)(199004)(189003)(54906003)(186003)(486006)(53936002)(316002)(6512007)(5660300002)(26005)(478600001)(476003)(66946007)(64756008)(76176011)(6916009)(66446008)(53546011)(6506007)(66476007)(33656002)(6436002)(6486002)(66556008)(102836004)(14454004)(99286004)(76116006)(229853002)(256004)(305945005)(446003)(66066001)(2906002)(8676002)(6246003)(36756003)(86362001)(25786009)(8936002)(2616005)(71190400001)(4326008)(71200400001)(11346002)(7736002)(3846002)(6116002)(81156014)(14444005)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB3925;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 3Xz5uBgO+veO4+oiTVhIswxusJvfnnxHx0DKBsx+9z2DxC8Wayp9CA3LnK3dQr0HZwu5+cHyQRLCoZOUp6qT8NTUAqvyWcD677hAN03/GtTqARn5BlEcEuNpE5r95ZwttnqtvqwjYGH6dwlHZ2HmXaUTRso/J1Xfzq+2kNFJdii8wRwcAI7Siu1CMV1d7R+mxhQ6UDYBHIg4+xV5ZqgwtKWxZYGLsS111YIXMPuSOF8H+/3HjnZOPL+IbbWqPoFOPcaBH063D1q6M0N38RgaGYt4G/9aoQ6CjsfmiZPdkLBVbod/7LhPn6RG1o02T2as3hq8QIbBlRJ/66JP5UeNiSjk5ZjMb1XHAB1VgZXzORoUOM2HteDqf3BO9CPvVCJZfHSt/f+MdDYw6Z/sAogWIGVAmPhFP6N0Pla2hvg5KJ0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F2EB266CFF731C4798729C491FC45D72@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190805143911.12185-2-hhhawa@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47b123e6-436a-4c10-2780-08d7266c76bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 19:19:18.4501
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OAGZTuLecOGKeJDRewSHIP3AZr9oyY7dPrnJ8qqBJSGY6gCjkVh+t+bWXPGbXS8gcB/cXJMnRGlXxiavVx/FWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB3925
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 05, 2019 at 03:39:08PM +0100, Hanna Hawa wrote:
-> Document Amazon's Annapurna Labs L1 EDAC SoC binding.
-> 
-> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-> ---
->  .../devicetree/bindings/edac/amazon,al-l1-edac.txt | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt b/Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
-> new file mode 100644
-> index 000000000000..2ae8370216bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/amazon,al-l1-edac.txt
-> @@ -0,0 +1,14 @@
-> +* Amazon's Annapurna Labs L1 EDAC
-> +
-> +Amazon's Annapurna Labs SoCs supports L1 single bit correction and
-> +two bits detection capability based on ARM implementation.
-> +
-> +Required properties:
-> +- compatible:
-> +	should be "amazon,al-l1-edac".
+> On Aug 21, 2019, at 12:12 PM, David Hildenbrand <david@redhat.com> wrote:
+>=20
+> On 21.08.19 21:10, Nadav Amit wrote:
+>>> On Aug 21, 2019, at 12:06 PM, David Hildenbrand <david@redhat.com> wrot=
+e:
+>>>=20
+>>> On 21.08.19 20:59, Nadav Amit wrote:
+>>>>> On Aug 21, 2019, at 11:57 AM, David Hildenbrand <david@redhat.com> wr=
+ote:
+>>>>>=20
+>>>>> On 21.08.19 11:41, Nadav Amit wrote:
+>>>>>> There is no reason to print generic warnings when balloon memory
+>>>>>> allocation fails, as failures are expected and can be handled
+>>>>>> gracefully. Since VMware balloon now uses balloon-compaction
+>>>>>> infrastructure, and suppressed these warnings before, it is also
+>>>>>> beneficial to suppress these warnings to keep the same behavior that=
+ the
+>>>>>> balloon had before.
+>>>>>>=20
+>>>>>> Since such warnings can still be useful to indicate that the balloon=
+ is
+>>>>>> over-inflated, print more informative and less frightening warning i=
+f
+>>>>>> allocation fails instead.
+>>>>>>=20
+>>>>>> Cc: David Hildenbrand <david@redhat.com>
+>>>>>> Cc: Jason Wang <jasowang@redhat.com>
+>>>>>> Signed-off-by: Nadav Amit <namit@vmware.com>
+>>>>>>=20
+>>>>>> ---
+>>>>>>=20
+>>>>>> v1->v2:
+>>>>>> * Print informative warnings instead suppressing [David]
+>>>>>> ---
+>>>>>> mm/balloon_compaction.c | 7 ++++++-
+>>>>>> 1 file changed, 6 insertions(+), 1 deletion(-)
+>>>>>>=20
+>>>>>> diff --git a/mm/balloon_compaction.c b/mm/balloon_compaction.c
+>>>>>> index 798275a51887..0c1d1f7689f0 100644
+>>>>>> --- a/mm/balloon_compaction.c
+>>>>>> +++ b/mm/balloon_compaction.c
+>>>>>> @@ -124,7 +124,12 @@ EXPORT_SYMBOL_GPL(balloon_page_list_dequeue);
+>>>>>> struct page *balloon_page_alloc(void)
+>>>>>> {
+>>>>>> 	struct page *page =3D alloc_page(balloon_mapping_gfp_mask() |
+>>>>>> -				       __GFP_NOMEMALLOC | __GFP_NORETRY);
+>>>>>> +				       __GFP_NOMEMALLOC | __GFP_NORETRY |
+>>>>>> +				       __GFP_NOWARN);
+>>>>>> +
+>>>>>> +	if (!page)
+>>>>>> +		pr_warn_ratelimited("memory balloon: memory allocation failed");
+>>>>>> +
+>>>>>> 	return page;
+>>>>>> }
+>>>>>> EXPORT_SYMBOL_GPL(balloon_page_alloc);
+>>>>>=20
+>>>>> Not sure if "memory balloon" is the right wording. hmmm.
+>>>>>=20
+>>>>> Acked-by: David Hildenbrand <david@redhat.com>
+>>>>=20
+>>>> Do you have a better suggestion?
+>>>=20
+>>> Not really - that's why I ack'ed :)
+>>>=20
+>>> However, thinking about it - what about moving the check + print to the
+>>> caller and then using dev_warn... or sth. like simple "virtio_balloon:
+>>> ..." ? You can then drop the warning for vmware balloon if you feel lik=
+e
+>>> not needing it.
+>>=20
+>> Actually, there is already a warning that is printed by the virtue_ballo=
+on
+>> in fill_balloon():
+>>=20
+>>                struct page *page =3D balloon_page_alloc();
+>>=20
+>>                if (!page) {
+>>                        dev_info_ratelimited(&vb->vdev->dev,
+>>                                             "Out of puff! Can't get %u p=
+ages\n",
+>>                                             VIRTIO_BALLOON_PAGES_PER_PAG=
+E);
+>>                        /* Sleep for at least 1/5 of a second before retr=
+y. */
+>>                        msleep(200);
+>>                        break;
+>>                }
+>>=20
+>> So are you ok with going back to v1?
+>=20
+> Whoops, I missed that - sorry - usually the warnings scream louder at me =
+:D
+>=20
+> Yes, v1 is fine with me!
 
-Why is this even in DT? AFAICT, this is all just CortexA57 core features 
-(i.e. nothing Amazon specific). The core type and the ECC capabilities 
-are discoverable.
+Thanks, I missed this one too. This change should prevent making users
+concerned for no good reason.
 
-Rob
