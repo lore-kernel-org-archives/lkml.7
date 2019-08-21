@@ -2,110 +2,180 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8EBC3A59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAC4C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0455B2332B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:11:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pDy9bJxn"
+	by mail.kernel.org (Postfix) with ESMTP id 3FC1A22DD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfHUDLt (ORCPT
+        id S1727022AbfHUDNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 23:11:49 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39394 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfHUDLs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 23:11:48 -0400
-Received: by mail-pl1-f193.google.com with SMTP id z3so510674pln.6;
-        Tue, 20 Aug 2019 20:11:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tfmgm4LIxxx9FZ0lj1a+BI18xaGv0RsnyVSEcXhiXYo=;
-        b=pDy9bJxnBGKM1sKpIALE7tC8FeAmFQuMtZ1Bu4n2nDyhrPran3Ta7FiFeQQlQExPcj
-         KHDchay8h9+7yByAof4eZ5E6HyepC035XGKBUhzGOsVtn6UCQXE8bugxFBJM2Jz6dj0u
-         HeBCd/xxoFIYUbenH5WCe2vxFMlxAkpAFAd1Jl5ouinHaQTwsuCA4iNylUacmTinj0lf
-         VVqxVwpF7L17EJSgJiPydsfetUrf88v3qNwFIO5y1wlCN7QJvemJ0e+WhIZencU8L2/O
-         EZcidgGpdgytWToe7bwLRzaTRD6UKWzXWUJ8EDJqaBcbZVheT9wRiR2I3fgXOg7IYqCm
-         FQ6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=tfmgm4LIxxx9FZ0lj1a+BI18xaGv0RsnyVSEcXhiXYo=;
-        b=X99JNJR0Eiql1ClllKLLK1b1qdefDOHMWmkcu60G3qdCvAAYtXlibfoRGGU6du+w/c
-         JoasVZHey7wpdBva+Wkeu4T4GbyuOawgPIhvBf7TcAIH1L+gqbN77yZnVf9LDJ+HvbzW
-         l3QI1hPHvn3fpApaRuJlQ7CuvRMQWN4C+wpM4T2vPf7OMn60tMOgohwMsyU3LL14zVua
-         v06TLdWJIyrPdGsQxQq6UtGBu/zVYLfg3ihYc6yaj6i8ONkvOIRUZJGe85xWbY5FyK90
-         IlTh156Y4BfiUFDkAutPQMNLPze06zOh/Lk0uKcM5kO8f4g8d4TY5VRJu+Wzwbsg/4r5
-         9A0A==
-X-Gm-Message-State: APjAAAUzkxuz3GWkARa5eUOOo2qHhlG8hsSjNDlTt079uqB17y9IJ3EZ
-        Xmi2VWQxM/rNEQuGF/T2XaU=
-X-Google-Smtp-Source: APXvYqywbluDozgwfegRgr7JEenjh7blVGNMTCIZBGNYicQyVNkH/LJvp5txNVm0x2yEXo8FlfHXtQ==
-X-Received: by 2002:a17:902:29e6:: with SMTP id h93mr10098249plb.39.1566357107026;
-        Tue, 20 Aug 2019 20:11:47 -0700 (PDT)
-Received: from localhost.localdomain ([103.29.142.67])
-        by smtp.gmail.com with ESMTPSA id j15sm21540009pfe.3.2019.08.20.20.11.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Aug 2019 20:11:46 -0700 (PDT)
-From:   Kever Yang <kever.yang@rock-chips.com>
-To:     heiko@sntech.de
-Cc:     linux-rockchip@lists.infradead.org,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Akash Gajjar <Akash_Gajjar@mentor.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
+        Tue, 20 Aug 2019 23:13:53 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39148 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfHUDNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 23:13:53 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1E7501A04CA;
+        Wed, 21 Aug 2019 05:13:50 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 925D91A004C;
+        Wed, 21 Aug 2019 05:13:43 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 8AD3F402FF;
+        Wed, 21 Aug 2019 11:13:35 +0800 (SGT)
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] dt-bindings: arm: rockchip: remove reference to fennec board
-Date:   Wed, 21 Aug 2019 11:11:24 +0800
-Message-Id: <20190821031124.17806-2-kever.yang@rock-chips.com>
+        Pavel Machek <pavel@ucw.cz>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Li Biwen <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH v6 1/3] PM: wakeup: Add routine to help fetch wakeup source object.
+Date:   Wed, 21 Aug 2019 11:15:35 +0800
+Message-Id: <20190821031537.46824-1-ran.wang_1@nxp.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190821031124.17806-1-kever.yang@rock-chips.com>
-References: <20190821031124.17806-1-kever.yang@rock-chips.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rk3288 fennec board has been removed, remove the binding document at
-the same time.
+Some user might want to go through all registered wakeup sources
+and doing things accordingly. For example, SoC PM driver might need to
+do HW programming to prevent powering down specific IP which wakeup
+source depending on. So add this API to help walk through all registered
+wakeup source objects on that list and return them one by one.
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 ---
+Change in v6:
+	- Add wakeup_source_get_star() and wakeup_source_get_stop() to aligned 
+	with wakeup_sources_stats_seq_start/nex/stop.
 
-Changes in v2: None
+Change in v5:
+	- Update commit message, add decription of walk through all wakeup
+	source objects.
+	- Add SCU protection in function wakeup_source_get_next().
+	- Rename wakeup_source member 'attached_dev' to 'dev' and move it up
+	(before wakeirq).
 
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 -----
- 1 file changed, 5 deletions(-)
+Change in v4:
+	- None.
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 34865042f4e4..cc2f1c2d0cd0 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -424,11 +424,6 @@ properties:
-               - rockchip,rk3288-evb-rk808
-           - const: rockchip,rk3288
+Change in v3:
+	- Adjust indentation of *attached_dev;.
+
+Change in v2:
+	- None.
+
+ drivers/base/power/wakeup.c | 39 +++++++++++++++++++++++++++++++++++++++
+ include/linux/pm_wakeup.h   |  5 +++++
+ 2 files changed, 44 insertions(+)
+
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index ee31d4f..61bc16b 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -14,6 +14,7 @@
+ #include <linux/suspend.h>
+ #include <linux/seq_file.h>
+ #include <linux/debugfs.h>
++#include <linux/of_device.h>
+ #include <linux/pm_wakeirq.h>
+ #include <trace/events/power.h>
  
--      - description: Rockchip RK3288 Fennec
--        items:
--          - const: rockchip,rk3288-fennec
--          - const: rockchip,rk3288
--
-       - description: Rockchip RK3328 Evaluation board
-         items:
-           - const: rockchip,rk3328-evb
+@@ -228,6 +229,43 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+ EXPORT_SYMBOL_GPL(wakeup_source_unregister);
+ 
+ /**
++ * wakeup_source_get_star - Begin a walk on wakeup source list
++ * @srcuidx: Lock index allocated for this caller.
++ */
++struct wakeup_source *wakeup_source_get_start(int *srcuidx)
++{
++	struct list_head *ws_head = &wakeup_sources;
++
++	*srcuidx = srcu_read_lock(&wakeup_srcu);
++
++	return list_entry_rcu(ws_head->next, struct wakeup_source, entry);
++}
++EXPORT_SYMBOL_GPL(wakeup_source_get_start);
++
++/**
++ * wakeup_source_get_next - Get next wakeup source from the list
++ * @ws: Previous wakeup source object
++ */
++struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws)
++{
++	struct list_head *ws_head = &wakeup_sources;
++
++	return list_next_or_null_rcu(ws_head, &ws->entry,
++				struct wakeup_source, entry);
++}
++EXPORT_SYMBOL_GPL(wakeup_source_get_next);
++
++/**
++ * wakeup_source_get_stop - Stop a walk on wakeup source list
++ * @idx: Dedicated lock index of this caller.
++ */
++void wakeup_source_get_stop(int idx)
++{
++	srcu_read_unlock(&wakeup_srcu, idx);
++}
++EXPORT_SYMBOL_GPL(wakeup_source_get_stop);
++
++/**
+  * device_wakeup_attach - Attach a wakeup source object to a device object.
+  * @dev: Device to handle.
+  * @ws: Wakeup source object to attach to @dev.
+@@ -242,6 +280,7 @@ static int device_wakeup_attach(struct device *dev, struct wakeup_source *ws)
+ 		return -EEXIST;
+ 	}
+ 	dev->power.wakeup = ws;
++	ws->dev = dev;
+ 	if (dev->power.wakeirq)
+ 		device_wakeup_attach_irq(dev, dev->power.wakeirq);
+ 	spin_unlock_irq(&dev->power.lock);
+diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+index 9102760..e6b47b6 100644
+--- a/include/linux/pm_wakeup.h
++++ b/include/linux/pm_wakeup.h
+@@ -23,6 +23,7 @@ struct wake_irq;
+  * @name: Name of the wakeup source
+  * @entry: Wakeup source list entry
+  * @lock: Wakeup source lock
++ * @dev: The device it attached to
+  * @wakeirq: Optional device specific wakeirq
+  * @timer: Wakeup timer list
+  * @timer_expires: Wakeup timer expiration
+@@ -42,6 +43,7 @@ struct wakeup_source {
+ 	const char 		*name;
+ 	struct list_head	entry;
+ 	spinlock_t		lock;
++	struct device		*dev;
+ 	struct wake_irq		*wakeirq;
+ 	struct timer_list	timer;
+ 	unsigned long		timer_expires;
+@@ -88,6 +90,9 @@ extern void wakeup_source_add(struct wakeup_source *ws);
+ extern void wakeup_source_remove(struct wakeup_source *ws);
+ extern struct wakeup_source *wakeup_source_register(const char *name);
+ extern void wakeup_source_unregister(struct wakeup_source *ws);
++extern struct wakeup_source *wakeup_source_get_start(int *srcuidx);
++extern struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws);
++extern void wakeup_source_get_stop(int idx);
+ extern int device_wakeup_enable(struct device *dev);
+ extern int device_wakeup_disable(struct device *dev);
+ extern void device_set_wakeup_capable(struct device *dev, bool capable);
 -- 
-2.17.1
+2.7.4
 
