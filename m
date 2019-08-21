@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3EBC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC86AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D092A2082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F4E233A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566392826;
-	bh=t34oJ1+/X+9Un4r85sReatE8xGow9P8i7e4A33oJhPo=;
+	s=default; t=1566392830;
+	bh=0v32ZZ6O33elaDt+S/HSHNT2AKsZguqxcmZy9fXnA5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=orcO52WCnRQwT44O/Gxbo5+VZ9kAhKBv8cOPRPdZYk/qSwOI+3bEv/ZBA0RC8+OBG
-	 L7qJVI1XQmcKzaB+RkHJdSLZgugM5Xw4grZPmsNzI6DYcHB8SuIaza3ilGBB10HVcc
-	 e7s2AEIXIVa3y9PZ1PaC7j727M7+vd2zV0KyYPeA=
+	b=wT33p6jmcpHqkpyreaesqzivkqhbmyb+wAfmVJjDX0Ria140FE34bmiDhA7c3ZlM9
+	 taVqxhc1od8xtDtcDXQJSMpT9/s61twdvk67tA1vyYODEXIY2j2pI9jnWEnF+NtEwR
+	 lwPIBxPI1samLq0wt+OzH5dFmXMnGyEMQEOIHbec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbfHUNHG (ORCPT
+        id S1728849AbfHUNHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 09:07:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50874 "EHLO mail.kernel.org"
+        Wed, 21 Aug 2019 09:07:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727559AbfHUNHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:07:04 -0400
+        id S1727559AbfHUNHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 09:07:07 -0400
 Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0D9F2339E;
-        Wed, 21 Aug 2019 13:07:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71E41233A2;
+        Wed, 21 Aug 2019 13:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566392824;
-        bh=t34oJ1+/X+9Un4r85sReatE8xGow9P8i7e4A33oJhPo=;
+        s=default; t=1566392826;
+        bh=0v32ZZ6O33elaDt+S/HSHNT2AKsZguqxcmZy9fXnA5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FfN/Kvlaf2ZeIvHYO5r6SQpZZqZaYZyzwX88W9s6SmN6Lr07JQ4vIb8sF3GjHFQ6v
-         qftPh2rJGo7wVlQuNFMslNopwPEgU5LxnyAt9y5rsP/owumbB0YVeua90htHtzp/+c
-         QWfBAxEyjX1btNoZFTtY6ZRbD5y9s7ayymeq8QqI=
+        b=gFNALjloL3/59PvwnxTEmnNmtZdMI+aNHJOg/zLFuAseYN1viWCohC8c4k1UcvlM8
+         B4K897XB/EWC16jRBjilSBllM3MjSc3hqizzUCBsCbCO5LgMvlyUPC+xHMw6jMUEt+
+         0Jw/qJsX9/BImCIGMXCdfgFLLNWLuN1GIE95uaIg=
 From:   Maxime Ripard <mripard@kernel.org>
 To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>,
         lgirdwood@gmail.com, broonie@kernel.org
 Cc:     alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
         codekipper@gmail.com, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/4] ASoC: sun4i-i2s: Use the actual format width instead of an hardcoded one
-Date:   Wed, 21 Aug 2019 15:06:54 +0200
-Message-Id: <f08a0c3605cd1d79752b38d704690190183f7865.1566392800.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH v2 3/4] ASoC: sun4i-i2s: Replace call to params_width by local variable
+Date:   Wed, 21 Aug 2019 15:06:55 +0200
+Message-Id: <f85a1c1e014080a4bbc3abd19bc8fdcb86f0981a.1566392800.git-series.maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.6022d5fe61fb8a11565a71bee24d5280b0259c63.1566392800.git-series.maxime.ripard@bootlin.com>
 References: <cover.6022d5fe61fb8a11565a71bee24d5280b0259c63.1566392800.git-series.maxime.ripard@bootlin.com>
@@ -59,31 +59,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-The LRCK period field in the FMT0 register holds the number of LRCK period
-for one channel in I2S mode.
+The sun4i_i2s_hw_params function already has a variable holding the value
+returned by params_width, so let's just use that variable instead of
+calling params_width multiple times.
 
-This has been hardcoded to 32, while it really should be the physical width
-of the format, which creates an improper clock when using a 16bit format,
-with the i2s controller as LRCK master.
-
-Fixes: 7d2993811a1e ("ASoC: sun4i-i2s: Add support for H3")
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
  sound/soc/sunxi/sun4i-i2s.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index cdc3fa60ff33..9ef784b8867c 100644
+index 9ef784b8867c..69162af9fd65 100644
 --- a/sound/soc/sunxi/sun4i-i2s.c
 +++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -359,7 +359,7 @@ static int sun4i_i2s_set_clk_rate(struct snd_soc_dai *dai,
- 	if (i2s->variant->has_fmt_set_lrck_period)
- 		regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
- 				   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
--				   SUN8I_I2S_FMT0_LRCK_PERIOD(32));
-+				   SUN8I_I2S_FMT0_LRCK_PERIOD(slot_width));
+@@ -487,7 +487,7 @@ static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
+ 	}
+ 	i2s->playback_dma_data.addr_width = width;
  
- 	return 0;
- }
+-	sr = i2s->variant->get_sr(i2s, params_width(params));
++	sr = i2s->variant->get_sr(i2s, word_size);
+ 	if (sr < 0)
+ 		return -EINVAL;
+ 
 -- 
 git-series 0.9.1
