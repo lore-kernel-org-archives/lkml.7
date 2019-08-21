@@ -2,135 +2,122 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD153C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4D0C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3065214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2993214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:25:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jOt/EPS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbfHUTYb (ORCPT
+        id S1729819AbfHUTZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:24:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7202 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729221AbfHUTYb (ORCPT
+        Wed, 21 Aug 2019 15:25:16 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15779 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfHUTZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:24:31 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LJM7Nj057769
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:24:30 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uh87mabqb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:24:29 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Wed, 21 Aug 2019 20:24:27 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 21 Aug 2019 20:24:24 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LJON4C50331762
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 19:24:23 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87046A405C;
-        Wed, 21 Aug 2019 19:24:23 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B602A405B;
-        Wed, 21 Aug 2019 19:24:21 +0000 (GMT)
-Received: from naverao1-tp.ibmuc.com (unknown [9.85.72.179])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 21 Aug 2019 19:24:21 +0000 (GMT)
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiong Wang <jiong.wang@netronome.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, <bpf@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] bpf: handle 32-bit zext during constant blinding
-Date:   Thu, 22 Aug 2019 00:53:58 +0530
-X-Mailer: git-send-email 2.22.0
+        Wed, 21 Aug 2019 15:25:16 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5d9a9c0000>; Wed, 21 Aug 2019 12:25:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 21 Aug 2019 12:25:15 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 21 Aug 2019 12:25:15 -0700
+Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
+ 2019 19:25:15 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by hqmail110.nvidia.com
+ (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
+ 2019 19:25:15 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 21 Aug 2019 19:25:15 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d5d9a9b0001>; Wed, 21 Aug 2019 12:25:15 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     "H . Peter Anvin" <hpa@zytor.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        <gregkh@linuxfoundation.org>, <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Neil MacLeod <neil@nmacleod.com>, <stable@vger.kernel.org>
+Subject: [PATCH] x86/boot: Fix boot failure regression
+Date:   Wed, 21 Aug 2019 12:25:13 -0700
+Message-ID: <20190821192513.20126-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.22.1
+In-Reply-To: <CAFbqK8=RUaCnk_WkioodkdwLsDina=yW+eLvzckSbVx_3Py_-A@mail.gmail.com>
+References: <CAFbqK8=RUaCnk_WkioodkdwLsDina=yW+eLvzckSbVx_3Py_-A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19082119-0012-0000-0000-00000341366C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082119-0013-0000-0000-0000217B5F31
-Message-Id: <20190821192358.31922-1-naveen.n.rao@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908210186
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566415516; bh=ucr7rfBqqfedkyuatW9cIEFGnyPN7FoxAX83ufXFfrY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=jOt/EPS3F5WJZf3aR6gpICax9WLuTVMxlu/t5B7ue1oW/cG+/ErojaJ21e+q5MuR0
+         zBI11Nv7Pps35tW9m38daZq4ARL9yhu/EeYiED2ZnB2wNRXMRQZKxDmCJxsS9/5hJ+
+         R7KXJfTdjOk0fZnWHzXKuYUK59xdvxCyimnb/sHDiVyb4Kn+gjtGFznja6e49j3exO
+         mFAhN+cjVv3Z8PVmq1/RtczZ3C6jbKhQ8Q+IKKI4kx+KJHjHCjeN3OQAuBzxN/cyDO
+         3aHnA40sYh+S0ON694NqXgXgO5E4xYHNF/8B3nDoWX4+ilC2tu6XKw09k2SWJ3O6VC
+         qHCq7xDA/9hqQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since BPF constant blinding is performed after the verifier pass, the
-ALU32 instructions inserted for doubleword immediate loads don't have a
-corresponding zext instruction. This is causing a kernel oops on powerpc
-and can be reproduced by running 'test_cgroup_storage' with
-bpf_jit_harden=2.
+commit a90118c445cc ("x86/boot: Save fields explicitly, zero out
+everything else") had two errors:
 
-Fix this by emitting BPF_ZEXT during constant blinding if
-prog->aux->verifier_zext is set.
+    * It preserved boot_params.acpi_rsdp_addr, and
+    * It failed to preserve boot_params.hdr
 
-Fixes: a4b1d3c1ddf6cb ("bpf: verifier: insert zero extension according to analysis result")
-Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Therefore, zero out acpi_rsdp_addr, and preserve hdr.
+
+Fixes: a90118c445cc ("x86/boot: Save fields explicitly, zero out everything=
+ else")
+Reported-by: Neil MacLeod <neil@nmacleod.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
-Changes since RFC:
-- Removed changes to ALU32 and JMP32 ops since those don't alter program 
-  execution, and the verifier would have already accounted for them.  
+ arch/x86/include/asm/bootparam_utils.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
- kernel/bpf/core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 8191a7db2777..66088a9e9b9e 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -890,7 +890,8 @@ int bpf_jit_get_func_addr(const struct bpf_prog *prog,
- 
- static int bpf_jit_blind_insn(const struct bpf_insn *from,
- 			      const struct bpf_insn *aux,
--			      struct bpf_insn *to_buff)
-+			      struct bpf_insn *to_buff,
-+			      bool emit_zext)
- {
- 	struct bpf_insn *to = to_buff;
- 	u32 imm_rnd = get_random_int();
-@@ -1005,6 +1006,8 @@ static int bpf_jit_blind_insn(const struct bpf_insn *from,
- 	case 0: /* Part 2 of BPF_LD | BPF_IMM | BPF_DW. */
- 		*to++ = BPF_ALU32_IMM(BPF_MOV, BPF_REG_AX, imm_rnd ^ aux[0].imm);
- 		*to++ = BPF_ALU32_IMM(BPF_XOR, BPF_REG_AX, imm_rnd);
-+		if (emit_zext)
-+			*to++ = BPF_ZEXT_REG(BPF_REG_AX);
- 		*to++ = BPF_ALU64_REG(BPF_OR,  aux[0].dst_reg, BPF_REG_AX);
- 		break;
- 
-@@ -1088,7 +1091,8 @@ struct bpf_prog *bpf_jit_blind_constants(struct bpf_prog *prog)
- 		    insn[1].code == 0)
- 			memcpy(aux, insn, sizeof(aux));
- 
--		rewritten = bpf_jit_blind_insn(insn, aux, insn_buff);
-+		rewritten = bpf_jit_blind_insn(insn, aux, insn_buff,
-+						clone->aux->verifier_zext);
- 		if (!rewritten)
- 			continue;
- 
--- 
-2.22.0
+diff --git a/arch/x86/include/asm/bootparam_utils.h b/arch/x86/include/asm/=
+bootparam_utils.h
+index f5e90a849bca..9e5f3c722c33 100644
+--- a/arch/x86/include/asm/bootparam_utils.h
++++ b/arch/x86/include/asm/bootparam_utils.h
+@@ -59,7 +59,6 @@ static void sanitize_boot_params(struct boot_params *boot=
+_params)
+ 			BOOT_PARAM_PRESERVE(apm_bios_info),
+ 			BOOT_PARAM_PRESERVE(tboot_addr),
+ 			BOOT_PARAM_PRESERVE(ist_info),
+-			BOOT_PARAM_PRESERVE(acpi_rsdp_addr),
+ 			BOOT_PARAM_PRESERVE(hd0_info),
+ 			BOOT_PARAM_PRESERVE(hd1_info),
+ 			BOOT_PARAM_PRESERVE(sys_desc_table),
+@@ -71,6 +70,7 @@ static void sanitize_boot_params(struct boot_params *boot=
+_params)
+ 			BOOT_PARAM_PRESERVE(eddbuf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
++			BOOT_PARAM_PRESERVE(hdr),
+ 			BOOT_PARAM_PRESERVE(e820_table),
+ 			BOOT_PARAM_PRESERVE(eddbuf),
+ 		};
+--=20
+2.22.1
 
