@@ -2,165 +2,155 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CEEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65877C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9143B22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A8FA22DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:28:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQwd3ES5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbfHUK14 (ORCPT
+        id S1728017AbfHUK2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:27:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:55726 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbfHUK1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:27:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A83B28;
-        Wed, 21 Aug 2019 03:27:55 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B57B3F706;
-        Wed, 21 Aug 2019 03:27:53 -0700 (PDT)
-Subject: Re: [PATCH v2 4/9] KVM: arm64: Support stolen time reporting via
- shared structure
-To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190819140436.12207-1-steven.price@arm.com>
- <20190819140436.12207-5-steven.price@arm.com>
- <f6fad4fa-323d-306c-c582-de07464f4d00@kernel.org>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <4703baa7-0116-f5d6-291e-1e669a36545d@arm.com>
-Date:   Wed, 21 Aug 2019 11:27:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 06:28:23 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38584 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbfHUK2W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 06:28:22 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r12so2349141edo.5;
+        Wed, 21 Aug 2019 03:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tH4C4SHneA684UXc3D0kikroiEy/mW4WtnOuT96rGAM=;
+        b=BQwd3ES5iB5HttBbWB7MmvzhXgwGjN1tPwBc9rgjyI4dXXBt3RMxGIY+7W/suYq3NE
+         lWNbrFE/pp+XVvg3D7gmSet9mqwvmzVB/Z3+Pgv/kZ/y5fmwTz/JAKG3xI10dX1TXYnI
+         w/ODwpQpbHmD61JlwUh0Te793e6L6ezn1YCwjnAG8sEFuXhJNNzOMFLG3Tjb1eagSrNb
+         g5ZNNnaRAaP6GtB8MrOwh0crnBqjHYtXmbYLH+JoE2XSY+4YBV7VWkTYfEY57TOmsufz
+         k1VkjkKQaEbnV2JlDjwoXHnudSdDW+x6vX84e12dpNVk5y4WggJcR07ZgeAF8NTyLb1o
+         4KFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tH4C4SHneA684UXc3D0kikroiEy/mW4WtnOuT96rGAM=;
+        b=F79KTTxHHaa3L3dTvXrE/WQ4bRtDEAs/WG9Iaal/W3rQyMWleXpN/oQAGxtH+lZWlV
+         8C3Wx9ZgJ8zVMM+kpuPswKg+JoA/lx5uZiUATkYS8hdiGncy2iIljQFyJYK6ZmevKlvz
+         l1ILKUCtANtFjjeASuO0c8bqkimT1e9jM+/Be88QyFDDcp/PiKTLpk0L9wrwbTUngDZG
+         jgAd/MaQvkowoZhlQXBQwAaifCrErZuMCDgOM5A3TaxATXqfZqJAH2qw5QY8yeYA7pj6
+         fQYdSWlCDe0Heb74xaT0t8sgP1u2jT+GINeiym0/CnO2DWUCij5GUD5/DpC3rh+ze5ap
+         PDBw==
+X-Gm-Message-State: APjAAAUOX+bN9pqzlrcDyQywZgs8zCMBv+3ipkKS29swNqPwsvs2dRAv
+        4LurPPoct+PYzkQY3NMxNxX2UWGOReV0pteP8+8=
+X-Google-Smtp-Source: APXvYqzm1AMb1SdDCLl2PZqOX1rVW3GzxnXK3xzo7vqdb+GYSql0VNnjYrTZY+VKIhPl9/PtAF3T/yfx4M2nAKykGw8=
+X-Received: by 2002:a50:c385:: with SMTP id h5mr35182112edf.18.1566383300730;
+ Wed, 21 Aug 2019 03:28:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f6fad4fa-323d-306c-c582-de07464f4d00@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190820084833.6019-1-hubert.feurstein@vahle.at> <20190820084833.6019-5-hubert.feurstein@vahle.at>
+In-Reply-To: <20190820084833.6019-5-hubert.feurstein@vahle.at>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Wed, 21 Aug 2019 13:28:09 +0300
+Message-ID: <CA+h21ho6T=DdE-9XCCj00UBFZahe08oEMP4kbgv+CmfRYD5c_Q@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 4/4] net: fec: add support for PTP system
+ timestamping for MDIO devices
+To:     Hubert Feurstein <h.feurstein@gmail.com>
+Cc:     netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/08/2019 17:40, Marc Zyngier wrote:
-> Hi Steven,
-> 
-> On 19/08/2019 15:04, Steven Price wrote:
->> Implement the service call for configuring a shared structure between a
->> VCPU and the hypervisor in which the hypervisor can write the time
->> stolen from the VCPU's execution time by other tasks on the host.
->>
->> The hypervisor allocates memory which is placed at an IPA chosen by user
->> space. The hypervisor then uses WRITE_ONCE() to update the shared
->> structure ensuring single copy atomicity of the 64-bit unsigned value
->> that reports stolen time in nanoseconds.
->>
->> Whenever stolen time is enabled by the guest, the stolen time counter is
->> reset.
->>
->> The stolen time itself is retrieved from the sched_info structure
->> maintained by the Linux scheduler code. We enable SCHEDSTATS when
->> selecting KVM Kconfig to ensure this value is meaningful.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>  arch/arm/include/asm/kvm_host.h   | 15 +++++++
->>  arch/arm64/include/asm/kvm_host.h | 16 ++++++-
->>  arch/arm64/kvm/Kconfig            |  1 +
->>  include/linux/kvm_types.h         |  2 +
->>  virt/kvm/arm/arm.c                | 19 +++++++++
->>  virt/kvm/arm/hypercalls.c         |  3 ++
->>  virt/kvm/arm/pvtime.c             | 71 +++++++++++++++++++++++++++++++
->>  7 files changed, 126 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
->> index 369b5d2d54bf..14d61a84c270 100644
->> --- a/arch/arm/include/asm/kvm_host.h
->> +++ b/arch/arm/include/asm/kvm_host.h
->> @@ -39,6 +39,7 @@
->>  	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
->>  #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
->>  #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
->> +#define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
->>  
->>  DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
->>  
->> @@ -77,6 +78,12 @@ struct kvm_arch {
->>  
->>  	/* Mandated version of PSCI */
->>  	u32 psci_version;
->> +
->> +	struct kvm_arch_pvtime {
->> +		struct gfn_to_hva_cache st_ghc;
->> +		gpa_t st_base;
->> +		u64 st_size;
->> +	} pvtime;
-> 
-> It'd be good if we could avoid having this in the 32bit vcpu structure,
-> given that it serves no real purpose (other than being able to compile
-> things).
+On Tue, 20 Aug 2019 at 11:49, Hubert Feurstein <h.feurstein@gmail.com> wrote:
+>
+> From: Hubert Feurstein <h.feurstein@gmail.com>
+>
+> In order to improve the synchronisation precision of phc2sys (from
+> the linuxptp project) for devices like switches which are attached
+> to the MDIO bus, it is necessary the get the system timestamps as
+> close as possible to the access which causes the PTP timestamp
+> register to be snapshotted in the switch hardware. Usually this is
+> triggered by an MDIO write access, the snapshotted timestamp is then
+> transferred by several MDIO reads.
+>
+> The ptp_read_system_*ts functions already check the ptp_sts pointer.
+>
+> Signed-off-by: Hubert Feurstein <h.feurstein@gmail.com>
+> ---
+>  drivers/net/ethernet/freescale/fec_main.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+> index c01d3ec3e9af..dd1253683ac0 100644
+> --- a/drivers/net/ethernet/freescale/fec_main.c
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> @@ -1815,10 +1815,12 @@ static int fec_enet_mdio_write(struct mii_bus *bus, int mii_id, int regnum,
+>         reinit_completion(&fep->mdio_done);
+>
+>         /* start a write op */
+> +       ptp_read_system_prets(bus->ptp_sts);
+>         writel(FEC_MMFR_ST | FEC_MMFR_OP_WRITE |
+>                 FEC_MMFR_PA(mii_id) | FEC_MMFR_RA(regnum) |
+>                 FEC_MMFR_TA | FEC_MMFR_DATA(value),
+>                 fep->hwp + FEC_MII_DATA);
+> +       ptp_read_system_postts(bus->ptp_sts);
+>
 
-Good point - I think I can fix that with a couple more static inline
-functions... It's a little tricky due to header file include order, but
-I think I can make it work.
+How do you know the core will not service an interrupt here?
+Why are you not disabling (postponing) local interrupts after this
+critical section? (which you were in the RFC)
+If the argument is that you didn't notice any issue with phc2sys -N 5,
+that's not a good argument. "Unlikely for a condition to happen" does
+not mean deterministic.
+Here is an example of the system servicing an interrupt during the
+transmission of a 12-byte SPI transfer (proof that they can occur
+anywhere where they aren't disabled):
+https://drive.google.com/file/d/1rUZpfkBKHJGwQN4orFUWks_5i70wn-mj/view?usp=sharing
 
-[...]
->> +int kvm_update_stolen_time(struct kvm_vcpu *vcpu, bool init)
->> +{
->> +	struct kvm *kvm = vcpu->kvm;
->> +	struct kvm_arch_pvtime *pvtime = &kvm->arch.pvtime;
->> +	u64 steal;
->> +	u64 steal_le;
->> +	u64 offset;
->> +	int idx;
->> +	const int stride = sizeof(struct pvclock_vcpu_stolen_time);
->> +
->> +	if (pvtime->st_base == GPA_INVALID)
->> +		return -ENOTSUPP;
->> +
->> +	/* Let's do the local bookkeeping */
->> +	steal = vcpu->arch.steal.steal;
->> +	steal += current->sched_info.run_delay - vcpu->arch.steal.last_steal;
->> +	vcpu->arch.steal.last_steal = current->sched_info.run_delay;
->> +	vcpu->arch.steal.steal = steal;
->> +
->> +	offset = stride * kvm_vcpu_get_idx(vcpu);
->> +
->> +	if (unlikely(offset + stride > pvtime->st_size))
->> +		return -EINVAL;
->> +
->> +	steal_le = cpu_to_le64(steal);
->> +	pagefault_disable();
-> 
-> What's the reason for doing a pagefault_disable()? What I'd expect is
-> for the userspace page to be faulted in and written to, and doing a
-> pagefault_disable() seems to be going against this idea.
+>         /* wait for end of transfer */
+>         time_left = wait_for_completion_timeout(&fep->mdio_done,
+> @@ -1956,7 +1958,7 @@ static int fec_enet_mii_init(struct platform_device *pdev)
+>         struct fec_enet_private *fep = netdev_priv(ndev);
+>         struct device_node *node;
+>         int err = -ENXIO;
+> -       u32 mii_speed, holdtime;
+> +       u32 mii_speed, mii_period, holdtime;
+>
+>         /*
+>          * The i.MX28 dual fec interfaces are not equal.
+> @@ -1993,6 +1995,7 @@ static int fec_enet_mii_init(struct platform_device *pdev)
+>          * document.
+>          */
+>         mii_speed = DIV_ROUND_UP(clk_get_rate(fep->clk_ipg), 5000000);
+> +       mii_period = div_u64((u64)mii_speed * 2 * NSEC_PER_SEC, clk_get_rate(fep->clk_ipg));
+>         if (fep->quirks & FEC_QUIRK_ENET_MAC)
+>                 mii_speed--;
+>         if (mii_speed > 63) {
+> @@ -2034,6 +2037,8 @@ static int fec_enet_mii_init(struct platform_device *pdev)
+>                 pdev->name, fep->dev_id + 1);
+>         fep->mii_bus->priv = fep;
+>         fep->mii_bus->parent = &pdev->dev;
+> +       fep->mii_bus->flags = MII_BUS_F_PTP_STS_SUPPORTED;
+> +       fep->mii_bus->ptp_sts_offset = 32 * mii_period;
+>
+>         node = of_get_child_by_name(pdev->dev.of_node, "mdio");
+>         err = of_mdiobus_register(fep->mii_bus, node);
+> --
+> 2.22.1
+>
 
-Umm... this is me screwing up the locking...
-
-The current code is very confused about which locks should/can be held
-when kvm_update_stolen_time() is called. vcpu_req_record_steal()
-explicitly takes the kvm->srcu read lock - which is then taken again
-here. But kvm_hypercall_stolen_time doesn't hold any lock. And obviously
-at some point in time I expected this to be called in atomic context...
-
-In general the page is likely to be faulted in (as a guest which is
-using stolen time is surely looking at the numbers there). But there's
-no need for the pagefault_disable(). It also shouldn't be the callers
-responsibility to hold kvm->srcu.
-
-Steve
+Regards,
+-Vladimir
