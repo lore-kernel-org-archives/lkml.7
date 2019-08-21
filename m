@@ -2,275 +2,134 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFFBC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6893EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B063722DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3809022DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o2AQ6w2h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfHUEUy (ORCPT
+        id S1727571AbfHUEYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:20:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41534 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726409AbfHUEUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:20:54 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 39B8B30917AC;
-        Wed, 21 Aug 2019 04:20:53 +0000 (UTC)
-Received: from x1.home (ovpn-116-99.phx2.redhat.com [10.3.116.99])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E166100195C;
-        Wed, 21 Aug 2019 04:20:52 +0000 (UTC)
-Date:   Tue, 20 Aug 2019 22:20:51 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        cjia <cjia@nvidia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Message-ID: <20190820222051.7aeafb69@x1.home>
-In-Reply-To: <AM0PR05MB486686D3C311F3C61BE0997DD1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190802065905.45239-1-parav@mellanox.com>
-        <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
-        <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190813085246.1d642ae5@x1.home>
-        <AM0PR05MB48663579A340E6597B3D01BCD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190813111149.027c6a3c@x1.home>
-        <AM0PR05MB4866D40F8EBB382C78193C91D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814100135.1f60aa42.cohuck@redhat.com>
-        <AM0PR05MB4866ABFDDD9DDCBC01F6CA90D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814150911.296da78c.cohuck@redhat.com>
-        <AM0PR05MB48666CCDFE985A25F42A0259D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814085746.26b5f2a3@x1.home>
-        <AM0PR05MB4866148ABA3C4E48E73E95FCD1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <AM0PR05MB48668B6221E477A873688CDBD1AB0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190820111904.75515f58@x1.home>
-        <AM0PR05MB486686D3C311F3C61BE0997DD1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Organization: Red Hat
+        Wed, 21 Aug 2019 00:24:15 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41661 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfHUEYP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 00:24:15 -0400
+Received: by mail-pl1-f193.google.com with SMTP id m9so595511pls.8;
+        Tue, 20 Aug 2019 21:24:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MUy6WQ1xoK9lJfNLjEvn57XDcafYhRNiEwXA8Tk63hA=;
+        b=o2AQ6w2hzvdylDkGbQ4pDyR/cuDlx1jU8ZUDk2Y2Y6xVqKPYirpYBYgwTS5XthsdXc
+         wdykV+BK5LfYKk1+OcVw01Vj1p4R4d1vRi1drzxMFYAgRizN/3FaGChOgfdKQ5Aw57oj
+         UphcE3ekxjyf5jsUaGiMNCQbWgJ9yW4OZET6xG4iFztVrbtUTHsEQNDxeZUrB2ovsJO2
+         Aqa4LB5Zou+iZfc+whmnfTo9esmCvam+UGqwGe1Mm9V5nK4PKpLsXfJUkYQ/FBvGYOLs
+         O16YaYhAcXv2HMdaohN61cf+oQzoYygjXa48Ce8GetAMW/DO9WMfSsx0ED7L/kb3JDGG
+         gPWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MUy6WQ1xoK9lJfNLjEvn57XDcafYhRNiEwXA8Tk63hA=;
+        b=PHG7t5dat4SdP34WcyegYl6wUKqxrd3ldN5yku4iQz17wNZD3WZyFFEGJIRnLmWhJC
+         Q9D0QnJcf2CAFie5SUYALD4J48U9OyfsdGWzP2EwLZtuIGBPyjP+eYgpq0Rkb/1NCTN5
+         VlWZhRskb+FyVrFH64j5paLL5ynV2MeXXOVSJtgI4jmKh4gIoWUQ0+TPrAzKF/U6eyDO
+         sF8GbdercgT0flLLge44jDZBUNJSj4FmrVRTm32J+/nfhKH5JBZ6FuWXozKIqLsBU2SR
+         pKynGKEt9FICsUkZJ1y0pOQWpfqaX7X1RZLYjKrlea0+ChkE5vrIOAZn2wCpdAlIpqGy
+         ewtA==
+X-Gm-Message-State: APjAAAX1Siel14G8ijD1nJzGux2ZhFX1ErKHmOs8FsOzcDT/hXY8l4ib
+        TAO2aU2wKJ2r9w/qlNSQkpw=
+X-Google-Smtp-Source: APXvYqwai5cAkqOIhGquS4Yv9DULTJ6E8oyvFg/ISEE/lFGOD3GAK991WB57QFuu2WTF1SFRr0ba5g==
+X-Received: by 2002:a17:902:9b90:: with SMTP id y16mr28533828plp.17.1566361454421;
+        Tue, 20 Aug 2019 21:24:14 -0700 (PDT)
+Received: from [192.168.43.210] (mobile-166-137-176-042.mycingular.net. [166.137.176.42])
+        by smtp.gmail.com with ESMTPSA id g2sm39866695pfq.88.2019.08.20.21.24.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 21:24:13 -0700 (PDT)
+Subject: Re: [PATCH v7 1/7] driver core: Add support for linking devices
+ during device addition
+To:     Saravana Kannan <saravanak@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        David Collins <collinsd@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>
+References: <20190724001100.133423-1-saravanak@google.com>
+ <20190724001100.133423-2-saravanak@google.com>
+ <32a8abd2-b6a4-67df-eee9-0f006310e81e@gmail.com>
+ <CAGETcx8Q27+Jnz+rHtt33muMV6U+S3cmKh02Ok_Ds_ZzfBqhrg@mail.gmail.com>
+ <522e8375-5070-f579-6509-3e44fe66768e@gmail.com>
+ <CAGETcx-9Bera+nU-3=ZNpHqdqKxO0TmNuVUsCMQ-yDm1VXn5zA@mail.gmail.com>
+ <a4c139c1-c9d1-3e5a-f47f-cd790b42da1f@gmail.com>
+ <CAGETcx-J7+d3pcArMZvO5zQbUhAhRW+1=FUf7C1fV9-QhkckBw@mail.gmail.com>
+ <6028b35b-a4ca-18de-84c6-4a22dbd987c9@gmail.com>
+ <20190821015647.GA12237@kroah.com>
+ <CAGETcx8eVfJ0mn08E6pTDytjVE+RFcj_gOt_enide4E6G1NAWw@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <113e6881-4c47-58fb-13fc-181e792818e5@gmail.com>
+Date:   Tue, 20 Aug 2019 21:24:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 21 Aug 2019 04:20:53 +0000 (UTC)
+In-Reply-To: <CAGETcx8eVfJ0mn08E6pTDytjVE+RFcj_gOt_enide4E6G1NAWw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019 03:42:25 +0000
-Parav Pandit <parav@mellanox.com> wrote:
+On 8/20/19 7:01 PM, Saravana Kannan wrote:
+> 
+> 
+> On Tue, Aug 20, 2019, 6:56 PM Greg Kroah-Hartman <gregkh@linuxfoundation.org <mailto:gregkh@linuxfoundation.org>> wrote:
+> 
+>     On Tue, Aug 20, 2019 at 06:06:55PM -0700, Frank Rowand wrote:
+>     > On 8/20/19 3:10 PM, Saravana Kannan wrote:
+>     > > On Mon, Aug 19, 2019 at 9:25 PM Frank Rowand <frowand.list@gmail.com <mailto:frowand.list@gmail.com>> wrote:
+>     > >>
+>     > >> On 8/19/19 5:00 PM, Saravana Kannan wrote:
+>     > >>> On Sun, Aug 18, 2019 at 8:38 PM Frank Rowand <frowand.list@gmail.com <mailto:frowand.list@gmail.com>> wrote:
+>     > >>>>
+>     > >>>> On 8/15/19 6:50 PM, Saravana Kannan wrote:
+>     > >>>>> On Wed, Aug 7, 2019 at 7:04 PM Frank Rowand <frowand.list@gmail.com <mailto:frowand.list@gmail.com>> wrote:
+>     > >>>>>>
+>     > >>>>>>> Date: Tue, 23 Jul 2019 17:10:54 -0700
+>     > >>>>>>> Subject: [PATCH v7 1/7] driver core: Add support for linking devices during
+>     > >>>>>>>  device addition
+>     > >>>>>>> From: Saravana Kannan <saravanak@google.com <mailto:saravanak@google.com>>
+> 
+>     This is a "fun" thread :(
+> 
+>     You two should get together in person this week and talk.  I think you
+>     both will be at ELC, can we do this tomorrow or Thursday so we can hash
+>     it out in a way that doesn't end up talking past each other, like I feel
+>     is happening here right now?
+> 
+> 
+> That would be great. Wednesday would be better for me. I might not make it to ELC on Thursday. Let us know Frank.
+> 
+> Thanks,
+> Saravana
 
-> > -----Original Message-----
-> > From: Alex Williamson <alex.williamson@redhat.com>
-> > Sent: Tuesday, August 20, 2019 10:49 PM
-> > To: Parav Pandit <parav@mellanox.com>
-> > Cc: Jiri Pirko <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>;
-> > Kirti Wankhede <kwankhede@nvidia.com>; Cornelia Huck
-> > <cohuck@redhat.com>; kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > cjia <cjia@nvidia.com>; netdev@vger.kernel.org
-> > Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-> > 
-> > On Tue, 20 Aug 2019 08:58:02 +0000
-> > Parav Pandit <parav@mellanox.com> wrote:
-> >   
-> > > + Dave.
-> > >
-> > > Hi Jiri, Dave, Alex, Kirti, Cornelia,
-> > >
-> > > Please provide your feedback on it, how shall we proceed?
-> > >
-> > > Short summary of requirements.
-> > > For a given mdev (mediated device [1]), there is one representor
-> > > netdevice and devlink port in switchdev mode (similar to SR-IOV VF),
-> > > And there is one netdevice for the actual mdev when mdev is probed.
-> > >
-> > > (a) representor netdev and devlink port should be able derive
-> > > phys_port_name(). So that representor netdev name can be built
-> > > deterministically across reboots.
-> > >
-> > > (b) for mdev's netdevice, mdev's device should have an attribute.
-> > > This attribute can be used by udev rules/systemd or something else to
-> > > rename netdev name deterministically.
-> > >
-> > > (c) IFNAMSIZ of 16 bytes is too small to fit whole UUID.
-> > > A simple grep IFNAMSIZ in stack hints hundreds of users of IFNAMSIZ in
-> > > drivers, uapi, netlink, boot config area and more. Changing IFNAMSIZ
-> > > for a mdev bus doesn't really look reasonable option to me.  
-> > 
-> > How many characters do we really have to work with?  Your examples below
-> > prepend various characters, ex. option-1 results in ens2f0_m10 or enm10.  Do
-> > the extra 8 or 3 characters in these count against IFNAMSIZ?
-> >   
-> Maximum 15. Last is null termination.
-> Some udev rules setting by user prefix the PF netdev interface. I took such example below where ens2f0 netdev named is prefixed.
-> Some prefer not to prefix.
-> 
-> > > Hence, I would like to discuss below options.
-> > >
-> > > Option-1: mdev index
-> > > Introduce an optional mdev index/handle as u32 during mdev create
-> > > time. User passes mdev index/handle as input.
-> > >
-> > > phys_port_name=mIndex=m%u
-> > > mdev_index will be available in sysfs as mdev attribute for udev to
-> > > name the mdev's netdev.
-> > >
-> > > example mdev create command:
-> > > UUID=$(uuidgen)
-> > > echo $UUID index=10  
-> > > > /sys/class/net/ens2f0/mdev_supported_types/mlx5_core_mdev/create  
-> > 
-> > Nit, IIRC previous discussions of additional parameters used comma separators,
-> > ex. echo $UUID,index=10 >...
-> >   
-> Yes, ok.
-> 
-> > > > example netdevs:  
-> > > repnetdev=ens2f0_m10	/*ens2f0 is parent PF's netdevice */  
-> > 
-> > Is the parent really relevant in the name?    
-> No. I just picked one udev example who prefixed the parent netdev name.
-> But there are users who do not prefix it.
-> 
-> > Tools like mdevctl are meant to
-> > provide persistence, creating the same mdev devices on the same parent, but
-> > that's simply the easiest policy decision.  We can also imagine that multiple
-> > parent devices might support a specified mdev type and policies factoring in
-> > proximity, load-balancing, power consumption, etc might be weighed such that
-> > we really don't want to promote userspace creating dependencies on the
-> > parent association.
-> >   
-> > > mdev_netdev=enm10
-> > >
-> > > Pros:
-> > > 1. mdevctl and any other existing tools are unaffected.
-> > > 2. netdev stack, ovs and other switching platforms are unaffected.
-> > > 3. achieves unique phys_port_name for representor netdev 4. achieves
-> > > unique mdev eth netdev name for the mdev using udev/systemd extension.
-> > > 5. Aligns well with mdev and netdev subsystem and similar to existing
-> > > sriov bdf's.  
-> > 
-> > A user provided index seems strange to me.  It's not really an index, just a user
-> > specified instance number.  Presumably you have the user providing this
-> > because if it really were an index, then the value depends on the creation order
-> > and persistence is lost.  Now the user needs to both avoid uuid collision as well
-> > as "index" number collision.  The uuid namespace is large enough to mostly
-> > ignore this, but this is not.  This seems like a burden.
-> >   
-> I liked the term 'instance number', which is lot better way to say than index/handle.
-> Yes, user needs to avoid both the collision.
-> UUID collision should not occur in most cases, they way UUID are generated.
-> So practically users needs to pick unique 'instance number', similar to how it picks unique netdev names.
-> 
-> Burden to user comes from the requirement to get uniqueness.
-> 
-> > > Option-2: shorter mdev name
-> > > Extend mdev to have shorter mdev device name in addition to UUID.
-> > > such as 'foo', 'bar'.
-> > > Mdev will continue to have UUID.
-> > > phys_port_name=mdev_name
-> > >
-> > > Pros:
-> > > 1. All same as option-1, except mdevctl needs upgrade for newer usage.
-> > > It is common practice to upgrade iproute2 package along with the
-> > > kernel. Similar practice to be done with mdevctl.
-> > > 2. Newer users of mdevctl who wants to work with non_UUID names, will
-> > > use newer mdevctl/tools. Cons:
-> > > 1. Dual naming scheme of mdev might affect some of the existing tools.
-> > > It's unclear how/if it actually affects.
-> > > mdevctl [2] is very recently developed and can be enhanced for dual
-> > > naming scheme.  
-> > 
-> > I think we've already nak'ed this one, the device namespace becomes
-> > meaningless if the name becomes just a string where a uuid might be an
-> > example string.  mdevs are named by uuid.
-> >   
-> > > Option-3: mdev uuid alias
-> > > Instead of shorter mdev name or mdev index, have alpha-numeric name
-> > > alias. Alias is an optional mdev sysfs attribute such as 'foo', 'bar'.
-> > > example mdev create command:
-> > > UUID=$(uuidgen)
-> > > echo $UUID alias=foo  
-> > > > /sys/class/net/ens2f0/mdev_supported_types/mlx5_core_mdev/create
-> > > > example netdevs:  
-> > > examle netdevs:
-> > > repnetdev = ens2f0_mfoo
-> > > mdev_netdev=enmfoo
-> > >
-> > > Pros:
-> > > 1. All same as option-1.
-> > > 2. Doesn't affect existing mdev naming scheme.
-> > > Cons:
-> > > 1. Index scheme of option-1 is better which can number large number of
-> > > mdevs with fewer characters, simplifying the management tool.  
-> > 
-> > No better than option-1, simply a larger secondary namespace, but still
-> > requires the user to come up with two independent names for the device.
-> >   
-> > > Option-4: extend IFNAMESZ to be 64 bytes Extended IFNAMESZ from 16 to
-> > > 64 bytes phys_port_name=mdev_UUID_string mdev_netdev_name=enmUUID
-> > >
-> > > Pros:
-> > > 1. Doesn't require mdev extension
-> > > Cons:
-> > > 1. netdev stack, driver, uapi, user space, boot config wide changes 2.
-> > > Possible user space extensions who assumed name size being 16
-> > > characters 3. Single device type demands namesize change for all
-> > > netdev types  
-> > 
-> > What about an alias based on the uuid?  For example, we use 160-bit sha1s
-> > daily with git (uuids are only 128-bit), but we generally don't reference git
-> > commits with the full 20 character string.  Generally 12 characters is
-> > recommended to avoid ambiguity.  Could mdev automatically create an
-                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > abbreviated sha1 alias for the device?  If so, how many characters should we
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > use and what do we do on collision?  The colliding device could add enough
-> > alias characters to disambiguate (we likely couldn't re-alias the existing device
-> > to disambiguate, but I'm not sure it matters, userspace has sysfs to associate
-> > aliases).  Ex.
-> > 
-> > UUID=$(uuidgen)
-> > ALIAS=$(echo $UUID | sha1sum | colrm 13)
-> >   
-> I explained in previous reply to Cornelia, we should set UUID and ALIAS at the same time.
-> Setting is via different sysfs attribute is lot code burden with no extra benefit.
+I am really glad that you are here at ELC.  It should be very productive to
+sit down together and figure some things out.
 
-Just an example of the alias, not proposing how it's set.  In fact,
-proposing that the user does not set it, mdev-core provides one
-automatically.
- 
-> > Since there seems to be some prefix overhead, as I ask about above in how
-> > many characters we actually have to work with in IFNAMESZ, maybe we start
-> > with 8 characters (matching your "index" namespace) and expand as necessary
-> > for disambiguation.  If we can eliminate overhead in IFNAMESZ, let's start with
-> > 12.  Thanks,
-> >   
-> If user is going to choose the alias, why does it have to be limited to sha1?
-> Or you just told it as an example?
-> 
-> It can be an alpha-numeric string.
+I'll send a separate reply with my phone number off list.
 
-No, I'm proposing a different solution where mdev-core creates an alias
-based on an abbreviated sha1.  The user does not provide the alias.
- 
-> Instead of mdev imposing number of characters on the alias, it should be best left to the user.
-> Because in future if netdev improves on the naming scheme, mdev will be limiting it, which is not right.
-> So not restricting alias size seems right to me.
-> User configuring mdev for networking devices in a given kernel knows what user is doing.
-> So user can choose alias name size as it finds suitable.
-
-That's not what I'm proposing, please read again.  Thanks,
-
-Alex
+-Frank
