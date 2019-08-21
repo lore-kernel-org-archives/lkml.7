@@ -2,129 +2,136 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1582C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257D3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900A72339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B3B22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 06:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="WvF1ftlo"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JaVC9qTT";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JaVC9qTT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfHUGGL (ORCPT
+        id S1727814AbfHUGHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 02:06:11 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36823 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbfHUGGL (ORCPT
+        Wed, 21 Aug 2019 02:07:35 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59652 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727630AbfHUGHf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 02:06:11 -0400
-Received: by mail-qk1-f193.google.com with SMTP id d23so869157qko.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 23:06:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u4vudB10NnGSSIVbFDIExmT5iLFJ1FBMO1Iq0ZB2aGA=;
-        b=WvF1ftloUdpfjtWcfdm6rO6AOAmWH7IfHxfZ9J1MNR+X4HhR7PYkVvciSnk70rUSMH
-         VLutVcOTXVIf5zCbD199NfcVBcjyD+/2Lk5tibNQVP8qTUP/r7T5SVHm1u4loLn1ysDg
-         u+DmbgmLvHhpA3m0V/XGYeh6/zRNVYQzNwANY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u4vudB10NnGSSIVbFDIExmT5iLFJ1FBMO1Iq0ZB2aGA=;
-        b=s/LNn89s4P+JLNqds/agJTV5Ef9rBlvL/qeyuGPgsIIXKb2iwnQZC/J0uekELkUUKJ
-         QBKX13v+QApSHmxI0FCtt+/IpkOgIGnMRG/u+4VizGo/nVxM+aPTWtq9P0gdiCJXmMBa
-         l3Sn3ziUGRayClChnLo1kfzFjcSrhKZwSG6rF3wJ+TEK07c46w9NR64FIm285ehjLsEp
-         ilZgV0hQjeGqiAFIhALws34eITfwYex3iyngjXWNYuilW9fKV3MyS6dyIwQl0ZRmM11N
-         r/tpLKSql+ELRhPNzd//rUK/NR54v4zKMcZzK9mDRUxegNJa20m5+9TWMqD6rwQgX3CU
-         SR8Q==
-X-Gm-Message-State: APjAAAUq/5gN53JHIhWZPUfFhWZOxmnSVCusNUAIzJNIa2fHsJCOLiMr
-        EUraYFL/Bt8/zREQpB7CD6SpMOlwDe1cMYljZbg=
-X-Google-Smtp-Source: APXvYqzbicHccNHud6DWGqtLSuhmh68QJIsc5UokILNEEGLB0NGMfwGbZX49AhlIcGFb/6gQfq5DXTrOIrW5Ba+oClg=
-X-Received: by 2002:a05:620a:705:: with SMTP id 5mr30258433qkc.330.1566367569477;
- Tue, 20 Aug 2019 23:06:09 -0700 (PDT)
+        Wed, 21 Aug 2019 02:07:35 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9282B60ACF; Wed, 21 Aug 2019 06:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566367654;
+        bh=pXIBqk4P+QePW7ibCGrnyuR0zHexMYLeI86KiWRpM0Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JaVC9qTTK66W6xP3lSDunbODw1J9tS5SFbIFCUKIT/+Va2VCWRGWixZfR4wm0uw+E
+         /ov9w6X91zUGfI1Ojw7KTugXe+VbJ1xwNcOiGmYbZM6+HMYs76oxTzv4GuELiyXGpc
+         /lUJSNGC3t1Qb3V0rHnDdOQdSCBhPMP+XXQJ8Trs=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 97F0E60741;
+        Wed, 21 Aug 2019 06:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1566367654;
+        bh=pXIBqk4P+QePW7ibCGrnyuR0zHexMYLeI86KiWRpM0Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JaVC9qTTK66W6xP3lSDunbODw1J9tS5SFbIFCUKIT/+Va2VCWRGWixZfR4wm0uw+E
+         /ov9w6X91zUGfI1Ojw7KTugXe+VbJ1xwNcOiGmYbZM6+HMYs76oxTzv4GuELiyXGpc
+         /lUJSNGC3t1Qb3V0rHnDdOQdSCBhPMP+XXQJ8Trs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 97F0E60741
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>
+Subject: pull-request: wireless-drivers 2019-08-21
+Date:   Wed, 21 Aug 2019 09:07:30 +0300
+Message-ID: <87zhk359wd.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <1565896134-22749-1-git-send-email-eajames@linux.ibm.com> <a1cbb068b3b264c22792fda5f62f4fe9f1f1733b.camel@kernel.crashing.org>
-In-Reply-To: <a1cbb068b3b264c22792fda5f62f4fe9f1f1733b.camel@kernel.crashing.org>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 21 Aug 2019 06:05:58 +0000
-Message-ID: <CACPK8Xeinjk7Vp4-M-dbPtnYWBnouaKS0yQFn9U9juj0pg7zXw@mail.gmail.com>
-Subject: Re: [PATCH] fsi: scom: Don't abort operations for minor errors
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Eddie James <eajames@linux.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jeremy Kerr <jk@ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019 at 05:26, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
->
-> On Thu, 2019-08-15 at 14:08 -0500, Eddie James wrote:
-> > The scom driver currently fails out of operations if certain system
-> > errors are flagged in the status register; system checkstop, special
-> > attention, or recoverable error. These errors won't impact the ability
-> > of the scom engine to perform operations, so the driver should continue
-> > under these conditions.
-> > Also, don't do a PIB reset for these conditions, since it won't help.
-> >
-> > Signed-off-by: Eddie James <eajames@linux.ibm.com>
->
-> Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Hi Dave,
 
-Thanks Ben.  We also have one from jk which was sent to the openbmc list:
+here's a pull request to net for 5.3, more info below. I will be offline
+the next week, but Johannes should be able to help if there are any
+issues.
 
-Acked-by: Jeremy Kerr <jk@ozlabs.org>
+Kalle
 
-And we can add:
 
-Fixes: 6b293258cded ("fsi: scom: Major overhaul")
+The following changes since commit d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
 
-I'll stick this in the FSI tree.
+  Linux 5.3-rc5 (2019-08-18 14:31:08 -0700)
 
-Cheers,
+are available in the git repository at:
 
-Joel
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git tags/wireless-drivers-for-davem-2019-08-21
 
->
-> > ---
-> >  drivers/fsi/fsi-scom.c | 8 +-------
-> >  1 file changed, 1 insertion(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/fsi/fsi-scom.c b/drivers/fsi/fsi-scom.c
-> > index 343153d..004dc03 100644
-> > --- a/drivers/fsi/fsi-scom.c
-> > +++ b/drivers/fsi/fsi-scom.c
-> > @@ -38,8 +38,7 @@
-> >  #define SCOM_STATUS_PIB_RESP_MASK    0x00007000
-> >  #define SCOM_STATUS_PIB_RESP_SHIFT   12
-> >
-> > -#define SCOM_STATUS_ANY_ERR          (SCOM_STATUS_ERR_SUMMARY | \
-> > -                                      SCOM_STATUS_PROTECTION | \
-> > +#define SCOM_STATUS_ANY_ERR          (SCOM_STATUS_PROTECTION | \
-> >                                        SCOM_STATUS_PARITY |     \
-> >                                        SCOM_STATUS_PIB_ABORT | \
-> >                                        SCOM_STATUS_PIB_RESP_MASK)
-> > @@ -251,11 +250,6 @@ static int handle_fsi2pib_status(struct scom_device *scom, uint32_t status)
-> >       /* Return -EBUSY on PIB abort to force a retry */
-> >       if (status & SCOM_STATUS_PIB_ABORT)
-> >               return -EBUSY;
-> > -     if (status & SCOM_STATUS_ERR_SUMMARY) {
-> > -             fsi_device_write(scom->fsi_dev, SCOM_FSI2PIB_RESET_REG, &dummy,
-> > -                              sizeof(uint32_t));
-> > -             return -EIO;
-> > -     }
-> >       return 0;
-> >  }
-> >
->
+for you to fetch changes up to 5a8c31aa63578cb0ff390a57537f1cb4b312a1ed:
+
+  iwlwifi: pcie: fix recognition of QuZ devices (2019-08-20 17:00:42 +0300)
+
+----------------------------------------------------------------
+wireless-drivers fixes for 5.3
+
+Third set of fixes for 5.3, and most likely the last one. The rt2x00
+regression has been reported multiple times, others are of lower
+priority.
+
+mt76
+
+* fix hang on resume on certain machines
+
+rt2x00
+
+* fix AP mode regression related to encryption
+
+iwlwifi
+
+* avoid unnecessary error messages due to multicast frames when not
+  associated
+
+* fix configuration for ax201 devices
+
+* fix recognition of QuZ devices
+
+----------------------------------------------------------------
+Emmanuel Grumbach (1):
+      iwlwifi: pcie: fix the byte count table format for 22560 devices
+
+Ilan Peer (1):
+      iwlwifi: mvm: Allow multicast data frames only when associated
+
+Luca Coelho (2):
+      iwlwifi: pcie: don't switch FW to qnj when ax201 is detected
+      iwlwifi: pcie: fix recognition of QuZ devices
+
+Stanislaw Gruszka (2):
+      mt76: mt76x0u: do not reset radio on resume
+      rt2x00: clear IV's on start to fix AP mode regression
+
+ drivers/net/wireless/intel/iwlwifi/mvm/mac-ctxt.c | 33 ++++++++++++++++++++---
+ drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c | 10 +++++++
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c     | 17 ++++++++++++
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c   |  1 +
+ drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c | 20 +++++++++-----
+ drivers/net/wireless/mediatek/mt76/mt76x0/usb.c   |  8 +++---
+ drivers/net/wireless/ralink/rt2x00/rt2800lib.c    |  9 +++++++
+ drivers/net/wireless/ralink/rt2x00/rt2x00.h       |  1 +
+ drivers/net/wireless/ralink/rt2x00/rt2x00dev.c    | 13 +++++----
+ 9 files changed, 93 insertions(+), 19 deletions(-)
