@@ -2,99 +2,78 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4F6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D5BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B2E2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:17:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFY4wLbH"
+	by mail.kernel.org (Postfix) with ESMTP id 885992339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731388AbfHUXRr (ORCPT
+        id S1731399AbfHUXTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 19:17:47 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44719 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729841AbfHUXRr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 19:17:47 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c81so2470644pfc.11;
-        Wed, 21 Aug 2019 16:17:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=FU7aS4c8r3DI9MJLtX68651RnQQMYkzHAkQK9w3MzVU=;
-        b=fFY4wLbH+FYNp84w0k7iuK4xp6dwv4nZRC4+jQ+HSAwiOC4QufpOen8rbWwZZzj7/X
-         NaBOQg52Yd6O+k200QyeIFiYVzHO9M8KbdqgFhXqooVcsJp9h0ZFHFoCUXscBBeBocxZ
-         AK/JKWB5+1IAPHwHp+C8GwBUsH97+tjqaFNIWOH838M81iUqqqLLwHExSdR7380APYVn
-         pFhazFS0zPDwN3clTNXTDZB48uOGhXetcDmUXHktigoisOiBiE1VcD+WcYTGsQgOmGM0
-         SSp9acGbbczoUz6425h2uYLsXItDSDBY6Y54fodEhdo0VwplJzgp9hqYVv3F3HPsupba
-         qM1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FU7aS4c8r3DI9MJLtX68651RnQQMYkzHAkQK9w3MzVU=;
-        b=GnDRVuERlfqUQ+TibnemggYiFBURoaGj6TmUl90v9WFwbHEnGBSRs142cTILzdcSQ8
-         4kCuBRcPUzgxQ7xKtTWJXs/Vg+l4Reg3fFNOcAaqLdScH/4nG3C2KV96ODzWVx/joh1f
-         e78xu1nDm1/f9j40Uv+UouB34Ks05aQnzg3JzZYphdshWnYzar31C44gu9IgocNg4DES
-         T0YAZfROCAqFQLoRfLNvviRYStDBK+AN8JMJaVGNb+giTdRg0naEjo4VIICSZCl07Olc
-         kb2IRKriraMMsyj0ewoEKj1C1HGieH6ISn0KsabV4TYOQs2GpAx/+C5Q56aH4yKqvAkh
-         M3Sg==
-X-Gm-Message-State: APjAAAXu6f5AdWjg3mk4B3dvH3ud7DX/zDCVFoY1xUKXsaw3nkBy3EfM
-        /Y5Met8ObkBCNud0JN03Zp2yBDpE
-X-Google-Smtp-Source: APXvYqxTQXZanuOiof2/sVzu3XHROVEXvykvg7UR5Ydi0eoMxQhnQ2zV/+5ZczfLwx+FHIKHaIsjSQ==
-X-Received: by 2002:a17:90a:2525:: with SMTP id j34mr2479573pje.11.1566429465655;
-        Wed, 21 Aug 2019 16:17:45 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id q69sm1250493pjb.0.2019.08.21.16.17.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 16:17:44 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org (open list:CPU FREQUENCY SCALING FRAMEWORK)
-Subject: [PATCH] cpufreq: Print driver name if cpufreq_suspend() fails
-Date:   Wed, 21 Aug 2019 16:16:32 -0700
-Message-Id: <20190821231632.29133-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 21 Aug 2019 19:19:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58950 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727685AbfHUXTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 19:19:10 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4072A10F23E1;
+        Wed, 21 Aug 2019 23:19:10 +0000 (UTC)
+Received: from t460p.redhat.com (ovpn-117-150.phx2.redhat.com [10.3.117.150])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D942660126;
+        Wed, 21 Aug 2019 23:19:06 +0000 (UTC)
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: [PATCH RT v2 0/3] RCU fixes
+Date:   Wed, 21 Aug 2019 18:19:03 -0500
+Message-Id: <20190821231906.4224-1-swood@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 21 Aug 2019 23:19:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of printing the policy, which is incidentally a kernel pointer,
-so with limited interest, print the cpufreq driver name that failed to
-be suspend, which is more useful for debugging.
+This is a respin of the "Address rcutorture issues" patchset,
+minus the actual rcutorture changes.
 
-Fixes: 2f0aea936360 ("cpufreq: suspend governors on system suspend/hibernate")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/cpufreq/cpufreq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I still plan to implement detection of bad nesting scenarios, but it's
+complicated by the need to distinguish (on a non-RT kernel) between
+irq/preempt disabling that would and would not happen on an RT kernel
+(which would also have the benefit of being able to detect nesting
+regular spinlocks inside raw spinlocks on a non-RT debug kernel).  In
+the meantime I could send the rcutorture changes as a PREEMPT_RT only
+patch, though the extent of the changes depends on whether my migrate
+disable patchset is applied since it removes a restriction.
 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index c28ebf2810f1..330d789f81fc 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -1807,8 +1807,8 @@ void cpufreq_suspend(void)
- 		}
- 
- 		if (cpufreq_driver->suspend && cpufreq_driver->suspend(policy))
--			pr_err("%s: Failed to suspend driver: %p\n", __func__,
--				policy);
-+			pr_err("%s: Failed to suspend driver: %s\n", __func__,
-+				cpufreq_driver->name);
- 	}
- 
- suspend:
+Scott Wood (3):
+  rcu: Acquire RCU lock when disabling BHs
+  sched: migrate_enable: Use sleeping_lock to indicate involuntary sleep
+  rcu: Disable use_softirq on PREEMPT_RT
+
+ include/linux/rcupdate.h |  4 ++++
+ include/linux/sched.h    |  4 ++--
+ kernel/rcu/tree.c        |  9 ++++++++-
+ kernel/rcu/tree_plugin.h |  2 +-
+ kernel/rcu/update.c      |  4 ++++
+ kernel/sched/core.c      |  8 ++++++++
+ kernel/softirq.c         | 12 +++++++++---
+ 7 files changed, 36 insertions(+), 7 deletions(-)
+
 -- 
-2.17.1
+1.8.3.1
 
