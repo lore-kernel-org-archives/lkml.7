@@ -2,309 +2,309 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F721C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12443C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF6D22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3ACE206DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:27:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="j2iwPxN9"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="CTovpnin"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfHUQ1L (ORCPT
+        id S1729192AbfHUQ1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:27:11 -0400
-Received: from mail-eopbgr710112.outbound.protection.outlook.com ([40.107.71.112]:33473
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727862AbfHUQ1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:27:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g7FC/VqDMaM4gvgwZ9Uy0fM6Guw3fpvul9M78HfObe/4mqNvTPlb/B5+xeZXvvJ6yH0VtXdoMj2uhGNJMJnTgeNBgcwRthCjiSfc70nvGciP6WGbha2fVY1sbAZVfgl4hNuYwQ+pMXIrBKozYObq0YSWgVqoNxitomHx1f6WauKARMkP/Nts5bcgJg13BjWRbcUkKCmu+fAh0vWyjgkb7e2W/1J77FqrGghyaTDQFjQxCv7PObEDXaBP0R+momPuV15Vu70io7C8+PJhpgRjnF5OrR00JDR6YBMg16FNDGhhONJ9Pwyg1X9vzQbYCn5Vdrit14zWF1kVlMfG79aXvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UsesYBEetvd7pE7T+hDpuD7GjvN0u/ijgWLnPageO98=;
- b=jGbtTuqTgg+SG6KGiAA1580kwtnfa1kgIu5S24d7wYib2NJxZ0+116y9hZRlyLS/yLnq+2P9JWfRSg5bA/+UPemqAzLJG8qgFxhii27bVhHRzeFJwjNFGf5dqZ/vuU0VFCwZCgbnphni+8t/iHiYC3ynToOMuJ/Qly4BWpGT+s712Bh5LOifAnW4QyvlqdQ9jN+6wIFQXm5jPadF5kLX2G6l0hagbTzzY/kA6X5WBgYtFHjONlgHGrT/i+0kYJzVPP+a8LbnUwKvs1GyA26pssYvsH5BXlIhoTbTujczP20RETTSuDJ81XGbTgk1SjlL8NEkJOB7lt+W+K0m9ognog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UsesYBEetvd7pE7T+hDpuD7GjvN0u/ijgWLnPageO98=;
- b=j2iwPxN9cOvDPYBGX0Epr1UdqeFU0/wFhl3EYRNrNZGG64/hGheGhbv3DfhxQ5PeyIDxvGEB1b5ra0CJ4qj4ly0H1NTe3j9CHXlg6Zk047A+st6lr4Phe+gg9WY5SKhwI42JfkT20RYlX5TT8c2uJybjzS3OTXZMc0UAV74P7Fg=
-Received: from CY4PR21MB0741.namprd21.prod.outlook.com (10.173.189.7) by
- CY4PR21MB0133.namprd21.prod.outlook.com (10.173.189.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.7; Wed, 21 Aug 2019 16:27:00 +0000
-Received: from CY4PR21MB0741.namprd21.prod.outlook.com
- ([fe80::2c62:5380:9ed8:496d]) by CY4PR21MB0741.namprd21.prod.outlook.com
- ([fe80::2c62:5380:9ed8:496d%11]) with mapi id 15.20.2220.000; Wed, 21 Aug
- 2019 16:27:00 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Ming Lei <ming.lei@redhat.com>
-CC:     John Garry <john.garry@huawei.com>,
-        Ming Lei <tom.leiming@gmail.com>,
-        "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
-        chenxiang <chenxiang66@hisilicon.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: RE: [PATCH 0/3] fix interrupt swamp in NVMe
-Thread-Topic: [PATCH 0/3] fix interrupt swamp in NVMe
-Thread-Index: AQHVVx6PT//gmViwZUu9hv4+3aJrE6cDs4qAgAAJYgCAAXaqoIAAKCCAgABv6KA=
-Date:   Wed, 21 Aug 2019 16:27:00 +0000
-Message-ID: <CY4PR21MB07410E84C8C7C1D64BD7BF41CEAA0@CY4PR21MB0741.namprd21.prod.outlook.com>
-References: <1566281669-48212-1-git-send-email-longli@linuxonhyperv.com>
- <CACVXFVPCiTU0mtXKS0fyMccPXN6hAdZNHv6y-f8-tz=FE=BV=g@mail.gmail.com>
- <fd7d6101-37f4-2d34-f2f7-cfeade610278@huawei.com>
- <CY4PR21MB0741D1CD295AD572548E61D1CEAA0@CY4PR21MB0741.namprd21.prod.outlook.com>
- <20190821094406.GA28391@ming.t460p>
-In-Reply-To: <20190821094406.GA28391@ming.t460p>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=longli@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:7:ede6:db5c:c6fe:798]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cca33d39-01b3-4ddf-281e-08d7265464c8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR21MB0133;
-x-ms-traffictypediagnostic: CY4PR21MB0133:
-x-microsoft-antispam-prvs: <CY4PR21MB013383221E2758158C269835CEAA0@CY4PR21MB0133.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(136003)(39860400002)(376002)(366004)(189003)(199004)(81166006)(446003)(11346002)(476003)(8676002)(8936002)(7416002)(76116006)(66446008)(186003)(74316002)(5660300002)(99286004)(66476007)(7696005)(6916009)(66946007)(66556008)(256004)(14444005)(64756008)(81156014)(25786009)(10290500003)(14454004)(478600001)(305945005)(22452003)(54906003)(46003)(7736002)(229853002)(316002)(486006)(71190400001)(71200400001)(6116002)(2906002)(53546011)(6506007)(6246003)(55016002)(33656002)(6306002)(4326008)(52536014)(102836004)(9686003)(53936002)(76176011)(10090500001)(86362001)(8990500004)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0133;H:CY4PR21MB0741.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: L126nhJOvtiXqpIjBy7CvYFN2JiAm7xWHzBtU0cFLB2jJPH1VcUS874vSzH4Llh1LfZU7fYjHD+Xio0i3MaQBLtYKIx6HLOu5MAU/5tdup2ZgdblroXXe2pYubn34c0xn89CtupAPhMJcxv+330WPj/Ejhg6ht2kHUUOzu+0rL5eULoe/W1O+8q5K6EqWaR4QerP5tmi/rCwmKKE0D2Ab7fEQtV4nWLmNT9QeSBJ2U9x5INsG9ZTk3UU2blGZmCzrcDDXCXc08PI7z6eEbwAPtzY6fJbiL5vaEXgfVPpkDdH3NJpbCEjh2lkkleP4JxtMLY9pGD39anedAKKlzyVjk8qsOEbMcjc1SDkUgf8RvlDhNvTARueqODx9PFufSZPhbiMb4GKVEgeiW0T0C8vw2SdJBm9VPWjBrLL/wqDkfM=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 21 Aug 2019 12:27:55 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:38045 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728888AbfHUQ1z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:27:55 -0400
+Received: by mail-yw1-f65.google.com with SMTP id f187so1162199ywa.5
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 09:27:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9g+q33wId0eH0+EplXmj0yiWsc5rhqIe5dreCekLVfc=;
+        b=CTovpnin+xG4fahNvP6kUxijFjXa9J/mob6Z4me/XIcPwpO3z6It9v2V7aJJST9HUp
+         weeatsLIUk1rvVGHd4ZZ/AqAVmkZ//lOAmCL+Txyr4LUSyg4u2qyNKT15fLVSygpKs+z
+         PKtABCilb2Xds2Ssfekri2YNTZNqs0qAMiJoGgm95YNJA+ZzthCJUtCEr/5C1997JntY
+         YCiw9XS+ifulO9tAxN/ks/C3yjsoBudJhXMcxUi3fMPCGmx+rvMskxnR0tU2BS7aqKeH
+         nHqqKrRNnq7NLvNMGOWMzJdANhrdykt0hW/Gc/nrIppEPajtJoaPvdhbcIaYl/YUpp7u
+         nXpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9g+q33wId0eH0+EplXmj0yiWsc5rhqIe5dreCekLVfc=;
+        b=TtN3s0ZvDXRcQPoYpu/TuIEX152Sj6llGHzGozZ8VHkqR+g9fTQqsJ8K1PknMMdBzI
+         Mmc20SGVNL/orcJNFvx9hlmFb0el/TZ3HhBTN99SA9woFIeghW2+vS8+/KU8VrXYFN1c
+         luI50IKhfxW2AlMoUH0/qnTpCk9D2IEKrGkp/1Kb6WAIlXM7Vk5cvpJLskjVzku9p3z3
+         wlzjFQyvrPf1WjLEj81//IGulVRpqcwWL0on0pGCTXpw/8vCXmsmGkgGTIymyl+2+D9J
+         cCbl65XJxWfzwJfM9Q2aLWMeXqlBML9z+igShxocEKuzlT+OpMkQoKMk0AE9EefYB61D
+         8EKA==
+X-Gm-Message-State: APjAAAXsdB1liM6QM6hvX6I6g8apQKiucb4PXM/QxhWxHh4ZO9pkS5Iw
+        MYsgzpayClzDQXHwLcDV5Tr8eQ==
+X-Google-Smtp-Source: APXvYqyxBZeZ6KddrgZgUZGVlDckj8facP8PvyZrVD+6D/ivNPxEfqEfKzvB+PBKvDfxndE8by780A==
+X-Received: by 2002:a81:eb09:: with SMTP id n9mr25845895ywm.115.1566404873620;
+        Wed, 21 Aug 2019 09:27:53 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id x25sm4837162ywj.22.2019.08.21.09.27.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 09:27:52 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 12:27:52 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, Sean Paul <seanpaul@chromium.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jayant Shekhar <jshekhar@codeaurora.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Fritz Koenig <frkoenig@google.com>,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/msm/dpu: fix "frame done" timeouts
+Message-ID: <20190821162752.GG104440@art_vandelay>
+References: <20190820231301.28445-1-robdclark@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cca33d39-01b3-4ddf-281e-08d7265464c8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 16:27:00.5052
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2EFdWk8J3VtjOshH2TT5p8HppypgJfgnvvUTc7xP7P9zl9D8Ozvrot0ReQf4MTdz5SMV9oFEOoD6m/0UroZtSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0133
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820231301.28445-1-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>Subject: Re: [PATCH 0/3] fix interrupt swamp in NVMe
->>>
->>>On Wed, Aug 21, 2019 at 07:47:44AM +0000, Long Li wrote:
->>>> >>>Subject: Re: [PATCH 0/3] fix interrupt swamp in NVMe
->>>> >>>
->>>> >>>On 20/08/2019 09:25, Ming Lei wrote:
->>>> >>>> On Tue, Aug 20, 2019 at 2:14 PM <longli@linuxonhyperv.com> wrote:
->>>> >>>>>
->>>> >>>>> From: Long Li <longli@microsoft.com>
->>>> >>>>>
->>>> >>>>> This patch set tries to fix interrupt swamp in NVMe devices.
->>>> >>>>>
->>>> >>>>> On large systems with many CPUs, a number of CPUs may share
->>>one
->>>> >>>NVMe
->>>> >>>>> hardware queue. It may have this situation where several CPUs
->>>> >>>>> are issuing I/Os, and all the I/Os are returned on the CPU where
->>>> >>>>> the
->>>> >>>hardware queue is bound to.
->>>> >>>>> This may result in that CPU swamped by interrupts and stay in
->>>> >>>>> interrupt mode for extended time while other CPUs continue to
->>>> >>>>> issue I/O. This can trigger Watchdog and RCU timeout, and make
->>>> >>>>> the system
->>>> >>>unresponsive.
->>>> >>>>>
->>>> >>>>> This patch set addresses this by enforcing scheduling and
->>>> >>>>> throttling I/O when CPU is starved in this situation.
->>>> >>>>>
->>>> >>>>> Long Li (3):
->>>> >>>>>   sched: define a function to report the number of context switc=
-hes
->>>on a
->>>> >>>>>     CPU
->>>> >>>>>   sched: export idle_cpu()
->>>> >>>>>   nvme: complete request in work queue on CPU with flooded
->>>> >>>>> interrupts
->>>> >>>>>
->>>> >>>>>  drivers/nvme/host/core.c | 57
->>>> >>>>> +++++++++++++++++++++++++++++++++++++++-
->>>> >>>>>  drivers/nvme/host/nvme.h |  1 +
->>>> >>>>>  include/linux/sched.h    |  2 ++
->>>> >>>>>  kernel/sched/core.c      |  7 +++++
->>>> >>>>>  4 files changed, 66 insertions(+), 1 deletion(-)
->>>> >>>>
->>>> >>>> Another simpler solution may be to complete request in threaded
->>>> >>>> interrupt handler for this case. Meantime allow scheduler to run
->>>> >>>> the interrupt thread handler on CPUs specified by the irq
->>>> >>>> affinity mask, which was discussed by the following link:
->>>> >>>>
->>>> >>>>
->>>> >>>https://lor
->>>> >>>e
->>>> >>>> .kernel.org%2Flkml%2Fe0e9478e-62a5-ca24-3b12-
->>>> >>>58f7d056383e%40huawei.com
->>>> >>>> %2F&amp;data=3D02%7C01%7Clongli%40microsoft.com%7Cc7f46d3e2
->>>73f45
->>>> >>>176d1c08
->>>> >>>>
->>>> >>>d7254cc69e%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C63
->>>70188
->>>> >>>8401588
->>>> >>>>
->>>> >>>9866&amp;sdata=3Dh5k6HoGoyDxuhmDfuKLZUwgmw17PU%2BT%2FCb
->>>awfxV
->>>> >>>Er3U%3D&amp;
->>>> >>>> reserved=3D0
->>>> >>>>
->>>> >>>> Could you try the above solution and see if the lockup can be
->>>avoided?
->>>> >>>> John Garry
->>>> >>>> should have workable patch.
->>>> >>>
->>>> >>>Yeah, so we experimented with changing the interrupt handling in
->>>> >>>the SCSI driver I maintain to use a threaded handler IRQ handler
->>>> >>>plus patch below, and saw a significant throughput boost:
->>>> >>>
->>>> >>>--->8
->>>> >>>
->>>> >>>Subject: [PATCH] genirq: Add support to allow thread to use hard
->>>> >>>irq affinity
->>>> >>>
->>>> >>>Currently the cpu allowed mask for the threaded part of a threaded
->>>> >>>irq handler will be set to the effective affinity of the hard irq.
->>>> >>>
->>>> >>>Typically the effective affinity of the hard irq will be for a
->>>> >>>single cpu. As such, the threaded handler would always run on the
->>>same cpu as the hard irq.
->>>> >>>
->>>> >>>We have seen scenarios in high data-rate throughput testing that
->>>> >>>the cpu handling the interrupt can be totally saturated handling
->>>> >>>both the hard interrupt and threaded handler parts, limiting
->>>throughput.
->>>> >>>
->>>> >>>Add IRQF_IRQ_AFFINITY flag to allow the driver requesting the
->>>> >>>threaded interrupt to decide on the policy of which cpu the threade=
-d
->>>handler may run.
->>>> >>>
->>>> >>>Signed-off-by: John Garry <john.garry@huawei.com>
->>>>
->>>> Thanks for pointing me to this patch. This fixed the interrupt swamp a=
-nd
->>>make the system stable.
->>>>
->>>> However I'm seeing reduced performance when using threaded
->>>interrupts.
->>>>
->>>> Here are the test results on a system with 80 CPUs and 10 NVMe disks
->>>> (32 hardware queues for each disk) Benchmark tool is FIO, I/O pattern:
->>>> 4k random reads on all NVMe disks, with queue depth =3D 64, num of job=
-s
->>>> =3D 80, direct=3D1
->>>>
->>>> With threaded interrupts: 1320k IOPS
->>>> With just interrupts: 3720k IOPS
->>>> With just interrupts and my patch: 3700k IOPS
->>>
->>>This gap looks too big wrt. threaded interrupts vs. interrupts.
->>>
->>>>
->>>> At the peak IOPS, the overall CPU usage is at around 98-99%. I think t=
-he
->>>cost of doing wake up and context switch for NVMe threaded IRQ handler
->>>takes some CPU away.
->>>>
->>>
->>>In theory, it shouldn't be so because most of times the thread should be
->>>running on CPUs of this hctx, and the wakeup cost shouldn't be so big.
->>>Maybe there is performance problem somewhere wrt. threaded interrupt.
->>>
->>>Could you share us your test script and environment? I will see if I can
->>>reproduce it in my environment.
+On Tue, Aug 20, 2019 at 04:12:28PM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> Previously, dpu_crtc_frame_event_work() would try to aquire all the
+> modeset locks in order to check whether it can release bandwidth.  (If
+> we only have cmd-mode display, bandwidth can be released at frame-done
+> time.)
+> 
+> The problem with this is that it is also responsible for signalling
+> frame_done_comp, which dpu_crtc_commit_kickoff() waits on if there is
+> already a frame pending.  This is called in the msm_atomic_commit_tail()
+> path.. which means that for non-nonblock commits, at least some of the
+> modeset locks are already held.
+> 
+> Re-work this scheme to use a reference count to track our need to have
+> clocks enabled.  It is incremented for each atomic commit, and
+> decremented in the corresponding frame-done.  Additionally, any crtc
+> used in video mode hold an extra reference while they are enabled.  The
+> net effect is that we can determine in frame-done whether it is safe to
+> drop bandwidth without needing to aquire any modeset locks.
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-Ming, do you have access to L80s_v2 in Azure? This test needs to run on tha=
-t VM size.
+All looks good to me, nice cleanup!
 
-Here is the command to benchmark it:
+Reviewed-by: Sean Paul <sean@chromium.org>
 
-fio --bs=3D4k --ioengine=3Dlibaio --iodepth=3D128 --filename=3D/dev/nvme0n1=
-:/dev/nvme1n1:/dev/nvme2n1:/dev/nvme3n1:/dev/nvme4n1:/dev/nvme5n1:/dev/nvme=
-6n1:/dev/nvme7n1:/dev/nvme8n1:/dev/nvme9n1 --direct=3D1 --runtime=3D120 --n=
-umjobs=3D80 --rw=3Drandread --name=3Dtest --group_reporting --gtod_reduce=
-=3D1
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 16 +------
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c      | 45 +++++++++++--------
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       |  2 +
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  8 ++++
+>  4 files changed, 38 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> index 5cda96875e03..09a49b59bb5b 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> @@ -214,7 +214,6 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
+>   */
+>  void dpu_core_perf_crtc_release_bw(struct drm_crtc *crtc)
+>  {
+> -	struct drm_crtc *tmp_crtc;
+>  	struct dpu_crtc *dpu_crtc;
+>  	struct dpu_crtc_state *dpu_cstate;
+>  	struct dpu_kms *kms;
+> @@ -233,22 +232,9 @@ void dpu_core_perf_crtc_release_bw(struct drm_crtc *crtc)
+>  	dpu_crtc = to_dpu_crtc(crtc);
+>  	dpu_cstate = to_dpu_crtc_state(crtc->state);
+>  
+> -	/* only do this for command mode rt client */
+> -	if (dpu_crtc_get_intf_mode(crtc) != INTF_MODE_CMD)
+> +	if (atomic_dec_return(&kms->bandwidth_ref) > 0)
+>  		return;
+>  
+> -	/*
+> -	 * If video interface present, cmd panel bandwidth cannot be
+> -	 * released.
+> -	 */
+> -	if (dpu_crtc_get_intf_mode(crtc) == INTF_MODE_CMD)
+> -		drm_for_each_crtc(tmp_crtc, crtc->dev) {
+> -			if (tmp_crtc->enabled &&
+> -				dpu_crtc_get_intf_mode(tmp_crtc) ==
+> -						INTF_MODE_VIDEO)
+> -				return;
+> -		}
+> -
+>  	/* Release the bandwidth */
+>  	if (kms->perf.enable_bw_release) {
+>  		trace_dpu_cmd_release_bw(crtc->base.id);
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> index b3417d56032d..4e54550c4a80 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> @@ -292,19 +292,6 @@ void dpu_crtc_vblank_callback(struct drm_crtc *crtc)
+>  	trace_dpu_crtc_vblank_cb(DRMID(crtc));
+>  }
+>  
+> -static void dpu_crtc_release_bw_unlocked(struct drm_crtc *crtc)
+> -{
+> -	int ret = 0;
+> -	struct drm_modeset_acquire_ctx ctx;
+> -
+> -	DRM_MODESET_LOCK_ALL_BEGIN(crtc->dev, ctx, 0, ret);
+> -	dpu_core_perf_crtc_release_bw(crtc);
+> -	DRM_MODESET_LOCK_ALL_END(ctx, ret);
+> -	if (ret)
+> -		DRM_ERROR("Failed to acquire modeset locks to release bw, %d\n",
+> -			  ret);
+> -}
+> -
+>  static void dpu_crtc_frame_event_work(struct kthread_work *work)
+>  {
+>  	struct dpu_crtc_frame_event *fevent = container_of(work,
+> @@ -334,7 +321,7 @@ static void dpu_crtc_frame_event_work(struct kthread_work *work)
+>  			/* release bandwidth and other resources */
+>  			trace_dpu_crtc_frame_event_done(DRMID(crtc),
+>  							fevent->event);
+> -			dpu_crtc_release_bw_unlocked(crtc);
+> +			dpu_core_perf_crtc_release_bw(crtc);
+>  		} else {
+>  			trace_dpu_crtc_frame_event_more_pending(DRMID(crtc),
+>  								fevent->event);
+> @@ -650,7 +637,7 @@ void dpu_crtc_commit_kickoff(struct drm_crtc *crtc, bool async)
+>  		dpu_encoder_prepare_for_kickoff(encoder, async);
+>  
+>  	if (!async) {
+> -		/* wait for frame_event_done completion */
+> +		/* wait for previous frame_event_done completion */
+>  		DPU_ATRACE_BEGIN("wait_for_frame_done_event");
+>  		ret = _dpu_crtc_wait_for_frame_done(crtc);
+>  		DPU_ATRACE_END("wait_for_frame_done_event");
+> @@ -729,6 +716,7 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
+>  	struct drm_encoder *encoder;
+>  	struct msm_drm_private *priv;
+>  	unsigned long flags;
+> +	bool release_bandwidth = false;
+>  
+>  	if (!crtc || !crtc->dev || !crtc->dev->dev_private || !crtc->state) {
+>  		DPU_ERROR("invalid crtc\n");
+> @@ -745,8 +733,15 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
+>  	drm_crtc_vblank_off(crtc);
+>  
+>  	drm_for_each_encoder_mask(encoder, crtc->dev,
+> -				  old_crtc_state->encoder_mask)
+> +				  old_crtc_state->encoder_mask) {
+> +		/* in video mode, we hold an extra bandwidth reference
+> +		 * as we cannot drop bandwidth at frame-done if any
+> +		 * crtc is being used in video mode.
+> +		 */
+> +		if (dpu_encoder_get_intf_mode(encoder) == INTF_MODE_VIDEO)
+> +			release_bandwidth = true;
+>  		dpu_encoder_assign_crtc(encoder, NULL);
+> +	}
+>  
+>  	/* wait for frame_event_done completion */
+>  	if (_dpu_crtc_wait_for_frame_done(crtc))
+> @@ -760,7 +755,8 @@ static void dpu_crtc_disable(struct drm_crtc *crtc,
+>  	if (atomic_read(&dpu_crtc->frame_pending)) {
+>  		trace_dpu_crtc_disable_frame_pending(DRMID(crtc),
+>  				     atomic_read(&dpu_crtc->frame_pending));
+> -		dpu_core_perf_crtc_release_bw(crtc);
+> +		if (release_bandwidth)
+> +			dpu_core_perf_crtc_release_bw(crtc);
+>  		atomic_set(&dpu_crtc->frame_pending, 0);
+>  	}
+>  
+> @@ -792,6 +788,7 @@ static void dpu_crtc_enable(struct drm_crtc *crtc,
+>  	struct dpu_crtc *dpu_crtc;
+>  	struct drm_encoder *encoder;
+>  	struct msm_drm_private *priv;
+> +	bool request_bandwidth;
+>  
+>  	if (!crtc || !crtc->dev || !crtc->dev->dev_private) {
+>  		DPU_ERROR("invalid crtc\n");
+> @@ -804,9 +801,19 @@ static void dpu_crtc_enable(struct drm_crtc *crtc,
+>  	DRM_DEBUG_KMS("crtc%d\n", crtc->base.id);
+>  	dpu_crtc = to_dpu_crtc(crtc);
+>  
+> -	drm_for_each_encoder_mask(encoder, crtc->dev, crtc->state->encoder_mask)
+> +	drm_for_each_encoder_mask(encoder, crtc->dev, crtc->state->encoder_mask) {
+> +		/* in video mode, we hold an extra bandwidth reference
+> +		 * as we cannot drop bandwidth at frame-done if any
+> +		 * crtc is being used in video mode.
+> +		 */
+> +		if (dpu_encoder_get_intf_mode(encoder) == INTF_MODE_VIDEO)
+> +			request_bandwidth = true;
+>  		dpu_encoder_register_frame_event_callback(encoder,
+>  				dpu_crtc_frame_event_cb, (void *)crtc);
+> +	}
+> +
+> +	if (request_bandwidth)
+> +		atomic_inc(&_dpu_crtc_get_kms(crtc)->bandwidth_ref);
+>  
+>  	trace_dpu_crtc_enable(DRMID(crtc), true, dpu_crtc);
+>  	dpu_crtc->enabled = true;
+> @@ -981,6 +988,8 @@ static int dpu_crtc_atomic_check(struct drm_crtc *crtc,
+>  		}
+>  	}
+>  
+> +	atomic_inc(&_dpu_crtc_get_kms(crtc)->bandwidth_ref);
+> +
+>  	rc = dpu_core_perf_crtc_check(crtc, state);
+>  	if (rc) {
+>  		DPU_ERROR("crtc%d failed performance check %d\n",
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> index 99d0bd569c38..681955eb286f 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> @@ -800,6 +800,8 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
+>  		return rc;
+>  	}
+>  
+> +	atomic_set(&dpu_kms->bandwidth_ref, 0);
+> +
+>  	dpu_kms->mmio = msm_ioremap(dpu_kms->pdev, "mdp", "mdp");
+>  	if (IS_ERR(dpu_kms->mmio)) {
+>  		rc = PTR_ERR(dpu_kms->mmio);
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+> index 9e40f559c51f..fdef016f5ca3 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
+> @@ -120,6 +120,14 @@ struct dpu_kms {
+>  	struct platform_device *pdev;
+>  	bool rpm_enabled;
+>  	struct dss_module_power mp;
+> +
+> +	/* reference count bandwidth requests, so we know when we can
+> +	 * release bandwidth.  Each atomic update increments, and frame-
+> +	 * done event decrements.  Additionally, for video mode, the
+> +	 * reference is incremented when crtc is enabled, and decremented
+> +	 * when disabled.
+> +	 */
+> +	atomic_t bandwidth_ref;
+>  };
+>  
+>  struct vsync_info {
+> -- 
+> 2.21.0
+> 
 
-Thanks
-
-Long
-
->>>
->>>> In this test, I made the following change to make use of
->>>IRQF_IRQ_AFFINITY for NVMe:
->>>>
->>>> diff --git a/drivers/pci/irq.c b/drivers/pci/irq.c index
->>>> a1de501a2729..3fb30d16464e 100644
->>>> --- a/drivers/pci/irq.c
->>>> +++ b/drivers/pci/irq.c
->>>> @@ -86,7 +86,7 @@ int pci_request_irq(struct pci_dev *dev, unsigned in=
-t
->>>nr, irq_handler_t handler,
->>>>         va_list ap;
->>>>         int ret;
->>>>         char *devname;
->>>> -       unsigned long irqflags =3D IRQF_SHARED;
->>>> +       unsigned long irqflags =3D IRQF_SHARED | IRQF_IRQ_AFFINITY;
->>>>
->>>>         if (!handler)
->>>>                 irqflags |=3D IRQF_ONESHOT;
->>>>
->>>
->>>I don't see why IRQF_IRQ_AFFINITY is needed.
->>>
->>>John, could you explain it a bit why you need changes on
->>>IRQF_IRQ_AFFINITY?
->>>
->>>The following patch should be enough:
->>>
->>>diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c index
->>>e8f7f179bf77..1e7cffc1c20c 100644
->>>--- a/kernel/irq/manage.c
->>>+++ b/kernel/irq/manage.c
->>>@@ -968,7 +968,11 @@ irq_thread_check_affinity(struct irq_desc *desc,
->>>struct irqaction *action)
->>> 	if (cpumask_available(desc->irq_common_data.affinity)) {
->>> 		const struct cpumask *m;
->>>
->>>-		m =3D irq_data_get_effective_affinity_mask(&desc-
->>>>irq_data);
->>>+		if (irqd_affinity_is_managed(&desc->irq_data))
->>>+			m =3D desc->irq_common_data.affinity;
->>>+		else
->>>+			m =3D irq_data_get_effective_affinity_mask(
->>>+					&desc->irq_data);
->>> 		cpumask_copy(mask, m);
->>> 	} else {
->>> 		valid =3D false;
->>>
->>>
->>>Thanks,
->>>Ming
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
