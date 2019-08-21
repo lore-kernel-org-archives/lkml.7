@@ -2,108 +2,89 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C3AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A69C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C166216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:33:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566398002;
-	bh=QO+p1/85LdqTXyI9zUBJ/aIY/wCtPQIJief+RWd2UrY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QozHcB6qYjynBq3IP+R71MOST26L8ZR7L1dpvED7JtGh8mrZaNMlsfyr9vl4jrVGb
-	 FdoRASzUSZ7Nn3sas+gQfwKkAk9mX/SwlJqg+ufAF0NR/OqwmOigeKgbBkU7DZHVUK
-	 xZotAstJggSN4gSDnTxas1K3njXNcIWAE1opxeAg=
+	by mail.kernel.org (Postfix) with ESMTP id 4F3F6216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:35:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="n9LjiHkZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbfHUOdV (ORCPT
+        id S1729393AbfHUOf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:33:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35388 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbfHUOdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:33:21 -0400
-Received: from localhost (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B31EB21655;
-        Wed, 21 Aug 2019 14:33:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566398000;
-        bh=QO+p1/85LdqTXyI9zUBJ/aIY/wCtPQIJief+RWd2UrY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PHZnmkn9zAYlpVwUC319SBmftvtX2tizMVRp2zk2k3EriOA8NLI+X3BAJWW30wuza
-         sSunp5GHpstIb3ekTNyky5M7w8XNsyYD4r0idsCwXcCOqD1EtGNerIFaGgZdsNdnjP
-         w/ON98/gqARUdfEixQZj25NBbsXVSOG8Tm4VOaUw=
-Date:   Wed, 21 Aug 2019 16:33:17 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: watchdog: Add YAML schemas for the
- generic watchdog bindings
-Message-ID: <20190821143317.dkahpwjvgrtqtx4d@flea>
-References: <20190819182039.24892-1-mripard@kernel.org>
- <ada53037-898f-7b8c-8a96-b80414563fa7@roeck-us.net>
+        Wed, 21 Aug 2019 10:35:56 -0400
+Received: from sender4-of-o55.zoho.com ([136.143.188.55]:21580 "EHLO
+        sender4-of-o55.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728763AbfHUOfz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 10:35:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; t=1566398145; cv=none; 
+        d=zoho.com; s=zohoarc; 
+        b=VNRKugRJEyO5IqDtKrg6+UjxGs+9vxF6KJPUpO6H56xmqO+ibGwIfd0Xi9LXMHdrtG5hx2STjUqcdyO6/H5FXmScr2i4x1JfeQw4HD+hOIvEMrMIK83GRkEuYlVnTfOLSfIUVcAoyQ+ewAy65M+4WZ5P6WwxRpMT9P7H/n3fD9o=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
+        t=1566398145; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To:ARC-Authentication-Results; 
+        bh=f22V/qNVlYw5I4WKBZDrjRWbTvWAuj4evwp6Q6Y8Qa8=; 
+        b=FUHcyRQhIEIOsLbFnGW6WKa6PcIX1BGuBwMZ4i30erG7QPdYrl7ytjc7J9AN2nV5XvFaGDIgSgavlwBFdTe7JoGbdwNiKuBxdcz3QnnTuhMbymIgRsSwgQFWW8+YCS5YaS9TuPMweXgb5Vstp3seowh5PKWY/vi84nGM1CQzz2E=
+ARC-Authentication-Results: i=1; mx.zoho.com;
+        dkim=pass  header.i=brennan.io;
+        spf=pass  smtp.mailfrom=stephen@brennan.io;
+        dmarc=pass header.from=<stephen@brennan.io> header.from=<stephen@brennan.io>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1566398145;
+        s=selector01; d=brennan.io; i=stephen@brennan.io;
+        h=From:To:Cc:Message-ID:Subject:Date:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        l=1232; bh=f22V/qNVlYw5I4WKBZDrjRWbTvWAuj4evwp6Q6Y8Qa8=;
+        b=n9LjiHkZc8f04AI3V+jiVd5f8coz/EHRnvw0jwlOvEhtg8Aou2/szd4VkKigg//m
+        FHKhuxIfrS8kjO6DHIhLgZK5ccWM8A1+1Vg0eGRn5qyg+9ZPoR51KOvzbqqZ27vfYCj
+        zjR/5lJziYHdxbVMS5RNE5Ja3hPzbl0WE/8blpmo=
+Received: from localhost (67.218.105.90 [67.218.105.90]) by mx.zohomail.com
+        with SMTPS id 1566398144866732.0878686594964; Wed, 21 Aug 2019 07:35:44 -0700 (PDT)
+From:   Stephen Brennan <stephen@brennan.io>
+To:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc:     Stephen Brennan <stephen@brennan.io>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, "Tobin C . Harding" <me@tobin.cc>
+Message-ID: <20190821143540.4501-1-stephen@brennan.io>
+Subject: [PATCH v2 0/3] staging: rtl8192u: coding style fixes in ieee80211
+Date:   Wed, 21 Aug 2019 07:35:37 -0700
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3o66cqpsjmmmmqh3"
-Content-Disposition: inline
-In-Reply-To: <ada53037-898f-7b8c-8a96-b80414563fa7@roeck-us.net>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Addressed some spacing, brace placement, and macro alignment in this
+driver. I do not have the relevant hardware, but I verified that the
+drivers/staging/rtl8192u module built between each patch. This time I've
+included proper patch descriptions, my apologies for the previous series.
 
---3o66cqpsjmmmmqh3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Stephen Brennan (3):
+  staging: rtl8192u: fix OPEN_BRACE errors in ieee80211
+  staging: rtl8192u: fix macro alignment in ieee80211
+  staging: rtl8192u: fix spacing in ieee80211
 
-Hi Guenter,
+ drivers/staging/rtl8192u/ieee80211/dot11d.c   |  10 +-
+ .../staging/rtl8192u/ieee80211/ieee80211.h    |  38 +++---
+ .../rtl8192u/ieee80211/ieee80211_crypt.c      |   2 +-
+ .../rtl8192u/ieee80211/ieee80211_crypt_tkip.c |  22 ++--
+ .../rtl8192u/ieee80211/ieee80211_crypt_wep.c  |   4 +-
+ .../staging/rtl8192u/ieee80211/ieee80211_rx.c | 118 ++++++-----------
+ .../rtl8192u/ieee80211/ieee80211_softmac_wx.c |  14 +-
+ .../staging/rtl8192u/ieee80211/ieee80211_tx.c | 121 ++++++++----------
+ .../staging/rtl8192u/ieee80211/ieee80211_wx.c |  35 +++--
+ .../rtl8192u/ieee80211/rtl819x_BAProc.c       |  12 +-
+ .../staging/rtl8192u/ieee80211/rtl819x_HT.h   |  17 ++-
+ .../rtl8192u/ieee80211/rtl819x_TSProc.c       |  14 +-
+ 12 files changed, 174 insertions(+), 233 deletions(-)
 
-On Tue, Aug 20, 2019 at 08:54:53AM -0700, Guenter Roeck wrote:
-> On 8/19/19 11:20 AM, Maxime Ripard wrote:
-> > From: Maxime Ripard <maxime.ripard@bootlin.com>
-> >
-> > The watchdogs have a bunch of generic properties that are needed in a
-> > device tree. Add a YAML schemas for those.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> What is the target subsystem for this series ? You didn't copy the watchdog
-> mailing list, so I assume it won't be the watchdog subsystem.
+--=20
+2.22.0
 
-Sorry for that :/
 
-It can either go through the DT or watchdog tree. I'll resend it and
-let you and Rob figure it out :)
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---3o66cqpsjmmmmqh3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXV1WLQAKCRDj7w1vZxhR
-xV7MAP9eNJQeheprjz1a/+LmmPM8s1A06SHcgrdDWaIdjrnr9AEA3opx310odS8e
-IIcinBLkTGCtVyqZQn99Bq1LeOvEPgA=
-=W2rw
------END PGP SIGNATURE-----
-
---3o66cqpsjmmmmqh3--
