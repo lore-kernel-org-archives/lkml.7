@@ -3,90 +3,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DD6C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B7CC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E8D214DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20281214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbfHUO0K (ORCPT
+        id S1729357AbfHUO2w convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:26:10 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:60788 "EHLO
-        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfHUO0K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:26:10 -0400
-Received: from imladris.surriel.com ([96.67.55.152])
-        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1i0RYv-0004aN-BG; Wed, 21 Aug 2019 10:26:09 -0400
-Message-ID: <7d3d50666ced8fb27d0964fa51e78fcbd0aec82e.camel@surriel.com>
-Subject: Re: Pointer magic in mm_init_cpumask()
-From:   Rik van Riel <riel@surriel.com>
-To:     Siarhei Liakh <sliakh.lkml@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 21 Aug 2019 10:26:08 -0400
-In-Reply-To: <CALBuU529+=+Xmsccc3AU2R0tSOCJtMQx=yMGDHopc3=tO3uM3Q@mail.gmail.com>
-References: <CALBuU529+=+Xmsccc3AU2R0tSOCJtMQx=yMGDHopc3=tO3uM3Q@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-k3HbeHCDITjKCpsf2FRY"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
+        Wed, 21 Aug 2019 10:28:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39348 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727949AbfHUO2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 10:28:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 89345AD94;
+        Wed, 21 Aug 2019 14:28:49 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 16:28:47 +0200
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-input@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v5 10/17] net: sgi: ioc3-eth: rework skb rx handling
+Message-Id: <20190821162847.479c9967d4dc8026fe65fa0e@suse.de>
+In-Reply-To: <20190819165522.451f2ea2@cakuba.netronome.com>
+References: <20190819163144.3478-1-tbogendoerfer@suse.de>
+        <20190819163144.3478-11-tbogendoerfer@suse.de>
+        <20190819165522.451f2ea2@cakuba.netronome.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 19 Aug 2019 16:55:22 -0700
+Jakub Kicinski <jakub.kicinski@netronome.com> wrote:
 
---=-k3HbeHCDITjKCpsf2FRY
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> On Mon, 19 Aug 2019 18:31:33 +0200, Thomas Bogendoerfer wrote:
+> > Buffers alloacted by alloc_skb() are already cache aligned so there
+> > is no need for an extra align done by ioc3_alloc_skb. And instead
+> > of skb_put/skb_trim simply use one skb_put after frame size is known
+> > during receive.
+> [...]  
+> > -/* We use this to acquire receive skb's that we can DMA directly into. */
+> > -
+> > -#define IOC3_CACHELINE	128UL
+> 
+> Is the cache line on the platform this driver works on 128B?
 
-On Wed, 2019-08-21 at 09:13 -0400, Siarhei Liakh wrote:
+right now yes, in theory IOC3 CAD DUO cards might work in SGI O2 systems,
+but the current Linux PCI implementation for O2 will not detect that card.
+On X86 usually the BIOS will choke up on that cards.
 
-> If mm_cpumask() is not safe, then at the very least the following has
-> to be fixed:
-> $ grep -rIn 'cpumask_clear(mm_cpumask(' *
-> arch/powerpc/include/asm/tlb.h:69:    cpumask_clear(mm_cpumask(mm));
-> arch/sparc/mm/init_64.c:857:        cpumask_clear(mm_cpumask(mm));
-> arch/ia64/include/asm/mmu_context.h:92:        cpumask_clear(mm_cpuma
-> sk(mm));
-> arch/csky/mm/asid.c:126:    cpumask_clear(mm_cpumask(mm));
-> arch/arm/mm/context.c:233:    cpumask_clear(mm_cpumask(mm));
->=20
-> Otherwise, mm_init_cpumask() can be simplified down to
-> cpumask_clear(mm_cpumask(mm)).
-> What do you think?
+> This looks like a DMA engine alignment requirement, more than an
+> optimization.
 
-That looks like a nice cleanup.
+that true, there are two constraints for the rx buffers, start must be aligned
+to 128 bytes and a buffer must not cross a 16kbyte boundary. I was already
+thinking of allocating pages and chop them up. Is there a Linux API available,
+which could help for implementing this ?
 
-I do not see why it would not work, but I suppose
-that should be tested :)
+I'll probably drop this patch or only change the skb_put stuff plus RX_BUF_SIZE
+define.
 
---=20
-All Rights Reversed.
+Thomas.
 
---=-k3HbeHCDITjKCpsf2FRY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl1dVIEACgkQznnekoTE
-3oNGSQf/Xbkuz6NK2iPNQsSsPRCz2ie4Qkxq6sQYeD+pD4f6YHog0GOGWTFFrAIT
-FShUqfjcu5OgYAAuhifsZn9k9WjYeME+HSQON8we3IjyeAP05r5yE25TrvQgVc6l
-5CrEle71a7go8l+f5ZcCB/gUJHZdRjaD+aJ3RIEPPwZ/O2YYofcGpHb4kHeFOABX
-sxI8y9waEIQJlUBzOdIHuUajxyCh6W2zr0s7aM590iqGsFBbvvrKxQMK5F8HUbhP
-ahi8PNbsO9bz3vLvVpKN9jzkJd5CviMCLO1oFN8cYvOjLfdKDo8BAQ2ddMJhQXej
-4+pdaB4mVtUuTReDC/hMDQaiBcqbxg==
-=sAMJ
------END PGP SIGNATURE-----
-
---=-k3HbeHCDITjKCpsf2FRY--
-
+-- 
+SUSE Linux GmbH
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
