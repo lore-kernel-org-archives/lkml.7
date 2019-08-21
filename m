@@ -2,61 +2,61 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522C1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19819C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1509D22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E252A22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 05:24:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e1jxa3Q2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FUz7pN44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfHUFXe (ORCPT
+        id S1727816AbfHUFYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 01:23:34 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33208 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727470AbfHUFXe (ORCPT
+        Wed, 21 Aug 2019 01:24:21 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43992 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbfHUFYU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 01:23:34 -0400
-Received: by mail-pf1-f196.google.com with SMTP id g2so650710pfq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 22:23:33 -0700 (PDT)
+        Wed, 21 Aug 2019 01:24:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id v12so626722pfn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 22:24:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=gk5hBFL+zVsGTiYjgXO/Fpozdyng3BO4uoV137GL+GU=;
-        b=e1jxa3Q2588Ob9x6kW+s98HVpKflZuV51sDkqtp1W7M8fFuoqNQieOx7XZgYvhjCk0
-         ptDwUw++oSPtE+AvV6FIcHMe/DX7cQFvbBIMEEAzzuWl9ycVL+cHnh13QfH7c2ZUUDzR
-         9/gA3TfjozoAmsjCnQ4yO9ysbAYro+Q0yOlsCS7kfY/L2L6We8rjnip9UtW7ADIAJNMi
-         +aT12kxKsenm1fwscCl+gPp5DeI5envtkvKy7dkQbJz3taB7zyIBNdM/ZbO1DWU9630R
-         5SbnJh1dVsilH3YyeEMFNknte5bbP2l/TtEVu86taqh1PatWR97T7F0peZwnIVmypl1h
-         /z+g==
+        bh=WVZuNtomVVNJU6oxBSPSh7G1rqbdcZx30YER/VTqJy0=;
+        b=FUz7pN44X6Tv4OeVuIV52guGzHMnmYin+wu9ELjFCcSR+0aws/OWfCadkkuqfVdCLK
+         mNGaUIjPJikw+d22fQPAE5PlaRRwxBqtQCNgdjrOUKqL9EfbQ1ymZLXKWp+ZFONNvI14
+         x1VgB8USTvIJaFXzt8Hz4wYclyoDS/928mCrxNzBO+0HQlj3T5Hx0qoSQhket12hKZeI
+         s16MRBgF1ca01Adh+FAA3GF9KpeEZmlXGoI/XQeC3HdXX9Cdp8CyR87ufMKOltSiMDZG
+         ua5tdZPmMtv/brEPvUX9c837I/Tc59DwbMtYUcNjcOe17AS1TP/D/TqIjIOX+aT8YGgb
+         AepQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gk5hBFL+zVsGTiYjgXO/Fpozdyng3BO4uoV137GL+GU=;
-        b=LvTjqSj/5KA0AlzJiyfHABsrPp80x1von8MnqaAyfdlECL87kQmsOp/cyViEQTfmIo
-         T1H/5djYsKvyIL1EOtSnuvN0weL9Mrtc0ZCU9DW4joz/1Qhh+vHasjuMsmqG4LIBHqMr
-         S+9CQgAqjOQzRZR9Ue9iIjlJg8QU8z5wASR4akZOiA2bkepuWreK+Ob0JnVnOdio1WHa
-         cpjMy1NRe5EgtwVe4R6+GyV4FoNx8wfqRXIhDtgm6PINPLhb1eiQrDk+gMD0nR6ybEiU
-         Zu3ZIQAmR8g6gwuzkdts5gmoA75iHOrPMG8liO9j2ssj7aGbmtJVrgX5xMbGWd+ISYlT
-         GeIg==
-X-Gm-Message-State: APjAAAVBeUCA6hT2rHBmqxWvc9g+iBdbLjeVtxT9ydinu21eZZ+GKJXq
-        bKC8CjMT2R3i/XxtQ+Icz18vGQ==
-X-Google-Smtp-Source: APXvYqxjps2jGsMWRHNpKkH8xofYKtLT/1SGtm5kRxow16cEqA032NNAf8R3+ys1S/HHdRNNzwhbIQ==
-X-Received: by 2002:a62:c584:: with SMTP id j126mr33906007pfg.21.1566365013017;
-        Tue, 20 Aug 2019 22:23:33 -0700 (PDT)
+        bh=WVZuNtomVVNJU6oxBSPSh7G1rqbdcZx30YER/VTqJy0=;
+        b=exJKkhHdrLKj7+EDeb2RY7SyTUXALcStD8HSa43QQePNDoMuu4vhTSTTd6wW7U8n9D
+         jQZuURqmj8wf8ZuCZlFiNRt92VLdLUxwcgbBJoqsy2vg6twzIER4YbKbGK7Y3GeMnm9Z
+         gTCKrHreD4ZLdHZdFE2Fu3fxyVf1bI2UvBxnR8/+kKTqiWdMx0HiDGDTMkdfLXciWHlz
+         SqeAKBTjtuNzN/fWLuq2bKCtvGAlUQr+Q9eFjqyGeqD3bnXeg0PZy+FhgMMFj8oZj3Gr
+         E/vj1de4taaJEDTM+FoCxGTKxrecxwQJH5PM7RE+8BBVtwDhOc2nYqiZyL/x4veLJf2b
+         Znbg==
+X-Gm-Message-State: APjAAAV6BJHoccj+uizdaGlEKuYKNYKgrljNAxyZmpfaGOnttssHcbmu
+        fEVNNfsos6rVhMFxupyOihC0bw==
+X-Google-Smtp-Source: APXvYqz5Xtr2EJgM6D6fSLIQb46x2LJP6fotbNZ4KkYGPV/au8MPrF7OtOBzkPcoKZLYmwj4ZF66QA==
+X-Received: by 2002:a17:90a:2325:: with SMTP id f34mr3758425pje.128.1566365059850;
+        Tue, 20 Aug 2019 22:24:19 -0700 (PDT)
 Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id l4sm1781386pjq.9.2019.08.20.22.23.31
+        by smtp.gmail.com with ESMTPSA id e7sm22939634pfn.72.2019.08.20.22.24.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 Aug 2019 22:23:32 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 10:53:30 +0530
+        Tue, 20 Aug 2019 22:24:19 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 10:54:17 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Saravana Kannan <saravanak@google.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -77,162 +77,56 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH v5 2/3] OPP: Add support for bandwidth OPP tables
-Message-ID: <20190821052330.7zufh7hhurq7ictp@vireshk-i7>
+Message-ID: <20190821052417.gby4borlnxv2xacr@vireshk-i7>
 References: <20190807223111.230846-1-saravanak@google.com>
  <20190807223111.230846-3-saravanak@google.com>
  <20190820061300.wa2dirylb7fztsem@vireshk-i7>
  <CAGETcx9BV9qj17LY30vgAaLtz+3rXt_CPpu4wB_AQCC5M7qOdA@mail.gmail.com>
+ <CAGETcx-xQika2MgTgA3Gft3u2_uXgvoYThXwEpW_G03QTEh-yQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGETcx9BV9qj17LY30vgAaLtz+3rXt_CPpu4wB_AQCC5M7qOdA@mail.gmail.com>
+In-Reply-To: <CAGETcx-xQika2MgTgA3Gft3u2_uXgvoYThXwEpW_G03QTEh-yQ@mail.gmail.com>
 User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-08-19, 15:27, Saravana Kannan wrote:
-> On Mon, Aug 19, 2019 at 11:13 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On 20-08-19, 15:36, Saravana Kannan wrote:
+> On Tue, Aug 20, 2019 at 3:27 PM Saravana Kannan <saravanak@google.com> wrote:
 > >
-> > On 07-08-19, 15:31, Saravana Kannan wrote:
-> > > Not all devices quantify their performance points in terms of frequency.
-> > > Devices like interconnects quantify their performance points in terms of
-> > > bandwidth. We need a way to represent these bandwidth levels in OPP. So,
-> > > add support for parsing bandwidth OPPs from DT.
+> > On Mon, Aug 19, 2019 at 11:13 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 > > >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > ---
-> > >  drivers/opp/of.c  | 41 ++++++++++++++++++++++++++++++++---------
-> > >  drivers/opp/opp.h |  4 +++-
-> > >  2 files changed, 35 insertions(+), 10 deletions(-)
+> > > On 07-08-19, 15:31, Saravana Kannan wrote:
+> 
+> > > > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
+> > > > +     if (ret)
+> > > > +             return ret;
+> > > > +     new_opp->rate = (unsigned long) bw;
+> > > > +
+> > > > +     ret = of_property_read_u32(np, "opp-avg-kBps", &bw);
+> > > > +     if (!ret)
+> > > > +             new_opp->avg_bw = (unsigned long) bw;
 > > >
-> > > diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> > > index 1813f5ad5fa2..e1750033fef9 100644
-> > > --- a/drivers/opp/of.c
-> > > +++ b/drivers/opp/of.c
-> > > @@ -523,6 +523,35 @@ void dev_pm_opp_of_remove_table(struct device *dev)
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+> > > If none of opp-hz/level/peak-kBps are available, print error message here
+> > > itself..
+> >
+> > But you don't print any error for opp-level today. Seems like it's optional?
+> >
 > > >
-> > > +static int _read_opp_key(struct dev_pm_opp *new_opp, struct device_node *np)
-> > > +{
-> > > +     int ret;
-> > > +     u64 rate;
-> > > +     u32 bw;
-> > > +
-> > > +     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > > +     if (!ret) {
-> > > +             /*
-> > > +              * Rate is defined as an unsigned long in clk API, and so
-> > > +              * casting explicitly to its type. Must be fixed once rate is 64
-> > > +              * bit guaranteed in clk API.
-> > > +              */
-> > > +             new_opp->rate = (unsigned long)rate;
-> > > +             return 0;
-> > > +     }
-> > > +
-> >
-> > Please read opp-level also here and do error handling.
-> 
-> Can you please explain what's the reasoning? opp-level doesn't seem to
-> be a "key" based on looking at the code.
-
-Because opp-level is the thing that distinguishes OPPs for power domains, those
-nodes don't have opp-hz or bw.
-
-> > > +     ret = of_property_read_u32(np, "opp-peak-kBps", &bw);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +     new_opp->rate = (unsigned long) bw;
-> > > +
-> > > +     ret = of_property_read_u32(np, "opp-avg-kBps", &bw);
-> > > +     if (!ret)
-> > > +             new_opp->avg_bw = (unsigned long) bw;
-> >
-> > If none of opp-hz/level/peak-kBps are available, print error message here
-> > itself..
-> 
-> But you don't print any error for opp-level today. Seems like it's optional?
-
-Yeah, probably it should have been there. It will be better to do it now as we
-are creating a separate routine for that.
-
-> >
-> > > +
-> > > +     return 0;
-> >
-> > You are returning 0 on failure as well here.
-> 
-> Thanks.
-> 
-> > > +}
-> > > +
-> > >  /**
-> > >   * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
-> > >   * @opp_table:       OPP table
-> > > @@ -560,22 +589,16 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
-> > >       if (!new_opp)
-> > >               return ERR_PTR(-ENOMEM);
+> > > > +
+> > > > +     return 0;
 > > >
-> > > -     ret = of_property_read_u64(np, "opp-hz", &rate);
-> > > +     ret = _read_opp_key(new_opp, np);
-> > >       if (ret < 0) {
-> > >               /* "opp-hz" is optional for devices like power domains. */
-> > >               if (!opp_table->is_genpd) {
-> > > -                     dev_err(dev, "%s: opp-hz not found\n", __func__);
-> > > +                     dev_err(dev, "%s: opp-hz or opp-peak-kBps not found\n",
-> > > +                             __func__);
-> > >                       goto free_opp;
-> > >               }
-> > >
-> > >               rate_not_available = true;
+> > > You are returning 0 on failure as well here.
 > >
-> > Move all above as well to read_opp_key().
+> > Thanks.
 > 
-> Ok. I didn't want to print an error at the API level and instead print
-> at the caller level. But if that's what you want, that's fine by me.
+> Wait, no. This is not actually a failure. opp-avg-kBps is optional. So
+> returning 0 is the right thing to do. If the mandatory properties
+> aren't present an error is returned before you get to th end.
 
-That would be fine, you can keep the print message here (but a generic one, like
-key missing).
-
-> > > -     } else {
-> > > -             /*
-> > > -              * Rate is defined as an unsigned long in clk API, and so
-> > > -              * casting explicitly to its type. Must be fixed once rate is 64
-> > > -              * bit guaranteed in clk API.
-> > > -              */
-> > > -             new_opp->rate = (unsigned long)rate;
-> > >       }
-> > >
-> > >       of_property_read_u32(np, "opp-level", &new_opp->level);
-> > > diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-> > > index 01a500e2c40a..6bb238af9cac 100644
-> > > --- a/drivers/opp/opp.h
-> > > +++ b/drivers/opp/opp.h
-> > > @@ -56,7 +56,8 @@ extern struct list_head opp_tables;
-> > >   * @turbo:   true if turbo (boost) OPP
-> > >   * @suspend: true if suspend OPP
-> > >   * @pstate: Device's power domain's performance state.
-> > > - * @rate:    Frequency in hertz
-> > > + * @rate:    Frequency in hertz OR Peak bandwidth in kilobytes per second
-> > > + * @avg_bw:  Average bandwidth in kilobytes per second
-> >
-> > Please add separate entry for peak_bw here.
-> >
-> > I know you reused rate because you don't want to reimplement the helpers we
-> > have. Maybe we can just update them to return peak_bw when opp-hz isn't present.
-> 
-> How about I just rename this to "key"? That makes a lot more sense
-> than trying to save 3 different keys and going through them one at a
-> time.
-
-I would still like to keep separate fields for now. We are still in continuous
-development and don't know how things will be going forward. We may end up
-having bw and hz in the OPP table as well. Over that I like to have separate
-fields for readability.
-
-Thanks.
+You are right :)
 
 -- 
 viresh
