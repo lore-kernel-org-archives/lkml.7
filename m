@@ -2,174 +2,212 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84948C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E57DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5407422DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F00C22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:59:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nuRxovpd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0fycqMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfHUO7H (ORCPT
+        id S1729114AbfHUO72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:59:07 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:34995 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726530AbfHUO7H (ORCPT
+        Wed, 21 Aug 2019 10:59:28 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35666 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfHUO71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:59:07 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LEfjSi009445;
-        Wed, 21 Aug 2019 16:58:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : content-type : content-transfer-encoding :
- mime-version; s=STMicroelectronics;
- bh=hvsyhvBbKbAJCgOiIKrRFL9GHm7h8/kewDO4a8D7m+M=;
- b=nuRxovpd/+qFW1wlNN/bYzzek0YmXSQOJu8hRnCXaGbQPZFkqH25FNLxrpE1QvV0e6hH
- E4chC4jVsTfi6reBe642JZ4MoQj+vitpIXW4X7pq1gdfcEGRFFE1O0MOCmJkeo4ZCIny
- TFSrfDO+1CKknh6b7kAd475QqR+SIdDUzhRYQoNcDInf8m/Y87UuV5pMl5HBHWeCvfFm
- ToZE62UY3wbDEGu01MJAdI+LPEcdrstg0i6P1ZtvAP9HqRHugOGSYO2UQ6o63B5aVt5P
- w4KaUGg4hKgjKu0je4+LuGKnixsLzSI/3qJnRCS+EnrN69T8x+RbLgmoveN0bRSLIdAv Tg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ue7buye6t-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 21 Aug 2019 16:58:48 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6142838;
-        Wed, 21 Aug 2019 14:58:47 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 466B42D6F86;
-        Wed, 21 Aug 2019 16:58:47 +0200 (CEST)
-Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 16:58:47 +0200
-Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
- SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
- 15.00.1473.003; Wed, 21 Aug 2019 16:58:46 +0200
-From:   Gerald BAEZA <gerald.baeza@st.com>
-To:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>
-CC:     Alexandre TORGUE <alexandre.torgue@st.com>
-Subject: perf tool issue following 'perf stat: Fix --no-scale' patch
- integration
-Thread-Topic: perf tool issue following 'perf stat: Fix --no-scale' patch
- integration
-Thread-Index: AdVYMNa4esDp3njlR1KZ0bzgLh2tpg==
-Date:   Wed, 21 Aug 2019 14:58:46 +0000
-Message-ID: <2680dc183a9e45b999be4939cbe67b44@SFHDAG5NODE1.st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 21 Aug 2019 10:59:27 -0400
+Received: by mail-pf1-f194.google.com with SMTP id d85so1611057pfd.2;
+        Wed, 21 Aug 2019 07:59:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=Z5zNV+aGEXnZe0+CPgdtnFJ8dRf/r2ygP8Iohve0Rps=;
+        b=f0fycqMFGS1JWxp1KhvwIftJwqDZPus1tTQemthJDQYeojm77cFV7cVWmH5S1Gac4V
+         EprUkqhJletcvmlAj1qn9J3/X5GtO5Ba1MJjYPyhBg17L3ymOQILNaNynrz322LN9KMn
+         ozCbINmOAl05/syfAkDa8J2ppNOPXR4kQr+k8VytHd+4Bj12QnYc2FtR5jx1lUEu2rFB
+         XLF0YeUfPnVuaBtNPkigEZnTKdzINmRTFb6yG00JjThyNla6wNXxc8xX33tMWJnhVVry
+         xw3dNLW7LJth/U7S71Mdl+g5ukquPnozyRuUpAGh3hQxXfvMgPjg1d4u+jw6e5tUaezs
+         w0WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=Z5zNV+aGEXnZe0+CPgdtnFJ8dRf/r2ygP8Iohve0Rps=;
+        b=FB193W0gefwKI2s9xOGISxaR8qGojEQfgKkosP6XxPufhYR8bTLmOq1WUkTidVjgxf
+         pKao4j25A6zS+P8kOA+ChQBGK/mpQptjlXf4AatLArBZWNt+pAHEm8NzF6xmBk+D6rbb
+         WXDWdI0R7uJbwE5cUMCXrFFJG1D9X1lKo8lfXAjQ/DaGorKFx0SiuzM5Q6JYk644AqQi
+         v3rdk13Xn/519JuC4zHQW58hzoW0PYbd6F+ue10cpF3A6EWZRUByS+0rFl5OMsvQmOgk
+         bqv2N1DLbQeo8DCUdo76UhiUe2tciSe08obxwIZZl/OiJP63Ca01jtELBjkANFFWJZre
+         JYkw==
+X-Gm-Message-State: APjAAAXOq40iPqsYAFZvRt0JL/4l91dAw005HUy5Ox364YSelRiRbb+U
+        FHiDhW9UBD97Eno+xBpQF2I=
+X-Google-Smtp-Source: APXvYqzrFyVlorWkueXx9HRBuLKcOcy2Opun+O4OOr1HVzfU2JfHa3PQ1/39vsylKSV3Xcp4yieOtQ==
+X-Received: by 2002:a17:90a:8991:: with SMTP id v17mr410994pjn.120.1566399566511;
+        Wed, 21 Aug 2019 07:59:26 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id f12sm22513826pgo.85.2019.08.21.07.59.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 07:59:25 -0700 (PDT)
+Subject: [PATCH v6 0/6] mm / virtio: Provide support for unused page
+ reporting
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     nitesh@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
+        david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, osalvador@suse.de
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
+Date:   Wed, 21 Aug 2019 07:59:24 -0700
+Message-ID: <20190821145806.20926.22448.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_05:,,
- signatures=0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Andi and all perf tool / arm debug =A0experts
+This series provides an asynchronous means of reporting to a hypervisor
+that a guest page is no longer in use and can have the data associated
+with it dropped. To do this I have implemented functionality that allows
+for what I am referring to as unused page reporting
 
-This is about the following patch=A0:
-       perf stat: Fix --no-scale
-       SHA-1=A0: 75998bb263bf48c1c85d78cd2d2f3a97d3747cab
+The functionality for this is fairly simple. When enabled it will allocate
+statistics to track the number of reported pages in a given free area.
+When the number of free pages exceeds this value plus a high water value,
+currently 32, it will begin performing page reporting which consists of
+pulling pages off of free list and placing them into a scatter list. The
+scatterlist is then given to the page reporting device and it will perform
+the required action to make the pages "reported", in the case of
+virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+and as such they are forced out of the guest. After this they are placed
+back on the free list, and an additional bit is added if they are not
+merged indicating that they are a reported buddy page instead of a
+standard buddy page. The cycle then repeats with additional non-reported
+pages being pulled until the free areas all consist of reported pages.
 
-Since it is applied in the kernel, I noticed that perf tool fails on my ARM=
-v7 platform (STM32MP1 with Cortex-A7 and NEON) with the following error :=20
-       root@stm32mp1:~# perf stat --no-scale sleep 1
-       [10827.350202] Alignment trap: perf (631) PC=3D0x001139e8 Instr=3D0x=
-f4640adf Address=3D0x0021a804 1
-       [10827.357704] Alignment trap: not handling instruction f4640adf at =
-[<001139e8>]
-       [10827.364867] 8<--- cut here ---
-       [10827.367875] Unhandled fault: alignment exception (0x001) at 0x002=
-1a804
-       [10827.374427] pgd =3D 8abc1568
-       [10827.377090] [0021a804] *pgd=3Dff2e8835
-       Bus error
+I am leaving a number of things hard-coded such as limiting the lowest
+order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
+determine what the limit is on how many pages it wants to allocate to
+process the hints. The upper limit for this is based on the size of the
+queue used to store the scattergather list.
 
-The same error happens with or without the --no-scale option.
-This is to give the context. I do not blame your patch, Andi :)
+My primary testing has just been to verify the memory is being freed after
+allocation by running memhog 40g on a 40g guest and watching the total
+free memory via /proc/meminfo on the host. With this I have verified most
+of the memory is freed after each iteration. As far as performance I have
+been mainly focusing on the will-it-scale/page_fault1 test running with
+16 vcpus. I have modified it to use Transparent Huge Pages. With this I
+see almost no difference, -0.08%, with the patches applied and the feature
+disabled. I see a regression of -0.86% with the feature enabled, but the
+madvise disabled in the hypervisor due to a device being assigned. With
+the feature fully enabled I see a regression of -3.27% versus the baseline
+without these patches applied. In my testing I found that most of the
+overhead was due to the page zeroing that comes as a result of the pages
+having to be faulted back into the guest.
 
-I analyzed the root cause of this issue, summarized below, but then I need =
-your lights to imagine the best correction.
+One side effect of these patches is that the guest becomes much more
+resilient in terms of NUMA locality. With the pages being freed and then
+reallocated when used it allows for the pages to be much closer to the
+active thread, and as a result there can be situations where this patch
+set will out-perform the stock kernel when the guest memory is not local
+to the guest vCPUs. To avoid that in my testing I set the affinity of all
+the vCPUs and QEMU instance to the same node.
 
-One of the changes in the patch concerns tools/perf/util/stat.c :
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 case AGGR_GLOBAL:
-       =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0 aggr->val +=3D count->val;
-       -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0 if (config->scale) {
-       -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 aggr-=
->ena +=3D count->ena;
-       -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 aggr-=
->run +=3D count->run;
-       -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0 }
-       +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 aggr->ena +=3D count->ena;
-       +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 aggr->run +=3D count->run;
+Changes from the RFC:
+https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
+Moved aeration requested flag out of aerator and into zone->flags.
+Moved boundary out of free_area and into local variables for aeration.
+Moved aeration cycle out of interrupt and into workqueue.
+Left nr_free as total pages instead of splitting it between raw and aerated.
+Combined size and physical address values in virtio ring into one 64b value.
 
-The consequence of this new writing is that GCC generates a NEON vectored i=
-nstruction to load count->val and count->ena values in 64 bits registers, s=
-ince they are sequential in memory and systematically initialized now:
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 f4640adf =A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 vld1.64=A0 {d16-d17}, [r4 :64]
+Changes from v1:
+https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
+Dropped "waste page treatment" in favor of "page hinting"
+Renamed files and functions from "aeration" to "page_hinting"
+Moved from page->lru list to scatterlist
+Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
+Virtio now uses scatterlist directly instead of intermediate array
+Moved stats out of free_area, now in separate area and pointed to from zone
+Merged patch 5 into patch 4 to improve review-ability
+Updated various code comments throughout
 
-The problem comes from the ':64' specifying that the parameter has to be 8 =
-bytes aligned.
-The 'count' pointer points inside the 'contents[]' array from the 'struct x=
-yarray'.
-If I force this field to be 64 bits aligned, then perf works again:
-struct xyarray {
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 size_t row_size;
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 size_t entry_size;
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 size_t entries;
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 size_t max_x;
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 size_t max_y;
--=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 char contents[]=A0;
-+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 char contents[] __attribute__((aligne=
-d(64)));
-};
+Changes from v2:
+https://lore.kernel.org/lkml/20190724165158.6685.87228.stgit@localhost.localdomain/
+Dropped "page hinting" in favor of "page reporting"
+Renamed files from "hinting" to "reporting"
+Replaced "Hinted" page type with "Reported" page flag
+Added support for page poisoning while hinting is active
+Add QEMU patch that implements PAGE_POISON feature
 
-But the xyarray structure is generic so I think this patch cannot be the fi=
-nal one.
-Some GCC versions have a -mgeneral-regs-only option to forbid the generatio=
-n of NEON instructions while compiling one file, but this does not seem to =
-be mainlined (?).
+Changes from v3:
+https://lore.kernel.org/lkml/20190801222158.22190.96964.stgit@localhost.localdomain/
+Added mutex lock around page reporting startup and shutdown
+Fixed reference to "page aeration" in patch 2
+Split page reporting function bit out into separate QEMU patch
+Limited capacity of scatterlist to vq size - 1 instead of vq size
+Added exception handling for case of virtio descriptor allocation failure
 
-Well, I am hesitating and don't know what kind of correction I should apply=
-.
-I also don't know very well perf tool source code, so this sets some border=
-s to my imagination=A0 :)
+Changes from v4:
+https://lore.kernel.org/lkml/20190807224037.6891.53512.stgit@localhost.localdomain/
+Replaced spin_(un)lock with spin_(un)lock_irq in page_reporting_cycle()
+Dropped if/continue for ternary operator in page_reporting_process()
+Added checks for isolate and cma types to for_each_reporting_migratetype_order
+Added virtio-dev, Michal Hocko, and Oscar Salvador to to:/cc:
+Rebased on latest linux-next and QEMU git trees
 
-Can you help me please ?
+Changes from v5:
+https://lore.kernel.org/lkml/20190812213158.22097.30576.stgit@localhost.localdomain/
+Replaced spin_(un)lock with spin_(un)lock_irq in page_reporting_startup()
+Updated shuffle code to use "shuffle_pick_tail" and updated patch description
+Dropped storage of order and migratettype while page is being reported
+Used get_pfnblock_migratetype to determine migratetype of page
+Renamed put_reported_page to free_reported_page, added order as argument
+Dropped check for CMA type as I believe we should be reporting those
+Added code to allow moving of reported pages into and out of isolation
+Defined page reporting order as minimum of Huge Page size vs MAX_ORDER - 1
+Cleaned up use of static branch usage for page_reporting_notify_enabled
 
-Best regards
+---
 
-G=E9rald
+Alexander Duyck (6):
+      mm: Adjust shuffle code to allow for future coalescing
+      mm: Move set/get_pcppage_migratetype to mmzone.h
+      mm: Use zone and order instead of free area in free_list manipulators
+      mm: Introduce Reported pages
+      virtio-balloon: Pull page poisoning config out of free page hinting
+      virtio-balloon: Add support for providing unused page reports to host
 
+
+ drivers/virtio/Kconfig              |    1 
+ drivers/virtio/virtio_balloon.c     |   84 ++++++++-
+ include/linux/mmzone.h              |  124 ++++++++-----
+ include/linux/page-flags.h          |   11 +
+ include/linux/page_reporting.h      |  177 ++++++++++++++++++
+ include/uapi/linux/virtio_balloon.h |    1 
+ mm/Kconfig                          |    5 +
+ mm/Makefile                         |    1 
+ mm/internal.h                       |   18 ++
+ mm/memory_hotplug.c                 |    1 
+ mm/page_alloc.c                     |  216 ++++++++++++++++-------
+ mm/page_reporting.c                 |  336 +++++++++++++++++++++++++++++++++++
+ mm/shuffle.c                        |   40 +++-
+ mm/shuffle.h                        |   12 +
+ 14 files changed, 896 insertions(+), 131 deletions(-)
+ create mode 100644 include/linux/page_reporting.h
+ create mode 100644 mm/page_reporting.c
+
+--
