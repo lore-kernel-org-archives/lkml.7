@@ -2,143 +2,94 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A70DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AACBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2F322DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33FA233A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566402247;
+	bh=Rvf9YghnoPKjXklr+lbYCQc4fN06lE+T07xEGELvoDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qdCol67PNqDsvyedD5ao9o4aSNreR+efAKOwrnNEUsmGsdo4oIRpV/KkHKpYdM9kM
+	 dXuhSRenJ8hhsCODAnEGZnAj431dHWsrmXhFqow/DG3zpgr0bcVowaMB7Hjh5TFUHZ
+	 zgxImNRWY2+ALXPNNzHWCAZ4n5CGaX5VVpshZUuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbfHUPnh (ORCPT
+        id S1728756AbfHUPoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:43:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32854 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726513AbfHUPng (ORCPT
+        Wed, 21 Aug 2019 11:44:06 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46746 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727553AbfHUPoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:43:36 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LFh3tT007868
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:43:35 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uh84rte65-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:43:35 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 21 Aug 2019 16:43:32 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 21 Aug 2019 16:43:29 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LFhSk936306986
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 15:43:28 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89B9752050;
-        Wed, 21 Aug 2019 15:43:28 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.219.114])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2390052054;
-        Wed, 21 Aug 2019 15:43:24 +0000 (GMT)
-Subject: Re: [GIT PULL] Keys: Set 4 - Key ACLs for 5.3
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        James Morris <jmorris@namei.org>, keyrings@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, linux-nfs@vger.kernel.org,
-        CIFS <linux-cifs@vger.kernel.org>, linux-afs@lists.infradead.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Date:   Wed, 21 Aug 2019 11:43:23 -0400
-In-Reply-To: <23498.1565962602@warthog.procyon.org.uk>
-References: <1562814435.4014.11.camel@linux.ibm.com>
-         <28477.1562362239@warthog.procyon.org.uk>
-         <CAHk-=wjxoeMJfeBahnWH=9zShKp2bsVy527vo3_y8HfOdhwAAw@mail.gmail.com>
-         <20190710194620.GA83443@gmail.com> <20190710201552.GB83443@gmail.com>
-         <CAHk-=wiFti6=K2fyAYhx-PSX9ovQPJUNp0FMdV0pDaO_pSx9MQ@mail.gmail.com>
-         <23498.1565962602@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19082115-0028-0000-0000-0000039227A6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082115-0029-0000-0000-000024544FC7
-Message-Id: <1566402203.5162.12.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908210163
+        Wed, 21 Aug 2019 11:44:06 -0400
+Received: by mail-qk1-f196.google.com with SMTP id p13so2188944qkg.13;
+        Wed, 21 Aug 2019 08:44:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WsaM9eIl3JXCekJs4SyvVa1WU1qEuim85t6paiIn/CI=;
+        b=gBwwCIlRoRsncPrLfulxtiNtBqDslrrk01qoUakj7ROxgUCe2Z1Jkie5QrOYx6cy1t
+         ittH90Nf5mi+zTDNL+DT/YD22t+Gq4e4G1xT2KXF/IWYBadFqyiJVb1YtkbDxqokGJbz
+         2FUoS6prtlCz8ZqXUlLW/C+7dfISWWedqHkc26+Sgeb1Mqp2ByRaRx/BYT26Raskd9fG
+         dZjhnF77bE+uuLLYKItQJogKGqIj7IlYf1ScdYDDqpVrQjz0D4D0XBpaB0hrYBHvxLq/
+         4vetyes91YzvtHonebCbwxVB9w4U7blReA094/muNGax4e8R6EiuBSsk9XlEvN3/ON/Q
+         mn7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WsaM9eIl3JXCekJs4SyvVa1WU1qEuim85t6paiIn/CI=;
+        b=FL+kYhAHDCr1z9tg7egO3tgoYVjsPgTrnQQmMOatTqndvwWqAaKNNlF/Yipv0TltsH
+         MBVwMrY3JWhOpcZKrisU9Hski//xTqISoSTseS34Qm7C5Cp8HYJwXvC4tghkglklZvnx
+         SFirOgQi++FUUDMJkpdfv7Zl87uD5SrPFT1oDNJ4r+Cxcki6iDFnCRlISwrr7O3tAF+l
+         3YQkUJOOyFiqiIj9Tn4P7xPxVbD0Dd+/Wo13cQ8aMy94i2+8kPqp5ips1+nZ6GAMCfvX
+         6NCL3jotSMn4A+/Y/Sq7xrL//4prXptLf7ymxsi6sAF+2UbRYC0y63cIiRQ9zAODYvBl
+         6Lzw==
+X-Gm-Message-State: APjAAAX6tuADOYs0IVz6qnfo19mpwuv7i8crTjwqE39CNzkfKKghU/0R
+        gXBSJkjLoQofoBxSoNP8lTs=
+X-Google-Smtp-Source: APXvYqyoo7O4zfbKH6+h9K44hSm5hrR8vMIas7kYusKUQEoRDkhQgiXDaxkhQ2c9BF00wPuPLVmdAw==
+X-Received: by 2002:a37:8c07:: with SMTP id o7mr16922667qkd.491.1566402245255;
+        Wed, 21 Aug 2019 08:44:05 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:1f05])
+        by smtp.gmail.com with ESMTPSA id r4sm10171491qtt.90.2019.08.21.08.44.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 08:44:04 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 08:44:02 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Fam Zheng <zhengfeiran@bytedance.com>
+Cc:     linux-kernel@vger.kernel.org, axboe@kernel.dk, fam@euphon.net,
+        paolo.valente@linaro.org, duanxiongchun@bytedance.com,
+        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+        zhangjiachen.jc@bytedance.com
+Subject: Re: [PATCH v2 3/3] bfq: Add per-device weight
+Message-ID: <20190821154402.GI2263813@devbig004.ftw2.facebook.com>
+References: <20190805063807.9494-1-zhengfeiran@bytedance.com>
+ <20190805063807.9494-4-zhengfeiran@bytedance.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805063807.9494-4-zhengfeiran@bytedance.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-16 at 14:36 +0100, David Howells wrote:
-> Mimi Zohar <zohar@linux.ibm.com> wrote:
-> 
-> > Sorry for the delay.  An exception is needed for loading builtin keys
-> > "KEY_ALLOC_BUILT_IN" onto a keyring that is not writable by userspace.
-> >  The following works, but probably is not how David would handle the
-> > exception.
-> 
-> I think the attached is the right way to fix it.
-> 
-> load_system_certificate_list(), for example, when it creates keys does this:
-> 
-> 	key = key_create_or_update(make_key_ref(builtin_trusted_keys, 1),
-> 
-> marking the keyring as "possessed" in make_key_ref().  This allows the
-> possessor permits to be used - and that's the *only* way to use them for
-> internal keyrings like this because you can't link to them and you can't join
-> them.
+On Mon, Aug 05, 2019 at 02:38:07PM +0800, Fam Zheng wrote:
+> Signed-off-by: Fam Zheng <zhengfeiran@bytedance.com>
 
-In addition, as long as additional keys still can't be added or
-existing keys updated by userspace on the .builtin_trusted_keys, then
-this is fine.
+Looks good to me.
 
-> 
-> David
-> ---
-> diff --git a/certs/system_keyring.c b/certs/system_keyring.c
-> index 57be78b5fdfc..1f8f26f7bb05 100644
-> --- a/certs/system_keyring.c
-> +++ b/certs/system_keyring.c
-> @@ -99,7 +99,7 @@ static __init int system_trusted_keyring_init(void)
->  	builtin_trusted_keys =
->  		keyring_alloc(".builtin_trusted_keys",
->  			      KUIDT_INIT(0), KGIDT_INIT(0), current_cred(),
-> -			      &internal_key_acl, KEY_ALLOC_NOT_IN_QUOTA,
-> +			      &internal_keyring_acl, KEY_ALLOC_NOT_IN_QUOTA,
->  			      NULL, NULL);
->  	if (IS_ERR(builtin_trusted_keys))
->  		panic("Can't allocate builtin trusted keyring\n");
-> diff --git a/security/keys/permission.c b/security/keys/permission.c
-> index fc84d9ef6239..86efd3eaf083 100644
-> --- a/security/keys/permission.c
-> +++ b/security/keys/permission.c
-> @@ -47,7 +47,7 @@ struct key_acl internal_keyring_acl = {
->  	.usage	= REFCOUNT_INIT(1),
->  	.nr_ace	= 2,
->  	.aces = {
-> -		KEY_POSSESSOR_ACE(KEY_ACE_SEARCH),
-> +		KEY_POSSESSOR_ACE(KEY_ACE_SEARCH | KEY_ACE_WRITE),
->  		KEY_OWNER_ACE(KEY_ACE_VIEW | KEY_ACE_READ | KEY_ACE_SEARCH),
->  	}
->  };
+ Acked-by: Tejun Heo <tj@kernel.org>
 
-Thanks, David.  The builtin keys are now being loaded.
+Thanks.
 
-Mimi
-
+-- 
+tejun
