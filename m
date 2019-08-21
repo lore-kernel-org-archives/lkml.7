@@ -2,130 +2,94 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745C2C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216C5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7F32339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC74322DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ieAJQEap"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WKZKmhCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbfHUPBu (ORCPT
+        id S1728735AbfHUPCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:01:50 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18390 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727725AbfHUPBu (ORCPT
+        Wed, 21 Aug 2019 11:02:22 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45476 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbfHUPCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:01:50 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5d5cde0000>; Wed, 21 Aug 2019 08:01:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 21 Aug 2019 08:01:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 21 Aug 2019 08:01:49 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 15:01:48 +0000
-Received: from [10.25.74.119] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 15:01:45 +0000
-Subject: Re: [PATCH][next] PCI: tegra: tegra194: fix phy_count less than zero
- check
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Colin King <colin.king@canonical.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190821120123.14223-1-colin.king@canonical.com>
- <20190821140520.GA691@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <b9f4dc94-a3d6-5748-128d-9df6dc990eb8@nvidia.com>
-Date:   Wed, 21 Aug 2019 20:31:42 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Wed, 21 Aug 2019 11:02:21 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7LF2H3Q115452;
+        Wed, 21 Aug 2019 10:02:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566399737;
+        bh=9U6VgUhs0WUhDkB5sgJHbbn7p+rrmYQHaH8DyLgbm0k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WKZKmhCzTM92U3edVWZZeYK4kHibPRD0XAY8t4dJraauANMKIyKyr1+385o/bgEGX
+         ueKkwTe+Q2z6jj6avJRaK4VH4oYZRpVGXZ6PJ2E3bXMbVV6OwfqWKvQy+B+uL0xpJW
+         trbrL78+ft4yyD/sbq/jPIEKYFfiU7HYvGhB9g5g=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7LF2H1R046792
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 21 Aug 2019 10:02:17 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 21
+ Aug 2019 10:02:16 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 21 Aug 2019 10:02:17 -0500
+Received: from [10.250.98.116] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7LF2Eeg041638;
+        Wed, 21 Aug 2019 10:02:15 -0500
+Subject: Re: [PATCH net] net: cpsw: fix NULL pointer exception in the probe
+ error path
+To:     Antoine Tenart <antoine.tenart@bootlin.com>, <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <maxime.chevallier@bootlin.com>
+References: <20190821144123.22248-1-antoine.tenart@bootlin.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <139cd66e-e8f8-0d18-a876-59e791bb8624@ti.com>
+Date:   Wed, 21 Aug 2019 18:02:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190821140520.GA691@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
+In-Reply-To: <20190821144123.22248-1-antoine.tenart@bootlin.com>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566399710; bh=pVlgGlKM4Jh1fIne7Jt+bEk9BU5YPhXW/fJ0EL5D3i0=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ieAJQEapTwKUlGo+Q8ZuJRxc3YyGSLmWch2L8LcayRGH5N0ErNoOpMcrvwQHFPZG1
-         ufkTAF8FE2/xnJakffaGEHr4XV4cfPpFpV75oQ2TZGd6EbEMNXqXY3RWmwUj5ctkYM
-         o6FrcfLw+K0XjJZV7I3R38nNpMyx8SkbPVFBIRZa1lXVAiYT61pI6IhUXjUdDr9Wn0
-         6/y6mHm8cCQLQSq+alPn9TFftPTcMCEs/bIlOqN3fI7TpzVS+M5FL+qgz++YxzllEJ
-         ka43K4LBbsYZKHcAmQtTckmwY54/ZYkH7VpcLDFvv0U6x0sJuWSfGH4cdmDi21fX8u
-         TMThaA3dSQwDw==
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/2019 7:35 PM, Lorenzo Pieralisi wrote:
-> On Wed, Aug 21, 2019 at 01:01:23PM +0100, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> The check for pcie->phy_count < 0 is always false because phy_count
->> is an unsigned int and can never be less than zero. Fix this by
->> assigning ret to the return from of_property_count_strings and
->> checking if this is less than zero instead.
->>
->> Addresses-Coverity: ("Dead code")
->> Fixes: 6404441c8e13 ("PCI: tegra: Add Tegra194 PCIe support")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-tegra194.c | 9 +++++----
->>   1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> Squashed in the original commit (it is not merged yet), thanks
-> for reporting it.
-Thanks Colin for catching it and pushing a fix also.
-Thanks Lorenzo for merging it.
-Apologies for missing this in my patch series.
 
-> 
-> Lorenzo
-> 
->> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
->> index fc0dbeb31d78..b47ea3e68303 100644
->> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
->> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
->> @@ -969,12 +969,13 @@ static int tegra_pcie_dw_parse_dt(struct tegra_pcie_dw *pcie)
->>   		return ret;
->>   	}
->>   
->> -	pcie->phy_count = of_property_count_strings(np, "phy-names");
->> -	if (pcie->phy_count < 0) {
->> +	ret = of_property_count_strings(np, "phy-names");
->> +	if (ret < 0) {
->>   		dev_err(pcie->dev, "Failed to find PHY entries: %d\n",
->> -			pcie->phy_count);
->> -		return pcie->phy_count;
->> +			ret);
->> +		return ret;
->>   	}
->> +	pcie->phy_count = ret;
->>   
->>   	if (of_property_read_bool(np, "nvidia,update-fc-fixup"))
->>   		pcie->update_fc_fixup = true;
->> -- 
->> 2.20.1
->>
 
+On 21/08/2019 17:41, Antoine Tenart wrote:
+> In certain cases when the probe function fails the error path calls
+> cpsw_remove_dt() before calling platform_set_drvdata(). This is an
+> issue as cpsw_remove_dt() uses platform_get_drvdata() to retrieve the
+> cpsw_common data and leds to a NULL pointer exception. This patches
+> fixes it by calling platform_set_drvdata() earlier in the probe.
+> 
+> Fixes: 83a8471ba255 ("net: ethernet: ti: cpsw: refactor probe to group common hw initialization")
+> Reported-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> ---
+>   drivers/net/ethernet/ti/cpsw.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+
+Thank you.
+Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+
+-- 
+Best regards,
+grygorii
