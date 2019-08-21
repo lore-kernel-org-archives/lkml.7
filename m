@@ -2,117 +2,100 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CE8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C3FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7041A22CE3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F2422CE3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:21:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WIeV35zB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfHULVM (ORCPT
+        id S1727719AbfHULVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 07:21:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:55288 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbfHULVM (ORCPT
+        Wed, 21 Aug 2019 07:21:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34912 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbfHULVg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 07:21:12 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i0Off-0002N8-Dv; Wed, 21 Aug 2019 13:20:55 +0200
-Date:   Wed, 21 Aug 2019 13:20:53 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tony.luck@intel.com,
-        x86@kernel.org, andriy.shevchenko@intel.com, alan@linux.intel.com,
-        rppt@linux.ibm.com, linux-kernel@vger.kernel.org,
-        qi-ming.wu@intel.com, cheol.yong.kim@intel.com,
-        rahul.tanwar@intel.com
-Subject: Re: [PATCH] x86/apic: Update virtual irq base for DT/OF based system
- as well
-In-Reply-To: <7b4db9f3-21da-5b5e-e219-0170e812a015@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1908211235180.2223@nanos.tec.linutronix.de>
-References: <20190821081330.1187-1-rahul.tanwar@linux.intel.com> <alpine.DEB.2.21.1908211028030.2223@nanos.tec.linutronix.de> <7b4db9f3-21da-5b5e-e219-0170e812a015@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 21 Aug 2019 07:21:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Zn3ejhAASFSRg1tK+lTcY6WiRVoDmLTbMDhh5WUo4kM=; b=WIeV35zBNqv7yPM8SA3WzOWgm
+        KyQ5IiHHuhQirkKsaIvQm/Y8yQ8vsoHh7OuEeD6xl2KQ12MPzYrEimbiLPzTXeuQHe+g3SY+7INJT
+        Icz6HmwoWk0uWsRPaj0J+zWOJp2Ymk0R3WqQ1O5JacQbSLDjhHAk0oBmWul6X5of5iU3ttecLv6U0
+        GcdxgmkYWl482jrmlDTD65sYgeFk2/+dKrS5HLrYFCVMWDGsps3whjkgRHU1tHdJ49jwR1/SMZXI4
+        QgPQv3ptU0ausBAgtZ7ZXIXmIf5qflNCqVpxgit7eMp96E/tDL46yve9crbyWhe2frxcW5ZTkGRTv
+        QgthHe+uw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0Og0-0003Jk-OB; Wed, 21 Aug 2019 11:21:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0A219307602;
+        Wed, 21 Aug 2019 13:20:42 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9F63020A21FC6; Wed, 21 Aug 2019 13:21:13 +0200 (CEST)
+Date:   Wed, 21 Aug 2019 13:21:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>, kan.liang@intel.com,
+        Rik van Riel <riel@surriel.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 1/9] sched/core: add is_kthread() helper
+Message-ID: <20190821112113.GA2332@hirez.programming.kicks-ass.net>
+References: <20190814104131.20190-1-mark.rutland@arm.com>
+ <20190814104131.20190-2-mark.rutland@arm.com>
+ <CAMuHMdV_hZ-uMmKdqEutLL5+XkhhcKdSaurMUS2N46AhZwDNKQ@mail.gmail.com>
+ <20190814113232.GE17931@lakrids.cambridge.arm.com>
+ <20190819085213.GA15409@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819085213.GA15409@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019, Tanwar, Rahul wrote:
-> On 21/8/2019 4:34 PM, Thomas Gleixner wrote:
+On Mon, Aug 19, 2019 at 10:52:13AM +0200, Ingo Molnar wrote:
+> * Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Wed, Aug 14, 2019 at 01:26:43PM +0200, Geert Uytterhoeven wrote:
+> > > On Wed, Aug 14, 2019 at 12:43 PM Mark Rutland <mark.rutland@arm.com> wrote:
+
+> > > > +static inline bool is_kthread(const struct task_struct *p)
+> > > > +{
+> > > > +       return !!(p->flags & PF_KTHREAD);
+> > > 
+> > > The !! is not really needed.
+> > > Probably you followed is_idle_task() above (where it's also not needed).
+> > 
+> > Indeed! I'm aware of the implicit bool conversion, but kept that for
+> > consistency.
+> > 
+> > Peter, Ingo, do you have a preference?
 > 
-> > Secondly, this link is irrelevant. ioapic_dynirq_base has nothing to do
-> > with virtual IRQ number 0. It's a boundary for the dynamic allocation of
-> > virtual interrupt numbers so that the core allocator does not pick
-> > interrupts out of the IOAPIC's fixed interrupt number space.
-> > 
-> > This can be legitimately 0 when IOAPIC is not enabled at all.
-> > 
-> > Can you please explain what kind of problem you were seing and what this
-> > really fixes?
->
-> The problem is that device tree infrastructure considers 0 IRQ value as
-> invalid/error value whereas for ACPI, 0 is a valid value.
+> So the !! pattern is useful where the return value is an integer (i.e. 
+> there's a risk of non-bool use) - but the return value is an explicit 
+> bool here, so !! is IMO an entirely superfluous obfuscation.
 
-Sure.
-
-> Without this change, the problem that we see is that the first driver
-> using of_irq_get_xx() or its variants fails because of 0 IRQ number. With
-> this change, allocated IRQ number is never 0 so it works ok.
-
-Well, this still is not a proper explanation. Just because it works does
-not make it correct in the first place.
-
-ioapic_dynirq_base is pretty much irrelevant for a DT machine. The reason
-why it exists is that for regular BIOS the interrupt numbers are hard
-mapped to the IOAPIC pins. ioapic_dynirq_base is used to protect this hard
-mapped interrupt number space. The core allocator does not allocate from
-that space unless it is explicitely told to do so, which is the case for
-IOAPIC_DOMAIN_STRICT where the allocation tells the core to allocate the
-associated GSI number.
-
-On DT the interrupt number is irrelevant as DT describes the irq controller
-and the pin to which a device is connected and does not make assumptions
-about the interrupt number. So the core can freely allocate any available
-interrupt number except 0. That's already prevented in the core code.
-
-But x86 implements arch_dynirq_lower_bound() which overrides the core limit
-and because ioapic_dynirq_base is zero in the DT case it allows VIRQ 0 to
-be allocated which then causes of_irq*() to fail.
-
-So your change prevents that by excluding the 'GSI' range from allocation,
-which means that the first irq number which is handed out is 24, assumed
-you have one IOAPIC with 24 pins.
-
-That's fine as the interrupt number space is big enough, but it needs
-
-    - a coherent explanation in the changelog
-
-    - proper comments to that effect in the code
-
-Also this is presumably a stable candidate and needs a Fixes: ... tag.
-
-Thanks,
-
-	tglx
-
-
-
-
-
-
-
-
-
+Yeah, no real preference, for giggles, (_Bool) also seems to work.
 
