@@ -2,89 +2,160 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7F9C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F203BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:01:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E9CC206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:01:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RMKm8u4a"
+	by mail.kernel.org (Postfix) with ESMTP id CF945206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:01:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbfHUHBN (ORCPT
+        id S1727923AbfHUHB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 03:01:13 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39147 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfHUHBN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:01:13 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x4so1105667ljj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 00:01:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=45VwxPMZ2VRTdvGcS6InzQ5jT8ovuVn5bmoUU3rlkSU=;
-        b=RMKm8u4aDSYop1iSb3Gr6mPLG3mGQTPimrATSgn1UAhXY9PdU0M+EFKRzBvXhRrbk6
-         cVVVYUvMuCTtBJCbNZDav1n9HZl/C3LwRD87ZuP0ua+k03/iACX2NVVP57WPfg5H6EXQ
-         KB6EGLymq+dTSromI57EF3NrDGbTaHjNAHFN7bEShqfKNTy3KObSsQcHvc7CeG32O5M5
-         eTtzLUu2PbiTCCntA0bCBtEM3vUuY0Jrfz5I2J8aGajQclbrZnuszRGECKEO8WW+8dR1
-         jtet4kko5WNee74vzaFS+pUuYR0CUCBPLRfjPB0pqPmMgvL+b9Pf3mIpzczJxZxYUvyj
-         mVAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=45VwxPMZ2VRTdvGcS6InzQ5jT8ovuVn5bmoUU3rlkSU=;
-        b=FleKXPf/KaWwtUnUYaNZT/FldCLVOFZXvajexod0yIGtG7GeD3EavMpGurMeZ61LdO
-         wlVHA+fKpr/CS1rJPKjAvYnRKNclyv2gqZxa2ey/hIyVGTqoOcBM6hlbEljTWylwsFX2
-         a3+td5f/3UeqkVBnIVtjN1fOAXh+yJ0ilxHNnm6E+DUEs4e36twzPlWRr3jefgs+DPeF
-         cl/0n7RVnQd1X0gfzqzHqxNkGoMxYkhxVu1HzBwnZsUtDHoAbGA0ft0NBK8O7TybLQBm
-         +6RuAlvbHWf5tsuI7fue30OsBvB0FHyoNqweJOZpUefnSc2s3tfQDsFl1A3Xdodt955C
-         M08g==
-X-Gm-Message-State: APjAAAWLt/OZlzV0ivNh/i8Jxmw0MeFh/ds6HcI0Adgx9wvrCd+mwC4n
-        B7OGhL157aiEnQdpGr28J3h+H3S8Wb7x+75emFzSvhrdb8Y=
-X-Google-Smtp-Source: APXvYqzzxpc/KIZteudGF3ML4Pwcop+gQzvsBym8rGDx914MnhHB6d4FabwwAY98D2vLM2yvWZJMLmMX1KYPGXhN+IE=
-X-Received: by 2002:a2e:80da:: with SMTP id r26mr15248039ljg.62.1566370870887;
- Wed, 21 Aug 2019 00:01:10 -0700 (PDT)
+        Wed, 21 Aug 2019 03:01:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46670 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727266AbfHUHB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 03:01:56 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 23DA78AC6FF;
+        Wed, 21 Aug 2019 07:01:55 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.70.39.226])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9AD7F5D6B0;
+        Wed, 21 Aug 2019 07:01:52 +0000 (UTC)
+From:   xiubli@redhat.com
+To:     josef@toxicpanda.com, axboe@kernel.dk
+Cc:     mchristi@redhat.com, linux-block@vger.kernel.org,
+        nbd@other.debian.org, linux-kernel@vger.kernel.org,
+        Xiubo Li <xiubli@redhat.com>
+Subject: [PATCH] nbd: fix possible page fault for nbd disk
+Date:   Wed, 21 Aug 2019 12:31:48 +0530
+Message-Id: <20190821070148.8502-1-xiubli@redhat.com>
 MIME-Version: 1.0
-References: <20190821161620.403f663c@canb.auug.org.au>
-In-Reply-To: <20190821161620.403f663c@canb.auug.org.au>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 21 Aug 2019 09:00:59 +0200
-Message-ID: <CACRpkdZUpuK2fg9ASF_0z_c=9r2sk0vU5JKsje98J-Qt1aQSrQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the pinctrl tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 21 Aug 2019 07:01:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 8:16 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+From: Xiubo Li <xiubli@redhat.com>
 
-> After merging the pinctrl tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
->
-> drivers/pinctrl/pinctrl-st.c: In function 'st_pctl_dt_parse_groups':
-> drivers/pinctrl/pinctrl-st.c:1212:15: error: implicit declaration of function 'of_get_named_gpio'; did you mean 'of_get_address'? [-Werror=implicit-function-declaration]
->    conf->pin = of_get_named_gpio(pins, pp->name, 0);
->                ^~~~~~~~~~~~~~~~~
->                of_get_address
->
-> Probably caused by commit
->
->   712dfdaf62b6 ("pinctrl: st: Include the right header")
+When the NBD_CFLAG_DESTROY_ON_DISCONNECT flag is set and at the same
+time when the socket is closed due to the server daemon is restarted,
+there will be crashing randomly, like:
 
-Yeah my mistake :(
+<3>[  110.151949] block nbd1: Receive control failed (result -32)
+<1>[  110.152024] BUG: unable to handle page fault for address: 0000058000000840
+<1>[  110.152063] #PF: supervisor read access in kernel mode
+<1>[  110.152083] #PF: error_code(0x0000) - not-present page
+<6>[  110.152094] PGD 0 P4D 0
+<4>[  110.152106] Oops: 0000 [#1] SMP PTI
+<4>[  110.152120] CPU: 0 PID: 6698 Comm: kworker/u5:1 Kdump: loaded Not tainted 5.3.0-rc4+ #2
+<4>[  110.152136] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+<4>[  110.152166] Workqueue: knbd-recv recv_work [nbd]
+<4>[  110.152187] RIP: 0010:__dev_printk+0xd/0x67
+<4>[  110.152206] Code: 10 e8 c5 fd ff ff 48 8b 4c 24 18 65 48 33 0c 25 28 00 [...]
+<4>[  110.152244] RSP: 0018:ffffa41581f13d18 EFLAGS: 00010206
+<4>[  110.152256] RAX: ffffa41581f13d30 RBX: ffff96dd7374e900 RCX: 0000000000000000
+<4>[  110.152271] RDX: ffffa41581f13d20 RSI: 00000580000007f0 RDI: ffffffff970ec24f
+<4>[  110.152285] RBP: ffffa41581f13d80 R08: ffff96dd7fc17908 R09: 0000000000002e56
+<4>[  110.152299] R10: ffffffff970ec24f R11: 0000000000000003 R12: ffff96dd7374e900
+<4>[  110.152313] R13: 0000000000000000 R14: ffff96dd7374e9d8 R15: ffff96dd6e3b02c8
+<4>[  110.152329] FS:  0000000000000000(0000) GS:ffff96dd7fc00000(0000) knlGS:0000000000000000
+<4>[  110.152362] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[  110.152383] CR2: 0000058000000840 CR3: 0000000067cc6002 CR4: 00000000001606f0
+<4>[  110.152401] Call Trace:
+<4>[  110.152422]  _dev_err+0x6c/0x83
+<4>[  110.152435]  nbd_read_stat.cold+0xda/0x578 [nbd]
+<4>[  110.152448]  ? __switch_to_asm+0x34/0x70
+<4>[  110.152468]  ? __switch_to_asm+0x40/0x70
+<4>[  110.152478]  ? __switch_to_asm+0x34/0x70
+<4>[  110.152491]  ? __switch_to_asm+0x40/0x70
+<4>[  110.152501]  ? __switch_to_asm+0x34/0x70
+<4>[  110.152511]  ? __switch_to_asm+0x40/0x70
+<4>[  110.152522]  ? __switch_to_asm+0x34/0x70
+<4>[  110.152533]  recv_work+0x35/0x9e [nbd]
+<4>[  110.152547]  process_one_work+0x19d/0x340
+<4>[  110.152558]  worker_thread+0x50/0x3b0
+<4>[  110.152568]  kthread+0xfb/0x130
+<4>[  110.152577]  ? process_one_work+0x340/0x340
+<4>[  110.152609]  ? kthread_park+0x80/0x80
+<4>[  110.152637]  ret_from_fork+0x35/0x40
 
-I made a v2 patch fixing the error and took this out.
+This is very easy to reproduce by running the nbd-runner.
 
-Thanks,
-Linus Walleij
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+---
+ drivers/block/nbd.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index e21d2ded732b..bf5e4227c54d 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -26,6 +26,7 @@
+ #include <linux/ioctl.h>
+ #include <linux/mutex.h>
+ #include <linux/compiler.h>
++#include <linux/completion.h>
+ #include <linux/err.h>
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+@@ -112,6 +113,8 @@ struct nbd_device {
+ 	struct list_head list;
+ 	struct task_struct *task_recv;
+ 	struct task_struct *task_setup;
++
++	struct completion complete;
+ };
+ 
+ #define NBD_CMD_REQUEUED	1
+@@ -231,6 +234,13 @@ static void nbd_put(struct nbd_device *nbd)
+ 					&nbd_index_mutex)) {
+ 		idr_remove(&nbd_index_idr, nbd->index);
+ 		mutex_unlock(&nbd_index_mutex);
++
++		/* Wait untill the recv_work exit */
++		wait_for_completion(&nbd->complete);
++
++		kfree(nbd->config);
++		nbd->config = NULL;
++
+ 		nbd_dev_remove(nbd);
+ 	}
+ }
+@@ -1134,8 +1144,6 @@ static void nbd_config_put(struct nbd_device *nbd)
+ 			}
+ 			kfree(config->socks);
+ 		}
+-		kfree(nbd->config);
+-		nbd->config = NULL;
+ 
+ 		nbd->tag_set.timeout = 0;
+ 		nbd->disk->queue->limits.discard_granularity = 0;
+@@ -1143,6 +1151,8 @@ static void nbd_config_put(struct nbd_device *nbd)
+ 		blk_queue_max_discard_sectors(nbd->disk->queue, UINT_MAX);
+ 		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, nbd->disk->queue);
+ 
++		complete(&nbd->complete);
++
+ 		mutex_unlock(&nbd->config_lock);
+ 		nbd_put(nbd);
+ 		module_put(THIS_MODULE);
+@@ -1596,6 +1606,7 @@ static int nbd_dev_add(int index)
+ 	nbd->tag_set.flags = BLK_MQ_F_SHOULD_MERGE |
+ 		BLK_MQ_F_BLOCKING;
+ 	nbd->tag_set.driver_data = nbd;
++	init_completion(&nbd->complete);
+ 
+ 	err = blk_mq_alloc_tag_set(&nbd->tag_set);
+ 	if (err)
+-- 
+2.21.0
+
