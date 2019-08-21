@@ -2,95 +2,101 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020B4C3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E4FC3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7C9D216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D43120870
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="v7xXKbSE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUqixZEM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbfHUACF (ORCPT
+        id S1726512AbfHUADV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 20:02:05 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:46888 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbfHUACF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 20:02:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=FXqq5agnMhybNrO23ARWsSKRNVHc8uwYX6TeUD3ACrU=; b=v7xXKbSE/kXKAj3899T00ra+G0
-        3VdR9y6xjSny+QEGRAy1XnJCpBF3GrRKsNGQotR6CdLMKE6TxpX0CfMQmn35lcCL242wZqt+RQYMO
-        REqcatuA7o1ySYt0k+vwRo+SuJRL96CsqsM8qpZXFu86ghZ0VmQwRYAlKsucZxG9zuZs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i0E4Z-0001Ct-3i; Wed, 21 Aug 2019 02:01:55 +0200
-Date:   Wed, 21 Aug 2019 02:01:55 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Sabrina Dubroca <sd@queasysnail.net>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        Igor Russkikh <Igor.Russkikh@aquantia.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
-        "camelia.groza@nxp.com" <camelia.groza@nxp.com>,
-        Simon Edelhaus <Simon.Edelhaus@aquantia.com>,
-        Pavel Belous <Pavel.Belous@aquantia.com>
-Subject: Re: [PATCH net-next v2 6/9] net: macsec: hardware offloading
- infrastructure
-Message-ID: <20190821000155.GA4285@lunn.ch>
-References: <20190808140600.21477-1-antoine.tenart@bootlin.com>
- <20190808140600.21477-7-antoine.tenart@bootlin.com>
- <e96fa4ae-1f2c-c1be-b2d8-060217d8e151@aquantia.com>
- <20190813085817.GA3200@kwain>
- <20190813131706.GE15047@lunn.ch>
- <2e3c2307-d414-a531-26cb-064e05fa01fc@aquantia.com>
- <20190816132959.GC8697@bistromath.localdomain>
- <20190820100140.GA3292@kwain>
- <20190820144119.GA28714@bistromath.localdomain>
+        Tue, 20 Aug 2019 20:03:21 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33727 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfHUADV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 20:03:21 -0400
+Received: by mail-io1-f67.google.com with SMTP id z3so1078413iog.0;
+        Tue, 20 Aug 2019 17:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/hK0xzub3tYFlOXLUKC5HkLTnr9OcFK2afBoeU8vIos=;
+        b=GUqixZEM/qGpnaXHE1DfSi29Qd96gfn+y1YZOG1EbLraVdbnrXZEsNAtIYIEzXLdNZ
+         R1V6Hn8lq//P+bJ4T6hBbCrp/flZP1FD0ZVNhvUaLfrFZbYBBODVrtcvGcRg94IrlxBV
+         5OymAdN1L9sc05Wt1nrnW/adiwy0RVXc8JYYKaJLppCLI3VUuvyxdBZULHcqVPQW2tQG
+         dO1aeud5wcCfb+0YOeoT8elQVyOuc+4leLAVRqDgAO5ROGlq/3vEhQ7FUHA1nm05j4Dx
+         oCTjkIfS2zxQAjNfBvptmOGWiLsV0veBHitA3CkofTU7FV/4R2b/iRgwmvRy8zkU6SSD
+         f9Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/hK0xzub3tYFlOXLUKC5HkLTnr9OcFK2afBoeU8vIos=;
+        b=fntfm2dWtsagSMnMT1zb1RFo4nMkU2YwNEMuPkrjWvrTfe+sdyGdnLcav8inXQpNW7
+         Je2U8KxvToS/b4KpQFIPbEGW5drwpB9qLWKATLI56q8rMRXhWQrs6L0FGZAKfu38p94L
+         7qMp6zZWjppgE2lwEVO1okrI5xboePQa/71nnP6ekvvCQUnk1I0kOiDkIQgYRfxiJOmp
+         42vdJTc4urcXT7xfdE/281aT+sovF/YJIHfeU+koILC9Jo8RpWPmHrle3tFTQKF9YUFU
+         +wCPI4duzi/caEjqKz38HIbyV/TA5UyFOgSgZkTjMnh79H6NAViiisPj4isK5OUTgRgm
+         C6Tw==
+X-Gm-Message-State: APjAAAVoL50Vg71oceKyXiqFcwLhCXM0zgk7sF67fCNwyneLLgxUSY97
+        SEMyKoDaUuf5igyT7kaxqOYOpM+vvzhJ7+n1akM=
+X-Google-Smtp-Source: APXvYqwsCp2QRaWKlcwHARTdMz/Hzj+coQq02t1hRapfNDDGet0cC76VvV2Lj4s9gi2N9qNvwM9dWQQw1EIRgNhtm+s=
+X-Received: by 2002:a02:10:: with SMTP id 16mr6836969jaa.96.1566345800395;
+ Tue, 20 Aug 2019 17:03:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820144119.GA28714@bistromath.localdomain>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190818165817.32634-1-deepa.kernel@gmail.com>
+ <20190818165817.32634-20-deepa.kernel@gmail.com> <201908200018.8C876788@keescook>
+In-Reply-To: <201908200018.8C876788@keescook>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Tue, 20 Aug 2019 17:03:08 -0700
+Message-ID: <CABeXuvpjgE6azA27y8MTpnJ9QogLCPbXrmbDny16tkuAJytcsw@mail.gmail.com>
+Subject: Re: [PATCH v8 19/20] pstore: fs superblock limits
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> If you look at IPsec offloading, the networking stack builds up the
-> ESP header, and passes the unencrypted data down to the driver. I'm
-> wondering if the same would be possible with MACsec offloading: the
-> macsec virtual interface adds the header (and maybe a dummy ICV), and
-> then the HW does the encryption. In case of HW that needs to add the
-> sectag itself, the driver would first strip the headers that the stack
-> created. On receive, the driver would recreate a sectag and the macsec
-> interface would just skip all verification (decrypt, PN).
+On Tue, Aug 20, 2019 at 12:20 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Sun, Aug 18, 2019 at 09:58:16AM -0700, Deepa Dinamani wrote:
+> > Leaving granularity at 1ns because it is dependent on the specific
+> > attached backing pstore module. ramoops has microsecond resolution.
+> >
+> > Fix the readback of ramoops fractional timestamp microseconds,
+> > which has incorrectly been reporting the value as nanoseconds since
+> > 3f8f80f0 ("pstore/ram: Read and write to the 'compressed' flag of pstore").
+>
+> As such, this should also have:
+>
+> Fixes: 3f8f80f0cfeb ("pstore/ram: Read and write to the 'compressed' flag of pstore")
 
-Hi Sabrina
+Will add that in. Thanks.
 
-I assume the software implementation cannot make use of TSO or GSO,
-letting the hardware segment a big buffer up into Ethernet frames?
-When using hardware MACSEC, is it possible to enable these? By the
-time the frames have reach the PHY GSO has been done. So it sees a
-stream of frames it needs to encode/decode.
+> > Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+> > Acked-by: Kees Cook <keescook@chromium.org>
+>
+> Also: this is going via some other tree, yes? (Or should I pick this up
+> for the pstore tree?)
 
-But if you are suggesting the extra headers are added by the virtual
-interface, i don't think GSO can be used? My guess would be, we get a
-performance boost from using hardware MAC sec, but there will also be
-a performance boost if GSO can be enabled when it was disabled before.
+I am hoping Al can take the series as a whole.
 
-      Andrew
+-Deepa
