@@ -2,101 +2,72 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E4FC3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C91DC3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D43120870
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:03:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUqixZEM"
+	by mail.kernel.org (Postfix) with ESMTP id C98722087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfHUADV (ORCPT
+        id S1726533AbfHUAHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 20:03:21 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33727 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfHUADV (ORCPT
+        Tue, 20 Aug 2019 20:07:47 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:61009 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfHUAHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 20:03:21 -0400
-Received: by mail-io1-f67.google.com with SMTP id z3so1078413iog.0;
-        Tue, 20 Aug 2019 17:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/hK0xzub3tYFlOXLUKC5HkLTnr9OcFK2afBoeU8vIos=;
-        b=GUqixZEM/qGpnaXHE1DfSi29Qd96gfn+y1YZOG1EbLraVdbnrXZEsNAtIYIEzXLdNZ
-         R1V6Hn8lq//P+bJ4T6hBbCrp/flZP1FD0ZVNhvUaLfrFZbYBBODVrtcvGcRg94IrlxBV
-         5OymAdN1L9sc05Wt1nrnW/adiwy0RVXc8JYYKaJLppCLI3VUuvyxdBZULHcqVPQW2tQG
-         dO1aeud5wcCfb+0YOeoT8elQVyOuc+4leLAVRqDgAO5ROGlq/3vEhQ7FUHA1nm05j4Dx
-         oCTjkIfS2zxQAjNfBvptmOGWiLsV0veBHitA3CkofTU7FV/4R2b/iRgwmvRy8zkU6SSD
-         f9Og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/hK0xzub3tYFlOXLUKC5HkLTnr9OcFK2afBoeU8vIos=;
-        b=fntfm2dWtsagSMnMT1zb1RFo4nMkU2YwNEMuPkrjWvrTfe+sdyGdnLcav8inXQpNW7
-         Je2U8KxvToS/b4KpQFIPbEGW5drwpB9qLWKATLI56q8rMRXhWQrs6L0FGZAKfu38p94L
-         7qMp6zZWjppgE2lwEVO1okrI5xboePQa/71nnP6ekvvCQUnk1I0kOiDkIQgYRfxiJOmp
-         42vdJTc4urcXT7xfdE/281aT+sovF/YJIHfeU+koILC9Jo8RpWPmHrle3tFTQKF9YUFU
-         +wCPI4duzi/caEjqKz38HIbyV/TA5UyFOgSgZkTjMnh79H6NAViiisPj4isK5OUTgRgm
-         C6Tw==
-X-Gm-Message-State: APjAAAVoL50Vg71oceKyXiqFcwLhCXM0zgk7sF67fCNwyneLLgxUSY97
-        SEMyKoDaUuf5igyT7kaxqOYOpM+vvzhJ7+n1akM=
-X-Google-Smtp-Source: APXvYqwsCp2QRaWKlcwHARTdMz/Hzj+coQq02t1hRapfNDDGet0cC76VvV2Lj4s9gi2N9qNvwM9dWQQw1EIRgNhtm+s=
-X-Received: by 2002:a02:10:: with SMTP id 16mr6836969jaa.96.1566345800395;
- Tue, 20 Aug 2019 17:03:20 -0700 (PDT)
+        Tue, 20 Aug 2019 20:07:47 -0400
+Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7L07bDN042143;
+        Wed, 21 Aug 2019 09:07:37 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp);
+ Wed, 21 Aug 2019 09:07:37 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7L07atr042137;
+        Wed, 21 Aug 2019 09:07:36 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: (from i-love@localhost)
+        by www262.sakura.ne.jp (8.15.2/8.15.2/Submit) id x7L07aoF042136;
+        Wed, 21 Aug 2019 09:07:36 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Message-Id: <201908210007.x7L07aoF042136@www262.sakura.ne.jp>
+X-Authentication-Warning: www262.sakura.ne.jp: i-love set sender to penguin-kernel@i-love.sakura.ne.jp using -f
+Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
 MIME-Version: 1.0
-References: <20190818165817.32634-1-deepa.kernel@gmail.com>
- <20190818165817.32634-20-deepa.kernel@gmail.com> <201908200018.8C876788@keescook>
-In-Reply-To: <201908200018.8C876788@keescook>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Tue, 20 Aug 2019 17:03:08 -0700
-Message-ID: <CABeXuvpjgE6azA27y8MTpnJ9QogLCPbXrmbDny16tkuAJytcsw@mail.gmail.com>
-Subject: Re: [PATCH v8 19/20] pstore: fs superblock limits
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Date:   Wed, 21 Aug 2019 09:07:36 +0900
+References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp> <20190820222403.GB8120@kroah.com>
+In-Reply-To: <20190820222403.GB8120@kroah.com>
+Content-Type: text/plain; charset="ISO-2022-JP"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 12:20 AM Kees Cook <keescook@chromium.org> wrote:
+Greg Kroah-Hartman wrote:
+> Oh, nice!  This shouldn't break anything that is assuming that the read
+> will complete before a signal is delivered, right?
 >
-> On Sun, Aug 18, 2019 at 09:58:16AM -0700, Deepa Dinamani wrote:
-> > Leaving granularity at 1ns because it is dependent on the specific
-> > attached backing pstore module. ramoops has microsecond resolution.
-> >
-> > Fix the readback of ramoops fractional timestamp microseconds,
-> > which has incorrectly been reporting the value as nanoseconds since
-> > 3f8f80f0 ("pstore/ram: Read and write to the 'compressed' flag of pstore").
->
-> As such, this should also have:
->
-> Fixes: 3f8f80f0cfeb ("pstore/ram: Read and write to the 'compressed' flag of pstore")
+> I know userspace handling of "short" reads is almost always not there...
 
-Will add that in. Thanks.
+Since this check will give up upon SIGKILL, userspace won't be able to see
+the return value from read(). Thus, returning 0 upon SIGKILL will be safe. ;-)
+Maybe we also want to add cond_resched()...
 
-> > Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
-> > Acked-by: Kees Cook <keescook@chromium.org>
->
-> Also: this is going via some other tree, yes? (Or should I pick this up
-> for the pstore tree?)
-
-I am hoping Al can take the series as a whole.
-
--Deepa
+By the way, do we want similar check on write_mem() side?
+If aborting "write to /dev/mem" upon SIGKILL (results in partial write) is
+unexpected, we might want to ignore SIGKILL for write_mem() case.
+But copying data from killed threads (especially when killed by OOM killer
+and userspace memory is reclaimed by OOM reaper before write_mem() returns)
+would be after all unexpected. Then, it might be preferable to check SIGKILL
+on write_mem() side...
