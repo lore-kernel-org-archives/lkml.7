@@ -2,95 +2,175 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7EEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE49C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBF622CE3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230C9233A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbfHUMLr (ORCPT
+        id S1727683AbfHUMOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 08:11:47 -0400
-Received: from mail1.bemta24.messagelabs.com ([67.219.250.209]:59783 "EHLO
-        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726484AbfHUMLr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 08:11:47 -0400
-Received: from [67.219.251.53] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-c.us-west-2.aws.symcld.net id F6/2C-30481-FF43D5D5; Wed, 21 Aug 2019 12:11:43 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDKsWRWlGSWpSXmKPExsXi5LtOQPefSWy
-  sQe8ac4uHV/0tVk3dyWKx6fE1VouuXyuZLS7vmsNm8Xf7JhaLF1vELdqOHWN14PDYOesuu8em
-  VZ1sHneu7WHz2Lyk3mPjux1MHv1/DTw+b5ILYI9izcxLyq9IYM042LiTrWAec8XVCwfZGhhnM
-  HcxcnEICaxilJi+6SY7hLOXUeLMimUsXYycHGwC5hLTDh8Es0UELCT+TZgL1sEs8ItJ4tOOA0
-  wgCWGBMInXc1ayQhSFS7xe8psNwraSuHVsGyOIzSKgKjH35HtmEJtXwFfixuxPYDVCAjUSkyf
-  9ZAexOQXsJE6fmgQ2h1FAVmLl+dNgvcwC4hK3nswH2yUhICCxZM95ZghbVOLl43+sELaCxIIL
-  X4EO5QCq15RYv0sfolVRYkr3Q3aItYISJ2c+YYFYqybRNmcC8wRG0VlINsxC6J6FpHsWku4Fj
-  CyrGM2TijLTM0pyEzNzdA0NDHQNDY10DY3Ndc0s9RKrdJP1Sot1y1OLS3SN9BLLi/WKK3OTc1
-  L08lJLNjECoziloNN1B+P+WW/0DjFKcjApifKeUYmNFeJLyk+pzEgszogvKs1JLT7EKMPBoST
-  Ba2IMlBMsSk1PrUjLzAEmFJi0BAePkgjvXSOgNG9xQWJucWY6ROoUozHHhJdzFzFzHJm7dBGz
-  EEtefl6qlDjvH5BSAZDSjNI8uEGwRHeJUVZKmJeRgYFBiKcgtSg3swRV/hWjOAejkjDvHZB7e
-  DLzSuD2vQI6hQnolN2HI0FOKUlESEk1MNV1bzmx+TDj7m9vk86tefZYfvaaV281E4S98pdbm3
-  P8MhHnaLnnte98xJmfE81v8mjcmLXOnaXEyervw/kfvLtiiyIk5VdNfP2zLG1P9beX39m/b/Z
-  +vqNFbYdFzbR150KtvC6eZ8x19ftRGWiy4tCNgFVPWBS4uFZbtT1mcDr6THCRTu/8leEsv47v
-  2b2MoWB59C2NiOXSyn4HXP9dXZgb3/BOL93bcIXN+6qF3jOSeib1+ficFsx/sbbw0213D6Egk
-  RNKbnc3TXya816Kv/Ds67z7akwvDr7W3rq4JtF8inWgtMjq22bcFVMTTXcxfKj3TD6grFEsaR
-  z6IH8W66/FlWzSDA2nZgRvn2h/Y7kSS3FGoqEWc1FxIgB4MB1D7wMAAA==
-X-Env-Sender: Jose.DiazdeGrenu@digi.com
-X-Msg-Ref: server-19.tower-365.messagelabs.com!1566389501!14255!1
-X-Originating-IP: [66.77.174.16]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.43.9; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 22255 invoked from network); 21 Aug 2019 12:11:42 -0000
-Received: from owa.digi.com (HELO MCL-VMS-XCH01.digi.com) (66.77.174.16)
-  by server-19.tower-365.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 21 Aug 2019 12:11:42 -0000
-Received: from DOR-VMS-XCH01.digi.com (10.49.8.98) by MCL-VMS-XCH01.digi.com
- (10.5.8.49) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 21 Aug 2019
- 07:11:41 -0500
-Received: from DOR-SMS-XCH01.digi.com ([fe80::894b:3bdc:74ae:6efc]) by
- DOR-VMS-XCH01.digi.com ([fe80::c47f:be41:1dc7:5ab8%11]) with mapi id
- 14.03.0468.000; Wed, 21 Aug 2019 14:11:39 +0200
-From:   "Diaz de Grenu, Jose" <Jose.DiazdeGrenu@digi.com>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/2] nvmem: imx-ocotp: allow reads with arbitrary size
- and offset
-Thread-Topic: [PATCH 0/2] nvmem: imx-ocotp: allow reads with arbitrary size
- and offset
-Thread-Index: AQHVQWvhEud7zccX5U+rMC/CtlWS8Kbt2KgAgBfWu0A=
-Date:   Wed, 21 Aug 2019 12:11:38 +0000
-Message-ID: <0B2EBCD48D33654381E736352034C70C025D80A9@dor-sms-xch01.digi.com>
-References: <1563895963-19526-1-git-send-email-Jose.DiazdeGrenu@digi.com>
- <771a6f0a-3cc2-da20-2439-9a91dd2bf9d2@linaro.org>
-In-Reply-To: <771a6f0a-3cc2-da20-2439-9a91dd2bf9d2@linaro.org>
-Accept-Language: es-ES, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.101.2.178]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 21 Aug 2019 08:14:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47908 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbfHUMOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 08:14:22 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 753238AC700;
+        Wed, 21 Aug 2019 12:14:21 +0000 (UTC)
+Received: from [10.36.116.105] (ovpn-116-105.ams2.redhat.com [10.36.116.105])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9671B2B9D9;
+        Wed, 21 Aug 2019 12:14:16 +0000 (UTC)
+Subject: Re: [PATCH v2] iommu: revisit iommu_insert_resv_region()
+ implementation
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     eric.auger.pro@gmail.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org, shameerali.kolothum.thodi@huawei.com,
+        alex.williamson@redhat.com, robin.murphy@arm.com
+References: <20190801155946.20645-1-eric.auger@redhat.com>
+ <20190806073202.GA26575@infradead.org>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <58fa88cb-0ba6-4ba0-130c-091ad5274795@redhat.com>
+Date:   Wed, 21 Aug 2019 14:14:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
+In-Reply-To: <20190806073202.GA26575@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 21 Aug 2019 12:14:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDYvMDgvMjAxOSAxMjowNiBTcmluaXZhcyBLYW5kYWdhdGxhIHdyb3RlOg0KPiBBbnlvbmUg
-Zm9ybSBJTVggY2FuIHRlc3QgdGhpcyBwYXRjaHNldCBiZWZvcmUgSSBwdXNoIHRoaXMgb3V0Pw0K
-Pg0KPiBUaGFua3MsDQo+IHNyaW5pDQoNCkp1c3QgZm9yIHRoZSByZWNvcmQsIEkgdGVzdGVkIHRo
-aXMgb24gYW4gaS5NWDZVTCBiYXNlZCBib2FyZC4NCg0KTGV0IG1lIGtub3cgaWYgdGhlcmUgaXMg
-c29tZXRoaW5nIEkgY2FuIGRvIHRvIGZhY2lsaXRhdGUgdGhlIHRlc3RpbmcgdG8gYW55b25lIGZy
-b20gSU1YLg0KDQpUaGFua3MuDQo=
+Hi Christoph,
+
+On 8/6/19 9:32 AM, Christoph Hellwig wrote:
+> A couple nitpicks below:
+> 
+> On Thu, Aug 01, 2019 at 05:59:46PM +0200, Eric Auger wrote:
+>> - * The new element is sorted by address with respect to the other
+>> - * regions of the same type. In case it overlaps with another
+>> - * region of the same type, regions are merged. In case it
+>> - * overlaps with another region of different type, regions are
+>> - * not merged.
+>> + * Elements are sorted by start address and overlapping segments
+>> + * of the same type are merged.
+>>   */
+>> +int iommu_insert_resv_region(struct iommu_resv_region *new,
+>> +			     struct list_head *regions)
+>>  {
+>> +	struct iommu_resv_region *iter, *tmp, *nr, *top;
+>> +	struct list_head stack;
+>> +	bool added = false;
+>>  
+>> +	INIT_LIST_HEAD(&stack);
+
+Please forgive me for the delay. I am just back to the office.
+> 
+> Nit: you could just use
+> 
+> 	LIST_HEAD(&stack);
+> 
+> to declare and initialize the variable in a single line.
+done
+> 
+>> +	nr = iommu_alloc_resv_region(new->start, new->length,
+>> +				     new->prot, new->type);
+>> +	if (!nr)
+>>  		return -ENOMEM;
+>>  
+>> +	/* First add the new elt based on start address sorting */
+> 
+> /elt/element/ ?
+yes
+> 
+>> +	list_for_each_entry(iter, regions, list) {
+>> +		if (nr->start < iter->start) {
+>> +			list_add_tail(&nr->list, &iter->list);
+>> +			added = true;
+>> +			break;
+>> +		} else if (nr->start == iter->start && nr->type <= iter->type) {
+>> +			list_add_tail(&nr->list, &iter->list);
+>> +			added = true;
+>> +			break;
+>> +		}
+> 
+> Nit:  no need for an else after a a break.  But then again  both
+> branches look identical, so why don't you just merge them:
+> 
+> 		if (nr->start < iter->start ||
+> 		    (nr->start == iter->start && nr->type <= iter->type)) {
+> 			list_add_tail(&nr->list, &iter->list);
+> 			added = true;
+> 			break;
+I merged both
+> 
+> 	}
+> 
+>> +	if (!added)
+>> +		list_add_tail(&nr->list, regions);
+> 
+> Probably down to preference, but I'd just use a goto to jump past the
+> list_add and save the added variable.
+done
+> 
+>> +	/* Merge overlapping segments of type nr->type, if any */
+>> +	list_for_each_entry_safe(iter, tmp, regions, list) {
+>> +		phys_addr_t top_end, iter_end = iter->start + iter->length - 1;
+>> +		bool found = false;
+>> +
+>> +		/* no merge needed on elements of different types than @nr */
+>> +		if (iter->type != nr->type) {
+>> +			list_move_tail(&iter->list, &stack);
+>> +			continue;
+>> +		}
+>> +
+>> +		/* look for the last stack element of same type as @iter */
+>> +		list_for_each_entry_reverse(top, &stack, list)
+>> +			if (top->type == iter->type) {
+>> +				found = true;
+>> +				break;
+>> +			}
+>> +		if (!found) {
+> 
+> Same here.
+done
+> 
+>> +			list_move_tail(&iter->list, &stack);
+>> +			continue;
+>> +		}
+>> +
+>> +		top_end = top->start + top->length - 1;
+>> +
+>> +		if (iter->start > top_end + 1) {
+>> +			list_move_tail(&iter->list, &stack);
+>> +		} else {
+>> +			top->length = max(top_end, iter_end) - top->start + 1;
+>> +			list_del(&iter->list);
+>> +			kfree(iter);
+>> +		}
+> 
+> I wonder if the body of the outer list_for_each_entry_safe loop would
+> be a bit nicer in a helper, but again that is probably just down to
+> personal preference.
+I skipped that suggestion at the moment.
+
+Hope that looks better in v3.
+
+Thank you for your review!
+
+Best Regards
+
+Eric
+> 
