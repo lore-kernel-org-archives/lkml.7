@@ -2,110 +2,184 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902A1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE95C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 693CE22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F183C2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 20:24:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="aR2HO5vC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbfHUUSr (ORCPT
+        id S1729733AbfHUUYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 16:18:47 -0400
-Received: from mga04.intel.com ([192.55.52.120]:54478 "EHLO mga04.intel.com"
+        Wed, 21 Aug 2019 16:24:32 -0400
+Received: from mout.web.de ([212.227.17.12]:47619 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729078AbfHUUSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 16:18:46 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 13:18:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
-   d="scan'208";a="186344345"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by FMSMGA003.fm.intel.com with ESMTP; 21 Aug 2019 13:18:46 -0700
-Date:   Wed, 21 Aug 2019 13:18:46 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "alan@linux.intel.com" <alan@linux.intel.com>,
-        "ricardo.neri-calderon@linux.intel.com" 
-        <ricardo.neri-calderon@linux.intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Qiming" <qi-ming.wu@intel.com>,
-        "Kim, Cheol Yong" <cheol.yong.kim@intel.com>,
-        "Tanwar, Rahul" <rahul.tanwar@intel.com>
-Subject: Re: [PATCH v2 2/3] x86/cpu: Add new Intel Atom CPU model name
-Message-ID: <20190821201845.GA29589@agluck-desk2.amr.corp.intel.com>
-References: <cover.1565940653.git.rahul.tanwar@linux.intel.com>
- <83345984845d24b6ce97a32bef21cd0bbdffc86d.1565940653.git.rahul.tanwar@linux.intel.com>
- <20190820122233.GN2332@hirez.programming.kicks-ass.net>
- <1D9AE27C-D412-412D-8FE8-51B625A7CC98@intel.com>
- <20190820145735.GW2332@hirez.programming.kicks-ass.net>
+        id S1727014AbfHUUYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 16:24:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1566419058;
+        bh=VNQY+ZmbCZzJoVAMnbzoqAo320qHdd8HBCfC8P3oEsQ=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=aR2HO5vCArAroXgeUrYAEDof3jwPLQ4+GRPz0nZmtBfU0GaZ4h4s+R1B9KawBDImi
+         JAVXQ/qkgEZavUhye5m+Tn0+zlwJY0j7+ilR+RDLqRZoYJQMGBwX4wnAwcQpUzIqCv
+         SycrrTogtL9XbPiWcKJErVy5v165vDXpdnU8f5fU=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.9.44]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LpwB1-1iUOWM3bTL-00fnHN; Wed, 21
+ Aug 2019 22:24:18 +0200
+To:     linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Petko Manolov <petkan@nucleusys.com>,
+        Steve Winslow <swinslow@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: =?UTF-8?Q?=5bPATCH=5d_net=3a_usb=3a_Delete_unnecessary_checks_befor?=
+ =?UTF-8?B?ZSB0aGUgbWFjcm8gY2FsbCDigJxkZXZfa2ZyZWVfc2ti4oCd?=
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <425214be-355b-92c0-bc74-1d0ea899290f@web.de>
+Date:   Wed, 21 Aug 2019 22:24:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190820145735.GW2332@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jFIJT+Q1Ibe/eal+vXdIE/RL9fhDs5LiS/YB/LPMcccmxCIaowF
+ AymYymTWKvlURv0OvC4wVcSuchgR/fli/uf9UxivYf+etVEEY23eE/XhfxuqpGpuY+r94mz
+ FG+c/3Egw+pwS98nVplYVkIah2HPQbFwgqSLLfMyWlHOyTrWhIMjMFQI2CpYdlGiBqsCUgB
+ deisjnDMiH0p3ZIkdsDyw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:HzLO6KbUB5U=:YUaWhZVedtxrKGftc9oH9Z
+ nwa1ox3jY/BFfqc3mv2JaFEgsFaUOiCRUKAzBaNR54MyqAgfPFiN/rgXzujtTtpleVlluON41
+ sOgqQGStfpFOq+VzRxWSbnCkOt++8tts6wFlc00KD+qFlvwRMJ2WYcLQmJhvFI5wyvFbpDESi
+ fFioWzIb4BH3CzMBJVd2gMYDr4bVitbVATXos3sKremDeOl5yQe2XD22lCEnGoFXDTx4XoKwl
+ XzrLUO/TBYgaQjo9znDBNKA3kx4D0M2KgW22mdlPMF4rw0eUGjwfTJPtMTtoB8L5MTVEv6aM4
+ x2dElgdDmq/BQBEkdLgBnnn+hT7XcUvRybe75xpHX50WyXPmtVpXU4TVbPRnBV3ox2hk+1PYS
+ YBmATmMmqbkdEtoMBZXK+yaKny4Hb0CMFYH0slMqy3KrjfKxa3sG86wL3URSmhp6zbXDb+3jL
+ uunRB2heRx1qwBilNkSP8o3E4HLGn3s0WBoLq+nBJ8oggz0RKiAlJ/4aO0RuBru8AHrMiaU7j
+ uPobMsKlmaz/1uouvsfmSIlpWGOlvk7Se0efDjCx3XWnikGOL4wkG/n+uygsTR+c7vdwMeh2n
+ Rba7gqs8aGhNEBvL0IQgELIllOAyn1DdS6zHDg3qnjUYEJ+9SNCh+5fU2dn3hhpPmSPsaOHe/
+ L77nG+vbXyLJGh/Vs5vYqiu1HVVPAGawu3HcSOV0O5a79MxaBqLwm4mIplWYEhH9jqh28uVNv
+ R2u7vhJ+1BzxV9U+mSXe3j92rjASQMgt56dJTrZSTyegUysP9TQ07jNAW/SfAsJCWXABEVJm0
+ J4KNleb8J8PiBFxN/UtAZv0IwSaEFPU64ftGlQ5R2sfHo4uIS+BQzIQiyHkOnOQ01Cu8XRZf3
+ F2PmdCf1NE89PrtZhQ1DY89yqGVBjZFqUGsaDpPMDqpQ/4CLdFZ0edcPLDFbqW8wZBeWokkna
+ l/LZXx1O/SNUnU6GnFIWeaj+fNX3QLV+fRErdUWbu/ptWoXowGYmX7EaITGbsvx1nnbUoMcKQ
+ 6vtEgVou/2y5L16jl0ku4B/ho8ina24hPb7Ge57Jec3LNukpggEk25PZOodOL296ADe7W5cLE
+ EfIfyDPecG4Ne6aE490WzagseNgnQ+5aXpjSssrCQJuD9K0+hgEdmeTry2v1XNAaRGFOr2gAn
+ LNSHA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 04:57:35PM +0200, Peter Zijlstra wrote:
-> On Tue, Aug 20, 2019 at 12:48:05PM +0000, Luck, Tony wrote:
-> > 
-> > >> +#define INTEL_FAM6_ATOM_AIRMONT_NP    0x75 /* Lightning Mountain */
-> > > 
-> > > What's _NP ?
-> > 
-> > Network Processor. But that is too narrow a descriptor. This is going to be used in
-> > other areas besides networking. 
-> > 
-> > I’m contemplating calling it AIRMONT2
-> 
-> What would describe the special sause that warranted a new SOC? If this
-> thing is marketed as 'Network Processor' then I suppose we can actually
-> use it, esp. if we're going to see this more, like the MID thing -- that
-> lived for a while over multiple uarchs.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Wed, 21 Aug 2019 22:16:02 +0200
 
-The reasons for allocating a new model number are a mystery.
-I've seen cases where I thought we'd get a new numnber for sure,
-but then just bumped the stepping. I've also seen us allocate a
-new number when it didn't look needed (to me, from my OS perspective).
+The dev_kfree_skb() function performs also input parameter validation.
+Thus the test around the shown calls is not needed.
 
-As I mentioned above, there are some folks internally that think
-NP == Network Processor is too narrow a pigeonhole for this CPU.
+This issue was detected by using the Coccinelle software.
 
-But _NPAOS (Network Processor And Other Stuff) doesn't sound helpful.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/net/usb/lg-vl600.c | 4 +---
+ drivers/net/usb/rtl8150.c  | 6 ++----
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-> Note that for the big cores we added the NNPI thing, which was for
-> Neural Network Processing something.
+diff --git a/drivers/net/usb/lg-vl600.c b/drivers/net/usb/lg-vl600.c
+index 6c2b3e368efe..217a2d8fa47b 100644
+=2D-- a/drivers/net/usb/lg-vl600.c
++++ b/drivers/net/usb/lg-vl600.c
+@@ -87,9 +87,7 @@ static void vl600_unbind(struct usbnet *dev, struct usb_=
+interface *intf)
+ {
+ 	struct vl600_state *s =3D dev->driver_priv;
 
-I'm sure that we will invent all sorts of strings for the "OPTDIFF"
-part of the name (many of which will only be used once or twice).
+-	if (s->current_rx_buf)
+-		dev_kfree_skb(s->current_rx_buf);
+-
++	dev_kfree_skb(s->current_rx_buf);
+ 	kfree(s);
 
-Rationale for "AIRMONT2" is that this is derived from Airmont. So
-you'd expect many model specific bits of code to do the same for
-this as they did for plain AIRMONT. But in a few corner cases there
-will be separate code.
+ 	return usbnet_cdc_unbind(dev, intf);
+diff --git a/drivers/net/usb/rtl8150.c b/drivers/net/usb/rtl8150.c
+index 98f33e270af1..13e51ccf0214 100644
+=2D-- a/drivers/net/usb/rtl8150.c
++++ b/drivers/net/usb/rtl8150.c
+@@ -586,8 +586,7 @@ static void free_skb_pool(rtl8150_t *dev)
+ 	int i;
 
-Perhaps I need to update the rubric that I just added to the
-head on intel-family.h to say that the MICROARCH element may
-be followed by an optional number to differentiate SOCs that
-use essentially the same core, but have different model numbers
-because of SOC differences outside of the core.
+ 	for (i =3D 0; i < RX_SKB_POOL_SIZE; i++)
+-		if (dev->rx_skb_pool[i])
+-			dev_kfree_skb(dev->rx_skb_pool[i]);
++		dev_kfree_skb(dev->rx_skb_pool[i]);
+ }
 
--Tony
+ static void rx_fixup(unsigned long data)
+@@ -946,8 +945,7 @@ static void rtl8150_disconnect(struct usb_interface *i=
+ntf)
+ 		unlink_all_urbs(dev);
+ 		free_all_urbs(dev);
+ 		free_skb_pool(dev);
+-		if (dev->rx_skb)
+-			dev_kfree_skb(dev->rx_skb);
++		dev_kfree_skb(dev->rx_skb);
+ 		kfree(dev->intr_buff);
+ 		free_netdev(dev->netdev);
+ 	}
+=2D-
+2.23.0
+
