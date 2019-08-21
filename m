@@ -2,128 +2,216 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 301DDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8290EC3A59B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D43233A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:56:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="TdnpAHVA"
+	by mail.kernel.org (Postfix) with ESMTP id 53FBA233A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfHUJ4m (ORCPT
+        id S1727314AbfHUJ45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:56:42 -0400
-Received: from mail-eopbgr700045.outbound.protection.outlook.com ([40.107.70.45]:51808
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726935AbfHUJ4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:56:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=id4ASevEIGgIogNEvUycxs4ZQnSgIsKxVYlNxWtpkNcrIvoxMj9UGNY4KBiTlPwsV7d4I8841F8Bm0uejbWTWgNHJyXLmp7j9nt1ib0fV+mpKpn/xU+igi0yJsWI+NNpiBAcQhpiGJw5fcliiCS3XE/vcwQd1jURkq6V0xF5jCqbs6AqwWhy0uG7+RWbkLf+1jxhlcVFUOLIsBdMpig8ExFgxcC8jrHviEYIIaerbeZ1i3eTm/8dBf9jfLc9K3QUVjhoQynthEofGsVT6njmxYgpzi0y2DB61MlyDblJcOSvQOIC5HcWMaMEKBvreADIZGpczzvXAgcYVByY817YJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ga9HpClYwxw/cm6sUhur+fKgs5ikbOaHmZU6B1GonhM=;
- b=WvhBdvyVt/vV/pIwWh6PLrHUPg1xIHm8gzPIYLQH0ZSUwnolQO1cDNQbmsGDmW+3sQrAuMTxSkfAE4UvlJglgeUdQD8HLoGWkbVi222IdBSHSD0BZ8s45C61C0Jydov9vl46OmLvZvoT0qJ4pMveqtz+iq3mLe3ukjWtsfZYn5jOz8PMuxUe233ouj9t1LIHObBUxud5Rox+K9JzcsODJ6ToI43bM9Vg5xJpZACjU0CsjYYJ25EPsQBtAquX/zr5OLCjVosz6iRPP+ohcTg1QrSte+F5+j7dCLaKU+q8Z6WNw5QSg8w88MobH2P3HLip6TUBqecIt3yJvpVCrLze3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ga9HpClYwxw/cm6sUhur+fKgs5ikbOaHmZU6B1GonhM=;
- b=TdnpAHVA8iMnekqWh2toaUxA8wd6YQyIQfccRK/k5sGZlJ6FcZYf0rWPOWmPmZOzXkiN+KprdqEatoAAvKXcuiMPOZBLJPDIn9fU03br1vJ1wuGnlipWjZKMGqOL0paOcC4rR7f1jpgavBfRoQi6NX0We2U4CqxMMbz+3abwiCA=
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
- BYAPR03MB3639.namprd03.prod.outlook.com (52.135.213.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Wed, 21 Aug 2019 09:56:40 +0000
-Received: from BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::a517:3578:67bf:6c88]) by BYAPR03MB4773.namprd03.prod.outlook.com
- ([fe80::a517:3578:67bf:6c88%7]) with mapi id 15.20.2157.022; Wed, 21 Aug 2019
- 09:56:40 +0000
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Sven Schnelle <svens@stackframe.org>
-CC:     "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] kprobes/parisc: remove arch_kprobe_on_func_entry()
-Thread-Topic: [PATCH] kprobes/parisc: remove arch_kprobe_on_func_entry()
-Thread-Index: AQHVWAa6TjC5SDDjQUqnxzYIwX9R7g==
-Date:   Wed, 21 Aug 2019 09:56:40 +0000
-Message-ID: <20190821174533.5736ca90@xhacker.debian>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [124.74.246.114]
-x-clientproxiedby: TY2PR06CA0046.apcprd06.prod.outlook.com
- (2603:1096:404:2e::34) To BYAPR03MB4773.namprd03.prod.outlook.com
- (2603:10b6:a03:134::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5f79cb2a-0b06-4a3d-233e-08d7261ddcd1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR03MB3639;
-x-ms-traffictypediagnostic: BYAPR03MB3639:
-x-microsoft-antispam-prvs: <BYAPR03MB3639808F53A797398138AEFBEDAA0@BYAPR03MB3639.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2000;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(366004)(39860400002)(396003)(346002)(189003)(199004)(71190400001)(71200400001)(110136005)(316002)(4326008)(54906003)(486006)(26005)(5660300002)(102836004)(6506007)(4744005)(66066001)(3846002)(6116002)(2906002)(386003)(186003)(7736002)(99286004)(305945005)(1076003)(53936002)(66946007)(66476007)(66556008)(64756008)(66446008)(256004)(86362001)(476003)(6436002)(50226002)(52116002)(478600001)(81156014)(8676002)(81166006)(6512007)(9686003)(8936002)(25786009)(6486002)(14454004)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3639;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: synaptics.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +X5eGJ7vCJ2XkVJtTSWOxpO9ZbPM99Qdmj/v++nkL9T3d56JWTXZmxYpk+/Ppwa8yGQ0QqWHeKPPd/hShkKAZd3t7D6gQkUHWNenJ6foz5vS9m01Y1KG8P31za2SGr4Y++oF0NpkUXL6XTeTIN1fLjMbmNWw4MYDB7LqA+ybGFxu6FKcUDcKgwyEBHHlixRDONF71vziFdI8o1voQ/HM7zyIUsnLG51l/MeT/+PrrAtDWE919sokhoRSwWiErZHbjFOKTKJztUpxYIjjqKzZwIucH6grIW42f5V5nOcs3FHAZBbRzx6gCzKT73hB74EwHwxg1zvMZ1Jg098ERXyN3ABjwXacCkcLDUKBG6ITM9woH1aVd3PmUNYLb3gpusPrTBhzKy+YSmLTWLXxWn1C05YhS0V3ACPbny8NPnIA7jg=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <94073DB57D47F04D96301B354B3E9B97@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 21 Aug 2019 05:56:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54486 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726227AbfHUJ44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:56:56 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ADC76C08EC01
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 09:56:55 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id d64so969463wmc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 02:56:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JOVqz1l35vJZ23KPBu9ziZO2Il+lGFYoleDymVgdcKA=;
+        b=ftWOFUizch0OUJ83EJ9xoLX5EU1QxFefrcpTbMGHpF5NpvftTphXGPCZvsWQ/t5kdo
+         r72zN9jVh95KfBKlO8VjXwHdg44uGMGAx1FgesKEBRPKR1TlathRO+d6aPeVcDBrQv1c
+         2HbzqU1QDNVK+/aNxW76Vp5MZQWriYC9dnAQL/9A9lZuqG1S1D7t31SqujhLAu7zZob9
+         0aP6I2WCOV9MpR7/Uvg6yUGdjXl4EeYVaro4fbi5M/hI4DDqLJToJ1nt4XKMx6PvysSR
+         FOp3WfsWFosXVCnNYw/KRCdIY9+KFl5+HbG1MGdDSvjl68FzTTHc7QFjx8dw0dDSoOnQ
+         qkdQ==
+X-Gm-Message-State: APjAAAVJXHedEwJzBUAl5VFiNWTT1ccHxFGCKlp0rRQYe+kg5qDYqvOB
+        IEKO3C4FU3P+6W6VX+sYgf2gMoaPzF0It4GtEEBlhXFW7AnZNADYYgTWGRMctqKj7YX5ItTK1z/
+        eqOVPj05iqw41BF2PlwwdPxS6
+X-Received: by 2002:a5d:54c4:: with SMTP id x4mr39913681wrv.155.1566381414343;
+        Wed, 21 Aug 2019 02:56:54 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwhhUql7+ZyKhnIUaI4qLrkDP5iPcpcLFTYf0YurYLpd+8qazbz3a0zv9Hd1gJ0CxdPSR6rmQ==
+X-Received: by 2002:a5d:54c4:: with SMTP id x4mr39913652wrv.155.1566381414103;
+        Wed, 21 Aug 2019 02:56:54 -0700 (PDT)
+Received: from vitty.brq.redhat.com (ip-89-176-161-20.net.upcbroadband.cz. [89.176.161.20])
+        by smtp.gmail.com with ESMTPSA id j16sm18795169wrp.62.2019.08.21.02.56.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 02:56:53 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linux-hyperv@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] x86/hyper-v: enable TSC page clocksource on 32bit
+Date:   Wed, 21 Aug 2019 11:56:50 +0200
+Message-Id: <20190821095650.1841-1-vkuznets@redhat.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f79cb2a-0b06-4a3d-233e-08d7261ddcd1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 09:56:40.1112
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: B4qZkoZHm09q1Re2eWEn5vf0wyGzHoA2BEBSNc7Dzn0FrfbePEEzKIp73O8mrzQEeWpBxFH8JnsoSkuRwyv1Iw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3639
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The common kprobes provides a weak implementation of
-arch_kprobe_on_func_entry(). The parisc version is the same as the
-common version, so remove it.
+There is no particular reason to not enable TSC page clocksource
+on 32-bit. mul_u64_u64_shr() is available and despite the increased
+computational complexity (compared to 64bit) TSC page is still a huge
+win compared to MSR-based clocksource.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+In-kernel reads:
+  MSR based clocksource: 3361 cycles
+  TSC page clocksource: 49 cycles
+
+Reads from userspace (unilizing vDSO in case of TSC page):
+  MSR based clocksource: 5664 cycles
+  TSC page clocksource: 131 cycles
+
+Enabling TSC page on 32bits allows us to get rid of CONFIG_HYPERV_TSCPAGE
+as it is now not any different from CONFIG_HYPERV_TIMER.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- arch/parisc/kernel/kprobes.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/x86/include/asm/vdso/gettimeofday.h |  6 +++---
+ drivers/clocksource/hyperv_timer.c       | 11 -----------
+ drivers/hv/Kconfig                       |  3 ---
+ include/clocksource/hyperv_timer.h       |  6 ++----
+ 4 files changed, 5 insertions(+), 21 deletions(-)
 
-diff --git a/arch/parisc/kernel/kprobes.c b/arch/parisc/kernel/kprobes.c
-index 5d7f2692ac5a..77ec51818916 100644
---- a/arch/parisc/kernel/kprobes.c
-+++ b/arch/parisc/kernel/kprobes.c
-@@ -281,10 +281,6 @@ int __kprobes arch_trampoline_kprobe(struct kprobe *p)
- {
- 	return p->addr =3D=3D trampoline_p.addr;
+diff --git a/arch/x86/include/asm/vdso/gettimeofday.h b/arch/x86/include/asm/vdso/gettimeofday.h
+index ba71a63cdac4..e9ee139cf29e 100644
+--- a/arch/x86/include/asm/vdso/gettimeofday.h
++++ b/arch/x86/include/asm/vdso/gettimeofday.h
+@@ -51,7 +51,7 @@ extern struct pvclock_vsyscall_time_info pvclock_page
+ 	__attribute__((visibility("hidden")));
+ #endif
+ 
+-#ifdef CONFIG_HYPERV_TSCPAGE
++#ifdef CONFIG_HYPERV_TIMER
+ extern struct ms_hyperv_tsc_page hvclock_page
+ 	__attribute__((visibility("hidden")));
+ #endif
+@@ -228,7 +228,7 @@ static u64 vread_pvclock(void)
  }
--bool arch_kprobe_on_func_entry(unsigned long offset)
--{
--	return !offset;
--}
-=20
- int __init arch_init_kprobes(void)
+ #endif
+ 
+-#ifdef CONFIG_HYPERV_TSCPAGE
++#ifdef CONFIG_HYPERV_TIMER
+ static u64 vread_hvclock(void)
  {
---=20
-2.23.0.rc1
+ 	return hv_read_tsc_page(&hvclock_page);
+@@ -251,7 +251,7 @@ static inline u64 __arch_get_hw_counter(s32 clock_mode)
+ 		return vread_pvclock();
+ 	}
+ #endif
+-#ifdef CONFIG_HYPERV_TSCPAGE
++#ifdef CONFIG_HYPERV_TIMER
+ 	if (clock_mode == VCLOCK_HVCLOCK) {
+ 		barrier();
+ 		return vread_hvclock();
+diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+index ba2c79e6a0ee..b6083faab540 100644
+--- a/drivers/clocksource/hyperv_timer.c
++++ b/drivers/clocksource/hyperv_timer.c
+@@ -212,8 +212,6 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
+ struct clocksource *hyperv_cs;
+ EXPORT_SYMBOL_GPL(hyperv_cs);
+ 
+-#ifdef CONFIG_HYPERV_TSCPAGE
+-
+ static struct ms_hyperv_tsc_page *tsc_pg;
+ 
+ struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
+@@ -244,7 +242,6 @@ static struct clocksource hyperv_cs_tsc = {
+ 	.mask	= CLOCKSOURCE_MASK(64),
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+ };
+-#endif
+ 
+ static u64 notrace read_hv_sched_clock_msr(void)
+ {
+@@ -271,7 +268,6 @@ static struct clocksource hyperv_cs_msr = {
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+ };
+ 
+-#ifdef CONFIG_HYPERV_TSCPAGE
+ static bool __init hv_init_tsc_clocksource(void)
+ {
+ 	u64		tsc_msr;
+@@ -306,13 +302,6 @@ static bool __init hv_init_tsc_clocksource(void)
+ 	sched_clock_register(read_hv_sched_clock_tsc, 64, HV_CLOCK_HZ);
+ 	return true;
+ }
+-#else
+-static bool __init hv_init_tsc_clocksource(void)
+-{
+-	return false;
+-}
+-#endif
+-
+ 
+ void __init hv_init_clocksource(void)
+ {
+diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+index 9a59957922d4..79e5356a737a 100644
+--- a/drivers/hv/Kconfig
++++ b/drivers/hv/Kconfig
+@@ -14,9 +14,6 @@ config HYPERV
+ config HYPERV_TIMER
+ 	def_bool HYPERV
+ 
+-config HYPERV_TSCPAGE
+-       def_bool HYPERV && X86_64
+-
+ config HYPERV_UTILS
+ 	tristate "Microsoft Hyper-V Utilities driver"
+ 	depends on HYPERV && CONNECTOR && NLS
+diff --git a/include/clocksource/hyperv_timer.h b/include/clocksource/hyperv_timer.h
+index a821deb8ecb2..f72e4619d0a7 100644
+--- a/include/clocksource/hyperv_timer.h
++++ b/include/clocksource/hyperv_timer.h
+@@ -28,12 +28,10 @@ extern void hv_stimer_cleanup(unsigned int cpu);
+ extern void hv_stimer_global_cleanup(void);
+ extern void hv_stimer0_isr(void);
+ 
+-#if IS_ENABLED(CONFIG_HYPERV)
++#ifdef CONFIG_HYPERV_TIMER
+ extern struct clocksource *hyperv_cs;
+ extern void hv_init_clocksource(void);
+-#endif /* CONFIG_HYPERV */
+ 
+-#ifdef CONFIG_HYPERV_TSCPAGE
+ extern struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
+ 
+ static inline notrace u64
+@@ -102,6 +100,6 @@ static inline u64 hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg,
+ {
+ 	return U64_MAX;
+ }
+-#endif /* CONFIG_HYPERV_TSCPAGE */
++#endif /* CONFIG_HYPERV_TIMER */
+ 
+ #endif
+-- 
+2.20.1
 
