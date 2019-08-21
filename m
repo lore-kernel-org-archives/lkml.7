@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4332DC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20593C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3102339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0040A2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 23:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731415AbfHUXTP (ORCPT
+        id S1731427AbfHUXTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 19:19:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43350 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 19:19:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54098 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727685AbfHUXTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 19:19:11 -0400
+        id S1731403AbfHUXTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 19:19:13 -0400
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9358680F7C;
-        Wed, 21 Aug 2019 23:19:11 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id AAF8F1801584;
+        Wed, 21 Aug 2019 23:19:12 +0000 (UTC)
 Received: from t460p.redhat.com (ovpn-117-150.phx2.redhat.com [10.3.117.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5DA8A600CD;
-        Wed, 21 Aug 2019 23:19:10 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B2642600CD;
+        Wed, 21 Aug 2019 23:19:11 +0000 (UTC)
 From:   Scott Wood <swood@redhat.com>
 To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -37,128 +37,91 @@ Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Juri Lelli <juri.lelli@redhat.com>,
         Clark Williams <williams@redhat.com>,
         Scott Wood <swood@redhat.com>
-Subject: [PATCH RT v2 1/3] rcu: Acquire RCU lock when disabling BHs
-Date:   Wed, 21 Aug 2019 18:19:04 -0500
-Message-Id: <20190821231906.4224-2-swood@redhat.com>
+Subject: [PATCH RT v2 2/3] sched: migrate_enable: Use sleeping_lock to indicate involuntary sleep
+Date:   Wed, 21 Aug 2019 18:19:05 -0500
+Message-Id: <20190821231906.4224-3-swood@redhat.com>
 In-Reply-To: <20190821231906.4224-1-swood@redhat.com>
 References: <20190821231906.4224-1-swood@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 21 Aug 2019 23:19:11 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Wed, 21 Aug 2019 23:19:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A plain local_bh_disable() is documented as creating an RCU critical
-section, and (at least) rcutorture expects this to be the case.  However,
-in_softirq() doesn't block a grace period on PREEMPT_RT, since RCU checks
-preempt_count() directly.  Even if RCU were changed to check
-in_softirq(), that wouldn't allow blocked BH disablers to be boosted.
-
-Fix this by calling rcu_read_lock() from local_bh_disable(), and update
-rcu_read_lock_bh_held() accordingly.
+Without this, rcu_note_context_switch() will complain if an RCU read
+lock is held when migrate_enable() calls stop_one_cpu().
 
 Signed-off-by: Scott Wood <swood@redhat.com>
 ---
-Another question is whether non-raw spinlocks are intended to create an
-RCU read-side critical section due to implicit preempt disable.  If they
-are, then we'd need to add rcu_read_lock() there as well since RT doesn't
-disable preemption (and rcutorture should explicitly test with a
-spinlock).  If not, the documentation should make that clear.
+v2: Added comment.
 
- include/linux/rcupdate.h |  4 ++++
- kernel/rcu/update.c      |  4 ++++
- kernel/softirq.c         | 12 +++++++++---
- 3 files changed, 17 insertions(+), 3 deletions(-)
+If my migrate disable changes aren't taken, then pin_current_cpu()
+will also need to use sleeping_lock_inc() because calling
+__read_rt_lock() bypasses the usual place it's done.
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 388ace315f32..d6e357378732 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -615,10 +615,12 @@ static inline void rcu_read_unlock(void)
- static inline void rcu_read_lock_bh(void)
- {
- 	local_bh_disable();
-+#ifndef CONFIG_PREEMPT_RT_FULL
- 	__acquire(RCU_BH);
- 	rcu_lock_acquire(&rcu_bh_lock_map);
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(),
- 			 "rcu_read_lock_bh() used illegally while idle");
-+#endif
- }
- 
- /*
-@@ -628,10 +630,12 @@ static inline void rcu_read_lock_bh(void)
-  */
- static inline void rcu_read_unlock_bh(void)
- {
-+#ifndef CONFIG_PREEMPT_RT_FULL
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(),
- 			 "rcu_read_unlock_bh() used illegally while idle");
- 	rcu_lock_release(&rcu_bh_lock_map);
- 	__release(RCU_BH);
-+#endif
- 	local_bh_enable();
- }
- 
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index 016c66a98292..a9cdf3d562bc 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -296,7 +296,11 @@ int rcu_read_lock_bh_held(void)
- 		return 0;
- 	if (!rcu_lockdep_current_cpu_online())
- 		return 0;
-+#ifdef CONFIG_PREEMPT_RT_FULL
-+	return lock_is_held(&rcu_lock_map) || irqs_disabled();
-+#else
- 	return in_softirq() || irqs_disabled();
-+#endif
- }
- EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
- 
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index d16d080a74f7..6080c9328df1 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -115,8 +115,10 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
- 	long soft_cnt;
- 
- 	WARN_ON_ONCE(in_irq());
--	if (!in_atomic())
-+	if (!in_atomic()) {
- 		local_lock(bh_lock);
-+		rcu_read_lock();
-+	}
- 	soft_cnt = this_cpu_inc_return(softirq_counter);
- 	WARN_ON_ONCE(soft_cnt == 0);
- 	current->softirq_count += SOFTIRQ_DISABLE_OFFSET;
-@@ -151,8 +153,10 @@ void _local_bh_enable(void)
+ include/linux/sched.h    | 4 ++--
+ kernel/rcu/tree_plugin.h | 2 +-
+ kernel/sched/core.c      | 8 ++++++++
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 7e892e727f12..1ebc97f28009 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -673,7 +673,7 @@ struct task_struct {
+ 	int				migrate_disable_atomic;
+ # endif
+ #endif
+-#ifdef CONFIG_PREEMPT_RT_FULL
++#ifdef CONFIG_PREEMPT_RT_BASE
+ 	int				sleeping_lock;
  #endif
  
- 	current->softirq_count -= SOFTIRQ_DISABLE_OFFSET;
--	if (!in_atomic())
-+	if (!in_atomic()) {
-+		rcu_read_unlock();
- 		local_unlock(bh_lock);
-+	}
+@@ -1881,7 +1881,7 @@ static __always_inline bool need_resched(void)
+ 	return unlikely(tif_need_resched());
  }
  
- void _local_bh_enable_rt(void)
-@@ -185,8 +189,10 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
- 	WARN_ON_ONCE(count < 0);
- 	local_irq_enable();
- 
--	if (!in_atomic())
-+	if (!in_atomic()) {
-+		rcu_read_unlock();
- 		local_unlock(bh_lock);
-+	}
- 
- 	current->softirq_count -= SOFTIRQ_DISABLE_OFFSET;
- 	preempt_check_resched();
+-#ifdef CONFIG_PREEMPT_RT_FULL
++#ifdef CONFIG_PREEMPT_RT_BASE
+ static inline void sleeping_lock_inc(void)
+ {
+ 	current->sleeping_lock++;
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 23a54e4b649c..7a3aa085ce2c 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -292,7 +292,7 @@ void rcu_note_context_switch(bool preempt)
+ 	barrier(); /* Avoid RCU read-side critical sections leaking down. */
+ 	trace_rcu_utilization(TPS("Start context switch"));
+ 	lockdep_assert_irqs_disabled();
+-#if defined(CONFIG_PREEMPT_RT_FULL)
++#if defined(CONFIG_PREEMPT_RT_BASE)
+ 	sleeping_l = t->sleeping_lock;
+ #endif
+ 	WARN_ON_ONCE(!preempt && t->rcu_read_lock_nesting > 0 && !sleeping_l);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e1bdd7f9be05..0758ee85634e 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7405,7 +7405,15 @@ void migrate_enable(void)
+ 			unpin_current_cpu();
+ 			preempt_lazy_enable();
+ 			preempt_enable();
++
++			/*
++			 * sleeping_lock_inc suppresses a debug check for
++			 * sleeping inside an RCU read side critical section
++			 */
++			sleeping_lock_inc();
+ 			stop_one_cpu(task_cpu(p), migration_cpu_stop, &arg);
++			sleeping_lock_dec();
++
+ 			return;
+ 		}
+ 	}
 -- 
 1.8.3.1
 
