@@ -6,134 +6,190 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5F2C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6E7C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE6A2070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E82F2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbfHUR5k (ORCPT
+        id S1728406AbfHUR62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:57:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33162 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 13:58:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48964 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727014AbfHUR5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:57:38 -0400
+        id S1729793AbfHUR5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:57:39 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1FBC510F23F3;
-        Wed, 21 Aug 2019 17:57:38 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 105E87F768;
+        Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EA8F05D9D3;
-        Wed, 21 Aug 2019 17:57:37 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DE1FC17D29;
+        Wed, 21 Aug 2019 17:57:38 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 94259223D01; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
+        id CD458223D0C; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nvdimm@lists.01.org
 Cc:     virtio-fs@redhat.com, vgoyal@redhat.com, miklos@szeredi.hu,
         stefanha@redhat.com, dgilbert@redhat.com,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        kvm@vger.kernel.org
-Subject: [PATCH 05/19] virtio: Implement get_shm_region for MMIO transport
-Date:   Wed, 21 Aug 2019 13:57:06 -0400
-Message-Id: <20190821175720.25901-6-vgoyal@redhat.com>
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 16/19] dax: Create a range version of dax_layout_busy_page()
+Date:   Wed, 21 Aug 2019 13:57:17 -0400
+Message-Id: <20190821175720.25901-17-vgoyal@redhat.com>
 In-Reply-To: <20190821175720.25901-1-vgoyal@redhat.com>
 References: <20190821175720.25901-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 21 Aug 2019 17:57:38 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastien Boeuf <sebastien.boeuf@intel.com>
+While reclaiming a dax range, we do not want to unamap whole file instead
+want to make sure pages in a certain range do not have references taken
+on them. Hence create a version of the function which allows to pass in
+a range.
 
-On MMIO a new set of registers is defined for finding SHM
-regions.  Add their definitions and use them to find the region.
-
-Cc: kvm@vger.kernel.org
-Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- drivers/virtio/virtio_mmio.c     | 32 ++++++++++++++++++++++++++++++++
- include/uapi/linux/virtio_mmio.h | 11 +++++++++++
- 2 files changed, 43 insertions(+)
+ fs/dax.c            | 66 ++++++++++++++++++++++++++++++++-------------
+ include/linux/dax.h |  6 +++++
+ 2 files changed, 54 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-index e09edb5c5e06..5c07985c8cb8 100644
---- a/drivers/virtio/virtio_mmio.c
-+++ b/drivers/virtio/virtio_mmio.c
-@@ -500,6 +500,37 @@ static const char *vm_bus_name(struct virtio_device *vdev)
- 	return vm_dev->pdev->name;
+diff --git a/fs/dax.c b/fs/dax.c
+index 60620a37030c..435f5b67e828 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -557,27 +557,20 @@ static void *grab_mapping_entry(struct xa_state *xas,
+ 	return xa_mk_internal(VM_FAULT_FALLBACK);
  }
  
-+static bool vm_get_shm_region(struct virtio_device *vdev,
-+			      struct virtio_shm_region *region, u8 id)
-+{
-+	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
-+	u64 len, addr;
-+
-+	/* Select the region we're interested in */
-+	writel(id, vm_dev->base + VIRTIO_MMIO_SHM_SEL);
-+
-+	/* Read the region size */
-+	len = (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_LOW);
-+	len |= (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_HIGH) << 32;
-+
-+	region->len = len;
-+
-+	/* Check if region length is -1. If that's the case, the shared memory
-+	 * region does not exist and there is no need to proceed further.
-+	 */
-+	if (len == ~(u64)0) {
-+		return false;
+-/**
+- * dax_layout_busy_page - find first pinned page in @mapping
+- * @mapping: address space to scan for a page with ref count > 1
+- *
+- * DAX requires ZONE_DEVICE mapped pages. These pages are never
+- * 'onlined' to the page allocator so they are considered idle when
+- * page->count == 1. A filesystem uses this interface to determine if
+- * any page in the mapping is busy, i.e. for DMA, or other
+- * get_user_pages() usages.
+- *
+- * It is expected that the filesystem is holding locks to block the
+- * establishment of new mappings in this address_space. I.e. it expects
+- * to be able to run unmap_mapping_range() and subsequently not race
+- * mapping_mapped() becoming true.
++/*
++ * Partial pages are included. If end is 0, pages in the range from start
++ * to end of the file are inluded.
+  */
+-struct page *dax_layout_busy_page(struct address_space *mapping)
++struct page *dax_layout_busy_page_range(struct address_space *mapping,
++					loff_t start, loff_t end)
+ {
+-	XA_STATE(xas, &mapping->i_pages, 0);
+ 	void *entry;
+ 	unsigned int scanned = 0;
+ 	struct page *page = NULL;
++	pgoff_t start_idx = start >> PAGE_SHIFT;
++	pgoff_t end_idx = end >> PAGE_SHIFT;
++	XA_STATE(xas, &mapping->i_pages, start_idx);
++	loff_t len, lstart = round_down(start, PAGE_SIZE);
+ 
+ 	/*
+ 	 * In the 'limited' case get_user_pages() for dax is disabled.
+@@ -588,6 +581,22 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
+ 	if (!dax_mapping(mapping) || !mapping_mapped(mapping))
+ 		return NULL;
+ 
++	/* If end == 0, all pages from start to till end of file */
++	if (!end) {
++		end_idx = ULONG_MAX;
++		len = 0;
++	} else {
++		/* length is being calculated from lstart and not start.
++		 * This is due to behavior of unmap_mapping_range(). If
++		 * start is say 4094 and end is on 4093 then want to
++		 * unamp two pages, idx 0 and 1. But unmap_mapping_range()
++		 * will unmap only page at idx 0. If we calculate len
++		 * from the rounded down start, this problem should not
++		 * happen.
++		 */
++		len = end - lstart + 1;
 +	}
 +
-+	/* Read the region base address */
-+	addr = (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_BASE_LOW);
-+	addr |= (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_BASE_HIGH) << 32;
+ 	/*
+ 	 * If we race get_user_pages_fast() here either we'll see the
+ 	 * elevated page count in the iteration and wait, or
+@@ -600,10 +609,10 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
+ 	 * guaranteed to either see new references or prevent new
+ 	 * references from being established.
+ 	 */
+-	unmap_mapping_range(mapping, 0, 0, 0);
++	unmap_mapping_range(mapping, start, len, 0);
+ 
+ 	xas_lock_irq(&xas);
+-	xas_for_each(&xas, entry, ULONG_MAX) {
++	xas_for_each(&xas, entry, end_idx) {
+ 		if (WARN_ON_ONCE(!xa_is_value(entry)))
+ 			continue;
+ 		if (unlikely(dax_is_locked(entry)))
+@@ -624,6 +633,27 @@ struct page *dax_layout_busy_page(struct address_space *mapping)
+ 	xas_unlock_irq(&xas);
+ 	return page;
+ }
++EXPORT_SYMBOL_GPL(dax_layout_busy_page_range);
 +
-+	region->addr = addr;
-+
-+	return true;
++/**
++ * dax_layout_busy_page - find first pinned page in @mapping
++ * @mapping: address space to scan for a page with ref count > 1
++ *
++ * DAX requires ZONE_DEVICE mapped pages. These pages are never
++ * 'onlined' to the page allocator so they are considered idle when
++ * page->count == 1. A filesystem uses this interface to determine if
++ * any page in the mapping is busy, i.e. for DMA, or other
++ * get_user_pages() usages.
++ *
++ * It is expected that the filesystem is holding locks to block the
++ * establishment of new mappings in this address_space. I.e. it expects
++ * to be able to run unmap_mapping_range() and subsequently not race
++ * mapping_mapped() becoming true.
++ */
++struct page *dax_layout_busy_page(struct address_space *mapping)
++{
++	return dax_layout_busy_page_range(mapping, 0, 0);
++}
+ EXPORT_SYMBOL_GPL(dax_layout_busy_page);
+ 
+ static int __dax_invalidate_entry(struct address_space *mapping,
+diff --git a/include/linux/dax.h b/include/linux/dax.h
+index e7f40108f2c9..3ef6686c080b 100644
+--- a/include/linux/dax.h
++++ b/include/linux/dax.h
+@@ -145,6 +145,7 @@ int dax_writeback_mapping_range(struct address_space *mapping,
+ 		struct writeback_control *wbc);
+ 
+ struct page *dax_layout_busy_page(struct address_space *mapping);
++struct page *dax_layout_busy_page_range(struct address_space *mapping, loff_t start, loff_t end);
+ dax_entry_t dax_lock_page(struct page *page);
+ void dax_unlock_page(struct page *page, dax_entry_t cookie);
+ #else
+@@ -180,6 +181,11 @@ static inline struct page *dax_layout_busy_page(struct address_space *mapping)
+ 	return NULL;
+ }
+ 
++static inline struct page *dax_layout_busy_page_range(struct address_space *mapping, pgoff_t start, pgoff_t nr_pages)
++{
++	return NULL;
 +}
 +
- static const struct virtio_config_ops virtio_mmio_config_ops = {
- 	.get		= vm_get,
- 	.set		= vm_set,
-@@ -512,6 +543,7 @@ static const struct virtio_config_ops virtio_mmio_config_ops = {
- 	.get_features	= vm_get_features,
- 	.finalize_features = vm_finalize_features,
- 	.bus_name	= vm_bus_name,
-+	.get_shm_region = vm_get_shm_region,
- };
- 
- 
-diff --git a/include/uapi/linux/virtio_mmio.h b/include/uapi/linux/virtio_mmio.h
-index c4b09689ab64..0650f91bea6c 100644
---- a/include/uapi/linux/virtio_mmio.h
-+++ b/include/uapi/linux/virtio_mmio.h
-@@ -122,6 +122,17 @@
- #define VIRTIO_MMIO_QUEUE_USED_LOW	0x0a0
- #define VIRTIO_MMIO_QUEUE_USED_HIGH	0x0a4
- 
-+/* Shared memory region id */
-+#define VIRTIO_MMIO_SHM_SEL             0x0ac
-+
-+/* Shared memory region length, 64 bits in two halves */
-+#define VIRTIO_MMIO_SHM_LEN_LOW         0x0b0
-+#define VIRTIO_MMIO_SHM_LEN_HIGH        0x0b4
-+
-+/* Shared memory region base address, 64 bits in two halves */
-+#define VIRTIO_MMIO_SHM_BASE_LOW        0x0b8
-+#define VIRTIO_MMIO_SHM_BASE_HIGH       0x0bc
-+
- /* Configuration atomicity value */
- #define VIRTIO_MMIO_CONFIG_GENERATION	0x0fc
- 
+ static inline int dax_writeback_mapping_range(struct address_space *mapping,
+ 		struct block_device *bdev, struct dax_device *dax_dev,
+ 		struct writeback_control *wbc)
 -- 
 2.20.1
 
