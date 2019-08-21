@@ -6,89 +6,77 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4EAC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D34C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA2DC22CF4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9360022CF4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 11:39:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfHULiz (ORCPT
+        id S1727181AbfHULjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 07:38:55 -0400
-Received: from muru.com ([72.249.23.125]:58386 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726372AbfHULiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 07:38:55 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id B02F6809C;
-        Wed, 21 Aug 2019 11:39:21 +0000 (UTC)
-Date:   Wed, 21 Aug 2019 04:38:50 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Philipp Rossak <embed3d@gmail.com>,
-        moaz korena <moaz@korena.xyz>,
-        Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-        Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        kernel@pyra-handheld.com,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, maemo-leste@lists.dyne.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Lay common foundation to make PVR/SGX work without hacks on
- OMAP34xx, OMAP36xx, AM335x and potentially OMAP4, OMAP5
-Message-ID: <20190821113850.GP52127@atomide.com>
-References: <3b0a5e78-c4c2-1963-bac7-b49496a1e9b9@wizzup.org>
- <1F942AAB-1648-46C0-ADD5-90F6898778BE@goldelico.com>
- <84cac9b8-0eff-33f8-464d-4f8045d7db19@wizzup.org>
- <BFAA7FA6-A352-476A-99F9-02EA663A6AAD@goldelico.com>
- <20190814094755.GC52127@atomide.com>
- <6A6394A6-9D50-4E43-A8E4-716888897AD6@goldelico.com>
- <20190814131607.GD52127@atomide.com>
- <CAHCN7xJ2kcr7dOFvxTB_PX_62sX_QV5EyeMPHMaPbZ9fXts9pg@mail.gmail.com>
- <20190817070307.GJ52127@atomide.com>
- <CAHCN7xJH6ZjksNZ2cyb1rN_TiF-0GKAtW9KD1kv1-JE+gqLgEA@mail.gmail.com>
+        Wed, 21 Aug 2019 07:39:00 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:55305 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfHULi7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 07:38:59 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 31AF460004;
+        Wed, 21 Aug 2019 11:38:57 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 13:38:56 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Li Yang <leoyang.li@nxp.com>, nandor.han@vaisala.com,
+        Biwen Li <biwen.li@nxp.com>, a.zummo@towertech.it,
+        linux-rtc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [v2] rtc: pcf85363/pcf85263: fix error that failed to run
+ hwclock -w
+Message-ID: <20190821113856.GB27031@piout.net>
+References: <20190816024636.34738-1-biwen.li@nxp.com>
+ <20190816080417.GB3545@piout.net>
+ <CADRPPNRkqbWzGEvUJyi0Qff3oS6biO0v7BTrK1Jiz9AMnOYF=Q@mail.gmail.com>
+ <20190816162825.GE3545@piout.net>
+ <CADRPPNQwcGrVXLm8eHbXKmyecMhT6Mt9rNGnspJA1+MnV4K8oQ@mail.gmail.com>
+ <20190820182224.GI4738@sirena.co.uk>
+ <CADRPPNQ__XRW74e+Dq0BEjJq-onVi2dmb7qKrn2Lt_xr50VCCw@mail.gmail.com>
+ <20190821112142.GD5128@sirena.co.uk>
+ <20190821112413.GA27031@piout.net>
+ <20190821113029.GE5128@sirena.co.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHCN7xJH6ZjksNZ2cyb1rN_TiF-0GKAtW9KD1kv1-JE+gqLgEA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190821113029.GE5128@sirena.co.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Adam Ford <aford173@gmail.com> [190819 19:26]:
-> On Sat, Aug 17, 2019 at 2:03 AM Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > * Adam Ford <aford173@gmail.com> [190816 23:02]:
-> > > On Wed, Aug 14, 2019 at 8:16 AM Tony Lindgren <tony@atomide.com> wrote:
-> > > > Well I just posted some sgx interconnect target module patches. We might
-> > > > still have them in v5.4 assuming people manage to review and test them.
-> > >
-> > > Nikolaus,
-> > >
-> > > I tested Tony's change and I can confirm that I can read the value
-> > > when enabled.  Should I apply his patches to your branch before I
-> > > test, or is it go too to go as-is? I've got an AM3517, OMAP35 and a
-> > > DM3730.  I am not sure if the AM3517 is even on the radar, but it has
-> > > an sgx530 as well.
-> >
-> > My estimate is am3517 is wired the same way as omap34xx with a 60%
-> > chance, then 30% chance it's wired the same way as omap36xx, and then
-> > 10% chance for similar wiring to am335x.. So hopefully that leaves 0%
-> > chance for yet something different for it's wiring :)
+On 21/08/2019 12:30:29+0100, Mark Brown wrote:
+> On Wed, Aug 21, 2019 at 01:24:13PM +0200, Alexandre Belloni wrote:
+> > On 21/08/2019 12:21:42+0100, Mark Brown wrote:
+> > > On Tue, Aug 20, 2019 at 01:33:14PM -0500, Li Yang wrote:
 > 
-> Based on [1], I went under the assumption it was wired like the
-> omap34xx.  I applied your omap34 patches to the am3517.dtsi, and I was
-> able to get the same response as I did for the omap3530.  Do you want
-> me to post the patches to the mailing list, or do you want to do it?
+> > > > violation check of regmap rejects such access.  According to
+> > > > Alexcandre, the address wrapping is essential to the functionality of
+> 
+> > > It's *essential*?  Will innovation never cease?
+> 
+> > To be clear, for some RTCs, its is the only way to accurately set the
+> > time.
+> 
+> What's the mechanism here?  It's a very strange thing to require.
 
-OK great, yeah please post patches :)
+The clock control is on the first register, then you have sec, min,
+hour, day, mon, year.
 
-Thanks,
+To be able to set the clock accurately, you need to first disable the
+clock, then set the time and date and finally reenable the clock in the
+first register. This should be done in a single i2c write.
 
-TOny
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
