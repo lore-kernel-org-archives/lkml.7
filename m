@@ -2,107 +2,99 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275E2C3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DBCC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA2A22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E29422DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="patCUhZQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayPOIeKR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfHUDKE (ORCPT
+        id S1727120AbfHUDLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 23:10:04 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45985 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfHUDKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 23:10:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Ct1y2SZfz9sMr;
-        Wed, 21 Aug 2019 13:09:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566356998;
-        bh=P1H9VicFPqkJV2AwZ3wXrQpYSivnct3XmGgdNbJe8zw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=patCUhZQ72uhJQ7JUokCiE8psE/9lju6aXJ9W8y75gvCoLMXvnK8fwrIis+TuHbcQ
-         obxutv7e+nEsTSulw8uLqi6xp6q2L6kqVHKvVLPx48EEX53vQIbSiun8vX7AQLqQXV
-         xcEBVdk+9s67YqwVGhkoRl4KPclQHmehIx6D9RTTmtulWG4vbUT2rmKq3jgZozqVAx
-         2rFOIWgdn8LfdAaQ95G/pWXEDUNliG8w+hwW8IGfIlznPwb3/BcdHG7DauHou9LJDS
-         5QF64bBflgFBfveCRiBpY5VC7ryUTBIIFZLQpJM8mtVXZ8H9/Utw7RZ0Tq91So0Cjp
-         bysgqn0zG6vgQ==
-Date:   Wed, 21 Aug 2019 13:09:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Morris <jmorris@namei.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Bohac <jbohac@suse.cz>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: linux-next: manual merge of the security tree with Linus' tree
-Message-ID: <20190821130957.407d9c10@canb.auug.org.au>
+        Tue, 20 Aug 2019 23:11:19 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42189 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfHUDLT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 23:11:19 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i30so425893pfk.9;
+        Tue, 20 Aug 2019 20:11:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7VKiFEOSby4f/ETS90JOc2T6lf0TxUWde3q3IiKs2hk=;
+        b=ayPOIeKRL1aXrRPT53uPHJbOPJUR3Q8qwMtQKuVyArmh6gQPfIYa4X4+BAaNtOpRNN
+         j+GGT6TSgTYnrz9gSvvEWQkyFopETx0DjM+2g+8c4z3pbtg7hcj6ehLiCisCrn7x0DLe
+         MtweW9FMc37NWP/TB1hWkjNA5tsMDpudE+76Di89tqC9Q0ZdOUH5+vaK1pV0Q6WZX3EU
+         JVpMHtiLZqofOoUsmZ7ptxzaNRsX4lAM4zYQVa+VjokG6ZIy6OMxv/ZYJNZB0/riLLu/
+         Pzpo5IZkDOR9HUfrxuIWwsoLeIMhOA6MclnKVFNKgbyuGyHtHxMj9xqdfm0D+ioIbVfQ
+         46lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7VKiFEOSby4f/ETS90JOc2T6lf0TxUWde3q3IiKs2hk=;
+        b=EbGN7Q8j+bzZo0XUe+x2uq0Buv4GO07+7y5prk+4hpskzB2SNdoBNkFc+zCcQIANQl
+         u38biu2i+a1kNF/qS2vP80MOw/fRz949w/KyoWCd2ovGxnGfnVfVqzVKek4hhiJ/7PB0
+         6oyUDF3HEtJPAuLDnbIx56jFwxXLtSb0dQdZ0amc12pIUyVMH8ukpkHMBRnNP0syjypN
+         h/IgfPH1q47AvOFQrO3BZM4/dHMDecpJeTv6uI9pkItyhXGyU+vOxHRd6Ds/6RRqIGgB
+         5gSurHuGgKjxEAnPnfcqZosQZzVPomLvucx1x5TKiaSNYyJOKQYyms68C6Nnmv/GboOI
+         xziA==
+X-Gm-Message-State: APjAAAWPi6E0zndVa1YCopwJyhlabkeRd1iO6vw0ibv8CmJJdvD4CuAY
+        v5v3ix4BIo4zlmQpvh+oNT8=
+X-Google-Smtp-Source: APXvYqxPDAcxhu5eVbv/IncTToFfr76TLspE3K2Ax1ShxsE3gx2pOAVuvkXzYaUOrffTdMCqAiaa6Q==
+X-Received: by 2002:a63:2264:: with SMTP id t36mr26267617pgm.87.1566357078520;
+        Tue, 20 Aug 2019 20:11:18 -0700 (PDT)
+Received: from masabert (150-66-68-21m5.mineo.jp. [150.66.68.21])
+        by smtp.gmail.com with ESMTPSA id l123sm31019032pfl.9.2019.08.20.20.11.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 20:11:18 -0700 (PDT)
+Received: by masabert (Postfix, from userid 1000)
+        id A9D012011CC; Wed, 21 Aug 2019 12:11:03 +0900 (JST)
+From:   Masanari Iida <standby24x7@gmail.com>
+To:     linux-kernel@vger.kernel.org, QLogic-Storage-Upstream@qlogic.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org
+Cc:     Masanari Iida <standby24x7@gmail.com>
+Subject: [PATCH] scsi: qla4xxx: Fix a typo in ql4_os.c
+Date:   Wed, 21 Aug 2019 12:11:02 +0900
+Message-Id: <20190821031102.3788-1-standby24x7@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+6Z=r_TWP/aQC5L/trFlXIM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+6Z=r_TWP/aQC5L/trFlXIM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patch fix a spelling typo in a printk message.
 
-Hi all,
+Signed-off-by: Masanari Iida <standby24x7@gmail.com>
+---
+ drivers/scsi/qla4xxx/ql4_os.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Today's linux-next merge of the security tree got a conflict in:
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index 8c674eca09f1..1ac18f93cf9a 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -6191,7 +6191,7 @@ static int qla4xxx_setup_boot_info(struct scsi_qla_host *ha)
+ 
+ 	if (ql4xdisablesysfsboot) {
+ 		ql4_printk(KERN_INFO, ha,
+-			   "%s: syfsboot disabled - driver will trigger login "
++			   "%s: sysfsboot disabled - driver will trigger login "
+ 			   "and publish session for discovery .\n", __func__);
+ 		return QLA_SUCCESS;
+ 	}
+-- 
+2.23.0
 
-  arch/s390/configs/performance_defconfig
-
-between commit:
-
-  d1523a8f4b8b ("s390: replace defconfig with performance_defconfig")
-
-from Linus' tree and commit:
-
-  99d5cadfde2b ("kexec_file: split KEXEC_VERIFY_SIG into KEXEC_SIG and KEXE=
-C_SIG_FORCE")
-
-from the security tree.
-
-I fixed it up (the former removed this file) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+6Z=r_TWP/aQC5L/trFlXIM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1ctgUACgkQAVBC80lX
-0Gw8TAf/bCSxp7JMhlxskUqB0S7V1wbMekGdk8RURMsWCBwFPoao1q8SNY+bHmBs
-t4pWjdzoKFByeqW8YMOXvYcX+WojPbA8AlkFD4v7LWRU2gDR2MB3+HkQydrFUoSR
-E7r9Z84JhZKnz9cdxh1wARYy6fFW+qCqhUPqJk3B1ll66StotqaD8NW7YezrCk1O
-b6RkEPELB92Kj7UDJHZYuwaXF5f8MgYZ2T2ujQdvFt5QFSZ29s1sj5MY54eEqvXm
-oFFwS4pFPNCQc4RFvogApVIWPrwch15YFcf/Hrz5qXnuCBeqmQ1kECL+ltwHgCp3
-8Hwlhm7Gdp/NqPTwyvdzXYddfVkqug==
-=Wl/O
------END PGP SIGNATURE-----
-
---Sig_/+6Z=r_TWP/aQC5L/trFlXIM--
