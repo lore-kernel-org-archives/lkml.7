@@ -2,82 +2,99 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DA9C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B95EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5095216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566412454;
-	bh=6176p1EuuaKcL1e9/dTRawWYECKMySkbCjvgkM0Thpw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QXKdbQ9B9aotsawiK2GA8tpHA9DTM4e0OrJ0DoLhWwjTcsBr1NWn0+CUkZrjJ1v+4
-	 AktBVSEpDg1FR/wKN7Kl186DG2AzN8gobx4dyLuQR8Y8V5JrklgfKRn8k48ITKsn0L
-	 jRuZV/iCdQTF3a/0g6j3W2Gki8pV43y4oebkgHv0=
+	by mail.kernel.org (Postfix) with ESMTP id 0968022DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728998AbfHUSeO (ORCPT
+        id S1727504AbfHUSg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:34:14 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44311 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbfHUSeN (ORCPT
+        Wed, 21 Aug 2019 14:36:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56843 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726741AbfHUSg0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:34:13 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k22so2347599oiw.11;
-        Wed, 21 Aug 2019 11:34:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gi2BZPRlk0uA2JzVWQCJU+s6t1qhy8lKwkC+6999UAg=;
-        b=IsOv291JMyHDIF/Ml4tt/YNVWOBn6d86CqQUZZmPH7RbzjseJ34W7FXtuzs+Wm0YOD
-         SeekYwZKyUzfpoTG0HiWdQNLIyO8fM4Yg18KNGN1fNqutNqiLqGKpZFHyOMm3TyniTEL
-         zvo6MykN311SB27l8taZCELBSXLgdlZZ1b8BZctSReSYRbcuAAPvIlzgZ4OT31paSxuF
-         wCZA4SSIc8H89vu1SXYDA7T1gtvTcM6rnfJOPqulGiF0qDmBpXZ73KbQrM5S3ea5yf0i
-         jOJXmoe5+vqWVOz0GphNufXctte+0kPAcSNuAcUq1qgJJTBI23WCck/LXXXtXzVmNW3a
-         hDpw==
-X-Gm-Message-State: APjAAAXJn7o01Fm9E6F3E+GynBhVdKg58+7tuOXLAy19frPe8hrnHR5V
-        AoD/CCqrQUSKF3PkOlS47Q==
-X-Google-Smtp-Source: APXvYqx3DnJdbJxJ1b1jmrQ8KW6WnZtAF9psvXnB9Q4r34aJ0FaUBKFmSuJmxrnz4HGTVJO0BtdgUQ==
-X-Received: by 2002:aca:4f48:: with SMTP id d69mr1082979oib.74.1566412453047;
-        Wed, 21 Aug 2019 11:34:13 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v5sm8044571otk.64.2019.08.21.11.34.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 11:34:12 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 13:34:11 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Chuanhua Han <chuanhua.han@nxp.com>
-Cc:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Chuanhua Han <chuanhua.han@nxp.com>
-Subject: Re: [PATCH 1/3] dt-bindings: fsl: dspi: Add fsl,ls1088a-dspi
- compatible string
-Message-ID: <20190821183411.GA26478@bogus>
-References: <20190801083105.30102-1-chuanhua.han@nxp.com>
+        Wed, 21 Aug 2019 14:36:26 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i0VSx-0003HL-QR; Wed, 21 Aug 2019 20:36:15 +0200
+Date:   Wed, 21 Aug 2019 20:36:14 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: consolidate pgtable_cache_init() and
+ pgd_cache_init()
+In-Reply-To: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
+Message-ID: <alpine.DEB.2.21.1908212035200.1983@nanos.tec.linutronix.de>
+References: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190801083105.30102-1-chuanhua.han@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  1 Aug 2019 16:31:03 +0800, Chuanhua Han wrote:
-> new compatible string: "fsl,ls1088a-dspi".
-> 
-> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> ---
->  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Wed, 21 Aug 2019, Mike Rapoport wrote:
+> diff --git a/arch/x86/include/asm/pgtable_32.h b/arch/x86/include/asm/pgtable_32.h
+> index b9b9f8a..0dca7f7 100644
+> --- a/arch/x86/include/asm/pgtable_32.h
+> +++ b/arch/x86/include/asm/pgtable_32.h
+> @@ -29,7 +29,6 @@ extern pgd_t swapper_pg_dir[1024];
+>  extern pgd_t initial_page_table[1024];
+>  extern pmd_t initial_pg_pmd[];
+>  
+> -static inline void pgtable_cache_init(void) { }
+>  void paging_init(void);
+>  void sync_initial_page_table(void);
+>  
+> diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
+> index a26d2d5..0b6c4042 100644
+> --- a/arch/x86/include/asm/pgtable_64.h
+> +++ b/arch/x86/include/asm/pgtable_64.h
+> @@ -241,8 +241,6 @@ extern void cleanup_highmap(void);
+>  #define HAVE_ARCH_UNMAPPED_AREA
+>  #define HAVE_ARCH_UNMAPPED_AREA_TOPDOWN
+>  
+> -#define pgtable_cache_init()   do { } while (0)
+> -
+>  #define PAGE_AGP    PAGE_KERNEL_NOCACHE
+>  #define HAVE_PAGE_AGP 1
+>  
+> diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+> index 73757bc..3e4b903 100644
+> --- a/arch/x86/mm/pgtable.c
+> +++ b/arch/x86/mm/pgtable.c
+> @@ -357,7 +357,7 @@ static void pgd_prepopulate_user_pmd(struct mm_struct *mm,
+>  
+>  static struct kmem_cache *pgd_cache;
+>  
+> -void __init pgd_cache_init(void)
+> +void __init pgtable_cache_init(void)
+>  {
+>  	/*
+>  	 * When PAE kernel is running as a Xen domain, it does not use
+> @@ -402,10 +402,6 @@ static inline void _pgd_free(pgd_t *pgd)
+>  }
+>  #else
+>  
+> -void __init pgd_cache_init(void)
+> -{
+> -}
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
