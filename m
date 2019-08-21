@@ -2,145 +2,146 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C255C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6A8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F105022CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="td6wTzQq"
+	by mail.kernel.org (Postfix) with ESMTP id 0C67A22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:28:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566358131;
+	bh=h62B4j2FOwWirHP1+DzSufc6oo0jCD2jub9yu/4xYcE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1ubZIbwjLciJ2k72V1w9unLiaZJ6CR7qoQsyOtWt1Lq4R3cDcLpIatYeJm9rk1PPi
+	 ybXj1c5Z6vqxygh5kxHGY7JVszg1gT3lL6vUwctfVYkRyAjWNLw1zMvJwaIowILSEX
+	 SuztCadtefGYiukI/SZhuzxjhFiou2BIP5Y9mwZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfHUD2C (ORCPT
+        id S1727363AbfHUD2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 23:28:02 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42657 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfHUD2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 23:28:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46CtQk3R1Gz9s4Y;
-        Wed, 21 Aug 2019 13:27:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566358078;
-        bh=33J2ZYDpWb8pnhaCfRFBJpUbWUIkHSUveXcCUDYwWvU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=td6wTzQq9nhrxW5X+TT0fpv1mps/E3PzTHQRO3XtNMUK1r2eISGDa0LJd8sV63VYW
-         nFSVAwQheqgMSfjUnLS5lA6PhqvavjfVlXkRJf5uJ7yJ4CCKFxNx2bm+nmIOOaTfnW
-         HrcB7HNYopjBWPf+1LTsVtV3+RbSQp68qtbeOpc7SH4DhclmCcHpuHn9lFh/LeJoNj
-         73bw2jc2AXCKBV11pj0Vk+LYQiCmTQC19l24EHrfK0U4fvQ7nTkwk0dVf7QdGxGk9j
-         gJ9tMiygaa8IS2gaXW/IgxFDFY8pjCM4x6QBNcA3E7R9pS2w6XC96ZFJcupdLd3YdX
-         M8puAE9T8lS8g==
-Date:   Wed, 21 Aug 2019 13:27:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Bohac <jbohac@suse.cz>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: linux-next: manual merge of the integrity tree with the security
- tree
-Message-ID: <20190821132757.4a12dada@canb.auug.org.au>
+        Tue, 20 Aug 2019 23:28:50 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35794 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbfHUD2t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 23:28:49 -0400
+Received: by mail-pf1-f196.google.com with SMTP id d85so471230pfd.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 20:28:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O3GThF6qgBBSbkZwWRayRKD2MaFCahuUCpZzRTM/BR0=;
+        b=lJgU+v+sqA7ICZrgm6EtvUbPg6RV0D/rlVzKAHBUZ3jGKY6icNFnV9hua8bDKvWSV4
+         jJMkdzTaCzjqRpAU9u9SxsXGXv+OtTj8wXiMyMl7RvaII7t37QeFNoAYChY34V8A+a8k
+         tlWixTEF0bI/1uW3KcZ/IjSsrIsBQhrc6EsDvNMCSmzvEeWUZKjJ4vU6L8Mx2NHh4b+8
+         tzzhXYiN0yuquUEm+iW4xJyeCeO6syveLxGlFthL2hcahJCxUl913ZKEiXNCgmPgGown
+         bj7mqLAIwYX0FDO9bEjjL95aio/ML2UI8lbjeUr8I5rs7z2f//sJrzFvX7E4MD5moTJj
+         xMLA==
+X-Gm-Message-State: APjAAAVX5+3wtW98mL9cI6z/ypLjAZLBztdKMSXvi7+qFWzTnBY7LJK1
+        75YgAJymR52CGrfuQPTujzR2dw==
+X-Google-Smtp-Source: APXvYqyumJYFLBjxpJaHCd0soNjhTEab8KG/HJBqQQUsiVKxWCzrF4y9BztwfhrVQnKH/j++9l8dVQ==
+X-Received: by 2002:a17:90a:cd03:: with SMTP id d3mr3221239pju.117.1566358129061;
+        Tue, 20 Aug 2019 20:28:49 -0700 (PDT)
+Received: from localhost ([2601:647:5b80:29f7:1bdd:d748:9a4e:8083])
+        by smtp.gmail.com with ESMTPSA id b6sm18402890pgq.26.2019.08.20.20.28.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Aug 2019 20:28:48 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 20:28:47 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     gregkh@linuxfoundation.org, mdf@kernel.org,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
+        atull@kernel.org
+Subject: Re: [PATCH v5 2/9] fpga: dfl: fme: convert platform_driver to use
+ dev_groups
+Message-ID: <20190821032847.GB28625@archbox>
+References: <1565578204-13969-1-git-send-email-hao.wu@intel.com>
+ <1565578204-13969-3-git-send-email-hao.wu@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Ld73mL_pKbcSjayK+pT8GbB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1565578204-13969-3-git-send-email-hao.wu@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Ld73mL_pKbcSjayK+pT8GbB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Hao,
 
-Hi all,
-
-Today's linux-next merge of the integrity tree got a conflict in:
-
-  arch/s390/kernel/machine_kexec_file.c
-
-between commit:
-
-  99d5cadfde2b ("kexec_file: split KEXEC_VERIFY_SIG into KEXEC_SIG and KEXE=
-C_SIG_FORCE")
-
-from the security tree and commit:
-
-  c8424e776b09 ("MODSIGN: Export module signature definitions")
-
-from the integrity tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/s390/kernel/machine_kexec_file.c
-index c0f33ba49a9a,1ac9fbc6e01e..000000000000
---- a/arch/s390/kernel/machine_kexec_file.c
-+++ b/arch/s390/kernel/machine_kexec_file.c
-@@@ -22,29 -22,7 +22,7 @@@ const struct kexec_file_ops * const kex
-  	NULL,
-  };
- =20
- -#ifdef CONFIG_KEXEC_VERIFY_SIG
- +#ifdef CONFIG_KEXEC_SIG
-- /*
--  * Module signature information block.
--  *
--  * The constituents of the signature section are, in order:
--  *
--  *	- Signer's name
--  *	- Key identifier
--  *	- Signature data
--  *	- Information block
--  */
-- struct module_signature {
-- 	u8	algo;		/* Public-key crypto algorithm [0] */
-- 	u8	hash;		/* Digest algorithm [0] */
-- 	u8	id_type;	/* Key identifier type [PKEY_ID_PKCS7] */
-- 	u8	signer_len;	/* Length of signer's name [0] */
-- 	u8	key_id_len;	/* Length of key identifier [0] */
-- 	u8	__pad[3];
-- 	__be32	sig_len;	/* Length of signature data */
-- };
--=20
-- #define PKEY_ID_PKCS7 2
--=20
-  int s390_verify_sig(const char *kernel, unsigned long kernel_len)
-  {
-  	const unsigned long marker_len =3D sizeof(MODULE_SIG_STRING) - 1;
-
---Sig_/Ld73mL_pKbcSjayK+pT8GbB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1cuj0ACgkQAVBC80lX
-0GzOlggAgNYypzYn0+ZyFYKHGM8XZaRNKbqrH4picUjwrELX/2lB5WIPsbD4Ftjf
-JdXBy2qGX0Eky0Fm67XBis9lpcb5ltw4C5kGhVs8lo0RZeImqxt2ZfXHSmNx61zD
-kZWyk6qzzpijNAB6AHQmo37drqtp61SfpjLg5gnKCycyk6wh/vnDuvfBOtVlaUiS
-mY2nNl6n2TtLcHlSnBqvCdnCNvG+yS9NTW4fGaC0RNxEQd6bpmT57jv5irIJF9Sh
-Oh649H+DwTUxEHiDYxLP/nwaiadgga/vqe+grX5eNryzYgcDBWOxfPM4GcaWcZUL
-0brA440bTD8CZ48/kSDLysYoo0WGoQ==
-=SJXe
------END PGP SIGNATURE-----
-
---Sig_/Ld73mL_pKbcSjayK+pT8GbB--
+On Mon, Aug 12, 2019 at 10:49:57AM +0800, Wu Hao wrote:
+> This patch takes advantage of driver core which helps to create
+> and remove sysfs attribute files, so there is no need to register
+> sysfs entries manually in dfl-fme platform river code.
+Nit: s/river/driver
+> 
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+Acked-by: Moritz Fischer <mdf@kernel.org>
+> ---
+>  drivers/fpga/dfl-fme-main.c | 29 ++---------------------------
+>  1 file changed, 2 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
+> index f033f1c..bf8114d 100644
+> --- a/drivers/fpga/dfl-fme-main.c
+> +++ b/drivers/fpga/dfl-fme-main.c
+> @@ -129,30 +129,6 @@ static ssize_t socket_id_show(struct device *dev,
+>  };
+>  ATTRIBUTE_GROUPS(fme_hdr);
+>  
+> -static int fme_hdr_init(struct platform_device *pdev,
+> -			struct dfl_feature *feature)
+> -{
+> -	void __iomem *base = feature->ioaddr;
+> -	int ret;
+> -
+> -	dev_dbg(&pdev->dev, "FME HDR Init.\n");
+> -	dev_dbg(&pdev->dev, "FME cap %llx.\n",
+> -		(unsigned long long)readq(base + FME_HDR_CAP));
+> -
+> -	ret = device_add_groups(&pdev->dev, fme_hdr_groups);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return 0;
+> -}
+> -
+> -static void fme_hdr_uinit(struct platform_device *pdev,
+> -			  struct dfl_feature *feature)
+> -{
+> -	dev_dbg(&pdev->dev, "FME HDR UInit.\n");
+> -	device_remove_groups(&pdev->dev, fme_hdr_groups);
+> -}
+> -
+>  static long fme_hdr_ioctl_release_port(struct dfl_feature_platform_data *pdata,
+>  				       unsigned long arg)
+>  {
+> @@ -199,8 +175,6 @@ static long fme_hdr_ioctl(struct platform_device *pdev,
+>  };
+>  
+>  static const struct dfl_feature_ops fme_hdr_ops = {
+> -	.init = fme_hdr_init,
+> -	.uinit = fme_hdr_uinit,
+>  	.ioctl = fme_hdr_ioctl,
+>  };
+>  
+> @@ -361,7 +335,8 @@ static int fme_remove(struct platform_device *pdev)
+>  
+>  static struct platform_driver fme_driver = {
+>  	.driver	= {
+> -		.name    = DFL_FPGA_FEATURE_DEV_FME,
+> +		.name       = DFL_FPGA_FEATURE_DEV_FME,
+> +		.dev_groups = fme_hdr_groups,
+>  	},
+>  	.probe   = fme_probe,
+>  	.remove  = fme_remove,
+> -- 
+> 1.8.3.1
+> 
+Thanks,
+Moritz
