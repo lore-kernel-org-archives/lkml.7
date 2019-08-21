@@ -3,106 +3,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1662BC3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B0DC3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C412082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CE82332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 01:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfHUBaj (ORCPT
+        id S1726812AbfHUBeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 21:30:39 -0400
-Received: from 59-120-53-16.HINET-IP.hinet.net ([59.120.53.16]:25685 "EHLO
-        ATCSQR.andestech.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726307AbfHUBaj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 21:30:39 -0400
-Received: from mail.andestech.com (atcpcs16.andestech.com [10.0.1.222])
-        by ATCSQR.andestech.com with ESMTP id x7L1HIrU040654;
-        Wed, 21 Aug 2019 09:17:18 +0800 (GMT-8)
-        (envelope-from alankao@andestech.com)
-Received: from andestech.com (10.0.15.65) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.123.3; Wed, 21 Aug 2019
- 09:29:22 +0800
-Date:   Wed, 21 Aug 2019 09:29:22 +0800
-From:   Alan Kao <alankao@andestech.com>
-To:     Atish Patra <Atish.Patra@wdc.com>
-CC:     "hch@infradead.org" <hch@infradead.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "anup@brainfault.org" <anup@brainfault.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "schwab@linux-m68k.org" <schwab@linux-m68k.org>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "allison@lohutok.net" <allison@lohutok.net>
-Subject: Re: [v2 PATCH] RISC-V: Optimize tlb flush path.
-Message-ID: <20190821012921.GA30187@andestech.com>
-References: <20190820004735.18518-1-atish.patra@wdc.com>
- <mvmh86cl1o3.fsf@linux-m68k.org>
- <b2510462b55ffd93dba0c1b7cc28f9eef3089b50.camel@wdc.com>
- <20190820092207.GA26271@infradead.org>
- <76467815b464709f4c899444c957d921ebac87db.camel@wdc.com>
+        Tue, 20 Aug 2019 21:34:13 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4741 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726484AbfHUBeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 21:34:13 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 7E40CECFBE302ADD17A5;
+        Wed, 21 Aug 2019 09:34:10 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 21 Aug
+ 2019 09:34:04 +0800
+Subject: Re: [PATCH] erofs: move erofs out of staging
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Qu Wenruo <quwenruo.btrfs@gmx.com>,
+        Gao Xiang <hsiangkao@aol.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
+        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
+        devel <devel@driverdev.osuosl.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-erofs <linux-erofs@lists.ozlabs.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Jaegeuk Kim" <jaegeuk@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "Li Guifu" <bluce.liguifu@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>, "Pavel Machek" <pavel@denx.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        torvalds <torvalds@linux-foundation.org>
+References: <20190818161638.GE1118@sol.localdomain>
+ <20190818162201.GA16269@infradead.org>
+ <20190818172938.GA14413@sol.localdomain>
+ <20190818174702.GA17633@infradead.org>
+ <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <20190819160923.GG15198@magnolia>
+ <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
+ <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
+ <20190820155623.GA10232@mit.edu>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <9d8f88ee-4b81-bdfa-b0d7-9c7d5d54e70a@huawei.com>
+Date:   Wed, 21 Aug 2019 09:34:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <76467815b464709f4c899444c957d921ebac87db.camel@wdc.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.0.15.65]
-X-DNSRBL: 
-X-MAIL: ATCSQR.andestech.com x7L1HIrU040654
+In-Reply-To: <20190820155623.GA10232@mit.edu>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 08:28:36PM +0000, Atish Patra wrote:
-> On Tue, 2019-08-20 at 02:22 -0700, hch@infradead.org wrote:
-> > On Tue, Aug 20, 2019 at 08:42:19AM +0000, Atish Patra wrote:
-> > > cmask NULL is pretty common case and we would  be unnecessarily
-> > > executing bunch of instructions everytime while not saving much.
-> > > Kernel
-> > > still have to make an SBI call and OpenSBI is doing a local flush
-> > > anyways.
-> > > 
-> > > Looking at the code again, I think we can just use cpumask_weight
-> > > and
-> > > do local tlb flush only if local cpu is the only cpu present. 
-> > > 
-> > > Otherwise, it will just fall through and call
-> > > sbi_remote_sfence_vma().
-> > 
-> > Maybe it is just time to split the different cases at a higher level.
-> > The idea to multiple everything onto a single function always seemed
-> > odd to me.
-> > 
-> > FYI, here is what I do for the IPI based tlbflush for the native S-
-> > mode
-> > clint prototype, which seems much easier to understand:
-> > 
-> > http://git.infradead.org/users/hch/riscv.git/commitdiff/ea4067ae61e20fcfcf46a6f6bd1cc25710ce3afe
-> 
-> This does seem a lot cleaner to me. We can reuse some of the code for
-> this patch as well. Based on NATIVE_CLINT configuration, it will send
-> an IPI or SBI call.
+On 2019/8/20 23:56, Theodore Y. Ts'o wrote:
+> The reason why there needs to be at least some file system specific
+> code for fuzz testing is because for efficiency's sake, you don't want
+> to fuzz every single bit in the file system, but just the ones which
+> are most interesting (e.g., the metadata blocks).  For file systems
+> which use checksum to protect against accidental corruption, the file
+> system fuzzer needs to also fix up the checksums (since you can be
+> sure malicious attackers will do this).
 
-IMHO, this approach should be avoided because CLINT is compatible to but
- not mandatory in the privileged spec.  In other words, it is possible that
-a Linux-capable RISC-V platform does not contain a CLINT component but
-rely on some other mechanism to deal with SW/timer interrupts.
+Yup, IMO, if we really want such tool, it needs to:
+- move all generic fuzz codes (trigger random fuzzing in meta/data area) into
+that tool, and
+- make filesystem generic fs_meta/file_node lookup/inject/pack function as a
+callback, such as
+ * .find_fs_sb
+ * .inject_fs_sb
+ * .pack_fs_sb
+ * .find_fs_bitmap
+ * .inject_fs_bitmap
+ * .find_fs_inode_bitmap
+ * .inject_fs_inode_bitmap
+ * .find_inode_by_num
+ * .inject_inode
+ * .pack_inode
+ * .find_tree_node_by_level
+...
+then specific filesystem can fill the callback to tell how the tool can locate a
+field in inode or a metadata in tree node and then trigger the designed fuzz.
+
+It will be easier to rewrite whole generic fwk for each filesystem, because
+existed filesystem userspace tool should has included above callback's detail
+codes...
+
+> On Tue, Aug 20, 2019 at 10:24:11AM +0800, Chao Yu wrote:
+>> filesystem fill the tool's callback to seek a node/block and supported fields
+>> can be fuzzed in inode.
 
 > 
-> I can rebase my patch on top of yours and I can send it together or you
-> can include in your series.
+> What you *can* do is to make the file system specific portion of the
+> work as small as possible.  Great work in this area is Professor Kim's
+> Janus[1][2] and Hydra[2] work.  (Hydra is about to be published at SOSP 19,
+> and was partially funded from a Google Faculty Research Work.)
 > 
-> Let me know your preference.
-> 
-> -- 
-> Regards,
-> Atish
+> [1] https://taesoo.kim/pubs/2019/xu:janus.pdf
+> [2] https://github.com/sslab-gatech/janus
+> [3] https://github.com/sslab-gatech/hydra
 
-Best,
-Alan
+Thanks for the information!
+
+It looks like janus and hydra alreay have generic compress/decompress function
+across different filesystems, it's really a good job, I do think it may be the
+one once it becomes more generic.
+
+Thanks
+
+> 
