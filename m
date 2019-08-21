@@ -2,117 +2,116 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AE3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBABC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBDDB2332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7SZLu+1"
+	by mail.kernel.org (Postfix) with ESMTP id ED1D922D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbfHURg5 (ORCPT
+        id S1729995AbfHURiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:36:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40612 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728535AbfHURg5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:36:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c5so2777632wmb.5;
-        Wed, 21 Aug 2019 10:36:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=smhXu1L5t6GuvxXpM02oEkcG3qy/NF91cs0u42tWNQM=;
-        b=Z7SZLu+1OWPt/QYrEf3gyDmxq2SiRh/WlDoNoD9cXWQW8PfO6Bg2S6A72046Wbb69b
-         fuqPMdlWe2O0FipE/J1iPyhMAOp7BTcYSDB51HiqDqy9fDCeQ/seS7z0aTYhrcPhDsEd
-         iK52/paX6q2MJNbM35hzjgnq3X6nebfa9TLxD+KLpSlw+bWeXUQnGfF8nI6xKw+ELGbs
-         wWr5BIRKIPEdW/826poZAbTrS7mUqW9Oh5ixr04Z8t8TXEy3WsIAnUYcBh0THUSdoWWw
-         jwyempdtrYCOpPNfUUkuw4gNXiuA5KV11Ej5F9qL4lZ6DMhAsM7pEZM2igDG2A4aGTO7
-         NdpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=smhXu1L5t6GuvxXpM02oEkcG3qy/NF91cs0u42tWNQM=;
-        b=DKy0LCB2LVqwtAyd4Op0oZW0/X/7GJQ3MPANVt50XikgDRX86eQF8gW5U4i5WZPRoP
-         CXx/kQE7Ae2HkCuputTDqs/y0DKW0tbTa37e22c1nZ70Ly8S7NooJBuCJatfW1fr3SR7
-         aqtXXidLqgBiCVEvo7cpo3Iloxtn9LNwQGocJin1QgB3kTma1VnXi2vssTfDeP+RNUyb
-         YRxVdpb2DT139v/omDBjlB3HE6i7R8vE7lThB+kLw6IvpX2NgnU4sMqgg1An/kgCMEb0
-         DMXniCZM0cBJ9JlAbSUIpIjXAioi1208zHGRMuz5pS3l7oiQwIDW7WA4g8vsGp4vueAh
-         rUWQ==
-X-Gm-Message-State: APjAAAXym44ZtrQwMsbSRPR1pIYK0eOWlpbFv0tIJaKdf+/ZNMHCxrIM
-        19zBqjvHYD4HUwEzkumYua0=
-X-Google-Smtp-Source: APXvYqyXNaXwSC85caOVq0J3S9SmTrgdefplsopEPHCiE6o/zPmn3cLlBkTYVCg6pWayt8sHC4PbyA==
-X-Received: by 2002:a1c:9ad8:: with SMTP id c207mr1246531wme.145.1566409014779;
-        Wed, 21 Aug 2019 10:36:54 -0700 (PDT)
-Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id 2sm1109217wmz.16.2019.08.21.10.36.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 10:36:53 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
-        kvm@vger.kernel.org
-Subject: [GIT PULL] KVM fixes for Linux 5.3-rc6
-Date:   Wed, 21 Aug 2019 19:36:50 +0200
-Message-Id: <1566409010-50104-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 21 Aug 2019 13:38:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:9972 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727656AbfHURiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:38:20 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 28CC0300308B;
+        Wed, 21 Aug 2019 17:38:20 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A2B760603;
+        Wed, 21 Aug 2019 17:38:15 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id B0B95223D00; Wed, 21 Aug 2019 13:38:14 -0400 (EDT)
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        miklos@szeredi.hu
+Cc:     virtio-fs@redhat.com, vgoyal@redhat.com, stefanha@redhat.com,
+        dgilbert@redhat.com
+Subject: [PATCH 04/13] fuse: export fuse_len_args()
+Date:   Wed, 21 Aug 2019 13:37:33 -0400
+Message-Id: <20190821173742.24574-5-vgoyal@redhat.com>
+In-Reply-To: <20190821173742.24574-1-vgoyal@redhat.com>
+References: <20190821173742.24574-1-vgoyal@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 21 Aug 2019 17:38:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+From: Stefan Hajnoczi <stefanha@redhat.com>
 
-The following changes since commit a738b5e75b4c13be3485c82eb62c30047aa9f164:
+virtio-fs will need to query the length of fuse_arg lists.  Make the
+symbol visible.
 
-  Merge tag 'kvmarm-fixes-for-5.3-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2019-08-09 16:53:50 +0200)
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+---
+ fs/fuse/dev.c    | 7 ++++---
+ fs/fuse/fuse_i.h | 5 +++++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-are available in the git repository at:
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 34dd1436cec2..d90dba54f0d4 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -350,7 +350,7 @@ void fuse_put_request(struct fuse_conn *fc, struct fuse_req *req)
+ }
+ EXPORT_SYMBOL_GPL(fuse_put_request);
+ 
+-static unsigned len_args(unsigned numargs, struct fuse_arg *args)
++unsigned fuse_len_args(unsigned numargs, struct fuse_arg *args)
+ {
+ 	unsigned nbytes = 0;
+ 	unsigned i;
+@@ -360,6 +360,7 @@ static unsigned len_args(unsigned numargs, struct fuse_arg *args)
+ 
+ 	return nbytes;
+ }
++EXPORT_SYMBOL_GPL(fuse_len_args);
+ 
+ static u64 fuse_get_unique(struct fuse_iqueue *fiq)
+ {
+@@ -375,7 +376,7 @@ static unsigned int fuse_req_hash(u64 unique)
+ static void queue_request(struct fuse_iqueue *fiq, struct fuse_req *req)
+ {
+ 	req->in.h.len = sizeof(struct fuse_in_header) +
+-		len_args(req->in.numargs, (struct fuse_arg *) req->in.args);
++		fuse_len_args(req->in.numargs, (struct fuse_arg *) req->in.args);
+ 	list_add_tail(&req->list, &fiq->pending);
+ 	wake_up_locked(&fiq->waitq);
+ 	kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
+@@ -1894,7 +1895,7 @@ static int copy_out_args(struct fuse_copy_state *cs, struct fuse_out *out,
+ 	if (out->h.error)
+ 		return nbytes != reqsize ? -EINVAL : 0;
+ 
+-	reqsize += len_args(out->numargs, out->args);
++	reqsize += fuse_len_args(out->numargs, out->args);
+ 
+ 	if (reqsize < nbytes || (reqsize > nbytes && !out->argvar))
+ 		return -EINVAL;
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index 67521103d3b2..f41ce8f39006 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -1098,4 +1098,9 @@ int fuse_set_acl(struct inode *inode, struct posix_acl *acl, int type);
+ /* readdir.c */
+ int fuse_readdir(struct file *file, struct dir_context *ctx);
+ 
++/**
++ * Return the number of bytes in an arguments list
++ */
++unsigned fuse_len_args(unsigned numargs, struct fuse_arg *args);
++
+ #endif /* _FS_FUSE_I_H */
+-- 
+2.20.1
 
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to e4427372398c31f57450565de277f861a4db5b3b:
-
-  selftests/kvm: make platform_info_test pass on AMD (2019-08-21 19:08:18 +0200)
-
-----------------------------------------------------------------
-* A couple bugfixes, and mostly selftests changes.
-
-----------------------------------------------------------------
-Miaohe Lin (1):
-      KVM: x86: svm: remove redundant assignment of var new_entry
-
-Paolo Bonzini (7):
-      MAINTAINERS: change list for KVM/s390
-      MAINTAINERS: add KVM x86 reviewers
-      selftests: kvm: do not try running the VM in vmx_set_nested_state_test
-      selftests: kvm: provide common function to enable eVMCS
-      selftests: kvm: fix vmx_set_nested_state_test
-      selftests: kvm: fix state save/load on processors without XSAVE
-      Revert "KVM: x86/mmu: Zap only the relevant pages when removing a memslot"
-
-Radim Krcmar (1):
-      kvm: x86: skip populating logical dest map if apic is not sw enabled
-
-Vitaly Kuznetsov (1):
-      selftests/kvm: make platform_info_test pass on AMD
-
- MAINTAINERS                                        | 19 +++++++------
- arch/x86/kvm/lapic.c                               |  5 ++++
- arch/x86/kvm/mmu.c                                 | 33 +---------------------
- arch/x86/kvm/svm.c                                 |  1 -
- tools/testing/selftests/kvm/include/evmcs.h        |  2 ++
- tools/testing/selftests/kvm/lib/x86_64/processor.c | 16 +++++++----
- tools/testing/selftests/kvm/lib/x86_64/vmx.c       | 20 +++++++++++++
- tools/testing/selftests/kvm/x86_64/evmcs_test.c    | 15 ++--------
- tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c  | 12 +++-----
- .../selftests/kvm/x86_64/platform_info_test.c      |  2 +-
- .../kvm/x86_64/vmx_set_nested_state_test.c         | 32 +++++++++------------
- 11 files changed, 69 insertions(+), 88 deletions(-)
