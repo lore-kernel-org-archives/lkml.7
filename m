@@ -2,136 +2,205 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD94C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48353C41514
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F75233A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:19:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmFr7nxD"
+	by mail.kernel.org (Postfix) with ESMTP id 273042339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfHUJTU (ORCPT
+        id S1726995AbfHUJTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:19:20 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39638 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfHUJTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:19:20 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x4so1452853ljj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 02:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7tEQ31WOSLuQ3JEBF9cV8gIJ36Fz5CZ1Zb7GBPfj32s=;
-        b=NmFr7nxDxcBSv+uW4e7+vOU6sf2roLBf2V03NMTBhvA8HsbJuDjuF6SfhiqpB9nTHE
-         fR+OaPMsCKLJ7NobySSrkj3ygxdF+UbQFTYp10jJwkYhe3u7d4VDj0SNJHOsgLX2bNKC
-         UCj73zuWvfPcmvRIg1dGnFzky8Ud54Lzq3z0YH3+ZD4ZJgK6cC/hcUvBcrx3IpKzxFAW
-         AKK+8ukGQkwMaiKxjiW91h3sMTIz5qNaUWdiQAU8rS+YGdVuRqv8VNXbaPlCyHFApjMG
-         6rRc9FbKry+rKOrUZtXHAYBymjAL11ozmQrBmF9WdBY2Z3QOKqPBC40ikCNvC/qqv5Gf
-         RU5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7tEQ31WOSLuQ3JEBF9cV8gIJ36Fz5CZ1Zb7GBPfj32s=;
-        b=CKzN3cbd457CneMzWNkR8JBeshAtmZwoeqfofifa4yt8FuaE0bbx9/FL+5PACEzRhP
-         W88C5stMYIez5eLaGB9qVsocDMZxSfJbncZHWXp5a6U2nu77Ctpq6mGVU/moPf7kl1uW
-         ljKUSS8UrccchPcDxnIqAtAE5jrJIddyVLkU3dRthgjZouBMW5NGcYgviuPMiByrN2bm
-         lPA6jr3rKcyo5WEm5dcioSsw5sHJpTN64zNqEp3IgL/Giq2x2ySfcFgpvAoIQxpw5wF7
-         uk5Z73YlpihtaamxMwhCPTEfal8I8DisyUes5GPQyS/IKUKjciYoJ3ce6DWEHizNYxp/
-         aRpA==
-X-Gm-Message-State: APjAAAUEAfWxczibsTgn7aiuQEy6ePHzFz2ulDH06+UPTfYYV+Rc3CqO
-        8RuBoGE3BYuF4jg2eXfa2fJNQz60qQ9KuG9mVYo=
-X-Google-Smtp-Source: APXvYqyMvMP7WpKv2AQSCUyxhmpTSTKtEUxHamxuC1vWlEJy7y4MvakGKiV9JeryByhHBufUiM7n40VZzjuQKwrf178=
-X-Received: by 2002:a2e:5bc6:: with SMTP id m67mr15204586lje.53.1566379158109;
- Wed, 21 Aug 2019 02:19:18 -0700 (PDT)
+        Wed, 21 Aug 2019 05:19:32 -0400
+Received: from mga06.intel.com ([134.134.136.31]:43460 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726448AbfHUJTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 05:19:32 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 02:19:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,412,1559545200"; 
+   d="scan'208";a="378886901"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga006.fm.intel.com with ESMTP; 21 Aug 2019 02:19:29 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i0Mm7-0005F9-EQ; Wed, 21 Aug 2019 12:19:27 +0300
+Date:   Wed, 21 Aug 2019 12:19:27 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kristian Klausen <kristian@klausen.dk>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] ACPI: PM: s2idle: Always set up EC GPE for system wakeup
+Message-ID: <20190821091927.GV30120@smile.fi.intel.com>
+References: <2671465.Ihf76VL9xe@kreacher>
 MIME-Version: 1.0
-References: <20190814060854.26345-1-codekipper@gmail.com> <20190814060854.26345-10-codekipper@gmail.com>
-In-Reply-To: <20190814060854.26345-10-codekipper@gmail.com>
-From:   Code Kipper <codekipper@gmail.com>
-Date:   Wed, 21 Aug 2019 11:19:05 +0200
-Message-ID: <CAEKpxB=9NNoZgZoY_GpcEuDYoMUGzb+ATgZOSM64qy9tirC_MQ@mail.gmail.com>
-Subject: Re: [PATCH v5 09/15] clk: sunxi-ng: h6: Allow I2S to change parent rate
-To:     Maxime Ripard <maxime.ripard@free-electrons.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "Andrea Venturi (pers)" <be17068@iperbole.bo.it>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2671465.Ihf76VL9xe@kreacher>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 08:09, <codekipper@gmail.com> wrote:
->
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
->
-> I2S doesn't work if parent rate couldn't be change. Difference between
-> wanted and actual rate is too big.
->
-> Fix this by adding CLK_SET_RATE_PARENT flag to I2S clocks.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+On Wed, Aug 21, 2019 at 10:06:09AM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Commit 10a08fd65ec1 ("ACPI: PM: Set up EC GPE for system wakeup from
+> drivers that need it") assumed that the EC GPE would only need to be
+> set up for system wakeup if either the intel-hid or the intel-vbtn
+> driver was in use, but that turns out to be incorrect.  In particular,
+> on ASUS Zenbook UX430UNR/i7-8550U, if the EC GPE is not enabled while
+> suspended, the system cannot be woken up by opening the lid or
+> pressing a key, and that machine doesn't use any of the drivers
+> mentioned above.
+> 
+> For this reason, always set up the EC GPE for system wakeup from
+> suspend-to-idle by setting and clearing its wake mask in the ACPI
+> suspend-to-idle callbacks.
 
-Signed-off-by: Marcus Cooper <codekipper@gmail.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+Couple of minor comments below.
+
+> Fixes: 10a08fd65ec1 ("ACPI: PM: Set up EC GPE for system wakeup from drivers that need it")
+> Reported-by: Kristian Klausen <kristian@klausen.dk>
+> Tested-by: Kristian Klausen <kristian@klausen.dk>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
->  drivers/clk/sunxi-ng/ccu-sun50i-h6.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-> index aebef4af9861..d89353a3cdec 100644
-> --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-> @@ -505,7 +505,7 @@ static struct ccu_div i2s3_clk = {
->                 .hw.init        = CLK_HW_INIT_PARENTS("i2s3",
->                                                       audio_parents,
->                                                       &ccu_div_ops,
-> -                                                     0),
-> +                                                     CLK_SET_RATE_PARENT),
->         },
->  };
->
-> @@ -518,7 +518,7 @@ static struct ccu_div i2s0_clk = {
->                 .hw.init        = CLK_HW_INIT_PARENTS("i2s0",
->                                                       audio_parents,
->                                                       &ccu_div_ops,
-> -                                                     0),
-> +                                                     CLK_SET_RATE_PARENT),
->         },
->  };
->
-> @@ -531,7 +531,7 @@ static struct ccu_div i2s1_clk = {
->                 .hw.init        = CLK_HW_INIT_PARENTS("i2s1",
->                                                       audio_parents,
->                                                       &ccu_div_ops,
-> -                                                     0),
-> +                                                     CLK_SET_RATE_PARENT),
->         },
->  };
->
-> @@ -544,7 +544,7 @@ static struct ccu_div i2s2_clk = {
->                 .hw.init        = CLK_HW_INIT_PARENTS("i2s2",
->                                                       audio_parents,
->                                                       &ccu_div_ops,
-> -                                                     0),
-> +                                                     CLK_SET_RATE_PARENT),
->         },
->  };
->
-> --
-> 2.22.0
->
+> 
+> Commit 10a08fd65ec1 is present in linux-next.
+> 
+> ---
+>  drivers/acpi/ec.c                 |    1 -
+>  drivers/acpi/sleep.c              |   15 +++++++++++++--
+>  drivers/platform/x86/intel-hid.c  |    5 +----
+>  drivers/platform/x86/intel-vbtn.c |    5 +----
+>  4 files changed, 15 insertions(+), 11 deletions(-)
+> 
+> Index: linux-pm/drivers/acpi/sleep.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/sleep.c
+> +++ linux-pm/drivers/acpi/sleep.c
+> @@ -938,6 +938,13 @@ static int lps0_device_attach(struct acp
+>  	if (mem_sleep_default > PM_SUSPEND_MEM && !acpi_sleep_default_s3)
+>  		mem_sleep_current = PM_SUSPEND_TO_IDLE;
+>  
+> +	/*
+> +	 * Some LPS0 systems, like ASUS Zenbook UX430UNR/i7-8550U, require the
+> +	 * EC GPE to be enabled while suspended for certain wakeup devices to
+> +	 * work, so mark it as wakeup-capable.
+> +	 */
+> +	acpi_ec_mark_gpe_for_wake();
+> +
+>  	return 0;
+>  }
+>  
+> @@ -954,8 +961,10 @@ static int acpi_s2idle_begin(void)
+>  
+>  static int acpi_s2idle_prepare(void)
+>  {
+> -	if (acpi_sci_irq_valid())
+> +	if (acpi_sci_irq_valid()) {
+>  		enable_irq_wake(acpi_sci_irq);
+> +		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
+> +	}
+>  
+>  	acpi_enable_wakeup_devices(ACPI_STATE_S0);
+>  
+> @@ -1034,8 +1043,10 @@ static void acpi_s2idle_restore(void)
+>  
+>  	acpi_disable_wakeup_devices(ACPI_STATE_S0);
+>  
+> -	if (acpi_sci_irq_valid())
+> +	if (acpi_sci_irq_valid()) {
+> +		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
+>  		disable_irq_wake(acpi_sci_irq);
+> +	}
+>  }
+>  
+>  static void acpi_s2idle_end(void)
+> Index: linux-pm/drivers/platform/x86/intel-hid.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/intel-hid.c
+> +++ linux-pm/drivers/platform/x86/intel-hid.c
+> @@ -257,7 +257,6 @@ static int intel_hid_pm_prepare(struct d
+>  		struct intel_hid_priv *priv = dev_get_drvdata(device);
+>  
+>  		priv->wakeup_mode = true;
+> -		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
+>  	}
+>  	return 0;
+>  }
+> @@ -266,10 +265,8 @@ static void intel_hid_pm_complete(struct
+>  {
+>  	struct intel_hid_priv *priv = dev_get_drvdata(device);
+>  
+> -	if (priv->wakeup_mode) {
+> -		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
+
+> +	if (priv->wakeup_mode)
+
+But this now seems does not add any value and we can assign unconditionally.
+
+>  		priv->wakeup_mode = false;
+> -	}
+>  }
+>  
+>  static int intel_hid_pl_suspend_handler(struct device *device)
+> Index: linux-pm/drivers/platform/x86/intel-vbtn.c
+> ===================================================================
+> --- linux-pm.orig/drivers/platform/x86/intel-vbtn.c
+> +++ linux-pm/drivers/platform/x86/intel-vbtn.c
+> @@ -205,7 +205,6 @@ static int intel_vbtn_pm_prepare(struct
+>  		struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
+>  
+>  		priv->wakeup_mode = true;
+> -		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
+>  	}
+>  	return 0;
+>  }
+> @@ -214,10 +213,8 @@ static void intel_vbtn_pm_complete(struc
+>  {
+>  	struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
+>  
+> -	if (priv->wakeup_mode) {
+> -		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
+
+> +	if (priv->wakeup_mode)
+
+Ditto.
+
+>  		priv->wakeup_mode = false;
+> -	}
+>  }
+>  
+>  static int intel_vbtn_pm_resume(struct device *dev)
+> Index: linux-pm/drivers/acpi/ec.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/ec.c
+> +++ linux-pm/drivers/acpi/ec.c
+> @@ -1970,7 +1970,6 @@ void acpi_ec_set_gpe_wake_mask(u8 action
+>  	if (pm_suspend_no_platform() && first_ec && !ec_no_wakeup)
+>  		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
+>  }
+> -EXPORT_SYMBOL_GPL(acpi_ec_set_gpe_wake_mask);
+>  
+>  bool acpi_ec_dispatch_gpe(void)
+>  {
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
