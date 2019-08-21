@@ -2,68 +2,80 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E151C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C14C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B85A22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9981B216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:09:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tqWXC1kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfHURGQ (ORCPT
+        id S1729820AbfHURJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:06:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35824 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbfHURGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:06:15 -0400
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0530511A04
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 17:06:15 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id r9so1434757wme.8
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 10:06:14 -0700 (PDT)
+        Wed, 21 Aug 2019 13:09:14 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55607 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729162AbfHURJO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:09:14 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f72so2879066wmf.5;
+        Wed, 21 Aug 2019 10:09:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UMR/Orq2VXEoqtMil/E3IY1gq7rGKQTBq1zwm09du9Q=;
+        b=tqWXC1kvVN/WaBA7ZeYmo6gcE3pIp443OzO9+aw8egrUA4pRZMy0X8AUyC2daJ8KJf
+         skTQ0anvwcSbQK9BCNHFmphfdHHmKkG4zMA6wdDaFm80m5n0RWfYIuXUEQTKci71s4EW
+         sk1Hz7HQRzaAhyndAlwUGZYPzHWnQdPa6RQYf0f4TLSa1nZuFJruwrqWtAlwGQTMoz/A
+         CrmlewrKMB9XSTcOboZindf9XWYXO9JCWJzxLutxx7PsRp7z/HUKdQKJWXEVtQc0IaNo
+         jX3lZJNmTtKqtHFGGn1H4mjDpe+cqk4EV1814y6Gq2Xkqw3j4zT+0jMg/Gfk4/BXXEvm
+         ui9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=W24D/eGxTc+6J2y3EbaYEs8JehLWl+BD786rxzrTCtM=;
-        b=TdQQ4lUS1tiZcZkeg9c2fhjbmdUlzBXvxgwhBtAObXJs2pDGZiWYSP7x+YlWT1sejo
-         D758AJKXgn1aH44lqFdgFHTE7NFsakOC3Mi106HdVJwYghJ4ewrKq1ILv9DmQlFsMoWe
-         2fZ5kzrZW0eFvY8mUUT0eFd1pfdswX8OVVv3ok7wHdOHOvf+qeu+lGBvhCk8Va9ouv+t
-         sGKznIn4oo4CTyStj0wChbZPEYXW7PYIkyEhMZrI0FpmVivCkbsQyusa23FS2EYNbe0a
-         gip+3DXOw95gPi/vKrq+Fd05QcDAIfRiLNbM3nQnb6T8KBtljYbh8HKYBeLXY7h8fJFR
-         O+Tg==
-X-Gm-Message-State: APjAAAUFcLR6FE2fibMLhJhSDtxJQnkAzm2c+4yzrfqz2nvgjU0Vf2qm
-        KiuiLNWWqANlOkXwKNX3fvzm82go4fSXRrvsSWSjk3qqaYfCfF+TqTnAtkm1HA+vTIt1LxphFJf
-        v4EM4xgAXongUHVBPINrV3GhP
-X-Received: by 2002:a05:600c:d9:: with SMTP id u25mr1230374wmm.26.1566407173632;
-        Wed, 21 Aug 2019 10:06:13 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwuQfx1XaberyFNitFoFJZeqA2WoDq201lvGolt2CImLLnqThhrovfYHtbz1QDSuPhoyHzTsA==
-X-Received: by 2002:a05:600c:d9:: with SMTP id u25mr1230352wmm.26.1566407173334;
-        Wed, 21 Aug 2019 10:06:13 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:21b9:ff1f:a96c:9fb3? ([2001:b07:6468:f312:21b9:ff1f:a96c:9fb3])
-        by smtp.gmail.com with ESMTPSA id a19sm68979449wra.2.2019.08.21.10.06.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Aug 2019 10:06:12 -0700 (PDT)
-Subject: Re: [PATCH] selftests/kvm: make platform_info_test pass on AMD
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <20190610172255.6792-1-vkuznets@redhat.com>
- <87a7c2qz1x.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <023eb523-9767-3239-b6eb-cba3769bbd0f@redhat.com>
-Date:   Wed, 21 Aug 2019 19:06:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        bh=UMR/Orq2VXEoqtMil/E3IY1gq7rGKQTBq1zwm09du9Q=;
+        b=WD2bOFjqC/rpfDKbzBRglFCAjwLvvSl5gsnOlf3K2L/yJ3aIXwDqGG5QbBGiyCqns8
+         Ie+wTp7kywYUBcA0X+2mC67Q82GEW8Vc2qcNU2/hFvOT8QT2kz5V54sxKQuruMNuVeZA
+         D6DLX82Tc1Gru9jvm6cN020FlopdpCWKRAHvEA2Rd4yXbH+rRUaSkCsZGreTkj59KcmV
+         pRD3OTcL5YCG01XWj1Koz/JaZ1bf+tNh9KI4g+7pipo5p1MtjzZkfuAL77JVA+FHwaEa
+         4rGIUFhOCQ/w9W4KCsmu/90+zIBsBneRZccjKo1tOqKjTTZBhytwP13VkHmhIj/wuyqu
+         qqUA==
+X-Gm-Message-State: APjAAAXwFh3A91WlI5RJeVTR5DYST088jU5eDRUZVXzNPipDtTAj+XgS
+        Abt2boFyl08M1drXM6FGXZB7IOnG
+X-Google-Smtp-Source: APXvYqyM5KTZhwUSWIZPTATAD3HjZa+4IGrcteHQPv8ofuB4n3NLdmYchdJ6ySkM1zfiXt71u4mc6w==
+X-Received: by 2002:a1c:a8d7:: with SMTP id r206mr1179944wme.47.1566407350948;
+        Wed, 21 Aug 2019 10:09:10 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f04:7c00:7026:65b1:a037:c969? (p200300EA8F047C00702665B1A037C969.dip0.t-ipconnect.de. [2003:ea:8f04:7c00:7026:65b1:a037:c969])
+        by smtp.googlemail.com with ESMTPSA id m3sm300425wmc.44.2019.08.21.10.09.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 10:09:10 -0700 (PDT)
+Subject: Re: [EXT] Re: [PATCH net-next 0/1] Add BASE-T1 PHY support
+To:     Christian Herber <christian.herber@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190815153209.21529-1-christian.herber@nxp.com>
+ <8c15b855-6947-9930-c3df-71a64fbff33b@gmail.com>
+ <AM6PR0402MB379864B810F08D3698618B5F86A80@AM6PR0402MB3798.eurprd04.prod.outlook.com>
+ <13e65051-fe4f-5964-30b3-75285e6d2eee@gmail.com>
+ <AM6PR0402MB3798FCBF1EE592687B13A3C386AB0@AM6PR0402MB3798.eurprd04.prod.outlook.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <5c920846-b8f5-d087-cea4-a8ca3f816127@gmail.com>
+Date:   Wed, 21 Aug 2019 19:09:03 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <87a7c2qz1x.fsf@vitty.brq.redhat.com>
+In-Reply-To: <AM6PR0402MB3798FCBF1EE592687B13A3C386AB0@AM6PR0402MB3798.eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -72,37 +84,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/08/19 18:10, Vitaly Kuznetsov wrote:
-> Vitaly Kuznetsov <vkuznets@redhat.com> writes:
-> 
->> test_msr_platform_info_disabled() generates EXIT_SHUTDOWN but VMCB state
->> is undefined after that so an attempt to launch this guest again from
->> test_msr_platform_info_enabled() fails. Reorder the tests to make test
->> pass.
+On 20.08.2019 15:36, Christian Herber wrote:
+> On 19.08.2019 21:07, Heiner Kallweit wrote:
+>> Caution: EXT Email
 >>
->> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> ---
->>  tools/testing/selftests/kvm/x86_64/platform_info_test.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> On 19.08.2019 08:32, Christian Herber wrote:
+>>> On 16.08.2019 22:59, Heiner Kallweit wrote:
+>>>> On 15.08.2019 17:32, Christian Herber wrote:
+>>>>> This patch adds basic support for BASE-T1 PHYs in the framework.
+>>>>> BASE-T1 PHYs main area of application are automotive and industrial.
+>>>>> BASE-T1 is standardized in IEEE 802.3, namely
+>>>>> - IEEE 802.3bw: 100BASE-T1
+>>>>> - IEEE 802.3bp 1000BASE-T1
+>>>>> - IEEE 802.3cg: 10BASE-T1L and 10BASE-T1S
+>>>>>
+>>>>> There are no products which contain BASE-T1 and consumer type PHYs like
+>>>>> 1000BASE-T. However, devices exist which combine 100BASE-T1 and 1000BASE-T1
+>>>>> PHYs with auto-negotiation.
+>>>>
+>>>> Is this meant in a way that *currently* there are no PHY's combining Base-T1
+>>>> with normal Base-T modes? Or are there reasons why this isn't possible in
+>>>> general? I'm asking because we have PHY's combining copper and fiber, and e.g.
+>>>> the mentioned Aquantia PHY that combines NBase-T with 1000Base-T2.
+>>>>
+>>>>>
+>>>>> The intention of this patch is to make use of the existing Clause 45 functions.
+>>>>> BASE-T1 adds some additional registers e.g. for aneg control, which follow a
+>>>>> similiar register layout as the existing devices. The bits which are used in
+>>>>> BASE-T1 specific registers are the same as in basic registers, thus the
+>>>>> existing functions can be resued, with get_aneg_ctrl() selecting the correct
+>>>>> register address.
+>>>>>
+>>>> If Base-T1 can't be combined with other modes then at a first glance I see no
+>>>> benefit in defining new registers e.g. for aneg control, and the standard ones
+>>>> are unused. Why not using the standard registers? Can you shed some light on that?
+>>>>
+>>>> Are the new registers internally shadowed to the standard location?
+>>>> That's something I've seen on other PHY's: one register appears in different
+>>>> places in different devices.
+>>>>
+>>>>> The current version of ethtool has been prepared for 100/1000BASE-T1 and works
+>>>>> with this patch. 10BASE-T1 needs to be added to ethtool.
+>>>>>
+>>>>> Christian Herber (1):
+>>>>>     Added BASE-T1 PHY support to PHY Subsystem
+>>>>>
+>>>>>    drivers/net/phy/phy-c45.c    | 113 +++++++++++++++++++++++++++++++----
+>>>>>    drivers/net/phy/phy-core.c   |   4 +-
+>>>>>    include/uapi/linux/ethtool.h |   2 +
+>>>>>    include/uapi/linux/mdio.h    |  21 +++++++
+>>>>>    4 files changed, 129 insertions(+), 11 deletions(-)
+>>>>>
+>>>>
+>>>> Heiner
+>>>>
+>>>
+>>> Hi Heiner,
+>>>
+>>> I do not think the Aquantia part you are describing is publicly
+>>> documented, so i cannot comment on that part.
+>> Right, datasheet isn't publicly available. All I wanted to say with
+>> mentioning this PHY: It's not a rare exception that a PHY combines
+>> standard BaseT modes with "non-consumer" modes for special purposes.
+>> One practical use case of this proprietary 1000Base-T2 mode is
+>> re-using existing 2-pair cabling in aircrafts.
 >>
->> diff --git a/tools/testing/selftests/kvm/x86_64/platform_info_test.c b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
->> index 40050e44ec0a..f9334bd3cce9 100644
->> --- a/tools/testing/selftests/kvm/x86_64/platform_info_test.c
->> +++ b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
->> @@ -99,8 +99,8 @@ int main(int argc, char *argv[])
->>  	msr_platform_info = vcpu_get_msr(vm, VCPU_ID, MSR_PLATFORM_INFO);
->>  	vcpu_set_msr(vm, VCPU_ID, MSR_PLATFORM_INFO,
->>  		msr_platform_info | MSR_PLATFORM_INFO_MAX_TURBO_RATIO);
->> -	test_msr_platform_info_disabled(vm);
->>  	test_msr_platform_info_enabled(vm);
->> +	test_msr_platform_info_disabled(vm);
->>  	vcpu_set_msr(vm, VCPU_ID, MSR_PLATFORM_INFO, msr_platform_info);
->>  
->>  	kvm_vm_free(vm);
+>>> There are multiple reasons why e.g. xBASE-T1 plus 1000BASE-T is
+>>> unlikely. First, the is no use-case known to me, where this would be
+>>> required. Second, there is no way that you can do an auto-negotiation
+>>> between the two, as these both have their own auto-neg defined (Clause
+>>> 28/73 vs. Clause 98). Thirdly, if you would ever have a product with
+>>> both, I believe it would just include two full PHYs and a way to select
+>>> which flavor you want. Of course, this is the theory until proven
+>>> otherwise, but to me it is sufficient to use a single driver.
+>>>
+>> I'm with you if you say it's unlikely. However your statement in the
+>> commit message leaves the impression that there can't be such a device.
+>> And that's a difference.
+>>
+>> Regarding "including two full PHYs":
+>> This case we have already, there are PHYs combining different IP blocks,
+>> each one supporting a specific mode (e.g. copper and fiber). There you
+>> also have the case of different autoneg methods, clause 28 vs. clause 37.
+>>
+>>> The registers are different in the fields they include. It is just that
+>>> the flags which are used by the Linux driver, like restarting auto-neg,
+>>> are at the same position.
+>>>
+>> Good to know. Your commit description doesn't mention any specific PHY.
+>> I suppose you have PHYs you'd like to operate with the genphy_c45 driver.
+>> Could you give an example? And ideally, is a public datasheet available?
+>>
+>>> Christian
+>>>
+>>>
+>> Heiner
+>>
 > 
-> Ping!
+> There are no public BASE-T1 devices on the market right now that use 
+> Clause 45 standard registers. The first such products were developed 
+> before the IEEE standard (BroadR-Reach) and used Clause 22 access (see 
+> e.g. the support in the Kernel for TJA110x).
 > 
+> The most convenient way to test with a BASE-T1 device would be to use an 
+> SFP (e.g. 
+> https://technica-engineering.de/produkt/1000base-t1-sfp-module/). 
+> Alternative source could be Goepel.
+> 
+> There are also a number of media-converters around where one could break 
+> out the MDIO and connect to a processor. Of course, in all cases it 
+> should be made sure that this is a Clause-45 device.
+> 
+> As all relevant parts are NDA-restricted, this is pretty much all the 
+> information I can share.
+> 
+If no such device is on the market yet, then I'd suggest:
+- wait for such a device to see whether genphy_c45 driver is really
+  sufficient or whether other chip features require a dedicated driver
+  anyway. In the latter case it may be better to add dedicated T1
+  functions to phylib.
+- add the missing 10BASE-T1L and 10BASE-T1S support meanwhile
 
-Queued, thanks.
+The current patch set IMO is a little bit hacky. I'm not 100% happy
+with the implicit assumption that there can't be devices supporting
+T1 and classic BaseT modes or fiber modes.
 
-Paolo
+Andrew: Do you have an opinion on that?
+
+> Christian
+> 
+> 
+Heiner
