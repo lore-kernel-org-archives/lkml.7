@@ -2,119 +2,121 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B0EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBFDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8690B22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C355722DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="YrdLKKCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbfHUPhc (ORCPT
+        id S1730254AbfHUPhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:37:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:60436 "EHLO foss.arm.com"
+        Wed, 21 Aug 2019 11:37:51 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49066 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730157AbfHUPh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:37:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00745337;
-        Wed, 21 Aug 2019 08:37:27 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F26D63F718;
-        Wed, 21 Aug 2019 08:37:24 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     Steven Price <steven.price@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 06/10] KVM: Allow kvm_device_ops to be const
-Date:   Wed, 21 Aug 2019 16:36:52 +0100
-Message-Id: <20190821153656.33429-7-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190821153656.33429-1-steven.price@arm.com>
-References: <20190821153656.33429-1-steven.price@arm.com>
+        id S1729352AbfHUPht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:37:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=xuBrmteC5AYtTtwM4c0/q/0f+0lPdxUwwmCp9CFt+9M=; b=YrdLKKCmA4/6woR3hIeUZHQxq7
+        kyE3TevbpdsOOEaHwfN3v/P2QzgOWi+s2iyYsmtn3yJXTV5uXeyRJtD6BUl15Ynmx8hn6dR7hhAk2
+        uYrBeJ4z+3i/a/ErtyLSAWa1fGUZt/20xbTlp4bpIFhakXjUli92V032szvaxkYMRAFo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i0Sg8-0005rs-Ug; Wed, 21 Aug 2019 17:37:40 +0200
+Date:   Wed, 21 Aug 2019 17:37:40 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Marco Hartmann <marco.hartmann@nxp.com>
+Cc:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Christian Herber <christian.herber@nxp.com>
+Subject: Re: [PATCH v2 net] Add genphy_c45_config_aneg() function to phy-c45.c
+Message-ID: <20190821153740.GB22091@lunn.ch>
+References: <1566385208-23523-1-git-send-email-marco.hartmann@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566385208-23523-1-git-send-email-marco.hartmann@nxp.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently a kvm_device_ops structure cannot be const without triggering
-compiler warnings. However the structure doesn't need to be written to
-and, by marking it const, it can be read-only in memory. Add some more
-const keywords to allow this.
+On Wed, Aug 21, 2019 at 11:00:46AM +0000, Marco Hartmann wrote:
+> Commit 34786005eca3 ("net: phy: prevent PHYs w/o Clause 22 regs from calling
+> genphy_config_aneg") introduced a check that aborts phy_config_aneg()
+> if the phy is a C45 phy.
+> This causes phy_state_machine() to call phy_error() so that the phy
+> ends up in PHY_HALTED state.
+> 
+> Instead of returning -EOPNOTSUPP, call genphy_c45_config_aneg()
+> (analogous to the C22 case) so that the state machine can run
+> correctly.
+> 
+> genphy_c45_config_aneg() closely resembles mv3310_config_aneg()
+> in drivers/net/phy/marvell10g.c, excluding vendor specific
+> configurations for 1000BaseT.
 
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- include/linux/kvm_host.h | 4 ++--
- virt/kvm/kvm_main.c      | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+> +/**
+> + * genphy_c45_config_aneg - restart auto-negotiation or forced setup
+> + * @phydev: target phy_device struct
+> + *
+> + * Description: If auto-negotiation is enabled, we configure the
+> + *   advertising, and then restart auto-negotiation.  If it is not
+> + *   enabled, then we force a configuration.
+> + */
+> +int genphy_c45_config_aneg(struct phy_device *phydev)
+> +{
+> +	bool changed = false;
+> +	int ret;
+> +
+> +	if (phydev->autoneg == AUTONEG_DISABLE)
+> +		return genphy_c45_pma_setup_forced(phydev);
+> +
+> +	ret = genphy_c45_an_config_aneg(phydev);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret > 0)
+> +		changed = true;
+> +
+> +	return genphy_c45_check_and_restart_aneg(phydev, changed);
+> +}
+> +EXPORT_SYMBOL_GPL(genphy_c45_config_aneg);
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index e154a1897e20..c5c1a923f21b 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1262,7 +1262,7 @@ extern unsigned int halt_poll_ns_grow_start;
- extern unsigned int halt_poll_ns_shrink;
- 
- struct kvm_device {
--	struct kvm_device_ops *ops;
-+	const struct kvm_device_ops *ops;
- 	struct kvm *kvm;
- 	void *private;
- 	struct list_head vm_node;
-@@ -1315,7 +1315,7 @@ struct kvm_device_ops {
- void kvm_device_get(struct kvm_device *dev);
- void kvm_device_put(struct kvm_device *dev);
- struct kvm_device *kvm_device_from_filp(struct file *filp);
--int kvm_register_device_ops(struct kvm_device_ops *ops, u32 type);
-+int kvm_register_device_ops(const struct kvm_device_ops *ops, u32 type);
- void kvm_unregister_device_ops(u32 type);
- 
- extern struct kvm_device_ops kvm_mpic_ops;
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index c6a91b044d8d..75488ebb87c9 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -3046,14 +3046,14 @@ struct kvm_device *kvm_device_from_filp(struct file *filp)
- 	return filp->private_data;
- }
- 
--static struct kvm_device_ops *kvm_device_ops_table[KVM_DEV_TYPE_MAX] = {
-+static const struct kvm_device_ops *kvm_device_ops_table[KVM_DEV_TYPE_MAX] = {
- #ifdef CONFIG_KVM_MPIC
- 	[KVM_DEV_TYPE_FSL_MPIC_20]	= &kvm_mpic_ops,
- 	[KVM_DEV_TYPE_FSL_MPIC_42]	= &kvm_mpic_ops,
- #endif
- };
- 
--int kvm_register_device_ops(struct kvm_device_ops *ops, u32 type)
-+int kvm_register_device_ops(const struct kvm_device_ops *ops, u32 type)
- {
- 	if (type >= ARRAY_SIZE(kvm_device_ops_table))
- 		return -ENOSPC;
-@@ -3074,7 +3074,7 @@ void kvm_unregister_device_ops(u32 type)
- static int kvm_ioctl_create_device(struct kvm *kvm,
- 				   struct kvm_create_device *cd)
- {
--	struct kvm_device_ops *ops = NULL;
-+	const struct kvm_device_ops *ops = NULL;
- 	struct kvm_device *dev;
- 	bool test = cd->flags & KVM_CREATE_DEVICE_TEST;
- 	int type;
--- 
-2.20.1
+The vendor parts for 1000BaseT makes this interesting. Do we expect to
+see an C45 PHYs which don't support 1000BaseT? I think that
+unlikely. So all C45 PHYs are going to implement their own config_aneg
+callback so they can set their vendor registers for 1000BaseT.
 
+> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+> index f3adea9ef400..74c4e15ebe52 100644
+> --- a/drivers/net/phy/phy.c
+> +++ b/drivers/net/phy/phy.c
+> @@ -507,7 +507,7 @@ static int phy_config_aneg(struct phy_device *phydev)
+>  	 * allowed to call genphy_config_aneg()
+>  	 */
+>  	if (phydev->is_c45 && !(phydev->c45_ids.devices_in_package & BIT(0)))
+> -		return -EOPNOTSUPP;
+> +		return genphy_c45_config_aneg(phydev);
+>  
+>  	return genphy_config_aneg(phydev);
+
+So here we should be calling the driver config_aneg function. It can
+then call genphy_c45_config_aneg(phydev) to do the generic parts.
+
+Heiner, what do you think?
+
+	Andrew
