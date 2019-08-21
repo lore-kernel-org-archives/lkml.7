@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298F3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFF6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F353622DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8232B2339F
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZULk9xeI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cYeQS8nq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbfHUI0t (ORCPT
+        id S1727548AbfHUI0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 04:26:49 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39166 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbfHUI0s (ORCPT
+        Wed, 21 Aug 2019 04:26:51 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51584 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727452AbfHUI0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 04:26:48 -0400
-Received: by mail-wm1-f65.google.com with SMTP id i63so1195955wmg.4;
-        Wed, 21 Aug 2019 01:26:46 -0700 (PDT)
+        Wed, 21 Aug 2019 04:26:50 -0400
+Received: by mail-wm1-f67.google.com with SMTP id k1so1192946wmi.1;
+        Wed, 21 Aug 2019 01:26:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nwX/48Ia7d2dRgMHoMgDxjTtTXX3pmd4YgGY1f3Mcbg=;
-        b=ZULk9xeIJuv1XoFXog3/KZs2+L80kTNWp4MkFqWfibqPuHiMoIYJ1EHN5CXMu87HKk
-         TXsZ3YK9TdmFxEhnPy2G2nhjyaglkv+pyMaDM0djtXs7FNeHSjHxXdkscuKKwhCz6bHo
-         Ysw7c0sulOGiQWZwa3lZ8eWk2FLi9/DHJ7oshYYNrA707T5EUQyRTme2ErNeYs7hkvrr
-         hO44+hOKaXEd6U4opIUnBjIyFRS2nU5l+WdZDPKJaB7khl3fut4+9uavVOw/H5kWfLv+
-         dqfcHBBfM0E+84nNhPh8OC5yBQjNW8iry7YMaHHiYL5ldaLSoQj/p5FkyOW2XL3IBsdD
-         h4Pg==
+        bh=u4jqzd2Sa7cqOfxmJTjO2EUX/kBXhO1wvG+CPlLawDo=;
+        b=cYeQS8nqwJ2nxYaJvnK5iDKIc/f+MXApfpkaO7wT56NzwajB+RULs7NWeTMiIJLuy3
+         FfSXxk66yXF9qOYAKazW8bMiCkzcL7gPrZOu5UFiIlomiHsuGvkaddQrOKgY4Ygpv2KN
+         3C50QCTd664WoIJZ90u/4xdn0U0ti7rR1cD0TO3lj4YXiHnRbcsG3r2eMCCcVNDDd/ve
+         C7OKQx3cBCUgDmvtJ7KZc4VdWlU9THd1DDITdKNVUWg64DcZ9YGJs1exHkTiiEZm9bQB
+         dCu9U21FZRGx5z6hsJXbVdjTM9HjfIv4eAy8rRzJx7VNrxBfqwttbq+Ty8rYIDr4fF52
+         v9Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=nwX/48Ia7d2dRgMHoMgDxjTtTXX3pmd4YgGY1f3Mcbg=;
-        b=PygTowU/BVJGwiye0FWZ1z7AMm1VXyLjqf4IPK4cI+VzkzwHhZMosMjQS6ad7yEkde
-         5eK5FIGN8UZsDsm50Gn76M8E4BQ3MFQHQvNcXDRUt3+6IXGX+XIuQibZvilKWkm8SJbO
-         5/CcApTY4YsV8GREdDKe6HDL409kqpoyodYosnnpDBzuh+0lg9CtZ+ZiWa5pvNIadXGZ
-         Fw9zJULfpT1May8HeFGO1cntyRbVJ9J8Wes8EFr77NJQkKlfAGijsW41fYgY8OsovSvK
-         Cpq91E05pFG1/9rX0qHk1iuJWBrOFtAmiyPbIf2kuBFevIlzhLi4hEg9nqd3oWFEuKXc
-         hNng==
-X-Gm-Message-State: APjAAAXHAAO+6Y1XrlmOVH/QJEGsOUgByd/0BnC/yYESo4uw/cv3QhFg
-        jka3VFlQRV4xMR9NWRk54LuWxf4udHI=
-X-Google-Smtp-Source: APXvYqynhnmicUQQOOG75MVstq+5H1fNWaUgK9qQiE62egUfeFJKxzkXHxu7i6FLV/9QLM/pzsl6Sw==
-X-Received: by 2002:a7b:c5c2:: with SMTP id n2mr4835665wmk.9.1566376005834;
-        Wed, 21 Aug 2019 01:26:45 -0700 (PDT)
+        bh=u4jqzd2Sa7cqOfxmJTjO2EUX/kBXhO1wvG+CPlLawDo=;
+        b=AUwEJ2ntt9BC7jDrGLTO1aPtbKjp1vXNVABT826IeF8tGUi+pZsN4obsNDKFHbW83Z
+         MUnOuW5+5tqdQoSKH0UsNJVG5kn1wB7uYJGLY6H7C6CbaghxEtJHnsQx+SqPSzGbTTjk
+         mn12B03QUQUuYyGRJtu7aTRODqOiK6V7CLcK+HfNle8NsZLtk/JeT8esVRVmVxeMiKH+
+         IbSWzGWCZEvY0grx3PJjpkSV0IlTbI6WVV0M064Y6/2b5E3Rw3v+nN+TfPrqaqxyd8au
+         iQXvygwsX8VaNR4Zl1byyTYkt/THdVm/UzsvHPOMzP9oD9IJFAkPCk9jXisgONqtSRYL
+         5vBQ==
+X-Gm-Message-State: APjAAAV+v1rQD0g2duNU5FAe1pykBLBT27sDaACVp0a6Lf6JUW/wp6dW
+        maiim/v6FMsjgGNOPwdEfIcH/hDrrlM=
+X-Google-Smtp-Source: APXvYqyAE6UPHqryx0y2r5NIOdeFRnqkZSNLDgNCY7aIoVDEcZTIp4OMhLAwcnKfO0wfabKsIRa4Vg==
+X-Received: by 2002:a7b:c952:: with SMTP id i18mr4882470wml.44.1566376007688;
+        Wed, 21 Aug 2019 01:26:47 -0700 (PDT)
 Received: from 640k.localdomain.com ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id w5sm2931892wmm.43.2019.08.21.01.26.44
+        by smtp.gmail.com with ESMTPSA id w5sm2931892wmm.43.2019.08.21.01.26.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 01:26:45 -0700 (PDT)
+        Wed, 21 Aug 2019 01:26:47 -0700 (PDT)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     jmattson@redhat.com, ehabkost@redhat.com, konrad.wilk@oracle.com
-Subject: [PATCH 1/3] KVM: x86: fix reporting of AMD speculation bug CPUID leaf
-Date:   Wed, 21 Aug 2019 10:26:40 +0200
-Message-Id: <1566376002-17121-2-git-send-email-pbonzini@redhat.com>
+Subject: [PATCH 3/3] KVM: x86: use Intel speculation bugs and features as derived in generic x86 code
+Date:   Wed, 21 Aug 2019 10:26:42 +0200
+Message-Id: <1566376002-17121-4-git-send-email-pbonzini@redhat.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
 References: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
@@ -69,55 +69,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AMD_* bits have to be set from the vendor-independent
+Similar to AMD bits, set the Intel bits from the vendor-independent
 feature and bug flags, because KVM_GET_SUPPORTED_CPUID does not care
-about the vendor and they should be set on Intel processors as well.
-On top of this, SSBD, STIBP and AMD_SSB_NO bit were not set, and
-VIRT_SSBD does not have to be added manually because it is a
-cpufeature that comes directly from the host's CPUID bit.
+about the vendor and they should be set on AMD processors as well.
 
+Suggested-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/cpuid.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ arch/x86/kvm/cpuid.c | 6 ++++++
+ arch/x86/kvm/x86.c   | 7 +++++++
+ 2 files changed, 13 insertions(+)
 
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 22c2720cd948..43caeb6059b9 100644
+index 43caeb6059b9..dd5985eb61b4 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -729,18 +729,23 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
- 			g_phys_as = phys_as;
- 		entry->eax = g_phys_as | (virt_as << 8);
- 		entry->edx = 0;
-+		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
-+		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
- 		/*
--		 * IBRS, IBPB and VIRT_SSBD aren't necessarily present in
--		 * hardware cpuid
-+		 * AMD has separate bits for each SPEC_CTRL bit.
-+		 * arch/x86/kernel/cpu/bugs.c is kind enough to
-+		 * record that in cpufeatures so use them.
- 		 */
--		if (boot_cpu_has(X86_FEATURE_AMD_IBPB))
-+		if (boot_cpu_has(X86_FEATURE_IBPB))
- 			entry->ebx |= F(AMD_IBPB);
--		if (boot_cpu_has(X86_FEATURE_AMD_IBRS))
-+		if (boot_cpu_has(X86_FEATURE_IBRS))
- 			entry->ebx |= F(AMD_IBRS);
--		if (boot_cpu_has(X86_FEATURE_VIRT_SSBD))
--			entry->ebx |= F(VIRT_SSBD);
--		entry->ebx &= kvm_cpuid_8000_0008_ebx_x86_features;
--		cpuid_mask(&entry->ebx, CPUID_8000_0008_EBX);
+@@ -392,6 +392,12 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
+ 
+ 		entry->edx &= kvm_cpuid_7_0_edx_x86_features;
+ 		cpuid_mask(&entry->edx, CPUID_7_EDX);
++		if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
++			entry->edx |= F(SPEC_CTRL);
 +		if (boot_cpu_has(X86_FEATURE_STIBP))
-+			entry->ebx |= F(AMD_STIBP);
++			entry->edx |= F(INTEL_STIBP);
 +		if (boot_cpu_has(X86_FEATURE_SSBD))
-+			entry->ebx |= F(AMD_SSBD);
-+		if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
-+			entry->ebx |= F(AMD_SSB_NO);
++			entry->edx |= F(SPEC_CTRL_SSBD);
  		/*
- 		 * The preference is to use SPEC CTRL MSR instead of the
- 		 * VIRT_SPEC MSR.
+ 		 * We emulate ARCH_CAPABILITIES in software even
+ 		 * if the host doesn't support it.
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 93b0bd45ac73..6b81c7609d09 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1254,6 +1254,13 @@ static u64 kvm_get_arch_capabilities(void)
+ 	if (l1tf_vmx_mitigation != VMENTER_L1D_FLUSH_NEVER)
+ 		data |= ARCH_CAP_SKIP_VMENTRY_L1DFLUSH;
+ 
++	if (!boot_cpu_has_bug(X86_BUG_CPU_MELTDOWN))
++		data |= ARCH_CAP_RDCL_NO;
++	if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS))
++		data |= ARCH_CAP_SSB_NO;
++	if (!boot_cpu_has_bug(X86_BUG_MDS))
++		data |= ARCH_CAP_MDS_NO;
++
+ 	return data;
+ }
+ 
 -- 
 1.8.3.1
-
 
