@@ -2,285 +2,191 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E3DC3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E3DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFC820870
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3B522CE3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:46:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s+ipYvK/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfHUCmT (ORCPT
+        id S1726760AbfHUCqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 22:42:19 -0400
-Received: from mail-eopbgr140081.outbound.protection.outlook.com ([40.107.14.81]:48782
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726372AbfHUCmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 22:42:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OklyOIZX7LX3BMn0GfraMRmxEKgX0eHk9pL33HwXvC7H549O7+9DArSVFX4rtxRIsCVf22JwcjPscJ6U2ZN1mUrumimI6i/8vkXVDLLa1Kc7FdsxwPCkd2s62IylW82YE0eUSOK6nDG5uReqNaBUgSPkRTdMqAoDUSAbrtxZFI9gQN6yh+B+5YLaQ5EPjTW5Ij2Mqy5GVaiyYpGRyQBZ/tSrPqYeEysvHEBeJ8oGHXQ7yLxgqJrpBxqmNGn8h/fL7NG7JBccUdj7zAjjed7Xz2TyQkCfl2jPPXMgpkwFUNiN2mzgWqhgqa9SLXVSRGyz4cEtMmNCBZRKtmECrF3FCQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qtu6v425T++j/bRaAVr/iHT7hwgCA5pTKHProD8IYos=;
- b=IIyYQLm992CTV2wmeem2bLYp5MUt6XUvOYsLe3S2NYrqaTmEIg03PQ3uy7Y+G9IYj+Jokigpge1nCoZXj/CZyRaedqkT187xT6RqbIVY8dTuB/635PFT/HEX2DrHco9rAK9y6H54IGdwlftaV8I7sbAtRurfeXwnh1PeyS6nmxnxnLaHnoPwO0IAErcUGtkkptsj8KNEeeKT9FfssgulDgPvNe2vpLSEr4nI327SddV05hs5y0NjVBHHbBsdfOwVe4prKpYD2OhjAc6etiVUzrPV9L6RiESTIW59A8bAjBPRr3C9Ff7EFqAgBBlfCKyYDEy4oEdU7clNEJ/nM1WXPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qtu6v425T++j/bRaAVr/iHT7hwgCA5pTKHProD8IYos=;
- b=URqBvnV9XP2w8dega8m31c7BIiYl0aGTOXPvCprIoXmCKBxwqcAUoFeP+UsvP8zpMGfK4VGqsmE7bRf13VgrWBTrdThaHxXKMnMOB62Pk/LGsfR4n0P9KBNWQv1e08eD8KJut/W2NA0xlEZCT8rnnLz5ublz5fzhg/tCln5F3Qk=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB5060.eurprd05.prod.outlook.com (20.176.214.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Wed, 21 Aug 2019 02:42:00 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::216f:f548:1db0:41ea%6]) with mapi id 15.20.2178.018; Wed, 21 Aug 2019
- 02:42:00 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-CC:     Christophe de Dinechin <christophe.de.dinechin@gmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        cjia <cjia@nvidia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Thread-Topic: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Thread-Index: AQHVTfNxjgfwJJG2ZUiuOAmKCwQvf6bx3uKAgAWJU4CAAcVCEIAABCsAgAAWVtCAABCDgIAAzoewgAAqE4CAAECFQIAAFWyAgAAGbNCAABfqAIAAErcwgAjpulCAAB4NgIAAFSMQgABYcACAAKhrQA==
-Date:   Wed, 21 Aug 2019 02:42:00 +0000
-Message-ID: <AM0PR05MB4866DF5936E1550EEDFB3B78D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190802065905.45239-1-parav@mellanox.com>
-        <77ffb1f8-e050-fdf5-e306-0a81614f7a88@nvidia.com>
-        <AM0PR05MB4866993536C0C8ACEA2F92DBD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190813085246.1d642ae5@x1.home>
-        <AM0PR05MB48663579A340E6597B3D01BCD1D20@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190813111149.027c6a3c@x1.home>
-        <AM0PR05MB4866D40F8EBB382C78193C91D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814100135.1f60aa42.cohuck@redhat.com>
-        <AM0PR05MB4866ABFDDD9DDCBC01F6CA90D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814150911.296da78c.cohuck@redhat.com>
-        <AM0PR05MB48666CCDFE985A25F42A0259D1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <20190814085746.26b5f2a3@x1.home>
-        <AM0PR05MB4866148ABA3C4E48E73E95FCD1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <AM0PR05MB48668B6221E477A873688CDBD1AB0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-        <m1o90kduow.fsf@dinechin.org>
-        <AM0PR05MB4866EBB51F7019F2E3D9918CD1AB0@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190820183106.1680d0d9.cohuck@redhat.com>
-In-Reply-To: <20190820183106.1680d0d9.cohuck@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [106.51.22.188]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 30e43e50-d196-4a0f-74d2-08d725e12466
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB5060;
-x-ms-traffictypediagnostic: AM0PR05MB5060:
-x-ld-processed: a652971c-7d2e-4d9b-a6a4-d149256f461b,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB50603A28D831110740251BFFD1AA0@AM0PR05MB5060.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(346002)(136003)(366004)(189003)(199004)(13464003)(186003)(99286004)(6246003)(229853002)(316002)(26005)(86362001)(81166006)(2906002)(54906003)(76176011)(102836004)(7696005)(25786009)(66066001)(11346002)(76116006)(33656002)(64756008)(66476007)(486006)(66946007)(74316002)(7736002)(4326008)(305945005)(6916009)(66556008)(66446008)(9686003)(8936002)(52536014)(55016002)(446003)(9456002)(476003)(478600001)(6116002)(256004)(53936002)(71190400001)(5660300002)(3846002)(8676002)(81156014)(6436002)(71200400001)(55236004)(14454004)(6506007)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5060;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gFv5iiA/WVPCjDfoFA098zdO/H8nNl++kzLtIZQkpfYvZrb3ahEF/he3GZVb+BExcWP49FGx/zTmjdgPdP8xECtk18/oOPBtPsOk6/mNjX0xIyrb8jPW36b74xDqtfzwcUfAgdcBqdPhHIQ79iJdj5MxtThOnYSuf/S+eOtyJiOJpg0MCyIrGphAEBsWoRF1ZqOXX5bPlHvJIrep9uuXvwuDc4qYrVptpBLufpsYpm0FEiZSlVzZnI/9xoYLPzs6nxNroyqc7RHo+k1RByZG1r1idOXjV86aIst8LmYn2fblh4AadKjjsogMR6mOkbtzvqk1jsEzwk0tCMTC+HBeSE1UaUgHph6491PkpqMGRvLHHbuTr2r1A78BGdH1pGaozlMhIA9UlKOxRq03qANjg58pRVSN3aAkX0ez+wiOuQY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 20 Aug 2019 22:46:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42125 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfHUCqw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 22:46:52 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i30so388913pfk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 19:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rzA9S1AIz/6xQmIDVoSvFl0QH4KJ3JhpAFF3D1CfKh0=;
+        b=s+ipYvK/PXc0BFsqo5Tnmt2Vnc6JFR0aG8HAWklRvlWdQyin8D1mC7EnMGjfhhEy7O
+         qGmpCNR02TbHZhdQ/+2f7zpJJAJ1jyftQeKEWnNFTYymKnDuID4xnBxALF7r9DMvAiwe
+         f0n42KeMUI2n3utsk8x+EKkqiXYKo9BtU3xWPR22lQ7A5ThtHJ4rJxXSfg3+NguML63t
+         VL7nUXJe8KbLx36EXA0i4nQdDQtMmvRJADZbIrOPuBliIvCw/JEL+DYXdBh1cdLlpIyL
+         hs/gPjQSXzFGNPnsYytfIqvcVXjg2MxQ36l0r8Y1drjG/qqd4lziE/XKOvupAVPalNs9
+         iXWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rzA9S1AIz/6xQmIDVoSvFl0QH4KJ3JhpAFF3D1CfKh0=;
+        b=sGeq+xiPQvf9Cq34tlOUgm+3Q8/MmwelfsaqpH+wCQuwziJK4wW9+3svxRgJ5t/gxS
+         iYLBq41u+NlZTBVfLSmlixvmLVujQC4jErkCHsQvJV/hn6WcXW5+YPm0XfOtC5kVh5yd
+         kLwwBVhRFfk8JMDDNTIPuU4FWIKghggH5nh/HgerxKf4h3vYtZq/K08jLF05niqWhmC9
+         e2JFG0A0u5UozTwqScS6sK/sDdPZnAaTVL5zGTok4TyYBn2p3TJKCknXyl2LzyFdD1D0
+         86xcbVW/OV4dycGg4Kj93jAfV0dPxZ7CIysaiqsB+OcylYhML5gJV8GbV3so65G8nqVe
+         7QPQ==
+X-Gm-Message-State: APjAAAXmxSB8exCBYoAoC13+ZBnS22PgzdQnXj20D/nxKR9dIY0ZlehY
+        G4uHq1DTxy1cNs/izkYw92sBE+cdpw==
+X-Google-Smtp-Source: APXvYqxWjSAeaVO7l8MTk1p6uF2HhW/owqfIUdX/K1HMqNwAehrCyxIRk1mn/yYnS0T+S5vx1rqVzA==
+X-Received: by 2002:a17:90a:c24e:: with SMTP id d14mr3161488pjx.129.1566355611709;
+        Tue, 20 Aug 2019 19:46:51 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2405:204:7101:175:ddd7:6c31:ebc7:37e8])
+        by smtp.gmail.com with ESMTPSA id x2sm1517865pja.22.2019.08.20.19.46.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 20 Aug 2019 19:46:51 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 08:16:43 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     afaerber@suse.de
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        thomas.liau@actions-semi.com, linux-actions@lists.infradead.org,
+        linus.walleij@linaro.org, linux-clk@vger.kernel.org,
+        ulf.hansson@linaro.org, robh+dt@kernel.org, sboyd@kernel.org
+Subject: Re: [PATCH v2 4/7] arm64: dts: actions: Add uSD and eMMC support for
+ Bubblegum96
+Message-ID: <20190821024643.GA14176@Mani-XPS-13-9360>
+References: <20190821024014.14070-1-manivannan.sadhasivam@linaro.org>
+ <20190821024014.14070-5-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30e43e50-d196-4a0f-74d2-08d725e12466
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 02:42:00.3369
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g9p/Ihv+ITsGhGs6qg8jGYR+hkyRMUkEtvKMX/w5AU1ms9G5UHWLcUKv2CyKlKiSV441E8dtmRZ6WotoyiZKCQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5060
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821024014.14070-5-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Andreas,
 
+On Wed, Aug 21, 2019 at 08:10:11AM +0530, Manivannan Sadhasivam wrote:
+> Add uSD and eMMC support for Bubblegum96 board based on Actions Semi
+> Owl SoC. SD0 is connected to uSD slot and SD2 is connected to eMMC.
+> Since there is no PMIC support added yet, fixed regulator has been
+> used as a regulator node.
+> 
 
-> -----Original Message-----
-> From: Cornelia Huck <cohuck@redhat.com>
-> Sent: Tuesday, August 20, 2019 10:01 PM
-> > > > Option-1: mdev index
-> > > > Introduce an optional mdev index/handle as u32 during mdev create
-> time.
-> > > > User passes mdev index/handle as input.
-> > > >
-> > > > phys_port_name=3DmIndex=3Dm%u
-> > > > mdev_index will be available in sysfs as mdev attribute for udev
-> > > > to name the
-> > > mdev's netdev.
-> > > >
-> > > > example mdev create command:
-> > > > UUID=3D$(uuidgen)
-> > > > echo $UUID index=3D10 >
-> > > > /sys/class/net/ens2f0/mdev_supported_types/mlx5_core_mdev/create
-> > > > example netdevs:
-> > > > repnetdev=3Dens2f0_m10	/*ens2f0 is parent PF's netdevice */
-> > > > mdev_netdev=3Denm10
-> > > >
-> > > > Pros:
-> > > > 1. mdevctl and any other existing tools are unaffected.
-> > > > 2. netdev stack, ovs and other switching platforms are unaffected.
-> > > > 3. achieves unique phys_port_name for representor netdev 4.
-> > > > achieves unique mdev eth netdev name for the mdev using udev/system=
-d
-> extension.
-> > > > 5. Aligns well with mdev and netdev subsystem and similar to
-> > > > existing sriov
-> > > bdf's.
-> > > >
-> > > > Option-2: shorter mdev name
-> > > > Extend mdev to have shorter mdev device name in addition to UUID.
-> > > > such as 'foo', 'bar'.
-> > > > Mdev will continue to have UUID.
->=20
-> I fail to understand how 'uses uuid' and 'allow shorter device name'
-> are supposed to play together?
->=20
-Each mdev will have uuid as today. Instead of naming device based on UUID, =
-name it based on explicit name given by the user.
-Again, I want to repeat, this name parameter is optional.
+Just realised that I missed your review on the patch description here.
+Will either modify in next iteration (if needed) or modify it while
+applying.
 
-> > > > phys_port_name=3Dmdev_name
-> > > >
-> > > > Pros:
-> > > > 1. All same as option-1, except mdevctl needs upgrade for newer usa=
-ge.
-> > > > It is common practice to upgrade iproute2 package along with the ke=
-rnel.
-> > > > Similar practice to be done with mdevctl.
-> > > > 2. Newer users of mdevctl who wants to work with non_UUID names,
-> > > > will use
-> > > newer mdevctl/tools.
-> > > > Cons:
-> > > > 1. Dual naming scheme of mdev might affect some of the existing too=
-ls.
-> > > > It's unclear how/if it actually affects.
-> > > > mdevctl [2] is very recently developed and can be enhanced for
-> > > > dual naming
-> > > scheme.
->=20
-> The main problem is not tools we know about (i.e. mdevctl), but those we =
-don't
-> know about.
->=20
-Well, if it not part of the distros, there is very little can do about it b=
-y kernel.
-I tried mdevctl with mdev named using non UUID and it were able to list the=
-m.
+Sorry for that!
 
-> IOW, this (and the IFNAMESIZ change, which seems even worse) are the
-> options I would not want at all.
->=20
-Ok.
+Thanks,
+Mani
 
-> > > >
-> > > > Option-3: mdev uuid alias
-> > > > Instead of shorter mdev name or mdev index, have alpha-numeric
-> > > > name
-> > > alias.
-> > > > Alias is an optional mdev sysfs attribute such as 'foo', 'bar'.
-> > > > example mdev create command:
-> > > > UUID=3D$(uuidgen)
-> > > > echo $UUID alias=3Dfoo >
-> > > > /sys/class/net/ens2f0/mdev_supported_types/mlx5_core_mdev/create
-> > > > example netdevs:
-> > > > examle netdevs:
-> > > > repnetdev =3D ens2f0_mfoo
-> > > > mdev_netdev=3Denmfoo
-> > > >
-> > > > Pros:
-> > > > 1. All same as option-1.
-> > > > 2. Doesn't affect existing mdev naming scheme.
-> > > > Cons:
-> > > > 1. Index scheme of option-1 is better which can number large
-> > > > number of
-> > > mdevs with fewer characters, simplifying the management tool.
-> > >
-> > > I believe that Alex pointed out another "Cons" to all three options,
-> > > which is that it forces user-space to resolve potential race
-> > > conditions when creating an index or short name or alias.
-> > >
-> > This race condition exists for at least two subsystems that I know of, =
-i.e.
-> netdev and rdma.
-> > If a device with a given name exists, subsystem returns error.
-> > When user space gets error code EEXIST, and it can picks up different
-> identifier(s).
->=20
-> If you decouple device creation and setting the alias/index, you make the=
- issue
-> visible and thus much more manageable.
->=20
-I thought about it. It has two issues.
-1. user should be able to set this only once. Repeatedly setting it require=
-s changing/notifying it.
-2. setting alias translating in creating devlink port doesn't sound correct=
-.
-Because if user attempts to reset to different value, it required unregistr=
-ation, reregistration.
-All of such race conditions handling it not worth it.
-So setting the index, I liked Alex's term more 'instance number', at instan=
-ce creation time is lot more simple.
-
-> >
-> > > Also, what happens if `index=3D10` is not provided on the command-lin=
-e?
-> > > Does that make the device unusable for your purpose?
-> > Yes, it is unusable to an extent.
-> > Currently we have DEVLINK_PORT_FLAVOUR_PCI_VF in
-> > include/uapi/linux/devlink.h Similar to it, we need to have
-> DEVLINK_PORT_FLAVOUR_MDEV for mdev eswitch ports.
-> > This port flavour needs to generate phys_port_name(). This should be us=
-er
-> parameter driven.
-> > Because representor netdevice name is generated based on this parameter=
-.
->=20
-> I'm also unsure how the extra parameter is supposed to work; writing it t=
-o the
-> create attribute does not sound right.
->=20
-Why? When you create a device it takes multiple mandatory and optional para=
-meters.
-This is common for netdev (vxlan, vlan, macvlan, ipvlan, gre and more).
-
-> mdevctl supports setting additional parameters on an already created devi=
-ce
-> (see the examples provided for vfio-ap), so going that route would actual=
-ly
-> work out of the box from the tooling side.
->=20
-I explained that setting and re-setting attributes for instance create time=
- value is not worth.
-
-> What you would need is some kind of synchronization/locking to make sure =
-that
-> you only link up to the other device after the extra attribute has been s=
-et and
-> that you don't allow to change it as long as it is associated with the ot=
-her side. I
-> do not know enough about the actual devices to suggest something here; if=
- you
-> need userspace cooperation, maybe uevents would be an option.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../boot/dts/actions/s900-bubblegum-96.dts    | 60 +++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
+> index 732daaa6e9d3..92376b71cb8f 100644
+> --- a/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
+> +++ b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
+> @@ -12,6 +12,9 @@
+>  	model = "Bubblegum-96";
+>  
+>  	aliases {
+> +		mmc0 = &mmc0;
+> +		mmc1 = &mmc1;
+> +		mmc2 = &mmc2;
+>  		serial5 = &uart5;
+>  	};
+>  
+> @@ -23,6 +26,22 @@
+>  		device_type = "memory";
+>  		reg = <0x0 0x0 0x0 0x80000000>;
+>  	};
+> +
+> +	vcc_3v1: vcc-3v1 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "fixed-3.1V";
+> +		regulator-min-microvolt = <3100000>;
+> +		regulator-max-microvolt = <3100000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	sd_vcc: sd-vcc {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "fixed-3.1V";
+> +		regulator-min-microvolt = <3100000>;
+> +		regulator-max-microvolt = <3100000>;
+> +		regulator-always-on;
+> +	};
+>  };
+>  
+>  &i2c0 {
+> @@ -241,6 +260,47 @@
+>  			bias-pull-up;
+>  		};
+>  	};
+> +
+> +	mmc0_default: mmc0_default {
+> +		pinmux {
+> +			groups = "sd0_d0_mfp", "sd0_d1_mfp", "sd0_d2_d3_mfp",
+> +				 "sd0_cmd_mfp", "sd0_clk_mfp";
+> +			function = "sd0";
+> +		};
+> +	};
+> +
+> +	mmc2_default: mmc2_default {
+> +		pinmux {
+> +			groups = "nand0_d0_ceb3_mfp";
+> +			function = "sd2";
+> +		};
+> +	};
+> +};
+> +
+> +/* uSD */
+> +&mmc0 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc0_default>;
+> +	no-sdio;
+> +	no-mmc;
+> +	no-1-8-v;
+> +	cd-gpios = <&pinctrl 120 GPIO_ACTIVE_LOW>;
+> +	bus-width = <4>;
+> +	vmmc-supply = <&sd_vcc>;
+> +	vqmmc-supply = <&sd_vcc>;
+> +};
+> +
+> +/* eMMC */
+> +&mmc2 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc2_default>;
+> +	no-sdio;
+> +	no-sd;
+> +	non-removable;
+> +	bus-width = <8>;
+> +	vmmc-supply = <&vcc_3v1>;
+>  };
+>  
+>  &timer {
+> -- 
+> 2.17.1
+> 
