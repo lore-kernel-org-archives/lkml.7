@@ -2,121 +2,129 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0040EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A603C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA02022DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5C3206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AO1lwW7G"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DrmJcYu9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfHUEOd (ORCPT
+        id S1727641AbfHUEOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:14:33 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54868 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfHUEOd (ORCPT
+        Wed, 21 Aug 2019 00:14:47 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45856 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbfHUEOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:14:33 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7L4DvZE120885;
-        Wed, 21 Aug 2019 04:14:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : subject : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=e3kgDvccVDLzNMMeR9/zH2eW+3aMX6c/MhJZaprZC3E=;
- b=AO1lwW7GB+SWC6UPk9BqflMxYl14SNqeX+eyW3uvmZUOzdDTu47HI0bDdNgfDT6NXNQP
- 7aHQrgyy5FBkfD4ui/eDYnz/ywy0+Cksn3IyiwqxTbgH7wg/0DKIFk2iRvkvriey1wvM
- UFy33uW2amPTLoZVlGFWR5aGWJ6VSOR/sNsDmBDxIa/PyLcaTuCADvO0PUKK77nVOISc
- kDsElmn5RyYZeqYmS0sYT57vxMED0MoQ3DNRcFcRv2kfifLsJ/wYknivca4EbhZcFaqb
- 2jTs7aD7WhJRYGo77E7TJjZRL6WSVTO3P4f2ZcgRNyBWZ37DSd/rwb4H3agPD5kex4ir 8A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2uea7qtjje-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 04:14:22 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7L4D9n0141955;
-        Wed, 21 Aug 2019 04:14:22 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2ug1ga34eb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 04:14:22 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7L4EKYn029840;
-        Wed, 21 Aug 2019 04:14:20 GMT
-Received: from [192.168.1.218] (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 20 Aug 2019 21:14:19 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: Re: [PATCH 1/2] padata: always acquire cpu_hotplug_lock before
- pinst->lock
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190809192857.26585-1-daniel.m.jordan@oracle.com>
- <20190815051518.GB24982@gondor.apana.org.au>
-Message-ID: <f25cc77e-d467-c7a9-415c-eb9f46ac8493@oracle.com>
-Date:   Wed, 21 Aug 2019 00:14:19 -0400
-MIME-Version: 1.0
-In-Reply-To: <20190815051518.GB24982@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908210044
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908210044
+        Wed, 21 Aug 2019 00:14:46 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w26so513208pfq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 20 Aug 2019 21:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Ct/vcfqX294xnImjewrmDMG+pNu8phs+mheV9IoXqXA=;
+        b=DrmJcYu9mQkQ+5oXyRM9YqgXYA0IMMSiWznW5HVNzzMJ7ZV0GEzazOoMN6L5eiLmcJ
+         cYAa9F/vsLCVlLq75If9r/eW75gmVC5de/ALXLQHXE5wAgEmN2+EanhC5XNg9Yyd44w7
+         D5nqrXJeT1pbW9bi9iEn0ISOPHcFxNde3UV/dmGNpgE0GFhQVYQ5Y4sWjzHth8/dYrxh
+         kk4jdkPx4SF+lRqREUhytqk6W6orEntQWFKrvd7DnmuGzYew2VX4icnkCrgwsKYsoXuq
+         h/24DG9iI62yoeJ6AQ+P3YVuOZb5PJTUYw4y/9aQYmI+CHlmQ7qpwNFf+K1GnCvE1bZz
+         LKGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Ct/vcfqX294xnImjewrmDMG+pNu8phs+mheV9IoXqXA=;
+        b=rMLdK1Q1eEGz6rv8GkPvWBvJlSdQYf6bfpehZ5fZ8aSql5WiV+/uw7cHk79yNPxnGE
+         6Yr2gXrKWtBnlV14IRYg5HeGTcss93TxDCL38rDWVYRg1q+mMV67q+L6CkNntnfgHqK2
+         /Kk0WW30s05P0FMSKJQBISsGwDIAptXBI2nSDqVodWM4iZBkRImz8SfHDrOMxj1l8JuV
+         SpqN/8UUVdSluN5Vopv+cEqvceNCQEqIPmEQtI5dW+loRCuLC8QGEYUZEoiIonO1O7/s
+         RqBMzAClR7yljcyETMKBLNVUFGOREy6d+eB/O7lpTYbkDa1EtWcViN9hcHBhrrHpAOjm
+         Rd6A==
+X-Gm-Message-State: APjAAAXo6Te2eS7z8h3GdCjK1z06kyWHlQxQ0TraG0E0hVLtPz8o+PuQ
+        +22pOgYQ4ADFlvXgkgGqQH7yE/CZDWQ=
+X-Google-Smtp-Source: APXvYqyTnwrp6dMD25VYpFUckTpU2oPfnP6GLcw49ySJC+PsfTX2cQkXPs52ILKSDbS02wHzdCRHEw==
+X-Received: by 2002:a62:dbc6:: with SMTP id f189mr4364709pfg.237.1566360885909;
+        Tue, 20 Aug 2019 21:14:45 -0700 (PDT)
+Received: from [172.20.2.243] (64-71-28-71.static.wiline.com. [64.71.28.71])
+        by smtp.gmail.com with ESMTPSA id p3sm1336423pjo.3.2019.08.20.21.14.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 Aug 2019 21:14:45 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Subject: Re: [PATCH 15/15] riscv: disable the EFI PECOFF header for M-mode
+From:   Troy Benjegerdes <troy.benjegerdes@sifive.com>
+In-Reply-To: <20190813154747.24256-16-hch@lst.de>
+Date:   Tue, 20 Aug 2019 21:14:41 -0700
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3BF39A0F-558D-40E0-880D-27829486F9F0@sifive.com>
+References: <20190813154747.24256-1-hch@lst.de>
+ <20190813154747.24256-16-hch@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
+X-Mailer: Apple Mail (2.3445.9.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[sorry for late reply, moved to new place in past week]
 
-On 8/15/19 1:15 AM, Herbert Xu wrote:
-> On Fri, Aug 09, 2019 at 03:28:56PM -0400, Daniel Jordan wrote:
->> padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
->> order.  Which should be first?  CPU hotplug calls into padata with
->> cpu_hotplug_lock already held, so it should have priority.
-> 
-> Yeah this is clearly a bug but I think we need tackle something
-> else first.
->   
->> diff --git a/kernel/padata.c b/kernel/padata.c
->> index b60cc3dcee58..d056276a96ce 100644
->> --- a/kernel/padata.c
->> +++ b/kernel/padata.c
->> @@ -487,9 +487,7 @@ static void __padata_stop(struct padata_instance *pinst)
->>   
->>   	synchronize_rcu();
->>   
->> -	get_online_cpus();
->>   	padata_flush_queues(pinst->pd);
->> -	put_online_cpus();
->>   }
-> 
-> As I pointed earlier, the whole concept of flushing the queues is
-> suspect.  So we should tackle that first and it may obviate the need
-> to do get_online_cpus completely if the flush call disappears.
->
-> My main worry is that you're adding an extra lock around synchronize_rcu
-> and that is always something that should be done only after careful
-> investigation.
 
-Agreed, padata_stop may not need to do get_online_cpus() if we stop an instance in a way that plays well with async crypto.
+> On Aug 13, 2019, at 8:47 AM, Christoph Hellwig <hch@lst.de> wrote:
+>=20
+> No point in bloating the kernel image with a bootloader header if
+> we run bare metal.
 
-I'll try fixing the flushing with Steffen's refcounting idea assuming he hasn't already started on that.  So we're on the same page, the problem is that if padata's ->parallel() punts to a cryptd thread, flushing the parallel work will return immediately without necessarily indicating the parallel job is finished, so flushing is pointless and padata_replace needs to wait till the instance's refcount drops to 0.  Did I get it right?
+I would say the same for S-mode. EFI booting should be an option, not
+a requirement. I have M-mode U-boot working with bootelf to start BBL,
+and at some point, I=E2=80=99m hoping we can have a M-mode linux kernel =
+be
+the SBI provider for S-mode kernels, which seem most logical to me
+to start using the vmlinux elf binaries using something like kexec()
 
-Daniel
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+> arch/riscv/kernel/head.S | 2 ++
+> 1 file changed, 2 insertions(+)
+>=20
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 670e5cacb24e..09fcf3d000c0 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -16,6 +16,7 @@
+>=20
+> __INIT
+> ENTRY(_start)
+> +#ifndef CONFIG_M_MODE
+> 	/*
+> 	 * Image header expected by Linux boot-loaders. The image header =
+data
+> 	 * structure is described in asm/image.h.
+> @@ -47,6 +48,7 @@ ENTRY(_start)
+>=20
+> .global _start_kernel
+> _start_kernel:
+> +#endif /* CONFIG_M_MODE */
+> 	/* Mask all interrupts */
+> 	csrw CSR_XIE, zero
+> 	csrw CSR_XIP, zero
+> --=20
+> 2.20.1
+>=20
+>=20
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
