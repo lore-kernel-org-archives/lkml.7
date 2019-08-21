@@ -2,152 +2,112 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68157C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D56CC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB1C22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:57:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="NjpiNNiB"
+	by mail.kernel.org (Postfix) with ESMTP id E6DDA2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566403243;
+	bh=z+I+ll9JzvSq5sT40Ie4Oipb+E0vOsXvpvHBtoHoKVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X8w7Ju3ki6HiqQOS2aFzTL9pc4WAsRNZKEJOx+mpuCoSctv3dory1+IXPnkkXs6Mf
+	 lrWUAp6ohJm0IuKXbsFC99lweHuoJVe5baVA8eiP8XMbYQWnYGtjDeXbmxEPEyzgsU
+	 SqaXoROsGgUlVUR01NvbsG4YPPJRg5Zw3zLGcqnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbfHUP5u (ORCPT
+        id S1728108AbfHUQAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:57:50 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:58328 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727554AbfHUP5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:57:47 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id BA4B042ED0;
-        Wed, 21 Aug 2019 15:57:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:date:date:from:from:subject:subject
-        :message-id:received:received:received; s=mta-01; t=1566403064;
-         x=1568217465; bh=cUjJrAB3OomH4KewIUgBh/9D64kXv5bgtvG9RSiYgKo=; b=
-        NjpiNNiB5Yy83fB0V2C9/T1tieBZ9CXFUSnI+CZsrQcXFjbCfKXVXs6dPoS/CbQl
-        QcHcLUIYSQxeTnJWBro3TCyFxonJyGcG6G9WmDsa3/+joAi4f36z/eqyfxSA2hvp
-        SKdR4ClCZ+QBkhrlS3bul8MLPluqAQueUhC9fhGy7I0=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id kvGBZuanyL5B; Wed, 21 Aug 2019 18:57:44 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 845234120B;
-        Wed, 21 Aug 2019 18:57:44 +0300 (MSK)
-Received: from localhost.localdomain (172.17.15.69) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Wed, 21 Aug 2019 18:57:43 +0300
-Message-ID: <1f2cd155057e5ab0cdb20a9a11614bbb09bb49ad.camel@yadro.com>
-Subject: [PATCH 3/3] watchdog/aspeed: add support for dual boot
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-CC:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        "Alexander Amelkin" <a.amelkin@yadro.com>
-Date:   Wed, 21 Aug 2019 18:57:43 +0300
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 21 Aug 2019 12:00:42 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44857 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbfHUQAl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:00:41 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d79so2244259qke.11;
+        Wed, 21 Aug 2019 09:00:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SkQ1iRQmedFusEhYknXF0m0szFVCfve43ayyHL3P7UE=;
+        b=PfRGf7dJmGlq/vFV6Y+jNfBdQj9FXFXpgr4U2sqHZkOOzikZqcKARWfm/Ay9cjoDSU
+         SCX+h5EJLGStrV2y6/OzsiFWSydoRDIB8xs/LthT66NJMLZAYtyRP5nrnZgOEeHiNyJk
+         1bf35F88LlY3ZL6xZzCIEGGOZVVSZr2saC2AonVkeLUBSZKclxcjROkdE6IhiIiZK18A
+         z1eW4eMKnZKE5uALGEnUQyOrqFkSKIT6AjOY4D73Eu6oZ+ZkI6UO+7WVtIvPOc7iPQV5
+         aAxUr8psXAumVPPm2Vln5wKADn3tcXCg2XrJ+MksLKbdQw0SqjF2hpb4xY0Ud7EO5OH2
+         B8bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SkQ1iRQmedFusEhYknXF0m0szFVCfve43ayyHL3P7UE=;
+        b=c0tISbAsv4wpwue6Ehj1RzHwKDpIYuLEDDM8VbXDdYoOBuJCo5q7H0TIVLJIlc4WNe
+         BoWIusBC5VCoKrxKYjh81yFZka2Oq5+tIJO4F/piwde1KsOPZiy2QyC78IgfgM1fD9pS
+         PwhC7Ikw+cOGMh/MiFyzFya8f/DY8JFpFRH0Jkyy+5MT8RSfJNHfWBG2bp2koNiXwmhK
+         eQ0EJmHACi5xn6FH98JxzrYmxduiqx4vD15SJhDLM6prs5mLjrR6vz9qxGV9RkALq2hZ
+         /x+emHSjeWeTrfilRP6dGpAuEZufZh1T+1SlBQoTWvR9w3hL+9O6N7ub8af/0BDbY+9v
+         +jhg==
+X-Gm-Message-State: APjAAAUE1x9Lv27kfbcKbfQ1P9q8zY6waEW8B21OEl+E2hc9cBarXxy1
+        XE6BCJKaxx7AltntHhC7TRs=
+X-Google-Smtp-Source: APXvYqygD4G25/4+1lbrU9OJUBtreiUUAzC3687HWTZ5HRPAeIzC0XOf19SJJBxuWv+Hi3cQWG/YHA==
+X-Received: by 2002:a37:395:: with SMTP id 143mr32776745qkd.317.1566403240448;
+        Wed, 21 Aug 2019 09:00:40 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:1f05])
+        by smtp.gmail.com with ESMTPSA id s58sm11388981qth.59.2019.08.21.09.00.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 09:00:39 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 09:00:37 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     axboe@kernel.dk, hannes@cmpxchg.org, mhocko@kernel.org,
+        vdavydov.dev@gmail.com, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, guro@fb.com,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH 5/5] writeback, memcg: Implement foreign dirty flushing
+Message-ID: <20190821160037.GK2263813@devbig004.ftw2.facebook.com>
+References: <20190815195619.GA2263813@devbig004.ftw2.facebook.com>
+ <20190815195930.GF2263813@devbig004.ftw2.facebook.com>
+ <20190816160256.GI3041@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.17.15.69]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816160256.GI3041@quack2.suse.cz>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION into WDT_CLEAR_TIMEOUT_STATUS
-to clear out boot code source and re-enable access to the primary SPI flash
-chip while booted via wdt2 from the alternate chip.
+Hello,
 
-AST2400 datasheet says:
-"In the 2nd flash booting mode, all the address mapping to CS0# would be
-re-directed to CS1#. And CS0# is not accessable under this mode. To access
-CS0#, firmware should clear the 2nd boot mode register in the WDT2 status
-register WDT30.bit[1]."
+On Fri, Aug 16, 2019 at 06:02:56PM +0200, Jan Kara wrote:
+> 1) You ask to writeback LONG_MAX pages. That means that you give up any
+> livelock avoidance for the flusher work and you can writeback almost
+> forever if someone is busily dirtying pages in the wb. I think you need to
+> pick something like amount of dirty pages in the given wb (that would have
+> to be fetched after everything is looked up) or just some arbitrary
+> reasonably small constant like 1024 (but then I guess there's no guarantee
+> stuck memcg will make any progress and you've invalidated the frn entry
+> here).
 
-Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
----
- drivers/watchdog/aspeed_wdt.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+I see.  Yeah, I think the right thing to do would be feeding the
+number of dirty pages or limiting it to one full sweep.  I'll look
+into it.
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index cc71861e033a..858e62f1c7ba 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -53,6 +53,8 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
- #define   WDT_CTRL_ENABLE		BIT(0)
- #define WDT_TIMEOUT_STATUS	0x10
- #define   WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
-+#define WDT_CLEAR_TIMEOUT_STATUS	0x14
-+#define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
- 
- /*
-  * WDT_RESET_WIDTH controls the characteristics of the external pulse (if
-@@ -165,6 +167,29 @@ static int aspeed_wdt_restart(struct watchdog_device *wdd,
- 	return 0;
- }
- 
-+static ssize_t access_cs0_store(struct device *dev,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t size)
-+{
-+	struct aspeed_wdt *wdt = dev_get_drvdata(dev);
-+
-+	if (unlikely(!wdt))
-+		return -ENODEV;
-+
-+	writel(WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION,
-+			wdt->base + WDT_CLEAR_TIMEOUT_STATUS);
-+	wdt->wdd.bootstatus |= WDIOF_EXTERN1;
-+
-+	return size;
-+}
-+static DEVICE_ATTR_WO(access_cs0);
-+
-+static struct attribute *bswitch_attrs[] = {
-+	&dev_attr_access_cs0.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(bswitch);
-+
- static const struct watchdog_ops aspeed_wdt_ops = {
- 	.start		= aspeed_wdt_start,
- 	.stop		= aspeed_wdt_stop,
-@@ -223,6 +248,9 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 
- 	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
- 
-+	if (of_property_read_bool(np, "aspeed,alt-boot"))
-+		wdt->wdd.groups = bswitch_groups;
-+
- 	/*
- 	 * Control reset on a per-device basis to ensure the
- 	 * host is not affected by a BMC reboot
-@@ -309,6 +337,8 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY)
- 		wdt->wdd.bootstatus = WDIOF_CARDRESET;
- 
-+	dev_set_drvdata(dev, wdt);
-+
- 	return devm_watchdog_register_device(dev, &wdt->wdd);
- }
- 
+> 2) When you invalidate frn entry here by writing 0 to 'at', it's likely to get
+> reused soon. Possibly while the writeback is still running. And then you
+> won't start any writeback for the new entry because of the
+> atomic_read(&frn->done.cnt) == 1 check. This seems like it could happen
+> pretty frequently?
+
+Hmm... yeah, the clearing might not make sense.  I'll remove that.
+
+Thanks.
+
 -- 
-2.20.1
-
-
+tejun
