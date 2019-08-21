@@ -2,176 +2,121 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBD6C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 347D5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8F722DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="jRqX+OjZ"
+	by mail.kernel.org (Postfix) with ESMTP id 05D292339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:49:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566402590;
+	bh=BZ4tsVVE8eVOOxdzgMCo8Z11/xvYaSj85B5Wg6POF9Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iQzec3JAXC8XzP5gzqe/E6oBZtxUSis2dq3qJu28p1ichlpcPoGyYZybvcxVxDrGV
+	 v5dzFj1UiPZbutH4lXxl54rijC9oibY2fqG02S6CLbEOvt2fKi17pdgpRldJpGF9I2
+	 2F/406XRH6YOI47btigx4ou5F7aNY1nlb1oasMhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbfHUPsq (ORCPT
+        id S1729380AbfHUPtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:48:46 -0400
-Received: from mail.efficios.com ([167.114.142.138]:45314 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728459AbfHUPsq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:48:46 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 784882CAD29;
-        Wed, 21 Aug 2019 11:48:44 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id mKb2H5X-fXvj; Wed, 21 Aug 2019 11:48:44 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id ED4C02CAD26;
-        Wed, 21 Aug 2019 11:48:43 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com ED4C02CAD26
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1566402524;
-        bh=raMzDsvLp2MJ0A1zw+jKNPt3gxA/18NTfDpige5zLCY=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=jRqX+OjZQ6VhTLFZHTptD7xsc3YuLNYTya2TMd6WSqBIyN1tKztU7CLM3LSQ0kybQ
-         DfDziPTvjxbLtwDQTqxyNwKBYdIh03/Pr6vabmpHkVoigfBJv2YVx7QXickH3JGZjs
-         FktrhJ2DWoLRYNnrto5ss/FTRkyIdmROakhtfsm3g681aBTJNvjjLEQvO+t1+D6OTv
-         LreQUem9N10M+M/UqZuk1Q0/Oq/zjEY903C76NU9gCNJeHDdKUyhxJNU3azSFFRqYP
-         vNU72FQYu0kd1GwtFod/ah2fum0GrQLPj2HWDJAm/Enw14HILvg5gcQ1IA5FHa2MLs
-         FPpGeww027mEg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id FFjmIk5DJO4F; Wed, 21 Aug 2019 11:48:43 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id D48832CAD1C;
-        Wed, 21 Aug 2019 11:48:43 -0400 (EDT)
-Date:   Wed, 21 Aug 2019 11:48:43 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     paulmck <paulmck@linux.ibm.com>, Will Deacon <will@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Wed, 21 Aug 2019 11:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727185AbfHUPts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:49:48 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C361922DA7;
+        Wed, 21 Aug 2019 15:49:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566402587;
+        bh=BZ4tsVVE8eVOOxdzgMCo8Z11/xvYaSj85B5Wg6POF9Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i3eFteCqRTqRIOtU/Fg4d0rBnyDcEYHwf3i2H+M85YKQICqt8jXw7PE/EYSVRAqyh
+         2TNu2I0Xa9lsCwasUN1jQxxMvCi9rybb/JHZ6m1SJqM0aJLG+mayeTwkC1QmPd0LUc
+         Zu1cS45GMImuV+iGffJeeFEgTrLSM2TFO6vbZERQ=
+Date:   Wed, 21 Aug 2019 16:49:42 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        rostedt <rostedt@goodmis.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        David Howells <dhowells@redhat.com>
-Message-ID: <52600272.1909.1566402523680.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190821153325.GD2349@hirez.programming.kicks-ass.net>
-References: <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org> <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com> <CAHk-=wgC4+kV9AiLokw7cPP429rKCU+vjA8cWAfyOjC3MtqC4A@mail.gmail.com> <20190820135612.GS2332@hirez.programming.kicks-ass.net> <20190820202932.GW28441@linux.ibm.com> <20190821103200.kpufwtviqhpbuv2n@willie-the-truck> <20190821132310.GC28441@linux.ibm.com> <20190821153325.GD2349@hirez.programming.kicks-ass.net>
-Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: consolidate pgtable_cache_init() and pgd_cache_init()
+Message-ID: <20190821154942.js4u466rolnekwmq@willie-the-truck>
+References: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3829 (ZimbraWebClient - FF68 (Linux)/8.8.15_GA_3829)
-Thread-Topic: trace sched switch start/stop racy updates
-Thread-Index: vUNKpvAVCmtLIvMwU3k3Nuab82BXLA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Aug 21, 2019, at 8:33 AM, Peter Zijlstra peterz@infradead.org wrote:
-
-> On Wed, Aug 21, 2019 at 06:23:10AM -0700, Paul E. McKenney wrote:
->> On Wed, Aug 21, 2019 at 11:32:01AM +0100, Will Deacon wrote:
+On Wed, Aug 21, 2019 at 06:06:58PM +0300, Mike Rapoport wrote:
+> Both pgtable_cache_init() and pgd_cache_init() are used to initialize kmem
+> cache for page table allocations on several architectures that do not use
+> PAGE_SIZE tables for one or more levels of the page table hierarchy.
 > 
->> > and so it is using a store-pair instruction to reduce the complexity in
->> > the immediate generation. Thus, the 64-bit store will only have 32-bit
->> > atomicity. In fact, this is scary because if I change bar to:
->> > 
->> > void bar(u64 *x)
->> > {
->> > 	*(volatile u64 *)x = 0xabcdef10abcdef10;
->> > }
->> > 
->> > then I get:
->> > 
->> > bar:
->> > 	mov	w1, 61200
->> > 	movk	w1, 0xabcd, lsl 16
->> > 	str	w1, [x0]
->> > 	str	w1, [x0, 4]
->> > 	ret
->> > 
->> > so I'm not sure that WRITE_ONCE would even help :/
->> 
->> Well, I can have the LWN article cite your email, then.  So thank you
->> very much!
->> 
->> Is generation of this code for a 64-bit volatile store considered a bug?
->> Or does ARMv8 exclude the possibility of 64-bit MMIO registers?  And I
->> would guess that Thomas and Linus would ask a similar bugginess question
->> for normal stores.  ;-)
+> Most architectures do not implement these functions and use __week default
+> NOP implementation of pgd_cache_init(). Since there is no such default for
+> pgtable_cache_init(), its empty stub is duplicated among most
+> architectures.
 > 
-> I'm calling this a compiler bug; the way I understand volatile this is
-> very much against the intentended use case. That is, this is buggy even
-> on UP vs signals or MMIO.
+> Rename the definitions of pgd_cache_init() to pgtable_cache_init() and drop
+> empty stubs of pgtable_cache_init().
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
 
-And here is a simpler reproducer on my gcc-8.3.0 (aarch64) compiled with O2:
+[...]
 
-volatile unsigned long a;
- 
-void fct(void)
-{
-        a = 0x1234567812345678ULL;
-}
+> diff --git a/arch/arm64/mm/pgd.c b/arch/arm64/mm/pgd.c
+> index 7548f9c..4a64089 100644
+> --- a/arch/arm64/mm/pgd.c
+> +++ b/arch/arm64/mm/pgd.c
+> @@ -35,7 +35,7 @@ void pgd_free(struct mm_struct *mm, pgd_t *pgd)
+>  		kmem_cache_free(pgd_cache, pgd);
+>  }
+>  
+> -void __init pgd_cache_init(void)
+> +void __init pgtable_cache_init(void)
+>  {
+>  	if (PGD_SIZE == PAGE_SIZE)
+>  		return;
 
-void fct(void)
-{
-        a = 0x1234567812345678ULL;
-   0:   90000000        adrp    x0, 8 <fct+0x8>
-   4:   528acf01        mov     w1, #0x5678                     // #22136
-   8:   72a24681        movk    w1, #0x1234, lsl #16
-   c:   f9400000        ldr     x0, [x0]
-  10:   b9000001        str     w1, [x0]
-  14:   b9000401        str     w1, [x0, #4]
-}
-  18:   d65f03c0        ret
+[...]
 
-And the non-volatile case uses stp (is it a single store to memory ?):
+> diff --git a/init/main.c b/init/main.c
+> index b90cb5f..2fa8038 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -507,7 +507,7 @@ void __init __weak mem_encrypt_init(void) { }
+>  
+>  void __init __weak poking_init(void) { }
+>  
+> -void __init __weak pgd_cache_init(void) { }
+> +void __init __weak pgtable_cache_init(void) { }
+>  
+>  bool initcall_debug;
+>  core_param(initcall_debug, initcall_debug, bool, 0644);
+> @@ -565,7 +565,6 @@ static void __init mm_init(void)
+>  	init_espfix_bsp();
+>  	/* Should be run after espfix64 is set up. */
+>  	pti_init();
+> -	pgd_cache_init();
+>  }
 
-unsigned long a;
-  
-void fct(void)
-{
-        a = 0x1234567812345678ULL;
-}
+AFAICT, this change means we now initialise our pgd cache before
+debug_objects_mem_init() has run. Is that going to cause fireworks with
+CONFIG_DEBUG_OBJECTS when we later free a pgd?
 
-void fct(void)
-{
-        a = 0x1234567812345678ULL;
-   0:   90000000        adrp    x0, 8 <fct+0x8>
-   4:   528acf01        mov     w1, #0x5678                     // #22136
-   8:   72a24681        movk    w1, #0x1234, lsl #16
-   c:   f9400000        ldr     x0, [x0]
-  10:   29000401        stp     w1, w1, [x0]
-}
-  14:   d65f03c0        ret
-
-It would probably be a good idea to audit other architectures, since this
-is done by the compiler backend.
-
-Thanks,
-
-Mathieu
-
-
-
-
-
-
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Will
