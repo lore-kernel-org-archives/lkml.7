@@ -2,81 +2,85 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D3BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09EBC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A8D22DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C100723400
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:26:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dT8WftTi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfHUI0k (ORCPT
+        id S1727437AbfHUI0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 04:26:40 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5169 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726409AbfHUI0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 04:26:40 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A1478709B65622D03112;
-        Wed, 21 Aug 2019 16:26:33 +0800 (CST)
-Received: from [127.0.0.1] (10.133.211.147) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Wed, 21 Aug 2019
- 16:26:29 +0800
-Subject: Re: [PATCH] cpustat: print watchdog time and statistics of soft and
- hard interrupts in soft lockup scenes
-To:     Peter Zijlstra <peterz@infradead.org>
-References: <60319e82-3c2b-ff24-4ba7-4d58048130ff@huawei.com>
- <20190820110430.GL2332@hirez.programming.kicks-ass.net>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <hpa@zytor.com>,
-        <x86@kernel.org>, <linux-kernel@vger.kernel.org>
-From:   c00423981 <caomeng5@huawei.com>
-Message-ID: <4eb6b499-b6b0-602a-ae89-0c1dceaa5088@huawei.com>
-Date:   Wed, 21 Aug 2019 16:26:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
-MIME-Version: 1.0
-In-Reply-To: <20190820110430.GL2332@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.211.147]
-X-CFilter-Loop: Reflected
+        Wed, 21 Aug 2019 04:26:47 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55037 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726409AbfHUI0r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 04:26:47 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so1174913wme.4;
+        Wed, 21 Aug 2019 01:26:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=8a1RxKgl4Ho99BSDrm3kp2pAknY5o067UUqOAsK0EP0=;
+        b=dT8WftTimyE7Yxj68nlu4Izp6oOh20ppEAjBdSuZMO0uCVE6wu0b2+HOly3r1AQEYe
+         sVD330ISGuOhleQRplfaMjsVooBZlMCryBWft8NYK5EUZUMg3i4FcFd+kCauPgsYVIX7
+         nqrtRjqLbHddpMJfRxRSkv6p/0c43MYLUCY2dUg6Z6+A5KV3V0sbgAdaEpEe7CeMQkJh
+         I/6UdtzDgD/J7EwEn+vc9lwWLR6KZgFFiM/Vb2AWiugKHbWDlLZMuC0gV/QEU5CJZYdm
+         e9sLkBiJHPNu43V5Lf9e1lenVHuY1iXxDXb6dvXRZvY/QVSGCsaGtoR6aGuJ6cgrccXP
+         Di0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=8a1RxKgl4Ho99BSDrm3kp2pAknY5o067UUqOAsK0EP0=;
+        b=sY5Pe4E5lpAUAGk+SS9nH6bBC2q5EJX6w8oSJaYW7fz9933ZG5NGeGCGLZcKQV537A
+         U8bLs6axYtYmQWEC9ClEMnjtTl4hDYWjLE2G91qHsUOCKH1qa6fNnbovjm1vhHvFFN6t
+         74EFRUxxaylH+gTMVlC45C0njXoJUYxo/+IIPlmGLJK2hMelwRfjmtCPxoUqproumdpr
+         IFM31JGHmZ0omHc5phwPZ2RJoXw2O3bnBYpEIInsy5Ewx1Q5ktlEfWpw9Lrs/6B0kw9Q
+         rsqXrrRawPcMXl0zEYwFE4MthAD7Pp4DBYp7leh/3+e+VsmNV5oTNgSuBip7U5Ujkvdq
+         iF2Q==
+X-Gm-Message-State: APjAAAXTxqaud7o4/nJrPHoJjlQ8lEBz+iptSv42mfwojafNHDAzorpM
+        vvbH1rmKlYK+4MkiXgdUCms+5h1r+sE=
+X-Google-Smtp-Source: APXvYqyy/d0jhexMZME5uEI9ZADdvOfT+nlmvPZwLeJB1ms/t5JydsYI16TK5wdsJgX25jSNiAOIsQ==
+X-Received: by 2002:a05:600c:2111:: with SMTP id u17mr4847080wml.64.1566376004647;
+        Wed, 21 Aug 2019 01:26:44 -0700 (PDT)
+Received: from 640k.localdomain.com ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id w5sm2931892wmm.43.2019.08.21.01.26.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 01:26:43 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     jmattson@redhat.com, ehabkost@redhat.com, konrad.wilk@oracle.com
+Subject: [PATCH v2 0/3] KVM: x86: fixes for speculation bug feature reporting
+Date:   Wed, 21 Aug 2019 10:26:39 +0200
+Message-Id: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, I cannot understand this problem accurately. I try to understand it and I guess what you want
-to express is that the return value type should be cputime64_t but not u64, just like as follows:
+Patches 1 and 2 are the same as the previous patch, but using
+svm_get_supported_cpuid and with a fix to the placement of cpuid_mask.
 
-+static cputime64_t cpustat_curr_cputime(int cpu, int index)
-+{
-+	cputime64_t time;
-+
-+	if (index == CPUTIME_IDLE)
-+		time = get_idle_time(cpu);
-+	else if (index == CPUTIME_IOWAIT)
-+		time = get_iowait_time(cpu);
+Patch 3 is new and, unlike the previous one, will only be in kvm/next.
 
-I don't know if I understand it correctly. Looking forward to your answer.
+Paolo Bonzini (3):
+  KVM: x86: fix reporting of AMD speculation bug CPUID leaf
+  KVM: x86: always expose VIRT_SSBD to guests
+  KVM: x86: use Intel speculation bugs and features as derived in
+    generic x86 code
 
+ arch/x86/kvm/cpuid.c | 27 +++++++++++++++++++--------
+ arch/x86/kvm/svm.c   | 13 +++++++++----
+ arch/x86/kvm/x86.c   |  7 +++++++
+ 3 files changed, 35 insertions(+), 12 deletions(-)
 
-
-
-On 2019/8/20 19:04, Peter Zijlstra wrote:
-> On Mon, Aug 19, 2019 at 03:12:24PM +0800, c00423981 wrote:
->> +static u64 cpustat_curr_cputime(int cpu, int index)
->> +{
->> +	u64 time;
->> +
->> +	if (index == CPUTIME_IDLE)
->> +		time = get_idle_time(cpu);
->> +	else if (index == CPUTIME_IOWAIT)
->> +		time = get_iowait_time(cpu);
-> 
-> NAK; don't add new users of this terminally broken interface.
-> 
-> 
+-- 
+1.8.3.1
 
