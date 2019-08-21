@@ -2,147 +2,126 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 755EEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9351CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535E12339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ECED2339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbfHUIye (ORCPT
+        id S1726960AbfHUI57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 04:54:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50036 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 04:57:59 -0400
+Received: from foss.arm.com ([217.140.110.172]:54748 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbfHUIyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 04:54:33 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 31740C054907
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 08:54:32 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id v15so913902wrg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 01:54:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=+w6S/d4xE8RPcCnUmNNhlmM38FUwU6Cbxaxoa0JXU/s=;
-        b=sjLUYuAOpR3wxOryZ5UgzjHI9/+W+zcUufwnY4NWBjE/ERSVhbZfRlTKLfXaZMRkYH
-         /JdJVzXXoLfGfQ6i1PHmjtTknoXCSpRAj7USO8mUagXbp7RogHpJkSc7D1TM09izK7eN
-         FMzfpcu89/bAHE2r5i5oWQn+dfQIxPMKGtSIydl1djCbyzbKBPFGfzVNqvyO1kcwmKn8
-         vl9NEsk7ssEjC+Xz44yIDdpFJKoK495b3Sd2s2Vxqxm7JquICCTXlGIcUpGM/TPOQqjs
-         3uQ5IGYAD3lCsu0HJaOPyX48ZLlUtvFpUFdg0TLV8sIvnIrtwGqgS1pvQKvUAKLFGZjA
-         E0nA==
-X-Gm-Message-State: APjAAAVRieU8A5H+DNvjLoh+iulnWU0J8Yp2+FYffGsQ2eMDITDnBdSF
-        jkvNlrkeGcvgRqa7x6Duq+OhOpmBhmON9WWSkYziavvQcdbue2qtzVuAUMqtMA33P38KmNSOBna
-        9lwtiFZctB6j9nODiVUWlUHV5
-X-Received: by 2002:a1c:9d8c:: with SMTP id g134mr4872136wme.174.1566377670685;
-        Wed, 21 Aug 2019 01:54:30 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwJvqD1cl28+sp4QHLw+FNqBWCQTObXkxuvx4NlL/0iLvU5iNtqQtOMuGgDZJYc9msHKi9j9A==
-X-Received: by 2002:a1c:9d8c:: with SMTP id g134mr4872098wme.174.1566377670394;
-        Wed, 21 Aug 2019 01:54:30 -0700 (PDT)
-Received: from vitty.brq.redhat.com (ip-89-176-161-20.net.upcbroadband.cz. [89.176.161.20])
-        by smtp.gmail.com with ESMTPSA id m23sm3103680wml.41.2019.08.21.01.54.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 01:54:29 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <lantianyu1986@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-arch\@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel\@vger kernel org" <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: RE: [PATCH 0/2] clocksource/Hyper-V: Add Hyper-V specific sched clock function
-In-Reply-To: <87o90jq99w.fsf@vitty.brq.redhat.com>
-References: <20190729075243.22745-1-Tianyu.Lan@microsoft.com> <87zhkxksxd.fsf@vitty.brq.redhat.com> <20190729110927.GC31398@hirez.programming.kicks-ass.net> <87wog1kpib.fsf@vitty.brq.redhat.com> <CAOLK0py6ngy9kAnZcRMBK8U45s2L5Wo4X0NP_qPM0zv7WjeVQQ@mail.gmail.com> <DM5PR21MB0137E03AAD8C2EA61EC81ED7D7D30@DM5PR21MB0137.namprd21.prod.outlook.com> <87sgq5a2hq.fsf@vitty.brq.redhat.com> <DM5PR21MB013730EB79A17AF02C170BD7D7AB0@DM5PR21MB0137.namprd21.prod.outlook.com> <87o90jq99w.fsf@vitty.brq.redhat.com>
-Date:   Wed, 21 Aug 2019 10:54:28 +0200
-Message-ID: <87imqqrj97.fsf@vitty.brq.redhat.com>
+        id S1726635AbfHUI57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 04:57:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 082D1337;
+        Wed, 21 Aug 2019 01:57:56 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CC303F246;
+        Wed, 21 Aug 2019 01:57:55 -0700 (PDT)
+Subject: Re: [PATCH] drm/panfrost: Queue jobs on the hardware
+To:     Rob Herring <robh@kernel.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190816093107.30518-2-steven.price@arm.com>
+ <CAL_JsqJKm7n=SuQrPTxfWR=Cgqn-gR-bgOrOdTVyR_XCae0FQg@mail.gmail.com>
+ <CAL_JsqL2oeKDKqv0DSQkMmM_=0sN0eY37xi4Y4oComX_v4U9oQ@mail.gmail.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <2dbb2b86-c409-1f58-275d-bec054da4dd5@arm.com>
+Date:   Wed, 21 Aug 2019 09:57:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAL_JsqL2oeKDKqv0DSQkMmM_=0sN0eY37xi4Y4oComX_v4U9oQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+On 19/08/2019 18:02, Rob Herring wrote:
+> On Mon, Aug 19, 2019 at 11:58 AM Rob Herring <robh@kernel.org> wrote:
+>>
+>> On Fri, Aug 16, 2019 at 4:31 AM Steven Price <steven.price@arm.com> wrote:
+>>>
+>>> The hardware has a set of '_NEXT' registers that can hold a second job
+>>> while the first is executing. Make use of these registers to enqueue a
+>>> second job per slot.
+>>>
+>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>> ---
+>>> Note that this is based on top of Rob Herring's "per FD address space"
+>>> patch[1].
+>>>
+>>> [1] https://marc.info/?i=20190813150115.30338-1-robh%20()%20kernel%20!%20org
+>>>
+>>>  drivers/gpu/drm/panfrost/panfrost_device.h |  4 +-
+>>>  drivers/gpu/drm/panfrost/panfrost_job.c    | 76 ++++++++++++++++++----
+>>>  drivers/gpu/drm/panfrost/panfrost_mmu.c    |  2 +-
+>>>  3 files changed, 67 insertions(+), 15 deletions(-)
+>>
+>> LGTM, but I'll give Tomeu a chance to comment.
+> 
+> Though checkpatch reports some style nits:
 
-> Michael Kelley <mikelley@microsoft.com> writes:
->
->> I talked to KY Srinivasan for any history about TSC page on 32-bit.  He said
->> there was no technical reason not to implement it, but our focus was always
->> 64-bit Linux, so the 32-bit was much less important.  Also, on 32-bit Linux,
->> the required 64x64 multiply and shift is more complex and takes more
->> more cycles (compare 32-bit implementation of mul_u64_u64_shr vs.
->> the 64-bit implementation), so the win over a MSR read is less.  I
->> don't know of any actual measurements being made to compare vs.
->> MSR read.
->
-> VMExit is 1000 CPU cycles or so, I would guess that TSC page
-> calculations are better. Let me try to build 32bit kernel and do some
-> quick measurements.
+Gah! Sorry - I probably should have pushed this out as an RFC anyway. My
+DDK-on-Panfrost investigation showed a decent performance improvement,
+but I hadn't actually tested with the Mesa driver. And as Tomeu has
+discovered that it actually slows down I guess we need to investigate
+that before merging.
 
-So I tried and the difference is HUGE.
+Steve
 
-For in-kernel clocksource reads (like sched_clock()), the testing code
-was:
+> -:46: CHECK:COMPARISON_TO_NULL: Comparison to NULL could be written
+> "!pfdev->jobs[slot][0]"
+> #46: FILE: drivers/gpu/drm/panfrost/panfrost_job.c:143:
+> +       if (pfdev->jobs[slot][0] == NULL)
+> 
+> -:48: CHECK:COMPARISON_TO_NULL: Comparison to NULL could be written
+> "!pfdev->jobs[slot][1]"
+> #48: FILE: drivers/gpu/drm/panfrost/panfrost_job.c:145:
+> +       if (pfdev->jobs[slot][1] == NULL)
+> 
+> -:53: CHECK:OPEN_ENDED_LINE: Lines should not end with a '('
+> #53: FILE: drivers/gpu/drm/panfrost/panfrost_job.c:150:
+> +static struct panfrost_job *panfrost_dequeue_job(
+> 
+> -:67: CHECK:COMPARISON_TO_NULL: Comparison to NULL could be written
+> "!pfdev->jobs[slot][0]"
+> #67: FILE: drivers/gpu/drm/panfrost/panfrost_job.c:164:
+> +       if (pfdev->jobs[slot][0] == NULL) {
+> 
+> -:71: CHECK:COMPARISON_TO_NULL: Comparison to NULL could be written
+> "pfdev->jobs[slot][1]"
+> #71: FILE: drivers/gpu/drm/panfrost/panfrost_job.c:168:
+> +       WARN_ON(pfdev->jobs[slot][1] != NULL);
+> 
+> -:160: ERROR:SPACING: space prohibited before that '--' (ctx:WxO)
+> #160: FILE: drivers/gpu/drm/panfrost/panfrost_job.c:497:
+> +                       jobs --;
+>                              ^
+> 
+> -:165: ERROR:SPACING: space required one side of that '--' (ctx:WxW)
+> #165: FILE: drivers/gpu/drm/panfrost/panfrost_job.c:500:
+> +               while (jobs -- > active) {
+>                             ^
+> 
+> -:204: CHECK:SPACING: spaces preferred around that '*' (ctx:VxV)
+> #204: FILE: drivers/gpu/drm/panfrost/panfrost_mmu.c:150:
+> +               WARN_ON(en >= NUM_JOB_SLOTS*2);
+>                                            ^
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
 
-        before = rdtsc_ordered();
-        for (i = 0; i < 1000; i++)
-             (void)read_hv_sched_clock_msr();
-        after = rdtsc_ordered();
-        printk("MSR based clocksource: %d cycles\n", ((u32)(after - before))/1000);
-
-        before = rdtsc_ordered();
-        for (i = 0; i < 1000; i++)
-            (void)read_hv_sched_clock_tsc();
-        after = rdtsc_ordered();
-        printk("TSC page clocksource: %d cycles\n", ((u32)(after - before))/1000);
-
-The result (WS2016) is:
-[    1.101910] MSR based clocksource: 3361 cycles
-[    1.105224] TSC page clocksource: 49 cycles
-
-For userspace reads the absolute difference is even bigger as TSC page
-gives us functional vDSO:
-
-Testing code:
-	before = rdtsc();
-	for (i = 0; i < COUNT; i++)
-		clock_gettime(CLOCK_REALTIME, &tp);
-	after = rdtsc();
-	printf("%d\n", (after - before)/COUNT);
-
-Result:
-
-TSC page:
-# ./gettime_cycles 
-131
-
-MSR:
-# ./gettime_cycles 
-5664
-
-With all that I see no reason for us to not enable TSC page on 32bit,
-even if the number of users is negligible, this will allow us to get rid
-of ugly #ifdef CONFIG_HYPERV_TSCPAGE in the code.
-
-I'll send a patch for discussion.
-
--- 
-Vitaly
