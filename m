@@ -2,111 +2,469 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3981EC3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E12C3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0528222DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:01:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ks/voPpH"
+	by mail.kernel.org (Postfix) with ESMTP id E560F22DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfHUDBK (ORCPT
+        id S1726983AbfHUDBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 23:01:10 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60431 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfHUDBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 23:01:09 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Csql0bcpz9sBp;
-        Wed, 21 Aug 2019 13:01:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566356467;
-        bh=W2xPWAW+jxBqUQWyXnROYA1WLGjQHjqD8WC+NGxot5Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ks/voPpHm+KITaXIc1nYfwfiSCj5t/Hi3JkbYKbAe1fOaMlOBGJnTAqPuKJNW6q6M
-         255LBvatIPpmp8PJJEPENxRQEGGYvKxGClngoeo+3cg0zGY9d9pTrU1kHciuStpHco
-         p5E9rA4BIj+5jmTYKzqFDFkBq1fFVPwRBcpuu7c/vHGUuFudqijA3ST2gMKidSunn0
-         iSKsfTKQlffULzgO8n7JSjQaA04FQDe6tJtUjC5+92RLnuC0nzIelvre46BZjLa2ln
-         vy9tl5XdQ0LDMhhd3XE+SJCNozjVGIIWVl2pceceXjCQ6UqILt8x5ofz/weZX84mKt
-         9PQM67l2g3jsw==
-Date:   Wed, 21 Aug 2019 13:01:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Morris <jmorris@namei.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Bohac <jbohac@suse.cz>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: linux-next: manual merge of the security tree with Linus' tree
-Message-ID: <20190821130106.0c794ddc@canb.auug.org.au>
+        Tue, 20 Aug 2019 23:01:33 -0400
+Received: from regular1.263xmail.com ([211.150.70.206]:58874 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfHUDBd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 23:01:33 -0400
+Received: from kever.yang?rock-chips.com (unknown [192.168.167.138])
+        by regular1.263xmail.com (Postfix) with ESMTP id 16E01227;
+        Wed, 21 Aug 2019 11:01:17 +0800 (CST)
+X-263anti-spam: KSV:0;BIG:0;
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-KSVirus-check: 0
+X-ADDR-CHECKED4: 1
+X-ABS-CHECKED: 1
+X-SKE-CHECKED: 1
+X-ANTISPAM-LEVEL: 2
+Received: from [172.16.12.9] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P31966T140494522795776S1566356475496741_;
+        Wed, 21 Aug 2019 11:01:16 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <0a04dc954f7ac39dac612a0572d74fc7>
+X-RL-SENDER: kever.yang@rock-chips.com
+X-SENDER: yk@rock-chips.com
+X-LOGIN-NAME: kever.yang@rock-chips.com
+X-FST-TO: linux-kernel@vger.kernel.org
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+Subject: Re: [PATCH] ARM: dts: rockchip: remove rk3288 fennec board support
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     linux-rockchip@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190820100353.17728-1-kever.yang@rock-chips.com>
+ <3270378.xvmEzLMrnJ@phil>
+From:   Kever Yang <kever.yang@rock-chips.com>
+Message-ID: <5dfd9896-b8d2-abd0-93f4-8bcfc4331aa3@rock-chips.com>
+Date:   Wed, 21 Aug 2019 11:01:15 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Ritugo/RKWUh1Hj_F7znhFE";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <3270378.xvmEzLMrnJ@phil>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Ritugo/RKWUh1Hj_F7znhFE
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
-
-FIXME: Add owner of second tree to To:
-       Add author(s)/SOB of conflicting commits.
-
-Today's linux-next merge of the security tree got conflicts in:
-
-  arch/s390/configs/debug_defconfig
-  arch/s390/configs/defconfig
-
-between commit:
-
-  3361f3193c74 ("s390: update configs")
-
-from Linus' tree and commit:
-
-  99d5cadfde2b ("kexec_file: split KEXEC_VERIFY_SIG into KEXEC_SIG and KEXE=
-C_SIG_FORCE")
-
-from the security tree.
-
-I fixed it up (the former removed the CONFIG option updated by the latter)
-and can carry the fix as necessary. This is now fixed as far as linux-next
-is concerned, but any non trivial conflicts should be mentioned to your
-upstream maintainer when your tree is submitted for merging.  You may
-also want to consider cooperating with the maintainer of the conflicting
-tree to minimise any particularly complex conflicts.
+On 2019/8/20 下午9:56, Heiko Stuebner wrote:
+> Hi Kever,
+>
+> Am Dienstag, 20. August 2019, 12:03:52 CEST schrieb Kever Yang:
+>> Since there is no one using this board, remove it.
+> so just to elaborate a bit, I guess this board was internal to Rockchip,
+> never went to the market and therefore is obsolete without any users,
+> right?
 
 
+Yes, even if there is someone using this board, they don't use upstream 
+source code, you can see
 
---=20
-Cheers,
-Stephen Rothwell
+there is only one commit relate to board itself, but never update. So I 
+would like to remove it
 
---Sig_/Ritugo/RKWUh1Hj_F7znhFE
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+from kernel and U-Boot upstream.
 
------BEGIN PGP SIGNATURE-----
+>
+> Also we should remove the binding  from
+> 	Documentation/devicetree/bindings/arm/rockchip.yaml as well
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1cs/IACgkQAVBC80lX
-0GzY0wf/UN5Izgp/hriJbDPrdLDRPFCTdHtALtKV6X9D5hzADbamw3o7nvHbcjVO
-7KfngxIXwWsV54K1zbXaHZ07vCqc6/bGZpuQPE5pTKo0zAhNtS//XbGMkyfmHMeb
-Lui5ZmRtp0Z6my/53+iZS1K4zCwIfGMDK7Q2gG9XJprIcY0MSCewu+DiMbAZi0sS
-49XKud1PA2kQo+FsGh3f5vTIBN7+++IlsFMtsYlJmLE0YiENq0YJ2edUa6+UGCG9
-t7Vl8QaGHZPiULW/BQwLN8s+Vj6z8BTD4mOp6c5YA0cZhrOZSE4YgDoNxgcsk6Pn
-C/7xEOMmSTBoWVJrIGfOmQFeLdQfCw==
-=galj
------END PGP SIGNATURE-----
+Will update.
 
---Sig_/Ritugo/RKWUh1Hj_F7znhFE--
+
+Thanks,
+
+- Kever
+
+>
+>
+> Heiko
+>
+>
+>> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+>> ---
+>>
+>>   arch/arm/boot/dts/rk3288-fennec.dts | 347 ----------------------------
+>>   1 file changed, 347 deletions(-)
+>>   delete mode 100644 arch/arm/boot/dts/rk3288-fennec.dts
+>>
+>> diff --git a/arch/arm/boot/dts/rk3288-fennec.dts b/arch/arm/boot/dts/rk3288-fennec.dts
+>> deleted file mode 100644
+>> index 4847cf902a15..000000000000
+>> --- a/arch/arm/boot/dts/rk3288-fennec.dts
+>> +++ /dev/null
+>> @@ -1,347 +0,0 @@
+>> -// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> -
+>> -/dts-v1/;
+>> -
+>> -#include "rk3288.dtsi"
+>> -
+>> -/ {
+>> -	model = "Rockchip RK3288 Fennec Board";
+>> -	compatible = "rockchip,rk3288-fennec", "rockchip,rk3288";
+>> -
+>> -	memory@0 {
+>> -		reg = <0x0 0x0 0x0 0x80000000>;
+>> -		device_type = "memory";
+>> -	};
+>> -
+>> -	ext_gmac: external-gmac-clock {
+>> -		compatible = "fixed-clock";
+>> -		#clock-cells = <0>;
+>> -		clock-frequency = <125000000>;
+>> -		clock-output-names = "ext_gmac";
+>> -	};
+>> -
+>> -	vcc_sys: vsys-regulator {
+>> -		compatible = "regulator-fixed";
+>> -		regulator-name = "vcc_sys";
+>> -		regulator-min-microvolt = <5000000>;
+>> -		regulator-max-microvolt = <5000000>;
+>> -		regulator-always-on;
+>> -		regulator-boot-on;
+>> -	};
+>> -};
+>> -
+>> -&cpu0 {
+>> -	cpu0-supply = <&vdd_cpu>;
+>> -};
+>> -
+>> -&emmc {
+>> -	bus-width = <8>;
+>> -	cap-mmc-highspeed;
+>> -	non-removable;
+>> -	pinctrl-names = "default";
+>> -	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_pwr &emmc_bus8>;
+>> -	status = "okay";
+>> -};
+>> -
+>> -&gmac {
+>> -	assigned-clocks = <&cru SCLK_MAC>;
+>> -	assigned-clock-parents = <&ext_gmac>;
+>> -	clock_in_out = "input";
+>> -	pinctrl-names = "default";
+>> -	pinctrl-0 = <&rgmii_pins>, <&phy_rst>, <&phy_pmeb>, <&phy_int>;
+>> -	phy-supply = <&vcc_lan>;
+>> -	phy-mode = "rgmii";
+>> -	snps,reset-active-low;
+>> -	snps,reset-delays-us = <0 10000 1000000>;
+>> -	snps,reset-gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_LOW>;
+>> -	tx_delay = <0x30>;
+>> -	rx_delay = <0x10>;
+>> -	status = "okay";
+>> -};
+>> -
+>> -&gpu {
+>> -	mali-supply = <&vdd_gpu>;
+>> -	status = "okay";
+>> -};
+>> -
+>> -&hdmi {
+>> -	status = "okay";
+>> -};
+>> -
+>> -&i2c0 {
+>> -	status = "okay";
+>> -	clock-frequency = <400000>;
+>> -
+>> -	rk808: pmic@1b {
+>> -		compatible = "rockchip,rk808";
+>> -		reg = <0x1b>;
+>> -		interrupt-parent = <&gpio0>;
+>> -		interrupts = <RK_PA4 IRQ_TYPE_LEVEL_LOW>;
+>> -		#clock-cells = <1>;
+>> -		clock-output-names = "xin32k", "rk808-clkout2";
+>> -		pinctrl-names = "default";
+>> -		pinctrl-0 = <&pmic_int &global_pwroff>;
+>> -		rockchip,system-power-controller;
+>> -		wakeup-source;
+>> -
+>> -		vcc1-supply = <&vcc_sys>;
+>> -		vcc2-supply = <&vcc_sys>;
+>> -		vcc3-supply = <&vcc_sys>;
+>> -		vcc4-supply = <&vcc_sys>;
+>> -		vcc6-supply = <&vcc_sys>;
+>> -		vcc7-supply = <&vcc_sys>;
+>> -		vcc8-supply = <&vcc_io>;
+>> -		vcc9-supply = <&vcc_io>;
+>> -		vcc10-supply = <&vcc_io>;
+>> -		vcc11-supply = <&vcc_io>;
+>> -		vcc12-supply = <&vcc_io>;
+>> -		vddio-supply = <&vcc_io>;
+>> -
+>> -		regulators {
+>> -			vdd_cpu: DCDC_REG1 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-min-microvolt = <750000>;
+>> -				regulator-max-microvolt = <1350000>;
+>> -				regulator-name = "vdd_arm";
+>> -				regulator-state-mem {
+>> -					regulator-off-in-suspend;
+>> -				};
+>> -			};
+>> -
+>> -			vdd_gpu: DCDC_REG2 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-min-microvolt = <850000>;
+>> -				regulator-max-microvolt = <1250000>;
+>> -				regulator-name = "vdd_gpu";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -					regulator-suspend-microvolt = <1000000>;
+>> -				};
+>> -			};
+>> -
+>> -			vcc_ddr: DCDC_REG3 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-name = "vcc_ddr";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -				};
+>> -			};
+>> -
+>> -			vcc_io: DCDC_REG4 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-min-microvolt = <3300000>;
+>> -				regulator-max-microvolt = <3300000>;
+>> -				regulator-name = "vcc_io";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -					regulator-suspend-microvolt = <3300000>;
+>> -				};
+>> -			};
+>> -
+>> -			vccio_pmu: LDO_REG1 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-min-microvolt = <3300000>;
+>> -				regulator-max-microvolt = <3300000>;
+>> -				regulator-name = "vccio_pmu";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -					regulator-suspend-microvolt = <3300000>;
+>> -				};
+>> -			};
+>> -
+>> -			vcca_33: LDO_REG2 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-min-microvolt = <3300000>;
+>> -				regulator-max-microvolt = <3300000>;
+>> -				regulator-name = "vcca_33";
+>> -				regulator-state-mem {
+>> -					regulator-off-in-suspend;
+>> -				};
+>> -			};
+>> -
+>> -			vdd_10: LDO_REG3 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-min-microvolt = <1000000>;
+>> -				regulator-max-microvolt = <1000000>;
+>> -				regulator-name = "vdd_10";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -					regulator-suspend-microvolt = <1000000>;
+>> -				};
+>> -			};
+>> -
+>> -			vcc_wl: LDO_REG4 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-min-microvolt = <1800000>;
+>> -				regulator-max-microvolt = <1800000>;
+>> -				regulator-name = "vcc_wl";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -					regulator-suspend-microvolt = <1800000>;
+>> -				};
+>> -			};
+>> -
+>> -			vccio_sd: LDO_REG5 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-min-microvolt = <1800000>;
+>> -				regulator-max-microvolt = <3300000>;
+>> -				regulator-name = "vccio_sd";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -					regulator-suspend-microvolt = <3300000>;
+>> -				};
+>> -			};
+>> -
+>> -			vdd10_lcd: LDO_REG6 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-min-microvolt = <1000000>;
+>> -				regulator-max-microvolt = <1000000>;
+>> -				regulator-name = "vdd10_lcd";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -					regulator-suspend-microvolt = <1000000>;
+>> -				};
+>> -			};
+>> -
+>> -			vcc_18: LDO_REG7 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-min-microvolt = <1800000>;
+>> -				regulator-max-microvolt = <1800000>;
+>> -				regulator-name = "vcc_18";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -					regulator-suspend-microvolt = <1800000>;
+>> -				};
+>> -			};
+>> -
+>> -			vcc18_lcd: LDO_REG8 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-min-microvolt = <1800000>;
+>> -				regulator-max-microvolt = <1800000>;
+>> -				regulator-name = "vcc18_lcd";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -					regulator-suspend-microvolt = <1800000>;
+>> -				};
+>> -			};
+>> -
+>> -			vcc_sd: SWITCH_REG1 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-name = "vcc_sd";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -				};
+>> -			};
+>> -
+>> -			vcc_lan: SWITCH_REG2 {
+>> -				regulator-always-on;
+>> -				regulator-boot-on;
+>> -				regulator-name = "vcc_lan";
+>> -				regulator-state-mem {
+>> -					regulator-on-in-suspend;
+>> -				};
+>> -			};
+>> -		};
+>> -	};
+>> -};
+>> -
+>> -&pinctrl {
+>> -	pcfg_output_high: pcfg-output-high {
+>> -		output-high;
+>> -	};
+>> -
+>> -	pcfg_output_low: pcfg-output-low {
+>> -		output-low;
+>> -	};
+>> -
+>> -	pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
+>> -		drive-strength = <8>;
+>> -	};
+>> -
+>> -	pcfg_pull_up_drv_8ma: pcfg-pull-up-drv-8ma {
+>> -		bias-pull-up;
+>> -		drive-strength = <8>;
+>> -	};
+>> -
+>> -	gmac {
+>> -		phy_int: phy-int {
+>> -			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_up>;
+>> -		};
+>> -
+>> -		phy_pmeb: phy-pmeb {
+>> -			rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_up>;
+>> -		};
+>> -
+>> -		phy_rst: phy-rst {
+>> -			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_output_high>;
+>> -		};
+>> -	};
+>> -
+>> -	pmic {
+>> -		pmic_int: pmic-int {
+>> -			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_up>;
+>> -		};
+>> -	};
+>> -
+>> -	usbphy {
+>> -		host_drv: host-drv {
+>> -			rockchip,pins = <0 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
+>> -		};
+>> -	};
+>> -};
+>> -
+>> -&uart2 {
+>> -	status = "okay";
+>> -};
+>> -
+>> -&usbphy {
+>> -	pinctrl-names = "default";
+>> -	pinctrl-0 = <&host_drv>;
+>> -	vbus_drv-gpios = <&gpio0 RK_PB6 GPIO_ACTIVE_HIGH>;
+>> -	status = "okay";
+>> -};
+>> -
+>> -&usb_host0_ehci {
+>> -	status = "okay";
+>> -};
+>> -
+>> -&usb_host1 {
+>> -	status = "okay";
+>> -};
+>> -
+>> -&usb_otg {
+>> -	status = "okay";
+>> -};
+>> -
+>> -&usb_hsic {
+>> -	status = "okay";
+>> -};
+>> -
+>> -&vopb {
+>> -	status = "okay";
+>> -};
+>> -
+>> -&vopb_mmu {
+>> -	status = "okay";
+>> -};
+>> -
+>> -&vopl {
+>> -	status = "okay";
+>> -};
+>> -
+>> -&vopl_mmu {
+>> -	status = "okay";
+>> -};
+>>
+>
+>
+>
+>
+
+
