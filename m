@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1148BC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5EDC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A652339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262EB20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 22:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731243AbfHUWiK (ORCPT
+        id S1731257AbfHUWiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 18:38:10 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:46095 "EHLO
+        Wed, 21 Aug 2019 18:38:19 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:44629 "EHLO
         mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729857AbfHUWiJ (ORCPT
+        with ESMTP id S1731195AbfHUWiK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 18:38:09 -0400
-Received: by mail-io1-f70.google.com with SMTP id e17so4202825ioh.13
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:38:08 -0700 (PDT)
+        Wed, 21 Aug 2019 18:38:10 -0400
+Received: by mail-io1-f70.google.com with SMTP id s9so4198130iob.11
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 15:38:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=BTtJUMszNrujEPFC3wQT6l7FYC6eZ4EtPS5uVqWHKZc=;
-        b=I8oSaEOJqFDx341OJW9MLiF0XBdqIaSU2uODgnq2CARsvzYITPa/mfLXnkAbWxrRR+
-         Yp2b7BIYYZ45adX9xY39smxz4gbceymLAZnNL3oUp23aBdHV6nYvffiRp8nb9V3dpJsz
-         zoYuu+Mx+erHSvqKKATir4SAWK5Z9OGNmoYWnHk++V9UOeRCdKt5oS4uxNqGpI35cdxk
-         Gq/oZBoUKAh8FMrBSngs0UwOtc3fJDRkCzwhbSC5nYynE3VOV2d3872K/+I68+LedFNx
-         Jb1i1SkTOXxxHmSgdx0n7dBd6c2bjU5MFLyitD9T2uaimrVIZ7uBmvC24xdDsl7Z3n7W
-         +fRQ==
-X-Gm-Message-State: APjAAAWzhgToYmfOx2G1YnQvssgppgaypTGMeH4lXOQ7zLf1p6cJnDRt
-        tjdSXca+KmI7VEGlQl8JkRD03/PbWICUXIG6cnaSG4tBgYmN
-X-Google-Smtp-Source: APXvYqzOluyNlTC3a21ScZvzJi76nxi43xLQVkD9qQOF0Qspti0r4r1Pja6nog2TC39cP1WafA+H4oMWutoHWRL5P1FhBGMyCnCU
+        bh=jBsYp09/cLeBSkbIbxHgzYI7ddEGG6UPk+vEQ8x/yJE=;
+        b=fx1X4Gu5u0UpL+8/V5djamEEuSDaTDCkpyGLmZGeWNexG0xL4ZJuvGRcqxu8B6rToL
+         U1y2cJKKrkhr5eCInQjdZEZsyuPvsr9/U8QECZukNvM/SYnIpctGQ7Nk4M5mzk15WuxZ
+         d5tZRGACAAR7iE9NLbel0IJgquf12gv32/KvhQSNedOAFU1HaRYi8AA+CCKSh9l+tHGa
+         mbhU1CyXq0IgsZaqJHHjKkxHdmxv/YFu8NNfEMgYTdxRUDK8/tfhlaFtBYXaZWRwYk2v
+         HPmDvjq812cLmw/fGsqxA3EPR6C8Nvg6fEAda5YVN4c64Orw7vuutCmyJeWwaqdrkBtd
+         p+iA==
+X-Gm-Message-State: APjAAAVyyrYXpL247au8Uix+o5+p3yRJEfkSM27IxKm0pbKiwMmA6RtH
+        LmpKlEde3TkebbbN+1QK9PWoxmwYVHkVkaIXy/wq0zhF8qti
+X-Google-Smtp-Source: APXvYqzavPFlUWhnFmdpVUObRjYgw6MY/e5tU+JIj+9wrZ+1vCE20RJd43jMnxmak3ET8Jl7AtG2e2W+aGjEDZ9eNa/+0s/Sas+4
 MIME-Version: 1.0
-X-Received: by 2002:a02:1441:: with SMTP id 62mr13101565jag.21.1566427087791;
- Wed, 21 Aug 2019 15:38:07 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 15:38:07 -0700
+X-Received: by 2002:a6b:c8cf:: with SMTP id y198mr10240574iof.202.1566427089150;
+ Wed, 21 Aug 2019 15:38:09 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 15:38:09 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000226dc30590a83a39@google.com>
-Subject: KMSAN: uninit-value in batadv_iv_send_outstanding_bat_ogm_packet
-From:   syzbot <syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000003728c00590a83aa5@google.com>
+Subject: WARNING: bad usercopy in hidraw_ioctl
+From:   syzbot <syzbot+fc7106c3bcd1cb7b165c@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, andreyknvl@google.com, cai@lca.pw,
+        isaacm@codeaurora.org, keescook@chromium.org,
+        kstewart@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-usb@vger.kernel.org,
+        psodagud@codeaurora.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,102 +61,76 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    61ccdad1 Revert "drm/bochs: Use shadow buffer for bochs fr..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=13d6909c600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=27abc558ecb16a3b
-dashboard link: https://syzkaller.appspot.com/bug?extid=355cab184197dbbfa384
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1612b9d2600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11d388ac600000
+HEAD commit:    eea39f24 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=128c664c600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
+dashboard link: https://syzkaller.appspot.com/bug?extid=fc7106c3bcd1cb7b165c
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
+Reported-by: syzbot+fc7106c3bcd1cb7b165c@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KMSAN: uninit-value in batadv_iv_ogm_send_to_if  
-net/batman-adv/bat_iv_ogm.c:317 [inline]
-BUG: KMSAN: uninit-value in batadv_iv_ogm_emit  
-net/batman-adv/bat_iv_ogm.c:383 [inline]
-BUG: KMSAN: uninit-value in  
-batadv_iv_send_outstanding_bat_ogm_packet+0x6cd/0xcc0  
-net/batman-adv/bat_iv_ogm.c:1657
-CPU: 1 PID: 290 Comm: kworker/u4:7 Not tainted 5.3.0-rc3+ #17
+------------[ cut here ]------------
+Bad or missing usercopy whitelist? Kernel memory exposure attempt detected  
+from SLUB object 'shmem_inode_cache' (offset 88, size 33)!
+WARNING: CPU: 0 PID: 3101 at mm/usercopy.c:74 usercopy_warn+0xe8/0x110  
+mm/usercopy.c:74
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 3101 Comm: syz-executor.0 Not tainted 5.3.0-rc5+ #28
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-Workqueue: bat_events batadv_iv_send_outstanding_bat_ogm_packet
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
-  batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:317 [inline]
-  batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:383 [inline]
-  batadv_iv_send_outstanding_bat_ogm_packet+0x6cd/0xcc0  
-net/batman-adv/bat_iv_ogm.c:1657
-  process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
-  worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
-  kthread+0x4b5/0x4f0 kernel/kthread.c:256
-  ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-
-Uninit was created at:
-  kmsan_save_stack_with_flags+0x37/0x70 mm/kmsan/kmsan.c:187
-  kmsan_internal_alloc_meta_for_pages+0x123/0x510 mm/kmsan/kmsan_hooks.c:114
-  kmsan_alloc_page+0x7a/0xf0 mm/kmsan/kmsan_hooks.c:244
-  __alloc_pages_nodemask+0x142d/0x5fa0 mm/page_alloc.c:4768
-  __alloc_pages include/linux/gfp.h:475 [inline]
-  __alloc_pages_node include/linux/gfp.h:488 [inline]
-  alloc_pages_node include/linux/gfp.h:502 [inline]
-  __page_frag_cache_refill mm/page_alloc.c:4843 [inline]
-  page_frag_alloc+0x35b/0x890 mm/page_alloc.c:4873
-  __napi_alloc_skb+0x195/0x980 net/core/skbuff.c:519
-  napi_alloc_skb include/linux/skbuff.h:2808 [inline]
-  page_to_skb+0x134/0x1150 drivers/net/virtio_net.c:384
-  receive_mergeable drivers/net/virtio_net.c:924 [inline]
-  receive_buf+0xe7b/0x8810 drivers/net/virtio_net.c:1033
-  virtnet_receive drivers/net/virtio_net.c:1323 [inline]
-  virtnet_poll+0x666/0x19d0 drivers/net/virtio_net.c:1428
-  napi_poll net/core/dev.c:6347 [inline]
-  net_rx_action+0x74b/0x1950 net/core/dev.c:6413
-  __do_softirq+0x4a1/0x83a kernel/softirq.c:293
-  invoke_softirq kernel/softirq.c:375 [inline]
-  irq_exit+0x230/0x280 kernel/softirq.c:416
-  exiting_irq arch/x86/include/asm/apic.h:537 [inline]
-  do_IRQ+0x20d/0x3a0 arch/x86/kernel/irq.c:259
-  ret_from_intr+0x0/0x33
-  kmsan_get_shadow_origin_ptr+0x6/0x3a0 mm/kmsan/kmsan.c:656
-  __msan_metadata_ptr_for_load_8+0x10/0x20 mm/kmsan/kmsan_instr.c:55
-  compound_head include/linux/compiler.h:206 [inline]
-  PageReferenced include/linux/page-flags.h:315 [inline]
-  mark_page_accessed+0x30c/0xa00 mm/swap.c:391
-  touch_buffer fs/buffer.c:60 [inline]
-  __find_get_block+0x1681/0x19e0 fs/buffer.c:1303
-  __getblk_gfp+0xc5/0x1080 fs/buffer.c:1321
-  sb_getblk include/linux/buffer_head.h:325 [inline]
-  __ext4_get_inode_loc+0x647/0x1c80 fs/ext4/inode.c:4611
-  ext4_get_inode_loc fs/ext4/inode.c:4726 [inline]
-  ext4_reserve_inode_write+0x15d/0x430 fs/ext4/inode.c:5919
-  ext4_mark_inode_dirty+0x2dd/0xca0 fs/ext4/inode.c:6071
-  ext4_dirty_inode+0x187/0x1d0 fs/ext4/inode.c:6110
-  __mark_inode_dirty+0x486/0x1380 fs/fs-writeback.c:2170
-  mark_inode_dirty include/linux/fs.h:2138 [inline]
-  generic_write_end+0x3f7/0x460 fs/buffer.c:2164
-  ext4_da_write_end+0x1050/0x1240 fs/ext4/inode.c:3217
-  generic_perform_write+0x618/0x990 mm/filemap.c:3341
-  __generic_file_write_iter+0x421/0xa30 mm/filemap.c:3459
-  ext4_file_write_iter+0xc97/0x2010 fs/ext4/file.c:270
-  call_write_iter include/linux/fs.h:1870 [inline]
-  new_sync_write fs/read_write.c:483 [inline]
-  __vfs_write+0xa2c/0xcb0 fs/read_write.c:496
-  vfs_write+0x481/0x920 fs/read_write.c:558
-  ksys_write+0x265/0x430 fs/read_write.c:611
-  __do_sys_write fs/read_write.c:623 [inline]
-  __se_sys_write+0x92/0xb0 fs/read_write.c:620
-  __x64_sys_write+0x4a/0x70 fs/read_write.c:620
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-==================================================================
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x2a3/0x6da kernel/panic.c:219
+  __warn.cold+0x20/0x4a kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:usercopy_warn+0xe8/0x110 mm/usercopy.c:74
+Code: e8 bd f8 d6 ff 49 89 e9 4c 89 e1 48 89 de 41 57 48 c7 c7 40 f5 cd 85  
+41 55 41 56 4c 8b 44 24 20 48 8b 54 24 18 e8 9d de ac ff <0f> 0b 48 83 c4  
+18 e9 45 ff ff ff 48 c7 c5 40 f3 cd 85 49 89 ee 49
+RSP: 0018:ffff8881c5d07be8 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffffffff85cdf500 RCX: 0000000000000000
+RDX: 0000000000008303 RSI: ffffffff81288cfd RDI: ffffed1038ba0f6f
+RBP: ffffffff85cc2ca0 R08: ffff8881c79b0000 R09: ffffed103b645d58
+R10: ffffed103b645d57 R11: ffff8881db22eabf R12: ffffffff86a6b0c8
+R13: 0000000000000058 R14: ffffffff85cdf380 R15: 0000000000000021
+  check_heap_object mm/usercopy.c:234 [inline]
+  __check_object_size mm/usercopy.c:280 [inline]
+  __check_object_size+0x327/0x39a mm/usercopy.c:250
+  check_object_size include/linux/thread_info.h:119 [inline]
+  check_copy_size include/linux/thread_info.h:150 [inline]
+  copy_to_user include/linux/uaccess.h:151 [inline]
+  hidraw_ioctl+0x65f/0xae0 drivers/hid/hidraw.c:440
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
+  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x459829
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f75e27c6c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+RDX: 00000000200000c0 RSI: 0000000080404804 RDI: 0000000000000003
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f75e27c76d4
+R13: 00000000004c21c9 R14: 00000000004d5628 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
@@ -165,5 +140,3 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
