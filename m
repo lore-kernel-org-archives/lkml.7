@@ -2,113 +2,128 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B15AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A34F3C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00ED82332A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77EB22332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 09:07:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="eN2sJxBY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ldPZ7n1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfHUJF5 (ORCPT
+        id S1727107AbfHUJHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 05:05:57 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40609 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726425AbfHUJF5 (ORCPT
+        Wed, 21 Aug 2019 05:07:03 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34505 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbfHUJHC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 05:05:57 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c3so1259267wrd.7
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 02:05:55 -0700 (PDT)
+        Wed, 21 Aug 2019 05:07:02 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x18so1442421ljh.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 02:07:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=fQeTw8XVpz3MXJ+9QKUltKbufjCfYbnuGVJHHdsUDLI=;
-        b=eN2sJxBYytWmV3/n076E7pwNxHyBqPih6k1yaMTSgWesLfORTfAQd/TyGk2BSf6eDw
-         OTh9CSsPjuOfOv+ZYebNkiivlWNXMt3AWrscTv4UmcqfK3bvUEiI9sjHdDpJ5U1JrXtG
-         PVfMJKDMCk7WSQ0dnvEFFQiJS+Rwz3XRCMLCflYtp7yecqs+fBoJ9udb+dMYH7Ka9+VE
-         iaBGNJmfnZSOqQVqUEKnIQjlYppxz9AotT+CDtLRDn5JYGqQy9GibuJ8n/zwK3KZoy+1
-         yFN/6kJyjNUE/X4QgWakwmg3FJEgjx8TyiP/2HLaWHDxdIRt39KUcrClx9ExN44FOYAj
-         sQDw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=l1PSwAxURmvRpKju1nSZAkhT1kqhpgoMPnKulqMvgaU=;
+        b=ldPZ7n1YKnH6urIqEpjgNnB9Yz6A9hu7oUFsROK9+okfYJw31JxfVGrlYrO5EEIfCa
+         UohvmNFqTTgOLenwL/KxMl7/Zkm/+uZ0ss3xAZ1mzFZ5idRlcs8PF1Qr6pzRg3CD9q4+
+         l46lL0b/b1pbZ0jbxHflmKmNI0MMX0qMkfLrLMxBsk6M/7ofuixSCG/PFt7ypxfXC9nj
+         FkTGzf2aPo1ZSbBa4MmUkRTkRRMQJHl0kTiF2QbKQJcNlzvxx2EqKkjBzJwz6oWRJAOt
+         /yTUYrTgFGrn1tQ4+9dsq6A0UwFDdkHe97QTPZTdeyNhtrS4o+QWZqKZprCNEsOVodPd
+         5Deg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=fQeTw8XVpz3MXJ+9QKUltKbufjCfYbnuGVJHHdsUDLI=;
-        b=dtc/ukLplEjvnLQ9X0PeO9uoBLBv+5Qdh1dv1kaBDVHaISmbfpbOStKZQCJQr0I1qW
-         O6FG8EEo831txiEerMCyQnBEmQQU4WJDB8q81j/SomsGGtyTaCM6+VmV6Is40HJcRTfp
-         ai2mTDfJi1exMfyaKVdIEa8wi2j+JXON+dVk3LIMFHoLzH5rqq8Roru4c8fbZcU6yt8I
-         j37ttu/c4wOZWrhyW4s451hNxoEGIpV3FatYx1X/aHFU/zjeWuln0gJuJn1YNndwnr4r
-         B0aCud0Gt00KW32AFdKZyZo7YMBF8dRBIQAvSYGsU5IhwxQIK3SJ067UqSDmMZwNUYXd
-         0LEg==
-X-Gm-Message-State: APjAAAVOctxaf2uqbN3yqyoNIox/zzV8gpRvozg6CKkT+U/U+MLwgw+h
-        hk+sj8YBrUPmmKFh1kT/aSQ7rg==
-X-Google-Smtp-Source: APXvYqyjvAvT4fg2ukxmE0qZ9tQtEBd7iI0jte/BSRbLASZkZ+xMjQBSSJvfCpxW0Oo/+1F7zkzQbQ==
-X-Received: by 2002:adf:ed4a:: with SMTP id u10mr14236353wro.284.1566378355151;
-        Wed, 21 Aug 2019 02:05:55 -0700 (PDT)
-Received: from LAPTOP-V3S7NLPL ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id 91sm64065796wrp.3.2019.08.21.02.05.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 21 Aug 2019 02:05:54 -0700 (PDT)
-References: <20190813171018.28221-1-naveen.n.rao@linux.vnet.ibm.com> <1566376025.68ldwx3wc7.naveen@linux.ibm.com>
-User-agent: mu4e 0.9.18; emacs 25.2.2
-From:   Jiong Wang <jiong.wang@netronome.com>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiong Wang <jiong.wang@netronome.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Michael Ellerman <mpe@ellerman.id.au>, netdev@vger.kernel.org
-Subject: Re: [RFC PATCH] bpf: handle 32-bit zext during constant blinding
-In-reply-to: <1566376025.68ldwx3wc7.naveen@linux.ibm.com>
-Date:   Wed, 21 Aug 2019 10:05:53 +0100
-Message-ID: <87y2zmubv2.fsf@netronome.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l1PSwAxURmvRpKju1nSZAkhT1kqhpgoMPnKulqMvgaU=;
+        b=Aox97wEzF7M62SKFgoImCx2Y+QvryM553Z5+Kejv1CuANUl5QV2y3gsuaXQ2bOuchS
+         9jMUxn2U6wEOXayR4Zvyw91N8ehc3uSWPxxyyQ7h7Sz4cdsZ7l0JYr93Vk+75QtdZZ1O
+         e/BY6CnAIH/LTN1Adxr0vR+hEyRM5sYq9uwUMYClhlzMFMPChcEBhPAss36TpQ6YRXdV
+         Pzx8H/vBCDDmqFVexYz6w3isPLdW/47D/xExwgXTkX6ou9v67tyitNFLZ5yO4daXQ4v2
+         FlcrouuLHqPxHwWgaZ/6Ap4qVLlAF3/0jQaZr9ZrY/Sh/hx3WvjX77xhS+n0d7DJLShj
+         HMlQ==
+X-Gm-Message-State: APjAAAXQt3N42CdfeCa2lReWO+p+0g5smoUjAKIQFkDKNOHOVIzL9K2V
+        ta6/YHMR07enKU2ldGXNRyOGJA==
+X-Google-Smtp-Source: APXvYqzG9CVLKmNl0LbqKy5+pIULi7I5nAFbvEiaeMSL2RErmaHBoXceiFNSGmwFYhOr2oazUpYPEA==
+X-Received: by 2002:a2e:b00b:: with SMTP id y11mr18017045ljk.159.1566378419968;
+        Wed, 21 Aug 2019 02:06:59 -0700 (PDT)
+Received: from centauri (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
+        by smtp.gmail.com with ESMTPSA id 202sm3182448ljf.102.2019.08.21.02.06.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 02:06:59 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 11:06:57 +0200
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] arm64: dts: qcom: sm8150: Add SM8150 DTS
+Message-ID: <20190821090657.GA560@centauri>
+References: <20190820172351.24145-1-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820172351.24145-1-vkoul@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 20, 2019 at 10:53:42PM +0530, Vinod Koul wrote:
+> This series adds DTS for SM8150, PMIC PM8150, PM8150B, PM8150L and
+> the MTP for SM8150.
+> 
+> Changes in v3:
+>  - Fix copyright comment style to Linux kernel style
+>  - Make property values all hex or decimal
+>  - Fix patch titles and logs and make them consistent
+>  - Fix line breaks
+> 
+> Changes in v2:
+>  - Squash patches
+>  - Fix comments given by Stephen namely, lowercase for hext numbers,
+>    making rpmhcc have xo_board as parent, rename pon controller to
+>    power-on controller, make pmic nodes as disabled etc.
+>  - removed the dependency on clk defines and use raw numbers
+> 
+> 
+> Vinod Koul (8):
+>   arm64: dts: qcom: sm8150: Add base dts file
+>   arm64: dts: qcom: pm8150: Add base dts file
+>   arm64: dts: qcom: pm8150b: Add base dts file
+>   arm64: dts: qcom: pm8150l: Add base dts file
+>   arm64: dts: qcom: sm8150-mtp: Add base dts file
+>   arm64: dts: qcom: sm8150-mtp: Add regulators
+>   arm64: dts: qcom: sm8150: Add reserved-memory regions
+>   arm64: dts: qcom: sm8150: Add apps shared nodes
+> 
+>  arch/arm64/boot/dts/qcom/Makefile       |   1 +
+>  arch/arm64/boot/dts/qcom/pm8150.dtsi    |  97 +++++
+>  arch/arm64/boot/dts/qcom/pm8150b.dtsi   |  86 +++++
+>  arch/arm64/boot/dts/qcom/pm8150l.dtsi   |  80 ++++
+>  arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 378 +++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi    | 481 ++++++++++++++++++++++++
+>  6 files changed, 1123 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8150.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/pm8150l.dtsi
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8150-mtp.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
+> 
+> -- 
+> 2.20.1
+> 
 
-Naveen N. Rao writes:
+Whole series is:
 
-> Naveen N. Rao wrote:
->> Since BPF constant blinding is performed after the verifier pass, there
->> are certain ALU32 instructions inserted which don't have a corresponding
->> zext instruction inserted after. This is causing a kernel oops on
->> powerpc and can be reproduced by running 'test_cgroup_storage' with
->> bpf_jit_harden=2.
->> 
->> Fix this by emitting BPF_ZEXT during constant blinding if
->> prog->aux->verifier_zext is set.
->> 
->> Fixes: a4b1d3c1ddf6cb ("bpf: verifier: insert zero extension according to analysis result")
->> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
->> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
->> ---
->> This approach (the location where zext is being introduced below, in 
->> particular) works for powerpc, but I am not entirely sure if this is 
->> sufficient for other architectures as well. This is broken on v5.3-rc4.
->
-> Alexie, Daniel, Jiong,
-> Any feedback on this?
-
-The fix on BPF_LD | BPF_IMM | BPF_DW looks correct to me, but the two other
-places looks to me is unnecessary, as those destinations are exposed to
-external and if they are used as 64-bit then there will be zext inserted
-for them.
-
-Have you verified removing those two fixes will still cause the bug?
-
-Regards,
-Jiong
-
->
-> - Naveen
-
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
