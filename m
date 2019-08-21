@@ -2,145 +2,150 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42952C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D116BC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163FD233FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:33:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="ILjJA4n/"
+	by mail.kernel.org (Postfix) with ESMTP id A374A233A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:33:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566412404;
+	bh=DJv9nlExzSh44r2Q7GyC5m1qmrEaoL0a7wtdPqJYykU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jPmGbcAs+eBXa1n5zYElwndwCbuXjXwptFUR8iIH4bCrrAIXG4VTRaHuSoI7/fdzp
+	 C7zVloYBFjhgbzxrqpboAaggFw5+Avs7uEbLe/VDfr5To+jbzR2zXZ03Q/sE7VEs2i
+	 OAX7UJoaOYC/EPbIcXQWMYgBpJMkg3mMSrDTsvWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbfHUSdR (ORCPT
+        id S1730025AbfHUSdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:33:17 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45930 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729339AbfHUScM (ORCPT
+        Wed, 21 Aug 2019 14:33:23 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:32930 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727720AbfHUSdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:32:12 -0400
-Received: by mail-qk1-f196.google.com with SMTP id m2so2696825qki.12
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 11:32:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=bQvsgscqpy4gJx0RSAZHmPdNixt0ATCDS0WU9XTwyb8=;
-        b=ILjJA4n/giE8JmPiexv7Bw1nwvbRl2Z+YSLoE4FuqVk0Cy9Y8l0Z/Oi043el4txkPI
-         biHES+QyYLZFcNUoZPuckwwgZ/ZXoRyQ8rxMSMLPx468ECFak95S7bHRA5hE7sgYwLo1
-         ERLOIgzIGS0X8aQ1hin4TNUKMPvt4jZ8F71XOY2yF9JNx+98bKfh5WdXq2GAL7Nq6Uo3
-         KfLn8Kp0O5dqjYZeCaQSMuaUmJE3xMJ+Hjjv8je7GShbQFFNY8YKqG+42V9uOpm21DqX
-         2cavH9DsopJFxHmz518GX7AOejraE2dw00Ly+gcqnjNxEU861osit10n9wkODkePQq2J
-         VOJQ==
+        Wed, 21 Aug 2019 14:33:21 -0400
+Received: by mail-ot1-f68.google.com with SMTP id q20so3032473otl.0;
+        Wed, 21 Aug 2019 11:33:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bQvsgscqpy4gJx0RSAZHmPdNixt0ATCDS0WU9XTwyb8=;
-        b=jkLrcYubkWro7Q+dFJ/ZkyOYqfaNDKVauC21voReIYX7g50vqrbrypftp/NYe0NrGT
-         heO6SVD1RMouGH9MWUfWDOC3AmHef3KvAOMlTKh091DDfAmJV4EQcaJ0M4Laud4Tip8N
-         8X3W7kXmjNDGcKM2fFq5CFyTqMrhCJcea84j8s6cWLJKNELlwibqRryVhU6+EJCHlrz1
-         XIEEtypynJyVxXwikHwrmT0agCTOTx/7QrClaiFGREcShy0abxTxRNwfV54JZZHtIBNw
-         sCF7xWTw5l0kgSeFgNG8+4DfIN2falINr0p8vdv1XpysEqA7x6mz+iiDm8OW/qpmMmcc
-         XbVQ==
-X-Gm-Message-State: APjAAAU3Ww8u2fdz5mc5K8H6q6S06ptnt1iBo8Ck8KEHaGqI2W1XO79j
-        HT06fdhXTL1DNZoTJBJi6TST1g==
-X-Google-Smtp-Source: APXvYqzfJ8BXdrEH0K8CKkw4fBwWFDafodl10SDkUCPN4bBIEhI2MWQI353Halx8ux+skSlbJLzXYQ==
-X-Received: by 2002:ae9:ec1a:: with SMTP id h26mr17120619qkg.80.1566412331857;
-        Wed, 21 Aug 2019 11:32:11 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id q13sm10443332qkm.120.2019.08.21.11.32.10
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=egHhqVwtSMDmp9YF4xs0dobfljwNvPw3rwWXCHsf7oo=;
+        b=fNDPgh+uo6pDAEosEFEZ/+tABmMmnfF158ptzURV5nI4OGDLf2B8w1P9rOmuZhsjqz
+         hCfFiEXw+80JJiS26VSgs0uiz2L1iSlPpMVhDwBZ4mgNsItoY8CKfvj7/AZgDFYnGwqv
+         0QvVNbbwPEbcC4yi61AJ7J+CmaH+M3pWCR/IlKnEwfVRt+yNNPAAc8FvPNyLzv1umLFQ
+         BE620Fr0k2O9tKYd5sxaznTkR2y92evyiynODo9WCptEjDYVPSJj7oiCyKOJquAxrKzr
+         2EZgKWj9dU98fey+86A2b1d1Uy+sJ2sY6uBzcOflZvrs7WZcjqclJJYp7NdzyZ5gyC8a
+         6x0Q==
+X-Gm-Message-State: APjAAAUopOR423VJonIhbSAyvWw6vTOmBhJlikxhzlrItfFtxiVgPf9M
+        uAQ5FPzTTVQdNhUt+b+ixg==
+X-Google-Smtp-Source: APXvYqwQIo2Vuh1ftveWru24y3+5VDk13vltqfb28SAYQ4YZfiK4rqCZKAcqCdEvqJ17ZGIKIpXeTA==
+X-Received: by 2002:a9d:331:: with SMTP id 46mr23079892otv.8.1566412400760;
+        Wed, 21 Aug 2019 11:33:20 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v24sm7972302otj.78.2019.08.21.11.33.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 11:32:11 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        ebiederm@xmission.com, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com,
-        james.morse@arm.com, vladimir.murzin@arm.com,
-        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
-        mark.rutland@arm.com
-Subject: [PATCH v3 04/17] arm64, hibernate: rename dst to page in create_safe_exec_page
-Date:   Wed, 21 Aug 2019 14:31:51 -0400
-Message-Id: <20190821183204.23576-5-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190821183204.23576-1-pasha.tatashin@soleen.com>
-References: <20190821183204.23576-1-pasha.tatashin@soleen.com>
+        Wed, 21 Aug 2019 11:33:20 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 13:33:19 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Avi Fishman <avifishman70@gmail.com>
+Cc:     venture@google.com, yuenn@google.com, benjaminfair@google.com,
+        davem@davemloft.net, mark.rutland@arm.com,
+        gregkh@linuxfoundation.org, tmaimon77@gmail.com,
+        tali.perry1@gmail.com, openbmc@lists.ozlabs.org,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH v1 1/2] dt-binding: net: document NPCM7xx EMC 10/100 DT
+ bindings
+Message-ID: <20190821183319.GA19310@bogus>
+References: <20190801072611.27935-1-avifishman70@gmail.com>
+ <20190801072611.27935-2-avifishman70@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190801072611.27935-2-avifishman70@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-create_safe_exec_page() allocates a safe page and maps it at a
-specific location, also this function returns the physical address
-of newly allocated page.
+On Thu, Aug 01, 2019 at 10:26:10AM +0300, Avi Fishman wrote:
+> Added device tree binding documentation for
+> Nuvoton NPCM7xx Ethernet MAC Controller (EMC) 10/100 RMII
+> 
+> Signed-off-by: Avi Fishman <avifishman70@gmail.com>
+> ---
+>  .../bindings/net/nuvoton,npcm7xx-emc.txt      | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt
 
-The destination VA, and PA are specified in arguments: dst_addr,
-phys_dst_addr
+Consider converting this to DT schema (YAML).
 
-However, within the function it uses "dst" which has unsigned long
-type, but is actually a pointers in the current virtual space. This
-is confusing to read.
+> 
+> diff --git a/Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt b/Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt
+> new file mode 100644
+> index 000000000000..a7ac3ca66de9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/nuvoton,npcm7xx-emc.txt
+> @@ -0,0 +1,38 @@
+> +Nuvoton NPCM7XX 10/100 Ethernet MAC Controller (EMC)
+> +
+> +The NPCM7XX provides one or two Ethernet MAC RMII Controllers
+> +for WAN/LAN applications
+> +
+> +Required properties:
+> +- device_type     : Should be "network"
 
-Rename dst to more appropriate page (page that is created), and also
-change its time to "void *"
+Drop this. device_type is deprecated for FDT except for a few cases.
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- arch/arm64/kernel/hibernate.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+> +- compatible      : "nuvoton,npcm750-emc" for Poleg NPCM7XX.
+> +- reg             : Offset and length of the register set for the device.
+> +- interrupts      : Contain the emc interrupts with flags for falling edge.
+> +                    first interrupt dedicated to Txirq
+> +                    second interrupt dedicated to Rxirq
+> +- phy-mode        : Should be "rmii" (see ethernet.txt in the same directory)
+> +- clocks          : phandle of emc reference clock.
+> +- resets          : phandle to the reset control for this device.
+> +- use-ncsi        : Use the NC-SI stack instead of an MDIO PHY
 
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index c8211108ec11..ee34a06d8a35 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -198,17 +198,17 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 				 unsigned long dst_addr,
- 				 phys_addr_t *phys_dst_addr)
- {
-+	void *page = (void *)get_safe_page(GFP_ATOMIC);
- 	pgd_t *pgdp;
- 	pud_t *pudp;
- 	pmd_t *pmdp;
- 	pte_t *ptep;
--	unsigned long dst = get_safe_page(GFP_ATOMIC);
- 
--	if (!dst)
-+	if (!page)
- 		return -ENOMEM;
- 
--	memcpy((void *)dst, src_start, length);
--	__flush_icache_range(dst, dst + length);
-+	memcpy(page, src_start, length);
-+	__flush_icache_range((unsigned long)page, (unsigned long)page + length);
- 
- 	pgdp = pgd_offset_raw((void *)get_safe_page(GFP_ATOMIC), dst_addr);
- 	if (pgd_none(READ_ONCE(*pgdp))) {
-@@ -235,7 +235,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	}
- 
- 	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(dst), PAGE_KERNEL_EXEC));
-+	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
- 
- 	/*
- 	 * Load our new page tables. A strict BBM approach requires that we
-@@ -254,7 +254,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	write_sysreg(phys_to_ttbr(virt_to_phys(pgdp)), ttbr0_el1);
- 	isb();
- 
--	*phys_dst_addr = virt_to_phys((void *)dst);
-+	*phys_dst_addr = virt_to_phys(page);
- 
- 	return 0;
- }
--- 
-2.23.0
+Vendor prefix needed.
 
+> +
+> +Example:
+> +
+> +emc0: eth@f0825000 {
+
+ethernet@...
+
+> +	device_type = "network";
+> +	compatible = "nuvoton,npcm750-emc";
+> +	reg = <0xf0825000 0x1000>;
+> +	interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+> +	             <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> +	phy-mode = "rmii";
+> +	clocks = <&clk NPCM7XX_CLK_AHB>;
+> +
+> +	#use-ncsi; /* add this to support ncsi */
+
+Doesn't match the binding.
+
+> +
+> +	clock-names = "clk_emc";
+> +	resets = <&rstc 6>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&r1_pins
+> +	             &r1err_pins
+> +	             &r1md_pins>;
+> +	status = "okay";
+
+Drop status in examples.
+
+> +};
+> -- 
+> 2.18.0
+> 
