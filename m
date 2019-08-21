@@ -2,260 +2,176 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F5AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBD6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F21E62339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8F722DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 15:48:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="jRqX+OjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfHUPsh (ORCPT
+        id S1729212AbfHUPsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 11:48:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38174 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728459AbfHUPsh (ORCPT
+        Wed, 21 Aug 2019 11:48:46 -0400
+Received: from mail.efficios.com ([167.114.142.138]:45314 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728459AbfHUPsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 11:48:37 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LFlxWv061321;
-        Wed, 21 Aug 2019 11:48:06 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uh88da239-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Aug 2019 11:48:06 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7LFm5hM061893;
-        Wed, 21 Aug 2019 11:48:06 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uh88da1v9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Aug 2019 11:48:05 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7LFjTdf023320;
-        Wed, 21 Aug 2019 15:47:55 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma05wdc.us.ibm.com with ESMTP id 2ue9764ust-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Aug 2019 15:47:55 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LFltZF52887930
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Aug 2019 15:47:55 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64E96B205F;
-        Wed, 21 Aug 2019 15:47:55 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36928B2064;
-        Wed, 21 Aug 2019 15:47:55 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 21 Aug 2019 15:47:55 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id DE51416C1775; Wed, 21 Aug 2019 08:47:55 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 08:47:55 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [RFC v2] rcu/tree: Try to invoke_rcu_core() if in_irq() during
- unlock
-Message-ID: <20190821154755.GH28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190819012153.GR28441@linux.ibm.com>
- <20190819014143.GB160903@google.com>
- <20190819014623.GC160903@google.com>
- <20190819022927.GS28441@linux.ibm.com>
- <20190819125757.GA6946@linux.ibm.com>
- <20190819143314.GT28441@linux.ibm.com>
- <20190819154143.GA18470@linux.ibm.com>
- <20190821143841.GC147977@google.com>
- <20190821145617.GD147977@google.com>
- <20190821152638.GF147977@google.com>
+        Wed, 21 Aug 2019 11:48:46 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 784882CAD29;
+        Wed, 21 Aug 2019 11:48:44 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id mKb2H5X-fXvj; Wed, 21 Aug 2019 11:48:44 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id ED4C02CAD26;
+        Wed, 21 Aug 2019 11:48:43 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com ED4C02CAD26
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1566402524;
+        bh=raMzDsvLp2MJ0A1zw+jKNPt3gxA/18NTfDpige5zLCY=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=jRqX+OjZQ6VhTLFZHTptD7xsc3YuLNYTya2TMd6WSqBIyN1tKztU7CLM3LSQ0kybQ
+         DfDziPTvjxbLtwDQTqxyNwKBYdIh03/Pr6vabmpHkVoigfBJv2YVx7QXickH3JGZjs
+         FktrhJ2DWoLRYNnrto5ss/FTRkyIdmROakhtfsm3g681aBTJNvjjLEQvO+t1+D6OTv
+         LreQUem9N10M+M/UqZuk1Q0/Oq/zjEY903C76NU9gCNJeHDdKUyhxJNU3azSFFRqYP
+         vNU72FQYu0kd1GwtFod/ah2fum0GrQLPj2HWDJAm/Enw14HILvg5gcQ1IA5FHa2MLs
+         FPpGeww027mEg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id FFjmIk5DJO4F; Wed, 21 Aug 2019 11:48:43 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id D48832CAD1C;
+        Wed, 21 Aug 2019 11:48:43 -0400 (EDT)
+Date:   Wed, 21 Aug 2019 11:48:43 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     paulmck <paulmck@linux.ibm.com>, Will Deacon <will@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        rostedt <rostedt@goodmis.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        David Howells <dhowells@redhat.com>
+Message-ID: <52600272.1909.1566402523680.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190821153325.GD2349@hirez.programming.kicks-ass.net>
+References: <Pine.LNX.4.44L0.1908161505400.1525-100000@iolanthe.rowland.org> <1642847744.23403.1566005809759.JavaMail.zimbra@efficios.com> <CAHk-=wgC4+kV9AiLokw7cPP429rKCU+vjA8cWAfyOjC3MtqC4A@mail.gmail.com> <20190820135612.GS2332@hirez.programming.kicks-ass.net> <20190820202932.GW28441@linux.ibm.com> <20190821103200.kpufwtviqhpbuv2n@willie-the-truck> <20190821132310.GC28441@linux.ibm.com> <20190821153325.GD2349@hirez.programming.kicks-ass.net>
+Subject: Re: [PATCH 1/1] Fix: trace sched switch start/stop racy updates
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821152638.GF147977@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908210164
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3829 (ZimbraWebClient - FF68 (Linux)/8.8.15_GA_3829)
+Thread-Topic: trace sched switch start/stop racy updates
+Thread-Index: vUNKpvAVCmtLIvMwU3k3Nuab82BXLA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 11:26:38AM -0400, Joel Fernandes wrote:
-> On Wed, Aug 21, 2019 at 10:56:17AM -0400, Joel Fernandes wrote:
-> > On Wed, Aug 21, 2019 at 10:38:41AM -0400, Joel Fernandes wrote:
-> > > On Mon, Aug 19, 2019 at 08:41:43AM -0700, Paul E. McKenney wrote:
-> > > > On Mon, Aug 19, 2019 at 07:33:14AM -0700, Paul E. McKenney wrote:
-> > > > > On Mon, Aug 19, 2019 at 05:57:57AM -0700, Paul E. McKenney wrote:
-> > > > > > On Sun, Aug 18, 2019 at 07:29:27PM -0700, Paul E. McKenney wrote:
-> > > > > > > On Sun, Aug 18, 2019 at 09:46:23PM -0400, Joel Fernandes wrote:
-> > > > > > > > On Sun, Aug 18, 2019 at 09:41:43PM -0400, Joel Fernandes wrote:
-> > > > > > > > > On Sun, Aug 18, 2019 at 06:21:53PM -0700, Paul E. McKenney wrote:
-> > > > > > > > [snip]
-> > > > > > > > > > > > Also, your commit log's point #2 is "in_irq() implies in_interrupt()
-> > > > > > > > > > > > which implies raising softirq will not do any wake ups."  This mention
-> > > > > > > > > > > > of softirq seems a bit odd, given that we are going to wake up a rcuc
-> > > > > > > > > > > > kthread.  Of course, this did nothing to quell my suspicions.  ;-)
-> > > > > > > > > > > 
-> > > > > > > > > > > Yes, I should delete this #2 from the changelog since it is not very relevant
-> > > > > > > > > > > (I feel now). My point with #2 was that even if were to raise a softirq
-> > > > > > > > > > > (which we are not), a scheduler wakeup of ksoftirqd is impossible in this
-> > > > > > > > > > > path anyway since in_irq() implies in_interrupt().
-> > > > > > > > > > 
-> > > > > > > > > > Please!  Could you also add a first-principles explanation of why
-> > > > > > > > > > the added condition is immune from scheduler deadlocks?
-> > > > > > > > > 
-> > > > > > > > > Sure I can add an example in the change log, however I was thinking of this
-> > > > > > > > > example which you mentioned:
-> > > > > > > > > https://lore.kernel.org/lkml/20190627173831.GW26519@linux.ibm.com/
-> > > > > > > > > 
-> > > > > > > > > 	previous_reader()
-> > > > > > > > > 	{
-> > > > > > > > > 		rcu_read_lock();
-> > > > > > > > > 		do_something(); /* Preemption happened here. */
-> > > > > > > > > 		local_irq_disable(); /* Cannot be the scheduler! */
-> > > > > > > > > 		do_something_else();
-> > > > > > > > > 		rcu_read_unlock();  /* Must defer QS, task still queued. */
-> > > > > > > > > 		do_some_other_thing();
-> > > > > > > > > 		local_irq_enable();
-> > > > > > > > > 	}
-> > > > > > > > > 
-> > > > > > > > > 	current_reader() /* QS from previous_reader() is still deferred. */
-> > > > > > > > > 	{
-> > > > > > > > > 		local_irq_disable();  /* Might be the scheduler. */
-> > > > > > > > > 		do_whatever();
-> > > > > > > > > 		rcu_read_lock();
-> > > > > > > > > 		do_whatever_else();
-> > > > > > > > > 		rcu_read_unlock();  /* Must still defer reporting QS. */
-> > > > > > > > > 		do_whatever_comes_to_mind();
-> > > > > > > > > 		local_irq_enable();
-> > > > > > > > > 	}
-> > > > > > > > > 
-> > > > > > > > > One modification of the example could be, previous_reader() could also do:
-> > > > > > > > > 	previous_reader()
-> > > > > > > > > 	{
-> > > > > > > > > 		rcu_read_lock();
-> > > > > > > > > 		do_something_that_takes_really_long(); /* causes need_qs in
-> > > > > > > > > 							  the unlock_special_union to be set */
-> > > > > > > > > 		local_irq_disable(); /* Cannot be the scheduler! */
-> > > > > > > > > 		do_something_else();
-> > > > > > > > > 		rcu_read_unlock();  /* Must defer QS, task still queued. */
-> > > > > > > > > 		do_some_other_thing();
-> > > > > > > > > 		local_irq_enable();
-> > > > > > > > > 	}
-> > > > > > > > 
-> > > > > > > > The point you were making in that thread being, current_reader() ->
-> > > > > > > > rcu_read_unlock() -> rcu_read_unlock_special() would not do any wakeups
-> > > > > > > > because previous_reader() sets the deferred_qs bit.
-> > > > > > > > 
-> > > > > > > > Anyway, I will add all of this into the changelog.
-> > > > > > > 
-> > > > > > > Examples are good, but what makes it so that there are no examples of
-> > > > > > > its being unsafe?
-> > > > > > > 
-> > > > > > > And a few questions along the way, some quick quiz, some more serious.
-> > > > > > > Would it be safe if it checked in_interrupt() instead of in_irq()?
-> > > > > > > If not, should the in_interrupt() in the "if" condition preceding the
-> > > > > > > added "else if" be changed to in_irq()?  Would it make sense to add an
-> > > > > > > "|| !irqs_were_disabled" do your new "else if" condition?  Would the
-> > > > > > > body of the "else if" actually be executed in current mainline?
-> > > > > > > 
-> > > > > > > In an attempt to be at least a little constructive, I am doing some
-> > > > > > > testing of this patch overnight, along with a WARN_ON_ONCE() to see if
-> > > > > > > that invoke_rcu_core() is ever reached.
-> > > > > > 
-> > > > > > And that WARN_ON_ONCE() never triggered in two-hour rcutorture runs of
-> > > > > > TREE01, TREE02, TREE03, and TREE09.  (These are the TREE variants in
-> > > > > > CFLIST that have CONFIG_PREEMPT=y.)
-> > > > > > 
-> > > > > > This of course raises other questions.  But first, do you see that code
-> > > > > > executing in your testing?
-> > > > > 
-> > > > > Never mind!  Idiot here forgot the "--bootargs rcutree.use_softirq"...
-> > > > 
-> > > > So this time I ran the test this way:
-> > > > 
-> > > > tools/testing/selftests/rcutorture/bin/kvm.sh --cpus 8 --duration 10 --configs "TREE01 TREE02 TREE03 TREE09" --bootargs "rcutree.use_softirq=0"
-> > > > 
-> > > > Still no splats.  Though only 10-minute runs instead of the two-hour runs
-> > > > I did last night.  (Got other stuff I need to do, sorry!)
-> > > > 
-> > > > My test version of your patch is shown below.  Please let me know if I messed
-> > > > something up.
-> > > 
-> > > I think you also need to pass rcutorture.irqreader=1 ?
-> > > 
-> > > Otherwise seems all readers happen in process context AFAICS.
-> > 
-> > Which is the default setting for that, so that's not the issue.
-> > 
-> > I think one reason could be, in_irq() is false when the timer callback
-> > executes, since the timer callback is executing after a grace-period. The
-> > stack is as follows:
-> > 
-> > Any reason why we cannot both test for call_rcu() and execute the RCU
-> > callback from the timer hardirq handler?
-> > 
-> > In fact, I guess on use_nosoftirq systems, the callback will not even run
-> > in softirq context.
-> > 
-> > [   20.553361]  => rcu_torture_timer_cb
-> > [   20.553361]  => rcu_do_batch
-> > [   20.553361]  => rcu_core
-> > [   20.553361]  => __do_softirq
-> > [   20.553361]  => do_softirq_own_stack
-> > [   20.553361]  => do_softirq.part.16
-> > [   20.553361]  => __local_bh_enable_ip
-> > [   20.553361]  => rcutorture_one_extend
-> > [   20.553361]  => rcu_torture_one_read
-> > [   20.553361]  => rcu_torture_reader
-> > [   20.553361]  => kthread
-> > [   20.553361]  => ret_from_fork
-> 
-> Oops! wrong stack trace, this is the one where it shows that the timer handler
-> is running from softirq, not hardirq. Both the rcu_torture_timer() and
-> rcu_torture_timer_cb() run from softirq context. ftrace confirms:
-> 
-> [   27.949671] rcu_tort-182     8..s1 7268705us : <stack trace>
-> [   27.949671]  => __ftrace_trace_stack
-> [   27.949671]  => rcu_torture_timer
-> [   27.949671]  => call_timer_fn
-> [   27.949671]  => run_timer_softirq
-> [   27.949671]  => __do_softirq
-> [   27.949671]  => irq_exit
-> [   27.949671]  => smp_apic_timer_interrupt
-> [   27.949671]  => apic_timer_interrupt
-> [   27.949671]  => rcutorture_one_extend
-> [   27.949671]  => rcu_torture_one_read
-> [   27.949671]  => rcu_torture_reader
-> [   27.949671]  => kthread
-> [   27.949671]  => ret_from_fork
-> 
-> So looks like torture testing modifications are called for, to run them in
-> hard interrupt context as well to provide this additional coverage.. Or am I
-> way off in the woods?
+----- On Aug 21, 2019, at 8:33 AM, Peter Zijlstra peterz@infradead.org wrote:
 
-That actually might be worth doing.
+> On Wed, Aug 21, 2019 at 06:23:10AM -0700, Paul E. McKenney wrote:
+>> On Wed, Aug 21, 2019 at 11:32:01AM +0100, Will Deacon wrote:
+> 
+>> > and so it is using a store-pair instruction to reduce the complexity in
+>> > the immediate generation. Thus, the 64-bit store will only have 32-bit
+>> > atomicity. In fact, this is scary because if I change bar to:
+>> > 
+>> > void bar(u64 *x)
+>> > {
+>> > 	*(volatile u64 *)x = 0xabcdef10abcdef10;
+>> > }
+>> > 
+>> > then I get:
+>> > 
+>> > bar:
+>> > 	mov	w1, 61200
+>> > 	movk	w1, 0xabcd, lsl 16
+>> > 	str	w1, [x0]
+>> > 	str	w1, [x0, 4]
+>> > 	ret
+>> > 
+>> > so I'm not sure that WRITE_ONCE would even help :/
+>> 
+>> Well, I can have the LWN article cite your email, then.  So thank you
+>> very much!
+>> 
+>> Is generation of this code for a 64-bit volatile store considered a bug?
+>> Or does ARMv8 exclude the possibility of 64-bit MMIO registers?  And I
+>> would guess that Thomas and Linus would ask a similar bugginess question
+>> for normal stores.  ;-)
+> 
+> I'm calling this a compiler bug; the way I understand volatile this is
+> very much against the intentended use case. That is, this is buggy even
+> on UP vs signals or MMIO.
 
-The reason I didn't bother is that in the common case, timer softirq
-generates exactly the same race conditions as would a hard interrupt
-handler.  You can see this in your stack trace, where the call is
-coming from irq_exit(), that is, from the trailing edge of a hardware
-interrupt.
+And here is a simpler reproducer on my gcc-8.3.0 (aarch64) compiled with O2:
 
-							Thanx, Paul
+volatile unsigned long a;
+ 
+void fct(void)
+{
+        a = 0x1234567812345678ULL;
+}
+
+void fct(void)
+{
+        a = 0x1234567812345678ULL;
+   0:   90000000        adrp    x0, 8 <fct+0x8>
+   4:   528acf01        mov     w1, #0x5678                     // #22136
+   8:   72a24681        movk    w1, #0x1234, lsl #16
+   c:   f9400000        ldr     x0, [x0]
+  10:   b9000001        str     w1, [x0]
+  14:   b9000401        str     w1, [x0, #4]
+}
+  18:   d65f03c0        ret
+
+And the non-volatile case uses stp (is it a single store to memory ?):
+
+unsigned long a;
+  
+void fct(void)
+{
+        a = 0x1234567812345678ULL;
+}
+
+void fct(void)
+{
+        a = 0x1234567812345678ULL;
+   0:   90000000        adrp    x0, 8 <fct+0x8>
+   4:   528acf01        mov     w1, #0x5678                     // #22136
+   8:   72a24681        movk    w1, #0x1234, lsl #16
+   c:   f9400000        ldr     x0, [x0]
+  10:   29000401        stp     w1, w1, [x0]
+}
+  14:   d65f03c0        ret
+
+It would probably be a good idea to audit other architectures, since this
+is done by the compiler backend.
+
+Thanks,
+
+Mathieu
+
+
+
+
+
+
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
