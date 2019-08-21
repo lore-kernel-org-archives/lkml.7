@@ -2,173 +2,239 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605CDC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4261EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F6422CF4
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:56:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="fHvjr7M6"
+	by mail.kernel.org (Postfix) with ESMTP id 098BB22CF4
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 10:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfHUK4A (ORCPT
+        id S1727188AbfHUK5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 06:56:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41256 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727042AbfHUKz6 (ORCPT
+        Wed, 21 Aug 2019 06:57:09 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:48000 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726330AbfHUK5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 06:55:58 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j16so1579125wrr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 03:55:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=WyMHZAA0Qc/+TYCGuweI620Z3fpFzwfapMrIB9ufTsg=;
-        b=fHvjr7M6oaWkGoWvcj9pBZmawdN6AT/H7iPBdFn+TdXoKTZpAm6k6X457tR1nd17hx
-         BWXvWHcu3QIwb6BXuuWalLFaUIArTyJ/Wn+8XazKdstH2/5ddO077ZNzX95OvfA/bLkF
-         grtXXwefsLdQVmzT0uzIJAPKXWJ/t4NXvmjWvWSgzVv1hDNX2ywpxx7yX3l/98tgcLzX
-         3lfytGhqxQ4oJ2dCFhWF0gEoJ0E0cM4eROXmE6JK65SiDDRpJDp2ozvFrpDr/p+BpU1t
-         bBIIuSD5SOjKDo7wg3besn6J0FWR+5wIvVjk/pprMgLOyEWk7wEaD0fuivujlrsHcBrP
-         Tfjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=WyMHZAA0Qc/+TYCGuweI620Z3fpFzwfapMrIB9ufTsg=;
-        b=Q3UIrcmUYLCSVSF2w4miN83K626iFMVpW5hk+P9Jj37rQXU3rfNfso9xdoTnMP9p23
-         DxCAAU60GZg0JhBs5WQLocndLxlRSg1/ueKcUIu9l57zl1lmq/Sy5MDtNN8hu/tfqn07
-         m8NAAmcaDYJ6vZdZYKWAc09XeRjwtegpjJ5yqH5DCzOripSLIyWcC8E7IM3r4huR9F6D
-         rzjnk3zjM8A2Rihze1KNHsKcZOcvBr9YysmLtWoc0/peeEdrlZThrtrz0w7VgFKXUiof
-         lNyGQv7F57RntHZfAduLwBg5GKbv0w4vkz0ySblP5sTbLMRS/dkOdZdE59UDSMPUOCVU
-         LeXw==
-X-Gm-Message-State: APjAAAWJPqw3q0GwGOESHbNdVZm6EV5I7KIzGMP927SrRQ4NucE7qOOF
-        ufYQWKq/EVHWxRvioOGVjzvXcQiLVNc=
-X-Google-Smtp-Source: APXvYqxy71UJYE8nNVPrM78f/UonRomhIlrziR5U+ykFKDa0TRBkO8syiWp8ZwkpMnF9OvVCGS9LGg==
-X-Received: by 2002:a5d:4950:: with SMTP id r16mr39205612wrs.347.1566384956439;
-        Wed, 21 Aug 2019 03:55:56 -0700 (PDT)
-Received: from LAPTOP-V3S7NLPL ([217.38.71.146])
-        by smtp.gmail.com with ESMTPSA id g65sm7099972wma.21.2019.08.21.03.55.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 21 Aug 2019 03:55:55 -0700 (PDT)
-References: <20190813171018.28221-1-naveen.n.rao@linux.vnet.ibm.com> <87d0gy6cj6.fsf@concordia.ellerman.id.au>
-User-agent: mu4e 0.9.18; emacs 25.2.2
-From:   Jiong Wang <jiong.wang@netronome.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiong Wang <jiong.wang@netronome.com>, bpf@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Regression fix for bpf in v5.3 (was Re: [RFC PATCH] bpf: handle 32-bit zext during constant blinding)
-In-reply-to: <87d0gy6cj6.fsf@concordia.ellerman.id.au>
-Date:   Wed, 21 Aug 2019 11:55:54 +0100
-Message-ID: <87k1b6yeh1.fsf@netronome.com>
+        Wed, 21 Aug 2019 06:57:09 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.258884-0.00885615-0.73226;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=7;RT=7;SR=0;TI=SMTPD_---.FFrRGz4_1566385024;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.FFrRGz4_1566385024)
+          by smtp.aliyun-inc.com(10.147.40.44);
+          Wed, 21 Aug 2019 18:57:04 +0800
+Date:   Wed, 21 Aug 2019 18:57:04 +0800
+From:   Mao Han <han_mao@c-sky.com>
+To:     Greentime Hu <green.hu@gmail.com>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        paul.walmsley@sifive.com, palmer@sifive.com, hch@lst.de,
+        linux-csky@vegr.kernel.org
+Subject: Re: [PATCH V4 1/3] riscv: Add perf callchain support
+Message-ID: <20190821105704.GA8431@vmh-VirtualBox>
+References: <cover.1566290744.git.han_mao@c-sky.com>
+ <820d80272fc5627b8d00e684663a614470217606.1566290744.git.han_mao@c-sky.com>
+ <CAEbi=3cBu8pbHZQk9ff79DLzHurKTSAwABEfW3aT=v-1brqppg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEbi=3cBu8pbHZQk9ff79DLzHurKTSAwABEfW3aT=v-1brqppg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Michael Ellerman writes:
-
-> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> writes:
->> Since BPF constant blinding is performed after the verifier pass, there
->> are certain ALU32 instructions inserted which don't have a corresponding
->> zext instruction inserted after. This is causing a kernel oops on
->> powerpc and can be reproduced by running 'test_cgroup_storage' with
->> bpf_jit_harden=2.
->>
->> Fix this by emitting BPF_ZEXT during constant blinding if
->> prog->aux->verifier_zext is set.
->>
->> Fixes: a4b1d3c1ddf6cb ("bpf: verifier: insert zero extension according to analysis result")
->> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
->> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
->> ---
->> This approach (the location where zext is being introduced below, in 
->> particular) works for powerpc, but I am not entirely sure if this is 
->> sufficient for other architectures as well. This is broken on v5.3-rc4.
+Hi Greentime,
+On Wed, Aug 21, 2019 at 05:16:13PM +0800, Greentime Hu wrote:
+> Hi Mao,
+> 
+> Mao Han <han_mao@c-sky.com> 於 2019年8月20日 週二 下午4:57寫道：
+> >
+> > This patch add support for perf callchain sampling on riscv platform.
+> > The return address of leaf function is retrieved from pt_regs as
+> > it is not saved in the outmost frame.
+> >
+> >
+> 
+> Not sure if I did something wrong. I encounter a build error when I
+> try to build tools/perf/tests
+> 
+>   CC       arch/riscv/util/dwarf-regs.o
+> arch/riscv/util/dwarf-regs.c:64:5: error: no previous prototype for
+> ‘regs_query_register_offset’ [-Werror=missing-prototypes]
 >
-> Any comment on this?
 
-Have commented on https://marc.info/?l=linux-netdev&m=156637836024743&w=2
-
-The fix looks correct to me on "BPF_LD | BPF_IMM | BPF_DW", but looks
-unnecessary on two other places. It would be great if you or Naveen could
-confirm it.
-
-Thanks.
-
-Regards,
-Jiong
-
-> This is a regression in v5.3, which results in a kernel crash, it would
-> be nice to get it fixed before the release please?
+This seems becasue I didn't add PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET
+in tools/perf/arch/riscv/Makefile so the prototype in
+./util/include/dwarf-regs.h is not declared. I'll add that in the next
+version.
+ 
+> I simply add its prototype and it could be built pass.
+> This is my testing results.
+> # ./perf test
+>  1: vmlinux symtab matches kallsyms                       : Skip
+>  2: Detect openat syscall event                           : FAILED!
+>  3: Detect openat syscall event on all cpus               : FAILED!
+>  4: Read samples using the mmap interface                 : FAILED!
+>  5: Test data source output                               : Ok
+>  6: Parse event definition strings                        : FAILED!
+>  7: Simple expression parser                              : Ok
+>  8: PERF_RECORD_* events & perf_sample fields             : FAILED!
+>  9: Parse perf pmu format                                 : Ok
+> 10: DSO data read                                         : Ok
+> 11: DSO data cache                                        : Ok
+> 12: DSO data reopen                                       : Ok
+> 13: Roundtrip evsel->name                                 : Ok
+> 14: Parse sched tracepoints fields                        : FAILED!
+> 15: syscalls:sys_enter_openat event fields                : FAILED!
+> 16: Setup struct perf_event_attr                          : FAILED!
+> 17: Match and link multiple hists                         : Ok
+> 18: 'import perf' in python                               : FAILED!
+> 
+> 19: Breakpoint overflow signal handler                    : FAILED!
+> 20: Breakpoint overflow sampling                          : FAILED!
+> 21: Breakpoint accounting                                 : Skip
+> 22: Watchpoint                                            :
+> 22.1: Read Only Watchpoint                                : FAILED!
+> 22.2: Write Only Watchpoint                               : FAILED!
+> 22.3: Read / Write Watchpoint                             : FAILED!
+> 22.4: Modify Watchpoint                                   : FAILED!
+> 23: Number of exit events of a simple workload            : Ok
+> 24: Software clock events period values                   : Ok
+> 25: Object code reading                                   : Ok
+> 26: Sample parsing                                        : Ok
+> 27: Use a dummy software event to keep tracking           : Ok
+> 28: Parse with no sample_id_all bit set                   : Ok
+> 29: Filter hist entries                                   : Ok
+> 30: Lookup mmap thread                                    : Ok
+> 31: Share thread mg                                       : Ok
+> 32: Sort output of hist entries                           : Ok
+> 33: Cumulate child hist entries                           : Ok
+> 34: Track with sched_switch                               : Ok
+> 35: Filter fds with revents mask in a fdarray             : Ok
+> 36: Add fd to a fdarray, making it autogrow               : Ok
+> 37: kmod_path__parse                                      : Ok
+> 38: Thread map                                            : Ok
+> 39: LLVM search and compile                               :
+> 39.1: Basic BPF llvm compile                              : Skip
+> 39.2: kbuild searching                                    : Skip
+> 39.3: Compile source for BPF prologue generation          : Skip
+> 39.4: Compile source for BPF relocation                   : Skip
+> 40: Session topology                                      : FAILED!
+> 41: BPF filter                                            :
+> 41.1: Basic BPF filtering                                 : Skip
+> 41.2: BPF pinning                                         : Skip
+> 41.3: BPF relocation checker                              : Skip
+> 42: Synthesize thread map                                 : Ok
+> 43: Remove thread map                                     : Ok
+> 44: Synthesize cpu map                                    : Ok
+> 45: Synthesize stat config                                : Ok
+> 46: Synthesize stat                                       : Ok
+> 47: Synthesize stat round                                 : Ok
+> 48: Synthesize attr update                                : Ok
+> 49: Event times                                           : Ok
+> 50: Read backward ring buffer                             : Skip
+> 51: Print cpu map                                         : Ok
+> 52: Probe SDT events                                      : Skip
+> 53: is_printable_array                                    : Ok
+> 54: Print bitmap                                          : Ok
+> 55: perf hooks                                            : Ok
+> 56: builtin clang support                                 : Skip (not
+> compiled in)
+> 57: unit_number__scnprintf                                : Ok
+> 58: mem2node                                              : Ok
+> 59: time utils                                            : Ok
+> 60: map_groups__merge_in                                  : Ok
+> 61: probe libc's inet_pton & backtrace it with ping       : FAILED!
+> 62: Add vfs_getname probe to get syscall args filenames   : FAILED!
+> 63: Check open filename arg using perf trace + vfs_getname: Skip
+> 64: Use vfs_getname probe to get syscall args filenames   : FAILED!
+> 65: Zstd perf.data compression/decompression              : Skip
 >
-> cheers
->
->> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
->> index 8191a7db2777..d84146e6fd9e 100644
->> --- a/kernel/bpf/core.c
->> +++ b/kernel/bpf/core.c
->> @@ -890,7 +890,8 @@ int bpf_jit_get_func_addr(const struct bpf_prog *prog,
->>  
->>  static int bpf_jit_blind_insn(const struct bpf_insn *from,
->>  			      const struct bpf_insn *aux,
->> -			      struct bpf_insn *to_buff)
->> +			      struct bpf_insn *to_buff,
->> +			      bool emit_zext)
->>  {
->>  	struct bpf_insn *to = to_buff;
->>  	u32 imm_rnd = get_random_int();
->> @@ -939,6 +940,8 @@ static int bpf_jit_blind_insn(const struct bpf_insn *from,
->>  		*to++ = BPF_ALU32_IMM(BPF_MOV, BPF_REG_AX, imm_rnd ^ from->imm);
->>  		*to++ = BPF_ALU32_IMM(BPF_XOR, BPF_REG_AX, imm_rnd);
->>  		*to++ = BPF_ALU32_REG(from->code, from->dst_reg, BPF_REG_AX);
->> +		if (emit_zext)
->> +			*to++ = BPF_ZEXT_REG(from->dst_reg);
->>  		break;
->>  
->>  	case BPF_ALU64 | BPF_ADD | BPF_K:
->> @@ -992,6 +995,10 @@ static int bpf_jit_blind_insn(const struct bpf_insn *from,
->>  			off -= 2;
->>  		*to++ = BPF_ALU32_IMM(BPF_MOV, BPF_REG_AX, imm_rnd ^ from->imm);
->>  		*to++ = BPF_ALU32_IMM(BPF_XOR, BPF_REG_AX, imm_rnd);
->> +		if (emit_zext) {
->> +			*to++ = BPF_ZEXT_REG(BPF_REG_AX);
->> +			off--;
->> +		}
->>  		*to++ = BPF_JMP32_REG(from->code, from->dst_reg, BPF_REG_AX,
->>  				      off);
->>  		break;
->> @@ -1005,6 +1012,8 @@ static int bpf_jit_blind_insn(const struct bpf_insn *from,
->>  	case 0: /* Part 2 of BPF_LD | BPF_IMM | BPF_DW. */
->>  		*to++ = BPF_ALU32_IMM(BPF_MOV, BPF_REG_AX, imm_rnd ^ aux[0].imm);
->>  		*to++ = BPF_ALU32_IMM(BPF_XOR, BPF_REG_AX, imm_rnd);
->> +		if (emit_zext)
->> +			*to++ = BPF_ZEXT_REG(BPF_REG_AX);
->>  		*to++ = BPF_ALU64_REG(BPF_OR,  aux[0].dst_reg, BPF_REG_AX);
->>  		break;
->>  
->> @@ -1088,7 +1097,8 @@ struct bpf_prog *bpf_jit_blind_constants(struct bpf_prog *prog)
->>  		    insn[1].code == 0)
->>  			memcpy(aux, insn, sizeof(aux));
->>  
->> -		rewritten = bpf_jit_blind_insn(insn, aux, insn_buff);
->> +		rewritten = bpf_jit_blind_insn(insn, aux, insn_buff,
->> +						clone->aux->verifier_zext);
->>  		if (!rewritten)
->>  			continue;
->>  
->> -- 
->> 2.22.0
 
+The perf test result I got is quiet similar to yours, but with 5
+less testcases.
+
+ 1: vmlinux symtab matches kallsyms            : Skip
+ 2: Detect openat syscall event                : FAILED!
+ 3: Detect openat syscall event on all cpus    : FAILED!
+ 4: Read samples using the mmap interface      : FAILED!
+ 5: Test data source output                    : Ok
+ 6: Parse event definition strings             : FAILED!
+ 7: Simple expression parser                   : Ok
+ 8: PERF_RECORD_* events & perf_sample fields  : FAILED!
+ 9: Parse perf pmu format                      : Ok
+10: DSO data read                              : Ok
+11: DSO data cache                             : Ok
+12: DSO data reopen                            : Ok
+13: Roundtrip evsel->name                      : Ok
+14: Parse sched tracepoints fields             : FAILED!
+15: syscalls:sys_enter_openat event fields     : FAILED!
+16: Setup struct perf_event_attr               : Skip
+17: Match and link multiple hists              : Ok
+18: 'import perf' in python                    : Ok
+19: Breakpoint overflow signal handler         : FAILED!
+20: Breakpoint overflow sampling               : FAILED!
+21: Breakpoint accounting                      : Skip
+22: Watchpoint                                 :
+22.1: Read Only Watchpoint                     : FAILED!
+22.2: Write Only Watchpoint                    : FAILED!
+22.3: Read / Write Watchpoint                  : FAILED!
+22.4: Modify Watchpoint                        : FAILED!
+23: Number of exit events of a simple workload : Ok
+24: Software clock events period values        : Ok
+25: Object code reading                        : Ok
+26: Sample parsing                             : Ok
+27: Use a dummy software event to keep tracking: Ok
+28: Parse with no sample_id_all bit set        : Ok
+29: Filter hist entries                        : Ok
+30: Lookup mmap thread                         : Ok
+31: Share thread mg                            : Ok
+32: Sort output of hist entries                : Ok
+33: Cumulate child hist entries                : Ok
+34: Track with sched_switch                    : Ok
+35: Filter fds with revents mask in a fdarray  : Ok
+36: Add fd to a fdarray, making it autogrow    : Ok
+37: kmod_path__parse                           : Ok
+38: Thread map                                 : Ok
+39: LLVM search and compile                    :
+39.1: Basic BPF llvm compile                    : Skip
+39.2: kbuild searching                          : Skip
+39.3: Compile source for BPF prologue generation: Skip
+39.4: Compile source for BPF relocation         : Skip
+40: Session topology                           : FAILED!
+41: BPF filter                                 :
+41.1: Basic BPF filtering                      : Skip
+41.2: BPF pinning                              : Skip
+41.3: BPF relocation checker                   : Skip
+42: Synthesize thread map                      : Ok
+43: Remove thread map                          : Ok
+44: Synthesize cpu map                         : Ok
+45: Synthesize stat config                     : Ok
+46: Synthesize stat                            : Ok
+47: Synthesize stat round                      : Ok
+48: Synthesize attr update                     : Ok
+49: Event times                                : Ok
+50: Read backward ring buffer                  : Skip
+51: Print cpu map                              : Ok
+52: Probe SDT events                           : Skip
+53: is_printable_array                         : Ok
+54: Print bitmap                               : Ok
+55: perf hooks                                 : Ok
+56: builtin clang support                      : Skip (not compiled in)
+57: unit_number__scnprintf                     : Ok
+58: mem2node                                   : Ok
+59: time utils                                 : Ok
+60: map_groups__merge_in                       : Ok
+
+The comparison before/after applied this patch set:
+
+/tools/perf/util# diff perf_test_before perf_test_after
+1d0
+< # perf test
+8c7
+<  7: Simple expression parser                   : FAILED!
+---
+>  7: Simple expression parser                   : Ok
