@@ -2,92 +2,91 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C28DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B028DC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32FB122DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE4922DA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566359092;
+	bh=5By/2PQuRdlPIlpzsaXsOgc4JfIVlhrhXv7f5LnEHKg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=T4k5nWqmYiDZLPJn+EunjQsI4iRy7uHmxM2B9qoufgQrvsZ3n46V5OV9r0z5ZG3Jn
+	 qJVBQT3kmDabzqsGAkgtXFiWsIsr6tNzdYjC99LujKvXD8BHifUTujBclVgIVreWZY
+	 c9SU1Oteyp8I+rpEoTDKWm21HQSS/MYY1Z9lpsxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfHUDo1 (ORCPT
+        id S1727419AbfHUDov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 23:44:27 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:42809 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfHUDo0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 23:44:26 -0400
-Received: by mail-yb1-f195.google.com with SMTP id h8so449588ybq.9;
-        Tue, 20 Aug 2019 20:44:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YcggR1HawStyBJ3k10IaNabkt2WXu5RxAJT3QmaxLtw=;
-        b=m+FIr9uSKbH7TJMP0Ahdc94aI/pr99eGNU/kAzDAh3MaNrzNOSjlxvzpVn/OD4oYo9
-         30CgE+tg7iQR8wpq2gXKpSPiquntA3zhWCInmr2+VmkvEhQ1EPddJZwb5XzY++l7lSCK
-         9SZ3kXmyo8j5dWUGmKz1vnQ2Q3XtA9ZrNW9t7KvpigmIN+qkS3EiWT9CaKQgVIFEvMXq
-         yKWtUHLdZMB0x7KHUYm5DSGOCdg+99V5JLnE83AjeuU6YshOqYt4T7uE8If7o/HZT3g5
-         CCjjAk+6Gr2iQET1ri5jFUIYRauRglzfdTaJd2mzfa60ITU5dyp5oZuOJyMuys4fiAuP
-         LOMg==
-X-Gm-Message-State: APjAAAXQu5R41qYXKFrKgv8zbfJbSFGUTuFaZhb+jV/iUxhlZ95lLsMn
-        oYIMsCsv7WcULCZVGzvbrB8=
-X-Google-Smtp-Source: APXvYqzD5ET7RLLtceKCPwcALRHEUhK2tgGJTNOyhKZAwigWcvAuQ9Tfc2ujNrO3jyeGZsInKdTieQ==
-X-Received: by 2002:a25:dc87:: with SMTP id y129mr13167422ybe.424.1566359065921;
-        Tue, 20 Aug 2019 20:44:25 -0700 (PDT)
-Received: from localhost.localdomain (24-158-240-219.dhcp.smyr.ga.charter.com. [24.158.240.219])
-        by smtp.gmail.com with ESMTPSA id q65sm4017227ywc.11.2019.08.20.20.44.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 20 Aug 2019 20:44:25 -0700 (PDT)
-From:   Wenwen Wang <wenwen@cs.uga.edu>
-To:     Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-        linux-acpi@vger.kernel.org (open list:ACPI),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] ACPI / PCI: fix acpi_pci_irq_enable() memory leak
-Date:   Tue, 20 Aug 2019 22:44:19 -0500
-Message-Id: <1566359059-4844-1-git-send-email-wenwen@cs.uga.edu>
-X-Mailer: git-send-email 2.7.4
+        Tue, 20 Aug 2019 23:44:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbfHUDov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 23:44:51 -0400
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10C682339D;
+        Wed, 21 Aug 2019 03:44:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566359090;
+        bh=5By/2PQuRdlPIlpzsaXsOgc4JfIVlhrhXv7f5LnEHKg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QzyJdl7JfTokId/OZ05ag4GqyaLSc+97+Qr759zCC5F4lo9A+kAn6tXgReiG5wDqb
+         9pWj84VWLn6SXcDisDg+y16+eHXAlhjk1Lji0fwC2q4ZAlj9bZ/jdBEEkv5SFjn4gE
+         ar/mQNNErQoofDSufqvNxNs5c3QgEijheCaAXTx4=
+Received: by mail-wr1-f43.google.com with SMTP id c3so567568wrd.7;
+        Tue, 20 Aug 2019 20:44:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAXI4E5nHAPsVRZr2L9GtaHwqMAyRj/AUCPNXe7+ScQESy4y395w
+        O1PAmVJ5QUHAr+OKJ0+/uTjtsMtUusaHjvYjvUA=
+X-Google-Smtp-Source: APXvYqwpNARCWTRvG8bJmmduzy/ZlcmBCfJsdbgjHCLXGhjssnRv6bIS4UH1D85rlz959KH9WxXZJhI1IXymcFRCT9M=
+X-Received: by 2002:a5d:66c8:: with SMTP id k8mr1028491wrw.7.1566359088581;
+ Tue, 20 Aug 2019 20:44:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <1566304469-5601-1-git-send-email-guoren@kernel.org> <20190821021650.GA32710@infradead.org>
+In-Reply-To: <20190821021650.GA32710@infradead.org>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Wed, 21 Aug 2019 11:44:37 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTR196j8BPwZZLC3f--oKWnPYZFuY78efNgnRyhzrQR4Yw@mail.gmail.com>
+Message-ID: <CAJF2gTR196j8BPwZZLC3f--oKWnPYZFuY78efNgnRyhzrQR4Yw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] csky: Fixup arch_get_unmapped_area() implementation
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-csky@vger.kernel.org, douzhk@nationalchip.com,
+        Guo Ren <ren_guo@c-sky.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In acpi_pci_irq_enable(), 'entry' is allocated by kzalloc() in
-acpi_pci_irq_check_entry() (invoked from acpi_pci_irq_lookup()). However,
-it is not deallocated if acpi_pci_irq_valid() returns false, leading to a
-memory leak. To fix this issue, free 'entry' before returning 0.
+Thx Christoph,
 
-Fixes: e237a5518425 ("x86/ACPI/PCI: Recognize that Interrupt Line 255 means
-"not connected"")
+On Wed, Aug 21, 2019 at 10:16 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> > +/*
+> > + * We need to ensure that shared mappings are correctly aligned to
+> > + * avoid aliasing issues with VIPT caches.  We need to ensure that
+> > + * a specific page of an object is always mapped at a multiple of
+> > + * SHMLBA bytes.
+> > + *
+> > + * We unconditionally provide this function for all cases.
+> > + */
+>
+> On something unrelated: If csky has virtually indexed caches you also
+> need to implement the flush_kernel_vmap_range and
+> invalidate_kernel_vmap_range functions to avoid data corruption when
+> doing I/O on vmalloc/vmap ranges.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
----
- drivers/acpi/pci_irq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I'll give another patch for this issue
 
-diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
-index d2549ae..dea8a60 100644
---- a/drivers/acpi/pci_irq.c
-+++ b/drivers/acpi/pci_irq.c
-@@ -449,8 +449,10 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
- 		 * No IRQ known to the ACPI subsystem - maybe the BIOS /
- 		 * driver reported one, then use it. Exit in any case.
- 		 */
--		if (!acpi_pci_irq_valid(dev, pin))
-+		if (!acpi_pci_irq_valid(dev, pin)) {
-+			kfree(entry);
- 			return 0;
-+		}
- 
- 		if (acpi_isa_register_gsi(dev))
- 			dev_warn(&dev->dev, "PCI INT %c: no GSI\n",
 -- 
-2.7.4
+Best Regards
+ Guo Ren
 
+ML: https://lore.kernel.org/linux-csky/
