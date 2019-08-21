@@ -2,115 +2,74 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B246BC3A59D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE15C3A589
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8807C22DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:18:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XrnDrmLn"
+	by mail.kernel.org (Postfix) with ESMTP id 7630A22DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 03:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfHUDSG (ORCPT
+        id S1727234AbfHUDUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 23:18:06 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50677 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfHUDSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 23:18:06 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46CtCJ18Kzz9s4Y;
-        Wed, 21 Aug 2019 13:18:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566357484;
-        bh=LfTl3U3DXyFlaSZOQY3hHH00E096mRNPpjLKp1ypn74=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XrnDrmLnSkcA8P3yQB9A54gBWRNesjQ7BGBNa11mCA0npzYyqDNAVroeGMWHqCGeo
-         0WCrzi/Uh1pHaBUsp9sWROEeurgXW7O9BvtEVUAf06Pg06K3oNIKu2s1W1DCXUahKr
-         cov6rOP4JhrpiDwTi+0CfQ8o0wC/F3LIG+KptWu2nqNjBGQg3p8aN5hnxWTfLqu3Rd
-         WJYdnGvPIOLH20J918/7JBHOtCpRi2bM1O+lDGKfvsJdmTMz0sJDD2Xxb5I/mDiYgy
-         H7BTGwYgmtDMsDNWfB3Ur7d8re5akA2auarys0biMINhp2EYxOMrxUfG3T/wbEq/2A
-         Zlof1Sl5Q8nQQ==
-Date:   Wed, 21 Aug 2019 13:18:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Morris <jmorris@namei.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Bohac <jbohac@suse.cz>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Garrett <mjg59@google.com>
-Subject: Re: linux-next: manual merge of the security tree with Linus' tree
-Message-ID: <20190821131803.1fc4f887@canb.auug.org.au>
-In-Reply-To: <20190821130106.0c794ddc@canb.auug.org.au>
-References: <20190821130106.0c794ddc@canb.auug.org.au>
+        Tue, 20 Aug 2019 23:20:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4742 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726864AbfHUDUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 23:20:12 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5D0A5CDE30F52E2A0F31;
+        Wed, 21 Aug 2019 11:20:09 +0800 (CST)
+Received: from szxyal004123181.china.huawei.com (10.65.65.77) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 21 Aug 2019 11:20:03 +0800
+From:   Dongxu Liu <liudongxu3@huawei.com>
+To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] net: Add the same IP detection for duplicate address.
+Date:   Wed, 21 Aug 2019 11:20:00 +0800
+Message-ID: <20190821032000.10540-1-liudongxu3@huawei.com>
+X-Mailer: git-send-email 2.12.0.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rPzYgtJ2zsml.U4.5TSJuRo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [10.65.65.77]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rPzYgtJ2zsml.U4.5TSJuRo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The network sends an ARP REQUEST packet to determine
+whether there is a host with the same IP.
+Windows and some other hosts may send the source IP
+address instead of 0.
+When IN_DEV_ORCONF(in_dev, DROP_GRATUITOUS_ARP) is enable,
+the REQUEST will be dropped.
+When IN_DEV_ORCONF(in_dev, DROP_GRATUITOUS_ARP) is disable,
+The case should be added to the IP conflict handling process.
 
-Hi all,
+Signed-off-by: Dongxu Liu <liudongxu3@huawei.com>
+---
+ net/ipv4/arp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Just adding a couple of more Cc's
+diff --git a/net/ipv4/arp.c b/net/ipv4/arp.c
+index 05eb42f..a51c921 100644
+--- a/net/ipv4/arp.c
++++ b/net/ipv4/arp.c
+@@ -801,7 +801,7 @@ static int arp_process(struct net *net, struct sock *sk, struct sk_buff *skb)
+ 						    GFP_ATOMIC);
+ 
+ 	/* Special case: IPv4 duplicate address detection packet (RFC2131) */
+-	if (sip == 0) {
++	if (sip == 0 || sip == tip) {
+ 		if (arp->ar_op == htons(ARPOP_REQUEST) &&
+ 		    inet_addr_type_dev_table(net, dev, tip) == RTN_LOCAL &&
+ 		    !arp_ignore(in_dev, sip, tip))
+-- 
+2.12.3
 
-On Wed, 21 Aug 2019 13:01:06 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> Today's linux-next merge of the security tree got conflicts in:
->=20
->   arch/s390/configs/debug_defconfig
->   arch/s390/configs/defconfig
->=20
-> between commit:
->=20
->   3361f3193c74 ("s390: update configs")
->=20
-> from Linus' tree and commit:
->=20
->   99d5cadfde2b ("kexec_file: split KEXEC_VERIFY_SIG into KEXEC_SIG and KE=
-XEC_SIG_FORCE")
->=20
-> from the security tree.
->=20
-> I fixed it up (the former removed the CONFIG option updated by the latter)
-> and can carry the fix as necessary. This is now fixed as far as linux-next
-> is concerned, but any non trivial conflicts should be mentioned to your
-> upstream maintainer when your tree is submitted for merging.  You may
-> also want to consider cooperating with the maintainer of the conflicting
-> tree to minimise any particularly complex conflicts.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/rPzYgtJ2zsml.U4.5TSJuRo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1ct+sACgkQAVBC80lX
-0Gx0iwf+JujmS7sDznWXEMvaSR+Y6gCItmJ/uhIjUW8McxCEbESFF7z4XtEmVl32
-3P60DXYi+YlbCfW8CLZ0W9NdCvNes+s00ktSbhmYejdx1rwN08g9e73yyd7faD9Q
-xxaNXS7dqJkfb7cSWq9pP53Rzz4FmLqij5dzsDnXbpECz5vpx/tTOrFmKdh2CyWl
-3OSNf/sQhOzOzeVsiH4c0F2RoEYg41wWMCALJAYZ4/SeBztoSchZWY1WWLmlnNXr
-WJowEjF0wRDWhBv3AMGkhWL6B3kZDYcB9ho9B5/wT1gzEvMqwHqBCFbLLMNZeToa
-SuspYCILrTc7vRardM0a9VuOlVwTUA==
-=lu/H
------END PGP SIGNATURE-----
-
---Sig_/rPzYgtJ2zsml.U4.5TSJuRo--
