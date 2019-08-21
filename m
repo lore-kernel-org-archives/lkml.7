@@ -2,95 +2,145 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E66C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC6AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03E222D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2AD22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 16:40:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qNUYZ3ay"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="oEGFc3ZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbfHUQkD (ORCPT
+        id S1729636AbfHUQkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 12:40:03 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41180 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729380AbfHUQkD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 12:40:03 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 196so1774518pfz.8
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 09:40:02 -0700 (PDT)
+        Wed, 21 Aug 2019 12:40:22 -0400
+Received: from mail-eopbgr740050.outbound.protection.outlook.com ([40.107.74.50]:36480
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728806AbfHUQkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 12:40:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CGoZQgouupDfIir+/5mJ1/R3uopSUtorDpE9Ui1XJ7fCaPpj/HoV+AnZFs4WEWkR214dVyxJhc4jS/0oDfHhH4EmoNWpTtI0FhszVEUz48cR8hdfWCxUJYF9hsUSN59VV6WFmkKtxiy6LFcyN/KVziQ/jo38Ei87C5n/OwtkGZcK6jIk/G2Jg84Auf807XAawAUnvHsdevo0B4sKIr3M/oylVVLM8UQCDZDQ3ReLHStuvGLXbR093C5z461YVFUma+N4GXA5gbUTEWSOqE59Vpta/Ljhi7zv6KYDlwKiUWZe7+92TnLGzOvfKaHEL26ZcCw/W9es/rd3N81c+8+bxg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m9rtp3Ew6Kpy4cdQ5VZ++tCWTBw64TnggvE7WoWuO0Y=;
+ b=IyW3v1xW/L9xOviPSZczkq9eP+Y/d2ODhg1JtB4ua7SKCbdKITV8AmyTDcJ3XpFF4323nSOKAWZiHKGJM+y8hVhckHwBVY70/qQMBNq4iMiTnyY7uH7jWwC/6d9uTERwYy531B/WgFrDF9Jn+0GJrPPN6BTYOWwUGxsfaIp9aQsI2JAeFrKF6HiifkJLqW2jM/wL2O4RgFN3cvU6RLP2UJ8FQswWtjkeRMACn8TX7T23Gz72zvdn5iLVP4eHatHBeq3feWk7Pvnh9V+2gb5j8b/GW0M/l2Z74F41sR6AsDgsivmKVIzmuxR6fAFvMhADvkFSOXdnOBV4f4f4XiCFog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VUVIcvKRAxchzzIboABzY4R0ISYxco2N8kvTRtaX2No=;
-        b=qNUYZ3ayTlf/+efR18tsC2cdgYlaL+V64+bHpwBKeAOvUI02sHoSgR9WQ8Ndc6QwuZ
-         qX7mv+wHlSrKxF8S48uzMfYMzp+1x5EtPKNuSZFj2GaEwfDZ9ILYpf8PaUwlxinG6vEC
-         n+TEXB6jCJPemwoDI+JzRsitP8jtHNO0JACKuMZ9gyHRadCl4kqtPhau02Jx96LDLsW0
-         aT6gDNIPoQ4asedEhowXd03uvdJVk9ycdLTekzxhbRamYUgSH27n8D6psoMw/96X8toL
-         VgUWELVs8RBmBu0SlA7rqY0ZOdljucwYL0q2/E838xRQ1UvdR1JpgcMIas1wDj3AmoD6
-         0UHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VUVIcvKRAxchzzIboABzY4R0ISYxco2N8kvTRtaX2No=;
-        b=a3HjzwDPDddXudxA8OyqcJGkyxsN7vqyJQb1i1kFWOR786vs4M591yP25Qi9wzzKRG
-         fMxTvxt8CPbKZeq5bmvFZAWMPL07tqhY5Yr/RJdod4HtYZWnIOSrsK1NpCfpjku9x3cT
-         84Juy3wz93RfmgSBmd+4t4u69GGWEvXPg3wXSEfXHhuMmTf+meFyo4t1+e5Gdei/KX+v
-         h2aqGyXVUwQOj9lCWcKZaZOqQ9WynfHuBq8lavzBUHTY0egk1si+adv0bmyvTE/RsBgB
-         VYnwozDHHC6gr2djsPqvAPUX6MkbERrVSuoxYY6z+eQ889oQs9gAjDz+Puupwy+k1hzn
-         gNOg==
-X-Gm-Message-State: APjAAAWg3v5/SCYoJdDN5ThmPe53M3wvFSdWhe1p1ZrtnypgAu+sSBTb
-        esr9qD16GaH3g8uUiAVcw8bEr40LtpLXhGeUwJiZHaJQEQPsvA==
-X-Google-Smtp-Source: APXvYqxObByY71HuxPnyU08sUAGGvZX2iThJJB5iiD03WIZb1eORrogkr5nLL2kPV/CD4qzWueFyCPez88tPXcYIJ6E=
-X-Received: by 2002:a65:4b8b:: with SMTP id t11mr29817121pgq.130.1566405602118;
- Wed, 21 Aug 2019 09:40:02 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m9rtp3Ew6Kpy4cdQ5VZ++tCWTBw64TnggvE7WoWuO0Y=;
+ b=oEGFc3ZEqvjIr6+h0C6S8xm26uRbo/dCRz7sHbRWy1fTRZvDglbYzqWORY7RAsXacfjBA8pZhUcL3iifudrTlUBlA0gZ6CBURMrMmsEpaxxBX+wFnujHrFcdgQwKnBwtVU/HeyuAHTcLog8o6RAhS2sPrLN7LpHwd/Z2Iz66pYI=
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB0055.namprd12.prod.outlook.com (10.172.77.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Wed, 21 Aug 2019 16:40:17 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::540f:1eae:7e3a:c6b2]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::540f:1eae:7e3a:c6b2%5]) with mapi id 15.20.2178.020; Wed, 21 Aug 2019
+ 16:40:16 +0000
+From:   Harry Wentland <hwentlan@amd.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>
+CC:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] drm/amd/display: Fix 32-bit divide error in
+ wait_for_alt_mode
+Thread-Topic: [PATCH] drm/amd/display: Fix 32-bit divide error in
+ wait_for_alt_mode
+Thread-Index: AQHVV7MFnH4uDS8chUOr/aJXK/7Tz6cFzskA
+Date:   Wed, 21 Aug 2019 16:40:15 +0000
+Message-ID: <f594d746-9eaf-76fe-d380-bb033cce06f8@amd.com>
+References: <20190820235713.3429-1-natechancellor@gmail.com>
+In-Reply-To: <20190820235713.3429-1-natechancellor@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.55.250]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-clientproxiedby: YTBPR01CA0008.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::21) To CY4PR1201MB0230.namprd12.prod.outlook.com
+ (2603:10b6:910:1e::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9cd013a6-0dae-4070-01fa-08d726563bd9
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR1201MB0055;
+x-ms-traffictypediagnostic: CY4PR1201MB0055:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB0055B3DE9DC2077BC38A75188CAA0@CY4PR1201MB0055.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-forefront-prvs: 0136C1DDA4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(396003)(346002)(376002)(136003)(189003)(199004)(4326008)(76176011)(8676002)(81156014)(81166006)(14444005)(256004)(31696002)(486006)(6636002)(3846002)(52116002)(54906003)(316002)(7736002)(99286004)(64756008)(66446008)(66946007)(110136005)(6116002)(58126008)(305945005)(25786009)(8936002)(2906002)(31686004)(66476007)(478600001)(66556008)(6246003)(45080400002)(53546011)(386003)(6512007)(65806001)(65956001)(66066001)(6506007)(2616005)(71200400001)(71190400001)(14454004)(53936002)(186003)(6436002)(36756003)(102836004)(26005)(476003)(6486002)(5660300002)(11346002)(446003)(229853002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB0055;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 78xTGTOR1X21oSt1xp11/okXNgU6F83Ngm4/rQz7I89sVmMI7hI25O+7j3qmaXYxUL9FHBA7SEOy9zq8bJz+6coS+ifGb6MVRCZOYgRo2uuFVCW7jO/7qghveuRw0+I9MAVxoKQc2xapOxcZnugeVK34/2NjewJGgYSuVxZy0EZOSfAiu5b1793MW+HGJKcTGbT0Ri/KgRUoienpJhEh9Md8D0DmfegzzUZcUGzkRr/Ci4TAlrStIaTdg916i8SdupgqJWOyU98kFcmCppJBheimu46lgopeVU+kUVOraIsqABHiWBJqrK9tMKEFcAudn/F3Mv0zCvZ2Invpzw/BxiuoHMfmGzh5CPX2BSExXLQPL0h8j1CLZilxFrTJLQe/A2dfDb2siyKeL6OZzSTFDCATbfNsxstG31yt8z2bPLw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <46A377C5DAB0164096A7EC287785F1DF@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <Pine.LNX.4.44L0.1908211218550.1816-100000@iolanthe.rowland.org> <00000000000040fec90590a33230@google.com>
-In-Reply-To: <00000000000040fec90590a33230@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 21 Aug 2019 18:39:50 +0200
-Message-ID: <CAAeHK+xhxhdJecq=HMLbZySTxzT_JTvMWdXojTnCdJ+OU2w4Ew@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in hidraw_ioctl
-To:     syzbot <syzbot+ded1794a717e3b235226@syzkaller.appspotmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cd013a6-0dae-4070-01fa-08d726563bd9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 16:40:15.7714
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KT+u574U4ZAjO+FwcPmx5IBAkK35L8yvvPhOD+VerWvt5N8Y24r61k/gYN9tjLRyKS00xA6LQVZzE/Gydklv2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 6:38 PM syzbot
-<syzbot+ded1794a717e3b235226@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot has tested the proposed patch and the reproducer did not trigger
-> crash:
->
-> Reported-and-tested-by:
-> syzbot+ded1794a717e3b235226@syzkaller.appspotmail.com
->
-> Tested on:
->
-> commit:         e96407b4 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=126b9da6600000
->
-> Note: testing is done by a robot and is best-effort only.
-
-Let's dup this bug into the other one:
-
-#syz dup: KASAN: slab-out-of-bounds Read in hidraw_ioctl
+T24gMjAxOS0wOC0yMCA3OjU3IHAubS4sIE5hdGhhbiBDaGFuY2VsbG9yIHdyb3RlOg0KPiBXaGVu
+IGJ1aWxkaW5nIGFybTMyIGFsbHllc2NvbmZpZzoNCj4gDQo+IGxkLmxsZDogZXJyb3I6IHVuZGVm
+aW5lZCBzeW1ib2w6IF9fYWVhYmlfdWxkaXZtb2QNCj4+Pj4gcmVmZXJlbmNlZCBieSBkY19saW5r
+LmMNCj4+Pj4gZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9jb3JlL2RjX2xpbmsubzood2FpdF9mb3Jf
+YWx0X21vZGUpIGluIGFyY2hpdmUgZHJpdmVycy9idWlsdC1pbi5hDQo+Pj4+IHJlZmVyZW5jZWQg
+YnkgZGNfbGluay5jDQo+Pj4+IGdwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvY29yZS9kY19saW5rLm86
+KHdhaXRfZm9yX2FsdF9tb2RlKSBpbiBhcmNoaXZlIGRyaXZlcnMvYnVpbHQtaW4uYQ0KPiANCj4g
+dGltZV90YWtlbl9pbl9ucyBpcyBvZiB0eXBlIHVuc2lnbmVkIGxvbmcgbG9uZyBzbyB3ZSBuZWVk
+IHRvIHVzZSBkaXZfdTY0DQo+IHRvIGF2b2lkIHRoaXMgZXJyb3IuDQo+IA0KPiBGaXhlczogYjVi
+MWY0NTU0OTA0ICgiZHJtL2FtZC9kaXNwbGF5OiBFbmFibGUgdHlwZSBDIGhvdHBsdWciKQ0KPiBS
+ZXBvcnRlZC1ieTogUmFuZHkgRHVubGFwIDxyZHVubGFwQGluZnJhZGVhZC5vcmc+DQo+IFNpZ25l
+ZC1vZmYtYnk6IE5hdGhhbiBDaGFuY2VsbG9yIDxuYXRlY2hhbmNlbGxvckBnbWFpbC5jb20+DQoN
+ClJldmlld2VkLWJ5OiBIYXJyeSBXZW50bGFuZCA8aGFycnkud2VudGxhbmRAYW1kLmNvbT4NCg0K
+SGFycnkNCg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9jb3JlL2Rj
+X2xpbmsuYyB8IDQgKystLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBk
+ZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3Bs
+YXkvZGMvY29yZS9kY19saW5rLmMgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvY29y
+ZS9kY19saW5rLmMNCj4gaW5kZXggZjJkNzhkN2IwODllLi44NjM0OTIzYjQ0NDQgMTAwNjQ0DQo+
+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9jb3JlL2RjX2xpbmsuYw0KPiAr
+KysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMvY29yZS9kY19saW5rLmMNCj4gQEAg
+LTcyMSw3ICs3MjEsNyBAQCBib29sIHdhaXRfZm9yX2FsdF9tb2RlKHN0cnVjdCBkY19saW5rICps
+aW5rKQ0KPiAgCQkJdGltZV90YWtlbl9pbl9ucyA9IGRtX2dldF9lbGFwc2VfdGltZV9pbl9ucygN
+Cj4gIAkJCQlsaW5rLT5jdHgsIGZpbmlzaF90aW1lc3RhbXAsIGVudGVyX3RpbWVzdGFtcCk7DQo+
+ICAJCQlEQ19MT0dfV0FSTklORygiQWx0IG1vZGUgZW50ZXJlZCBmaW5pc2hlZCBhZnRlciAlbGx1
+IG1zXG4iLA0KPiAtCQkJCSAgICAgICB0aW1lX3Rha2VuX2luX25zIC8gMTAwMDAwMCk7DQo+ICsJ
+CQkJICAgICAgIGRpdl91NjQodGltZV90YWtlbl9pbl9ucywgMTAwMDAwMCkpOw0KPiAgCQkJcmV0
+dXJuIHRydWU7DQo+ICAJCX0NCj4gIA0KPiBAQCAtNzMwLDcgKzczMCw3IEBAIGJvb2wgd2FpdF9m
+b3JfYWx0X21vZGUoc3RydWN0IGRjX2xpbmsgKmxpbmspDQo+ICAJdGltZV90YWtlbl9pbl9ucyA9
+IGRtX2dldF9lbGFwc2VfdGltZV9pbl9ucyhsaW5rLT5jdHgsIGZpbmlzaF90aW1lc3RhbXAsDQo+
+ICAJCQkJCQkgICAgZW50ZXJfdGltZXN0YW1wKTsNCj4gIAlEQ19MT0dfV0FSTklORygiQWx0IG1v
+ZGUgaGFzIHRpbWVkIG91dCBhZnRlciAlbGx1IG1zXG4iLA0KPiAtCQkJdGltZV90YWtlbl9pbl9u
+cyAvIDEwMDAwMDApOw0KPiArCQkJZGl2X3U2NCh0aW1lX3Rha2VuX2luX25zLCAxMDAwMDAwKSk7
+DQo+ICAJcmV0dXJuIGZhbHNlOw0KPiAgfQ0KPiAgDQo+IA0K
