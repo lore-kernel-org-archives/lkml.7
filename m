@@ -2,191 +2,391 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35154C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B07C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E53DC2339E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:44:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="hFRSSPAi";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="S9JXzYIM"
+	by mail.kernel.org (Postfix) with ESMTP id 006962339E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:44:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566413054;
+	bh=Dp1E0NU05STvIhret+1ooR57CeQpbfSceCtIkzTi/6c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ey/HvYYE6aKecQBDF2tG6A3oHzW0YipLXAz0QUeVYPR/u2FfNRcxAYkENAijtZFNU
+	 hiaKffsu25+JNtitP3OJwGj9K90qEVyBE03+7ajFM6vWYjHifyHUhzjn1pxho/aYqx
+	 Cr89ghLlJ2te3XQuzjlq1G8nhGwfdiL14dkvCzWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbfHUSoJ (ORCPT
+        id S1728724AbfHUSoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:44:09 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:54026 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728511AbfHUSoH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:44:07 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LIXmLw030294;
-        Wed, 21 Aug 2019 11:43:54 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=ZF82EjY/seItOsECRLqLxB69TEhoMdDBTLlaBG9AjI8=;
- b=hFRSSPAi4kqyQ3XwUuuE09zaL7csdbXfztXKIC58NOQmKrPDGFygzpPjL9shHbm5nKIe
- hM4yYpSzU9pEQGYkjSRlqPgK2T0CJ37u/7DsoJbgDJ/TUJIUbLH9beeni0AvSUCvzrz4
- WLGnYEYzipNAA406qzcZasjGmyrgdC2DkMA= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2uh867s21v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 21 Aug 2019 11:43:54 -0700
-Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
- ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 21 Aug 2019 11:43:53 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 21 Aug 2019 11:43:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hA4BNgzzxvcI98+xYVrKoaFz4wp8NG2vV6ZeYKrIfGbqHpgP0snMbPrWjxIEt/smqNb1vhLFUBuZKcdfuMFO1s98LfK6EhFbGOP4gCbcZnzftmmqCIxW9TZY5PO0Gz8OL4lvQZz5ABvNrpOrUh0yeYDvXU+qNMKUJa7KVH8ILmOJ+RPikBM2oaBhGkbjCid1J499nwW1HpaZwjBZ7iYB3OtDTkI5F8Obmt1fe02eNPLm9VEoZBHv6tVsjs553qLNAY/AuCPo4wJRemqfM8Jk3sX2nvmlx9ctLwhCYuRHQ9QUl3Oayu3PhbygBs17VRx3z7D+q2lhr9IxiGfUMQY+Qg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZF82EjY/seItOsECRLqLxB69TEhoMdDBTLlaBG9AjI8=;
- b=HC9KPFeLlpJqMfBv5f+vO5GKNy1hkhQXkNR++Itq5lWeDs6lzTo3gNfj2nR5gI7ga4amHe2iZ0uPSj/H2CpJ/K/5nZeIECwxHqDF9tklmh4YDhpaspARFgTkaqNpN/mldxsejNKEFfKV61CMxxFRUn2X9QOekdCREIXQTIakrvangkaYoW9ea2WZZ0tETYPdEszKp2qUm8wZ3h/UC3CUEFHbukNkwHhPIYRYDaGHAj3ILddLe/aU4n5xXE4UN7lHpIiIxeaB3WJAl2G4SzBdDGoajSDeS6swP5a8yq04d1DPNV/1oH7r/0vN2xQBQbtEXOfuiW6HJHj10pCiEhIqZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZF82EjY/seItOsECRLqLxB69TEhoMdDBTLlaBG9AjI8=;
- b=S9JXzYIMngACeB5lxazX9KKviYBRZZY+5njhYtuCbcGYCQBFSn4Bu2L9Mwi76p90PoJIlsEJixpe7RSmL+gXeLeuFhJVbP0ZADrbEEMXPTHMvbBo+A4xRDzB8lJjZuk9Z6uB/ZhNoYKkg2vb0u6WYvPOJkWoMOwVVsLcmNEKboY=
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com (20.179.59.17) by
- BYAPR15MB2661.namprd15.prod.outlook.com (20.179.156.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Wed, 21 Aug 2019 18:43:49 +0000
-Received: from BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::d95b:271:fa7e:e978]) by BYAPR15MB3384.namprd15.prod.outlook.com
- ([fe80::d95b:271:fa7e:e978%5]) with mapi id 15.20.2178.020; Wed, 21 Aug 2019
- 18:43:49 +0000
-From:   Yonghong Song <yhs@fb.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Daniel Xu <dxu@dxuuu.xyz>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>
-Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add
- PERF_EVENT_IOC_QUERY_PROBE ioctl
-Thread-Topic: [PATCH v3 bpf-next 1/4] tracing/probe: Add
- PERF_EVENT_IOC_QUERY_PROBE ioctl
-Thread-Index: AQHVWBDfYHIXKLzjJEaHryqNNkv52KcFXMkAgACQf4CAAANPgA==
-Date:   Wed, 21 Aug 2019 18:43:49 +0000
-Message-ID: <5ecdcd72-255d-26d1-baf3-dc64498753c2@fb.com>
-References: <20190820144503.GV2332@hirez.programming.kicks-ass.net>
- <BWENHQJIN885.216UOYEIWNGFU@dlxu-fedora-R90QNFJV>
- <20190821110856.GB2349@hirez.programming.kicks-ass.net>
- <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
- <20190821183155.GE2349@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190821183155.GE2349@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR13CA0044.namprd13.prod.outlook.com
- (2603:10b6:300:95::30) To BYAPR15MB3384.namprd15.prod.outlook.com
- (2603:10b6:a03:10e::17)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:f330]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bbd2d10d-87ca-4c62-15d7-08d726678169
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB2661;
-x-ms-traffictypediagnostic: BYAPR15MB2661:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB266109363152EC07B59DA9C1D3AA0@BYAPR15MB2661.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1751;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(396003)(376002)(39860400002)(136003)(199004)(189003)(36756003)(64756008)(7416002)(81156014)(66556008)(386003)(14454004)(81166006)(6506007)(54906003)(53546011)(478600001)(52116002)(31686004)(2906002)(6512007)(76176011)(71200400001)(5660300002)(31696002)(6116002)(186003)(102836004)(6436002)(6486002)(66446008)(6246003)(316002)(86362001)(8936002)(71190400001)(4326008)(53936002)(256004)(8676002)(2616005)(6916009)(46003)(229853002)(486006)(66476007)(66946007)(446003)(7736002)(5024004)(25786009)(476003)(99286004)(305945005)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2661;H:BYAPR15MB3384.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4bXSgARJQXUjD421AD/kzFZH17qImeVWB+1lEb42IJHdltk1fvA1eVg+aMr/WYIGrFVLzQBU4uhA+AmY9tP6p0dYCd7Adfo2+JxdGrYiKcxT9taVLo2+r5P7vULHxg5fKPwCEcG4uGbD5aT6Q3T5E6gW4hz+jMpTA5rPBvTU6GTZswShw98kdz+uh1CGncSU0k+9/nGHi0AgBAbJ4cnuBjvmQE+zEQ9bV4sxUZrr25qQoZ0A3RCfsQdwd7885n3poiMZZ8GsHsuWVooY9evEKsWaiOyCHUGXycGsJoI7z2nfSiKRSlknfzBT6uvNvu5SgOaYngR535GNwR6x7YMRG9LTQlX/cF0wavVtOeLSXzmWaDcs7+elvh+dpsDA47VwnayH3PtioktUM8fuwy/492pjZl/l/YLxjbS3OtWVwQg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E33811E1312E6D41A5C997F352A1FE8B@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 21 Aug 2019 14:44:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39836 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728653AbfHUSoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 14:44:10 -0400
+Received: from localhost.localdomain (unknown [106.201.100.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DCC422DD3;
+        Wed, 21 Aug 2019 18:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566413048;
+        bh=Dp1E0NU05STvIhret+1ooR57CeQpbfSceCtIkzTi/6c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XYBfCGN9XEBnOvZPQXM3phAqaAxRnMg022ZSpsmvzceNu5YI2ETfHG0zcqpm2RFSV
+         7Lg0v809I2CfG7szynDwsCAJ9+940i0lSUVCKmgDIkUY49RgjwpJmmq7z+6qv1k9t8
+         Ti/Ub0chhO2ytVkbbY1eK8wK7Id4N/XSESogJXlE=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sibi Sankar <sibis@codeaurora.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Niklas Cassel <niklas.cassel@linaro.org>
+Subject: [PATCH v4 1/8] arm64: dts: qcom: sm8150: Add base dts file
+Date:   Thu, 22 Aug 2019 00:12:32 +0530
+Message-Id: <20190821184239.12364-2-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190821184239.12364-1-vkoul@kernel.org>
+References: <20190821184239.12364-1-vkoul@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbd2d10d-87ca-4c62-15d7-08d726678169
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 18:43:49.2898
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 88nKzxg/zogw0YNCv5cfQ+6LTVpEcO6wBgp/nOK0IBb0gxoJD+ET3JhEdeoOsYEM
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2661
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908210182
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDgvMjEvMTkgMTE6MzEgQU0sIFBldGVyIFppamxzdHJhIHdyb3RlOg0KPiBPbiBXZWQs
-IEF1ZyAyMSwgMjAxOSBhdCAwNDo1NDo0N1BNICswMDAwLCBZb25naG9uZyBTb25nIHdyb3RlOg0K
-Pj4gQ3VycmVudGx5LCBpbiBrZXJuZWwvdHJhY2UvYnBmX3RyYWNlLmMsIHdlIGhhdmUNCj4+DQo+
-PiB1bnNpZ25lZCBpbnQgdHJhY2VfY2FsbF9icGYoc3RydWN0IHRyYWNlX2V2ZW50X2NhbGwgKmNh
-bGwsIHZvaWQgKmN0eCkNCj4+IHsNCj4+ICAgICAgICAgICB1bnNpZ25lZCBpbnQgcmV0Ow0KPj4N
-Cj4+ICAgICAgICAgICBpZiAoaW5fbm1pKCkpIC8qIG5vdCBzdXBwb3J0ZWQgeWV0ICovDQo+PiAg
-ICAgICAgICAgICAgICAgICByZXR1cm4gMTsNCj4+DQo+PiAgICAgICAgICAgcHJlZW1wdF9kaXNh
-YmxlKCk7DQo+Pg0KPj4gICAgICAgICAgIGlmICh1bmxpa2VseShfX3RoaXNfY3B1X2luY19yZXR1
-cm4oYnBmX3Byb2dfYWN0aXZlKSAhPSAxKSkgew0KPiANCj4gWWVzLCBJJ20gYXdhcmUgb2YgdGhh
-dC4NCj4gDQo+PiBJbiB0aGUgYWJvdmUsIHRoZSBldmVudHMgd2l0aCBicGYgcHJvZ3JhbSBhdHRh
-Y2hlZCB3aWxsIGJlIG1pc3NlZA0KPj4gaWYgdGhlIGNvbnRleHQgaXMgbm1pIGludGVycnVwdCwg
-b3IgaWYgc29tZSByZWN1cnNpb24gaGFwcGVucyBldmVuIHdpdGgNCj4+IHRoZSBzYW1lIG9yIGRp
-ZmZlcmVudCBicGYgcHJvZ3JhbXMuDQo+PiBJbiBjYXNlIG9mIHJlY3Vyc2lvbiwgdGhlIGV2ZW50
-cyB3aWxsIG5vdCBiZSBzZW50IHRvIHJpbmcgYnVmZmVyLg0KPiANCj4gQW5kIHdoaWxlIHRoYXQg
-aXMgc2lnbmlmaWNhbnRseSB3b3JzZSB0aGFuIHdoYXQgZnRyYWNlL3BlcmYgaGF2ZSwgaXQgaXMN
-Cj4gZnVuZGFtZW50YWxseSB0aGUgc2FtZSB0aGluZy4NCj4gDQo+IHBlcmYgYWxsb3dzIChhbmQg
-aWlyYyBmdHJhY2UgZG9lcyB0b28pIDQgbmVzdGVkIGNvbnRleHQgcGVyIENQVQ0KPiAodGFzayxz
-b2Z0aXJxLGlycSxubWkpIGJ1dCBhbnkgcmVjdXJzaW9uIHdpdGhpbiB0aG9zZSBjb250ZXh0IGFu
-ZCB3ZQ0KPiBkcm9wIHN0dWZmLg0KPiANCj4gVGhlIEJQRiBzdHVmZiBpcyBqdXN0IG1vcmUgZWFn
-ZXIgdG8gZHJvcCB0aGluZ3Mgb24gdGhlIGZsb29yLCBidXQgaXQgaXMNCj4gZnVuZGFtZW50YWxs
-eSB0aGUgc2FtZS4NCj4gDQo+PiBBIGxvdCBvZiBicGYtYmFzZWQgdHJhY2luZyBwcm9ncmFtcyB1
-c2VzIG1hcHMgdG8gY29tbXVuaWNhdGUgYW5kDQo+PiBkbyBub3QgYWxsb2NhdGUgcmluZyBidWZm
-ZXIgYXQgYWxsLg0KPiANCj4gU28gZXh0ZW5kaW5nIFBFUkZfUkVDT1JEX0xPU1QgZG9lc24ndCB3
-b3JrLiBCdXQgUEVSRl9GT1JNQVRfTE9TVCBtaWdodA0KPiBzdGlsbCB3b3JrIGZpbmU7IGJ1dCB5
-b3UgZ2V0IHRvIGltcGxlbWVudCBpdCBmb3IgYWxsIHNvZnR3YXJlIGV2ZW50cy4NCg0KQ291bGQg
-eW91IGdpdmUgbW9yZSBzcGVjaWZpY3MgYWJvdXQgUEVSRl9GT1JNQVRfTE9TVD8gR29vZ2xpbmcg
-DQoiUEVSRl9GT1JNQVRfTE9TVCIgb25seSB5aWVsZHMgdHdvIGVtYWlscyB3aGljaCB3ZSBhcmUg
-ZGlzY3Vzc2luZyBoZXJlIDotKA0KDQo+IA0KPj4gTWF5YmUgd2UgY2FuIHN0aWxsIHVzZSBpb2N0
-bCBiYXNlZCBhcHByb2FjaCB3aGljaCBpcyBsaWdodCB3ZWlnaHRlZA0KPj4gY29tcGFyZWQgdG8g
-cmluZyBidWZmZXIgYXBwcm9hY2g/IElmIGEgZmQgaGFzIGJwZiBhdHRhY2hlZCwgbmhpdC9ubWlz
-c2VzDQo+PiBtZWFucyB0aGUga3Byb2JlIGlzIHByb2Nlc3NlZCBieSBicGYgcHJvZ3JhbSBvciBu
-b3QuDQo+IA0KPiBUaGVyZSBpcyBub3RoaW5nIGtwcm9iZSBzcGVjaWZpYyBoZXJlLiBLcHJvYmVz
-IGp1c3QgYXBwZWFyIHRvIGJlIHRoZQ0KPiBvbmx5IG9uZSBhY3R1YWxseSBhY2NvdW50aW5nIHRo
-ZSByZWN1cnNpb24gY2FzZXMsIGJ1dCBldmVyeW9uZSBoYXMNCj4gdGhlbS4NCg0KU29ycnkgdG8g
-YmUgc3BlY2lmaWMsIGtwcm9iZSBpcyBqdXN0IGFuIGV4YW1wbGUsIEkgYWN0dWFsbHkgcmVmZXJz
-IHRvIA0KYW55IHBlcmYgZXZlbnQgd2hlcmUgYnBmIGNhbiBhdHRhY2ggdG8sIHdoaWNoIHRoZW9y
-ZXRpY2FsbHkgYXJlIGFueQ0KcGVyZiBldmVudHMgd2hpY2ggY2FuIGJlIG9wZW5lZCB3aXRoICJw
-ZXJmX2V2ZW50X29wZW4iIHN5c2NhbGwgYWx0aG91Z2ggDQpzb21lIG9mIHRoZW0gKGUuZy4sIHNv
-ZnR3YXJlIGV2ZW50cz8pIG1heSBub3QgaGF2ZSBicGYgcnVubmluZyBob29rcyB5ZXQuDQoNCj4g
-DQo+PiBDdXJyZW50bHksIGZvciBkZWJ1Z2ZzLCB0aGUgbmhpdC9ubWlzc2VzIGluZm8gaXMgZXhw
-b3NlZCBhdA0KPj4ge2t8dX1wcm9iZV9wcm9maWxlLiBBbHRlcm5hdGl2ZSwgd2UgY291bGQgZXhw
-b3NlIHRoZSBuaGl0L25taXNzZXMNCj4+IGluIC9wcm9jL3NlbGYvZmRpbmZvLzxmZD4uIFVzZXIg
-Y2FuIHF1ZXJ5IHRoaXMgaW50ZXJmYWNlIHRvDQo+PiBnZXQgbnVtYmVycy4NCj4gDQo+IE5vLCB3
-ZSdyZSBub3QgYWRkaW5nIHN0dWZmIHRvIHByb2NmcyBmb3IgdGhpcy4NCg0KTm8gcHJvYmxlbS4g
-SnVzdCBhIHN1Z2dlc3Rpb24uDQo=
+This add base DTS file with cpu, psci, firmware, clock node tlmm and
+spmi and enables boot to console
+
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm8150.dtsi | 308 +++++++++++++++++++++++++++
+ 1 file changed, 308 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sm8150.dtsi
+
+diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+new file mode 100644
+index 000000000000..417b21d1897c
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+@@ -0,0 +1,308 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2019, Linaro Limited
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/soc/qcom,rpmh-rsc.h>
++#include <dt-bindings/clock/qcom,rpmh.h>
++
++/ {
++	interrupt-parent = <&intc>;
++
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	chosen { };
++
++	clocks {
++		xo_board: xo-board {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <38400000>;
++			clock-output-names = "xo_board";
++		};
++
++		sleep_clk: sleep-clk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <32764>;
++			clock-output-names = "sleep_clk";
++		};
++	};
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		CPU0: cpu@0 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x0>;
++			enable-method = "psci";
++			next-level-cache = <&L2_0>;
++			L2_0: l2-cache {
++				compatible = "cache";
++				next-level-cache = <&L3_0>;
++				L3_0: l3-cache {
++				      compatible = "cache";
++				};
++			};
++		};
++
++		CPU1: cpu@100 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x100>;
++			enable-method = "psci";
++			next-level-cache = <&L2_100>;
++			L2_100: l2-cache {
++				compatible = "cache";
++				next-level-cache = <&L3_0>;
++			};
++
++		};
++
++		CPU2: cpu@200 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x200>;
++			enable-method = "psci";
++			next-level-cache = <&L2_200>;
++			L2_200: l2-cache {
++				compatible = "cache";
++				next-level-cache = <&L3_0>;
++			};
++		};
++
++		CPU3: cpu@300 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x300>;
++			enable-method = "psci";
++			next-level-cache = <&L2_300>;
++			L2_300: l2-cache {
++				compatible = "cache";
++				next-level-cache = <&L3_0>;
++			};
++		};
++
++		CPU4: cpu@400 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x400>;
++			enable-method = "psci";
++			next-level-cache = <&L2_400>;
++			L2_400: l2-cache {
++				compatible = "cache";
++				next-level-cache = <&L3_0>;
++			};
++		};
++
++		CPU5: cpu@500 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x500>;
++			enable-method = "psci";
++			next-level-cache = <&L2_500>;
++			L2_500: l2-cache {
++				compatible = "cache";
++				next-level-cache = <&L3_0>;
++			};
++		};
++
++		CPU6: cpu@600 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x600>;
++			enable-method = "psci";
++			next-level-cache = <&L2_600>;
++			L2_600: l2-cache {
++				compatible = "cache";
++				next-level-cache = <&L3_0>;
++			};
++		};
++
++		CPU7: cpu@700 {
++			device_type = "cpu";
++			compatible = "qcom,kryo485";
++			reg = <0x0 0x700>;
++			enable-method = "psci";
++			next-level-cache = <&L2_700>;
++			L2_700: l2-cache {
++				compatible = "cache";
++				next-level-cache = <&L3_0>;
++			};
++		};
++	};
++
++	firmware {
++		scm: scm {
++			compatible = "qcom,scm-sm8150", "qcom,scm";
++			#reset-cells = <1>;
++		};
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		/* We expect the bootloader to fill in the size */
++		reg = <0x0 0x80000000 0x0 0x0>;
++	};
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++	};
++
++	soc: soc@0 {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges = <0 0 0 0 0x10 0>;
++		dma-ranges = <0 0 0 0 0x10 0>;
++		compatible = "simple-bus";
++
++		gcc: clock-controller@100000 {
++			compatible = "qcom,gcc-sm8150";
++			reg = <0x0 0x00100000 0x0 0x1f0000>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++			#power-domain-cells = <1>;
++			clock-names = "bi_tcxo",
++				      "sleep_clk";
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&sleep_clk>;
++		};
++
++		qupv3_id_1: geniqup@ac0000 {
++			compatible = "qcom,geni-se-qup";
++			reg = <0x0 0x00ac0000 0x0 0x6000>;
++			clock-names = "m-ahb", "s-ahb";
++			clocks = <&gcc 123>,
++				 <&gcc 124>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			status = "disabled";
++
++			uart2: serial@a90000 {
++				compatible = "qcom,geni-debug-uart";
++				reg = <0x0 0x00a90000 0x0 0x4000>;
++				clock-names = "se";
++				clocks = <&gcc 105>;
++				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
++				status = "disabled";
++			};
++		};
++
++		tlmm: pinctrl@3100000 {
++			compatible = "qcom,sm8150-pinctrl";
++			reg = <0x0 0x03100000 0x0 0x300000>,
++			      <0x0 0x03500000 0x0 0x300000>,
++			      <0x0 0x03900000 0x0 0x300000>,
++			      <0x0 0x03D00000 0x0 0x300000>;
++			reg-names = "west", "east", "north", "south";
++			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-ranges = <&tlmm 0 0 175>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		spmi_bus: spmi@c440000 {
++			compatible = "qcom,spmi-pmic-arb";
++			reg = <0x0 0x0c440000 0x0 0x0001100>,
++			      <0x0 0x0c600000 0x0 0x2000000>,
++			      <0x0 0x0e600000 0x0 0x0100000>,
++			      <0x0 0x0e700000 0x0 0x00a0000>,
++			      <0x0 0x0c40a000 0x0 0x0026000>;
++			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
++			interrupt-names = "periph_irq";
++			interrupts = <GIC_SPI 481 IRQ_TYPE_LEVEL_HIGH>;
++			qcom,ee = <0>;
++			qcom,channel = <0>;
++			#address-cells = <2>;
++			#size-cells = <0>;
++			interrupt-controller;
++			#interrupt-cells = <4>;
++			cell-index = <0>;
++		};
++
++		intc: interrupt-controller@17a00000 {
++			compatible = "arm,gic-v3";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			reg = <0x0 0x17a00000 0x0 0x10000>,	/* GICD */
++			      <0x0 0x17a60000 0x0 0x100000>;	/* GICR * 8 */
++			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		timer@17c20000 {
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++			compatible = "arm,armv7-timer-mem";
++			reg = <0x0 0x17c20000 0x0 0x1000>;
++			clock-frequency = <19200000>;
++
++			frame@17c21000{
++				frame-number = <0>;
++				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c21000 0x0 0x1000>,
++				      <0x0 0x17c22000 0x0 0x1000>;
++			};
++
++			frame@17c23000 {
++				frame-number = <1>;
++				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c23000 0x0 0x1000>;
++				status = "disabled";
++			};
++
++			frame@17c25000 {
++				frame-number = <2>;
++				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c25000 0x0 0x1000>;
++				status = "disabled";
++			};
++
++			frame@17c27000 {
++				frame-number = <3>;
++				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c26000 0x0 0x1000>;
++				status = "disabled";
++			};
++
++			frame@17c29000 {
++				frame-number = <4>;
++				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c29000 0x0 0x1000>;
++				status = "disabled";
++			};
++
++			frame@17c2b000 {
++				frame-number = <5>;
++				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c2b000 0x0 0x1000>;
++				status = "disabled";
++			};
++
++			frame@17c2d000 {
++				frame-number = <6>;
++				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x17c2d000 0x0 0x1000>;
++				status = "disabled";
++			};
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
+-- 
+2.20.1
+
