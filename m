@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB3EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25436C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E67622D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF02622D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 12:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbfHUM5l (ORCPT
+        id S1728672AbfHUM5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 08:57:41 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:42763 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728643AbfHUM5h (ORCPT
+        Wed, 21 Aug 2019 08:57:39 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:52761 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728649AbfHUM5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 21 Aug 2019 08:57:37 -0400
-Received: by mail-io1-f71.google.com with SMTP id x9so2537967ior.9
+Received: by mail-io1-f70.google.com with SMTP id q5so2512598iof.19
         for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 05:57:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to:cc;
-        bh=VF3uCJoR9wA3sTx4IaRIl15rml5SufmjnMgjqKV8elw=;
-        b=IzR57Vx7Z7EAlgyMTiJtr8z9Vssk/kBbxGJI0W5Mq0zXRPE0P1DJQd3uxuefNCh0q5
-         C36PJC9Vb+W9likKF0YCXKrJrqx00FHYoOJqNZFDfy56RUEr99Yo3vdURkxFxVbf2myn
-         attuHf3zBQu4MX9dwS6ACvALCBnOwqqJ1rXn6HncbskHgPwMf5HC29uDS0JDyaVyvxUK
-         ularW7+jSYqsC29ttafbQKLJaVeAnNsUFrcwxFhMDqQllk4NpbEiWsrOKQnzeHA0nSlF
-         JkaMR34yY6slZE2AI72K41//paw4JrMwQMl8gs7xNIe3Qndn81ioAdzy+079Aot/5h2V
-         eLgg==
-X-Gm-Message-State: APjAAAUWFTanDssIRVOTVAKJaSxRHpjJL7hyrTmU2VOjvqBd7j20xa1N
-        ptZxjpgAjTJKFEPlTo36KnvNgTDxDRWg3is6y43Xnuk6SDWe
-X-Google-Smtp-Source: APXvYqwMEGXY3SvKofisC1Eo8CETERB0p4Ih/LAoX1evch3UpONZ1QSlKqBTVUrO8FWc8phNsntqAaOV+RBFEfb4mMDh20H6KKSR
+        bh=QjkSwzJGqruLUor0WrhXtS14xNGl+DA69ls17YPrtvQ=;
+        b=rCAeZXe6IIMZRXIgLiTStE15j60Z4NwtNnM7GB2tTj7B1cKao8ldJmjb9bMtn1fQ2r
+         9ryywCz3vX3G7t6GCua4ybYfSTzHhAWuZjvQi3DJsVBLLPjSgoVW42sRT5ZIAP1SnkBU
+         WMCAnJ6tx9T4Ok8LwVzFR9E1XSTKlvWJFQq+seph4xbQvy1T4TdELKYNzV1e4HYable8
+         oG0xH7iRZXTo+CTlYeqeOmrUjkeo4yzLNS2LMjkQogo/Tm0Kihb8tqK8CwGjjwWmtJUF
+         Z8NBY8A14Pj4VpTAZpa1kqs+EWTcwSqDkcvDTLh1tEDXKjDrU0XeQ2GmsREw2mWZqX59
+         QIkA==
+X-Gm-Message-State: APjAAAUZ34EQJwGdPKRihVkI9vsHaUFsSy8YfFJ8pBEiB3sPYcD2o0lj
+        B/9KpWYah9rhaZdAJ1RnVAM7jU48dBDAewHTawSMitUNnfxs
+X-Google-Smtp-Source: APXvYqxYnOy2Ml4FXIS5PIdr76pUUL5lwpWpuAJFlnEGyvbEip9TSwDHmd6rHMQNRq1CDA4yW1gaJkf0EcQ02n5bFWst9uKa2Osl
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:348:: with SMTP id x8mr9826036jap.31.1566392256648;
+X-Received: by 2002:a5e:c802:: with SMTP id y2mr6255924iol.134.1566392256853;
  Wed, 21 Aug 2019 05:57:36 -0700 (PDT)
 Date:   Wed, 21 Aug 2019 05:57:36 -0700
 In-Reply-To: <CAAeHK+zeN+bLTix2yaWDo-iu_G4D8T1KELjds=KVTtywiPpc4g@mail.gmail.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000095ae90590a01e9a@google.com>
+Message-ID: <0000000000000c820c0590a01e9a@google.com>
 Subject: Re: Re: KASAN: slab-out-of-bounds Read in hidraw_ioctl
 From:   syzbot <syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+To:     "'Andrey Konovalov' via syzkaller-bugs" 
+        <syzkaller-bugs@googlegroups.com>
+Cc:     benjamin.tissoires@redhat.com, jikos@kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -150,3 +150,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 want 2 args (repo, branch), got 3
 
+
+> --
+> You received this message because you are subscribed to the Google  
+> Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an  
+> email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit  
+> https://groups.google.com/d/msgid/syzkaller-bugs/CAAeHK%2BzeN%2BbLTix2yaWDo-iu_G4D8T1KELjds%3DKVTtywiPpc4g%40mail.gmail.com.
