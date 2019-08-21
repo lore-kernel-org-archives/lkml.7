@@ -2,99 +2,96 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF74C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B93C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF65233FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:21:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Lnoj50t8"
+	by mail.kernel.org (Postfix) with ESMTP id 6B4E6233A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbfHUOVL (ORCPT
+        id S1729539AbfHUOVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:21:11 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50332 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729481AbfHUOVJ (ORCPT
+        Wed, 21 Aug 2019 10:21:16 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:35115 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729508AbfHUOVM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:21:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v15so2337011wml.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:21:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BE56XeKlPm5JVcX8n3q5JNmJvyUhg1qETHFabaUvyfE=;
-        b=Lnoj50t8bQ9bDRMRR2IVG3gDVVz+yPL5PUmwgYkRrDAf0BGZeBREwDCBPfdtWm9kBP
-         tEDTpaYnE0C4mUW0R9BIBlTErQRUZ8IrJD7PcDvt4AlcV9EgfqSbelBCYHeEuFpUauqe
-         OYlhTKrQLsz0bJBai3GlKXpR5/+kvGBQkw0mdQ0192//87LcnM2VaXxhPK5JzM4RxKcB
-         O4oYr6/w1yguRxm96R0vxzXmCytT6V1e6eolbuH5KC7HvX6CybmVRKNzz0ZhfoXhQJfc
-         FW1kCS3hd55lfc81CQv9KTtvkpS20Fu6j4qrhlMDGtBECabUJPAQ67+mboPQqUA2tqcn
-         QL1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BE56XeKlPm5JVcX8n3q5JNmJvyUhg1qETHFabaUvyfE=;
-        b=a7yi1lAN1R1cG9M5lPk/Z17PuX3X0/w8Bu9G7CFm3aU9edjmepeLN5JPmfKQu+EvDB
-         1oqAtn81MFyN+xB+HQU3rmfEUZUHXBKk7CLPfLoeUCgvqUoNzSCsWA9AOhp+C/SyXGaF
-         eJGni+rs3TIiz5zB80j1AUBxjdwjEALNCqePYrKB5hymJUVQNqLEo3oT0jFTsU5NKVzC
-         LXvnDCXCRiAJF7dgDr9MJ/qtBJIscfvVnLac+vP8Cz00u9YIFTtuvM3KiqIC9EWY2EqX
-         BXkkIRyAhWWVfdaUzck6APAcCbWaKFL4h70xOAPHFap/dwV9JKiitkOmTWCzDxjHpvnV
-         W68w==
-X-Gm-Message-State: APjAAAXgynTVYrsOfwkoGXh0DNnGqIojsUosuHsmoZExegoq+s/zdPtS
-        A5WMdSF/4mQGblqUB4/lSLqm9EZtxeDWPg==
-X-Google-Smtp-Source: APXvYqzuHs2peSetC63p+jjntS+Mxj6i8Ywj33/Z22DI61wK6k8o4lDfUFeda2o6zo5i32KR9FA1Qw==
-X-Received: by 2002:a1c:6087:: with SMTP id u129mr313661wmb.108.1566397266758;
-        Wed, 21 Aug 2019 07:21:06 -0700 (PDT)
-Received: from bender.baylibre.local (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id o9sm33418939wrm.88.2019.08.21.07.21.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 07:21:05 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 12/14] arm64: dts: meson-gxbb-nanopi-k2: add missing model
-Date:   Wed, 21 Aug 2019 16:20:41 +0200
-Message-Id: <20190821142043.14649-13-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190821142043.14649-1-narmstrong@baylibre.com>
-References: <20190821142043.14649-1-narmstrong@baylibre.com>
+        Wed, 21 Aug 2019 10:21:12 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id C3576240011;
+        Wed, 21 Aug 2019 14:21:10 +0000 (UTC)
+Date:   Wed, 21 Aug 2019 16:21:10 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Alexander Dahl <ada@thorsis.com>, linux-rt-users@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [ANNOUNCE] v5.2.9-rt3
+Message-ID: <20190821142110.GC27031@piout.net>
+References: <20190816153616.fbridfzjkmfg4dnr@linutronix.de>
+ <2182739.9IRgZpf3R8@ada>
+ <20190820154418.GM3545@piout.net>
+ <20190821132553.gjvya5lu6j2dfyo5@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821132553.gjvya5lu6j2dfyo5@linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes the following DT schemas check errors:
-meson-gxbb-nanopi-k2.dt.yaml: /: 'model' is a required property
+On 21/08/2019 15:25:54+0200, Sebastian Andrzej Siewior wrote:
+> On 2019-08-20 17:44:18 [+0200], Alexandre Belloni wrote:
+> > Hi,
+> Hi,
+> 
+> > On 19/08/2019 13:03:51+0200, Alexander Dahl wrote:
+> > > Hei hei,
+> > > 
+> > > just tried to compile this v5.2.9-rt3 for SAMA5D27-SOM1-EK1 based on 
+> > > arch/arm/configs/sama5_defconfig and with running oldconfig and selecting 
+> > > defaults, but that fails if CONFIG_ATMEL_TCB_CLKSRC_USE_SLOW_CLOCK is not set. 
+> > > 
+> > > I think this is due to changes for Atmel TCLIB in v5.2 and the not yet adapted 
+> > > RT patch "clocksource: TCLIB: Allow higher clock rates for clock events", 
+> > > right?
+> > 
+> > Patch clocksource-tclib-allow-higher-clockrates.patch needs to be
+> > changed so:
+> > 
+> > ret = setup_clkevents(tc, best_divisor_idx);
+> > 
+> > becomes
+> > 
+> > ret = setup_clkevents(&tc, best_divisor_idx);
+> > 
+> 
+> I will fix that locally.
+> 
+> > Also, I would think clocksource-tclib-add-proper-depend.patch could be
+> > dropped. Instead, setup_clkevents should use atmel_tcb_divisors. It
+> > would then be necessary to move its declaration before the function.
+> > 
+> > Sebastian, can you take care of that or do you expect a patch? In the
+> > latter case, do you want a patch for the patch?
+> 
+> For the second part I would appreciate a patch. I can then drop
+> clocksource-tclib-add-proper-depend.patch if it is not an issue.
+> 
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 1 +
- 1 file changed, 1 insertion(+)
+I'm not sure it is worth it as the issue is introduced by
+clocksource-tclib-allow-higher-clockrates.patch. Shouldn't we fix it
+directly?
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-index c34c1c90ccb6..233eb1cd7967 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -10,6 +10,7 @@
- 
- / {
- 	compatible = "friendlyarm,nanopi-k2", "amlogic,meson-gxbb";
-+	model = "FriendlyARM NanoPi K2";
- 
- 	aliases {
- 		serial0 = &uart_AO;
 -- 
-2.22.0
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
