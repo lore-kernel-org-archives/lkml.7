@@ -2,183 +2,129 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B32FCC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4D9C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB7922D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E8B922D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="R1o1vhth"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="E0MgQD/1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729375AbfHUOSs (ORCPT
+        id S1729314AbfHUOUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:18:48 -0400
-Received: from mail-eopbgr20052.outbound.protection.outlook.com ([40.107.2.52]:52590
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729230AbfHUOSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:18:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z2DbPQ2VbJvMx1kdbyXYqoKT/3ls0+ovrXWs13Zch5uwAbKkhNCcyyoItEXh6hai8EWfx405eUe+JNBMauE8cqovsihaHDbOzYCBw9Esu8I44gg4pqwefw1i93TVFe4zgu5EOcBV2o89hAQpC1TUUn63gT3NTsynuqdsmSN64MiBjtKYLbhdoYekZ9NfcTdtG/Lpv66t2fdng832RkuHMb6hwnv7Vanuc53I+reMWmNe8dYZj6Ck+ohpeBqiYtUwmhTafgpzk/97W/DBa5Wg/aPsWGEgqjuArCILx9CvE3pckD8IPUnjDfXV3wXnsH6uUrb3JEhJJ/USUxL0PWqxaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hQgb4h3tli12W7C65ehs3kmbP1Va0bFBWrSpOX328WM=;
- b=NTtChAPVx4lOGnoGKoWap8Djr3rXXduA8rZACD7A6g/Y1F7+gTQWPDWOyIMEpRWHyBS9I1JLq6xJfoZgOdxs9xbqkDXT/yFZFmzXosfoKEIhKCHg0S92GRB6mVaURt3o9Nf9qm7xsbvMv/xybPpqta0PJ6vxeJh+avvfhumKEqWAz9qQbHOhwIqJukhXXSUCoZpbvSkfo6/Bp77j8p9/IOJ3+pR+It2AAWIYkSdbJGx9aaulw3lJMyNlFWqCp21Y2kvcnvyZvYrfohzA5bREhf37kxGV7ibjsc3+sTXs3io+Ee745R4I6Aj6SfHZvgaIkJ0sfE9gmZ6wmb+v/WT/SA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hQgb4h3tli12W7C65ehs3kmbP1Va0bFBWrSpOX328WM=;
- b=R1o1vhthUGizInDfFXH1sj7Xk72za6urLR1paRadLfyaUdZc1XW6RbuTQfa+o86euVJiXP0kdixpy14sJmHnA56u7D/aefnl70732Dl081RN1E1swNAC8Asqn5ZMTZOumy+3QmN1MzWZOQqm5uK4igCR2qR2otpRC/8/hFprSfA=
-Received: from VI1PR04MB4015.eurprd04.prod.outlook.com (10.171.182.24) by
- VI1PR04MB4573.eurprd04.prod.outlook.com (20.177.55.219) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Wed, 21 Aug 2019 14:18:43 +0000
-Received: from VI1PR04MB4015.eurprd04.prod.outlook.com
- ([fe80::9c4f:262d:db31:e339]) by VI1PR04MB4015.eurprd04.prod.outlook.com
- ([fe80::9c4f:262d:db31:e339%4]) with mapi id 15.20.2178.018; Wed, 21 Aug 2019
- 14:18:43 +0000
-From:   Ashish Kumar <ashish.kumar@nxp.com>
-To:     Mark Brown <broonie@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        Kuldeep Singh <kuldeep.singh@nxp.com>
-Subject: RE: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add
- ls2080a compatibility string to bindings
-Thread-Topic: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add
- ls2080a compatibility string to bindings
-Thread-Index: AQHVUcEk+xwdBczP/06jXTHXcyeTPqcFfYEAgAAn5gA=
-Date:   Wed, 21 Aug 2019 14:18:43 +0000
-Message-ID: <VI1PR04MB401528B4F92DAD98385EF53395AA0@VI1PR04MB4015.eurprd04.prod.outlook.com>
-References: <1565691791-26167-1-git-send-email-Ashish.Kumar@nxp.com>
- <20190821110640.GC5128@sirena.co.uk>
-In-Reply-To: <20190821110640.GC5128@sirena.co.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ashish.kumar@nxp.com; 
-x-originating-ip: [92.120.0.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5daf5742-fd08-4402-2ac7-08d726427918
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4573;
-x-ms-traffictypediagnostic: VI1PR04MB4573:
-x-ms-exchange-purlcount: 2
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB45736CD9561CE592EC01E71495AA0@VI1PR04MB4573.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0136C1DDA4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(346002)(376002)(396003)(189003)(199004)(13464003)(102836004)(5660300002)(53546011)(966005)(478600001)(186003)(52536014)(6506007)(99286004)(66946007)(66556008)(64756008)(66446008)(110136005)(66476007)(71200400001)(71190400001)(54906003)(14454004)(316002)(76116006)(26005)(9686003)(66066001)(86362001)(6306002)(486006)(74316002)(476003)(81156014)(11346002)(2906002)(33656002)(81166006)(8676002)(8936002)(6436002)(55016002)(256004)(229853002)(25786009)(4326008)(44832011)(76176011)(7696005)(2501003)(6246003)(6116002)(53936002)(3846002)(14444005)(7736002)(305945005)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4573;H:VI1PR04MB4015.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: vo+uH4MwhPVqwghaxsPeXBuU7pIHeE2Nnd+sAwal6HDYfnE9jBqcs+diOj3thiHH39Qmifu7keK2ujv6EcH31dwtdKmDPpKFFDp6yiRe9MoGOu/vowHx1AFfWHehNBQDJF+nuJe/fV2Eo+fWv0WO2yEMGqrLD+6puaCMFKZUjiXWDVl8dmMFJQGKAPgtR+Fw76GBIMOogpPWvFZ9WYIv/KwCe02MYeTD3nyBxHkC7PNX+6HIasZFp237LHT0YtP+KNEi9jhkWaT5s8CED3ukpx1PIiUbRwOAigqy1mq1R5EzjMwWYUo6J8FJF6EzF/DnxBu27HqCDr34bFOBEyjXka9qpYEQbiMBb6/lGffgFiWEgWNnPd3wmDByXdoVRC/ZeK6XRIgY9LeP2s2QXCAywYc7d9YTH1F3LVVzJvCdlKg=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 21 Aug 2019 10:20:55 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35134 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727949AbfHUOUz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 10:20:55 -0400
+Received: by mail-wm1-f68.google.com with SMTP id l2so2351293wmg.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9hgbbdW56kZ9dbt4pURRNeqYEzO7tOgAeaDiUmq4v1w=;
+        b=E0MgQD/1DR5lR/EVgfVAzXNjcUBnyq4K7Ghg+Niucl7aAj3rOqg3UJg7t1gBQ2yrb2
+         OZLhhSeoR2nsOxtm+miQ2krAI5eyTGHczpNeSNkmY0eEHzuFfUfjl+GLIG1lZ+rzmdKo
+         Olh11zxk7rTUK4QUx+w5VTNTZ64pgdRc/lwZ9D+myQk1L9yXgGaVeeoPttE7pNJjYU1/
+         FFodCccBS/7U0y200sFowkpauy+YDx8PHdmt0luiyhpc0Rqs18q+jChaZ7WYjxlDINjE
+         d3QGYwJpL292p2LjxUAKUgpJ61vJrlRRyVUBAiJWUySDIAVNuqcmuOQWuFpIIl6Mb2Dh
+         PSfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9hgbbdW56kZ9dbt4pURRNeqYEzO7tOgAeaDiUmq4v1w=;
+        b=DssV0uFBItZaU2s++b88Q5NIYw4TASYw6cYLY+tMb/kOgP0rajN+f0vwowTzA433Ql
+         lc3H6cI2gV9f/6Luj4oOiQiERaS22e4j84nrZz4i2LFDYlla5ZYiMBErkiSRUjXbGL0D
+         izrdXekH9O3mdr7pcrMRYOshlfO4AM23UBUUs3cboCqZdV8biYPvkLAly9BkWX16H5Gl
+         338zW1mpG8FQi8BuuZ8xa3styXJ485RQtt7hdawt51gio3LBO9nudfCZl4KkWCLsLtmM
+         DSjfCTOvciHfHUsQz6pPt6t/e8xKFnUsdcCRSMfVrBcJJ4auNGUgfcH4B7oWeXhTQaF6
+         pt1w==
+X-Gm-Message-State: APjAAAX248zpik+v/WuLDO+G3H2RBWXrS5XwwmK+15/s9FXlemOxt07e
+        +QC7YSQULULfr+7u1ja/yD1Umw==
+X-Google-Smtp-Source: APXvYqy+BKmYE4t79zuMDWuHtMYIbNyIVmEb2qK2hKucfvDuuOO+H7pzCxk9BLseZMyZsL1udITvhw==
+X-Received: by 2002:a7b:c8cb:: with SMTP id f11mr322764wml.138.1566397252864;
+        Wed, 21 Aug 2019 07:20:52 -0700 (PDT)
+Received: from bender.baylibre.local (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id o9sm33418939wrm.88.2019.08.21.07.20.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 07:20:52 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 00/14] arm64: dts: meson: fixes following YAML bindings schemas conversion
+Date:   Wed, 21 Aug 2019 16:20:29 +0200
+Message-Id: <20190821142043.14649-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5daf5742-fd08-4402-2ac7-08d726427918
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2019 14:18:43.6509
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7urDO9tzip+F4nqpNQaMeKw/b3lHamSStmE67kuNW+bnJiWIM55CukAmikEzzVWBUkR1EuWgrxzxTr26LFroKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4573
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is the first set of DT fixes following the first YAML bindings conversion
+at [1], [2] and [3].
 
+After this set of fixes, the remaining errors are :
+meson-axg-s400.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+meson-g12a-sei510.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+meson-g12b-odroid-n2.dt.yaml: usb-hub: gpios:0:0: 20 is not valid under any of the given schemas
+meson-g12b-odroid-n2.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
+meson-g12a-x96-max.dt.yaml: sound: 'clocks' is a dependency of 'assigned-clocks'
 
-> -----Original Message-----
-> From: Mark Brown <broonie@kernel.org>
-> Sent: Wednesday, August 21, 2019 4:37 PM
-> To: Ashish Kumar <ashish.kumar@nxp.com>
-> Cc: linux-kernel@vger.kernel.org; linux-spi@vger.kernel.org;
-> devicetree@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
-> linux-next@vger.kernel.org; Kuldeep Singh <kuldeep.singh@nxp.com>
-> Subject: [EXT] Re: [Patch v4 1/3] dt-bindings: spi: spi-fsl-qspi: Add ls2=
-080a
-> compatibility string to bindings
->=20
-> On Tue, Aug 13, 2019 at 03:53:09PM +0530, Ashish Kumar wrote:
->=20
-> > There are 2 version of QSPI-IP, according to which controller
-> > registers sets can be big endian or little endian.There are some other
-> > minor changes like RX fifo depth etc.
-> >
-> > The big endian version uses driver compatible "fsl,ls1021a-qspi" and
-> > little endian version uses driver compatible "fsl,ls2080a-qspi"
->=20
-> I'm not seeing the corresponding code changes anywhere?  I'd at least
-> expect to see the compatibles added, and it sounds like some actual code
-> updates are needed.
-Hi Mark,
+These are only cosmetic changes, and should not break drivers implementation
+following the bindings.
 
-Snippet from driver spi-fsl-qspi.c
-static const struct of_device_id fsl_qspi_dt_ids[] =3D {
-        { .compatible =3D "fsl,vf610-qspi", .data =3D &vybrid_data, },
-        { .compatible =3D "fsl,imx6sx-qspi", .data =3D &imx6sx_data, },
-        { .compatible =3D "fsl,imx7d-qspi", .data =3D &imx7d_data, },
-        { .compatible =3D "fsl,imx6ul-qspi", .data =3D &imx6ul_data, },
-        { .compatible =3D "fsl,ls1021a-qspi", .data =3D &ls1021a_data, },
-        { .compatible =3D "fsl,ls2080a-qspi", .data =3D &ls2080a_data, },
-        { /* sentinel */ }
-};
-I had previously sent dts patch based out of Shawn's tree with dependency o=
-n these dt binding patch. To which Shawn had replied to get dependency patc=
-h accepted first before sending this dts change.
-Reference conversion can be viewed here [1],[2].
+Changes since v1 at [4]:
+- Added suggested commit text from Martin in patches 1 & 2
+- Fixed NanoPi K2 model name
 
-This compatible can be seen here: file arch/arm64/boot/dts/freescale/fsl-ls=
-208xa.dtsi
+[1] https://patchwork.kernel.org/cover/11083597/
+[2] https://patchwork.kernel.org/cover/11103229/
+[3] https://patchwork.kernel.org/cover/11083649/
+[4] https://patchwork.kernel.org/cover/11094063/
 
-Snippet from previous dts patch based on Shawn tree, I will send next versi=
-on on this patch after dt-bindings are updated
-arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls208xa.dtsi
-index d7e78dcd153d..8e5ba513b24f 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -606,7 +606,7 @@
-=20
- 		qspi: spi@20c0000 {
- 			status =3D "disabled";
--			compatible =3D "fsl,ls2080a-qspi", "fsl,ls1021a-qspi";
-+			compatible =3D "fsl,ls2080a-qspi";
- 			#address-cells =3D <1>;
- 			#size-cells =3D <0>;
- 			reg =3D <0x0 0x20c0000 0x0 0x10000>,
->=20
-> Please use subject lines matching the style for the subsystem.  This make=
-s it
-> easier for people to identify relevant patches.
-Could you please guide more, or point to documentation to follow sub-system=
- style.
-dt-bindings: spi: spi-fsl-qspi: Add ls2080a-qspi compatibility string to bi=
-ndings=20
-Is this a better now? if yes, I will send next version
+Neil Armstrong (14):
+  arm64: dts: meson: fix ethernet mac reg format
+  arm64: dts: meson-gx: drop the vpu dmc memory cell
+  arm64: dts: meson-gx: fix reset controller compatible
+  arm64: dts: meson-gx: fix spifc compatible
+  arm64: dts: meson-gx: fix watchdog compatible
+  arm64: dts: meson-gx: fix mhu compatible
+  arm64: dts: meson-gx: fix periphs bus node name
+  arm64: dts: meson-gxl: fix internal phy compatible
+  arm64: dts: meson-axg: fix MHU compatible
+  arm64: dts: meson-g12a: fix reset controller compatible
+  arm64: dts: meson-g12a-x96-max: fix compatible
+  arm64: dts: meson-gxbb-nanopi-k2: add missing model
+  arm64: dts: meson-gxbb-p201: fix snps,reset-delays-us format
+  arm64: dts: meson: fix boards regulators states format
 
-[1]: https://www.spinics.net/lists/arm-kernel/msg727403.html
-[2]: https://patchwork.kernel.org/patch/10192103/
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  6 +++---
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   |  2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   |  7 +++----
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts |  4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi     | 19 +++++++++----------
+ .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts |  1 +
+ .../dts/amlogic/meson-gxbb-nexbox-a95x.dts    |  4 ++--
+ .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  |  4 ++--
+ .../boot/dts/amlogic/meson-gxbb-p201.dts      |  2 +-
+ .../boot/dts/amlogic/meson-gxbb-p20x.dtsi     |  4 ++--
+ .../meson-gxl-s905x-hwacom-amazetv.dts        |  4 ++--
+ .../amlogic/meson-gxl-s905x-nexbox-a95x.dts   |  4 ++--
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |  5 +----
+ 13 files changed, 31 insertions(+), 35 deletions(-)
 
-Regards
-Ashish
+-- 
+2.22.0
+
