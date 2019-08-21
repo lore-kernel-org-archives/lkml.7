@@ -2,114 +2,166 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 651C6C3A589
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C62C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2354822DD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:15:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="mAx89SzU"
+	by mail.kernel.org (Postfix) with ESMTP id DCCBA22DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 00:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566346565;
+	bh=2RuQs1F7tYgJBLvgQ6WridWiJhdHMgHseFYdpGdyqzs=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=O8+xkVpz38BuRV6sPzpwBFbnYAuc03qqGzqAmdR26ZZe8L/WGYwrE7zW9sFzt17Dr
+	 Gx2DjLfz33eRFZykI/0irvcGvVNFR0QRrktk56O95xu14HR6Ds3l91HS8lQlbAGBIm
+	 VMSNKOKS/6JRARNyQs+Q9zbhoVskjwX6qG5cdHHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfHUAO6 (ORCPT
+        id S1726568AbfHUAQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 20:14:58 -0400
-Received: from mx.aristanetworks.com ([162.210.129.12]:2981 "EHLO
-        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfHUAO5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 20:14:57 -0400
-Received: from smtp.aristanetworks.com (localhost [127.0.0.1])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 9460342C554;
-        Tue, 20 Aug 2019 17:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1566346539;
-        bh=9nvWetf9lqZs3dYeWxahRnA3U8FbuSbGvhyiG5L8URA=;
-        h=From:To:Cc:Subject:Date;
-        b=mAx89SzUhBPgIsHC15LD3TzdsSGZM2+XPBYX75qUCmMYCYzKMFsbLQ9cBjijLrhyt
-         huG0P5qRAAdIxykc49TCKHRTt6IdpZjClY/xPoIbd0Xd38aDkNNbZy0fjH5pxuxI31
-         wTzG2lMEU3xtygRGfcStEoUIRXG+fC11eG22isaGZUnFSfGOnbq8iTLgcJu/f/tSmI
-         q7NHLw6C9A4HGen2lQF0e+c7Aci6XscxKjf65Von+tTx7Ce5J+ScwL8jZSaev7o4WX
-         yWL5iNJhKP1x+Hi924ZayjEOz41i4Ak4Eu5UcZPO/KMrQjuXZ7G8nr0KcydkCAymR7
-         JlPPPXhbG9a4g==
-Received: from egc101.sjc.aristanetworks.com (unknown [172.20.210.50])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 90AE942C552;
-        Tue, 20 Aug 2019 17:15:39 -0700 (PDT)
-From:   Edward Chron <echron@arista.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
+        Tue, 20 Aug 2019 20:16:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726229AbfHUAQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 20:16:02 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 116882087E;
+        Wed, 21 Aug 2019 00:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566346560;
+        bh=2RuQs1F7tYgJBLvgQ6WridWiJhdHMgHseFYdpGdyqzs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=h/9SOpCxtOLRs6g5m+cJNbJz0udbmW1GGoOmLXaQfek2wie52cFhxaDLPxrwyKa7t
+         DXo/HvBBcOpNeAp5/4kk9R4eosaYHxiCJmSQZPYFG/r9HgeUIOSuGMLSresn8i9BPp
+         XGM39t/6VU4uCPsIzFNwGZggfyYQ0w1m5Gkr9ny8=
+Subject: Re: [PATCH v13 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
         David Rientjes <rientjes@google.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, colona@arista.com,
-        Edward Chron <echron@arista.com>
-Subject: [PATCH] mm/oom: Add oom_score_adj value to oom Killed process message
-Date:   Tue, 20 Aug 2019 17:14:45 -0700
-Message-Id: <20190821001445.32114-1-echron@arista.com>
-X-Mailer: git-send-email 2.20.1
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com,
+        Bjorn Helgaas <bhelgaas@google.com>, shuah <shuah@kernel.org>
+References: <20190814055108.214253-1-brendanhiggins@google.com>
+ <5b880f49-0213-1a6e-9c9f-153e6ab91eeb@kernel.org>
+ <20190820182450.GA38078@google.com>
+ <e8eaf28e-75df-c966-809a-2e3631353cc9@kernel.org>
+ <CAFd5g44JT_KQ+OxjVdG0qMWuaEB0Zq5x=r6tLsqJdncwZ_zbGA@mail.gmail.com>
+ <CAFd5g44aO40G7Wc-51EPyhWZgosN4ZHwwSjKe7CU_vi2OD7eKA@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <10e4190d-2a26-f51a-ba34-7afe8e640771@kernel.org>
+Date:   Tue, 20 Aug 2019 18:15:57 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFd5g44aO40G7Wc-51EPyhWZgosN4ZHwwSjKe7CU_vi2OD7eKA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For an OOM event: print oom_score_adj value for the OOM Killed process to
-document what the oom score adjust value was at the time the process was
-OOM Killed. The adjustment value can be set by user code and it affects
-the resulting oom_score so it is used to influence kill process selection.
+On 8/20/19 5:23 PM, Brendan Higgins wrote:
+> On Tue, Aug 20, 2019 at 2:26 PM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+>>
+>> On Tue, Aug 20, 2019 at 12:08 PM shuah <shuah@kernel.org> wrote:
+>>>
+>>> On 8/20/19 12:24 PM, Brendan Higgins wrote:
+>>>> On Tue, Aug 20, 2019 at 11:24:45AM -0600, shuah wrote:
+>>>>> On 8/13/19 11:50 PM, Brendan Higgins wrote:
+>>>>>> ## TL;DR
+>>>>>>
+>>>>>> This revision addresses comments from Stephen and Bjorn Helgaas. Most
+>>>>>> changes are pretty minor stuff that doesn't affect the API in anyway.
+>>>>>> One significant change, however, is that I added support for freeing
+>>>>>> kunit_resource managed resources before the test case is finished via
+>>>>>> kunit_resource_destroy(). Additionally, Bjorn pointed out that I broke
+>>>>>> KUnit on certain configurations (like the default one for x86, whoops).
+>>>>>>
+>>>>>> Based on Stephen's feedback on the previous change, I think we are
+>>>>>> pretty close. I am not expecting any significant changes from here on
+>>>>>> out.
+>>>>>>
+>>>>>
+>>>>> Hi Brendan,
+>>>>>
+>>>>> I found checkpatch errors in one or two patches. Can you fix those and
+>>>>> send v14.
+>>>>
+>>>> Hi Shuah,
+>>>>
+>>>> Are you refering to the following errors?
+>>>>
+>>>> ERROR: Macros with complex values should be enclosed in parentheses
+>>>> #144: FILE: include/kunit/test.h:456:
+>>>> +#define KUNIT_BINARY_CLASS \
+>>>> +       kunit_binary_assert, KUNIT_INIT_BINARY_ASSERT_STRUCT
+>>>>
+>>>> ERROR: Macros with complex values should be enclosed in parentheses
+>>>> #146: FILE: include/kunit/test.h:458:
+>>>> +#define KUNIT_BINARY_PTR_CLASS \
+>>>> +       kunit_binary_ptr_assert, KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT
+>>>>
+>>>> These values should *not* be in parentheses. I am guessing checkpatch is
+>>>> getting confused and thinks that these are complex expressions, when
+>>>> they are not.
+>>>>
+>>>> I ignored the errors since I figured checkpatch was complaining
+>>>> erroneously.
+>>>>
+>>>> I could refactor the code to remove these macros entirely, but I think
+>>>> the code is cleaner with them.
+>>>>
+>>>
+>>> Please do. I am not veru sure what value these macros add.
+>>
+>> Alright, I will have something for you later today.
+> 
+> I just sent a new revision with the fix.
+> 
+> Cheers
+> 
 
-When eligible tasks are not printed (sysctl oom_dump_tasks = 0) printing
-this value is the only documentation of the value for the process being
-killed. Having this value on the Killed process message documents if a
-miscconfiguration occurred or it can confirm that the oom_score_adj
-value applies as expected.
+Thanks Brendan. I will get them in.
 
-An example which illustates both misconfiguration and validation that
-the oom_score_adj was applied as expected is:
-
-Aug 14 23:00:02 testserver kernel: Out of memory: Killed process 2692
- (systemd-udevd) total-vm:1056800kB, anon-rss:1052760kB, file-rss:4kB,
- shmem-rss:0kB oom_score_adj:1000
-
-The systemd-udevd is a critical system application that should have an
-oom_score_adj of -1000. Here it was misconfigured to have a adjustment
-of 1000 making it a highly favored OOM kill target process. The output
-documents both the misconfiguration and the fact that the process
-was correctly targeted by OOM due to the miconfiguration. Having
-the oom_score_adj on the Killed message ensures that it is documented.
-
-Signed-off-by: Edward Chron <echron@arista.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
- mm/oom_kill.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index eda2e2a0bdc6..c781f73b6cd6 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -884,12 +884,13 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
- 	 */
- 	do_send_sig_info(SIGKILL, SEND_SIG_PRIV, victim, PIDTYPE_TGID);
- 	mark_oom_victim(victim);
--	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
-+	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB oom_score_adj:%ld\n",
- 		message, task_pid_nr(victim), victim->comm,
- 		K(victim->mm->total_vm),
- 		K(get_mm_counter(victim->mm, MM_ANONPAGES)),
- 		K(get_mm_counter(victim->mm, MM_FILEPAGES)),
--		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)));
-+		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)),
-+		(long)victim->signal->oom_score_adj);
- 	task_unlock(victim);
- 
- 	/*
--- 
-2.20.1
-
+-- Shuah
