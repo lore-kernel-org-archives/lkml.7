@@ -2,114 +2,177 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24315C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52537C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3CBF22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C50C22D6D
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 08:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfHUH7h (ORCPT
+        id S1726739AbfHUIGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 03:59:37 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:57108 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbfHUH7h (ORCPT
+        Wed, 21 Aug 2019 04:06:14 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63686 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfHUIGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:59:37 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1i0LWb-0005Ho-UV; Wed, 21 Aug 2019 09:59:22 +0200
-Message-ID: <90445abd30536f2785e34c705e3a9ce6c817b17a.camel@sipsolutions.net>
-Subject: Re: [PATCH] `iwlist scan` fails with many networks available
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     James Nylen <jnylen@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 21 Aug 2019 09:59:20 +0200
-In-Reply-To: <CABVa4Nga1vyvyWNpTTJLa44rZo8wu4-bE=mXX1nZgvzktbSq6A@mail.gmail.com> (sfid-20190813_024304_695118_D911022B)
-References: <CABVa4NgWMkJuyB1P5fwQEYHwqBRiySE+fGQpMKt8zbp+xJ8+rw@mail.gmail.com>
-         <CABVa4NhutjvHPbyaxNeVpJjf-RMJdwEX-Yjk4bkqLC1DN3oXPA@mail.gmail.com>
-         <f7de98001849bc98a0a084d2ffc369f4d9772d52.camel@sipsolutions.net>
-         <CABVa4Nga1vyvyWNpTTJLa44rZo8wu4-bE=mXX1nZgvzktbSq6A@mail.gmail.com>
-         (sfid-20190813_024304_695118_D911022B)
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 21 Aug 2019 04:06:13 -0400
+Received: from 79.184.254.79.ipv4.supernova.orange.pl (79.184.254.79) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.275)
+ id 365a6345488f7933; Wed, 21 Aug 2019 10:06:10 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kristian Klausen <kristian@klausen.dk>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] ACPI: PM: s2idle: Always set up EC GPE for system wakeup
+Date:   Wed, 21 Aug 2019 10:06:09 +0200
+Message-ID: <2671465.Ihf76VL9xe@kreacher>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-13 at 00:43 +0000, James Nylen wrote:
-> > I suppose we could consider applying a workaround like this if it has a
-> > condition checking that the buffer passed in is the maximum possible
-> > buffer (65535 bytes, due to iw_point::length being u16)
-> 
-> This is what the latest patch does (attached to my email from
-> yesterday / https://lkml.org/lkml/2019/8/10/452 ).
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Hmm, yes, you're right. I evidently missed the comparisons to 0xFFFF
-there, sorry about that.
+Commit 10a08fd65ec1 ("ACPI: PM: Set up EC GPE for system wakeup from
+drivers that need it") assumed that the EC GPE would only need to be
+set up for system wakeup if either the intel-hid or the intel-vbtn
+driver was in use, but that turns out to be incorrect.  In particular,
+on ASUS Zenbook UX430UNR/i7-8550U, if the EC GPE is not enabled while
+suspended, the system cannot be woken up by opening the lid or
+pressing a key, and that machine doesn't use any of the drivers
+mentioned above.
 
-> If you'd like to apply it, I'm happy to make any needed revisions.
-> Otherwise I'm going to have to keep patching my kernels for this
-> issue, unfortunately I don't have the time to try to get wicd to
-> migrate to a better solution.
+For this reason, always set up the EC GPE for system wakeup from
+suspend-to-idle by setting and clearing its wake mask in the ACPI
+suspend-to-idle callbacks.
 
-Not sure which would be easier, but ok :-)
+Fixes: 10a08fd65ec1 ("ACPI: PM: Set up EC GPE for system wakeup from drivers that need it")
+Reported-by: Kristian Klausen <kristian@klausen.dk>
+Tested-by: Kristian Klausen <kristian@klausen.dk>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-Can you please fix the patch to
- 1) use /* */ style comments (see
-    https://www.kernel.org/doc/html/latest/process/coding-style.html)
+Commit 10a08fd65ec1 is present in linux-next.
 
- 2) remove extra braces (also per coding style)
+---
+ drivers/acpi/ec.c                 |    1 -
+ drivers/acpi/sleep.c              |   15 +++++++++++++--
+ drivers/platform/x86/intel-hid.c  |    5 +----
+ drivers/platform/x86/intel-vbtn.c |    5 +----
+ 4 files changed, 15 insertions(+), 11 deletions(-)
 
- 3) use U16_MAX instead of 0xFFFF
+Index: linux-pm/drivers/acpi/sleep.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/sleep.c
++++ linux-pm/drivers/acpi/sleep.c
+@@ -938,6 +938,13 @@ static int lps0_device_attach(struct acp
+ 	if (mem_sleep_default > PM_SUSPEND_MEM && !acpi_sleep_default_s3)
+ 		mem_sleep_current = PM_SUSPEND_TO_IDLE;
+ 
++	/*
++	 * Some LPS0 systems, like ASUS Zenbook UX430UNR/i7-8550U, require the
++	 * EC GPE to be enabled while suspended for certain wakeup devices to
++	 * work, so mark it as wakeup-capable.
++	 */
++	acpi_ec_mark_gpe_for_wake();
++
+ 	return 0;
+ }
+ 
+@@ -954,8 +961,10 @@ static int acpi_s2idle_begin(void)
+ 
+ static int acpi_s2idle_prepare(void)
+ {
+-	if (acpi_sci_irq_valid())
++	if (acpi_sci_irq_valid()) {
+ 		enable_irq_wake(acpi_sci_irq);
++		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
++	}
+ 
+ 	acpi_enable_wakeup_devices(ACPI_STATE_S0);
+ 
+@@ -1034,8 +1043,10 @@ static void acpi_s2idle_restore(void)
+ 
+ 	acpi_disable_wakeup_devices(ACPI_STATE_S0);
+ 
+-	if (acpi_sci_irq_valid())
++	if (acpi_sci_irq_valid()) {
++		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
+ 		disable_irq_wake(acpi_sci_irq);
++	}
+ }
+ 
+ static void acpi_s2idle_end(void)
+Index: linux-pm/drivers/platform/x86/intel-hid.c
+===================================================================
+--- linux-pm.orig/drivers/platform/x86/intel-hid.c
++++ linux-pm/drivers/platform/x86/intel-hid.c
+@@ -257,7 +257,6 @@ static int intel_hid_pm_prepare(struct d
+ 		struct intel_hid_priv *priv = dev_get_drvdata(device);
+ 
+ 		priv->wakeup_mode = true;
+-		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
+ 	}
+ 	return 0;
+ }
+@@ -266,10 +265,8 @@ static void intel_hid_pm_complete(struct
+ {
+ 	struct intel_hid_priv *priv = dev_get_drvdata(device);
+ 
+-	if (priv->wakeup_mode) {
+-		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
++	if (priv->wakeup_mode)
+ 		priv->wakeup_mode = false;
+-	}
+ }
+ 
+ static int intel_hid_pl_suspend_handler(struct device *device)
+Index: linux-pm/drivers/platform/x86/intel-vbtn.c
+===================================================================
+--- linux-pm.orig/drivers/platform/x86/intel-vbtn.c
++++ linux-pm/drivers/platform/x86/intel-vbtn.c
+@@ -205,7 +205,6 @@ static int intel_vbtn_pm_prepare(struct
+ 		struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
+ 
+ 		priv->wakeup_mode = true;
+-		acpi_ec_set_gpe_wake_mask(ACPI_GPE_ENABLE);
+ 	}
+ 	return 0;
+ }
+@@ -214,10 +213,8 @@ static void intel_vbtn_pm_complete(struc
+ {
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(dev);
+ 
+-	if (priv->wakeup_mode) {
+-		acpi_ec_set_gpe_wake_mask(ACPI_GPE_DISABLE);
++	if (priv->wakeup_mode)
+ 		priv->wakeup_mode = false;
+-	}
+ }
+ 
+ static int intel_vbtn_pm_resume(struct device *dev)
+Index: linux-pm/drivers/acpi/ec.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/ec.c
++++ linux-pm/drivers/acpi/ec.c
+@@ -1970,7 +1970,6 @@ void acpi_ec_set_gpe_wake_mask(u8 action
+ 	if (pm_suspend_no_platform() && first_ec && !ec_no_wakeup)
+ 		acpi_set_gpe_wake_mask(NULL, first_ec->gpe, action);
+ }
+-EXPORT_SYMBOL_GPL(acpi_ec_set_gpe_wake_mask);
+ 
+ bool acpi_ec_dispatch_gpe(void)
+ {
 
-I'd also consider renaming "maybe_current_ev" to "next_ev" or something
-shorter anyway, and would probably argue that rewriting this
 
-> +		if (IS_ERR(maybe_current_ev)) {
-> +			err = PTR_ERR(maybe_current_ev);
-> +			if (err == -E2BIG) {
-> +				// Last BSS failed to copy into buffer.  As
-> +				// above, only report an error if `iwlist` will
-> +				// retry again with a larger buffer.
-> +				if (len >= 0xFFFF) {
-> +					err = 0;
-> +				}
-> +			}
->  			break;
-> +		} else {
-> +			current_ev = maybe_current_ev;
->  		}
-
-
-to something like
-
-	next_ev = ...
-	if (IS_ERR(next_ev)) {
-		err = PTR_ERR(next_ev);
-		/* mask error and truncate in case buffer cannot be
-                 * increased
-                 */
-		if (err == -E2BIG && len < U16_MAX)
-			err = 0;
-		break;
-	}
-
-	current_ev = next_ev;
-
-
-could be more readable, but that's just editorial really.
-
-Thanks,
-johannes
 
