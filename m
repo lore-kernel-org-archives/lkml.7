@@ -2,158 +2,91 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D79C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41142C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9452339F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:24:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FVubjkvp"
+	by mail.kernel.org (Postfix) with ESMTP id 090E122DD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 18:24:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566411889;
+	bh=ugKHG1JshU1dwvl8yLn9iLYIvQ1WYl/oxu1OTFKUqVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oYBRNyAEV5dSiDX3AleXi/BftwEc7ILKXYJ342myk5qGTEsaqxR6EHZNrNIwYQ6wA
+	 uEC5d9LooHTdrMau9rdoYMtiUtz7xRL4RVlvSReADk8aQQj1tZMqU715zjScMVReje
+	 klEEoz6bEPU5YVPzB+Jd7arQpAGea4JblifTshRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbfHUSYQ (ORCPT
+        id S1729190AbfHUSYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 14:24:16 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:11858 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfHUSYP (ORCPT
+        Wed, 21 Aug 2019 14:24:48 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42665 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfHUSYr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 14:24:15 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d5d8c4d0000>; Wed, 21 Aug 2019 11:24:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 21 Aug 2019 11:24:13 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 21 Aug 2019 11:24:13 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 18:24:12 +0000
-Received: from [10.2.161.131] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
- 2019 18:24:12 +0000
-Subject: Re: [RFC PATCH v2 00/19] RDMA/FS DAX truncate proposal V1,000,002 ;-)
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Ira Weiny <ira.weiny@intel.com>
-CC:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Matthew Wilcox" <willy@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
-        <linux-xfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
-        <linux-mm@kvack.org>
-References: <20190814180848.GB31490@iweiny-DESK2.sc.intel.com>
- <20190815130558.GF14313@quack2.suse.cz>
- <20190816190528.GB371@iweiny-DESK2.sc.intel.com>
- <20190817022603.GW6129@dread.disaster.area>
- <20190819063412.GA20455@quack2.suse.cz>
- <20190819092409.GM7777@dread.disaster.area> <20190819123841.GC5058@ziepe.ca>
- <20190820011210.GP7777@dread.disaster.area> <20190820115515.GA29246@ziepe.ca>
- <20190821180200.GA5965@iweiny-DESK2.sc.intel.com>
- <20190821181343.GH8653@ziepe.ca>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <50905b73-b64a-2b02-f5d5-f66ba0d912ab@nvidia.com>
-Date:   Wed, 21 Aug 2019 11:22:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 14:24:47 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j7so2962577ota.9;
+        Wed, 21 Aug 2019 11:24:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xj642LOUuahy+rYAJ7XSvVLcFTloxyknrp7w0AGW3JQ=;
+        b=LdoA16fh5oNqbW5smx5/Id2AzmtiAZWsNCNoujMtpTZ1B43ozOuBjlq1OO8i05qXUU
+         5FoH9bVE3GKevqM+P2ohZlqZJ3hk2cVhpML3lTjoYSNtZmejdFjO941VxXg0Fl1ot8B5
+         Jrnj/TmosYCZBYj1k3iPhoLQUI2iyZa7tP1iJlZGvL3+xrOk4yHvE+QW2P3rS7/m0PMU
+         HOI70FYYBWJGdwO8Da18pQPpAGVLn2WlG9/wrpEezgq0ooWFO2dBCYrm0Gwwk0Hn+28V
+         QliO0lCxFMoVC3btWmuk7wBZwRFyOdXVDG3Wdn9LL2zo9GPbclxAQSRzLYDykE0lh4Od
+         dcxg==
+X-Gm-Message-State: APjAAAVO4S/VEeR9gFea1YRq+7dD5gjaYymjDUY+Ho2k84MqWJLV97yu
+        zB5laTd/C7HHumVgNP0oCw==
+X-Google-Smtp-Source: APXvYqzn+v4yVCzNPWIXhmRz3AdMu+fycoMKN7LNNf8XGpK3Hy8shxP66dzdzXor5TPJ4npISlu7dQ==
+X-Received: by 2002:a9d:5c11:: with SMTP id o17mr10969493otk.107.1566411886789;
+        Wed, 21 Aug 2019 11:24:46 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id i17sm6178004oik.32.2019.08.21.11.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 11:24:45 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 13:24:45 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH v2] dt-bindings: arm-boards: Update pointer to ARM CPU
+ bindings
+Message-ID: <20190821182445.GA9101@bogus>
+References: <20190731114201.7884-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-In-Reply-To: <20190821181343.GH8653@ziepe.ca>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1566411853; bh=CfqY8aJja8VV7vQdQwO0ArJP7UGyxBQ9FeuFR1zQxF4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FVubjkvptshBNnluMQjtoEMnrXaPNCHMPCZ0L8jnjc9nEOnq6dqKhOe+TvOOP7K04
-         6I4vM3+3IHlNz4bj4WEE6vv6H1xbLRU22hJWsYyts0CsqEAEIR1/WJf1Lql9ZCrDWW
-         MJ6OCMA4rAS3PDporQJNy9PmW155jIzLu7SYKrtMZTMsGKDQqST56iTQpBp5eYgrOH
-         blDrmpTbHWZKLDV2Mk2gFjrXf8+pUhWMvIfMwlN+z/T6aNEBdOocUohhXbkxa9euoz
-         OtGAYEgIWVXbfAYV4A5vvnkWCH3bW4Gx4cxWy4g+M/67D1nmfmJlD3HcEd6W5ifcdA
-         KEmZJENkYkOOg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190731114201.7884-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/19 11:13 AM, Jason Gunthorpe wrote:
-> On Wed, Aug 21, 2019 at 11:02:00AM -0700, Ira Weiny wrote:
->> On Tue, Aug 20, 2019 at 08:55:15AM -0300, Jason Gunthorpe wrote:
->>> On Tue, Aug 20, 2019 at 11:12:10AM +1000, Dave Chinner wrote:
->>>> On Mon, Aug 19, 2019 at 09:38:41AM -0300, Jason Gunthorpe wrote:
->>>>> On Mon, Aug 19, 2019 at 07:24:09PM +1000, Dave Chinner wrote:
->>>>>
->>>>>> So that leaves just the normal close() syscall exit case, where the
->>>>>> application has full control of the order in which resources are
->>>>>> released. We've already established that we can block in this
->>>>>> context.  Blocking in an interruptible state will allow fatal signal
->>>>>> delivery to wake us, and then we fall into the
->>>>>> fatal_signal_pending() case if we get a SIGKILL while blocking.
->>>>>
->>>>> The major problem with RDMA is that it doesn't always wait on close() for the
->>>>> MR holding the page pins to be destoyed. This is done to avoid a
->>>>> deadlock of the form:
->>>>>
->>>>>     uverbs_destroy_ufile_hw()
->>>>>        mutex_lock()
->>>>>         [..]
->>>>>          mmput()
->>>>>           exit_mmap()
->>>>>            remove_vma()
->>>>>             fput();
->>>>>              file_operations->release()
->>>>
->>>> I think this is wrong, and I'm pretty sure it's an example of why
->>>> the final __fput() call is moved out of line.
->>>
->>> Yes, I think so too, all I can say is this *used* to happen, as we
->>> have special code avoiding it, which is the code that is messing up
->>> Ira's lifetime model.
->>>
->>> Ira, you could try unraveling the special locking, that solves your
->>> lifetime issues?
->>
->> Yes I will try to prove this out...  But I'm still not sure this fully solves
->> the problem.
->>
->> This only ensures that the process which has the RDMA context (RDMA FD) is safe
->> with regard to hanging the close for the "data file FD" (the file which has
->> pinned pages) in that _same_ process.  But what about the scenario.
+On Wed, 31 Jul 2019 13:42:01 +0200, Geert Uytterhoeven wrote:
+> The ARM CPU DT bindings were converted from plain text to YAML, but not
+> all referrers were updated.
 > 
-> Oh, I didn't think we were talking about that. Hanging the close of
-> the datafile fd contingent on some other FD's closure is a recipe for
-> deadlock..
+> Fixes: 672951cbd1b70a9e ("dt-bindings: arm: Convert cpu binding to json-schema")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> v2:
+>   - Add Acked-by.
+> ---
+>  Documentation/devicetree/bindings/arm/arm-boards | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> IMHO the pin refcnt is held by the driver char dev FD, that is the
-> object you need to make it visible against.
 
+Applied, thanks.
 
-If you do that, it might make it a lot simpler to add lease support
-to drivers like XDP, which is otherwise looking pretty difficult to
-set up with an fd. (It's socket-based, and not immediately clear where
-to connect up the fd.)
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-> 
-> Why not just have a single table someplace of all the layout leases
-> with the file they are held on and the FD/socket/etc that is holding
-> the pin? Make it independent of processes and FDs?
-> 
-> Jason
-> 
+Rob
