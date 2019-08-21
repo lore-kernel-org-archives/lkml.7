@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E83AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCEFC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED4D233A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9233D233FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 13:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbfHUNz3 (ORCPT
+        id S1729144AbfHUNzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 09:55:29 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:39627 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726371AbfHUNz3 (ORCPT
+        Wed, 21 Aug 2019 09:55:41 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:53707 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726371AbfHUNzl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:55:29 -0400
-X-UUID: 793083e005e247909a5f599bb7d4a452-20190821
-X-UUID: 793083e005e247909a5f599bb7d4a452-20190821
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        Wed, 21 Aug 2019 09:55:41 -0400
+X-UUID: 336b9342b47345619820c12a975481e9-20190821
+X-UUID: 336b9342b47345619820c12a975481e9-20190821
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
         (envelope-from <yong.wu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 79809332; Wed, 21 Aug 2019 21:55:23 +0800
+        with ESMTP id 105547725; Wed, 21 Aug 2019 21:55:32 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
  mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 21 Aug 2019 21:55:20 +0800
+ 15.0.1395.4; Wed, 21 Aug 2019 21:55:28 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 21 Aug 2019 21:55:19 +0800
+ Transport; Wed, 21 Aug 2019 21:55:27 +0800
 From:   Yong Wu <yong.wu@mediatek.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -50,9 +50,9 @@ CC:     Rob Herring <robh+dt@kernel.org>,
         <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>,
         <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
         <ming-fan.chen@mediatek.com>
-Subject: [PATCH v10 08/23] iommu/io-pgtable-arm-v7s: Rename the quirk from MTK_4GB to MTK_EXT
-Date:   Wed, 21 Aug 2019 21:53:11 +0800
-Message-ID: <1566395606-7975-9-git-send-email-yong.wu@mediatek.com>
+Subject: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support PA[33:32] for MediaTek
+Date:   Wed, 21 Aug 2019 21:53:12 +0800
+Message-ID: <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
 References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
@@ -64,81 +64,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In previous mt2712/mt8173, MediaTek extend the v7s to support 4GB dram.
-But in the latest mt8183, We extend it to support the PA up to 34bit.
-Then the "MTK_4GB" name is not so fit, This patch only change the quirk
-name to "MTK_EXT".
+MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
+the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
+respectively. Meanwhile the iova still is 32bits.
+
+Regarding whether the pagetable address could be over 4GB, the mt8183
+support it while the previous mt8173 don't, thus keep it as is.
 
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
 ---
- drivers/iommu/io-pgtable-arm-v7s.c | 6 +++---
- drivers/iommu/mtk_iommu.c          | 2 +-
- include/linux/io-pgtable.h         | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
+ include/linux/io-pgtable.h         |  7 +++----
+ 2 files changed, 28 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/iommu/io-pgtable-arm-v7s.c b/drivers/iommu/io-pgtable-arm-v7s.c
-index fa1b38f..77cc1eb 100644
+index 77cc1eb..4a084f0 100644
 --- a/drivers/iommu/io-pgtable-arm-v7s.c
 +++ b/drivers/iommu/io-pgtable-arm-v7s.c
-@@ -315,7 +315,7 @@ static arm_v7s_iopte arm_v7s_prot_to_pte(int prot, int lvl,
+@@ -112,7 +112,9 @@
+ #define ARM_V7S_TEX_MASK		0x7
+ #define ARM_V7S_ATTR_TEX(val)		(((val) & ARM_V7S_TEX_MASK) << ARM_V7S_TEX_SHIFT)
+ 
+-#define ARM_V7S_ATTR_MTK_4GB		BIT(9) /* MTK extend it for 4GB mode */
++/* MediaTek extend the two bits for PA 32bit/33bit */
++#define ARM_V7S_ATTR_MTK_PA_BIT32	BIT(9)
++#define ARM_V7S_ATTR_MTK_PA_BIT33	BIT(4)
+ 
+ /* *well, except for TEX on level 2 large pages, of course :( */
+ #define ARM_V7S_CONT_PAGE_TEX_SHIFT	6
+@@ -179,13 +181,22 @@ static dma_addr_t __arm_v7s_dma_addr(void *pages)
+ static arm_v7s_iopte paddr_to_iopte(phys_addr_t paddr, int lvl,
+ 				    struct io_pgtable_cfg *cfg)
+ {
+-	return paddr & ARM_V7S_LVL_MASK(lvl);
++	arm_v7s_iopte pte = paddr & ARM_V7S_LVL_MASK(lvl);
++
++	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
++		if (paddr & BIT_ULL(32))
++			pte |= ARM_V7S_ATTR_MTK_PA_BIT32;
++		if (paddr & BIT_ULL(33))
++			pte |= ARM_V7S_ATTR_MTK_PA_BIT33;
++	}
++	return pte;
+ }
+ 
+ static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
+ 				  struct io_pgtable_cfg *cfg)
+ {
+ 	arm_v7s_iopte mask;
++	phys_addr_t paddr;
+ 
+ 	if (ARM_V7S_PTE_IS_TABLE(pte, lvl))
+ 		mask = ARM_V7S_TABLE_MASK;
+@@ -194,7 +205,15 @@ static phys_addr_t iopte_to_paddr(arm_v7s_iopte pte, int lvl,
+ 	else
+ 		mask = ARM_V7S_LVL_MASK(lvl);
+ 
+-	return pte & mask;
++	paddr = pte & mask;
++	if (IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT) &&
++	    (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)) {
++		if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
++			paddr |= BIT_ULL(32);
++		if (pte & ARM_V7S_ATTR_MTK_PA_BIT33)
++			paddr |= BIT_ULL(33);
++	}
++	return paddr;
+ }
+ 
+ static arm_v7s_iopte *iopte_deref(arm_v7s_iopte pte, int lvl,
+@@ -315,9 +334,6 @@ static arm_v7s_iopte arm_v7s_prot_to_pte(int prot, int lvl,
  	if (lvl == 1 && (cfg->quirks & IO_PGTABLE_QUIRK_ARM_NS))
  		pte |= ARM_V7S_ATTR_NS_SECTION;
  
--	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB)
-+	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
- 		pte |= ARM_V7S_ATTR_MTK_4GB;
- 
+-	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
+-		pte |= ARM_V7S_ATTR_MTK_4GB;
+-
  	return pte;
-@@ -737,12 +737,12 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
- 	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
- 			    IO_PGTABLE_QUIRK_NO_PERMS |
- 			    IO_PGTABLE_QUIRK_TLBI_ON_MAP |
--			    IO_PGTABLE_QUIRK_ARM_MTK_4GB |
-+			    IO_PGTABLE_QUIRK_ARM_MTK_EXT |
- 			    IO_PGTABLE_QUIRK_NON_STRICT))
+ }
+ 
+@@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
+ {
+ 	struct arm_v7s_io_pgtable *data;
+ 
+-	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
++	if (cfg->ias > ARM_V7S_ADDR_BITS ||
++	    (cfg->oas > ARM_V7S_ADDR_BITS &&
++	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
  		return NULL;
  
- 	/* If ARM_MTK_4GB is enabled, the NO_PERMS is also expected. */
--	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_4GB &&
-+	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT &&
- 	    !(cfg->quirks & IO_PGTABLE_QUIRK_NO_PERMS))
- 			return NULL;
- 
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 9ba2706..62edce7 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -296,7 +296,7 @@ static int mtk_iommu_domain_finalise(struct mtk_iommu_domain *dom)
- 	};
- 
- 	if (data->enable_4GB)
--		dom->cfg.quirks |= IO_PGTABLE_QUIRK_ARM_MTK_4GB;
-+		dom->cfg.quirks |= IO_PGTABLE_QUIRK_ARM_MTK_EXT;
- 
- 	dom->iop = alloc_io_pgtable_ops(ARM_V7S, &dom->cfg, data);
- 	if (!dom->iop) {
+ 	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
 diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
-index b5a450a..915fb73 100644
+index 915fb73..a2a52c3 100644
 --- a/include/linux/io-pgtable.h
 +++ b/include/linux/io-pgtable.h
-@@ -65,7 +65,7 @@ struct io_pgtable_cfg {
+@@ -65,10 +65,9 @@ struct io_pgtable_cfg {
  	 *	(unmapped) entries but the hardware might do so anyway, perform
  	 *	TLB maintenance when mapping as well as when unmapping.
  	 *
--	 * IO_PGTABLE_QUIRK_ARM_MTK_4GB: (ARM v7s format) Set bit 9 in all
-+	 * IO_PGTABLE_QUIRK_ARM_MTK_EXT: (ARM v7s format) Set bit 9 in all
- 	 *	PTEs, for Mediatek IOMMUs which treat it as a 33rd address bit
- 	 *	when the SoC is in "4GB mode" and they can only access the high
- 	 *	remap of DRAM (0x1_00000000 to 0x1_ffffffff).
-@@ -77,7 +77,7 @@ struct io_pgtable_cfg {
- 	#define IO_PGTABLE_QUIRK_ARM_NS		BIT(0)
- 	#define IO_PGTABLE_QUIRK_NO_PERMS	BIT(1)
- 	#define IO_PGTABLE_QUIRK_TLBI_ON_MAP	BIT(2)
--	#define IO_PGTABLE_QUIRK_ARM_MTK_4GB	BIT(3)
-+	#define IO_PGTABLE_QUIRK_ARM_MTK_EXT	BIT(3)
- 	#define IO_PGTABLE_QUIRK_NON_STRICT	BIT(4)
- 	unsigned long			quirks;
- 	unsigned long			pgsize_bitmap;
+-	 * IO_PGTABLE_QUIRK_ARM_MTK_EXT: (ARM v7s format) Set bit 9 in all
+-	 *	PTEs, for Mediatek IOMMUs which treat it as a 33rd address bit
+-	 *	when the SoC is in "4GB mode" and they can only access the high
+-	 *	remap of DRAM (0x1_00000000 to 0x1_ffffffff).
++	 * IO_PGTABLE_QUIRK_ARM_MTK_EXT: (ARM v7s format) MediaTek IOMMUs extend
++	 *	to support up to 34 bits PA where the bit32 and bit33 are
++	 *	encoded in the bit9 and bit4 of the PTE respectively.
+ 	 *
+ 	 * IO_PGTABLE_QUIRK_NON_STRICT: Skip issuing synchronous leaf TLBIs
+ 	 *	on unmap, for DMA domains using the flush queue mechanism for
 -- 
 1.9.1
 
