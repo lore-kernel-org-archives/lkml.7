@@ -4,162 +4,154 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 830A6C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74372C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FEF92082F
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E202082F
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbfHUR5t (ORCPT
+        id S1730427AbfHUR6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:57:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58782 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 13:58:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:9586 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730171AbfHUR5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729317AbfHUR5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 21 Aug 2019 13:57:45 -0400
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D638F1801592;
+        by mx1.redhat.com (Postfix) with ESMTPS id C1222300BEA4;
         Wed, 21 Aug 2019 17:57:44 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 08B011F8;
-        Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D8FC757B6;
+        Wed, 21 Aug 2019 17:57:38 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id C8396223D0B; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
+        id B8C7B223D08; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nvdimm@lists.01.org
 Cc:     virtio-fs@redhat.com, vgoyal@redhat.com, miklos@szeredi.hu,
         stefanha@redhat.com, dgilbert@redhat.com
-Subject: [PATCH 15/19] fuse: Maintain a list of busy elements
-Date:   Wed, 21 Aug 2019 13:57:16 -0400
-Message-Id: <20190821175720.25901-16-vgoyal@redhat.com>
+Subject: [PATCH 12/19] fuse, dax: add DAX mmap support
+Date:   Wed, 21 Aug 2019 13:57:13 -0400
+Message-Id: <20190821175720.25901-13-vgoyal@redhat.com>
 In-Reply-To: <20190821175720.25901-1-vgoyal@redhat.com>
 References: <20190821175720.25901-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Wed, 21 Aug 2019 17:57:44 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 21 Aug 2019 17:57:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This list will be used selecting fuse_dax_mapping to free when number of
-free mappings drops below a threshold.
+From: Stefan Hajnoczi <stefanha@redhat.com>
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Add DAX mmap() support.
+
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
 ---
- fs/fuse/file.c   | 22 ++++++++++++++++++++++
- fs/fuse/fuse_i.h |  8 ++++++++
- fs/fuse/inode.c  |  4 ++++
- 3 files changed, 34 insertions(+)
+ fs/fuse/file.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 63 insertions(+), 1 deletion(-)
 
 diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 7b70b5ea7f94..8c1777fb61f7 100644
+index f323b7b04414..32870bb862e7 100644
 --- a/fs/fuse/file.c
 +++ b/fs/fuse/file.c
-@@ -200,6 +200,23 @@ static struct fuse_dax_mapping *alloc_dax_mapping(struct fuse_conn *fc)
- 	return dmap;
+@@ -2730,10 +2730,15 @@ static const struct vm_operations_struct fuse_file_vm_ops = {
+ 	.page_mkwrite	= fuse_page_mkwrite,
+ };
+ 
++static int fuse_dax_mmap(struct file *file, struct vm_area_struct *vma);
+ static int fuse_file_mmap(struct file *file, struct vm_area_struct *vma)
+ {
+ 	struct fuse_file *ff = file->private_data;
+ 
++	/* DAX mmap is superior to direct_io mmap */
++	if (IS_DAX(file_inode(file)))
++		return fuse_dax_mmap(file, vma);
++
+ 	if (ff->open_flags & FOPEN_DIRECT_IO) {
+ 		/* Can't provide the coherency needed for MAP_SHARED */
+ 		if (vma->vm_flags & VM_MAYSHARE)
+@@ -2765,9 +2770,65 @@ static ssize_t fuse_file_splice_read(struct file *in, loff_t *ppos,
+ 
  }
  
-+/* This assumes fc->lock is held */
-+static void __dmap_remove_busy_list(struct fuse_conn *fc,
-+				    struct fuse_dax_mapping *dmap)
++static int __fuse_dax_fault(struct vm_fault *vmf, enum page_entry_size pe_size,
++			    bool write)
 +{
-+	list_del_init(&dmap->busy_list);
-+	WARN_ON(fc->nr_busy_ranges == 0);
-+	fc->nr_busy_ranges--;
++	vm_fault_t ret;
++	struct inode *inode = file_inode(vmf->vma->vm_file);
++	struct super_block *sb = inode->i_sb;
++	pfn_t pfn;
++
++	if (write)
++		sb_start_pagefault(sb);
++
++	/* TODO inode semaphore to protect faults vs truncate */
++
++	ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL, &fuse_iomap_ops);
++
++	if (ret & VM_FAULT_NEEDDSYNC)
++		ret = dax_finish_sync_fault(vmf, pe_size, pfn);
++
++	if (write)
++		sb_end_pagefault(sb);
++
++	return ret;
 +}
 +
-+static void dmap_remove_busy_list(struct fuse_conn *fc,
-+				  struct fuse_dax_mapping *dmap)
++static vm_fault_t fuse_dax_fault(struct vm_fault *vmf)
 +{
-+	spin_lock(&fc->lock);
-+	__dmap_remove_busy_list(fc, dmap);
-+	spin_unlock(&fc->lock);
++	return __fuse_dax_fault(vmf, PE_SIZE_PTE,
++				vmf->flags & FAULT_FLAG_WRITE);
 +}
 +
- /* This assumes fc->lock is held */
- static void __dmap_add_to_free_pool(struct fuse_conn *fc,
- 				struct fuse_dax_mapping *dmap)
-@@ -265,6 +282,10 @@ static int fuse_setup_one_mapping(struct inode *inode, loff_t offset,
- 		/* Protected by fi->i_dmap_sem */
- 		fuse_dax_interval_tree_insert(dmap, &fi->dmap_tree);
- 		fi->nr_dmaps++;
-+		spin_lock(&fc->lock);
-+		list_add_tail(&dmap->busy_list, &fc->busy_ranges);
-+		fc->nr_busy_ranges++;
-+		spin_unlock(&fc->lock);
- 	}
- 	return 0;
- }
-@@ -334,6 +355,7 @@ static void dmap_reinit_add_to_free_pool(struct fuse_conn *fc,
- 	pr_debug("fuse: freeing memory range start=0x%llx end=0x%llx "
- 		 "window_offset=0x%llx length=0x%llx\n", dmap->start,
- 		 dmap->end, dmap->window_offset, dmap->length);
-+	__dmap_remove_busy_list(fc, dmap);
- 	dmap->start = dmap->end = 0;
- 	__dmap_add_to_free_pool(fc, dmap);
- }
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 125bb7123651..070a5c2b6498 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -119,6 +119,10 @@ struct fuse_dax_mapping {
- 	/** End Position in file */
- 	__u64 end;
- 	__u64 __subtree_last;
++static vm_fault_t fuse_dax_huge_fault(struct vm_fault *vmf,
++			       enum page_entry_size pe_size)
++{
++	return __fuse_dax_fault(vmf, pe_size, vmf->flags & FAULT_FLAG_WRITE);
++}
 +
-+	/* Will connect in fc->busy_ranges to keep track busy memory */
-+	struct list_head busy_list;
++static vm_fault_t fuse_dax_page_mkwrite(struct vm_fault *vmf)
++{
++	return __fuse_dax_fault(vmf, PE_SIZE_PTE, true);
++}
 +
- 	/** Position in DAX window */
- 	u64 window_offset;
- 
-@@ -887,6 +891,10 @@ struct fuse_conn {
- 	/** DAX device, non-NULL if DAX is supported */
- 	struct dax_device *dax_dev;
- 
-+	/* List of memory ranges which are busy */
-+	unsigned long nr_busy_ranges;
-+	struct list_head busy_ranges;
++static vm_fault_t fuse_dax_pfn_mkwrite(struct vm_fault *vmf)
++{
++	return __fuse_dax_fault(vmf, PE_SIZE_PTE, true);
++}
 +
- 	/*
- 	 * DAX Window Free Ranges. TODO: This might not be best place to store
- 	 * this free list
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 52135b4616d2..b80e76a307f3 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -614,6 +614,8 @@ static void fuse_free_dax_mem_ranges(struct list_head *mem_list)
- 	/* Free All allocated elements */
- 	list_for_each_entry_safe(range, temp, mem_list, list) {
- 		list_del(&range->list);
-+		if (!list_empty(&range->busy_list))
-+			list_del(&range->busy_list);
- 		kfree(range);
- 	}
++static const struct vm_operations_struct fuse_dax_vm_ops = {
++	.fault		= fuse_dax_fault,
++	.huge_fault	= fuse_dax_huge_fault,
++	.page_mkwrite	= fuse_dax_page_mkwrite,
++	.pfn_mkwrite	= fuse_dax_pfn_mkwrite,
++};
++
+ static int fuse_dax_mmap(struct file *file, struct vm_area_struct *vma)
+ {
+-	return -EINVAL; /* TODO */
++	file_accessed(file);
++	vma->vm_ops = &fuse_dax_vm_ops;
++	vma->vm_flags |= VM_MIXEDMAP | VM_HUGEPAGE;
++	return 0;
  }
-@@ -658,6 +660,7 @@ static int fuse_dax_mem_range_init(struct fuse_conn *fc,
- 		 */
- 		range->window_offset = i * FUSE_DAX_MEM_RANGE_SZ;
- 		range->length = FUSE_DAX_MEM_RANGE_SZ;
-+		INIT_LIST_HEAD(&range->busy_list);
- 		list_add_tail(&range->list, &mem_ranges);
- 	}
  
-@@ -708,6 +711,7 @@ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
- 	fc->user_ns = get_user_ns(user_ns);
- 	fc->max_pages = FUSE_DEFAULT_MAX_PAGES_PER_REQ;
- 	INIT_LIST_HEAD(&fc->free_ranges);
-+	INIT_LIST_HEAD(&fc->busy_ranges);
- }
- EXPORT_SYMBOL_GPL(fuse_conn_init);
- 
+ static int convert_fuse_file_lock(struct fuse_conn *fc,
+@@ -3825,6 +3886,7 @@ static const struct file_operations fuse_file_operations = {
+ 	.release	= fuse_release,
+ 	.fsync		= fuse_fsync,
+ 	.lock		= fuse_file_lock,
++	.get_unmapped_area = thp_get_unmapped_area,
+ 	.flock		= fuse_file_flock,
+ 	.splice_read	= fuse_file_splice_read,
+ 	.splice_write	= iter_file_splice_write,
 -- 
 2.20.1
 
