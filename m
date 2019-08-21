@@ -7,73 +7,214 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80C4C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFD6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7900B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6311C2332A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 07:04:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iD1FzuN4"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="oMNSV3F9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfHUHDy (ORCPT
+        id S1727972AbfHUHEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 03:03:54 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:46625 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfHUHDy (ORCPT
+        Wed, 21 Aug 2019 03:04:30 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:39557 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbfHUHEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 03:03:54 -0400
+        Wed, 21 Aug 2019 03:04:30 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x7L73obt020055;
-        Wed, 21 Aug 2019 16:03:50 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x7L73obt020055
+        by conuserg-09.nifty.com with ESMTP id x7L727vB010350;
+        Wed, 21 Aug 2019 16:02:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x7L727vB010350
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566371030;
-        bh=sMFPtLuGDuqHPGp8bbKvCgqciiiU1yw2wz53C7izrOw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iD1FzuN4oVpqcAMVZKMaQTdOJpL+e9O5HkbgvBpZu+ff4KIkRJI8prPuq5ybO6zDt
-         3uYDFIXfrhqG+wLskRbc4zFMicClH+YyEpF6AevKXac6K3bv9jYetcIkg2oSK9v/Z9
-         df4KvplaBtWLfAIXN0lIVIxFKEDT0ykcD+7b0YCuD5MG8VKDO0q7xkEAsy8JlwSh/i
-         QdRMdIsqlwT/oacO70t6AsIqDiBwU2FkcNtw7hgOpXSCtoqooK6ifq4z50ACurEjKs
-         vppH+uMj3DJg/mTlctf6vHYMCuzfYXkv93V/+lnPt+kIk6BtE4NWC56BVmbcdY+rFP
-         sEQ2Z+w0VDdVQ==
+        s=dec2015msa; t=1566370932;
+        bh=RaFKffSw+PipHQQxACqqSUGOlGcAb1Ci/wYUrlHdarU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oMNSV3F9SR5IxWOnFaL2EymiVkvsLtY4gtmfulltW89fku6upTrhdpOsjWYXOk4nA
+         GyvFMFUYjx3vcXqvqFSnSFS2RZeRBsZsxetEskDCQZMK3MAP7Dn9vAiCrcxOBpSPjC
+         VCgJRqPLx5J+QvD3mpeJZNvd7gcjzWfI15RUAnO5kod135kO89A3rzpIaNpFYS3ZUi
+         6kaigjogibAHpzqR6nb0MQeqX8N3JAKbgw8LLiLi3sjQ9R9+8oNwfIOxozO89WTC4Z
+         mRA1Qk0htQxpNEnHrvrkRZo6B+bwmjbUqWH152F9N3wvHI8Y10fkv1xYFAxwZPdiDX
+         yvY5bSruvZGVg==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Michal Marek <michal.lkml@markovi.net>,
+        Sam Ravnborg <sam@ravnborg.org>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: remove unneeded '+' marker from kselftest-merge
-Date:   Wed, 21 Aug 2019 16:03:48 +0900
-Message-Id: <20190821070348.8596-1-yamada.masahiro@socionext.com>
+Subject: [PATCH 3/4] kbuild: pkg: rename scripts/package/Makefile to scripts/Makefile.package
+Date:   Wed, 21 Aug 2019 16:02:04 +0900
+Message-Id: <20190821070205.8297-3-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190821070205.8297-1-yamada.masahiro@socionext.com>
+References: <20190821070205.8297-1-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This line contains $(MAKE), so Make knows that it will invoke sub-make
-without help of the '+' marker.
+scripts/package/Makefile does not use $(obj) or $(src) at all.
+It actually generates files and directories in the top of $(objtree).
+I do not see much sense in descending into scripts/package/.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/kbuild/makefiles.rst             | 16 ++++------------
+ Makefile                                       |  8 +++-----
+ scripts/Makefile.clean                         | 14 +-------------
+ scripts/{package/Makefile => Makefile.package} |  5 ++++-
+ scripts/kconfig/Makefile                       |  2 +-
+ usr/include/Makefile                           |  4 +---
+ 6 files changed, 14 insertions(+), 35 deletions(-)
+ rename scripts/{package/Makefile => Makefile.package} (99%)
 
+diff --git a/Documentation/kbuild/makefiles.rst b/Documentation/kbuild/makefiles.rst
+index 68ed20ef37dd..78aa51a6fcd4 100644
+--- a/Documentation/kbuild/makefiles.rst
++++ b/Documentation/kbuild/makefiles.rst
+@@ -765,7 +765,8 @@ Files matching the patterns "*.[oas]", "*.ko", plus some additional files
+ generated by kbuild are deleted all over the kernel src tree when
+ "make clean" is executed.
+ 
+-Additional files can be specified in kbuild makefiles by use of $(clean-files).
++Additional files or directories can be specified in kbuild makefiles by use of
++$(clean-files).
+ 
+ 	Example::
+ 
+@@ -776,17 +777,8 @@ When executing "make clean", the file "crc32table.h" will be deleted.
+ Kbuild will assume files to be in the same relative directory as the
+ Makefile, except if prefixed with $(objtree).
+ 
+-To delete a directory hierarchy use:
+-
+-	Example::
+-
+-		#scripts/package/Makefile
+-		clean-dirs := $(objtree)/debian/
+-
+-This will delete the directory debian in the toplevel directory, including all
+-subdirectories.
+-
+-To exclude certain files from make clean, use the $(no-clean-files) variable.
++To exclude certain files or directories from make clean, use the
++$(no-clean-files) variable.
+ 
+ Usually kbuild descends down in subdirectories due to "obj-* := dir/",
+ but in the architecture makefiles where the kbuild infrastructure
 diff --git a/Makefile b/Makefile
-index ec2a6b85a0fa..c0be1a4dbfdd 100644
+index e88d4fcd5e87..ec2a6b85a0fa 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1253,7 +1253,7 @@ kselftest-merge:
- 	$(if $(wildcard $(objtree)/.config),, $(error No .config exists, config your kernel first!))
- 	$(Q)find $(srctree)/tools/testing/selftests -name config | \
- 		xargs $(srctree)/scripts/kconfig/merge_config.sh -m $(objtree)/.config
--	+$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
-+	$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+@@ -1448,13 +1448,11 @@ distclean: mrproper
  
+ # Packaging of the kernel to various formats
  # ---------------------------------------------------------------------------
- # Devicetree files
+-package-dir	:= scripts/package
+ 
+ %src-pkg: FORCE
+-	$(Q)$(MAKE) $(build)=$(package-dir) $@
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.package $@
+ %pkg: include/config/kernel.release FORCE
+-	$(Q)$(MAKE) $(build)=$(package-dir) $@
+-
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.package $@
+ 
+ # Brief documentation of the typical targets used
+ # ---------------------------------------------------------------------------
+@@ -1526,7 +1524,7 @@ help:
+ 	@echo '  or  "cd tools; make help"'
+ 	@echo  ''
+ 	@echo  'Kernel packaging:'
+-	@$(MAKE) $(build)=$(package-dir) help
++	@$(MAKE) -f $(srctree)/scripts/Makefile.package help
+ 	@echo  ''
+ 	@echo  'Documentation targets:'
+ 	@$(MAKE) -f $(srctree)/Documentation/Makefile dochelp
+diff --git a/scripts/Makefile.clean b/scripts/Makefile.clean
+index 0b80e3207b20..798e8717c1d9 100644
+--- a/scripts/Makefile.clean
++++ b/scripts/Makefile.clean
+@@ -52,26 +52,14 @@ __clean-files   := $(wildcard                                               \
+ 		   $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(__clean-files))) \
+ 		   $(filter $(objtree)/%, $(__clean-files)))
+ 
+-# same as clean-files
+-
+-__clean-dirs    := $(wildcard                                               \
+-		   $(addprefix $(obj)/, $(filter-out $(objtree)/%, $(clean-dirs)))    \
+-		   $(filter $(objtree)/%, $(clean-dirs)))
+-
+ # ==========================================================================
+ 
+ quiet_cmd_clean    = CLEAN   $(obj)
+-      cmd_clean    = rm -f $(__clean-files)
+-quiet_cmd_cleandir = CLEAN   $(__clean-dirs)
+-      cmd_cleandir = rm -rf $(__clean-dirs)
+-
++      cmd_clean    = rm -rf $(__clean-files)
+ 
+ __clean: $(subdir-ymn)
+ ifneq ($(strip $(__clean-files)),)
+ 	+$(call cmd,clean)
+-endif
+-ifneq ($(strip $(__clean-dirs)),)
+-	+$(call cmd,cleandir)
+ endif
+ 	@:
+ 
+diff --git a/scripts/package/Makefile b/scripts/Makefile.package
+similarity index 99%
+rename from scripts/package/Makefile
+rename to scripts/Makefile.package
+index 407189d9942a..56eadcc48d46 100644
+--- a/scripts/package/Makefile
++++ b/scripts/Makefile.package
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ # Makefile for the different targets used to generate full packages of a kernel
+-# It uses the generic clean infrastructure of kbuild
++
++include $(srctree)/scripts/Kbuild.include
+ 
+ # RPM target
+ # ---------------------------------------------------------------------------
+@@ -154,3 +155,5 @@ help:
+ 	@echo '  perf-targz-src-pkg  - Build $(perf-tar).tar.gz source tarball'
+ 	@echo '  perf-tarbz2-src-pkg - Build $(perf-tar).tar.bz2 source tarball'
+ 	@echo '  perf-tarxz-src-pkg  - Build $(perf-tar).tar.xz source tarball'
++
++.PHONY: $(PHONY)
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index 7656e1137b6b..bed7a5a2fbe9 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -114,7 +114,7 @@ testconfig: $(obj)/conf
+ 	$(PYTHON3) -B -m pytest $(srctree)/$(src)/tests \
+ 	-o cache_dir=$(abspath $(obj)/tests/.cache) \
+ 	$(if $(findstring 1,$(KBUILD_VERBOSE)),--capture=no)
+-clean-dirs += tests/.cache
++clean-files += tests/.cache
+ 
+ # Help text used by make help
+ help:
+diff --git a/usr/include/Makefile b/usr/include/Makefile
+index 1fb6abe29b2f..05c71ef42f51 100644
+--- a/usr/include/Makefile
++++ b/usr/include/Makefile
+@@ -115,6 +115,4 @@ header-test-y += $(filter-out $(header-test-), \
+ 			$(patsubst $(obj)/%,%, $(wildcard \
+ 			$(addprefix $(obj)/, *.h */*.h */*/*.h */*/*/*.h))))
+ 
+-# For GNU Make <= 4.2.1, $(wildcard $(obj)/*/) matches to not only directories
+-# but also regular files. Use $(filter %/, ...) just in case.
+-clean-dirs += $(patsubst $(obj)/%/,%,$(filter %/, $(wildcard $(obj)/*/)))
++clean-files += $(filter-out Makefile, $(notdir $(wildcard $(obj)/*)))
 -- 
 2.17.1
 
