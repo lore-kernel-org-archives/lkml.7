@@ -3,83 +3,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB69AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5FBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4C52070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487DD2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbfHUR5k (ORCPT
+        id S1730163AbfHUR5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:57:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41972 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 13:57:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55780 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729817AbfHUR5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:57:39 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1729817AbfHUR5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:57:43 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 56A4E106BB2C;
-        Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id B723F1105201;
+        Wed, 21 Aug 2019 17:57:42 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D0FF5DC1E;
-        Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F167C60127;
+        Wed, 21 Aug 2019 17:57:32 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id DCA92223D0F; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
+        id 7C3D6223CFD; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nvdimm@lists.01.org
 Cc:     virtio-fs@redhat.com, vgoyal@redhat.com, miklos@szeredi.hu,
-        stefanha@redhat.com, dgilbert@redhat.com
-Subject: [PATCH 19/19] fuse: Take inode lock for dax inode truncation
-Date:   Wed, 21 Aug 2019 13:57:20 -0400
-Message-Id: <20190821175720.25901-20-vgoyal@redhat.com>
+        stefanha@redhat.com, dgilbert@redhat.com,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH 01/19] dax: remove block device dependencies
+Date:   Wed, 21 Aug 2019 13:57:02 -0400
+Message-Id: <20190821175720.25901-2-vgoyal@redhat.com>
 In-Reply-To: <20190821175720.25901-1-vgoyal@redhat.com>
 References: <20190821175720.25901-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Wed, 21 Aug 2019 17:57:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a file is opened with O_TRUNC, we need to make sure that any other
-DAX operation is not in progress. DAX expects i_size to be stable.
+From: Stefan Hajnoczi <stefanha@redhat.com>
 
-In fuse_iomap_begin() we check for i_size at multiple places and we expect
-i_size to not change.
+Although struct dax_device itself is not tied to a block device, some
+DAX code assumes there is a block device.  Make block devices optional
+by allowing bdev to be NULL in commonly used DAX APIs.
 
-Another problem is, if we setup a mapping in fuse_iomap_begin(), and
-file gets truncated and dax read/write happens, KVM currently hangs.
-It tries to fault in a page which does not exist on host (file got
-truncated). It probably requries fixing in KVM.
+When there is no block device:
+ * Skip the partition offset calculation in bdev_dax_pgoff()
+ * Skip the blkdev_issue_zeroout() optimization
 
-So for now, take inode lock. Once KVM is fixed, we might have to
-have a look at it again.
+Note that more block device assumptions remain but I haven't reach those
+code paths yet.
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
 ---
- fs/fuse/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dax/super.c | 3 ++-
+ fs/dax.c            | 7 ++++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index e369a1f92d85..794c55131bd0 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -524,7 +524,7 @@ int fuse_open_common(struct inode *inode, struct file *file, bool isdir)
- 	int err;
- 	bool lock_inode = (file->f_flags & O_TRUNC) &&
- 			  fc->atomic_o_trunc &&
--			  fc->writeback_cache;
-+			  (fc->writeback_cache || IS_DAX(inode));
+diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+index 26a654dbc69a..3cbc97f3e653 100644
+--- a/drivers/dax/super.c
++++ b/drivers/dax/super.c
+@@ -46,7 +46,8 @@ EXPORT_SYMBOL_GPL(dax_read_unlock);
+ int bdev_dax_pgoff(struct block_device *bdev, sector_t sector, size_t size,
+ 		pgoff_t *pgoff)
+ {
+-	phys_addr_t phys_off = (get_start_sect(bdev) + sector) * 512;
++	sector_t start_sect = bdev ? get_start_sect(bdev) : 0;
++	phys_addr_t phys_off = (start_sect + sector) * 512;
  
- 	err = generic_file_open(inode, file);
- 	if (err)
+ 	if (pgoff)
+ 		*pgoff = PHYS_PFN(phys_off);
+diff --git a/fs/dax.c b/fs/dax.c
+index 6bf81f931de3..a11147bbaf9e 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -1046,7 +1046,12 @@ static vm_fault_t dax_load_hole(struct xa_state *xas,
+ static bool dax_range_is_aligned(struct block_device *bdev,
+ 				 unsigned int offset, unsigned int length)
+ {
+-	unsigned short sector_size = bdev_logical_block_size(bdev);
++	unsigned short sector_size;
++
++	if (!bdev)
++		return false;
++
++	sector_size = bdev_logical_block_size(bdev);
+ 
+ 	if (!IS_ALIGNED(offset, sector_size))
+ 		return false;
 -- 
 2.20.1
 
