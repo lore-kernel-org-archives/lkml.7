@@ -2,173 +2,105 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E280DC41514
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4C8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F0522DA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71012332B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 02:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566353988;
+	bh=99ObL1cP+jG7BwJuhGr2xRiHMfm0AyVNnY16uyz8mng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JanfxmGu3phl6eEYxBlKE+GyvQg06YYI7OPywF90qTE6fF2Y4ENQPz2iSr18cYwnZ
+	 +TVkTkmYUHzqblRqPGAcvKBfEfLiMP1dS9h2iESqRaY2WfIcIjK4mYfPut1C8llxor
+	 LWyUjO3GqNBR6nNF7yANCtMvGtg80mpmS3KKB2XU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfHUCSO (ORCPT
+        id S1726947AbfHUCTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 20 Aug 2019 22:18:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53904 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726329AbfHUCSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 20 Aug 2019 22:18:14 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 875DA282536BF636B30A;
-        Wed, 21 Aug 2019 09:57:36 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 21 Aug
- 2019 09:57:30 +0800
-Subject: Re: [PATCH] erofs: move erofs out of staging
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-CC:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        Gao Xiang <hsiangkao@aol.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Eric Biggers" <ebiggers@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Jan Kara <jack@suse.cz>, "Dave Chinner" <david@fromorbit.com>,
-        David Sterba <dsterba@suse.cz>, Miao Xie <miaoxie@huawei.com>,
-        devel <devel@driverdev.osuosl.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-erofs <linux-erofs@lists.ozlabs.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Jaegeuk Kim" <jaegeuk@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Li Guifu" <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>, "Pavel Machek" <pavel@denx.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        torvalds <torvalds@linux-foundation.org>
-References: <20190818172938.GA14413@sol.localdomain>
- <20190818174702.GA17633@infradead.org>
- <20190818181654.GA1617@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190818201405.GA27398@hsiangkao-HP-ZHAN-66-Pro-G1>
- <20190819160923.GG15198@magnolia>
- <20190819203051.GA10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <bdb91cbf-985b-5a2c-6019-560b79739431@gmx.com>
- <ad62636f-ef1b-739f-42cc-28d9d7ed86da@huawei.com>
- <20190820155623.GA10232@mit.edu>
- <9d8f88ee-4b81-bdfa-b0d7-9c7d5d54e70a@huawei.com>
- <20190821014818.GB1037422@magnolia>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <8ae23b55-eb3f-e6e8-4cfb-5ce2885d8ff8@huawei.com>
-Date:   Wed, 21 Aug 2019 09:57:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 20 Aug 2019 22:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfHUCTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 20 Aug 2019 22:19:47 -0400
+Received: from localhost (li1825-44.members.linode.com [172.104.248.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C84EE22DA7;
+        Wed, 21 Aug 2019 02:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566353986;
+        bh=99ObL1cP+jG7BwJuhGr2xRiHMfm0AyVNnY16uyz8mng=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ru6a2+QADULs0wwoFX4YQsebNK/5qd6Kk+kCW16FnuAC9nOB84MNYRAHcouXWGbFA
+         jxDDlseEOkfLWKdjTvog2K/cs7Lp3dY0OF8fKx5O3Mim0AfBj86ctChYFeQLuM/7Lu
+         fYDzulv0SOkwznjOgALPI+7qG9dTtb1IsoG+OBUU=
+Date:   Tue, 20 Aug 2019 19:19:42 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chao Yu <chao@kernel.org>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Miao Xie <miaoxie@huawei.com>,
+        weidu.du@huawei.com, Fang Wei <fangwei1@huawei.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5/6] staging: erofs: detect potential multiref due to
+ corrupted images
+Message-ID: <20190821021942.GA14087@kroah.com>
+References: <20190819080218.GA42231@138>
+ <20190819103426.87579-1-gaoxiang25@huawei.com>
+ <20190819103426.87579-6-gaoxiang25@huawei.com>
+ <f302710e-0c7f-8695-d692-be0c01c431ea@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190821014818.GB1037422@magnolia>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f302710e-0c7f-8695-d692-be0c01c431ea@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/21 9:48, Darrick J. Wong wrote:
-> On Wed, Aug 21, 2019 at 09:34:02AM +0800, Chao Yu wrote:
->> On 2019/8/20 23:56, Theodore Y. Ts'o wrote:
->>> The reason why there needs to be at least some file system specific
->>> code for fuzz testing is because for efficiency's sake, you don't want
->>> to fuzz every single bit in the file system, but just the ones which
->>> are most interesting (e.g., the metadata blocks).  For file systems
->>> which use checksum to protect against accidental corruption, the file
->>> system fuzzer needs to also fix up the checksums (since you can be
->>> sure malicious attackers will do this).
->>
->> Yup, IMO, if we really want such tool, it needs to:
->> - move all generic fuzz codes (trigger random fuzzing in meta/data area) into
->> that tool, and
->> - make filesystem generic fs_meta/file_node lookup/inject/pack function as a
->> callback, such as
->>  * .find_fs_sb
->>  * .inject_fs_sb
->>  * .pack_fs_sb
+On Mon, Aug 19, 2019 at 10:57:42PM +0800, Chao Yu wrote:
+> On 2019-8-19 18:34, Gao Xiang wrote:
+> > As reported by erofs-utils fuzzer, currently, multiref
+> > (ondisk deduplication) hasn't been supported for now,
+> > we should forbid it properly.
+> > 
+> > Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+> > Cc: <stable@vger.kernel.org> # 4.19+
+> > Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> > ---
+> >  drivers/staging/erofs/zdata.c | 16 ++++++++++++++--
+> >  1 file changed, 14 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/staging/erofs/zdata.c b/drivers/staging/erofs/zdata.c
+> > index aae2f2b8353f..5b6fef5181af 100644
+> > --- a/drivers/staging/erofs/zdata.c
+> > +++ b/drivers/staging/erofs/zdata.c
+> > @@ -816,8 +816,16 @@ static int z_erofs_decompress_pcluster(struct super_block *sb,
+> >  			pagenr = z_erofs_onlinepage_index(page);
+> >  
+> >  		DBG_BUGON(pagenr >= nr_pages);
+> > -		DBG_BUGON(pages[pagenr]);
+> >  
+> > +		/*
+> > +		 * currently EROFS doesn't support multiref(dedup),
+> > +		 * so here erroring out one multiref page.
+> > +		 */
+> > +		if (unlikely(pages[pagenr])) {
+> > +			DBG_BUGON(1);
+> > +			SetPageError(pages[pagenr]);
+> > +			z_erofs_onlinepage_endio(pages[pagenr]);
 > 
-> What about group descriptors?  AG headers?  The AGFLWTFBBQLOL?
-> 
->>  * .find_fs_bitmap
->>  * .inject_fs_bitmap
-> 
-> Probably want an find/inject for log blocks too.
-> 
-> Oh, wait, XFS doesn't log blocks like jbd2 does. :) :)
+> Should set err meanwhile?
 
-Yes, I admit that I should miss a lot of fs meta type here, but that's just a
-simple example here, we should not treat it as a full design.... :)
+I've skipped this patch in this series for now, and applied the rest.
 
-> 
->>  * .find_fs_inode_bitmap
->>  * .inject_fs_inode_bitmap
-> 
-> XFS has an inode bitmap? ;)
+thanks,
 
-We can leave callback as NULL? ;)
-
-> 
-> (This is why there's no generic fuzz tool; every fs is different enough
-> that doing so would be sort of a mess.)
-
-Yes, I just wonder if there is any possible we can save some redundant work.
-
-> 
-> ((Granted, you could also look at how xfstests uses the xfs_db fuzz
-> command so at least it would be systematic...))
-Okay, I will check that.
-
-Thanks,
-
-> 
->>  * .find_inode_by_num
->>  * .inject_inode
->>  * .pack_inode
->>  * .find_tree_node_by_level
->> ...
-> 
-> What about the name/value btrees?  (Ok, I'll stop now.)
-> 
-> --D
-> 
->> then specific filesystem can fill the callback to tell how the tool can locate a
->> field in inode or a metadata in tree node and then trigger the designed fuzz.
->>
->> It will be easier to rewrite whole generic fwk for each filesystem, because
->> existed filesystem userspace tool should has included above callback's detail
->> codes...
->>
->>> On Tue, Aug 20, 2019 at 10:24:11AM +0800, Chao Yu wrote:
->>>> filesystem fill the tool's callback to seek a node/block and supported fields
->>>> can be fuzzed in inode.
->>
->>>
->>> What you *can* do is to make the file system specific portion of the
->>> work as small as possible.  Great work in this area is Professor Kim's
->>> Janus[1][2] and Hydra[2] work.  (Hydra is about to be published at SOSP 19,
->>> and was partially funded from a Google Faculty Research Work.)
->>>
->>> [1] https://taesoo.kim/pubs/2019/xu:janus.pdf
->>> [2] https://github.com/sslab-gatech/janus
->>> [3] https://github.com/sslab-gatech/hydra
->>
->> Thanks for the information!
->>
->> It looks like janus and hydra alreay have generic compress/decompress function
->> across different filesystems, it's really a good job, I do think it may be the
->> one once it becomes more generic.
->>
->> Thanks
->>
->>>
-> .
-> 
+greg k-h
