@@ -6,104 +6,167 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3E0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633CAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381292070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE332070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 17:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730483AbfHUR6o (ORCPT
+        id S1730493AbfHUR6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 13:58:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58834 "EHLO mx1.redhat.com"
+        Wed, 21 Aug 2019 13:58:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47782 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729806AbfHUR5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 13:57:39 -0400
+        id S1729661AbfHUR5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 13:57:38 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2DE5330860B9;
-        Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 77687308402D;
+        Wed, 21 Aug 2019 17:57:38 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C7FD60600;
-        Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EAAB360600;
+        Wed, 21 Aug 2019 17:57:37 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id D78F9223D0E; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
+        id 9908D223D02; Wed, 21 Aug 2019 13:57:32 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nvdimm@lists.01.org
 Cc:     virtio-fs@redhat.com, vgoyal@redhat.com, miklos@szeredi.hu,
         stefanha@redhat.com, dgilbert@redhat.com
-Subject: [PATCH 18/19] fuse: Release file in process context
-Date:   Wed, 21 Aug 2019 13:57:19 -0400
-Message-Id: <20190821175720.25901-19-vgoyal@redhat.com>
+Subject: [PATCH 06/19] fuse, dax: add fuse_conn->dax_dev field
+Date:   Wed, 21 Aug 2019 13:57:07 -0400
+Message-Id: <20190821175720.25901-7-vgoyal@redhat.com>
 In-Reply-To: <20190821175720.25901-1-vgoyal@redhat.com>
 References: <20190821175720.25901-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 21 Aug 2019 17:57:39 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 21 Aug 2019 17:57:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fuse_file_put(sync) can be called with sync=true/false. If sync=true,
-it waits for release request response and then calls iput() in the
-caller's context. If sync=false, it does not wait for release request
-response, frees the fuse_file struct immediately and req->end function
-does the iput().
+From: Stefan Hajnoczi <stefanha@redhat.com>
 
-iput() can be a problem with DAX if called in req->end context. If this
-is last reference to inode (VFS has let go its reference already), then
-iput() will clean DAX mappings as well and send REMOVEMAPPING requests
-and wait for completion. (All the the worker thread context which is
-processing fuse replies from daemon on the host).
+A struct dax_device instance is a prerequisite for the DAX filesystem
+APIs.  Let virtio_fs associate a dax_device with a fuse_conn.  Classic
+FUSE and CUSE set the pointer to NULL, disabling DAX.
 
-That means it blocks worker thread and it stops processing further
-replies and system deadlocks.
-
-So for now, force sync release of file in case of DAX inodes.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
 ---
- fs/fuse/file.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ fs/fuse/cuse.c      | 3 ++-
+ fs/fuse/fuse_i.h    | 9 ++++++++-
+ fs/fuse/inode.c     | 9 ++++++---
+ fs/fuse/virtio_fs.c | 5 +++--
+ 4 files changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 2ff7624d58c0..e369a1f92d85 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -579,6 +579,7 @@ void fuse_release_common(struct file *file, bool isdir)
- 	struct fuse_file *ff = file->private_data;
- 	struct fuse_req *req = ff->reserved_req;
- 	int opcode = isdir ? FUSE_RELEASEDIR : FUSE_RELEASE;
-+	bool sync = false;
- 
- 	fuse_prepare_release(fi, ff, file->f_flags, opcode);
- 
-@@ -599,8 +600,20 @@ void fuse_release_common(struct file *file, bool isdir)
- 	 * Make the release synchronous if this is a fuseblk mount,
- 	 * synchronous RELEASE is allowed (and desirable) in this case
- 	 * because the server can be trusted not to screw up.
-+	 *
-+	 * For DAX, fuse server is trusted. So it should be fine to
-+	 * do a sync file put. Doing async file put is creating
-+	 * problems right now because when request finish, iput()
-+	 * can lead to freeing of inode. That means it tears down
-+	 * mappings backing DAX memory and sends REMOVEMAPPING message
-+	 * to server and blocks for completion. Currently, waiting
-+	 * in req->end context deadlocks the system as same worker thread
-+	 * can't process REMOVEMAPPING reply it is waiting for.
+diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
+index 04727540bdbb..0f9e3c93b056 100644
+--- a/fs/fuse/cuse.c
++++ b/fs/fuse/cuse.c
+@@ -504,7 +504,8 @@ static int cuse_channel_open(struct inode *inode, struct file *file)
+ 	 * Limit the cuse channel to requests that can
+ 	 * be represented in file->f_cred->user_ns.
  	 */
--	fuse_file_put(ff, ff->fc->destroy_req != NULL, isdir);
-+	if (IS_DAX(req->misc.release.inode) || ff->fc->destroy_req != NULL)
-+		sync = true;
+-	fuse_conn_init(&cc->fc, file->f_cred->user_ns, &fuse_dev_fiq_ops, NULL);
++	fuse_conn_init(&cc->fc, file->f_cred->user_ns, NULL, &fuse_dev_fiq_ops,
++					NULL);
+ 
+ 	fud = fuse_dev_alloc_install(&cc->fc);
+ 	if (!fud) {
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index 25a6da6ee8c3..ecd9dbc3312e 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -77,6 +77,9 @@ struct fuse_mount_data {
+ 	unsigned max_read;
+ 	unsigned blksize;
+ 
++	/* DAX device, may be NULL */
++	struct dax_device *dax_dev;
 +
-+	fuse_file_put(ff, sync, isdir);
+ 	/* fuse input queue operations */
+ 	const struct fuse_iqueue_ops *fiq_ops;
+ 
+@@ -831,6 +834,9 @@ struct fuse_conn {
+ 
+ 	/** List of device instances belonging to this connection */
+ 	struct list_head devices;
++
++	/** DAX device, non-NULL if DAX is supported */
++	struct dax_device *dax_dev;
+ };
+ 
+ static inline struct fuse_conn *get_fuse_conn_super(struct super_block *sb)
+@@ -1061,7 +1067,8 @@ struct fuse_conn *fuse_conn_get(struct fuse_conn *fc);
+  * Initialize fuse_conn
+  */
+ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
+-		    const struct fuse_iqueue_ops *fiq_ops, void *fiq_priv);
++			struct dax_device *dax_dev,
++			const struct fuse_iqueue_ops *fiq_ops, void *fiq_priv);
+ 
+ /**
+  * Release reference to fuse_conn
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 16bcf0f95979..6d9258a4091a 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -591,7 +591,8 @@ static void fuse_pqueue_init(struct fuse_pqueue *fpq)
  }
  
- static int fuse_open(struct inode *inode, struct file *file)
+ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
+-		    const struct fuse_iqueue_ops *fiq_ops, void *fiq_priv)
++			struct dax_device *dax_dev,
++			const struct fuse_iqueue_ops *fiq_ops, void *fiq_priv)
+ {
+ 	memset(fc, 0, sizeof(*fc));
+ 	spin_lock_init(&fc->lock);
+@@ -616,6 +617,7 @@ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
+ 	atomic64_set(&fc->attr_version, 1);
+ 	get_random_bytes(&fc->scramble_key, sizeof(fc->scramble_key));
+ 	fc->pid_ns = get_pid_ns(task_active_pid_ns(current));
++	fc->dax_dev = dax_dev;
+ 	fc->user_ns = get_user_ns(user_ns);
+ 	fc->max_pages = FUSE_DEFAULT_MAX_PAGES_PER_REQ;
+ }
+@@ -1132,8 +1134,8 @@ int fuse_fill_super_common(struct super_block *sb,
+ 		err = -ENOMEM;
+ 		if (!fc)
+ 			goto err;
+-		fuse_conn_init(fc, sb->s_user_ns, mount_data->fiq_ops,
+-			       mount_data->fiq_priv);
++		fuse_conn_init(fc, sb->s_user_ns, mount_data->dax_dev,
++			       mount_data->fiq_ops, mount_data->fiq_priv);
+ 		fc->release = fuse_free_conn;
+ 	}
+ 
+@@ -1237,6 +1239,7 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto err_fput;
+ 	__set_bit(FR_BACKGROUND, &init_req->flags);
+ 
++	d.dax_dev = NULL;
+ 	d.fiq_ops = &fuse_dev_fiq_ops;
+ 	d.fiq_priv = NULL;
+ 	d.fudptr = &file->private_data;
+diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+index ce1de9acde84..706b27e0502a 100644
+--- a/fs/fuse/virtio_fs.c
++++ b/fs/fuse/virtio_fs.c
+@@ -986,8 +986,9 @@ static struct dentry *virtio_fs_mount(struct file_system_type *fs_type,
+ 	fc = kzalloc(sizeof(struct fuse_conn), GFP_KERNEL);
+ 	if (!fc)
+ 		return ERR_PTR(-ENOMEM);
+-	fuse_conn_init(fc, get_user_ns(current_user_ns()), &virtio_fs_fiq_ops,
+-		       fs);
++	d.dax_dev = NULL;
++	fuse_conn_init(fc, get_user_ns(current_user_ns()), d.dax_dev,
++		       &virtio_fs_fiq_ops, fs);
+ 	fc->release = fuse_free_conn;
+ 
+ 	s = sget(fs_type, virtio_fs_test_super, virtio_fs_set_super, flags, fc);
 -- 
 2.20.1
 
