@@ -2,158 +2,218 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CDDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD4FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45919233A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EFBE20644
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 14:10:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YfLhf8Zq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ei8A/Vrq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbfHUOI3 (ORCPT
+        id S1729105AbfHUOKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 10:08:29 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37937 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728932AbfHUOI1 (ORCPT
+        Wed, 21 Aug 2019 10:10:18 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37206 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728567AbfHUOKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 10:08:27 -0400
-Received: by mail-wm1-f68.google.com with SMTP id m125so2285209wmm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:08:25 -0700 (PDT)
+        Wed, 21 Aug 2019 10:10:17 -0400
+Received: by mail-pl1-f193.google.com with SMTP id bj8so1410151plb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 07:10:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=WMoQq0gYYHBS1Xnas7hCTSegRXzsqafpfXZ5srz2uTk=;
-        b=YfLhf8ZquALm7qNCcVznUga7apwr1IcXZitVwpaZNU9t/LLGfIYjvlB28m+Pu67YRj
-         VJFrE3u8UmRnOCMeORWAH5ZLV7LYf+QT8klXObinJIC8DanraQdhjMz5je7SPiKfQ3+A
-         FyTwr2pscMhfqnk0RgVtavO0NqEbeiMazwUUKZWjKhcU7WJ8l3PzYBti5nHpPyaSesjC
-         4rIaeqdCPrEs3Owk4bkKLnpudMIP/Be62vJwTOm+Vji7y4hTw54uVXEMzUaBunOXY+CI
-         cJh7D/6YbMwkHztFAMG1BcuF0oKPh9uPjKRL4dHE0qsRTGgYd4T+Xd649PcBYUvCPUoU
-         2LHA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=91W+niEv0WVmZiALbnZljY1AEmpvTE5WjjWmApzWgws=;
+        b=Ei8A/VrqJNaxWogf0kSzbXRLM1PuETnVyT/kWpMA0bQzXs+WTR4VPku+JXT5nejQDj
+         3IFfur7TD31ZP8QU71uSA2zCFcHw3vPpdkgRGBIUiiPxlQWzfoDAuwoYEBKGsaVJDSke
+         /2DqtACqhpk9GU/RdfMic4epwSfg3CYSVNfhGFMRcTnNw2zxptgvRr4F41lB+Kt2uYGU
+         /sQM/lTBViuj6naxnXYm4C8rlN4tldULXI5PMdWImHX+DWdn0iffutdvrfWzGoyS05b0
+         UGV9pxvyqmFnpIamWX+kQW5+DeyTCCCBwhumb2HbRTYdguwge9g1yOxfHseGYbC547Vq
+         +WsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=WMoQq0gYYHBS1Xnas7hCTSegRXzsqafpfXZ5srz2uTk=;
-        b=TF+7cbijk5zPsKGRbyuRElccGAa7K+OGlfz+bTwsDEpN3XJzI5ogbJN6XNnlM8AVMX
-         wl0fOLTdkmvEjWo7zfnYdLoEA7zmZWeloraaoa911xVhbTucAv3iixjO8KBktlj8DJNT
-         +lPEOfCKneQpsE8qcsm3vTAF1fDmcBge73+Ra6gIJt5E7QMlYpSBgJJOKbE1c6YJxoVO
-         RLyV172GPaExVDDocFiO9gp2YeUag5+idtVXPsWndaEEa2qWQfmDicHGkUbTyZHnKwi6
-         Aa90hk5nQDIvQt1Qdhq6VX1G0rvfk+mRYsSCBj12FwEF8Jlp3ampVJBGhrPmnosZ/l+W
-         w44g==
-X-Gm-Message-State: APjAAAX5ZG+wYAD8QCtlFYZh6hDF1mNuhzWgqiqD/qJpTHCJDD/8mX69
-        yMpJA8rOTgrqd6xWwQxm71EgEQ==
-X-Google-Smtp-Source: APXvYqy8yJnCe5b+/p5Tz+wxWWxBSwTu4aD9ddSlLVzIEYAiCK77mDnFnjJmmJWShrjbsPLq/9CbtQ==
-X-Received: by 2002:a05:600c:48b:: with SMTP id d11mr219609wme.55.1566396504493;
-        Wed, 21 Aug 2019 07:08:24 -0700 (PDT)
-Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id t19sm156177wmi.29.2019.08.21.07.08.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 07:08:23 -0700 (PDT)
-Subject: Re: [PATCH 12/14] arm64: dts: meson-gxbb-nanopi-k2: add missing model
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     khilman@baylibre.com, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-References: <20190814142918.11636-1-narmstrong@baylibre.com>
- <20190814142918.11636-13-narmstrong@baylibre.com>
- <CAFBinCCJPm+FjMTK+-Qik4x-UtLibH3FTozHG8gMet0e5Rf9bg@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
- GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
- RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
- NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
- 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
- ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
- YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
- GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
- coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
- SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
- YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
- mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
- zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
- 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
- 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
- RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
- C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
- Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
- GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
- 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
- 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
- zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
- wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
- 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
- 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
- xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
- K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
- AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
- AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
- n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
- 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
- 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
- EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
- /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
- NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
- 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
- yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
- bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
- KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
- KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
- WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
- VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <48de2cf6-2bce-1a55-b08b-8f95bb8e9b3f@baylibre.com>
-Date:   Wed, 21 Aug 2019 16:08:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=91W+niEv0WVmZiALbnZljY1AEmpvTE5WjjWmApzWgws=;
+        b=T8kzWnQgdMVv2+P8XiVnxCyrRqoYIEN+CfA7ygjd9oNN6M9WvguE73+7aQqfR3R0Gb
+         455ZO5uSuwsm+kFd+n/sglWuDvEIpxhwOUf/5/Kq8lyOwUOzhG7L2odbpmOUEWm7y7m3
+         J9zIuI/wJi9GLq+OHYF6b2G6wikzMmj9ALo9TSdis4Frif6JFcICTk1hDgShOAipX4kD
+         fEGGIMixOxfXjGVsht5Jg3qiYLZOefISlMsGYbAmy4R2IHiRGPmYhdaErV+hSTWjZK2n
+         6tWlmdozJPQqoqZ0zeWjFzzxmzhjwBYit5rmF8Wckm43slcXufD6hBPmwg5Ns2TlzgRp
+         lFBQ==
+X-Gm-Message-State: APjAAAWq9u47VGrAc/s6zKUCUEuxFTtYB/wkMb+3plKzjmztP5xmi9Sf
+        J3Ra810xppt7id8WJhmAjC55AL9kOelXeCDCqrMbEQ==
+X-Google-Smtp-Source: APXvYqxK+ApEEyxrw888Ur2Oy2D+0iAa/di4rkBrqE3p50khUcWy9sP6H2oqqnNe/VXvBAYxIOsTuI+5xF5Gw7TWhhw=
+X-Received: by 2002:a17:902:8649:: with SMTP id y9mr31535731plt.252.1566396615972;
+ Wed, 21 Aug 2019 07:10:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCCJPm+FjMTK+-Qik4x-UtLibH3FTozHG8gMet0e5Rf9bg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAAeHK+yEUO0f7qgTgWYRp0nv=LY2cX12=gK54yHzPkxZT0SyHQ@mail.gmail.com>
+ <00000000000027b5750590a087dc@google.com>
+In-Reply-To: <00000000000027b5750590a087dc@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 21 Aug 2019 16:10:05 +0200
+Message-ID: <CAAeHK+xS0zb9ya=s=CVJWwvhn6=4iLPBRSky9ZQjGWsnm8+GYw@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in hidraw_ioctl
+To:     syzbot <syzbot+ded1794a717e3b235226@syzkaller.appspotmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/08/2019 22:25, Martin Blumenstingl wrote:
-> On Wed, Aug 14, 2019 at 4:33 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> This fixes the following DT schemas check errors:
->> meson-gxbb-nanopi-k2.dt.yaml: /: 'model' is a required property
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
->> index c34c1c90ccb6..1a36d2bd2d21 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
->> @@ -10,6 +10,7 @@
->>
->>  / {
->>         compatible = "friendlyarm,nanopi-k2", "amlogic,meson-gxbb";
->> +       model = "Nanopi K2";
-> this should be "FriendlyARM NanoPi K2" to be consistent with other
-> boards (for example meson-gxbb-odroidc2.dts)
-> 
+On Wed, Aug 21, 2019 at 3:27 PM syzbot
+<syzbot+ded1794a717e3b235226@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot has tested the proposed patch but the reproducer still triggered
+> crash:
+> KASAN: use-after-free Read in hidraw_ioctl
 
-Exact, I'll fix it
+OK, so this looks like a different bug.
+
+>
+> ==================================================================
+> BUG: KASAN: use-after-free in hidraw_ioctl+0x609/0xaf0
+> drivers/hid/hidraw.c:380
+> Read of size 4 at addr ffff8881d2db4218 by task syz-executor.1/3343
+>
+> CPU: 1 PID: 3343 Comm: syz-executor.1 Not tainted 5.2.0-rc6+ #1
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description+0x67/0x231 mm/kasan/report.c:188
+>   __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
+>   kasan_report+0xe/0x20 mm/kasan/common.c:614
+>   hidraw_ioctl+0x609/0xaf0 drivers/hid/hidraw.c:380
+>   vfs_ioctl fs/ioctl.c:46 [inline]
+>   file_ioctl fs/ioctl.c:509 [inline]
+>   do_vfs_ioctl+0xcda/0x12e0 fs/ioctl.c:696
+>   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
+>   __do_sys_ioctl fs/ioctl.c:720 [inline]
+>   __se_sys_ioctl fs/ioctl.c:718 [inline]
+>   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
+>   do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x459829
+> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007fac801dac78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+> RDX: 00000000200015c0 RSI: 0000000080044801 RDI: 0000000000000005
+> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007fac801db6d4
+> R13: 00000000004c21ee R14: 00000000004d53f8 R15: 00000000ffffffff
+>
+> Allocated by task 2911:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:71
+>   set_track mm/kasan/common.c:79 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:489 [inline]
+>   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
+>   kmalloc include/linux/slab.h:547 [inline]
+>   kzalloc include/linux/slab.h:742 [inline]
+>   hid_allocate_device+0x3e/0x480 drivers/hid/hid-core.c:2389
+>   usbhid_probe+0x23e/0xfa0 drivers/hid/usbhid/hid-core.c:1321
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x660 drivers/base/dd.c:509
+>   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:843
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2111
+>   usb_new_device.cold+0x6a4/0xe61 drivers/usb/core/hub.c:2536
+>   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1abd/0x3550 drivers/usb/core/hub.c:5441
+>   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+>   process_scheduled_works kernel/workqueue.c:2331 [inline]
+>   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+>   kthread+0x30b/0x410 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Freed by task 2895:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:71
+>   set_track mm/kasan/common.c:79 [inline]
+>   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
+>   slab_free_hook mm/slub.c:1421 [inline]
+>   slab_free_freelist_hook mm/slub.c:1448 [inline]
+>   slab_free mm/slub.c:2994 [inline]
+>   kfree+0xd7/0x280 mm/slub.c:3949
+>   device_release+0x71/0x200 drivers/base/core.c:1064
+>   kobject_cleanup lib/kobject.c:691 [inline]
+>   kobject_release lib/kobject.c:720 [inline]
+>   kref_put include/linux/kref.h:65 [inline]
+>   kobject_put+0x171/0x280 lib/kobject.c:737
+>   put_device+0x1b/0x30 drivers/base/core.c:2210
+>   usbhid_disconnect+0x90/0xd0 drivers/hid/usbhid/hid-core.c:1413
+>   usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+>   __device_release_driver drivers/base/dd.c:1081 [inline]
+>   device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1112
+>   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+>   device_del+0x460/0xb80 drivers/base/core.c:2274
+>   usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+>   usb_disconnect+0x284/0x830 drivers/usb/core/hub.c:2199
+>   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x13bd/0x3550 drivers/usb/core/hub.c:5441
+>   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x30b/0x410 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> The buggy address belongs to the object at ffff8881d2db4200
+>   which belongs to the cache kmalloc-8k of size 8192
+> The buggy address is located 24 bytes inside of
+>   8192-byte region [ffff8881d2db4200, ffff8881d2db6200)
+> The buggy address belongs to the page:
+> page:ffffea00074b6c00 refcount:1 mapcount:0 mapping:ffff8881dac02400
+> index:0x0 compound_mapcount: 0
+> flags: 0x200000000010200(slab|head)
+> raw: 0200000000010200 ffffea0007176e00 0000000300000003 ffff8881dac02400
+> raw: 0000000000000000 0000000000030003 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8881d2db4100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>   ffff8881d2db4180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> > ffff8881d2db4200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                              ^
+>   ffff8881d2db4280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881d2db4300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+>
+>
+> Tested on:
+>
+> commit:         6a3599ce usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1637707a600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=15db9586600000
+>
