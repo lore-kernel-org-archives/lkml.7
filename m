@@ -2,94 +2,102 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293B2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB14DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD062064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:26:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566415609;
-	bh=gg3dk0BOd2Fg7b9XmfIEvMSXA5B/GkZAN+0CAOklmeA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JNGUXKP6LkhmZIh/z2EshkuJQLmt9xw7ygN3+wBhq5EpibHaDoiZLJB9lYsJmj91E
-	 Vb4qQGG07EOzWOLYaQ900ix53iv4RdUIV3b6JvOA/7dAtSEkMx+pMqgH5w6qL5C4ih
-	 0eWNFogfNOPqiomw/LfhHjRSh08b3HuJco+Ykd04=
+	by mail.kernel.org (Postfix) with ESMTP id AFC022064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 19:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbfHUT0s (ORCPT
+        id S1729829AbfHUTan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 15:26:48 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39352 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729700AbfHUT0r (ORCPT
+        Wed, 21 Aug 2019 15:30:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57129 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728231AbfHUTan (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 15:26:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id b1so3156864otp.6;
-        Wed, 21 Aug 2019 12:26:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=10waZ0/ZkKGq42Av7UyfIsQLjaV5XyZlPq4+UDb3efY=;
-        b=Kl9JXevtUhrZ3Tl8A/NDkp2aZ2yoO6bHdVmhIKjilshkv2HxOM/obSpkzj/3EOoyiD
-         ACSo+42qm8I8aJpLFsjBtUjLYxW/iJ9YL28C4tGAOLL9MrXFcZu5O79Dpzch1mlqKVnY
-         qH5v/s5tIz8Y1bak6LWqB3hBxiG1qN5tMsYSz6tPKs3T10zcHGvpnMbIhK/Da2WD7bTa
-         zpzqMpqY81X3Zz7sSXiDSNobeQOGPz5k9EVINI9Q+aZUuaaTZdj2W1ym92+h6d6tF8oh
-         hQyPmJ+S+SiraO+faAqLcyT5zCDXvuhins7ym4pHXL3YxLVWAztKXPJMCwEJSGdzc8UI
-         EUUw==
-X-Gm-Message-State: APjAAAU4V64p1CzoIS7BSb0skm5VJCreaGsYgcyea+j0cvAj+DjzH6Jm
-        Y8MCULMOJZ1XEMiSx8MFsw==
-X-Google-Smtp-Source: APXvYqxLs6MFhoQAEH6ogwkzbZqevbuPU9pesTaxbtwOpkRdDuv+cpoUh2/qMzsEYRLg7/dteh3tjg==
-X-Received: by 2002:a9d:7b4e:: with SMTP id f14mr1554439oto.193.1566415606656;
-        Wed, 21 Aug 2019 12:26:46 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z16sm3139424oic.10.2019.08.21.12.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 12:26:46 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 14:26:45 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, zhiqiang.hou@nxp.com, roy.zang@nxp.com,
-        kstewart@linuxfoundation.org, pombredanne@nexb.com,
-        shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: Re: [PATCHv3 1/3] dt-bindings: pci: layerscape-pci: add compatible
- strings "fsl,ls1028a-pcie"
-Message-ID: <20190821192645.GA22618@bogus>
-References: <20190806061553.19934-1-xiaowei.bao@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806061553.19934-1-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 21 Aug 2019 15:30:43 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i0WJc-00048z-R6; Wed, 21 Aug 2019 21:30:40 +0200
+Message-Id: <20190821190847.665673890@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Wed, 21 Aug 2019 21:08:47 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [patch V2 00/38] posix-cpu-timers: Cleanup and consolidation
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  6 Aug 2019 14:15:51 +0800, Xiaowei Bao wrote:
-> Add the PCIe compatible string for LS1028A
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> v2:
->  - no change.
-> v3:
->  - no change.
-> 
->  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Folks!
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This is the second version of that set. First one can be found here:
+
+  https://lkml.kernel.org/r/20190819143141.221906747@linutronix.de
+
+The following changes vs. V1:
+
+  - Folded the synchronization callback patch into the original one and
+    replaced the original one in tip timers/core as requested by Christoph
+
+  - Merged the first couple of trivial patches into tip timers/core with
+    Frederics reviewed-by picked up.
+
+  - Dropped the sighand locking change as pointed out by Frederic
+
+  - Dropped the last patch which switches to direct expiry mode as it got
+    too ugly as the sighand locking change needed to be dropped. This will
+    come with the next set on top of this which moves the expiry into task
+    work context which was the initial reason for staring at this code.
+
+  - Reworked the storage array after the patch which removes the temporary
+    union and the abused struct task_cputime as requested by Ingo.
+
+  - Fixed up a comment and the ugly hack in do_rlimit() which was needed to
+    convert 0 expiry time to 1 which was required due to the 0 based checks
+    which are now gone. (New)
+
+  - Fixed typos in comments and changelogs (Ingo)
+
+The series applies on top of:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
+
+and is available from git as well:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.timers/core
+
+Thanks,
+
+	tglx
+
+8<--------------
+ include/linux/init_task.h      |   11 
+ include/linux/posix-timers.h   |  121 ++++-
+ include/linux/sched.h          |   29 -
+ include/linux/sched/cputime.h  |   12 
+ include/linux/sched/signal.h   |   14 
+ include/linux/sched/types.h    |   23 
+ include/linux/timerqueue.h     |   10 
+ init/init_task.c               |    2 
+ kernel/fork.c                  |   34 -
+ kernel/sched/rt.c              |    6 
+ kernel/sys.c                   |   16 
+ kernel/time/itimer.c           |   11 
+ kernel/time/posix-cpu-timers.c |  952 +++++++++++++++++++----------------------
+ 13 files changed, 616 insertions(+), 625 deletions(-)
+
+
+
