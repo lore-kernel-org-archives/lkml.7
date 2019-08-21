@@ -2,129 +2,96 @@ Return-Path: <SRS0=xaRW=WR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1490C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F83C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8105322CF7
-	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D63206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 21 Aug 2019 04:07:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mIVjIYDx"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="d8Q/64LQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfHUEGr (ORCPT
+        id S1727478AbfHUEHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 00:06:47 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:53128 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbfHUEGq (ORCPT
+        Wed, 21 Aug 2019 00:07:23 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18913 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726150AbfHUEHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 00:06:46 -0400
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x7L46Mfm004949;
-        Wed, 21 Aug 2019 13:06:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x7L46Mfm004949
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566360383;
-        bh=muuXnYLKetb5cxC3kfdv57DMCKDIXml15bwOXhq/nJs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mIVjIYDxZc9Lbo+4Rn79AO8sNgIFjPug562CXh6JT/1+QQoJrDq0RZqPqa5OyYTxB
-         IQzNZdOH6Eo4H7Q2o9vMv9+M6AUh3QtB3n09xY3D3oln30lNJY+fzYn9tS7f1MVE74
-         wDCGQ+SuiSiaZH5rqEpXzH+27/fwcIP5I6aUvrlKr5H6PC7o/EUx6EmpGaRXCi0jpD
-         XNlC3xqnW1gNpH63f12U1BtwfCQiwfjDFaIj3xmKK1wVN1p+Y3SanSgEMrgM+cU1HP
-         7GQZBmBtn8l2CM24dqlNC+knxlXE5bzNrOl4AIYIwJYB7yEXLtBOGOvFQC6HSW/p/j
-         yTkUu7oxybCdg==
-X-Nifty-SrcIP: [209.85.217.45]
-Received: by mail-vs1-f45.google.com with SMTP id j25so452434vsq.12;
-        Tue, 20 Aug 2019 21:06:22 -0700 (PDT)
-X-Gm-Message-State: APjAAAXbKsU3X5JsLp5O+EnyT45yOl1ME5GdhBfGgFJ+TlB7jLtUSPCw
-        yxPt7t6iKRDmU69MlpWzjOalixsKI3xKxpvNi1k=
-X-Google-Smtp-Source: APXvYqylf5YzGmVfQP1Y/aLizQEgiqcXur6luFADCkGp19zMapciICFm2B+UioaZMTg4uUM9pqSaSmGNw+RRsCvvZ4k=
-X-Received: by 2002:a67:fe12:: with SMTP id l18mr4861186vsr.54.1566360381493;
- Tue, 20 Aug 2019 21:06:21 -0700 (PDT)
+        Wed, 21 Aug 2019 00:07:22 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d5cc3790000>; Tue, 20 Aug 2019 21:07:22 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 20 Aug 2019 21:07:21 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 20 Aug 2019 21:07:21 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
+ 2019 04:07:20 +0000
+Received: from [10.2.161.11] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 21 Aug
+ 2019 04:07:20 +0000
+Subject: disregard: [PATCH 1/4] checkpatch: revert broken NOTIFIER_HEAD check
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        Andy Whitcroft <apw@canonical.com>,
+        Joe Perches <joe@perches.com>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>
+References: <20190821040355.19566-1-jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <7148f0a6-ee20-7c89-e11b-8ffe3053430b@nvidia.com>
+Date:   Tue, 20 Aug 2019 21:05:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190821035517.21671-1-yamada.masahiro@socionext.com> <20190821035517.21671-3-yamada.masahiro@socionext.com>
-In-Reply-To: <20190821035517.21671-3-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 21 Aug 2019 13:05:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAROtaGR4fqrCcocmv8eO1GcAS4FKCLiS_wQqrjEjMMBBg@mail.gmail.com>
-Message-ID: <CAK7LNAROtaGR4fqrCcocmv8eO1GcAS4FKCLiS_wQqrjEjMMBBg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] video/logo: fix unneeded generation of font C files
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-fbdev@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190821040355.19566-1-jhubbard@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1566360442; bh=U6dFw5Ws7lt4i7y6B6eLJLXyO1E1XavUXw1yA0J+5V0=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=d8Q/64LQQmKuu3Q/qqnYCaLIetEHHMn3CaRH8dQ+Dqtbyg3M2by6NErdaqlxzy9S3
+         kb36YXBNUxf9kos4quc3VXSjz164OkNdfXhdyRA7zI0AsY31k1iC6v7pjxaW5GnRmF
+         Qu3bihEc9KQZTRDK8FxQcpuhg+lzkLVUIk8C2oBCklzVIatxXjgWe7Xe/Sb4fVfkDp
+         58QDCDYHT//I3TKAyic8P/sPKF9KVZRRfglG21DXObEiHYpQeUuibUs8GW0haa/87m
+         1YAfOryUurxDfIocVUNq87rgMdYBeJsXkPxtHZcohRu1S3Ip2m29yWb8sEi9Fw0TnP
+         BpZ4aPPEzaH3A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 12:56 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On 8/20/19 9:03 PM, John Hubbard wrote:
+> commit 1a47005dd5aa ("checkpatch: add *_NOTIFIER_HEAD as var
+> definition") causes the following warning when run on some
+> patches:
+> 
 
-I will replace 'font' -> 'logo'.
-(My brain was corrupted.)
+Please disregard this series. It's stale.
 
-
-
-> Currently, all the font C files are generated irrespective of CONFIG
-> options. Adding them to extra-y is wrong. What we need to do here is
-> to add them to 'targets' so that if_changed works properly.
->
-> All files listed in 'targets' are cleaned, so clean-files is unneeded.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
->  drivers/video/logo/Makefile | 21 ++-------------------
->  1 file changed, 2 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/video/logo/Makefile b/drivers/video/logo/Makefile
-> index 10b75ce3ce09..16f60c1e1766 100644
-> --- a/drivers/video/logo/Makefile
-> +++ b/drivers/video/logo/Makefile
-> @@ -18,23 +18,6 @@ obj-$(CONFIG_SPU_BASE)                       += logo_spe_clut224.o
->
->  # How to generate logo's
->
-> -# Use logo-cfiles to retrieve list of .c files to be built
-> -logo-cfiles = $(notdir $(patsubst %.$(2), %.c, \
-> -              $(wildcard $(srctree)/$(src)/*$(1).$(2))))
-> -
-> -
-> -# Mono logos
-> -extra-y += $(call logo-cfiles,_mono,pbm)
-> -
-> -# VGA16 logos
-> -extra-y += $(call logo-cfiles,_vga16,ppm)
-> -
-> -# 224 Logos
-> -extra-y += $(call logo-cfiles,_clut224,ppm)
-> -
-> -# Gray 256
-> -extra-y += $(call logo-cfiles,_gray256,pgm)
-> -
->  pnmtologo := scripts/pnmtologo
->
->  # Create commands like "pnmtologo -t mono -n logo_mac_mono -o ..."
-> @@ -55,5 +38,5 @@ $(obj)/%_clut224.c: $(src)/%_clut224.ppm $(pnmtologo) FORCE
->  $(obj)/%_gray256.c: $(src)/%_gray256.pgm $(pnmtologo) FORCE
->         $(call if_changed,logo)
->
-> -# Files generated that shall be removed upon make clean
-> -clean-files := *_mono.c *_vga16.c *_clut224.c *_gray256.c
-> +# generated C files
-> +targets += *_mono.c *_vga16.c *_clut224.c *_gray256.c
-> --
-> 2.17.1
->
-
-
+thanks,
 -- 
-Best Regards
-Masahiro Yamada
+John Hubbard
+NVIDIA
