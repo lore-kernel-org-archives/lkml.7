@@ -2,135 +2,131 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01341C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8D7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4E120673
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A20920673
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IurdQHEZ"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="Utj4s/Z5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eMNX9UaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392717AbfHVVQY (ORCPT
+        id S2392929AbfHVVQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:16:24 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33085 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390356AbfHVVPx (ORCPT
+        Thu, 22 Aug 2019 17:16:34 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:48895 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730897AbfHVVQR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:15:53 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p77so7911718wme.0;
-        Thu, 22 Aug 2019 14:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Qbsyx6cF/8P/pZdaXCMzm6cKCGUBSYy56F5PBcg7/6U=;
-        b=IurdQHEZbGF35XnlZ8UF4pR7YW1Lwv8gIaLu9L09hnAbFrbd4V1JAFAzo2b43ecYX6
-         u9uJyo2I1maGQ8DtMmZYEx1bADj3Fy6rD31yTojMMljpfUyC1f6iE7rcqwTbY+eYiUfy
-         PS1z3EQn2OOrFa98leV17thaU5l5iCxxVlJKROvg1X0tGD94ka299HYefzbngW5+tv0M
-         mE76oeUVca+Z4DzEWgiVNRYJ52H9OtO8Pfw0wsAf9oGHzofofBNcqqvIyTS0+RjGce25
-         3jJ7514tEQwiKNJevx2LUNmmZZqDdN0I2vS9UBU0uFJeoM42TD7pkmHXg2J1QLBwHSn5
-         iZpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Qbsyx6cF/8P/pZdaXCMzm6cKCGUBSYy56F5PBcg7/6U=;
-        b=cDijmRTogNGVevN0x7AHhpBnBICNrKahjBhz4b6+nYq5nSjazhpFKl0m38QMuzFIs7
-         UnPVXtAEFUbkdbISxYVAUoeQfL5+5PHjcJLUh38R2HPByZu6l+oiP0BnEywKMD/9TokO
-         T6Y+TBsUpJIaeKwJwOpdHTiXjEginAg9h8SBcn1bQYIUb459OHv+XdHhOmIRvx66Cs/Z
-         jUidarWCmCYImfgBZDo2HwjrYql1nhQSx7y/hPbh5lCAWxPRfOmOGn8IKD3w/AxJRJfD
-         Abf2DmsA9lmVXq6hmD9jAw+AZxPP4P5nk1s8CzlLG/2Z8uYFQa10z6C8yWX8zjtv8j9c
-         aT3Q==
-X-Gm-Message-State: APjAAAVeWM/20NFlSckv/wTWCeXH4JD/s8PUIN9kYYBCg4kd3EKiN4KS
-        lik8aX9GLstKi64nUk/2O/0=
-X-Google-Smtp-Source: APXvYqzC0gNtmlawfUqHbSI/k/ZCR1IkvUuCXPArTbZVL4HwXj+ZTZ3lPdnNyswf3HvdzID+RE48xA==
-X-Received: by 2002:a1c:18a:: with SMTP id 132mr1079271wmb.15.1566508551835;
-        Thu, 22 Aug 2019 14:15:51 -0700 (PDT)
-Received: from localhost.localdomain ([86.126.25.232])
-        by smtp.gmail.com with ESMTPSA id g197sm578488wme.30.2019.08.22.14.15.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 14:15:51 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v2 3/5] spi: spi-fsl-dspi: Remove impossible to reach error check
-Date:   Fri, 23 Aug 2019 00:15:12 +0300
-Message-Id: <20190822211514.19288-4-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190822211514.19288-1-olteanv@gmail.com>
-References: <20190822211514.19288-1-olteanv@gmail.com>
+        Thu, 22 Aug 2019 17:16:17 -0400
+X-Greylist: delayed 479 seconds by postgrey-1.27 at vger.kernel.org; Thu, 22 Aug 2019 17:16:16 EDT
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id CFDEE49A;
+        Thu, 22 Aug 2019 17:08:14 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 22 Aug 2019 17:08:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        content-transfer-encoding:content-type:in-reply-to:date:cc
+        :subject:from:to:message-id; s=fm1; bh=WZ5Ec3wLQiEm5IlJwCBhY1oTo
+        MWeoHMfgT/wZdlQH5Q=; b=Utj4s/Z5saDMZIER6kYduuw5ZYnj1gZuBNQMjAk3I
+        GwAsPVKOr+/Azp/IbdYZPN6ePMEBYuIIZy6RNBaN4O63jvgcbJnxnmlGhrboJcmw
+        UthSMhr88TD8c0lIGbTubBfN3PlowT5cncIoEVsQh1jEloUj6Ags+rVsQUUoCbZP
+        Kksg6YvPmR2BlQIGxKyH28uW/d6KzRDss+bCEPBmhabFR6TPKiLFmssr92qJ8ou5
+        YUN4buxkRU/78bPvciLNknmT2SNhaJBzlsbo4Zk48ZBuua3MhxIjKsb6hsZHbpKR
+        2qGOCBtyRfjH3p7H/kHRFBcMDCNSXdkT1tB72cR2liWTg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=WZ5Ec3
+        wLQiEm5IlJwCBhY1oToMWeoHMfgT/wZdlQH5Q=; b=eMNX9UaIeB2Sm/5VpMH21P
+        YOpr4TD0uVEwVn+0GeuAYiMuDQoSFgPuIdBv0dibbEinqvnDeaFSyGrOVOu3pTM8
+        6/wO4nY7vx4eiPN6DoMGMn+u3C1H7qHoFiCqmScXsxktUIAbR6SCQ+IY0QaQw7Ai
+        k30z2Rff7dseY0OsOvTujqKVXnTmuo+DXVb0BHr8/QxZDMjEiPARGSfi7gCVqjem
+        pPn7az+SLLjYZRqjlhc/jbp3lJpDD8xmNp7PcBkapH3avJQN54HiIQTUjYGmOjZC
+        dppndIgwiGYamCRnffNBmRlBJPxkor/4nfZipdRyr3n0ZEYELeWfh5K4txBvwNnA
+        ==
+X-ME-Sender: <xms:PQRfXQKfIgkFSLdEPMcp9yeLkcwroP3kxcHz1x3emQCrROzvNo8VBA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegiedguddufecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enfghrlhcuvffnffculdefhedmnecujfgurhepgfgtjgffuffhvffksehtqhertddttdej
+    necuhfhrohhmpedfffgrnhhivghlucgiuhdfuceougiguhesugiguhhuuhdrgiihiieqne
+    cukfhppeduleelrddvtddurdeigedrgeenucfrrghrrghmpehmrghilhhfrhhomhepugig
+    uhesugiguhhuuhdrgiihiienucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:PQRfXYU8ISslaBb0aPcoNOzsZOXje8elv4Qqu48meYoY24cDCfFefA>
+    <xmx:PQRfXWkxwm9Ej8uQLPPEfg68dTjcMsgImjZsPelUAk-3lVlZiv5Fyg>
+    <xmx:PQRfXWdesUsRaPhOWUSMB6ytOdMczGHdAgcOQQniUZ-wZsRJ5rwU9g>
+    <xmx:PgRfXeJcvuWPQjvXGiyQ2-HXUt_fQurItbiQYKI3NPwNce8E4xUFp8--DV0>
+Received: from localhost (prnvpn05.thefacebook.com [199.201.64.4])
+        by mail.messagingengine.com (Postfix) with ESMTPA id CD78380062;
+        Thu, 22 Aug 2019 17:08:10 -0400 (EDT)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190822090555.GJ2349@hirez.programming.kicks-ass.net>
+Date:   Thu, 22 Aug 2019 14:08:10 -0700
+Cc:     "Yonghong Song" <yhs@fb.com>, "Daniel Xu" <dxu@dxuuu.xyz>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "Andrii Nakryiko" <andriin@fb.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "Alexei Starovoitov" <ast@fb.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Kernel Team" <Kernel-team@fb.com>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>
+Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add
+ PERF_EVENT_IOC_QUERY_PROBE ioctl
+From:   "Daniel Xu" <dxu@dxuuu.xyz>
+To:     "Peter Zijlstra" <peterz@infradead.org>,
+        "Song Liu" <songliubraving@fb.com>
+Message-Id: <BWGGRTQXX7EP.15IPIDK3KLQ6O@dlxu-fedora-R90QNFJV>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dspi->devtype_data is under the total control of the driver. Therefore,
-a bad value is a driver bug and checking it at runtime (and during an
-ISR, at that!) is pointless.
+On Thu Aug 22, 2019 at 11:05 AM Peter Zijlstra wrote:
+> On Thu, Aug 22, 2019 at 07:54:16AM +0000, Song Liu wrote:
+> > Hi Peter,=20
+> >=20
+> > > On Aug 22, 2019, at 12:47 AM, Peter Zijlstra <peterz@infradead.org> w=
+rote:
+> > >=20
+> > > On Wed, Aug 21, 2019 at 06:43:49PM +0000, Yonghong Song wrote:
+> > >> On 8/21/19 11:31 AM, Peter Zijlstra wrote:
+> > >=20
+> > >>> So extending PERF_RECORD_LOST doesn't work. But PERF_FORMAT_LOST mi=
+ght
+> > >>> still work fine; but you get to implement it for all software event=
+s.
+> > >>=20
+> > >> Could you give more specifics about PERF_FORMAT_LOST? Googling=20
+> > >> "PERF_FORMAT_LOST" only yields two emails which we are discussing he=
+re :-(
+> > >=20
+> > > Look at what the other PERF_FORMAT_ flags do? Basically it is adding =
+a
+> > > field to the read(2) output.
+> >=20
+> > Do we need to implement PERF_FORMAT_LOST for all software events? If us=
+er
+> > space asks for PERF_FORMAT_LOST for events that do not support it, can =
+we
+> > just fail sys_perf_event_open()?
+>=20
+> It really shouldn't be hard; and I'm failing to see why kprobes are
+> special.
 
-The second "else if" check is only for clarity (instead of a broader
-"else") in case other transfer modes are added in the future. But the
-printing is dead code and can be removed.
+Thanks for the feedback, everyone. Really appreciate it.
 
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
- drivers/spi/spi-fsl-dspi.c | 24 ++++--------------------
- 1 file changed, 4 insertions(+), 20 deletions(-)
+I will look into extending read_format. I'll submit another patch series
+after I get the code to work.
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 6ef2279a3699..6d2c7984ab0e 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -670,18 +670,10 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 	msg->actual_length += spi_tcnt * dspi->bytes_per_word;
- 
- 	trans_mode = dspi->devtype_data->trans_mode;
--	switch (trans_mode) {
--	case DSPI_EOQ_MODE:
-+	if (trans_mode == DSPI_EOQ_MODE)
- 		dspi_eoq_read(dspi);
--		break;
--	case DSPI_TCFQ_MODE:
-+	else if (trans_mode == DSPI_TCFQ_MODE)
- 		dspi_tcfq_read(dspi);
--		break;
--	default:
--		dev_err(&dspi->pdev->dev, "unsupported trans_mode %u\n",
--			trans_mode);
--			return IRQ_HANDLED;
--	}
- 
- 	if (!dspi->len) {
- 		dspi->waitflags = 1;
-@@ -689,18 +681,10 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 		return IRQ_HANDLED;
- 	}
- 
--	switch (trans_mode) {
--	case DSPI_EOQ_MODE:
-+	if (trans_mode == DSPI_EOQ_MODE)
- 		dspi_eoq_write(dspi);
--		break;
--	case DSPI_TCFQ_MODE:
-+	else if (trans_mode == DSPI_TCFQ_MODE)
- 		dspi_tcfq_write(dspi);
--		break;
--	default:
--		dev_err(&dspi->pdev->dev,
--			"unsupported trans_mode %u\n",
--			trans_mode);
--	}
- 
- 	return IRQ_HANDLED;
- }
--- 
-2.17.1
-
+Daniel
