@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7F4C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB5CC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61060233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A4E233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495122;
-	bh=x4GW7c2JlwLxPGm5e4bIPxoPtdr/wRUzPZBqG+t2Xhc=;
+	s=default; t=1566495124;
+	bh=BwTVcTTrqz+7D6NZcqiUlK5wEVnCl3CvoYa5456Y7z0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RtNO6SmlGn3b/VRBM5k2KKkXHUJrMTgrf04dPGt7Cola9GQJ4C37tNfw9ORfZeLRV
-	 q6TrOM/qib/wAUDfsAsipCvKPuhyZgCdqrF3PXYtEuIlOa6PCKminaO2wUoMTv8/Q2
-	 MQOHCXtJHMgSBm0TXykK7vIC6wvJ3SVmh7GS1Tbs=
+	b=HyOZ4sKVaejtE0FY0vrpxysEANr+9Xu8v5HIzqF60hWQJoNfRmnFqY6y4Wupi16n7
+	 6jmB+W/iWxx8cU7uxDC1521Lg7Ce2UB9VFScIumZpWB65eokoqbYLIbXSiNEh6wLtS
+	 gorMaqmLdpqiVysC7BUhrJ5SW2MF6OOibngUhdtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404623AbfHVRcB (ORCPT
+        id S2404626AbfHVRcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:32:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:32:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404497AbfHVRZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:48 -0400
+        id S2404493AbfHVRZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:47 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AB10206DD;
-        Thu, 22 Aug 2019 17:25:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AFF523427;
+        Thu, 22 Aug 2019 17:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494747;
-        bh=x4GW7c2JlwLxPGm5e4bIPxoPtdr/wRUzPZBqG+t2Xhc=;
+        s=default; t=1566494745;
+        bh=BwTVcTTrqz+7D6NZcqiUlK5wEVnCl3CvoYa5456Y7z0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NXa0lUmo79f5DaV2Dlr3AKYzvKLpUGRWzd4XFfLvqtWFnOw4ZWuqVf0dJPwovwv8X
-         9oxHE2IMpJoBP7OZcoAxDr3Srtg0/YEjoSg0mNZLDjyg/nhzxrfPU0Hzc+lOSH6Sba
-         eCLiHI0lIwYyFxTGKVWZ7an1zVgfOy6vHzJBFtkc=
+        b=c3TIGeG8b/D5Acl32pdRaLA597cwP0FLyQm6qEwXJcvKcu1ovPzb57xB7g9VucNuk
+         6Yvjn+NpE8BuLEm+EFEr7V3Q1gI4abcFHvvSH5sATbvYpjSlFxkNraGL7LxaaJ3+Bf
+         FDlb+7wPLBSb/hrplVStO8FEMsz/tApkKq/+XTOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>,
-        Qian Cai <cai@lca.pw>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 06/85] mm/memcontrol.c: fix use after free in mem_cgroup_iter()
-Date:   Thu, 22 Aug 2019 10:18:39 -0700
-Message-Id: <20190822171731.298944742@linuxfoundation.org>
+Subject: [PATCH 4.19 04/85] mm: mempolicy: make the behavior consistent when MPOL_MF_MOVE* and MPOL_MF_STRICT were specified
+Date:   Thu, 22 Aug 2019 10:18:37 -0700
+Message-Id: <20190822171731.190101948@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -63,225 +63,219 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miles Chen <miles.chen@mediatek.com>
+From: Yang Shi <yang.shi@linux.alibaba.com>
 
-commit 54a83d6bcbf8f4700013766b974bf9190d40b689 upstream.
+commit d883544515aae54842c21730b880172e7894fde9 upstream.
 
-This patch is sent to report an use after free in mem_cgroup_iter()
-after merging commit be2657752e9e ("mm: memcg: fix use after free in
-mem_cgroup_iter()").
+When both MPOL_MF_MOVE* and MPOL_MF_STRICT was specified, mbind() should
+try best to migrate misplaced pages, if some of the pages could not be
+migrated, then return -EIO.
 
-I work with android kernel tree (4.9 & 4.14), and commit be2657752e9e
-("mm: memcg: fix use after free in mem_cgroup_iter()") has been merged
-to the trees.  However, I can still observe use after free issues
-addressed in the commit be2657752e9e.  (on low-end devices, a few times
-this month)
+There are three different sub-cases:
+ 1. vma is not migratable
+ 2. vma is migratable, but there are unmovable pages
+ 3. vma is migratable, pages are movable, but migrate_pages() fails
 
-backtrace:
-        css_tryget <- crash here
-        mem_cgroup_iter
-        shrink_node
-        shrink_zones
-        do_try_to_free_pages
-        try_to_free_pages
-        __perform_reclaim
-        __alloc_pages_direct_reclaim
-        __alloc_pages_slowpath
-        __alloc_pages_nodemask
+If #1 happens, kernel would just abort immediately, then return -EIO,
+after a7f40cfe3b7a ("mm: mempolicy: make mbind() return -EIO when
+MPOL_MF_STRICT is specified").
 
-To debug, I poisoned mem_cgroup before freeing it:
+If #3 happens, kernel would set policy and migrate pages with
+best-effort, but won't rollback the migrated pages and reset the policy
+back.
 
-  static void __mem_cgroup_free(struct mem_cgroup *memcg)
-        for_each_node(node)
-        free_mem_cgroup_per_node_info(memcg, node);
-        free_percpu(memcg->stat);
-  +     /* poison memcg before freeing it */
-  +     memset(memcg, 0x78, sizeof(struct mem_cgroup));
-        kfree(memcg);
-  }
+Before that commit, they behaves in the same way.  It'd better to keep
+their behavior consistent.  But, rolling back the migrated pages and
+resetting the policy back sounds not feasible, so just make #1 behave as
+same as #3.
 
-The coredump shows the position=0xdbbc2a00 is freed.
+Userspace will know that not everything was successfully migrated (via
+-EIO), and can take whatever steps it deems necessary - attempt
+rollback, determine which exact page(s) are violating the policy, etc.
 
-  (gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
-  $13 = {position = 0xdbbc2a00, generation = 0x2efd}
+Make queue_pages_range() return 1 to indicate there are unmovable pages
+or vma is not migratable.
 
-  0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
-  0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
-  0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
-  0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
-  0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
-  0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
-  0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
-  0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
-  0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
-  0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
-  0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
-  0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
-  0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
-  0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
-  0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
-  0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
+The #2 is not handled correctly in the current kernel, the following
+patch will fix it.
 
-In the reclaim path, try_to_free_pages() does not setup
-sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
-shrink_node().
-
-In mem_cgroup_iter(), root is set to root_mem_cgroup because
-sc->target_mem_cgroup is NULL.  It is possible to assign a memcg to
-root_mem_cgroup.nodeinfo.iter in mem_cgroup_iter().
-
-        try_to_free_pages
-        	struct scan_control sc = {...}, target_mem_cgroup is 0x0;
-        do_try_to_free_pages
-        shrink_zones
-        shrink_node
-        	 mem_cgroup *root = sc->target_mem_cgroup;
-        	 memcg = mem_cgroup_iter(root, NULL, &reclaim);
-        mem_cgroup_iter()
-        	if (!root)
-        		root = root_mem_cgroup;
-        	...
-
-        	css = css_next_descendant_pre(css, &root->css);
-        	memcg = mem_cgroup_from_css(css);
-        	cmpxchg(&iter->position, pos, memcg);
-
-My device uses memcg non-hierarchical mode.  When we release a memcg:
-invalidate_reclaim_iterators() reaches only dead_memcg and its parents.
-If non-hierarchical mode is used, invalidate_reclaim_iterators() never
-reaches root_mem_cgroup.
-
-  static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-  {
-        struct mem_cgroup *memcg = dead_memcg;
-
-        for (; memcg; memcg = parent_mem_cgroup(memcg)
-        ...
-  }
-
-So the use after free scenario looks like:
-
-  CPU1						CPU2
-
-  try_to_free_pages
-  do_try_to_free_pages
-  shrink_zones
-  shrink_node
-  mem_cgroup_iter()
-      if (!root)
-      	root = root_mem_cgroup;
-      ...
-      css = css_next_descendant_pre(css, &root->css);
-      memcg = mem_cgroup_from_css(css);
-      cmpxchg(&iter->position, pos, memcg);
-
-        				invalidate_reclaim_iterators(memcg);
-        				...
-        				__mem_cgroup_free()
-        					kfree(memcg);
-
-  try_to_free_pages
-  do_try_to_free_pages
-  shrink_zones
-  shrink_node
-  mem_cgroup_iter()
-      if (!root)
-      	root = root_mem_cgroup;
-      ...
-      mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
-      iter = &mz->iter[reclaim->priority];
-      pos = READ_ONCE(iter->position);
-      css_tryget(&pos->css) <- use after free
-
-To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter
-in invalidate_reclaim_iterators().
-
-[cai@lca.pw: fix -Wparentheses compilation warning]
-  Link: http://lkml.kernel.org/r/1564580753-17531-1-git-send-email-cai@lca.pw
-Link: http://lkml.kernel.org/r/20190730015729.4406-1-miles.chen@mediatek.com
-Fixes: 5ac8fb31ad2e ("mm: memcontrol: convert reclaim iterator to simple css refcounting")
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+[yang.shi@linux.alibaba.com: fix review comments from Vlastimil]
+  Link: http://lkml.kernel.org/r/1563556862-54056-2-git-send-email-yang.shi@linux.alibaba.com
+Link: http://lkml.kernel.org/r/1561162809-59140-2-git-send-email-yang.shi@linux.alibaba.com
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memcontrol.c |   39 +++++++++++++++++++++++++++++----------
- 1 file changed, 29 insertions(+), 10 deletions(-)
+ mm/mempolicy.c |   68 ++++++++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 48 insertions(+), 20 deletions(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1037,26 +1037,45 @@ void mem_cgroup_iter_break(struct mem_cg
- 		css_put(&prev->css);
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -429,11 +429,14 @@ static inline bool queue_pages_required(
  }
  
--static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-+static void __invalidate_reclaim_iterators(struct mem_cgroup *from,
-+					struct mem_cgroup *dead_memcg)
- {
--	struct mem_cgroup *memcg = dead_memcg;
- 	struct mem_cgroup_reclaim_iter *iter;
- 	struct mem_cgroup_per_node *mz;
- 	int nid;
- 	int i;
- 
--	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
--		for_each_node(nid) {
--			mz = mem_cgroup_nodeinfo(memcg, nid);
--			for (i = 0; i <= DEF_PRIORITY; i++) {
--				iter = &mz->iter[i];
--				cmpxchg(&iter->position,
--					dead_memcg, NULL);
--			}
-+	for_each_node(nid) {
-+		mz = mem_cgroup_nodeinfo(from, nid);
-+		for (i = 0; i <= DEF_PRIORITY; i++) {
-+			iter = &mz->iter[i];
-+			cmpxchg(&iter->position,
-+				dead_memcg, NULL);
- 		}
+ /*
+- * queue_pages_pmd() has three possible return values:
+- * 1 - pages are placed on the right node or queued successfully.
+- * 0 - THP was split.
+- * -EIO - is migration entry or MPOL_MF_STRICT was specified and an existing
+- *        page was already on a node that does not follow the policy.
++ * queue_pages_pmd() has four possible return values:
++ * 0 - pages are placed on the right node or queued successfully.
++ * 1 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
++ *     specified.
++ * 2 - THP was split.
++ * -EIO - is migration entry or only MPOL_MF_STRICT was specified and an
++ *        existing page was already on a node that does not follow the
++ *        policy.
+  */
+ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
+ 				unsigned long end, struct mm_walk *walk)
+@@ -451,19 +454,17 @@ static int queue_pages_pmd(pmd_t *pmd, s
+ 	if (is_huge_zero_page(page)) {
+ 		spin_unlock(ptl);
+ 		__split_huge_pmd(walk->vma, pmd, addr, false, NULL);
++		ret = 2;
+ 		goto out;
  	}
+-	if (!queue_pages_required(page, qp)) {
+-		ret = 1;
++	if (!queue_pages_required(page, qp))
+ 		goto unlock;
+-	}
+ 
+-	ret = 1;
+ 	flags = qp->flags;
+ 	/* go to thp migration */
+ 	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
+ 		if (!vma_migratable(walk->vma)) {
+-			ret = -EIO;
++			ret = 1;
+ 			goto unlock;
+ 		}
+ 
+@@ -479,6 +480,13 @@ out:
+ /*
+  * Scan through pages checking if pages follow certain conditions,
+  * and move them to the pagelist if they do.
++ *
++ * queue_pages_pte_range() has three possible return values:
++ * 0 - pages are placed on the right node or queued successfully.
++ * 1 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
++ *     specified.
++ * -EIO - only MPOL_MF_STRICT was specified and an existing page was already
++ *        on a node that does not follow the policy.
+  */
+ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+ 			unsigned long end, struct mm_walk *walk)
+@@ -488,17 +496,17 @@ static int queue_pages_pte_range(pmd_t *
+ 	struct queue_pages *qp = walk->private;
+ 	unsigned long flags = qp->flags;
+ 	int ret;
++	bool has_unmovable = false;
+ 	pte_t *pte;
+ 	spinlock_t *ptl;
+ 
+ 	ptl = pmd_trans_huge_lock(pmd, vma);
+ 	if (ptl) {
+ 		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
+-		if (ret > 0)
+-			return 0;
+-		else if (ret < 0)
++		if (ret != 2)
+ 			return ret;
+ 	}
++	/* THP was split, fall through to pte walk */
+ 
+ 	if (pmd_trans_unstable(pmd))
+ 		return 0;
+@@ -519,14 +527,21 @@ static int queue_pages_pte_range(pmd_t *
+ 		if (!queue_pages_required(page, qp))
+ 			continue;
+ 		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
+-			if (!vma_migratable(vma))
++			/* MPOL_MF_STRICT must be specified if we get here */
++			if (!vma_migratable(vma)) {
++				has_unmovable = true;
+ 				break;
++			}
+ 			migrate_page_add(page, qp->pagelist, flags);
+ 		} else
+ 			break;
+ 	}
+ 	pte_unmap_unlock(pte - 1, ptl);
+ 	cond_resched();
++
++	if (has_unmovable)
++		return 1;
++
+ 	return addr != end ? -EIO : 0;
  }
  
-+static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-+{
-+	struct mem_cgroup *memcg = dead_memcg;
-+	struct mem_cgroup *last;
+@@ -639,7 +654,13 @@ static int queue_pages_test_walk(unsigne
+  *
+  * If pages found in a given range are on a set of nodes (determined by
+  * @nodes and @flags,) it's isolated and queued to the pagelist which is
+- * passed via @private.)
++ * passed via @private.
++ *
++ * queue_pages_range() has three possible return values:
++ * 1 - there is unmovable page, but MPOL_MF_MOVE* & MPOL_MF_STRICT were
++ *     specified.
++ * 0 - queue pages successfully or no misplaced page.
++ * -EIO - there is misplaced page and only MPOL_MF_STRICT was specified.
+  */
+ static int
+ queue_pages_range(struct mm_struct *mm, unsigned long start, unsigned long end,
+@@ -1168,6 +1189,7 @@ static long do_mbind(unsigned long start
+ 	struct mempolicy *new;
+ 	unsigned long end;
+ 	int err;
++	int ret;
+ 	LIST_HEAD(pagelist);
+ 
+ 	if (flags & ~(unsigned long)MPOL_MF_VALID)
+@@ -1229,10 +1251,15 @@ static long do_mbind(unsigned long start
+ 	if (err)
+ 		goto mpol_out;
+ 
+-	err = queue_pages_range(mm, start, end, nmask,
++	ret = queue_pages_range(mm, start, end, nmask,
+ 			  flags | MPOL_MF_INVERT, &pagelist);
+-	if (!err)
+-		err = mbind_range(mm, start, end, new);
 +
-+	do {
-+		__invalidate_reclaim_iterators(memcg, dead_memcg);
-+		last = memcg;
-+	} while ((memcg = parent_mem_cgroup(memcg)));
++	if (ret < 0) {
++		err = -EIO;
++		goto up_out;
++	}
 +
-+	/*
-+	 * When cgruop1 non-hierarchy mode is used,
-+	 * parent_mem_cgroup() does not walk all the way up to the
-+	 * cgroup root (root_mem_cgroup). So we have to handle
-+	 * dead_memcg from cgroup root separately.
-+	 */
-+	if (last != root_mem_cgroup)
-+		__invalidate_reclaim_iterators(root_mem_cgroup,
-+						dead_memcg);
-+}
-+
- /**
-  * mem_cgroup_scan_tasks - iterate over tasks of a memory cgroup hierarchy
-  * @memcg: hierarchy root
++	err = mbind_range(mm, start, end, new);
+ 
+ 	if (!err) {
+ 		int nr_failed = 0;
+@@ -1245,13 +1272,14 @@ static long do_mbind(unsigned long start
+ 				putback_movable_pages(&pagelist);
+ 		}
+ 
+-		if (nr_failed && (flags & MPOL_MF_STRICT))
++		if ((ret > 0) || (nr_failed && (flags & MPOL_MF_STRICT)))
+ 			err = -EIO;
+ 	} else
+ 		putback_movable_pages(&pagelist);
+ 
++up_out:
+ 	up_write(&mm->mmap_sem);
+- mpol_out:
++mpol_out:
+ 	mpol_put(new);
+ 	return err;
+ }
 
 
