@@ -2,53 +2,55 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 370FFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08493C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA3720856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13A320870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495859;
-	bh=z851h45O7JFYDbYorJHDPsmBa98oYdmzXl0lcIKxDjs=;
+	s=default; t=1566495862;
+	bh=JDHqFHevzPXTDr1cUatLUjNYAVyZZOe6mz7YHiq1i1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GkJGknC3VffwSO9oEIFpdBUSVTH/AsV9uTOfyoRsG+hRoIIxlyD3kznr6tzWBfDsv
-	 MJJmWPJdhTpl8x9Rxn+rSiwGu+o38XRm6+q/eMGhtOfAhHemHoKsfJk6/OCJpfETh5
-	 UVoHi+KvpxRlmJ3limShJZl3YOq6KHt0RTdh27Fc=
+	b=GdNCJ1js1BjAQm3kdmo46NuT8etEoMlvdmKCd88ruC/rH0NwVLUG2sOvFsoLtyPnc
+	 9pub2oNRr8sJCXEFWPftr8pmRZrDN5lKYTxW7SNPpMJynjXCsBkUs7FyUsE4lmN7Xp
+	 AKthvY/H1SxNo/SUOGf+U887hNoX6fRmI0CcukTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403919AbfHVRXV (ORCPT
+        id S2392760AbfHVRoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42912 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:44:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403896AbfHVRXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:18 -0400
+        id S2403912AbfHVRXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:21 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FA7823406;
-        Thu, 22 Aug 2019 17:23:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A01B1233FC;
+        Thu, 22 Aug 2019 17:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494597;
-        bh=z851h45O7JFYDbYorJHDPsmBa98oYdmzXl0lcIKxDjs=;
+        s=default; t=1566494600;
+        bh=JDHqFHevzPXTDr1cUatLUjNYAVyZZOe6mz7YHiq1i1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VsGwPGyVzMnbqMoo0wF2GZkwMoxqOUkcD6CWqQnbiwMmmGgOy5sL5+B1cngD4SCqI
-         u/GEgSOedMSxu7zC10KHVNsG722wTtjD+FOIgw6AnI7TaYxpZwtRyo79HqI0ZG1Qgq
-         qiHD8al9zYrss1bbtRT103fSbpTWxBxDUkDMop2o=
+        b=tPkeRy8QR8qceJmIAe3l7K437dlYRg7wtBpHxJX2nXIZmEb012GDuKyzQnTCOScvy
+         WnIwqjL6XNBYALpgrCNsoBqbqJWIOef520I4n1jIpBNM2OCnHmiHCGqcpsKGf4GTuf
+         gT53dnfkmYCQ49vnRcVaJ8hQrgfUSoGvWz6SnNaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 019/103] ALSA: compress: Prevent bypasses of set_params
-Date:   Thu, 22 Aug 2019 10:18:07 -0700
-Message-Id: <20190822171729.629383029@linuxfoundation.org>
+Subject: [PATCH 4.9 022/103] perf probe: Avoid calling freeing routine multiple times for same pointer
+Date:   Thu, 22 Aug 2019 10:18:10 -0700
+Message-Id: <20190822171729.750620526@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -61,81 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 26c3f1542f5064310ad26794c09321780d00c57d ]
+[ Upstream commit d95daf5accf4a72005daa13fbb1d1bd8709f2861 ]
 
-Currently, whilst in SNDRV_PCM_STATE_OPEN it is possible to call
-snd_compr_stop, snd_compr_drain and snd_compr_partial_drain, which
-allow a transition to SNDRV_PCM_STATE_SETUP. The stream should
-only be able to move to the setup state once it has received a
-SNDRV_COMPRESS_SET_PARAMS ioctl. Fix this issue by not allowing
-those ioctls whilst in the open state.
+When perf_add_probe_events() we call cleanup_perf_probe_events() for the
+pev pointer it receives, then, as part of handling this failure the main
+'perf probe' goes on and calls cleanup_params() and that will again call
+cleanup_perf_probe_events()for the same pointer, so just set nevents to
+zero when handling the failure of perf_add_probe_events() to avoid the
+double free.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-x8qgma4g813z96dvtw9w219q@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/compress_offload.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+ tools/perf/builtin-probe.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index cf1317546b0ff..1538fbc7562b8 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -712,9 +712,15 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
- {
- 	int retval;
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 9a250c71840e9..2b420e7a92c0c 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -675,6 +675,16 @@ __cmd_probe(int argc, const char **argv, const char *prefix __maybe_unused)
  
--	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
--			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_PREPARED:
- 		return -EPERM;
-+	default:
-+		break;
-+	}
+ 		ret = perf_add_probe_events(params.events, params.nevents);
+ 		if (ret < 0) {
 +
- 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
- 	if (!retval) {
- 		snd_compr_drain_notify(stream);
-@@ -802,9 +808,14 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
- {
- 	int retval;
- 
--	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
--			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_PREPARED:
- 		return -EPERM;
-+	default:
-+		break;
-+	}
- 
- 	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_DRAIN);
- 	if (retval) {
-@@ -841,9 +852,16 @@ static int snd_compr_next_track(struct snd_compr_stream *stream)
- static int snd_compr_partial_drain(struct snd_compr_stream *stream)
- {
- 	int retval;
--	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
--			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
-+
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_PREPARED:
- 		return -EPERM;
-+	default:
-+		break;
-+	}
-+
- 	/* stream can be drained only when next track has been signalled */
- 	if (stream->next_track == false)
- 		return -EPERM;
++			/*
++			 * When perf_add_probe_events() fails it calls
++			 * cleanup_perf_probe_events(pevs, npevs), i.e.
++			 * cleanup_perf_probe_events(params.events, params.nevents), which
++			 * will call clear_perf_probe_event(), so set nevents to zero
++			 * to avoid cleanup_params() to call clear_perf_probe_event() again
++			 * on the same pevs.
++			 */
++			params.nevents = 0;
+ 			pr_err_with_code("  Error: Failed to add events.", ret);
+ 			return ret;
+ 		}
 -- 
 2.20.1
 
