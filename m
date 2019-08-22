@@ -2,308 +2,164 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C46C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1A6C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F08E2082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728502082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="hKIl6fK+"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="UPabgX6o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389255AbfHVOg1 (ORCPT
+        id S2389269AbfHVOgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:36:27 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:60982 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729731AbfHVOg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:36:26 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 8A69942ED3;
-        Thu, 22 Aug 2019 14:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-type:content-type:in-reply-to:mime-version:user-agent
-        :date:date:message-id:organization:from:from:references:subject
-        :subject:received:received:received; s=mta-01; t=1566484582; x=
-        1568298983; bh=KjLZ/dXb03wCeLlcNpYc1sfR2QBhG4qiGXMw3VhDuCI=; b=h
-        KIl6fK+ADBPFXUBs4nGI6DG4Ws8k+GDr1X5QqlQVHb9KjG9I2Yb9pq8Mz3cgp154
-        EQiRcBGjakvt56n3c4qo54o3sJyWb/im+VOl0DtHktQxhVbkKAVhFat6vDGASqT6
-        2kquwOsBC2X11clFMIzlQteIAbZ7Jv6qyaJOtPoX0Y=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qq5hMQ1PA2LM; Thu, 22 Aug 2019 17:36:22 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 8F97A412D3;
-        Thu, 22 Aug 2019 17:36:22 +0300 (MSK)
-Received: from [172.17.14.197] (172.17.14.197) by T-EXCH-02.corp.yadro.com
- (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Thu, 22
- Aug 2019 17:36:22 +0300
-Subject: Re: [PATCH 3/3] watchdog/aspeed: add support for dual boot
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-References: <1f2cd155057e5ab0cdb20a9a11614bbb09bb49ad.camel@yadro.com>
- <20190821163220.GA11547@roeck-us.net>
- <9e7fe5cc-ba1b-b8b6-69c5-c3c6cf508a36@yadro.com>
- <20190821181008.GB15127@roeck-us.net>
-From:   Alexander Amelkin <a.amelkin@yadro.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=a.amelkin@yadro.com; prefer-encrypt=mutual; keydata=
- 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
- dTYsE5wSxM06T2l/MILupCNZ7A==
-Organization: YADRO
-Message-ID: <5cb20f52-884a-b921-c904-ebf244092318@yadro.com>
-Date:   Thu, 22 Aug 2019 17:36:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 22 Aug 2019 10:36:32 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:29634 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389256AbfHVOgc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:36:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1566484590; x=1598020590;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=Yvp8LjaYWUxeQilicZ38jo3c+L9KmT9UXROdt/YTVSE=;
+  b=UPabgX6oETFS37AjnRE+mf2NqDpIIE6h6ASUYuaIOVt7mkFHB0BuGAxe
+   zsksD8uwXaStzMo6F8gfJY5HS6UpC55z6PMdgJv8h1rVS7GvoqtJjGQnq
+   yKALBh7bGOKa3NIA+s4h9fZdWZY5coo4TYYQdTcr2BjkYsLi/uC+c+C7d
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.64,416,1559520000"; 
+   d="scan'208";a="411121470"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 22 Aug 2019 14:36:29 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id 26B442413D5;
+        Thu, 22 Aug 2019 14:36:25 +0000 (UTC)
+Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 22 Aug 2019 14:36:25 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 22 Aug 2019 14:36:25 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
+ Thu, 22 Aug 2019 14:36:25 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "andrew.murray@arm.com" <andrew.murray@arm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v4 3/7] PCI/VPD: Add VPD release quirk for Amazon's
+ Annapurna Labs Root Port
+Thread-Topic: [PATCH v4 3/7] PCI/VPD: Add VPD release quirk for Amazon's
+ Annapurna Labs Root Port
+Thread-Index: AQHVWDYx1otPgAUY7UaMxbVyR8qrcqcHDLyAgAAwyQA=
+Date:   Thu, 22 Aug 2019 14:36:24 +0000
+Message-ID: <5a2c0097471e933d6f6a3964ac9fba9520994991.camel@amazon.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+         <20190821153545.17635-4-jonnyc@amazon.com>
+         <20190822114146.GP23903@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190822114146.GP23903@e119886-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.67]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4BEB828D57473A42AE30BC33D5008F5B@amazon.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190821181008.GB15127@roeck-us.net>
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature";
-        boundary="YIEW7bBuQgeLRG8A8mPFaUjOFyaWm03jp"
-X-Originating-IP: [172.17.14.197]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---YIEW7bBuQgeLRG8A8mPFaUjOFyaWm03jp
-Content-Type: multipart/mixed; boundary="CGCf03BkzPVvByrHDZk8giv8pTtRj2ooY";
- protected-headers="v1"
-From: Alexander Amelkin <a.amelkin@yadro.com>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Ivan Mikhaylov <i.mikhaylov@yadro.com>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Joel Stanley <joel@jms.id.au>,
- Andrew Jeffery <andrew@aj.id.au>, linux-watchdog@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-Message-ID: <5cb20f52-884a-b921-c904-ebf244092318@yadro.com>
-Subject: Re: [PATCH 3/3] watchdog/aspeed: add support for dual boot
-References: <1f2cd155057e5ab0cdb20a9a11614bbb09bb49ad.camel@yadro.com>
- <20190821163220.GA11547@roeck-us.net>
- <9e7fe5cc-ba1b-b8b6-69c5-c3c6cf508a36@yadro.com>
- <20190821181008.GB15127@roeck-us.net>
-In-Reply-To: <20190821181008.GB15127@roeck-us.net>
-
---CGCf03BkzPVvByrHDZk8giv8pTtRj2ooY
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-
-21.08.2019 21:10, Guenter Roeck wrote:
-> On Wed, Aug 21, 2019 at 08:42:24PM +0300, Alexander Amelkin wrote:
->> 21.08.2019 19:32, Guenter Roeck wrote:
->>> On Wed, Aug 21, 2019 at 06:57:43PM +0300, Ivan Mikhaylov wrote:
->>>> Set WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION into WDT_CLEAR_TIMEOUT=
-_STATUS
->>>> to clear out boot code source and re-enable access to the primary SP=
-I flash
->>>> chip while booted via wdt2 from the alternate chip.
->>>>
->>>> AST2400 datasheet says:
->>>> "In the 2nd flash booting mode, all the address mapping to CS0# woul=
-d be
->>>> re-directed to CS1#. And CS0# is not accessable under this mode. To =
-access
->>>> CS0#, firmware should clear the 2nd boot mode register in the WDT2 s=
-tatus
->>>> register WDT30.bit[1]."
->>> Is there reason to not do this automatically when loading the module
->>> in alt-boot mode ? What means does userspace have to determine if CS0=
-
->>> or CS1 is active at any given time ? If there is reason to ever have =
-CS1
->>> active instead of CS0, what means would userspace have to enable it ?=
-
->> Yes, there is. The driver is loaded long before the filesystems are mo=
-unted.
->> The filesystems, in the event of alternate/recovery boot, need to be m=
-ounted
->> from the same chip that the kernel was booted. For one reason because =
-the main
->> chip at CS0 is most probably corrupt. If you clear that bit when drive=
-r is
->> loaded, your software will not know that and will try to mount the wro=
-ng
->> filesystems. The whole idea of ASPEED's switching chipselects is to ha=
-ve
->> identical firmware in both chips, without the need to process the alte=
-rnate
->> boot state in any way except for indicating a successful boot and rest=
-oring
->> access to CS0 when needed.
->>
->> The userspace can read bootstatus sysfs node to determine if an altern=
-ate
->> boot has occured.
->>
->> With ASPEED, CS1 is activated automatically by wdt2 when system fails =
-to boot
->> from the primary flash chip (at CS0) and disable the watchdog to indic=
-ate a
->> successful boot. When that happens, both CS0 and CS1 controls=C2=A0 ge=
-t routed in
->> hardware to CS1 line, making the primary flash chip inaccessible. Depe=
-nding
->> on the architecture of the user-space software, it may choose to re-en=
-able
->> access to the primary chip via CS0 at different times. There must be a=
- way to do so.
->>
-> So by activating cs0, userspace would essentially pull its own root fil=
-e system
-> from underneath itself ?
-
-Exactly. That's why for alternate boot the firmware would usually copy
-all filesystems to memory and mount from there. Some embedded systems
-do that always, regardless of which chip they boot from.
-
-However, to be able to recover the main flash chip, the system needs CS0
-to function as such (not as CS1). That's why this control is needed.
-
-As Ivan mentioned, for AST2500 and the upcoming AST2600 the behavior
-is slightly different. They don't just connect both CS controls to CS1 bu=
-t instead
-swap them so the primary chip becomes secondary from the software point
-of view. The means to restore the normal wiring may still be needed.
-
->
->> This code most probably adds nothing at the assembly level.
->>
-> That seems quite unlikely. Please demonstrate.
-
-Yes, you were right. It adds 7 instructions. We'll drop the check.
-It's just my DO-178 background, I add 'robustness' checks everywhere.
-
->>>> +	writel(WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION,
->>>> +			wdt->base + WDT_CLEAR_TIMEOUT_STATUS);
->>>> +	wdt->wdd.bootstatus |=3D WDIOF_EXTERN1;
->>> The variable reflects the _boot status_. It should not change after b=
-ooting.
->> Is there any documentation that dictates that? All I could find is
->>
->> "bootstatus: status of the device after booting". That doesn't look to=
- me like it absolutely can not change to reflect the updated status (that=
- is, to reflect that the originally set up alternate CS routing has been =
-reset to normal).
->>
-> You choose to interpret "after booting" in a kind of novel way,
-> which I find a bit disturbing. I am not really sure how else to
-> describe "boot status" in a way that does not permit such
-> reinterpratation of the term.
-
-How about "Reflects reasons that caused a reboot, remains constant until =
-the next boot" ?
-
-> On top of that, how specifically would "WDIOF_EXTERN1" reflect
-> what you claim it does ? Not only you are hijacking bootstatus9
-> (which is supposed to describe the reason for a reboot), you
-> are also hijacking WDIOF_EXTERN1. That seems highly arbitrary
-> to me, and is not really how an API/ABI should be used.
-
-We used WDIOF_EXTERN1 because:
-
-1. We thought that bootstatus _can_ change
-
-2. We thought that adding extra bits wouldn't be appreciated
-
-Now as you clarified that assumption 1 was wrong we are going to implemen=
-t status as I proposed earlier:
-
->
->> I think we could make 'access_cs0' readable instead, so it could repor=
-t the
->> current state of the boot code selection bit. Reverted, I suppose. Tha=
-t
->> way 'access_cs0' would report 1 after 1 has been written to it (it wou=
-ldn't
->> be possible to write a zero).
-
-With best regards,
-Alexander Amelkin,
-BIOS/BMC Team Lead, YADRO
-https://yadro.com
-
-
-
---CGCf03BkzPVvByrHDZk8giv8pTtRj2ooY--
-
---YIEW7bBuQgeLRG8A8mPFaUjOFyaWm03jp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJdXqhlAAoJEOiTWHtbdBeNGSMP/1EdyFby2fvhiS+viqTox7Yh
-XBOSBOEbl1OohoMq87ZG6rhT5uuT+C+drxz+WIEP1wt2YgOS0gNO6ODsL9G9FZNf
-PYns9R2pKHQ+5oMqP7FalU9EoCJiHdGK6/HrP/QERHTt4+lVNeJg+GrbaNOaIZew
-qFsst9KCBmGxDJHv6j4sHExZBvsrP1P9+1q7LrJHP2ep3hWAKYcYlzsGooXtrFQH
-oSNeQJxW9o3OXwMihIYoDLyfsUpazxTw8p/+t6EO4sopjP5Hh3LGbGskM1NdFVkc
-sLFGBhX5qmMxRQhBHyIdCJz9c0D6uhTp5MfcllQf7+FVo+0QLo8WVSxGLUoP4TH5
-BttQvU+7H7DCRu5WxBj00LhPS2wK1Xb2KJ1agoo7QSr/5RpNqyFRGKIykQmWNm/X
-TJ/Ru3IMUQl8HC2C3ihddw7CRm5js2X0n45HI+7BjqkO5e+yW7he/nIRDgm19udU
-ChkkjqMKRUAC4aOQWxDMEC20PMjsi+3r0eiF5BCgQJ6qIzlzU18V6JHCiaCGENr0
-um1OktmfkT5SPqDJgDw0QX/7e/jIJD0mA5HZgKVQmtTPJEUN+YyHSWvseJKdyR6S
-4/4udiV8wCHdXIgjgSAxcCrRKqX9zfjurOZUA0LneS3a88jfP2D5GLBV51+wIB1I
-xf+LRRJj90D2ov79r4dD
-=nMHV
------END PGP SIGNATURE-----
-
---YIEW7bBuQgeLRG8A8mPFaUjOFyaWm03jp--
+T24gVGh1LCAyMDE5LTA4LTIyIGF0IDEyOjQxICswMTAwLCBBbmRyZXcgTXVycmF5IHdyb3RlOg0K
+PiBPbiBXZWQsIEF1ZyAyMSwgMjAxOSBhdCAwNjozNTo0M1BNICswMzAwLCBKb25hdGhhbiBDaG9j
+cm9uIHdyb3RlOg0KPiA+IFRoZSBBbWF6b24gQW5uYXB1cm5hIExhYnMgUENJZSBSb290IFBvcnQg
+ZXhwb3NlcyB0aGUgVlBEDQo+ID4gY2FwYWJpbGl0eSwNCj4gPiBidXQgdGhlcmUgaXMgbm8gYWN0
+dWFsIHN1cHBvcnQgZm9yIGl0Lg0KPiA+IA0KPiA+IFRoZSByZWFzb24gZm9yIG5vdCB1c2luZyB0
+aGUgYWxyZWFkeSBleGlzdGluZyBxdWlya19ibGFja2xpc3RfdnBkKCkNCj4gPiBpcyB0aGF0LCBh
+bHRob3VnaCB0aGlzIGZhaWxzIHBjaV92cGRfcmVhZC93cml0ZSwgdGhlICd2cGQnIHN5c2ZzDQo+
+ID4gZW50cnkgc3RpbGwgZXhpc3RzLiBXaGVuIHJ1bm5pbmcgbHNwY2kgLXZ2LCBmb3IgZXhhbXBs
+ZSwgdGhpcw0KPiA+IHJlc3VsdHMgaW4gdGhlIGZvbGxvd2luZyBlcnJvcjoNCj4gPiANCj4gPiBw
+Y2lsaWI6IHN5c2ZzX3JlYWRfdnBkOiByZWFkIGZhaWxlZDogSW5wdXQvb3V0cHV0IGVycm9yDQo+
+IA0KPiBPaCB0aGF0J3Mgbm90IG5pY2UuIEl0J3MgcHJvYmFibHkgdHJpZ2dlcmVkIGJ5IHRoZSAt
+RUlPIGluDQo+IHBjaV92cGRfcmVhZC4NCj4gQSBxdWljayBzZWFyY2ggb25saW5lIHNlZW1zIHRv
+IHNob3cgdGhhdCBvdGhlciBwZW9wbGUgaGF2ZQ0KPiBleHBlcmllbmNlZA0KPiB0aGlzIHRvbyAt
+IHRob3VnaCBmcm9tIGFzIGZhciBhcyBJIGNhbiB0ZWxsIHRoaXMganVzdCBnaXZlcyB5b3UgYQ0K
+PiB3YXJuaW5nIGFuZCBwY2lsaWIgd2lsbCBjb250aW5udWUgdG8gZ2l2ZSBvdGhlciBvdXRwdXQ/
+DQo+IA0KQ29ycmVjdC4NCg0KPiBJIGd1ZXNzIGV2ZXJ5IHZwZCBibGFja2xpc3QnZCBkcml2ZXIg
+d2lsbCBoYXZlIHRoZSBzYW1lIGlzc3VlLiBBbmQNCj4gZm9yDQo+IHRoaXMgcmVhc29uIEkgZG9u
+J3QgdGhpbmsgdGhhdCB0aGlzIHBhdGNoIGlzIHRoZSByaWdodCBzb2x1dGlvbiAtIGFzDQo+IG90
+aGVyd2lzZSBhbGwgdGhlIG90aGVyIGJsYWNrbGlzdGVkIGRyaXZlcnMgY291bGQgZm9sbG93IHlv
+dXIgbGVhZC4NCj4gDQpJIHRoaW5rIHRoYXQgZ29pbmcgZm9yd2FyZCwgdGhleSBzaG91bGQgZm9s
+bG93IG15IGxlYWQsIEkganVzdCBkaWRuJ3QNCndhbnQgdG8gcG9zc2libHkgYnJlYWsgYW55IGFz
+c3VtcHRpb25zIG90aGVyIHZlbmRvcnMnIHRvb2xzIG1pZ2h0IGhhdmUNCnJlZ2FyZGluZyB0aGUg
+ZXhpc3RlbmNlL25vbi1leGlzdGVuY2Ugb2YgdGhlIHZwZCBzeXNmcyBlbnRyeS4NCg0KPiBJIGRv
+bid0IHRoaW5rIHlvdSBuZWVkIHRvIGZpeCB0aGlzIHNwZWNpZmljYWxseSBmb3IgdGhlIEFMIGRy
+aXZlciBhbmQNCj4gc28NCj4gSSdkIHN1Z2dlc3QgdGhhdCB5b3UgY2FuIHByb2JhYmx5IGRyb3Ag
+dGhpcyBwYXRjaC4gKElkZWFsbHkgcGNpdXRpbHMNCj4gY291bGQgYmUgdXBkYXRlZCB0byBub3Qg
+d2FybiBmb3IgdGhpcyBzcGVjaWZpYyB1c2UtY2FzZSkuDQo+IA0KSSBkb24ndCB0aGluayB0aGF0
+IHNvbHV0aW9uIHNob3VsZCBiZSBpbXBsZW1lbnRlZCBpbiBwY2l0dWlscy4gSXQNCnJpZ2h0ZnVs
+bHkgd2FybnMgd2hlbiBpdCBmYWlscyB0byByZWFkIGZyb20gdGhlIHZwZCBzeXNmcyBmaWxlIC0g
+aXQNCmZpcnN0ICdvcGVuJ3MgdGhlIGZpbGUgd2hpY2ggc3VjY2VlZHMsIGFuZCB0aGVuIGZhaWxz
+IHdoZW4gdHJ5aW5nIHRvDQoncmVhZCcgZnJvbSBpdC4gSSBkb24ndCB0aGluayB0aGF0IGl0IHNo
+b3VsZCBzcGVjaWZpY2FsbHkgIm1hc2siIG91dA0KLUVJTywgc2luY2UgaXQgc2hvdWxkbid0IGhh
+dmUgdG8gImtub3ciIHRoYXQgdGhlIHVuZGVybHlpbmcgcmVhc29uIGlzIGENClZQRCBxdWlyayAo
+b3IgbW9yZSBwcmVjaXNlbHkgdnBkLT5sZW4gPT0gMCkuIEZ1cnRoZXJtb3JlLCBpdCBpcw0KcG9z
+c2libGUgdGhhdCB0aGlzIGVycm9yIGNvZGUgd291bGQgYmUgcmV0dXJuZWQgZm9yIHNvbWUgb3Ro
+ZXIgcmVhc29uDQoobm90IHN1cmUgaWYgY3VycmVudGx5IHRoaXMgb2NjdXJzKS4NCg0KSSB0aGlu
+ayB0aGF0IGlmIHRoZSBkZXZpY2UgZG9lc24ndCBwcm9wZXJseSBzdXBwb3J0IHZwZCwgdGhlIGtl
+cm5lbA0Kc2hvdWxkbid0IGV4cG9zZSB0aGUgImVtcHR5IiBzeXNmcyBmaWxlIGluIHRoZSBmaXJz
+dCBwbGFjZS4NCg0KSW4gdGhlIGxvbmcgcnVuLCBxdWlya19ibGFja2xpc3RfdnBkKCkgc2hvdWxk
+IHByb2JhYmx5IGJlIG1vZGlmaWVkIHRvDQpkbyB3aGF0IG91ciBxdWlyayBkb2VzIG9yIHNvbWV0
+aGluZyBzaW1pbGFyIChhbmQgdGhlbiB0aGUgYWwgcXVpcmsgY2FuDQpiZSByZW1vdmVkKS4gV2hh
+dCBkbyB5b3UgdGhpbms/DQoNCj4gVGhhbmtzLA0KPiANCj4gQW5kcmV3IE11cnJheQ0KPiANCj4g
+PiANCj4gPiBUaGlzIHF1aXJrIHJlbW92ZXMgdGhlIHN5c2ZzIGVudHJ5LCB3aGljaCBhdm9pZHMg
+dGhlIGVycm9yIHByaW50Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIENob2Ny
+b24gPGpvbm55Y0BhbWF6b24uY29tPg0KPiA+IFJldmlld2VkLWJ5OiBHdXN0YXZvIFBpbWVudGVs
+IDxndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9w
+Y2kvdnBkLmMgfCAxNiArKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNiBp
+bnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL3ZwZC5jIGIv
+ZHJpdmVycy9wY2kvdnBkLmMNCj4gPiBpbmRleCA0OTYzYzJlMmJkNGMuLmMyM2E4ZWMwOGRiOSAx
+MDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS92cGQuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNp
+L3ZwZC5jDQo+ID4gQEAgLTY0NCw0ICs2NDQsMjAgQEAgc3RhdGljIHZvaWQgcXVpcmtfY2hlbHNp
+b19leHRlbmRfdnBkKHN0cnVjdA0KPiA+IHBjaV9kZXYgKmRldikNCj4gPiAgREVDTEFSRV9QQ0lf
+RklYVVBfRklOQUwoUENJX1ZFTkRPUl9JRF9DSEVMU0lPLCBQQ0lfQU5ZX0lELA0KPiA+ICAJCQlx
+dWlya19jaGVsc2lvX2V4dGVuZF92cGQpOw0KPiA+ICANCj4gPiArc3RhdGljIHZvaWQgcXVpcmtf
+YWxfdnBkX3JlbGVhc2Uoc3RydWN0IHBjaV9kZXYgKmRldikNCj4gPiArew0KPiA+ICsJaWYgKGRl
+di0+dnBkKSB7DQo+ID4gKwkJcGNpX3ZwZF9yZWxlYXNlKGRldik7DQo+ID4gKwkJZGV2LT52cGQg
+PSBOVUxMOw0KPiA+ICsJCXBjaV93YXJuKGRldiwgRldfQlVHICJSZWxlYXNpbmcgVlBEIGNhcGFi
+aWxpdHkgKE5vDQo+ID4gc3VwcG9ydCBmb3IgVlBEIHJlYWQvd3JpdGUgdHJhbnNhY3Rpb25zKVxu
+Iik7DQo+ID4gKwl9DQo+ID4gK30NCj4gPiArDQo+ID4gKy8qDQo+ID4gKyAqIFRoZSAwMDMxIGRl
+dmljZSBpZCBpcyByZXVzZWQgZm9yIG90aGVyIG5vbiBSb290IFBvcnQgZGV2aWNlDQo+ID4gdHlw
+ZXMsDQo+ID4gKyAqIHRoZXJlZm9yZSB0aGUgcXVpcmsgaXMgcmVnaXN0ZXJlZCBmb3IgdGhlIFBD
+SV9DTEFTU19CUklER0VfUENJDQo+ID4gY2xhc3MuDQo+ID4gKyAqLw0KPiA+ICtERUNMQVJFX1BD
+SV9GSVhVUF9DTEFTU19GSU5BTChQQ0lfVkVORE9SX0lEX0FNQVpPTl9BTk5BUFVSTkFfTEFCUywN
+Cj4gPiAweDAwMzEsDQo+ID4gKwkJCSAgICAgIFBDSV9DTEFTU19CUklER0VfUENJLCA4LA0KPiA+
+IHF1aXJrX2FsX3ZwZF9yZWxlYXNlKTsNCj4gPiArDQo+ID4gICNlbmRpZg0KPiA+IC0tIA0KPiA+
+IDIuMTcuMQ0KPiA+IA0K
