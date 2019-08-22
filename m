@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8CBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCB2C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A56520870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A1F120870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566496128;
-	bh=5uuql1tVFziqA9qQ6xOQe96Cm2H7wKqbV3eqJLptOhc=;
+	s=default; t=1566496132;
+	bh=m5NZwnBFJYJ2c4JlcSy4JuljsJe7navc+ij5rqPDI6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QlroqGR3B4kczj1Z4Aq5jX0nzDcFVQZ4W8mPvF8hMfwD65RAFN0AeI0DhHwHNlt4I
-	 pybOOw7okf6JmtuAjRxjcJNRQqk3UEPQNawDQhH4p8MRcOmFmz7cvbArLUfTBG8jvo
-	 fIwRqb5rvVjWHQVzvYUOheTlra2eqxIL2omK4/Cg=
+	b=epqA5mhG8cgW+KVOMmPqNHBkd26UVmytmmlHlsPneYnNnrpoa0ShqrmGqAPuzSJnD
+	 rGyHTR+P1mshalgI47pT0tWMmyc5+8bRN23kpWW5sIluQpvYneDac1b6dekOA1i+/9
+	 3VkShmZ7YEOjnXoXqlkOHvOPuuesKKav7f+atwBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393289AbfHVRsr (ORCPT
+        id S2393307AbfHVRsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40420 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390047AbfHVRWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:23 -0400
+        id S2389988AbfHVRWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:21 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23B3E233FE;
-        Thu, 22 Aug 2019 17:22:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C2EF23400;
+        Thu, 22 Aug 2019 17:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494542;
-        bh=5uuql1tVFziqA9qQ6xOQe96Cm2H7wKqbV3eqJLptOhc=;
+        s=default; t=1566494540;
+        bh=m5NZwnBFJYJ2c4JlcSy4JuljsJe7navc+ij5rqPDI6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1W1uxlfn30oCYKU5cmO8vFt3Qk4lR4XHokMHysbqsE7iqZ+Eg624KcEdqnApWgBXM
-         cqMr5WOqmhCKSdt1cjj/i19SERGTv/i6fI70bXNnFOQbpdI+e5Om/muhDIn3J/eZM2
-         8XfUw8ngOJRh+3c+ewOTxS9fvEIM5iQ+KALeogNk=
+        b=fUN9WvuJmtMepgCENBgotxhU8QkP60L1X1O5FqxHt/shmxpIEM4+dzVHXYV620fJv
+         lMZaGTgbScGysSwoFHjyz/XHhiSniPSqqOVNEwdYIEt3117Zd2I+s/2PefBkB5amcQ
+         k5GXRcXoX0dQQh6NvTvfQIlcZw8eYOm3ny59pNuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 22/78] tty/ldsem, locking/rwsem: Add missing ACQUIRE to read_failed sleep loop
-Date:   Thu, 22 Aug 2019 10:18:26 -0700
-Message-Id: <20190822171832.686181635@linuxfoundation.org>
+        stable@vger.kernel.org, Junxiao Bi <junxiao.bi@oracle.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 20/78] scsi: megaraid_sas: fix panic on loading firmware crashdump
+Date:   Thu, 22 Aug 2019 10:18:24 -0700
+Message-Id: <20190822171832.629738393@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -63,72 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 952041a8639a7a3a73a2b6573cb8aa8518bc39f8 ]
+[ Upstream commit 3b5f307ef3cb5022bfe3c8ca5b8f2114d5bf6c29 ]
 
-While reviewing rwsem down_slowpath, Will noticed ldsem had a copy of
-a bug we just found for rwsem.
+While loading fw crashdump in function fw_crash_buffer_show(), left bytes
+in one dma chunk was not checked, if copying size over it, overflow access
+will cause kernel panic.
 
-  X = 0;
-
-  CPU0			CPU1
-
-  rwsem_down_read()
-    for (;;) {
-      set_current_state(TASK_UNINTERRUPTIBLE);
-
-                        X = 1;
-                        rwsem_up_write();
-                          rwsem_mark_wake()
-                            atomic_long_add(adjustment, &sem->count);
-                            smp_store_release(&waiter->task, NULL);
-
-      if (!waiter.task)
-        break;
-
-      ...
-    }
-
-  r = X;
-
-Allows 'r == 0'.
-
-Reported-by: Will Deacon <will@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Will Deacon <will@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Hurley <peter@hurleysoftware.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 4898e640caf0 ("tty: Add timed, writer-prioritized rw semaphore")
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/tty_ldsem.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/tty/tty_ldsem.c b/drivers/tty/tty_ldsem.c
-index 34234c2338511..656c2ade6a434 100644
---- a/drivers/tty/tty_ldsem.c
-+++ b/drivers/tty/tty_ldsem.c
-@@ -137,8 +137,7 @@ static void __ldsem_wake_readers(struct ld_semaphore *sem)
- 
- 	list_for_each_entry_safe(waiter, next, &sem->read_wait, list) {
- 		tsk = waiter->task;
--		smp_mb();
--		waiter->task = NULL;
-+		smp_store_release(&waiter->task, NULL);
- 		wake_up_process(tsk);
- 		put_task_struct(tsk);
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
+index 2422094f1f15c..5e0bac8de6381 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -2752,6 +2752,7 @@ megasas_fw_crash_buffer_show(struct device *cdev,
+ 	u32 size;
+ 	unsigned long buff_addr;
+ 	unsigned long dmachunk = CRASH_DMA_BUF_SIZE;
++	unsigned long chunk_left_bytes;
+ 	unsigned long src_addr;
+ 	unsigned long flags;
+ 	u32 buff_offset;
+@@ -2777,6 +2778,8 @@ megasas_fw_crash_buffer_show(struct device *cdev,
  	}
-@@ -234,7 +233,7 @@ down_read_failed(struct ld_semaphore *sem, long count, long timeout)
- 	for (;;) {
- 		set_task_state(tsk, TASK_UNINTERRUPTIBLE);
  
--		if (!waiter.task)
-+		if (!smp_load_acquire(&waiter.task))
- 			break;
- 		if (!timeout)
- 			break;
+ 	size = (instance->fw_crash_buffer_size * dmachunk) - buff_offset;
++	chunk_left_bytes = dmachunk - (buff_offset % dmachunk);
++	size = (size > chunk_left_bytes) ? chunk_left_bytes : size;
+ 	size = (size >= PAGE_SIZE) ? (PAGE_SIZE - 1) : size;
+ 
+ 	src_addr = (unsigned long)instance->crash_buf[buff_offset / dmachunk] +
 -- 
 2.20.1
 
