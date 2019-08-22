@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C80C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5520DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22552133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA5C2133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566498804;
-	bh=sHxdlIv3sBia/oJJQivQkRnoM0mkrTSMSKQMwTk0Kbc=;
+	s=default; t=1566498807;
+	bh=sE3Zsmu407RNy/V47joFj4lHNXyi5p2tqt1qfFcMo7E=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=SBljbELRzLrgf6+On8EJJXeRcRJYoyO/JddqOlQnzfLN4Lw7VcllmHmKtc13Q+FrH
-	 UWoZ1estALegeF81uST7NMr8vy0cgsgIa74ooThc3w1+XKwNGT9HYOA96gdW65Pdai
-	 4d6VMW7JAfxZaa8IIHRaSKfmpHq5ZrNbOgeAmUBo=
+	b=ksk/LrWIAY3w4Wka7OCrwU314FeSjTQXoJl0klsL0Tsyb+UNh/efLgsKy7qTIXEId
+	 3JuXHptp9QPPWK4fLpd2EO4Dyi0GLfX7uQWy+BPUp8p4MB2xcPQOY8cf8j88G/WSZG
+	 MFujSypGhzqXY9uRtoVLot6VlErDghoevYYbfbA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390842AbfHVSdX (ORCPT
+        id S2403757AbfHVSd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 14:33:23 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38010 "EHLO
+        Thu, 22 Aug 2019 14:33:26 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38126 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731603AbfHVSdV (ORCPT
+        with ESMTP id S2390820AbfHVSdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 14:33:21 -0400
+        Thu, 22 Aug 2019 14:33:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=3IOPSPIClE7HKnjr7s1UzzzM1kSkGao1Q9bHE/f9ZwY=; b=l5414VFfiXDs
-        k5q6qVfdY2jeQ1WQWuRTLjkheqgKJRNrL3T8swK0w+wwQES9FwXn1WueukqFeSWhQs/1v2S4COyxj
-        XbuVP+2/9V4loc8FZkN7kbwwbULRixeXu3wZM2ZVcP211e1glmn3lUlPe8tWu+3KOOTNHCRwXV4DM
-        2yFww=;
+        List-Archive; bh=QvbtlpNGECvp8d0MV5UXor4WYBMzN8LWn966kYEwpDU=; b=djfZW1duzVOb
+        bHHONTlk49MhT/yg2fXrfBEyRcDgzNFuZ0yPJbEBfY7HYns2+eVWi/wEYg46cUPAVFPlPtl8AP17y
+        VOqPrivspFkJ4uvIjnY/U8z9g1PNO2avmpE/pWK8N1eLBBxYNA98dQzTLXcttzlc9ZHRWnoU/2DOb
+        +Gp0g=;
 Received: from 92.40.26.78.threembb.co.uk ([92.40.26.78] helo=fitzroy.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1i0rtS-0007ft-Ez; Thu, 22 Aug 2019 18:33:06 +0000
+        id 1i0rtR-0007fh-KZ; Thu, 22 Aug 2019 18:33:06 +0000
 Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 9C0E4D02CEB; Thu, 22 Aug 2019 19:32:57 +0100 (BST)
+        id 4E189D02CE7; Thu, 22 Aug 2019 19:32:57 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        gregkh@linuxfoundation.org, Hulk Robot <hulkci@huawei.com>,
+Cc:     allison@lohutok.net, alsa-devel@alsa-project.org,
+        broonie@kernel.org, gregkh@linuxfoundation.org,
+        Hulk Robot <hulkci@huawei.com>, info@metux.net,
         lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, maruthi.bayyavarapu@amd.com,
+        Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com,
         perex@perex.cz, tglx@linutronix.de, tiwai@suse.com,
-        Vijendar.Mukunda@amd.com, yuehaibing@huawei.com
-Subject: Applied "ASoC: AMD: Fix Kconfig warning without GPIOLIB" to the asoc tree
-In-Reply-To: <20190822143007.73644-1-yuehaibing@huawei.com>
+        yuehaibing@huawei.com
+Subject: Applied "ASoC: wm8988: fix typo in wm8988_right_line_controls" to the asoc tree
+In-Reply-To: <20190822143608.59824-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190822183257.9C0E4D02CEB@fitzroy.sirena.org.uk>
+Message-Id: <20190822183257.4E189D02CE7@fitzroy.sirena.org.uk>
 Date:   Thu, 22 Aug 2019 19:32:57 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -65,11 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: AMD: Fix Kconfig warning without GPIOLIB
+   ASoC: wm8988: fix typo in wm8988_right_line_controls
 
 has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,41 +91,38 @@ to this mail.
 Thanks,
 Mark
 
-From 0ce6a624473e7e5752a84416f85f73d082308edd Mon Sep 17 00:00:00 2001
+From c101fb29737f4558bf589d0d66371d9e21040568 Mon Sep 17 00:00:00 2001
 From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 22 Aug 2019 22:30:07 +0800
-Subject: [PATCH] ASoC: AMD: Fix Kconfig warning without GPIOLIB
+Date: Thu, 22 Aug 2019 22:36:08 +0800
+Subject: [PATCH] ASoC: wm8988: fix typo in wm8988_right_line_controls
 
-While do rand build without GPIOLIB, we get Kconfig warning:\
+sound/soc/codecs/wm8988.c:270:30: warning:
+ wm8988_rline_enum defined but not used [-Wunused-const-variable=]
 
-WARNING: unmet direct dependencies detected for SND_SOC_MAX98357A
-  Depends on [n]: SOUND [=y] && !UML && SND [=m] && SND_SOC [=m] && GPIOLIB [=n]
-  Selected by [m]:
-  - SND_SOC_AMD_CZ_DA7219MX98357_MACH [=m] && SOUND [=y] && !UML && SND [=m] && SND_SOC [=m] && SND_SOC_AMD_ACP [=m] && I2C [=y]
-
-Add GPIOLIB dependency to fix this.
+wm8988_rline_enum should be used in wm8988_right_line_controls.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 5409fb4e327a ("ASoC: Add WM8988 CODEC driver")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190822143007.73644-1-yuehaibing@huawei.com
+Link: https://lore.kernel.org/r/20190822143608.59824-1-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/amd/Kconfig | 2 +-
+ sound/soc/codecs/wm8988.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/amd/Kconfig b/sound/soc/amd/Kconfig
-index 9ca9214cb7fb..5f40517717c4 100644
---- a/sound/soc/amd/Kconfig
-+++ b/sound/soc/amd/Kconfig
-@@ -10,7 +10,7 @@ config SND_SOC_AMD_CZ_DA7219MX98357_MACH
- 	select SND_SOC_MAX98357A
- 	select SND_SOC_ADAU7002
- 	select REGULATOR
--	depends on SND_SOC_AMD_ACP && I2C
-+	depends on SND_SOC_AMD_ACP && I2C && GPIOLIB
- 	help
- 	 This option enables machine driver for DA7219 and MAX9835.
+diff --git a/sound/soc/codecs/wm8988.c b/sound/soc/codecs/wm8988.c
+index 25e74cf0666a..85bfd041d546 100644
+--- a/sound/soc/codecs/wm8988.c
++++ b/sound/soc/codecs/wm8988.c
+@@ -273,7 +273,7 @@ static const struct soc_enum wm8988_rline_enum =
+ 			      wm8988_line_texts,
+ 			      wm8988_line_values);
+ static const struct snd_kcontrol_new wm8988_right_line_controls =
+-	SOC_DAPM_ENUM("Route", wm8988_lline_enum);
++	SOC_DAPM_ENUM("Route", wm8988_rline_enum);
  
+ /* Left Mixer */
+ static const struct snd_kcontrol_new wm8988_left_mixer_controls[] = {
 -- 
 2.20.1
 
