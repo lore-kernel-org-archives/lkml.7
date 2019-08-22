@@ -2,51 +2,53 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34026C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB496C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7B83233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF8532341B
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494544;
-	bh=Mh1/bHNMSZxjSXWuCew94BhzmXBwks+dNsCioYr3Aqg=;
+	s=default; t=1566494545;
+	bh=FBhKzA1AleMbcz3S8j0PttuU8+2cgq4kBoa7CHYBSWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2jLUjrwTLIS5kRBtnccu1ZRXy1B2x6ZefQajzMclzYBOawdLGDofPRvV2z2z1pnJg
-	 16aUCyoenUxtlX4WvUz3+5/YAveAIcZoVv5wWcMjiD9Hb0PkD1BFI0e2RDoR5AUJsV
-	 Ai34lWzK1O+RHgMvWIYytiYtw5TPXXnX0NaUjFwY=
+	b=NLFzdMVtcksA6zIwjDcOJ9zBq0U1T/mgbdIMVnxVMNO7Qv8zQUjaaoePlHpLDJVWa
+	 dxaxDJ3KXGS1Hnb5LZSTWcIW4qYr/OXrhGDCbcH19bP4hSp9zoUkz96HrTV+tHcXrA
+	 EQCwpWIFJ44vNpCL6rlyUGybzwld/3SircvYTPOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390005AbfHVRWW (ORCPT
+        id S2390295AbfHVRWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:22:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40282 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:22:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389950AbfHVRWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:20 -0400
+        id S2390004AbfHVRWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:22 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDC37233FC;
-        Thu, 22 Aug 2019 17:22:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51A2B233FD;
+        Thu, 22 Aug 2019 17:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494540;
-        bh=Mh1/bHNMSZxjSXWuCew94BhzmXBwks+dNsCioYr3Aqg=;
+        s=default; t=1566494541;
+        bh=FBhKzA1AleMbcz3S8j0PttuU8+2cgq4kBoa7CHYBSWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yK6iTG5nCEwS8x9IKn/ei8i/YhnlkaSJCIuaqHXX45r8j+WRkeuNMjgKReC9d07Qd
-         6x7PgEgmILwDmpp9zQhrVwjfdcB/fNbHzievtc+SXX81T2FXinszh3BeN//br52vPl
-         MBkA4sWUGSiidamOo+8hbZD+2NXnQQoNt0HWY+ps=
+        b=2XsjW0s5cBJlXI/6lLld8yxc4Vl+wELWyZhFewrxwLTAV+z0gs55TzmkMDmfWfAjR
+         UIVuyYPd8eIQcwa9s6VK0DTF8OT8CALygSMfCVWLf5lYnRwjTQWiOXyUexl7AjY73E
+         azpdUz6Z0FpzyOSxwV7gIJCr4qRXnSXMqjNRseyU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 02/78] sound: fix a memory leak bug
-Date:   Thu, 22 Aug 2019 10:18:06 -0700
-Message-Id: <20190822171832.115851286@linuxfoundation.org>
+        stable@vger.kernel.org, Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 21/78] scsi: ibmvfc: fix WARN_ON during event pool release
+Date:   Thu, 22 Aug 2019 10:18:25 -0700
+Message-Id: <20190822171832.658091043@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -59,39 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+[ Upstream commit 5578257ca0e21056821e6481bd534ba267b84e58 ]
 
-commit c7cd7c748a3250ca33509f9235efab9c803aca09 upstream.
+While removing an ibmvfc client adapter a WARN_ON like the following
+WARN_ON is seen in the kernel log:
 
-In sound_insert_unit(), the controlling structure 's' is allocated through
-kmalloc(). Then it is added to the sound driver list by invoking
-__sound_insert_unit(). Later on, if __register_chrdev() fails, 's' is
-removed from the list through __sound_remove_unit(). If 'index' is not less
-than 0, -EBUSY is returned to indicate the error. However, 's' is not
-deallocated on this execution path, leading to a memory leak bug.
+WARNING: CPU: 6 PID: 5421 at ./include/linux/dma-mapping.h:541
+ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
+CPU: 6 PID: 5421 Comm: rmmod Tainted: G            E     4.17.0-rc1-next-20180419-autotest #1
+NIP:  d00000000290328c LR: d00000000290325c CTR: c00000000036ee20
+REGS: c000000288d1b7e0 TRAP: 0700   Tainted: G            E      (4.17.0-rc1-next-20180419-autotest)
+MSR:  800000010282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44008828  XER: 20000000
+CFAR: c00000000036e408 SOFTE: 1
+GPR00: d00000000290325c c000000288d1ba60 d000000002917900 c000000289d75448
+GPR04: 0000000000000071 c0000000ff870000 0000000018040000 0000000000000001
+GPR08: 0000000000000000 c00000000156e838 0000000000000001 d00000000290c640
+GPR12: c00000000036ee20 c00000001ec4dc00 0000000000000000 0000000000000000
+GPR16: 0000000000000000 0000000000000000 00000100276901e0 0000000010020598
+GPR20: 0000000010020550 0000000010020538 0000000010020578 00000000100205b0
+GPR24: 0000000000000000 0000000000000000 0000000010020590 5deadbeef0000100
+GPR28: 5deadbeef0000200 d000000002910b00 0000000000000071 c0000002822f87d8
+NIP [d00000000290328c] ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
+LR [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc]
+Call Trace:
+[c000000288d1ba60] [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc] (unreliable)
+[c000000288d1baf0] [d000000002909390] ibmvfc_abort_task_set+0x7b0/0x8b0 [ibmvfc]
+[c000000288d1bb70] [c0000000000d8c68] vio_bus_remove+0x68/0x100
+[c000000288d1bbb0] [c0000000007da7c4] device_release_driver_internal+0x1f4/0x2d0
+[c000000288d1bc00] [c0000000007da95c] driver_detach+0x7c/0x100
+[c000000288d1bc40] [c0000000007d8af4] bus_remove_driver+0x84/0x140
+[c000000288d1bcb0] [c0000000007db6ac] driver_unregister+0x4c/0xa0
+[c000000288d1bd20] [c0000000000d6e7c] vio_unregister_driver+0x2c/0x50
+[c000000288d1bd50] [d00000000290ba0c] cleanup_module+0x24/0x15e0 [ibmvfc]
+[c000000288d1bd70] [c0000000001dadb0] sys_delete_module+0x220/0x2d0
+[c000000288d1be30] [c00000000000b284] system_call+0x58/0x6c
+Instruction dump:
+e8410018 e87f0068 809f0078 e8bf0080 e8df0088 2fa30000 419e008c e9230200
+2fa90000 419e0080 894d098a 794a07e0 <0b0a0000> e9290008 2fa90000 419e0028
 
-To fix the above issue, free 's' before -EBUSY is returned.
+This is tripped as a result of irqs being disabled during the call to
+dma_free_coherent() by ibmvfc_free_event_pool(). At this point in the code path
+we have quiesced the adapter and its overly paranoid anyways to be holding the
+host lock.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/sound_core.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/ibmvscsi/ibmvfc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/sound_core.c
-+++ b/sound/sound_core.c
-@@ -287,7 +287,8 @@ retry:
- 				goto retry;
- 			}
- 			spin_unlock(&sound_loader_lock);
--			return -EBUSY;
-+			r = -EBUSY;
-+			goto fail;
- 		}
- 	}
+diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
+index 1f9f9e5af2072..0526a47e30a3f 100644
+--- a/drivers/scsi/ibmvscsi/ibmvfc.c
++++ b/drivers/scsi/ibmvscsi/ibmvfc.c
+@@ -4869,8 +4869,8 @@ static int ibmvfc_remove(struct vio_dev *vdev)
  
+ 	spin_lock_irqsave(vhost->host->host_lock, flags);
+ 	ibmvfc_purge_requests(vhost, DID_ERROR);
+-	ibmvfc_free_event_pool(vhost);
+ 	spin_unlock_irqrestore(vhost->host->host_lock, flags);
++	ibmvfc_free_event_pool(vhost);
+ 
+ 	ibmvfc_free_mem(vhost);
+ 	spin_lock(&ibmvfc_driver_lock);
+-- 
+2.20.1
+
 
 
