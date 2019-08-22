@@ -2,80 +2,63 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5101C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA82C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACA3233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566515752;
-	bh=9klvzmm4SgliLDekMfe676XkWiJvbDBtkds5Yp8l2Vo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jUZ3yIVYQ1AngGyZfdVSSLRZuSBmMH93u7SYplATDqGleXzRsHmTFjgHzV2vGKSio
-	 Cq1yDtDWo97kKV49Bg+XUr7zxSru21yoy8ewtL+mFkt7P7LVd/fDFmH18XWd3TWy88
-	 RHG+GzOomh7/HpIaUgLCKBeb6+ZdW0NLL07orKns=
+	by mail.kernel.org (Postfix) with ESMTP id 423042173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388310AbfHVXPv (ORCPT
+        id S2405599AbfHVXQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 19:15:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730309AbfHVXPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 19:15:50 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33BC02173E;
-        Thu, 22 Aug 2019 23:15:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566515750;
-        bh=9klvzmm4SgliLDekMfe676XkWiJvbDBtkds5Yp8l2Vo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yB7CLcwbcd2S7DLuLbFOINev+ZuM9oPyN5r4np0gHWJSrdb6ZgV/vnE6ktz+qsEPh
-         dUoQeexKblay3bHXJ/TxrSpHboS45fjtuP7dhlAv59uTos6OAyUTFxsaFt+QZoCZ4O
-         Z+lJsj8NKsKPv5drJ0YjHbBkmLAuU5mEm7FugVac=
-Date:   Thu, 22 Aug 2019 16:15:49 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Helge Deller <deller@gmx.de>, Qian Cai <cai@lca.pw>,
-        James.Bottomley@HansenPartnership.com,
-        kirill.shutemov@linux.intel.com, linux-parisc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] parisc: fix compilation errrors
-Message-Id: <20190822161549.7eb9893b0e6cfc4c8efdb924@linux-foundation.org>
-In-Reply-To: <1f6be421-5304-3d2c-1e6e-d9f464bdff88@roeck-us.net>
-References: <20190815205305.1382-1-cai@lca.pw>
-        <20190815210208.GA9868@roeck-us.net>
-        <0f27b102-471a-e472-3e69-d9883a36efeb@gmx.de>
-        <1f6be421-5304-3d2c-1e6e-d9f464bdff88@roeck-us.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 22 Aug 2019 19:16:24 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:50420 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394284AbfHVXQX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 19:16:23 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0F2891539AF1E;
+        Thu, 22 Aug 2019 16:16:23 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 16:16:22 -0700 (PDT)
+Message-Id: <20190822.161622.97568202266351755.davem@davemloft.net>
+To:     marco.hartmann@nxp.com
+Cc:     fugang.duan@nxp.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, christian.herber@nxp.com
+Subject: Re: [PATCH v2 net-next] net: fec: add C45 MDIO read/write support
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1566387814-7034-1-git-send-email-marco.hartmann@nxp.com>
+References: <1566387814-7034-1-git-send-email-marco.hartmann@nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 22 Aug 2019 16:16:23 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 22 Aug 2019 16:04:38 -0700 Guenter Roeck <linux@roeck-us.net> wrote:
+From: Marco Hartmann <marco.hartmann@nxp.com>
+Date: Wed, 21 Aug 2019 11:43:49 +0000
 
-> >>> Fixes: 0cfaee2af3a0 ("include/asm-generic/5level-fixup.h: fix variable 'p4d' set but not used")
-> >>> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> >>> Signed-off-by: Qian Cai <cai@lca.pw>
-> >>
-> >> Tested-by: Guenter Roeck <linux@roeck-us.net>
-> > 
-> > Acked-by: Helge Deller <deller@gmx.de>
-> > 
-> > Helge
-> > 
+> IEEE 802.3ae clause 45 defines a modified MDIO protocol that uses a two
+> staged access model in order to increase the address space.
 > 
-> Any chance to push this patch into mainline anytime soon ? It has been applied
-> to -next, but all parisc builds in mainline are still broken.
+> This patch adds support for C45 MDIO read and write accesses, which are
+> used whenever the MII_ADDR_C45 flag in the regnum argument is set.
+> In case it is not set, C22 accesses are used as before.
+> 
+> Signed-off-by: Marco Hartmann <marco.hartmann@nxp.com>
+> ---
+> Changes in v2:
+> - use bool variable is_c45
+> - add missing goto statements
 
-I'll be including it in tomorrow's patchpile->Linus.
+Applied, thank you.
