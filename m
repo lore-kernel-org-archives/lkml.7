@@ -2,55 +2,61 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ECAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B66BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D01E2341B
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:36:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CB120856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495417;
-	bh=Alprxcc+QmZyxQfHhL5lUNZK1dBM0xD3R+2hCoaI0eg=;
+	s=default; t=1566495420;
+	bh=R75vZH8WAXHU5KHvvbT7kh+7MT4AbmQf3QKW+xyOarU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P/BVMBeVD0/8tsqEJISwcQ+Y6XAvB77UrPjsriKkgbJnxAJKQshcZeS71QHfPym7e
-	 SG5np6AbKSuF+kF3bOasoTQysukA4N7u1BzFrLkZi12VLkq8CiqHXgeFQbIjfMNcJi
-	 EVXY7x31k2rPnIJua01i3A2Uk4zFesnY3o7FSd2s=
+	b=PSe6XUzoBdGccD8T+WZPvCqSrTH0MT9PMZpMjodHZOgz/2pP70jESCvnDSZZcqaDi
+	 SkxTp0Dbq9q4eNGriD/V8BdNUXDjZJO/0/+jv0NQwEge9ZPvgvOIsXddfCm0ivk6EQ
+	 2Lw8EsHNhf6+SJejjLnsxUW+BFuAItcQtggDVc+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404307AbfHVRYn (ORCPT
+        id S2392571AbfHVRg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:24:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45712 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:36:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404167AbfHVRYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:20 -0400
+        id S2404296AbfHVRYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:43 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78DDC2341A;
-        Thu, 22 Aug 2019 17:24:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF2DE2342E;
+        Thu, 22 Aug 2019 17:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494659;
-        bh=Alprxcc+QmZyxQfHhL5lUNZK1dBM0xD3R+2hCoaI0eg=;
+        s=default; t=1566494682;
+        bh=R75vZH8WAXHU5KHvvbT7kh+7MT4AbmQf3QKW+xyOarU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBk1myXB7W9H1c5bLIxXn0wE2Kk0L7dn1U+hKrO024WwjpC74+ZVlr2TIDY6Lm4yS
-         pC/QktZMSNHELZl+KcOwWaOeYb/WBAYvrOPYhBd1/ba8XnoXIYHdNMRa2vy/A77qLu
-         g3SgcE8lp6d+a6N71qlGFHYtw2oq+6HDCAt7vs1A=
+        b=zmu+itXdTIyVBTNxq+4uYwr6+78fZeO0Nd8nWzKGPeuwYoAxqJ8uKCQvnLbdRpXJK
+         TqCEBdlzfeF6KO2jX9XL/0V5fE3mdyuxv8kKzvgU7UmcBnXuvUCzy6KVx6FRntCLC5
+         trFNYkl9dUGr4+iNxZ1QGtkcSXYx76cHZHKdUwRI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.9 101/103] net/mlx5e: Use flow keys dissector to parse packets for ARFS
-Date:   Thu, 22 Aug 2019 10:19:29 -0700
-Message-Id: <20190822171733.230660092@linuxfoundation.org>
+        stable@vger.kernel.org, Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Drayton <mbd@fb.com>, Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 27/71] perf header: Fix use of unitialized value warning
+Date:   Thu, 22 Aug 2019 10:19:02 -0700
+Message-Id: <20190822171729.053382991@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
-References: <20190822171728.445189830@linuxfoundation.org>
+In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
+References: <20190822171726.131957995@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,194 +66,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Mikityanskiy <maximmi@mellanox.com>
+[ Upstream commit 20f9781f491360e7459c589705a2e4b1f136bee9 ]
 
-[ Upstream commit 405b93eb764367a670e729da18e54dc42db32620 ]
+When building our local version of perf with MSAN (Memory Sanitizer) and
+running the perf record command, MSAN throws a use of uninitialized
+value warning in "tools/perf/util/util.c:333:6".
 
-The current ARFS code relies on certain fields to be set in the SKB
-(e.g. transport_header) and extracts IP addresses and ports by custom
-code that parses the packet. The necessary SKB fields, however, are not
-always set at that point, which leads to an out-of-bounds access. Use
-skb_flow_dissect_flow_keys() to get the necessary information reliably,
-fix the out-of-bounds access and reuse the code.
+This warning stems from the "buf" variable being passed into "write".
+It originated as the variable "ev" with the type union perf_event*
+defined in the "perf_event__synthesize_attr" function in
+"tools/perf/util/header.c".
 
-Fixes: 18c908e477dc ("net/mlx5e: Add accelerated RFS support")
-Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In the "perf_event__synthesize_attr" function they allocate space with a malloc
+call using ev, then go on to only assign some of the member variables before
+passing "ev" on as a parameter to the "process" function therefore "ev"
+contains uninitialized memory. Changing the malloc call to zalloc to initialize
+all the members of "ev" which gets rid of the warning.
+
+To reproduce this warning, build perf by running:
+make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
+ -fsanitize-memory-track-origins"
+
+(Additionally, llvm might have to be installed and clang might have to
+be specified as the compiler - export CC=/usr/bin/clang)
+
+then running:
+tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
+ -i - --stdio
+
+Please see the cover letter for why false positive warnings may be
+generated.
+
+Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Drayton <mbd@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190724234500.253358-2-nums@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c |   97 +++++++---------------
- 1 file changed, 34 insertions(+), 63 deletions(-)
+ tools/perf/util/header.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
-@@ -441,12 +441,6 @@ arfs_hash_bucket(struct arfs_table *arfs
- 	return &arfs_t->rules_hash[bucket_idx];
- }
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index baec3e9833256..f03ba775f8be6 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2990,7 +2990,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
+ 	size += sizeof(struct perf_event_header);
+ 	size += ids * sizeof(u64);
  
--static u8 arfs_get_ip_proto(const struct sk_buff *skb)
--{
--	return (skb->protocol == htons(ETH_P_IP)) ?
--		ip_hdr(skb)->protocol : ipv6_hdr(skb)->nexthdr;
--}
--
- static struct arfs_table *arfs_get_table(struct mlx5e_arfs_tables *arfs,
- 					 u8 ip_proto, __be16 etype)
- {
-@@ -605,31 +599,9 @@ out:
- 	arfs_may_expire_flow(priv);
- }
+-	ev = malloc(size);
++	ev = zalloc(size);
  
--/* return L4 destination port from ip4/6 packets */
--static __be16 arfs_get_dst_port(const struct sk_buff *skb)
--{
--	char *transport_header;
--
--	transport_header = skb_transport_header(skb);
--	if (arfs_get_ip_proto(skb) == IPPROTO_TCP)
--		return ((struct tcphdr *)transport_header)->dest;
--	return ((struct udphdr *)transport_header)->dest;
--}
--
--/* return L4 source port from ip4/6 packets */
--static __be16 arfs_get_src_port(const struct sk_buff *skb)
--{
--	char *transport_header;
--
--	transport_header = skb_transport_header(skb);
--	if (arfs_get_ip_proto(skb) == IPPROTO_TCP)
--		return ((struct tcphdr *)transport_header)->source;
--	return ((struct udphdr *)transport_header)->source;
--}
--
- static struct arfs_rule *arfs_alloc_rule(struct mlx5e_priv *priv,
- 					 struct arfs_table *arfs_t,
--					 const struct sk_buff *skb,
-+					 const struct flow_keys *fk,
- 					 u16 rxq, u32 flow_id)
- {
- 	struct arfs_rule *rule;
-@@ -644,19 +616,19 @@ static struct arfs_rule *arfs_alloc_rule
- 	INIT_WORK(&rule->arfs_work, arfs_handle_work);
- 
- 	tuple = &rule->tuple;
--	tuple->etype = skb->protocol;
-+	tuple->etype = fk->basic.n_proto;
-+	tuple->ip_proto = fk->basic.ip_proto;
- 	if (tuple->etype == htons(ETH_P_IP)) {
--		tuple->src_ipv4 = ip_hdr(skb)->saddr;
--		tuple->dst_ipv4 = ip_hdr(skb)->daddr;
-+		tuple->src_ipv4 = fk->addrs.v4addrs.src;
-+		tuple->dst_ipv4 = fk->addrs.v4addrs.dst;
- 	} else {
--		memcpy(&tuple->src_ipv6, &ipv6_hdr(skb)->saddr,
-+		memcpy(&tuple->src_ipv6, &fk->addrs.v6addrs.src,
- 		       sizeof(struct in6_addr));
--		memcpy(&tuple->dst_ipv6, &ipv6_hdr(skb)->daddr,
-+		memcpy(&tuple->dst_ipv6, &fk->addrs.v6addrs.dst,
- 		       sizeof(struct in6_addr));
- 	}
--	tuple->ip_proto = arfs_get_ip_proto(skb);
--	tuple->src_port = arfs_get_src_port(skb);
--	tuple->dst_port = arfs_get_dst_port(skb);
-+	tuple->src_port = fk->ports.src;
-+	tuple->dst_port = fk->ports.dst;
- 
- 	rule->flow_id = flow_id;
- 	rule->filter_id = priv->fs.arfs.last_filter_id++ % RPS_NO_FILTER;
-@@ -667,37 +639,33 @@ static struct arfs_rule *arfs_alloc_rule
- 	return rule;
- }
- 
--static bool arfs_cmp_ips(struct arfs_tuple *tuple,
--			 const struct sk_buff *skb)
-+static bool arfs_cmp(const struct arfs_tuple *tuple, const struct flow_keys *fk)
- {
--	if (tuple->etype == htons(ETH_P_IP) &&
--	    tuple->src_ipv4 == ip_hdr(skb)->saddr &&
--	    tuple->dst_ipv4 == ip_hdr(skb)->daddr)
--		return true;
--	if (tuple->etype == htons(ETH_P_IPV6) &&
--	    (!memcmp(&tuple->src_ipv6, &ipv6_hdr(skb)->saddr,
--		     sizeof(struct in6_addr))) &&
--	    (!memcmp(&tuple->dst_ipv6, &ipv6_hdr(skb)->daddr,
--		     sizeof(struct in6_addr))))
--		return true;
-+	if (tuple->src_port != fk->ports.src || tuple->dst_port != fk->ports.dst)
-+		return false;
-+	if (tuple->etype != fk->basic.n_proto)
-+		return false;
-+	if (tuple->etype == htons(ETH_P_IP))
-+		return tuple->src_ipv4 == fk->addrs.v4addrs.src &&
-+		       tuple->dst_ipv4 == fk->addrs.v4addrs.dst;
-+	if (tuple->etype == htons(ETH_P_IPV6))
-+		return !memcmp(&tuple->src_ipv6, &fk->addrs.v6addrs.src,
-+			       sizeof(struct in6_addr)) &&
-+		       !memcmp(&tuple->dst_ipv6, &fk->addrs.v6addrs.dst,
-+			       sizeof(struct in6_addr));
- 	return false;
- }
- 
- static struct arfs_rule *arfs_find_rule(struct arfs_table *arfs_t,
--					const struct sk_buff *skb)
-+					const struct flow_keys *fk)
- {
- 	struct arfs_rule *arfs_rule;
- 	struct hlist_head *head;
--	__be16 src_port = arfs_get_src_port(skb);
--	__be16 dst_port = arfs_get_dst_port(skb);
- 
--	head = arfs_hash_bucket(arfs_t, src_port, dst_port);
-+	head = arfs_hash_bucket(arfs_t, fk->ports.src, fk->ports.dst);
- 	hlist_for_each_entry(arfs_rule, head, hlist) {
--		if (arfs_rule->tuple.src_port == src_port &&
--		    arfs_rule->tuple.dst_port == dst_port &&
--		    arfs_cmp_ips(&arfs_rule->tuple, skb)) {
-+		if (arfs_cmp(&arfs_rule->tuple, fk))
- 			return arfs_rule;
--		}
- 	}
- 
- 	return NULL;
-@@ -710,20 +678,24 @@ int mlx5e_rx_flow_steer(struct net_devic
- 	struct mlx5e_arfs_tables *arfs = &priv->fs.arfs;
- 	struct arfs_table *arfs_t;
- 	struct arfs_rule *arfs_rule;
-+	struct flow_keys fk;
-+
-+	if (!skb_flow_dissect_flow_keys(skb, &fk, 0))
-+		return -EPROTONOSUPPORT;
- 
--	if (skb->protocol != htons(ETH_P_IP) &&
--	    skb->protocol != htons(ETH_P_IPV6))
-+	if (fk.basic.n_proto != htons(ETH_P_IP) &&
-+	    fk.basic.n_proto != htons(ETH_P_IPV6))
- 		return -EPROTONOSUPPORT;
- 
- 	if (skb->encapsulation)
- 		return -EPROTONOSUPPORT;
- 
--	arfs_t = arfs_get_table(arfs, arfs_get_ip_proto(skb), skb->protocol);
-+	arfs_t = arfs_get_table(arfs, fk.basic.ip_proto, fk.basic.n_proto);
- 	if (!arfs_t)
- 		return -EPROTONOSUPPORT;
- 
- 	spin_lock_bh(&arfs->arfs_lock);
--	arfs_rule = arfs_find_rule(arfs_t, skb);
-+	arfs_rule = arfs_find_rule(arfs_t, &fk);
- 	if (arfs_rule) {
- 		if (arfs_rule->rxq == rxq_index) {
- 			spin_unlock_bh(&arfs->arfs_lock);
-@@ -731,8 +703,7 @@ int mlx5e_rx_flow_steer(struct net_devic
- 		}
- 		arfs_rule->rxq = rxq_index;
- 	} else {
--		arfs_rule = arfs_alloc_rule(priv, arfs_t, skb,
--					    rxq_index, flow_id);
-+		arfs_rule = arfs_alloc_rule(priv, arfs_t, &fk, rxq_index, flow_id);
- 		if (!arfs_rule) {
- 			spin_unlock_bh(&arfs->arfs_lock);
- 			return -ENOMEM;
+ 	if (ev == NULL)
+ 		return -ENOMEM;
+-- 
+2.20.1
+
 
 
