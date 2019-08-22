@@ -2,119 +2,137 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F1DC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA467C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EE1233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC21233A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:14:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="PcuOy/1n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GD8Za+na"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733075AbfHVJOD (ORCPT
+        id S1733090AbfHVJOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:14:03 -0400
-Received: from first.geanix.com ([116.203.34.67]:51054 "EHLO first.geanix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733031AbfHVJOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:14:02 -0400
-Received: from [10.130.30.123] (unknown [89.221.170.34])
-        by first.geanix.com (Postfix) with ESMTPSA id 5E7DA26C;
-        Thu, 22 Aug 2019 09:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
-        t=1566465226; bh=asXzZBQBNt4GDuGVIHuNtW2Y0ft96E4G10anvfYUF/8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=PcuOy/1n0ks2lfIy7rEPtHSNPB2ib/EcUFsL6j04f7IuVtitWCIrrbzy2RxBOk6pC
-         T5y8EKSLj/pjQ8FgbkhZaj6hGRxI7rvSoM/QtZhuuuKViecd0e7vNqsRdY+hfhkutL
-         1CzgKOitxDGY+xnWHfSElnGpvJjFTDgHZIdTRV8H8Ns86uXP8fpz6t7Nxk9pjJJ0zv
-         H2CRY3EibutmIC7wN7clZe0YDPLOgXuGgvcngxyjGSSySP6f98r56hvBd4lKzH3Z6M
-         lrUIbnWrVCGdp8fi+/9jqd1HrhXpDH6pxWd39w3/bU2FaD2zYpJgk04OsgbfbwZqfE
-         uNps0ZMwytgBg==
-Subject: =?UTF-8?Q?Re=3a_=5bPATCH=5d_can=3a_Delete_unnecessary_checks_before?=
- =?UTF-8?B?IHRoZSBtYWNybyBjYWxsIOKAnGRldl9rZnJlZV9za2LigJ0=?=
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, Allison Randal <allison@lohutok.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Enrico Weigelt <lkml@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Weitao Hou <houweitaoo@gmail.com>,
-        Wolfgang Grandegger <wg@grandegger.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-References: <27674907-fd2a-7f0c-84fd-d8b5124739a9@web.de>
-From:   Sean Nyekjaer <sean@geanix.com>
-Message-ID: <dc19a08f-eba9-ebd3-ef0a-3f99e06c9916@geanix.com>
-Date:   Thu, 22 Aug 2019 11:13:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 05:14:32 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33187 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbfHVJOc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:14:32 -0400
+Received: by mail-pf1-f193.google.com with SMTP id g2so3544152pfq.0;
+        Thu, 22 Aug 2019 02:14:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/bGJNIGeHShUi2KAJrnIfqaAZ76Q6jv5SalNCR03uoY=;
+        b=GD8Za+nahfu3tp60ifZ+TzNV/Gc7aWKBoy5u7inJdjfDv3ymB2vWFu6vh+Tl1WP+UG
+         BoAX6Ro4izBSvkVZO5dyZ9TjfcRMO050Hv45zvqXhgXrs2UiZFfy4CnrZ0YLB0zfcP51
+         lLtA2Pt6KeIjM8pvdC2pn3vHGPHJp4sJ474i39Ij9g778nhvsVoR6LRHf65MpuzkJ9Gb
+         hFPr1GadkjKLZYrT32rtx06Zsx3xNsgOShPAzlSRlqutdN+YqzlFsMPnLVnE6d2w0cGE
+         /TCRwBnwDOflX4L57uKN7sC/USfVMT21usbtwy8jgHdss237aChRIG529Pf5xHqL6HVK
+         wF9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/bGJNIGeHShUi2KAJrnIfqaAZ76Q6jv5SalNCR03uoY=;
+        b=Hrd8V/L4/uXVkAuhpGUAWt7aNTETMKsSCB28Tp2ELbA4VSWQzWvB+8quj/pWy6U+9G
+         ePecPC6k6yJtYKN3welhKNMEWTKDSfRDJ4XB+kcAaCFS+rTiJ0JZbJfPXzVbo2y0s7Wb
+         an1hSc/IgWbmYoOwf9U/mPQ2T40kl4R1UK57e902M6Ow/tFQSZaj2Zt+ya/3K46LMr7E
+         4ZS74WEYqIEfgxS3da3j+V7KdiTkCyH+ONZn49Yc3djw3mvVTFc1G6s0H2xRlRfTXf+0
+         4KgFT4x6SVyOTcb+xys9UWm0NnMvPJJhXGGwC3PC/5PQZwdlgXFwVH0IhwclB/vpPET9
+         J3yw==
+X-Gm-Message-State: APjAAAVKTnq792fZwRXMHV8e5h+wPcasZOMKDAelp1Ww1gKKsItuhxTy
+        kvxTJg7Dya6nxMoPrgCpEbj+rS8Q+efPUdNmSE4=
+X-Google-Smtp-Source: APXvYqzUXOoO7jdGPjAKWz7nXwmlWYmfzAsnoLiS84XqAjcFRWSGZ/WnSNWu1MT5YbHpr7hkfHM0M3VTjLpmlKd9Ct4=
+X-Received: by 2002:a17:90a:fe07:: with SMTP id ck7mr4315418pjb.68.1566465271506;
+ Thu, 22 Aug 2019 02:14:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <27674907-fd2a-7f0c-84fd-d8b5124739a9@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+References: <20190822053852.239309-1-Tianyu.Lan@microsoft.com> <87zhk1pp9p.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87zhk1pp9p.fsf@vitty.brq.redhat.com>
+From:   Tianyu Lan <lantianyu1986@gmail.com>
+Date:   Thu, 22 Aug 2019 17:14:20 +0800
+Message-ID: <CAOLK0px+=yGoXnGw_e_wC=pVAw+Op5f7dtgjaczLUT_edukfSA@mail.gmail.com>
+Subject: Re: [PATCH] x86/Hyper-V: Fix build error with CONFIG_HYPERV_TSCPAGE=N
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        linux-hyperv@vger.kernel.org,
+        "linux-kernel@vger kernel org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        michael.h.kelley@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 22, 2019 at 4:39 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> lantianyu1986@gmail.com writes:
+>
+> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> >
+> > Both Hyper-V tsc page and Hyper-V tsc MSR code use variable
+> > hv_sched_clock_offset for their sched clock callback and so
+> > define the variable regardless of CONFIG_HYPERV_TSCPAGE setting.
+>
+> CONFIG_HYPERV_TSCPAGE is gone after my "x86/hyper-v: enable TSC page
+> clocksource on 32bit" patch. Do we still have an issue to fix?
+>
+Hi Vtialy:
+             Your patch also fixs the build issue. If it's not
+necessary to have a dedicated patch
+to fix the issue, please ignore it. Thanks.
 
-
-On 21/08/2019 21.30, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Wed, 21 Aug 2019 21:16:15 +0200
-> 
-> The dev_kfree_skb() function performs also input parameter validation.
-> Thus the test around the shown calls is not needed.
-> 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-Acked-by: Sean Nyekjaer <sean@geanix.com>
-> ---
->   drivers/net/can/spi/hi311x.c  | 3 +--
->   drivers/net/can/spi/mcp251x.c | 3 +--
->   2 files changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/can/spi/hi311x.c b/drivers/net/can/spi/hi311x.c
-> index 03a711c3221b..7c7c7e78214c 100644
-> --- a/drivers/net/can/spi/hi311x.c
-> +++ b/drivers/net/can/spi/hi311x.c
-> @@ -184,8 +184,7 @@ static void hi3110_clean(struct net_device *net)
-> 
->   	if (priv->tx_skb || priv->tx_len)
->   		net->stats.tx_errors++;
-> -	if (priv->tx_skb)
-> -		dev_kfree_skb(priv->tx_skb);
-> +	dev_kfree_skb(priv->tx_skb);
->   	if (priv->tx_len)
->   		can_free_echo_skb(priv->net, 0);
->   	priv->tx_skb = NULL;
-> diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
-> index 12358f06d194..1c496d2adb45 100644
-> --- a/drivers/net/can/spi/mcp251x.c
-> +++ b/drivers/net/can/spi/mcp251x.c
-> @@ -274,8 +274,7 @@ static void mcp251x_clean(struct net_device *net)
-> 
->   	if (priv->tx_skb || priv->tx_len)
->   		net->stats.tx_errors++;
-> -	if (priv->tx_skb)
-> -		dev_kfree_skb(priv->tx_skb);
-> +	dev_kfree_skb(priv->tx_skb);
->   	if (priv->tx_len)
->   		can_free_echo_skb(priv->net, 0);
->   	priv->tx_skb = NULL;
+> >
+> > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > ---
+> > This patch is based on the top of "git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+> > timers/core".
+> >
+> >  drivers/clocksource/hyperv_timer.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> > index dad8af198e20..c322ab4d3689 100644
+> > --- a/drivers/clocksource/hyperv_timer.c
+> > +++ b/drivers/clocksource/hyperv_timer.c
+> > @@ -22,6 +22,7 @@
+> >  #include <asm/mshyperv.h>
+> >
+> >  static struct clock_event_device __percpu *hv_clock_event;
+> > +static u64 hv_sched_clock_offset __ro_after_init;
+> >
+> >  /*
+> >   * If false, we're using the old mechanism for stimer0 interrupts
+> > @@ -215,7 +216,6 @@ EXPORT_SYMBOL_GPL(hyperv_cs);
+> >  #ifdef CONFIG_HYPERV_TSCPAGE
+> >
+> >  static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
+> > -static u64 hv_sched_clock_offset __ro_after_init;
+> >
+> >  struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
+> >  {
+>
 > --
-> 2.23.0
-> 
+> Vitaly
 
-Good catch Markus :-)
 
-/Sean
+
+-- 
+Best regards
+Tianyu Lan
