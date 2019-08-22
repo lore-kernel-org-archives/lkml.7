@@ -2,118 +2,79 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADEDC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1EEC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33083233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:27:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="bThEovQj"
+	by mail.kernel.org (Postfix) with ESMTP id 98B53233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:27:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732128AbfHVO1c (ORCPT
+        id S2388421AbfHVO1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:27:32 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46864 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729081AbfHVO1b (ORCPT
+        Thu, 22 Aug 2019 10:27:45 -0400
+Received: from paleale.coelho.fi ([176.9.41.70]:38088 "EHLO
+        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728903AbfHVO1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:27:31 -0400
-Received: by mail-ot1-f67.google.com with SMTP id z17so5570863otk.13
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 07:27:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HxSEtX2z/ZJV/B0XcD4BCr1O2HbvzOrzKNcLT4JypFY=;
-        b=bThEovQjDRPbGQci1oGNwl98knwGtDbVI9tycUtNpAD5WH/u71hGUtM2xhNVyI5R1f
-         fOd+c1dN12ruUyXlb/wEqY3WTmbAJQU4afNsp98FtxyMr/7sUppyEdf1DRZ18OTqR0+C
-         AIRU6Cjy4Kh+FYM1N/+/DUewnmCrWcZwia6BI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HxSEtX2z/ZJV/B0XcD4BCr1O2HbvzOrzKNcLT4JypFY=;
-        b=RG7ryBfeSyN7ym1OgtFzv4zlL/hXBGABvU6tp4pxugpKmIcBiFPuaEl4hQh1DBzNHY
-         ZxEw3GCl6gESIX/Ubxv1iLNWKvJtj4HCnJw0nl/DzIJfKbLArKa3s3KufICOwlin2d7+
-         0L4I8iSCJEGH5EaX9oF+UC/U0HlHDndEn3Vp3YEH85Q9MfPc/bLQBSy3erH0URSqmJ2t
-         CxDbS3khZMx5benrmmvHUJehknsr999Yphiyfsl1u0fyw6dvANFzMforRt/qdvBbE4bY
-         GKptgTCGFCRHrAGA4r0FDPppdAU3iKQxP0JC8rirdv2viGEiPcNsvOiZQovwHZCIbuJ4
-         dSLw==
-X-Gm-Message-State: APjAAAWoyDzzrzcqO8QtyEcy4QfmKWjy8YxIp4mEH8KimK4wD3O9cZZx
-        EVowru0/1N6PTUKLW0/JxJPLo9F2B6WeY+KZt7QxNQ==
-X-Google-Smtp-Source: APXvYqzrWuV30uDAlQUdwtvK/fFSj1j/bZ180iv5Fx+HFnPaAc75KsLZP2Z8mNCZI4plTUPZzv1Ihu5g4y0wy4zzZSI=
-X-Received: by 2002:a9d:7087:: with SMTP id l7mr1213445otj.281.1566484050304;
- Thu, 22 Aug 2019 07:27:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
- <20190820081902.24815-5-daniel.vetter@ffwll.ch> <20190820133418.GG29246@ziepe.ca>
- <20190820151810.GG11147@phenom.ffwll.local> <20190821154151.GK11147@phenom.ffwll.local>
- <20190821161635.GC8653@ziepe.ca> <CAKMK7uERsmgFqDVHMCWs=4s_3fHM0eRr7MV6A8Mdv7xVouyxJw@mail.gmail.com>
- <20190822142410.GB8339@ziepe.ca>
-In-Reply-To: <20190822142410.GB8339@ziepe.ca>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 22 Aug 2019 16:27:18 +0200
-Message-ID: <CAKMK7uF5CMSUrG2jTYJ9M7tDK_Saxmxk6yLs62tfc-Ozj3p2BQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] mm, notifier: Catch sleeping/blocking for !blockable
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
+        Thu, 22 Aug 2019 10:27:45 -0400
+Received: from [91.156.6.193] (helo=redipa)
+        by farmhouse.coelho.fi with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92)
+        (envelope-from <luca@coelho.fi>)
+        id 1i0o3w-0003NY-Ey; Thu, 22 Aug 2019 17:27:41 +0300
+Message-ID: <9c101e4016e73831c92d228ee90689e835a9d7d0.camel@coelho.fi>
+From:   Luca Coelho <luca@coelho.fi>
+To:     Chris Clayton <chris2553@googlemail.com>,
+        Stuart Little <achirvasub@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>
+Date:   Thu, 22 Aug 2019 17:27:39 +0300
+In-Reply-To: <5e3ed328-7eea-f112-45d7-4ddee04c4b77@googlemail.com>
+References: <fd102579-d83d-b86d-e165-8168c74a4bac@googlemail.com>
+         <20190818105530.GA1247@chirva-void>
+         <5e3ed328-7eea-f112-45d7-4ddee04c4b77@googlemail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: PROBLEM: 5.3.0-rc* causes iwlwifi failure
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 4:24 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Thu, Aug 22, 2019 at 10:42:39AM +0200, Daniel Vetter wrote:
->
-> > > RDMA has a mutex:
-> > >
-> > > ib_umem_notifier_invalidate_range_end
-> > >   rbt_ib_umem_for_each_in_range
-> > >    invalidate_range_start_trampoline
-> > >     ib_umem_notifier_end_account
-> > >       mutex_lock(&umem_odp->umem_mutex);
-> > >
-> > > I'm working to delete this path though!
-> > >
-> > > nonblocking or not follows the start, the same flag gets placed into
-> > > the mmu_notifier_range struct passed to end.
-> >
-> > Ok, makes sense.
-> >
-> > I guess that also means the might_sleep (I started on that) in
-> > invalidate_range_end also needs to be conditional? Or not bother with
-> > a might_sleep in invalidate_range_end since you're working on removing
-> > the last sleep in there?
->
-> I might suggest the same pattern as used for locked, the might_sleep
-> unconditionally on the start, and a 2nd might sleep after the IF in
-> __mmu_notifier_invalidate_range_end()
->
-> Observing that by audit all the callers already have the same locking
-> context for start/end
+On Thu, 2019-08-22 at 09:59 +0100, Chris Clayton wrote:
+> Thanks, Stuart.
+> 
+> On 18/08/2019 11:55, Stuart Little wrote:
+> > On Sun, Aug 18, 2019 at 09:17:59AM +0100, Chris Clayton wrote:
+> > > 
+> > > On 17/08/2019 22:44, Stuart Little wrote:
+> > > > After some private coaching from Serge Belyshev on git-revert I can confirm that reverting that commit atop the current tree resolves the issue (the wifi card scans for and finds networks just fine, no dmesg errors reported, etc.).
+> > > > 
+> > > 
+> > > I've reported the "Microcode SW error detected" issue too, but, wrongly, only to LKML. I'll point that thread to this
+> > > one. I've also been experiencing my network stopping working after suspend resume, but haven't got round to reporting
+> > > that yet.
+> > > 
+> > > What was the git magic that you acquired to revert the patch, please?
+> > > 
+> 
+> By following the advice below, I reverted 4fd445a2c855bbcab81fbe06d110e78dbd974a5b and using the resultant kernel I
+> haven't seen the "Microcode SW error detected" again. I am, however, still experiencing the problem of my network not
+> working after resume from suspend. I've reported it to LKML, so it can be followed there should anyone need/want to.
 
-My question was more about enforcing that going forward, since you're
-working to remove all the sleeps from invalidate_range_end. I don't
-want to add debug annotations which are stricter than what the other
-side actually expects. But since currently there is still sleeping
-locks in invalidate_range_end I think I'll just stick them in both
-places. You can then (re)move it when the cleanup lands.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+FWIW, we're tracking the iwlwifi bug here:
+
+https://bugzilla.kernel.org/show_bug.cgi?id=204151
+
+I'm thinking about how to solve this and will probably have a proper
+patch by the end of the week.
+
+--
+Cheers,
+Luca.
+
