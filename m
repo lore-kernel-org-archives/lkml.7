@@ -7,111 +7,106 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EC3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 567C6C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7684F22CF7
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF6922CF7
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nsTgn0i3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nSstffzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730805AbfHVCk6 (ORCPT
+        id S1730144AbfHVCm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 22:40:58 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45487 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbfHVCk6 (ORCPT
+        Wed, 21 Aug 2019 22:42:28 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34607 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbfHVCm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 22:40:58 -0400
-Received: by mail-pg1-f196.google.com with SMTP id o13so2539671pgp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 19:40:57 -0700 (PDT)
+        Wed, 21 Aug 2019 22:42:28 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n9so2570499pgc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 19:42:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=43GEvCft8nMJFLB+nTdZDz3Ku9zd5Z0S8EKkYV/XwO8=;
-        b=nsTgn0i3Th/wy8FgI5cIWRJ4TK9B9ZcN5ZwBL5RTrHOzfv+tJ5DkHxxh2Y2MfFXTS6
-         9qSzMul1OGxVPEZRkFJwbvwTc2isJuuCndRh5LOSsLMPqA6kQwdWzVg/jHcjy7kBBAXc
-         520tVw6i9X1ejfuKZX32ui11PRTrfLx2VkluXpjUhOXjB8q3CRg+/0jrOUujInsBefNG
-         y4xntkRWLpSJxiV9wjTPLXCBwirDSzEK/FkyKj00buDKYJ9Y/imSyqsznneVMfeX9fa7
-         zmSlxGz2oQkaxvaGGE5u+ZLrZeYpcXjfQC+dlLxbNy+S7ABCQQMdjV+3qUILX/X9tOji
-         /+Qg==
+        bh=NgNbAg8LMhyX90LlgIEI3ox3xP9DSn9WzzFTkSBbr1g=;
+        b=nSstffzoNuXC8At32BW8GVT+2kLpVRBo1TbHwgWRM48q3jY1MRhiw5h7peR/OWeLXW
+         eUVQ2VyG98El7mw1A2n+pBPOwC/MUH8mgKfijCCj0/HMe0u3sxP7Qv+y9SRCMZYB+FkR
+         2bi5hPGHRZHCyhMaUuQVecxaFFDIPxAyZ2rLpN+Ew4Oy7FqOLNUIHztSdVR6v+rm17R7
+         KMSthUsQKaXTmh6witGeDW2u4YElAwlNvZsizh1gtAxGvSIcglM3DL2e4HbjIEx3tx7Q
+         wQyEtr8ZSKSbF3p4WeMoSSSyZPe8qihdP9TNTfRwIUu1N6Vqoza3pQjuq5OpNz1PSnqh
+         LkQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=43GEvCft8nMJFLB+nTdZDz3Ku9zd5Z0S8EKkYV/XwO8=;
-        b=tvpGrUjjv6eM6tP0/mW2y67uxtFSO1ER0sB4Xekz9Lw1OcJm6n731BCpQPPl6w+A3M
-         KvoN/rwoz9IlMqCGTcVVL0LCaFC5XL8HX2gcVg/grbrh0vhO80rBdLJb88Kj3edJZW0j
-         hPh3fxpMj0TEJEf3jAV9jg0PbDm80b/25x+QhuoyzXh0yrc9DSlOC58mC7V1irpRjcyM
-         3cFJynJo4GCn75syj/pyPijklPjIXUYMacHOcr9IfT0Lw6RHyCi0EgcBBWanSQRgsRFS
-         UsTVNjZnOllD3ExkJVCth0d1Vj/bQD/1APP1o088YjrexPr9TCXWsjiDsmYxW2QbkOPa
-         nktg==
-X-Gm-Message-State: APjAAAWxoqMHibKJSVzJIqeOWZRBsgtegtvdQYB//wcbnNZ431vlKz75
-        8li4UvVlENbQCAExuN0wnPNQ4QWikn0=
-X-Google-Smtp-Source: APXvYqzHtyT3YDd/cLPhVSy+7THC/RtNzvd5nFbExS+j6Yto5pGt1hjPPyeXgBC1QiP5G65qQlOQ/Q==
-X-Received: by 2002:a63:ab08:: with SMTP id p8mr404210pgf.340.1566441657106;
-        Wed, 21 Aug 2019 19:40:57 -0700 (PDT)
+        bh=NgNbAg8LMhyX90LlgIEI3ox3xP9DSn9WzzFTkSBbr1g=;
+        b=l2WtzSFFpJhOe4B6e7Uj7M1C3MaohdYzfeYf8o1X/ax/dHrN6trY7Hd06ud12/7sph
+         4IPwQEdtsIcGNwOUSbgEwMu7WAndgKNWmNjUpKWCNfQ+W0/ni1hJsJI6PSvyQyyq7XXc
+         SOjsOdAleAyX8yoozSZaEA6YOFP1ZtXw8RsaS5xbAaXmd/rRTh4At1Ilcvy3a9RwLtMG
+         yTJihtk42aVsoVxAGF62dBWwZc5CGGyav9MkLkelQbbq6nWAJcghvie++ZZmXp4nZmow
+         R1mx1UvMG5EwvR+2A9JocMiv3gYC82JnK5NG0h7AyoeW+3IXAeDCt50C/TdLQwiKREY5
+         YmwQ==
+X-Gm-Message-State: APjAAAWIFf+ZNNMCkXbBDp7WcAn9t7YnPDP7nJiNg75GogHA6ODAltWp
+        +k2rA183lv1eds+JJKlW1mxFsw==
+X-Google-Smtp-Source: APXvYqwlT9owBX9i8KeoniR31rqUbD2ekZHttd7fvbTto1FEW78Fcq7E+nLkn2nOL4T0dvqDef9yOQ==
+X-Received: by 2002:a62:2c93:: with SMTP id s141mr39038219pfs.114.1566441747058;
+        Wed, 21 Aug 2019 19:42:27 -0700 (PDT)
 Received: from localhost ([122.172.76.219])
-        by smtp.gmail.com with ESMTPSA id h42sm1186807pjb.24.2019.08.21.19.40.55
+        by smtp.gmail.com with ESMTPSA id d12sm24803245pfn.11.2019.08.21.19.42.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 19:40:56 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 08:10:51 +0530
+        Wed, 21 Aug 2019 19:42:26 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 08:12:22 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     agross@kernel.org, rjw@rjwysocki.net, sibis@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH -next] cpufreq: qcom-hw: remove set but not used variable
- 'prev_cc'
-Message-ID: <20190822024051.eubzzxh3b2ip2gzv@vireshk-i7>
-References: <20190821121445.72588-1-yuehaibing@huawei.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "open list:CPU FREQUENCY SCALING FRAMEWORK" 
+        <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH] cpufreq: Print driver name if cpufreq_suspend() fails
+Message-ID: <20190822024221.wt7mx2zrm3fetnjp@vireshk-i7>
+References: <20190821231632.29133-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190821121445.72588-1-yuehaibing@huawei.com>
+In-Reply-To: <20190821231632.29133-1-f.fainelli@gmail.com>
 User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-08-19, 20:14, YueHaibing wrote:
-> drivers/cpufreq/qcom-cpufreq-hw.c: In function qcom_cpufreq_hw_read_lut:
-> drivers/cpufreq/qcom-cpufreq-hw.c:89:38: warning:
->  variable prev_cc set but not used [-Wunused-but-set-variable]
+On 21-08-19, 16:16, Florian Fainelli wrote:
+> Instead of printing the policy, which is incidentally a kernel pointer,
+> so with limited interest, print the cpufreq driver name that failed to
+> be suspend, which is more useful for debugging.
 > 
-> It is not used since commit 3003e75a5045 ("cpufreq:
-> qcom-hw: Update logic to detect turbo frequency")
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Fixes: 2f0aea936360 ("cpufreq: suspend governors on system suspend/hibernate")
+
+I will drop this tag as this isn't a bug really.
+
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  drivers/cpufreq/qcom-cpufreq-hw.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/cpufreq/cpufreq.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-> index 3eea197..a9ae2f8 100644
-> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
-> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> @@ -86,7 +86,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  				    struct cpufreq_policy *policy,
->  				    void __iomem *base)
->  {
-> -	u32 data, src, lval, i, core_count, prev_cc = 0, prev_freq = 0, freq;
-> +	u32 data, src, lval, i, core_count, prev_freq = 0, freq;
->  	u32 volt;
->  	struct cpufreq_frequency_table	*table;
->  
-> @@ -139,7 +139,6 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  			break;
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index c28ebf2810f1..330d789f81fc 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1807,8 +1807,8 @@ void cpufreq_suspend(void)
 >  		}
 >  
-> -		prev_cc = core_count;
->  		prev_freq = freq;
+>  		if (cpufreq_driver->suspend && cpufreq_driver->suspend(policy))
+> -			pr_err("%s: Failed to suspend driver: %p\n", __func__,
+> -				policy);
+> +			pr_err("%s: Failed to suspend driver: %s\n", __func__,
+> +				cpufreq_driver->name);
 >  	}
+>  
+>  suspend:
 
-@Sibi, you fine with this change ? I will merge it with the original patch then.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
 viresh
