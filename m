@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E051EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B767C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBB723429
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A7E23402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493729;
-	bh=ZKAkj2PBDzbgmpcPQyxVaFn971P85QAkn1irCUYBn+0=;
+	s=default; t=1566493730;
+	bh=GDMUFK49iJw6LrP6ldTPSNcdlEBauNYXoB7Qz/wRAao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Qx/zZ8BjhD20Rd3YHVickxbaJ8MbKjuuBlZor4YUnsDLfNj4pJOEaZ+6mT/CuMq2
-	 4xLOEuZcbti/E7kKEF2PAosOe6LtCYF42RmBwWFvsQsLE3ZIK7HSFJ4FwVfqVLedeJ
-	 X69MJcPVlYHKKxXcD/OdtD1vOk7QZzM4QA7Lc9Gw=
+	b=ziMSMFfweVqKHsPXEyLb9cuVeCZmEqvjJ5EDslfGtF27LWWOBt4Oa8KIFEQcXRRFy
+	 ScsX47gPP0SRJJ7oksHQQ+llx9XOqUX3TpnoaDAE+ZVRDXas203XLhLQK4Hdfp4YDH
+	 55QHLlIXoxZVIDjVoPR8eQybO3j+8pqYU5TLdao0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390525AbfHVRIs (ORCPT
+        id S2390536AbfHVRIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58626 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390499AbfHVRIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:46 -0400
+        id S2390506AbfHVRIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:47 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C72D23426;
-        Thu, 22 Aug 2019 17:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 154F423406;
+        Thu, 22 Aug 2019 17:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493725;
-        bh=ZKAkj2PBDzbgmpcPQyxVaFn971P85QAkn1irCUYBn+0=;
+        s=default; t=1566493727;
+        bh=GDMUFK49iJw6LrP6ldTPSNcdlEBauNYXoB7Qz/wRAao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z9XtDx2udrSsUooTPm60zQfDbCzA272c6hh+t6iWMiEc3DWcKJTR8wF+IpZLWwXWC
-         CfjLclt4+RicsHVlg1ShaF8tqJSCnlViaMzZCtlEBGbe9gAcqfo6twbKdt3Yodqxwf
-         zkakVROZ+qaExBgQ0cRuwgSkyKoxe97Rs08VARtI=
+        b=NrY/JGlHZdo9oL78upF9vAVATFKAsAgqyaShLg436SOurPLI9dDBSjx+Qr1uNV+pf
+         4OhZ1IdFXOiUYuqN5c1CrMbR4P93H7cRMhOLwvHUV7bfSz4B2m+XMDqY05AvAmFlbi
+         wwekRFe3wAYk0278fRGn/3mWREJ1VpaOxjYHB0W4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+Cc:     Don Brace <don.brace@microsemi.com>,
+        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
+        Scott Teel <scott.teel@microsemi.com>,
+        Scott Benesh <scott.benesh@microsemi.com>,
+        Kevin Barnett <kevin.barnett@microsemi.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 057/135] drm/bridge: lvds-encoder: Fix build error while CONFIG_DRM_KMS_HELPER=m
-Date:   Thu, 22 Aug 2019 13:06:53 -0400
-Message-Id: <20190822170811.13303-58-sashal@kernel.org>
+Subject: [PATCH 5.2 060/135] scsi: hpsa: correct scsi command status issue after reset
+Date:   Thu, 22 Aug 2019 13:06:56 -0400
+Message-Id: <20190822170811.13303-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,39 +69,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Don Brace <don.brace@microsemi.com>
 
-[ Upstream commit f4cc743a98136df3c3763050a0e8223b52d9a960 ]
+[ Upstream commit eeebce1862970653cdf5c01e98bc669edd8f529a ]
 
-If DRM_LVDS_ENCODER=y but CONFIG_DRM_KMS_HELPER=m,
-build fails:
-
-drivers/gpu/drm/bridge/lvds-encoder.o: In function `lvds_encoder_probe':
-lvds-encoder.c:(.text+0x155): undefined reference to `devm_drm_panel_bridge_add'
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: dbb58bfd9ae6 ("drm/bridge: Fix lvds-encoder since the panel_bridge rework.")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190729071216.27488-1-yuehaibing@huawei.com
+Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
+Reviewed-by: Scott Teel <scott.teel@microsemi.com>
+Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
+Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
+Signed-off-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/hpsa.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index ee777469293a4..cc62603b87c59 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -48,6 +48,7 @@ config DRM_DUMB_VGA_DAC
- config DRM_LVDS_ENCODER
- 	tristate "Transparent parallel to LVDS encoder support"
- 	depends on OF
-+	select DRM_KMS_HELPER
- 	select DRM_PANEL_BRIDGE
- 	help
- 	  Support for transparent parallel to LVDS encoders that don't require
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 8068520cf89ed..152de392f9aaf 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -2320,6 +2320,8 @@ static int handle_ioaccel_mode2_error(struct ctlr_info *h,
+ 	case IOACCEL2_SERV_RESPONSE_COMPLETE:
+ 		switch (c2->error_data.status) {
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_GOOD:
++			if (cmd)
++				cmd->result = 0;
+ 			break;
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_CHK_COND:
+ 			cmd->result |= SAM_STAT_CHECK_CONDITION;
+@@ -2479,8 +2481,10 @@ static void process_ioaccel2_completion(struct ctlr_info *h,
+ 
+ 	/* check for good status */
+ 	if (likely(c2->error_data.serv_response == 0 &&
+-			c2->error_data.status == 0))
++			c2->error_data.status == 0)) {
++		cmd->result = 0;
+ 		return hpsa_cmd_free_and_done(h, c, cmd);
++	}
+ 
+ 	/*
+ 	 * Any RAID offload error results in retry which will use
+@@ -5638,6 +5642,12 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
+ 	}
+ 	c = cmd_tagged_alloc(h, cmd);
+ 
++	/*
++	 * This is necessary because the SML doesn't zero out this field during
++	 * error recovery.
++	 */
++	cmd->result = 0;
++
+ 	/*
+ 	 * Call alternate submit routine for I/O accelerated commands.
+ 	 * Retries always go down the normal I/O path.
 -- 
 2.20.1
 
