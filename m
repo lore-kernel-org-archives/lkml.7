@@ -2,55 +2,55 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A4EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3A4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9FE20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B42C120856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495890;
-	bh=/Ff2BB1YQa4gCwavzBkOv5LyIublasKxglhj1JWbgpE=;
+	s=default; t=1566495892;
+	bh=HPNzx4VxH9DlBbAtxABhmKBRkBXNftbrYMoVCau5eTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gthGawEf5/P2PPCSJWbjoDE1S3jAFRGF2Rr5jYaOpL/rivqnnndAj6aVU1OYuX4P2
-	 TOsI4I2R1WfBQwxEuONLslJjUNAmPjbhwATSMQrZCeNAjs1CTYkiuKE2bZmdiiWOTM
-	 BDvq6BR9z5ruu4FO33H0DN5vsdWVHHpCNSG7X6AA=
+	b=eHhdX4FJ4FbbKQ4hDovQ1p3Ei14Z885JFkJoDN0xuHbDKWFWqfebHU/Mrw0kTIqmj
+	 jRZYByBCNeuNZtzEVkYXlXI5S4/rbwa29UYpE9+ECI1BM8gRujUzadd4is3NBlmGxk
+	 oWJ/q5Q3K8jAdKyaqawo7Z/jpcYqXc8i9qJ6+grk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392873AbfHVRot (ORCPT
+        id S2403873AbfHVRXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:44:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42712 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403868AbfHVRXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:14 -0400
+        id S2403851AbfHVRXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:10 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D22AA23402;
-        Thu, 22 Aug 2019 17:23:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65DFA23402;
+        Thu, 22 Aug 2019 17:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494594;
-        bh=/Ff2BB1YQa4gCwavzBkOv5LyIublasKxglhj1JWbgpE=;
+        s=default; t=1566494589;
+        bh=HPNzx4VxH9DlBbAtxABhmKBRkBXNftbrYMoVCau5eTc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=snr1uwJevNPGt6RNCSvu12+eUwLgFKXWJ5y84n4deiAyWw0C9jSm5eCGrSMVhsquq
-         uNxIU88uFMrG0fH7FVySGsDlWsKP2kvN09UeAjNedHkw82qtDs9yjlMarLOg/Hbb6g
-         B+IXZink6pi1oqyRuNEkO29pALvafzXzxOOtICyY=
+        b=MU2uK8dWzGvz23WMIwSluxQj/QHbOd+b/9gJCO2BoQdJtfVHR0hz4Y1BGjJwxt+Vs
+         U4kJkjKHqsBpH7Yfp3xjp2Joy5KsEJvsiexiKjzS1AGVmKzl+aiRHLjrtMObcB8CdM
+         0O3V2YgF6oVfNBANhrGRkxGhbcxgQR3WqAM4WAFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 014/103] mac80211: dont warn about CW params when not using them
-Date:   Thu, 22 Aug 2019 10:18:02 -0700
-Message-Id: <20190822171729.429243453@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 78/78] bonding: Add vlan tx offload to hw_enc_features
+Date:   Thu, 22 Aug 2019 10:19:22 -0700
+Message-Id: <20190822171834.289717985@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
-References: <20190822171728.445189830@linuxfoundation.org>
+In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
+References: <20190822171832.012773482@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,52 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d2b3fe42bc629c2d4002f652b3abdfb2e72991c7 ]
+From: YueHaibing <yuehaibing@huawei.com>
 
-ieee80211_set_wmm_default() normally sets up the initial CW min/max for
-each queue, except that it skips doing this if the driver doesn't
-support ->conf_tx. We still end up calling drv_conf_tx() in some cases
-(e.g., ieee80211_reconfig()), which also still won't do anything
-useful...except it complains here about the invalid CW parameters.
+[ Upstream commit d595b03de2cb0bdf9bcdf35ff27840cc3a37158f ]
 
-Let's just skip the WARN if we weren't going to do anything useful with
-the parameters.
+As commit 30d8177e8ac7 ("bonding: Always enable vlan tx offload")
+said, we should always enable bonding's vlan tx offload, pass the
+vlan packets to the slave devices with vlan tci, let them to handle
+vlan implementation.
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
-Link: https://lore.kernel.org/r/20190718015712.197499-1-briannorris@chromium.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Now if encapsulation protocols like VXLAN is used, skb->encapsulation
+may be set, then the packet is passed to vlan device which based on
+bonding device. However in netif_skb_features(), the check of
+hw_enc_features:
+
+	 if (skb->encapsulation)
+                 features &= dev->hw_enc_features;
+
+clears NETIF_F_HW_VLAN_CTAG_TX/NETIF_F_HW_VLAN_STAG_TX. This results
+in same issue in commit 30d8177e8ac7 like this:
+
+vlan_dev_hard_start_xmit
+  -->dev_queue_xmit
+    -->validate_xmit_skb
+      -->netif_skb_features //NETIF_F_HW_VLAN_CTAG_TX is cleared
+      -->validate_xmit_vlan
+        -->__vlan_hwaccel_push_inside //skb->tci is cleared
+...
+ --> bond_start_xmit
+   --> bond_xmit_hash //BOND_XMIT_POLICY_ENCAP34
+     --> __skb_flow_dissect // nhoff point to IP header
+        -->  case htons(ETH_P_8021Q)
+             // skb_vlan_tag_present is false, so
+             vlan = __skb_header_pointer(skb, nhoff, sizeof(_vlan),
+             //vlan point to ip header wrongly
+
+Fixes: b2a103e6d0af ("bonding: convert to ndo_fix_features")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mac80211/driver-ops.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/net/bonding/bond_main.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/mac80211/driver-ops.c b/net/mac80211/driver-ops.c
-index bb886e7db47f1..f783d1377d9a8 100644
---- a/net/mac80211/driver-ops.c
-+++ b/net/mac80211/driver-ops.c
-@@ -169,11 +169,16 @@ int drv_conf_tx(struct ieee80211_local *local,
- 	if (!check_sdata_in_driver(sdata))
- 		return -EIO;
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1111,7 +1111,9 @@ static void bond_compute_features(struct
  
--	if (WARN_ONCE(params->cw_min == 0 ||
--		      params->cw_min > params->cw_max,
--		      "%s: invalid CW_min/CW_max: %d/%d\n",
--		      sdata->name, params->cw_min, params->cw_max))
-+	if (params->cw_min == 0 || params->cw_min > params->cw_max) {
-+		/*
-+		 * If we can't configure hardware anyway, don't warn. We may
-+		 * never have initialized the CW parameters.
-+		 */
-+		WARN_ONCE(local->ops->conf_tx,
-+			  "%s: invalid CW_min/CW_max: %d/%d\n",
-+			  sdata->name, params->cw_min, params->cw_max);
- 		return -EINVAL;
-+	}
+ done:
+ 	bond_dev->vlan_features = vlan_features;
+-	bond_dev->hw_enc_features = enc_features | NETIF_F_GSO_ENCAP_ALL;
++	bond_dev->hw_enc_features = enc_features | NETIF_F_GSO_ENCAP_ALL |
++				    NETIF_F_HW_VLAN_CTAG_TX |
++				    NETIF_F_HW_VLAN_STAG_TX;
+ 	bond_dev->gso_max_segs = gso_max_segs;
+ 	netif_set_gso_max_size(bond_dev, gso_max_size);
  
- 	trace_drv_conf_tx(local, sdata, ac, params);
- 	if (local->ops->conf_tx)
--- 
-2.20.1
-
 
 
