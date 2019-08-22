@@ -2,367 +2,152 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3FFC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A55FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07981206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C21233FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:34:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="TTe1Rfnh"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YA5QwGD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388653AbfHVMdo (ORCPT
+        id S2388674AbfHVMeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:33:44 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39240 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388625AbfHVMdl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:33:41 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i63so5594281wmg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 05:33:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Jo69w2Y5GpdPAOSdBd76ME+SCr5IL7+9j1PUyEP8Fhw=;
-        b=TTe1RfnhK1hg+QfkErlN2RP9MHIiCIChj7XEEShaahOG92mWO23Dbhf3YTyC2/pYh0
-         1VBHaLDH9Xnpyx9PEy1s0K2y2dE7ZYm9mZTwgvHzID/QSfJ8kwClW/l1376daHt0+Htv
-         ObxFyKLz3AIxqZWEBsOYP8HJRHKCy1B6+8Qez34yOjp6RxXvl3GT9d/HhLsaGGI19bDJ
-         Eg09JMdw/SEjwb52gq+r+YUIUbrcFbpck9l57dKOzSRf/nyaEsx8XsuzQxpYu5dnElRO
-         sS5jcNOlabbvK5YIEMzn4WAYn0jP59mU2UW89Iitm8XGoUToTnxrjOBuEkhhTEcj3Hh3
-         0OEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Jo69w2Y5GpdPAOSdBd76ME+SCr5IL7+9j1PUyEP8Fhw=;
-        b=iVakSVCkkp415x6Ds0VVWOkatyT1Xe2/areAR8qrPjN7SWTih7T77sAVEQX05bBkBb
-         3lDQIvboF/+spsCglDrFmRF9OV8Rd34pojPXU8KtLweMBqfqBuItNd3QukkjjDIH/Fu3
-         1/1h6rn7vpKXo6vWLgRd6CJeNW1Eh0+N7AviLWNpyCKzmE47eHCOXfGAXWuDKUWBXtpF
-         FiapIQb4Fza7VIQRrJp2+l6LKOIbyGxPfCLcwScmP6wa6jUzYHNGzn1p2CdI0rUrWPrm
-         o/34wHeVDb+61OLi38uoaSJb1N6NJHhtOs4pyavbj4Ov2ia0jn63dW1pqOrSMe5/+YRL
-         Ssww==
-X-Gm-Message-State: APjAAAVR2MN3+bvxdEhTDROrjyTghW1Hsl2fJhbdvXK9EKEktnMnytr1
-        ChKkuy6CPL+4Ezb4YZsiTL+OPZQwwUhOYudwcbIO5uCHpAw=
-X-Google-Smtp-Source: APXvYqyvRbS1LTMkIIyQkE/41BHL0/shCFGOpXnrr89IwodQepgzOEABw/zX3m+WQygrU3cuaUl6Z6hqR6nXdBSbcF4=
-X-Received: by 2002:a1c:3d89:: with SMTP id k131mr5691618wma.24.1566477218546;
- Thu, 22 Aug 2019 05:33:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190822084131.114764-1-anup.patel@wdc.com> <20190822084131.114764-11-anup.patel@wdc.com>
- <917cea87-42c0-e50a-6508-d5b577c8b702@amazon.com>
-In-Reply-To: <917cea87-42c0-e50a-6508-d5b577c8b702@amazon.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 22 Aug 2019 18:03:27 +0530
-Message-ID: <CAAhSdy2QtZRKvs0Hr-mZuVsb7sVkweeW-RpvhObZR009UbA7KA@mail.gmail.com>
-Subject: Re: [PATCH v5 10/20] RISC-V: KVM: Handle MMIO exits for VCPU
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Thu, 22 Aug 2019 08:34:22 -0400
+Received: from mail-eopbgr20071.outbound.protection.outlook.com ([40.107.2.71]:17795
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730918AbfHVMeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:34:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ne8XkoBsB/m4UUfqjbTPrUe1KrWHXnHyLYtWDjiUnFPH3nyroqUEhLjqPgZVsyU+Bh7bpol9lMCamCu5QDutM+xk1UTnVw5JI5vs/Ro3jGrP2SvDawB6PzQjjGa4xDyDT/IJPO7iq8pTOmMPdaZmD5RKZ156NRuMnhfwteZH7AvjD0VrvYDajJ0OQjDGeZzoK9jApk1DWcWKjClP8AgAClA/eYxe2e+FvlBzWvLN+tYCFPQb/haxDInuB6qACS6SYxcrZr31xr0fwSvG8iMCeV6CMA+XoEoTPwCgtiiIbMw/UgFvy5Hgem5TWe12Bjb+XZshzHkeB4RbdvaKqCBTrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VDnK8p8YZXUFIcCNd9u85VsuBtOMMannter/nOuJwng=;
+ b=OjBh6gGvyBaZtlRTENLgobLLPE1Rh1EoHwgR1aA7AY1+AD+D839KyR4X8UjlYOyD0A9lD6DsJSjVfFaL/tXk0+1Bc3wZFgV7JpERH8KLRZYKh0U2Cl9rciisZouoU5D8LJYieayAv66EkHtVD54pHa0hzDAhHQzN8QYsCYVivbuM0ulnEwyF3pzDMojx63eQFrtnnedoJGJI2crEyFTe/rLejIFT6nLJ3kPLNh5+Rh3LGHv11uTXuWk/N1TJ15KVjnO3P8FyKbHY01o9wtWgrv3L546itTZlqXNcLufSWZJZ9K8DQuGJSnN6BDhGixpZtTfebRvVyN0Atj0ssZ3Vrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VDnK8p8YZXUFIcCNd9u85VsuBtOMMannter/nOuJwng=;
+ b=YA5QwGD3vDaxiyFjwAcu8Ptf8WbKpeZa23/I1RcDbsQ1FBgng+zPN2xWIo4kVcQeNiIMqd/tm9CCWffs1IkQYGHJTQSxnScBjPzng+od9onRhyM99Y7dKnD0s95DVcj08bBN2Qj1G0CzAu+ngzy8bYm8aPxrYjFSOOPSySahwFU=
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
+ VI1PR04MB5871.eurprd04.prod.outlook.com (20.178.205.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Thu, 22 Aug 2019 12:34:17 +0000
+Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::c5e8:90f8:da97:947e]) by VI1PR04MB7023.eurprd04.prod.outlook.com
+ ([fe80::c5e8:90f8:da97:947e%3]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
+ 12:34:17 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>, "sboyd@kernel.org" <sboyd@kernel.org>
+CC:     Jacky Bai <ping.bai@nxp.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] clk: imx: pll14xx: avoid glitch when set rate
+Thread-Topic: [PATCH] clk: imx: pll14xx: avoid glitch when set rate
+Thread-Index: AQHVVv10E+OF2Euht0ilryFWSAJw8w==
+Date:   Thu, 22 Aug 2019 12:34:16 +0000
+Message-ID: <VI1PR04MB70234B225BC4AC8E909A4C2AEEA50@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <1566266337-21597-1-git-send-email-peng.fan@nxp.com>
+ <VI1PR04MB7023C1017F60BF132B6A3F8CEEA50@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <AM0PR04MB44818E133AD735E3EB2789E288A50@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 66bdf910-1ee7-404d-563e-08d726fd0c3b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB5871;
+x-ms-traffictypediagnostic: VI1PR04MB5871:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB587132A8AFD449B2FE26D99CEEA50@VI1PR04MB5871.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01371B902F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(396003)(376002)(39860400002)(136003)(189003)(199004)(305945005)(5660300002)(76116006)(66946007)(66446008)(64756008)(66556008)(66476007)(14454004)(53936002)(8676002)(102836004)(6246003)(66066001)(9686003)(478600001)(446003)(316002)(33656002)(7736002)(53546011)(6506007)(2906002)(54906003)(71200400001)(256004)(476003)(3846002)(6116002)(25786009)(7696005)(186003)(110136005)(52536014)(81166006)(6436002)(86362001)(76176011)(14444005)(44832011)(99286004)(74316002)(55016002)(486006)(2501003)(4326008)(71190400001)(8936002)(81156014)(26005)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5871;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ggsv6HV2BmM0wgmKqg1eNwIeYNfWZL6jwA3ih7GrZMDDmzT8nWWmQD93BDHZ908o6bYLxiYBDjIEQ5hqDwrDbhAikhdH8XyvqM6XK4DvkVUuKSpZ20wVAcmEU+pUHycgJuHHYWj1sh5vKmOK+AJDZqUQsVks9XNz0SIrIaGaw79UXa1v83cpz3S9UtVKk7azvEt5atwj2QyfXVDMg6MWByrw94IqaiwfIlj2d72O0kMb9ws8ScTsj/xFDZKkwdC7nYyMQK1bPvKQrZzXgejtds9oioC4j5hXnRXWlhbaZcEB+A3jRyZrgPjrTeZ981aEII5r6toDcK7wmbtEuw/vEwd4hv4EPxCgZipHpddGy1QCSwctFkVH/wWecNl7IXPiAzb6HAaMmrFIO/1gEP8qkU1B1NG/FqY0KW0pGtko4PU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66bdf910-1ee7-404d-563e-08d726fd0c3b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 12:34:16.8389
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dUyg9FnkptF2eQD2A3+brWjj5IZN/Vj0yiQwwVg8scDxqVg2LtOS9/kdq3SCUkWauc/9nkezu9VGhCtcVlKNZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5871
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 5:44 PM Alexander Graf <graf@amazon.com> wrote:
->
-> On 22.08.19 10:44, Anup Patel wrote:
-> > We will get stage2 page faults whenever Guest/VM access SW emulated
-> > MMIO device or unmapped Guest RAM.
-> >
-> > This patch implements MMIO read/write emulation by extracting MMIO
-> > details from the trapped load/store instruction and forwarding the
-> > MMIO read/write to user-space. The actual MMIO emulation will happen
-> > in user-space and KVM kernel module will only take care of register
-> > updates before resuming the trapped VCPU.
-> >
-> > The handling for stage2 page faults for unmapped Guest RAM will be
-> > implemeted by a separate patch later.
-> >
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> > ---
-> >   arch/riscv/include/asm/kvm_host.h |  11 +
-> >   arch/riscv/kvm/mmu.c              |   7 +
-> >   arch/riscv/kvm/vcpu_exit.c        | 436 +++++++++++++++++++++++++++++-
-> >   3 files changed, 451 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> > index 18f1097f1d8d..4388bace6d70 100644
-> > --- a/arch/riscv/include/asm/kvm_host.h
-> > +++ b/arch/riscv/include/asm/kvm_host.h
-> > @@ -53,6 +53,12 @@ struct kvm_arch {
-> >       phys_addr_t pgd_phys;
-> >   };
-> >
-> > +struct kvm_mmio_decode {
-> > +     unsigned long insn;
-> > +     int len;
-> > +     int shift;
-> > +};
-> > +
-> >   struct kvm_cpu_context {
-> >       unsigned long zero;
-> >       unsigned long ra;
-> > @@ -141,6 +147,9 @@ struct kvm_vcpu_arch {
-> >       unsigned long irqs_pending;
-> >       unsigned long irqs_pending_mask;
-> >
-> > +     /* MMIO instruction details */
-> > +     struct kvm_mmio_decode mmio_decode;
-> > +
-> >       /* VCPU power-off state */
-> >       bool power_off;
-> >
-> > @@ -160,6 +169,8 @@ static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
-> >   int kvm_riscv_setup_vsip(void);
-> >   void kvm_riscv_cleanup_vsip(void);
-> >
-> > +int kvm_riscv_stage2_map(struct kvm_vcpu *vcpu, gpa_t gpa, unsigned long hva,
-> > +                      bool is_write);
-> >   void kvm_riscv_stage2_flush_cache(struct kvm_vcpu *vcpu);
-> >   int kvm_riscv_stage2_alloc_pgd(struct kvm *kvm);
-> >   void kvm_riscv_stage2_free_pgd(struct kvm *kvm);
-> > diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-> > index 04dd089b86ff..2b965f9aac07 100644
-> > --- a/arch/riscv/kvm/mmu.c
-> > +++ b/arch/riscv/kvm/mmu.c
-> > @@ -61,6 +61,13 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
-> >       return 0;
-> >   }
-> >
-> > +int kvm_riscv_stage2_map(struct kvm_vcpu *vcpu, gpa_t gpa, unsigned long hva,
-> > +                      bool is_write)
-> > +{
-> > +     /* TODO: */
-> > +     return 0;
-> > +}
-> > +
-> >   void kvm_riscv_stage2_flush_cache(struct kvm_vcpu *vcpu)
-> >   {
-> >       /* TODO: */
-> > diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-> > index e4d7c8f0807a..efc06198c259 100644
-> > --- a/arch/riscv/kvm/vcpu_exit.c
-> > +++ b/arch/riscv/kvm/vcpu_exit.c
-> > @@ -6,9 +6,371 @@
-> >    *     Anup Patel <anup.patel@wdc.com>
-> >    */
-> >
-> > +#include <linux/bitops.h>
-> >   #include <linux/errno.h>
-> >   #include <linux/err.h>
-> >   #include <linux/kvm_host.h>
-> > +#include <asm/csr.h>
-> > +
-> > +#define INSN_MATCH_LB                0x3
-> > +#define INSN_MASK_LB         0x707f
-> > +#define INSN_MATCH_LH                0x1003
-> > +#define INSN_MASK_LH         0x707f
-> > +#define INSN_MATCH_LW                0x2003
-> > +#define INSN_MASK_LW         0x707f
-> > +#define INSN_MATCH_LD                0x3003
-> > +#define INSN_MASK_LD         0x707f
-> > +#define INSN_MATCH_LBU               0x4003
-> > +#define INSN_MASK_LBU                0x707f
-> > +#define INSN_MATCH_LHU               0x5003
-> > +#define INSN_MASK_LHU                0x707f
-> > +#define INSN_MATCH_LWU               0x6003
-> > +#define INSN_MASK_LWU                0x707f
-> > +#define INSN_MATCH_SB                0x23
-> > +#define INSN_MASK_SB         0x707f
-> > +#define INSN_MATCH_SH                0x1023
-> > +#define INSN_MASK_SH         0x707f
-> > +#define INSN_MATCH_SW                0x2023
-> > +#define INSN_MASK_SW         0x707f
-> > +#define INSN_MATCH_SD                0x3023
-> > +#define INSN_MASK_SD         0x707f
-> > +
-> > +#define INSN_MATCH_C_LD              0x6000
-> > +#define INSN_MASK_C_LD               0xe003
-> > +#define INSN_MATCH_C_SD              0xe000
-> > +#define INSN_MASK_C_SD               0xe003
-> > +#define INSN_MATCH_C_LW              0x4000
-> > +#define INSN_MASK_C_LW               0xe003
-> > +#define INSN_MATCH_C_SW              0xc000
-> > +#define INSN_MASK_C_SW               0xe003
-> > +#define INSN_MATCH_C_LDSP    0x6002
-> > +#define INSN_MASK_C_LDSP     0xe003
-> > +#define INSN_MATCH_C_SDSP    0xe002
-> > +#define INSN_MASK_C_SDSP     0xe003
-> > +#define INSN_MATCH_C_LWSP    0x4002
-> > +#define INSN_MASK_C_LWSP     0xe003
-> > +#define INSN_MATCH_C_SWSP    0xc002
-> > +#define INSN_MASK_C_SWSP     0xe003
-> > +
-> > +#define INSN_LEN(insn)               ((((insn) & 0x3) < 0x3) ? 2 : 4)
-> > +
-> > +#ifdef CONFIG_64BIT
-> > +#define LOG_REGBYTES         3
-> > +#else
-> > +#define LOG_REGBYTES         2
-> > +#endif
-> > +#define REGBYTES             (1 << LOG_REGBYTES)
-> > +
-> > +#define SH_RD                        7
-> > +#define SH_RS1                       15
-> > +#define SH_RS2                       20
-> > +#define SH_RS2C                      2
-> > +
-> > +#define RV_X(x, s, n)                (((x) >> (s)) & ((1 << (n)) - 1))
-> > +#define RVC_LW_IMM(x)                ((RV_X(x, 6, 1) << 2) | \
-> > +                              (RV_X(x, 10, 3) << 3) | \
-> > +                              (RV_X(x, 5, 1) << 6))
-> > +#define RVC_LD_IMM(x)                ((RV_X(x, 10, 3) << 3) | \
-> > +                              (RV_X(x, 5, 2) << 6))
-> > +#define RVC_LWSP_IMM(x)              ((RV_X(x, 4, 3) << 2) | \
-> > +                              (RV_X(x, 12, 1) << 5) | \
-> > +                              (RV_X(x, 2, 2) << 6))
-> > +#define RVC_LDSP_IMM(x)              ((RV_X(x, 5, 2) << 3) | \
-> > +                              (RV_X(x, 12, 1) << 5) | \
-> > +                              (RV_X(x, 2, 3) << 6))
-> > +#define RVC_SWSP_IMM(x)              ((RV_X(x, 9, 4) << 2) | \
-> > +                              (RV_X(x, 7, 2) << 6))
-> > +#define RVC_SDSP_IMM(x)              ((RV_X(x, 10, 3) << 3) | \
-> > +                              (RV_X(x, 7, 3) << 6))
-> > +#define RVC_RS1S(insn)               (8 + RV_X(insn, SH_RD, 3))
-> > +#define RVC_RS2S(insn)               (8 + RV_X(insn, SH_RS2C, 3))
-> > +#define RVC_RS2(insn)                RV_X(insn, SH_RS2C, 5)
-> > +
-> > +#define SHIFT_RIGHT(x, y)            \
-> > +     ((y) < 0 ? ((x) << -(y)) : ((x) >> (y)))
-> > +
-> > +#define REG_MASK                     \
-> > +     ((1 << (5 + LOG_REGBYTES)) - (1 << LOG_REGBYTES))
-> > +
-> > +#define REG_OFFSET(insn, pos)                \
-> > +     (SHIFT_RIGHT((insn), (pos) - LOG_REGBYTES) & REG_MASK)
-> > +
-> > +#define REG_PTR(insn, pos, regs)     \
-> > +     (ulong *)((ulong)(regs) + REG_OFFSET(insn, pos))
-> > +
-> > +#define GET_RM(insn)         (((insn) >> 12) & 7)
-> > +
-> > +#define GET_RS1(insn, regs)  (*REG_PTR(insn, SH_RS1, regs))
-> > +#define GET_RS2(insn, regs)  (*REG_PTR(insn, SH_RS2, regs))
-> > +#define GET_RS1S(insn, regs) (*REG_PTR(RVC_RS1S(insn), 0, regs))
-> > +#define GET_RS2S(insn, regs) (*REG_PTR(RVC_RS2S(insn), 0, regs))
-> > +#define GET_RS2C(insn, regs) (*REG_PTR(insn, SH_RS2C, regs))
-> > +#define GET_SP(regs)         (*REG_PTR(2, 0, regs))
-> > +#define SET_RD(insn, regs, val)      (*REG_PTR(insn, SH_RD, regs) = (val))
-> > +#define IMM_I(insn)          ((s32)(insn) >> 20)
-> > +#define IMM_S(insn)          (((s32)(insn) >> 25 << 5) | \
-> > +                              (s32)(((insn) >> 7) & 0x1f))
-> > +#define MASK_FUNCT3          0x7000
-> > +
-> > +#define STR(x)                       XSTR(x)
-> > +#define XSTR(x)                      #x
-> > +
-> > +/* TODO: Handle traps due to unpriv load and redirect it back to VS-mode */
-> > +static ulong get_insn(struct kvm_vcpu *vcpu)
-> > +{
-> > +     ulong __sepc = vcpu->arch.guest_context.sepc;
-> > +     ulong __hstatus, __sstatus, __vsstatus;
-> > +#ifdef CONFIG_RISCV_ISA_C
-> > +     ulong rvc_mask = 3, tmp;
-> > +#endif
-> > +     ulong flags, val;
-> > +
-> > +     local_irq_save(flags);
-> > +
-> > +     __vsstatus = csr_read(CSR_VSSTATUS);
-> > +     __sstatus = csr_read(CSR_SSTATUS);
-> > +     __hstatus = csr_read(CSR_HSTATUS);
-> > +
-> > +     csr_write(CSR_VSSTATUS, __vsstatus | SR_MXR);
-> > +     csr_write(CSR_SSTATUS, vcpu->arch.guest_context.sstatus | SR_MXR);
-> > +     csr_write(CSR_HSTATUS, vcpu->arch.guest_context.hstatus | HSTATUS_SPRV);
->
-> What happens when the insn load triggers a page fault, maybe because the
-> guest was malicious and did
->
->    1) Run on page 0x1000
->    2) Remove map for 0x1000, do *not* flush TLB
->    3) Trigger MMIO
->
-> That would DOS the host here, as the host kernel would continue running
-> in guest address space, right?
-
-Yes, we can certainly fault while accessing Guest instruction. We will
-be fixing this issue in a followup series. We have mentioned this in cover
-letter as well.
-
-BTW, RISC-V spec is going to further improve to provide easy
-access of faulting instruction to Hypervisor.
-(Refer, https://github.com/riscv/riscv-isa-manual/issues/431)
-
-Regards,
-Anup
-
->
->
-> Alex
->
-> > +
-> > +#ifndef CONFIG_RISCV_ISA_C
-> > +     asm ("\n"
-> > +#ifdef CONFIG_64BIT
-> > +             STR(LWU) " %[insn], (%[addr])\n"
-> > +#else
-> > +             STR(LW) " %[insn], (%[addr])\n"
-> > +#endif
-> > +             : [insn] "=&r" (val) : [addr] "r" (__sepc));
-> > +#else
-> > +     asm ("and %[tmp], %[addr], 2\n"
-> > +             "bnez %[tmp], 1f\n"
-> > +#ifdef CONFIG_64BIT
-> > +             STR(LWU) " %[insn], (%[addr])\n"
-> > +#else
-> > +             STR(LW) " %[insn], (%[addr])\n"
-> > +#endif
-> > +             "and %[tmp], %[insn], %[rvc_mask]\n"
-> > +             "beq %[tmp], %[rvc_mask], 2f\n"
-> > +             "sll %[insn], %[insn], %[xlen_minus_16]\n"
-> > +             "srl %[insn], %[insn], %[xlen_minus_16]\n"
-> > +             "j 2f\n"
-> > +             "1:\n"
-> > +             "lhu %[insn], (%[addr])\n"
-> > +             "and %[tmp], %[insn], %[rvc_mask]\n"
-> > +             "bne %[tmp], %[rvc_mask], 2f\n"
-> > +             "lhu %[tmp], 2(%[addr])\n"
-> > +             "sll %[tmp], %[tmp], 16\n"
-> > +             "add %[insn], %[insn], %[tmp]\n"
-> > +             "2:"
-> > +     : [vsstatus] "+&r" (__vsstatus), [insn] "=&r" (val),
-> > +       [tmp] "=&r" (tmp)
-> > +     : [addr] "r" (__sepc), [rvc_mask] "r" (rvc_mask),
-> > +       [xlen_minus_16] "i" (__riscv_xlen - 16));
-> > +#endif
-> > +
-> > +     csr_write(CSR_HSTATUS, __hstatus);
-> > +     csr_write(CSR_SSTATUS, __sstatus);
-> > +     csr_write(CSR_VSSTATUS, __vsstatus);
-> > +
-> > +     local_irq_restore(flags);
-> > +
-> > +     return val;
-> > +}
->
+On 22.08.2019 12:18, Peng Fan wrote:=0A=
+>> Subject: Re: [PATCH] clk: imx: pll14xx: avoid glitch when set rate=0A=
+>>=0A=
+>> On 20.08.2019 05:17, Peng Fan wrote:=0A=
+>>> According to PLL1443XA and PLL1416X spec, "When BYPASS is 0 and RESETB=
+=0A=
+>>> is changed from 0 to 1, FOUT starts to output unstable clock until=0A=
+>>> lock time passes. PLL1416X/PLL1443XA may generate a glitch at FOUT."=0A=
+>>>=0A=
+>>> So set BYPASS when RESETB is changed from 0 to 1 to avoid glitch.=0A=
+>>> In the end of set rate, BYPASS will be cleared.=0A=
+>>>=0A=
+>>> @@ -191,6 +191,10 @@ static int clk_pll1416x_set_rate(struct clk_hw *hw=
+,=0A=
+>> unsigned long drate,=0A=
+>>>    	tmp &=3D ~RST_MASK;=0A=
+>>>    	writel_relaxed(tmp, pll->base);=0A=
+>>>=0A=
+>>> +	/* Enable BYPASS */=0A=
+>>> +	tmp |=3D BYPASS_MASK;=0A=
+>>> +	writel(tmp, pll->base);=0A=
+>>> +=0A=
+>>=0A=
+>> Shouldn't BYPASS be set before reset?=0A=
+> =0A=
+> No. the glitch happens when RESET changes from 0 to 1, not from 1 to 0.=
+=0A=
+=0A=
+You're right, sorry.=0A=
+=0A=
+>> Also, isn't a similar bypass/unbypass dance also needed in=0A=
+>> clk_pll14xx_prepare? As far as I understand that could also output glitc=
+hes=0A=
+>> until the PLL is locked. It could be a separate patch.=0A=
+> =0A=
+> Yes, that might also output glitch. Fix in v2.=0A=
+> =0A=
+>>=0A=
+>> It's strange that this BYPASS bit is also handled by muxes like=0A=
+>> audio_pll1_bypass in clk-imx8mm.c but that's a separate issue not strict=
+ly=0A=
+>> related to the glitches you're trying to fix here.=0A=
+> =0A=
+> Yes, need use EXT_BYPASS for the mux usage.=0A=
+=0A=
+Might make sense to post as a series.=0A=
