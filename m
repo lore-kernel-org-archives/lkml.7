@@ -2,120 +2,158 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09BB0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9BBC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D422D233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C474723400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:24:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1E6/5ih"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ej6/01HU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389887AbfHVQY0 (ORCPT
+        id S2389906AbfHVQYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:24:26 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42376 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389867AbfHVQYZ (ORCPT
+        Thu, 22 Aug 2019 12:24:52 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41353 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389867AbfHVQYu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:24:25 -0400
-Received: by mail-qk1-f195.google.com with SMTP id 201so5656949qkm.9;
-        Thu, 22 Aug 2019 09:24:24 -0700 (PDT)
+        Thu, 22 Aug 2019 12:24:50 -0400
+Received: by mail-io1-f67.google.com with SMTP id j5so13015858ioj.8;
+        Thu, 22 Aug 2019 09:24:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LYvKe5wejsC6qDJ+UX43WDzJLWa+tddnchjuNlT6Thg=;
-        b=S1E6/5ihriAAmGPzQLCB11TvQvxLBG3TaqCYx881WTAFnA0NYUxSZ3JgJam/+Ww1WF
-         A/72qew6cN1tcS5IcZdOo/CfqZX0yQe3Kod8GaULbE7evm8fina+eR5zncgwEIsjdg0k
-         hK6I5fhJneS5ym5mhqt5eVgzaqAsnpkFQM3dqtYWbf9Dy6598B7Znj550p/0cJdP9pIJ
-         B9UxgFMJFnRg4aBUxuN7zGzk/2xC+KAs15xseZQdfTvrF1raGnqTLbNqrLzrb5L8jTge
-         8k9iUUkb/4LbaZIHQMzlBAccuvPNiy1gGTdXDfQPKzv3XrYAf0YIU4WLwWCpFyACNQPN
-         mtGg==
+        bh=O/Rn5qcoy7BQBKOAN8lQSNVqcodC1sml/1HztLPmPY8=;
+        b=Ej6/01HUyOove1llDfiVALHzwkEJs2MC17YrBQtF58o9MWpuPRVLfgv2ovJcPGpzk5
+         +EVLsiGinkPtC/1jan6MHfnvOxef1kQkVho8kCP9rKHWn/1yJxJtn1/QjcUAgOK/yYae
+         4aPn97HI3+G0OJGh9eV3qzmnNewkLku5to/FRSj2mdayX0uU3CDScXgZqys7F3P1GxEx
+         oDBve+y3N9OTUVeEBqCpq1PeptowFI//nGCyWZLaGzrN1aWDkKS18wsb2HBm6sy8UlQf
+         8tUOsCMr2lwbupWe9lwdwgZ5B3HamP/0/EGRGvARkRR5Zv0IKwtuNHQrIq3e+qP/kKKT
+         EZHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LYvKe5wejsC6qDJ+UX43WDzJLWa+tddnchjuNlT6Thg=;
-        b=Sp4a5Ko4FEmXUn4IT6lkfNHcGkzgk94y+UiNeQC64YPv0yy4xMA0EQQKpb8T4ZC+u8
-         G3vfS36cvf76MryO4U/jN/maGu+tCbhNlBBaiVOtTVryi5ULN4/uq/w7MTNhVZHwdUHT
-         20HY1CKRmD0oUF0d9huJ5Xx6zlKUgfku+8S643VMgN9hw9yuyz9bKJP267zvg4CQN2B0
-         1Nh5+dgSPWD/35DD6bjwDprM0HE2ijBJNRSKBLYUHRaiZCGpoGKVnk+aYKAnZiS1GWhb
-         UoQ8TbcuimUO/tRziMNCA+CIVXhiN73+WNHg4hQKBW4ityyBs1ihwATl8ck89Ba61SD3
-         YrEA==
-X-Gm-Message-State: APjAAAVjYTxnjTkjqcKJggYkyQF89zdksVcptncj8cX/UeXygJASdDzB
-        njVhIAKTANSsHILJZEqLPFBbILzKbdIukxsW5fM=
-X-Google-Smtp-Source: APXvYqzfp0DsFG7wg7mABKUn7qD/EylcXwWBQQXTwi17HfLBzXQgUE4I6Gny6jWqNCRdCx46/Pl5HKKKMYqXVrE4Q7U=
-X-Received: by 2002:a37:e306:: with SMTP id y6mr37349543qki.174.1566491064158;
- Thu, 22 Aug 2019 09:24:24 -0700 (PDT)
+        bh=O/Rn5qcoy7BQBKOAN8lQSNVqcodC1sml/1HztLPmPY8=;
+        b=QVEr+hASvP+DyMUAkE9nG8fg6eDBAu2moPqFZK4iTKbCoViruBGMHObn/oW1RppI6H
+         OLz0atvHOid4YQV8NDXkil8kVPOIyqZLPbd0xxx/zQkyOQy80Y5A60nrc3OUPleZPEd3
+         p2C7mc/WNuq6UZL2HYLyGJVRkqzbdtMrnCo0iIBVg81h2SBr/lndbPLZvd+9+S9Mm/mr
+         xALm/Mp7rYu2kXfEN1Q54s6I/9vimedPcyG7abCMSzipP7oA6yNb3vQQpd3hKU5Prex7
+         gVh5P7vz5KUEbPTQWXx06jiP8WI7UOmUk3JisGGkRkiwBLK92NxFedtOnB2fURJKt8RT
+         xGNQ==
+X-Gm-Message-State: APjAAAUlG1DQ1DzCEt0fkNLtQt9XLstcbUp2UJ58YvAX+TZzPrqNnj3S
+        E+yCFJoIejIzztwYZwHvJiBE9c1Mn0OluXUS1aE=
+X-Google-Smtp-Source: APXvYqyxn9px69p1obzCaGficBATfeUEzqjvnLugjNBV7+KMpVmv/zqC7jztjI0xxXxeLkWOC1qslt97HyHsKgXPSjw=
+X-Received: by 2002:a5e:8c11:: with SMTP id n17mr676146ioj.64.1566491088983;
+ Thu, 22 Aug 2019 09:24:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20190822123045eucas1p125b6e106f0310bdb50e759ef41993a91@eucas1p1.samsung.com>
- <20190822123037.28068-1-i.maximets@samsung.com>
-In-Reply-To: <20190822123037.28068-1-i.maximets@samsung.com>
-From:   William Tu <u9012063@gmail.com>
-Date:   Thu, 22 Aug 2019 09:23:46 -0700
-Message-ID: <CALDO+SaMFHB8u3YOsrCM=MNuT=14kmBnst_RNs3qNU0OjPmfGA@mail.gmail.com>
-Subject: Re: [PATCH net v2] ixgbe: fix double clean of tx descriptors with xdp
-To:     Ilya Maximets <i.maximets@samsung.com>
-Cc:     Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Eelco Chaudron <echaudro@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
+References: <20190821145806.20926.22448.stgit@localhost.localdomain>
+ <20190821145950.20926.83684.stgit@localhost.localdomain> <91355107-ed73-fce5-7051-3a746b526163@redhat.com>
+In-Reply-To: <91355107-ed73-fce5-7051-3a746b526163@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 22 Aug 2019 09:24:37 -0700
+Message-ID: <CAKgT0UeFyxH9pEsQ+CcZo3c4-GZdqsw6ucPG2KOkefvDvFF94g@mail.gmail.com>
+Subject: Re: [virtio-dev] [PATCH v6 4/6] mm: Introduce Reported pages
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        virtio-dev@lists.oasis-open.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 5:30 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+On Thu, Aug 22, 2019 at 9:19 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
 >
-> Tx code doesn't clear the descriptors' status after cleaning.
-> So, if the budget is larger than number of used elems in a ring, some
-> descriptors will be accounted twice and xsk_umem_complete_tx will move
-> prod_tail far beyond the prod_head breaking the comletion queue ring.
+>
+> On 8/21/19 10:59 AM, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> >
+> > In order to pave the way for free page reporting in virtualized
+> > environments we will need a way to get pages out of the free lists and
+> > identify those pages after they have been returned. To accomplish this,
+> > this patch adds the concept of a Reported Buddy, which is essentially
+> > meant to just be the Uptodate flag used in conjunction with the Buddy
+> > page type.
+> >
+> > It adds a set of pointers we shall call "boundary" which represents the
+> > upper boundary between the unreported and reported pages. The general idea
+> > is that in order for a page to cross from one side of the boundary to the
+> > other it will need to go through the reporting process. Ultimately a
+> > free_list has been fully processed when the boundary has been moved from
+> > the tail all they way up to occupying the first entry in the list.
+> >
+> > Doing this we should be able to make certain that we keep the reported
+> > pages as one contiguous block in each free list. This will allow us to
+> > efficiently manipulate the free lists whenever we need to go in and start
+> > sending reports to the hypervisor that there are new pages that have been
+> > freed and are no longer in use.
+> >
+> > An added advantage to this approach is that we should be reducing the
+> > overall memory footprint of the guest as it will be more likely to recycle
+> > warm pages versus trying to allocate the reported pages that were likely
+> > evicted from the guest memory.
+> >
+> > Since we will only be reporting one zone at a time we keep the boundary
+> > limited to being defined for just the zone we are currently reporting pages
+> > from. Doing this we can keep the number of additional pointers needed quite
+> > small. To flag that the boundaries are in place we use a single bit
+> > in the zone to indicate that reporting and the boundaries are active.
+> >
+> > The determination of when to start reporting is based on the tracking of
+> > the number of free pages in a given area versus the number of reported
+> > pages in that area. We keep track of the number of reported pages per
+> > free_area in a separate zone specific area. We do this to avoid modifying
+> > the free_area structure as this can lead to false sharing for the highest
+> > order with the zone lock which leads to a noticeable performance
+> > degradation.
+> [...]
+> > +
+> > +/* request page reporting on this zone */
+> > +void __page_reporting_request(struct zone *zone)
+> > +{
+> > +     struct page_reporting_dev_info *phdev;
+> > +
+> > +     rcu_read_lock();
+> > +
+> > +     /*
+> > +      * We use RCU to protect the ph_dev_info pointer. In almost all
+> > +      * cases this should be present, however in the unlikely case of
+> > +      * a shutdown this will be NULL and we should exit.
+> > +      */
+> > +     phdev = rcu_dereference(ph_dev_info);
+> > +     if (unlikely(!phdev))
+> > +             return;
+> > +
+>
+> Just a minor comment here.
+> Although this is unlikely to trigger still I think you should release the
+> rcu_read_lock before returning.
 
-s/comletion/completion/
+Thanks for catching that. I will have that fixed for next version.
 
->
-> Fix that by limiting the number of descriptors to clean by the number
-> of used descriptors in the tx ring.
->
-> 'ixgbe_clean_xdp_tx_irq()' function refactored to look more like
-> 'ixgbe_xsk_clean_tx_ring()' since we don't need most of the
-> complications implemented in the regular 'ixgbe_clean_tx_irq()'
-> and we're allowed to directly use 'next_to_clean' and 'next_to_use'
-> indexes.
->
-> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
-> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-> ---
-
-Tested-by: William Tu <u9012063@gmail.com>
-
-Instead of measuring tx performance at the tx machine, I measured the TX
-performance at the other side (the traffic generating machine).  This time it
-is more consistent and showing not much difference with (5.9Mpps) and
-without this patch (6.1Mpps).
-
->
-> Version 2:
->   * 'ixgbe_clean_xdp_tx_irq()' refactored to look more like
->     'ixgbe_xsk_clean_tx_ring()'.
->
->  drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c | 34 ++++++++------------
->  1 file changed, 13 insertions(+), 21 deletions(-)
->
-
-<snip>
+- Alex
