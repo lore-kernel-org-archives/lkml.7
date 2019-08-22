@@ -2,154 +2,240 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152D6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CB4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E54E42341B
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F42023400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:50:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="Tjz6zp1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388086AbfHVMti (ORCPT
+        id S2388104AbfHVMuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:49:38 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:35209 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388061AbfHVMti (ORCPT
+        Thu, 22 Aug 2019 08:50:17 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46618 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731604AbfHVMuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:49:38 -0400
-Received: from [192.168.1.110] ([77.4.120.101]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M91Tq-1huk7L3zc6-0068YY; Thu, 22 Aug 2019 14:49:30 +0200
-Subject: Re: Status of Subsystems
-To:     Sebastian Duda <sebastian.duda@fau.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
-        linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com
-References: <2529f953-305f-414b-5969-d03bf20892c4@fau.de>
- <20190820131422.2navbg22etf7krxn@pali>
- <3cf18665-7669-a33c-a718-e0917fa6d1b9@fau.de>
- <20190820171550.GE10232@mit.edu>
- <475ea59c-8942-c19d-c660-164fcb44d179@fau.de>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <e222bc6c-aff0-899c-b113-47f7f1798fe1@metux.net>
-Date:   Thu, 22 Aug 2019 14:49:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 22 Aug 2019 08:50:16 -0400
+Received: by mail-wr1-f68.google.com with SMTP id z1so5284817wru.13
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 05:50:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ROB4gx4OGB1CpDcKjvU71ET9FrwtUSFzAVqfUnfvjig=;
+        b=Tjz6zp1luUYbfqgLHs8u1XU3r21rRiuHFjEEE445sTZjPTG1K1TbEO655UT3JDH3uL
+         sC9vFssy7r4wfHsKKF/jvniljfpEfBFwOrQchEZDTPX3FFboKQyRluqtt46Kzkw0x8XG
+         yKutR8H6zkflJqqRKMFoQNCPwDuLl5c3EUDnFRNxl1fIpcQ6/JjEJYLu2fsFzhRNkdkC
+         T6RMZHoZAvxRZ25l7eXoVO73Em9ogqkTFCN2UVljQt/8eRLrTATgzUwrfpw6Zd6lqKRY
+         g9WxpB32AOgs0olEMDJsyZyRztxQnxlRzFtFxz+8PJQyQWvuhTE7hN6yS2Wz9XivJaJq
+         D+sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ROB4gx4OGB1CpDcKjvU71ET9FrwtUSFzAVqfUnfvjig=;
+        b=Q7D1p0L9QS8mRtFh0QNbYoMflsb4xDGf/aUzRtgO/uNrRP9Vwyf/kITtLrNI9DEwFo
+         uJxhfEKNz1az5MKubJylaU9ZBpRTpb1vI2jsWw361XiDu5Bdo55vm+wKW/SMR+UBHhAg
+         oGogE1u1bWMKEfeN8SFdAHNKsczxBrCgpvt63ImEb7wkvy38wouRrPAKdG6dJcZbaP5X
+         qC8rEz0uOfLrEH4fRlaEuWkNVtDJX7Xg/A7kRck9cJR0Ywsihboas5PskkDIeqJ72A9y
+         NarJQ0BWmlGkFvSBcRwpNfq5bG7CXzrMs6f59dgSlyhDwC8YxFCunuJ6T4sylE6HN5SV
+         sAcA==
+X-Gm-Message-State: APjAAAUq42Y7ZizPmSqPoqlgoU0m+ariPpZxLK9USQc6Vod/UZbmX9Kc
+        uIquTpd9jQVVpC9CMAOgxy8V4suev3iCASTPu5fzSQ==
+X-Google-Smtp-Source: APXvYqzQ1TjSFQOix3vHo2hOrSZgy2endTM2XhjVhF8ByOGg0ehcvHXulptQXEetr33hXvAwYdNbyFGI7JnPGcIt6sU=
+X-Received: by 2002:a05:6000:104c:: with SMTP id c12mr42632777wrx.328.1566478213090;
+ Thu, 22 Aug 2019 05:50:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <475ea59c-8942-c19d-c660-164fcb44d179@fau.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:DEQE4p9Q/SgYCR56ptB5W4Pq6YJsYcmprlOkc8swly7MCTvFyRs
- zigXa6H8BcHhg0FuFMaYbgIsImxg8KY92a+BzQ5Co/DgCSE6Jmh9vyF8tuF7W14kIS8NuBo
- V8crYzG9KGk/JZO5w/iqjJhW7eMyvRs20v0B52X8ac0vtIyNpYBpWtdZeZF7IS2msrPiE14
- Jk9RzZQDT3FY7f5nP/YcA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eNAevpgP5G8=:hWranH3GBXqoTvP8KfocQY
- m5emHMTKG97TBFUD7gl9Dx0h6/X5/NSld7IdDKA+OH998Yzces40n40AoZJiNgeAHGsZeyif7
- NN+p+BjIeR2q8KQujRHismRLGbuVyE3jS5LlsYo/JiilH8Gjcz5pxuYAiyG4XZjK69b+xrCJO
- au9kogD+JHN3Zvoe+32OBn4NqzuqtAqTgYaPI6UV5MWWuLAFSmBwnDPqo74TB2l9kz7adf4lb
- PejP5yqJsTtu6gxnf2JStS+nAqgw1qVq6X1pWwcgQUb8k1/OONe6/xwb5emAYN1PpVd307QJF
- Y7TTvXGQpTpvZYQWX8bY3qFx25EQSVYyp9KcF6ztnKdMSYTwif7228uBYGV2cqcc2UCN4o6Jw
- ykvrHmJqQFoAe6l+n6FtoIPiFdQYyukhOXrtl3+hvAi2pP8y4SyFAGRhSGLoWaHzvwzd5tokT
- YR+A4C8KS6y5rIRJD/m1TviRszn3mtWG5o9QNIdANevKooCyhV9t2dMrSbc72e4wGl8gLSjjC
- ZN5G+R4crRgL3ZKQctVyeWfaZUh7kZRAKiKhLD9fnZIChbXfeWbguyKPvRzRuLxSbDw3ALT3c
- BdRXwFB15TrAYHxUkD0kFbjqvA0aT4N8HQ+ALvBXo345mSwuSTsmPEJLeFJKGUrLjM+T+JqXp
- vAoDD4puENZqP6MBaUCD1cIgsDdQ8MuwNEgPbP6S7tw27wkbspz5nhWolvOZPWtT1V55KhG+a
- uDBHCaHjVwF6G8urutG6cKDpZ7vEITA7qU6OgDyU9JD1F2kqhcagfDHEBzc=
+References: <20190822084131.114764-1-anup.patel@wdc.com> <20190822084131.114764-12-anup.patel@wdc.com>
+ <29b8f7c6-4b9d-91fc-61e7-82ecfd26ff88@amazon.com>
+In-Reply-To: <29b8f7c6-4b9d-91fc-61e7-82ecfd26ff88@amazon.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Thu, 22 Aug 2019 18:20:01 +0530
+Message-ID: <CAAhSdy2=6gC6fe_VtsnbQVXZnJMm_2Hc_qG3xS3nSnn5j8H1cQ@mail.gmail.com>
+Subject: Re: [PATCH v5 11/20] RISC-V: KVM: Handle WFI exits for VCPU
+To:     Alexander Graf <graf@amazon.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.08.19 11:28, Sebastian Duda wrote:
+On Thu, Aug 22, 2019 at 5:49 PM Alexander Graf <graf@amazon.com> wrote:
+>
+> On 22.08.19 10:45, Anup Patel wrote:
+> > We get illegal instruction trap whenever Guest/VM executes WFI
+> > instruction.
+> >
+> > This patch handles WFI trap by blocking the trapped VCPU using
+> > kvm_vcpu_block() API. The blocked VCPU will be automatically
+> > resumed whenever a VCPU interrupt is injected from user-space
+> > or from in-kernel IRQCHIP emulation.
+> >
+> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> > Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+> > ---
+> >   arch/riscv/kvm/vcpu_exit.c | 88 ++++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 88 insertions(+)
+> >
+> > diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
+> > index efc06198c259..fbc04fe335ad 100644
+> > --- a/arch/riscv/kvm/vcpu_exit.c
+> > +++ b/arch/riscv/kvm/vcpu_exit.c
+> > @@ -12,6 +12,9 @@
+> >   #include <linux/kvm_host.h>
+> >   #include <asm/csr.h>
+> >
+> > +#define INSN_MASK_WFI                0xffffff00
+> > +#define INSN_MATCH_WFI               0x10500000
+> > +
+> >   #define INSN_MATCH_LB               0x3
+> >   #define INSN_MASK_LB                0x707f
+> >   #define INSN_MATCH_LH               0x1003
+> > @@ -179,6 +182,87 @@ static ulong get_insn(struct kvm_vcpu *vcpu)
+> >       return val;
+> >   }
+> >
+> > +typedef int (*illegal_insn_func)(struct kvm_vcpu *vcpu,
+> > +                              struct kvm_run *run,
+> > +                              ulong insn);
+> > +
+> > +static int truly_illegal_insn(struct kvm_vcpu *vcpu,
+> > +                           struct kvm_run *run,
+> > +                           ulong insn)
+> > +{
+> > +     /* TODO: Redirect trap to Guest VCPU */
+> > +     return -ENOTSUPP;
+> > +}
+> > +
+> > +static int system_opcode_insn(struct kvm_vcpu *vcpu,
+> > +                           struct kvm_run *run,
+> > +                           ulong insn)
+> > +{
+> > +     if ((insn & INSN_MASK_WFI) == INSN_MATCH_WFI) {
+> > +             vcpu->stat.wfi_exit_stat++;
+> > +             if (!kvm_arch_vcpu_runnable(vcpu)) {
+> > +                     srcu_read_unlock(&vcpu->kvm->srcu, vcpu->arch.srcu_idx);
+> > +                     kvm_vcpu_block(vcpu);
+> > +                     vcpu->arch.srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
+> > +                     kvm_clear_request(KVM_REQ_UNHALT, vcpu);
+> > +             }
+> > +             vcpu->arch.guest_context.sepc += INSN_LEN(insn);
+> > +             return 1;
+> > +     }
+> > +
+> > +     return truly_illegal_insn(vcpu, run, insn);
+> > +}
+> > +
+> > +static illegal_insn_func illegal_insn_table[32] = {
+>
+> Every time I did experiments on PowerPC with indirect tables like this
+> over switch() in C, the switch() code won. CPUs are pretty good at
+> predicting branches. Predicting indirect jumps however, they are
+> terrible at.
+>
+> So unless you consider the jump table more readable / maintainable, I
+> would suggest to use a simple switch() statement. It will be faster and
+> smaller.
 
-Hello Sabastian,
+Yes, readability was the reason why we choose jump table but
+I see your point. Most of the entries in jump table point to
+truly_illegal_insn() so I guess switch case will be quite simple
+here.
 
+I will update this in next revision.
 
-> We have seen some incidents of developers sending patches to wrong
-> recipients, missing recipients or sending patches to orphaned
-> subsystems. Consequently, some of those patches never make it to a
-> reviewer or a maintainer (or only after some further adjustments on
-> the list of recipients).
+Regards,
+Anup
 
-yes, I've stumpled into this myself :(
-
-Do you see any chance for some tool-based assistance ?
-
-Few ideas coming into my mind:
-
-a) kernel.org ops could collect bouncing addresses and match them
-    against the MAINTAINERS file. Maybe post an alert with specific
-    syntax (so it's easy to filter/monitor), so we can look around
-    how to reach the missing folks (already did so myself). Sometimes
-    those messages reach the missing folks by some other channel.
-
-b) automatic scan/report for duplicate or unclaimed files.
-    maybe this topic just needs more awareness.
-
-    IMHO, every file should have a maintainer, because just posting to
-    lkml globally has high risk of getting unnoticed.
-
-c) automatic report of potentially unmaintained areas, so
-
-
-By the way: if you prefer a more personal conversation, feel free to
-call me (I'm settled @Schwabach)
-
-I'm already keen on reading your thesis paper. (and if there's a public
-presentation, I'd like to be there). You've picked a very good, useful
-topic - we need more of that :)
-
-> Whereas that cannot be avoided entirely, as it is a human, social and
-> flexible process and not everything can be encoded in simple rules,
-> the maintainer, reviewer, list information in MAINTAINERS and
-> get_maintainer.pl does a good job at assisting that these hickups
-> happen rather seldomly.
-
-Yes, but it can only work well with good data. So it's good that you
-take care of that. And if you can improve the performance of this
-script, I'd highly welcome that.
-
-I'd like to recommend you as the maintainer of the MAINTAINERS file ;-)
-
-> Similarly, the status can already indicate:
->   - to a contributor fixing an issues or providing a patch, that the
-> code is possibly already orphaned and not maintained, set expectations
-> on the possible responses, or to focus on other parts of the code.
-
-Orphaned code IMHO deserves it's own discussion. Maybe we should have
-some comments on why exactly orphaned/obsolete but still there (just no
-maintainer anymore ? obsoleted by something else ? ...).
-
-> The MAINTAINERS files contains 2088 entries [1].
-> 12 of these entries have no status and fall into different categories:
-> - Additionally Reviewed
->    - ALPS PS/2 TOUCHPAD DRIVER
->    - NOKIA N900 POWER SUPPLY DRIVERS
->    - RENESAS ETHERNET DRIVERS
->    - SPMI SUBSYSTEM
->    - TI BQ27XXX POWER SUPPLY DRIVER
-> - Maintained
->    - ABI/API
->    - ACPI APEI
->    - CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)
->    - I2C/SMBUS ISMT DRIVER
->    - IFE PROTOCOL
->    - MICROCHIP SAMA5D2-COMPATIBLE PIOBU GPIO
-> - Obsolete
->    - NETWORKING [WIRELESS]
->      This is an old entry, which can be omitted
-
-There're also some with status "Orphaned / Obsolete" - did you already
-catch them ?
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+>
+>
+> Alex
+>
+>
+> > +     truly_illegal_insn, /* 0 */
+> > +     truly_illegal_insn, /* 1 */
+> > +     truly_illegal_insn, /* 2 */
+> > +     truly_illegal_insn, /* 3 */
+> > +     truly_illegal_insn, /* 4 */
+> > +     truly_illegal_insn, /* 5 */
+> > +     truly_illegal_insn, /* 6 */
+> > +     truly_illegal_insn, /* 7 */
+> > +     truly_illegal_insn, /* 8 */
+> > +     truly_illegal_insn, /* 9 */
+> > +     truly_illegal_insn, /* 10 */
+> > +     truly_illegal_insn, /* 11 */
+> > +     truly_illegal_insn, /* 12 */
+> > +     truly_illegal_insn, /* 13 */
+> > +     truly_illegal_insn, /* 14 */
+> > +     truly_illegal_insn, /* 15 */
+> > +     truly_illegal_insn, /* 16 */
+> > +     truly_illegal_insn, /* 17 */
+> > +     truly_illegal_insn, /* 18 */
+> > +     truly_illegal_insn, /* 19 */
+> > +     truly_illegal_insn, /* 20 */
+> > +     truly_illegal_insn, /* 21 */
+> > +     truly_illegal_insn, /* 22 */
+> > +     truly_illegal_insn, /* 23 */
+> > +     truly_illegal_insn, /* 24 */
+> > +     truly_illegal_insn, /* 25 */
+> > +     truly_illegal_insn, /* 26 */
+> > +     truly_illegal_insn, /* 27 */
+> > +     system_opcode_insn, /* 28 */
+> > +     truly_illegal_insn, /* 29 */
+> > +     truly_illegal_insn, /* 30 */
+> > +     truly_illegal_insn  /* 31 */
+> > +};
+> > +
+> > +static int illegal_inst_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> > +                           unsigned long stval)
+> > +{
+> > +     ulong insn = stval;
+> > +
+> > +     if (unlikely((insn & 3) != 3)) {
+> > +             if (insn == 0)
+> > +                     insn = get_insn(vcpu);
+> > +             if ((insn & 3) != 3)
+> > +                     return truly_illegal_insn(vcpu, run, insn);
+> > +     }
+> > +
+> > +     return illegal_insn_table[(insn & 0x7c) >> 2](vcpu, run, insn);
+> > +}
+> > +
+> >   static int emulate_load(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> >                       unsigned long fault_addr)
+> >   {
+> > @@ -439,6 +523,10 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> >       ret = -EFAULT;
+> >       run->exit_reason = KVM_EXIT_UNKNOWN;
+> >       switch (scause) {
+> > +     case EXC_INST_ILLEGAL:
+> > +             if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
+> > +                     ret = illegal_inst_fault(vcpu, run, stval);
+> > +             break;
+> >       case EXC_INST_PAGE_FAULT:
+> >       case EXC_LOAD_PAGE_FAULT:
+> >       case EXC_STORE_PAGE_FAULT:
+> >
+>
