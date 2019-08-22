@@ -2,168 +2,104 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42DEC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269ABC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E095233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0251D233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbfHVFoK (ORCPT
+        id S1731202AbfHVFrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 01:44:10 -0400
-Received: from mga18.intel.com ([134.134.136.126]:5691 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726857AbfHVFoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 01:44:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Aug 2019 22:44:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,415,1559545200"; 
-   d="scan'208";a="169651574"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 21 Aug 2019 22:44:09 -0700
-Received: from [10.226.38.19] (vramuthx-mobl1.gar.corp.intel.com [10.226.38.19])
-        by linux.intel.com (Postfix) with ESMTP id 73E04580258;
-        Wed, 21 Aug 2019 22:44:07 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
- for LGM eMMC PHY
-To:     Rob Herring <robh@kernel.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com
-References: <20190821101118.42774-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <CAL_Jsq+pyaYD2C8G1WZm1fL-wgkJvDYBkp0TwJTmQVKP-gHPXQ@mail.gmail.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <67bca68e-a46b-e03f-bb66-23c677d8515d@linux.intel.com>
-Date:   Thu, 22 Aug 2019 13:44:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+pyaYD2C8G1WZm1fL-wgkJvDYBkp0TwJTmQVKP-gHPXQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Thu, 22 Aug 2019 01:47:08 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56244 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728497AbfHVFrH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 01:47:07 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7M5kcxD086942;
+        Thu, 22 Aug 2019 01:46:55 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uhmhrs6e7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 01:46:55 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7M5kU6f032463;
+        Thu, 22 Aug 2019 05:46:55 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma03dal.us.ibm.com with ESMTP id 2ue977182w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 05:46:55 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7M5krml48824728
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 05:46:53 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D59906A04D;
+        Thu, 22 Aug 2019 05:46:53 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CFECC6A047;
+        Thu, 22 Aug 2019 05:46:51 +0000 (GMT)
+Received: from [9.124.31.100] (unknown [9.124.31.100])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 22 Aug 2019 05:46:51 +0000 (GMT)
+Message-ID: <1566452811.526.7.camel@abdul.in.ibm.com>
+Subject: [linux-next][PPC][bisected c7d8b7][gcc 6.4.1] build error at
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:1471
+From:   Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-next <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, jgg@mellanox.com.hch,
+        rcampbell@nvidia.com
+Date:   Thu, 22 Aug 2019 11:16:51 +0530
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=538 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908220061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Greeting's
 
-On 21/8/2019 9:35 PM, Rob Herring wrote:
-> On Wed, Aug 21, 2019 at 5:11 AM Ramuthevar,Vadivel MuruganX
-> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add a YAML schema to use the host controller driver with the
->> eMMC PHY on Intel's Lightning Mountain SoC.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->> changes in v3:
->>    - resolve 'make dt_binding_check' warnings
->>
->> changes in v2:
->>    As per Rob Herring review comments, the following updates
->>   - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
->>   - filename is the compatible string plus .yaml
->>   - LGM: Lightning Mountain
->>   - update maintainer
->>   - add intel,syscon under property list
->>   - keep one example instead of two
->> ---
->>   .../bindings/phy/intel,lgm-emmc-phy.yaml           | 59 ++++++++++++++++++++++
->>   1 file changed, 59 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->> new file mode 100644
->> index 000000000000..9342e33d8b02
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->> @@ -0,0 +1,59 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +properties:
->> +  "#phy-cells":
->> +    const: 0
->> +
->> +  compatible:
->> +    const: intel,lgm-emmc-phy
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  syscon:
-> intel,syscon like the example. You must have used 5.2 as on 5.3-rc the
-> example will fail validation.
-Thanks for the review comments,  used 5.3 for validation, after 
-addressing the below comments
-once again validate on both 5.2 and 5.3 as well.
->> +    items:
-> Drop items as there is only 1.
-agreed
->> +      $ref: "/schemas/types.yaml#definitions/phandle"
->> +
->> +  clocks:
->> +    items:
->> +      - description: e-MMC phy module clock
->> +
->> +  clock-names:
->> +    items:
->> +      - const: emmcclk
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +required:
->> +  - "#phy-cells"
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - resets
->> +  - ref
-> Not documented.
+Today's linux-next kernel 5.3.0-rc5-next-20190820 failed to build on my
+powerpc machine
 
-Agreed, will update
+Build errors:
+drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c: In function amdgpu_exit:
+drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:1471:2: error: implicit
+declaration of function mmu_notifier_synchronize
+[-Werror=implicit-function-declaration]
+  mmu_notifier_synchronize();
+  ^~~~~~~~~~~~~~~~~~~~~~~~ 
+cc1: some warnings being treated as errors
+make[4]: *** [drivers/gpu/drm/amd/amdgpu/amdgpu_drv.o] Error 1
+make[3]: *** [drivers/gpu/drm/amd/amdgpu] Error 2
 
-With Best Regards
-Vadivel
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    emmc_phy: emmc_phy {
->> +        compatible = "intel,lgm-emmc-phy";
->> +        reg = <0xe0020000 0x100>;
->> +        intel,syscon = <&sysconf>;
->> +        clocks = <&emmc>;
->> +        clock-names = "emmcclk";
->> +        #phy-cells = <0>;
->> +    };
->> +
->> +...
->> --
->> 2.11.0
->>
+It was introduced with commit c7d8b7 (hmm: use mmu_notifier_get/put for
+'struct hmm')
+
+Reverting the commit fixes the issue.
+
+-- 
+Regard's
+
+Abdul Haleem
+IBM Linux Technology Centre
+
+
+
