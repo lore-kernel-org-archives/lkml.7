@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35040C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12006C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 074DB2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB74C2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493995;
-	bh=IB6SHesi+A+4IuSaCxBprlGHXn7PaDRVN21talzL+Qg=;
+	s=default; t=1566493998;
+	bh=sRXrwARtkwNs+gUqC/kzGbrhnVeKcYJ+cMWizTaGyi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eWGEnG72uOa+CPrNqw9k+f2KhuSnFLH4z9cIwdAgptQXxMMkk4bVwjIlJuERG5ZtV
-	 jWSz9qy+RFhKo/NpBGUsJfMpbtk9tFrdJmGhV58Qal2Ca5enuieIUrL7OLa/YSFZ6t
-	 BLhX2Qs6NpqchUU3Y+P44bfCKMFWeEOTUPfKLDUs=
+	b=mXHpTHTDvuMrgDKR1uWmfEhMA0v+bNJlEaFszzLcP7uHTKnr/F60XejFGb8PglyV/
+	 wGuTSIZ7f4KIgdem8NUDXqWfXBATRe2eZ85m2I7pcO7fg7Y7XsST/DJYCtLUg35wga
+	 OT9cqU8ij2nEcnJtRbmj//p/6mQvh6zg96LrKhnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390222AbfHVRNN (ORCPT
+        id S2390626AbfHVRJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:13:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59204 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390627AbfHVRJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:03 -0400
+        id S2390506AbfHVRI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:57 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAD68233FE;
-        Thu, 22 Aug 2019 17:09:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E58F8233FE;
+        Thu, 22 Aug 2019 17:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493742;
-        bh=IB6SHesi+A+4IuSaCxBprlGHXn7PaDRVN21talzL+Qg=;
+        s=default; t=1566493736;
+        bh=sRXrwARtkwNs+gUqC/kzGbrhnVeKcYJ+cMWizTaGyi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ffmopOcHlgfcPDsnTBPpB83XfseXIC4F5Fvyoxn3OqSVDGyZgGLKxNrcgn6V9pUhR
-         eOyS72J2qGl2aZm8GdfSzZS0v//cN5538Jz07YNdiL7zKkk15lEph8N5bNhqvxP0M5
-         OM0qO52PYWCuDPEjZykCSU9WtC1HJIsDIjEpr/ik=
+        b=zLBOryh1tOWWYPulCQF15qoQUp7XSp81Ya4oVmqyTS9p+CTkFGRBcBV5S9a9KlkPH
+         kFG1KgdeA5NLoOEvShcxBzG3EZH5UOJCl6pJ+TdDgTb+oiCGmTtuYdIzLvG8rX12WA
+         Q39ihRPoS8IL59utX1MN6yloXKp6qXrCB38c/3h4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Guy Levi <guyle@mellanox.com>, Moni Shoua <monis@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 088/135] page flags: prioritize kasan bits over last-cpuid
-Date:   Thu, 22 Aug 2019 13:07:24 -0400
-Message-Id: <20190822170811.13303-89-sashal@kernel.org>
+Subject: [PATCH 5.2 077/135] IB/mlx5: Fix MR registration flow to use UMR properly
+Date:   Thu, 22 Aug 2019 13:07:13 -0400
+Message-Id: <20190822170811.13303-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -72,110 +66,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Guy Levi <guyle@mellanox.com>
 
-[ Upstream commit ee38d94a0ad89890b770f6c876263cf9fcbfde84 ]
+[ Upstream commit e5366d309a772fef264ec85e858f9ea46f939848 ]
 
-ARM64 randdconfig builds regularly run into a build error, especially
-when NUMA_BALANCING and SPARSEMEM are enabled but not SPARSEMEM_VMEMMAP:
+Driver shouldn't allow to use UMR to register a MR when
+umr_modify_atomic_disabled is set. Otherwise it will always end up with a
+failure in the post send flow which sets the UMR WQE to modify atomic access
+right.
 
-  #error "KASAN: not enough bits in page flags for tag"
-
-The last-cpuid bits are already contitional on the available space, so
-the result of the calculation is a bit random on whether they were
-already left out or not.
-
-Adding the kasan tag bits before last-cpuid makes it much more likely to
-end up with a successful build here, and should be reliable for
-randconfig at least, as long as that does not randomize NR_CPUS or
-NODES_SHIFT but uses the defaults.
-
-In order for the modified check to not trigger in the x86 vdso32 code
-where all constants are wrong (building with -m32), enclose all the
-definitions with an #ifdef.
-
-[arnd@arndb.de: build fix]
-  Link: http://lkml.kernel.org/r/CAK8P3a3Mno1SWTcuAOT0Wa9VS15pdU6EfnkxLbDpyS55yO04+g@mail.gmail.com
-Link: http://lkml.kernel.org/r/20190722115520.3743282-1-arnd@arndb.de
-Link: https://lore.kernel.org/lkml/20190618095347.3850490-1-arnd@arndb.de/
-Fixes: 2813b9c02962 ("kasan, mm, arm64: tag non slab memory allocated via pagealloc")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: c8d75a980fab ("IB/mlx5: Respect new UMR capabilities")
+Signed-off-by: Guy Levi <guyle@mellanox.com>
+Reviewed-by: Moni Shoua <monis@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/20190731081929.32559-1-leon@kernel.org
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/vdso/vdso.h             |  1 +
- include/linux/page-flags-layout.h | 18 +++++++++++-------
- 2 files changed, 12 insertions(+), 7 deletions(-)
+ drivers/infiniband/hw/mlx5/mr.c | 27 +++++++++------------------
+ 1 file changed, 9 insertions(+), 18 deletions(-)
 
-diff --git a/arch/mips/vdso/vdso.h b/arch/mips/vdso/vdso.h
-index 14b1931be69c3..b65b169778e31 100644
---- a/arch/mips/vdso/vdso.h
-+++ b/arch/mips/vdso/vdso.h
-@@ -9,6 +9,7 @@
- #if _MIPS_SIM != _MIPS_SIM_ABI64 && defined(CONFIG_64BIT)
+diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
+index e54bec2c29654..d239fc58c0020 100644
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -51,22 +51,12 @@ static void clean_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr);
+ static void dereg_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr);
+ static int mr_cache_max_order(struct mlx5_ib_dev *dev);
+ static int unreg_umr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr);
+-static bool umr_can_modify_entity_size(struct mlx5_ib_dev *dev)
+-{
+-	return !MLX5_CAP_GEN(dev->mdev, umr_modify_entity_size_disabled);
+-}
  
- /* Building 32-bit VDSO for the 64-bit kernel. Fake a 32-bit Kconfig. */
-+#define BUILD_VDSO32_64
- #undef CONFIG_64BIT
- #define CONFIG_32BIT 1
- #ifndef __ASSEMBLY__
-diff --git a/include/linux/page-flags-layout.h b/include/linux/page-flags-layout.h
-index 1dda31825ec4a..71283739ffd23 100644
---- a/include/linux/page-flags-layout.h
-+++ b/include/linux/page-flags-layout.h
-@@ -32,6 +32,7 @@
+ static bool umr_can_use_indirect_mkey(struct mlx5_ib_dev *dev)
+ {
+ 	return !MLX5_CAP_GEN(dev->mdev, umr_indirect_mkey_disabled);
+ }
  
- #endif /* CONFIG_SPARSEMEM */
+-static bool use_umr(struct mlx5_ib_dev *dev, int order)
+-{
+-	return order <= mr_cache_max_order(dev) &&
+-		umr_can_modify_entity_size(dev);
+-}
+-
+ static int destroy_mkey(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr)
+ {
+ 	int err = mlx5_core_destroy_mkey(dev->mdev, &mr->mmkey);
+@@ -1271,7 +1261,7 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
+ {
+ 	struct mlx5_ib_dev *dev = to_mdev(pd->device);
+ 	struct mlx5_ib_mr *mr = NULL;
+-	bool populate_mtts = false;
++	bool use_umr;
+ 	struct ib_umem *umem;
+ 	int page_shift;
+ 	int npages;
+@@ -1303,29 +1293,30 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
+ 	if (err < 0)
+ 		return ERR_PTR(err);
  
-+#ifndef BUILD_VDSO32_64
- /*
-  * page->flags layout:
-  *
-@@ -76,20 +77,22 @@
- #define LAST_CPUPID_SHIFT 0
- #endif
- 
--#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT <= BITS_PER_LONG - NR_PAGEFLAGS
-+#ifdef CONFIG_KASAN_SW_TAGS
-+#define KASAN_TAG_WIDTH 8
-+#else
-+#define KASAN_TAG_WIDTH 0
-+#endif
+-	if (use_umr(dev, order)) {
++	use_umr = !MLX5_CAP_GEN(dev->mdev, umr_modify_entity_size_disabled) &&
++		  (!MLX5_CAP_GEN(dev->mdev, umr_modify_atomic_disabled) ||
++		   !MLX5_CAP_GEN(dev->mdev, atomic));
 +
-+#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT+KASAN_TAG_WIDTH \
-+	<= BITS_PER_LONG - NR_PAGEFLAGS
- #define LAST_CPUPID_WIDTH LAST_CPUPID_SHIFT
- #else
- #define LAST_CPUPID_WIDTH 0
- #endif
++	if (order <= mr_cache_max_order(dev) && use_umr) {
+ 		mr = alloc_mr_from_cache(pd, umem, virt_addr, length, ncont,
+ 					 page_shift, order, access_flags);
+ 		if (PTR_ERR(mr) == -EAGAIN) {
+ 			mlx5_ib_dbg(dev, "cache empty for order %d\n", order);
+ 			mr = NULL;
+ 		}
+-		populate_mtts = false;
+ 	} else if (!MLX5_CAP_GEN(dev->mdev, umr_extended_translation_offset)) {
+ 		if (access_flags & IB_ACCESS_ON_DEMAND) {
+ 			err = -EINVAL;
+ 			pr_err("Got MR registration for ODP MR > 512MB, not supported for Connect-IB\n");
+ 			goto error;
+ 		}
+-		populate_mtts = true;
++		use_umr = false;
+ 	}
  
--#ifdef CONFIG_KASAN_SW_TAGS
--#define KASAN_TAG_WIDTH 8
- #if SECTIONS_WIDTH+NODES_WIDTH+ZONES_WIDTH+LAST_CPUPID_WIDTH+KASAN_TAG_WIDTH \
- 	> BITS_PER_LONG - NR_PAGEFLAGS
--#error "KASAN: not enough bits in page flags for tag"
--#endif
--#else
--#define KASAN_TAG_WIDTH 0
-+#error "Not enough bits in page flags"
- #endif
+ 	if (!mr) {
+-		if (!umr_can_modify_entity_size(dev))
+-			populate_mtts = true;
+ 		mutex_lock(&dev->slow_path_mutex);
+ 		mr = reg_create(NULL, pd, virt_addr, length, umem, ncont,
+-				page_shift, access_flags, populate_mtts);
++				page_shift, access_flags, !use_umr);
+ 		mutex_unlock(&dev->slow_path_mutex);
+ 	}
  
- /*
-@@ -104,4 +107,5 @@
- #define LAST_CPUPID_NOT_IN_PAGE_FLAGS
- #endif
+@@ -1341,7 +1332,7 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
  
-+#endif
- #endif /* _LINUX_PAGE_FLAGS_LAYOUT */
+ 	update_odp_mr(mr);
+ 
+-	if (!populate_mtts) {
++	if (use_umr) {
+ 		int update_xlt_flags = MLX5_IB_UPD_XLT_ENABLE;
+ 
+ 		if (access_flags & IB_ACCESS_ON_DEMAND)
 -- 
 2.20.1
 
