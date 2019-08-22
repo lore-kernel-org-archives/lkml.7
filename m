@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC94C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B8CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA6D21743
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A8F23405
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494590;
-	bh=jzjytNtnrJ/2ODtaSdZNF8+JKdKysEd0k3SIvqd6KEI=;
+	s=default; t=1566494591;
+	bh=6fU+9PuammxkfJEvmn0ipo4sM2/Oi5xnKuBsX/DqtLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m5QzOPf6kZ+jXkcnRDOu6MMMhvSrawccxtpoYJHww1JXiksaBmtt4f1W9w+X8SZX7
-	 lmqLPR4ghkOBsI0chkn7SOdg6cD6sZxtEHd8BpQd7skL6UWoMB6D83e6d8/k52LjPM
-	 bHk97/ae2e0pqvAlRN9ynbiIEIzzkCLM7WgsiMGY=
+	b=x5h7tuoO3CZ6wCN+AXzI4Dz9KKJRfzustIBWvs3BUIOqH5HvUYpbz9cy5FgPx3Czx
+	 Fezeg7rP8V5FGM8CfrJaEutBHLMNfJHXyPiPlCXg/SVKNxMRdeKrUNnkjtyJFSjZ1h
+	 DAIJGNNLK1y7PZWHyVkcygHZFkf6gwxHn+KYd0SI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403846AbfHVRXJ (ORCPT
+        id S2403856AbfHVRXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42412 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:23:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403785AbfHVRXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:06 -0400
+        id S2403826AbfHVRXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:07 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A644121743;
-        Thu, 22 Aug 2019 17:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 688EA23407;
+        Thu, 22 Aug 2019 17:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494585;
-        bh=jzjytNtnrJ/2ODtaSdZNF8+JKdKysEd0k3SIvqd6KEI=;
+        s=default; t=1566494586;
+        bh=6fU+9PuammxkfJEvmn0ipo4sM2/Oi5xnKuBsX/DqtLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z4NWQF88pqx/v1Sp6UhNXhyYJFKMDs1+rGEkWnhJcRtNitP/zPvahd6LUA88wVNl9
-         vk7ju4Bo8QevaY39AYLBKCxrYHyvzPJKqrQ/dLdxcYhMKH9M5YQzrCPIP7qG97coB0
-         NIZSTwO/QE6kgWe7FceIZ+Us7eGp5NRgovVeWP8g=
+        b=ytww0zm+wIhGrV4gr9SgU0mPjNiwrv8N423Qtqa1/tS4PfsTZDLq1WbtZ7CEmQamC
+         6yKzPeiWBLui3yYyMOKS3JvXMgz5A191CexL2YI6j9w97BoW3rL9+rkSbRpcQ75N03
+         FHlhk3hyKmnj9QanxEX6un3aKG7FrtXI23tphZf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 37/78] ALSA: hda - Fix a memory leak bug
-Date:   Thu, 22 Aug 2019 10:18:41 -0700
-Message-Id: <20190822171833.116637676@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+965152643a75a56737be@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>, Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.4 38/78] HID: holtek: test for sanity of intfdata
+Date:   Thu, 22 Aug 2019 10:18:42 -0700
+Message-Id: <20190822171833.144706924@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -59,36 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit cfef67f016e4c00a2f423256fc678a6967a9fc09 upstream.
+commit 01ec0a5f19c8c82960a07f6c7410fc9e01d7fb51 upstream.
 
-In snd_hda_parse_generic_codec(), 'spec' is allocated through kzalloc().
-Then, the pin widgets in 'codec' are parsed. However, if the parsing
-process fails, 'spec' is not deallocated, leading to a memory leak.
+The ioctl handler uses the intfdata of a second interface,
+which may not be present in a broken or malicious device, hence
+the intfdata needs to be checked for NULL.
 
-To fix the above issue, free 'spec' before returning the error.
-
-Fixes: 352f7f914ebb ("ALSA: hda - Merge Realtek parser code to generic parser")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[jkosina@suse.cz: fix newly added spurious space]
+Reported-by: syzbot+965152643a75a56737be@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_generic.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-holtek-kbd.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -5917,7 +5917,7 @@ static int snd_hda_parse_generic_codec(s
+--- a/drivers/hid/hid-holtek-kbd.c
++++ b/drivers/hid/hid-holtek-kbd.c
+@@ -126,9 +126,14 @@ static int holtek_kbd_input_event(struct
  
- 	err = snd_hda_parse_pin_defcfg(codec, &spec->autocfg, NULL, 0);
- 	if (err < 0)
--		return err;
-+		goto error;
+ 	/* Locate the boot interface, to receive the LED change events */
+ 	struct usb_interface *boot_interface = usb_ifnum_to_if(usb_dev, 0);
++	struct hid_device *boot_hid;
++	struct hid_input *boot_hid_input;
  
- 	err = snd_hda_gen_parse_auto_config(codec, &spec->autocfg);
- 	if (err < 0)
+-	struct hid_device *boot_hid = usb_get_intfdata(boot_interface);
+-	struct hid_input *boot_hid_input = list_first_entry(&boot_hid->inputs,
++	if (unlikely(boot_interface == NULL))
++		return -ENODEV;
++
++	boot_hid = usb_get_intfdata(boot_interface);
++	boot_hid_input = list_first_entry(&boot_hid->inputs,
+ 		struct hid_input, list);
+ 
+ 	return boot_hid_input->input->event(boot_hid_input->input, type, code,
 
 
