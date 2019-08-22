@@ -2,132 +2,96 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4015FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C8CC41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E92233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:45:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rDszp6GW"
+	by mail.kernel.org (Postfix) with ESMTP id A083323400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732895AbfHVLp5 (ORCPT
+        id S1732942AbfHVLr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:45:57 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:37226 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732863AbfHVLp4 (ORCPT
+        Thu, 22 Aug 2019 07:47:57 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:29466 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727310AbfHVLr5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:45:56 -0400
-Received: by mail-vs1-f66.google.com with SMTP id q188so3622922vsa.4
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 04:45:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ias0hnNTQ1W0WLMJ9Tw+pF62AvhAzndWUOgIreZptR4=;
-        b=rDszp6GWldYKXV1jR5X0tVPwOQUmi6CxIEOrbjVQUz3WhkU6oYTxYzX8HxeY8leOeh
-         zvTSuAERxKEcn8Yv9UsDjeKMrhx6DkoMarSTEZkDd68+2mj+BgZXGGtNWJI9+EFQuVQ+
-         CyB4j3oAVf1Sm05kBVhXT8wjbkRr6SC4LyvEcPVuhYxovbmtuhHVcIXOTHLmpwk200KN
-         3vWaa4ABGDhxySRoMd9bnoJjE/MwJ0QN6JNQuGkCtgyDw1T5WZeR3j0ywN5yzX6IjAZ4
-         bp1uABpaYaWvwa4Z1bgZ93PENPx4XxOkKWdZY7cjBXyOAlrgPcwG5by4QPTERiNSTm/f
-         90+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ias0hnNTQ1W0WLMJ9Tw+pF62AvhAzndWUOgIreZptR4=;
-        b=qyoIiLU1fd51eXLrXQAb1+godIa/83HBdjbJBWS/fg39z+wgVQomhDJh43pHsr0JEa
-         vhyu2xM6D1oGRZqkTmqrv/kz4w1XGpgbGGbvgSHGWfnZHrbxENTME1CIrr/IWGoKyT2L
-         nXTOJ7RvuXQ1Bcsv89MJrq0RwldQYaFvokVxVm3uasoKG2XN+VV+eW3fa5FSsQ4HB0kZ
-         YdVAgyzybx3kmH9m9H3PC/OBQUguCWJNa2tDmsshz3S2/H6wQqqO5io3kfK06MNo8kRh
-         QJ7RJR+HrtyUSIkicJpeFjZvvtlvbi7piLbrmtCkhgD3QWo5McKmQShZfB6hDhjlxLeK
-         J2UA==
-X-Gm-Message-State: APjAAAXTYIxdkpqjKXWEY+ZyZ/5P6XeOMOCCUhG0esD/rgWT8uv2yVbF
-        4j3mh5QEnvJjprjQfIH+nQnG6CXsS8FpqsTQ8/lQOg==
-X-Google-Smtp-Source: APXvYqwpurVmREw1NCNrWD/HWUqNVjMRJbQbiiRPPhDel5CxOBrosK7SYbiXJVV66QIkSwppRQHrHqUJ1UD4Wg1NEeE=
-X-Received: by 2002:a67:e287:: with SMTP id g7mr23784378vsf.200.1566474355983;
- Thu, 22 Aug 2019 04:45:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190807003629.2974-1-andrew@aj.id.au> <20190807003629.2974-2-andrew@aj.id.au>
- <CACPK8Xe6Zp1uOqEffEc0b6oGa7portEAifGPRqb876HmA+oZeg@mail.gmail.com> <6c94aada-9c4a-4f55-9a43-349282ad12af@www.fastmail.com>
-In-Reply-To: <6c94aada-9c4a-4f55-9a43-349282ad12af@www.fastmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 22 Aug 2019 13:45:19 +0200
-Message-ID: <CAPDyKFrDPxFMm710Z25i-euOT2rrgCNXVa4na-fye0xamMXq_A@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mmc: Document Aspeed SD controller
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     Joel Stanley <joel@jms.id.au>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
+        Thu, 22 Aug 2019 07:47:57 -0400
+X-UUID: b1ba783c964143cabbdbb3840f5fdad6-20190822
+X-UUID: b1ba783c964143cabbdbb3840f5fdad6-20190822
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <ran.bi@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 790826270; Thu, 22 Aug 2019 19:47:52 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs01n2.mediatek.inc
+ (172.21.101.79) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 22 Aug
+ 2019 19:47:46 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 22 Aug 2019 19:47:44 +0800
+Message-ID: <1566474469.12318.7.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
+From:   Ran Bi <ran.bi@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
         Mark Rutland <mark.rutland@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ryan Chen <ryanchen.aspeed@gmail.com>
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, YT Shen <yt.shen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        "Flora Fu" <flora.fu@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Date:   Thu, 22 Aug 2019 19:47:49 +0800
+In-Reply-To: <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
+References: <20190801110122.26834-1-ran.bi@mediatek.com>
+         <20190801110122.26834-3-ran.bi@mediatek.com>
+         <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 07BEDA87CE6DE420B3D64B7B18F56819C1B1580EC0478AB37A2E93247614A2FB2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 15 Aug 2019 at 07:37, Andrew Jeffery <andrew@aj.id.au> wrote:
->
->
->
-> On Thu, 15 Aug 2019, at 15:06, Joel Stanley wrote:
-> > On Wed, 7 Aug 2019 at 00:38, Andrew Jeffery <andrew@aj.id.au> wrote:
-> > >
-> > > The ASPEED SD/SDIO/MMC controller exposes two slots implementing the
-> > > SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
-> > > data bus if only a single slot is enabled.
-> > >
-> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> >
-> > Reviewed-by: Joel Stanley <joel@jms.id.au>
-> >
-> > Two minor comments below.
-> >
-> > > +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-> > > @@ -0,0 +1,105 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-or-later
-> >
-> > No "Copyright IBM" ?
->
-> I'm going rogue.
->
-> That reminds me I should chase up where we got to with the binding
-> licensing.
->
-> >
-> > > +%YAML 1.2
-> > > +---
-> >
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/clock/aspeed-clock.h>
-> > > +    sdc@1e740000 {
-> > > +            compatible = "aspeed,ast2500-sd-controller";
-> > > +            reg = <0x1e740000 0x100>;
-> > > +            #address-cells = <1>;
-> > > +            #size-cells = <1>;
-> > > +            ranges = <0 0x1e740000 0x10000>;
-> >
-> > According to the datasheet this could be 0x20000. It does not matter
-> > though, as there's nothing in it past 0x300.
->
-> Good catch.
->
+On Thu, 2019-08-22 at 11:12 +0200, Matthias Brugger wrote:
+> 
+> On 01/08/2019 13:01, Ran Bi wrote:
+> > This add support for the MediaTek MT2712 RTC. It was SoC based RTC, but
+> > had different architecture compared with MT7622 RTC.
+> > 
+> > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> > ---
+> >  drivers/rtc/Kconfig      |  10 +
+> >  drivers/rtc/Makefile     |   1 +
+> >  drivers/rtc/rtc-mt2712.c | 444 +++++++++++++++++++++++++++++++++++++++
+> 
+> Can't we just adjust rtc-mt7622.c (and rename it) to unify the source for both
+> devices. What is the difference that we need to write a driver of our own?
+> 
+> Regards,
+> Matthias
 
-Are you planning on sending a v6 or you want me to apply this and you
-can post a patch on top?
+We cannot merge rtc-mt7622.c and rtc-mt2712.c together. These two rtc
+hardwares have totally different design. Registers naming, registers
+offset and operating method are different.
 
-Kind regards
-Uffe
+
