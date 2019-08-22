@@ -4,57 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C80DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBE1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9F321726
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A7221726
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:09:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388992AbfHVNJT (ORCPT
+        id S1731001AbfHVNJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:09:19 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47091 "EHLO ozlabs.org"
+        Thu, 22 Aug 2019 09:09:13 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39329 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388972AbfHVNJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:09:15 -0400
+        id S2388957AbfHVNJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 09:09:10 -0400
 Received: by ozlabs.org (Postfix, from userid 1034)
-        id 46DlGw6ltlz9sPg; Thu, 22 Aug 2019 23:09:12 +1000 (AEST)
+        id 46DlGs1HPYz9sNk; Thu, 22 Aug 2019 23:09:07 +1000 (AEST)
 X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: b5bda6263cad9a927e1a4edb7493d542da0c1410
-In-Reply-To: <20190820081352.8641-2-santosh@fossix.org>
-To:     Santosh Sivaraj <santosh@fossix.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
+X-powerpc-patch-commit: d9642117914c9d3f800b3bacc19d7e388b04edb4
+In-Reply-To: <668aba4db6b9af6d8a151174e11a4289f1a6bbcd.1565933217.git.christophe.leroy@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
 From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        stable@vger.kernel.org, Reza Arbab <arbab@linux.ibm.com>
-Subject: Re: [PATCH v11 1/7] powerpc/mce: Schedule work from irq_work
-Message-Id: <46DlGw6ltlz9sPg@ozlabs.org>
-Date:   Thu, 22 Aug 2019 23:09:12 +1000 (AEST)
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] powerpc/mm: define empty update_mmu_cache() as static inline
+Message-Id: <46DlGs1HPYz9sNk@ozlabs.org>
+Date:   Thu, 22 Aug 2019 23:09:07 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-20 at 08:13:46 UTC, Santosh Sivaraj wrote:
-> schedule_work() cannot be called from MCE exception context as MCE can
-> interrupt even in interrupt disabled context.
+On Fri, 2019-08-16 at 05:41:40 UTC, Christophe Leroy wrote:
+> Only BOOK3S and FSL_BOOK3E have a usefull update_mmu_cache().
 > 
-> fixes: 733e4a4c ("powerpc/mce: hookup memory_failure for UE errors")
-> Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-> Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-> Acked-by: Balbir Singh <bsingharora@gmail.com>
-> Signed-off-by: Santosh Sivaraj <santosh@fossix.org>
-> Cc: stable@vger.kernel.org # v4.15+
+> For the others, just define it static inline.
+> 
+> In the meantime, simplify the FSL_BOOK3E related ifdef as
+> book3e_hugetlb_preload() only exists when CONFIG_PPC_FSL_BOOK3E
+> is selected.
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
 Series applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/b5bda6263cad9a927e1a4edb7493d542da0c1410
+https://git.kernel.org/powerpc/c/d9642117914c9d3f800b3bacc19d7e388b04edb4
 
 cheers
