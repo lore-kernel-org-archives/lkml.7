@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A98C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEA6C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCD84233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A8A233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494391;
-	bh=WozQVHAvxMlGUO9JWvfxjwZ3Pv3TpGs1akcR2dUpekk=;
+	s=default; t=1566494396;
+	bh=gnDqYprqryBgYwsbaoWSzJtYzfvv0NyZ3hqDyWJpqlk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sVBtdagB1OChuxmmGP7OS4y03Db4/G2Zemlz/PDpMFspki192XxO13LgdOzKbuE5N
-	 QigNPjR6+rpVXJOQA/jStWVyWtE+hVUWbLUKJfWeWbVemQ0AT/lr7uoCiJwgVXXpI9
-	 cJXjao/IsoSt1YyI75wX7EYw5blJYCE5nIX65VLc=
+	b=ZE8W38VMOWlUlyc9xGNV11JnhMCmSQsLIhddxhZBGHZCvO/1OO8sKB8bwz+Fthbfw
+	 E+faDGkOlOwvluZwa/CoOm3ajIrIMhU2N5HiYLL3pC5c916T5F7PP4uecU0dpsh6re
+	 e79liEoUUwmiW5a2/zV2MUxjvFOY4te8g2GrGsnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389165AbfHVRTo (ORCPT
+        id S1733009AbfHVRTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:19:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57958 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:19:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390295AbfHVRIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:24 -0400
+        id S1725857AbfHVRIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:25 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EACED23404;
-        Thu, 22 Aug 2019 17:08:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2E6F23406;
+        Thu, 22 Aug 2019 17:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493703;
-        bh=WozQVHAvxMlGUO9JWvfxjwZ3Pv3TpGs1akcR2dUpekk=;
+        s=default; t=1566493705;
+        bh=gnDqYprqryBgYwsbaoWSzJtYzfvv0NyZ3hqDyWJpqlk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EplEx8lIhIcIAgHB30E+zWUQ6Tn9jgJ10upY0z4NYjywy5+V7CTHAjHs1vl2nzARX
-         MZJMthCeWNMEZ73B1fSRwlgkcmaWfuuiD16jpyFOPvljvmMx6GN/Ex+tQRjTAQKpdy
-         BZkmU8ZPkob9+cFn1gsyUwxwWY+UPRnxXqswkb5w=
+        b=oXYb1aFvuwQUIselXl+Tey3g0bRbkwRyFNabQVKfdI1liKGn9rkNsQFsYNKWnEjiQ
+         chcuPtVSazpO0QJxe2R04HW58sDyCiKaASJ4hIR2LABTFU6BEaKSrSZRozxj+xjrkf
+         d9p+fdNfTAK7h/LIOQPe3BKz7zmBfQ0Yx+0ShhOQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Max Filippov <jcmvbkbc@gmail.com>,
+Cc:     Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Takashi Iwai <tiwai@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 015/135] xtensa: add missing isync to the cpu_reset TLB code
-Date:   Thu, 22 Aug 2019 13:06:11 -0400
-Message-Id: <20190822170811.13303-16-sashal@kernel.org>
+Subject: [PATCH 5.2 019/135] ALSA: usb-audio: Fix an OOB bug in parse_audio_mixer_unit
+Date:   Thu, 22 Aug 2019 13:06:15 -0400
+Message-Id: <20190822170811.13303-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -64,34 +66,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Hui Peng <benquike@gmail.com>
 
-commit cd8869f4cb257f22b89495ca40f5281e58ba359c upstream.
+commit daac07156b330b18eb5071aec4b3ddca1c377f2c upstream.
 
-ITLB entry modifications must be followed by the isync instruction
-before the new entries are possibly used. cpu_reset lacks one isync
-between ITLB way 6 initialization and jump to the identity mapping.
-Add missing isync to xtensa cpu_reset.
+The `uac_mixer_unit_descriptor` shown as below is read from the
+device side. In `parse_audio_mixer_unit`, `baSourceID` field is
+accessed from index 0 to `bNrInPins` - 1, the current implementation
+assumes that descriptor is always valid (the length  of descriptor
+is no shorter than 5 + `bNrInPins`). If a descriptor read from
+the device side is invalid, it may trigger out-of-bound memory
+access.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+```
+struct uac_mixer_unit_descriptor {
+	__u8 bLength;
+	__u8 bDescriptorType;
+	__u8 bDescriptorSubtype;
+	__u8 bUnitID;
+	__u8 bNrInPins;
+	__u8 baSourceID[];
+}
+```
+
+This patch fixes the bug by add a sanity check on the length of
+the descriptor.
+
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Hui Peng <benquike@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/xtensa/kernel/setup.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/usb/mixer.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-index 176cb46bcf12c..0634bfb82a0bc 100644
---- a/arch/xtensa/kernel/setup.c
-+++ b/arch/xtensa/kernel/setup.c
-@@ -515,6 +515,7 @@ void cpu_reset(void)
- 				      "add	%2, %2, %7\n\t"
- 				      "addi	%0, %0, -1\n\t"
- 				      "bnez	%0, 1b\n\t"
-+				      "isync\n\t"
- 				      /* Jump to identity mapping */
- 				      "jx	%3\n"
- 				      "2:\n\t"
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 2051a64fa2904..b5927c3d5bc0b 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -745,6 +745,8 @@ static int uac_mixer_unit_get_channels(struct mixer_build *state,
+ 		return -EINVAL;
+ 	if (!desc->bNrInPins)
+ 		return -EINVAL;
++	if (desc->bLength < sizeof(*desc) + desc->bNrInPins)
++		return -EINVAL;
+ 
+ 	switch (state->mixer->protocol) {
+ 	case UAC_VERSION_1:
 -- 
 2.20.1
 
