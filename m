@@ -4,54 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4418CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF740C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C40C23400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3A723402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495265;
-	bh=j1+sFMf/J8TyA8Rsg6L005Lt4RSXA3g0HiKRnJquEuY=;
+	s=default; t=1566495270;
+	bh=9o44ulriWXXkwnJBjHg4oBd96Y4y2e/U4b3CT7RffeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t3lNnujo89lnhIraWIg1JKoI0rOQi0JjoK/HW6VVIBbyF8U+RqvsssI/gw23CqvPq
-	 Qx62wvrmuLfUUaFFQhzJFDG5RalBS7PrEhmAK7Hx2nPmP5sQpZbMl5eIRwtX/nSMAQ
-	 kSDDEkOrtKd/PKs11l1jdO+lP/c/B22NBe5YlR3c=
+	b=j0ovMA6ix2qWK+rFJeCeJPLTk2jPnFpBcVTYT24jzMHMZFVVd02qDW0FXkbcIkkzi
+	 e5rq2ObBdKYRGKc0R+15SEtIvtfttovc+yS5s+UEx39LUrACef6ke6Nq9Gn3HGAp/u
+	 0GIU8s7LB4+kHMy6Q8dyW2wM1ucdd8vf3QNkY2c8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392728AbfHVReT (ORCPT
+        id S2392788AbfHVRe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48536 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:34:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404406AbfHVRZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:24 -0400
+        id S2404390AbfHVRZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:22 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6314A23405;
-        Thu, 22 Aug 2019 17:25:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25E3E2341A;
+        Thu, 22 Aug 2019 17:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494723;
-        bh=j1+sFMf/J8TyA8Rsg6L005Lt4RSXA3g0HiKRnJquEuY=;
+        s=default; t=1566494721;
+        bh=9o44ulriWXXkwnJBjHg4oBd96Y4y2e/U4b3CT7RffeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hAkwsPTQEnX6skA64wB8C9D6ltuHBe11BWS+m3Bxo71fbi4vW7c3uyUAm5WUZpGCF
-         NadFllX2miF1fT0tB3zRV7GtMUKwZRNgD+Llb0o54lOq9f3AXyDslkOCobi9j5XIeN
-         +1jdKSf8wumef91Sov3sQDoN+6dbq1Z7PchnCtJU=
+        b=pTK8a3YYxkJ1CJpbOLMVUDgO/MlwnvQCfXWv/7fyK713mhMNzHwHjQg1yb2lmtTEM
+         VNOBH7ZafepixfOd2oCfMGP8AwO7l43eN8I60hblVGZ1CX2+UxuwFOTxP5fAdObgbu
+         MXnLLHa321losAjPohEQEpK/nzBQ+rgR0/xzijZ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 12/85] ALSA: usb-audio: Fix a stack buffer overflow bug in check_input_term
-Date:   Thu, 22 Aug 2019 10:18:45 -0700
-Message-Id: <20190822171731.612188700@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH 4.19 01/85] sh: kernel: hw_breakpoint: Fix missing break in switch statement
+Date:   Thu, 22 Aug 2019 10:18:34 -0700
+Message-Id: <20190822171731.070419606@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,131 +63,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Peng <benquike@gmail.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 19bce474c45be69a284ecee660aa12d8f1e88f18 upstream.
+commit 1ee1119d184bb06af921b48c3021d921bbd85bac upstream.
 
-`check_input_term` recursively calls itself with input from
-device side (e.g., uac_input_terminal_descriptor.bCSourceID)
-as argument (id). In `check_input_term`, if `check_input_term`
-is called with the same `id` argument as the caller, it triggers
-endless recursive call, resulting kernel space stack overflow.
+Add missing break statement in order to prevent the code from falling
+through to case SH_BREAKPOINT_WRITE.
 
-This patch fixes the bug by adding a bitmap to `struct mixer_build`
-to keep track of the checked ids and stop the execution if some id
-has been checked (similar to how parse_audio_unit handles unitid
-argument).
-
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 09a072947791 ("sh: hw-breakpoints: Add preliminary support for SH-4A UBC.")
+Cc: stable@vger.kernel.org
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c |   35 +++++++++++++++++++++++++++--------
- 1 file changed, 27 insertions(+), 8 deletions(-)
+ arch/sh/kernel/hw_breakpoint.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -83,6 +83,7 @@ struct mixer_build {
- 	unsigned char *buffer;
- 	unsigned int buflen;
- 	DECLARE_BITMAP(unitbitmap, MAX_ID_ELEMS);
-+	DECLARE_BITMAP(termbitmap, MAX_ID_ELEMS);
- 	struct usb_audio_term oterm;
- 	const struct usbmix_name_map *map;
- 	const struct usbmix_selector_map *selector_map;
-@@ -788,16 +789,25 @@ static int uac_mixer_unit_get_channels(s
-  * parse the source unit recursively until it reaches to a terminal
-  * or a branched unit.
-  */
--static int check_input_term(struct mixer_build *state, int id,
-+static int __check_input_term(struct mixer_build *state, int id,
- 			    struct usb_audio_term *term)
- {
- 	int protocol = state->mixer->protocol;
- 	int err;
- 	void *p1;
-+	unsigned char *hdr;
- 
- 	memset(term, 0, sizeof(*term));
--	while ((p1 = find_audio_control_unit(state, id)) != NULL) {
--		unsigned char *hdr = p1;
-+	for (;;) {
-+		/* a loop in the terminal chain? */
-+		if (test_and_set_bit(id, state->termbitmap))
-+			return -EINVAL;
-+
-+		p1 = find_audio_control_unit(state, id);
-+		if (!p1)
-+			break;
-+
-+		hdr = p1;
- 		term->id = id;
- 
- 		if (protocol == UAC_VERSION_1 || protocol == UAC_VERSION_2) {
-@@ -815,7 +825,7 @@ static int check_input_term(struct mixer
- 
- 					/* call recursively to verify that the
- 					 * referenced clock entity is valid */
--					err = check_input_term(state, d->bCSourceID, term);
-+					err = __check_input_term(state, d->bCSourceID, term);
- 					if (err < 0)
- 						return err;
- 
-@@ -849,7 +859,7 @@ static int check_input_term(struct mixer
- 			case UAC2_CLOCK_SELECTOR: {
- 				struct uac_selector_unit_descriptor *d = p1;
- 				/* call recursively to retrieve the channel info */
--				err = check_input_term(state, d->baSourceID[0], term);
-+				err = __check_input_term(state, d->baSourceID[0], term);
- 				if (err < 0)
- 					return err;
- 				term->type = UAC3_SELECTOR_UNIT << 16; /* virtual type */
-@@ -912,7 +922,7 @@ static int check_input_term(struct mixer
- 
- 				/* call recursively to verify that the
- 				 * referenced clock entity is valid */
--				err = check_input_term(state, d->bCSourceID, term);
-+				err = __check_input_term(state, d->bCSourceID, term);
- 				if (err < 0)
- 					return err;
- 
-@@ -963,7 +973,7 @@ static int check_input_term(struct mixer
- 			case UAC3_CLOCK_SELECTOR: {
- 				struct uac_selector_unit_descriptor *d = p1;
- 				/* call recursively to retrieve the channel info */
--				err = check_input_term(state, d->baSourceID[0], term);
-+				err = __check_input_term(state, d->baSourceID[0], term);
- 				if (err < 0)
- 					return err;
- 				term->type = UAC3_SELECTOR_UNIT << 16; /* virtual type */
-@@ -979,7 +989,7 @@ static int check_input_term(struct mixer
- 					return -EINVAL;
- 
- 				/* call recursively to retrieve the channel info */
--				err = check_input_term(state, d->baSourceID[0], term);
-+				err = __check_input_term(state, d->baSourceID[0], term);
- 				if (err < 0)
- 					return err;
- 
-@@ -997,6 +1007,15 @@ static int check_input_term(struct mixer
- 	return -ENODEV;
- }
- 
-+
-+static int check_input_term(struct mixer_build *state, int id,
-+			    struct usb_audio_term *term)
-+{
-+	memset(term, 0, sizeof(*term));
-+	memset(state->termbitmap, 0, sizeof(state->termbitmap));
-+	return __check_input_term(state, id, term);
-+}
-+
- /*
-  * Feature Unit
-  */
+--- a/arch/sh/kernel/hw_breakpoint.c
++++ b/arch/sh/kernel/hw_breakpoint.c
+@@ -160,6 +160,7 @@ int arch_bp_generic_fields(int sh_len, i
+ 	switch (sh_type) {
+ 	case SH_BREAKPOINT_READ:
+ 		*gen_type = HW_BREAKPOINT_R;
++		break;
+ 	case SH_BREAKPOINT_WRITE:
+ 		*gen_type = HW_BREAKPOINT_W;
+ 		break;
 
 
