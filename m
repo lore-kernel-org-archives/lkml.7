@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A42CCC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D433BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7956523401
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6DBD23404
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566507742;
-	bh=6DLuWqVAilt07lXJ0ps9lLLQjFJex1jF05xqTySiZ88=;
+	s=default; t=1566507747;
+	bh=E+2BgSKwZ23cH6WjngXRUllFEJ5++RR5H3ZwXan/cu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PIaxhEubV1yNl5STPTkrFh1rZPqXGmSsMImfJohXkmudBl2jedDMe+oFgULWnq7N+
-	 6zoihI9jHErl1WlbgA4DtBEc//fkPfsbHP6tk3LA2BS+fiViWSqlK4MG/WcZB6mCT1
-	 VB4ugX42iNmhw6yZHbJZRArUoUyOHglt7ZS9lM0A=
+	b=MZjGZPvqsxZdlLvwdxnik1qhnsb3cS8bZy8qfEXctzz965UWyAuTf1q4qu2hJbO55
+	 Y1gn1/gBIQQMoEP8t0ByhRDXqoWoT92MpRO1muUM1oPJ7+m81IInbk+mkG5EkeeinB
+	 bYNbbHLknyiY19jRLr2wJpEAw7XB6OTUK/QUy80A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393481AbfHVVCV (ORCPT
+        id S2393490AbfHVVC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:02:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43280 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 17:02:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393445AbfHVVCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:02:17 -0400
+        id S2388169AbfHVVCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 17:02:23 -0400
 Received: from quaco.ghostprotocols.net (unknown [177.158.141.211])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2CDE233FC;
-        Thu, 22 Aug 2019 21:02:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B029623405;
+        Thu, 22 Aug 2019 21:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566507737;
-        bh=6DLuWqVAilt07lXJ0ps9lLLQjFJex1jF05xqTySiZ88=;
+        s=default; t=1566507742;
+        bh=E+2BgSKwZ23cH6WjngXRUllFEJ5++RR5H3ZwXan/cu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPrAlCb6h+spb36t8mhlu3xnL+yVKZbRriMGQZ2w+4a0HaVIYKIwTm4FZs6BiTpXi
-         qk71wBdE4g5FPmKOlSin4SJUNf+DVA/81eCNG1r/yUYGVnGR9ELIpsitdNz1GruIHJ
-         Ew/DWlsv3y6D9TrlNiypMbHmRcwKaaZ0hqXdK/yc=
+        b=b4njaB6owL22o3JH6zNyTCYGwNsM9sX5XbgCflcRnVBB05y/+GHEfe0IVLRAFzR4Y
+         IFJJUlb9g/GdufFdLjPpavcbxf/qeiXk1lNvIUYMSTL5XxiiJluZ9DoV14cFxTzxF7
+         fcwo9wNft4Go4L1znehN4SFyoOYZjyYMwdlEsA7k=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 16/25] perf evsel: Add missing perf/evsel.h header in util/evsel.h
-Date:   Thu, 22 Aug 2019 18:00:51 -0300
-Message-Id: <20190822210100.3461-17-acme@kernel.org>
+Subject: [PATCH 17/25] perf evsel: Remove needless counts.h header from util/evsel.h
+Date:   Thu, 22 Aug 2019 18:00:52 -0300
+Message-Id: <20190822210100.3461-18-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190822210100.3461-1-acme@kernel.org>
 References: <20190822210100.3461-1-acme@kernel.org>
@@ -62,34 +62,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Since util/evsel.h uses perf_evsel__cpus() that has its prototype in
-libperf's perf/evsel.h file, we need it explicitely included.
-
-This was working by luck as util/evsel.h includes counts.h, but that is
-not necessary, just some forward declarations, so, before we remove
-counts.h from util/evsel.h, add what is realli needed.
+We need only a struct forward declaration, so prune the header
+dependency tree a bit more.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-nfb9e0t4jm9zhvr0q86hc29d@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-oqvgf04w4ku8xasrz79zquim@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/evsel.c | 1 +
+ tools/perf/util/evsel.h | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 477c47c84971..7b4350681d64 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -26,6 +26,7 @@
+ #include "asm/bug.h"
+ #include "callchain.h"
+ #include "cgroup.h"
++#include "counts.h"
+ #include "event.h"
+ #include "evsel.h"
+ #include "evlist.h"
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 2928eee78427..da91d6f57f44 100644
+index da91d6f57f44..296390541030 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -8,6 +8,7 @@
- #include <linux/perf_event.h>
- #include <linux/types.h>
- #include <internal/evsel.h>
-+#include <perf/evsel.h>
+@@ -11,7 +11,6 @@
+ #include <perf/evsel.h>
  #include "symbol_conf.h"
  #include "cpumap.h"
- #include "counts.h"
+-#include "counts.h"
+ 
+ struct evsel;
+ 
+@@ -93,6 +92,7 @@ enum perf_tool_event {
+ };
+ 
+ struct bpf_object;
++struct perf_counts;
+ struct xyarray;
+ 
+ /** struct evsel - event selector
 -- 
 2.21.0
 
