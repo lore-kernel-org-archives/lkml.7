@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B90F3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38152C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908362089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035022089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493882;
-	bh=fJ3azQZ1DCnkjLnuIEYjspKZxSeuc1mE32jQfEX269s=;
+	s=default; t=1566493893;
+	bh=S4HhUcBWnP8kCVygmAhefXzJ2AmPVuCiTHanSqjrDFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j2Ge8Ky1wjMlrRvHVnqb/AaJzvWGLhaz5NlO/93VcG1Ck31tnkCS35TyFvUW+01rW
-	 gjLdD/wukPdbaXJQcFnNhnXNVPN+GkyZvivPY+lYbQgX/My8tLik3WOpHVPEgKz46V
-	 0Tn+SVQarQRbcXAncyrUciFa480yQiMk2HMDsWPI=
+	b=YMB6hNkaQ0/N4uWp495djzuBBADmORMOMHKvaED8Bzq8zCeuntmDuMK17uuStkCa3
+	 ZLa9JHHFjT/5iXaFYh+3ObnHDaTgef8OFncGUCXkzkWIasYjvZ64VDg9bDqNrEGR93
+	 NGRKb/xF5HbANA1o2CzySZzM2LtIcQOma5QtlHv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390860AbfHVRKz (ORCPT
+        id S2390910AbfHVRLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:10:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59656 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390730AbfHVRJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:20 -0400
+        id S2390718AbfHVRJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:17 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 074F2233FC;
-        Thu, 22 Aug 2019 17:09:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10D45233FC;
+        Thu, 22 Aug 2019 17:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493759;
-        bh=fJ3azQZ1DCnkjLnuIEYjspKZxSeuc1mE32jQfEX269s=;
+        s=default; t=1566493756;
+        bh=S4HhUcBWnP8kCVygmAhefXzJ2AmPVuCiTHanSqjrDFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bsrZzXn3UKpgojFf5/bob3yQcTq5Go20xNVcf5d/ECG4tMzUFJ6iPJWq+yDkXxCpZ
-         KBdgI10zMh2kZ8Eotf9VDXFhL+QpFKBzn11rkIFRHYnZY28+AMkKSWgDh3VkoOUP/t
-         aVBhN1/2CAP0u6uZwWRhxJbp/mqbXQv6W2yxkGQQ=
+        b=y7BNN+kaHPgH89g5sV4Rw7wmZBIUnBA8nnmzsgom5G4pEnVSw4hunSwvZ8s0lp67g
+         8UR+zu13Fp2brV+2+EjjGuLXX7vLensOhWDcZdGu18cx7Gw+HgiKk7GlzecUJobhXy
+         22/43m4nU0HdR0qVtgE1liwdYcjOmI4PkXPlZA2c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 120/135] bnxt_en: Improve RX doorbell sequence.
-Date:   Thu, 22 Aug 2019 13:07:56 -0400
-Message-Id: <20190822170811.13303-121-sashal@kernel.org>
+Subject: [PATCH 5.2 114/135] sctp: fix the transport error_count check
+Date:   Thu, 22 Aug 2019 13:07:50 -0400
+Message-Id: <20190822170811.13303-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,81 +66,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit e8f267b063208372f7a329c6d5288d58944d873c ]
+[ Upstream commit a1794de8b92ea6bc2037f445b296814ac826693e ]
 
-When both RX buffers and RX aggregation buffers have to be
-replenished at the end of NAPI, post the RX aggregation buffers first
-before RX buffers.  Otherwise, we may run into a situation where
-there are only RX buffers without RX aggregation buffers for a split
-second.  This will cause the hardware to abort the RX packet and
-report buffer errors, which will cause unnecessary cleanup by the
-driver.
+As the annotation says in sctp_do_8_2_transport_strike():
 
-Ringing the Aggregation ring doorbell first before the RX ring doorbell
-will prevent some of these buffer errors.  Use the same sequence during
-ring initialization as well.
+  "If the transport error count is greater than the pf_retrans
+   threshold, and less than pathmaxrtx ..."
 
-Fixes: 697197e5a173 ("bnxt_en: Re-structure doorbells.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It should be transport->error_count checked with pathmaxrxt,
+instead of asoc->pf_retrans.
+
+Fixes: 5aa93bcf66f4 ("sctp: Implement quick failover draft from tsvwg")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/sctp/sm_sideeffect.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index d9eaafa93970b..36fe4f161cf1c 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -2015,9 +2015,9 @@ static void __bnxt_poll_work_done(struct bnxt *bp, struct bnxt_napi *bnapi)
- 	if (bnapi->events & BNXT_RX_EVENT) {
- 		struct bnxt_rx_ring_info *rxr = bnapi->rx_ring;
+diff --git a/net/sctp/sm_sideeffect.c b/net/sctp/sm_sideeffect.c
+index a554d6d15d1b6..1cf5bb5b73c41 100644
+--- a/net/sctp/sm_sideeffect.c
++++ b/net/sctp/sm_sideeffect.c
+@@ -546,7 +546,7 @@ static void sctp_do_8_2_transport_strike(struct sctp_cmd_seq *commands,
+ 	 */
+ 	if (net->sctp.pf_enable &&
+ 	   (transport->state == SCTP_ACTIVE) &&
+-	   (asoc->pf_retrans < transport->pathmaxrxt) &&
++	   (transport->error_count < transport->pathmaxrxt) &&
+ 	   (transport->error_count > asoc->pf_retrans)) {
  
--		bnxt_db_write(bp, &rxr->rx_db, rxr->rx_prod);
- 		if (bnapi->events & BNXT_AGG_EVENT)
- 			bnxt_db_write(bp, &rxr->rx_agg_db, rxr->rx_agg_prod);
-+		bnxt_db_write(bp, &rxr->rx_db, rxr->rx_prod);
- 	}
- 	bnapi->events = 0;
- }
-@@ -5011,6 +5011,7 @@ static void bnxt_set_db(struct bnxt *bp, struct bnxt_db_info *db, u32 ring_type,
- 
- static int bnxt_hwrm_ring_alloc(struct bnxt *bp)
- {
-+	bool agg_rings = !!(bp->flags & BNXT_FLAG_AGG_RINGS);
- 	int i, rc = 0;
- 	u32 type;
- 
-@@ -5086,7 +5087,9 @@ static int bnxt_hwrm_ring_alloc(struct bnxt *bp)
- 		if (rc)
- 			goto err_out;
- 		bnxt_set_db(bp, &rxr->rx_db, type, map_idx, ring->fw_ring_id);
--		bnxt_db_write(bp, &rxr->rx_db, rxr->rx_prod);
-+		/* If we have agg rings, post agg buffers first. */
-+		if (!agg_rings)
-+			bnxt_db_write(bp, &rxr->rx_db, rxr->rx_prod);
- 		bp->grp_info[map_idx].rx_fw_ring_id = ring->fw_ring_id;
- 		if (bp->flags & BNXT_FLAG_CHIP_P5) {
- 			struct bnxt_cp_ring_info *cpr = &bnapi->cp_ring;
-@@ -5105,7 +5108,7 @@ static int bnxt_hwrm_ring_alloc(struct bnxt *bp)
- 		}
- 	}
- 
--	if (bp->flags & BNXT_FLAG_AGG_RINGS) {
-+	if (agg_rings) {
- 		type = HWRM_RING_ALLOC_AGG;
- 		for (i = 0; i < bp->rx_nr_rings; i++) {
- 			struct bnxt_rx_ring_info *rxr = &bp->rx_ring[i];
-@@ -5121,6 +5124,7 @@ static int bnxt_hwrm_ring_alloc(struct bnxt *bp)
- 			bnxt_set_db(bp, &rxr->rx_agg_db, type, map_idx,
- 				    ring->fw_ring_id);
- 			bnxt_db_write(bp, &rxr->rx_agg_db, rxr->rx_agg_prod);
-+			bnxt_db_write(bp, &rxr->rx_db, rxr->rx_prod);
- 			bp->grp_info[grp_idx].agg_fw_ring_id = ring->fw_ring_id;
- 		}
- 	}
+ 		sctp_assoc_control_transport(asoc, transport,
 -- 
 2.20.1
 
