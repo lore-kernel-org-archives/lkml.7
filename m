@@ -2,122 +2,152 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658A1C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5E7C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38844206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B84206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:48:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H1nHUAjL"
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="P1Y0ZkSh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732259AbfHVKpx (ORCPT
+        id S2387811AbfHVKsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 06:45:53 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32925 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730333AbfHVKpw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:45:52 -0400
-Received: by mail-wr1-f67.google.com with SMTP id u16so4960920wrr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 03:45:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/DjOjyPKJGO/AF9O06K0OKutOBMRAX78D/FmEPCYTxg=;
-        b=H1nHUAjLEMs4Dr3/Rfk4r8Z7hCsoI3/15V+TnydrEwdtdKJA4Vc1HidnpZVfn+XmKl
-         M6c1XvAax0EAAkoyitioea/2HCCVE1kmjwMwIAjvxB+0UG4ZuBIXSXnsrp6qrNbOK2ou
-         1LNkD31uLewoJA83SLRrTHR4ab5eKPpOv4kWrt3yq2GQp6I9PhIrrAOu6/f+X6Lc+lTs
-         c8lUCbNH5kByi28P2a/nH0BWzQ1kPO3QIEnykizpOuAnVKmFCj3WtHqU77o7TFSxEDVn
-         FaxpSJ6tRo8eAhO8WYS62HfIlPeN2EjKweqdADxmZVST0H7rSwQIlVMXXvk5ld4BtERk
-         3Q+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/DjOjyPKJGO/AF9O06K0OKutOBMRAX78D/FmEPCYTxg=;
-        b=G27dXbrKx/uDXtssfhmDVhu0uudEglxK5tz7n7BjpwS20m8R9eP8/4/E9ksezpsPxM
-         UgQX/Kdt0xQr9YMk7pYPlzAFkYbZW+2eONphHUdcXujirUQ11+BRbtwM/Ogp5B/V8zyV
-         EyFI4l3wQy0WtUGiLr9eOOjs2vEiV3FkSZpLUmA/lA9nBiqGIlIbiEZQ8fCc05BDeilt
-         frkyOGOgEiPs4zo7Z4ys48bP+fPLh9DMSnw+KDeXO/wFvrKWJwAkPKV2aA7ZnKqaC36I
-         Ld2BTf959H6QEy56QFg5ecSfhob6gZeI/rKQ1RFwTfCDoCba1xSBmq3i2LMqANeBzR8L
-         z/Xw==
-X-Gm-Message-State: APjAAAXZTjocGbnFhcLlBTMxjxRo25QsKiAkeR44Ye1mlipaBi2wx/zX
-        nVeSyvUxdcL3A+YXMA4sle8ZRg==
-X-Google-Smtp-Source: APXvYqxPje/72ek540Wsgy2FREnCYVC+6jwVQWIqUyJBEi7qym21drEX2bFUj7QhfEDtCBnjXkOH0g==
-X-Received: by 2002:adf:e801:: with SMTP id o1mr47743779wrm.45.1566470750528;
-        Thu, 22 Aug 2019 03:45:50 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id f134sm5264028wmg.20.2019.08.22.03.45.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 03:45:49 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] ASoC: qdsp6: q6afe-dai: Update max rate for slim
- and tdm dais
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     broonie@kernel.org, spapothi@codeaurora.org,
-        bgoswami@codeaurora.org, plai@codeaurora.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com
-References: <20190822095653.7200-1-srinivas.kandagatla@linaro.org>
- <20190822095653.7200-4-srinivas.kandagatla@linaro.org>
- <s5h7e75v7en.wl-tiwai@suse.de>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <923f1d65-d908-c64c-3109-0da1938d3824@linaro.org>
-Date:   Thu, 22 Aug 2019 11:45:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <s5h7e75v7en.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 22 Aug 2019 06:48:12 -0400
+Received: from mail-eopbgr150121.outbound.protection.outlook.com ([40.107.15.121]:33286
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732494AbfHVKsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 06:48:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mqnp9Z/eeJWIiQO2tp86Gcv8yCatLp6U/QCxd8YfXnAWOIkk+weDYdu2jgAaOkiVLIVMsX6Hr5+hZd/LzJxQBMZZ4VIeMpSY3H9s7ggwUbqh481FJIy4IuLeoWyuW8+CtDkgge3bGBH8r5eSyyHJnzQVBKVpaGDKLpx8/tbpGh8z97TsKS3WgIqgLeh/4/8ctQTb4or08de3zZ6R0kUZ/cUvJLPhTQJ7ngGbrM9djehIWF4IIKW45chE8O+rW8noH2VwHY7pkxLOal8bLgeeZKP+kw4OWksryXIFD6tK2Eh5vKroQF0+MZJF5GGwCtDKwyG4QltDjK072XGhtU0MbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XPvVUob0c0d1S+fmQT9H6gkk2lxFy0seicc/ClTLuso=;
+ b=VzghZ9dXYBh6A4qcrSolMPBm6ocgVh2dfwN8BJgz+YLmlAYhvxfOl874D7yj3v16nm8eJ7sH0mvoT9hJg3CpmfPogSxLlvjUT0GkCWlGPs71sDIeKee2jUM4FMKHJDjJO64CSnZKlBbUHEW1x8G9VvO5s1ajblkLVSKg1oSdso+s4mq2cPCk8gGl53i/5C/Xgn2SLphudxLV7wphK9AcDxe50H57z9cv9aZWKt7D0tz1gqfqRxCBjaXkh51TBnmXpLeeQ8AmYiMA/R4dQYUXzzencMxcZVHm6N5KWrKued12ciukPTANTzH1tMPMzmE07mBZZCVbXSwW52yXZeJrsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XPvVUob0c0d1S+fmQT9H6gkk2lxFy0seicc/ClTLuso=;
+ b=P1Y0ZkSh6Zq1R5QuDtdd48M1fg0zWldYl7qksRSJHozMl5o8KQ3bAge7CRtWQLXAEGFc2lYQM7loX23+fDE8kr/7isAeJu4E6gDsgM3QqDWuspBgf8N9wqErgV531+UnHVgEv5ofwdEemNWNhl0IXU3B8alg1Aj9x2vEuNNYPqQ=
+Received: from VI1PR08MB2782.eurprd08.prod.outlook.com (10.170.236.143) by
+ VI1PR08MB2655.eurprd08.prod.outlook.com (10.175.245.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Thu, 22 Aug 2019 10:48:08 +0000
+Received: from VI1PR08MB2782.eurprd08.prod.outlook.com
+ ([fe80::2969:e370:fb70:71a]) by VI1PR08MB2782.eurprd08.prod.outlook.com
+ ([fe80::2969:e370:fb70:71a%3]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
+ 10:48:08 +0000
+From:   Jan Dakinevich <jan.dakinevich@virtuozzo.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Denis Lunev <den@virtuozzo.com>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        "jan.dakinevich@gmail.com" <jan.dakinevich@gmail.com>,
+        Jan Dakinevich <jan.dakinevich@virtuozzo.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Alexey Kuznetsov (C)" <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Johannes Berg <johannes.berg@intel.com>,
+        David Ahern <dsahern@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        John Hurley <john.hurley@netronome.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Eric Dumazet <edumazet@google.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Patrick Talbert <ptalbert@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>
+Subject: [PATCH 0/3] rework netlink skb allocation
+Thread-Topic: [PATCH 0/3] rework netlink skb allocation
+Thread-Index: AQHVWNcVBzufB0ixBkav/5yACjs/iw==
+Date:   Thu, 22 Aug 2019 10:48:08 +0000
+Message-ID: <1566470851-4694-1-git-send-email-jan.dakinevich@virtuozzo.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0202CA0033.eurprd02.prod.outlook.com
+ (2603:10a6:3:e4::19) To VI1PR08MB2782.eurprd08.prod.outlook.com
+ (2603:10a6:802:19::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jan.dakinevich@virtuozzo.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.1.4
+x-originating-ip: [185.231.240.5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f7f3b429-3346-40df-56a6-08d726ee37e1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR08MB2655;
+x-ms-traffictypediagnostic: VI1PR08MB2655:
+x-ld-processed: 0bc7f26d-0264-416e-a6fc-8352af79c58f,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR08MB26559CD07CE0CE988AFD5A318AA50@VI1PR08MB2655.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 01371B902F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(366004)(136003)(376002)(39840400004)(199004)(189003)(2616005)(99286004)(66476007)(66946007)(66556008)(5660300002)(476003)(64756008)(6116002)(66446008)(8936002)(3846002)(478600001)(6506007)(386003)(81166006)(7406005)(81156014)(44832011)(316002)(52116002)(8676002)(14444005)(305945005)(6486002)(256004)(5640700003)(86362001)(71200400001)(6512007)(102836004)(14454004)(7736002)(6436002)(186003)(7416002)(486006)(50226002)(66066001)(4744005)(2906002)(6916009)(36756003)(2501003)(53936002)(2351001)(71190400001)(25786009)(4326008)(54906003)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR08MB2655;H:VI1PR08MB2782.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: virtuozzo.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: LDyzR3zFN40v8lkANxiMle0FU1hl5xtt/dMWarNJVdcXtLXRJPZ6EiWUYPzVU48A5mx3hMo9CynUm8hPv6ZpLT7VsDhQucQr5WnShWS8PY35ghia7ckPyx20TRVvOzSnIeN8Gw7usI0sX9Lg7a2EHzkzF6Qy3fk6Hbp2JByUnP4pf5QVWaf0yIa4xIAAGPH3X3vRQR4lqtjgtXw4066HMd5GzYbvHIxaem8emX1O4TYTWKT9a3c3EjsAN/1/Fb2NM5+nFOAWMFCZULoYzwxfDENDhWm0oTCNkYtfsdQbx7vvfVPCte++Gb3WKe8iMxoPzKGM5hhNiQqEZP3qAIwitslwkpqpxZ1/nS4vh/drbPyr6XgewT5Hy48Xu5BoE0RfSPHDa8ubaGUKbaSjpyCWx49IWN02ZACqy5WchTuRbLs=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7f3b429-3346-40df-56a6-08d726ee37e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 10:48:08.0649
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uwMgAaZ387mInRd+RVR4jj4ndd0WETZn+pffh7M+KPeghSXVZLfobfASlBhhG7O7YEvzblVWR+zrPSgTtTpUk48NnunB7eIeZeuuTxJuxMg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB2655
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently, userspace is able to initiate costly high-order allocation in=20
+kernel sending large broadcast netlink message, which is considered=20
+undesirable. At the same time, unicast message are safe in this regard,=20
+because they uses vmalloc-ed memory.
 
+This series introduces changes, that allow broadcast messages to be=20
+allocated with vmalloc() as well as unicast.
 
-On 22/08/2019 11:09, Takashi Iwai wrote:
-> On Thu, 22 Aug 2019 11:56:52 +0200,
-> Srinivas Kandagatla wrote:
->>
->> QDSP supports up to 384000 rates on SLIM dais and 352800 rate on TDM dais.
->> Add this missing rates.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   sound/soc/qcom/qdsp6/q6afe-dai.c | 92 +++++++++++---------------------
->>   1 file changed, 32 insertions(+), 60 deletions(-)
->>
->> diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
->> index c1a7624eaf17..ae2baefdb6e2 100644
->> --- a/sound/soc/qcom/qdsp6/q6afe-dai.c
->> +++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
->> @@ -18,14 +18,14 @@
->>   			.stream_name = pre" TDM"#num" Playback",	\
->>   			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000 |\
->>   				SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_48000 |\
->> -				SNDRV_PCM_RATE_176400,			\
->> +				SNDRV_PCM_RATE_176400 | SNDRV_PCM_RATE_352800,\
-> 
-> This will support a lot more than advertised, e.g. it contains 64000Hz
-> or 22050Hz.  Is this supposed?  If yes, mention it clearly in the
-> changelog, too.
+Jan Dakinevich (3):
+  skbuff: use kvfree() to deallocate head
+  netlink: always use vmapped memory for skb data
+  netlink: use generic skb_set_owner_r()
 
-Some of the rates inbetween are not in the DSP supported rate list for TDM.
+ include/linux/netlink.h   | 16 ----------------
+ net/core/skbuff.c         |  2 +-
+ net/ipv4/fib_frontend.c   |  2 +-
+ net/netfilter/nfnetlink.c |  2 +-
+ net/netlink/af_netlink.c  | 39 +++++++--------------------------------
+ 5 files changed, 10 insertions(+), 51 deletions(-)
 
-DSP should return error if we try to set any unsupported rate!
+--=20
+2.1.4
 
---srini
-> 
-> thanks,
-> 
-> Takashi
-> 
