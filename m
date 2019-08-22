@@ -2,53 +2,56 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9ABC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E002C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD9F2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05440233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495071;
-	bh=2gdbjHhkbWqhj+3DY8AUj7t5iK1XdHveNGKJAc0gszA=;
+	s=default; t=1566495079;
+	bh=rSE9tySoDK9NcP8IePbKZZLmlTlkfFUSKzFTEfDHgZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QNl5g5hdyjmHHf6UUG3CbWCcCEmUXQvl3HwGhgmYOpS/hLuVIeb3Lb2v/FXOuylTS
-	 Pgwr4S0nilirPzRPZAfJw6hMUIHOiWg74Q88TgjurUcVfmdPUNmqPILv7+f4wJyccH
-	 7CRzTnt+n6VPZnsYJzZ1Z17nKeri96kDSIF0qwpg=
+	b=wbARl+hDBYP6CIzPwCfoz5CVPuks4TY7sMKbyPUKhJEEI7qujzYKICVtw7Gfd0x/l
+	 hBqvRjjVxs55B5QV8KxIezV/UhtISxqm6X4NYN0Gw/TgC7jQryT95TV3sQoGPMijHT
+	 LQ7SMlQYsiyJh08HufhNtF1fJ1KjuitBPpickz4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392211AbfHVRbK (ORCPT
+        id S2392232AbfHVRbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:31:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50790 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404559AbfHVR0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:26:00 -0400
+        id S2404557AbfHVRZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:59 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 561F823405;
-        Thu, 22 Aug 2019 17:25:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA542341C;
+        Thu, 22 Aug 2019 17:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494759;
-        bh=2gdbjHhkbWqhj+3DY8AUj7t5iK1XdHveNGKJAc0gszA=;
+        s=default; t=1566494758;
+        bh=rSE9tySoDK9NcP8IePbKZZLmlTlkfFUSKzFTEfDHgZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ydrlr69/5m2YFGqFR/q/TYUQbmUXoXKTqrJ6/t91jwu3jr+MJo4eu7pUR95JrnlZb
-         PwgWiAhf33ibUeboCGpXu02HgWjhGTI4m/fl13IUEG2ibIjOfU1HRY5rPUtVcfJmOx
-         AWi+iyfwljmLhPcWnjRMcj63mZljdA85d96ccyRQ=
+        b=gI1RuaXUe3J4qsHBneA02wtP4kaec7fX88qtesbyn0hprRPYtb+PDqC5kXYB0vjsi
+         aha0aUe72Sb15VGpswv2TWn2mAOM5z7X8OIJ0luxOSnQ1HTc4m1nbws76IG83UlFQw
+         Sxf/Gut4FJH0/VJG9iiUxq1ACxhm20lg9Cq0Nn+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 4.19 60/85] usb: gadget: udc: renesas_usb3: Fix sysfs interface of "role"
-Date:   Thu, 22 Aug 2019 10:19:33 -0700
-Message-Id: <20190822171733.818552029@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Smith <peter.smith@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 42/85] kbuild: Check for unknown options with cc-option usage in Kconfig and clang
+Date:   Thu, 22 Aug 2019 10:19:15 -0700
+Message-Id: <20190822171733.116438013@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -61,46 +64,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+[ Upstream commit e8de12fb7cde2c85bc31097cd098da79a4818305 ]
 
-commit 5dac665cf403967bb79a7aeb8c182a621fe617ff upstream.
+If the particular version of clang a user has doesn't enable
+-Werror=unknown-warning-option by default, even though it is the
+default[1], then make sure to pass the option to the Kconfig cc-option
+command so that testing options from Kconfig files works properly.
+Otherwise, depending on the default values setup in the clang toolchain
+we will silently assume options such as -Wmaybe-uninitialized are
+supported by clang, when they really aren't.
 
-Since the role_store() uses strncmp(), it's possible to refer
-out-of-memory if the sysfs data size is smaller than strlen("host").
-This patch fixes it by using sysfs_streq() instead of strncmp().
+A compilation issue only started happening for me once commit
+589834b3a009 ("kbuild: Add -Werror=unknown-warning-option to
+CLANG_FLAGS") was applied on top of commit b303c6df80c9 ("kbuild:
+compute false-positive -Wmaybe-uninitialized cases in Kconfig"). This
+leads kbuild to try and test for the existence of the
+-Wmaybe-uninitialized flag with the cc-option command in
+scripts/Kconfig.include, and it doesn't see an error returned from the
+option test so it sets the config value to Y. Then the Makefile tries to
+pass the unknown option on the command line and
+-Werror=unknown-warning-option catches the invalid option and breaks the
+build. Before commit 589834b3a009 ("kbuild: Add
+-Werror=unknown-warning-option to CLANG_FLAGS") the build works fine,
+but any cc-option test of a warning option in Kconfig files silently
+evaluates to true, even if the warning option flag isn't supported on
+clang.
 
-Fixes: cc995c9ec118 ("usb: gadget: udc: renesas_usb3: add support for usb role swap")
-Cc: <stable@vger.kernel.org> # v4.12+
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Note: This doesn't change cc-option usages in Makefiles because those
+use a different rule that includes KBUILD_CFLAGS by default (see the
+__cc-option command in scripts/Kbuild.incluide). The KBUILD_CFLAGS
+variable already has the -Werror=unknown-warning-option flag set. Thanks
+to Doug for pointing out the different rule.
 
+[1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
+Cc: Peter Smith <peter.smith@linaro.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/renesas_usb3.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ scripts/Kconfig.include | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/gadget/udc/renesas_usb3.c
-+++ b/drivers/usb/gadget/udc/renesas_usb3.c
-@@ -19,6 +19,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
-+#include <linux/string.h>
- #include <linux/sys_soc.h>
- #include <linux/uaccess.h>
- #include <linux/usb/ch9.h>
-@@ -2378,9 +2379,9 @@ static ssize_t role_store(struct device
- 	if (usb3->forced_b_device)
- 		return -EBUSY;
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+index dad5583451afb..3b2861f47709b 100644
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -20,7 +20,7 @@ success = $(if-success,$(1),y,n)
  
--	if (!strncmp(buf, "host", strlen("host")))
-+	if (sysfs_streq(buf, "host"))
- 		new_mode_is_host = true;
--	else if (!strncmp(buf, "peripheral", strlen("peripheral")))
-+	else if (sysfs_streq(buf, "peripheral"))
- 		new_mode_is_host = false;
- 	else
- 		return -EINVAL;
+ # $(cc-option,<flag>)
+ # Return y if the compiler supports <flag>, n otherwise
+-cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
++cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
+ 
+ # $(ld-option,<flag>)
+ # Return y if the linker supports <flag>, n otherwise
+-- 
+2.20.1
+
 
 
