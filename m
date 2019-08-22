@@ -2,169 +2,186 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1610C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360E5C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF76206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:54:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="CzG0Wk2h";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="HDTkOQrx"
+	by mail.kernel.org (Postfix) with ESMTP id 082CA21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731766AbfHVHyk (ORCPT
+        id S1731776AbfHVH4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:54:40 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:31242 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726197AbfHVHyk (ORCPT
+        Thu, 22 Aug 2019 03:56:25 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:37435 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725799AbfHVH4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:54:40 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7M7rDAQ014066;
-        Thu, 22 Aug 2019 00:54:20 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=asebsleGK7BS9fcN0sbFoB+K9iif492vBVE8Xdi5FeQ=;
- b=CzG0Wk2hiwnX3ZvlUP5KvMLq5bXCo6EddrcdAkcv6GcXLsXzceJcbd4xM0tgAIElrXIX
- pKjGfBkgcb3Z/3qUyAvbY1qFMbMASM412bl/R6Ft3kQqSfMtLFelI/AmjknnL/+H9hIX
- 8M8SHADGHbvNjLehwLL1Vqx/pGmewOIby0k= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2uhegj9kqw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 22 Aug 2019 00:54:20 -0700
-Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
- ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 22 Aug 2019 00:54:19 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 22 Aug 2019 00:54:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iwvSH3MaJAuQUZblhwSCxYPIOsGxw5zKRCiXXab5RFl5o6yc3EuWW+MnayHvb7ApgynF14VXRMUSfBKAX5TCPauIy4xn6qajJXrBf5UIv/tneTOo3n0GuY3H6LMLZ0H6aiN3FXoLfqg9lpoUbbKbkXnCRky7UVCrXz8LQJ4kAXU74I6nd0wudHaIRxROUSLl7/n4CmQGxHis4207Q/ZwaetW9kdmtPUni4m9LBNfGQoJYK430qxFLXLZ2/ityOAHGG0VvaXVqJJqabwE8o33iaGREt/VLRkAHcpb7H1BMVelpbBWToRsnPtcYmOfeZxsMXrqhjZlOB+xEbOboCRxmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=asebsleGK7BS9fcN0sbFoB+K9iif492vBVE8Xdi5FeQ=;
- b=D59uEi+FlyOfrW2/6hTkq5wfQpI7xI8gdbOZutnlhnxGo3u2E40KDzOROKdQdss//gA1MKdF0kHbRPURelJdDkzOfufLdDLu70oC9JJXPB2I9PVAlxmxt3O+DW0miXhi1pNoID2+GErs1UxRvONuBD51Jdsr+eIaw292bHTpEPlk1sGyerzZvzvSv/rkQ0mbJIs8ydqxBSe8qrN7RJxje78Fx7xTaTu1BBXR2Y/0dgcZaimQwTf5Msx4jyJzmeqo9T/6GO8GdHbJLidzmnOZi/+m9RhXArupQUdfsBidUNlIsBYmn++gm2Jr2QFR29hbrfwTnLsC67ZLAkmganIeyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=asebsleGK7BS9fcN0sbFoB+K9iif492vBVE8Xdi5FeQ=;
- b=HDTkOQrxqeR49ENyDjKyi8HRe+R8pECuFtJ+qUbtVQQO5zRsGBgGg1ddJKnKuNkUxz74NX3AHDWOE9PZ96QNigfqw5pDYzK+tZEKeT0kacoLY95aV6jfpovl5fZKkPYcgyygK+D9Xbz5suu6/9HyR53ETP70lt+fhluyUt58DtI=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1885.namprd15.prod.outlook.com (10.174.254.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Thu, 22 Aug 2019 07:54:17 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::45ee:bc50:acfa:60a5]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::45ee:bc50:acfa:60a5%3]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
- 07:54:16 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Yonghong Song <yhs@fb.com>, Daniel Xu <dxu@dxuuu.xyz>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>
-Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add
- PERF_EVENT_IOC_QUERY_PROBE ioctl
-Thread-Topic: [PATCH v3 bpf-next 1/4] tracing/probe: Add
- PERF_EVENT_IOC_QUERY_PROBE ioctl
-Thread-Index: AQHVVIJ7G4XJ12jTyke2vfGd3/MIdKcEIq6AgAA2IICAAR/TAIAAYKGAgAAbI4CAAANTgIAA2v6AgAAB3AA=
-Date:   Thu, 22 Aug 2019 07:54:16 +0000
-Message-ID: <E9CB8C05-8972-4454-9D19-FA2D0D94F32D@fb.com>
-References: <20190820144503.GV2332@hirez.programming.kicks-ass.net>
- <BWENHQJIN885.216UOYEIWNGFU@dlxu-fedora-R90QNFJV>
- <20190821110856.GB2349@hirez.programming.kicks-ass.net>
- <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
- <20190821183155.GE2349@hirez.programming.kicks-ass.net>
- <5ecdcd72-255d-26d1-baf3-dc64498753c2@fb.com>
- <20190822074737.GG2349@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190822074737.GG2349@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.11)
-x-originating-ip: [2620:10d:c090:180::e026]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0cdcba2f-0c3e-4bff-3f28-08d726d5eea4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR15MB1885;
-x-ms-traffictypediagnostic: MWHPR15MB1885:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB1885B41075E3CB544065DDACB3A50@MWHPR15MB1885.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:935;
-x-forefront-prvs: 01371B902F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(39860400002)(376002)(136003)(189003)(199004)(81166006)(6436002)(486006)(8936002)(50226002)(305945005)(53546011)(7736002)(8676002)(76176011)(6512007)(33656002)(36756003)(4744005)(446003)(186003)(46003)(11346002)(7416002)(2616005)(81156014)(102836004)(6506007)(229853002)(476003)(316002)(54906003)(256004)(6486002)(4326008)(86362001)(99286004)(57306001)(6246003)(2906002)(14454004)(25786009)(6916009)(5660300002)(71200400001)(71190400001)(6116002)(53936002)(64756008)(478600001)(66946007)(66556008)(76116006)(66446008)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1885;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xxpOIh9lLSmcwDEpAlmVuonsMMF05icV2Qmc89Pept6ASvRENv4SKafzXmaMLrR7np2+FH1EEGvdDp9E4PDc41ym0MSLw57xl55Cr5TruPv81TOh52k3kh5Jbq5T3GkLU92TlQTiDDeq2JlMhqdrrbgc5ExeFYukrbOa2M36c82TDzJfZaHRRHchRgoLwZCFydJ07LWE1KLv9uOf3UtPF7mqQljaFwq66wzi2sJg5uyYIj7NdpqJ0IsoRfrtEVRuybDVnAVmHwgLl8Xo+bKjHrm4e7MjQ6iav+3z8VWgLgCcwLmcLFPfR9vR0Af/V2GjlSKSTyQJjQ9TL4pfIUMLNCStxu2aFFT6ZbdWYif+98SglzxGqZpJh1FzMxlBXiOKCgjtBGPK10uaQg68wDPoaYGm8nMUGi+bDinnn66/m44=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B02A8AEC4F72A14E9779D9B3EE834119@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 22 Aug 2019 03:56:25 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 0hxCiaUu9Thuu0hxFij4sI; Thu, 22 Aug 2019 09:56:22 +0200
+Subject: Re: [PATCH v2 1/3] media: add V4L2_CID_UNIT_CELL_SIZE control
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190820094027.4144-1-ribalda@kernel.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <58ea3b45-1936-7326-5064-e2ac2a862b81@xs4all.nl>
+Date:   Thu, 22 Aug 2019 09:56:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cdcba2f-0c3e-4bff-3f28-08d726d5eea4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 07:54:16.7601
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6UulFcHtRBE8xLEXBvAHmU95EusYg9Kq0w5rgZNlAMXe6Z+gRrhKtL1rPcAT3nkecMLYrA5cuwueKanBZvD87w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1885
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908220086
-X-FB-Internal: deliver
+In-Reply-To: <20190820094027.4144-1-ribalda@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfKgjC887wzIfi44vqDnXdGcskFyB4NBnkDhIJF/p0Y1w/SHkGHJbp/xQR/mRdpM447xV7ErGWTz3kpydEcWWetLPDxHW+GIVzBIYjrt3Ovyy5vcvSZp3
+ 2jQw3UWiVOZ4W4LxsN+WmJH7ZrBewXq3doOVvAgenidciV+a9IlVRBQ36EkyI726ngvSzMrYiO/R4tpsEA3/SqdfeYyfDNhG8YSPl2wsLzWTPqq/rffBjP7L
+ FegziwyDCq7i1B7nPQZDVipFoHOSEg153RTMHbUjBvxfqLLwJDoapWWwbHdAndcKScDvZMyFeZ/EbIfJDQskYRVq6vStg9XYCPwOadgTt3F5tLuygnQZBsfM
+ LXWDZ6KE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,=20
+On 8/20/19 11:40 AM, Ricardo Ribalda Delgado wrote:
+> This control returns the unit cell size in nanometres. The struct provides
+> the width and the height in separated fields to take into consideration
+> asymmetric pixels and/or hardware binning.
+> This control is required for automatic calibration of sensors/cameras.
+> 
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> ---
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 11 +++++++++++
+>  include/media/v4l2-ctrls.h           |  2 ++
+>  include/uapi/linux/v4l2-controls.h   |  3 +++
+>  include/uapi/linux/videodev2.h       | 11 +++++++++++
+>  4 files changed, 27 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index cd1ae016706f..ec949453a081 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -978,6 +978,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
+>  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
+>  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
+> +	case V4L2_CID_UNIT_CELL_SIZE:		return "Unit Cell Size";
+>  
+>  	/* FM Radio Modulator controls */
+>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+> @@ -1357,6 +1358,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
+>  		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
+>  		break;
+> +	case V4L2_CID_UNIT_CELL_SIZE:
+> +		*type = V4L2_CTRL_TYPE_AREA;
+> +		break;
+>  	default:
+>  		*type = V4L2_CTRL_TYPE_INTEGER;
+>  		break;
+> @@ -1423,6 +1427,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_RDS_RX_TRAFFIC_ANNOUNCEMENT:
+>  	case V4L2_CID_RDS_RX_TRAFFIC_PROGRAM:
+>  	case V4L2_CID_RDS_RX_MUSIC_SPEECH:
+> +	case V4L2_CID_UNIT_CELL_SIZE:
+>  		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
+>  		break;
+>  	case V4L2_CID_RF_TUNER_PLL_LOCK:
+> @@ -1705,6 +1710,9 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
+>  	case V4L2_CTRL_TYPE_FWHT_PARAMS:
+>  		break;
+>  
+> +	case V4L2_CTRL_TYPE_AREA:
+> +		break;
+> +
+>  	case V4L2_CTRL_TYPE_H264_SPS:
+>  	case V4L2_CTRL_TYPE_H264_PPS:
+>  	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
+> @@ -2403,6 +2411,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+>  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
+>  		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
+>  		break;
+> +	case V4L2_CTRL_TYPE_AREA:
+> +		elem_size = sizeof(struct v4l2_area);
+> +		break;
+>  	default:
+>  		if (type < V4L2_CTRL_COMPOUND_TYPES)
+>  			elem_size = sizeof(s32);
+> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+> index 570ff4b0205a..9a3d11350e67 100644
+> --- a/include/media/v4l2-ctrls.h
+> +++ b/include/media/v4l2-ctrls.h
+> @@ -50,6 +50,7 @@ struct poll_table_struct;
+>   * @p_h264_slice_params:	Pointer to a struct v4l2_ctrl_h264_slice_params.
+>   * @p_h264_decode_params:	Pointer to a struct v4l2_ctrl_h264_decode_params.
+>   * @p_vp8_frame_header:		Pointer to a VP8 frame header structure.
+> + * @p_area:			Pointer to an area.
+>   * @p:				Pointer to a compound value.
+>   */
+>  union v4l2_ctrl_ptr {
+> @@ -68,6 +69,7 @@ union v4l2_ctrl_ptr {
+>  	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
+>  	struct v4l2_ctrl_h264_decode_params *p_h264_decode_params;
+>  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
+> +	struct v4l2_area *p_area;
+>  	void *p;
+>  };
+>  
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index a2669b79b294..1332eabd27b1 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -912,6 +912,9 @@ enum v4l2_auto_focus_range {
+>  #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
+>  #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
+>  
+> +#define V4L2_CID_UNIT_CELL_SIZE			(V4L2_CID_CAMERA_CLASS_BASE+34)
+> +
+> +
+>  /* FM Modulator class control IDs */
+>  
+>  #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 2427bc4d8eba..751e2065ac02 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -422,6 +422,11 @@ struct v4l2_fract {
+>  	__u32   denominator;
+>  };
+>  
+> +struct v4l2_area {
+> +	__u32   width;
+> +	__u32   height;
+> +};
+> +
+>  /**
+>    * struct v4l2_capability - Describes V4L2 device caps returned by VIDIOC_QUERYCAP
+>    *
+> @@ -1718,6 +1723,12 @@ enum v4l2_ctrl_type {
+>  	V4L2_CTRL_TYPE_U8	     = 0x0100,
+>  	V4L2_CTRL_TYPE_U16	     = 0x0101,
+>  	V4L2_CTRL_TYPE_U32	     = 0x0102,
+> +	/*
+> +	 * V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS = 0x0103,
+> +	 * V4L2_CTRL_TYPE_MPEG2_QUANTIZATION = 0x0104,
+> +	 * V4L2_CTRL_TYPE_FWHT_PARAMS = 0x0105,
+> +	 */
+> +	V4L2_CTRL_TYPE_AREA    = 0x0106,
 
-> On Aug 22, 2019, at 12:47 AM, Peter Zijlstra <peterz@infradead.org> wrote=
-:
->=20
-> On Wed, Aug 21, 2019 at 06:43:49PM +0000, Yonghong Song wrote:
->> On 8/21/19 11:31 AM, Peter Zijlstra wrote:
->=20
->>> So extending PERF_RECORD_LOST doesn't work. But PERF_FORMAT_LOST might
->>> still work fine; but you get to implement it for all software events.
->>=20
->> Could you give more specifics about PERF_FORMAT_LOST? Googling=20
->> "PERF_FORMAT_LOST" only yields two emails which we are discussing here :=
--(
->=20
-> Look at what the other PERF_FORMAT_ flags do? Basically it is adding a
-> field to the read(2) output.
+This new type should be documented.
 
-Do we need to implement PERF_FORMAT_LOST for all software events? If user
-space asks for PERF_FORMAT_LOST for events that do not support it, can we
-just fail sys_perf_event_open()?
+Regards,
 
-Thanks,
-Song
+	Hans
+
+>  };
+>  
+>  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
+> 
 
