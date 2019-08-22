@@ -2,85 +2,128 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5A8C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6468AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 910A0233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CA3233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:39:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388487AbfHVOj0 (ORCPT
+        id S2388551AbfHVOjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:39:26 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3948 "EHLO huawei.com"
+        Thu, 22 Aug 2019 10:39:42 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36166 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731487AbfHVOj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:39:26 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 04F91F4E5300D576654F;
-        Thu, 22 Aug 2019 22:39:23 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 22 Aug 2019 22:39:22 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Thu, 22 Aug 2019 22:39:22 +0800
-Date:   Thu, 22 Aug 2019 22:38:42 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-CC:     "Theodore Y. Ts'o" <tytso@mit.edu>, Gao Xiang <hsiangkao@aol.com>,
-        "Richard Weinberger" <richard@nod.at>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: erofs: Question on unused fields in on-disk structs
-Message-ID: <20190822143841.GC195034@architecture4>
-References: <1323459733.69859.1566234633793.JavaMail.zimbra@nod.at>
- <20190819204504.GB10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAFLxGvxr2UMeVa29M9pjLtWMFPz7w6udRV38CRxEF1moyA9_Rw@mail.gmail.com>
- <20190821220251.GA3954@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAFLxGvzLPgD22pVOV_jz1EvC-c7YU_2dEFbBt4q08bSkZ3U0Dg@mail.gmail.com>
- <20190822142142.GB2730@mit.edu>
- <CAFLxGvzGEBH2Z+Bpv68OMeLR1JH0pe6bHn6P-sBG+epLTXbR6w@mail.gmail.com>
+        id S1731487AbfHVOjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:39:41 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id AD8466A9E1BC676579BA;
+        Thu, 22 Aug 2019 22:39:37 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 22 Aug 2019
+ 22:39:28 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <matthias.bgg@gmail.com>,
+        <yuehaibing@huawei.com>, <pihsun@chromium.org>,
+        <swboyd@chromium.org>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH -next] ASoC: mediatek: mt2701: Fix -Wunused-const-variable warnings
+Date:   Thu, 22 Aug 2019 22:37:47 +0800
+Message-ID: <20190822143747.20944-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAFLxGvzGEBH2Z+Bpv68OMeLR1JH0pe6bHn6P-sBG+epLTXbR6w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme709-chm.china.huawei.com (10.1.199.105) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+sound/soc/mediatek/mt2701/mt2701-afe-common.h:66:27: warning:
+ mt2701_afe_backup_list defined but not used [-Wunused-const-variable=]
 
-On Thu, Aug 22, 2019 at 04:29:44PM +0200, Richard Weinberger wrote:
-> On Thu, Aug 22, 2019 at 4:21 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
-> > It might make life easier for other kernel developers if "features"
-> > was named "compat_features" and "requirements" were named
-> > "incompat_features", just because of the long-standing use of that in
-> > ext2, ext3, ext4, ocfs2, etc.  But that naming scheme really is a
-> > legacy of ext2 and its descendents, and there's no real reason why it
-> > has to be that way on other file systems.
-> 
-> Yes, the naming confused me a little. :-)
+mt2701_afe_backup_list is only used in mt2701-afe-pcm.c,
+so just move the definition over there.
 
-Sorry for confusing... And thanks, I'm happy that
-you give us those reports. and sorry about my poor
-English...
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ sound/soc/mediatek/mt2701/mt2701-afe-common.h | 21 ---------------------
+ sound/soc/mediatek/mt2701/mt2701-afe-pcm.c    | 21 +++++++++++++++++++++
+ 2 files changed, 21 insertions(+), 21 deletions(-)
 
-Thanks,
-Gao Xiang
+diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-common.h b/sound/soc/mediatek/mt2701/mt2701-afe-common.h
+index d44faba..32bef5e 100644
+--- a/sound/soc/mediatek/mt2701/mt2701-afe-common.h
++++ b/sound/soc/mediatek/mt2701/mt2701-afe-common.h
+@@ -63,27 +63,6 @@ enum audio_base_clock {
+ 	MT2701_BASE_CLK_NUM,
+ };
+ 
+-static const unsigned int mt2701_afe_backup_list[] = {
+-	AUDIO_TOP_CON0,
+-	AUDIO_TOP_CON4,
+-	AUDIO_TOP_CON5,
+-	ASYS_TOP_CON,
+-	AFE_CONN0,
+-	AFE_CONN1,
+-	AFE_CONN2,
+-	AFE_CONN3,
+-	AFE_CONN15,
+-	AFE_CONN16,
+-	AFE_CONN17,
+-	AFE_CONN18,
+-	AFE_CONN19,
+-	AFE_CONN20,
+-	AFE_CONN21,
+-	AFE_CONN22,
+-	AFE_DAC_CON0,
+-	AFE_MEMIF_PBUF_SIZE,
+-};
+-
+ struct mt2701_i2s_data {
+ 	int i2s_ctrl_reg;
+ 	int i2s_asrc_fs_shift;
+diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
+index d7f5def..76502ba 100644
+--- a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
++++ b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
+@@ -60,6 +60,27 @@ static const struct mt2701_afe_rate mt2701_afe_i2s_rates[] = {
+ 	{ .rate = 352800, .regvalue = 24 },
+ };
+ 
++static const unsigned int mt2701_afe_backup_list[] = {
++	AUDIO_TOP_CON0,
++	AUDIO_TOP_CON4,
++	AUDIO_TOP_CON5,
++	ASYS_TOP_CON,
++	AFE_CONN0,
++	AFE_CONN1,
++	AFE_CONN2,
++	AFE_CONN3,
++	AFE_CONN15,
++	AFE_CONN16,
++	AFE_CONN17,
++	AFE_CONN18,
++	AFE_CONN19,
++	AFE_CONN20,
++	AFE_CONN21,
++	AFE_CONN22,
++	AFE_DAC_CON0,
++	AFE_MEMIF_PBUF_SIZE,
++};
++
+ static int mt2701_dai_num_to_i2s(struct mtk_base_afe *afe, int num)
+ {
+ 	struct mt2701_afe_private *afe_priv = afe->platform_priv;
+-- 
+2.7.4
 
-> 
-> -- 
-> Thanks,
-> //richard
+
