@@ -2,212 +2,93 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7E0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6655FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBEE233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 397B1233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:51:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sCs+e7Jk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389619AbfHVPuW convert rfc822-to-8bit (ORCPT
+        id S2387798AbfHVPvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:50:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49358 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731069AbfHVPuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:50:22 -0400
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8586B85550
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 15:50:21 +0000 (UTC)
-Received: by mail-qk1-f199.google.com with SMTP id d203so6268009qke.4
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:50:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=e33KgK5g3O2XLfmnWFACPhTCEze1U4J8Z33SDjP74cg=;
-        b=jTN9ncA6y6i1a+3iZCLwoWPQ/PrkMcBQEqJM/QHJmdvq+iftCq01dXY5fYeZdpX8r+
-         SmF8RfxlYEQ0QsZ8TVskuunmzuZRadUaXCB0RdVNueFWaXm789v+CKsr+TVFDLCCT9xp
-         5CFw+t2RH8HF1mHez4a+8R1trIwbktzEgMpUeKu9zn2dKtMnSvsV8jwhV3M71meqmGVv
-         aZIGNC2oNpY0vEeT3c5A2ZUFRbhvo3BMym2JqTBot8t111E3FIURPoUZD48YL/HE/7jJ
-         2y/PlQqhOAzBzLtte8L9tSZeRq6sD6+45+3Z73m7SHziDposZpHaEns8CKLLDuOdYqjY
-         +TqA==
-X-Gm-Message-State: APjAAAXyJf6lXw/WwZcTr87+fY1wgFaVWhq4pSe+fBYmpX3Wj99JS4mn
-        6IITaYBrM4mVj//4L1NgH2x4EUPCCjvLoUaZ5cZ1jurATsQLWRIblX7tFzSOopTfhHxj5px7ZL+
-        xCBLi7X5fi07LuYIPZtFAmGEpy3wwrEiqaKxKiSZ7
-X-Received: by 2002:ac8:c86:: with SMTP id n6mr199540qti.345.1566489020852;
-        Thu, 22 Aug 2019 08:50:20 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyRgOzepRKfTeAqRTqi7wUGOejeOBFZfIFjjdiBfCpr2htlaQFncT/AR+JSo1yb4xgQ3hq2ONwRKd7bXhpahuI=
-X-Received: by 2002:ac8:c86:: with SMTP id n6mr199526qti.345.1566489020648;
- Thu, 22 Aug 2019 08:50:20 -0700 (PDT)
+        Thu, 22 Aug 2019 11:51:22 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58316 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727953AbfHVPvV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 11:51:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=mphAHqGMfote5PJqLqpE9cHsYiAfStB4m//vfSN73+w=; b=sCs+e7JkKz0elOXDlbM+7uXis
+        cmrLP7YMN9WyitReDyhu3kxWFp8T32/0BsIIH8EaJBXWHZfzkf1+JTvkiwpwWyjiInJF+XwyOrRuy
+        8x/YqCDQjH5id5NetGVF+s3XcrWRxO23yYHwrqNOTAnxO0YpaqENa2HXhW9iM5FkyTjd4dbFDE7co
+        tYUD0b2eIx5AJTgc+pkKXj83jlSCxj8Pgv92MQxZCEF13WBAC5ZqpUfh0CgKagmEOuaNH+WlwwK9H
+        EfqdvRQCOsV5piFnrXUeXQPVmsM2XA3EFd0dFTl4rnQSGMfEzkJC+tGu+ukHe0EAF0krsHXzH33xS
+        8MfoWyxoQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0pMo-0005Y9-6s; Thu, 22 Aug 2019 15:51:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 20E18305F65;
+        Thu, 22 Aug 2019 17:50:40 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 391CE2029B0A2; Thu, 22 Aug 2019 17:51:12 +0200 (CEST)
+Date:   Thu, 22 Aug 2019 17:51:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Satendra Singh Thakur <sst2005@gmail.com>
+Cc:     Satendra Singh Thakur <satendrasingh.thakur@hcl.com>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] [semaphore] Removed redundant code from semaphore's
+ down family of function
+Message-ID: <20190822155112.GU2369@hirez.programming.kicks-ass.net>
+References: <20190812053014.27743-1-satendrasingh.thakur@hcl.com>
+ <20190812134859.16061-1-sst2005@gmail.com>
 MIME-Version: 1.0
-References: <20190812162740.15898-1-benjamin.tissoires@redhat.com>
- <20190812162740.15898-2-benjamin.tissoires@redhat.com> <20190813075358.2a3cbfbd@pluto.restena.lu>
-In-Reply-To: <20190813075358.2a3cbfbd@pluto.restena.lu>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Thu, 22 Aug 2019 17:50:08 +0200
-Message-ID: <CAO-hwJJUT3eWMrnGP6zsaqdaWNfv=h6tcwyHJsu=Q5Mhp4_Pcw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] HID: do not call hid_set_drvdata(hdev, NULL) in drivers
-To:     =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Ping Cheng <pinglinux@gmail.com>,
-        Jason Gerecke <jason.gerecke@wacom.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190812134859.16061-1-sst2005@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 7:54 AM Bruno Prémont <bonbons@linux-vserver.org> wrote:
->
-> On Mon, 12 Aug 2019 18:27:39 +0200 Benjamin Tissoires wrote:
-> > This is a common pattern in the HID drivers to reset the drvdata. Some
-> > do it properly, some do it only in case of failure.
-> >
-> > But, this is actually already handled by driver core, so there is no need
-> > to do it manually.
-> >
-> > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->
-> For hid-picolcd_core.c:
->   Acked-by: Bruno Prémont <bonbons@linux-vserver.org>
+On Mon, Aug 12, 2019 at 07:18:59PM +0530, Satendra Singh Thakur wrote:
+> -The semaphore code has four funcs
+> down,
+> down_interruptible,
+> down_killable,
+> down_timeout
+> -These four funcs have almost similar code except that
+> they all call lower level function __down_xyz.
+> -This lower level func in-turn call inline func
+> __down_common with appropriate arguments.
+> -This patch creates a common macro for above family of funcs
+> so that duplicate code is eliminated.
+> -Also, __down_common has been made noinline so that code is
+> functionally similar to previous one
+> -For example, earlier down_killable would call __down_killable
+> , which in-turn would call inline func __down_common
+> Now, down_killable calls noinline __down_common directly
+> through a macro
+> -The funcs __down_interruptible, __down_killable etc have been
+> removed as they were just wrapper to __down_common
 
-Thanks for the acks.
+The above is unreadable and seems to lack a reason for this change.
 
-Applied to for-5.4/cleanup
+AFAICT from the actual patch, you're destroying the explicit
+instantiation of the __down*() functions through constant propagation
+into __down_common().
 
-Cheers,
-Benjamin
-
->
-> > ---
-> >  drivers/hid/hid-cougar.c       | 6 ++----
-> >  drivers/hid/hid-gfrm.c         | 7 -------
-> >  drivers/hid/hid-lenovo.c       | 2 --
-> >  drivers/hid/hid-picolcd_core.c | 7 +------
-> >  drivers/hid/hid-sensor-hub.c   | 1 -
-> >  5 files changed, 3 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-cougar.c b/drivers/hid/hid-cougar.c
-> > index e0bb7b34f3a4..4ff3bc1d25e2 100644
-> > --- a/drivers/hid/hid-cougar.c
-> > +++ b/drivers/hid/hid-cougar.c
-> > @@ -207,7 +207,7 @@ static int cougar_probe(struct hid_device *hdev,
-> >       error = hid_parse(hdev);
-> >       if (error) {
-> >               hid_err(hdev, "parse failed\n");
-> > -             goto fail;
-> > +             return error;
-> >       }
-> >
-> >       if (hdev->collection->usage == COUGAR_VENDOR_USAGE) {
-> > @@ -219,7 +219,7 @@ static int cougar_probe(struct hid_device *hdev,
-> >       error = hid_hw_start(hdev, connect_mask);
-> >       if (error) {
-> >               hid_err(hdev, "hw start failed\n");
-> > -             goto fail;
-> > +             return error;
-> >       }
-> >
-> >       error = cougar_bind_shared_data(hdev, cougar);
-> > @@ -249,8 +249,6 @@ static int cougar_probe(struct hid_device *hdev,
-> >
-> >  fail_stop_and_cleanup:
-> >       hid_hw_stop(hdev);
-> > -fail:
-> > -     hid_set_drvdata(hdev, NULL);
-> >       return error;
-> >  }
-> >
-> > diff --git a/drivers/hid/hid-gfrm.c b/drivers/hid/hid-gfrm.c
-> > index 86c317320bf2..699186ff2349 100644
-> > --- a/drivers/hid/hid-gfrm.c
-> > +++ b/drivers/hid/hid-gfrm.c
-> > @@ -123,12 +123,6 @@ static int gfrm_probe(struct hid_device *hdev, const struct hid_device_id *id)
-> >       return ret;
-> >  }
-> >
-> > -static void gfrm_remove(struct hid_device *hdev)
-> > -{
-> > -     hid_hw_stop(hdev);
-> > -     hid_set_drvdata(hdev, NULL);
-> > -}
-> > -
-> >  static const struct hid_device_id gfrm_devices[] = {
-> >       { HID_BLUETOOTH_DEVICE(0x58, 0x2000),
-> >               .driver_data = GFRM100 },
-> > @@ -142,7 +136,6 @@ static struct hid_driver gfrm_driver = {
-> >       .name = "gfrm",
-> >       .id_table = gfrm_devices,
-> >       .probe = gfrm_probe,
-> > -     .remove = gfrm_remove,
-> >       .input_mapping = gfrm_input_mapping,
-> >       .raw_event = gfrm_raw_event,
-> >       .input_configured = gfrm_input_configured,
-> > diff --git a/drivers/hid/hid-lenovo.c b/drivers/hid/hid-lenovo.c
-> > index 364bc7f11d9d..96fa2a2c2cd3 100644
-> > --- a/drivers/hid/hid-lenovo.c
-> > +++ b/drivers/hid/hid-lenovo.c
-> > @@ -866,8 +866,6 @@ static void lenovo_remove_tpkbd(struct hid_device *hdev)
-> >
-> >       led_classdev_unregister(&data_pointer->led_micmute);
-> >       led_classdev_unregister(&data_pointer->led_mute);
-> > -
-> > -     hid_set_drvdata(hdev, NULL);
-> >  }
-> >
-> >  static void lenovo_remove_cptkbd(struct hid_device *hdev)
-> > diff --git a/drivers/hid/hid-picolcd_core.c b/drivers/hid/hid-picolcd_core.c
-> > index 5f7a39a5d4af..1b5c63241af0 100644
-> > --- a/drivers/hid/hid-picolcd_core.c
-> > +++ b/drivers/hid/hid-picolcd_core.c
-> > @@ -534,8 +534,7 @@ static int picolcd_probe(struct hid_device *hdev,
-> >       data = kzalloc(sizeof(struct picolcd_data), GFP_KERNEL);
-> >       if (data == NULL) {
-> >               hid_err(hdev, "can't allocate space for Minibox PicoLCD device data\n");
-> > -             error = -ENOMEM;
-> > -             goto err_no_cleanup;
-> > +             return -ENOMEM;
-> >       }
-> >
-> >       spin_lock_init(&data->lock);
-> > @@ -597,9 +596,6 @@ static int picolcd_probe(struct hid_device *hdev,
-> >       hid_hw_stop(hdev);
-> >  err_cleanup_data:
-> >       kfree(data);
-> > -err_no_cleanup:
-> > -     hid_set_drvdata(hdev, NULL);
-> > -
-> >       return error;
-> >  }
-> >
-> > @@ -635,7 +631,6 @@ static void picolcd_remove(struct hid_device *hdev)
-> >       picolcd_exit_cir(data);
-> >       picolcd_exit_keys(data);
-> >
-> > -     hid_set_drvdata(hdev, NULL);
-> >       mutex_destroy(&data->mutex);
-> >       /* Finally, clean up the picolcd data itself */
-> >       kfree(data);
-> > diff --git a/drivers/hid/hid-sensor-hub.c b/drivers/hid/hid-sensor-hub.c
-> > index be92a6f79687..94c7398b5c27 100644
-> > --- a/drivers/hid/hid-sensor-hub.c
-> > +++ b/drivers/hid/hid-sensor-hub.c
-> > @@ -742,7 +742,6 @@ static void sensor_hub_remove(struct hid_device *hdev)
-> >       }
-> >       spin_unlock_irqrestore(&data->lock, flags);
-> >       mfd_remove_devices(&hdev->dev);
-> > -     hid_set_drvdata(hdev, NULL);
-> >       mutex_destroy(&data->mutex);
-> >  }
-> >
