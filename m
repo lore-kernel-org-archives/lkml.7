@@ -2,100 +2,97 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAEAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B63C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DABCB233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19477233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:55:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731484AbfHVFzk (ORCPT
+        id S1731500AbfHVFzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 01:55:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42850 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731469AbfHVFzk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 01:55:40 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7M5qgk2020448
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:55:39 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uhjbs54yf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:55:38 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 22 Aug 2019 06:55:37 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 22 Aug 2019 06:55:34 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7M5tXsJ59572322
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 22 Aug 2019 05:55:33 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 51B48A405C;
-        Thu, 22 Aug 2019 05:55:33 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A1DFEA405F;
-        Thu, 22 Aug 2019 05:55:32 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.59])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 22 Aug 2019 05:55:32 +0000 (GMT)
-Date:   Thu, 22 Aug 2019 08:55:31 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm: consolidate pgtable_cache_init() and pgd_cache_init()
-References: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
- <1655e1c9-ad2c-fc31-c517-e3f55995c6b1@free.fr>
+        Thu, 22 Aug 2019 01:55:49 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:58378 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726857AbfHVFzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 01:55:48 -0400
+Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
+        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1i0g4T-0002wN-LB; Thu, 22 Aug 2019 15:55:41 +1000
+Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1i0g4P-00011O-Qy; Thu, 22 Aug 2019 15:55:37 +1000
+Date:   Thu, 22 Aug 2019 15:55:37 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH v2] lib/mpi: Eliminate unused umul_ppmm definitions for
+ MIPS
+Message-ID: <20190822055537.GC3860@gondor.apana.org.au>
+References: <20190812193256.55103-1-natechancellor@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1655e1c9-ad2c-fc31-c517-e3f55995c6b1@free.fr>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19082205-0008-0000-0000-0000030BB29C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082205-0009-0000-0000-00004A29DFC5
-Message-Id: <20190822055530.GA18872@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=781 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908220062
+In-Reply-To: <20190812193256.55103-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 06:17:12PM +0200, Marc Gonzalez wrote:
-> On 21/08/2019 17:06, Mike Rapoport wrote:
+On Mon, Aug 12, 2019 at 12:32:57PM -0700, Nathan Chancellor wrote:
+> Clang errors out when building this macro:
 > 
-> > Both pgtable_cache_init() and pgd_cache_init() are used to initialize kmem
-> > cache for page table allocations on several architectures that do not use
-> > PAGE_SIZE tables for one or more levels of the page table hierarchy.
-> > 
-> > Most architectures do not implement these functions and use __week default
+> lib/mpi/generic_mpih-mul1.c:37:24: error: invalid use of a cast in a
+> inline asm context requiring an l-value: remove the cast or build with
+> -fheinous-gnu-extensions
+>                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+>                 ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> lib/mpi/longlong.h:652:20: note: expanded from macro 'umul_ppmm'
+>         : "=l" ((USItype)(w0)), \
+>                 ~~~~~~~~~~^~~
+> lib/mpi/generic_mpih-mul1.c:37:3: error: invalid output constraint '=h'
+> in asm
+>                 umul_ppmm(prod_high, prod_low, s1_ptr[j], s2_limb);
+>                 ^
+> lib/mpi/longlong.h:653:7: note: expanded from macro 'umul_ppmm'
+>              "=h" ((USItype)(w1)) \
+>              ^
+> 2 errors generated.
 > 
-> s/week/weak  ?
+> The C version that is used for GCC 4.4 and up works well with clang;
+> however, it is not currently being used because Clang masks itself
+> as GCC 4.2.1 for compatibility reasons. As Nick points out, we require
+> GCC 4.6 and newer in the kernel so we can eliminate all of the
+> versioning checks and just use the C version of umul_ppmm for all
+> supported compilers.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/605
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+> 
+> This supersedes the following two patches:
+> 
+> https://lore.kernel.org/lkml/20190812033120.43013-4-natechancellor@gmail.com/
+> 
+> https://lore.kernel.org/lkml/20190812033120.43013-5-natechancellor@gmail.com/
+> 
+> I labelled this as a v2 so those don't get applied.
+> 
+>  lib/mpi/longlong.h | 36 +-----------------------------------
+>  1 file changed, 1 insertion(+), 35 deletions(-)
 
-Sure, thanks!
-
+Patch applied.  Thanks.
 -- 
-Sincerely yours,
-Mike.
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
