@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293A5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD0BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2952233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C30233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495249;
-	bh=fVOfMDhv67/fWY9m59BiAVg7e25aNXujUHQmhfjO+cM=;
+	s=default; t=1566495262;
+	bh=9DPX3KSIliTFiRsyLG+ikS6pltUNT9tRg+QaBVPlITA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DbCzy8JHpOWD+jRl1eg1eormy8Q27cWQU0zyY0FP38yY+haMQBmLvhCd9CUxGk7h7
-	 wcluUrLNsb8pP3ZHUM13aEBZkn3huxXJDyNQkXxcHF08AKjdQp2MRBDB0IVFMiQS/T
-	 3AaJ++8I2bXRIvLG2Oy4rr+Wivlm+9scV5peAOzM=
+	b=yby8o7TOZinQi3xjW/3pi7lag/5M2DnSZZAaIqWvaItl8G6hzOC9KLPEE+1PWhi/G
+	 6RLl+OCIV9ffoRam2Q6mip1aXl0ABFPAVuBwxK3ro2TrTWyZx2e3W1LCL+0fjUxlUn
+	 tmstzWObhP9RMq0L3H0rbVqMihUaazbds57YEwco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392692AbfHVReH (ORCPT
+        id S2392767AbfHVReV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:34:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49388 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:34:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391857AbfHVRZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:33 -0400
+        id S2404400AbfHVRZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:23 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 108FA23400;
-        Thu, 22 Aug 2019 17:25:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EE4E206DD;
+        Thu, 22 Aug 2019 17:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494733;
-        bh=fVOfMDhv67/fWY9m59BiAVg7e25aNXujUHQmhfjO+cM=;
+        s=default; t=1566494722;
+        bh=9DPX3KSIliTFiRsyLG+ikS6pltUNT9tRg+QaBVPlITA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fvUK+2bBRwmeA8dRa0FQQln1nwjtMRv86lFAlq84hwUsuFJYZ3Vpal9vBycOxcw1j
-         col3jfibPBykD1PLa3LtsDPcfv5R7JGTLVyApml05swUBmDT7qGaHk1kPSknTJWfo6
-         91h+3UVPtREv13cnT6QiYUHxUZmjpH8TkycUP36s=
+        b=CP9m+jxqi+bHuCdxR3Ck0YIu+xr3eatQb4ivJbFPN0sp01ehGgvQrHJCxdxSmEC9d
+         7zbkXohyBshjkw2ECq/p4d++USGUTkYY8pPIy/uegkw+GNHzGUcfPY6j9TO8l9Ux+v
+         y1RL+E523h7YwxomkISHMEpPJeiuhYZc2lUoguY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+276ddebab3382bbf72db@syzkaller.appspotmail.com,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 4.19 24/85] netfilter: ebtables: also count base chain policies
-Date:   Thu, 22 Aug 2019 10:18:57 -0700
-Message-Id: <20190822171732.213000750@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 11/85] ALSA: hda/realtek - Add quirk for HP Envy x360
+Date:   Thu, 22 Aug 2019 10:18:44 -0700
+Message-Id: <20190822171731.561759150@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -61,79 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 3b48300d5cc7c7bed63fddb006c4046549ed4aec upstream.
+commit 190d03814eb3b49d4f87ff38fef26d36f3568a60 upstream.
 
-ebtables doesn't include the base chain policies in the rule count,
-so we need to add them manually when we call into the x_tables core
-to allocate space for the comapt offset table.
+HP Envy x360 (AMD Ryzen-based model) with 103c:8497 needs the same
+quirk like HP Spectre x360 for enabling the mute LED over Mic3 pin.
 
-This lead syzbot to trigger:
-WARNING: CPU: 1 PID: 9012 at net/netfilter/x_tables.c:649
-xt_compat_add_offset.cold+0x11/0x36 net/netfilter/x_tables.c:649
-
-Reported-by: syzbot+276ddebab3382bbf72db@syzkaller.appspotmail.com
-Fixes: 2035f3ff8eaa ("netfilter: ebtables: compat: un-break 32bit setsockopt when no rules are present")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204373
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bridge/netfilter/ebtables.c |   28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -1779,20 +1779,28 @@ static int compat_calc_entry(const struc
- 	return 0;
- }
- 
-+static int ebt_compat_init_offsets(unsigned int number)
-+{
-+	if (number > INT_MAX)
-+		return -EINVAL;
-+
-+	/* also count the base chain policies */
-+	number += NF_BR_NUMHOOKS;
-+
-+	return xt_compat_init_offsets(NFPROTO_BRIDGE, number);
-+}
- 
- static int compat_table_info(const struct ebt_table_info *info,
- 			     struct compat_ebt_replace *newinfo)
- {
- 	unsigned int size = info->entries_size;
- 	const void *entries = info->entries;
-+	int ret;
- 
- 	newinfo->entries_size = size;
--	if (info->nentries) {
--		int ret = xt_compat_init_offsets(NFPROTO_BRIDGE,
--						 info->nentries);
--		if (ret)
--			return ret;
--	}
-+	ret = ebt_compat_init_offsets(info->nentries);
-+	if (ret)
-+		return ret;
- 
- 	return EBT_ENTRY_ITERATE(entries, size, compat_calc_entry, info,
- 							entries, newinfo);
-@@ -2241,11 +2249,9 @@ static int compat_do_replace(struct net
- 
- 	xt_compat_lock(NFPROTO_BRIDGE);
- 
--	if (tmp.nentries) {
--		ret = xt_compat_init_offsets(NFPROTO_BRIDGE, tmp.nentries);
--		if (ret < 0)
--			goto out_unlock;
--	}
-+	ret = ebt_compat_init_offsets(tmp.nentries);
-+	if (ret < 0)
-+		goto out_unlock;
- 
- 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
- 	if (ret < 0)
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6851,6 +6851,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x103c, 0x82bf, "HP G3 mini", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x82c0, "HP G3 mini premium", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
++	SND_PCI_QUIRK(0x103c, 0x8497, "HP Envy x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
+ 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
+ 	SND_PCI_QUIRK(0x1043, 0x106d, "Asus K53BE", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
 
 
