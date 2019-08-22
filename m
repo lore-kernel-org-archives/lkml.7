@@ -2,131 +2,147 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94328C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8DBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 680EB22DD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:16:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVn+IM8Y"
+	by mail.kernel.org (Postfix) with ESMTP id 3C3D022DD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbfHVDQg (ORCPT
+        id S1730840AbfHVDTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 23:16:36 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44218 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfHVDQf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 23:16:35 -0400
-Received: by mail-io1-f66.google.com with SMTP id j4so655782iog.11;
-        Wed, 21 Aug 2019 20:16:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TtertmLvNhD994TQ2dS81rm18H0RxAIy1U/i+r1aP8c=;
-        b=fVn+IM8YO9kCNczHLi2YD/XfNxmhEf2UsVUOkmv4WYU8hT1mAb+2WclAcCAtXXAT69
-         uOW4AkayV4i+WXYIrra32kM+WRlTpOmvNOqQqHKl/haoonOyxCpomBLzuE1+eROW8XbT
-         srfKPnbYJS6DIz4M9psKQSJWlm3/SGmIU8wxw3yt+VAe/jG/cYhMkjvkVVowKIV4WBFX
-         WR2u/ja18MW73HyyNrP5+3OH1wz4Vvm2Zr82n+CggKaRQBQZS0FWynYy/wiT+2s1hIAs
-         ncuuL2/9p9waVgTPz4ycytEaTAdZTlGjVxEAu5Njw0OejAtaBmII079XLkcazxrbe7YM
-         Hgsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TtertmLvNhD994TQ2dS81rm18H0RxAIy1U/i+r1aP8c=;
-        b=Lvt5gG06m6VCSvgEpiFbixDKuVjSWNI2cWvozxvsmfmbU9JogwRoaFbRMGknlsSrWe
-         JqhKhwHGNuTb2fesqYbFWeZsckZS2yiblRZO3Z6rUsNrByTaMMBtxylcVhcOC+ac/SUT
-         iwkc6mxkl/DNn6EhIk3DMLu2NFbdYhz9IF8IM/BwByKlgghW6LGPqwROCNmmehCQaZik
-         hq0bzzdGlEjRoEwieTXNOjHmJuFTQPlQ7BjIjiJMSwLZ82lD8qdNZaolLRS2VPLB8c/3
-         u4KH1xgWo2M2/uxOY0snEouNrdJhVvf8LTFMWaBiFCz6fC6MD7FmvQcke9zU2NN1LnlR
-         yZTg==
-X-Gm-Message-State: APjAAAUyamKSXkAbd6r3OO+2VXB9zWKwJ40npz97XtoN282DSIQhDCte
-        bWdxKC8ZE9wiXpC0VX3g0g==
-X-Google-Smtp-Source: APXvYqziqhmkvV2PqA2POT4i7S3BQ4r8ivWZ0xA2khR9WBcWupbZZMTRTn+Gs2DRZBoSW5YMKVO9gQ==
-X-Received: by 2002:a6b:3c0a:: with SMTP id k10mr7951406iob.271.1566443794786;
-        Wed, 21 Aug 2019 20:16:34 -0700 (PDT)
-Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id 8sm19911023ion.26.2019.08.21.20.16.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 21 Aug 2019 20:16:32 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 23:16:30 -0400
-From:   Branden Bonaby <brandonbonaby94@gmail.com>
-To:     Harry Zhang <harz@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/3] tools: hv: add vmbus testing tool
-Message-ID: <20190822031630.GA37262@Test-Virtual-Machine>
-References: <cover.1566340843.git.brandonbonaby94@gmail.com>
- <c63cae8e916cbfa4a3fe627da3a545736d0b45dc.1566340843.git.brandonbonaby94@gmail.com>
- <PS1P15301MB02497E19A17D71913DA32857C0A50@PS1P15301MB0249.APCP153.PROD.OUTLOOK.COM>
+        Wed, 21 Aug 2019 23:19:01 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:4756 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726785AbfHVDTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 23:19:00 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 63B236385ECCEE5B31CE;
+        Thu, 22 Aug 2019 11:18:58 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Thu, 22 Aug 2019
+ 11:18:50 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <acourbot@nvidia.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] gpio: Move gpiochip_lock/unlock_as_irq to gpio/driver.h
+Date:   Thu, 22 Aug 2019 11:18:17 +0800
+Message-ID: <20190822031817.32888-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PS1P15301MB02497E19A17D71913DA32857C0A50@PS1P15301MB0249.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 01:36:09AM +0000, Harry Zhang wrote:
-> Tool function issues:  Please validate args errors for  '-p' and '--path',  in or following validate_args_path().  
-> 
-> Comments of functionality:
-> -	it's confusing when fuzz_testing are all OFF, then user run ' python3 /home/lisa/vmbus_testing -p /sys/kernel/debug/hyperv/000d3a6e-4548-000d-3a6e-4548000d3a6e delay -d 0 0 -D ' which will enable all delay testing state ('Y' in state files).  even I used "-D", "--dis_all" param. 
-> -	if we have subparsers of "disable-all" for the testing tool, then probably we don't need the mutually_exclusive_group under subparsers of "delay"
-> -	the path argument (-p) could be an argument for subparsers of "delay" and "view" only.
-> 
-> Regards,
-> Harry
->
+If CONFIG_GPIOLIB is not, gpiochip_lock/unlock_as_irq will
+conflict as this:
 
-So I made the choice to keep disabling the state and disabling delay
-testing seperate, because once we start adding other testing options
-you wouldn't want to inadvertently disable all testing especially
-if you were doing more than one type of test at a time.
-So with your configuration
+In file included from sound/soc/codecs/wm5100.c:18:0:
+./include/linux/gpio.h:224:19: error: static declaration of gpiochip_lock_as_irq follows non-static declaration
+ static inline int gpiochip_lock_as_irq(struct gpio_chip *chip,
+                   ^~~~~~~~~~~~~~~~~~~~
+In file included from sound/soc/codecs/wm5100.c:17:0:
+./include/linux/gpio/driver.h:494:5: note: previous declaration of gpiochip_lock_as_irq was here
+ int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
+     ^~~~~~~~~~~~~~~~~~~~
+In file included from sound/soc/codecs/wm5100.c:18:0:
+./include/linux/gpio.h:231:20: error: static declaration of gpiochip_unlock_as_irq follows non-static declaration
+ static inline void gpiochip_unlock_as_irq(struct gpio_chip *chip,
+                    ^~~~~~~~~~~~~~~~~~~~~~
+In file included from sound/soc/codecs/wm5100.c:17:0:
+./include/linux/gpio/driver.h:495:6: note: previous declaration of gpiochip_unlock_as_irq was here
+ void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
+     ^~~~~~~~~~~~~~~~~~~~~~
 
-'python3 /home/lisa/vmbus_testing -p /sys/kernel/debug/hyperv/000d3a6e-4548-000d-3a6e-4548000d3a6e delay -d 0 0 -D '
+Move them to gpio/driver.h and use CONFIG_GPIOLIB guard this.
 
-this would stop all delay testing on all the devices but wouldn't change
-their test state to OFF 'N'.So thats why I have the option -s --state to
-change the state to Off with a -s 0. Then to disable all types of testing
-and change the state to OFF thats where the 'disable-all' subparser  comes in.
-with:
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: d74be6dfea1b ("gpio: remove gpiod_lock/unlock_as_irq()")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ include/linux/gpio.h        | 13 -------------
+ include/linux/gpio/driver.h | 19 ++++++++++++++++---
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
-'python3 /home/lisa/vmbus_testing disable-all
+diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+index f757a58..2157717 100644
+--- a/include/linux/gpio.h
++++ b/include/linux/gpio.h
+@@ -221,19 +221,6 @@ static inline int gpio_to_irq(unsigned gpio)
+ 	return -EINVAL;
+ }
+ 
+-static inline int gpiochip_lock_as_irq(struct gpio_chip *chip,
+-				       unsigned int offset)
+-{
+-	WARN_ON(1);
+-	return -EINVAL;
+-}
+-
+-static inline void gpiochip_unlock_as_irq(struct gpio_chip *chip,
+-					  unsigned int offset)
+-{
+-	WARN_ON(1);
+-}
+-
+ static inline int irq_to_gpio(unsigned irq)
+ {
+ 	/* irq can never have been returned from gpio_to_irq() */
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 4d2d7b7..1778106 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -490,9 +490,6 @@ extern int devm_gpiochip_add_data(struct device *dev, struct gpio_chip *chip,
+ extern struct gpio_chip *gpiochip_find(void *data,
+ 			      int (*match)(struct gpio_chip *chip, void *data));
+ 
+-/* lock/unlock as IRQ */
+-int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
+-void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
+ bool gpiochip_line_is_irq(struct gpio_chip *chip, unsigned int offset);
+ int gpiochip_reqres_irq(struct gpio_chip *chip, unsigned int offset);
+ void gpiochip_relres_irq(struct gpio_chip *chip, unsigned int offset);
+@@ -710,6 +707,10 @@ void devprop_gpiochip_set_names(struct gpio_chip *chip,
+ 
+ struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
+ 
++/* lock/unlock as IRQ */
++int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
++void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
++
+ #else /* CONFIG_GPIOLIB */
+ 
+ static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+@@ -719,6 +720,18 @@ static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+ 	return ERR_PTR(-ENODEV);
+ }
+ 
++static inline int gpiochip_lock_as_irq(struct gpio_chip *chip,
++				       unsigned int offset)
++{
++	WARN_ON(1);
++	return -EINVAL;
++}
++
++static inline void gpiochip_unlock_as_irq(struct gpio_chip *chip,
++					  unsigned int offset)
++{
++	WARN_ON(1);
++}
+ #endif /* CONFIG_GPIOLIB */
+ 
+ #endif /* __LINUX_GPIO_DRIVER_H */
+-- 
+2.7.4
 
-For that last point I don't understand what you mean, are you saying it would be
-better to have something like this using  delay as an example?
 
-'python3 /home/lisa/vmbus_testing delay -p /sys/kernel/debug/hyperv/000d3a6e-4548-000d-3a6e-4548000d3a6e'
-
-If thats what you mean I figured it was better to make the -p accessible
-to all test type so I made it apart of the main parser. This would allow
-us to just have it there once instead of having to make a -p for every
-subparser.
-
-Also maybe I need to change the examples and the help text
-because with the -D option for delay you wouldnt actually need to put in 
-the path. As
-
-'python3 /home/lisa/vmbus_testing delay -d 0 0 -D '
-
-would suffice to stop delay testing on all devices; -E would enable
-it for all devices and change the state to On 'Y' if it wasn't already.
-
-let me know your thoughts
-
-branden bonaby
