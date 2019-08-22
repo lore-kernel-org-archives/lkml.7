@@ -2,199 +2,228 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8B2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73BDC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64DC2341A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AkW4PEg8"
+	by mail.kernel.org (Postfix) with ESMTP id 99D2C2339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389629AbfHVUAl (ORCPT
+        id S2391383AbfHVUA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:00:41 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:51034 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389524AbfHVUAi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:00:38 -0400
-Received: by mail-qt1-f201.google.com with SMTP id c14so7657262qtn.17
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 13:00:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=9WhbLtA1PXXZFsn027jIR9WnGYXiAtblVNlzQiAJJRM=;
-        b=AkW4PEg8sMv0JywT4cALwVmK7sakobFBNA609slVBXgyG8MnxhqVyi9tIn5nwBPERu
-         /Il6KfJlShTL+7xkVedpbOriuKmmSnDwS1QbvswmpaOYKu/P+l5TZqxd0EL+rMJ8hhju
-         WqpUyTZultC9mQ7GPF3mRep7adSIG0Uf6FYCfxBmZEDSTzIUDTRKZtVkThozogeLUppD
-         L6z5FDhHLpn7fj69PbWz3utrOf2gUa65DXB3Mh2IFjZrxHCpzXKV5jNHXSu4cq1bOpkR
-         DpQqIaxhqy6jAAIZG8he16Vj7ll9IQca5qdfTNZrbco8yzKEToRhsYh+e+7mq0N4aNyT
-         +e/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=9WhbLtA1PXXZFsn027jIR9WnGYXiAtblVNlzQiAJJRM=;
-        b=qnP4OerMnCZLMl4XjLt34TcQaC/5xaKb4aES4JJqKU6cN6E0ml+/ZoZG0go/x4STW6
-         xm04jkLktwcEHmcnEgcNkWYWt0zfAB/WTpcbqOrziGYpPw0Gk3rBueqpfBpLgzRmyh9v
-         EwJeDON9kQJl9gIEIFQheoHqE1ArXiqFSWcD6CykOnWb/qyE4Z3M53kPLIcoLq9D+ujQ
-         GbJKK7KN62JHu0eBhow1AhX0IjUeJJiV7zNmhb0QWsI3ZVahTUoYR/HCGvYOJgfKD82S
-         g7YQvLAy1saq8XvKLjW2HtSNLgwpZqa6Gda7rm9HA96JYdy4eU1sw65K3gKvae7yKAKc
-         XeAQ==
-X-Gm-Message-State: APjAAAUWycQFj0SBF56jZqFZ3HyMzDkgj1c09+LSAumOkDnxzNrNfAx6
-        C1Zy+U+5aeiV6ouR8S5lIKAwaLcBFxw=
-X-Google-Smtp-Source: APXvYqxx8BxWXRQ3WUuUqowsTxGrCRGmGyHhwE4M6AywtCiosAGn84MKaz7FSzZ64J6yaYzk/KOj1mNUZ00=
-X-Received: by 2002:a0c:f147:: with SMTP id y7mr1083982qvl.244.1566504037397;
- Thu, 22 Aug 2019 13:00:37 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 13:00:29 -0700
-In-Reply-To: <20190822200030.141272-1-khazhy@google.com>
-Message-Id: <20190822200030.141272-2-khazhy@google.com>
-Mime-Version: 1.0
-References: <20190822200030.141272-1-khazhy@google.com>
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v2 2/3] fuse: pass gfp flags to fuse_request_alloc
-From:   Khazhismel Kumykov <khazhy@google.com>
-To:     miklos@szeredi.hu
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shakeelb@google.com, Khazhismel Kumykov <khazhy@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 22 Aug 2019 16:00:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34588 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388328AbfHVUA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 16:00:56 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 222268980FB;
+        Thu, 22 Aug 2019 20:00:55 +0000 (UTC)
+Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E4F351001B08;
+        Thu, 22 Aug 2019 20:00:53 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 15:00:51 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Raphael Gault <raphael.gault@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com,
+        julien.thierry.kdev@gmail.com, raph.gault+kdev@gmail.com
+Subject: Re: [RFC v4 04/18] objtool: arm64: Add required implementation for
+ supporting the aarch64 architecture in objtool.
+Message-ID: <20190822200051.in6qxtv23le6jrtf@treble>
+References: <20190816122403.14994-1-raphael.gault@arm.com>
+ <20190816122403.14994-5-raphael.gault@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190816122403.14994-5-raphael.gault@arm.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 22 Aug 2019 20:00:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of having a helper per flag
+On Fri, Aug 16, 2019 at 01:23:49PM +0100, Raphael Gault wrote:
+> diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
+> index e91e12807678..bb5ce810fb6e 100644
+> --- a/tools/objtool/arch.h
+> +++ b/tools/objtool/arch.h
+> @@ -62,9 +62,16 @@ struct op_src {
+>  	int offset;
+>  };
+>  
+> +struct op_extra {
+> +	unsigned char used;
+> +	unsigned char reg;
+> +	int offset;
+> +};
+> +
+>  struct stack_op {
+>  	struct op_dest dest;
+>  	struct op_src src;
+> +	struct op_extra extra;
 
-Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
----
- fs/fuse/dev.c    | 16 +++-------------
- fs/fuse/file.c   |  6 +++---
- fs/fuse/fuse_i.h |  4 +---
- fs/fuse/inode.c  |  4 ++--
- 4 files changed, 9 insertions(+), 21 deletions(-)
+Maybe the arch-specific data structure should just be named 'arch'
+instead of 'extra'.
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index ea8237513dfa..c957620ce7ba 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -66,7 +66,7 @@ static struct page **fuse_req_pages_alloc(unsigned int npages, gfp_t flags,
- 	return pages;
- }
- 
--static struct fuse_req *__fuse_request_alloc(unsigned npages, gfp_t flags)
-+struct fuse_req *fuse_request_alloc(unsigned int npages, gfp_t flags)
- {
- 	struct fuse_req *req = kmem_cache_zalloc(fuse_req_cachep, flags);
- 	if (req) {
-@@ -90,18 +90,8 @@ static struct fuse_req *__fuse_request_alloc(unsigned npages, gfp_t flags)
- 	}
- 	return req;
- }
--
--struct fuse_req *fuse_request_alloc(unsigned npages)
--{
--	return __fuse_request_alloc(npages, GFP_KERNEL);
--}
- EXPORT_SYMBOL_GPL(fuse_request_alloc);
- 
--struct fuse_req *fuse_request_alloc_nofs(unsigned npages)
--{
--	return __fuse_request_alloc(npages, GFP_NOFS);
--}
--
- static void fuse_req_pages_free(struct fuse_req *req)
- {
- 	if (req->pages != req->inline_pages)
-@@ -201,7 +191,7 @@ static struct fuse_req *__fuse_get_req(struct fuse_conn *fc, unsigned npages,
- 	if (fc->conn_error)
- 		goto out;
- 
--	req = fuse_request_alloc(npages);
-+	req = fuse_request_alloc(npages, GFP_KERNEL);
- 	err = -ENOMEM;
- 	if (!req) {
- 		if (for_background)
-@@ -310,7 +300,7 @@ struct fuse_req *fuse_get_req_nofail_nopages(struct fuse_conn *fc,
- 	wait_event(fc->blocked_waitq, fc->initialized);
- 	/* Matches smp_wmb() in fuse_set_initialized() */
- 	smp_rmb();
--	req = fuse_request_alloc(0);
-+	req = fuse_request_alloc(0, GFP_KERNEL);
- 	if (!req)
- 		req = get_reserved_req(fc, file);
- 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 5ae2828beb00..572d8347ebcb 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -50,7 +50,7 @@ struct fuse_file *fuse_file_alloc(struct fuse_conn *fc)
- 		return NULL;
- 
- 	ff->fc = fc;
--	ff->reserved_req = fuse_request_alloc(0);
-+	ff->reserved_req = fuse_request_alloc(0, GFP_KERNEL);
- 	if (unlikely(!ff->reserved_req)) {
- 		kfree(ff);
- 		return NULL;
-@@ -1703,7 +1703,7 @@ static int fuse_writepage_locked(struct page *page)
- 
- 	set_page_writeback(page);
- 
--	req = fuse_request_alloc_nofs(1);
-+	req = fuse_request_alloc(1, GFP_NOFS);
- 	if (!req)
- 		goto err;
- 
-@@ -1923,7 +1923,7 @@ static int fuse_writepages_fill(struct page *page,
- 		struct fuse_inode *fi = get_fuse_inode(inode);
- 
- 		err = -ENOMEM;
--		req = fuse_request_alloc_nofs(FUSE_REQ_INLINE_PAGES);
-+		req = fuse_request_alloc(FUSE_REQ_INLINE_PAGES, GFP_NOFS);
- 		if (!req) {
- 			__free_page(tmp_page);
- 			goto out_unlock;
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 24dbca777775..8080a51096e9 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -902,9 +902,7 @@ void __exit fuse_ctl_cleanup(void);
- /**
-  * Allocate a request
-  */
--struct fuse_req *fuse_request_alloc(unsigned npages);
--
--struct fuse_req *fuse_request_alloc_nofs(unsigned npages);
-+struct fuse_req *fuse_request_alloc(unsigned int npages, gfp_t flags);
- 
- bool fuse_req_realloc_pages(struct fuse_conn *fc, struct fuse_req *req,
- 			    gfp_t flags);
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 4bb885b0f032..5afd1872b8b1 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -1177,13 +1177,13 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
- 	/* Root dentry doesn't have .d_revalidate */
- 	sb->s_d_op = &fuse_dentry_operations;
- 
--	init_req = fuse_request_alloc(0);
-+	init_req = fuse_request_alloc(0, GFP_KERNEL);
- 	if (!init_req)
- 		goto err_put_root;
- 	__set_bit(FR_BACKGROUND, &init_req->flags);
- 
- 	if (is_bdev) {
--		fc->destroy_req = fuse_request_alloc(0);
-+		fc->destroy_req = fuse_request_alloc(0, GFP_KERNEL);
- 		if (!fc->destroy_req)
- 			goto err_free_init_req;
- 	}
+> --- /dev/null
+> +++ b/tools/objtool/arch/arm64/include/arch_special.h
+> @@ -0,0 +1,36 @@
+> +/*
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#ifndef _ARM64_ARCH_SPECIAL_H
+> +#define _ARM64_ARCH_SPECIAL_H
+> +
+> +#define EX_ENTRY_SIZE		8
+> +#define EX_ORIG_OFFSET		0
+> +#define EX_NEW_OFFSET		4
+> +
+> +#define JUMP_ENTRY_SIZE		16
+> +#define JUMP_ORIG_OFFSET	0
+> +#define JUMP_NEW_OFFSET		4
+> +
+> +#define ALT_ENTRY_SIZE		12
+> +#define ALT_ORIG_OFFSET		0
+> +#define ALT_NEW_OFFSET		4
+> +#define ALT_FEATURE_OFFSET	8
+> +#define ALT_ORIG_LEN_OFFSET	10
+> +#define ALT_NEW_LEN_OFFSET	11
+> +
+> +#define X86_FEATURE_POPCNT (4 * 32 + 23)
+> +#define X86_FEATURE_SMAP   (9 * 32 + 20)
+
+It's weird to have these x86-specific macros here.  I guess they're
+needed to compile because the later patch hasn't abstracted it out yet.
+
+This patch should really come later in the series, *after* all the
+arch-specific bits have been abstracted out of the generic code.
+
+> +
+> +#endif /* _ARM64_ARCH_SPECIAL_H */
+> diff --git a/tools/objtool/arch/arm64/include/asm/orc_types.h b/tools/objtool/arch/arm64/include/asm/orc_types.h
+> new file mode 100644
+> index 000000000000..9b04885eb785
+> --- /dev/null
+> +++ b/tools/objtool/arch/arm64/include/asm/orc_types.h
+> @@ -0,0 +1,96 @@
+> +/*
+> + * Copyright (C) 2017 Josh Poimboeuf <jpoimboe@redhat.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#ifndef _ORC_TYPES_H
+> +#define _ORC_TYPES_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/compiler.h>
+> +
+> +/*
+> + * The ORC_REG_* registers are base registers which are used to find other
+> + * registers on the stack.
+> + *
+> + * ORC_REG_PREV_SP, also known as DWARF Call Frame Address (CFA), is the
+> + * address of the previous frame: the caller's SP before it called the current
+> + * function.
+> + *
+> + * ORC_REG_UNDEFINED means the corresponding register's value didn't change in
+> + * the current frame.
+> + *
+> + * The most commonly used base registers are SP and BP -- which the previous SP
+> + * is usually based on -- and PREV_SP and UNDEFINED -- which the previous BP is
+> + * usually based on.
+> + *
+> + * The rest of the base registers are needed for special cases like entry code
+> + * and GCC realigned stacks.
+> + */
+> +#define ORC_REG_UNDEFINED		0
+> +#define ORC_REG_PREV_SP			1
+> +#define ORC_REG_DX			2
+> +#define ORC_REG_DI			3
+> +#define ORC_REG_BP			4
+> +#define ORC_REG_SP			5
+> +#define ORC_REG_R10			6
+> +#define ORC_REG_R13			7
+> +#define ORC_REG_BP_INDIRECT		8
+> +#define ORC_REG_SP_INDIRECT		9
+> +#define ORC_REG_MAX			15
+> +
+> +/*
+> + * ORC_TYPE_CALL: Indicates that sp_reg+sp_offset resolves to PREV_SP (the
+> + * caller's SP right before it made the call).  Used for all callable
+> + * functions, i.e. all C code and all callable asm functions.
+> + *
+> + * ORC_TYPE_REGS: Used in entry code to indicate that sp_reg+sp_offset points
+> + * to a fully populated pt_regs from a syscall, interrupt, or exception.
+> + *
+> + * ORC_TYPE_REGS_IRET: Used in entry code to indicate that sp_reg+sp_offset
+> + * points to the iret return frame.
+> + *
+> + * The UNWIND_HINT macros are used only for the unwind_hint struct.  They
+> + * aren't used in struct orc_entry due to size and complexity constraints.
+> + * Objtool converts them to real types when it converts the hints to orc
+> + * entries.
+> + */
+> +#define ORC_TYPE_CALL			0
+> +#define ORC_TYPE_REGS			1
+> +#define ORC_TYPE_REGS_IRET		2
+> +#define UNWIND_HINT_TYPE_SAVE		3
+> +#define UNWIND_HINT_TYPE_RESTORE	4
+> +
+> +#ifndef __ASSEMBLY__
+> +/*
+> + * This struct is more or less a vastly simplified version of the DWARF Call
+> + * Frame Information standard.  It contains only the necessary parts of DWARF
+> + * CFI, simplified for ease of access by the in-kernel unwinder.  It tells the
+> + * unwinder how to find the previous SP and BP (and sometimes entry regs) on
+> + * the stack for a given code address.  Each instance of the struct corresponds
+> + * to one or more code locations.
+> + */
+> +struct orc_entry {
+> +	s16		sp_offset;
+> +	s16		bp_offset;
+> +	unsigned	sp_reg:4;
+> +	unsigned	bp_reg:4;
+> +	unsigned	type:2;
+> +	unsigned	end:1;
+> +} __packed;
+> +
+> +#endif /* __ASSEMBLY__ */
+> +
+> +#endif /* _ORC_TYPES_H */
+
+Since ORC is now treated as arch-specific, and not yet implemented for
+arm64, can this header file just be (basically) empty for now?
+
 -- 
-2.23.0.187.g17f5b7556c-goog
-
+Josh
