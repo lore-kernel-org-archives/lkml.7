@@ -2,140 +2,104 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 479C1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172BBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20786233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495344;
-	bh=23yLYRYpZScSgWCIO/+4mT49aq0tGCkThcNRFW6pIUc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ySBvBB0DtdboUH5bZs6rxXVT3zExIIMBexXDunjPvuEKkwA2YKwjcjUSwUc8M5Z26
-	 twGXUTuBek4q3sKCeLi9rDvghLRbUaG2BiHSVdhcAWmPqMAZBdUJ6jXtnSipAIpXtK
-	 XatpT+m/QlSI0X5eHub82aIXhh61gdvrST13/Tr4=
+	by mail.kernel.org (Postfix) with ESMTP id E19DE20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="euLLhY+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390214AbfHVRfn (ORCPT
+        id S2404871AbfHVRfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:35:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391821AbfHVRZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:04 -0400
-Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19EE223427;
-        Thu, 22 Aug 2019 17:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494703;
-        bh=23yLYRYpZScSgWCIO/+4mT49aq0tGCkThcNRFW6pIUc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tDsq8zZTcdcZlTWDSaUL6EjIlDmPJgGXgDwomnuu34ne+hZBcvvj7lo8zM8XAJLkB
-         jIrOxGAhkT9TsDel8fLcEcE4/A4UNK7LLnV2zCRA7HMsJj2CUS0OjwgzSGJeQa1In/
-         4qaT8Pr4EYWvf60w1qk5Fz64GXfDg0HV4uptqOXM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.14 57/71] arm64: ftrace: Ensure module ftrace trampoline is coherent with I-side
-Date:   Thu, 22 Aug 2019 10:19:32 -0700
-Message-Id: <20190822171730.254380401@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
-References: <20190822171726.131957995@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 22 Aug 2019 13:35:51 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38555 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391819AbfHVRZD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:03 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w11so3370520plp.5
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 10:25:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=RtuYujDQbGoE383NaOTW8yNTTYMDfvcRIoYrv77xBo0=;
+        b=euLLhY+946DfyFpuvIdyFGJfMj0knyI7kYwiFDLPxTrrpqBXt30egdCgq3fEB/sL88
+         GJZHY1upb9230M9+Zx2VsXWQbb6terlbASK2Y8NjIXMYqZYxmMrwPJrKbYsdrXVKdKVp
+         h3oLBX6Xq2Kyr7bh2rZD1m3sNpfVxJEePoY4q7+bX1Usir70lWfAZ2Q5Wm9c3x/iC2oF
+         i845R9dxFgTKai1UsSQc1aFVXhbltY2Rql4zSkj4KmwbqXDJHZOd0ZxLP53dYJHtXhvW
+         PFZDbnj5L0kebFpNB0KndJJvUuR+yNkmwD89p/IsdVDOyVRCYiob6rsRKOyrv39tDlJH
+         213g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=RtuYujDQbGoE383NaOTW8yNTTYMDfvcRIoYrv77xBo0=;
+        b=UrbFbbSfG6dX3z54us8LBliNX5bMfZl39LsDSqFX7Arige/5dY0tVlpWsYz6PiEeJ7
+         0uf8KxR98m5G7UmGC8D/0mv1NaopDuJc0sNbIStS3S9UqTFOfuL7NtzpXbBV+Zv1zQV9
+         mNUwk+5e5bBh073Xx1ct2z4xsDFxHvAcDBNS47CkxIDGd6BTFmI2GGKkWBYS/x0KxJ+i
+         z0Hm8njcl/+JDO+Du01NyxBAQusIR84Tg7L5Ex1qOK4fccv0zmj6mmkf9U0jUezge0az
+         OMCabi3fAZh8nC0jmdVlfhX+/stdkgjqt3waIATItAW4lpOaQLjGK0x4wMOGvsBqQxY/
+         wPnQ==
+X-Gm-Message-State: APjAAAVpMFauOFyueEDkih4t+CsxUiI9rrKkygZP6XId1hkKqhkmbOuC
+        TL03Yx2q7+UuWqBaDXKZ4Z5Y
+X-Google-Smtp-Source: APXvYqz5vFIuN706iVqol8q3EsrpnwcsQfBFEXMXn/Nwi/SX1PpPwoQhg1LPT7MBQ1EhYyTnuzzXkA==
+X-Received: by 2002:a17:902:788b:: with SMTP id q11mr40640145pll.308.1566494703001;
+        Thu, 22 Aug 2019 10:25:03 -0700 (PDT)
+Received: from localhost.localdomain ([2405:204:71cc:5738:24ad:193e:4b59:8a76])
+        by smtp.gmail.com with ESMTPSA id r12sm31705798pgb.73.2019.08.22.10.24.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 10:25:02 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        fisher.cheng@bitmain.com, alec.lin@bitmain.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v4 3/8] clk: Add clk_hw_unregister_composite helper function definition
+Date:   Thu, 22 Aug 2019 22:54:21 +0530
+Message-Id: <20190822172426.25879-4-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190822172426.25879-1-manivannan.sadhasivam@linaro.org>
+References: <20190822172426.25879-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+This function has been delcared but not defined anywhere. Hence, this
+commit adds definition for it.
 
-commit b6143d10d23ebb4a77af311e8b8b7f019d0163e6 upstream.
-
-The initial support for dynamic ftrace trampolines in modules made use
-of an indirect branch which loaded its target from the beginning of
-a special section (e71a4e1bebaf7 ("arm64: ftrace: add support for far
-branches to dynamic ftrace")). Since no instructions were being patched,
-no cache maintenance was needed. However, later in be0f272bfc83 ("arm64:
-ftrace: emit ftrace-mod.o contents through code") this code was reworked
-to output the trampoline instructions directly into the PLT entry but,
-unfortunately, the necessary cache maintenance was overlooked.
-
-Add a call to __flush_icache_range() after writing the new trampoline
-instructions but before patching in the branch to the trampoline.
-
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: <stable@vger.kernel.org>
-Fixes: be0f272bfc83 ("arm64: ftrace: emit ftrace-mod.o contents through code")
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- arch/arm64/kernel/ftrace.c |   21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/clk/clk-composite.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/arch/arm64/kernel/ftrace.c
-+++ b/arch/arm64/kernel/ftrace.c
-@@ -76,7 +76,7 @@ int ftrace_make_call(struct dyn_ftrace *
- 
- 	if (offset < -SZ_128M || offset >= SZ_128M) {
- #ifdef CONFIG_ARM64_MODULE_PLTS
--		struct plt_entry trampoline;
-+		struct plt_entry trampoline, *dst;
- 		struct module *mod;
- 
- 		/*
-@@ -104,24 +104,27 @@ int ftrace_make_call(struct dyn_ftrace *
- 		 * is added in the future, but for now, the pr_err() below
- 		 * deals with a theoretical issue only.
- 		 */
-+		dst = mod->arch.ftrace_trampoline;
- 		trampoline = get_plt_entry(addr);
--		if (!plt_entries_equal(mod->arch.ftrace_trampoline,
--				       &trampoline)) {
--			if (!plt_entries_equal(mod->arch.ftrace_trampoline,
--					       &(struct plt_entry){})) {
-+		if (!plt_entries_equal(dst, &trampoline)) {
-+			if (!plt_entries_equal(dst, &(struct plt_entry){})) {
- 				pr_err("ftrace: far branches to multiple entry points unsupported inside a single module\n");
- 				return -EINVAL;
- 			}
- 
- 			/* point the trampoline to our ftrace entry point */
- 			module_disable_ro(mod);
--			*mod->arch.ftrace_trampoline = trampoline;
-+			*dst = trampoline;
- 			module_enable_ro(mod, true);
- 
--			/* update trampoline before patching in the branch */
--			smp_wmb();
-+			/*
-+			 * Ensure updated trampoline is visible to instruction
-+			 * fetch before we patch in the branch.
-+			 */
-+			flush_icache_range((unsigned long)&dst[0],
-+					   (unsigned long)&dst[1]);
- 		}
--		addr = (unsigned long)(void *)mod->arch.ftrace_trampoline;
-+		addr = (unsigned long)dst;
- #else /* CONFIG_ARM64_MODULE_PLTS */
- 		return -EINVAL;
- #endif /* CONFIG_ARM64_MODULE_PLTS */
-
+diff --git a/drivers/clk/clk-composite.c b/drivers/clk/clk-composite.c
+index 4d579f9d20f6..ccca58a6d271 100644
+--- a/drivers/clk/clk-composite.c
++++ b/drivers/clk/clk-composite.c
+@@ -344,3 +344,14 @@ void clk_unregister_composite(struct clk *clk)
+ 	clk_unregister(clk);
+ 	kfree(composite);
+ }
++
++void clk_hw_unregister_composite(struct clk_hw *hw)
++{
++	struct clk_composite *composite;
++
++	composite = to_clk_composite(hw);
++
++	clk_hw_unregister(hw);
++	kfree(composite);
++}
++EXPORT_SYMBOL_GPL(clk_hw_unregister_composite);
+-- 
+2.17.1
 
