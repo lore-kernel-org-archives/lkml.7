@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71941C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ABFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A3223400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDAB2341C
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494665;
-	bh=JL+SNRjKrSzVY2bQH0EbSdf5BZ9LDIz2h6lVziuKeSA=;
+	s=default; t=1566494667;
+	bh=6iRVylKRm0ssg5ydfcpq94VWi9TeVr5xxmjV92gmqP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A4CXXYA1nPI9i1WfOpHpiklrPb2GB+adbfUkzf360fY0PDxlJ4IWBVw0P7aWvPc8j
-	 5RAjbcJcRfWi62zs+qE3JPPuOz0B8e7+8vEVepSFDaIjuxikblQ9GpBaDVZoL71HSi
-	 njwBAkCpBNXkN9OAySXZzfyNtC0f5DA47nr0m6ys=
+	b=rz5qtdcw+wiUktlltJwvW+HMw/I2v564o7rnwZvU3KUAJU96MENNEEbTsx72if6ri
+	 J/WvT+/A8uG65QeCzjjEYxZi+J0Psb/iC7AX8fCw3bFhRc1/Y7lQOS6yDdn22WpBdi
+	 rKh0T5+/Vh5417aCRK6cAS1QQiHZwV4n1tnNYJR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391555AbfHVRYY (ORCPT
+        id S2404182AbfHVRY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391778AbfHVRYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:00 -0400
+        id S2404025AbfHVRYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:02 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B8FE23402;
-        Thu, 22 Aug 2019 17:23:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D13B21743;
+        Thu, 22 Aug 2019 17:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494639;
-        bh=JL+SNRjKrSzVY2bQH0EbSdf5BZ9LDIz2h6lVziuKeSA=;
+        s=default; t=1566494641;
+        bh=6iRVylKRm0ssg5ydfcpq94VWi9TeVr5xxmjV92gmqP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Il1uN3WgqlnC1jk1fn5cS7TVrKuzkxY3PqL7hDYjIjV9QfiKjGPAYLMqPLYABdW43
-         dR6MubmUkCdDfZOa4RwrOXl9xRYdiPhZwFUOHoYJ5Tqi0jemvn+2CuwgK9k1JFkzo8
-         5DKRTRcmvn7SW04ccQHIuBJSZUaJfgcIcHbFV2oU=
+        b=sJMyP1mzLwjZ5pOy+N4tsYZ6bkw2+IQngGyXtBaFmI14OganYCePSyJbNizYluDgj
+         3smPLjVwXPe9ywHBWUjNB2A87nQVlmwXJ7Hz25SIRFym5D/ySQZnZtAcIh9EaSI83c
+         HMWp5V+UxpWoon8l8263k3Q/whH0vs7Z/YanYJ7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
-        Scott Teel <scott.teel@microsemi.com>,
-        Scott Benesh <scott.benesh@microsemi.com>,
-        Kevin Barnett <kevin.barnett@microsemi.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 073/103] scsi: hpsa: correct scsi command status issue after reset
-Date:   Thu, 22 Aug 2019 10:19:01 -0700
-Message-Id: <20190822171731.867363725@linuxfoundation.org>
+Subject: [PATCH 4.9 075/103] kbuild: modpost: handle KBUILD_EXTRA_SYMBOLS only for external modules
+Date:   Thu, 22 Aug 2019 10:19:03 -0700
+Message-Id: <20190822171731.965458352@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -65,57 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eeebce1862970653cdf5c01e98bc669edd8f529a ]
+[ Upstream commit cb4819934a7f9b87876f11ed05b8624c0114551b ]
 
-Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
-Reviewed-by: Scott Teel <scott.teel@microsemi.com>
-Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
-Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
-Signed-off-by: Don Brace <don.brace@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+KBUILD_EXTRA_SYMBOLS makes sense only when building external modules.
+Moreover, the modpost sets 'external_module' if the -e option is given.
+
+I replaced $(patsubst %, -e %,...) with simpler $(addprefix -e,...)
+while I was here.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hpsa.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ scripts/Makefile.modpost | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 9f98c7211ec24..b82df8cdf9626 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -2236,6 +2236,8 @@ static int handle_ioaccel_mode2_error(struct ctlr_info *h,
- 	case IOACCEL2_SERV_RESPONSE_COMPLETE:
- 		switch (c2->error_data.status) {
- 		case IOACCEL2_STATUS_SR_TASK_COMP_GOOD:
-+			if (cmd)
-+				cmd->result = 0;
- 			break;
- 		case IOACCEL2_STATUS_SR_TASK_COMP_CHK_COND:
- 			cmd->result |= SAM_STAT_CHECK_CONDITION;
-@@ -2423,8 +2425,10 @@ static void process_ioaccel2_completion(struct ctlr_info *h,
- 
- 	/* check for good status */
- 	if (likely(c2->error_data.serv_response == 0 &&
--			c2->error_data.status == 0))
-+			c2->error_data.status == 0)) {
-+		cmd->result = 0;
- 		return hpsa_cmd_free_and_done(h, c, cmd);
-+	}
- 
- 	/*
- 	 * Any RAID offload error results in retry which will use
-@@ -5511,6 +5515,12 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
- 	}
- 	c = cmd_tagged_alloc(h, cmd);
- 
-+	/*
-+	 * This is necessary because the SML doesn't zero out this field during
-+	 * error recovery.
-+	 */
-+	cmd->result = 0;
-+
- 	/*
- 	 * Call alternate submit routine for I/O accelerated commands.
- 	 * Retries always go down the normal I/O path.
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index 16923ba4b5b10..8cb7971b3f25c 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -74,7 +74,7 @@ modpost = scripts/mod/modpost                    \
+  $(if $(CONFIG_MODULE_SRCVERSION_ALL),-a,)       \
+  $(if $(KBUILD_EXTMOD),-i,-o) $(kernelsymfile)   \
+  $(if $(KBUILD_EXTMOD),-I $(modulesymfile))      \
+- $(if $(KBUILD_EXTRA_SYMBOLS), $(patsubst %, -e %,$(KBUILD_EXTRA_SYMBOLS))) \
++ $(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS))) \
+  $(if $(KBUILD_EXTMOD),-o $(modulesymfile))      \
+  $(if $(CONFIG_DEBUG_SECTION_MISMATCH),,-S)      \
+  $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)  \
 -- 
 2.20.1
 
