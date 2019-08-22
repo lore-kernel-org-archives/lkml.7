@@ -2,53 +2,54 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AA3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEAFC41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4195206DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486F9206DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494811;
-	bh=fhxerGabZfXb3FnqDlDzXd1dKIMry2EkxBDyGiHtxIU=;
+	s=default; t=1566494815;
+	bh=F2s4r3Dc85Wwzv9Jk0wTHcyEYqKnxm5Uoi84WZ3ZM+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JhXRNxDoR0Mm3kCTthea4fMjXUmZ1gUOdrIQklsbh0tp+FDiew3zevrERijsvzNbo
-	 8NVJqBDqBbkoZ52XYBPcY+SHppe6F7nNwzFGXeU4iBkFdTRVDat4S8sX2tZxlF/NlG
-	 ER9q99cVtQ4vXR+3H6HReA19B++TtuGQBIu7SMOA=
+	b=huaDR3iLFLdcGYJicTdhUxcXlDi+L8TDyTLahkYK37R7PcF/XGnk2VCWBYcWeb4sM
+	 i8sS8C30uecTd9nh6TW9li3l09MJgaLj/bwBTWjZRCOYU1A/iTZtHNl0XsRj4VssCv
+	 d3UTBTJC8bXZdgTO+ncXOlmBpiZPlbeCPoh2IJYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404764AbfHVR0u (ORCPT
+        id S2404775AbfHVR0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:26:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49348 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:26:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391863AbfHVRZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:34 -0400
+        id S2404458AbfHVRZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:37 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4E7D2064A;
-        Thu, 22 Aug 2019 17:25:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC2D0206DD;
+        Thu, 22 Aug 2019 17:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494733;
-        bh=fhxerGabZfXb3FnqDlDzXd1dKIMry2EkxBDyGiHtxIU=;
+        s=default; t=1566494736;
+        bh=F2s4r3Dc85Wwzv9Jk0wTHcyEYqKnxm5Uoi84WZ3ZM+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bN18KC+5pIy1tK6yh3tuBMpeZgJKehj7JV+FEab1LtILZ2SGidTf19KQho0X5irSG
-         BeTsPwaXL2FeS7iEVeMjtlQl3emOQfjOkMwYtTndpc9ePkF1tPFH7RdSK6F4moh3VY
-         M9VDSD+Qxz8pXPeH2N7rWks+UZ9c7gBdk0BgA14M=
+        b=OYYXXEo2WiMXesSUeESeaCxanArdFcFUV5uSz6n3n/HWMk8GGNFYVAZv9qIT42Zah
+         VShFStTP7DsmVJvZX70rbRFr+LMtyIQCw7yMqccRpccJFkE39cDt197/SxakXbGezr
+         DFjbMghF6PWt9CPLsf2ynMIVxHYfJDz18ksRwzek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
-        Anup Patel <anup@brainfault.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH 4.19 25/85] riscv: Make __fstate_clean() work correctly.
-Date:   Thu, 22 Aug 2019 10:18:58 -0700
-Message-Id: <20190822171732.250431221@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 29/85] xen/pciback: remove set but not used variable old_state
+Date:   Thu, 22 Aug 2019 10:19:02 -0700
+Message-Id: <20190822171732.591441660@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -61,36 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Chen <vincent.chen@sifive.com>
+[ Upstream commit 09e088a4903bd0dd911b4f1732b250130cdaffed ]
 
-commit 69703eb9a8ae28a46cd5bce7d69ceeef6273a104 upstream.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Make the __fstate_clean() function correctly set the
-state of sstatus.FS in pt_regs to SR_FS_CLEAN.
+drivers/xen/xen-pciback/conf_space_capability.c: In function pm_ctrl_write:
+drivers/xen/xen-pciback/conf_space_capability.c:119:25: warning:
+ variable old_state set but not used [-Wunused-but-set-variable]
 
-Fixes: 7db91e57a0acd ("RISC-V: Task implementation")
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-[paul.walmsley@sifive.com: expanded "Fixes" commit ID]
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It is never used so can be removed.
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/include/asm/switch_to.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/xen/xen-pciback/conf_space_capability.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/riscv/include/asm/switch_to.h
-+++ b/arch/riscv/include/asm/switch_to.h
-@@ -23,7 +23,7 @@ extern void __fstate_restore(struct task
- 
- static inline void __fstate_clean(struct pt_regs *regs)
+diff --git a/drivers/xen/xen-pciback/conf_space_capability.c b/drivers/xen/xen-pciback/conf_space_capability.c
+index 73427d8e01161..e5694133ebe57 100644
+--- a/drivers/xen/xen-pciback/conf_space_capability.c
++++ b/drivers/xen/xen-pciback/conf_space_capability.c
+@@ -116,13 +116,12 @@ static int pm_ctrl_write(struct pci_dev *dev, int offset, u16 new_value,
  {
--	regs->sstatus |= (regs->sstatus & ~(SR_FS)) | SR_FS_CLEAN;
-+	regs->sstatus = (regs->sstatus & ~SR_FS) | SR_FS_CLEAN;
- }
+ 	int err;
+ 	u16 old_value;
+-	pci_power_t new_state, old_state;
++	pci_power_t new_state;
  
- static inline void fstate_save(struct task_struct *task,
+ 	err = pci_read_config_word(dev, offset, &old_value);
+ 	if (err)
+ 		goto out;
+ 
+-	old_state = (pci_power_t)(old_value & PCI_PM_CTRL_STATE_MASK);
+ 	new_state = (pci_power_t)(new_value & PCI_PM_CTRL_STATE_MASK);
+ 
+ 	new_value &= PM_OK_BITS;
+-- 
+2.20.1
+
 
 
