@@ -2,171 +2,149 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210C5C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D53C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3392233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:17:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566469079;
-	bh=D5zRVu+USg1+RS1lEwQnNpD4UWyIvPicvP8SU5txo7M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hqFKdTALHB4CADp0nnrSplLpT0dHlB7IJx7VvmWsGX4juR27Vvgjp3IDp/vEFdaIf
-	 UzXeTQ8vVwMUXiq4RXWnmTN9qtEi7RhZBwl0y6uIcdjvrOZDgMkE3hVEuPRQAarkDG
-	 HZ+8t20YWnM6KDiJMUufvW1K9JVXNrVsD/ZpEqv0=
+	by mail.kernel.org (Postfix) with ESMTP id D8DB5206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:20:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YH8DY7eZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387517AbfHVKR6 (ORCPT
+        id S2387527AbfHVKUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 06:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731865AbfHVKR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:17:57 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EA0A206BB;
-        Thu, 22 Aug 2019 10:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566469076;
-        bh=D5zRVu+USg1+RS1lEwQnNpD4UWyIvPicvP8SU5txo7M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U+kQlDk/quo+7he7VCs7KWCgcPH6jsj+XqyXsFL1nkatram4CncWOWeCdSKn/rY/g
-         +iRxXCIDdDiMiWHQcq6VRQ1qG5uB7ctPdIy7P/MENCTB0Hu4QpP11xguJp+ZhYENWW
-         9LXMLpxz8xM/2PO8Erokk4mm7xsc+uOJrVaKRsdI=
-Date:   Thu, 22 Aug 2019 11:17:50 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Yong Wu <yong.wu@mediatek.com>, youlin.pei@mediatek.com,
-        devicetree@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        cui.zhang@mediatek.com, srv_heupstream@mediatek.com,
-        chao.hao@mediatek.com, Joerg Roedel <joro@8bytes.org>,
-        linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        ming-fan.chen@mediatek.com, anan.sun@mediatek.com,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support
- PA[33:32] for MediaTek
-Message-ID: <20190822101749.3kwzd5lb7zinsord@willie-the-truck>
-References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
- <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
- <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
- <1566464186.11621.7.camel@mhfsdcap03>
- <10d5122d-3375-161b-9356-2ddfc1c835bd@arm.com>
+        Thu, 22 Aug 2019 06:20:07 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46363 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfHVKUH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 06:20:07 -0400
+Received: by mail-lf1-f65.google.com with SMTP id n19so4088792lfe.13
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 03:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wPBDtmTZhqkyTNz0MqWgEkHLzILpQif3A3GQnsT/mi8=;
+        b=YH8DY7eZIuy+N5wDuMxNcN/eV2PnncZNHKtZnk/Ev1sfTVb93MNfhwZaV0fFw0K1oy
+         5MX0uxb4PmY6nuTDa10FjmDjGjT3uN3XzwSpUuR+Bz7QcnSW7P2TwVHVyhV6P9XaoQLz
+         QmmsJQkd8i5rMJhzNKloN8I5jU4CAd6fR5XIQ44MvktPPGMJsFyiP2GgX8XRFmIZ0Vx8
+         Gy1DEAD8AsgKAjBGXuU1rY84orP8m6xmRP+LMIWYo0sR/38ud+lwnarD79w/o67x6CAJ
+         HO7mQU8/fs+LC/1uOI6N+X8QhWUsL11BYLNFs1h2pbi2o8B1H9z3fYGdqs733UEZhQ9A
+         52oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wPBDtmTZhqkyTNz0MqWgEkHLzILpQif3A3GQnsT/mi8=;
+        b=FZHbKcmPs1p+r0qzTW2TYUVDMZTLZL6371LbEmyKgXLN0TAOR7+wknFSxcGCbV2h5H
+         CtJzC8pBDmi9rB9TUHUDn+8Y/0zFhNP1cgZAR9Ez3BUR8oczilR5dkWlExUQIUoomBCz
+         EWKpY0Ls/U0K2yrXj4dQXX0+x6CL4LCtdOyHR1DpoakWwp0rFll/t47WkdmYVev7CE/2
+         EuZsQNX3DOdRk+DhZd6265hEvqDvRVIMzWdlcGKNJptBGwsA8DyKaczQFvV2MWaYG/s0
+         TjYpLqcqt6MQKRQ2zwFzqZtvLGg/4kBCPKni0xIUfmJY8iZXGd+ic9VpF456pnWhwZU1
+         fH7w==
+X-Gm-Message-State: APjAAAWzwQH++SAYsfk+oz5PRxD2QefBmE2rEtdszJC8FJr8KN+h/MTJ
+        hT7E78Htt/x27g5w+ycgHm+Qmg==
+X-Google-Smtp-Source: APXvYqxDQXf3LY5Ds0SPDRViU/Z88Dzf56IoZrVylWXa05DGSliVoBFyyrB3KfXrpeflaqNyf452jQ==
+X-Received: by 2002:a19:e04f:: with SMTP id g15mr21819606lfj.46.1566469205557;
+        Thu, 22 Aug 2019 03:20:05 -0700 (PDT)
+Received: from centauri (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
+        by smtp.gmail.com with ESMTPSA id k8sm3758979lja.24.2019.08.22.03.20.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 03:20:04 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 12:20:02 +0200
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        linux-arm-msm@vger.kernel.org, vireshk@kernel.org,
+        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
+        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 10/14] dt-bindings: power: avs: Add support for CPR
+ (Core Power Reduction)
+Message-ID: <20190822102002.GA8494@centauri>
+References: <20190725104144.22924-1-niklas.cassel@linaro.org>
+ <20190725104144.22924-11-niklas.cassel@linaro.org>
+ <5d579b36.1c69fb81.85eba.ff51@mx.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <10d5122d-3375-161b-9356-2ddfc1c835bd@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <5d579b36.1c69fb81.85eba.ff51@mx.google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 11:08:58AM +0100, Robin Murphy wrote:
-> On 2019-08-22 9:56 am, Yong Wu wrote:
-> > On Wed, 2019-08-21 at 16:24 +0100, Will Deacon wrote:
-> > > On Wed, Aug 21, 2019 at 09:53:12PM +0800, Yong Wu wrote:
-> > > > MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
-> > > > the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
-> > > > respectively. Meanwhile the iova still is 32bits.
-> > > > 
-> > > > Regarding whether the pagetable address could be over 4GB, the mt8183
-> > > > support it while the previous mt8173 don't, thus keep it as is.
-> > > > 
-> > > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > > > ---
-> > > >   drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
-> > > >   include/linux/io-pgtable.h         |  7 +++----
-> > > >   2 files changed, 28 insertions(+), 11 deletions(-)
-> > > 
-> > > [...]
-> > > 
-> > > > @@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
-> > > >   {
-> > > >   	struct arm_v7s_io_pgtable *data;
-> > > > -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
-> > > > +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
-> > > > +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
-> > > > +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
-> > > 
-> > > Please can you instead change arm_v7s_alloc_pgtable() so that it allows an
-> > > ias of up to 34 when the IO_PGTABLE_QUIRK_ARM_MTK_EXT is set?
-> > 
-> > Here I only simply skip the oas checking for our case. then which way do
-> > your prefer?  something like you commented before:?
-> > 
-> > 
-> > 	if (cfg->ias > ARM_V7S_ADDR_BITS)
-> > 		return NULL;
-> > 
-> > 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
-> > 		if (!IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
-> > 			cfg->oas = min(cfg->oas, ARM_V7S_ADDR_BITS);
-> > 		else if (cfg->oas > 34)
-> > 			return NULL;
-> > 	} else if (cfg->oas > ARM_V7S_ADDR_BITS) {
-> > 		return NULL;
-> > 	}
+On Fri, Aug 16, 2019 at 11:14:13PM -0700, Stephen Boyd wrote:
+> Quoting Niklas Cassel (2019-07-25 03:41:38)
+> > +       cpr@b018000 {
+> > +               compatible = "qcom,qcs404-cpr", "qcom,cpr";
+> > +               reg = <0x0b018000 0x1000>;
+> > +               interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
+> > +               clocks = <&xo_board>;
+> > +               clock-names = "ref";
+> > +               vdd-apc-supply = <&pms405_s3>;
+> > +               #power-domain-cells = <0>;
+> > +               operating-points-v2 = <&cpr_opp_table>;
+> > +               acc-syscon = <&tcsr>;
+> > +
+> > +               nvmem-cells = <&cpr_efuse_quot_offset1>,
+> > +                       <&cpr_efuse_quot_offset2>,
+> > +                       <&cpr_efuse_quot_offset3>,
+> > +                       <&cpr_efuse_init_voltage1>,
+> > +                       <&cpr_efuse_init_voltage2>,
+> > +                       <&cpr_efuse_init_voltage3>,
+> > +                       <&cpr_efuse_quot1>,
+> > +                       <&cpr_efuse_quot2>,
+> > +                       <&cpr_efuse_quot3>,
+> > +                       <&cpr_efuse_ring1>,
+> > +                       <&cpr_efuse_ring2>,
+> > +                       <&cpr_efuse_ring3>,
+> > +                       <&cpr_efuse_revision>;
+> > +               nvmem-cell-names = "cpr_quotient_offset1",
+> > +                       "cpr_quotient_offset2",
+> > +                       "cpr_quotient_offset3",
+> > +                       "cpr_init_voltage1",
+> > +                       "cpr_init_voltage2",
+> > +                       "cpr_init_voltage3",
+> > +                       "cpr_quotient1",
+> > +                       "cpr_quotient2",
+> > +                       "cpr_quotient3",
+> > +                       "cpr_ring_osc1",
+> > +                       "cpr_ring_osc2",
+> > +                       "cpr_ring_osc3",
+> > +                       "cpr_fuse_revision";
+> > +
+> > +               qcom,cpr-timer-delay-us = <5000>;
+> > +               qcom,cpr-timer-cons-up = <0>;
+> > +               qcom,cpr-timer-cons-down = <2>;
+> > +               qcom,cpr-up-threshold = <1>;
+> > +               qcom,cpr-down-threshold = <3>;
+> > +               qcom,cpr-idle-clocks = <15>;
+> > +               qcom,cpr-gcnt-us = <1>;
+> > +               qcom,vdd-apc-step-up-limit = <1>;
+> > +               qcom,vdd-apc-step-down-limit = <1>;
 > 
-> All it should take is something like:
+> Are any of these qcom,* properties going to change for a particular SoC?
+> They look like SoC config data that should just go into the driver and
+> change based on the SoC compatible string.
 > 
-> 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
-> 		max_oas = 34;
-> 	else
-> 		max_oas = 32;
-> 	if (cfg->oas > max_oas)
-> 		return NULL;
-> 
-> or even just:
-> 
-> 	if (cfg->oas > 32 ||
-> 	    (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT && cfg->oas > 34))
-> 		return NULL;
-> 
-> (and if we prefer the latter style, perhaps we could introduce some kind of
-> "is_mtk_4gb()" helper to save on verbosity)
 
-I wondered the same thing, but another place we'd want the check is in
-iopte_to_paddr() which probably needs the PHYS_ADDR_T check to avoid GCC
-warnings, although I didn't try it.
+Hello Stephen,
+thanks a lot for your reviews.
 
-So if we did:
+I agree with you, will drop these properties from the dt-binding
+and the driver once I respin the series.
 
-static bool cfg_mtk_ext_enabled(struct io_pgtable_cfg *cfg)
-{
-	return IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT) &&
-	       cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT;
-}
+I'm hoping to get the cpufreq part of the patch series merged this
+merge window, so that the patch pile will decrease.
 
-Then I suppose we could do this in _alloc():
 
-	if (cfg->oas > cfg_mtk_ext_enabled(cfg) ? 34 : ARM_V7S_ADDR_BITS)
-		return NULL;
-
-and then this in iopte_to_paddr():
-
-	[...]
-
-	paddr = pte & mask;
-	if (!cfg_mtk_ext_enabled(cfg))
-		return paddr;
-
-	if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
-		paddr |= ...
-
-	[...]
-
-What do you reckon?
-
-Will
+Kind regards,
+Niklas
