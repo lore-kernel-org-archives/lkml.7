@@ -2,85 +2,83 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9FBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0224C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 000E4206DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D3C72070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:46:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388721AbfHVMoa (ORCPT
+        id S2388009AbfHVMqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:44:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42376 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387868AbfHVMo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:44:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DB271ACD8;
-        Thu, 22 Aug 2019 12:44:26 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 14:44:26 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thu, 22 Aug 2019 08:46:34 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:43107 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729922AbfHVMqe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:46:34 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 01503100003;
+        Thu, 22 Aug 2019 12:46:28 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 14:46:28 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Ran Bi <ran.bi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: comments style: Re: [RFC PATCH v4 1/9] printk-rb: add a new
- printk ringbuffer implementation
-Message-ID: <20190822124426.3qw2rm6f2xw4m2fy@pathway.suse.cz>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-2-john.ogness@linutronix.de>
- <20190820085554.deuejmxn4kbqnq7n@pathway.suse.cz>
- <87h86bf50e.fsf@linutronix.de>
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        YT Shen <yt.shen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Flora Fu <flora.fu@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
+Message-ID: <20190822124628.GS27031@piout.net>
+References: <20190801110122.26834-1-ran.bi@mediatek.com>
+ <20190801110122.26834-3-ran.bi@mediatek.com>
+ <20190820201744.GZ3545@piout.net>
+ <1566477254.12318.41.camel@mhfsdcap03>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87h86bf50e.fsf@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <1566477254.12318.41.camel@mhfsdcap03>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-08-21 07:42:57, John Ogness wrote:
-> On 2019-08-20, Petr Mladek <pmladek@suse.com> wrote:
-> >> --- /dev/null
-> >> +++ b/kernel/printk/dataring.c
-> >> +/**
-> >> + * _datablock_valid() - Check if given positions yield a valid data block.
-> >> + *
-> >> + * @dr:         The associated data ringbuffer.
-> >> + *
-> >> + * @head_lpos:  The newest data logical position.
-> >> + *
-> >> + * @tail_lpos:  The oldest data logical position.
-> >> + *
-> >> + * @begin_lpos: The beginning logical position of the data block to check.
-> >> + *
-> >> + * @next_lpos:  The logical position of the next adjacent data block.
-> >> + *              This value is used to identify the end of the data block.
-> >> + *
-> >
-> > Please remove the empty lines between arguments description. They make
-> > the comments too scattered.
+On 22/08/2019 20:34:14+0800, Ran Bi wrote:
+> > > +	/* RTC need POWERKEY1/2 match, then goto normal work mode */
+> > > +	mt2712_writel(rtc, MT2712_POWERKEY1, MT2712_POWERKEY1_KEY);
+> > > +	mt2712_writel(rtc, MT2712_POWERKEY2, MT2712_POWERKEY2_KEY);
+> > 
+> > This should be written when setting the time after power was lost.
+> > 
 > 
-> Your feedback is contradicting what PeterZ requested[0]. Particularly
-> when multiple lines are involved with a description, I find the spacing
-> helpful. I've grown to like the spacing, but I won't fight for it.
+> I suppose we can move this into mt2712_rtc_read_time function's "if
+> (p1 != MT2712_POWERKEY1_KEY || p2 != MT2712_POWERKEY2_KEY)" condition
+> which will be added at next patch. We need additional flag to mark this
+> condition or another if condition in mt2712_rtc_set_time fucntion if we
+> put these code in mt2712_rtc_set_time function.
+> 
 
-I do not want to fight over it. Just note that >90% of argument
-descriptors seem to be one liners.
+It is fine to test both in read_time and in set_time.
 
-Best Regards,
-Petr
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
