@@ -2,53 +2,51 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A191C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AA0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6879120870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B7E20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495505;
-	bh=ndrEd7/0nAPg5IGK3CZvJhfhdbCZ9U2faBcBoDVLAbo=;
+	s=default; t=1566495508;
+	bh=M0ON+wcSMXQ4IP2Gj/v1u/IHC14XFEaaHkW20mRRtX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LP4iOs0MnAYBkcTx2L6IfOG8ZKVZFErzH7DQ1ghPgqhOsTW4uS8fJGANREBABMWVk
-	 4gtlSudEk7ZsR5msR9zUfAf/4Y0k+BknX9EIxalCM5OsWPrTSP4aWhCJduVvFjUn3n
-	 QIRhTyYWfxFRWfLTyAu3qqJhU9n3MxH4BZTCXxb0=
+	b=ENbpN6fduEiyhlcNS2ji/E32SPDnphMK1iVWtitrWQUejJJ04OU1Cr+iCFBaUHikX
+	 LBsgm4RQiR6CuQWJVLWliZTcKyRSFhH5/OUDq0yYDxxkJ4InWUYtiutKg9cnFu2JFo
+	 qVd2aMh5Z4/SlC2MdwXNkZRrNuRBjhky4nOGILvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404196AbfHVRY3 (ORCPT
+        id S2404960AbfHVRi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:24:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:38:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404035AbfHVRYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:03 -0400
+        id S2404187AbfHVRY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:28 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D4CB23400;
-        Thu, 22 Aug 2019 17:24:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C0972341E;
+        Thu, 22 Aug 2019 17:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494642;
-        bh=ndrEd7/0nAPg5IGK3CZvJhfhdbCZ9U2faBcBoDVLAbo=;
+        s=default; t=1566494667;
+        bh=M0ON+wcSMXQ4IP2Gj/v1u/IHC14XFEaaHkW20mRRtX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jrskGparkg6X351NS5+zstPwgLjUo4XzTv1erOWVV+5UrTjNt0on7gLNxpBtTWgrc
-         StsbYV4/rbkiRaQ+YSM76YqEo+7HyTkp/ckjekutVIYq8Eox8+8phQEFr2nlvih6dx
-         0dPgtoNCr5geYedwbFliJUE+pt6ee218QwJ2/yIM=
+        b=kiBIxfYzDgxMGCEwJXi1uvk+1e9TsvbxG3tUAfkwLUP8vwyffM6jxMKUp69ovri0w
+         rvVdAHswXhWGPcLaZFWgbL1GE9KUOGiQLLTXiMAwu1YFBDI3dhUouOeVmTs8HrrrsQ
+         oCG/cQmX3YdS6/LbSMkMiDtJ1kwFbUHbBkjw93Yo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Qian Cai <cai@lca.pw>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 076/103] arm64/efi: fix variable si set but not used
-Date:   Thu, 22 Aug 2019 10:19:04 -0700
-Message-Id: <20190822171732.020029545@linuxfoundation.org>
+        stable@vger.kernel.org, David Binderman <dcb314@hotmail.com>,
+        Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.9 081/103] staging: comedi: dt3000: Fix signed integer overflow divider * base
+Date:   Thu, 22 Aug 2019 10:19:09 -0700
+Message-Id: <20190822171732.247195281@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -61,43 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f1d4836201543e88ebe70237e67938168d5fab19 ]
+From: Ian Abbott <abbotti@mev.co.uk>
 
-GCC throws out this warning on arm64.
+commit b4d98bc3fc93ec3a58459948a2c0e0c9b501cd88 upstream.
 
-drivers/firmware/efi/libstub/arm-stub.c: In function 'efi_entry':
-drivers/firmware/efi/libstub/arm-stub.c:132:22: warning: variable 'si'
-set but not used [-Wunused-but-set-variable]
+In `dt3k_ns_to_timer()` the following lines near the end of the function
+result in a signed integer overflow:
 
-Fix it by making free_screen_info() a static inline function.
+	prescale = 15;
+	base = timer_base * (1 << prescale);
+	divider = 65535;
+	*nanosec = divider * base;
 
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+(`divider`, `base` and `prescale` are type `int`, `timer_base` and
+`*nanosec` are type `unsigned int`.  The value of `timer_base` will be
+either 50 or 100.)
+
+The main reason for the overflow is that the calculation for `base` is
+completely wrong.  It should be:
+
+	base = timer_base * (prescale + 1);
+
+which matches an earlier instance of this calculation in the same
+function.
+
+Reported-by: David Binderman <dcb314@hotmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20190812111517.26803-1-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/include/asm/efi.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/staging/comedi/drivers/dt3000.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/efi.h b/arch/arm64/include/asm/efi.h
-index 65615820155e6..65db124a44bff 100644
---- a/arch/arm64/include/asm/efi.h
-+++ b/arch/arm64/include/asm/efi.h
-@@ -52,7 +52,11 @@ int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md);
- #define efi_is_64bit()			(true)
+--- a/drivers/staging/comedi/drivers/dt3000.c
++++ b/drivers/staging/comedi/drivers/dt3000.c
+@@ -377,7 +377,7 @@ static int dt3k_ns_to_timer(unsigned int
+ 	}
  
- #define alloc_screen_info(x...)		&screen_info
--#define free_screen_info(x...)
-+
-+static inline void free_screen_info(efi_system_table_t *sys_table_arg,
-+				    struct screen_info *si)
-+{
-+}
- 
- /* redeclare as 'hidden' so the compiler will generate relative references */
- extern struct screen_info screen_info __attribute__((__visibility__("hidden")));
--- 
-2.20.1
-
+ 	prescale = 15;
+-	base = timer_base * (1 << prescale);
++	base = timer_base * (prescale + 1);
+ 	divider = 65535;
+ 	*nanosec = divider * base;
+ 	return (prescale << 16) | (divider);
 
 
