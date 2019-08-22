@@ -2,149 +2,86 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE8AC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A55C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2075721848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:19:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T2pMI6y+"
+	by mail.kernel.org (Postfix) with ESMTP id 6836E2339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733168AbfHVJTI (ORCPT
+        id S1733176AbfHVJUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:19:08 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:32812 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733152AbfHVJTF (ORCPT
+        Thu, 22 Aug 2019 05:20:14 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:55365 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfHVJUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:19:05 -0400
-Received: by mail-wr1-f41.google.com with SMTP id u16so4709443wrr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 02:19:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=8fMTG6N2j/TMUB2P1ujx2DtHjddT/TmmdRfnCuZ9XY0=;
-        b=T2pMI6y+G8IKrsK8J/v9Hw6Ze7VNU1QAegTQBtAa7YoAqIMV7jl4rsOxqLr2uKv+7E
-         qU8OpzWDLx9aa2GeALCMNY10DH8xUmpEvSQpL0ayo6EJseiHy6wUP019c/nCCacrOqhB
-         QB+3d2H2f0vEl7LtOw9XPlAwhFizRTqjD3JcaH9+n+VKUvYDS9r4fRpDwq0+iXaszL13
-         J3sknRZdTSR9IJXI8txUWEFdl9+uB5tH3eqzTb0H6t3MUJTXPo1J+pZxj4+FMYBI1PHv
-         B9TvUD/P3C3CaL5RpMtkMMjLBIWW2hdg5F7iwFp/hNbtITgX9r32GojgJ+PW0XbAEkM3
-         Pdcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=8fMTG6N2j/TMUB2P1ujx2DtHjddT/TmmdRfnCuZ9XY0=;
-        b=jVYcViecFfH3rhfw3n0Oh6lK/5oYpml9zawXSUoCBSCs8wJnHyMsRRM6/qtfWA+rLx
-         89ZdEer774j/LU5QWLsVj8gHk4kF63mL7SBcaXM3SJcyf9aajnII+Sf+xDEg1Lg9nxnq
-         +SiG6Y1D5duHcWDbsb0IE0Yjplqcx9PSEabghcWb7y8UoU1hjkm94Dpag27OECk/yFnm
-         dnfTOUbPmHB2yKHI3hS3pKGje3YuRP6E/96bIR4nrBybkRX5ndoQiwSICJeyA9Sf8KSl
-         bvh85ISIVRy9apI0qVK+ZaHdyIZgSFe1XmvCz7/X8FjPKaFWjdLpSQblSp0I1k/Hfq8f
-         0J4Q==
-X-Gm-Message-State: APjAAAVRAo8tr5QP2Nz65sqdfXh7HI2Jh/WugqyqRnVpnNBWzf1pJ/vl
-        gp5h3jFqOoHZHztJWbTpfVm8pw==
-X-Google-Smtp-Source: APXvYqzPaTB9as2RdUevNC/gvIlaqvXJBR28ZGeYWGl/cnFEEuvQi+58LrWHZHhwnpFu/CiJ7AkAEg==
-X-Received: by 2002:a5d:4101:: with SMTP id l1mr4986587wrp.202.1566465543440;
-        Thu, 22 Aug 2019 02:19:03 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id 4sm46118162wro.78.2019.08.22.02.19.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 02:19:02 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 10:18:58 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Martijn Coenen <maco@android.com>, cocci@systeme.lip6.fr,
-        kernel-janitors@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-modules@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-        kernel-team@android.com, usb-storage@lists.one-eyed-alien.net,
-        x86@kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Martijn Coenen <maco@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thu, 22 Aug 2019 05:20:14 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id A5BF61BF206;
+        Thu, 22 Aug 2019 09:20:08 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 11:20:08 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Ran Bi <ran.bi@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Rutland <mark.rutland@arm.com>,
         Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Oliver Neukum <oneukum@suse.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sandeep Patil <sspatil@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [v2 08/10] scripts: Coccinelle script for namespace dependencies
-Message-ID: <20190822091858.GA60652@google.com>
-References: <20190813121733.52480-9-maennich@google.com>
- <1c4420f4-361c-7358-49d9-87d8a51f7920@web.de>
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        YT Shen <yt.shen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Flora Fu <flora.fu@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
+Message-ID: <20190822092008.GR27031@piout.net>
+References: <20190801110122.26834-1-ran.bi@mediatek.com>
+ <20190801110122.26834-3-ran.bi@mediatek.com>
+ <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1c4420f4-361c-7358-49d9-87d8a51f7920@web.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 03:50:38PM +0200, Markus Elfring wrote:
->> +generate_deps_for_ns() {
->> +    $SPATCH --very-quiet --in-place --sp-file \
->> +	    $srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
->> +}
->
->* Where will the variable “srctree” be set for the file “scripts/nsdeps”?
->
+On 22/08/2019 11:12:29+0200, Matthias Brugger wrote:
+> 
+> 
+> On 01/08/2019 13:01, Ran Bi wrote:
+> > This add support for the MediaTek MT2712 RTC. It was SoC based RTC, but
+> > had different architecture compared with MT7622 RTC.
+> > 
+> > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> > ---
+> >  drivers/rtc/Kconfig      |  10 +
+> >  drivers/rtc/Makefile     |   1 +
+> >  drivers/rtc/rtc-mt2712.c | 444 +++++++++++++++++++++++++++++++++++++++
+> 
+> Can't we just adjust rtc-mt7622.c (and rename it) to unify the source for both
+> devices. What is the difference that we need to write a driver of our own?
+> 
 
-$srctree is defined by kbuild in the toplevel Makefile.
+If they are compatible, this is the way to go but the file can't be
+renamed (and that is fine).
 
->* Would you like to support a separate build directory for desired adjustments?
->
 
-No, as the purpose of this script is to directly patch the kernel
-sources where applicable.
-
->* How do you think about to check error handling around such commands?
->
->
-
-spatch emits a descriptive message on error. I will add a 'set
--e' to the script so that it aborts on errors.
-
->> +generate_deps() {
->…
->> +        for source_file in $mod_source_files; do
->> +            sed '/MODULE_IMPORT_NS/Q' $source_file > ${source_file}.tmp
->…
->
->I suggest to assign the name for the temporary file to a variable
->which should be used by subsequent commands.
-
-I somehow don't agree that this is an improvement to the code as the
-variable would likely be something like ${source_file_tmp}. Sticking to
-${source_file}.tmp does express the intent of a temporary file next to
-the original source file and the reader of the code does not need to
-reason about the value of ${source_file_tmp}.
-
-Cheers,
-Matthias
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
