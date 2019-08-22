@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79BDC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFEAC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E60E2339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903FB2339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XiHNyRJP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZLicH0OV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732557AbfHVJ5f (ORCPT
+        id S1732626AbfHVJ5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:57:35 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34662 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732502AbfHVJ5d (ORCPT
+        Thu, 22 Aug 2019 05:57:37 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38085 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732527AbfHVJ5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:57:33 -0400
-Received: by mail-wm1-f65.google.com with SMTP id e8so6723450wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 02:57:31 -0700 (PDT)
+        Thu, 22 Aug 2019 05:57:35 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m125so5099064wmm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 02:57:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GKAFqYDadH8IMiNywSvrdjTGvpCeW6m4y4ghvkPFmxg=;
-        b=XiHNyRJPSiORbIyKJHuEbQbN/oWy9Kz9DnlaRQmvE0QFRPUSfJ/wQRArr2AAZFNcjP
-         +4tKvhaM1NHaTb8jYFDWQHxJoGPUw4GiB9+C7EebLxAnrt1td8dIXJUcrSNMvCJFUeEH
-         993vnt+UyK/vhA3vQTs8izx9oAfKsPy6fz4DCkP5KI/ORB33uOk6QX3qb18R5ayS58K1
-         hmEB0n42KVIS4w8rWTLDo1IuJyxa8hngyXZRViT273e8ueH6mtvxrRx4MGThykMogNSk
-         vOxOfBk4dgwUhlBMiB3NrziEqYZ18ssarwHumTVKBZT/7OxRlvsrJa2fDU0GywpL/zuj
-         B+Qg==
+        bh=VR0Zo2f2LdCFMXPsnJEJq1uzw3++zs+EK/TmF24Zk8U=;
+        b=ZLicH0OVCDzwVWhCLhka6L6kttl49SH+prKuYjagxN7kq1n1T3Z4NJUEBiDUB8J/W9
+         C02+TSE7jcGLseF16/U7Eex53jFAzc0NXIGEe4YL8Rlhi1ULSJ5SoujcSB2y6COp7GI3
+         6aet3GSxhuQxqyS6RlnCI/mwU0aglT+LqRCsOXfy9NsYl6jYLjcjTOAgP9mT9/V/D7/0
+         uTw00t8G/TL911SQB9cLayd1WfnzQ7earGqZLu+5/tm42r219H7s1CurqP12c1vorOgJ
+         caQbmfo2k5cr2A1rFoCHr91UoriaATMIk8nOHvbtsLRTFlLbm8W1PaXoFGGwr6kcHiVR
+         3aKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GKAFqYDadH8IMiNywSvrdjTGvpCeW6m4y4ghvkPFmxg=;
-        b=PkivTRBy69GfvtE1efm+h00Hc5AWnDJHw3c+To0f9/Jk1cmBXPb80wfkzE0vFYT/Fx
-         JYnNT+PYvfI44EDsr6S/CFUqxqSWdAK7ySSRMTS2AIrG6AWr9ei8FzGmKF2mWzHhnBgR
-         hnWFalqm8PKol76DlOBzyjKLciSrqKYxpO/g7NHd95U7LaouO3T8mt7cIhhwMTJ/Pgw+
-         89cWxXrBCDNeh4cgFN2P1CNN4Nbjy3s1W65vVHWEWa+qGMyEBwgH/7DWoFS4I0w9Clw0
-         5NKDIrjt+rYNPfTpya/ZZpg2j1J4dUJrCSy+9G2H3kmyZ6GzYanJZGLTmYA7/hGZ7wDH
-         hDJg==
-X-Gm-Message-State: APjAAAWGRaSFAr++YI5DpC5lXGV2JD2yjQdhJyYj/tqn5C8Se6JeqQ5J
-        NfL2nDwAHKtTq8I4shAHnoIUWA==
-X-Google-Smtp-Source: APXvYqzK7Mj2V/hj/IO89jrFTKEWQfOQmDRvNqMHhkqgbg8bHdZAFC8WJc9kyzAdsIMmVhwhXq5RXQ==
-X-Received: by 2002:a1c:a957:: with SMTP id s84mr5319660wme.65.1566467851084;
-        Thu, 22 Aug 2019 02:57:31 -0700 (PDT)
+        bh=VR0Zo2f2LdCFMXPsnJEJq1uzw3++zs+EK/TmF24Zk8U=;
+        b=HJ3bywNgOSk4YpNDOcNIQEAJnlaszI0uaTufwB/rQ+LaV/N2Nm1ZCAbrav7bhaersC
+         0/yqFhBX/rx8F63je05CYkG/REM9Tz+MfqX2zLOMjYNy81izWX+mdHUn+Oo6sPtBbRKQ
+         hjxosJy4aLGvg1rUiekpCE0Mpm12qdnsIWEQ9QfLwtGQFIEC4bcZrF0/sJsMt16fV+xq
+         KBj+OJgmdyNC92aLeGWVwdnFi6nRlV1HcSVCoyI8ZXNTA7UvcjjOW7oOBF/SpY8iN198
+         xMGVQJax7n0prfKW+6A0pIfJ5zau3j8QUQudVefHWJVWU0jzEx0ae9xI769+cJ11LJkG
+         94IA==
+X-Gm-Message-State: APjAAAVF9pTBrpr1V7Un5BvLp7Sunluayp41wKdUdvgfqZBwgfPsQa7K
+        gMHh3Q0VgaIkaHfFEX1KDdf57g==
+X-Google-Smtp-Source: APXvYqxeC7PmjNh3A9bR7xWK9OwPh/lSdL8HYSddkfR3Lrm/ispW2G8paCYcovsDSmi6UIpWWXGfpQ==
+X-Received: by 2002:a7b:cf09:: with SMTP id l9mr5202229wmg.20.1566467853328;
+        Thu, 22 Aug 2019 02:57:33 -0700 (PDT)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id t24sm3298909wmj.14.2019.08.22.02.57.29
+        by smtp.gmail.com with ESMTPSA id t24sm3298909wmj.14.2019.08.22.02.57.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 02:57:30 -0700 (PDT)
+        Thu, 22 Aug 2019 02:57:32 -0700 (PDT)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     broonie@kernel.org, tiwai@suse.de
 Cc:     spapothi@codeaurora.org, bgoswami@codeaurora.org,
         plai@codeaurora.org, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 2/4] ASoC: wcd9335: Fix primary interpolator max rate
-Date:   Thu, 22 Aug 2019 10:56:51 +0100
-Message-Id: <20190822095653.7200-3-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 4/4] ASoC: qdsp6: q6asm-dai: fix max rates on q6asm dais
+Date:   Thu, 22 Aug 2019 10:56:53 +0100
+Message-Id: <20190822095653.7200-5-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190822095653.7200-1-srinivas.kandagatla@linaro.org>
 References: <20190822095653.7200-1-srinivas.kandagatla@linaro.org>
@@ -75,73 +75,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On this codec SLIMBus RX path supports 384000 rate on primary interpolator.
-Add this missing rate as supported rate.
+Q6ASM dais support max rate up to 384KHz, update this.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- sound/soc/codecs/wcd9335.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ sound/soc/qcom/qdsp6/q6asm-dai.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
-index 956602788d0e..03f8a94bba2f 100644
---- a/sound/soc/codecs/wcd9335.c
-+++ b/sound/soc/codecs/wcd9335.c
-@@ -2071,9 +2071,10 @@ static struct snd_soc_dai_driver wcd9335_slim_dais[] = {
- 		.id = AIF1_PB,
- 		.playback = {
- 			.stream_name = "AIF1 Playback",
--			.rates = WCD9335_RATES_MASK | WCD9335_FRAC_RATES_MASK,
-+			.rates = WCD9335_RATES_MASK | WCD9335_FRAC_RATES_MASK |
-+				 SNDRV_PCM_RATE_384000,
- 			.formats = WCD9335_FORMATS_S16_S24_LE,
--			.rate_max = 192000,
-+			.rate_max = 384000,
- 			.rate_min = 8000,
- 			.channels_min = 1,
- 			.channels_max = 2,
-@@ -2099,10 +2100,11 @@ static struct snd_soc_dai_driver wcd9335_slim_dais[] = {
- 		.id = AIF2_PB,
- 		.playback = {
- 			.stream_name = "AIF2 Playback",
--			.rates = WCD9335_RATES_MASK | WCD9335_FRAC_RATES_MASK,
-+			.rates = WCD9335_RATES_MASK | WCD9335_FRAC_RATES_MASK |
-+				 SNDRV_PCM_RATE_384000,
- 			.formats = WCD9335_FORMATS_S16_S24_LE,
- 			.rate_min = 8000,
--			.rate_max = 192000,
-+			.rate_max = 384000,
- 			.channels_min = 1,
- 			.channels_max = 2,
- 		},
-@@ -2127,10 +2129,11 @@ static struct snd_soc_dai_driver wcd9335_slim_dais[] = {
- 		.id = AIF3_PB,
- 		.playback = {
- 			.stream_name = "AIF3 Playback",
--			.rates = WCD9335_RATES_MASK | WCD9335_FRAC_RATES_MASK,
-+			.rates = WCD9335_RATES_MASK | WCD9335_FRAC_RATES_MASK |
-+				 SNDRV_PCM_RATE_384000,
- 			.formats = WCD9335_FORMATS_S16_S24_LE,
- 			.rate_min = 8000,
--			.rate_max = 192000,
-+			.rate_max = 384000,
- 			.channels_min = 1,
- 			.channels_max = 2,
- 		},
-@@ -2155,10 +2158,11 @@ static struct snd_soc_dai_driver wcd9335_slim_dais[] = {
- 		.id = AIF4_PB,
- 		.playback = {
- 			.stream_name = "AIF4 Playback",
--			.rates = WCD9335_RATES_MASK | WCD9335_FRAC_RATES_MASK,
-+			.rates = WCD9335_RATES_MASK | WCD9335_FRAC_RATES_MASK |
-+				 SNDRV_PCM_RATE_384000,
- 			.formats = WCD9335_FORMATS_S16_S24_LE,
- 			.rate_min = 8000,
--			.rate_max = 192000,
-+			.rate_max = 384000,
- 			.channels_min = 1,
- 			.channels_max = 2,
- 		},
+diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
+index 548eb4fa2da6..5eaeadec8492 100644
+--- a/sound/soc/qcom/qdsp6/q6asm-dai.c
++++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
+@@ -80,9 +80,9 @@ static struct snd_pcm_hardware q6asm_dai_hardware_capture = {
+ 				SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME),
+ 	.formats =              (SNDRV_PCM_FMTBIT_S16_LE |
+ 				SNDRV_PCM_FMTBIT_S24_LE),
+-	.rates =                SNDRV_PCM_RATE_8000_48000,
++	.rates =                SNDRV_PCM_RATE_8000_384000,
+ 	.rate_min =             8000,
+-	.rate_max =             48000,
++	.rate_max =             384000,
+ 	.channels_min =         1,
+ 	.channels_max =         4,
+ 	.buffer_bytes_max =     CAPTURE_MAX_NUM_PERIODS *
+@@ -102,9 +102,9 @@ static struct snd_pcm_hardware q6asm_dai_hardware_playback = {
+ 				SNDRV_PCM_INFO_PAUSE | SNDRV_PCM_INFO_RESUME),
+ 	.formats =              (SNDRV_PCM_FMTBIT_S16_LE |
+ 				SNDRV_PCM_FMTBIT_S24_LE),
+-	.rates =                SNDRV_PCM_RATE_8000_192000,
++	.rates =                SNDRV_PCM_RATE_8000_384000,
+ 	.rate_min =             8000,
+-	.rate_max =             192000,
++	.rate_max =             384000,
+ 	.channels_min =         1,
+ 	.channels_max =         8,
+ 	.buffer_bytes_max =     (PLAYBACK_MAX_NUM_PERIODS *
+@@ -119,25 +119,25 @@ static struct snd_pcm_hardware q6asm_dai_hardware_playback = {
+ #define Q6ASM_FEDAI_DRIVER(num) { \
+ 		.playback = {						\
+ 			.stream_name = "MultiMedia"#num" Playback",	\
+-			.rates = (SNDRV_PCM_RATE_8000_192000|		\
++			.rates = (SNDRV_PCM_RATE_8000_384000|		\
+ 					SNDRV_PCM_RATE_KNOT),		\
+ 			.formats = (SNDRV_PCM_FMTBIT_S16_LE |		\
+ 					SNDRV_PCM_FMTBIT_S24_LE),	\
+ 			.channels_min = 1,				\
+ 			.channels_max = 8,				\
+ 			.rate_min =     8000,				\
+-			.rate_max =	192000,				\
++			.rate_max =	384000,				\
+ 		},							\
+ 		.capture = {						\
+ 			.stream_name = "MultiMedia"#num" Capture",	\
+-			.rates = (SNDRV_PCM_RATE_8000_48000|		\
++			.rates = (SNDRV_PCM_RATE_8000_384000|		\
+ 					SNDRV_PCM_RATE_KNOT),		\
+ 			.formats = (SNDRV_PCM_FMTBIT_S16_LE |		\
+ 				    SNDRV_PCM_FMTBIT_S24_LE),		\
+ 			.channels_min = 1,				\
+ 			.channels_max = 4,				\
+ 			.rate_min =     8000,				\
+-			.rate_max =	48000,				\
++			.rate_max =	384000,				\
+ 		},							\
+ 		.name = "MultiMedia"#num,				\
+ 		.id = MSM_FRONTEND_DAI_MULTIMEDIA##num,			\
+@@ -146,7 +146,7 @@ static struct snd_pcm_hardware q6asm_dai_hardware_playback = {
+ /* Conventional and unconventional sample rate supported */
+ static unsigned int supported_sample_rates[] = {
+ 	8000, 11025, 12000, 16000, 22050, 24000, 32000, 44100, 48000,
+-	88200, 96000, 176400, 192000
++	88200, 96000, 176400, 192000, 352800, 384000
+ };
+ 
+ static struct snd_pcm_hw_constraint_list constraints_sample_rates = {
 -- 
 2.21.0
 
