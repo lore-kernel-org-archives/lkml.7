@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1238BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A2BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB08F23407
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543612342B
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494675;
-	bh=bW1g/fBVXLbz31tBrsOcMvh5V2C7AsoLRIxH3c0QeLM=;
+	s=default; t=1566494679;
+	bh=Ck+VrPPpa9FzruK7lFtVEWWTmxG15REiEr+0rrtY0SE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P/NwkEFgmgAG4PmJR1J7KgirimTFlwzFwu1ZgmH1OZ/EAhFXIUNnB/R0JFP77kbP/
-	 ozwlEFdjk3d3SpCl7Va7h4cRwidOg/l5s7VrB1PUpm+6kH7ZX/K/8zCAxV0XqUKoe6
-	 +1jnfwHkBZ1kaKpml+dOzS0mWsoXgd/AgEXvMm1g=
+	b=G/pMNSHzVFo9rA/YmZzSuCwlJ1RzuyYVis9Qx/41WaxsdEiNB3YuwA2ykSo42tgQd
+	 r5V75GU0KTBK0XvEXr3vnoxm3Ur5aCnOfTyAE3cQpz8p1SjJilyMkmkjtzH/EUw2IW
+	 fOj6hsrr4YfVnNxa8DzA8LweiWIxO6w3n0t1dBhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404248AbfHVRYf (ORCPT
+        id S2404272AbfHVRYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:24:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45520 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:24:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404135AbfHVRYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:16 -0400
+        id S2404143AbfHVRYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:17 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0357D2341D;
-        Thu, 22 Aug 2019 17:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B18BD23400;
+        Thu, 22 Aug 2019 17:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1566494655;
-        bh=bW1g/fBVXLbz31tBrsOcMvh5V2C7AsoLRIxH3c0QeLM=;
+        bh=Ck+VrPPpa9FzruK7lFtVEWWTmxG15REiEr+0rrtY0SE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vf12lv+wzJYB53pfD/7r/MJ7It6GNyE5xaX5yXS5SAFNG6QC45J4VIXB1tbvms+9w
-         eZleEFbzH2xBDv0k/VAAwtTqfv7w6JFgxq42IEyPW345xOgq4tXlEYB5c5OqR034kF
-         AMHJctCcvuI09C3VOX556eP+YE0VMYuG7eOBl0EQ=
+        b=fnZyipCQFTjxQyXSh4wNzUgOy0N0IHluiP8q84070IqXI29EnpvaICVNZWwnWsZPf
+         HIrKwt4lP7OP1dXfNCzE6aF0V9KYNCARCiDAW0G5Wn/SnpT0oFmOleCydoRZYAWAwb
+         b8j9sPIR7emWvbmkLj+R4toBWqqtYquadPeYobG4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        Shahed Shaikh <shshaikh@marvell.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 096/103] bnx2x: Fix VFs VLAN reconfiguration in reload.
-Date:   Thu, 22 Aug 2019 10:19:24 -0700
-Message-Id: <20190822171733.044363085@linuxfoundation.org>
+Subject: [PATCH 4.9 097/103] net/packet: fix race in tpacket_snd()
+Date:   Thu, 22 Aug 2019 10:19:25 -0700
+Message-Id: <20190822171733.078235346@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -61,98 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 4a4d2d372fb9b9229327e2ed01d5d9572eddf4de ]
+[ Upstream commit 32d3182cd2cd29b2e7e04df7b0db350fbe11289f ]
 
-Commit 04f05230c5c13 ("bnx2x: Remove configured vlans as
-part of unload sequence."), introduced a regression in driver
-that as a part of VF's reload flow, VLANs created on the VF
-doesn't get re-configured in hardware as vlan metadata/info
-was not getting cleared for the VFs which causes vlan PING to stop.
+packet_sendmsg() checks tx_ring.pg_vec to decide
+if it must call tpacket_snd().
 
-This patch clears the vlan metadata/info so that VLANs gets
-re-configured back in the hardware in VF's reload flow and
-PING/traffic continues for VLANs created over the VFs.
+Problem is that the check is lockless, meaning another thread
+can issue a concurrent setsockopt(PACKET_TX_RING ) to flip
+tx_ring.pg_vec back to NULL.
 
-Fixes: 04f05230c5c13 ("bnx2x: Remove configured vlans as part of unload sequence.")
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Sudarsana Kalluru <skalluru@marvell.com>
-Signed-off-by: Shahed Shaikh <shshaikh@marvell.com>
+Given that tpacket_snd() grabs pg_vec_lock mutex, we can
+perform the check again to solve the race.
+
+syzbot reported :
+
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 11429 Comm: syz-executor394 Not tainted 5.3.0-rc4+ #101
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:packet_lookup_frame+0x8d/0x270 net/packet/af_packet.c:474
+Code: c1 ee 03 f7 73 0c 80 3c 0e 00 0f 85 cb 01 00 00 48 8b 0b 89 c0 4c 8d 24 c1 48 b8 00 00 00 00 00 fc ff df 4c 89 e1 48 c1 e9 03 <80> 3c 01 00 0f 85 94 01 00 00 48 8d 7b 10 4d 8b 3c 24 48 b8 00 00
+RSP: 0018:ffff88809f82f7b8 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff8880a45c7030 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 1ffff110148b8e06 RDI: ffff8880a45c703c
+RBP: ffff88809f82f7e8 R08: ffff888087aea200 R09: fffffbfff134ae50
+R10: fffffbfff134ae4f R11: ffffffff89a5727f R12: 0000000000000000
+R13: 0000000000000001 R14: ffff8880a45c6ac0 R15: 0000000000000000
+FS:  00007fa04716f700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa04716edb8 CR3: 0000000091eb4000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ packet_current_frame net/packet/af_packet.c:487 [inline]
+ tpacket_snd net/packet/af_packet.c:2667 [inline]
+ packet_sendmsg+0x590/0x6250 net/packet/af_packet.c:2975
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:657
+ ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
+ __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
+ __do_sys_sendmmsg net/socket.c:2442 [inline]
+ __se_sys_sendmmsg net/socket.c:2439 [inline]
+ __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
+ do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 69e3c75f4d54 ("net: TX_RING and packet mmap")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c  |    7 ++++---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h  |    2 ++
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c |   17 ++++++++++++-----
- 3 files changed, 18 insertions(+), 8 deletions(-)
+ net/packet/af_packet.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -3062,12 +3062,13 @@ int bnx2x_nic_unload(struct bnx2x *bp, i
- 	/* if VF indicate to PF this function is going down (PF will delete sp
- 	 * elements and clear initializations
- 	 */
--	if (IS_VF(bp))
-+	if (IS_VF(bp)) {
-+		bnx2x_clear_vlan_info(bp);
- 		bnx2x_vfpf_close_vf(bp);
--	else if (unload_mode != UNLOAD_RECOVERY)
-+	} else if (unload_mode != UNLOAD_RECOVERY) {
- 		/* if this is a normal/close unload need to clean up chip*/
- 		bnx2x_chip_cleanup(bp, unload_mode, keep_link);
--	else {
-+	} else {
- 		/* Send the UNLOAD_REQUEST to the MCP */
- 		bnx2x_send_unload_req(bp, unload_mode);
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -2651,6 +2651,13 @@ static int tpacket_snd(struct packet_soc
  
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-@@ -425,6 +425,8 @@ void bnx2x_set_reset_global(struct bnx2x
- void bnx2x_disable_close_the_gate(struct bnx2x *bp);
- int bnx2x_init_hw_func_cnic(struct bnx2x *bp);
+ 	mutex_lock(&po->pg_vec_lock);
  
-+void bnx2x_clear_vlan_info(struct bnx2x *bp);
-+
- /**
-  * bnx2x_sp_event - handle ramrods completion.
-  *
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -8488,11 +8488,21 @@ int bnx2x_set_vlan_one(struct bnx2x *bp,
- 	return rc;
- }
- 
-+void bnx2x_clear_vlan_info(struct bnx2x *bp)
-+{
-+	struct bnx2x_vlan_entry *vlan;
-+
-+	/* Mark that hw forgot all entries */
-+	list_for_each_entry(vlan, &bp->vlan_reg, link)
-+		vlan->hw = false;
-+
-+	bp->vlan_cnt = 0;
-+}
-+
- static int bnx2x_del_all_vlans(struct bnx2x *bp)
- {
- 	struct bnx2x_vlan_mac_obj *vlan_obj = &bp->sp_objs[0].vlan_obj;
- 	unsigned long ramrod_flags = 0, vlan_flags = 0;
--	struct bnx2x_vlan_entry *vlan;
- 	int rc;
- 
- 	__set_bit(RAMROD_COMP_WAIT, &ramrod_flags);
-@@ -8501,10 +8511,7 @@ static int bnx2x_del_all_vlans(struct bn
- 	if (rc)
- 		return rc;
- 
--	/* Mark that hw forgot all entries */
--	list_for_each_entry(vlan, &bp->vlan_reg, link)
--		vlan->hw = false;
--	bp->vlan_cnt = 0;
-+	bnx2x_clear_vlan_info(bp);
- 
- 	return 0;
- }
++	/* packet_sendmsg() check on tx_ring.pg_vec was lockless,
++	 * we need to confirm it under protection of pg_vec_lock.
++	 */
++	if (unlikely(!po->tx_ring.pg_vec)) {
++		err = -EBUSY;
++		goto out;
++	}
+ 	if (likely(saddr == NULL)) {
+ 		dev	= packet_cached_dev_get(po);
+ 		proto	= po->num;
 
 
