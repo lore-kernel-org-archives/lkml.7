@@ -2,266 +2,115 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D21C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AA1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF44422CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806EF22CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:59:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="SsLoyyE5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tbdGs/7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732064AbfHVN65 (ORCPT
+        id S1732137AbfHVN7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:58:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35245 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732000AbfHVN65 (ORCPT
+        Thu, 22 Aug 2019 09:59:19 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38693 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732074AbfHVN7T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:58:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id l2so5916685wmg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 06:58:55 -0700 (PDT)
+        Thu, 22 Aug 2019 09:59:19 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w11so3058180plp.5;
+        Thu, 22 Aug 2019 06:59:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n2ZETo25ZbVRtndwNoCMa7+VCH83yBcVxID8DRYyuKs=;
-        b=SsLoyyE522ywIbe4SxLwD0VKyIDByZrtNPvNWvYLTA4kRAmAWxmfateXO/jFyWaiR7
-         N/itX9bTIxwE4cBf/pxAO9XfvTUPiTk87Kn7jX1/FfAeODsDvA9iBb+yDXkT6oT0Xy87
-         j6wFSjbJKNHrmL8a5RrFX3Avr2XRfpsUngPHa+6HmtmUmq/veGgUq7xtokdA6m06/Zwx
-         ZBDzRi+CKbpMKvw4mVcrjWZIFIig9wMQ5v0YyRwhyXQJj629DruxjxezhbWkStjt9bwb
-         HMJeASWbV8d8wFeuRFJZ7wflqATCIDDFU1GvyIBW4aPzKmMV5aPsafsEqaX9ypjHFtMg
-         OO0g==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gQMErqPW+Y+kyijobMVXbQaJgQ9U/p2mbhMShsZvhmY=;
+        b=tbdGs/7b5IYevDXx+SAWNGYEyip3VRS9QZ3yImh2nJ/Z9tgTGX+k8kX0/XTlhuOy4J
+         Ey6C8iymNu46T8xiFw7oZ3/cXx9FBg58J6g1a3vxrPBRMQ1aPQ+otf4a/i4wUdwWxpnN
+         kvJ3HshSmOkDIHTQrghV10SdhQG1W/4jCcQbehZLz4pulKIkHAtVtmA06vtRm05p+tVH
+         ZCSOIX5+2dawJP9Cgn4y6ci+z9O4rPHgzU63kMx7A5qS7PUEInbo3yxz6mt/Uh6HMk/+
+         zVzxEosK3Q7lM9hJBHo+aqg58hsgvlZiaBLbFasi5VnDrKTQiiRDvVbRbs5DJRkppGu1
+         q/Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n2ZETo25ZbVRtndwNoCMa7+VCH83yBcVxID8DRYyuKs=;
-        b=I4RoVtWDmk71egRJjq9pYCyFTXdW3lhJ1n4lfRkjMMhWGPBYoZuWKdHST524R78EtH
-         bqT4t5So2O6GaJCe3Y9t3kHobXKBLozFMBV985GqFlX3X6SOCdsJCWSssEfx6yUdkx68
-         T+v+LhYj0ZAMXGH9OMqiGXtXBlg3HZfEkvCzKn0X4qWBt1NiWVeQ7nykz9lpjME94p+v
-         QAf9MJeiW0x3yr0Wd462Cxlj8nbOZXXfNzQUb5kBwrdIybImyvQ3J7qApUvJnhS/6yIV
-         ohqCkuFmroPmfC92ubBjGZ7RDYRVaHUt0ojj/RbiQDrRbH3MCNYE8U1S7+ukxvlrqI8d
-         UBew==
-X-Gm-Message-State: APjAAAVPUwpKE8wxiex3FKU7vJhmiJLWya224uZfTmNvQWvq72czXj/+
-        onYHXvw1jcZcTvGYEpqbmhykShU12ynqcBF/3iAg2mSB
-X-Google-Smtp-Source: APXvYqwFCRfHPFhmoCxdnEut9Pl3bieYvMC+ES1WiyQNBcXiQzFQbQv/xowoZF8XsFOFoHrZnrb0cwnjMzew4z2awXs=
-X-Received: by 2002:a1c:c909:: with SMTP id f9mr6765062wmb.52.1566482334676;
- Thu, 22 Aug 2019 06:58:54 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gQMErqPW+Y+kyijobMVXbQaJgQ9U/p2mbhMShsZvhmY=;
+        b=Ltszalk+Jdagi9CWkRpvifL6EVBR52tCHaA/CbaBJw7gIM1Xk2qPOVysnKqtT9slMd
+         qP/b9a4ARANnNyLKBUvIRldGxptZGIS9buHF2IEUjijkKPAsoYhVocpdrL2Aoexov68s
+         VbY/7sWg/emPX2hC3wBUoATqNNYHeFmUqMnguCl3EwDJCs3PcSe8H9hywO4ihBlY408+
+         nTiJ2/oRkuVwaDptQ07pq1z+/bSsH/xckYNM+B9nq5e7avjl01/uBKXdQJ4bN/kL6rLl
+         mDe9EhPLBRsQiDRtfF9PGF4OXWcJrV/+0fKfDSu8E3lhmUcN2m5DUrJcvEhgqq+B+yfx
+         cnBg==
+X-Gm-Message-State: APjAAAVUjN3ssVXziJ+Dp/3rCZKURO+4sxUqLLngDodoGdp1vwz0/mu2
+        Gx/i3rG9HkyYH9mBmvWj83k=
+X-Google-Smtp-Source: APXvYqxxFMSue8E1e+xVFW8I5bTOFVzjtqZ4z3kHW7Zq9wWlq6SPsozB8axnGLvnvTwawGipkiE2bA==
+X-Received: by 2002:a17:902:1a4:: with SMTP id b33mr38545181plb.141.1566482358390;
+        Thu, 22 Aug 2019 06:59:18 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p10sm29038551pff.132.2019.08.22.06.59.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Aug 2019 06:59:17 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 06:59:16 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Badhri Jagan Sridharan <badhri@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] typec: tcpm: fix a typo in the comparison of
+ pdo_max_voltage
+Message-ID: <20190822135916.GC8144@roeck-us.net>
+References: <20190822135212.10195-1-colin.king@canonical.com>
 MIME-Version: 1.0
-References: <20190822084131.114764-1-anup.patel@wdc.com> <20190822084131.114764-14-anup.patel@wdc.com>
- <77b9ff3c-292f-ee17-ddbb-134c0666fde7@amazon.com> <CAAhSdy1h+m0gA2pro-XAb4qhe0Q+8knjW+8+6jaz3efOdKWskA@mail.gmail.com>
- <a44f86ac-8902-0aa3-1eee-013ac97d667b@amazon.com>
-In-Reply-To: <a44f86ac-8902-0aa3-1eee-013ac97d667b@amazon.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 22 Aug 2019 19:28:43 +0530
-Message-ID: <CAAhSdy20D=t5hbeWDi=1XmNAe5rwvNyjMth-WUwrVe+HcagVpg@mail.gmail.com>
-Subject: Re: [PATCH v5 13/20] RISC-V: KVM: Implement stage2 page table programming
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822135212.10195-1-colin.king@canonical.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 6:57 PM Alexander Graf <graf@amazon.com> wrote:
->
->
->
-> On 22.08.19 14:38, Anup Patel wrote:
-> > On Thu, Aug 22, 2019 at 5:58 PM Alexander Graf <graf@amazon.com> wrote:
-> >>
-> >> On 22.08.19 10:45, Anup Patel wrote:
-> >>> This patch implements all required functions for programming
-> >>> the stage2 page table for each Guest/VM.
-> >>>
-> >>> At high-level, the flow of stage2 related functions is similar
-> >>> from KVM ARM/ARM64 implementation but the stage2 page table
-> >>> format is quite different for KVM RISC-V.
-> >>>
-> >>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> >>> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> >>> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> >>> ---
-> >>>    arch/riscv/include/asm/kvm_host.h     |  10 +
-> >>>    arch/riscv/include/asm/pgtable-bits.h |   1 +
-> >>>    arch/riscv/kvm/mmu.c                  | 637 +++++++++++++++++++++++++-
-> >>>    3 files changed, 638 insertions(+), 10 deletions(-)
-> >>>
-> >>> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> >>> index 3b09158f80f2..a37775c92586 100644
-> >>> --- a/arch/riscv/include/asm/kvm_host.h
-> >>> +++ b/arch/riscv/include/asm/kvm_host.h
-> >>> @@ -72,6 +72,13 @@ struct kvm_mmio_decode {
-> >>>        int shift;
-> >>>    };
-> >>>
-> >>> +#define KVM_MMU_PAGE_CACHE_NR_OBJS   32
-> >>> +
-> >>> +struct kvm_mmu_page_cache {
-> >>> +     int nobjs;
-> >>> +     void *objects[KVM_MMU_PAGE_CACHE_NR_OBJS];
-> >>> +};
-> >>> +
-> >>>    struct kvm_cpu_context {
-> >>>        unsigned long zero;
-> >>>        unsigned long ra;
-> >>> @@ -163,6 +170,9 @@ struct kvm_vcpu_arch {
-> >>>        /* MMIO instruction details */
-> >>>        struct kvm_mmio_decode mmio_decode;
-> >>>
-> >>> +     /* Cache pages needed to program page tables with spinlock held */
-> >>> +     struct kvm_mmu_page_cache mmu_page_cache;
-> >>> +
-> >>>        /* VCPU power-off state */
-> >>>        bool power_off;
-> >>>
-> >>> diff --git a/arch/riscv/include/asm/pgtable-bits.h b/arch/riscv/include/asm/pgtable-bits.h
-> >>> index bbaeb5d35842..be49d62fcc2b 100644
-> >>> --- a/arch/riscv/include/asm/pgtable-bits.h
-> >>> +++ b/arch/riscv/include/asm/pgtable-bits.h
-> >>> @@ -26,6 +26,7 @@
-> >>>
-> >>>    #define _PAGE_SPECIAL   _PAGE_SOFT
-> >>>    #define _PAGE_TABLE     _PAGE_PRESENT
-> >>> +#define _PAGE_LEAF      (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC)
-> >>>
-> >>>    /*
-> >>>     * _PAGE_PROT_NONE is set on not-present pages (and ignored by the hardware) to
-> >>> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-> >>> index 2b965f9aac07..9e95ab6769f6 100644
-> >>> --- a/arch/riscv/kvm/mmu.c
-> >>> +++ b/arch/riscv/kvm/mmu.c
-> >>> @@ -18,6 +18,432 @@
-> >>>    #include <asm/page.h>
-> >>>    #include <asm/pgtable.h>
-> >>>
-> >>> +#ifdef CONFIG_64BIT
-> >>> +#define stage2_have_pmd              true
-> >>> +#define stage2_gpa_size              ((phys_addr_t)(1ULL << 39))
-> >>> +#define stage2_cache_min_pages       2
-> >>> +#else
-> >>> +#define pmd_index(x)         0
-> >>> +#define pfn_pmd(x, y)                ({ pmd_t __x = { 0 }; __x; })
-> >>> +#define stage2_have_pmd              false
-> >>> +#define stage2_gpa_size              ((phys_addr_t)(1ULL << 32))
-> >>> +#define stage2_cache_min_pages       1
-> >>> +#endif
-> >>> +
-> >>> +static int stage2_cache_topup(struct kvm_mmu_page_cache *pcache,
-> >>> +                           int min, int max)
-> >>> +{
-> >>> +     void *page;
-> >>> +
-> >>> +     BUG_ON(max > KVM_MMU_PAGE_CACHE_NR_OBJS);
-> >>> +     if (pcache->nobjs >= min)
-> >>> +             return 0;
-> >>> +     while (pcache->nobjs < max) {
-> >>> +             page = (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-> >>> +             if (!page)
-> >>> +                     return -ENOMEM;
-> >>> +             pcache->objects[pcache->nobjs++] = page;
-> >>> +     }
-> >>> +
-> >>> +     return 0;
-> >>> +}
-> >>> +
-> >>> +static void stage2_cache_flush(struct kvm_mmu_page_cache *pcache)
-> >>> +{
-> >>> +     while (pcache && pcache->nobjs)
-> >>> +             free_page((unsigned long)pcache->objects[--pcache->nobjs]);
-> >>> +}
-> >>> +
-> >>> +static void *stage2_cache_alloc(struct kvm_mmu_page_cache *pcache)
-> >>> +{
-> >>> +     void *p;
-> >>> +
-> >>> +     if (!pcache)
-> >>> +             return NULL;
-> >>> +
-> >>> +     BUG_ON(!pcache->nobjs);
-> >>> +     p = pcache->objects[--pcache->nobjs];
-> >>> +
-> >>> +     return p;
-> >>> +}
-> >>> +
-> >>> +struct local_guest_tlb_info {
-> >>> +     struct kvm_vmid *vmid;
-> >>> +     gpa_t addr;
-> >>> +};
-> >>> +
-> >>> +static void local_guest_tlb_flush_vmid_gpa(void *info)
-> >>> +{
-> >>> +     struct local_guest_tlb_info *infop = info;
-> >>> +
-> >>> +     __kvm_riscv_hfence_gvma_vmid_gpa(READ_ONCE(infop->vmid->vmid_version),
-> >>> +                                      infop->addr);
-> >>> +}
-> >>> +
-> >>> +static void stage2_remote_tlb_flush(struct kvm *kvm, gpa_t addr)
-> >>> +{
-> >>> +     struct local_guest_tlb_info info;
-> >>> +     struct kvm_vmid *vmid = &kvm->arch.vmid;
-> >>> +
-> >>> +     /* TODO: This should be SBI call */
-> >>> +     info.vmid = vmid;
-> >>> +     info.addr = addr;
-> >>> +     preempt_disable();
-> >>> +     smp_call_function_many(cpu_all_mask, local_guest_tlb_flush_vmid_gpa,
-> >>> +                            &info, true);
-> >>
-> >> This is all nice and dandy on the toy 4 core systems we have today, but
-> >> it will become a bottleneck further down the road.
-> >>
-> >> How many VMIDs do you have? Could you just allocate a new one every time
-> >> you switch host CPUs? Then you know exactly which CPUs to flush by
-> >> looking at all your vcpu structs and a local field that tells you which
-> >> pCPU they're on at this moment.
-> >>
-> >> Either way, it's nothing that should block inclusion. For today, we're fine.
-> >
-> > We are not happy about this either.
-> >
-> > Other two options, we have are:
-> > 1. Have SBI calls for remote HFENCEs
-> > 2. Propose RISC-V ISA extension for remote FENCEs
-> >
-> > Option1 is mostly extending SBI spec and implementing it in runtime
-> > firmware.
-> >
-> > Option2 is ideal solution but requires consensus among wider audience
-> > in RISC-V foundation.
-> >
-> > At this point, we are fine with a simple solution.
->
-> It's fine to explicitly IPI other CPUs to flush their TLBs. What is not
-> fine is to IPI *all* CPUs to flush their TLBs.
+On Thu, Aug 22, 2019 at 02:52:12PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There appears to be a typo in the comparison of pdo_max_voltage[i]
+> with the previous value, currently it is checking against the
+> array pdo_min_voltage rather than pdo_max_voltage. I believe this
+> is a typo. Fix this.
+> 
+> Addresses-Coverity: ("Copy-paste error")
+> Fixes: 5007e1b5db73 ("typec: tcpm: Validate source and sink caps")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Ahh, this should have been cpu_online_mask instead of cpu_all_mask
+I think you are correct.
 
-I will update this in next revision.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Regards,
-Anup
-
->
->
-> Alex
+> ---
+>  drivers/usb/typec/tcpm/tcpm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+> index 166b28562395..96562744101c 100644
+> --- a/drivers/usb/typec/tcpm/tcpm.c
+> +++ b/drivers/usb/typec/tcpm/tcpm.c
+> @@ -1439,7 +1439,7 @@ static enum pdo_err tcpm_caps_err(struct tcpm_port *port, const u32 *pdo,
+>  				else if ((pdo_min_voltage(pdo[i]) ==
+>  					  pdo_min_voltage(pdo[i - 1])) &&
+>  					 (pdo_max_voltage(pdo[i]) ==
+> -					  pdo_min_voltage(pdo[i - 1])))
+> +					  pdo_max_voltage(pdo[i - 1])))
+>  					return PDO_ERR_DUPE_PDO;
+>  				break;
+>  			/*
+> -- 
+> 2.20.1
+> 
