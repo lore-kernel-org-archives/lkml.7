@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B1BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7ACFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D92220856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C9E620856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495742;
-	bh=B7kkM0ZlWxR9GSrJ+E7aG9eJznkgKGpsBWxZ7RuDDjs=;
+	s=default; t=1566495747;
+	bh=U5olbrDyZc4oqAZsfWavZ8iVGWY73TcxqiHr19V0r5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FrRp/aC6Ks4NRSSO/EWeZGejOr4dL0IytxJjzKy84qehVYZftn6U5xqeOlBkYG1lh
-	 kYtbQ6bfmg3lWJ6b85/Mz8s2XHJh1l4+KPae6GE+fzBmawwJvjyz9xd3Q/nKNS+x3U
-	 V8phDLHPUwb1kQ+V6I5YXJZ0ZBVD1dZGWR1qwa4c=
+	b=LjZCi5gLNLtopdPTpFfNmkz8NdJHfwvYXslDFu78+nel+XtCWYHpiaVySuzhKtjjZ
+	 HC9qQAivPo0wMpH44gn4TwzeE3i/csoHzObRwAyG5Bspq9GweXElKe4Yk2cJybJ6Hx
+	 cAOIOQ6Rd3/RI9bSnzvzX/BrPmzkkHr1dk7SEZ/Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392632AbfHVRmV (ORCPT
+        id S2405195AbfHVRm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:42:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44422 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:42:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404012AbfHVRXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:50 -0400
+        id S2403997AbfHVRXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:48 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0504423766;
-        Thu, 22 Aug 2019 17:23:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B357023439;
+        Thu, 22 Aug 2019 17:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494629;
-        bh=B7kkM0ZlWxR9GSrJ+E7aG9eJznkgKGpsBWxZ7RuDDjs=;
+        s=default; t=1566494626;
+        bh=U5olbrDyZc4oqAZsfWavZ8iVGWY73TcxqiHr19V0r5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOQVwJHxX2IdjXS7nIi1VZgFJxO/LPSuLv8CtMJpYMse4wzA6qzxpCdnsDc2zgPWW
-         3QylI4qzRnwKYZujQ/MbwQe762tp2HiDCr2qsexGnvCs9Igj8itPKwtcTMl7TTdyqm
-         ouLKQ56kdw16wPwe/YHvDSczhRQq8KC8GCGwL1DQ=
+        b=y3vlDajwR7BYroEJ0pCUKOmutJHf20BQcLrxBaZwAgmimap4D+7euVmvz8/6B8t1L
+         poMAQefnlswYRM19EIQZ7QVDm7X/OCu3n+VF5ELh1tAPx3aBLpIMZWllF+opEeAaqb
+         X8YwFvWV4Q3R5d13A+ugEFYVSb+ckDUSIM9m3LHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 060/103] ALSA: hda - Add a generic reboot_notify
-Date:   Thu, 22 Aug 2019 10:18:48 -0700
-Message-Id: <20190822171731.220559115@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.9 057/103] netfilter: ctnetlink: dont use conntrack/expect object addresses as id
+Date:   Thu, 22 Aug 2019 10:18:45 -0700
+Message-Id: <20190822171731.096825895@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -59,114 +60,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit 871b9066027702e6e6589da0e1edd3b7dede7205 upstream.
+commit 3c79107631db1f7fd32cf3f7368e4672004a3010 upstream.
 
-Make codec enter D3 before rebooting or poweroff can fix the noise
-issue on some laptops. And in theory it is harmless for all codecs
-to enter D3 before rebooting or poweroff, let us add a generic
-reboot_notify, then realtek and conexant drivers can call this
-function.
+else, we leak the addresses to userspace via ctnetlink events
+and dumps.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Compute an ID on demand based on the immutable parts of nf_conn struct.
+
+Another advantage compared to using an address is that there is no
+immediate re-use of the same ID in case the conntrack entry is freed and
+reallocated again immediately.
+
+Fixes: 3583240249ef ("[NETFILTER]: nf_conntrack_expect: kill unique ID")
+Fixes: 7f85f914721f ("[NETFILTER]: nf_conntrack: kill unique ID")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/pci/hda/hda_generic.c    |   19 +++++++++++++++++++
- sound/pci/hda/hda_generic.h    |    1 +
- sound/pci/hda/patch_conexant.c |    6 +-----
- sound/pci/hda/patch_realtek.c  |   11 +----------
- 4 files changed, 22 insertions(+), 15 deletions(-)
+ include/net/netfilter/nf_conntrack.h |    2 ++
+ net/netfilter/nf_conntrack_core.c    |   35 +++++++++++++++++++++++++++++++++++
+ net/netfilter/nf_conntrack_netlink.c |   34 +++++++++++++++++++++++++++++-----
+ 3 files changed, 66 insertions(+), 5 deletions(-)
 
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -5849,6 +5849,24 @@ void snd_hda_gen_free(struct hda_codec *
- }
- EXPORT_SYMBOL_GPL(snd_hda_gen_free);
+--- a/include/net/netfilter/nf_conntrack.h
++++ b/include/net/netfilter/nf_conntrack.h
+@@ -336,6 +336,8 @@ struct nf_conn *nf_ct_tmpl_alloc(struct
+ 				 gfp_t flags);
+ void nf_ct_tmpl_free(struct nf_conn *tmpl);
  
-+/**
-+ * snd_hda_gen_reboot_notify - Make codec enter D3 before rebooting
-+ * @codec: the HDA codec
-+ *
-+ * This can be put as patch_ops reboot_notify function.
-+ */
-+void snd_hda_gen_reboot_notify(struct hda_codec *codec)
-+{
-+	/* Make the codec enter D3 to avoid spurious noises from the internal
-+	 * speaker during (and after) reboot
-+	 */
-+	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
-+	snd_hda_codec_write(codec, codec->core.afg, 0,
-+			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
-+	msleep(10);
-+}
-+EXPORT_SYMBOL_GPL(snd_hda_gen_reboot_notify);
++u32 nf_ct_get_id(const struct nf_conn *ct);
 +
- #ifdef CONFIG_PM
- /**
-  * snd_hda_gen_check_power_status - check the loopback power save state
-@@ -5876,6 +5894,7 @@ static const struct hda_codec_ops generi
- 	.init = snd_hda_gen_init,
- 	.free = snd_hda_gen_free,
- 	.unsol_event = snd_hda_jack_unsol_event,
-+	.reboot_notify = snd_hda_gen_reboot_notify,
- #ifdef CONFIG_PM
- 	.check_power_status = snd_hda_gen_check_power_status,
+ #define NF_CT_STAT_INC(net, count)	  __this_cpu_inc((net)->ct.stat->count)
+ #define NF_CT_STAT_INC_ATOMIC(net, count) this_cpu_inc((net)->ct.stat->count)
+ #define NF_CT_STAT_ADD_ATOMIC(net, count, v) this_cpu_add((net)->ct.stat->count, (v))
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -25,6 +25,7 @@
+ #include <linux/slab.h>
+ #include <linux/random.h>
+ #include <linux/jhash.h>
++#include <linux/siphash.h>
+ #include <linux/err.h>
+ #include <linux/percpu.h>
+ #include <linux/moduleparam.h>
+@@ -301,6 +302,40 @@ nf_ct_invert_tuple(struct nf_conntrack_t
+ }
+ EXPORT_SYMBOL_GPL(nf_ct_invert_tuple);
+ 
++/* Generate a almost-unique pseudo-id for a given conntrack.
++ *
++ * intentionally doesn't re-use any of the seeds used for hash
++ * table location, we assume id gets exposed to userspace.
++ *
++ * Following nf_conn items do not change throughout lifetime
++ * of the nf_conn after it has been committed to main hash table:
++ *
++ * 1. nf_conn address
++ * 2. nf_conn->ext address
++ * 3. nf_conn->master address (normally NULL)
++ * 4. tuple
++ * 5. the associated net namespace
++ */
++u32 nf_ct_get_id(const struct nf_conn *ct)
++{
++	static __read_mostly siphash_key_t ct_id_seed;
++	unsigned long a, b, c, d;
++
++	net_get_random_once(&ct_id_seed, sizeof(ct_id_seed));
++
++	a = (unsigned long)ct;
++	b = (unsigned long)ct->master ^ net_hash_mix(nf_ct_net(ct));
++	c = (unsigned long)ct->ext;
++	d = (unsigned long)siphash(&ct->tuplehash, sizeof(ct->tuplehash),
++				   &ct_id_seed);
++#ifdef CONFIG_64BIT
++	return siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &ct_id_seed);
++#else
++	return siphash_4u32((u32)a, (u32)b, (u32)c, (u32)d, &ct_id_seed);
++#endif
++}
++EXPORT_SYMBOL_GPL(nf_ct_get_id);
++
+ static void
+ clean_from_lists(struct nf_conn *ct)
+ {
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -29,6 +29,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/interrupt.h>
+ #include <linux/slab.h>
++#include <linux/siphash.h>
+ 
+ #include <linux/netfilter.h>
+ #include <net/netlink.h>
+@@ -441,7 +442,9 @@ static int ctnetlink_dump_ct_seq_adj(str
+ 
+ static int ctnetlink_dump_id(struct sk_buff *skb, const struct nf_conn *ct)
+ {
+-	if (nla_put_be32(skb, CTA_ID, htonl((unsigned long)ct)))
++	__be32 id = (__force __be32)nf_ct_get_id(ct);
++
++	if (nla_put_be32(skb, CTA_ID, id))
+ 		goto nla_put_failure;
+ 	return 0;
+ 
+@@ -1166,8 +1169,9 @@ static int ctnetlink_del_conntrack(struc
+ 	ct = nf_ct_tuplehash_to_ctrack(h);
+ 
+ 	if (cda[CTA_ID]) {
+-		u_int32_t id = ntohl(nla_get_be32(cda[CTA_ID]));
+-		if (id != (u32)(unsigned long)ct) {
++		__be32 id = nla_get_be32(cda[CTA_ID]);
++
++		if (id != (__force __be32)nf_ct_get_id(ct)) {
+ 			nf_ct_put(ct);
+ 			return -ENOENT;
+ 		}
+@@ -2472,6 +2476,25 @@ nla_put_failure:
+ 
+ static const union nf_inet_addr any_addr;
+ 
++static __be32 nf_expect_get_id(const struct nf_conntrack_expect *exp)
++{
++	static __read_mostly siphash_key_t exp_id_seed;
++	unsigned long a, b, c, d;
++
++	net_get_random_once(&exp_id_seed, sizeof(exp_id_seed));
++
++	a = (unsigned long)exp;
++	b = (unsigned long)exp->helper;
++	c = (unsigned long)exp->master;
++	d = (unsigned long)siphash(&exp->tuple, sizeof(exp->tuple), &exp_id_seed);
++
++#ifdef CONFIG_64BIT
++	return (__force __be32)siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &exp_id_seed);
++#else
++	return (__force __be32)siphash_4u32((u32)a, (u32)b, (u32)c, (u32)d, &exp_id_seed);
++#endif
++}
++
+ static int
+ ctnetlink_exp_dump_expect(struct sk_buff *skb,
+ 			  const struct nf_conntrack_expect *exp)
+@@ -2519,7 +2542,7 @@ ctnetlink_exp_dump_expect(struct sk_buff
+ 	}
  #endif
---- a/sound/pci/hda/hda_generic.h
-+++ b/sound/pci/hda/hda_generic.h
-@@ -322,6 +322,7 @@ int snd_hda_gen_parse_auto_config(struct
- 				  struct auto_pin_cfg *cfg);
- int snd_hda_gen_build_controls(struct hda_codec *codec);
- int snd_hda_gen_build_pcms(struct hda_codec *codec);
-+void snd_hda_gen_reboot_notify(struct hda_codec *codec);
+ 	if (nla_put_be32(skb, CTA_EXPECT_TIMEOUT, htonl(timeout)) ||
+-	    nla_put_be32(skb, CTA_EXPECT_ID, htonl((unsigned long)exp)) ||
++	    nla_put_be32(skb, CTA_EXPECT_ID, nf_expect_get_id(exp)) ||
+ 	    nla_put_be32(skb, CTA_EXPECT_FLAGS, htonl(exp->flags)) ||
+ 	    nla_put_be32(skb, CTA_EXPECT_CLASS, htonl(exp->class)))
+ 		goto nla_put_failure;
+@@ -2818,7 +2841,8 @@ static int ctnetlink_get_expect(struct n
  
- /* standard jack event callbacks */
- void snd_hda_gen_hp_automute(struct hda_codec *codec,
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -216,11 +216,7 @@ static void cx_auto_reboot_notify(struct
- 	/* Turn the problematic codec into D3 to avoid spurious noises
- 	   from the internal speaker during (and after) reboot */
- 	cx_auto_turn_eapd(codec, spec->num_eapds, spec->eapds, false);
--
--	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
--	snd_hda_codec_write(codec, codec->core.afg, 0,
--			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
--	msleep(10);
-+	snd_hda_gen_reboot_notify(codec);
- }
- 
- static void cx_auto_free(struct hda_codec *codec)
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -802,15 +802,6 @@ static void alc_reboot_notify(struct hda
- 		alc_shutup(codec);
- }
- 
--/* power down codec to D3 at reboot/shutdown; set as reboot_notify ops */
--static void alc_d3_at_reboot(struct hda_codec *codec)
--{
--	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
--	snd_hda_codec_write(codec, codec->core.afg, 0,
--			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
--	msleep(10);
--}
--
- #define alc_free	snd_hda_gen_free
- 
- #ifdef CONFIG_PM
-@@ -4473,7 +4464,7 @@ static void alc_fixup_tpt440_dock(struct
- 	struct alc_spec *spec = codec->spec;
- 
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
--		spec->reboot_notify = alc_d3_at_reboot; /* reduce noise */
-+		spec->reboot_notify = snd_hda_gen_reboot_notify; /* reduce noise */
- 		spec->parse_flags = HDA_PINCFG_NO_HP_FIXUP;
- 		codec->power_save_node = 0; /* avoid click noises */
- 		snd_hda_apply_pincfgs(codec, pincfgs);
+ 	if (cda[CTA_EXPECT_ID]) {
+ 		__be32 id = nla_get_be32(cda[CTA_EXPECT_ID]);
+-		if (ntohl(id) != (u32)(unsigned long)exp) {
++
++		if (id != nf_expect_get_id(exp)) {
+ 			nf_ct_expect_put(exp);
+ 			return -ENOENT;
+ 		}
 
 
