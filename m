@@ -2,133 +2,302 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73026C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975D4C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42CCB233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 646FF233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:56:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dO6MkOLx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1g4rct5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393345AbfHVUzX (ORCPT
+        id S2393369AbfHVU4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:55:23 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41813 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387699AbfHVUzW (ORCPT
+        Thu, 22 Aug 2019 16:56:07 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46247 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388040AbfHVU4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:55:22 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j16so6651614wrr.8;
-        Thu, 22 Aug 2019 13:55:20 -0700 (PDT)
+        Thu, 22 Aug 2019 16:56:06 -0400
+Received: by mail-pl1-f196.google.com with SMTP id c2so4136072plz.13;
+        Thu, 22 Aug 2019 13:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lRbOPMDoE31doaBIKEM0yAs5zAE0Z+co7+P/zE3Deug=;
-        b=dO6MkOLxdmPBc2RukZgga6fitB1oKcUHjkESVv57DByDxL25n69RQk4e6ArwcNptMo
-         BQMKdYnlmRCIfaXGHfP2KR4XuUusE5UWlJfnYev1V9jvenGPRvN6RuYIHkHNVp4TrkN3
-         fW3m5IwOZ2nTnJnHsxIdTVVYLGfPPaOv0o3QVWapwr3wnLH/An0YUzwLdkSo5ipGvL0p
-         fluLI7i3+Ic48hP2ab92zS0fDrXNGrLDAnGdW3dRQEBQUbfBTCB+7bskuXrvTVQNS1gG
-         KmauVkh5+ZN4913GAY2dz+U19ZDgfBQScjsC6Pob55UroJBZxP+L8HYWVqG/Avm3RoPe
-         5xfQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dkOlZMnbpz2S+cmJ2jL1bEKYw67H/e7YSCRv/YErFnY=;
+        b=C1g4rct5u8o+HEUCUxjjtCRBK+wdSIunOTkXavVoyR1q+BlgNILLKX1zPuzbwyAHKj
+         9TF1SEFlmRDP05qxnmW4ALaMPlIEG2w6btrYdU/3W2tNMWMkx6+G+pMPR7U3oVll3a23
+         fBWiKd/Gg+jeaO1kgZ6cL0BxLe8fI6YG7JhOQLP1gQQPqzoT8frJFyjShiJHvpEAuYhD
+         WiqGn2ylvIDXuTYnOuQevCXKTeEe78sgerxUZqTaBdCcaTvbsjl1pX49Ed+bGEur7PlQ
+         +6EJgLzTEaviONg4mAigafhVxz0P8O8T9q6d3zLZtFH/JsoR1lTkvpStbu8CQL7gtPvR
+         n4TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lRbOPMDoE31doaBIKEM0yAs5zAE0Z+co7+P/zE3Deug=;
-        b=Iams6K/UMyVa+xUBd+1c94LGBQX8dI4d08MFg7e5HXVKB18h0Xr9C/lOGJKBldt0s1
-         6599z7W7WKOUICGzYxaRX2buniEqnNn7X47lBfzdSzeIYLaqqAdGc4xw+kPWuoUUIU7H
-         xVemgrYqXzoodXsMMJKdd9qGg9uyla6pPPyjoY88fs4IWAgaVWZTNMLttg4P6b9MmED5
-         Vsp0Q8DNZxm2EAQQU2aeLX93jhlrkh3k5f1JCGoFUP4dekLyIh/qI47XqNmcxyffH3BH
-         H+GUNdWIi46S10tltDy5Kii8N08Je23bYfC/EPYuAh/1jmNjT/yH3rkeTguQZ2ZqBTnz
-         Zv1Q==
-X-Gm-Message-State: APjAAAVMgJraHWiNi9F4KbpkXQ8YEeZ+rYAw9PXqcg3k4vNGGK2Gi80U
-        kaPbi9P1rWEq367COGxamUhbEqsjHsjCnH4/fmM=
-X-Google-Smtp-Source: APXvYqxVuoG2YDL4c/4HLpmJucH4dmayX1vJ+tnYQOJyQWDNhMAnVIhulJpruEcIK1jr/0JSHbj+9O4UGbAaXMDgUJg=
-X-Received: by 2002:a5d:4ecb:: with SMTP id s11mr866410wrv.323.1566507320236;
- Thu, 22 Aug 2019 13:55:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dkOlZMnbpz2S+cmJ2jL1bEKYw67H/e7YSCRv/YErFnY=;
+        b=VisWbLANAV4btRJIlVA7gtjnb56ebPk9OxbpoEN1HDOEFeBj2MtKosQbqFJ/t4LY5o
+         E7WkfBY43jIp2bS7nddhi89bSuxD4Mb7gvXsIURgDhM9Pi0NOR/AbQos/4RId4F1ix/O
+         GFqWV80DkgSX0cw70lEWcxntRkvaGEPQ5RlN0nDlocfP5kuy+CAXd+KNbCpoxXkHhvQc
+         kQw5JlKN+i0rbUssAjKh3URGaPw5MwR8RuD3B2Zg7WGBMaxoeilRvbXYYMvcZrABf2xI
+         Gtf5hApSylVEkkk04IxIOZGKJec3WO7FL1qerWXSWuaRITZMBkLFfkO7I5LpFEQwBzgf
+         pZOg==
+X-Gm-Message-State: APjAAAVBXx7cb9T7OHYIuPF/7kdtOnCQcta5F55c4wRFyeNoR2REdbXJ
+        fN8dQcKGgxsuHigUtOVFrP0GceFoy/J8LA==
+X-Google-Smtp-Source: APXvYqz4oB1N6lhiWyngJv8lmCAclasVsaOWSsJMsAXM5Bfe8NVNTn2DC2RcURoEfpgsjyb6Hc0EEA==
+X-Received: by 2002:a17:902:684f:: with SMTP id f15mr818360pln.332.1566507365441;
+        Thu, 22 Aug 2019 13:56:05 -0700 (PDT)
+Received: from localhost.localdomain.com ([12.206.222.2])
+        by smtp.gmail.com with ESMTPSA id w2sm179056pgc.32.2019.08.22.13.56.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 13:56:04 -0700 (PDT)
+From:   David Abdurachmanov <david.abdurachmanov@gmail.com>
+X-Google-Original-From: David Abdurachmanov <david.abdurachmanov@sifive.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Vincent Chen <vincentc@andestech.com>,
+        Alan Kao <alankao@andestech.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     david.abdurachmanov@gmail.com, me@carlosedp.com
+Subject: [PATCH v2] riscv: add support for SECCOMP and SECCOMP_FILTER
+Date:   Thu, 22 Aug 2019 13:55:22 -0700
+Message-Id: <20190822205533.4877-1-david.abdurachmanov@sifive.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190816221011.10750-1-colin.king@canonical.com> <5981f677-3347-1450-f787-853e97496bd4@amd.com>
-In-Reply-To: <5981f677-3347-1450-f787-853e97496bd4@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 22 Aug 2019 16:55:08 -0400
-Message-ID: <CADnq5_M-7LQ1HAiV5-jzYZENRNqzRm939AyvVarDpWJEJZDNqw@mail.gmail.com>
-Subject: Re: [PATCH][drm-next] drm/amd/display: fix a potential null pointer dereference
-To:     Harry Wentland <hwentlan@amd.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 3:21 PM Harry Wentland <hwentlan@amd.com> wrote:
->
-> On 2019-08-16 6:10 p.m., Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> >
-> > Currently the pointer init_data is dereferenced on the assignment
-> > of fw_info before init_data is sanity checked to see if it is null.
-> > Fix te potential null pointer dereference on init_data by only
-> > performing dereference after it is null checked.
-> >
-> > Addresses-Coverity: ("Dereference before null check")
-> > Fixes: 9adc8050bf3c ("drm/amd/display: make firmware info only load once during dc_bios create")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
->
-> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
->
+This patch was extensively tested on Fedora/RISCV (applied by default on
+top of 5.2-rc7 kernel for <2 months). The patch was also tested with 5.3-rc
+on QEMU and SiFive Unleashed board.
 
-Applied.  Thanks!
+libseccomp (userspace) was rebased:
+https://github.com/seccomp/libseccomp/pull/134
 
-Alex
+Fully passes libseccomp regression testing (simulation and live).
 
-> Harry
->
-> > ---
-> >  drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c b/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
-> > index bee81bf288be..926954c804a6 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
-> > +++ b/drivers/gpu/drm/amd/display/dc/dce/dce_clock_source.c
-> > @@ -1235,7 +1235,7 @@ static bool calc_pll_max_vco_construct(
-> >                       struct calc_pll_clock_source_init_data *init_data)
-> >  {
-> >       uint32_t i;
-> > -     struct dc_firmware_info *fw_info = &init_data->bp->fw_info;
-> > +     struct dc_firmware_info *fw_info;
-> >       if (calc_pll_cs == NULL ||
-> >                       init_data == NULL ||
-> >                       init_data->bp == NULL)
-> > @@ -1244,6 +1244,7 @@ static bool calc_pll_max_vco_construct(
-> >       if (init_data->bp->fw_info_valid)
-> >               return false;
-> >
-> > +     fw_info = &init_data->bp->fw_info;
-> >       calc_pll_cs->ctx = init_data->ctx;
-> >       calc_pll_cs->ref_freq_khz = fw_info->pll_info.crystal_frequency;
-> >       calc_pll_cs->min_vco_khz =
-> >
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+There is one failing kernel selftest: global.user_notification_signal
+
+v1 -> v2:
+  - return immediatly if secure_computing(NULL) returns -1
+  - fixed whitespace issues
+  - add missing seccomp.h
+  - remove patch #2 (solved now)
+  - add riscv to seccomp kernel selftest
+
+Cc: keescook@chromium.org
+Cc: me@carlosedp.com
+
+Signed-off-by: David Abdurachmanov <david.abdurachmanov@sifive.com>
+---
+ arch/riscv/Kconfig                            | 14 ++++++++++
+ arch/riscv/include/asm/seccomp.h              | 10 +++++++
+ arch/riscv/include/asm/thread_info.h          |  5 +++-
+ arch/riscv/kernel/entry.S                     | 27 +++++++++++++++++--
+ arch/riscv/kernel/ptrace.c                    | 10 +++++++
+ tools/testing/selftests/seccomp/seccomp_bpf.c |  8 +++++-
+ 6 files changed, 70 insertions(+), 4 deletions(-)
+ create mode 100644 arch/riscv/include/asm/seccomp.h
+
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 59a4727ecd6c..441e63ff5adc 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -31,6 +31,7 @@ config RISCV
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_ATOMIC64 if !64BIT
+ 	select HAVE_ARCH_AUDITSYSCALL
++	select HAVE_ARCH_SECCOMP_FILTER
+ 	select HAVE_MEMBLOCK_NODE_MAP
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_FUTEX_CMPXCHG if FUTEX
+@@ -235,6 +236,19 @@ menu "Kernel features"
+ 
+ source "kernel/Kconfig.hz"
+ 
++config SECCOMP
++	bool "Enable seccomp to safely compute untrusted bytecode"
++	help
++	  This kernel feature is useful for number crunching applications
++	  that may need to compute untrusted bytecode during their
++	  execution. By using pipes or other transports made available to
++	  the process as file descriptors supporting the read/write
++	  syscalls, it's possible to isolate those applications in
++	  their own address space using seccomp. Once seccomp is
++	  enabled via prctl(PR_SET_SECCOMP), it cannot be disabled
++	  and the task is only allowed to execute a few safe syscalls
++	  defined by each seccomp mode.
++
+ endmenu
+ 
+ menu "Boot options"
+diff --git a/arch/riscv/include/asm/seccomp.h b/arch/riscv/include/asm/seccomp.h
+new file mode 100644
+index 000000000000..bf7744ee3b3d
+--- /dev/null
++++ b/arch/riscv/include/asm/seccomp.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _ASM_SECCOMP_H
++#define _ASM_SECCOMP_H
++
++#include <asm/unistd.h>
++
++#include <asm-generic/seccomp.h>
++
++#endif /* _ASM_SECCOMP_H */
+diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
+index 905372d7eeb8..a0b2a29a0da1 100644
+--- a/arch/riscv/include/asm/thread_info.h
++++ b/arch/riscv/include/asm/thread_info.h
+@@ -75,6 +75,7 @@ struct thread_info {
+ #define TIF_MEMDIE		5	/* is terminating due to OOM killer */
+ #define TIF_SYSCALL_TRACEPOINT  6       /* syscall tracepoint instrumentation */
+ #define TIF_SYSCALL_AUDIT	7	/* syscall auditing */
++#define TIF_SECCOMP		8	/* syscall secure computing */
+ 
+ #define _TIF_SYSCALL_TRACE	(1 << TIF_SYSCALL_TRACE)
+ #define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
+@@ -82,11 +83,13 @@ struct thread_info {
+ #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
+ #define _TIF_SYSCALL_TRACEPOINT	(1 << TIF_SYSCALL_TRACEPOINT)
+ #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
++#define _TIF_SECCOMP		(1 << TIF_SECCOMP)
+ 
+ #define _TIF_WORK_MASK \
+ 	(_TIF_NOTIFY_RESUME | _TIF_SIGPENDING | _TIF_NEED_RESCHED)
+ 
+ #define _TIF_SYSCALL_WORK \
+-	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT)
++	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_AUDIT | \
++	 _TIF_SECCOMP )
+ 
+ #endif /* _ASM_RISCV_THREAD_INFO_H */
+diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+index bc7a56e1ca6f..0bbedfa3e47d 100644
+--- a/arch/riscv/kernel/entry.S
++++ b/arch/riscv/kernel/entry.S
+@@ -203,8 +203,25 @@ check_syscall_nr:
+ 	/* Check to make sure we don't jump to a bogus syscall number. */
+ 	li t0, __NR_syscalls
+ 	la s0, sys_ni_syscall
+-	/* Syscall number held in a7 */
+-	bgeu a7, t0, 1f
++	/*
++	 * The tracer can change syscall number to valid/invalid value.
++	 * We use syscall_set_nr helper in syscall_trace_enter thus we
++	 * cannot trust the current value in a7 and have to reload from
++	 * the current task pt_regs.
++	 */
++	REG_L a7, PT_A7(sp)
++	/*
++	 * Syscall number held in a7.
++	 * If syscall number is above allowed value, redirect to ni_syscall.
++	 */
++	bge a7, t0, 1f
++	/*
++	 * Check if syscall is rejected by tracer or seccomp, i.e., a7 == -1.
++	 * If yes, we pretend it was executed.
++	 */
++	li t1, -1
++	beq a7, t1, ret_from_syscall_rejected
++	/* Call syscall */
+ 	la s0, sys_call_table
+ 	slli t0, a7, RISCV_LGPTR
+ 	add s0, s0, t0
+@@ -215,6 +232,12 @@ check_syscall_nr:
+ ret_from_syscall:
+ 	/* Set user a0 to kernel a0 */
+ 	REG_S a0, PT_A0(sp)
++	/*
++	 * We didn't execute the actual syscall.
++	 * Seccomp already set return value for the current task pt_regs.
++	 * (If it was configured with SECCOMP_RET_ERRNO/TRACE)
++	 */
++ret_from_syscall_rejected:
+ 	/* Trace syscalls, but only if requested by the user. */
+ 	REG_L t0, TASK_TI_FLAGS(tp)
+ 	andi t0, t0, _TIF_SYSCALL_WORK
+diff --git a/arch/riscv/kernel/ptrace.c b/arch/riscv/kernel/ptrace.c
+index 368751438366..63e47c9f85f0 100644
+--- a/arch/riscv/kernel/ptrace.c
++++ b/arch/riscv/kernel/ptrace.c
+@@ -154,6 +154,16 @@ void do_syscall_trace_enter(struct pt_regs *regs)
+ 		if (tracehook_report_syscall_entry(regs))
+ 			syscall_set_nr(current, regs, -1);
+ 
++	/*
++	 * Do the secure computing after ptrace; failures should be fast.
++	 * If this fails we might have return value in a0 from seccomp
++	 * (via SECCOMP_RET_ERRNO/TRACE).
++	 */
++	if (secure_computing(NULL) == -1) {
++		syscall_set_nr(current, regs, -1);
++		return;
++	}
++
+ #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
+ 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
+ 		trace_sys_enter(regs, syscall_get_nr(current, regs));
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index 6ef7f16c4cf5..492e0adad9d3 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -112,6 +112,8 @@ struct seccomp_data {
+ #  define __NR_seccomp 383
+ # elif defined(__aarch64__)
+ #  define __NR_seccomp 277
++# elif defined(__riscv)
++#  define __NR_seccomp 277
+ # elif defined(__hppa__)
+ #  define __NR_seccomp 338
+ # elif defined(__powerpc__)
+@@ -1582,6 +1584,10 @@ TEST_F(TRACE_poke, getpid_runs_normally)
+ # define ARCH_REGS	struct user_pt_regs
+ # define SYSCALL_NUM	regs[8]
+ # define SYSCALL_RET	regs[0]
++#elif defined(__riscv) && __riscv_xlen == 64
++# define ARCH_REGS	struct user_regs_struct
++# define SYSCALL_NUM	a7
++# define SYSCALL_RET	a0
+ #elif defined(__hppa__)
+ # define ARCH_REGS	struct user_regs_struct
+ # define SYSCALL_NUM	gr[20]
+@@ -1671,7 +1677,7 @@ void change_syscall(struct __test_metadata *_metadata,
+ 	EXPECT_EQ(0, ret) {}
+ 
+ #if defined(__x86_64__) || defined(__i386__) || defined(__powerpc__) || \
+-    defined(__s390__) || defined(__hppa__)
++    defined(__s390__) || defined(__hppa__) || defined(__riscv)
+ 	{
+ 		regs.SYSCALL_NUM = syscall;
+ 	}
+-- 
+2.21.0
+
