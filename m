@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068E9C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A47C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE34233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F823233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495111;
-	bh=1CYKAXKiR3PGLBCt5Dk6Fs+ZXrw2tCHPPNW8OOeyh4c=;
+	s=default; t=1566495115;
+	bh=bL68iMJ3TJ2Mww0F06M3ZjctDATG3hXQLAa3FyGMF9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epgS2/4qyBtVVwmnrU17GVeyBPzxSBu7nsAY581nsUIQD0MpbI6h/utTzi6LaH671
-	 hQdwVf1ahRQuo2wmBRNp1saF/elrBywfxyYVUo1ZhsztZ43YKG3KVL08g7aP/tJXME
-	 VElERrrzH/e7FxNewDBMTy1T2KuHhYhcLAjYN08A=
+	b=Vxd63l7zbroPgNnUVzJ6w3M8ZAI7G3k7in8U6fJh2G5iJ23QSr4hxg/NNRlPfKxUU
+	 YIRmLLiDc0vpsyuI2VAVY8mkCGKaJrLzjsryfAGDE2Wc2RkZj79efp54Sd9l2MUJhF
+	 Xg3nyKozB9JglUqHXBf0Zgjor5dr+vUSkLP/utAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392281AbfHVRbu (ORCPT
+        id S2392271AbfHVRbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:31:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49832 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404502AbfHVRZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:48 -0400
+        id S2391875AbfHVRZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:50 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC6FC23426;
-        Thu, 22 Aug 2019 17:25:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3966E2064A;
+        Thu, 22 Aug 2019 17:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494747;
-        bh=1CYKAXKiR3PGLBCt5Dk6Fs+ZXrw2tCHPPNW8OOeyh4c=;
+        s=default; t=1566494749;
+        bh=bL68iMJ3TJ2Mww0F06M3ZjctDATG3hXQLAa3FyGMF9g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V4Z7JKX8rvKL9LDtkyOdxOiEvpJ85I1lBFy9eL92Mthfjo8GkKwRqrTWXH7gNzaP5
-         Q/dIevPTyQEYZmc+KooCzSJ9+nxvnAu5s8I/kBtOGZDX2VUsUXL8qsYZaRTxih/uez
-         ueXKw72twzaVGDTIs6d0LTM7VivrhYoMr1+bUMn4=
+        b=0bQDj0mwtHPNpYfAEUcCWJuEUBY2BCouRcC2GswkXqMfbygQqENiax5mATduyvIiI
+         77zFtOuoBjuUDTw3IudiJ2evthPmZC4fwqMsa5aazkXMQ7dVKst0ZIWfUKCEhtaGjr
+         Mr5D45KEumRzTglZLN8M618N7w32cL99f2A9TPd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prasad Sodagudi <psodagud@codeaurora.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        Trilok Soni <tsoni@codeaurora.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 07/85] mm/usercopy: use memory range to be accessed for wraparound check
-Date:   Thu, 22 Aug 2019 10:18:40 -0700
-Message-Id: <20190822171731.333203615@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Smythies <dsmythies@telus.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 09/85] cpufreq: schedutil: Dont skip freq update when limits change
+Date:   Thu, 22 Aug 2019 10:18:42 -0700
+Message-Id: <20190822171731.403911636@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -64,52 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Isaac J. Manjarres <isaacm@codeaurora.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit 951531691c4bcaa59f56a316e018bc2ff1ddf855 upstream.
+commit 600f5badb78c316146d062cfd7af4a2cfb655baa upstream.
 
-Currently, when checking to see if accessing n bytes starting at address
-"ptr" will cause a wraparound in the memory addresses, the check in
-check_bogus_address() adds an extra byte, which is incorrect, as the
-range of addresses that will be accessed is [ptr, ptr + (n - 1)].
+To avoid reducing the frequency of a CPU prematurely, we skip reducing
+the frequency if the CPU had been busy recently.
 
-This can lead to incorrectly detecting a wraparound in the memory
-address, when trying to read 4 KB from memory that is mapped to the the
-last possible page in the virtual address space, when in fact, accessing
-that range of memory would not cause a wraparound to occur.
+This should not be done when the limits of the policy are changed, for
+example due to thermal throttling. We should always get the frequency
+within the new limits as soon as possible.
 
-Use the memory range that will actually be accessed when considering if
-accessing a certain amount of bytes will cause the memory address to
-wrap around.
+Trying to fix this by using only one flag, i.e. need_freq_update, can
+lead to a race condition where the flag gets cleared without forcing us
+to change the frequency at least once. And so this patch introduces
+another flag to avoid that race condition.
 
-Link: http://lkml.kernel.org/r/1564509253-23287-1-git-send-email-isaacm@codeaurora.org
-Fixes: f5509cc18daa ("mm: Hardened usercopy")
-Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-Co-developed-by: Prasad Sodagudi <psodagud@codeaurora.org>
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Trilok Soni <tsoni@codeaurora.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
+Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
+Reported-by: Doug Smythies <dsmythies@telus.net>
+Tested-by: Doug Smythies <dsmythies@telus.net>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/usercopy.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/cpufreq_schedutil.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -151,7 +151,7 @@ static inline void check_bogus_address(c
- 				       bool to_user)
- {
- 	/* Reject if object wraps past end of memory. */
--	if (ptr + n < ptr)
-+	if (ptr + (n - 1) < ptr)
- 		usercopy_abort("wrapped address", NULL, to_user, 0, ptr + n);
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -40,6 +40,7 @@ struct sugov_policy {
+ 	struct task_struct	*thread;
+ 	bool			work_in_progress;
  
- 	/* Reject if NULL or ZERO-allocation. */
++	bool			limits_changed;
+ 	bool			need_freq_update;
+ };
+ 
+@@ -90,8 +91,11 @@ static bool sugov_should_update_freq(str
+ 	    !cpufreq_this_cpu_can_update(sg_policy->policy))
+ 		return false;
+ 
+-	if (unlikely(sg_policy->need_freq_update))
++	if (unlikely(sg_policy->limits_changed)) {
++		sg_policy->limits_changed = false;
++		sg_policy->need_freq_update = true;
+ 		return true;
++	}
+ 
+ 	delta_ns = time - sg_policy->last_freq_update_time;
+ 
+@@ -405,7 +409,7 @@ static inline bool sugov_cpu_is_busy(str
+ static inline void ignore_dl_rate_limit(struct sugov_cpu *sg_cpu, struct sugov_policy *sg_policy)
+ {
+ 	if (cpu_bw_dl(cpu_rq(sg_cpu->cpu)) > sg_cpu->bw_dl)
+-		sg_policy->need_freq_update = true;
++		sg_policy->limits_changed = true;
+ }
+ 
+ static void sugov_update_single(struct update_util_data *hook, u64 time,
+@@ -425,7 +429,8 @@ static void sugov_update_single(struct u
+ 	if (!sugov_should_update_freq(sg_policy, time))
+ 		return;
+ 
+-	busy = sugov_cpu_is_busy(sg_cpu);
++	/* Limits may have changed, don't skip frequency update */
++	busy = !sg_policy->need_freq_update && sugov_cpu_is_busy(sg_cpu);
+ 
+ 	util = sugov_get_util(sg_cpu);
+ 	max = sg_cpu->max;
+@@ -798,6 +803,7 @@ static int sugov_start(struct cpufreq_po
+ 	sg_policy->last_freq_update_time	= 0;
+ 	sg_policy->next_freq			= 0;
+ 	sg_policy->work_in_progress		= false;
++	sg_policy->limits_changed		= false;
+ 	sg_policy->need_freq_update		= false;
+ 	sg_policy->cached_raw_freq		= 0;
+ 
+@@ -849,7 +855,7 @@ static void sugov_limits(struct cpufreq_
+ 		mutex_unlock(&sg_policy->work_lock);
+ 	}
+ 
+-	sg_policy->need_freq_update = true;
++	sg_policy->limits_changed = true;
+ }
+ 
+ static struct cpufreq_governor schedutil_gov = {
 
 
