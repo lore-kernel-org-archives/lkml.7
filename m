@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38152C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADD7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035022089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A975D233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493893;
-	bh=S4HhUcBWnP8kCVygmAhefXzJ2AmPVuCiTHanSqjrDFY=;
+	s=default; t=1566493895;
+	bh=k0NJEKzqa1CBSiBvOVHMb37rNO2LtfFkZtZBp8TITlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YMB6hNkaQ0/N4uWp495djzuBBADmORMOMHKvaED8Bzq8zCeuntmDuMK17uuStkCa3
-	 ZLa9JHHFjT/5iXaFYh+3ObnHDaTgef8OFncGUCXkzkWIasYjvZ64VDg9bDqNrEGR93
-	 NGRKb/xF5HbANA1o2CzySZzM2LtIcQOma5QtlHv0=
+	b=BO30eLeEDCK9Jgp/BHuHJZYJ8iHQa0jf04Bffvn2xaQKxAeFvLaYAfAx6e+CM8n3k
+	 d2rYG6B1QjLh2+qHF+o6mOWoEM44q8CZ2O/HNcSrIHhOycsoAmA/cYw5jQ+6pz9FyP
+	 bnKiqQaeEZPN4fvn8rZFNzenhatL7823kQi6fRmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390910AbfHVRLc (ORCPT
+        id S2390920AbfHVRLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:11:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59622 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:11:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390718AbfHVRJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:17 -0400
+        id S2390714AbfHVRJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:16 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10D45233FC;
-        Thu, 22 Aug 2019 17:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8C9023427;
+        Thu, 22 Aug 2019 17:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493756;
-        bh=S4HhUcBWnP8kCVygmAhefXzJ2AmPVuCiTHanSqjrDFY=;
+        s=default; t=1566493755;
+        bh=k0NJEKzqa1CBSiBvOVHMb37rNO2LtfFkZtZBp8TITlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y7BNN+kaHPgH89g5sV4Rw7wmZBIUnBA8nnmzsgom5G4pEnVSw4hunSwvZ8s0lp67g
-         8UR+zu13Fp2brV+2+EjjGuLXX7vLensOhWDcZdGu18cx7Gw+HgiKk7GlzecUJobhXy
-         22/43m4nU0HdR0qVtgE1liwdYcjOmI4PkXPlZA2c=
+        b=JsJOb3iNEHQgMRoGmhmZLykcxgf0Crt9bjKdeBG3NaAXF6uFlE50ZjtlZaQtdDTJO
+         RBKqBtQ7hvp0cjQORlLuDddtMePiExOm6/WjHzarg21j/285z9tbbxEaskqDCh0xB+
+         NMLr1A5Md3R8g6Jv7OtVjRXLm67TCfuQfOFFXyYw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 114/135] sctp: fix the transport error_count check
-Date:   Thu, 22 Aug 2019 13:07:50 -0400
-Message-Id: <20190822170811.13303-115-sashal@kernel.org>
+Subject: [PATCH 5.2 112/135] net: sched: sch_taprio: fix memleak in error path for sched list parse
+Date:   Thu, 22 Aug 2019 13:07:48 -0400
+Message-Id: <20190822170811.13303-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,40 +66,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 
-[ Upstream commit a1794de8b92ea6bc2037f445b296814ac826693e ]
+[ Upstream commit 51650d33b2771acd505068da669cf85cffac369a ]
 
-As the annotation says in sctp_do_8_2_transport_strike():
+In error case, all entries should be freed from the sched list
+before deleting it. For simplicity use rcu way.
 
-  "If the transport error count is greater than the pf_retrans
-   threshold, and less than pathmaxrtx ..."
-
-It should be transport->error_count checked with pathmaxrxt,
-instead of asoc->pf_retrans.
-
-Fixes: 5aa93bcf66f4 ("sctp: Implement quick failover draft from tsvwg")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 5a781ccbd19e46 ("tc: Add support for configuring the taprio scheduler")
+Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/sm_sideeffect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/sch_taprio.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/sctp/sm_sideeffect.c b/net/sctp/sm_sideeffect.c
-index a554d6d15d1b6..1cf5bb5b73c41 100644
---- a/net/sctp/sm_sideeffect.c
-+++ b/net/sctp/sm_sideeffect.c
-@@ -546,7 +546,7 @@ static void sctp_do_8_2_transport_strike(struct sctp_cmd_seq *commands,
- 	 */
- 	if (net->sctp.pf_enable &&
- 	   (transport->state == SCTP_ACTIVE) &&
--	   (asoc->pf_retrans < transport->pathmaxrxt) &&
-+	   (transport->error_count < transport->pathmaxrxt) &&
- 	   (transport->error_count > asoc->pf_retrans)) {
+diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
+index 9ecfb8f5902a4..8be89aa52b6e8 100644
+--- a/net/sched/sch_taprio.c
++++ b/net/sched/sch_taprio.c
+@@ -849,7 +849,8 @@ static int taprio_change(struct Qdisc *sch, struct nlattr *opt,
+ 	spin_unlock_bh(qdisc_lock(sch));
  
- 		sctp_assoc_control_transport(asoc, transport,
+ free_sched:
+-	kfree(new_admin);
++	if (new_admin)
++		call_rcu(&new_admin->rcu, taprio_free_sched_cb);
+ 
+ 	return err;
+ }
 -- 
 2.20.1
 
