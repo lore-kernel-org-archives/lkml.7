@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3F5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832E4C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30AF223407
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574112341E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493755;
-	bh=LnOiB9OqCt0GRJbG4EA7BRdT3fImUBdJIvCPdBkUXKo=;
+	s=default; t=1566493759;
+	bh=BceQIvYA6h6G5G9kleh1h72iqWj3mord1EgIKK2cbS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uhQAmKwo6EubCzyJ8fDPYh78ubp719Js62zFnYlNL12acfbys+x3SbCIF4b2j6et6
-	 1GpZoaQkVLzCqNWgmHWRRrFEXS4pSAFXEzAH5OxzHs9y+s32PJW/BZe7vG5cZtivfX
-	 xc0ixhslXiHsN3DHcH3ledI6XLSq8c7BBRLLKeHM=
+	b=yGVmfYmhzDY6Gio3YEUWvSn0cKjT2ukIRQOlMuohjylAqPhI+3Qb/PvamLw8vLaff
+	 T4DnS63AkE6HhKFKGpUyWxSpSsrvGSeOB7ULLnkCia212qtJOKVRfZZVSvgh+p7V32
+	 /UYnHIn2llolfSVrANJFhCBEMp2nAibsHZMHNL4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732151AbfHVRJN (ORCPT
+        id S2390724AbfHVRJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59266 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390650AbfHVRJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:05 -0400
+        id S2390662AbfHVRJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:06 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F1A823404;
-        Thu, 22 Aug 2019 17:09:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0262F233FD;
+        Thu, 22 Aug 2019 17:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493744;
-        bh=LnOiB9OqCt0GRJbG4EA7BRdT3fImUBdJIvCPdBkUXKo=;
+        s=default; t=1566493746;
+        bh=BceQIvYA6h6G5G9kleh1h72iqWj3mord1EgIKK2cbS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5FY5bGphIHUqxVnP5Wdp7kIpz/F0cHn+R5D52zDyufw8A4rAW8TeHiTp00Q4+t0R
-         3IrpQ2zS5tjmvto7xSwE5biKWOYrS7uxSm8GNqgQC4JoMoexuxfaGj6cTk+R1hZp3D
-         lLbNBVyKlXXrII9H47/Q7MJGF6kFeH2ALbw5PDr0=
+        b=ien4CO5oIek2jrmauRld0Z72feE0zfOcP+CCXE8S1y2fsfjAsEQd6y6zwVrknDr1g
+         tB7T0ZE/W3y0Sqd4d9gyVfWOXW6sHohIbgcOtsIdeR6vnehNIuiHu4SkDlgDXnLdhR
+         3YAwGoXal/YwcPn1X6Ax8X3CRUmjc9hwgR4N9qTk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 091/135] arm64: KVM: regmap: Fix unexpected switch fall-through
-Date:   Thu, 22 Aug 2019 13:07:27 -0400
-Message-Id: <20190822170811.13303-92-sashal@kernel.org>
+Subject: [PATCH 5.2 095/135] USB: core: Fix races in character device registration and deregistraion
+Date:   Thu, 22 Aug 2019 13:07:31 -0400
+Message-Id: <20190822170811.13303-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.2.y
@@ -66,88 +65,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anders Roxell <anders.roxell@linaro.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 3d584a3c85d6fe2cf878f220d4ad7145e7f89218 upstream.
+commit 303911cfc5b95d33687d9046133ff184cf5043ff upstream.
 
-When fall-through warnings was enabled by default, commit d93512ef0f0e
-("Makefile: Globally enable fall-through warning"), the following
-warnings was starting to show up:
+The syzbot fuzzer has found two (!) races in the USB character device
+registration and deregistration routines.  This patch fixes the races.
 
-In file included from ../arch/arm64/include/asm/kvm_emulate.h:19,
-                 from ../arch/arm64/kvm/regmap.c:13:
-../arch/arm64/kvm/regmap.c: In function ‘vcpu_write_spsr32’:
-../arch/arm64/include/asm/kvm_hyp.h:31:3: warning: this statement may fall
- through [-Wimplicit-fallthrough=]
-   asm volatile(ALTERNATIVE(__msr_s(r##nvh, "%x0"), \
-   ^~~
-../arch/arm64/include/asm/kvm_hyp.h:46:31: note: in expansion of macro ‘write_sysreg_elx’
- #define write_sysreg_el1(v,r) write_sysreg_elx(v, r, _EL1, _EL12)
-                               ^~~~~~~~~~~~~~~~
-../arch/arm64/kvm/regmap.c:180:3: note: in expansion of macro ‘write_sysreg_el1’
-   write_sysreg_el1(v, SYS_SPSR);
-   ^~~~~~~~~~~~~~~~
-../arch/arm64/kvm/regmap.c:181:2: note: here
-  case KVM_SPSR_ABT:
-  ^~~~
-In file included from ../arch/arm64/include/asm/cputype.h:132,
-                 from ../arch/arm64/include/asm/cache.h:8,
-                 from ../include/linux/cache.h:6,
-                 from ../include/linux/printk.h:9,
-                 from ../include/linux/kernel.h:15,
-                 from ../include/asm-generic/bug.h:18,
-                 from ../arch/arm64/include/asm/bug.h:26,
-                 from ../include/linux/bug.h:5,
-                 from ../include/linux/mmdebug.h:5,
-                 from ../include/linux/mm.h:9,
-                 from ../arch/arm64/kvm/regmap.c:11:
-../arch/arm64/include/asm/sysreg.h:837:2: warning: this statement may fall
- through [-Wimplicit-fallthrough=]
-  asm volatile("msr " __stringify(r) ", %x0"  \
-  ^~~
-../arch/arm64/kvm/regmap.c:182:3: note: in expansion of macro ‘write_sysreg’
-   write_sysreg(v, spsr_abt);
-   ^~~~~~~~~~~~
-../arch/arm64/kvm/regmap.c:183:2: note: here
-  case KVM_SPSR_UND:
-  ^~~~
+The first race results from the fact that usb_deregister_dev() sets
+usb_minors[intf->minor] to NULL before calling device_destroy() on the
+class device.  This leaves a window during which another thread can
+allocate the same minor number but will encounter a duplicate name
+error when it tries to register its own class device.  A typical error
+message in the system log would look like:
 
-Rework to add a 'break;' in the swich-case since it didn't have that,
-leading to an interresting set of bugs.
+    sysfs: cannot create duplicate filename '/class/usbmisc/ldusb0'
 
-Cc: stable@vger.kernel.org # v4.17+
-Fixes: a892819560c4 ("KVM: arm64: Prepare to handle deferred save/restore of 32-bit registers")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-[maz: reworked commit message, fixed stable range]
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+The patch fixes this race by destroying the class device first.
+
+The second race is in usb_register_dev().  When that routine runs, it
+first allocates a minor number, then drops minor_rwsem, and then
+creates the class device.  If the device creation fails, the minor
+number is deallocated and the whole routine returns an error.  But
+during the time while minor_rwsem was dropped, there is a window in
+which the minor number is allocated and so another thread can
+successfully open the device file.  Typically this results in
+use-after-free errors or invalid accesses when the other thread closes
+its open file reference, because the kernel then tries to release
+resources that were already deallocated when usb_register_dev()
+failed.  The patch fixes this race by keeping minor_rwsem locked
+throughout the entire routine.
+
+Reported-and-tested-by: syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1908121607590.1659-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kvm/regmap.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/core/file.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/kvm/regmap.c b/arch/arm64/kvm/regmap.c
-index d66613e6ad080..8a38ccf8dc021 100644
---- a/arch/arm64/kvm/regmap.c
-+++ b/arch/arm64/kvm/regmap.c
-@@ -178,13 +178,18 @@ void vcpu_write_spsr32(struct kvm_vcpu *vcpu, unsigned long v)
- 	switch (spsr_idx) {
- 	case KVM_SPSR_SVC:
- 		write_sysreg_el1(v, spsr);
-+		break;
- 	case KVM_SPSR_ABT:
- 		write_sysreg(v, spsr_abt);
-+		break;
- 	case KVM_SPSR_UND:
- 		write_sysreg(v, spsr_und);
-+		break;
- 	case KVM_SPSR_IRQ:
- 		write_sysreg(v, spsr_irq);
-+		break;
- 	case KVM_SPSR_FIQ:
- 		write_sysreg(v, spsr_fiq);
-+		break;
+diff --git a/drivers/usb/core/file.c b/drivers/usb/core/file.c
+index 65de6f73b6725..558890ada0e5b 100644
+--- a/drivers/usb/core/file.c
++++ b/drivers/usb/core/file.c
+@@ -193,9 +193,10 @@ int usb_register_dev(struct usb_interface *intf,
+ 		intf->minor = minor;
+ 		break;
  	}
+-	up_write(&minor_rwsem);
+-	if (intf->minor < 0)
++	if (intf->minor < 0) {
++		up_write(&minor_rwsem);
+ 		return -EXFULL;
++	}
+ 
+ 	/* create a usb class device for this usb interface */
+ 	snprintf(name, sizeof(name), class_driver->name, minor - minor_base);
+@@ -203,12 +204,11 @@ int usb_register_dev(struct usb_interface *intf,
+ 				      MKDEV(USB_MAJOR, minor), class_driver,
+ 				      "%s", kbasename(name));
+ 	if (IS_ERR(intf->usb_dev)) {
+-		down_write(&minor_rwsem);
+ 		usb_minors[minor] = NULL;
+ 		intf->minor = -1;
+-		up_write(&minor_rwsem);
+ 		retval = PTR_ERR(intf->usb_dev);
+ 	}
++	up_write(&minor_rwsem);
+ 	return retval;
  }
+ EXPORT_SYMBOL_GPL(usb_register_dev);
+@@ -234,12 +234,12 @@ void usb_deregister_dev(struct usb_interface *intf,
+ 		return;
+ 
+ 	dev_dbg(&intf->dev, "removing %d minor\n", intf->minor);
++	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
+ 
+ 	down_write(&minor_rwsem);
+ 	usb_minors[intf->minor] = NULL;
+ 	up_write(&minor_rwsem);
+ 
+-	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
+ 	intf->usb_dev = NULL;
+ 	intf->minor = -1;
+ 	destroy_usb_class();
 -- 
 2.20.1
 
