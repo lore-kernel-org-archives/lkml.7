@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1898DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C93C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6D3B2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86930233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494163;
-	bh=7PacgezBhWgl49FGiKUsGiEA921Ao2dsp7XTPPO661U=;
+	s=default; t=1566494171;
+	bh=9ROhGXK6rd4BaOKuMuPMhYS46hgPSYfBc0TGKxduK+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MDLmqYFAFOBuf+MFmF7YH3Uu6tlMYoRUjIDt6MzL2AkZrk8v9/1i+WcQdsN1Mx5sv
-	 NRrKAK4I6SFLcJAOnwgj8ta49xWOatfcEjagKv3MaGT1emcUXchK83f4u8fgBpiNEi
-	 Z3Dr4CGOtIJWZA/XJsrtU0COx8d/Y1WUdvRs+tNQ=
+	b=1WZuJ1zHj4qEqUF7qFaGckz952ojY7Q9yTtjb7H7OAD6bqEPoTxx70T6hZOs+Jd18
+	 NEOO1c8PByBHbW9t00dl26MC3b9XSzNG3U/L1LUC8x5ilgwM3R74TCULkz4c089Dei
+	 V0u7tf6PfKBf9BviZybuFt+5qPbPZYQ1DoGUY9XM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391202AbfHVRQC (ORCPT
+        id S2391215AbfHVRQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:16:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:16:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390429AbfHVRIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:39 -0400
+        id S2390363AbfHVRIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:37 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A30823402;
-        Thu, 22 Aug 2019 17:08:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6591523426;
+        Thu, 22 Aug 2019 17:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493719;
-        bh=7PacgezBhWgl49FGiKUsGiEA921Ao2dsp7XTPPO661U=;
+        s=default; t=1566493716;
+        bh=9ROhGXK6rd4BaOKuMuPMhYS46hgPSYfBc0TGKxduK+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VpH9QfAaeq2dPs+EFjRNMN7x2y/PKOL7niCWlhC17ubWWrOfFTV2lkpIfTrCNbl2i
-         xYEVCfJkWRCtRCQUxJGg8AtE41tog3bHeuNpd5l4JGKFUhzKJUa3htfAU+a6wAYkia
-         2rndjLzgeWdfwT5LqZt85jN+4S8/B6NqOWJyB4to=
+        b=CgfHfATZzyYDC7fYotNy6YDe54bP9lGpQ6E4MggLaEp7lHA/aFhP0C63XIemm1UVI
+         pYdJk/FmV8LbXM6AlkknjAZrIUvXkiz8391gGXO8olRVDUqpMo0p8AE+5MsRbt4B0f
+         201Cl/DSph1vUdPVsfEHlhRwm5alM6FD6KdiD9iY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nianyao Tang <tangnianyao@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 047/135] irqchip/gic-v3-its: Free unused vpt_page when alloc vpe table fail
-Date:   Thu, 22 Aug 2019 13:06:43 -0400
-Message-Id: <20190822170811.13303-48-sashal@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 042/135] dma-mapping: check pfn validity in dma_common_{mmap,get_sgtable}
+Date:   Thu, 22 Aug 2019 13:06:38 -0400
+Message-Id: <20190822170811.13303-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -68,38 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nianyao Tang <tangnianyao@huawei.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 34f8eb92ca053cbba2887bb7e4dbf2b2cd6eb733 ]
+[ Upstream commit 66d7780f18eae0232827fcffeaded39a6a168236 ]
 
-In its_vpe_init, when its_alloc_vpe_table fails, we should free
-vpt_page allocated just before, instead of vpe->vpt_page.
-Let's fix it.
+Check that the pfn returned from arch_dma_coherent_to_pfn refers to
+a valid page and reject the mmap / get_sgtable requests otherwise.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Based on the arm implementation of the mmap and get_sgtable methods.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Tested-by: Vignesh Raghavendra <vigneshr@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/dma/mapping.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 35500801dc2b5..20e5482d91b94 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3010,7 +3010,7 @@ static int its_vpe_init(struct its_vpe *vpe)
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index f7afdadb6770b..3401382bbca2f 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -116,11 +116,16 @@ int dma_common_get_sgtable(struct device *dev, struct sg_table *sgt,
+ 	int ret;
  
- 	if (!its_alloc_vpe_table(vpe_id)) {
- 		its_vpe_id_free(vpe_id);
--		its_free_pending_table(vpe->vpt_page);
-+		its_free_pending_table(vpt_page);
- 		return -ENOMEM;
+ 	if (!dev_is_dma_coherent(dev)) {
++		unsigned long pfn;
++
+ 		if (!IS_ENABLED(CONFIG_ARCH_HAS_DMA_COHERENT_TO_PFN))
+ 			return -ENXIO;
+ 
+-		page = pfn_to_page(arch_dma_coherent_to_pfn(dev, cpu_addr,
+-				dma_addr));
++		/* If the PFN is not valid, we do not have a struct page */
++		pfn = arch_dma_coherent_to_pfn(dev, cpu_addr, dma_addr);
++		if (!pfn_valid(pfn))
++			return -ENXIO;
++		page = pfn_to_page(pfn);
+ 	} else {
+ 		page = virt_to_page(cpu_addr);
  	}
- 
+@@ -170,7 +175,11 @@ int dma_common_mmap(struct device *dev, struct vm_area_struct *vma,
+ 	if (!dev_is_dma_coherent(dev)) {
+ 		if (!IS_ENABLED(CONFIG_ARCH_HAS_DMA_COHERENT_TO_PFN))
+ 			return -ENXIO;
++
++		/* If the PFN is not valid, we do not have a struct page */
+ 		pfn = arch_dma_coherent_to_pfn(dev, cpu_addr, dma_addr);
++		if (!pfn_valid(pfn))
++			return -ENXIO;
+ 	} else {
+ 		pfn = page_to_pfn(virt_to_page(cpu_addr));
+ 	}
 -- 
 2.20.1
 
