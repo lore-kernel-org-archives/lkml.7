@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15CCC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1B9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA12320870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A56C20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495782;
-	bh=gYalicMEIuy46kAjTuIZB5boLoqYysoGmjEG9YvgiJU=;
+	s=default; t=1566495791;
+	bh=b0aCbWO7BBEEMuz1CaPk9B3H8UIz8O29Qy3+OQF4CpQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yaYbmB8D1NdRtsWvlfjWmatFEzobrYvmhjeolvyAyd0F/UzIH0EYvQW6nuAReoMzz
-	 UPK4UOA3A5UnzfJaJYBBmcTwS/b7FUsJVy6R2ycnW+29OFNUUkOgGhVGX0eU+gmI9f
-	 NBBAXpjswuPr+JHIzNPv4m246lm9x5Y9tDBL8bYQ=
+	b=dZLqxLkapiNZyvNo9uLxHAsKK4pNAQwiSATp0pr4nPo4wODcQHWYzjz+LXqyHYLCV
+	 nIq5r5IxmVSmN5hywY+k/jZFRz6ZtPVvUAoC1hds6egQo2uYip5eQhKUEjTH423ADL
+	 7c0f8viP3hGiilT6MdDmham1cgFtl/+dYjXk8Kyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405461AbfHVRnB (ORCPT
+        id S2405483AbfHVRnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:43:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44100 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:43:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403996AbfHVRXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:43 -0400
+        id S2391494AbfHVRXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:31 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BD2023427;
-        Thu, 22 Aug 2019 17:23:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15DEC23406;
+        Thu, 22 Aug 2019 17:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494622;
-        bh=gYalicMEIuy46kAjTuIZB5boLoqYysoGmjEG9YvgiJU=;
+        s=default; t=1566494611;
+        bh=b0aCbWO7BBEEMuz1CaPk9B3H8UIz8O29Qy3+OQF4CpQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dDSx5+PgeifCDvDoaKcQ0wc/pYwpB11i9AgkwnFZSinPjNtB3IihKWzg0VWZEbC8n
-         EotmrXR+Ne0ZJgObi8tu+GkR0g6B1Opi47CeYZeVKV16VGbT1KhhZBVd5Fek6hgQpc
-         Z7J7XNIEGxhN5py7tGsGyH37rsERKivauJpYzd84=
+        b=A6IszvUtBpUttICxscWBQVkgFgA2y6oBNTI7nx1rahS7YfYkBJJ5REevAKX84JMLQ
+         mAGu7rL8I0t46EPvpP6FBAMR5lDPJj/Bqwg2FzJriaEk0ikvigbEMLGfEvdBrxRWDM
+         fW6PWd1STsz+rDIu7+IN8mdfanOmOk7W0z0b72CQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 052/103] vhost_net: fix possible infinite loop
-Date:   Thu, 22 Aug 2019 10:18:40 -0700
-Message-Id: <20190822171730.905236089@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH 4.9 005/103] x86/mm: Sync also unmappings in vmalloc_sync_all()
+Date:   Thu, 22 Aug 2019 10:17:53 -0700
+Message-Id: <20190822171728.829608283@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -61,116 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit e2412c07f8f3040593dfb88207865a3cd58680c0 upstream.
+commit 8e998fc24de47c55b47a887f6c95ab91acd4a720 upstream.
 
-When the rx buffer is too small for a packet, we will discard the vq
-descriptor and retry it for the next packet:
+With huge-page ioremap areas the unmappings also need to be synced between
+all page-tables. Otherwise it can cause data corruption when a region is
+unmapped and later re-used.
 
-while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
-					      &busyloop_intr))) {
-...
-	/* On overrun, truncate and discard */
-	if (unlikely(headcount > UIO_MAXIOV)) {
-		iov_iter_init(&msg.msg_iter, READ, vq->iov, 1, 1);
-		err = sock->ops->recvmsg(sock, &msg,
-					 1, MSG_DONTWAIT | MSG_TRUNC);
-		pr_debug("Discarded rx packet: len %zd\n", sock_len);
-		continue;
-	}
-...
-}
+Make the vmalloc_sync_one() function ready to sync unmappings and make sure
+vmalloc_sync_all() iterates over all page-tables even when an unmapped PMD
+is found.
 
-This makes it possible to trigger a infinite while..continue loop
-through the co-opreation of two VMs like:
-
-1) Malicious VM1 allocate 1 byte rx buffer and try to slow down the
-   vhost process as much as possible e.g using indirect descriptors or
-   other.
-2) Malicious VM2 generate packets to VM1 as fast as possible
-
-Fixing this by checking against weight at the end of RX and TX
-loop. This also eliminate other similar cases when:
-
-- userspace is consuming the packets in the meanwhile
-- theoretical TOCTOU attack if guest moving avail index back and forth
-  to hit the continue after vhost find guest just add new buffers
-
-This addresses CVE-2019-3900.
-
-Fixes: d8316f3991d20 ("vhost: fix total length when packets are too short")
-Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-[bwh: Backported to 4.9:
- - Both Tx modes are handled in one loop in handle_tx()
- - Adjust context]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lkml.kernel.org/r/20190719184652.11391-3-joro@8bytes.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/vhost/net.c |   22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
 
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -393,7 +393,7 @@ static void handle_tx(struct vhost_net *
- 	hdr_size = nvq->vhost_hlen;
- 	zcopy = nvq->ubufs;
+---
+ arch/x86/mm/fault.c |   13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -273,11 +273,12 @@ static inline pmd_t *vmalloc_sync_one(pg
  
--	for (;;) {
-+	do {
- 		/* Release DMAs done buffers first */
- 		if (zcopy)
- 			vhost_zerocopy_signal_used(net, vq);
-@@ -481,10 +481,7 @@ static void handle_tx(struct vhost_net *
- 			vhost_zerocopy_signal_used(net, vq);
- 		total_len += len;
- 		vhost_net_tx_packet(net);
--		if (unlikely(vhost_exceeds_weight(vq, ++sent_pkts,
--						  total_len)))
--			break;
--	}
-+	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
- out:
- 	mutex_unlock(&vq->mutex);
- }
-@@ -682,7 +679,10 @@ static void handle_rx(struct vhost_net *
- 		vq->log : NULL;
- 	mergeable = vhost_has_feature(vq, VIRTIO_NET_F_MRG_RXBUF);
+ 	pmd = pmd_offset(pud, address);
+ 	pmd_k = pmd_offset(pud_k, address);
+-	if (!pmd_present(*pmd_k))
+-		return NULL;
  
--	while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk))) {
-+	do {
-+		sock_len = vhost_net_rx_peek_head_len(net, sock->sk);
-+		if (!sock_len)
-+			break;
- 		sock_len += sock_hlen;
- 		vhost_len = sock_len + vhost_hlen;
- 		headcount = get_rx_bufs(vq, vq->heads, vhost_len,
-@@ -761,10 +761,10 @@ static void handle_rx(struct vhost_net *
- 			vhost_log_write(vq, vq_log, log, vhost_len,
- 					vq->iov, in);
- 		total_len += vhost_len;
--		if (unlikely(vhost_exceeds_weight(vq, ++recv_pkts, total_len)))
--			goto out;
--	}
--	vhost_net_enable_vq(net, vq);
-+	} while (likely(!vhost_exceeds_weight(vq, ++recv_pkts, total_len)));
+-	if (!pmd_present(*pmd))
++	if (pmd_present(*pmd) != pmd_present(*pmd_k))
+ 		set_pmd(pmd, *pmd_k);
 +
-+	if (!sock_len)
-+		vhost_net_enable_vq(net, vq);
- out:
- 	mutex_unlock(&vq->mutex);
- }
-@@ -834,7 +834,7 @@ static int vhost_net_open(struct inode *
- 		n->vqs[i].sock_hlen = 0;
- 	}
- 	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
--		       VHOST_NET_WEIGHT, VHOST_NET_PKT_WEIGHT);
-+		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT);
++	if (!pmd_present(*pmd_k))
++		return NULL;
+ 	else
+ 		BUG_ON(pmd_pfn(*pmd) != pmd_pfn(*pmd_k));
  
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, POLLOUT, dev);
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, POLLIN, dev);
+@@ -299,17 +300,13 @@ void vmalloc_sync_all(void)
+ 		spin_lock(&pgd_lock);
+ 		list_for_each_entry(page, &pgd_list, lru) {
+ 			spinlock_t *pgt_lock;
+-			pmd_t *ret;
+ 
+ 			/* the pgt_lock only for Xen */
+ 			pgt_lock = &pgd_page_get_mm(page)->page_table_lock;
+ 
+ 			spin_lock(pgt_lock);
+-			ret = vmalloc_sync_one(page_address(page), address);
++			vmalloc_sync_one(page_address(page), address);
+ 			spin_unlock(pgt_lock);
+-
+-			if (!ret)
+-				break;
+ 		}
+ 		spin_unlock(&pgd_lock);
+ 	}
 
 
