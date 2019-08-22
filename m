@@ -2,54 +2,55 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C534FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5D1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9214C20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E31B20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495640;
-	bh=EKdsLsqowILIrSK52BnbH7XxhzIE1yju7CUnuyYeLHE=;
+	s=default; t=1566495646;
+	bh=6DYQE+1R7IQvpF3fAifJcj3NciHz5naE1Vm4B1MTcyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kJ/TbUDXnGVBJ/qXBT25sUrop65hL/iZ73X//iXDQvuSNAb/6zJ6VCJB6DxQUvRSU
-	 LeWVGVij7VeDTkxhZqT+aChscG+g2jbj2mhnVr8tbh9OSU5rdp078CMRiWnooxkHCF
-	 LIjEZiLNR0gHEiaOjdzkC9CYORUdFyXhASzepjJc=
+	b=cSCYj2xNJySPlO2gG2XRw7VMItp0x3DXEBtE8vCjModvffXab5kqLwgm0KIZsO7h0
+	 VhAdYFgtUixVmD+kX3lrNIBJFapTo99v9UAklssO7rnd+0kG5Aedq10+U2qm5qqtmx
+	 51emZBE2wAxqFC1dbilSJqWzQ8FAWnYEszIjEOCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbfHVRkj (ORCPT
+        id S2404043AbfHVRYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:40:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45048 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404053AbfHVRYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:05 -0400
+        id S2403980AbfHVRXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:40 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B7B923405;
-        Thu, 22 Aug 2019 17:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E95A23405;
+        Thu, 22 Aug 2019 17:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494644;
-        bh=EKdsLsqowILIrSK52BnbH7XxhzIE1yju7CUnuyYeLHE=;
+        s=default; t=1566494619;
+        bh=6DYQE+1R7IQvpF3fAifJcj3NciHz5naE1Vm4B1MTcyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dOYi29ajhoh3p0OJG3V8kVRFasI2/DjdnzrFQ7jWiZh7AGFMJd9AXy37WHuGKrcWh
-         Xf56a073kE/XpFgLcbyjsNg3hY7+PX103yP8GTwXidV7omEpUStj4CQeNzCComFbrN
-         130oTBFvQY0xJ2L0sJ/o2zPbAGFU+bvig1ClRXhg=
+        b=HNAZFYnb0nKkijWtVaDQ9EMbZJde99EAK7bJsnQtTmMwXjsX2q0HkAbM4hA6lYkH6
+         gMdT9HAIVIpuvPpwHLhOmMIOXYTVF/8393ajQzsYlR4g4GPiYbJB4cWsDx3Bqytw2d
+         afx59gY8KD/AJH0z7RlsFPy4Zi81HnvePs2iU6cY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jack Morgenstein <jackm@dev.mellanox.co.il>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 079/103] IB/mad: Fix use-after-free in ib mad completion handling
-Date:   Thu, 22 Aug 2019 10:19:07 -0700
-Message-Id: <20190822171732.173846585@linuxfoundation.org>
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Haibin Zhang <haibinzhang@tencent.com>,
+        Yunfang Tai <yunfangtai@tencent.com>,
+        Lidong Chen <lidongchen@tencent.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.9 048/103] vhost-net: set packet weight of tx polling to 2 * vq size
+Date:   Thu, 22 Aug 2019 10:18:36 -0700
+Message-Id: <20190822171730.736833456@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -62,150 +63,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 770b7d96cfff6a8bf6c9f261ba6f135dc9edf484 ]
+From: haibinzhang(张海斌) <haibinzhang@tencent.com>
 
-We encountered a use-after-free bug when unloading the driver:
+commit a2ac99905f1ea8b15997a6ec39af69aa28a3653b upstream.
 
-[ 3562.116059] BUG: KASAN: use-after-free in ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
-[ 3562.117233] Read of size 4 at addr ffff8882ca5aa868 by task kworker/u13:2/23862
-[ 3562.118385]
-[ 3562.119519] CPU: 2 PID: 23862 Comm: kworker/u13:2 Tainted: G           OE     5.1.0-for-upstream-dbg-2019-05-19_16-44-30-13 #1
-[ 3562.121806] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu2 04/01/2014
-[ 3562.123075] Workqueue: ib-comp-unb-wq ib_cq_poll_work [ib_core]
-[ 3562.124383] Call Trace:
-[ 3562.125640]  dump_stack+0x9a/0xeb
-[ 3562.126911]  print_address_description+0xe3/0x2e0
-[ 3562.128223]  ? ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
-[ 3562.129545]  __kasan_report+0x15c/0x1df
-[ 3562.130866]  ? ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
-[ 3562.132174]  kasan_report+0xe/0x20
-[ 3562.133514]  ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
-[ 3562.134835]  ? find_mad_agent+0xa00/0xa00 [ib_core]
-[ 3562.136158]  ? qlist_free_all+0x51/0xb0
-[ 3562.137498]  ? mlx4_ib_sqp_comp_worker+0x1970/0x1970 [mlx4_ib]
-[ 3562.138833]  ? quarantine_reduce+0x1fa/0x270
-[ 3562.140171]  ? kasan_unpoison_shadow+0x30/0x40
-[ 3562.141522]  ib_mad_recv_done+0xdf6/0x3000 [ib_core]
-[ 3562.142880]  ? _raw_spin_unlock_irqrestore+0x46/0x70
-[ 3562.144277]  ? ib_mad_send_done+0x1810/0x1810 [ib_core]
-[ 3562.145649]  ? mlx4_ib_destroy_cq+0x2a0/0x2a0 [mlx4_ib]
-[ 3562.147008]  ? _raw_spin_unlock_irqrestore+0x46/0x70
-[ 3562.148380]  ? debug_object_deactivate+0x2b9/0x4a0
-[ 3562.149814]  __ib_process_cq+0xe2/0x1d0 [ib_core]
-[ 3562.151195]  ib_cq_poll_work+0x45/0xf0 [ib_core]
-[ 3562.152577]  process_one_work+0x90c/0x1860
-[ 3562.153959]  ? pwq_dec_nr_in_flight+0x320/0x320
-[ 3562.155320]  worker_thread+0x87/0xbb0
-[ 3562.156687]  ? __kthread_parkme+0xb6/0x180
-[ 3562.158058]  ? process_one_work+0x1860/0x1860
-[ 3562.159429]  kthread+0x320/0x3e0
-[ 3562.161391]  ? kthread_park+0x120/0x120
-[ 3562.162744]  ret_from_fork+0x24/0x30
-...
-[ 3562.187615] Freed by task 31682:
-[ 3562.188602]  save_stack+0x19/0x80
-[ 3562.189586]  __kasan_slab_free+0x11d/0x160
-[ 3562.190571]  kfree+0xf5/0x2f0
-[ 3562.191552]  ib_mad_port_close+0x200/0x380 [ib_core]
-[ 3562.192538]  ib_mad_remove_device+0xf0/0x230 [ib_core]
-[ 3562.193538]  remove_client_context+0xa6/0xe0 [ib_core]
-[ 3562.194514]  disable_device+0x14e/0x260 [ib_core]
-[ 3562.195488]  __ib_unregister_device+0x79/0x150 [ib_core]
-[ 3562.196462]  ib_unregister_device+0x21/0x30 [ib_core]
-[ 3562.197439]  mlx4_ib_remove+0x162/0x690 [mlx4_ib]
-[ 3562.198408]  mlx4_remove_device+0x204/0x2c0 [mlx4_core]
-[ 3562.199381]  mlx4_unregister_interface+0x49/0x1d0 [mlx4_core]
-[ 3562.200356]  mlx4_ib_cleanup+0xc/0x1d [mlx4_ib]
-[ 3562.201329]  __x64_sys_delete_module+0x2d2/0x400
-[ 3562.202288]  do_syscall_64+0x95/0x470
-[ 3562.203277]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+handle_tx will delay rx for tens or even hundreds of milliseconds when tx busy
+polling udp packets with small length(e.g. 1byte udp payload), because setting
+VHOST_NET_WEIGHT takes into account only sent-bytes but no single packet length.
 
-The problem was that the MAD PD was deallocated before the MAD CQ.
-There was completion work pending for the CQ when the PD got deallocated.
-When the mad completion handling reached procedure
-ib_mad_post_receive_mads(), we got a use-after-free bug in the following
-line of code in that procedure:
-   sg_list.lkey = qp_info->port_priv->pd->local_dma_lkey;
-(the pd pointer in the above line is no longer valid, because the
-pd has been deallocated).
+Ping-Latencies shown below were tested between two Virtual Machines using
+netperf (UDP_STREAM, len=1), and then another machine pinged the client:
 
-We fix this by allocating the PD before the CQ in procedure
-ib_mad_port_open(), and deallocating the PD after freeing the CQ
-in procedure ib_mad_port_close().
+vq size=256
+Packet-Weight   Ping-Latencies(millisecond)
+                   min      avg       max
+Origin           3.319   18.489    57.303
+64               1.643    2.021     2.552
+128              1.825    2.600     3.224
+256              1.997    2.710     4.295
+512              1.860    3.171     4.631
+1024             2.002    4.173     9.056
+2048             2.257    5.650     9.688
+4096             2.093    8.508    15.943
 
-Since the CQ completion work queue is flushed during ib_free_cq(),
-no completions will be pending for that CQ when the PD is later
-deallocated.
+vq size=512
+Packet-Weight   Ping-Latencies(millisecond)
+                   min      avg       max
+Origin           6.537   29.177    66.245
+64               2.798    3.614     4.403
+128              2.861    3.820     4.775
+256              3.008    4.018     4.807
+512              3.254    4.523     5.824
+1024             3.079    5.335     7.747
+2048             3.944    8.201    12.762
+4096             4.158   11.057    19.985
 
-Note that freeing the CQ before deallocating the PD is the practice
-in the ULPs.
+Seems pretty consistent, a small dip at 2 VQ sizes.
+Ring size is a hint from device about a burst size it can tolerate. Based on
+benchmarks, set the weight to 2 * vq size.
 
-Fixes: 4be90bc60df4 ("IB/mad: Remove ib_get_dma_mr calls")
-Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20190801121449.24973-1-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+To evaluate this change, another tests were done using netperf(RR, TX) between
+two machines with Intel(R) Xeon(R) Gold 6133 CPU @ 2.50GHz, and vq size was
+tweaked through qemu. Results shown below does not show obvious changes.
+
+vq size=256 TCP_RR                vq size=512 TCP_RR
+size/sessions/+thu%/+normalize%   size/sessions/+thu%/+normalize%
+   1/       1/  -7%/        -2%      1/       1/   0%/        -2%
+   1/       4/  +1%/         0%      1/       4/  +1%/         0%
+   1/       8/  +1%/        -2%      1/       8/   0%/        +1%
+  64/       1/  -6%/         0%     64/       1/  +7%/        +3%
+  64/       4/   0%/        +2%     64/       4/  -1%/        +1%
+  64/       8/   0%/         0%     64/       8/  -1%/        -2%
+ 256/       1/  -3%/        -4%    256/       1/  -4%/        -2%
+ 256/       4/  +3%/        +4%    256/       4/  +1%/        +2%
+ 256/       8/  +2%/         0%    256/       8/  +1%/        -1%
+
+vq size=256 UDP_RR                vq size=512 UDP_RR
+size/sessions/+thu%/+normalize%   size/sessions/+thu%/+normalize%
+   1/       1/  -5%/        +1%      1/       1/  -3%/        -2%
+   1/       4/  +4%/        +1%      1/       4/  -2%/        +2%
+   1/       8/  -1%/        -1%      1/       8/  -1%/         0%
+  64/       1/  -2%/        -3%     64/       1/  +1%/        +1%
+  64/       4/  -5%/        -1%     64/       4/  +2%/         0%
+  64/       8/   0%/        -1%     64/       8/  -2%/        +1%
+ 256/       1/  +7%/        +1%    256/       1/  -7%/         0%
+ 256/       4/  +1%/        +1%    256/       4/  -3%/        -4%
+ 256/       8/  +2%/        +2%    256/       8/  +1%/        +1%
+
+vq size=256 TCP_STREAM            vq size=512 TCP_STREAM
+size/sessions/+thu%/+normalize%   size/sessions/+thu%/+normalize%
+  64/       1/   0%/        -3%     64/       1/   0%/         0%
+  64/       4/  +3%/        -1%     64/       4/  -2%/        +4%
+  64/       8/  +9%/        -4%     64/       8/  -1%/        +2%
+ 256/       1/  +1%/        -4%    256/       1/  +1%/        +1%
+ 256/       4/  -1%/        -1%    256/       4/  -3%/         0%
+ 256/       8/  +7%/        +5%    256/       8/  -3%/         0%
+ 512/       1/  +1%/         0%    512/       1/  -1%/        -1%
+ 512/       4/  +1%/        -1%    512/       4/   0%/         0%
+ 512/       8/  +7%/        -5%    512/       8/  +6%/        -1%
+1024/       1/   0%/        -1%   1024/       1/   0%/        +1%
+1024/       4/  +3%/         0%   1024/       4/  +1%/         0%
+1024/       8/  +8%/        +5%   1024/       8/  -1%/         0%
+2048/       1/  +2%/        +2%   2048/       1/  -1%/         0%
+2048/       4/  +1%/         0%   2048/       4/   0%/        -1%
+2048/       8/  -2%/         0%   2048/       8/   5%/        -1%
+4096/       1/  -2%/         0%   4096/       1/  -2%/         0%
+4096/       4/  +2%/         0%   4096/       4/   0%/         0%
+4096/       8/  +9%/        -2%   4096/       8/  -5%/        -1%
+
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Haibin Zhang <haibinzhang@tencent.com>
+Signed-off-by: Yunfang Tai <yunfangtai@tencent.com>
+Signed-off-by: Lidong Chen <lidongchen@tencent.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/infiniband/core/mad.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/vhost/net.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
-index 3e2ab04201e2c..25a28e7060725 100644
---- a/drivers/infiniband/core/mad.c
-+++ b/drivers/infiniband/core/mad.c
-@@ -3155,18 +3155,18 @@ static int ib_mad_port_open(struct ib_device *device,
- 	if (has_smi)
- 		cq_size *= 2;
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -39,6 +39,10 @@ MODULE_PARM_DESC(experimental_zcopytx, "
+  * Using this limit prevents one virtqueue from starving others. */
+ #define VHOST_NET_WEIGHT 0x80000
  
-+	port_priv->pd = ib_alloc_pd(device, 0);
-+	if (IS_ERR(port_priv->pd)) {
-+		dev_err(&device->dev, "Couldn't create ib_mad PD\n");
-+		ret = PTR_ERR(port_priv->pd);
-+		goto error3;
-+	}
++/* Max number of packets transferred before requeueing the job.
++ * Using this limit prevents one virtqueue from starving rx. */
++#define VHOST_NET_PKT_WEIGHT(vq) ((vq)->num * 2)
 +
- 	port_priv->cq = ib_alloc_cq(port_priv->device, port_priv, cq_size, 0,
- 			IB_POLL_WORKQUEUE);
- 	if (IS_ERR(port_priv->cq)) {
- 		dev_err(&device->dev, "Couldn't create ib_mad CQ\n");
- 		ret = PTR_ERR(port_priv->cq);
--		goto error3;
--	}
--
--	port_priv->pd = ib_alloc_pd(device, 0);
--	if (IS_ERR(port_priv->pd)) {
--		dev_err(&device->dev, "Couldn't create ib_mad PD\n");
--		ret = PTR_ERR(port_priv->pd);
- 		goto error4;
- 	}
+ /* MAX number of TX used buffers for outstanding zerocopy */
+ #define VHOST_MAX_PEND 128
+ #define VHOST_GOODCOPY_LEN 256
+@@ -372,6 +376,7 @@ static void handle_tx(struct vhost_net *
+ 	struct socket *sock;
+ 	struct vhost_net_ubuf_ref *uninitialized_var(ubufs);
+ 	bool zcopy, zcopy_used;
++	int sent_pkts = 0;
  
-@@ -3209,11 +3209,11 @@ error8:
- error7:
- 	destroy_mad_qp(&port_priv->qp_info[0]);
- error6:
--	ib_dealloc_pd(port_priv->pd);
--error4:
- 	ib_free_cq(port_priv->cq);
- 	cleanup_recv_queue(&port_priv->qp_info[1]);
- 	cleanup_recv_queue(&port_priv->qp_info[0]);
-+error4:
-+	ib_dealloc_pd(port_priv->pd);
- error3:
- 	kfree(port_priv);
- 
-@@ -3243,8 +3243,8 @@ static int ib_mad_port_close(struct ib_device *device, int port_num)
- 	destroy_workqueue(port_priv->wq);
- 	destroy_mad_qp(&port_priv->qp_info[1]);
- 	destroy_mad_qp(&port_priv->qp_info[0]);
--	ib_dealloc_pd(port_priv->pd);
- 	ib_free_cq(port_priv->cq);
-+	ib_dealloc_pd(port_priv->pd);
- 	cleanup_recv_queue(&port_priv->qp_info[1]);
- 	cleanup_recv_queue(&port_priv->qp_info[0]);
- 	/* XXX: Handle deallocation of MAD registration tables */
--- 
-2.20.1
-
+ 	mutex_lock(&vq->mutex);
+ 	sock = vq->private_data;
+@@ -474,7 +479,8 @@ static void handle_tx(struct vhost_net *
+ 			vhost_zerocopy_signal_used(net, vq);
+ 		total_len += len;
+ 		vhost_net_tx_packet(net);
+-		if (unlikely(total_len >= VHOST_NET_WEIGHT)) {
++		if (unlikely(total_len >= VHOST_NET_WEIGHT) ||
++		    unlikely(++sent_pkts >= VHOST_NET_PKT_WEIGHT(vq))) {
+ 			vhost_poll_queue(&vq->poll);
+ 			break;
+ 		}
 
 
