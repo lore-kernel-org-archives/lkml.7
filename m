@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6451CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74189C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3A3233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDDE233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494188;
-	bh=mTa9ObJI1tPmKslY7UHxoXGKBG5f58d3ovgEkn6DzO4=;
+	s=default; t=1566494191;
+	bh=LYS3PhcNvoh+tL1N6o+HYoRwuN6L08WbmA+xaB04Dyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X+NfwL8kBOETaNkXiP2W4WJExoK9HwIyLUZmhQ3dl/vejlE4UkC7/qzcx2Wbc2a/+
-	 aYh2BYqxnigfokzeRBDKM/zT83DKADn9GJ8Q3gXrJIcQNIzBT8l9ulqXX9zp3pLhYp
-	 /mytTMC+HDpqMO4jPUShd3BVT9yeCMdedLSYCMfA=
+	b=s6K2bIrHBT398AlPKjyJcugal3+jv3qvhhESZ6JZirlupSoqMQ05525iDjssxpZx1
+	 XjpILSzvqtDtGPUv0BeEkxUFhqKRdQImqspPZewExdAzLtnilzV3h1aclGPAxdihlG
+	 jG3X/9ykqLd+4/zoFDy4daXCeJzN0y+M4HbBRKJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391223AbfHVRQZ (ORCPT
+        id S2387546AbfHVRQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:16:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58302 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:16:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390395AbfHVRIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:36 -0400
+        id S2390387AbfHVRIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:34 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FEEA23406;
-        Thu, 22 Aug 2019 17:08:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6233623428;
+        Thu, 22 Aug 2019 17:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493715;
-        bh=mTa9ObJI1tPmKslY7UHxoXGKBG5f58d3ovgEkn6DzO4=;
+        s=default; t=1566493713;
+        bh=LYS3PhcNvoh+tL1N6o+HYoRwuN6L08WbmA+xaB04Dyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+U36wluoQ0m40PCeVyxu+6T4G++u6m+UOE3eboSf54R9drgGHR3BzNf+I4Nkj2pp
-         x3JEedrI8Ad6/LAyVy4dxraxK92mT+yTq6heVHXf8tZDldNwbNSPQAZJtM8dRm+s5h
-         nSdUC/ypuieYUJ4kcYXlzbwHRlfZOWT+Lu8jO2+8=
+        b=LrqCH28MvSBoLmnYKYV+vdbpaxbs+W9BeFOH1fD9IfQTjc60ZXCFmzldHlLqx2ZzM
+         yl1kJFxJl5mNTc8scdVUNIV+2zVDaHYfXADrOkUrcxPtX2QbzvA6oCUOSAPJG+WkDK
+         IbtyNo88bxSzB4BfYfQigcg/DxJfroneS48hHLlE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 040/135] clk: sprd: Select REGMAP_MMIO to avoid compile errors
-Date:   Thu, 22 Aug 2019 13:06:36 -0400
-Message-Id: <20190822170811.13303-41-sashal@kernel.org>
+Cc:     Aleix Roca Nonell <aleix.rocanonell@bsc.es>,
+        Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.2 036/135] io_uring: fix manual setup of iov_iter for fixed buffers
+Date:   Thu, 22 Aug 2019 13:06:32 -0400
+Message-Id: <20190822170811.13303-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,31 +65,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+From: Aleix Roca Nonell <aleix.rocanonell@bsc.es>
 
-[ Upstream commit c9a67cbb5189e966c70451562b2ca4c3876ab546 ]
+commit 99c79f6692ccdc42e04deea8a36e22bb48168a62 upstream.
 
-Make REGMAP_MMIO selected to avoid undefined reference to regmap symbols.
+Commit bd11b3a391e3 ("io_uring: don't use iov_iter_advance() for fixed
+buffers") introduced an optimization to avoid using the slow
+iov_iter_advance by manually populating the iov_iter iterator in some
+cases.
 
-Fixes: d41f59fd92f2 ("clk: sprd: Add common infrastructure")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+However, the computation of the iterator count field was erroneous: The
+first bvec was always accounted for an extent of page size even if the
+bvec length was smaller.
+
+In consequence, some I/O operations on fixed buffers were unable to
+operate on the full extent of the buffer, consistently skipping some
+bytes at the end of it.
+
+Fixes: bd11b3a391e3 ("io_uring: don't use iov_iter_advance() for fixed buffers")
+Cc: stable@vger.kernel.org
+Signed-off-by: Aleix Roca Nonell <aleix.rocanonell@bsc.es>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/clk/sprd/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ fs/io_uring.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/clk/sprd/Kconfig b/drivers/clk/sprd/Kconfig
-index 91d3d721c801e..3c219af251001 100644
---- a/drivers/clk/sprd/Kconfig
-+++ b/drivers/clk/sprd/Kconfig
-@@ -3,6 +3,7 @@ config SPRD_COMMON_CLK
- 	tristate "Clock support for Spreadtrum SoCs"
- 	depends on ARCH_SPRD || COMPILE_TEST
- 	default ARCH_SPRD
-+	select REGMAP_MMIO
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 3e887a09533b3..61018559e8fe6 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1032,10 +1032,8 @@ static int io_import_fixed(struct io_ring_ctx *ctx, int rw,
  
- if SPRD_COMMON_CLK
+ 			iter->bvec = bvec + seg_skip;
+ 			iter->nr_segs -= seg_skip;
+-			iter->count -= (seg_skip << PAGE_SHIFT);
++			iter->count -= bvec->bv_len + offset;
+ 			iter->iov_offset = offset & ~PAGE_MASK;
+-			if (iter->iov_offset)
+-				iter->count -= iter->iov_offset;
+ 		}
+ 	}
  
 -- 
 2.20.1
