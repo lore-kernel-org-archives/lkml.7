@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40564C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A205EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A75233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AFC82089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494233;
-	bh=0gj6fwyrbSi5XYaMoU1UMe+hHqXJx+3UvPBxqN/CmoY=;
+	s=default; t=1566494239;
+	bh=lW+S8uKOzb511hV9dfHs1XB5RiJuMW7x/XjDJETPOro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=su0KJMrhTcKBPn+PXuyZVnh/OZRuxfCxCPzJthuuWchQ4CPXUB9kldkYl6xKh0lkz
-	 w5AKhci71nsA27H2Zu82CCaej9aruaNkL7d+wmjKoox59ZiGuUglNrly9IoLgAvm8P
-	 Fcd6MXGKtH3IccyxnI2X5VLIpVKxzXhgmRa/AwOM=
+	b=Hzpb0U59anQwNdDZiKxkpaUVf26ra1Bzur9wXd5/xvS9jbaL/MqT9Hw3LwNgbr801
+	 yl9FkCFMGUYGA/7pgaENlMtTAtlZ1mH5/LWI8l4D/SIJByJaD0qiWfHvu50wsJCeUW
+	 uaJMuc5UpL8OwtjLInCZ3NpHyXAMKob4O/kbFiAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390360AbfHVRIa (ORCPT
+        id S2391282AbfHVRRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58076 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:17:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390334AbfHVRI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:28 -0400
+        id S2390293AbfHVRI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:29 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37D1123405;
-        Thu, 22 Aug 2019 17:08:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4718F23406;
+        Thu, 22 Aug 2019 17:08:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493706;
-        bh=0gj6fwyrbSi5XYaMoU1UMe+hHqXJx+3UvPBxqN/CmoY=;
+        s=default; t=1566493708;
+        bh=lW+S8uKOzb511hV9dfHs1XB5RiJuMW7x/XjDJETPOro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2JsR465WYVYs/ofMpMwnhLtx8nMtN1mGNdZikHUGtHsb3EXVjTtWL6YyQCA9i5xhq
-         zcgSD4JGB7eexDZzlyZVv0ZSVuToSA4r75t7ZEUbzUgVf6QyCY0zQzyXKSgq2qixuQ
-         gFy94GmW+RNNUf8VMKbpOHNlNAqnftxoKS2RTcX0=
+        b=nyViDbh4PNp7cyePklYTSQ52IdPlYD+vD2W3EWpTDQCHdXJcpxUAdfeik9aQwimsv
+         WAX1zXcjYjLV2hVffmLsQVkHUd3+eES/A+kRCWUIG71DdhTMqhMOYb0LhVrON+AXe9
+         dJvjk59mhmPcu5/sMG6bNzlgheMPSFbR6RTS2wAE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hui Wang <hui.wang@canonical.com>, Takashi Iwai <tiwai@suse.de>,
+Cc:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Jiri Kosina <jkosina@suse.cz>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 022/135] ALSA: hda - Add a generic reboot_notify
-Date:   Thu, 22 Aug 2019 13:06:18 -0400
-Message-Id: <20190822170811.13303-23-sashal@kernel.org>
+Subject: [PATCH 5.2 026/135] HID: hiddev: do cleanup in failure of opening a device
+Date:   Thu, 22 Aug 2019 13:06:22 -0400
+Message-Id: <20190822170811.13303-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -64,122 +67,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Hillf Danton <hdanton@sina.com>
 
-commit 871b9066027702e6e6589da0e1edd3b7dede7205 upstream.
+commit 6d4472d7bec39917b54e4e80245784ea5d60ce49 upstream.
 
-Make codec enter D3 before rebooting or poweroff can fix the noise
-issue on some laptops. And in theory it is harmless for all codecs
-to enter D3 before rebooting or poweroff, let us add a generic
-reboot_notify, then realtek and conexant drivers can call this
-function.
+Undo what we did for opening before releasing the memory slice.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/pci/hda/hda_generic.c    | 19 +++++++++++++++++++
- sound/pci/hda/hda_generic.h    |  1 +
- sound/pci/hda/patch_conexant.c |  6 +-----
- sound/pci/hda/patch_realtek.c  | 11 +----------
- 4 files changed, 22 insertions(+), 15 deletions(-)
+ drivers/hid/usbhid/hiddev.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
-index 8f2beb1f3ae48..5bf24fb819d28 100644
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -6051,6 +6051,24 @@ void snd_hda_gen_free(struct hda_codec *codec)
- }
- EXPORT_SYMBOL_GPL(snd_hda_gen_free);
- 
-+/**
-+ * snd_hda_gen_reboot_notify - Make codec enter D3 before rebooting
-+ * @codec: the HDA codec
-+ *
-+ * This can be put as patch_ops reboot_notify function.
-+ */
-+void snd_hda_gen_reboot_notify(struct hda_codec *codec)
-+{
-+	/* Make the codec enter D3 to avoid spurious noises from the internal
-+	 * speaker during (and after) reboot
-+	 */
-+	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
-+	snd_hda_codec_write(codec, codec->core.afg, 0,
-+			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
-+	msleep(10);
-+}
-+EXPORT_SYMBOL_GPL(snd_hda_gen_reboot_notify);
+diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
+index c07df82923802..4e11cc6fc34bc 100644
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -308,6 +308,10 @@ static int hiddev_open(struct inode *inode, struct file *file)
+ 	hid_hw_power(hid, PM_HINT_NORMAL);
+ bail_unlock:
+ 	mutex_unlock(&hiddev->existancelock);
 +
- #ifdef CONFIG_PM
- /**
-  * snd_hda_gen_check_power_status - check the loopback power save state
-@@ -6078,6 +6096,7 @@ static const struct hda_codec_ops generic_patch_ops = {
- 	.init = snd_hda_gen_init,
- 	.free = snd_hda_gen_free,
- 	.unsol_event = snd_hda_jack_unsol_event,
-+	.reboot_notify = snd_hda_gen_reboot_notify,
- #ifdef CONFIG_PM
- 	.check_power_status = snd_hda_gen_check_power_status,
- #endif
-diff --git a/sound/pci/hda/hda_generic.h b/sound/pci/hda/hda_generic.h
-index 35a670a71c423..5f199dcb0d188 100644
---- a/sound/pci/hda/hda_generic.h
-+++ b/sound/pci/hda/hda_generic.h
-@@ -332,6 +332,7 @@ int snd_hda_gen_parse_auto_config(struct hda_codec *codec,
- 				  struct auto_pin_cfg *cfg);
- int snd_hda_gen_build_controls(struct hda_codec *codec);
- int snd_hda_gen_build_pcms(struct hda_codec *codec);
-+void snd_hda_gen_reboot_notify(struct hda_codec *codec);
- 
- /* standard jack event callbacks */
- void snd_hda_gen_hp_automute(struct hda_codec *codec,
-diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
-index f299f137eaea2..0b0f24d24f8fd 100644
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -175,11 +175,7 @@ static void cx_auto_reboot_notify(struct hda_codec *codec)
- 	/* Turn the problematic codec into D3 to avoid spurious noises
- 	   from the internal speaker during (and after) reboot */
- 	cx_auto_turn_eapd(codec, spec->num_eapds, spec->eapds, false);
--
--	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
--	snd_hda_codec_write(codec, codec->core.afg, 0,
--			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
--	msleep(10);
-+	snd_hda_gen_reboot_notify(codec);
- }
- 
- static void cx_auto_free(struct hda_codec *codec)
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 8aaf1d9c55cfd..e333b3e30e316 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -869,15 +869,6 @@ static void alc_reboot_notify(struct hda_codec *codec)
- 		alc_shutup(codec);
- }
- 
--/* power down codec to D3 at reboot/shutdown; set as reboot_notify ops */
--static void alc_d3_at_reboot(struct hda_codec *codec)
--{
--	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
--	snd_hda_codec_write(codec, codec->core.afg, 0,
--			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
--	msleep(10);
--}
--
- #define alc_free	snd_hda_gen_free
- 
- #ifdef CONFIG_PM
-@@ -5152,7 +5143,7 @@ static void alc_fixup_tpt440_dock(struct hda_codec *codec,
- 	struct alc_spec *spec = codec->spec;
- 
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
--		spec->reboot_notify = alc_d3_at_reboot; /* reduce noise */
-+		spec->reboot_notify = snd_hda_gen_reboot_notify; /* reduce noise */
- 		spec->parse_flags = HDA_PINCFG_NO_HP_FIXUP;
- 		codec->power_save_node = 0; /* avoid click noises */
- 		snd_hda_apply_pincfgs(codec, pincfgs);
++	spin_lock_irq(&list->hiddev->list_lock);
++	list_del(&list->node);
++	spin_unlock_irq(&list->hiddev->list_lock);
+ bail:
+ 	file->private_data = NULL;
+ 	vfree(list);
 -- 
 2.20.1
 
