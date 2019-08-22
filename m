@@ -2,52 +2,53 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83106C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F7CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B3723406
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD6E23407
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494604;
-	bh=0C0CntLjrth/EChT8V7C04HBrtlfZujJ18utphkB0Vg=;
+	s=default; t=1566494611;
+	bh=cIsKSAV/T1+AbC/OE5lBEwYl+TyKGRXDcTYNbIuHLRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rrzvnnZ3gJSPNmuWiKQWbCmiLlZdvFSrqNYpucS5c+fBItQEjWR4C0wMIFHExNxx6
-	 NKK5Rl6Tguu9ge8kj9j+apMdq6LE/SGwn7KFqwXjT5rrM0HxHG/pAjaXo5tfVyuFgy
-	 WKY4LbsobhqBQNuq/vICgykbBtoPB9OVRdnkJxe4=
+	b=TmZd57YJrCxPPtp+TAzgtVz7RuylQWQO1nYG1GA3or/ELg+7ADeFjz5qZKMD0SSl1
+	 VueJzGnY7ekoSW9m7/k0K9e81pmq0D3c4vpT8WJYs6SHMhT8mfztxmoaiZG+xWjSKi
+	 dDRMMXDJqwdb14wjSQhsE4jtEknIAgoPvgA9qCGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403934AbfHVRXX (ORCPT
+        id S2391488AbfHVRXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:23 -0400
+        Thu, 22 Aug 2019 13:23:30 -0400
 Received: from mail.kernel.org ([198.145.29.99]:42878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403898AbfHVRXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:19 -0400
+        id S1733026AbfHVRXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:21 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67284233FC;
-        Thu, 22 Aug 2019 17:23:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DB1023402;
+        Thu, 22 Aug 2019 17:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494598;
-        bh=0C0CntLjrth/EChT8V7C04HBrtlfZujJ18utphkB0Vg=;
+        s=default; t=1566494601;
+        bh=cIsKSAV/T1+AbC/OE5lBEwYl+TyKGRXDcTYNbIuHLRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YA/3I4eG7J5m2qb1Z8tQyN7Wa60cyX9XbgYZWAtPRaSqF+5heeMqJ7Z1OzDo/T2Um
-         UfabuxnSm2i2ZB0h/Npf8CSH2PR+S2Gcgurw0KhmRXqRF4j5cfNaX7Js6xNnb0U40g
-         16vDJPFbF+KBcqfMHdhfanUPKlrfCI+4FQR5d4fc=
+        b=NfLNEpU7wkZlUbyAUdVny2yugXFqvjyN/WwFrOZWd7y2rg/hrlIA5zgZ+3JUPVWal
+         jnprE3LSQ+ZhF1fGJazu0gUYyPRRia7MiYzpY0tMdwYX6bEB+USSqfJ5QqMIi3FgrF
+         BfLCj3c1cP1NQEORzL6BfM2NvOrUFAfeKvmzGAV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.9 002/103] usb: iowarrior: fix deadlock on disconnect
-Date:   Thu, 22 Aug 2019 10:17:50 -0700
-Message-Id: <20190822171728.557363694@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Roland Kammerer <roland.kammerer@linbit.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 023/103] drbd: dynamically allocate shash descriptor
+Date:   Thu, 22 Aug 2019 10:18:11 -0700
+Message-Id: <20190822171729.789153391@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -60,50 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+[ Upstream commit 77ce56e2bfaa64127ae5e23ef136c0168b818777 ]
 
-commit c468a8aa790e0dfe0a7f8a39db282d39c2c00b46 upstream.
+Building with clang and KASAN, we get a warning about an overly large
+stack frame on 32-bit architectures:
 
-We have to drop the mutex before we close() upon disconnect()
-as close() needs the lock. This is safe to do by dropping the
-mutex as intfdata is already set to NULL, so open() will fail.
+drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
+      [-Werror,-Wframe-larger-than=]
 
-Fixes: 03f36e885fc26 ("USB: open disconnect race in iowarrior")
-Reported-by: syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20190808092728.23417-1-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We already allocate other data dynamically in this function, so
+just do the same for the shash descriptor, which makes up most of
+this memory.
 
+Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/iowarrior.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -886,19 +886,20 @@ static void iowarrior_disconnect(struct
- 	dev = usb_get_intfdata(interface);
- 	mutex_lock(&iowarrior_open_disc_lock);
- 	usb_set_intfdata(interface, NULL);
-+	/* prevent device read, write and ioctl */
-+	dev->present = 0;
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 83957a1e15ed7..8e8e4ccb128f3 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -5297,7 +5297,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	unsigned int key_len;
+ 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
+ 	unsigned int resp_size;
+-	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
++	struct shash_desc *desc;
+ 	struct packet_info pi;
+ 	struct net_conf *nc;
+ 	int err, rv;
+@@ -5310,6 +5310,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	memcpy(secret, nc->shared_secret, key_len);
+ 	rcu_read_unlock();
  
- 	minor = dev->minor;
-+	mutex_unlock(&iowarrior_open_disc_lock);
-+	/* give back our minor - this will call close() locks need to be dropped at this point*/
++	desc = kmalloc(sizeof(struct shash_desc) +
++		       crypto_shash_descsize(connection->cram_hmac_tfm),
++		       GFP_KERNEL);
++	if (!desc) {
++		rv = -1;
++		goto fail;
++	}
+ 	desc->tfm = connection->cram_hmac_tfm;
+ 	desc->flags = 0;
  
--	/* give back our minor */
- 	usb_deregister_dev(interface, &iowarrior_class);
+@@ -5452,7 +5459,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	kfree(peers_ch);
+ 	kfree(response);
+ 	kfree(right_response);
+-	shash_desc_zero(desc);
++	if (desc) {
++		shash_desc_zero(desc);
++		kfree(desc);
++	}
  
- 	mutex_lock(&dev->mutex);
- 
- 	/* prevent device read, write and ioctl */
--	dev->present = 0;
- 
- 	mutex_unlock(&dev->mutex);
--	mutex_unlock(&iowarrior_open_disc_lock);
- 
- 	if (dev->opened) {
- 		/* There is a process that holds a filedescriptor to the device ,
+ 	return rv;
+ }
+-- 
+2.20.1
+
 
 
