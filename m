@@ -2,122 +2,141 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCFAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3797DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D277D233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:26:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TUTU2NnU"
+	by mail.kernel.org (Postfix) with ESMTP id 08C9A233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731552AbfHVP0G (ORCPT
+        id S1731690AbfHVP1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:26:06 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56738 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbfHVP0F (ORCPT
+        Thu, 22 Aug 2019 11:27:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39556 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725804AbfHVP1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:26:05 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7MF4Mx0087310;
-        Thu, 22 Aug 2019 15:20:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=1L5ER/qHk23OYtUxN07nDgRdnfnZxx2DF63Rw066TEU=;
- b=TUTU2NnUGOh4xD4o+ekU6weirf9jpHf+pLiY1Q/982QWFCZeo0muWZqUzEIst9mmeX2G
- tvc1KCLIMJv2FqopEsyv9HxiinVifeIFZCOgOXpieTlIyE8BeQT5DXBbUeH9BA0GC9f6
- SkWbP7KPLFpzj68lv1OfKaMVHRSLAvsoHzQarkWQyeeglWf6MzaDzBMcVo8CHqrA0PWn
- gC9SiP1VTgkabkM2NZBe6va8+EacRo3aq8PzjlZ90Q57mH9CIy9gYUV1DMDBTWHFVliT
- W7QWqT+hSJMIQ8GpYi/X7nlE+ViJU+0yCyasx6cEh9hTVifRdlge73HeEEwcgwfEymcU sA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2ue90txm3f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 22 Aug 2019 15:20:56 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7MF3xeU179464;
-        Thu, 22 Aug 2019 15:20:56 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2uhusembk0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 22 Aug 2019 15:20:55 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7MFKrjU013736;
-        Thu, 22 Aug 2019 15:20:54 GMT
-Received: from [192.168.1.219] (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 22 Aug 2019 15:20:53 +0000
-Subject: Re: [PATCH 00/14] per memcg lru_lock
-To:     Alex Shi <alex.shi@linux.alibaba.com>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>
-References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
- <6ba1ffb0-fce0-c590-c373-7cbc516dbebd@oracle.com>
- <348495d2-b558-fdfd-a411-89c75d4a9c78@linux.alibaba.com>
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-Message-ID: <b776032e-eabb-64ff-8aee-acc2b3711717@oracle.com>
-Date:   Thu, 22 Aug 2019 11:20:52 -0400
+        Thu, 22 Aug 2019 11:27:25 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7MFM642094538;
+        Thu, 22 Aug 2019 11:27:08 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhw1bj694-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 11:27:08 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7MFM5s9094473;
+        Thu, 22 Aug 2019 11:27:08 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhw1bj683-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 11:27:08 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7MFQU7R004861;
+        Thu, 22 Aug 2019 15:27:06 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma04dal.us.ibm.com with ESMTP id 2ue977crpp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 15:27:06 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7MFR5e736503854
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 15:27:06 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CCC59B2064;
+        Thu, 22 Aug 2019 15:27:05 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B90DDB2067;
+        Thu, 22 Aug 2019 15:27:05 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 22 Aug 2019 15:27:05 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id A5EC616C0F61; Thu, 22 Aug 2019 08:27:06 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 08:27:06 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Scott Wood <swood@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v2 1/3] rcu: Acquire RCU lock when disabling BHs
+Message-ID: <20190822152706.GB28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190821231906.4224-1-swood@redhat.com>
+ <20190821231906.4224-2-swood@redhat.com>
+ <20190821233358.GU28441@linux.ibm.com>
+ <20190822133955.GA29841@google.com>
 MIME-Version: 1.0
-In-Reply-To: <348495d2-b558-fdfd-a411-89c75d4a9c78@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9356 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1908220150
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9356 signatures=668684
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1908220150
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822133955.GA29841@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908220151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/19 7:56 AM, Alex Shi wrote:
-> 在 2019/8/22 上午2:00, Daniel Jordan 写道:
->>    https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice>
->> It's also synthetic but it stresses lru_lock more than just anon alloc/free.  It hits the page activate path, which is where we see this lock in our database, and if enough memory is configured lru_lock also gets stressed during reclaim, similar to [1].
+On Thu, Aug 22, 2019 at 09:39:55AM -0400, Joel Fernandes wrote:
+> On Wed, Aug 21, 2019 at 04:33:58PM -0700, Paul E. McKenney wrote:
+> > On Wed, Aug 21, 2019 at 06:19:04PM -0500, Scott Wood wrote:
+> > > A plain local_bh_disable() is documented as creating an RCU critical
+> > > section, and (at least) rcutorture expects this to be the case.  However,
+> > > in_softirq() doesn't block a grace period on PREEMPT_RT, since RCU checks
+> > > preempt_count() directly.  Even if RCU were changed to check
+> > > in_softirq(), that wouldn't allow blocked BH disablers to be boosted.
+> > > 
+> > > Fix this by calling rcu_read_lock() from local_bh_disable(), and update
+> > > rcu_read_lock_bh_held() accordingly.
+> > 
+> > Cool!  Some questions and comments below.
+> > 
+> > 							Thanx, Paul
+> > 
+> > > Signed-off-by: Scott Wood <swood@redhat.com>
+> > > ---
+> > > Another question is whether non-raw spinlocks are intended to create an
+> > > RCU read-side critical section due to implicit preempt disable.
+> > 
+> > Hmmm...  Did non-raw spinlocks act like rcu_read_lock_sched()
+> > and rcu_read_unlock_sched() pairs in -rt prior to the RCU flavor
+> > consolidation?  If not, I don't see why they should do so after that
+> > consolidation in -rt.
 > 
-> Thanks for the sharing, this patchset can not help the [1] case, since it's just relief the per container lock contention now.
+> May be I am missing something, but I didn't see the connection between
+> consolidation and this patch. AFAICS, this patch is so that
+> rcu_read_lock_bh_held() works at all on -rt. Did I badly miss something?
 
-I should've been clearer.  [1] is meant as an example of someone suffering from lru_lock during reclaim.  Wouldn't your series help per-memcg reclaim?
+I was interpreting Scott's question (which would be excluded from the
+git commit log) as relating to a possible follow-on patch.
 
-> Yes, readtwice case could be more sensitive for this lru_lock changes in containers. I may try to use it in container with some tuning. But anyway, aim9 is also pretty good to show the problem and solutions. :)
->>
->> It'd be better though, as Michal suggests, to use the real workload that's causing problems.  Where are you seeing contention?
-> 
-> We repeatly create or delete a lot of different containers according to servers load/usage, so normal workload could cause lots of pages alloc/remove. 
+The question is "how special can non-raw spinlocks be in -rt?".  From what
+I can see, they have been treated as sleeplocks from an RCU viewpoint,
+so maybe that should continue to be the case.  It does deserve some
+thought because in mainline a non-raw spinlock really would block a
+post-consolidation RCU grace period, even in PREEMPT kernels.
 
-I think numbers from that scenario would help your case.
+But then again, you cannot preempt a non-raw spinlock in mainline but
+you can in -rt, so extending that exception to RCU is not unreasonable.
 
-> aim9 could reflect part of scenarios. I don't know the DB scenario yet.
+Either way, we do need to make a definite decision and document it.
+If I were forced to make a decision right now, I would follow the old
+behavior, so that only raw spinlocks were guaranteed to block RCU grace
+periods.  But I am not being forced, so let's actually discuss and make
+a conscious decision.  ;-)
 
-We see it during DB shutdown when each DB process frees its memory (zap_pte_range -> mark_page_accessed).  But that's a different thing, clearly Not This Series.
-
->>> With this patch series, lruvec->lru_lock show no contentions
->>>           &(&lruvec->lru_l...          8          0               0       0               0               0
->>>
->>> and aim9 page_test/brk_test performance increased 5%~50%.
->>
->> Where does the 50% number come in?  The numbers below seem to only show ~4% boost.
-> 
-> the Setddev/CoeffVar case has about 50% performance increase. one of container's mmtests result as following:
-> 
-> Stddev    page_test      245.15 (   0.00%)      189.29 (  22.79%)
-> Stddev    brk_test      1258.60 (   0.00%)      629.16 (  50.01%)
-> CoeffVar  page_test        0.71 (   0.00%)        0.53 (  26.05%)
-> CoeffVar  brk_test         1.32 (   0.00%)        0.64 (  51.14%)
-
-Aha.  50% decrease in stdev.
+							Thanx, Paul
