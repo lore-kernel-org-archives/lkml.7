@@ -2,360 +2,111 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A88C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59217C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F20D0233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378BF22CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbfHVC4j (ORCPT
+        id S1729522AbfHVDCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 22:56:39 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:45674 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730343AbfHVC4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 22:56:37 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5211F200116;
-        Thu, 22 Aug 2019 04:56:35 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1C76620005C;
-        Thu, 22 Aug 2019 04:56:26 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 184CE402E1;
-        Thu, 22 Aug 2019 10:56:15 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk,
-        otavio@ossystems.com.br, leonard.crestez@nxp.com,
-        schnitzeltony@gmail.com, u.kleine-koenig@pengutronix.de,
-        jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Wed, 21 Aug 2019 23:02:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54754 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728286AbfHVDCI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 23:02:08 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7M31jQ6103174;
+        Wed, 21 Aug 2019 23:02:02 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhgqt3ka3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Aug 2019 23:02:02 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7M315UB019729;
+        Thu, 22 Aug 2019 03:02:01 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma04wdc.us.ibm.com with ESMTP id 2ufye0e0ag-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 03:02:01 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7M320Ie50659746
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 03:02:00 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D238EB2067;
+        Thu, 22 Aug 2019 03:02:00 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B3187B2064;
+        Thu, 22 Aug 2019 03:02:00 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.200.24])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 22 Aug 2019 03:02:00 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9BD5516C65CA; Wed, 21 Aug 2019 20:02:00 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 20:02:00 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     josh@joshtriplett.org, rcu@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V4 2/4] watchdog: Add i.MX7ULP watchdog support
-Date:   Wed, 21 Aug 2019 22:37:41 -0400
-Message-Id: <1566441463-11911-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
-References: <1566441463-11911-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Subject: Re: [PATCH] rcu: don't include <linux/ktime.h> in rcutiny.h
+Message-ID: <20190822030200.GX28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190822015343.4058-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822015343.4058-1-hch@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908220030
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i.MX7ULP Watchdog Timer (WDOG) module is an independent timer
-that is available for system use.
-It provides a safety feature to ensure that software is executing
-as planned and that the CPU is not stuck in an infinite loop or
-executing unintended code. If the WDOG module is not serviced
-(refreshed) within a certain period, it resets the MCU.
+On Thu, Aug 22, 2019 at 10:53:43AM +0900, Christoph Hellwig wrote:
+> The kbuild reported a built failure due to a header loop when RCUTINY is
+> enabled with my pending riscv-nommu port.  Switch rcutiny.h to only
+> include the minimal required header to get HZ instead.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Add driver support for i.MX7ULP watchdog.
+Queued for review and testing, thank you!
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V3:
-	- pass clk directly for reset action to avoid dereference from structure;
-	- use constant instead of variable for wdog clock rate, as it is fixed as 1KHz.
----
- drivers/watchdog/Kconfig       |  13 +++
- drivers/watchdog/Makefile      |   1 +
- drivers/watchdog/imx7ulp_wdt.c | 243 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 257 insertions(+)
- create mode 100644 drivers/watchdog/imx7ulp_wdt.c
+Do you need this in v5.4?  My normal workflow would put it into v5.5.
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index a8f5c81..d68e5b5 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -724,6 +724,19 @@ config IMX_SC_WDT
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called imx_sc_wdt.
- 
-+config IMX7ULP_WDT
-+	tristate "IMX7ULP Watchdog"
-+	depends on ARCH_MXC || COMPILE_TEST
-+	select WATCHDOG_CORE
-+	help
-+	  This is the driver for the hardware watchdog on the Freescale
-+	  IMX7ULP and later processors. If you have one of these
-+	  processors and wish to have watchdog support enabled,
-+	  say Y, otherwise say N.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called imx7ulp_wdt.
-+
- config UX500_WATCHDOG
- 	tristate "ST-Ericsson Ux500 watchdog"
- 	depends on MFD_DB8500_PRCMU
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index b5a0aed..2ee352b 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -67,6 +67,7 @@ obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
- obj-$(CONFIG_TS72XX_WATCHDOG) += ts72xx_wdt.o
- obj-$(CONFIG_IMX2_WDT) += imx2_wdt.o
- obj-$(CONFIG_IMX_SC_WDT) += imx_sc_wdt.o
-+obj-$(CONFIG_IMX7ULP_WDT) += imx7ulp_wdt.o
- obj-$(CONFIG_UX500_WATCHDOG) += ux500_wdt.o
- obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
- obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
-diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
-new file mode 100644
-index 0000000..5ce5102
---- /dev/null
-+++ b/drivers/watchdog/imx7ulp_wdt.c
-@@ -0,0 +1,243 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/watchdog.h>
-+
-+#define WDOG_CS			0x0
-+#define WDOG_CS_CMD32EN		BIT(13)
-+#define WDOG_CS_ULK		BIT(11)
-+#define WDOG_CS_RCS		BIT(10)
-+#define WDOG_CS_EN		BIT(7)
-+#define WDOG_CS_UPDATE		BIT(5)
-+
-+#define WDOG_CNT	0x4
-+#define WDOG_TOVAL	0x8
-+
-+#define REFRESH_SEQ0	0xA602
-+#define REFRESH_SEQ1	0xB480
-+#define REFRESH		((REFRESH_SEQ1 << 16) | REFRESH_SEQ0)
-+
-+#define UNLOCK_SEQ0	0xC520
-+#define UNLOCK_SEQ1	0xD928
-+#define UNLOCK		((UNLOCK_SEQ1 << 16) | UNLOCK_SEQ0)
-+
-+#define DEFAULT_TIMEOUT	60
-+#define MAX_TIMEOUT	128
-+#define WDOG_CLOCK_RATE	1000
-+
-+static bool nowayout = WATCHDOG_NOWAYOUT;
-+module_param(nowayout, bool, 0000);
-+MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-+		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-+
-+struct imx7ulp_wdt_device {
-+	struct notifier_block restart_handler;
-+	struct watchdog_device wdd;
-+	void __iomem *base;
-+	struct clk *clk;
-+};
-+
-+static inline void imx7ulp_wdt_enable(void __iomem *base, bool enable)
-+{
-+	u32 val = readl(base + WDOG_CS);
-+
-+	writel(UNLOCK, base + WDOG_CNT);
-+	if (enable)
-+		writel(val | WDOG_CS_EN, base + WDOG_CS);
-+	else
-+		writel(val & ~WDOG_CS_EN, base + WDOG_CS);
-+}
-+
-+static inline bool imx7ulp_wdt_is_enabled(void __iomem *base)
-+{
-+	u32 val = readl(base + WDOG_CS);
-+
-+	return val & WDOG_CS_EN;
-+}
-+
-+static int imx7ulp_wdt_ping(struct watchdog_device *wdog)
-+{
-+	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-+
-+	writel(REFRESH, wdt->base + WDOG_CNT);
-+
-+	return 0;
-+}
-+
-+static int imx7ulp_wdt_start(struct watchdog_device *wdog)
-+{
-+	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-+
-+	imx7ulp_wdt_enable(wdt->base, true);
-+
-+	return 0;
-+}
-+
-+static int imx7ulp_wdt_stop(struct watchdog_device *wdog)
-+{
-+	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-+
-+	imx7ulp_wdt_enable(wdt->base, false);
-+
-+	return 0;
-+}
-+
-+static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
-+				   unsigned int timeout)
-+{
-+	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
-+	u32 val = WDOG_CLOCK_RATE * timeout;
-+
-+	writel(UNLOCK, wdt->base + WDOG_CNT);
-+	writel(val, wdt->base + WDOG_TOVAL);
-+
-+	wdog->timeout = timeout;
-+
-+	return 0;
-+}
-+
-+static const struct watchdog_ops imx7ulp_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = imx7ulp_wdt_start,
-+	.stop  = imx7ulp_wdt_stop,
-+	.ping  = imx7ulp_wdt_ping,
-+	.set_timeout = imx7ulp_wdt_set_timeout,
-+};
-+
-+static const struct watchdog_info imx7ulp_wdt_info = {
-+	.identity = "i.MX7ULP watchdog timer",
-+	.options  = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-+		    WDIOF_MAGICCLOSE,
-+};
-+
-+static inline void imx7ulp_wdt_init(void __iomem *base, unsigned int timeout)
-+{
-+	u32 val;
-+
-+	/* unlock the wdog for reconfiguration */
-+	writel_relaxed(UNLOCK_SEQ0, base + WDOG_CNT);
-+	writel_relaxed(UNLOCK_SEQ1, base + WDOG_CNT);
-+
-+	/* set an initial timeout value in TOVAL */
-+	writel(timeout, base + WDOG_TOVAL);
-+	/* enable 32bit command sequence and reconfigure */
-+	val = BIT(13) | BIT(8) | BIT(5);
-+	writel(val, base + WDOG_CS);
-+}
-+
-+static void imx7ulp_wdt_action(void *data)
-+{
-+	clk_disable_unprepare(data);
-+}
-+
-+static int imx7ulp_wdt_probe(struct platform_device *pdev)
-+{
-+	struct imx7ulp_wdt_device *imx7ulp_wdt;
-+	struct device *dev = &pdev->dev;
-+	struct watchdog_device *wdog;
-+	int ret;
-+
-+	imx7ulp_wdt = devm_kzalloc(dev, sizeof(*imx7ulp_wdt), GFP_KERNEL);
-+	if (!imx7ulp_wdt)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, imx7ulp_wdt);
-+
-+	imx7ulp_wdt->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(imx7ulp_wdt->base))
-+		return PTR_ERR(imx7ulp_wdt->base);
-+
-+	imx7ulp_wdt->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(imx7ulp_wdt->clk)) {
-+		dev_err(dev, "Failed to get watchdog clock\n");
-+		return PTR_ERR(imx7ulp_wdt->clk);
-+	}
-+
-+	ret = clk_prepare_enable(imx7ulp_wdt->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(dev, imx7ulp_wdt_action, imx7ulp_wdt->clk);
-+	if (ret)
-+		return ret;
-+
-+	wdog = &imx7ulp_wdt->wdd;
-+	wdog->info = &imx7ulp_wdt_info;
-+	wdog->ops = &imx7ulp_wdt_ops;
-+	wdog->min_timeout = 1;
-+	wdog->max_timeout = MAX_TIMEOUT;
-+	wdog->parent = dev;
-+	wdog->timeout = DEFAULT_TIMEOUT;
-+
-+	watchdog_init_timeout(wdog, 0, dev);
-+	watchdog_stop_on_reboot(wdog);
-+	watchdog_stop_on_unregister(wdog);
-+	watchdog_set_drvdata(wdog, imx7ulp_wdt);
-+	imx7ulp_wdt_init(imx7ulp_wdt->base, wdog->timeout * WDOG_CLOCK_RATE);
-+
-+	return devm_watchdog_register_device(dev, wdog);
-+}
-+
-+static int __maybe_unused imx7ulp_wdt_suspend(struct device *dev)
-+{
-+	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
-+
-+	if (watchdog_active(&imx7ulp_wdt->wdd))
-+		imx7ulp_wdt_stop(&imx7ulp_wdt->wdd);
-+
-+	clk_disable_unprepare(imx7ulp_wdt->clk);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused imx7ulp_wdt_resume(struct device *dev)
-+{
-+	struct imx7ulp_wdt_device *imx7ulp_wdt = dev_get_drvdata(dev);
-+	u32 timeout = imx7ulp_wdt->wdd.timeout * WDOG_CLOCK_RATE;
-+	int ret;
-+
-+	ret = clk_prepare_enable(imx7ulp_wdt->clk);
-+	if (ret)
-+		return ret;
-+
-+	if (imx7ulp_wdt_is_enabled(imx7ulp_wdt->base))
-+		imx7ulp_wdt_init(imx7ulp_wdt->base, timeout);
-+
-+	if (watchdog_active(&imx7ulp_wdt->wdd))
-+		imx7ulp_wdt_start(&imx7ulp_wdt->wdd);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(imx7ulp_wdt_pm_ops, imx7ulp_wdt_suspend,
-+			 imx7ulp_wdt_resume);
-+
-+static const struct of_device_id imx7ulp_wdt_dt_ids[] = {
-+	{ .compatible = "fsl,imx7ulp-wdt", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, imx7ulp_wdt_dt_ids);
-+
-+static struct platform_driver imx7ulp_wdt_driver = {
-+	.probe		= imx7ulp_wdt_probe,
-+	.driver		= {
-+		.name	= "imx7ulp-wdt",
-+		.pm	= &imx7ulp_wdt_pm_ops,
-+		.of_match_table = imx7ulp_wdt_dt_ids,
-+	},
-+};
-+module_platform_driver(imx7ulp_wdt_driver);
-+
-+MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-+MODULE_DESCRIPTION("Freescale i.MX7ULP watchdog driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+							Thanx, Paul
 
+> ---
+>  include/linux/rcutiny.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
+> index 8e727f57d814..9bf1dfe7781f 100644
+> --- a/include/linux/rcutiny.h
+> +++ b/include/linux/rcutiny.h
+> @@ -12,7 +12,7 @@
+>  #ifndef __LINUX_TINY_H
+>  #define __LINUX_TINY_H
+>  
+> -#include <linux/ktime.h>
+> +#include <asm/param.h> /* for HZ */
+>  
+>  /* Never flag non-existent other CPUs! */
+>  static inline bool rcu_eqs_special_set(int cpu) { return false; }
+> -- 
+> 2.20.1
+> 
