@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41C6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5754DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9193F233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6A3233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388294AbfHVLdd (ORCPT
+        id S2388301AbfHVLdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:33:33 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:35206 "EHLO inva020.nxp.com"
+        Thu, 22 Aug 2019 07:33:42 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34750 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388204AbfHVLdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:33:12 -0400
+        id S2388192AbfHVLc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 07:32:59 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7F1E11A020E;
-        Thu, 22 Aug 2019 13:33:09 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C69D31A05E3;
+        Thu, 22 Aug 2019 13:32:57 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 289601A02DE;
-        Thu, 22 Aug 2019 13:32:59 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E9F731A02E3;
+        Thu, 22 Aug 2019 13:32:47 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 640BC4031F;
-        Thu, 22 Aug 2019 19:32:43 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D290B40318;
+        Thu, 22 Aug 2019 19:32:35 +0800 (SGT)
 From:   Xiaowei Bao <xiaowei.bao@nxp.com>
 To:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
         shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
@@ -39,9 +39,9 @@ To:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
         linux-arm-kernel@lists.infradead.org,
         linuxppc-dev@lists.ozlabs.org, andrew.murray@arm.com
 Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v2 08/10] PCI: layerscape: Add EP mode support for ls1088a and ls2088a
-Date:   Thu, 22 Aug 2019 19:22:40 +0800
-Message-Id: <20190822112242.16309-8-xiaowei.bao@nxp.com>
+Subject: [PATCH v2 04/10] dt-bindings: pci: layerscape-pci: add compatible strings for ls1088a and ls2088a
+Date:   Thu, 22 Aug 2019 19:22:36 +0800
+Message-Id: <20190822112242.16309-4-xiaowei.bao@nxp.com>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20190822112242.16309-1-xiaowei.bao@nxp.com>
 References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
@@ -51,149 +51,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe EP mode support for ls1088a and ls2088a, there are some
-difference between LS1 and LS2 platform, so refactor the code of
-the EP driver.
+Add compatible strings for ls1088a and ls2088a.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
 v2:
- - New mechanism for layerscape EP driver.
+ - No change.
 
- drivers/pci/controller/dwc/pci-layerscape-ep.c | 76 ++++++++++++++++++++------
- 1 file changed, 58 insertions(+), 18 deletions(-)
+ Documentation/devicetree/bindings/pci/layerscape-pci.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-index 7ca5fe8..2a66f07 100644
---- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -20,27 +20,29 @@
- 
- #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
- 
--struct ls_pcie_ep {
--	struct dw_pcie		*pci;
--	struct pci_epc_features	*ls_epc;
-+#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-+
-+struct ls_pcie_ep_drvdata {
-+	u32				func_offset;
-+	const struct dw_pcie_ep_ops	*ops;
-+	const struct dw_pcie_ops	*dw_pcie_ops;
- };
- 
--#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-+struct ls_pcie_ep {
-+	struct dw_pcie			*pci;
-+	struct pci_epc_features		*ls_epc;
-+	const struct ls_pcie_ep_drvdata *drvdata;
-+};
- 
- static int ls_pcie_establish_link(struct dw_pcie *pci)
- {
- 	return 0;
- }
- 
--static const struct dw_pcie_ops ls_pcie_ep_ops = {
-+static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
- 	.start_link = ls_pcie_establish_link,
- };
- 
--static const struct of_device_id ls_pcie_ep_of_match[] = {
--	{ .compatible = "fsl,ls-pcie-ep",},
--	{ },
--};
--
- static const struct pci_epc_features*
- ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
- {
-@@ -82,10 +84,44 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	}
- }
- 
--static const struct dw_pcie_ep_ops pcie_ep_ops = {
-+static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep *ep,
-+						u8 func_no)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-+	u8 header_type;
-+
-+	header_type = ioread8(pci->dbi_base + PCI_HEADER_TYPE);
-+
-+	if (header_type & (1 << 7))
-+		return pcie->drvdata->func_offset * func_no;
-+	else
-+		return 0;
-+}
-+
-+static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
- 	.ep_init = ls_pcie_ep_init,
- 	.raise_irq = ls_pcie_ep_raise_irq,
- 	.get_features = ls_pcie_ep_get_features,
-+	.func_conf_select = ls_pcie_ep_func_conf_select,
-+};
-+
-+static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
-+	.ops = &ls_pcie_ep_ops,
-+	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
-+};
-+
-+static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
-+	.func_offset = 0x20000,
-+	.ops = &ls_pcie_ep_ops,
-+	.dw_pcie_ops = &dw_ls_pcie_ep_ops,
-+};
-+
-+static const struct of_device_id ls_pcie_ep_of_match[] = {
-+	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
-+	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
-+	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
-+	{ },
- };
- 
- static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
-@@ -98,7 +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
- 	int ret;
- 
- 	ep = &pci->ep;
--	ep->ops = &pcie_ep_ops;
-+	ep->ops = pcie->drvdata->ops;
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
- 	if (!res)
-@@ -137,14 +173,11 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
- 	if (!ls_epc)
- 		return -ENOMEM;
- 
--	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
--	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
--	if (IS_ERR(pci->dbi_base))
--		return PTR_ERR(pci->dbi_base);
-+	pcie->drvdata = of_device_get_match_data(dev);
- 
--	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
- 	pci->dev = dev;
--	pci->ops = &ls_pcie_ep_ops;
-+	pci->ops = pcie->drvdata->dw_pcie_ops;
-+
- 	pcie->pci = pci;
- 
- 	ls_epc->linkup_notifier = false,
-@@ -152,6 +185,13 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
- 
- 	pcie->ls_epc = ls_epc;
- 
-+	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
-+	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-+	if (IS_ERR(pci->dbi_base))
-+		return PTR_ERR(pci->dbi_base);
-+
-+	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
-+
- 	platform_set_drvdata(pdev, pcie);
- 
- 	ret = ls_add_pcie_ep(pcie, pdev);
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index e20ceaa..16f592e 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -22,7 +22,10 @@ Required properties:
+         "fsl,ls1043a-pcie"
+         "fsl,ls1012a-pcie"
+   EP mode:
+-	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
++	"fsl,ls-pcie-ep"
++	"fsl,ls1046a-pcie-ep"
++	"fsl,ls1088a-pcie-ep"
++	"fsl,ls2088a-pcie-ep"
+ - reg: base addresses and lengths of the PCIe controller register blocks.
+ - interrupts: A list of interrupt outputs of the controller. Must contain an
+   entry for each entry in the interrupt-names property.
 -- 
 2.9.5
 
