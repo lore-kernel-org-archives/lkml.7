@@ -2,59 +2,61 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF740C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A250C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3A723402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E3023402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495270;
-	bh=9o44ulriWXXkwnJBjHg4oBd96Y4y2e/U4b3CT7RffeY=;
+	s=default; t=1566495274;
+	bh=Bs8dqzPgeMnC/DyyXQe3A2jAYl71NSYWfolTte+15Gk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j0ovMA6ix2qWK+rFJeCeJPLTk2jPnFpBcVTYT24jzMHMZFVVd02qDW0FXkbcIkkzi
-	 e5rq2ObBdKYRGKc0R+15SEtIvtfttovc+yS5s+UEx39LUrACef6ke6Nq9Gn3HGAp/u
-	 0GIU8s7LB4+kHMy6Q8dyW2wM1ucdd8vf3QNkY2c8=
+	b=0n/cXktn/nQ7izh1ZXGBvO4AUxORlwWEIO5P01B3I5cfxKbrYxjNErrFpWEEZ6C6+
+	 Z3gDLTLuMFU5HOyWB/a592ijGqxIHh55jw6zps9Trneyu1w7ErPEqRsp7+JEtXT13A
+	 +Fc+eFbS75aQtsDODKdE+wzN0w0MxqdxO4c7R+rc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392788AbfHVRe3 (ORCPT
+        id S2404382AbfHVRZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:34:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48392 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:25:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404390AbfHVRZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:22 -0400
+        id S2404311AbfHVRYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:44 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25E3E2341A;
-        Thu, 22 Aug 2019 17:25:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26E2F23426;
+        Thu, 22 Aug 2019 17:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494721;
-        bh=9o44ulriWXXkwnJBjHg4oBd96Y4y2e/U4b3CT7RffeY=;
+        s=default; t=1566494684;
+        bh=Bs8dqzPgeMnC/DyyXQe3A2jAYl71NSYWfolTte+15Gk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pTK8a3YYxkJ1CJpbOLMVUDgO/MlwnvQCfXWv/7fyK713mhMNzHwHjQg1yb2lmtTEM
-         VNOBH7ZafepixfOd2oCfMGP8AwO7l43eN8I60hblVGZ1CX2+UxuwFOTxP5fAdObgbu
-         MXnLLHa321losAjPohEQEpK/nzBQ+rgR0/xzijZ0=
+        b=no0ErYIHedf5D4IOl/slrHxEJtCCIWb80T6S/22I+HajTfeHnWQ7386o5yECD6u/+
+         OYX7rfjPEvUbT6vq6qq5xPqMKnnXxucNrnv+xYTATnOrenS9tQpz41sPsUPJHDliBD
+         7TPGXMiicrB1OobDEtA0mKONHRh3zSVrjgdFc4qE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH 4.19 01/85] sh: kernel: hw_breakpoint: Fix missing break in switch statement
-Date:   Thu, 22 Aug 2019 10:18:34 -0700
-Message-Id: <20190822171731.070419606@linuxfoundation.org>
+        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
+        Scott Teel <scott.teel@microsemi.com>,
+        Scott Benesh <scott.benesh@microsemi.com>,
+        Kevin Barnett <kevin.barnett@microsemi.com>,
+        Don Brace <don.brace@microsemi.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 30/71] scsi: hpsa: correct scsi command status issue after reset
+Date:   Thu, 22 Aug 2019 10:19:05 -0700
+Message-Id: <20190822171729.264126833@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
-References: <20190822171731.012687054@linuxfoundation.org>
+In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
+References: <20190822171726.131957995@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,34 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[ Upstream commit eeebce1862970653cdf5c01e98bc669edd8f529a ]
 
-commit 1ee1119d184bb06af921b48c3021d921bbd85bac upstream.
-
-Add missing break statement in order to prevent the code from falling
-through to case SH_BREAKPOINT_WRITE.
-
-Fixes: 09a072947791 ("sh: hw-breakpoints: Add preliminary support for SH-4A UBC.")
-Cc: stable@vger.kernel.org
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
+Reviewed-by: Scott Teel <scott.teel@microsemi.com>
+Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
+Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
+Signed-off-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/kernel/hw_breakpoint.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/hpsa.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/arch/sh/kernel/hw_breakpoint.c
-+++ b/arch/sh/kernel/hw_breakpoint.c
-@@ -160,6 +160,7 @@ int arch_bp_generic_fields(int sh_len, i
- 	switch (sh_type) {
- 	case SH_BREAKPOINT_READ:
- 		*gen_type = HW_BREAKPOINT_R;
-+		break;
- 	case SH_BREAKPOINT_WRITE:
- 		*gen_type = HW_BREAKPOINT_W;
- 		break;
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index 6d520e8945f73..3b892918d8219 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -2266,6 +2266,8 @@ static int handle_ioaccel_mode2_error(struct ctlr_info *h,
+ 	case IOACCEL2_SERV_RESPONSE_COMPLETE:
+ 		switch (c2->error_data.status) {
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_GOOD:
++			if (cmd)
++				cmd->result = 0;
+ 			break;
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_CHK_COND:
+ 			cmd->result |= SAM_STAT_CHECK_CONDITION;
+@@ -2425,8 +2427,10 @@ static void process_ioaccel2_completion(struct ctlr_info *h,
+ 
+ 	/* check for good status */
+ 	if (likely(c2->error_data.serv_response == 0 &&
+-			c2->error_data.status == 0))
++			c2->error_data.status == 0)) {
++		cmd->result = 0;
+ 		return hpsa_cmd_free_and_done(h, c, cmd);
++	}
+ 
+ 	/*
+ 	 * Any RAID offload error results in retry which will use
+@@ -5494,6 +5498,12 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
+ 	}
+ 	c = cmd_tagged_alloc(h, cmd);
+ 
++	/*
++	 * This is necessary because the SML doesn't zero out this field during
++	 * error recovery.
++	 */
++	cmd->result = 0;
++
+ 	/*
+ 	 * Call alternate submit routine for I/O accelerated commands.
+ 	 * Retries always go down the normal I/O path.
+-- 
+2.20.1
+
 
 
