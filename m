@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7A5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA8EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35BCE23407
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5125D23405
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494599;
-	bh=lddK2BR3eW6iu9NrovsCSujv19iVX+zVEY+ElFOHc70=;
+	s=default; t=1566494601;
+	bh=u55SxykGv3rcc/GjSWOuEpullZcd3P4SvDouGvXtU48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=McoDkD+RmkNe1thZGMSYgYJynXrfDrwwZky006/YRDcmwN3ScFBFMJnrDUyLEunVd
-	 oGXtS7Tl0aCkxpV1l7zvSxlxUEaSbjMyfwv4qufDupFkGooa8A413J8D1taGuWQA5F
-	 4rkI3kzA8dpkxUuEK0o4IsGAELCAUefXA4fsk6KM=
+	b=g5uh0rnp+Gah2bMra6wzMW/PX6RyLKdQeRYryrM4QnJS3hFcOlx+DlLhdL50JzuJ1
+	 5sVCM82sI+59aCYqgRy2SoMsrf3Q2DhhdYB0sOxTUM6bLxWswxd0KPknOcm+ASSg+x
+	 zgQsS9OBR4czfBsWEiB7nhiCuhzxR8kqu2uHvw1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403895AbfHVRXR (ORCPT
+        id S2390131AbfHVRXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42482 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:23:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387686AbfHVRXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:13 -0400
+        id S2403891AbfHVRXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:17 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11E1E233FC;
-        Thu, 22 Aug 2019 17:23:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D324023407;
+        Thu, 22 Aug 2019 17:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494593;
-        bh=lddK2BR3eW6iu9NrovsCSujv19iVX+zVEY+ElFOHc70=;
+        s=default; t=1566494597;
+        bh=u55SxykGv3rcc/GjSWOuEpullZcd3P4SvDouGvXtU48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vXYRYMrlINVodN/hXmV9pOXBuz7xdClSl/J29O/9vafoon4Mn/wEgbfCN2Xuu+n3Q
-         IVXVBceoAA6FCRKztRARCl4x0vNZrgvjNVPWSS8q4bVDXOKOGW+zYSBnWATGN8oHwS
-         sOzHZVmciCJNCfY+K9CQTaePXED1n8DDSgTVCgmo=
+        b=TnAXsp7oji5C5mA3CNj4MKxyjX0SCqw5mDoOYkXkt5T2pr1a/5DvhRRyMP5aYLYYZ
+         MJyqrxZYVOncNxMcGLSkU8XG/yp58Tt5CvzX40/oDXLvrqxJmnhDAqvdwtpTXzc3T8
+         7ZQJe9XV5KtuqsWnsqJ3mKu1r7L6gaev2pgUpFtI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Tai <thomas.tai@oracle.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 013/103] iscsi_ibft: make ISCSI_IBFT dependson ACPI instead of ISCSI_IBFT_FIND
-Date:   Thu, 22 Aug 2019 10:18:01 -0700
-Message-Id: <20190822171729.386681818@linuxfoundation.org>
+Subject: [PATCH 4.9 018/103] ALSA: compress: Fix regression on compressed capture streams
+Date:   Thu, 22 Aug 2019 10:18:06 -0700
+Message-Id: <20190822171729.588693318@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -60,68 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 94bccc34071094c165c79b515d21b63c78f7e968 ]
+[ Upstream commit 4475f8c4ab7b248991a60d9c02808dbb813d6be8 ]
 
-iscsi_ibft can use ACPI to find the iBFT entry during bootup,
-currently, ISCSI_IBFT depends on ISCSI_IBFT_FIND which is
-a X86 legacy way to find the iBFT by searching through the
-low memory. This patch changes the dependency so that other
-arch like ARM64 can use ISCSI_IBFT as long as the arch supports
-ACPI.
+A previous fix to the stop handling on compressed capture streams causes
+some knock on issues. The previous fix updated snd_compr_drain_notify to
+set the state back to PREPARED for capture streams. This causes some
+issues however as the handling for snd_compr_poll differs between the
+two states and some user-space applications were relying on the poll
+failing after the stream had been stopped.
 
-ibft_init() needs to use the global variable ibft_addr declared
-in iscsi_ibft_find.c. A #ifndef CONFIG_ISCSI_IBFT_FIND is needed
-to declare the variable if CONFIG_ISCSI_IBFT_FIND is not selected.
-Moving ibft_addr into the iscsi_ibft.c does not work because if
-ISCSI_IBFT is selected as a module, the arch/x86/kernel/setup.c won't
-be able to find the variable at compile time.
+To correct this regression whilst still fixing the original problem the
+patch was addressing, update the capture handling to skip the PREPARED
+state rather than skipping the SETUP state as it has done until now.
 
-Signed-off-by: Thomas Tai <thomas.tai@oracle.com>
-Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Fixes: 4f2ab5e1d13d ("ALSA: compress: Fix stop handling on compressed capture streams")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/Kconfig      | 5 +++--
- drivers/firmware/iscsi_ibft.c | 4 ++++
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ include/sound/compress_driver.h |  5 +----
+ sound/core/compress_offload.c   | 16 +++++++++++-----
+ 2 files changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-index bca172d42c743..854df538ae01e 100644
---- a/drivers/firmware/Kconfig
-+++ b/drivers/firmware/Kconfig
-@@ -144,7 +144,7 @@ config DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
+index 96bc5acdade38..49482080311a1 100644
+--- a/include/sound/compress_driver.h
++++ b/include/sound/compress_driver.h
+@@ -185,10 +185,7 @@ static inline void snd_compr_drain_notify(struct snd_compr_stream *stream)
+ 	if (snd_BUG_ON(!stream))
+ 		return;
  
- config ISCSI_IBFT_FIND
- 	bool "iSCSI Boot Firmware Table Attributes"
--	depends on X86 && ACPI
-+	depends on X86 && ISCSI_IBFT
- 	default n
- 	help
- 	  This option enables the kernel to find the region of memory
-@@ -155,7 +155,8 @@ config ISCSI_IBFT_FIND
- config ISCSI_IBFT
- 	tristate "iSCSI Boot Firmware Table Attributes module"
- 	select ISCSI_BOOT_SYSFS
--	depends on ISCSI_IBFT_FIND && SCSI && SCSI_LOWLEVEL
-+	select ISCSI_IBFT_FIND if X86
-+	depends on ACPI && SCSI && SCSI_LOWLEVEL
- 	default	n
- 	help
- 	  This option enables support for detection and exposing of iSCSI
-diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
-index 132b9bae4b6aa..220bbc91cebdb 100644
---- a/drivers/firmware/iscsi_ibft.c
-+++ b/drivers/firmware/iscsi_ibft.c
-@@ -93,6 +93,10 @@ MODULE_DESCRIPTION("sysfs interface to BIOS iBFT information");
- MODULE_LICENSE("GPL");
- MODULE_VERSION(IBFT_ISCSI_VERSION);
+-	if (stream->direction == SND_COMPRESS_PLAYBACK)
+-		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
+-	else
+-		stream->runtime->state = SNDRV_PCM_STATE_PREPARED;
++	stream->runtime->state = SNDRV_PCM_STATE_SETUP;
  
-+#ifndef CONFIG_ISCSI_IBFT_FIND
-+struct acpi_table_ibft *ibft_addr;
-+#endif
+ 	wake_up(&stream->runtime->sleep);
+ }
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index 555df64d46ffc..cf1317546b0ff 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -575,10 +575,7 @@ snd_compr_set_params(struct snd_compr_stream *stream, unsigned long arg)
+ 		stream->metadata_set = false;
+ 		stream->next_track = false;
+ 
+-		if (stream->direction == SND_COMPRESS_PLAYBACK)
+-			stream->runtime->state = SNDRV_PCM_STATE_SETUP;
+-		else
+-			stream->runtime->state = SNDRV_PCM_STATE_PREPARED;
++		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
+ 	} else {
+ 		return -EPERM;
+ 	}
+@@ -694,8 +691,17 @@ static int snd_compr_start(struct snd_compr_stream *stream)
+ {
+ 	int retval;
+ 
+-	if (stream->runtime->state != SNDRV_PCM_STATE_PREPARED)
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_SETUP:
++		if (stream->direction != SND_COMPRESS_CAPTURE)
++			return -EPERM;
++		break;
++	case SNDRV_PCM_STATE_PREPARED:
++		break;
++	default:
+ 		return -EPERM;
++	}
 +
- struct ibft_hdr {
- 	u8 id;
- 	u8 version;
+ 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_START);
+ 	if (!retval)
+ 		stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
 -- 
 2.20.1
 
