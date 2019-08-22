@@ -2,100 +2,154 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F53C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152D6C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6091A2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566478157;
-	bh=2jaWBCrOQ0yuu85NYyiu721Y016fScbcX6gjgMxXnr0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cNocqLuaGmWCf+iZsmF785405l06HCXT4WwkkDfJr6P07oS8aLCpzz9c+vWMIAn6K
-	 p0j4cdp2kZU/hwQSyRDEMV6l/uUTS2MxEGuc//uXhQ4mux7s3OCsBwLTjRv8ttiI4w
-	 WCfPJH+gdEwSGEc6fnDLwqU4Lw4lPZqcAW2LQOcI=
+	by mail.kernel.org (Postfix) with ESMTP id E54E42341B
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388056AbfHVMtQ (ORCPT
+        id S2388086AbfHVMti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:49:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731062AbfHVMtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:49:16 -0400
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6995423400;
-        Thu, 22 Aug 2019 12:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566478155;
-        bh=2jaWBCrOQ0yuu85NYyiu721Y016fScbcX6gjgMxXnr0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2bQAAPqDuCPhfPuMs0tpE6vN3uBcdrm2yVjXtOoUGIvVHTuwP6ecLZlheBZf8pGdC
-         AKIgU2DTTyLlFCkps6leFmpCukseM6ZGo6V9LcUyhkuYagvHPBqQD8COGECKgknWXl
-         nTFDC0KYYkwVolMTHw1xIp2ICCmpYV/E4vZ+yJDw=
-Received: by mail-qk1-f179.google.com with SMTP id s14so4972623qkm.4;
-        Thu, 22 Aug 2019 05:49:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAWelSbP6IBp8/k+Ti9gmmREG2OjD3ZTm/9VI0Iyrw3ZnHqJceFS
-        RAOhtXqaSpAjPSvAHZEigJwXdkcvmyDTGnUyJA==
-X-Google-Smtp-Source: APXvYqyBMDyPkKQlrL4F7PdNmYQzAWJgtlXak0rnzRNH21bjRVARC3G2rMD+eLD5LmndSLSMbzDZswfGkzeJi1x6FMY=
-X-Received: by 2002:a37:4941:: with SMTP id w62mr3533362qka.119.1566478154602;
- Thu, 22 Aug 2019 05:49:14 -0700 (PDT)
+        Thu, 22 Aug 2019 08:49:38 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:35209 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388061AbfHVMti (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:49:38 -0400
+Received: from [192.168.1.110] ([77.4.120.101]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M91Tq-1huk7L3zc6-0068YY; Thu, 22 Aug 2019 14:49:30 +0200
+Subject: Re: Status of Subsystems
+To:     Sebastian Duda <sebastian.duda@fau.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com
+References: <2529f953-305f-414b-5969-d03bf20892c4@fau.de>
+ <20190820131422.2navbg22etf7krxn@pali>
+ <3cf18665-7669-a33c-a718-e0917fa6d1b9@fau.de>
+ <20190820171550.GE10232@mit.edu>
+ <475ea59c-8942-c19d-c660-164fcb44d179@fau.de>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <e222bc6c-aff0-899c-b113-47f7f1798fe1@metux.net>
+Date:   Thu, 22 Aug 2019 14:49:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190822102843.47964-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-In-Reply-To: <20190822102843.47964-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 22 Aug 2019 07:49:02 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJEW0UDqYDTvOeRsZh9WJTeT99JZP8PtkvbnBU2dhYJEQ@mail.gmail.com>
-Message-ID: <CAL_JsqJEW0UDqYDTvOeRsZh9WJTeT99JZP8PtkvbnBU2dhYJEQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
- for LGM eMMC PHY
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <475ea59c-8942-c19d-c660-164fcb44d179@fau.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:DEQE4p9Q/SgYCR56ptB5W4Pq6YJsYcmprlOkc8swly7MCTvFyRs
+ zigXa6H8BcHhg0FuFMaYbgIsImxg8KY92a+BzQ5Co/DgCSE6Jmh9vyF8tuF7W14kIS8NuBo
+ V8crYzG9KGk/JZO5w/iqjJhW7eMyvRs20v0B52X8ac0vtIyNpYBpWtdZeZF7IS2msrPiE14
+ Jk9RzZQDT3FY7f5nP/YcA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eNAevpgP5G8=:hWranH3GBXqoTvP8KfocQY
+ m5emHMTKG97TBFUD7gl9Dx0h6/X5/NSld7IdDKA+OH998Yzces40n40AoZJiNgeAHGsZeyif7
+ NN+p+BjIeR2q8KQujRHismRLGbuVyE3jS5LlsYo/JiilH8Gjcz5pxuYAiyG4XZjK69b+xrCJO
+ au9kogD+JHN3Zvoe+32OBn4NqzuqtAqTgYaPI6UV5MWWuLAFSmBwnDPqo74TB2l9kz7adf4lb
+ PejP5yqJsTtu6gxnf2JStS+nAqgw1qVq6X1pWwcgQUb8k1/OONe6/xwb5emAYN1PpVd307QJF
+ Y7TTvXGQpTpvZYQWX8bY3qFx25EQSVYyp9KcF6ztnKdMSYTwif7228uBYGV2cqcc2UCN4o6Jw
+ ykvrHmJqQFoAe6l+n6FtoIPiFdQYyukhOXrtl3+hvAi2pP8y4SyFAGRhSGLoWaHzvwzd5tokT
+ YR+A4C8KS6y5rIRJD/m1TviRszn3mtWG5o9QNIdANevKooCyhV9t2dMrSbc72e4wGl8gLSjjC
+ ZN5G+R4crRgL3ZKQctVyeWfaZUh7kZRAKiKhLD9fnZIChbXfeWbguyKPvRzRuLxSbDw3ALT3c
+ BdRXwFB15TrAYHxUkD0kFbjqvA0aT4N8HQ+ALvBXo345mSwuSTsmPEJLeFJKGUrLjM+T+JqXp
+ vAoDD4puENZqP6MBaUCD1cIgsDdQ8MuwNEgPbP6S7tw27wkbspz5nhWolvOZPWtT1V55KhG+a
+ uDBHCaHjVwF6G8urutG6cKDpZ7vEITA7qU6OgDyU9JD1F2kqhcagfDHEBzc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 5:28 AM Ramuthevar,Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->
-> Add a YAML schema to use the host controller driver with the
-> eMMC PHY on Intel's Lightning Mountain SoC.
->
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
-> changes in v4:
->   - As per Rob's review: validate 5.2 and 5.3
->   - drop unrelated items.
->
-> changes in v3:
->   - resolve 'make dt_binding_check' warnings
->
-> changes in v2:
->   As per Rob Herring review comments, the following updates
->  - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
->  - filename is the compatible string plus .yaml
->  - LGM: Lightning Mountain
->  - update maintainer
->  - add intel,syscon under property list
->  - keep one example instead of two
-> ---
->  .../bindings/phy/intel,lgm-emmc-phy.yaml           | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+On 22.08.19 11:28, Sebastian Duda wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hello Sabastian,
+
+
+> We have seen some incidents of developers sending patches to wrong
+> recipients, missing recipients or sending patches to orphaned
+> subsystems. Consequently, some of those patches never make it to a
+> reviewer or a maintainer (or only after some further adjustments on
+> the list of recipients).
+
+yes, I've stumpled into this myself :(
+
+Do you see any chance for some tool-based assistance ?
+
+Few ideas coming into my mind:
+
+a) kernel.org ops could collect bouncing addresses and match them
+    against the MAINTAINERS file. Maybe post an alert with specific
+    syntax (so it's easy to filter/monitor), so we can look around
+    how to reach the missing folks (already did so myself). Sometimes
+    those messages reach the missing folks by some other channel.
+
+b) automatic scan/report for duplicate or unclaimed files.
+    maybe this topic just needs more awareness.
+
+    IMHO, every file should have a maintainer, because just posting to
+    lkml globally has high risk of getting unnoticed.
+
+c) automatic report of potentially unmaintained areas, so
+
+
+By the way: if you prefer a more personal conversation, feel free to
+call me (I'm settled @Schwabach)
+
+I'm already keen on reading your thesis paper. (and if there's a public
+presentation, I'd like to be there). You've picked a very good, useful
+topic - we need more of that :)
+
+> Whereas that cannot be avoided entirely, as it is a human, social and
+> flexible process and not everything can be encoded in simple rules,
+> the maintainer, reviewer, list information in MAINTAINERS and
+> get_maintainer.pl does a good job at assisting that these hickups
+> happen rather seldomly.
+
+Yes, but it can only work well with good data. So it's good that you
+take care of that. And if you can improve the performance of this
+script, I'd highly welcome that.
+
+I'd like to recommend you as the maintainer of the MAINTAINERS file ;-)
+
+> Similarly, the status can already indicate:
+>   - to a contributor fixing an issues or providing a patch, that the
+> code is possibly already orphaned and not maintained, set expectations
+> on the possible responses, or to focus on other parts of the code.
+
+Orphaned code IMHO deserves it's own discussion. Maybe we should have
+some comments on why exactly orphaned/obsolete but still there (just no
+maintainer anymore ? obsoleted by something else ? ...).
+
+> The MAINTAINERS files contains 2088 entries [1].
+> 12 of these entries have no status and fall into different categories:
+> - Additionally Reviewed
+>    - ALPS PS/2 TOUCHPAD DRIVER
+>    - NOKIA N900 POWER SUPPLY DRIVERS
+>    - RENESAS ETHERNET DRIVERS
+>    - SPMI SUBSYSTEM
+>    - TI BQ27XXX POWER SUPPLY DRIVER
+> - Maintained
+>    - ABI/API
+>    - ACPI APEI
+>    - CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)
+>    - I2C/SMBUS ISMT DRIVER
+>    - IFE PROTOCOL
+>    - MICROCHIP SAMA5D2-COMPATIBLE PIOBU GPIO
+> - Obsolete
+>    - NETWORKING [WIRELESS]
+>      This is an old entry, which can be omitted
+
+There're also some with status "Orphaned / Obsolete" - did you already
+catch them ?
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
