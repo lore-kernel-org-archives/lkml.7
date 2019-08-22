@@ -2,152 +2,242 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A55FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:34:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7E6C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C21233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:34:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YA5QwGD3"
+	by mail.kernel.org (Postfix) with ESMTP id 9123923400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388674AbfHVMeW (ORCPT
+        id S2388690AbfHVMe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:34:22 -0400
-Received: from mail-eopbgr20071.outbound.protection.outlook.com ([40.107.2.71]:17795
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730918AbfHVMeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:34:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ne8XkoBsB/m4UUfqjbTPrUe1KrWHXnHyLYtWDjiUnFPH3nyroqUEhLjqPgZVsyU+Bh7bpol9lMCamCu5QDutM+xk1UTnVw5JI5vs/Ro3jGrP2SvDawB6PzQjjGa4xDyDT/IJPO7iq8pTOmMPdaZmD5RKZ156NRuMnhfwteZH7AvjD0VrvYDajJ0OQjDGeZzoK9jApk1DWcWKjClP8AgAClA/eYxe2e+FvlBzWvLN+tYCFPQb/haxDInuB6qACS6SYxcrZr31xr0fwSvG8iMCeV6CMA+XoEoTPwCgtiiIbMw/UgFvy5Hgem5TWe12Bjb+XZshzHkeB4RbdvaKqCBTrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VDnK8p8YZXUFIcCNd9u85VsuBtOMMannter/nOuJwng=;
- b=OjBh6gGvyBaZtlRTENLgobLLPE1Rh1EoHwgR1aA7AY1+AD+D839KyR4X8UjlYOyD0A9lD6DsJSjVfFaL/tXk0+1Bc3wZFgV7JpERH8KLRZYKh0U2Cl9rciisZouoU5D8LJYieayAv66EkHtVD54pHa0hzDAhHQzN8QYsCYVivbuM0ulnEwyF3pzDMojx63eQFrtnnedoJGJI2crEyFTe/rLejIFT6nLJ3kPLNh5+Rh3LGHv11uTXuWk/N1TJ15KVjnO3P8FyKbHY01o9wtWgrv3L546itTZlqXNcLufSWZJZ9K8DQuGJSnN6BDhGixpZtTfebRvVyN0Atj0ssZ3Vrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VDnK8p8YZXUFIcCNd9u85VsuBtOMMannter/nOuJwng=;
- b=YA5QwGD3vDaxiyFjwAcu8Ptf8WbKpeZa23/I1RcDbsQ1FBgng+zPN2xWIo4kVcQeNiIMqd/tm9CCWffs1IkQYGHJTQSxnScBjPzng+od9onRhyM99Y7dKnD0s95DVcj08bBN2Qj1G0CzAu+ngzy8bYm8aPxrYjFSOOPSySahwFU=
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com (10.186.159.144) by
- VI1PR04MB5871.eurprd04.prod.outlook.com (20.178.205.13) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Thu, 22 Aug 2019 12:34:17 +0000
-Received: from VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::c5e8:90f8:da97:947e]) by VI1PR04MB7023.eurprd04.prod.outlook.com
- ([fe80::c5e8:90f8:da97:947e%3]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
- 12:34:17 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Peng Fan <peng.fan@nxp.com>, "sboyd@kernel.org" <sboyd@kernel.org>
-CC:     Jacky Bai <ping.bai@nxp.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Thu, 22 Aug 2019 08:34:26 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:49386 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730918AbfHVMeX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:34:23 -0400
+X-UUID: 31f219a7482b44259f289d9290bf75da-20190822
+X-UUID: 31f219a7482b44259f289d9290bf75da-20190822
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <ran.bi@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
+        with ESMTP id 1694480463; Thu, 22 Aug 2019 20:34:17 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs07n2.mediatek.inc
+ (172.21.101.141) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 22 Aug
+ 2019 20:34:11 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 22 Aug 2019 20:34:10 +0800
+Message-ID: <1566477254.12318.41.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
+From:   Ran Bi <ran.bi@mediatek.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] clk: imx: pll14xx: avoid glitch when set rate
-Thread-Topic: [PATCH] clk: imx: pll14xx: avoid glitch when set rate
-Thread-Index: AQHVVv10E+OF2Euht0ilryFWSAJw8w==
-Date:   Thu, 22 Aug 2019 12:34:16 +0000
-Message-ID: <VI1PR04MB70234B225BC4AC8E909A4C2AEEA50@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <1566266337-21597-1-git-send-email-peng.fan@nxp.com>
- <VI1PR04MB7023C1017F60BF132B6A3F8CEEA50@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <AM0PR04MB44818E133AD735E3EB2789E288A50@AM0PR04MB4481.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 66bdf910-1ee7-404d-563e-08d726fd0c3b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR04MB5871;
-x-ms-traffictypediagnostic: VI1PR04MB5871:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB587132A8AFD449B2FE26D99CEEA50@VI1PR04MB5871.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01371B902F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(396003)(376002)(39860400002)(136003)(189003)(199004)(305945005)(5660300002)(76116006)(66946007)(66446008)(64756008)(66556008)(66476007)(14454004)(53936002)(8676002)(102836004)(6246003)(66066001)(9686003)(478600001)(446003)(316002)(33656002)(7736002)(53546011)(6506007)(2906002)(54906003)(71200400001)(256004)(476003)(3846002)(6116002)(25786009)(7696005)(186003)(110136005)(52536014)(81166006)(6436002)(86362001)(76176011)(14444005)(44832011)(99286004)(74316002)(55016002)(486006)(2501003)(4326008)(71190400001)(8936002)(81156014)(26005)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5871;H:VI1PR04MB7023.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ggsv6HV2BmM0wgmKqg1eNwIeYNfWZL6jwA3ih7GrZMDDmzT8nWWmQD93BDHZ908o6bYLxiYBDjIEQ5hqDwrDbhAikhdH8XyvqM6XK4DvkVUuKSpZ20wVAcmEU+pUHycgJuHHYWj1sh5vKmOK+AJDZqUQsVks9XNz0SIrIaGaw79UXa1v83cpz3S9UtVKk7azvEt5atwj2QyfXVDMg6MWByrw94IqaiwfIlj2d72O0kMb9ws8ScTsj/xFDZKkwdC7nYyMQK1bPvKQrZzXgejtds9oioC4j5hXnRXWlhbaZcEB+A3jRyZrgPjrTeZ981aEII5r6toDcK7wmbtEuw/vEwd4hv4EPxCgZipHpddGy1QCSwctFkVH/wWecNl7IXPiAzb6HAaMmrFIO/1gEP8qkU1B1NG/FqY0KW0pGtko4PU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, YT Shen <yt.shen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        "Flora Fu" <flora.fu@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Date:   Thu, 22 Aug 2019 20:34:14 +0800
+In-Reply-To: <20190820201744.GZ3545@piout.net>
+References: <20190801110122.26834-1-ran.bi@mediatek.com>
+         <20190801110122.26834-3-ran.bi@mediatek.com>
+         <20190820201744.GZ3545@piout.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66bdf910-1ee7-404d-563e-08d726fd0c3b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 12:34:16.8389
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dUyg9FnkptF2eQD2A3+brWjj5IZN/Vj0yiQwwVg8scDxqVg2LtOS9/kdq3SCUkWauc/9nkezu9VGhCtcVlKNZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5871
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.08.2019 12:18, Peng Fan wrote:=0A=
->> Subject: Re: [PATCH] clk: imx: pll14xx: avoid glitch when set rate=0A=
->>=0A=
->> On 20.08.2019 05:17, Peng Fan wrote:=0A=
->>> According to PLL1443XA and PLL1416X spec, "When BYPASS is 0 and RESETB=
-=0A=
->>> is changed from 0 to 1, FOUT starts to output unstable clock until=0A=
->>> lock time passes. PLL1416X/PLL1443XA may generate a glitch at FOUT."=0A=
->>>=0A=
->>> So set BYPASS when RESETB is changed from 0 to 1 to avoid glitch.=0A=
->>> In the end of set rate, BYPASS will be cleared.=0A=
->>>=0A=
->>> @@ -191,6 +191,10 @@ static int clk_pll1416x_set_rate(struct clk_hw *hw=
-,=0A=
->> unsigned long drate,=0A=
->>>    	tmp &=3D ~RST_MASK;=0A=
->>>    	writel_relaxed(tmp, pll->base);=0A=
->>>=0A=
->>> +	/* Enable BYPASS */=0A=
->>> +	tmp |=3D BYPASS_MASK;=0A=
->>> +	writel(tmp, pll->base);=0A=
->>> +=0A=
->>=0A=
->> Shouldn't BYPASS be set before reset?=0A=
-> =0A=
-> No. the glitch happens when RESET changes from 0 to 1, not from 1 to 0.=
-=0A=
-=0A=
-You're right, sorry.=0A=
-=0A=
->> Also, isn't a similar bypass/unbypass dance also needed in=0A=
->> clk_pll14xx_prepare? As far as I understand that could also output glitc=
-hes=0A=
->> until the PLL is locked. It could be a separate patch.=0A=
-> =0A=
-> Yes, that might also output glitch. Fix in v2.=0A=
-> =0A=
->>=0A=
->> It's strange that this BYPASS bit is also handled by muxes like=0A=
->> audio_pll1_bypass in clk-imx8mm.c but that's a separate issue not strict=
-ly=0A=
->> related to the glitches you're trying to fix here.=0A=
-> =0A=
-> Yes, need use EXT_BYPASS for the mux usage.=0A=
-=0A=
-Might make sense to post as a series.=0A=
+Hi,
+
+> > +
+> > +#define MTK_RTC_DEV		KBUILD_MODNAME
+> 
+> You probably shouldn't do that and have a static string for the driver
+> name. I probably doesn't matter much though because DT is used to probe
+> the driver.
+> 
+
+Will change it at next patch.
+
+> > +/* we map HW YEAR 0 to 2000 because 2000 is the leap year */
+> > +#define MT2712_MIN_YEAR		2000
+> > +#define MT2712_BASE_YEAR	1900
+> > +#define MT2712_MIN_YEAR_OFFSET	(MT2712_MIN_YEAR - MT2712_BASE_YEAR)
+> > +#define MT2712_MAX_YEAR_OFFSET	(MT2712_MIN_YEAR_OFFSET + 127)
+> > +
+> 
+> All those defines are unecessary, see below.
+> 
+
+Will change it at next patch.
+
+> > +struct mt2712_rtc {
+> > +	struct device		*dev;
+> 
+> Looking at the code closely, it seems this is only used for debug and
+> error messages. Maybe you could use rtc_dev->dev instead.
+> 
+
+Will change it at next patch.
+
+> > +	mutex_lock(&rtc->rtc_dev->ops_lock);
+> > +
+> > +	irqsta = mt2712_readl(rtc, MT2712_IRQ_STA);
+> 
+> Do you have to lock that read? Is the register cleared on read?
+> 
+
+Yes, this register is read clear register.
+
+> > +	do {
+> > +		__mt2712_rtc_read_time(rtc, tm, &sec);
+> > +	} while (sec < tm->tm_sec);	/* SEC has carried */
+> 
+> Shouldn't that be while (tm->tm_sec < sec)?
+> 
+
+In __mt2712_rtc_read_time function, we read tm->tm_sec before read sec.
+Sometimes we can meet situation like "tm->tm_sec == 59" and "sec == 0".
+It means that TC_SEC has carried and we need to reload the tm struct. I
+suppose it was correct that using "while (sec < tm->tm_sec)"
+
+> > +
+> > +	/* HW register use 7 bits to store year data, minus
+> > +	 * MT2712_MIN_YEAR_OFFSET brfore write year data to register, and plus
+> > +	 * MT2712_MIN_YEAR_OFFSET back after read year from register
+> > +	 */
+> > +	tm->tm_year += MT2712_MIN_YEAR_OFFSET;
+> 
+> Simply add 100 in __mt2712_rtc_read_time
+> 
+
+Will change it at next patch.
+
+> > +
+> > +	/* HW register start mon from one, but tm_mon start from zero. */
+> > +	tm->tm_mon--;
+> > +
+> 
+> You can also do that in __mt2712_rtc_read_time.
+> 
+
+Will change it at next patch.
+
+> > +	if (rtc_valid_tm(tm)) {
+> 
+> This check is unnecessary, the validity is always checked by the core.
+> 
+
+Will remove this at next patch.
+
+> > +	if (tm->tm_year > MT2712_MAX_YEAR_OFFSET) {
+> > +		dev_dbg(rtc->dev, "Set year %d out of range. (%d - %d)\n",
+> > +			1900 + tm->tm_year, 1900 + MT2712_MIN_YEAR_OFFSET,
+> > +			1900 + MT2712_MAX_YEAR_OFFSET);
+> > +		return -EINVAL;
+> > +	}
+> 
+> This check is unnecessary, see below.
+> 
+
+Will change it at next patch.
+
+> > +
+> > +	tm->tm_year -= MT2712_MIN_YEAR_OFFSET;
+> > +	tm->tm_mon++;
+> 
+> You should probably avoid modifying tm, move the substraction and
+> addition in the mt2712_writel calls.
+> 
+
+Will change it at next patch.
+
+
+> > +	if (tm->tm_year > MT2712_MAX_YEAR_OFFSET) {
+> > +		dev_dbg(rtc->dev, "Set year %d out of range. (%d - %d)\n",
+> > +			1900 + tm->tm_year, 1900 + MT2712_MIN_YEAR_OFFSET,
+> > +			1900 + MT2712_MAX_YEAR_OFFSET);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> 
+> Unnecessary check.
+> 
+
+Will change it at next patch.
+
+> > +	p1 = mt2712_readl(rtc, MT2712_POWERKEY1);
+> > +	p2 = mt2712_readl(rtc, MT2712_POWERKEY2);
+> > +	if (p1 != MT2712_POWERKEY1_KEY || p2 != MT2712_POWERKEY2_KEY)
+> > +		dev_dbg(rtc->dev, "powerkey not set (lost power)\n");
+> > +
+> 
+> This info is valuable, you should check that when reading the time and
+> return -EINVAL if power was lost.
+> 
+
+Will change it at next patch.
+
+> 
+> > +	/* RTC need POWERKEY1/2 match, then goto normal work mode */
+> > +	mt2712_writel(rtc, MT2712_POWERKEY1, MT2712_POWERKEY1_KEY);
+> > +	mt2712_writel(rtc, MT2712_POWERKEY2, MT2712_POWERKEY2_KEY);
+> 
+> This should be written when setting the time after power was lost.
+> 
+
+I suppose we can move this into mt2712_rtc_read_time function's "if
+(p1 != MT2712_POWERKEY1_KEY || p2 != MT2712_POWERKEY2_KEY)" condition
+which will be added at next patch. We need additional flag to mark this
+condition or another if condition in mt2712_rtc_set_time fucntion if we
+put these code in mt2712_rtc_set_time function.
+
+> > +static const struct rtc_class_ops mt2712_rtc_ops = {
+> > +	.read_time	= mt2712_rtc_read_time,
+> > +	.set_time	= mt2712_rtc_set_time,
+> > +	.read_alarm	= mt2712_rtc_read_alarm,
+> > +	.set_alarm	= mt2712_rtc_set_alarm,
+> 
+> For proper operations, you should also provide the .alarm_irq_enable
+> callback.
+> 
+
+Will change it at next patch.
+
+> > +	rtc->rtc_dev->ops = &mt2712_rtc_ops;
+> 
+> If you set the range properly here using rtc_dev->range_min and
+> rtc_dev->range_max, then the core will be able to do range checking and
+> will also take care of the year offset/windowing calculations instead of
+> having to hardcode that in the driver.
+> 
+
+Will change it at next patch.
+
+Best Regards,
+Ran
+
+
