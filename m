@@ -2,130 +2,189 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0156FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A75C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9D123401
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B4522CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393294AbfHVUfp (ORCPT
+        id S2404259AbfHVUk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:35:45 -0400
-Received: from mga01.intel.com ([192.55.52.88]:17846 "EHLO mga01.intel.com"
+        Thu, 22 Aug 2019 16:40:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:52234 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387798AbfHVUfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:35:45 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 13:35:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,418,1559545200"; 
-   d="scan'208";a="208307620"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Aug 2019 13:35:43 -0700
-Date:   Thu, 22 Aug 2019 13:35:44 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "alan@linux.intel.com" <alan@linux.intel.com>,
-        "ricardo.neri-calderon@linux.intel.com" 
-        <ricardo.neri-calderon@linux.intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Qiming" <qi-ming.wu@intel.com>,
-        "Kim, Cheol Yong" <cheol.yong.kim@intel.com>,
-        "Tanwar, Rahul" <rahul.tanwar@intel.com>
-Subject: [PATCH] x86/cpu: Add new Airmont variant to Intel family
-Message-ID: <20190822203544.GA10229@agluck-desk2.amr.corp.intel.com>
-References: <cover.1565940653.git.rahul.tanwar@linux.intel.com>
- <83345984845d24b6ce97a32bef21cd0bbdffc86d.1565940653.git.rahul.tanwar@linux.intel.com>
- <20190820122233.GN2332@hirez.programming.kicks-ass.net>
- <1D9AE27C-D412-412D-8FE8-51B625A7CC98@intel.com>
- <20190820145735.GW2332@hirez.programming.kicks-ass.net>
- <20190821201845.GA29589@agluck-desk2.amr.corp.intel.com>
- <20190822102955.GS2369@hirez.programming.kicks-ass.net>
- <20190822185347.GA8933@agluck-desk2.amr.corp.intel.com>
+        id S1731895AbfHVUk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 16:40:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F7B7337;
+        Thu, 22 Aug 2019 13:40:55 -0700 (PDT)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C9D923F706;
+        Thu, 22 Aug 2019 13:40:53 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: Add missing unthrottle_cfs_rq()
+To:     bsegall@google.com
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, liangyan.peng@linux.alibaba.com,
+        shanpeic@linux.alibaba.com, xlpang@linux.alibaba.com,
+        pjt@google.com, stable@vger.kernel.org
+References: <0004fb54-cdee-2197-1cbf-6e2111d39ed9@arm.com>
+ <20190820105420.7547-1-valentin.schneider@arm.com>
+ <xm26lfvlhw93.fsf@bsegall-linux.svl.corp.google.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <20382abf-4741-7792-d830-34603409361e@arm.com>
+Date:   Thu, 22 Aug 2019 21:40:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822185347.GA8933@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <xm26lfvlhw93.fsf@bsegall-linux.svl.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 11:53:47AM -0700, Luck, Tony wrote:
-> On Thu, Aug 22, 2019 at 12:29:55PM +0200, Peter Zijlstra wrote:
-> > On Wed, Aug 21, 2019 at 01:18:46PM -0700, Luck, Tony wrote:
-> > > On Tue, Aug 20, 2019 at 04:57:35PM +0200, Peter Zijlstra wrote:
-> > 
-> > > As I mentioned above, there are some folks internally that think
-> > > NP == Network Processor is too narrow a pigeonhole for this CPU.
-> > > 
-> > > But _NPAOS (Network Processor And Other Stuff) doesn't sound helpful.
-> > 
-> > So what is 'other stuff'; is there really no general term that describes
-> > well what's been done to this SoC; or is it secret and we're in a catch
-> > 22 here?
+On 22/08/2019 19:48, bsegall@google.com wrote:> Having now seen the rest of the thread:
 > 
-> Since CPU model number is one of the early bits of disclosure
-> in order to get support upstream in time for launch, safe to
-> assume that some products will not want to advertise everything
-> that far ahead.
+> Could you send the repro, as it doesn't seem to have reached lkml, so
+> that I can confirm my guess as to what's going on?
 > 
-> > > > Note that for the big cores we added the NNPI thing, which was for
-> > > > Neural Network Processing something.
-> > > 
-> > > I'm sure that we will invent all sorts of strings for the "OPTDIFF"
-> > > part of the name (many of which will only be used once or twice).
-> > 
-> > That's a bit sad; because as shown by the patches just send out; there
-> > really isn't _that_ much variation right now.
-> > 
-> > Anyway, lets just give the thing a name; _NP whatever, and we can
-> > rename it if needed.
+
+Huh, odd. Here's the thing:
+
+delay.c:
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <pthread.h>
+
+unsigned long NUM_LOOPS=2500000*250;
+
+/* simple loop based delay: */
+static void delay_loop(unsigned long loops)
+{
+	asm volatile(
+		"	test %0,%0	\n"
+		"	jz 3f		\n"
+		"	jmp 1f		\n"
+
+		".align 16		\n"
+		"1:	jmp 2f		\n"
+
+		".align 16		\n"
+		"2:	dec %0		\n"
+		"	jnz 2b		\n"
+		"3:	dec %0		\n"
+
+		: /* we don't need output */
+		:"a" (loops)
+	);
+}
+
+void __const_udelay(unsigned long xloops)
+{
+	int d0;
+
+	xloops *= 4;
+	asm("mull %%edx"
+		:"=d" (xloops), "=&a" (d0)
+		:"1" (xloops), "0"
+		(NUM_LOOPS));
+
+	delay_loop(++xloops);
+}
+
+void __udelay(unsigned long usecs)
+{
+	__const_udelay(usecs * 0x000010c7); /* 2**32 / 1000000 (rounded up) */
+}
+
+static void *thread_start(void *arg)
+{
+    while(1) {
+	__udelay((unsigned long)arg);
+	usleep(7000);
+    }
+}
+
+int main(int argc, char*argv[])
+{
+	int i;
+	int thread;
+	unsigned long timeout;
+	pthread_t new_th;
+
+	if (argc != 3) {
+		printf("./delay nr_thread work_loop\n");
+		exit(-1);
+	}
+
+	thread = atoi(argv[1]);
+	timeout = (unsigned long)atoi(argv[2]);
+
+	for (i = 0; i < thread; i++) {
+		pthread_create(&new_th, NULL, thread_start, (void *)timeout);
+		usleep(100);
+	}
+
+	while(1) {
+		sleep(10);
+	}
+}
+
+
+do-delay.sh:
+#!/bin/bash
+
+mkdir /sys/fs/cgroup/cpu/test1
+echo 100000 > /sys/fs/cgroup/cpu/cpu.cfs_period_us
+echo 1600000 > /sys/fs/cgroup/cpu/test1/cpu.cfs_quota_us
+./delay 500 1000 &
+echo $! > /sys/fs/cgroup/cpu/test1/cgroup.procs
+mkdir /sys/fs/cgroup/cpu/test2
+echo 100000 > /sys/fs/cgroup/cpu/test2/cpu.cfs_period_us
+echo 800000 > /sys/fs/cgroup/cpu/test2/cpu.cfs_quota_us
+./delay 500 1000 &
+echo $! > /sys/fs/cgroup/cpu/test2/cgroup.procs
+prev=0;while true; do curr=`cat /sys/fs/cgroup/cpu/test1/cpuacct.usage` && echo $(($curr-$prev)) && prev=$curr && sleep 1; done
+
+
+I ran the thing on a dual-socket x86 test box and could trigger the issue
+quite rapidly (w/ the WARN_ON in distribute_cfs_runtime()).
+
+> It seems most likely we throttle during one of the remove-change-adds in
+> set_cpus_allowed and friends or during the put half of pick_next_task
+> followed by idle balance to drop the lock. Then distribute races with a
+> later assign_cfs_rq_runtime so that the account finds runtime in the
+> cfs_b.
 > 
-> Your other patch series shows that you aren't afraid
-> of a little churn. So sure, we can go with _NP for now
-> and fix it up later.  It's not like some OEM is going
-> to make a CPU selection based on the #define name that
-> we gave it in Linux :-)
 
-From: Tony Luck <tony.luck@intel.com>
+I should still have a trace laying around, let me have a look.
 
-One of the use cases for this processor is as a network
-processor. So give it an "_NP" tag for now. Could be changed
-later if it turns out to group with some other tag.
+> Re clock_task, it's only frozen for the purposes of pelt, not delta_exec
+> 
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/include/asm/intel-family.h | 1 +
- 1 file changed, 1 insertion(+)
+Noted, thanks. But then we shouldn't expect throttled rq's to call into
+update_curr(), right? Maybe just right after they've been throttled, but not
+beyond that. Otherwise I fail to see how that would make sense.
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 5c05b2d389c3..23ed388a3a56 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -95,6 +95,7 @@
- 
- #define INTEL_FAM6_ATOM_AIRMONT		0x4C /* Cherry Trail, Braswell */
- #define INTEL_FAM6_ATOM_AIRMONT_MID	0x5A /* Moorefield */
-+#define INTEL_FAM6_ATOM_AIRMONT_NP	0x75 /* Lightning Mountain */
- 
- #define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
- #define INTEL_FAM6_ATOM_GOLDMONT_D	0x5F /* Denverton */
--- 
-2.20.1
+> The other possible way to fix this would be to skip assign if throttled,
+> since the only time it could succeed is if we're racing with a
+> distribute that will unthrottle use anyways.
+> 
 
+So pretty much the change Liangyan originally proposed? (so much for trying
+to help :p)
+
+> The main advantage of that is the risk of screwy behavior due to unthrottling
+> in the middle of pick_next/put_prev. The disadvantage is that we already
+> have the lock, if it works we don't need an ipi to trigger a preempt,
+> etc. (But I think one of the issues is that we may trigger the preempt
+> on the previous task, not the next, and I'm not 100% sure that will
+> carry over correctly)
+> 
