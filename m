@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1DEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD21C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808452064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B760206DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494956;
-	bh=rWMI78uObu5Jq7fpXek1iMxgJ/1Q82HDvXacm5NBlAI=;
+	s=default; t=1566494964;
+	bh=Y/+XWBGaeuRRuumbxhD/nqhpYXI4L+3AvQCbGWM+bPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q2vkO9j36Tv5lZoM4ZKy1WJ1XrX1mN9G3xGqs0sxhExCMcW6jAXg3Hcm/O/tHr0or
-	 X+XNkzaJHFhzH2H5DMlE1toaD1gdUhp1F/YPIe7mmUGGGez/a9JtQd/nEDJRz+Ax1N
-	 9of1bIAVP8qmQ5WBLxWxg49avlTHx+AkMbLcgjzo=
+	b=derHcTUi1aVhCN2DgFjdaU4aReQaIx/Q/nVwpxjBBl55YlG0PsYiu7U+GuwzsOGME
+	 C9GaV8DZPAAbgGmNl0UqeceX7fLNca1z1rgnoCEq6zaKQR+pzntseqTWdvUHNwkX7C
+	 OzMbpRZmmciYyatcCRRIcLasPPQPj4Czo4NB84O8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390889AbfHVR0l (ORCPT
+        id S2404721AbfHVR0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:26:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48968 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:26:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404408AbfHVRZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:26 -0400
+        id S2404297AbfHVRZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:17 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1E1123427;
-        Thu, 22 Aug 2019 17:25:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF504206DD;
+        Thu, 22 Aug 2019 17:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494725;
-        bh=rWMI78uObu5Jq7fpXek1iMxgJ/1Q82HDvXacm5NBlAI=;
+        s=default; t=1566494716;
+        bh=Y/+XWBGaeuRRuumbxhD/nqhpYXI4L+3AvQCbGWM+bPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KHFC8cwm3W9eW3ukiBoEn2sLzdgOL+wF+pjj9sQB4FUPfis2zJEOLidPRsyp+kAtc
-         gT22xxypOR2vVPCDTD0roaTLTjMfGHXXMzbRyqqw4aQHTlB10gXrLZK8cEpPOR3YOR
-         M8QpoHcYvMY7s8aEHBe5i8wDAaoe2YD5Ea3yvHpQ=
+        b=IbnQ6JcVja4RBlF3GVFIuYfQaSdN940ygGa7xrHNd6zRpkLlOVEWHSf0BH+Xi3EbF
+         pz4x60O82HRq8T//DXQ+qD7KutR1gBFrLlb8trk403sVp4mPEVSwSMyTJY0tIzhcZz
+         5xh6aeT2HLPqO1DVC+PXPCqmg7exLx3+Elrq4XWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 15/85] ALSA: hda - Fix a memory leak bug
-Date:   Thu, 22 Aug 2019 10:18:48 -0700
-Message-Id: <20190822171731.773409513@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.14 44/71] staging: comedi: dt3000: Fix rounding up of timer divisor
+Date:   Thu, 22 Aug 2019 10:19:19 -0700
+Message-Id: <20190822171729.787526741@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
-References: <20190822171731.012687054@linuxfoundation.org>
+In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
+References: <20190822171726.131957995@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,36 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit cfef67f016e4c00a2f423256fc678a6967a9fc09 upstream.
+commit 8e2a589a3fc36ce858d42e767c3bcd8fc62a512b upstream.
 
-In snd_hda_parse_generic_codec(), 'spec' is allocated through kzalloc().
-Then, the pin widgets in 'codec' are parsed. However, if the parsing
-process fails, 'spec' is not deallocated, leading to a memory leak.
+`dt3k_ns_to_timer()` determines the prescaler and divisor to use to
+produce a desired timing period.  It is influenced by a rounding mode
+and can round the divisor up, down, or to the nearest value.  However,
+the code for rounding up currently does the same as rounding down!  Fix
+ir by using the `DIV_ROUND_UP()` macro to calculate the divisor when
+rounding up.
 
-To fix the above issue, free 'spec' before returning the error.
+Also, change the types of the `divider`, `base` and `prescale` variables
+from `int` to `unsigned int` to avoid mixing signed and unsigned types
+in the calculations.
 
-Fixes: 352f7f914ebb ("ALSA: hda - Merge Realtek parser code to generic parser")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Also fix a typo in a nearby comment: "improvment" => "improvement".
+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190812120814.21188-1-abbotti@mev.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_generic.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/comedi/drivers/dt3000.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -6082,7 +6082,7 @@ static int snd_hda_parse_generic_codec(s
+--- a/drivers/staging/comedi/drivers/dt3000.c
++++ b/drivers/staging/comedi/drivers/dt3000.c
+@@ -351,9 +351,9 @@ static irqreturn_t dt3k_interrupt(int ir
+ static int dt3k_ns_to_timer(unsigned int timer_base, unsigned int *nanosec,
+ 			    unsigned int flags)
+ {
+-	int divider, base, prescale;
++	unsigned int divider, base, prescale;
  
- 	err = snd_hda_parse_pin_defcfg(codec, &spec->autocfg, NULL, 0);
- 	if (err < 0)
--		return err;
-+		goto error;
+-	/* This function needs improvment */
++	/* This function needs improvement */
+ 	/* Don't know if divider==0 works. */
  
- 	err = snd_hda_gen_parse_auto_config(codec, &spec->autocfg);
- 	if (err < 0)
+ 	for (prescale = 0; prescale < 16; prescale++) {
+@@ -367,7 +367,7 @@ static int dt3k_ns_to_timer(unsigned int
+ 			divider = (*nanosec) / base;
+ 			break;
+ 		case CMDF_ROUND_UP:
+-			divider = (*nanosec) / base;
++			divider = DIV_ROUND_UP(*nanosec, base);
+ 			break;
+ 		}
+ 		if (divider < 65536) {
 
 
