@@ -2,104 +2,89 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873A7C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:53:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A215C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A3321848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7076A21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731451AbfHVFxl (ORCPT
+        id S1731468AbfHVFz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 01:53:41 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40084 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729854AbfHVFxl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 01:53:41 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7M5qM56089297;
-        Thu, 22 Aug 2019 01:53:28 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhm1cabje-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 22 Aug 2019 01:53:27 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7M5o1kO030793;
-        Thu, 22 Aug 2019 05:53:26 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma04wdc.us.ibm.com with ESMTP id 2ufye0eneq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 22 Aug 2019 05:53:26 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7M5rOeZ50921898
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 22 Aug 2019 05:53:24 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C09EBE04F;
-        Thu, 22 Aug 2019 05:53:24 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 523A9BE053;
-        Thu, 22 Aug 2019 05:53:22 +0000 (GMT)
-Received: from [9.124.31.100] (unknown [9.124.31.100])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 22 Aug 2019 05:53:21 +0000 (GMT)
-Message-ID: <1566453201.526.9.camel@abdul.in.ibm.com>
-Subject: [linux-next][PPC][bisected c7d8b7][gcc 6.4.1] build error at
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:1471
-From:   Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-next <linux-next@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, jgg@mellanox.com,
-        rcampbell <rcampbell@nvidia.com>
-Date:   Thu, 22 Aug 2019 11:23:21 +0530
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=514 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908220062
+        Thu, 22 Aug 2019 01:55:29 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:58364 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729690AbfHVFz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 01:55:29 -0400
+Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
+        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1i0g4A-0002vT-4S; Thu, 22 Aug 2019 15:55:22 +1000
+Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1i0g47-000117-Op; Thu, 22 Aug 2019 15:55:19 +1000
+Date:   Thu, 22 Aug 2019 15:55:19 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
+        Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH] random: Support freezable kthreads in
+ add_hwgenerator_randomness()
+Message-ID: <20190822055519.GB3860@gondor.apana.org.au>
+References: <20190819150245.176587-1-swboyd@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190819150245.176587-1-swboyd@chromium.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greeting's
+On Mon, Aug 19, 2019 at 08:02:45AM -0700, Stephen Boyd wrote:
+> The kthread calling this function is freezable after commit 03a3bb7ae631
+> ("hwrng: core - Freeze khwrng thread during suspend") is applied.
+> Unfortunately, this function uses wait_event_interruptible() but doesn't
+> check for the kthread being woken up by the fake freezer signal. When a
+> user suspends the system, this kthread will wake up and if it fails the
+> entropy size check it will immediately go back to sleep and not go into
+> the freezer. Eventually, suspend will fail because the task never froze
+> and a warning message like this may appear:
+> 
+>  PM: suspend entry (deep)
+>  Filesystems sync: 0.000 seconds
+>  Freezing user space processes ... (elapsed 0.001 seconds) done.
+>  OOM killer disabled.
+>  Freezing remaining freezable tasks ...
+>  Freezing of tasks failed after 20.003 seconds (1 tasks refusing to freeze, wq_busy=0):
+>  hwrng           R  running task        0   289      2 0x00000020
+>  [<c08c64c4>] (__schedule) from [<c08c6a10>] (schedule+0x3c/0xc0)
+>  [<c08c6a10>] (schedule) from [<c05dbd8c>] (add_hwgenerator_randomness+0xb0/0x100)
+>  [<c05dbd8c>] (add_hwgenerator_randomness) from [<bf1803c8>] (hwrng_fillfn+0xc0/0x14c [rng_core])
+>  [<bf1803c8>] (hwrng_fillfn [rng_core]) from [<c015abec>] (kthread+0x134/0x148)
+>  [<c015abec>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> 
+> Check for a freezer signal here and skip adding any randomness if the
+> task wakes up because it was frozen. This should make the kthread freeze
+> properly and suspend work again.
+> 
+> Fixes: 03a3bb7ae631 ("hwrng: core - Freeze khwrng thread during suspend")
+> Reported-by: Keerthy <j-keerthy@ti.com>
+> Tested-by: Keerthy <j-keerthy@ti.com>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+> 
+> Probably needs to go via Herbert who routed the patch this is fixing.
+> 
+>  drivers/char/random.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 
-Today's linux-next kernel 5.3.0-rc5-next-20190820 failed to build on my
-powerpc machine
-
-Build errors:
-drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c: In function amdgpu_exit:
-drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:1471:2: error: implicit
-declaration of function mmu_notifier_synchronize
-[-Werror=implicit-function-declaration]
-  mmu_notifier_synchronize();
-  ^~~~~~~~~~~~~~~~~~~~~~~~ 
-cc1: some warnings being treated as errors
-make[4]: *** [drivers/gpu/drm/amd/amdgpu/amdgpu_drv.o] Error 1
-make[3]: *** [drivers/gpu/drm/amd/amdgpu] Error 2
-
-It was introduced with commit c7d8b7 (hmm: use mmu_notifier_get/put for
-'struct hmm')
-
-error disappears when commit is reverted.
-
+Patch applied.  Thanks.
 -- 
-Regard's
-
-Abdul Haleem
-IBM Linux Technology Centre
-
-
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
