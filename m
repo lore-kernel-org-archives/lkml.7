@@ -2,111 +2,94 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3BDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4170CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFAA023401
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F48233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:44:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJBIjamP"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Zplosrd3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388417AbfHVQoD (ORCPT
+        id S2390151AbfHVQoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:44:03 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43526 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731880AbfHVQoC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:44:02 -0400
-Received: by mail-pl1-f195.google.com with SMTP id 4so3767376pld.10;
-        Thu, 22 Aug 2019 09:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=x9uce55kb6LZ9BYo7W+bqT1uxPy/bJS6Nheim+gxljU=;
-        b=bJBIjamPcgpm1ZXLpSxXD0oE/Ox67cJ9ESF+xyrbA/SkjeUjRz3OYUPh/q+mkf6WPW
-         gszvgZjW5Ii222UQ9cZcihxFW9h+rMspa/JpeAzL9LDsIz1jJ2swtPZe1+VUL+eFM9Qw
-         v4aTIGmNbz/8XbkanLChrI9PtQkDfbDkLzjQUvgRF1GkSFAHkj43uMm8zG5WdJd86Uqq
-         25hDzDwOIyhEmj0XRkqFgyrD7sWCaS3R/HCu4C/fUeMTPu+4fYv0uhFml2qpve1ViKF6
-         a/v6zkuV7yow07+jTxSnJu5/hqZ1aa54rlkappzHoqjQnR0pBhSNVwj70K8m/FAFnW1J
-         8e4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=x9uce55kb6LZ9BYo7W+bqT1uxPy/bJS6Nheim+gxljU=;
-        b=BitY8RPyuPv+IhDjAqlTsTOQ2sAncWTRBjdsARK94A7jrLLJVMTEObQBpOlQ5hNdVi
-         uxBG8H9HwL8WOcAi+Lq8gl7F/9xZJelUivKEoJLWRMbt9XW8FH6nTQjFVuSHUa2YAVjn
-         3mmMWAlWJcEswxyXBD/LNGvOpjhZkJq8sawK5fElp4qwkueNXW7BqYMiO2fdXcddlUpX
-         ifNzW4PsqTFCHablKd8RfTWhZhRgqFW0KCQG4hUjWjMSuNS5g4twZ/IgfQxc4+KiWTRW
-         bSLYmpqUWvVSJlS/9G3kbBsBv5rKI3X0thaZjKwymj1MEtTdUQZNaWqahDcOu061WOYp
-         Eukw==
-X-Gm-Message-State: APjAAAUTX+8hi38MYG1jzwaJJpnPwRrdFywFipMUR4qM6V9NGTDOJoVT
-        2zacugH3DO7AvWZI4Lfx+lY=
-X-Google-Smtp-Source: APXvYqxe6fOEzOe3vusXfkDM0IxXECeWeFZdwOpLMUqOaDlOvoQ66CBYHAGy9zDgc8muHzhUyugvfQ==
-X-Received: by 2002:a17:902:9686:: with SMTP id n6mr39475715plp.113.1566492241825;
-        Thu, 22 Aug 2019 09:44:01 -0700 (PDT)
-Received: from localhost.localdomain ([106.51.107.181])
-        by smtp.gmail.com with ESMTPSA id br18sm83722pjb.20.2019.08.22.09.43.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 22 Aug 2019 09:44:01 -0700 (PDT)
-From:   Rishi Gupta <gupt21@gmail.com>
-To:     jikos@kernel.org
-Cc:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH] HID: hidraw: replace printk() with corresponding pr_xx() variant
-Date:   Thu, 22 Aug 2019 22:13:52 +0530
-Message-Id: <1566492232-13590-1-git-send-email-gupt21@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 22 Aug 2019 12:44:10 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:45386 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731384AbfHVQoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 12:44:09 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46Dr2r50ngz9v4WL;
+        Thu, 22 Aug 2019 18:44:04 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Zplosrd3; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id VvLBuWFOsunQ; Thu, 22 Aug 2019 18:44:04 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46Dr2r3nZSz9v4WK;
+        Thu, 22 Aug 2019 18:44:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1566492244; bh=trYGHVEpD6dtjnX/NVUZh4W1Wy/UH0BDAKfhUgaCEmY=;
+        h=From:Subject:To:Cc:Date:From;
+        b=Zplosrd318O7wa1i5Ht5wVHUCoBWL2mXV/77ebvy9Uhi1/1L+lC39r6p+9KfFamVG
+         LVtrPWEH3dUKVF1xhmAE5u26j6FGZVXhI05Vi186+VxvD97vmV7Cwi/mKJ5dyscYzZ
+         qO4sxllZttXY8bmsPoWAeHtuhSrf+dq8Wpf2trSQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3AD858B84C;
+        Thu, 22 Aug 2019 18:44:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 7eVKBjGnOb26; Thu, 22 Aug 2019 18:44:06 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1143B8B81D;
+        Thu, 22 Aug 2019 18:44:06 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id DDDB46B730; Thu, 22 Aug 2019 16:44:05 +0000 (UTC)
+Message-Id: <a8b567c569aa521a7cf1beb061d43d79070e850c.1566492229.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/64: don't select ARCH_HAS_SCALED_CPUTIME on book3E
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 22 Aug 2019 16:44:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit replaces direct invocations of printk with
-their appropriate pr_info/warn() variant.
+Book3E doesn't have SPRN_SPURR/SPRN_PURR.
 
-Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+Activating ARCH_HAS_SCALED_CPUTIME is just wasting CPU time.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Link: https://github.com/linuxppc/issues/issues/171
 ---
- drivers/hid/hidraw.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
-index 006bd6f..67b652b 100644
---- a/drivers/hid/hidraw.c
-+++ b/drivers/hid/hidraw.c
-@@ -197,14 +197,14 @@ static ssize_t hidraw_get_report(struct file *file, char __user *buffer, size_t
- 	}
- 
- 	if (count > HID_MAX_BUFFER_SIZE) {
--		printk(KERN_WARNING "hidraw: pid %d passed too large report\n",
-+		pr_warn("hidraw: pid %d passed too large report\n",
- 				task_pid_nr(current));
- 		ret = -EINVAL;
- 		goto out;
- 	}
- 
- 	if (count < 2) {
--		printk(KERN_WARNING "hidraw: pid %d passed too short report\n",
-+		pr_warn("hidraw: pid %d passed too short report\n",
- 				task_pid_nr(current));
- 		ret = -EINVAL;
- 		goto out;
-@@ -597,7 +597,7 @@ int __init hidraw_init(void)
- 	if (result < 0)
- 		goto error_class;
- 
--	printk(KERN_INFO "hidraw: raw HID events driver (C) Jiri Kosina\n");
-+	pr_info("hidraw: raw HID events driver (C) Jiri Kosina\n");
- out:
- 	return result;
- 
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 0c322abb1495..6137f5e3bb2d 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -132,7 +132,7 @@ config PPC
+ 	select ARCH_HAS_PTE_DEVMAP		if PPC_BOOK3S_64
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_MEMBARRIER_CALLBACKS
+-	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC64
++	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
+ 	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
+ 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UACCESS_FLUSHCACHE
 -- 
-2.7.4
+2.13.3
 
