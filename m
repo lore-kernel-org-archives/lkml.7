@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A2BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C7BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543612342B
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19E023430
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494679;
-	bh=Ck+VrPPpa9FzruK7lFtVEWWTmxG15REiEr+0rrtY0SE=;
+	s=default; t=1566494682;
+	bh=1dcMSu4TAYul7LkH8fqne0TvbN4f4LdLMSu1D9WanJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G/pMNSHzVFo9rA/YmZzSuCwlJ1RzuyYVis9Qx/41WaxsdEiNB3YuwA2ykSo42tgQd
-	 r5V75GU0KTBK0XvEXr3vnoxm3Ur5aCnOfTyAE3cQpz8p1SjJilyMkmkjtzH/EUw2IW
-	 fOj6hsrr4YfVnNxa8DzA8LweiWIxO6w3n0t1dBhU=
+	b=ibYZUiguiO9R2Gb6eTXF2hwEaXOvOJ9hJu9U8O3xgSo/o+/CXz/6hGiZd64qK1TMd
+	 ZqIr933P/OQmkQG3Un/k+e02NzXeXnimKTvms6ci2hxDp0inMKVRytolLY34M2hgND
+	 07FuP8s1Yfh42H40XOv+4iVfICoBdlPT8ynXz9hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404272AbfHVRYi (ORCPT
+        id S2404287AbfHVRYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:24:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45544 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:24:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404143AbfHVRYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:17 -0400
+        id S2391343AbfHVRYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:20 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B18BD23400;
-        Thu, 22 Aug 2019 17:24:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E09523400;
+        Thu, 22 Aug 2019 17:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494655;
-        bh=Ck+VrPPpa9FzruK7lFtVEWWTmxG15REiEr+0rrtY0SE=;
+        s=default; t=1566494660;
+        bh=1dcMSu4TAYul7LkH8fqne0TvbN4f4LdLMSu1D9WanJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fnZyipCQFTjxQyXSh4wNzUgOy0N0IHluiP8q84070IqXI29EnpvaICVNZWwnWsZPf
-         HIrKwt4lP7OP1dXfNCzE6aF0V9KYNCARCiDAW0G5Wn/SnpT0oFmOleCydoRZYAWAwb
-         b8j9sPIR7emWvbmkLj+R4toBWqqtYquadPeYobG4=
+        b=i8RMHExOe975msVQlplC5ZbeRMYLEyQf9LK9dHw/Yhoq1VEsc6xjeTzyBoZUy7qxq
+         8hsEGGgBUCtvmkivr58GjD91Y2D63ymKI50iQAcBh0tG9yZ0BPE1ujBymqYP2l4YdM
+         qlMpJY0d9moFFml5Kw6gCAtyC5BcLCXcV2BaFOEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 097/103] net/packet: fix race in tpacket_snd()
-Date:   Thu, 22 Aug 2019 10:19:25 -0700
-Message-Id: <20190822171733.078235346@linuxfoundation.org>
+Subject: [PATCH 4.9 102/103] team: Add vlan tx offload to hw_enc_features
+Date:   Thu, 22 Aug 2019 10:19:30 -0700
+Message-Id: <20190822171733.272845410@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -60,78 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 32d3182cd2cd29b2e7e04df7b0db350fbe11289f ]
+[ Upstream commit 227f2f030e28d8783c3d10ce70ff4ba79cad653f ]
 
-packet_sendmsg() checks tx_ring.pg_vec to decide
-if it must call tpacket_snd().
+We should also enable team's vlan tx offload in hw_enc_features,
+pass the vlan packets to the slave devices with vlan tci, let the
+slave handle vlan tunneling offload implementation.
 
-Problem is that the check is lockless, meaning another thread
-can issue a concurrent setsockopt(PACKET_TX_RING ) to flip
-tx_ring.pg_vec back to NULL.
-
-Given that tpacket_snd() grabs pg_vec_lock mutex, we can
-perform the check again to solve the race.
-
-syzbot reported :
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 11429 Comm: syz-executor394 Not tainted 5.3.0-rc4+ #101
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:packet_lookup_frame+0x8d/0x270 net/packet/af_packet.c:474
-Code: c1 ee 03 f7 73 0c 80 3c 0e 00 0f 85 cb 01 00 00 48 8b 0b 89 c0 4c 8d 24 c1 48 b8 00 00 00 00 00 fc ff df 4c 89 e1 48 c1 e9 03 <80> 3c 01 00 0f 85 94 01 00 00 48 8d 7b 10 4d 8b 3c 24 48 b8 00 00
-RSP: 0018:ffff88809f82f7b8 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff8880a45c7030 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 1ffff110148b8e06 RDI: ffff8880a45c703c
-RBP: ffff88809f82f7e8 R08: ffff888087aea200 R09: fffffbfff134ae50
-R10: fffffbfff134ae4f R11: ffffffff89a5727f R12: 0000000000000000
-R13: 0000000000000001 R14: ffff8880a45c6ac0 R15: 0000000000000000
-FS:  00007fa04716f700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa04716edb8 CR3: 0000000091eb4000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- packet_current_frame net/packet/af_packet.c:487 [inline]
- tpacket_snd net/packet/af_packet.c:2667 [inline]
- packet_sendmsg+0x590/0x6250 net/packet/af_packet.c:2975
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
- __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
- do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 69e3c75f4d54 ("net: TX_RING and packet mmap")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Fixes: 3268e5cb494d ("team: Advertise tunneling offload features")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/team/team.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2651,6 +2651,13 @@ static int tpacket_snd(struct packet_soc
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -1014,7 +1014,9 @@ static void ___team_compute_features(str
+ 	}
  
- 	mutex_lock(&po->pg_vec_lock);
+ 	team->dev->vlan_features = vlan_features;
+-	team->dev->hw_enc_features = enc_features | NETIF_F_GSO_ENCAP_ALL;
++	team->dev->hw_enc_features = enc_features | NETIF_F_GSO_ENCAP_ALL |
++				     NETIF_F_HW_VLAN_CTAG_TX |
++				     NETIF_F_HW_VLAN_STAG_TX;
+ 	team->dev->hard_header_len = max_hard_header_len;
  
-+	/* packet_sendmsg() check on tx_ring.pg_vec was lockless,
-+	 * we need to confirm it under protection of pg_vec_lock.
-+	 */
-+	if (unlikely(!po->tx_ring.pg_vec)) {
-+		err = -EBUSY;
-+		goto out;
-+	}
- 	if (likely(saddr == NULL)) {
- 		dev	= packet_cached_dev_get(po);
- 		proto	= po->num;
+ 	team->dev->priv_flags &= ~IFF_XMIT_DST_RELEASE;
 
 
