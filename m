@@ -2,92 +2,125 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3384DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FEEC3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6ED22CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6757122CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:09:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDL+eZfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfHVAJb (ORCPT
+        id S1729294AbfHVAJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 20:09:31 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39564 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726828AbfHVAJa (ORCPT
+        Wed, 21 Aug 2019 20:09:50 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44405 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfHVAJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 20:09:30 -0400
-Received: by mail-wm1-f65.google.com with SMTP id i63so3872834wmg.4;
-        Wed, 21 Aug 2019 17:09:28 -0700 (PDT)
+        Wed, 21 Aug 2019 20:09:49 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i18so2318547pgl.11;
+        Wed, 21 Aug 2019 17:09:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=al+PMjVogxQV1Od/xeGI03NiBlkDv7AtMHf6o33QNRI=;
+        b=rDL+eZfQwrDPV5lDYLSFiQb6IXIJ6s1QyGkZcYyP3c8nGy7idqZ9DQZb1iDVR2OThh
+         5JBDVP1CNzrYaKs9e10g2f+LtvYkoAK3Nk3C0ITQux/8uDkjT8HNviygZhYa5hspBQMR
+         MVut/EWrdqfhnuMUlZkFbZNZHlHpEz+HaqZ+2gSr6eX7+qwx5bebn9gvRu7xLhnpdU0W
+         0Hnb6V2UcTvy8oD37g0eRizYJ7H5QVLs6DBJnWFc7Xs3WiK+jk3azw27m1hZ2MhoBXvt
+         qjWLgkB7ZYfaBHSM0mqivp2gvTM4SOs0Ds1lz4hLvhvrfz/q3lDqGOIy8nCR+k4kXSPY
+         FIXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=32/0yIVdzlJ2KJ3NplTUO5+v34KMaLLDclpZ7tzJ9aE=;
-        b=XFklBSV1ROpQHezo5lCXW6jYtyDmA7+IaKiARuK6gJadBKQ6t9IsUF+lJHd3ctp6DR
-         EG9mWqQgn35EdGLTGl2lsrVOh/JLzYrLDLZD4GH2jgI6l4slYeDi9js90BlNdDOxLX4l
-         2l1zjaGglt+QzvERRNqy+Ftw9z7BmxC7p2/Dfm/wUzLn0bWSB+Y/9/Ja2IPFzH5b+JZL
-         sn3ZbwzZLEe8ErXiSEgU4cUm5iY7/RoMaTHp3f2OOVoRr15iiHpHjqlqHSApm5jWi9dC
-         j7OWRhx7f2Om+zpynK3XovyzQYaU48ZlwKJuAHQtJIqQxgyAkpKFOtxN9HOiwFkHCroJ
-         0s6A==
-X-Gm-Message-State: APjAAAVANRDHLtpelZYVXCO4luEWska1FhKRGHLuri9D6M30WGm+UEBu
-        NWZSF7ZrUKT4zRpV3yUyrbY=
-X-Google-Smtp-Source: APXvYqwuT0kmih8HKsX3ht5823hsz+gh7dNnKBV5RVKrdbL46NznsoXAK7FHnNlGyRd4vEhe81JUTw==
-X-Received: by 2002:a1c:2314:: with SMTP id j20mr2598763wmj.152.1566432568173;
-        Wed, 21 Aug 2019 17:09:28 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id r16sm50444348wrc.81.2019.08.21.17.09.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 17:09:27 -0700 (PDT)
-Subject: Re: [PATCH v7 08/14] nvmet-core: allow one host per passthru-ctrl
-To:     Max Gurtovoy <maxg@mellanox.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
-References: <20190801234514.7941-1-logang@deltatee.com>
- <20190801234514.7941-9-logang@deltatee.com>
- <05a74e81-1dbd-725f-1369-5ca5c5918db1@mellanox.com>
- <a6b9db95-a7f0-d1f6-1fa2-8dc13a6aa29e@deltatee.com>
- <5717f515-e051-c420-07b7-299bcfcd1f32@mellanox.com>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <b0921c72-93f1-f67a-c4b3-31baeb1c39cb@grimberg.me>
-Date:   Wed, 21 Aug 2019 17:09:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <5717f515-e051-c420-07b7-299bcfcd1f32@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=al+PMjVogxQV1Od/xeGI03NiBlkDv7AtMHf6o33QNRI=;
+        b=CSNrlo34xN/9QyBlZNjJ7j8LEdyfjNE0HlvFbtXwg30kNEV7yObLOEFBSXa2hK2mNM
+         6maSTWtjO5G+bbWB6nqbEQClKrill70fahwQQPb+SANwlQVM+/pUDi3GzLrnx5mMle6F
+         tYrD9Zq/zpbkyOSsNFEanG7ZYoOmymvq5LpahvrcZyKppf/R/rmH1kic6p1gmMKY4sRG
+         kR84TgVGwxP79MOx5FGv8q340rZya6WBjGWareSrIdRZa6iymedGhqAIJ3y3TmpWlZlY
+         ojbwrk+hFso0tlNIRDkBJYqKRj1q7o931864pAePruxH6gSP0OWiop87ZHOp4+ByTJa+
+         8Xdg==
+X-Gm-Message-State: APjAAAUKTrqj0RVSb861oOEZezkJNVVOXYBX6gm+g0QE4cai36kuioZf
+        J/FLYhg3Othkr67XruUrn5+NWs+q
+X-Google-Smtp-Source: APXvYqxJcGCn5gjEQyFQJXcb39q8EzQcGgnvrA5A7LD5MgaV7rwA//L2Plyi0J5CT/yLm/MnqLxTdw==
+X-Received: by 2002:a65:690b:: with SMTP id s11mr27314088pgq.10.1566432588546;
+        Wed, 21 Aug 2019 17:09:48 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id i124sm27053789pfe.61.2019.08.21.17.09.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 17:09:47 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net] net: dsa: bcm_sf2: Do not configure PHYLINK on CPU port
+Date:   Wed, 21 Aug 2019 17:07:46 -0700
+Message-Id: <20190822000747.3036-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The SF2 binding does not specify that the CPU port should have
+properties mandatory for successfully instantiating a PHYLINK object. As
+such, there will be missing properties (including fixed-link) and when
+attempting to validate and later configure link modes, we will have an
+incorrect set of parameters (interface, speed, duplex).
 
-> I don't understand why we don't limit a regular ctrl to single access 
-> and we do it for the PT ctrl.
-> 
-> I guess the block layer helps to sync between multiple access in 
-> parallel but we can do it as well.
-> 
-> Also, let's say you limit the access to this subsystem to 1 user, the 
-> bdev is still accessibly for local user and also you can create a 
-> different subsystem that will use this device (PT and non-PT ctrl).
-> 
-> Sagi,
-> 
-> can you explain the trouble you meant and how this limitation solve it ?
+Simply prevent the CPU port from being configured through PHYLINK since
+bcm_sf2_imp_setup() takes care of that already.
 
-Its different to emulate the controller with all its admin
-commands vs. passing it through to the nvme device.. (think of format nvm)
+Fixes: 0e27921816ad ("net: dsa: Use PHYLINK for the CPU/DSA ports")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/net/dsa/bcm_sf2.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index 3811fdbda13e..28c963a21dac 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -478,6 +478,7 @@ static void bcm_sf2_sw_validate(struct dsa_switch *ds, int port,
+ 				unsigned long *supported,
+ 				struct phylink_link_state *state)
+ {
++	struct bcm_sf2_priv *priv = bcm_sf2_to_priv(ds);
+ 	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+ 
+ 	if (!phy_interface_mode_is_rgmii(state->interface) &&
+@@ -487,8 +488,10 @@ static void bcm_sf2_sw_validate(struct dsa_switch *ds, int port,
+ 	    state->interface != PHY_INTERFACE_MODE_INTERNAL &&
+ 	    state->interface != PHY_INTERFACE_MODE_MOCA) {
+ 		bitmap_zero(supported, __ETHTOOL_LINK_MODE_MASK_NBITS);
+-		dev_err(ds->dev,
+-			"Unsupported interface: %d\n", state->interface);
++		if (port != core_readl(priv, CORE_IMP0_PRT_ID))
++			dev_err(ds->dev,
++				"Unsupported interface: %d for port %d\n",
++				state->interface, port);
+ 		return;
+ 	}
+ 
+@@ -526,6 +529,9 @@ static void bcm_sf2_sw_mac_config(struct dsa_switch *ds, int port,
+ 	u32 id_mode_dis = 0, port_mode;
+ 	u32 reg, offset;
+ 
++	if (port == core_readl(priv, CORE_IMP0_PRT_ID))
++		return;
++
+ 	if (priv->type == BCM7445_DEVICE_ID)
+ 		offset = CORE_STS_OVERRIDE_GMIIP_PORT(port);
+ 	else
+-- 
+2.17.1
 
