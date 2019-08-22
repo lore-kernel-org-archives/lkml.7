@@ -2,214 +2,227 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C923FC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CB9C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B643205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFE1205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:44:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="jd5+8VjU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387676AbfHVKnQ (ORCPT
+        id S2387769AbfHVKoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 06:43:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34718 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbfHVKnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:43:16 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F13843082B02;
-        Thu, 22 Aug 2019 10:43:14 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CAB785888;
-        Thu, 22 Aug 2019 10:43:14 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id A7C1024F2F;
-        Thu, 22 Aug 2019 10:43:13 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 06:43:13 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     nitesh@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
-        david@redhat.com, dave hansen <dave.hansen@intel.com>,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
-        virtio-dev@lists.oasis-open.org, osalvador@suse.de,
-        yang zhang wz <yang.zhang.wz@gmail.com>, riel@surriel.com,
-        konrad wilk <konrad.wilk@oracle.com>, lcapitulino@redhat.com,
-        wei w wang <wei.w.wang@intel.com>, aarcange@redhat.com,
-        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>,
-        alexander h duyck <alexander.h.duyck@linux.intel.com>
-Message-ID: <1297409377.9866813.1566470593223.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190821145806.20926.22448.stgit@localhost.localdomain>
-References: <20190821145806.20926.22448.stgit@localhost.localdomain>
-Subject: Re: [PATCH v6 0/6] mm / virtio: Provide support for unused page
- reporting
+        Thu, 22 Aug 2019 06:44:09 -0400
+Received: from mail-eopbgr740070.outbound.protection.outlook.com ([40.107.74.70]:26432
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387710AbfHVKoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 06:44:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CLX62PrtxtT6PaGTRH423mSSR9AhtSsmqvvId8xaKFOd8UDrjD0k+8uIUxuaqlNtkWz9f7yOMqILM/hm6/fFJ0aWhX/e2JtJN5KTr6Cw2fYcEmgBCe5JF+pQ3PYAPxB2Y0AS+D/rcP/hY6Y0UjKtaU3t7yzmi0WGWgPGjVYYQCU0UgpZPbL4LhrVFkTQfIFQx/fGuiYqvqhi8PZDcL4lMd/NlspugZuyKR9ZisuSWPJV/XByKFzlV8Sa6bgvZgA5po8M8zhTvOKddhB7Ie246bEYgAmCe1kr3IxPzlIBv/+Dxy+aD4bjcHsECurKPDAY4Je3O4leva/Rr+wRgSJx8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PBxmssn2OKSXWcr+k/5rrNQfoK8KXpoqd1TaaRKg0PA=;
+ b=Tq9TDgMap/Y1tCDzLLDM/VsNd1k/AkN2+xwa8LMLwpDQIoMAzPkJnvDwK0HZKIBxIMxD4fcj4jt1YYUE1OMTGe3zN53YtQrxcdzTHyhiIJCscyRW3gMZgbmpitvtHJKi/2npd0J0klJFmkkaMlIS2FImhgOUj/YpcNqpT34bGfh1vr+dwBcnfXG/388mOMRAAAZCYzRo54qUtWIkclQHMgSYpQySBNwbotsEbnIhanWEYzvNYpmT4zMLt93GOnl1twfeZH04FfQoDA07TW5vqQWgoGQubaJ2ELkiSBQUYqg5+zyiQDk6iUMnSUhnpB1xGaSaK/o9BTwkE6ScIqqDXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PBxmssn2OKSXWcr+k/5rrNQfoK8KXpoqd1TaaRKg0PA=;
+ b=jd5+8VjUQvDFydKxtvsHvcgdE/4+g7ad97JMx0tlcPt8TFDNVmgCKiKHWDJqOjiTTAI1rvzRbZ72Y3W/tqaY6eG8CjZ9BwAFzM9FygViMP1HBfvibWDAgThKAuddKrKRGJf6aFFXAyzxobwjHaVCir92IkbNwzRoThZs3QcJpkY=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB3624.namprd03.prod.outlook.com (52.135.213.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Thu, 22 Aug 2019 10:44:04 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::b050:60f8:d275:e9f4]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::b050:60f8:d275:e9f4%7]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
+ 10:44:04 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4] arm64: implement KPROBES_ON_FTRACE
+Thread-Topic: [PATCH v4] arm64: implement KPROBES_ON_FTRACE
+Thread-Index: AQHVWJwGDRorz/HiOUajlPa5ER0qaKcGu4YAgACzXwD//4bGgIAAAwYA
+Date:   Thu, 22 Aug 2019 10:44:03 +0000
+Message-ID: <20190822183254.1bb5576d@xhacker.debian>
+References: <20190822113421.52920377@xhacker.debian>
+        <1566456155.27ojwy97ss.naveen@linux.ibm.com>
+        <20190822173558.63de3fc4@xhacker.debian>
+        <1566468150.x8u1577wgh.naveen@linux.ibm.com>
+In-Reply-To: <1566468150.x8u1577wgh.naveen@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [124.74.246.114]
+x-clientproxiedby: TY2PR06CA0041.apcprd06.prod.outlook.com
+ (2603:1096:404:2e::29) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c3e8b1e9-091b-4078-a527-08d726eda66e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR03MB3624;
+x-ms-traffictypediagnostic: BYAPR03MB3624:
+x-microsoft-antispam-prvs: <BYAPR03MB3624A58FE647EDC761C42A9BEDA50@BYAPR03MB3624.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01371B902F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(346002)(39850400004)(136003)(376002)(189003)(199004)(7736002)(26005)(386003)(6506007)(5660300002)(6916009)(86362001)(6436002)(6486002)(478600001)(53936002)(229853002)(4326008)(50226002)(54906003)(8936002)(52116002)(81166006)(8676002)(76176011)(2906002)(99286004)(81156014)(305945005)(25786009)(7416002)(102836004)(316002)(6246003)(476003)(14444005)(6116002)(11346002)(446003)(64756008)(66946007)(66476007)(486006)(256004)(66556008)(186003)(3846002)(66446008)(66066001)(1076003)(14454004)(6512007)(9686003)(71190400001)(71200400001)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3624;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cCdIEPXcWL/I/RaCRgBfDcedl/gErQmE8cgbu3UlsSLqd44O2YJAClmSzs6iksqjrw4hjo0LQHg+N1Lc/p8WjGlf2WILgLMqCIP67ggeGAKG57HngLD0PIKiXGpbWUWkHg0jzkM68iE6p09+HUf9Ss3w+FaNS3qp1CyWaM1vYUR8C2OOb0yA7ZCKqsukj5T8Q6xTk1LYvg5WLYXRvlf0g5jKqy2MEH7p9trbOldD6hkgmbJ7q5hwg13M+kwL3CLWlIvbOVatZDHRpZSKaNimtUjyllQVjr7qZFMBPNpQY3m/yEOqaIDaghnCfhFAifQT2VZ7v/Qr0QiE9VjVwYds98+CU/GKN8tSOgkiAlAj0x3JSNzDi4dla69pEyplcXiPjRoVZr3vi2b+sZDz42u5EpM2tjARDgymebfiDCSVOm0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <52D37053CF07584DA4A594C3BC219B1F@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.181, 10.4.195.5]
-Thread-Topic: mm / virtio: Provide support for unused page reporting
-Thread-Index: xHUmoXrRE8GpYbacHABVEp4l9hFR1A==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 22 Aug 2019 10:43:16 +0000 (UTC)
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c3e8b1e9-091b-4078-a527-08d726eda66e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 10:44:03.9547
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zQ6hrPj454XE+NovC32VY3InAbwBh1VtPPr9pterPmeuhKdmgLWhpDDFOyPsld4BJITjjUNEDW3xJio9SBpcPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3624
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 22 Aug 2019 15:52:05 +0530
+"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
 
-> 
-> This series provides an asynchronous means of reporting to a hypervisor
-> that a guest page is no longer in use and can have the data associated
-> with it dropped. To do this I have implemented functionality that allows
-> for what I am referring to as unused page reporting
-> 
-> The functionality for this is fairly simple. When enabled it will allocate
-> statistics to track the number of reported pages in a given free area.
-> When the number of free pages exceeds this value plus a high water value,
-> currently 32, it will begin performing page reporting which consists of
-> pulling pages off of free list and placing them into a scatter list. The
-> scatterlist is then given to the page reporting device and it will perform
-> the required action to make the pages "reported", in the case of
-> virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> and as such they are forced out of the guest. After this they are placed
-> back on the free list, and an additional bit is added if they are not
-> merged indicating that they are a reported buddy page instead of a
-> standard buddy page. The cycle then repeats with additional non-reported
-> pages being pulled until the free areas all consist of reported pages.
-> 
-> I am leaving a number of things hard-coded such as limiting the lowest
-> order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
-> determine what the limit is on how many pages it wants to allocate to
-> process the hints. The upper limit for this is based on the size of the
-> queue used to store the scattergather list.
-> 
-> My primary testing has just been to verify the memory is being freed after
-> allocation by running memhog 40g on a 40g guest and watching the total
-> free memory via /proc/meminfo on the host. With this I have verified most
-> of the memory is freed after each iteration. 
+>=20
+>=20
+> Jisheng Zhang wrote:
+> > Hi,
+> >
+> > On Thu, 22 Aug 2019 12:23:58 +0530
+> > "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote: =20
+> >> Jisheng Zhang wrote: =20
+> ...
+> >> > +/* Ftrace callback handler for kprobes -- called under preepmt
+> >> > disabed */
+> >> > +void kprobe_ftrace_handler(unsigned long ip, unsigned long parent_i=
+p,
+> >> > +                        struct ftrace_ops *ops, struct pt_regs *reg=
+s)
+> >> > +{
+> >> > +     struct kprobe *p;
+> >> > +     struct kprobe_ctlblk *kcb;
+> >> > +
+> >> > +     /* Preempt is disabled by ftrace */
+> >> > +     p =3D get_kprobe((kprobe_opcode_t *)ip);
+> >> > +     if (unlikely(!p) || kprobe_disabled(p))
+> >> > +             return;
+> >> > +
+> >> > +     kcb =3D get_kprobe_ctlblk();
+> >> > +     if (kprobe_running()) {
+> >> > +             kprobes_inc_nmissed_count(p);
+> >> > +     } else {
+> >> > +             unsigned long orig_ip =3D instruction_pointer(regs);
+> >> > +             /* Kprobe handler expects regs->pc =3D pc + 4 as break=
+point hit */
+> >> > +             instruction_pointer_set(regs, ip + sizeof(kprobe_opcod=
+e_t)); =20
+> >>
+> >> Just want to make sure that you've confirmed that this is what happens
+> >> with a regular trap/brk based kprobe on ARM64. The reason for setting
+> >> the instruction pointer here is to ensure that it is set to the same
+> >> value as would be set if there was a trap/brk instruction at the ftrac=
+e
+> >> location. This ensures that the kprobe pre handler sees the same value
+> >> regardless. =20
+> >
+> > Due to the arm64's DYNAMIC_FTRACE_WITH_REGS implementation, the code it=
+self
+> > is correct. But this doesn't look like "there was a trap instruction at
+> > the ftrace location".
+> >
+> > W/O KPROBE_ON_FTRACE:
+> >
+> > foo:
+> > 00    insA
+> > 04    insB
+> > 08    insC
+> >
+> > kprobe's pre_handler() will see pc points to 00. =20
+>=20
+> In this case, the probe will be placed at foo+0x00, so pre_handler()
+> seeing that address in pt_regs is correct behavior - as long as arm64
+> 'brk' instruction causes an exception with the instruction pointer set
 
-I tried to go through the entire patch series. I can see you reported a
--3.27 drop from the baseline. If its because of re-faulting the page after
-host has freed them? Can we avoid freeing all the pages from the guest free_area
-and keep some pages(maybe some mixed order), so that next allocation is done from
-the guest itself than faulting to host. This will work with real workload where
-allocation and deallocation happen at regular intervals. 
+Yep, confirmed with regular trap/brk based kprobes, I do see PC set to
+the "brk" instruction.
 
-This can be further optimized based on other factors like host memory pressure etc.
+> *to* the 'brk' instruction. This is similar to how powerpc 'trap' works.
+> However, x86 'int3' causes an exception *after* execution of the
+> instruction.
 
-Thanks,
-Pankaj       
+Got it. I understand where's the comment "expects regs->pc =3D pc + 1" from=
+.
 
-As far as performance I have
-> been mainly focusing on the will-it-scale/page_fault1 test running with
-> 16 vcpus. I have modified it to use Transparent Huge Pages. With this I
-> see almost no difference, -0.08%, with the patches applied and the feature
-> disabled. I see a regression of -0.86% with the feature enabled, but the
-> madvise disabled in the hypervisor due to a device being assigned. With
-> the feature fully enabled I see a regression of -3.27% versus the baseline
-> without these patches applied. In my testing I found that most of the
-> overhead was due to the page zeroing that comes as a result of the pages
-> having to be faulted back into the guest.
-> 
-> One side effect of these patches is that the guest becomes much more
-> resilient in terms of NUMA locality. With the pages being freed and then
-> reallocated when used it allows for the pages to be much closer to the
-> active thread, and as a result there can be situations where this patch
-> set will out-perform the stock kernel when the guest memory is not local
-> to the guest vCPUs. To avoid that in my testing I set the affinity of all
-> the vCPUs and QEMU instance to the same node.
-> 
-> Changes from the RFC:
-> https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
-> Moved aeration requested flag out of aerator and into zone->flags.
-> Moved boundary out of free_area and into local variables for aeration.
-> Moved aeration cycle out of interrupt and into workqueue.
-> Left nr_free as total pages instead of splitting it between raw and aerated.
-> Combined size and physical address values in virtio ring into one 64b value.
-> 
-> Changes from v1:
-> https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
-> Dropped "waste page treatment" in favor of "page hinting"
-> Renamed files and functions from "aeration" to "page_hinting"
-> Moved from page->lru list to scatterlist
-> Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
-> Virtio now uses scatterlist directly instead of intermediate array
-> Moved stats out of free_area, now in separate area and pointed to from zone
-> Merged patch 5 into patch 4 to improve review-ability
-> Updated various code comments throughout
-> 
-> Changes from v2:
-> https://lore.kernel.org/lkml/20190724165158.6685.87228.stgit@localhost.localdomain/
-> Dropped "page hinting" in favor of "page reporting"
-> Renamed files from "hinting" to "reporting"
-> Replaced "Hinted" page type with "Reported" page flag
-> Added support for page poisoning while hinting is active
-> Add QEMU patch that implements PAGE_POISON feature
-> 
-> Changes from v3:
-> https://lore.kernel.org/lkml/20190801222158.22190.96964.stgit@localhost.localdomain/
-> Added mutex lock around page reporting startup and shutdown
-> Fixed reference to "page aeration" in patch 2
-> Split page reporting function bit out into separate QEMU patch
-> Limited capacity of scatterlist to vq size - 1 instead of vq size
-> Added exception handling for case of virtio descriptor allocation failure
-> 
-> Changes from v4:
-> https://lore.kernel.org/lkml/20190807224037.6891.53512.stgit@localhost.localdomain/
-> Replaced spin_(un)lock with spin_(un)lock_irq in page_reporting_cycle()
-> Dropped if/continue for ternary operator in page_reporting_process()
-> Added checks for isolate and cma types to
-> for_each_reporting_migratetype_order
-> Added virtio-dev, Michal Hocko, and Oscar Salvador to to:/cc:
-> Rebased on latest linux-next and QEMU git trees
-> 
-> Changes from v5:
-> https://lore.kernel.org/lkml/20190812213158.22097.30576.stgit@localhost.localdomain/
-> Replaced spin_(un)lock with spin_(un)lock_irq in page_reporting_startup()
-> Updated shuffle code to use "shuffle_pick_tail" and updated patch description
-> Dropped storage of order and migratettype while page is being reported
-> Used get_pfnblock_migratetype to determine migratetype of page
-> Renamed put_reported_page to free_reported_page, added order as argument
-> Dropped check for CMA type as I believe we should be reporting those
-> Added code to allow moving of reported pages into and out of isolation
-> Defined page reporting order as minimum of Huge Page size vs MAX_ORDER - 1
-> Cleaned up use of static branch usage for page_reporting_notify_enabled
-> 
-> ---
-> 
-> Alexander Duyck (6):
->       mm: Adjust shuffle code to allow for future coalescing
->       mm: Move set/get_pcppage_migratetype to mmzone.h
->       mm: Use zone and order instead of free area in free_list manipulators
->       mm: Introduce Reported pages
->       virtio-balloon: Pull page poisoning config out of free page hinting
->       virtio-balloon: Add support for providing unused page reports to host
-> 
-> 
->  drivers/virtio/Kconfig              |    1
->  drivers/virtio/virtio_balloon.c     |   84 ++++++++-
->  include/linux/mmzone.h              |  124 ++++++++-----
->  include/linux/page-flags.h          |   11 +
->  include/linux/page_reporting.h      |  177 ++++++++++++++++++
->  include/uapi/linux/virtio_balloon.h |    1
->  mm/Kconfig                          |    5 +
->  mm/Makefile                         |    1
->  mm/internal.h                       |   18 ++
->  mm/memory_hotplug.c                 |    1
->  mm/page_alloc.c                     |  216 ++++++++++++++++-------
->  mm/page_reporting.c                 |  336
->  +++++++++++++++++++++++++++++++++++
->  mm/shuffle.c                        |   40 +++-
->  mm/shuffle.h                        |   12 +
->  14 files changed, 896 insertions(+), 131 deletions(-)
->  create mode 100644 include/linux/page_reporting.h
->  create mode 100644 mm/page_reporting.c
-> 
-> --
-> 
-> 
+>=20
+> >
+> > W/ KPROBE_ON_FTRACE:
+> >
+> > foo:
+> > 00    lr saver
+> > 04    nop     // will be modified to ftrace call ins when KPROBE is arm=
+ed
+> > 08    insA
+> > 0c    insB =20
+>=20
+> In this case, if user asks for a probe to be placed at 'foo', we will
+> choose foo+0x04 and from that point on, the behavior should reflect that
+> a kprobe was placed at foo+0x04. In particular, the pre_handler() should
+> see foo+0x04 in pt_regs. The post_handler() would then see foo+0x08.
+>=20
+> >
+> > later, kprobe_ftrace_handler() will see pc points to 04, so pc + 4 will
+> > point to 08 the same as the one w/o KPROBE_ON_FTRACE. =20
+>=20
+> I didn't mean to compare regular trap/brk based kprobes with
+> KPROBES_ON_FTRACE. The only important aspect is that the handlers see
+> consistent pt_regs in both cases, depending on where the kprobe was
+> placed. Choosing a different address/offset to place a kprobe during its
+> registration is an orthogonal aspect.
+
+Indeed, previously, I want to let the PC point to the same instruction, it
+seems I misunderstood the "consistent" meaning.
+
+>=20
+> >
+> > It seems I need to fix the comment. =20
+>=20
+> Given your explanation above, I think you can simply drop the first
+> adjustment to the instruction pointer before the pre handler invocation.
+> The rest of the code looks fine.
+>=20
+>=20
+
+Yep, thanks a lot. Will send out a new version soon.
