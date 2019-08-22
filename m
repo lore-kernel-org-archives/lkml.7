@@ -2,56 +2,54 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D43E9C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15502C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FE5220870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D966E20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495672;
-	bh=U5KoMlAyo+MXsn3lPJtOt1X3dveE4eWToQulh6/o9uI=;
+	s=default; t=1566495677;
+	bh=xOV+gfsvhKxuTMaRavsJgT56mMrub52ODkJUQy0F564=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wrMorw5a5kaWExIfo6tM2Wq+nhsyrSVBTcdJLZYIIXa7VrYpv++wHEdkP1di1mi64
-	 QCnoassSt9TGEAFjgqyqrhQ14nvZtTKjkGaEbJStQOn05fXtSFjK5upsj5rMerOxRH
-	 jweCssH/Hg/q32y67jaF0ECSRLXQ3mBTiwNe5SiA=
+	b=MTtcKz5HKnKuxStkgJElq7ja3U6FYXI2wGpEyaekSMQz5PvoS38qgd2CFUMOH5Cgi
+	 6wl0Rau11JIl/t8gAJr96KkxqOLL7J1WBNXeai2IlSI+FtbUxk3p0FqErYtla4MB6c
+	 o+domXiFTL3J3sFivhWrnuzSdpMmIK095V90jbmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404015AbfHVRYA (ORCPT
+        id S2405128AbfHVRlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:24:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43830 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:41:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403974AbfHVRXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:39 -0400
+        id S2391775AbfHVRX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:59 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F75823406;
-        Thu, 22 Aug 2019 17:23:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3BE023400;
+        Thu, 22 Aug 2019 17:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494618;
-        bh=U5KoMlAyo+MXsn3lPJtOt1X3dveE4eWToQulh6/o9uI=;
+        s=default; t=1566494638;
+        bh=xOV+gfsvhKxuTMaRavsJgT56mMrub52ODkJUQy0F564=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ftcXu7RLQKXMqOoyUQ+DivdAOSNdUqGG0cgOp2ltnNdVCq5xqBj3n6mUrxOQWlc0x
-         jeGYFqFR6VKnLlJZthyPYRTr+oDdfB78961LgHIF99wQyu08h5vitkVqELxITDryRM
-         x8iqb1QZBXfzvlFuXYObt62ADOi0fNynyfZNbVCk=
+        b=bz6LeGy/LIi/w7Ejw+5xFIIqu7ZHuPbiJLAcm4kbJJhkYD3mxZeiqQKnnyFGHBbxA
+         m0B6KN7TvWkr5soTUi2xJPktAnn2fk0BZMJD7uH5WUsPIbLcaCOM09S9f49VEaKpwy
+         2irGwtRBZtst8ruW7EF04n8AlbVnupHSkcLVR8g8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Jann Horn <jannh@google.com>,
+        stable@vger.kernel.org,
+        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Kees Cook <keescook@chromium.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>
-Subject: [PATCH 4.9 047/103] bpf: add bpf_jit_limit knob to restrict unpriv allocations
-Date:   Thu, 22 Aug 2019 10:18:35 -0700
-Message-Id: <20190822171730.699218805@linuxfoundation.org>
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 072/103] libata: zpodd: Fix small read overflow in zpodd_get_mech_type()
+Date:   Thu, 22 Aug 2019 10:19:00 -0700
+Message-Id: <20190822171731.819218616@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -64,193 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+[ Upstream commit 71d6c505b4d9e6f76586350450e785e3d452b346 ]
 
-commit ede95a63b5e84ddeea6b0c473b36ab8bfd8c6ce3 upstream.
+Jeffrin reported a KASAN issue:
 
-Rick reported that the BPF JIT could potentially fill the entire module
-space with BPF programs from unprivileged users which would prevent later
-attempts to load normal kernel modules or privileged BPF programs, for
-example. If JIT was enabled but unsuccessful to generate the image, then
-before commit 290af86629b2 ("bpf: introduce BPF_JIT_ALWAYS_ON config")
-we would always fall back to the BPF interpreter. Nowadays in the case
-where the CONFIG_BPF_JIT_ALWAYS_ON could be set, then the load will abort
-with a failure since the BPF interpreter was compiled out.
+  BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
+  Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
+  ...
+  The buggy address belongs to the variable:
+    cdb.48319+0x0/0x40
 
-Add a global limit and enforce it for unprivileged users such that in case
-of BPF interpreter compiled out we fail once the limit has been reached
-or we fall back to BPF interpreter earlier w/o using module mem if latter
-was compiled in. In a next step, fair share among unprivileged users can
-be resolved in particular for the case where we would fail hard once limit
-is reached.
+Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
+eject_tray()"), this fixes a cdb[] buffer length, this time in
+zpodd_get_mech_type():
 
-Fixes: 290af86629b2 ("bpf: introduce BPF_JIT_ALWAYS_ON config")
-Fixes: 0a14842f5a3c ("net: filter: Just In Time compiler for x86-64")
-Co-Developed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-[bwh: Backported to 4.9: adjust context]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
+ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
+
+Reported-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Fixes: afe759511808c ("libata: identify and init ZPODD devices")
+Link: https://lore.kernel.org/lkml/201907181423.E808958@keescook/
+Tested-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/sysctl/net.txt |    8 +++++++
- include/linux/filter.h       |    1 
- kernel/bpf/core.c            |   49 ++++++++++++++++++++++++++++++++++++++++---
- net/core/sysctl_net_core.c   |   10 +++++++-
- 4 files changed, 63 insertions(+), 5 deletions(-)
+ drivers/ata/libata-zpodd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/Documentation/sysctl/net.txt
-+++ b/Documentation/sysctl/net.txt
-@@ -54,6 +54,14 @@ Values :
- 	1 - enable JIT hardening for unprivileged users only
- 	2 - enable JIT hardening for all users
- 
-+bpf_jit_limit
-+-------------
-+
-+This enforces a global limit for memory allocations to the BPF JIT
-+compiler in order to reject unprivileged JIT requests once it has
-+been surpassed. bpf_jit_limit contains the value of the global limit
-+in bytes.
-+
- dev_weight
- --------------
- 
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -599,6 +599,7 @@ void bpf_warn_invalid_xdp_action(u32 act
- #ifdef CONFIG_BPF_JIT
- extern int bpf_jit_enable;
- extern int bpf_jit_harden;
-+extern int bpf_jit_limit;
- 
- typedef void (*bpf_jit_fill_hole_t)(void *area, unsigned int size);
- 
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -208,9 +208,43 @@ struct bpf_prog *bpf_patch_insn_single(s
- }
- 
- #ifdef CONFIG_BPF_JIT
-+# define BPF_JIT_LIMIT_DEFAULT	(PAGE_SIZE * 40000)
-+
- /* All BPF JIT sysctl knobs here. */
- int bpf_jit_enable   __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_ALWAYS_ON);
- int bpf_jit_harden   __read_mostly;
-+int bpf_jit_limit    __read_mostly = BPF_JIT_LIMIT_DEFAULT;
-+
-+static atomic_long_t bpf_jit_current;
-+
-+#if defined(MODULES_VADDR)
-+static int __init bpf_jit_charge_init(void)
-+{
-+	/* Only used as heuristic here to derive limit. */
-+	bpf_jit_limit = min_t(u64, round_up((MODULES_END - MODULES_VADDR) >> 2,
-+					    PAGE_SIZE), INT_MAX);
-+	return 0;
-+}
-+pure_initcall(bpf_jit_charge_init);
-+#endif
-+
-+static int bpf_jit_charge_modmem(u32 pages)
-+{
-+	if (atomic_long_add_return(pages, &bpf_jit_current) >
-+	    (bpf_jit_limit >> PAGE_SHIFT)) {
-+		if (!capable(CAP_SYS_ADMIN)) {
-+			atomic_long_sub(pages, &bpf_jit_current);
-+			return -EPERM;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void bpf_jit_uncharge_modmem(u32 pages)
-+{
-+	atomic_long_sub(pages, &bpf_jit_current);
-+}
- 
- struct bpf_binary_header *
- bpf_jit_binary_alloc(unsigned int proglen, u8 **image_ptr,
-@@ -218,21 +252,27 @@ bpf_jit_binary_alloc(unsigned int progle
- 		     bpf_jit_fill_hole_t bpf_fill_ill_insns)
- {
- 	struct bpf_binary_header *hdr;
--	unsigned int size, hole, start;
-+	u32 size, hole, start, pages;
- 
- 	/* Most of BPF filters are really small, but if some of them
- 	 * fill a page, allow at least 128 extra bytes to insert a
- 	 * random section of illegal instructions.
- 	 */
- 	size = round_up(proglen + sizeof(*hdr) + 128, PAGE_SIZE);
-+	pages = size / PAGE_SIZE;
-+
-+	if (bpf_jit_charge_modmem(pages))
-+		return NULL;
- 	hdr = module_alloc(size);
--	if (hdr == NULL)
-+	if (!hdr) {
-+		bpf_jit_uncharge_modmem(pages);
- 		return NULL;
-+	}
- 
- 	/* Fill space with illegal/arch-dep instructions. */
- 	bpf_fill_ill_insns(hdr, size);
- 
--	hdr->pages = size / PAGE_SIZE;
-+	hdr->pages = pages;
- 	hole = min_t(unsigned int, size - (proglen + sizeof(*hdr)),
- 		     PAGE_SIZE - sizeof(*hdr));
- 	start = (get_random_int() % hole) & ~(alignment - 1);
-@@ -245,7 +285,10 @@ bpf_jit_binary_alloc(unsigned int progle
- 
- void bpf_jit_binary_free(struct bpf_binary_header *hdr)
- {
-+	u32 pages = hdr->pages;
-+
- 	module_memfree(hdr);
-+	bpf_jit_uncharge_modmem(pages);
- }
- 
- static int bpf_jit_blind_insn(const struct bpf_insn *from,
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -253,7 +253,6 @@ static int proc_dointvec_minmax_bpf_enab
- 	return ret;
- }
- 
--# ifdef CONFIG_HAVE_EBPF_JIT
- static int
- proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 				    void __user *buffer, size_t *lenp,
-@@ -264,7 +263,6 @@ proc_dointvec_minmax_bpf_restricted(stru
- 
- 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- }
--# endif
- #endif
- 
- static struct ctl_table net_core_table[] = {
-@@ -348,6 +346,14 @@ static struct ctl_table net_core_table[]
- 		.extra2		= &two,
- 	},
- # endif
-+	{
-+		.procname	= "bpf_jit_limit",
-+		.data		= &bpf_jit_limit,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0600,
-+		.proc_handler	= proc_dointvec_minmax_bpf_restricted,
-+		.extra1		= &one,
-+	},
- #endif
- 	{
- 		.procname	= "netdev_tstamp_prequeue",
+diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
+index 7017a81d53cf2..083856272e92a 100644
+--- a/drivers/ata/libata-zpodd.c
++++ b/drivers/ata/libata-zpodd.c
+@@ -55,7 +55,7 @@ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
+ 	unsigned int ret;
+ 	struct rm_feature_desc *desc;
+ 	struct ata_taskfile tf;
+-	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
++	static const char cdb[ATAPI_CDB_LEN] = {  GPCMD_GET_CONFIGURATION,
+ 			2,      /* only 1 feature descriptor requested */
+ 			0, 3,   /* 3, removable medium feature */
+ 			0, 0, 0,/* reserved */
+-- 
+2.20.1
+
 
 
