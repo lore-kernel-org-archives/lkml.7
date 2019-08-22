@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE2DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4003C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91A1223401
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79D4023402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566507722;
-	bh=8MBi4J11QXg+Nw3fMASk8wV3rYOoGa64GhozdjPK20Y=;
+	s=default; t=1566507725;
+	bh=1MwG7RIv1THNr+WQTKVe5dsKMYphuScsrFdHJxj/3Kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DZlwKqjGZ3zDznbAk7GAMEjBQ9CncQLYfuB3Yl63b1qVl/RCAz8tnwK8Js3JG1+Gy
-	 m28pfZk8tlKCzBwio76b+QnHHkt901AQQQ4veimj9j+6/77bFu8/dxU+1ErFqfomHz
-	 CPmtgTp2cv/vuQwxJvZFrdNsJWjr1xRC3GR2o0HU=
+	b=dpdI2/66cntrtJuO7BpKNAFCoVe0WfEZ4IiKAQqgfyePsGmEbQ1PpJ9B2EZx2yEAA
+	 +RVXoK+eSv/lC6IE1rcX+fvwmU7J3qskqypqB4QYg2rYHc0n6eTTAvhKcE0NX6EPiN
+	 FC8JSFFhnXr4Ly0TVCBpLQiToEcIwUt3kLDnV3jY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393405AbfHVVCA (ORCPT
+        id S2393436AbfHVVCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:02:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43036 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 17:02:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393383AbfHVVB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:01:57 -0400
+        id S2393410AbfHVVCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 17:02:01 -0400
 Received: from quaco.ghostprotocols.net (unknown [177.158.141.211])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8142E23402;
-        Thu, 22 Aug 2019 21:01:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 648822341C;
+        Thu, 22 Aug 2019 21:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566507716;
-        bh=8MBi4J11QXg+Nw3fMASk8wV3rYOoGa64GhozdjPK20Y=;
+        s=default; t=1566507720;
+        bh=1MwG7RIv1THNr+WQTKVe5dsKMYphuScsrFdHJxj/3Kw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s2XcE6Alz0G5nJafL9m11ShkrvOja+5b99k89106sbdevO3muolg2s8nZFTVqrmfN
-         XrEAshSIZi289WIy6X0MMf7EbFU4KiCqkjr/9rplYzkRJ2M9iZ0rApp7kiqlFyUDaB
-         EX821FfiFQpZb0dM5rDjzdz4IFLLYnfqKsgQjXJ4=
+        b=h6uumdBS24V8kxPsSLUZMM9DGNjzRQ1lQCrfGwxbkRGjQqYs+LvJmWoyqVgWcfDuR
+         RhLO1XgCJknMZBHtMEyE1WphX1+pbkECLq/hd/Vm5g5l7QSflyvjDTe7HuI/f5oBnm
+         nQPispl9L6r2z5lfhJzqZmcdL9hv0xssDqOLWxD0=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 11/25] perf evlist: Add missing xyarray.h header
-Date:   Thu, 22 Aug 2019 18:00:46 -0300
-Message-Id: <20190822210100.3461-12-acme@kernel.org>
+Subject: [PATCH 12/25] perf script: Add missing counts.h
+Date:   Thu, 22 Aug 2019 18:00:47 -0300
+Message-Id: <20190822210100.3461-13-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190822210100.3461-1-acme@kernel.org>
 References: <20190822210100.3461-1-acme@kernel.org>
@@ -62,31 +62,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-It gets it very indirectly, via evsel.h -> counts.h, and since counts.h
-doesn't need xyarray.h at all, add it here before we remove it there.
+It is getting this via evsel.h, that don't strictly need counts.h, just
+forward declarations for some structs, so add it here before we remove
+it from there.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-hkizv6gojwfklj9ezaiiztll@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-q4shpvlxyjqz7val1hyrdak9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/builtin-script.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 8582560b59af..68b7c949017e 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -37,6 +37,8 @@
- #include <perf/evsel.h>
- #include <perf/cpumap.h>
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 1764efd16cd4..e957b870869b 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3,6 +3,7 @@
  
-+#include <internal/xyarray.h>
-+
- #ifdef LACKS_SIGQUEUE_PROTOTYPE
- int sigqueue(pid_t pid, int sig, const union sigval value);
- #endif
+ #include "perf.h"
+ #include "util/cache.h"
++#include "util/counts.h"
+ #include "util/debug.h"
+ #include <subcmd/exec-cmd.h>
+ #include "util/header.h"
 -- 
 2.21.0
 
