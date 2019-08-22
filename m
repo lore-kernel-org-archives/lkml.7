@@ -2,77 +2,135 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D8CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0551C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49736233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941B92339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:24:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oHQtK7cW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394421AbfHVXXm (ORCPT
+        id S2394429AbfHVXYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 19:23:42 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:50602 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730029AbfHVXXl (ORCPT
+        Thu, 22 Aug 2019 19:24:01 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41960 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391126AbfHVXYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 19:23:41 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id DF6051539DF80;
-        Thu, 22 Aug 2019 16:23:39 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 16:23:39 -0700 (PDT)
-Message-Id: <20190822.162339.831735149510227752.davem@davemloft.net>
-To:     Markus.Elfring@web.de
-Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        intel-wired-lan@lists.osuosl.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        UNGLinuxDriver@microchip.com, alexandre.torgue@st.com,
-        alexios.zavras@intel.com, allison@lohutok.net,
-        bryan.whitehead@microchip.com, claudiu.manoil@nxp.com,
-        opendmb@gmail.com, dougmill@linux.ibm.com, f.fainelli@gmail.com,
-        peppe.cavallaro@st.com, gregkh@linuxfoundation.org,
-        jeffrey.t.kirsher@intel.com, opensource@jilayne.com,
-        jonathan.lemon@gmail.com, joabreu@synopsys.com,
-        kstewart@linuxfoundation.org, mcgrof@kernel.org,
-        mcoquelin.stm32@gmail.com, michael.heimpold@i2se.com,
-        nico@fluxnic.net, ynezz@true.cz, shannon.nelson@oracle.com,
-        stefan.wahren@i2se.com, swinslow@gmail.com, tglx@linutronix.de,
-        weiyongjun1@huawei.com, wsa+renesas@sang-engineering.com,
-        yang.wei9@zte.com.cn, yuehaibing@huawei.com, zhongjiang@huawei.com,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] ethernet: Delete unnecessary checks before the macro
- call =?iso-2022-jp?B?GyRCIUgbKEJkZXZfa2ZyZWVfc2tiGyRCIUkbKEI=?=
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <af1ae1cf-4a01-5e3a-edc2-058668487137@web.de>
-References: <af1ae1cf-4a01-5e3a-edc2-058668487137@web.de>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 22 Aug 2019 16:23:41 -0700 (PDT)
+        Thu, 22 Aug 2019 19:24:01 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x15so4577145pgg.8
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 16:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Xrv/K8dQ89ELPWp5GIeJvc/tKU1hE0fADZZT0Rp4xCw=;
+        b=oHQtK7cWF4YNNlGFX4Lou7Tvf5M6/BkXy7GynBMfRPexYBZiYMeznIpW0OEEMlYOvO
+         h9FRRAdhuHWA69cBYNVMLsSpA0lLfGO1Vme9nN+wiZwpWn0Bkdo6KZ/80U1+uSjgWWpu
+         MhHBCysvmoJvK6dkijFMjPDvC/846PpdnyhE4AqP9XQlCBkGmUhoMLtg+90YXqGWpXKS
+         B4XwVx8ERhHdNl4h7RyoXWP8YYGz5OFuh5Pm0s5n7qtQhnY7N9AkSOY1KGPpikrGf9xX
+         axyZfS8wUK3VLfhWjIYpsq3n12IGgJJO/dv3dRVP8FqN0FvyhDGz+L4cBxZvz1LSDVAf
+         U9zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Xrv/K8dQ89ELPWp5GIeJvc/tKU1hE0fADZZT0Rp4xCw=;
+        b=kqOsCmEERmI+gAdOoiF/3q4hBYHFuyyRmHnGxb8kfbDyOthCyiJUeu1/Of8uIYep7Y
+         EzOJnsj7A+W7CwsWdNTm5RiDUy2p46VY6owLrkLJbFMka2KFulNT0doIt0+N/L+IIbef
+         oqi2SolYdWNsKkXQSx3GnkkI4KD8kdxC/joRPgTrvHeR6kJJ8sfvPp0JURmEnOx5Ws3X
+         hUOXhJ5y1AKgMXgIGS6+v/boA1QpMOlUP9CHSC+3RxlC0IXm8jegdRQtYWKgMo+YUM/F
+         bZS1hHIb+VjOtCaqxCuMBMXSxR0NXNXy25gIQohKpxAG7a8U53cp8d7n57Zi/HJg6OC0
+         nIYA==
+X-Gm-Message-State: APjAAAVwh652y5fBdfR11pIqN+sKyQutRpK8DnZVkJRzMFiZVFLHp9Jt
+        lHKHWdpbFnYaroYmNcLKTVEw4w==
+X-Google-Smtp-Source: APXvYqwa+nxDVJoq0CNmukkf7aMafMYxPRJadiw+6g6zA2gNsoqH1hxioLg6agDSoWaVzexljZ8jNA==
+X-Received: by 2002:a63:e148:: with SMTP id h8mr1392722pgk.275.1566516240065;
+        Thu, 22 Aug 2019 16:24:00 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:89d4:68d1:fc04:721])
+        by smtp.gmail.com with ESMTPSA id s7sm474003pfb.138.2019.08.22.16.23.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 22 Aug 2019 16:23:59 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     "kernelci.org bot" <bot@kernelci.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/71] 4.14.140-stable review
+In-Reply-To: <5d5f064d.1c69fb81.ab35c.8cfd@mx.google.com>
+References: <20190822171726.131957995@linuxfoundation.org> <5d5f064d.1c69fb81.ab35c.8cfd@mx.google.com>
+Date:   Thu, 22 Aug 2019 16:23:58 -0700
+Message-ID: <7h8srk238x.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <Markus.Elfring@web.de>
-Date: Thu, 22 Aug 2019 20:30:15 +0200
+"kernelci.org bot" <bot@kernelci.org> writes:
 
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Thu, 22 Aug 2019 20:02:56 +0200
-> 
-> The dev_kfree_skb() function performs also input parameter validation.
-> Thus the test around the shown calls is not needed.
-> 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> stable-rc/linux-4.14.y boot: 124 boots: 2 failed, 106 passed with 16 offline (v4.14.139-72-g6c641edcbe64)
 
-Applied.
+TL;DR;  All is well.
+
+> Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux-4.14.y/kernel/v4.14.139-72-g6c641edcbe64/
+> Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.y/kernel/v4.14.139-72-g6c641edcbe64/
+>
+> Tree: stable-rc
+> Branch: linux-4.14.y
+> Git Describe: v4.14.139-72-g6c641edcbe64
+> Git Commit: 6c641edcbe649a2aa866356ffd24f595edb17bea
+> Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+> Tested: 67 unique boards, 25 SoC families, 16 builds out of 201
+>
+> Boot Regressions Detected:
+>
+> arm:
+>
+>     bcm2835_defconfig:
+>         gcc-8:
+>           bcm2835-rpi-b:
+>               lab-baylibre-seattle: new failure (last pass: v4.14.139-62-g3f2d1f5446a4)
+>
+>     qcom_defconfig:
+>         gcc-8:
+>           qcom-apq8064-cm-qs600:
+>               lab-baylibre-seattle: failing since 6 days (last pass: v4.14.138 - first fail: v4.14.138-70-g736c2f07319a)
+>           qcom-apq8064-ifc6410:
+>               lab-baylibre-seattle: failing since 6 days (last pass: v4.14.138 - first fail: v4.14.138-70-g736c2f07319a)
+>
+>     sama5_defconfig:
+>         gcc-8:
+>           at91-sama5d4_xplained:
+>               lab-baylibre-seattle: new failure (last pass: v4.14.139-62-g3f2d1f5446a4)
+
+Again, regression detector failure...
+
+> Boot Failures Detected:
+>
+> arc:
+>     hsdk_defconfig:
+>         gcc-8:
+>             hsdk: 1 failed lab
+
+This is known broken on v4.14, will blacklist.
+
+> arm64:
+>     defconfig:
+>         gcc-8:
+>             rk3399-firefly: 1 failed lab
+
+Hmm, this appears to have never worked on v4.14 either.  Blacklisting
+until someone else cares to debug why.
+
+Kevin
