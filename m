@@ -2,125 +2,146 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C37BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E387C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757AE23406
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TOXDCBl6"
+	by mail.kernel.org (Postfix) with ESMTP id 047FE2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566495282;
+	bh=s0ApEAcmL3TT3fBlquZB8oeVyf6DwCkBqIEm+2y66aM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZfeLPEqRn16wKqdoSKNAxgVZUf7uACt4hYjS+PrCCWFr/kNDnTSf7t3oICM/gCDj/
+	 9wmGoRTiIK97h5RTF8RFosrc0mIQ0BNVGrR6EQaBC+9q8HbuQqXVJRg/CJfsP+tc7n
+	 Qls/KII+Ee7xp3ehcXE8JwNP8aGkdaM4yPmLx/go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392796AbfHVRef (ORCPT
+        id S2404375AbfHVRel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:34:35 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46731 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404374AbfHVRZS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:34:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404366AbfHVRZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 13:25:18 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c2so3826784plz.13
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 10:25:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Y6Dgg0LHIAz3laO+y1ntUkl0I7eVRTHEz+QlpqCcJzM=;
-        b=TOXDCBl6f8xlElGz/1VgT87+cdII1cmN5ZgoolaAd7oEb3dKLp1S1aL8eIAK602wRA
-         rFV3kajNzuMqA4UEKTCS3p+weiq9BteIBukmbisFxA48gsaY84KdHTxbIl+R7uti/zmz
-         vKmYinXsuEL5HmhH7cQg7SvGd3IMVzS+tidp1iSw7IeQ5I3BILh31uDv6xkYym/ZUF22
-         I+N3iNN6gjUqxDsC7MVj180HA/sXR/waBKbKAC6Ujfjt91vw4asNcnDuH9yG8hcd+pla
-         GAc0mCLgB3uLH3bVSL7ZcOSv9zFfBCOpTcrSc+K2XP/54ZTAa50tjiJvklrL9DieJktS
-         oDYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Y6Dgg0LHIAz3laO+y1ntUkl0I7eVRTHEz+QlpqCcJzM=;
-        b=FXPpJ+FG/zBUDwvPya3KJAFWMx8R4gnpHjFhdkAV70BzRuEF53f63OTF7/bQEcLt72
-         lgueAvz8YB57e+UbOAOecGpfCRsbRyhnTXNTj8YrdKgt1e9ODX3RPNKPBUalwWOEUYOr
-         ceVUVlstdxEHr0WuKatCQIHZXc2xhMlN9V1vghtCS6JWCicIyZJxB+CMYhkO2uCsyqjf
-         IwqstXYZvI3eHibp2cgzAH2V3sq9BUuBFCcFMBI4iNYURbQbu2nFlmE5eC/+u8RTLbf/
-         +IXaZe306+fKTWwjwf/oX0N62USfI3+R0eGYG0MhUQdoXOl2Tqtl3vONhrX6DjjVpq5X
-         Ctlg==
-X-Gm-Message-State: APjAAAXASOoTgNNevjlp0VQmIlbUP91yQ1Ma6sPCqpfj1+HBeC+RNQlB
-        ClG++QP/la6nITZjGblqNazzjKz/Ug==
-X-Google-Smtp-Source: APXvYqyQha/e6kS2nojAOGpDDw4shsyn1hRc1sxUaHNJWwVW+IOzYG5yHHeYZaNx46NEZ2lrt6i+Eg==
-X-Received: by 2002:a17:902:ab8f:: with SMTP id f15mr41150750plr.301.1566494717986;
-        Thu, 22 Aug 2019 10:25:17 -0700 (PDT)
-Received: from localhost.localdomain ([2405:204:71cc:5738:24ad:193e:4b59:8a76])
-        by smtp.gmail.com with ESMTPSA id r12sm31705798pgb.73.2019.08.22.10.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 10:25:17 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        fisher.cheng@bitmain.com, alec.lin@bitmain.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 5/8] arm64: dts: bitmain: Add clock controller support for BM1880 SoC
-Date:   Thu, 22 Aug 2019 22:54:23 +0530
-Message-Id: <20190822172426.25879-6-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190822172426.25879-1-manivannan.sadhasivam@linaro.org>
-References: <20190822172426.25879-1-manivannan.sadhasivam@linaro.org>
+Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60B9D23400;
+        Thu, 22 Aug 2019 17:25:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566494717;
+        bh=s0ApEAcmL3TT3fBlquZB8oeVyf6DwCkBqIEm+2y66aM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vY9oS3IKk4jCw4J4vGHtvdIO0UbTwxRVZCd8CgD27YdDGvlLWipRfoXQFs27PCUuM
+         MQcgZ8d3AejDYHcUUdPP0UdVWH9Lp2Q4RvGAgF/8KLk4j4GFx1hzm3QI/N7i+OQ5+j
+         J2XyK5cpzYrJ1+jLS5SXk0Y8+8IwbgJOq6quk63U=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 46/71] USB: core: Fix races in character device registration and deregistraion
+Date:   Thu, 22 Aug 2019 10:19:21 -0700
+Message-Id: <20190822171729.863177187@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
+References: <20190822171726.131957995@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clock controller support for Bitmain BM1880 SoC.
+From: Alan Stern <stern@rowland.harvard.edu>
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+commit 303911cfc5b95d33687d9046133ff184cf5043ff upstream.
+
+The syzbot fuzzer has found two (!) races in the USB character device
+registration and deregistration routines.  This patch fixes the races.
+
+The first race results from the fact that usb_deregister_dev() sets
+usb_minors[intf->minor] to NULL before calling device_destroy() on the
+class device.  This leaves a window during which another thread can
+allocate the same minor number but will encounter a duplicate name
+error when it tries to register its own class device.  A typical error
+message in the system log would look like:
+
+    sysfs: cannot create duplicate filename '/class/usbmisc/ldusb0'
+
+The patch fixes this race by destroying the class device first.
+
+The second race is in usb_register_dev().  When that routine runs, it
+first allocates a minor number, then drops minor_rwsem, and then
+creates the class device.  If the device creation fails, the minor
+number is deallocated and the whole routine returns an error.  But
+during the time while minor_rwsem was dropped, there is a window in
+which the minor number is allocated and so another thread can
+successfully open the device file.  Typically this results in
+use-after-free errors or invalid accesses when the other thread closes
+its open file reference, because the kernel then tries to release
+resources that were already deallocated when usb_register_dev()
+failed.  The patch fixes this race by keeping minor_rwsem locked
+throughout the entire routine.
+
+Reported-and-tested-by: syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1908121607590.1659-100000@iolanthe.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/boot/dts/bitmain/bm1880.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/usb/core/file.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/bitmain/bm1880.dtsi b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-index d65453f99a99..8471662413da 100644
---- a/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-+++ b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
-@@ -4,6 +4,7 @@
-  * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-  */
+--- a/drivers/usb/core/file.c
++++ b/drivers/usb/core/file.c
+@@ -193,9 +193,10 @@ int usb_register_dev(struct usb_interfac
+ 		intf->minor = minor;
+ 		break;
+ 	}
+-	up_write(&minor_rwsem);
+-	if (intf->minor < 0)
++	if (intf->minor < 0) {
++		up_write(&minor_rwsem);
+ 		return -EXFULL;
++	}
  
-+#include <dt-bindings/clock/bm1880-clock.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/bitmain,bm1880-reset.h>
+ 	/* create a usb class device for this usb interface */
+ 	snprintf(name, sizeof(name), class_driver->name, minor - minor_base);
+@@ -203,12 +204,11 @@ int usb_register_dev(struct usb_interfac
+ 				      MKDEV(USB_MAJOR, minor), class_driver,
+ 				      "%s", kbasename(name));
+ 	if (IS_ERR(intf->usb_dev)) {
+-		down_write(&minor_rwsem);
+ 		usb_minors[minor] = NULL;
+ 		intf->minor = -1;
+-		up_write(&minor_rwsem);
+ 		retval = PTR_ERR(intf->usb_dev);
+ 	}
++	up_write(&minor_rwsem);
+ 	return retval;
+ }
+ EXPORT_SYMBOL_GPL(usb_register_dev);
+@@ -234,12 +234,12 @@ void usb_deregister_dev(struct usb_inter
+ 		return;
  
-@@ -66,6 +67,12 @@
- 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
- 	};
+ 	dev_dbg(&intf->dev, "removing %d minor\n", intf->minor);
++	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
  
-+	osc: osc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <25000000>;
-+		#clock-cells = <0>;
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
-@@ -94,6 +101,15 @@
- 				reg = <0x400 0x120>;
- 			};
+ 	down_write(&minor_rwsem);
+ 	usb_minors[intf->minor] = NULL;
+ 	up_write(&minor_rwsem);
  
-+			clk: clock-controller@e8 {
-+				compatible = "bitmain,bm1880-clk";
-+				reg = <0xe8 0x0c>, <0x800 0xb0>;
-+				reg-names = "pll", "sys";
-+				clocks = <&osc>;
-+				clock-names = "osc";
-+				#clock-cells = <1>;
-+			};
-+
- 			rst: reset-controller@c00 {
- 				compatible = "bitmain,bm1880-reset";
- 				reg = <0xc00 0x8>;
--- 
-2.17.1
+-	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
+ 	intf->usb_dev = NULL;
+ 	intf->minor = -1;
+ 	destroy_usb_class();
+
 
