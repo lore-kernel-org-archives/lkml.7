@@ -2,133 +2,222 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5EDC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFF4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCB8233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF32023402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:58:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KNnlO3AS"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="XeejMVuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732531AbfHVJ5e (ORCPT
+        id S1732665AbfHVJ63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:57:34 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40628 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732403AbfHVJ5b (ORCPT
+        Thu, 22 Aug 2019 05:58:29 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36982 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730711AbfHVJ61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:57:31 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c5so4903225wmb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 02:57:30 -0700 (PDT)
+        Thu, 22 Aug 2019 05:58:27 -0400
+Received: by mail-wm1-f66.google.com with SMTP id d16so5109940wme.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 02:58:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7lEwavhf3fUGzkEL5MEZgCjXL2zMuro3WN6EEJNDNjU=;
-        b=KNnlO3ASgv4ah2d8gdkaMFHttHgLNVvTnm4UPZ74Eqwfy7YLV+R7o/vIGBjnfyEh9E
-         Xv1tzEw7a0qZuTR4qmbCKAeMqQFEJyk4L2SOdZhCRPcm2dCoG58ReEhEDi5blIeHiiFd
-         VzKuaX13KfllCzPzSn3OiuysWFMb1eZQ9VePTg63dOcHiSVD6LX0OHU6EyaTuK1MaPx3
-         Fq1QgUzvgl/WKVRERRfykRgAnriXiGyZZPViuba/+Tlcbhv76oHh3cPV1qcdbAYWX27j
-         lcydCzTlT7ABHQBsbCx7if52dsaxPcdMPGkyCSfG9L4xAE8gEzVYW0iXOkFs0llHuKFV
-         XmDA==
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=89qp1j0vG8r7k9LWPHrfwOqB56CK9Kz52Ma6ELu+ntU=;
+        b=XeejMVuQKifR+vB/IZdxnHUkXo8g/G6JmX1i5sxmn1oCBRRXQ5zR8j7dET2tONljf2
+         1AVDVasWSHplYDamp//Eaz9BsQ19s2YPYVSX+oCmdL7uDlWJYrOAL7HPpCyLVU0eq8Ga
+         ZWougP/kRhXIXnG7ID7LCMr96F4w5/Uk6XzEwukNcyNn1b2VkTpXRliyxAY0ufyKU2Y7
+         ieDeUuqcbMlzU5I3YJ34rXFCT7RTXFtPc8Tv3XKjdCzgwX2EH4umdPj7AfNFygH4E+v0
+         +MDWYB81Y2Z5bUfyfoYUui0Pw0wAgI6NN3lBdnT9j/UdGIgKjAYqgkPX/soue3NKmDIw
+         GODg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7lEwavhf3fUGzkEL5MEZgCjXL2zMuro3WN6EEJNDNjU=;
-        b=AnTBsR4eIiGuPY/G1on96jFKwPgb4qgJHZ9sOelyFPYy32u287rNXPQZUA6lkLWlDJ
-         3ZoWbUfiQn8cKqueMRtOrq+z+iPh5vuKYQWjUgJjaXkNz1VI7T+U2xgbBo6c+SeUU1ho
-         6OJ25GeJKnUOcEj8UcPn1384D8WyuT+FOqSgdCA+1aScmLUosxZs3tGD1PS+VUv5bWRn
-         XaluyluE5KVq0eDVzOr0MF6xQqlg3rXHGF7jbm4dJhT5boW/ppfIJ0SObRi/oFff0ZB7
-         5fdKqann/irzYeQC51ZIRHe11Ql9eftmiTpewOIFnhHqxN6JYHZL9PNYThHgWP0pgJI1
-         3MLw==
-X-Gm-Message-State: APjAAAVz91OSRde/PmcKwfbl7OJd2G1zrq5PW8Ej3uWRA/s/ftdBvS+x
-        B5dR3afjdOMpY9bmTao/HkwWCrGFlHM=
-X-Google-Smtp-Source: APXvYqwUnYGJLfqkiROJD+X4tEsIDFB40pxu7PvSCUNNiAEanKhCCKYvuvg1SrblgBqPqyIcx/v9bg==
-X-Received: by 2002:a1c:4c06:: with SMTP id z6mr5154610wmf.47.1566467849478;
-        Thu, 22 Aug 2019 02:57:29 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id t24sm3298909wmj.14.2019.08.22.02.57.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=89qp1j0vG8r7k9LWPHrfwOqB56CK9Kz52Ma6ELu+ntU=;
+        b=Mu6f5o6OJdfJfsNfBNwi1otmzKnXV2OpVq0oBn5luM7XP0yGPx+18ktjm6SFf1VvGx
+         dRnPHJOg7X6Q51gj9HDypC8tNEANfAh8ik5MekLOmeS6waZqQHFS0uTPmpo7p8Z/pNTy
+         vjVPLhwB91StgUznmE4hYyXtjt2dFNJtL4O7576pKK7EU5GgNWvI0OgDhNvTd4Y2E0ZH
+         aw9ssy00BnPWQIQjqebiOrJxJl+HRe5eGIAkjOk+tpzPwbP1qhE6gWmgrUyENxEfMios
+         u/Z/0Yo/hlPnfnavIkkbcS9SDW8tM9PCNbuKMfRcd+fxn1MHIH28ujjuxNlcZjzKaN/B
+         Nz+g==
+X-Gm-Message-State: APjAAAVQgyRtDZJpoyP+9Wi6+bcCIIoeDBhIWYwcqf9p/rsOdzjqzuNk
+        a533d1FI8nOFEjxFrQTl7Gqkyg==
+X-Google-Smtp-Source: APXvYqxdfWddTv+LwRyjWDMFciHMlomJRHxzOtJdA19Ptodrcj/WstW54OBl74diZxiCFIhujwLPuQ==
+X-Received: by 2002:a7b:cbc6:: with SMTP id n6mr5524779wmi.6.1566467904865;
+        Thu, 22 Aug 2019 02:58:24 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id i5sm27234820wrn.48.2019.08.22.02.58.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 02:57:28 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     broonie@kernel.org, tiwai@suse.de
-Cc:     spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        plai@codeaurora.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        Vidyakumar Athota <vathota@codeaurora.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v2 1/4] ALSA: pcm: add support for 352.8KHz and 384KHz sample rate
-Date:   Thu, 22 Aug 2019 10:56:50 +0100
-Message-Id: <20190822095653.7200-2-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190822095653.7200-1-srinivas.kandagatla@linaro.org>
-References: <20190822095653.7200-1-srinivas.kandagatla@linaro.org>
+        Thu, 22 Aug 2019 02:58:24 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 11:58:23 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        cjia <cjia@nvidia.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Message-ID: <20190822095823.GB2276@nanopsycho.orion>
+References: <20190820111904.75515f58@x1.home>
+ <AM0PR05MB486686D3C311F3C61BE0997DD1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <20190820222051.7aeafb69@x1.home>
+ <AM0PR05MB48664CDF05C3D02F9441440DD1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <20190820225722.237a57d2@x1.home>
+ <AM0PR05MB4866AE8FC4AA3CC24B08B326D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <20190820232622.164962d3@x1.home>
+ <AM0PR05MB4866437FAA63C447CACCD7E5D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <20190822092903.GA2276@nanopsycho.orion>
+ <AM0PR05MB4866A20F831A5D42E6C79EFED1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR05MB4866A20F831A5D42E6C79EFED1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vidyakumar Athota <vathota@codeaurora.org>
+Thu, Aug 22, 2019 at 11:42:13AM CEST, parav@mellanox.com wrote:
+>
+>
+>> -----Original Message-----
+>> From: Jiri Pirko <jiri@resnulli.us>
+>> Sent: Thursday, August 22, 2019 2:59 PM
+>> To: Parav Pandit <parav@mellanox.com>
+>> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri Pirko
+>> <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>; Kirti
+>> Wankhede <kwankhede@nvidia.com>; Cornelia Huck <cohuck@redhat.com>;
+>> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia <cjia@nvidia.com>;
+>> netdev@vger.kernel.org
+>> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+>> 
+>> Wed, Aug 21, 2019 at 08:23:17AM CEST, parav@mellanox.com wrote:
+>> >
+>> >
+>> >> -----Original Message-----
+>> >> From: Alex Williamson <alex.williamson@redhat.com>
+>> >> Sent: Wednesday, August 21, 2019 10:56 AM
+>> >> To: Parav Pandit <parav@mellanox.com>
+>> >> Cc: Jiri Pirko <jiri@mellanox.com>; David S . Miller
+>> >> <davem@davemloft.net>; Kirti Wankhede <kwankhede@nvidia.com>;
+>> >> Cornelia Huck <cohuck@redhat.com>; kvm@vger.kernel.org;
+>> >> linux-kernel@vger.kernel.org; cjia <cjia@nvidia.com>;
+>> >> netdev@vger.kernel.org
+>> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+>> >>
+>> >> > > > > Just an example of the alias, not proposing how it's set.  In
+>> >> > > > > fact, proposing that the user does not set it, mdev-core
+>> >> > > > > provides one
+>> >> > > automatically.
+>> >> > > > >
+>> >> > > > > > > Since there seems to be some prefix overhead, as I ask
+>> >> > > > > > > about above in how many characters we actually have to
+>> >> > > > > > > work with in IFNAMESZ, maybe we start with 8 characters
+>> >> > > > > > > (matching your "index" namespace) and expand as necessary for
+>> disambiguation.
+>> >> > > > > > > If we can eliminate overhead in IFNAMESZ, let's start with 12.
+>> >> > > > > > > Thanks,
+>> >> > > > > > >
+>> >> > > > > > If user is going to choose the alias, why does it have to
+>> >> > > > > > be limited to
+>> >> sha1?
+>> >> > > > > > Or you just told it as an example?
+>> >> > > > > >
+>> >> > > > > > It can be an alpha-numeric string.
+>> >> > > > >
+>> >> > > > > No, I'm proposing a different solution where mdev-core
+>> >> > > > > creates an alias based on an abbreviated sha1.  The user does
+>> >> > > > > not provide the
+>> >> alias.
+>> >> > > > >
+>> >> > > > > > Instead of mdev imposing number of characters on the alias,
+>> >> > > > > > it should be best
+>> >> > > > > left to the user.
+>> >> > > > > > Because in future if netdev improves on the naming scheme,
+>> >> > > > > > mdev will be
+>> >> > > > > limiting it, which is not right.
+>> >> > > > > > So not restricting alias size seems right to me.
+>> >> > > > > > User configuring mdev for networking devices in a given
+>> >> > > > > > kernel knows what
+>> >> > > > > user is doing.
+>> >> > > > > > So user can choose alias name size as it finds suitable.
+>> >> > > > >
+>> >> > > > > That's not what I'm proposing, please read again.  Thanks,
+>> >> > > >
+>> >> > > > I understood your point. But mdev doesn't know how user is
+>> >> > > > going to use
+>> >> > > udev/systemd to name the netdev.
+>> >> > > > So even if mdev chose to pick 12 characters, it could result in collision.
+>> >> > > > Hence the proposal to provide the alias by the user, as user
+>> >> > > > know the best
+>> >> > > policy for its use case in the environment its using.
+>> >> > > > So 12 character sha1 method will still work by user.
+>> >> > >
+>> >> > > Haven't you already provided examples where certain drivers or
+>> >> > > subsystems have unique netdev prefixes?  If mdev provides a
+>> >> > > unique alias within the subsystem, couldn't we simply define a
+>> >> > > netdev prefix for the mdev subsystem and avoid all other
+>> >> > > collisions?  I'm not in favor of the user providing both a uuid
+>> >> > > and an alias/instance.  Thanks,
+>> >> > >
+>> >> > For a given prefix, say ens2f0, can two UUID->sha1 first 9
+>> >> > characters have
+>> >> collision?
+>> >>
+>> >> I think it would be a mistake to waste so many chars on a prefix, but
+>> >> 9 characters of sha1 likely wouldn't have a collision before we have
+>> >> 10s of thousands of devices.  Thanks,
+>> >>
+>> >> Alex
+>> >
+>> >Jiri, Dave,
+>> >Are you ok with it for devlink/netdev part?
+>> >Mdev core will create an alias from a UUID.
+>> >
+>> >This will be supplied during devlink port attr set such as,
+>> >
+>> >devlink_port_attrs_mdev_set(struct devlink_port *port, const char
+>> >*mdev_alias);
+>> >
+>> >This alias is used to generate representor netdev's phys_port_name.
+>> >This alias from the mdev device's sysfs will be used by the udev/systemd to
+>> generate predicable netdev's name.
+>> >Example: enm<mdev_alias_first_12_chars>
+>> 
+>> What happens in unlikely case of 2 UUIDs collide?
+>> 
+>Since users sees two devices with same phys_port_name, user should destroy recently created mdev and recreate mdev with different UUID?
 
-Most of the modern codecs supports 352.8KHz and 384KHz sample rates.
-Currenlty HW params fails to set 352.8Kz and 384KHz sample rate
-as these are not in known rates list.
-Add these new rates to known list to allow them.
+Driver should make sure phys port name wont collide, in this case that
+it does not provide 2 same attrs for 2 different ports.
+Hmm, so the order of creation matters. That is not good.
 
-This patch also adds defines in pcm.h so that drivers can use it.
+>> 
+>> >I took Ethernet mdev as an example.
+>> >New prefix 'm' stands for mediated device.
+>> >Remaining 12 characters are first 12 chars of the mdev alias.
+>> 
+>> Does this resolve the identification of devlink port representor? 
+>Not sure if I understood your question correctly, attemping to answer below.
+>phys_port_name of devlink port is defined by the first 12 characters of mdev alias.
+>> I assume you want to use the same 12(or so) chars, don't you?
+>Mdev's netdev will also use the same mdev alias from the sysfs to rename netdev name from ethX to enm<mdev_alias>, where en=Etherenet, m=mdev.
+>
+>So yes, same 12 characters are use for mdev's netdev and mdev devlink port's phys_port_name.
+>
+>Is that what are you asking?
 
-Signed-off-by: Vidyakumar Athota <vathota@codeaurora.org>
-Signed-off-by: Banajit Goswami <bgoswami@codeaurora.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- include/sound/pcm.h     | 5 +++++
- sound/core/pcm_native.c | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/include/sound/pcm.h b/include/sound/pcm.h
-index 1e9bb1c91770..bbe6eb1ff5d2 100644
---- a/include/sound/pcm.h
-+++ b/include/sound/pcm.h
-@@ -117,6 +117,8 @@ struct snd_pcm_ops {
- #define SNDRV_PCM_RATE_96000		(1<<10)		/* 96000Hz */
- #define SNDRV_PCM_RATE_176400		(1<<11)		/* 176400Hz */
- #define SNDRV_PCM_RATE_192000		(1<<12)		/* 192000Hz */
-+#define SNDRV_PCM_RATE_352800		(1<<13)		/* 352800Hz */
-+#define SNDRV_PCM_RATE_384000		(1<<14)		/* 384000Hz */
- 
- #define SNDRV_PCM_RATE_CONTINUOUS	(1<<30)		/* continuous range */
- #define SNDRV_PCM_RATE_KNOT		(1<<31)		/* supports more non-continuos rates */
-@@ -129,6 +131,9 @@ struct snd_pcm_ops {
- 					 SNDRV_PCM_RATE_88200|SNDRV_PCM_RATE_96000)
- #define SNDRV_PCM_RATE_8000_192000	(SNDRV_PCM_RATE_8000_96000|SNDRV_PCM_RATE_176400|\
- 					 SNDRV_PCM_RATE_192000)
-+#define SNDRV_PCM_RATE_8000_384000	(SNDRV_PCM_RATE_8000_192000|\
-+					 SNDRV_PCM_RATE_352800|\
-+					 SNDRV_PCM_RATE_384000)
- #define _SNDRV_PCM_FMTBIT(fmt)		(1ULL << (__force int)SNDRV_PCM_FORMAT_##fmt)
- #define SNDRV_PCM_FMTBIT_S8		_SNDRV_PCM_FMTBIT(S8)
- #define SNDRV_PCM_FMTBIT_U8		_SNDRV_PCM_FMTBIT(U8)
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index 703857aab00f..11e653c8aa0e 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -2170,7 +2170,7 @@ static int snd_pcm_hw_rule_sample_bits(struct snd_pcm_hw_params *params,
- 
- static const unsigned int rates[] = {
- 	5512, 8000, 11025, 16000, 22050, 32000, 44100,
--	48000, 64000, 88200, 96000, 176400, 192000
-+	48000, 64000, 88200, 96000, 176400, 192000, 352800, 384000
- };
- 
- const struct snd_pcm_hw_constraint_list snd_pcm_known_rates = {
--- 
-2.21.0
-
+Yes. Then you have 3 chars to handle the rest of the name (pci, pf)...
