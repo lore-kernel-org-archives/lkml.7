@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4113CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A87DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02452233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14ED233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493770;
-	bh=E7dDbYlCbqrli8DEiyYIi2FFj2BDiNINEV8DC8CpJwQ=;
+	s=default; t=1566493776;
+	bh=4qbaXH5sM+XOTj+157enUJeOpnIDsLrcUa+ZqSU4zWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mk0QaRy6Sua0tM0ZlALh1jRmE4q58MABNGD6N3VHm3hzC+tgcPaMacn48oE09yKHs
-	 IkZ8sawuTpiW8ASUaT6aUQJ0CkzIpW98r48s3l4HAMdpqbwJWI60jv0T2oBNsrdNQ5
-	 y8CDp27h5qtFkqcmNnal8fd7zBZJU4CeBvjoguP8=
+	b=1pRoRMhQos8hJkq1X7rHm9hSumLDx60JHoUG5s3jZBxMTUS4YzhCgIkHdMJZchghI
+	 Tp6YdnClhc89fZHhyO40cLEwWgYxGKGzk6lLzxB8znnA85DXD4RKVSdfvSqTtqHRSl
+	 oV4/cRD1+vPf2CwyL8j81UJIC6WBCGBAGBYdZUkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390781AbfHVRJ2 (ORCPT
+        id S2390799AbfHVRJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59470 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390696AbfHVRJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:12 -0400
+        id S2390732AbfHVRJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:20 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20CC223427;
-        Thu, 22 Aug 2019 17:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C1322342F;
+        Thu, 22 Aug 2019 17:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493751;
-        bh=E7dDbYlCbqrli8DEiyYIi2FFj2BDiNINEV8DC8CpJwQ=;
+        s=default; t=1566493759;
+        bh=4qbaXH5sM+XOTj+157enUJeOpnIDsLrcUa+ZqSU4zWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=htKm+7qWsCV2pK6U1duia0dpNB+k4N9Rww+lZPvdELS8Rk9xuSlsBx3bgtRiYWeva
-         Vv5bAD/Z8HtgYtGjXkAuvR/zvRWmWtYyZssRAJXlGp1ZcQOadUpeKEM1qWMAHK80R4
-         ac44diTqsQdfJCUUETmcgq60OvtuzMACGLCColp0=
+        b=WDQ8WDvrLwBFH54VvDCNwIun9FmBxYXX6mewZNMtzQER7FYR4GmQ65rkRzItoM2Ao
+         RrvlAJQ10OGtIIaNU6EVi5z4eykhjRw+6K6hI5SRfxXnRzNeBvDoeUCWxIi/WrLV1+
+         dIv1XVs8qduqdGIm8ZnyzAtdTGR3w/qgFIXRyIDk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Haim Dreyfuss <haim.dreyfuss@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 105/135] iwlwifi: Add support for SAR South Korea limitation
-Date:   Thu, 22 Aug 2019 13:07:41 -0400
-Message-Id: <20190822170811.13303-106-sashal@kernel.org>
+Subject: [PATCH 5.2 121/135] bnxt_en: Fix handling FRAG_ERR when NVM_INSTALL_UPDATE cmd fails
+Date:   Thu, 22 Aug 2019 13:07:57 -0400
+Message-Id: <20190822170811.13303-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,331 +66,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haim Dreyfuss <haim.dreyfuss@intel.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-commit 0c3d7282233c7b02c74400b49981d6fff1d683a8 upstream.
+[ Upstream commit dd2ebf3404c7c295014bc025dea23960960ceb1a ]
 
-South Korea is adding a more strict SAR limit called "Limb SAR".
-Currently, WGDS SAR offset group 3 is not used (not mapped to any country).
-In order to be able to comply with South Korea new restriction:
-- OEM will use WGDS SAR offset group 3 to South Korea limitation.
-- OEM will change WGDS revision to 1 (currently latest revision is 0)
-	to notify that Korea Limb SAR applied.
-- Driver will read the WGDS table and pass the values to FW (as usual)
-- Driver will pass to FW an indication that Korea Limb SAR is applied
-	in case table revision is 1.
+If FW returns FRAG_ERR in response error code, driver is resending the
+command only when HWRM command returns success. Fix the code to resend
+NVM_INSTALL_UPDATE command with DEFRAG install flags, if FW returns
+FRAG_ERR in its response error code.
 
-Signed-off-by: Haim Dreyfuss <haim.dreyfuss@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Fixes: cb4d1d626145 ("bnxt_en: Retry failed NVM_INSTALL_UPDATE with defragmentation flag enabled.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wireless/intel/iwlwifi/fw/acpi.c  | 28 ++++++----
- drivers/net/wireless/intel/iwlwifi/fw/acpi.h  |  5 +-
- .../net/wireless/intel/iwlwifi/fw/api/power.h | 12 ++++
- drivers/net/wireless/intel/iwlwifi/fw/file.h  |  3 +
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c   | 55 ++++++++++++++-----
- drivers/net/wireless/intel/iwlwifi/mvm/mvm.h  |  1 +
- 6 files changed, 76 insertions(+), 28 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/acpi.c b/drivers/net/wireless/intel/iwlwifi/fw/acpi.c
-index 405038ce98d68..7573af2d88ce7 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/acpi.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/acpi.c
-@@ -97,7 +97,7 @@ IWL_EXPORT_SYMBOL(iwl_acpi_get_object);
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index a6c7baf38036a..b761a2e28a101 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -2016,21 +2016,19 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
+ 	mutex_lock(&bp->hwrm_cmd_lock);
+ 	hwrm_err = _hwrm_send_message(bp, &install, sizeof(install),
+ 				      INSTALL_PACKAGE_TIMEOUT);
+-	if (hwrm_err)
+-		goto flash_pkg_exit;
+-
+-	if (resp->error_code) {
++	if (hwrm_err) {
+ 		u8 error_code = ((struct hwrm_err_output *)resp)->cmd_err;
  
- union acpi_object *iwl_acpi_get_wifi_pkg(struct device *dev,
- 					 union acpi_object *data,
--					 int data_size)
-+					 int data_size, int *tbl_rev)
- {
- 	int i;
- 	union acpi_object *wifi_pkg;
-@@ -113,16 +113,19 @@ union acpi_object *iwl_acpi_get_wifi_pkg(struct device *dev,
- 	/*
- 	 * We need at least two packages, one for the revision and one
- 	 * for the data itself.  Also check that the revision is valid
--	 * (i.e. it is an integer set to 0).
-+	 * (i.e. it is an integer smaller than 2, as we currently support only
-+	 * 2 revisions).
- 	 */
- 	if (data->type != ACPI_TYPE_PACKAGE ||
- 	    data->package.count < 2 ||
- 	    data->package.elements[0].type != ACPI_TYPE_INTEGER ||
--	    data->package.elements[0].integer.value != 0) {
-+	    data->package.elements[0].integer.value > 1) {
- 		IWL_DEBUG_DEV_RADIO(dev, "Unsupported packages structure\n");
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-+	*tbl_rev = data->package.elements[0].integer.value;
-+
- 	/* loop through all the packages to find the one for WiFi */
- 	for (i = 1; i < data->package.count; i++) {
- 		union acpi_object *domain;
-@@ -151,14 +154,15 @@ int iwl_acpi_get_mcc(struct device *dev, char *mcc)
- {
- 	union acpi_object *wifi_pkg, *data;
- 	u32 mcc_val;
--	int ret;
-+	int ret, tbl_rev;
- 
- 	data = iwl_acpi_get_object(dev, ACPI_WRDD_METHOD);
- 	if (IS_ERR(data))
- 		return PTR_ERR(data);
- 
--	wifi_pkg = iwl_acpi_get_wifi_pkg(dev, data, ACPI_WRDD_WIFI_DATA_SIZE);
--	if (IS_ERR(wifi_pkg)) {
-+	wifi_pkg = iwl_acpi_get_wifi_pkg(dev, data, ACPI_WRDD_WIFI_DATA_SIZE,
-+					 &tbl_rev);
-+	if (IS_ERR(wifi_pkg) || tbl_rev != 0) {
- 		ret = PTR_ERR(wifi_pkg);
- 		goto out_free;
- 	}
-@@ -185,6 +189,7 @@ u64 iwl_acpi_get_pwr_limit(struct device *dev)
- {
- 	union acpi_object *data, *wifi_pkg;
- 	u64 dflt_pwr_limit;
-+	int tbl_rev;
- 
- 	data = iwl_acpi_get_object(dev, ACPI_SPLC_METHOD);
- 	if (IS_ERR(data)) {
-@@ -193,8 +198,8 @@ u64 iwl_acpi_get_pwr_limit(struct device *dev)
- 	}
- 
- 	wifi_pkg = iwl_acpi_get_wifi_pkg(dev, data,
--					 ACPI_SPLC_WIFI_DATA_SIZE);
--	if (IS_ERR(wifi_pkg) ||
-+					 ACPI_SPLC_WIFI_DATA_SIZE, &tbl_rev);
-+	if (IS_ERR(wifi_pkg) || tbl_rev != 0 ||
- 	    wifi_pkg->package.elements[1].integer.value != ACPI_TYPE_INTEGER) {
- 		dflt_pwr_limit = 0;
- 		goto out_free;
-@@ -211,14 +216,15 @@ IWL_EXPORT_SYMBOL(iwl_acpi_get_pwr_limit);
- int iwl_acpi_get_eckv(struct device *dev, u32 *extl_clk)
- {
- 	union acpi_object *wifi_pkg, *data;
--	int ret;
-+	int ret, tbl_rev;
- 
- 	data = iwl_acpi_get_object(dev, ACPI_ECKV_METHOD);
- 	if (IS_ERR(data))
- 		return PTR_ERR(data);
- 
--	wifi_pkg = iwl_acpi_get_wifi_pkg(dev, data, ACPI_ECKV_WIFI_DATA_SIZE);
--	if (IS_ERR(wifi_pkg)) {
-+	wifi_pkg = iwl_acpi_get_wifi_pkg(dev, data, ACPI_ECKV_WIFI_DATA_SIZE,
-+					 &tbl_rev);
-+	if (IS_ERR(wifi_pkg) || tbl_rev != 0) {
- 		ret = PTR_ERR(wifi_pkg);
- 		goto out_free;
- 	}
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/acpi.h b/drivers/net/wireless/intel/iwlwifi/fw/acpi.h
-index f5704e16643fc..991a234509994 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/acpi.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/acpi.h
-@@ -97,7 +97,7 @@
- void *iwl_acpi_get_object(struct device *dev, acpi_string method);
- union acpi_object *iwl_acpi_get_wifi_pkg(struct device *dev,
- 					 union acpi_object *data,
--					 int data_size);
-+					 int data_size, int *tbl_rev);
- 
- /**
-  * iwl_acpi_get_mcc - read MCC from ACPI, if available
-@@ -131,7 +131,8 @@ static inline void *iwl_acpi_get_object(struct device *dev, acpi_string method)
- 
- static inline union acpi_object *iwl_acpi_get_wifi_pkg(struct device *dev,
- 						       union acpi_object *data,
--						       int data_size)
-+						       int data_size,
-+						       int *tbl_rev)
- {
- 	return ERR_PTR(-ENOENT);
- }
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/power.h b/drivers/net/wireless/intel/iwlwifi/fw/api/power.h
-index 01f003c6cff9f..f195db398bedb 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/power.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/power.h
-@@ -419,14 +419,26 @@ struct iwl_per_chain_offset_group {
- 	struct iwl_per_chain_offset hb;
- } __packed; /* PER_CHAIN_LIMIT_OFFSET_GROUP_S_VER_1 */
- 
-+/**
-+ * struct iwl_geo_tx_power_profile_cmd_v1 - struct for GEO_TX_POWER_LIMIT cmd.
-+ * @ops: operations, value from &enum iwl_geo_per_chain_offset_operation
-+ * @table: offset profile per band.
-+ */
-+struct iwl_geo_tx_power_profiles_cmd_v1 {
-+	__le32 ops;
-+	struct iwl_per_chain_offset_group table[IWL_NUM_GEO_PROFILES];
-+} __packed; /* GEO_TX_POWER_LIMIT_VER_1 */
-+
- /**
-  * struct iwl_geo_tx_power_profile_cmd - struct for GEO_TX_POWER_LIMIT cmd.
-  * @ops: operations, value from &enum iwl_geo_per_chain_offset_operation
-  * @table: offset profile per band.
-+ * @table_revision: BIOS table revision.
-  */
- struct iwl_geo_tx_power_profiles_cmd {
- 	__le32 ops;
- 	struct iwl_per_chain_offset_group table[IWL_NUM_GEO_PROFILES];
-+	__le32 table_revision;
- } __packed; /* GEO_TX_POWER_LIMIT */
- 
- /**
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/file.h b/drivers/net/wireless/intel/iwlwifi/fw/file.h
-index de9243d301352..a74f34a8dffb0 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/file.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/file.h
-@@ -286,6 +286,8 @@ typedef unsigned int __bitwise iwl_ucode_tlv_api_t;
-  *	SCAN_OFFLOAD_PROFILES_QUERY_RSP_S.
-  * @IWL_UCODE_TLV_API_MBSSID_HE: This ucode supports v2 of
-  *	STA_CONTEXT_DOT11AX_API_S
-+ * @IWL_UCODE_TLV_CAPA_SAR_TABLE_VER: This ucode supports different sar
-+ *	version tables.
-  *
-  * @NUM_IWL_UCODE_TLV_API: number of bits used
-  */
-@@ -318,6 +320,7 @@ enum iwl_ucode_tlv_api {
- 	IWL_UCODE_TLV_API_MBSSID_HE		= (__force iwl_ucode_tlv_api_t)52,
- 	IWL_UCODE_TLV_API_WOWLAN_TCP_SYN_WAKE	= (__force iwl_ucode_tlv_api_t)53,
- 	IWL_UCODE_TLV_API_FTM_RTT_ACCURACY      = (__force iwl_ucode_tlv_api_t)54,
-+	IWL_UCODE_TLV_API_SAR_TABLE_VER         = (__force iwl_ucode_tlv_api_t)55,
- 
- 	NUM_IWL_UCODE_TLV_API
- #ifdef __CHECKER__
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-index 5af9959d05e52..8892707050d5a 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -682,15 +682,15 @@ static int iwl_mvm_sar_get_wrds_table(struct iwl_mvm *mvm)
- {
- 	union acpi_object *wifi_pkg, *table, *data;
- 	bool enabled;
--	int ret;
-+	int ret, tbl_rev;
- 
- 	data = iwl_acpi_get_object(mvm->dev, ACPI_WRDS_METHOD);
- 	if (IS_ERR(data))
- 		return PTR_ERR(data);
- 
- 	wifi_pkg = iwl_acpi_get_wifi_pkg(mvm->dev, data,
--					 ACPI_WRDS_WIFI_DATA_SIZE);
--	if (IS_ERR(wifi_pkg)) {
-+					 ACPI_WRDS_WIFI_DATA_SIZE, &tbl_rev);
-+	if (IS_ERR(wifi_pkg) || tbl_rev != 0) {
- 		ret = PTR_ERR(wifi_pkg);
- 		goto out_free;
- 	}
-@@ -719,15 +719,15 @@ static int iwl_mvm_sar_get_ewrd_table(struct iwl_mvm *mvm)
- {
- 	union acpi_object *wifi_pkg, *data;
- 	bool enabled;
--	int i, n_profiles, ret;
-+	int i, n_profiles, ret, tbl_rev;
- 
- 	data = iwl_acpi_get_object(mvm->dev, ACPI_EWRD_METHOD);
- 	if (IS_ERR(data))
- 		return PTR_ERR(data);
- 
- 	wifi_pkg = iwl_acpi_get_wifi_pkg(mvm->dev, data,
--					 ACPI_EWRD_WIFI_DATA_SIZE);
--	if (IS_ERR(wifi_pkg)) {
-+					 ACPI_EWRD_WIFI_DATA_SIZE, &tbl_rev);
-+	if (IS_ERR(wifi_pkg) || tbl_rev != 0) {
- 		ret = PTR_ERR(wifi_pkg);
- 		goto out_free;
- 	}
-@@ -778,7 +778,7 @@ static int iwl_mvm_sar_get_ewrd_table(struct iwl_mvm *mvm)
- static int iwl_mvm_sar_get_wgds_table(struct iwl_mvm *mvm)
- {
- 	union acpi_object *wifi_pkg, *data;
--	int i, j, ret;
-+	int i, j, ret, tbl_rev;
- 	int idx = 1;
- 
- 	data = iwl_acpi_get_object(mvm->dev, ACPI_WGDS_METHOD);
-@@ -786,12 +786,13 @@ static int iwl_mvm_sar_get_wgds_table(struct iwl_mvm *mvm)
- 		return PTR_ERR(data);
- 
- 	wifi_pkg = iwl_acpi_get_wifi_pkg(mvm->dev, data,
--					 ACPI_WGDS_WIFI_DATA_SIZE);
--	if (IS_ERR(wifi_pkg)) {
-+					 ACPI_WGDS_WIFI_DATA_SIZE, &tbl_rev);
-+	if (IS_ERR(wifi_pkg) || tbl_rev > 1) {
- 		ret = PTR_ERR(wifi_pkg);
- 		goto out_free;
- 	}
- 
-+	mvm->geo_rev = tbl_rev;
- 	for (i = 0; i < ACPI_NUM_GEO_PROFILES; i++) {
- 		for (j = 0; j < ACPI_GEO_TABLE_SIZE; j++) {
- 			union acpi_object *entry;
-@@ -894,15 +895,29 @@ int iwl_mvm_get_sar_geo_profile(struct iwl_mvm *mvm)
- {
- 	struct iwl_geo_tx_power_profiles_resp *resp;
- 	int ret;
-+	u16 len;
-+	void *data;
-+	struct iwl_geo_tx_power_profiles_cmd geo_cmd;
-+	struct iwl_geo_tx_power_profiles_cmd_v1 geo_cmd_v1;
-+	struct iwl_host_cmd cmd;
-+
-+	if (fw_has_api(&mvm->fw->ucode_capa, IWL_UCODE_TLV_API_SAR_TABLE_VER)) {
-+		geo_cmd.ops =
-+			cpu_to_le32(IWL_PER_CHAIN_OFFSET_GET_CURRENT_TABLE);
-+		len = sizeof(geo_cmd);
-+		data = &geo_cmd;
-+	} else {
-+		geo_cmd_v1.ops =
-+			cpu_to_le32(IWL_PER_CHAIN_OFFSET_GET_CURRENT_TABLE);
-+		len = sizeof(geo_cmd_v1);
-+		data = &geo_cmd_v1;
-+	}
- 
--	struct iwl_geo_tx_power_profiles_cmd geo_cmd = {
--		.ops = cpu_to_le32(IWL_PER_CHAIN_OFFSET_GET_CURRENT_TABLE),
--	};
--	struct iwl_host_cmd cmd = {
-+	cmd = (struct iwl_host_cmd){
- 		.id =  WIDE_ID(PHY_OPS_GROUP, GEO_TX_POWER_LIMIT),
--		.len = { sizeof(geo_cmd), },
-+		.len = { len, },
- 		.flags = CMD_WANT_SKB,
--		.data = { &geo_cmd },
-+		.data = { data },
- 	};
- 
- 	if (!iwl_mvm_sar_geo_support(mvm))
-@@ -969,6 +984,16 @@ static int iwl_mvm_sar_geo_init(struct iwl_mvm *mvm)
- 					i, j, value[1], value[2], value[0]);
+-		if (error_code == NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
++		if (resp->error_code && error_code ==
++		    NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
+ 			install.flags |= cpu_to_le16(
+ 			       NVM_INSTALL_UPDATE_REQ_FLAGS_ALLOWED_TO_DEFRAG);
+ 			hwrm_err = _hwrm_send_message(bp, &install,
+ 						      sizeof(install),
+ 						      INSTALL_PACKAGE_TIMEOUT);
+-			if (hwrm_err)
+-				goto flash_pkg_exit;
  		}
++		if (hwrm_err)
++			goto flash_pkg_exit;
  	}
-+
-+	cmd.table_revision = cpu_to_le32(mvm->geo_rev);
-+
-+	if (!fw_has_api(&mvm->fw->ucode_capa,
-+		       IWL_UCODE_TLV_API_SAR_TABLE_VER)) {
-+		return iwl_mvm_send_cmd_pdu(mvm, cmd_wide_id, 0,
-+				sizeof(struct iwl_geo_tx_power_profiles_cmd_v1),
-+				&cmd);
-+	}
-+
- 	return iwl_mvm_send_cmd_pdu(mvm, cmd_wide_id, 0, sizeof(cmd), &cmd);
- }
  
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-index 88af1f0ba3f0f..ed8fc9a9204ca 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/mvm.h
-@@ -1184,6 +1184,7 @@ struct iwl_mvm {
- #ifdef CONFIG_ACPI
- 	struct iwl_mvm_sar_profile sar_profiles[ACPI_SAR_PROFILE_NUM];
- 	struct iwl_mvm_geo_profile geo_profiles[ACPI_NUM_GEO_PROFILES];
-+	u32 geo_rev;
- #endif
- };
- 
+ 	if (resp->result) {
 -- 
 2.20.1
 
