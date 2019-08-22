@@ -2,93 +2,262 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56459C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 953A5C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28FEA20870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697C120870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731713AbfHVIH1 (ORCPT
+        id S1732077AbfHVIHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:07:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50240 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725783AbfHVIH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:07:26 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 948B0356C9
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:07:26 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id i4so2816877wri.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:07:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pF3YGFREgBUzzvAMmFfzZCFDTbGTkVkyO/Xg4NkQLbg=;
-        b=ni+h5gvuCJh9z2Y0e5oHtDt6lxn21lFq12OPzNs7j7HVqeSEH4hkb+jxhF0kPHYi1T
-         MWY7lELVbiSCTEsJpXBAokVmSc7J8nEz8rb3Y5qDjYmH6Bo+6c/+OYQeFG2lOx7Dwda2
-         ADM3GQE6b3CGnnxGKOKg2KAmXwyFU88fX4EtnjTdAr6+RoYEz8pvkUbWsrFxAa3NSMjZ
-         TfK/Jlx03KmX1HxAmyQMCaHd2CPzG0lGNMF+Zi4joi5A/iF6XzEyypgMua/Lf+KY14zl
-         IW21KEN4jeR80nvyeby/2XlEJZ+74hS8j97ibDcQ1flMEp6gNm8HwH0QkvJ2Q0EO6dmc
-         0c1A==
-X-Gm-Message-State: APjAAAX0k5lUvEzvyfsG8fOHexbcZYmExnGg1wncj8g2AuZnqOeW97Qy
-        fqZE7lMC4O1Ni73DOIRs2XxhCfEnSBteO6sXhmuvCU8wQjzZptiDKpIPdHEp5OckzC4rLCywGjk
-        5x9roTLSviC321XXpm7fbixrK
-X-Received: by 2002:adf:a48f:: with SMTP id g15mr46940522wrb.172.1566461245223;
-        Thu, 22 Aug 2019 01:07:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyKS7i8/l2gsUy685qpa5gOwkc8jiCcEIrrT+YYNuieEQ8e2G096e6ngarBG7s2GxLQuCFHpA==
-X-Received: by 2002:adf:a48f:: with SMTP id g15mr46940485wrb.172.1566461244874;
-        Thu, 22 Aug 2019 01:07:24 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:21b9:ff1f:a96c:9fb3? ([2001:b07:6468:f312:21b9:ff1f:a96c:9fb3])
-        by smtp.gmail.com with ESMTPSA id k9sm20260132wrq.15.2019.08.22.01.07.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Aug 2019 01:07:24 -0700 (PDT)
-Subject: Re: [PATCH RESEND] i386/kvm: support guest access CORE cstate
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Eduardo Habkost <ehabkost@redhat.com>
-References: <1563154124-18579-1-git-send-email-wanpengli@tencent.com>
- <ba3ae595-7f82-d17b-e8ed-6e86e9195ce5@redhat.com>
- <CANRm+Cx1bEOXBx50K9gv08UWEGadKOCtCbAwVo0CFC-g1gS+Xg@mail.gmail.com>
- <82a0eb75-5710-3b03-cf8e-a00b156ee275@redhat.com>
- <CANRm+Cw4V9AT1FOAOiQ5OSYHYcka_CxxKLewsPfZ9+ykTy354w@mail.gmail.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <d2c93756-708e-3f8c-d9f2-8b80c73928e7@redhat.com>
-Date:   Thu, 22 Aug 2019 10:07:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 04:07:47 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:33281 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbfHVIHr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 04:07:47 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x7M87iPY023756, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x7M87iPY023756
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 22 Aug 2019 16:07:44 +0800
+Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
+ (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Thu, 22 Aug 2019
+ 16:07:43 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     <netdev@vger.kernel.org>
+CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
+        Hayes Wang <hayeswang@realtek.com>
+Subject: [PATCH net-next] r8152: saving the settings of EEE
+Date:   Thu, 22 Aug 2019 16:07:18 +0800
+Message-ID: <1394712342-15778-304-Taiwan-albertk@realtek.com>
+X-Mailer: Microsoft Office Outlook 11
 MIME-Version: 1.0
-In-Reply-To: <CANRm+Cw4V9AT1FOAOiQ5OSYHYcka_CxxKLewsPfZ9+ykTy354w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [172.21.177.138]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/08/19 02:31, Wanpeng Li wrote:
-> On Wed, 21 Aug 2019 at 15:55, Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->> On 20/08/19 09:16, Wanpeng Li wrote:
->>> Kindly reminder, :)
->>
->> It's already in my pull request from yesterday.
-> 
-> Do you mean this pull
-> https://www.mail-archive.com/qemu-devel@nongnu.org/msg638707.html ?
-> This patch is missing.
+Saving the settings of EEE to avoid they become the default settings
+after reset_resume().
 
-Oops, you're right.  I must have removed it by mistake while bisecting a
-failure.  I've added it back now.
+Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+---
+ drivers/net/usb/r8152.c | 86 +++++++++++++++++++++++++++--------------
+ 1 file changed, 56 insertions(+), 30 deletions(-)
 
-Paolo
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 1aa61610f0bb..bbc65a94a83f 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -751,6 +751,7 @@ struct r8152 {
+ 
+ 	atomic_t rx_count;
+ 
++	bool eee_en;
+ 	int intr_interval;
+ 	u32 saved_wolopts;
+ 	u32 msg_enable;
+@@ -762,6 +763,7 @@ struct r8152 {
+ 
+ 	u16 ocp_base;
+ 	u16 speed;
++	u16 eee_adv;
+ 	u8 *intr_buff;
+ 	u8 version;
+ 	u8 duplex;
+@@ -3202,8 +3204,13 @@ static void r8152_eee_en(struct r8152 *tp, bool enable)
+ 
+ static void r8152b_enable_eee(struct r8152 *tp)
+ {
+-	r8152_eee_en(tp, true);
+-	r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, MDIO_EEE_100TX);
++	if (tp->eee_en) {
++		r8152_eee_en(tp, true);
++		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, tp->eee_adv);
++	} else {
++		r8152_eee_en(tp, false);
++		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0);
++	}
+ }
+ 
+ static void r8152b_enable_fc(struct r8152 *tp)
+@@ -3495,8 +3502,13 @@ static void r8153_hw_phy_cfg(struct r8152 *tp)
+ 	sram_write(tp, SRAM_10M_AMP1, 0x00af);
+ 	sram_write(tp, SRAM_10M_AMP2, 0x0208);
+ 
+-	r8153_eee_en(tp, true);
+-	ocp_reg_write(tp, OCP_EEE_ADV, MDIO_EEE_1000T | MDIO_EEE_100TX);
++	if (tp->eee_en) {
++		r8153_eee_en(tp, true);
++		ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
++	} else {
++		r8153_eee_en(tp, false);
++		ocp_reg_write(tp, OCP_EEE_ADV, 0);
++	}
+ 
+ 	r8153_aldps_en(tp, true);
+ 	r8152b_enable_fc(tp);
+@@ -3599,8 +3611,13 @@ static void r8153b_hw_phy_cfg(struct r8152 *tp)
+ 
+ 	r8153b_ups_flags_w1w0(tp, ups_flags, 0);
+ 
+-	r8153b_eee_en(tp, true);
+-	ocp_reg_write(tp, OCP_EEE_ADV, MDIO_EEE_1000T | MDIO_EEE_100TX);
++	if (tp->eee_en) {
++		r8153b_eee_en(tp, true);
++		ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
++	} else {
++		r8153b_eee_en(tp, false);
++		ocp_reg_write(tp, OCP_EEE_ADV, 0);
++	}
+ 
+ 	r8153b_aldps_en(tp, true);
+ 	r8153b_enable_fc(tp);
+@@ -4891,7 +4908,7 @@ static void rtl8152_get_strings(struct net_device *dev, u32 stringset, u8 *data)
+ 
+ static int r8152_get_eee(struct r8152 *tp, struct ethtool_eee *eee)
+ {
+-	u32 ocp_data, lp, adv, supported = 0;
++	u32 lp, adv, supported = 0;
+ 	u16 val;
+ 
+ 	val = r8152_mmd_read(tp, MDIO_MMD_PCS, MDIO_PCS_EEE_ABLE);
+@@ -4903,13 +4920,10 @@ static int r8152_get_eee(struct r8152 *tp, struct ethtool_eee *eee)
+ 	val = r8152_mmd_read(tp, MDIO_MMD_AN, MDIO_AN_EEE_LPABLE);
+ 	lp = mmd_eee_adv_to_ethtool_adv_t(val);
+ 
+-	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_EEE_CR);
+-	ocp_data &= EEE_RX_EN | EEE_TX_EN;
+-
+-	eee->eee_enabled = !!ocp_data;
++	eee->eee_enabled = tp->eee_en;
+ 	eee->eee_active = !!(supported & adv & lp);
+ 	eee->supported = supported;
+-	eee->advertised = adv;
++	eee->advertised = tp->eee_adv;
+ 	eee->lp_advertised = lp;
+ 
+ 	return 0;
+@@ -4919,19 +4933,22 @@ static int r8152_set_eee(struct r8152 *tp, struct ethtool_eee *eee)
+ {
+ 	u16 val = ethtool_adv_to_mmd_eee_adv_t(eee->advertised);
+ 
+-	r8152_eee_en(tp, eee->eee_enabled);
++	tp->eee_en = eee->eee_enabled;
++	tp->eee_adv = val;
+ 
+-	if (!eee->eee_enabled)
+-		val = 0;
++	r8152_eee_en(tp, eee->eee_enabled);
+ 
+-	r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, val);
++	if (eee->eee_enabled)
++		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, val);
++	else
++		r8152_mmd_write(tp, MDIO_MMD_AN, MDIO_AN_EEE_ADV, 0);
+ 
+ 	return 0;
+ }
+ 
+ static int r8153_get_eee(struct r8152 *tp, struct ethtool_eee *eee)
+ {
+-	u32 ocp_data, lp, adv, supported = 0;
++	u32 lp, adv, supported = 0;
+ 	u16 val;
+ 
+ 	val = ocp_reg_read(tp, OCP_EEE_ABLE);
+@@ -4943,13 +4960,10 @@ static int r8153_get_eee(struct r8152 *tp, struct ethtool_eee *eee)
+ 	val = ocp_reg_read(tp, OCP_EEE_LPABLE);
+ 	lp = mmd_eee_adv_to_ethtool_adv_t(val);
+ 
+-	ocp_data = ocp_read_word(tp, MCU_TYPE_PLA, PLA_EEE_CR);
+-	ocp_data &= EEE_RX_EN | EEE_TX_EN;
+-
+-	eee->eee_enabled = !!ocp_data;
++	eee->eee_enabled = tp->eee_en;
+ 	eee->eee_active = !!(supported & adv & lp);
+ 	eee->supported = supported;
+-	eee->advertised = adv;
++	eee->advertised = tp->eee_adv;
+ 	eee->lp_advertised = lp;
+ 
+ 	return 0;
+@@ -4959,12 +4973,15 @@ static int r8153_set_eee(struct r8152 *tp, struct ethtool_eee *eee)
+ {
+ 	u16 val = ethtool_adv_to_mmd_eee_adv_t(eee->advertised);
+ 
+-	r8153_eee_en(tp, eee->eee_enabled);
++	tp->eee_en = eee->eee_enabled;
++	tp->eee_adv = val;
+ 
+-	if (!eee->eee_enabled)
+-		val = 0;
++	r8153_eee_en(tp, eee->eee_enabled);
+ 
+-	ocp_reg_write(tp, OCP_EEE_ADV, val);
++	if (eee->eee_enabled)
++		ocp_reg_write(tp, OCP_EEE_ADV, val);
++	else
++		ocp_reg_write(tp, OCP_EEE_ADV, 0);
+ 
+ 	return 0;
+ }
+@@ -4973,12 +4990,15 @@ static int r8153b_set_eee(struct r8152 *tp, struct ethtool_eee *eee)
+ {
+ 	u16 val = ethtool_adv_to_mmd_eee_adv_t(eee->advertised);
+ 
+-	r8153b_eee_en(tp, eee->eee_enabled);
++	tp->eee_en = eee->eee_enabled;
++	tp->eee_adv = val;
+ 
+-	if (!eee->eee_enabled)
+-		val = 0;
++	r8153b_eee_en(tp, eee->eee_enabled);
+ 
+-	ocp_reg_write(tp, OCP_EEE_ADV, val);
++	if (eee->eee_enabled)
++		ocp_reg_write(tp, OCP_EEE_ADV, val);
++	else
++		ocp_reg_write(tp, OCP_EEE_ADV, 0);
+ 
+ 	return 0;
+ }
+@@ -5353,6 +5373,8 @@ static int rtl_ops_init(struct r8152 *tp)
+ 		ops->hw_phy_cfg		= r8152b_hw_phy_cfg;
+ 		ops->autosuspend_en	= rtl_runtime_suspend_enable;
+ 		tp->rx_buf_sz		= 16 * 1024;
++		tp->eee_en		= true;
++		tp->eee_adv		= MDIO_EEE_100TX;
+ 		break;
+ 
+ 	case RTL_VER_03:
+@@ -5371,6 +5393,8 @@ static int rtl_ops_init(struct r8152 *tp)
+ 		ops->hw_phy_cfg		= r8153_hw_phy_cfg;
+ 		ops->autosuspend_en	= rtl8153_runtime_enable;
+ 		tp->rx_buf_sz		= 32 * 1024;
++		tp->eee_en		= true;
++		tp->eee_adv		= MDIO_EEE_1000T | MDIO_EEE_100TX;
+ 		break;
+ 
+ 	case RTL_VER_08:
+@@ -5387,6 +5411,8 @@ static int rtl_ops_init(struct r8152 *tp)
+ 		ops->hw_phy_cfg		= r8153b_hw_phy_cfg;
+ 		ops->autosuspend_en	= rtl8153b_runtime_enable;
+ 		tp->rx_buf_sz		= 32 * 1024;
++		tp->eee_en		= true;
++		tp->eee_adv		= MDIO_EEE_1000T | MDIO_EEE_100TX;
+ 		break;
+ 
+ 	default:
+-- 
+2.21.0
+
