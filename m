@@ -2,132 +2,76 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AE6C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E380C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 719FF233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471E2233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732109AbfHVJba (ORCPT
+        id S1732359AbfHVJcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:31:30 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44429 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729052AbfHVJba (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:31:30 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1i0jRC-00004x-Lo; Thu, 22 Aug 2019 11:31:22 +0200
-Message-ID: <1566466282.3653.5.camel@pengutronix.de>
-Subject: Re: [PATCH v2 3/3] media: imx214: Add new control with
- V4L2_CID_UNIT_CELL_SIZE
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 22 Aug 2019 11:31:22 +0200
-In-Reply-To: <20190820094027.4144-3-ribalda@kernel.org>
-References: <20190820094027.4144-1-ribalda@kernel.org>
-         <20190820094027.4144-3-ribalda@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Thu, 22 Aug 2019 05:32:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:42190 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725799AbfHVJcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:32:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 468881596;
+        Thu, 22 Aug 2019 02:32:41 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27C703F246;
+        Thu, 22 Aug 2019 02:32:40 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Steven Price <steven.price@arm.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH] drm/panfrost: Add missing check for pfdev->regulator
+Date:   Thu, 22 Aug 2019 10:32:18 +0100
+Message-Id: <20190822093218.26014-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190822091512.GA32661@mwanda>
+References: <20190822091512.GA32661@mwanda>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-08-20 at 11:40 +0200, Ricardo Ribalda Delgado wrote:
-> According to the product brief, the unit cell size is 1120 nanometers^2.
-> 
-> https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
-> 
-> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> ---
->  drivers/media/i2c/imx214.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> index 159a3a604f0e..cc0a013ba7da 100644
-> --- a/drivers/media/i2c/imx214.c
-> +++ b/drivers/media/i2c/imx214.c
-> @@ -47,6 +47,7 @@ struct imx214 {
->  	struct v4l2_ctrl *pixel_rate;
->  	struct v4l2_ctrl *link_freq;
->  	struct v4l2_ctrl *exposure;
-> +	struct v4l2_ctrl *unit_size;
+When modifying panfrost_devfreq_target() to support a device without a
+regulator defined I missed the check on the error path. Let's add it.
 
-This is never used.
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: e21dd290881b ("drm/panfrost: Enable devfreq to work without regulator")
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Neither are pixel_rate and exposure, it appears. And link_freq is only
-used locally in imx214_probe to set the read-only flag.
+diff --git a/drivers/gpu/drm/panfrost/panfrost_devfreq.c b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+index 710d903f8e0d..a1f5fa6a742a 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_devfreq.c
++++ b/drivers/gpu/drm/panfrost/panfrost_devfreq.c
+@@ -53,8 +53,10 @@ static int panfrost_devfreq_target(struct device *dev, unsigned long *freq,
+ 	if (err) {
+ 		dev_err(dev, "Cannot set frequency %lu (%d)\n", target_rate,
+ 			err);
+-		regulator_set_voltage(pfdev->regulator, pfdev->devfreq.cur_volt,
+-				      pfdev->devfreq.cur_volt);
++		if (pfdev->regulator)
++			regulator_set_voltage(pfdev->regulator,
++					      pfdev->devfreq.cur_volt,
++					      pfdev->devfreq.cur_volt);
+ 		return err;
+ 	}
+ 
+-- 
+2.20.1
 
->  
->  	struct regulator_bulk_data	supplies[IMX214_NUM_SUPPLIES];
->  
-> @@ -941,6 +942,26 @@ static int __maybe_unused imx214_resume(struct device *dev)
->  	return ret;
->  }
->  
-> +static void unit_size_init(const struct v4l2_ctrl *ctrl, u32 idx,
-> +		     union v4l2_ctrl_ptr ptr)
-> +{
-> +	ptr.p_area->width = 1120;
-> +	ptr.p_area->height = 1120;
-> +}
-> +
-> +static const struct v4l2_ctrl_type_ops unit_size_ops = {
-> +	.init = unit_size_init,
-> +};
-> +
-> +static struct v4l2_ctrl *new_unit_size_ctrl(struct v4l2_ctrl_handler *handler)
-> +{
-> +	static struct v4l2_ctrl_config ctrl = {
-> +		.id = V4L2_CID_UNIT_CELL_SIZE,
-> +		.type_ops = &unit_size_ops,
-> +	};
-> +
-> +	return v4l2_ctrl_new_custom(handler, &ctrl, NULL);
-> +}
->  static int imx214_probe(struct i2c_client *client)
->  {
->  	struct device *dev = &client->dev;
-> @@ -1029,6 +1050,8 @@ static int imx214_probe(struct i2c_client *client)
->  					     V4L2_CID_EXPOSURE,
->  					     0, 3184, 1, 0x0c70);
->  
-> +	imx214->unit_size = new_unit_size_ctrl(&imx214->ctrls);
-> +
->  	ret = imx214->ctrls.error;
->  	if (ret) {
->  		dev_err(&client->dev, "%s control init failed (%d)\n",
-
-This seems like a lot of parts to assemble in every sensor driver just
-to provide a constant area control. Should this be turned into a
-v4l2_ctrl_new_area helper that takes a const struct v4l2_area as an
-argument?
-
-	static const struct v4l2_area unit_cell_size = {
-		.width = 1120,
-		.height = 1120
-	};
-
-	v4l2_ctrl_new_area(&imx214->ctrls, V4L2_CID_UNIT_CELL_SIZE,
-			   &unit_cell_size);
-
-regards
-Philipp
