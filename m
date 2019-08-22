@@ -2,84 +2,107 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CBCC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BBDC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCD9233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A127233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:26:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566466012;
+	bh=RGSrS75/dAlh69//rvSZNs4nKX4vmwiqC91h7KEWT40=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uKw/qpPy5bmkDsaN/dmDsrGUA6067booBECKlUr0XGele5vNZB556rL9l5MretJq5
+	 9GcO3z/NTRW5OpCPEhfrRk4P3/nl6M31/RfI+siHkVwBjXPslQbBPezPAoTP/izTyU
+	 v6eCmpCYS3iSVtImx+v3ivaijDzNkF9eULqaESm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733197AbfHVJ0n (ORCPT
+        id S1733208AbfHVJ0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:26:43 -0400
-Received: from mga06.intel.com ([134.134.136.31]:22515 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731829AbfHVJ0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:26:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 02:26:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,416,1559545200"; 
-   d="scan'208";a="262790259"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 22 Aug 2019 02:26:41 -0700
-Received: from [10.226.38.83] (rtanwar-mobl.gar.corp.intel.com [10.226.38.83])
-        by linux.intel.com (Postfix) with ESMTP id CE8235806C4;
-        Thu, 22 Aug 2019 02:26:37 -0700 (PDT)
-Subject: Re: [PATCH v1 1/2] x86/rtc: Add option to skip using RTC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, alan@linux.intel.com,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-References: <cover.1566458029.git.rahul.tanwar@linux.intel.com>
- <becacc523508b295a52db9f1592e2868e3988e28.1566458029.git.rahul.tanwar@linux.intel.com>
- <20190822090208.GJ30120@smile.fi.intel.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <25f6947d-7ba0-c23c-25aa-c4c4173da6b0@linux.intel.com>
-Date:   Thu, 22 Aug 2019 17:26:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 22 Aug 2019 05:26:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57668 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731829AbfHVJ0q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:26:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SuSy3FwC9g7e9MP38jQoeaQqj9wgxK6akeFEVXSHI7g=; b=E6Ep03hTc/OMURZQI/pHby/R6
+        pxiJiDd67Z9IDPoYy40qNjMPWkiH676qsZMJ1ysetis3sCMaeQHsIIT4Iz9iwRFQCfcvWvjFP2tua
+        FXNvggeVhwnQ7sZXem0k3PddENIa2emGPjK3b014mZdMxMKWUNIzELPSSePytlJno4POwd+0FhXD3
+        hWLS3qoujLBIFyCujBMPvUork5w6KgS6LwET+F5WhlU59XvKB1KNDjj68V4ip8H8/VrkQbEb3Kvn4
+        IW3AmPqovk+4moN0HRkz82iRH21MK6v5US68H4Nr+r53XNKH1gckfvYugZFj+hZkNtkis/To2+EwK
+        6Zm3edLvg==;
+Received: from [177.133.63.56] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0jMf-00037g-FT; Thu, 22 Aug 2019 09:26:41 +0000
+Date:   Thu, 22 Aug 2019 06:26:35 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Borislav Petkov <bp@alien8.de>, paul.walmsley@sifive.com,
+        palmer@sifive.com, linux-riscv@lists.infradead.org,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH] riscv: move sifive_l2_cache.c to drivers/soc
+Message-ID: <20190822062635.00f6e507@coco.lan>
+In-Reply-To: <20190819062619.GA20211@lst.de>
+References: <20190818082935.14869-1-hch@lst.de>
+        <20190819060904.GA4841@zn.tnic>
+        <20190819062619.GA20211@lst.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190822090208.GJ30120@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Mon, 19 Aug 2019 08:26:19 +0200
+Christoph Hellwig <hch@lst.de> escreveu:
 
-Hi Andy,
+> On Mon, Aug 19, 2019 at 08:09:04AM +0200, Borislav Petkov wrote:
+> > On Sun, Aug 18, 2019 at 10:29:35AM +0200, Christoph Hellwig wrote:  
+> > > The sifive_l2_cache.c is in no way related to RISC-V architecture
+> > > memory management.  It is a little stub driver working around the fact
+> > > that the EDAC maintainers prefer their drivers to be structured in a
+> > > certain way  
+> > 
+> > That changed recently so I guess we can do the per-IP block driver after
+> > all, if people would still prefer it.  
+> 
+> That would seem like the best idea.  But I don't really know this code
+> well enough myself, and I really need to get this code out of the
+> forced on RISC-V codebase as some SOCs I'm working with simply don't
+> have the memory for it..
+> 
+> So unless someone signs up to do a per-IP block edac drivers instead
+> very quickly I'd still like to see something like this go into 5.4
+> for now.
 
-On 22/8/2019 5:02 PM, Andy Shevchenko wrote:
-> On Thu, Aug 22, 2019 at 03:44:03PM +0800, Rahul Tanwar wrote:
->> Use a newly introduced optional "status" property of "motorola,mc146818"
->> compatible DT node to determine if RTC is supported. Skip read/write from
->> RTC device only when this node is present and status is "disabled". In all
->> other cases, proceed as before.
-> Can't we rather update ->get_wallclock() and ->set_wallclock() based on this?
+I'm wandering if we should at least add an entry for this one at
+MAINTAINERS, pointing it to the EDAC mailing list. Something like:
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7dfe381c8b43..1c3bc5aa3af0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5906,6 +5906,7 @@ M:	Yash Shah <yash.shah@sifive.com>
+ L:	linux-edac@vger.kernel.org
+ S:	Supported
+ F:	drivers/edac/sifive_edac.c
++F:	drivers/soc/sifive/
+ 
+ EDAC-SKYLAKE
+ M:	Tony Luck <tony.luck@intel.com>
 
 
-get_wallclock() and set_wallclock() are function pointers of platform_ops
-
-which are initialized to mach_get_cmos_time() and mach_set_rtc_mmss()
-
-at init time. Since adding a new platform to override these functions is
-
-discouraged, so the only way is to modify RTC get/set functions.
-
-
-Regards,
-
-Rahul
-
+Thanks,
+Mauro
