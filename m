@@ -2,51 +2,50 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BABC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF69C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB46920856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3927520856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495703;
-	bh=UQ8Ck8beOoAG5unTjjmxqkGlgJyFjjAtdvlh3GDzJVw=;
+	s=default; t=1566495706;
+	bh=GxpXIsPHFbuaZBKjNQf/MJm4SWd/jFG6S2Ae0i4PNOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PFyx5kUASkBW6ZxQ0IlQrVCAO/w1wp+SaFurlUlJ87eKGHHhJINzc0wbg/mdUWI0v
-	 L4/XD6OQhZY8XIX+hx/9q3P9FrhlWNoZ1JP5S6RtxKH5tI7+BiYauhVK6QrmZKR8yI
-	 DiSwAJqbv0BSMEhc8o5pwKKtQan4fqwW+J9b7/dU=
+	b=U4Ot/JTHFNQfuBJfo+fh4nL4YYNzinUfdWerfgsiTTPI+5NfFtsXrlExr3W6CW31P
+	 BUbJKJ7fZ7i/cUzeZhHuOp8jicH3ZUOPBaTwQvG+GMMJ+OOybBVszuTpiWzsGWYUUa
+	 Sy6IaXD1Hw1XizCErL0fCEHqPybLUmdmSQ4FXpW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392563AbfHVRli (ORCPT
+        id S2391757AbfHVRX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:41:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391756AbfHVRX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 13:23:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391508AbfHVRXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:36 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6834723402;
-        Thu, 22 Aug 2019 17:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B21D2342A;
+        Thu, 22 Aug 2019 17:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494636;
-        bh=UQ8Ck8beOoAG5unTjjmxqkGlgJyFjjAtdvlh3GDzJVw=;
+        s=default; t=1566494615;
+        bh=GxpXIsPHFbuaZBKjNQf/MJm4SWd/jFG6S2Ae0i4PNOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TOSa8ZXOvEkrGOmEftgmzdcBeM9FTPGD1GKRKl9hUGLsHm5lZaT1xh8uFUjlmODuj
-         gb57SKD8mqqI1ur1Y1Sf5KZw+m5LKrvKxnf1vCAImGly7RmxdiR+hhhnfhLa1L0sZH
-         jWlhE5emIxwo2bfZQ1jbGXHKyrtEinW9KcQx9L1c=
+        b=MUaStPYp0lx+Hke2I4jPMKom8ENvG8efuMTEvYXwjQpqkpGU9Z0gMnVPKAmQVXv6c
+         x5fTRxGRc7SSMpuk/eLsUR9jz1hx2EruuIlepEwKIgRoPlpJYVXzIXAviH5+IfT3DJ
+         GN8jvJTxZnJLSSFmfp7gB6ruu/7XAzz1m+mUeZFI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 069/103] irqchip/irq-imx-gpcv2: Forward irq type to parent
-Date:   Thu, 22 Aug 2019 10:18:57 -0700
-Message-Id: <20190822171731.657020191@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 035/103] ALSA: hda - Dont override global PCM hw info flag
+Date:   Thu, 22 Aug 2019 10:18:23 -0700
+Message-Id: <20190822171730.238296406@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -59,33 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9a446ef08f3bfc0c3deb9c6be840af2528ef8cf8 ]
+From: Takashi Iwai <tiwai@suse.de>
 
-The GPCv2 is a stacked IRQ controller below the ARM GIC. It doesn't
-care about the IRQ type itself, but needs to forward the type to the
-parent IRQ controller, so this one can be configured correctly.
+commit c1c6c877b0c79fd7e05c931435aa42211eaeebaf upstream.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The commit bfcba288b97f ("ALSA - hda: Add support for link audio time
+reporting") introduced the conditional PCM hw info setup, but it
+overwrites the global azx_pcm_hw object.  This will cause a problem if
+any other HD-audio controller, as it'll inherit the same bit flag
+although another controller doesn't support that feature.
+
+Fix the bug by setting the PCM hw info flag locally.
+
+Fixes: bfcba288b97f ("ALSA - hda: Add support for link audio time reporting")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/irqchip/irq-imx-gpcv2.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/hda/hda_controller.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-imx-gpcv2.c b/drivers/irqchip/irq-imx-gpcv2.c
-index 2d203b422129e..c56da0b13da5d 100644
---- a/drivers/irqchip/irq-imx-gpcv2.c
-+++ b/drivers/irqchip/irq-imx-gpcv2.c
-@@ -145,6 +145,7 @@ static struct irq_chip gpcv2_irqchip_data_chip = {
- 	.irq_unmask		= imx_gpcv2_irq_unmask,
- 	.irq_set_wake		= imx_gpcv2_irq_set_wake,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-+	.irq_set_type		= irq_chip_set_type_parent,
- #ifdef CONFIG_SMP
- 	.irq_set_affinity	= irq_chip_set_affinity_parent,
- #endif
--- 
-2.20.1
-
+--- a/sound/pci/hda/hda_controller.c
++++ b/sound/pci/hda/hda_controller.c
+@@ -609,11 +609,9 @@ static int azx_pcm_open(struct snd_pcm_s
+ 	}
+ 	runtime->private_data = azx_dev;
+ 
+-	if (chip->gts_present)
+-		azx_pcm_hw.info = azx_pcm_hw.info |
+-			SNDRV_PCM_INFO_HAS_LINK_SYNCHRONIZED_ATIME;
+-
+ 	runtime->hw = azx_pcm_hw;
++	if (chip->gts_present)
++		runtime->hw.info |= SNDRV_PCM_INFO_HAS_LINK_SYNCHRONIZED_ATIME;
+ 	runtime->hw.channels_min = hinfo->channels_min;
+ 	runtime->hw.channels_max = hinfo->channels_max;
+ 	runtime->hw.formats = hinfo->formats;
 
 
