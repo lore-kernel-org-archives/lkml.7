@@ -2,54 +2,90 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0BAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C026FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C816A2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86771233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:14:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566515671;
+	bh=vApCOM3H3LWmBhR9eGKlIz7FlGeav7+0V7QMAv0lrz4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GOelx5mxpsHlQdlwgjDfSk/S/D/ObsQAbn/o4C1xapjrTGb76UuDryvUPOaiKaGEr
+	 gCcFKyr6aOkmlYcd/b1qjvJ77LqSVr2M9x8JNjyyoh7N/e8hHfCR5BJ9dNdqVqK1fN
+	 BON661VF13+TH78WCL4YgqeLfuZw7tO63Ur1rLus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394258AbfHVXMi (ORCPT
+        id S2394266AbfHVXOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 19:12:38 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:50362 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732378AbfHVXMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 19:12:38 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id C975A1539AF08;
-        Thu, 22 Aug 2019 16:12:37 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 16:12:37 -0700 (PDT)
-Message-Id: <20190822.161237.59235267978130262.davem@davemloft.net>
-To:     kvalo@codeaurora.org
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, johannes@sipsolutions.net
-Subject: Re: pull-request: wireless-drivers 2019-08-21
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <87zhk359wd.fsf@kamboji.qca.qualcomm.com>
-References: <87zhk359wd.fsf@kamboji.qca.qualcomm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
+        Thu, 22 Aug 2019 19:14:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731799AbfHVXOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 19:14:30 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E6CC2173E;
+        Thu, 22 Aug 2019 23:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566515669;
+        bh=vApCOM3H3LWmBhR9eGKlIz7FlGeav7+0V7QMAv0lrz4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JnFvVQX53Ce1G2PQ2HOdxbB/SubAMwjIprQiE8EBfadRyLGqt1J+ii+olw/j5668Y
+         +QtLBXDlkv6/aLoxjapTqHtWc0fc3gJRJDtnIBEIp+3qWO0oQofuFmpQXuSE4efjH3
+         lHWO0el4UUudjvso5nDstFN30oxIxxABVA7nHCxs=
+Date:   Thu, 22 Aug 2019 16:14:28 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Wei Wang <wvw@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, Feng Tang <feng.tang@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH 3/4] kernel.h: Add non_block_start/end()
+Message-Id: <20190822161428.c9e4479207386d34745ea111@linux-foundation.org>
+In-Reply-To: <20190820202440.GH11147@phenom.ffwll.local>
+References: <20190820081902.24815-1-daniel.vetter@ffwll.ch>
+        <20190820081902.24815-4-daniel.vetter@ffwll.ch>
+        <20190820202440.GH11147@phenom.ffwll.local>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 22 Aug 2019 16:12:38 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kalle Valo <kvalo@codeaurora.org>
-Date: Wed, 21 Aug 2019 09:07:30 +0300
+On Tue, 20 Aug 2019 22:24:40 +0200 Daniel Vetter <daniel@ffwll.ch> wrote:
 
-> here's a pull request to net for 5.3, more info below. I will be offline
-> the next week, but Johannes should be able to help if there are any
-> issues.
+> Hi Peter,
+> 
+> Iirc you've been involved at least somewhat in discussing this. -mm folks
+> are a bit undecided whether these new non_block semantics are a good idea.
+> Michal Hocko still is in support, but Andrew Morton and Jason Gunthorpe
+> are less enthusiastic. Jason said he's ok with merging the hmm side of
+> this if scheduler folks ack. If not, then I'll respin with the
+> preempt_disable/enable instead like in v1.
 
-Pulled, thanks Kalle.
+I became mollified once Michel explained the rationale.  I think it's
+OK.  It's very specific to the oom reaper and hopefully won't be used
+more widely(?).
+
