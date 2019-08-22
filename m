@@ -2,121 +2,108 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBD8C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82A2C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2259C233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE739233A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:27:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eVlrAYfd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bpk27jgM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387601AbfHVK1A (ORCPT
+        id S2387652AbfHVK13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 06:27:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56016 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732978AbfHVK07 (ORCPT
+        Thu, 22 Aug 2019 06:27:29 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46636 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfHVK12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:26:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=DotA4iLQHzv00Y2V/yoKvVtA73fz51KfKrhIQUWvQ/A=; b=eVlrAYfdcJG6+boQHJJ67V4KC9
-        QbHlfleONMxWazMENqrju+gkrvwQLKEz4QjyGgdQGgpHf8jEQXlHo4zRC76zDN3CEw8MlAGvtVfHx
-        nXCCrySC8KOMw/dx4+ur5Hsh41NaRdWf8zPEO2ZGmBsWq2Zbaq3FFRljQgMxjF9hwmuHIbJInd1SC
-        4EW2tUZqsG0Dn0OBEg+jRNaThJ6Cf4r+kfd2xkDyMDzE1xSghN6eLY2LtQE9eYsGpcbe6HsK4DFri
-        SgKJ6OznuE7hxelqdcSlVojJywGHj5XPhCZMSr0rafQ54vGsqmaMHA7JARfChK82Zp8VFr05M8CsV
-        +gd8V1lg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i0kIu-0008DM-Nt; Thu, 22 Aug 2019 10:26:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9003B30780C;
-        Thu, 22 Aug 2019 12:26:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 6DF1720BD78F0; Thu, 22 Aug 2019 12:26:50 +0200 (CEST)
-Message-Id: <20190822102411.393701010@infradead.org>
-User-Agent: quilt/0.65
-Date:   Thu, 22 Aug 2019 12:23:11 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, x86@kernel.org,
-        Dave Hansen <dave.hansen@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [PATCH 5/5] x86/intel: Add common OPTDIFFs
-References: <20190822102306.109718810@infradead.org>
+        Thu, 22 Aug 2019 06:27:28 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f9so4999429ljc.13
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 03:27:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1sY/jJYsZ/Y8HplWdr+MRRPypzy+MY6MFI9cf4FZtZo=;
+        b=bpk27jgMbEtZBVqG1CXQ3WQkCcbGFhVLCR/qFQYW8++ezehtCiq2LgQ0huJWT56wHd
+         AcbSluVFZbuyT9vH9RCYjyLVGIODsmeBmIZ8NsIXc9Rc5iiU6gjxfOuBA9nuTDfyRjdb
+         55Phb2VI/m2KPNeD8bHWmHOy9aKKXBrP12BGnWg6wtYAWO6X1hiatoJzwTmryhSL9tPe
+         RgLYYQcGe85mfC7ZFIZVeKApZNtHPEBfgaT1TAPMuuZFMzX6vzilt5SF9PWrR5d+M2u2
+         IiOaIYVErWqtyJlSwf2QPoi35OsnqsiJCZ/+U2aCswFflOsil8XiwVRLc9/K8AmU9Wi3
+         l+rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1sY/jJYsZ/Y8HplWdr+MRRPypzy+MY6MFI9cf4FZtZo=;
+        b=m0hD6aChfYoM9VQqXyqK6sHKdHeWRgn7tLPSaBfC7qXkCpMm88cK34nRapIGLBVmYu
+         eg1bBhvcgMfxvF38mA6wWlD9Lz+vGk1vroTGkbtMn7Rvij8krFrsJHgDZXIGyqwX2eCN
+         8TqtiBhBmeribNhNKM8mIy0tD0G0Tek8raGijtqU5KDpAHbeHm0CPO8j5dLsLYmzxgQ0
+         YMN95I0QxuLhUpSbOdUPLGIgp0WkuxeYuDpQO2Fex28yARy01Mh1qOJTxOQ8rVWU05OW
+         IfCdIVLf/2vRTB6OzJWUI0n4whtBm/bBoBSQvmuBX/IQNTHOU/RtC6NDCudGw/vsK2HI
+         YoXA==
+X-Gm-Message-State: APjAAAWBIGgvMSatCR5uipxidaBAY91W3hk50S/czTLm4KoZmKi1832S
+        6JykMfq0vqIvGcXRQcWfpUb4OA==
+X-Google-Smtp-Source: APXvYqw9ELcfWAaOIRUHdmTqNqxavdwdByFmys1TchCBhziZhIJ8bAJRlc9uHWY43bt1oOR0dlb94g==
+X-Received: by 2002:a2e:a202:: with SMTP id h2mr21448448ljm.146.1566469645923;
+        Thu, 22 Aug 2019 03:27:25 -0700 (PDT)
+Received: from centauri (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
+        by smtp.gmail.com with ESMTPSA id q30sm4371622lfd.27.2019.08.22.03.27.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 03:27:25 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 12:27:23 +0200
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>,
+        linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
+        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
+        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 06/14] dt-bindings: cpufreq: qcom-nvmem: Support
+ pstates provided by a power domain
+Message-ID: <20190822102723.GB8494@centauri>
+References: <20190725104144.22924-7-niklas.cassel@linaro.org>
+ <20190819100957.17095-1-niklas.cassel@linaro.org>
+ <5d5ae389.1c69fb81.cb730.3225@mx.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d5ae389.1c69fb81.cb730.3225@mx.google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Aug 19, 2019 at 10:59:36AM -0700, Stephen Boyd wrote:
+> Quoting Niklas Cassel (2019-08-19 03:09:57)
+> > +
+> > +soc {
+> > +....
+> > +       cprpd: cpr@b018000 {
+> 
+> Maybe node name should be 'avs' for the industry standard adaptive
+> voltage scaling acronym?
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: x86@kernel.org
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
----
- arch/x86/include/asm/intel-family.h |   21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+I see where this is coming from, but "git grep avs" gives a single result.
 
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -5,9 +5,6 @@
- /*
-  * "Big Core" Processors (Branded as Core, Xeon, etc...)
-  *
-- * The "_X" parts are generally the EP and EX Xeons, or the
-- * "Extreme" ones, like Broadwell-E, or Atom microserver.
-- *
-  * While adding a new CPUID for a new microarchitecture, add a new
-  * group to keep logically sorted out in chronological order. Within
-  * that group keep the CPUID for the variants sorted by model number.
-@@ -21,9 +18,19 @@
-  * MICROARCH	Is the code name for the micro-architecture for this core.
-  *		N.B. Not the platform name.
-  * OPTDIFF	If needed, a short string to differentiate by market segment.
-- *		Exact strings here will vary over time. _DESKTOP, _MOBILE, and
-- *		_X (short for Xeon server) should be used when they are
-- *		appropriate.
-+ *
-+ *		Common OPTDIFFs:
-+ *
-+ *			- regular client parts
-+ *		_L	- regular mobile parts
-+ *		_G	- parts with extra graphics on
-+ *		_X	- regular server parts
-+ *		_D	- micro server parts
-+ *
-+ *		Historical OPTDIFFs:
-+ *
-+ *		_EP	- 2 socket server parts
-+ *		_EX	- 4+ socket server parts
-  *
-  * The #define line may optionally include a comment including platform names.
-  */
-@@ -91,6 +98,8 @@
- 
- #define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
- #define INTEL_FAM6_ATOM_GOLDMONT_D	0x5F /* Denverton */
-+
-+/* Note: the micro-architecture is "Goldmont Plus" */
- #define INTEL_FAM6_ATOM_GOLDMONT_PLUS	0x7A /* Gemini Lake */
- 
- #define INTEL_FAM6_ATOM_TREMONT_D	0x86 /* Jacobsville */
+Also, since the label is cprpd, it doesn't make sense to simply rename the
+node name, and I don't think that avspd would be a good name, since it is
+less correct.
 
+So if you don't insist, I would prefer to leave it as it is.
 
+> 
+> 
+> > +               compatible = "qcom,qcs404-cpr", "qcom,cpr";
+> > +               reg = <0x0b018000 0x1000>;
+> > +               ....
+> > +               vdd-apc-supply = <&pms405_s3>;
+> > +               #power-domain-cells = <0>;
