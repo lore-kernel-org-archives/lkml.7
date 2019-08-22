@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B767C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2ADC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A7E23402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F229523429
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493730;
-	bh=GDMUFK49iJw6LrP6ldTPSNcdlEBauNYXoB7Qz/wRAao=;
+	s=default; t=1566493733;
+	bh=j7dRkRn0P7DuIjEpAV9BUNkDp+uQeUKmWjYYzdwUzds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ziMSMFfweVqKHsPXEyLb9cuVeCZmEqvjJ5EDslfGtF27LWWOBt4Oa8KIFEQcXRRFy
-	 ScsX47gPP0SRJJ7oksHQQ+llx9XOqUX3TpnoaDAE+ZVRDXas203XLhLQK4Hdfp4YDH
-	 55QHLlIXoxZVIDjVoPR8eQybO3j+8pqYU5TLdao0=
+	b=VXvo+zn9KuSRWxPddI0ath21URuErfHrqqRitcnRCGwXI3NDHjbI5Ep0y8rX6tsVX
+	 0dACdgjYqvYN9wJdpIKAAmsOuYgKNndQjcgbdd4IL5aCyMCzDcGrNYk8+1wXOgKMfo
+	 xDSCfCs0VvFVSRa/hjiZBnHcIgDQyaq3csBNH7FI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390536AbfHVRIt (ORCPT
+        id S2390556AbfHVRIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58618 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390506AbfHVRIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:47 -0400
+        id S2390522AbfHVRIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:49 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 154F423406;
-        Thu, 22 Aug 2019 17:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56B4823430;
+        Thu, 22 Aug 2019 17:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493727;
-        bh=GDMUFK49iJw6LrP6ldTPSNcdlEBauNYXoB7Qz/wRAao=;
+        s=default; t=1566493728;
+        bh=j7dRkRn0P7DuIjEpAV9BUNkDp+uQeUKmWjYYzdwUzds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NrY/JGlHZdo9oL78upF9vAVATFKAsAgqyaShLg436SOurPLI9dDBSjx+Qr1uNV+pf
-         4OhZ1IdFXOiUYuqN5c1CrMbR4P93H7cRMhOLwvHUV7bfSz4B2m+XMDqY05AvAmFlbi
-         wwekRFe3wAYk0278fRGn/3mWREJ1VpaOxjYHB0W4=
+        b=Ruid9p8P7Oa/bXi1FgTFpH5PDRYCTnBi7FdWksW2Hr+SmL5sxeRtFVQalULjRCj2o
+         SFrl2QYoeQEryiWBJgcHtMWEHpK09ZCTUySiVx16A6wCbE7O3aPTZSR325W4rH54V2
+         CuKKxA7UYWjX+pQe/OVrQ84E8LLVMpwmdGoWrtso=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Don Brace <don.brace@microsemi.com>,
-        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
-        Scott Teel <scott.teel@microsemi.com>,
-        Scott Benesh <scott.benesh@microsemi.com>,
-        Kevin Barnett <kevin.barnett@microsemi.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 060/135] scsi: hpsa: correct scsi command status issue after reset
-Date:   Thu, 22 Aug 2019 13:06:56 -0400
-Message-Id: <20190822170811.13303-61-sashal@kernel.org>
+Subject: [PATCH 5.2 062/135] tracing: Fix header include guards in trace event headers
+Date:   Thu, 22 Aug 2019 13:06:58 -0400
+Message-Id: <20190822170811.13303-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -69,59 +65,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Don Brace <don.brace@microsemi.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit eeebce1862970653cdf5c01e98bc669edd8f529a ]
+[ Upstream commit b1d45c23284e55a379f85554a27a548b7988d47a ]
 
-Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
-Reviewed-by: Scott Teel <scott.teel@microsemi.com>
-Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
-Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
-Signed-off-by: Don Brace <don.brace@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+These include guards are broken.
+
+Match the #if !define() and #define lines so that they work correctly.
+
+Link: http://lkml.kernel.org/r/20190720103943.16982-1-yamada.masahiro@socionext.com
+
+Fixes: f54d1867005c3 ("dma-buf: Rename struct fence to dma_fence")
+Fixes: 2e26ca7150a4f ("tracing: Fix tracepoint.h DECLARE_TRACE() to allow more than one header")
+Fixes: e543002f77f46 ("qdisc: add tracepoint qdisc:qdisc_dequeue for dequeued SKBs")
+Fixes: 95f295f9fe081 ("dmaengine: tegra: add tracepoints to driver")
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hpsa.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ include/trace/events/dma_fence.h     | 2 +-
+ include/trace/events/napi.h          | 4 ++--
+ include/trace/events/qdisc.h         | 4 ++--
+ include/trace/events/tegra_apb_dma.h | 4 ++--
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 8068520cf89ed..152de392f9aaf 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -2320,6 +2320,8 @@ static int handle_ioaccel_mode2_error(struct ctlr_info *h,
- 	case IOACCEL2_SERV_RESPONSE_COMPLETE:
- 		switch (c2->error_data.status) {
- 		case IOACCEL2_STATUS_SR_TASK_COMP_GOOD:
-+			if (cmd)
-+				cmd->result = 0;
- 			break;
- 		case IOACCEL2_STATUS_SR_TASK_COMP_CHK_COND:
- 			cmd->result |= SAM_STAT_CHECK_CONDITION;
-@@ -2479,8 +2481,10 @@ static void process_ioaccel2_completion(struct ctlr_info *h,
+diff --git a/include/trace/events/dma_fence.h b/include/trace/events/dma_fence.h
+index 2212adda8f77f..64e92d56c6a8f 100644
+--- a/include/trace/events/dma_fence.h
++++ b/include/trace/events/dma_fence.h
+@@ -2,7 +2,7 @@
+ #undef TRACE_SYSTEM
+ #define TRACE_SYSTEM dma_fence
  
- 	/* check for good status */
- 	if (likely(c2->error_data.serv_response == 0 &&
--			c2->error_data.status == 0))
-+			c2->error_data.status == 0)) {
-+		cmd->result = 0;
- 		return hpsa_cmd_free_and_done(h, c, cmd);
-+	}
+-#if !defined(_TRACE_FENCE_H) || defined(TRACE_HEADER_MULTI_READ)
++#if !defined(_TRACE_DMA_FENCE_H) || defined(TRACE_HEADER_MULTI_READ)
+ #define _TRACE_DMA_FENCE_H
  
- 	/*
- 	 * Any RAID offload error results in retry which will use
-@@ -5638,6 +5642,12 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
- 	}
- 	c = cmd_tagged_alloc(h, cmd);
+ #include <linux/tracepoint.h>
+diff --git a/include/trace/events/napi.h b/include/trace/events/napi.h
+index f3a12566bed05..6678cf8b235b8 100644
+--- a/include/trace/events/napi.h
++++ b/include/trace/events/napi.h
+@@ -3,7 +3,7 @@
+ #define TRACE_SYSTEM napi
  
-+	/*
-+	 * This is necessary because the SML doesn't zero out this field during
-+	 * error recovery.
-+	 */
-+	cmd->result = 0;
-+
- 	/*
- 	 * Call alternate submit routine for I/O accelerated commands.
- 	 * Retries always go down the normal I/O path.
+ #if !defined(_TRACE_NAPI_H) || defined(TRACE_HEADER_MULTI_READ)
+-#define _TRACE_NAPI_H_
++#define _TRACE_NAPI_H
+ 
+ #include <linux/netdevice.h>
+ #include <linux/tracepoint.h>
+@@ -38,7 +38,7 @@ TRACE_EVENT(napi_poll,
+ 
+ #undef NO_DEV
+ 
+-#endif /* _TRACE_NAPI_H_ */
++#endif /* _TRACE_NAPI_H */
+ 
+ /* This part must be outside protection */
+ #include <trace/define_trace.h>
+diff --git a/include/trace/events/qdisc.h b/include/trace/events/qdisc.h
+index 60d0d8bd336d0..0d1a9ebf55ba4 100644
+--- a/include/trace/events/qdisc.h
++++ b/include/trace/events/qdisc.h
+@@ -2,7 +2,7 @@
+ #define TRACE_SYSTEM qdisc
+ 
+ #if !defined(_TRACE_QDISC_H) || defined(TRACE_HEADER_MULTI_READ)
+-#define _TRACE_QDISC_H_
++#define _TRACE_QDISC_H
+ 
+ #include <linux/skbuff.h>
+ #include <linux/netdevice.h>
+@@ -44,7 +44,7 @@ TRACE_EVENT(qdisc_dequeue,
+ 		  __entry->txq_state, __entry->packets, __entry->skbaddr )
+ );
+ 
+-#endif /* _TRACE_QDISC_H_ */
++#endif /* _TRACE_QDISC_H */
+ 
+ /* This part must be outside protection */
+ #include <trace/define_trace.h>
+diff --git a/include/trace/events/tegra_apb_dma.h b/include/trace/events/tegra_apb_dma.h
+index 0818f62861109..971cd02d2dafe 100644
+--- a/include/trace/events/tegra_apb_dma.h
++++ b/include/trace/events/tegra_apb_dma.h
+@@ -1,5 +1,5 @@
+ #if !defined(_TRACE_TEGRA_APB_DMA_H) || defined(TRACE_HEADER_MULTI_READ)
+-#define _TRACE_TEGRA_APM_DMA_H
++#define _TRACE_TEGRA_APB_DMA_H
+ 
+ #include <linux/tracepoint.h>
+ #include <linux/dmaengine.h>
+@@ -55,7 +55,7 @@ TRACE_EVENT(tegra_dma_isr,
+ 	TP_printk("%s: irq %d\n",  __get_str(chan), __entry->irq)
+ );
+ 
+-#endif /*  _TRACE_TEGRADMA_H */
++#endif /* _TRACE_TEGRA_APB_DMA_H */
+ 
+ /* This part must be outside protection */
+ #include <trace/define_trace.h>
 -- 
 2.20.1
 
