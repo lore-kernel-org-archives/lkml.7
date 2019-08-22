@@ -2,129 +2,87 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A648C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E865C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE1AE2339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488832339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:59:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731736AbfHVJ73 (ORCPT
+        id S1732670AbfHVJ7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:59:29 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:41099 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfHVJ73 (ORCPT
+        Thu, 22 Aug 2019 05:59:40 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:64853 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfHVJ7j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:59:29 -0400
-Received: from uno.localdomain (unknown [87.18.63.98])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id DED75240015;
-        Thu, 22 Aug 2019 09:59:22 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 12:00:51 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 03/19] arm64: renesas: Update 'vsps' property
-Message-ID: <20190822100051.yhguosvfz3zzykze@uno.localdomain>
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
- <20190706140746.29132-4-jacopo+renesas@jmondi.org>
- <CAMuHMdVXQaqFg-m3a4xTiKLWQLz+itKQgGEBAQpHtG+MkTNzQw@mail.gmail.com>
+        Thu, 22 Aug 2019 05:59:39 -0400
+Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7M9xQtM011138;
+        Thu, 22 Aug 2019 18:59:26 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp);
+ Thu, 22 Aug 2019 18:59:26 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7M9xPOa011134;
+        Thu, 22 Aug 2019 18:59:25 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: (from i-love@localhost)
+        by www262.sakura.ne.jp (8.15.2/8.15.2/Submit) id x7M9xP8r011133;
+        Thu, 22 Aug 2019 18:59:25 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Message-Id: <201908220959.x7M9xP8r011133@www262.sakura.ne.jp>
+X-Authentication-Warning: www262.sakura.ne.jp: i-love set sender to penguin-kernel@i-love.sakura.ne.jp using -f
+Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
+        Eric Biggers <ebiggers@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="42s67wtln7iyyikt"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVXQaqFg-m3a4xTiKLWQLz+itKQgGEBAQpHtG+MkTNzQw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Date:   Thu, 22 Aug 2019 18:59:25 +0900
+References: <20190820222403.GB8120@kroah.com> 
+Content-Type: text/plain; charset="ISO-2022-JP"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tetsuo Handa wrote:
+> Greg Kroah-Hartman wrote:
+> > Oh, nice!  This shouldn't break anything that is assuming that the read
+> > will complete before a signal is delivered, right?
+> >
+> > I know userspace handling of "short" reads is almost always not there...
+> 
+> Since this check will give up upon SIGKILL, userspace won't be able to see
+> the return value from read(). Thus, returning 0 upon SIGKILL will be safe. ;-)
+> Maybe we also want to add cond_resched()...
+> 
+> By the way, do we want similar check on write_mem() side?
+> If aborting "write to /dev/mem" upon SIGKILL (results in partial write) is
+> unexpected, we might want to ignore SIGKILL for write_mem() case.
+> But copying data from killed threads (especially when killed by OOM killer
+> and userspace memory is reclaimed by OOM reaper before write_mem() returns)
+> would be after all unexpected. Then, it might be preferable to check SIGKILL
+> on write_mem() side...
+> 
 
---42s67wtln7iyyikt
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Ha, ha. syzbot reported the same problem using write_mem().
+https://syzkaller.appspot.com/text?tag=CrashLog&x=1018055a600000
+We want fatal_signal_pending() check on both sides.
 
-Hi Geert,
+By the way, write_mem() worries me whether there is possibility of replacing
+kernel code/data with user-defined memory data supplied from userspace.
+If write_mem() were by chance replaced with code that does
 
-On Wed, Aug 21, 2019 at 02:16:02PM +0200, Geert Uytterhoeven wrote:
-> On Sat, Jul 6, 2019 at 4:07 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > Update the 'vsps' property in the R-Car Gen3 SoC device tree files to
-> > match what's in in the documentation example.
->
-> double in (no worries, I'll fix that up myself)
->
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->
-> Thanks!
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-devel for v5.4.
->
-> BTW, any plans to add channel indices to the vsps properties in the
-> remaining DTS files?
+   while (1);
 
-According to what I read in the parsing 'vsps' proeprties parsing
-routine rcar_du_vsps_init(), if the channel index is not specified, it
-is defaulted to 0.
-
-           /* Store the VSP pointer and pipe index in the CRTC. */
-           rcdu->crtcs[i].vsp = &rcdu->vsps[j];
-           rcdu->crtcs[i].vsp_pipe = cells >= 1 ? args.args[0] : 0;
-
-The DU bindings documentation does not state that the channel index is
-optional, so yes, it might be worth changing this and simplify the
-parsing routing to always assume the channel index is there.
-
-What does Laurent think? Is this worth the effort?
-
-Thanks
-   j
-
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-
---42s67wtln7iyyikt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1eZ9MACgkQcjQGjxah
-VjxVOw//dQJQ84fYnCIy7Da9eeUQ2Ymw8guYdhdfL3HqgI1d8U/aY3bgKGb/vbpJ
-1SFry3IwJE+TyHuBrcjPTeEZSh+Skonel+vSHhtY73AbrBFXRrsnqv4CAcALPQ0r
-nKpcEcnYvVjiefyBYhRJz0NHqhFXDZCorx7B3RluqQjvPIwBZR2GzBg5QgXWML5z
-nxSFhwZh58x7ViognfTeNaLocasH8LaKZ+JkBRBooo5xz7LdIw8Gevk4gkzCUTj9
-OdzRpG5DQjDl/J5X3iZKJ0T7DU9pPiYjWtEntlgVp6JPDZjxXUL0xyKInVEE9qrJ
-Mz3lpFw9Ea151LYjeu0uJUUpMP5RmxOSLjRXxssx0dT2/+x99re5ySvepJmah/gg
-S3TF5R6mxaz8i1lheWv7ZGs5cndbiP94bCOoveDUgAqmfhjMeTemX/4HDwmnYNoH
-RLLNuW7rG02uIE+biT+ZiD/TIpH4wNb4kwtpjPVXc/jXBcnFlaIqqv/IWKsLLHpJ
-hrtxX0EGDTjlmRu/RAh6D2B6YV2OPq3SWKaSl4CTA2Zk9usALsb04HTL2rfBokJN
-MNZfduNE0QohpNXhKZXdV3PkljURWaJl6Mb1dCGotDzY5bEZjkp2ssHtcGYut4n6
-8qy36cjJw+IRPy65JA8BUVdcAEvaZjdVOCcY5hQnsdw+Ff7jmtA=
-=hvs1
------END PGP SIGNATURE-----
-
---42s67wtln7iyyikt--
+we won't be able to return from write_mem() even if we added fatal_signal_pending() check.
+Ditto for replacing local variables with unexpected values...
