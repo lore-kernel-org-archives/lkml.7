@@ -2,53 +2,54 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD61C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 527D0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6799C23402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE7C23400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494978;
-	bh=sRrp4AB5ZZgmgXo65N7/Viju2DCUUVDpt6ASET+gznA=;
+	s=default; t=1566494985;
+	bh=qLdpS5SHe+1NzOJQlUCNlPAJKLL6lX/DTce7nhzyAwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i8JG3qflSn5FEDF4zF1F2YspgXUxAxR7Sb0t502+9ChkxLOi7YRQLq0hks1n3KBUx
-	 WuKfjn+0DlZP2YXYD46bNxwycLPXeR3dpy0/mWhVrJ7KTYSXCc7Vbds2k+7e0ibN6t
-	 Rspmhmejn7wK7R8bPoOuGi6vhIa48f6oXMyqkbK0=
+	b=1NmqV2MZugx1ifeS+YAFO+mfPH6PLhaJVSO5kbmau3BiXlYyJwJNMImqu8GiHvPyJ
+	 i64bkELPrgAsEj3ZSpSKb6kAFKHh8s7mZQP9OKatTuCUxV6F5E3mdQfcp1+h8N60pj
+	 zLKmMcdx+RZaF/PmH4eW9bmt1kmXURoTvoQSfgQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404827AbfHVR1i (ORCPT
+        id S2392062AbfHVR3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:27:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51134 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:29:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404603AbfHVR0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:26:06 -0400
+        id S2404711AbfHVR0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:26:22 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD1F9206DD;
-        Thu, 22 Aug 2019 17:26:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBFA82064A;
+        Thu, 22 Aug 2019 17:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494765;
-        bh=sRrp4AB5ZZgmgXo65N7/Viju2DCUUVDpt6ASET+gznA=;
+        s=default; t=1566494782;
+        bh=qLdpS5SHe+1NzOJQlUCNlPAJKLL6lX/DTce7nhzyAwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z17/3clyvxm5nlhXTRmEnMrpX0mXIrdvI8oZaumun4bsfiDmpSlSdEp7EQiqWC0xf
-         W3+Ha0/qOP6XyV+evJc0fH+x8ZjtuPlJrZVsloUAD6+0Qum1H+p5/s/JBjZbLLWyWm
-         zfZe9wnujRxCXEJVe75+PWsAjoJHRH0qtTecDU9c=
+        b=uuih6pef91vS5iuNdU7Yr82sOOY1SDZe4/ByPNLXRSHQfpB181n0jFHJihZpZprwP
+         ycJKmlh9TMZf5jZG77+3+I+c/rTfrWDxDggYStGiwXILh9O76LG6VKcGYtuBApX4q6
+         uvlr7AgiSBw5oStmLbN2la8ZUSWTHNxwvMRrZ0M0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.19 69/85] arm64: ftrace: Ensure module ftrace trampoline is coherent with I-side
-Date:   Thu, 22 Aug 2019 10:19:42 -0700
-Message-Id: <20190822171734.175450632@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jack Morgenstein <jackm@dev.mellanox.co.il>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 48/85] IB/mad: Fix use-after-free in ib mad completion handling
+Date:   Thu, 22 Aug 2019 10:19:21 -0700
+Message-Id: <20190822171733.368786136@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -61,80 +62,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+[ Upstream commit 770b7d96cfff6a8bf6c9f261ba6f135dc9edf484 ]
 
-commit b6143d10d23ebb4a77af311e8b8b7f019d0163e6 upstream.
+We encountered a use-after-free bug when unloading the driver:
 
-The initial support for dynamic ftrace trampolines in modules made use
-of an indirect branch which loaded its target from the beginning of
-a special section (e71a4e1bebaf7 ("arm64: ftrace: add support for far
-branches to dynamic ftrace")). Since no instructions were being patched,
-no cache maintenance was needed. However, later in be0f272bfc83 ("arm64:
-ftrace: emit ftrace-mod.o contents through code") this code was reworked
-to output the trampoline instructions directly into the PLT entry but,
-unfortunately, the necessary cache maintenance was overlooked.
+[ 3562.116059] BUG: KASAN: use-after-free in ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
+[ 3562.117233] Read of size 4 at addr ffff8882ca5aa868 by task kworker/u13:2/23862
+[ 3562.118385]
+[ 3562.119519] CPU: 2 PID: 23862 Comm: kworker/u13:2 Tainted: G           OE     5.1.0-for-upstream-dbg-2019-05-19_16-44-30-13 #1
+[ 3562.121806] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu2 04/01/2014
+[ 3562.123075] Workqueue: ib-comp-unb-wq ib_cq_poll_work [ib_core]
+[ 3562.124383] Call Trace:
+[ 3562.125640]  dump_stack+0x9a/0xeb
+[ 3562.126911]  print_address_description+0xe3/0x2e0
+[ 3562.128223]  ? ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
+[ 3562.129545]  __kasan_report+0x15c/0x1df
+[ 3562.130866]  ? ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
+[ 3562.132174]  kasan_report+0xe/0x20
+[ 3562.133514]  ib_mad_post_receive_mads+0xddc/0xed0 [ib_core]
+[ 3562.134835]  ? find_mad_agent+0xa00/0xa00 [ib_core]
+[ 3562.136158]  ? qlist_free_all+0x51/0xb0
+[ 3562.137498]  ? mlx4_ib_sqp_comp_worker+0x1970/0x1970 [mlx4_ib]
+[ 3562.138833]  ? quarantine_reduce+0x1fa/0x270
+[ 3562.140171]  ? kasan_unpoison_shadow+0x30/0x40
+[ 3562.141522]  ib_mad_recv_done+0xdf6/0x3000 [ib_core]
+[ 3562.142880]  ? _raw_spin_unlock_irqrestore+0x46/0x70
+[ 3562.144277]  ? ib_mad_send_done+0x1810/0x1810 [ib_core]
+[ 3562.145649]  ? mlx4_ib_destroy_cq+0x2a0/0x2a0 [mlx4_ib]
+[ 3562.147008]  ? _raw_spin_unlock_irqrestore+0x46/0x70
+[ 3562.148380]  ? debug_object_deactivate+0x2b9/0x4a0
+[ 3562.149814]  __ib_process_cq+0xe2/0x1d0 [ib_core]
+[ 3562.151195]  ib_cq_poll_work+0x45/0xf0 [ib_core]
+[ 3562.152577]  process_one_work+0x90c/0x1860
+[ 3562.153959]  ? pwq_dec_nr_in_flight+0x320/0x320
+[ 3562.155320]  worker_thread+0x87/0xbb0
+[ 3562.156687]  ? __kthread_parkme+0xb6/0x180
+[ 3562.158058]  ? process_one_work+0x1860/0x1860
+[ 3562.159429]  kthread+0x320/0x3e0
+[ 3562.161391]  ? kthread_park+0x120/0x120
+[ 3562.162744]  ret_from_fork+0x24/0x30
+...
+[ 3562.187615] Freed by task 31682:
+[ 3562.188602]  save_stack+0x19/0x80
+[ 3562.189586]  __kasan_slab_free+0x11d/0x160
+[ 3562.190571]  kfree+0xf5/0x2f0
+[ 3562.191552]  ib_mad_port_close+0x200/0x380 [ib_core]
+[ 3562.192538]  ib_mad_remove_device+0xf0/0x230 [ib_core]
+[ 3562.193538]  remove_client_context+0xa6/0xe0 [ib_core]
+[ 3562.194514]  disable_device+0x14e/0x260 [ib_core]
+[ 3562.195488]  __ib_unregister_device+0x79/0x150 [ib_core]
+[ 3562.196462]  ib_unregister_device+0x21/0x30 [ib_core]
+[ 3562.197439]  mlx4_ib_remove+0x162/0x690 [mlx4_ib]
+[ 3562.198408]  mlx4_remove_device+0x204/0x2c0 [mlx4_core]
+[ 3562.199381]  mlx4_unregister_interface+0x49/0x1d0 [mlx4_core]
+[ 3562.200356]  mlx4_ib_cleanup+0xc/0x1d [mlx4_ib]
+[ 3562.201329]  __x64_sys_delete_module+0x2d2/0x400
+[ 3562.202288]  do_syscall_64+0x95/0x470
+[ 3562.203277]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Add a call to __flush_icache_range() after writing the new trampoline
-instructions but before patching in the branch to the trampoline.
+The problem was that the MAD PD was deallocated before the MAD CQ.
+There was completion work pending for the CQ when the PD got deallocated.
+When the mad completion handling reached procedure
+ib_mad_post_receive_mads(), we got a use-after-free bug in the following
+line of code in that procedure:
+   sg_list.lkey = qp_info->port_priv->pd->local_dma_lkey;
+(the pd pointer in the above line is no longer valid, because the
+pd has been deallocated).
 
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: James Morse <james.morse@arm.com>
-Cc: <stable@vger.kernel.org>
-Fixes: be0f272bfc83 ("arm64: ftrace: emit ftrace-mod.o contents through code")
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We fix this by allocating the PD before the CQ in procedure
+ib_mad_port_open(), and deallocating the PD after freeing the CQ
+in procedure ib_mad_port_close().
 
+Since the CQ completion work queue is flushed during ib_free_cq(),
+no completions will be pending for that CQ when the PD is later
+deallocated.
+
+Note that freeing the CQ before deallocating the PD is the practice
+in the ULPs.
+
+Fixes: 4be90bc60df4 ("IB/mad: Remove ib_get_dma_mr calls")
+Signed-off-by: Jack Morgenstein <jackm@dev.mellanox.co.il>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Link: https://lore.kernel.org/r/20190801121449.24973-1-leon@kernel.org
+Signed-off-by: Doug Ledford <dledford@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/ftrace.c |   21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/infiniband/core/mad.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
---- a/arch/arm64/kernel/ftrace.c
-+++ b/arch/arm64/kernel/ftrace.c
-@@ -76,7 +76,7 @@ int ftrace_make_call(struct dyn_ftrace *
+diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
+index ef459f2f2eeb8..7586c1dd73f19 100644
+--- a/drivers/infiniband/core/mad.c
++++ b/drivers/infiniband/core/mad.c
+@@ -3182,18 +3182,18 @@ static int ib_mad_port_open(struct ib_device *device,
+ 	if (has_smi)
+ 		cq_size *= 2;
  
- 	if (offset < -SZ_128M || offset >= SZ_128M) {
- #ifdef CONFIG_ARM64_MODULE_PLTS
--		struct plt_entry trampoline;
-+		struct plt_entry trampoline, *dst;
- 		struct module *mod;
++	port_priv->pd = ib_alloc_pd(device, 0);
++	if (IS_ERR(port_priv->pd)) {
++		dev_err(&device->dev, "Couldn't create ib_mad PD\n");
++		ret = PTR_ERR(port_priv->pd);
++		goto error3;
++	}
++
+ 	port_priv->cq = ib_alloc_cq(port_priv->device, port_priv, cq_size, 0,
+ 			IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(port_priv->cq)) {
+ 		dev_err(&device->dev, "Couldn't create ib_mad CQ\n");
+ 		ret = PTR_ERR(port_priv->cq);
+-		goto error3;
+-	}
+-
+-	port_priv->pd = ib_alloc_pd(device, 0);
+-	if (IS_ERR(port_priv->pd)) {
+-		dev_err(&device->dev, "Couldn't create ib_mad PD\n");
+-		ret = PTR_ERR(port_priv->pd);
+ 		goto error4;
+ 	}
  
- 		/*
-@@ -104,24 +104,27 @@ int ftrace_make_call(struct dyn_ftrace *
- 		 * is added in the future, but for now, the pr_err() below
- 		 * deals with a theoretical issue only.
- 		 */
-+		dst = mod->arch.ftrace_trampoline;
- 		trampoline = get_plt_entry(addr);
--		if (!plt_entries_equal(mod->arch.ftrace_trampoline,
--				       &trampoline)) {
--			if (!plt_entries_equal(mod->arch.ftrace_trampoline,
--					       &(struct plt_entry){})) {
-+		if (!plt_entries_equal(dst, &trampoline)) {
-+			if (!plt_entries_equal(dst, &(struct plt_entry){})) {
- 				pr_err("ftrace: far branches to multiple entry points unsupported inside a single module\n");
- 				return -EINVAL;
- 			}
+@@ -3236,11 +3236,11 @@ error8:
+ error7:
+ 	destroy_mad_qp(&port_priv->qp_info[0]);
+ error6:
+-	ib_dealloc_pd(port_priv->pd);
+-error4:
+ 	ib_free_cq(port_priv->cq);
+ 	cleanup_recv_queue(&port_priv->qp_info[1]);
+ 	cleanup_recv_queue(&port_priv->qp_info[0]);
++error4:
++	ib_dealloc_pd(port_priv->pd);
+ error3:
+ 	kfree(port_priv);
  
- 			/* point the trampoline to our ftrace entry point */
- 			module_disable_ro(mod);
--			*mod->arch.ftrace_trampoline = trampoline;
-+			*dst = trampoline;
- 			module_enable_ro(mod, true);
- 
--			/* update trampoline before patching in the branch */
--			smp_wmb();
-+			/*
-+			 * Ensure updated trampoline is visible to instruction
-+			 * fetch before we patch in the branch.
-+			 */
-+			__flush_icache_range((unsigned long)&dst[0],
-+					     (unsigned long)&dst[1]);
- 		}
--		addr = (unsigned long)(void *)mod->arch.ftrace_trampoline;
-+		addr = (unsigned long)dst;
- #else /* CONFIG_ARM64_MODULE_PLTS */
- 		return -EINVAL;
- #endif /* CONFIG_ARM64_MODULE_PLTS */
+@@ -3270,8 +3270,8 @@ static int ib_mad_port_close(struct ib_device *device, int port_num)
+ 	destroy_workqueue(port_priv->wq);
+ 	destroy_mad_qp(&port_priv->qp_info[1]);
+ 	destroy_mad_qp(&port_priv->qp_info[0]);
+-	ib_dealloc_pd(port_priv->pd);
+ 	ib_free_cq(port_priv->cq);
++	ib_dealloc_pd(port_priv->pd);
+ 	cleanup_recv_queue(&port_priv->qp_info[1]);
+ 	cleanup_recv_queue(&port_priv->qp_info[0]);
+ 	/* XXX: Handle deallocation of MAD registration tables */
+-- 
+2.20.1
+
 
 
