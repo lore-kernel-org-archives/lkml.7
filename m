@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC10CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED6FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 803E22089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A785623406
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494057;
-	bh=3L+IQwvQDdqWZRQVsDruL1DOw6e+QLjGDZNG9Teckc8=;
+	s=default; t=1566494063;
+	bh=BA+UGscKPxuHl3GcdkS7m3JOxOxCmTFTvrCrso1YyF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CEfjdF2ksc8rCsvelmxh07FUSNwNrM0se119Mutz7ROJS4S9FthBvx0L+Y612wk8E
-	 MNEm4lHo3VFkRE67/YdseYKBc2CoIU/3LmLJKI5Fq7UHjRkawhz7MAC4NlhmRaQ8ri
-	 WJ2QpTyZo8wvykutE2NIVKoIvyKMQt+D5w+vFzm8=
+	b=fquQ5ZqUBblhD39YpER0LcI0Y9c0I7D+7oXMHudd2A3czDrMeJ+cjO6WioW91b0dC
+	 qRhv+AeHl/LWMkYwL1XbZ1bEWmlDFvoWRkB8TpbhCwDZYQy2bO2vy3QGo6JcZfVeLx
+	 QvPF4EiLJBp1wlyAFJCAM7QPFEhIp13cnI8KyE6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391060AbfHVROP (ORCPT
+        id S2391104AbfHVROW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:14:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58932 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:14:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390567AbfHVRIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:54 -0400
+        id S2390563AbfHVRIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:53 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76E382342A;
-        Thu, 22 Aug 2019 17:08:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D222F2341E;
+        Thu, 22 Aug 2019 17:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1566493733;
-        bh=3L+IQwvQDdqWZRQVsDruL1DOw6e+QLjGDZNG9Teckc8=;
+        bh=BA+UGscKPxuHl3GcdkS7m3JOxOxCmTFTvrCrso1YyF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fWENqGdHQXjPmz3XzVwz9P5cdd7Ucz5G6j/b8sBYxVDnW9+xH1z/jZgHRrGr6Pq82
-         5YGBCjRwhCuMYSpDdbhlc5/0HSh2LJL5IOievbvwXp4GuKqgNda2jRcImszE+4ct+G
-         BEyQedZd/Ppr5l6IuS5w3s0HbhPzVxPQJdOthSWg=
+        b=eI083BEuzH/HCPTeMv4soiRT8+/F7h/ElhmtY7En4tZINdFQKmaL4p0A4q+bTsQHH
+         rxpchSveDhjeUSkiylIP9UqzxHPaVRMTvl3qrHnR+2sjFKbuz94XC0hMbBkLK4EPnN
+         9aEAlbEr2hA8T2RtUmDvliG+QUPDsaDIZGD4p4Fc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 072/135] arm64: Lower priority mask for GIC_PRIO_IRQON
-Date:   Thu, 22 Aug 2019 13:07:08 -0400
-Message-Id: <20190822170811.13303-73-sashal@kernel.org>
+Cc:     Mao Han <han_mao@c-sky.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 071/135] riscv: Fix perf record without libelf support
+Date:   Thu, 22 Aug 2019 13:07:07 -0400
+Message-Id: <20190822170811.13303-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -67,62 +67,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Thierry <julien.thierry.kdev@gmail.com>
+From: Mao Han <han_mao@c-sky.com>
 
-[ Upstream commit 677379bc9139ac24b310a281fcb21a2f04288353 ]
+[ Upstream commit b399abe7c21e248dc6224cadc9a378a2beb10cfd ]
 
-On a system with two security states, if SCR_EL3.FIQ is cleared,
-non-secure IRQ priorities get shifted to fit the secure view but
-priority masks aren't.
+This patch fix following perf record error by linking vdso.so with
+build id.
 
-On such system, it turns out that GIC_PRIO_IRQON masks the priority of
-normal interrupts, which obviously ends up in a hang.
+perf.data      perf.data.old
+[ perf record: Woken up 1 times to write data ]
+free(): double free detected in tcache 2
+Aborted
 
-Increase GIC_PRIO_IRQON value (i.e. lower priority) to make sure
-interrupts are not blocked by it.
+perf record use filename__read_build_id(util/symbol-minimal.c) to get
+build id when libelf is not supported. When vdso.so is linked without
+build id, the section size of PT_NOTE will be zero, buf size will
+realloc to zero and cause memory corruption.
 
-Cc: Oleg Nesterov <oleg@redhat.com>
-Fixes: bd82d4bd21880b7c ("arm64: Fix incorrect irqflag restore for priority masking")
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Julien Thierry <julien.thierry.kdev@gmail.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-[will: fixed Fixes: tag]
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Mao Han <han_mao@c-sky.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/arch_gicv3.h | 6 ++++++
- arch/arm64/include/asm/ptrace.h     | 2 +-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ arch/riscv/kernel/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/arch_gicv3.h b/arch/arm64/include/asm/arch_gicv3.h
-index 79155a8cfe7c0..89e4c8b793490 100644
---- a/arch/arm64/include/asm/arch_gicv3.h
-+++ b/arch/arm64/include/asm/arch_gicv3.h
-@@ -155,6 +155,12 @@ static inline void gic_pmr_mask_irqs(void)
- 	BUILD_BUG_ON(GICD_INT_DEF_PRI < (GIC_PRIO_IRQOFF |
- 					 GIC_PRIO_PSR_I_SET));
- 	BUILD_BUG_ON(GICD_INT_DEF_PRI >= GIC_PRIO_IRQON);
-+	/*
-+	 * Need to make sure IRQON allows IRQs when SCR_EL3.FIQ is cleared
-+	 * and non-secure PMR accesses are not subject to the shifts that
-+	 * are applied to IRQ priorities
-+	 */
-+	BUILD_BUG_ON((0x80 | (GICD_INT_DEF_PRI >> 1)) >= GIC_PRIO_IRQON);
- 	gic_write_pmr(GIC_PRIO_IRQOFF);
- }
+diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
+index f1d6ffe43e428..49a5852fd07dd 100644
+--- a/arch/riscv/kernel/vdso/Makefile
++++ b/arch/riscv/kernel/vdso/Makefile
+@@ -37,7 +37,7 @@ $(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso) FORCE
+ # these symbols in the kernel code rather than hand-coded addresses.
  
-diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
-index 81693244f58d6..701eaa7381876 100644
---- a/arch/arm64/include/asm/ptrace.h
-+++ b/arch/arm64/include/asm/ptrace.h
-@@ -30,7 +30,7 @@
-  * in the  the priority mask, it indicates that PSR.I should be set and
-  * interrupt disabling temporarily does not rely on IRQ priorities.
-  */
--#define GIC_PRIO_IRQON			0xc0
-+#define GIC_PRIO_IRQON			0xe0
- #define GIC_PRIO_IRQOFF			(GIC_PRIO_IRQON & ~0x80)
- #define GIC_PRIO_PSR_I_SET		(1 << 4)
+ SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
+-	-Wl,--hash-style=both
++	-Wl,--build-id -Wl,--hash-style=both
+ $(obj)/vdso-dummy.o: $(src)/vdso.lds $(obj)/rt_sigreturn.o FORCE
+ 	$(call if_changed,vdsold)
  
 -- 
 2.20.1
