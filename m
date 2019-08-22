@@ -2,110 +2,93 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE08DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B63C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB9B822CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C6C23400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566482568;
+	bh=c65S8/JE0pz/X8+BdF45NzFA9QJJR53tkisF4bc26IE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iUDCs/IhQrLhxyKf3LQBYHaTuMotGtAk3am/GUBzFE/b/G5QqBAJmCsUzHPL4RbXo
+	 AcLLdBpZ9AIF+t1l2/cV9w9+vzp6rlDShwcbQMo5VmDObMJ6j5YxL6IUV1Ben73TKA
+	 8ZQb8qrztt/h/4t1j56uHE7+Wa/PtN6zVvCoRLo4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732460AbfHVOBV (ORCPT
+        id S1732527AbfHVOCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:01:21 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:59231 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbfHVOBV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:01:21 -0400
-Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7ME14I4050794;
-        Thu, 22 Aug 2019 23:01:04 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp);
- Thu, 22 Aug 2019 23:01:04 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7ME14Oi050789
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 22 Aug 2019 23:01:04 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-References: <20190820222403.GB8120@kroah.com>
- <201908220959.x7M9xP8r011133@www262.sakura.ne.jp>
- <20190822133538.GA16793@kroah.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <e8d3ce30-8c61-048e-2606-f8a4e8f08d87@i-love.sakura.ne.jp>
-Date:   Thu, 22 Aug 2019 23:00:59 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 10:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732473AbfHVOCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:02:47 -0400
+Received: from localhost (unknown [171.61.89.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0751622CE3;
+        Thu, 22 Aug 2019 14:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566482566;
+        bh=c65S8/JE0pz/X8+BdF45NzFA9QJJR53tkisF4bc26IE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HoyYLw2WErBxBAYXaQDRSmwu7UrvUDY82hIHaQpqYMl0aIUiFfLTwCDsnsB2CXUPz
+         Dwwskk3K2elpTMsl59Nz74QmQ5xwL8ZorMrs/aYam8dfZjjg6m01kPPueNc0x0H99k
+         JxeqKDrF6vCKpM/7D1LUE7rYaD2U8n/+tbag75LY=
+Date:   Thu, 22 Aug 2019 19:31:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] clk: qcom: clk-rpmh: Add support for SM8150
+Message-ID: <20190822140134.GQ12733@vkoul-mobl.Dlink>
+References: <20190819073947.17258-1-vkoul@kernel.org>
+ <20190819073947.17258-5-vkoul@kernel.org>
+ <20190820050944.GL26807@tuxbook-pro>
 MIME-Version: 1.0
-In-Reply-To: <20190822133538.GA16793@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820050944.GL26807@tuxbook-pro>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/08/22 22:35, Greg Kroah-Hartman wrote:
-> On Thu, Aug 22, 2019 at 06:59:25PM +0900, Tetsuo Handa wrote:
->> Tetsuo Handa wrote:
->>> Greg Kroah-Hartman wrote:
->>>> Oh, nice!  This shouldn't break anything that is assuming that the read
->>>> will complete before a signal is delivered, right?
->>>>
->>>> I know userspace handling of "short" reads is almost always not there...
->>>
->>> Since this check will give up upon SIGKILL, userspace won't be able to see
->>> the return value from read(). Thus, returning 0 upon SIGKILL will be safe. ;-)
->>> Maybe we also want to add cond_resched()...
->>>
->>> By the way, do we want similar check on write_mem() side?
->>> If aborting "write to /dev/mem" upon SIGKILL (results in partial write) is
->>> unexpected, we might want to ignore SIGKILL for write_mem() case.
->>> But copying data from killed threads (especially when killed by OOM killer
->>> and userspace memory is reclaimed by OOM reaper before write_mem() returns)
->>> would be after all unexpected. Then, it might be preferable to check SIGKILL
->>> on write_mem() side...
->>>
->>
->> Ha, ha. syzbot reported the same problem using write_mem().
->> https://syzkaller.appspot.com/text?tag=CrashLog&x=1018055a600000
->> We want fatal_signal_pending() check on both sides.
+On 19-08-19, 22:09, Bjorn Andersson wrote:
+> On Mon 19 Aug 00:39 PDT 2019, Vinod Koul wrote:
+> > +static const struct clk_rpmh_desc clk_rpmh_sm8150 = {
+> > +	.clks = sm8150_rpmh_clocks,
+> > +	.num_clks = ARRAY_SIZE(sm8150_rpmh_clocks),
+> > +};
 > 
-> Ok, want to send a patch for that?
+> Maybe an empty line here?
 
-Yes. But before sending a patch, I'm trying to dump values using debug printk().
+Sounds better
 
 > 
-> And does anything use /dev/mem anymore?  I think X stopped using it a
-> long time ago.
+> >  static struct clk_hw *of_clk_rpmh_hw_get(struct of_phandle_args *clkspec,
+> >  					 void *data)
+> >  {
+> > @@ -453,6 +479,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
+> >  
+> >  static const struct of_device_id clk_rpmh_match_table[] = {
+> >  	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
+> > +	{ .compatible = "qcom,sm8150-rpmh-clk", .data = &clk_rpmh_sm8150},
+> >  	{ }
+> >  };
+> >  MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
 > 
->> By the way, write_mem() worries me whether there is possibility of replacing
->> kernel code/data with user-defined memory data supplied from userspace.
->> If write_mem() were by chance replaced with code that does
->>
->>    while (1);
->>
->> we won't be able to return from write_mem() even if we added fatal_signal_pending() check.
->> Ditto for replacing local variables with unexpected values...
-> 
-> I'm sorry, I don't really understand what you mean here, but I haven't
-> had my morning coffee...  Any hints as to an example?
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Probably similar idea: "lockdown: Restrict /dev/{mem,kmem,port} when the kernel is locked down"
+Thanks for the review, will send an update.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/char/mem.c?h=next-20190822&id=9b9d8dda1ed72e9bd560ab0ca93d322a9440510e
-
-Then, syzbot might want to blacklist writing to /dev/mem .
+-- 
+~Vinod
