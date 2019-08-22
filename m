@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D5DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27618C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3928623406
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E236C23404
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493799;
-	bh=5YVlE2vUMqpY/t3ntX9fqj9uTRocxjJIUKfF3Fc0gsk=;
+	s=default; t=1566493808;
+	bh=3n4m7aF82NQQ1fzSPxJnHjp9PaDInQWklKCaCaI7JXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ksxstI478yHEt1RHpdMfGBBwYv3D3uVBNEHzge9onHWv3v4rPNZjsnTiHkgLd7WiW
-	 gwLTOqhVtGrGikDtVZvyzEujxTpUgBUKskDNYUqg9a8uvMNb1wswZT5pcDdixMVuUq
-	 iY8XHASLY2DjSta2crNzgnyZ0y94C6Rc7+b8Pq60=
+	b=zdgrePU7bQVZkOAVThY95tGgTj+OuPLJDiFsPUsV+URix5Hj5S4ZAHNm5RtV7JD9r
+	 X7QeqC+QDB3dspbDt8pSjHm+MbxB67zzY7iur2f7nf9z/AmGjM4kMQ12Q7Q/JwaXni
+	 tj3QyAiyDrYKA/nGb/EpeoexoW6aSd0uI82U+6To=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389133AbfHVRJ6 (ORCPT
+        id S2403758AbfHVRJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390773AbfHVRJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:28 -0400
+        id S2390742AbfHVRJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:23 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1105E233FE;
-        Thu, 22 Aug 2019 17:09:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1C26233FC;
+        Thu, 22 Aug 2019 17:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493767;
-        bh=5YVlE2vUMqpY/t3ntX9fqj9uTRocxjJIUKfF3Fc0gsk=;
+        s=default; t=1566493763;
+        bh=3n4m7aF82NQQ1fzSPxJnHjp9PaDInQWklKCaCaI7JXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BM+ociBgyenWZCDpqpJN9fxMWFkKJqrbmpg91biqpIGY4rTYKXBTWdf6T1tsJIc8/
-         VqLH/O0QfabzisoWfFxmPMNBs0oYhq1f8ZvMyUWe73ODhxcXyQkxX6J0z8SpqeXIEy
-         axAwgIl1T9BOz/WzjBqXq3whKpRTMjb3OKBCmNA8=
+        b=0CXR1WVPlTIjyf0BZKlaLpgKAVrnfmTOVb7/r1u+kW8+nZYoMqcDioiZ6AdeNheA/
+         7Wjbr8dx8kZZBcribVVf3FBVUBoeFxfj6D2/SLye5jwUWjImkJEDu2PEAtdy3DEyzD
+         R0v9xXiz+VOmxgdwKfg13j+HBNHvv9683sE+boms=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 135/135] Linux 5.2.10-rc1
-Date:   Thu, 22 Aug 2019 13:08:11 -0400
-Message-Id: <20190822170811.13303-136-sashal@kernel.org>
+Cc:     Mohamad Heib <mohamadh@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.2 128/135] net/mlx5e: ethtool, Avoid setting speed to 56GBASE when autoneg off
+Date:   Thu, 22 Aug 2019 13:08:04 -0400
+Message-Id: <20190822170811.13303-129-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -63,26 +65,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- Makefile | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+From: Mohamad Heib <mohamadh@mellanox.com>
 
-diff --git a/Makefile b/Makefile
-index cfc667fe99597..20297675a90a6 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 5
- PATCHLEVEL = 2
--SUBLEVEL = 9
--EXTRAVERSION =
-+SUBLEVEL = 10
-+EXTRAVERSION = -rc1
- NAME = Bobtail Squid
+[ Upstream commit 5faf5b70c51dd9c9905bf8209e33cbd867486607 ]
+
+Setting speed to 56GBASE is allowed only with auto-negotiation enabled.
+
+This patch prevent setting speed to 56GBASE when auto-negotiation disabled.
+
+Fixes: f62b8bb8f2d3 ("net/mlx5: Extend mlx5_core to support ConnectX-4 Ethernet functionality")
+Signed-off-by: Mohamad Heib <mohamadh@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+index 22d5101769651..06f9bd6a45e33 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -1060,6 +1060,14 @@ int mlx5e_ethtool_set_link_ksettings(struct mlx5e_priv *priv,
+ 	link_modes = autoneg == AUTONEG_ENABLE ? ethtool2ptys_adver_func(adver) :
+ 		mlx5e_port_speed2linkmodes(mdev, speed, !ext);
  
- # *DOCUMENTATION*
++	if ((link_modes & MLX5E_PROT_MASK(MLX5E_56GBASE_R4)) &&
++	    autoneg != AUTONEG_ENABLE) {
++		netdev_err(priv->netdev, "%s: 56G link speed requires autoneg enabled\n",
++			   __func__);
++		err = -EINVAL;
++		goto out;
++	}
++
+ 	link_modes = link_modes & eproto.cap;
+ 	if (!link_modes) {
+ 		netdev_err(priv->netdev, "%s: Not supported link mode(s) requested",
 -- 
 2.20.1
 
