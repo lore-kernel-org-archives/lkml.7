@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB81C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED73C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BA123402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F166223402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495616;
-	bh=9o44ulriWXXkwnJBjHg4oBd96Y4y2e/U4b3CT7RffeY=;
+	s=default; t=1566495619;
+	bh=1hKRuByecVlVLfQQ6iosXpCA9hG/cgMqUCWA0P8Ptts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Br6QodD3hb6S/XD+DIyJ5XtJh6owwuf0FESk29v/Era21D7vdDgLLkqBCj5r+wCcv
-	 ffdDJ9+TGBFDeP1AyN/k9mknKHlAxx//gMBsRwjKocMk7jip3mVerNj9Vh8G1QGN+j
-	 VHfSeCCuAVmJxnZ/gd1bVd826yirI5LqLA8RKAk0=
+	b=p9esaEelt5bH0hmOTPG3epNynHojW1nyFIr9dJfJnbALseXWlnkDuni44GYs2JJk4
+	 VYDZfvsbuTcB78gXme9q0GH/R7cHHPhNWBWB89R2DLvuT+W6UmXoXvfTkjymdmlfPo
+	 OLRS0qestxEwyQKcmT4ClPWhjGJJbHQq8WNdosDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404370AbfHVRkO (ORCPT
+        id S2405053AbfHVRkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:40:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45244 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:40:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404092AbfHVRYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2404086AbfHVRYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 13:24:08 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31DF023407;
-        Thu, 22 Aug 2019 17:24:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76AA123400;
+        Thu, 22 Aug 2019 17:24:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494648;
-        bh=9o44ulriWXXkwnJBjHg4oBd96Y4y2e/U4b3CT7RffeY=;
+        s=default; t=1566494647;
+        bh=1hKRuByecVlVLfQQ6iosXpCA9hG/cgMqUCWA0P8Ptts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WrEhNMiCObfSeddDZ0OZF4UeAkBuTT6QwCFt+FieN2Wi5i0SeitHdl14mxv16+OHd
-         INjA2HUJH1KPiWHaW2408XaL5tjlmrTaKcClA3K5UrRngH7xPex7otDteYqwN0rTpu
-         r072T36etop2+nk5kUd2Jmz7bQ6xDuxpnmMnC52A=
+        b=NQLERfQyJGNQM9RYMVN3gk+HftnBjMWfM3d9jyCDvKaI8A8alYwR6eGVs481PGV1b
+         rv7u3n0/Idnp0rwOyupVwwNB/mVTQ4TmXyrhvhTyDgpdN0I9ui25nWts7GgmzouUfi
+         n0dPKMcRuiyR87y+9aTmiFcwB4LTIUjri/Ois2wE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH 4.9 042/103] sh: kernel: hw_breakpoint: Fix missing break in switch statement
-Date:   Thu, 22 Aug 2019 10:18:30 -0700
-Message-Id: <20190822171730.506906597@linuxfoundation.org>
+        Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.9 041/103] scsi: mpt3sas: Use 63-bit DMA addressing on SAS35 HBA
+Date:   Thu, 22 Aug 2019 10:18:29 -0700
+Message-Id: <20190822171730.468258675@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -61,34 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 
-commit 1ee1119d184bb06af921b48c3021d921bbd85bac upstream.
+commit df9a606184bfdb5ae3ca9d226184e9489f5c24f7 upstream.
 
-Add missing break statement in order to prevent the code from falling
-through to case SH_BREAKPOINT_WRITE.
+Although SAS3 & SAS3.5 IT HBA controllers support 64-bit DMA addressing, as
+per hardware design, if DMA-able range contains all 64-bits
+set (0xFFFFFFFF-FFFFFFFF) then it results in a firmware fault.
 
-Fixes: 09a072947791 ("sh: hw-breakpoints: Add preliminary support for SH-4A UBC.")
-Cc: stable@vger.kernel.org
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+E.g. SGE's start address is 0xFFFFFFFF-FFFF000 and data length is 0x1000
+bytes. when HBA tries to DMA the data at 0xFFFFFFFF-FFFFFFFF location then
+HBA will fault the firmware.
+
+Driver will set 63-bit DMA mask to ensure the above address will not be
+used.
+
+Cc: <stable@vger.kernel.org> # 5.1.20+
+Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/sh/kernel/hw_breakpoint.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/arch/sh/kernel/hw_breakpoint.c
-+++ b/arch/sh/kernel/hw_breakpoint.c
-@@ -160,6 +160,7 @@ int arch_bp_generic_fields(int sh_len, i
- 	switch (sh_type) {
- 	case SH_BREAKPOINT_READ:
- 		*gen_type = HW_BREAKPOINT_R;
-+		break;
- 	case SH_BREAKPOINT_WRITE:
- 		*gen_type = HW_BREAKPOINT_W;
- 		break;
+---
+ drivers/scsi/mpt3sas/mpt3sas_base.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -1707,9 +1707,11 @@ _base_config_dma_addressing(struct MPT3S
+ {
+ 	struct sysinfo s;
+ 	u64 consistent_dma_mask;
++	/* Set 63 bit DMA mask for all SAS3 and SAS35 controllers */
++	int dma_mask = (ioc->hba_mpi_version_belonged > MPI2_VERSION) ? 63 : 64;
+ 
+ 	if (ioc->dma_mask)
+-		consistent_dma_mask = DMA_BIT_MASK(64);
++		consistent_dma_mask = DMA_BIT_MASK(dma_mask);
+ 	else
+ 		consistent_dma_mask = DMA_BIT_MASK(32);
+ 
+@@ -1717,11 +1719,11 @@ _base_config_dma_addressing(struct MPT3S
+ 		const uint64_t required_mask =
+ 		    dma_get_required_mask(&pdev->dev);
+ 		if ((required_mask > DMA_BIT_MASK(32)) &&
+-		    !pci_set_dma_mask(pdev, DMA_BIT_MASK(64)) &&
++		    !pci_set_dma_mask(pdev, DMA_BIT_MASK(dma_mask)) &&
+ 		    !pci_set_consistent_dma_mask(pdev, consistent_dma_mask)) {
+ 			ioc->base_add_sg_single = &_base_add_sg_single_64;
+ 			ioc->sge_size = sizeof(Mpi2SGESimple64_t);
+-			ioc->dma_mask = 64;
++			ioc->dma_mask = dma_mask;
+ 			goto out;
+ 		}
+ 	}
+@@ -1747,7 +1749,7 @@ static int
+ _base_change_consistent_dma_mask(struct MPT3SAS_ADAPTER *ioc,
+ 				      struct pci_dev *pdev)
+ {
+-	if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64))) {
++	if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(ioc->dma_mask))) {
+ 		if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32)))
+ 			return -ENODEV;
+ 	}
+@@ -3381,7 +3383,7 @@ _base_allocate_memory_pools(struct MPT3S
+ 		total_sz += sz;
+ 	} while (ioc->rdpq_array_enable && (++i < ioc->reply_queue_count));
+ 
+-	if (ioc->dma_mask == 64) {
++	if (ioc->dma_mask > 32) {
+ 		if (_base_change_consistent_dma_mask(ioc, ioc->pdev) != 0) {
+ 			pr_warn(MPT3SAS_FMT
+ 			    "no suitable consistent DMA mask for %s\n",
 
 
