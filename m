@@ -2,53 +2,53 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADE7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6CBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430A023407
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3BD23407
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494581;
-	bh=rKxAOf5Hdq8+ipxjfzKWw6YjIfD2PngFsw+PKWG2Lmw=;
+	s=default; t=1566494582;
+	bh=LDLY9fVEYlckPoMp5njUIgWaniUMPrNb/kq0sauyZjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r3EXwWDqNes9AgMTkK+03Gi+mrKbReU8hKFowU4rKLyyItX+h28QpYUfOrMY+7OjE
-	 T3K1pwImDEyP92YP3uYtnoFsy/i/5I8c9HYkwBobrJH2igThI/LraQpIFS64UGGBkF
-	 FrgX9afI4w5jrcD6LkvigG9AQC43ezC6dA9Sckfg=
+	b=MBNG2VpcbSl2pCRPb8PmeZpckEtS1pX94oI+ztru31R8VIyk1ZkieQ9G9GrWdg9YU
+	 5HQlI/7QKjuKLveCbxMYwtJrJYVIng/5XA9vjUHE7j8I49ppuwjGDF8dKn1A1nZ+uo
+	 F4iJHcWsJ0Cxr8MVLu9iws5mBRWu6zRwcCRH1M6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391708AbfHVRXA (ORCPT
+        id S2403778AbfHVRXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41778 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:23:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391660AbfHVRWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:55 -0400
+        id S2390121AbfHVRW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:56 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC66B21743;
-        Thu, 22 Aug 2019 17:22:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B18A233FC;
+        Thu, 22 Aug 2019 17:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494573;
-        bh=rKxAOf5Hdq8+ipxjfzKWw6YjIfD2PngFsw+PKWG2Lmw=;
+        s=default; t=1566494575;
+        bh=LDLY9fVEYlckPoMp5njUIgWaniUMPrNb/kq0sauyZjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SZ79RHnRoATvxLTjaZl+8tUy54VP4ArJqG0hdncw3XeHJuqScuIHiCLgAzVkS/zhd
-         CmOjSBwb6Hyx3sJh8MxGSc7O1b96G/dzXwp3JmL3f+41cSiKUd4uRridsoUQ+XB3mT
-         +ELvXcAx3IEmKN1aNfPyvVIPt38XUDHCRbibrQPI=
+        b=qDWjcUIcwGcFrJxJMIIdjom+HAeyWPtef2TFB4qf5ce9mMc4QC0FADH9M8VGBjTVi
+         9OVCTLk1nYuJ7Sz4BKlUCKxeQ8YGOJtaLC3edqSLcwzdBLhO9vTNfZun94eN7tiGEm
+         wsycixNIIc3m1w63A13ENSIMmPCdGV7dSCAQGyR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Sebor <msebor@gcc.gnu.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 64/78] include/linux/module.h: copy __init/__exit attrs to init/cleanup_module
-Date:   Thu, 22 Aug 2019 10:19:08 -0700
-Message-Id: <20190822171833.885876865@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hui Wang <hui.wang@canonical.com>
+Subject: [PATCH 4.4 66/78] Input: psmouse - fix build error of multiple definition
+Date:   Thu, 22 Aug 2019 10:19:10 -0700
+Message-Id: <20190822171833.942626155@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -61,81 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a6e60d84989fa0e91db7f236eda40453b0e44afa ]
+From: YueHaibing <yuehaibing@huawei.com>
 
-The upcoming GCC 9 release extends the -Wmissing-attributes warnings
-(enabled by -Wall) to C and aliases: it warns when particular function
-attributes are missing in the aliases but not in their target.
+commit 49e6979e7e92cf496105b5636f1df0ac17c159c0 upstream.
 
-In particular, it triggers for all the init/cleanup_module
-aliases in the kernel (defined by the module_init/exit macros),
-ending up being very noisy.
+trackpoint_detect() should be static inline while
+CONFIG_MOUSE_PS2_TRACKPOINT is not set, otherwise, we build fails:
 
-These aliases point to the __init/__exit functions of a module,
-which are defined as __cold (among other attributes). However,
-the aliases themselves do not have the __cold attribute.
+drivers/input/mouse/alps.o: In function `trackpoint_detect':
+alps.c:(.text+0x8e00): multiple definition of `trackpoint_detect'
+drivers/input/mouse/psmouse-base.o:psmouse-base.c:(.text+0x1b50): first defined here
 
-Since the compiler behaves differently when compiling a __cold
-function as well as when compiling paths leading to calls
-to __cold functions, the warning is trying to point out
-the possibly-forgotten attribute in the alias.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 55e3d9224b60 ("Input: psmouse - allow disabing certain protocol extensions")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-In order to keep the warning enabled, we decided to silence
-this case. Ideally, we would mark the aliases directly
-as __init/__exit. However, there are currently around 132 modules
-in the kernel which are missing __init/__exit in their init/cleanup
-functions (either because they are missing, or for other reasons,
-e.g. the functions being called from somewhere else); and
-a section mismatch is a hard error.
-
-A conservative alternative was to mark the aliases as __cold only.
-However, since we would like to eventually enforce __init/__exit
-to be always marked,  we chose to use the new __copy function
-attribute (introduced by GCC 9 as well to deal with this).
-With it, we copy the attributes used by the target functions
-into the aliases. This way, functions that were not marked
-as __init/__exit won't have their aliases marked either,
-and therefore there won't be a section mismatch.
-
-Note that the warning would go away marking either the extern
-declaration, the definition, or both. However, we only mark
-the definition of the alias, since we do not want callers
-(which only see the declaration) to be compiled as if the function
-was __cold (and therefore the paths leading to those calls
-would be assumed to be unlikely).
-
-Link: https://lore.kernel.org/lkml/20190123173707.GA16603@gmail.com/
-Link: https://lore.kernel.org/lkml/20190206175627.GA20399@gmail.com/
-Suggested-by: Martin Sebor <msebor@gcc.gnu.org>
-Acked-by: Jessica Yu <jeyu@kernel.org>
-Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/module.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/mouse/trackpoint.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/module.h b/include/linux/module.h
-index dfe5c2e25ba1e..d237d0574179e 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -127,13 +127,13 @@ extern void cleanup_module(void);
- #define module_init(initfn)					\
- 	static inline initcall_t __maybe_unused __inittest(void)		\
- 	{ return initfn; }					\
--	int init_module(void) __attribute__((alias(#initfn)));
-+	int init_module(void) __copy(initfn) __attribute__((alias(#initfn)));
- 
- /* This is only required if you want to be unloadable. */
- #define module_exit(exitfn)					\
- 	static inline exitcall_t __maybe_unused __exittest(void)		\
- 	{ return exitfn; }					\
--	void cleanup_module(void) __attribute__((alias(#exitfn)));
-+	void cleanup_module(void) __copy(exitfn) __attribute__((alias(#exitfn)));
- 
- #endif
- 
--- 
-2.20.1
-
+--- a/drivers/input/mouse/trackpoint.h
++++ b/drivers/input/mouse/trackpoint.h
+@@ -153,7 +153,8 @@ struct trackpoint_data
+ #ifdef CONFIG_MOUSE_PS2_TRACKPOINT
+ int trackpoint_detect(struct psmouse *psmouse, bool set_properties);
+ #else
+-inline int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
++static inline int trackpoint_detect(struct psmouse *psmouse,
++				    bool set_properties)
+ {
+ 	return -ENOSYS;
+ }
 
 
