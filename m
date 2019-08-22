@@ -2,103 +2,216 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7DEC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4DFC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7AC233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC28206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r5G0dUIK"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="v07kl0fR";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="v07kl0fR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387688AbfHVKaC (ORCPT
+        id S2387694AbfHVKas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 06:30:02 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:55904 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732187AbfHVKaB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:30:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5B6dDBcMbW2BW7BmBEa/KK1lUoMqHmy7CmpP97KQczk=; b=r5G0dUIKUpI0VqxgnxKu1jDCU
-        mCCvK4KF+/ZOR/10s948RX01UIW/LbwxpKJhc/im3kRXSOFat4Xe79TAayV+XU7GT9TVDu3Mp5nVa
-        +WzpN1tRwVakWKvEyOEzM3JoUdfvjfhaSgdIaTJ05RZ58omE8Max+d9fl6a3Fj7pvmvINZadPvDFV
-        /8+xxs0VQ6NDqDaV7DyqaIlKIvPe+QPPB2OI2QZgBUYxQYbvMUg3kJVSc5BFtBPmHUIUEI3JvrwEd
-        p1AAjn4eliIXfsCGEtOCuKYlxPfqbjD8+qpasBmMUNoX+Kx8pJax1n3DlGI7uaFrw/HYUyysl+Z9I
-        8R+od7/3A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i0kLs-0001oI-Q4; Thu, 22 Aug 2019 10:29:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2C8D9307598;
-        Thu, 22 Aug 2019 12:29:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 29ED6202D580F; Thu, 22 Aug 2019 12:29:55 +0200 (CEST)
-Date:   Thu, 22 Aug 2019 12:29:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "alan@linux.intel.com" <alan@linux.intel.com>,
-        "ricardo.neri-calderon@linux.intel.com" 
-        <ricardo.neri-calderon@linux.intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        Thu, 22 Aug 2019 06:30:48 -0400
+Received: from mail-eopbgr00051.outbound.protection.outlook.com ([40.107.0.51]:17038
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725783AbfHVKar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 06:30:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D7znNrORe7K2E4g8Ak/f67K9czZCH920lpE4LgQYYC0=;
+ b=v07kl0fRJDC8jMyY9o/dp4RwSEAIb5jwzd/PhSRepoTBCIjVJFgjdZoErPQjPszTtWrVA9fnNmLXpjK7Zwxo33uyTOkibDGdGuTz0nwXrCnL73n4nn94vh0yvLICh0yQ4PEzJPfLqsrLOro5U6SR6tQiQoN9yLFI9oQYxzQVvYM=
+Received: from AM6PR08CA0039.eurprd08.prod.outlook.com (2603:10a6:20b:c0::27)
+ by HE1PR0802MB2602.eurprd08.prod.outlook.com (2603:10a6:3:e2::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2178.16; Thu, 22 Aug
+ 2019 10:30:40 +0000
+Received: from AM5EUR03FT051.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e08::207) by AM6PR08CA0039.outlook.office365.com
+ (2603:10a6:20b:c0::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2199.15 via Frontend
+ Transport; Thu, 22 Aug 2019 10:30:40 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=temperror action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT051.mail.protection.outlook.com (10.152.16.246) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.13 via Frontend Transport; Thu, 22 Aug 2019 10:30:38 +0000
+Received: ("Tessian outbound cc8a947d4660:v26"); Thu, 22 Aug 2019 10:30:28 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 63311a90e55a20b4
+X-CR-MTA-TID: 64aa7808
+Received: from 6dcade16447e.2 (cr-mta-lb-1.cr-mta-net [104.47.5.52])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 11F24F8A-6648-4A99-9531-716E11F69783.1;
+        Thu, 22 Aug 2019 10:30:23 +0000
+Received: from EUR02-HE1-obe.outbound.protection.outlook.com (mail-he1eur02lp2052.outbound.protection.outlook.com [104.47.5.52])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 6dcade16447e.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 22 Aug 2019 10:30:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KOsW8OPrZfEJDnnRzTqgLgiB4BKOGpQBKSrtL84YH3G39TlESIJmXggXKeKthUNAYjWGNjC0/mPjTyyi4cxWHpNRl8u3hrpB46JIgXjYqnyOaeuU2MHRxpAYOYfwMnys7pK+0iVPWOnlEPtBi/z/Yolv2PFOTyuxmcQPB9bpxAe9JE8ydhUBhwz2MG4oTuF8jCTjdpzfJCdCl966lC6MO9yPbkGBP1z3LNOTKCHqmnS2LRUxCg58hjzmzutv1JZ8uNU3CkFPDInAuaBUj3TaqcltJYkLK3vuKknP0THoQyOWei0yZuquqgjW56ipycTe3dMcd0cXICYVWXfe9Qd8jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D7znNrORe7K2E4g8Ak/f67K9czZCH920lpE4LgQYYC0=;
+ b=bt/t9ZEKu3ExGENn/a6lq3PIW/dhPFfg8tPPg5W9HV1sbKjcGsg4pdqiP6VV9eEDNvxNyxQy0biPoJhW2c9pBiR4izq9bBP3YwItexTAnZLffAp39IceQnUIUUgHK0EzV/mmN1sI4DEVTf0Guo+JqW7GcE6AHXx8kmEx0sgmMuEHhYzWwV9MV50FtnVYRm9+VpgKgrOLISGW+v687Wtl+p3zXxlV1wHshkF97doepx3hYYRCdYm8OEwcPgj3zEeBvVgnGnoMH8f/y7z2nlgLI9tB9gX9ZQ9CJ6SEDdyfFsPunY8pGUI3XON9CknBwKwXzGxAF+PQYFaNodl9Cthu6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D7znNrORe7K2E4g8Ak/f67K9czZCH920lpE4LgQYYC0=;
+ b=v07kl0fRJDC8jMyY9o/dp4RwSEAIb5jwzd/PhSRepoTBCIjVJFgjdZoErPQjPszTtWrVA9fnNmLXpjK7Zwxo33uyTOkibDGdGuTz0nwXrCnL73n4nn94vh0yvLICh0yQ4PEzJPfLqsrLOro5U6SR6tQiQoN9yLFI9oQYxzQVvYM=
+Received: from AM0PR08MB5345.eurprd08.prod.outlook.com (52.132.212.135) by
+ AM0PR08MB5106.eurprd08.prod.outlook.com (10.255.30.87) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2157.15; Thu, 22 Aug 2019 10:30:19 +0000
+Received: from AM0PR08MB5345.eurprd08.prod.outlook.com
+ ([fe80::7532:a9e4:63b6:6a55]) by AM0PR08MB5345.eurprd08.prod.outlook.com
+ ([fe80::7532:a9e4:63b6:6a55%4]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
+ 10:30:19 +0000
+From:   Ayan Halder <Ayan.Halder@arm.com>
+To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+CC:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wu, Qiming" <qi-ming.wu@intel.com>,
-        "Kim, Cheol Yong" <cheol.yong.kim@intel.com>,
-        "Tanwar, Rahul" <rahul.tanwar@intel.com>
-Subject: Re: [PATCH v2 2/3] x86/cpu: Add new Intel Atom CPU model name
-Message-ID: <20190822102955.GS2369@hirez.programming.kicks-ass.net>
-References: <cover.1565940653.git.rahul.tanwar@linux.intel.com>
- <83345984845d24b6ce97a32bef21cd0bbdffc86d.1565940653.git.rahul.tanwar@linux.intel.com>
- <20190820122233.GN2332@hirez.programming.kicks-ass.net>
- <1D9AE27C-D412-412D-8FE8-51B625A7CC98@intel.com>
- <20190820145735.GW2332@hirez.programming.kicks-ass.net>
- <20190821201845.GA29589@agluck-desk2.amr.corp.intel.com>
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>
+Subject: Re: [PATCH] drm/komeda: Fix warning -Wunused-but-set-variable
+Thread-Topic: [PATCH] drm/komeda: Fix warning -Wunused-but-set-variable
+Thread-Index: AQHVUQBlSm03MEg+uUyspl7GAMnBG6cHBy4A
+Date:   Thu, 22 Aug 2019 10:30:18 +0000
+Message-ID: <20190822103018.GB29026@arm.com>
+References: <20190812112322.15990-1-james.qian.wang@arm.com>
+In-Reply-To: <20190812112322.15990-1-james.qian.wang@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LNXP265CA0003.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:5e::15) To AM0PR08MB5345.eurprd08.prod.outlook.com
+ (2603:10a6:208:17f::7)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Ayan.Halder@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [217.140.106.54]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: f4c34372-fa5c-4ec0-b0e9-08d726ebc6fe
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM0PR08MB5106;
+X-MS-TrafficTypeDiagnostic: AM0PR08MB5106:|HE1PR0802MB2602:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <HE1PR0802MB26020A0578B684BDE91F7E14E4A50@HE1PR0802MB2602.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:1247;OLM:1247;
+x-forefront-prvs: 01371B902F
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(376002)(136003)(39860400002)(366004)(189003)(199004)(102836004)(76176011)(71190400001)(71200400001)(446003)(11346002)(2616005)(81156014)(66066001)(81166006)(99286004)(2906002)(486006)(86362001)(52116002)(256004)(33656002)(8936002)(14444005)(476003)(44832011)(478600001)(316002)(7736002)(6116002)(3846002)(305945005)(6486002)(5660300002)(229853002)(64756008)(66556008)(66446008)(66946007)(66476007)(6436002)(6636002)(36756003)(37006003)(54906003)(14454004)(6512007)(25786009)(186003)(4326008)(26005)(6862004)(53936002)(6246003)(386003)(6506007)(1076003)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB5106;H:AM0PR08MB5345.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: 598MGX8akVcSkQYkFFySblHALcL3gFAUwR+2od7x25OQbfMsVUMDkwrsEOOS0M7eLe5+q4RCwVBjJlKUEcJoPqSPru9jdHq3RdZ9TrYyg45tueSLAx2sdOloesK33Cz967bfgeuSidSarTRnJXmowwqE3Ie13EhkiAuJEQuBYEw+1rk0+d49KU9XJj1KkoYFj/xeCfbboX/KzJpFwMZ80oI3+BBUCXKKLvDH3xAMvjZ3iiWUtYZPSJqTwsaiOJ+5lPkH3d2W99ORPe7wOMNDBadEJKzGnqtigrJg01OkNmG6nHqxi1l1kBtbi4pe2eFQu2CL6Cf6PtJjRyJvjglpM7pnwrLl4stkhwQsdZETVgfyn9JsONBUOdRDlx++K08avU8Bs+QLUD5ROGspi5qzgw1Uz9Vp3iKgWZ5rnHkKbr8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C258CA59D2A19B41A9E74A3DC9736233@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821201845.GA29589@agluck-desk2.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5106
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Ayan.Halder@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT051.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(396003)(376002)(2980300002)(199004)(189003)(476003)(76176011)(126002)(2486003)(2616005)(436003)(23676004)(446003)(11346002)(86362001)(186003)(99286004)(356004)(26005)(6506007)(386003)(70586007)(70206006)(336012)(486006)(14444005)(229853002)(8936002)(81166006)(63350400001)(8676002)(81156014)(102836004)(63370400001)(25786009)(37006003)(54906003)(6862004)(4326008)(3846002)(6116002)(316002)(22756006)(26826003)(47776003)(6246003)(6636002)(33656002)(305945005)(5660300002)(1076003)(2906002)(36756003)(76130400001)(66066001)(6512007)(50466002)(14454004)(7736002)(478600001)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0802MB2602;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 02b1fb97-79a5-4b84-d73c-08d726ebbaa7
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(710020)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:HE1PR0802MB2602;
+NoDisclaimer: True
+X-Forefront-PRVS: 01371B902F
+X-Microsoft-Antispam-Message-Info: Qm/tr2KCmfz5ASqLheZ49MgF3XaJWxjSTB5hIq4JhadXj8FrL+iEazo5UTDsImZkz85BaMBPmZLUdeaRgxowm+mORFKfg85HiOXxUnm9vcFT+4LYGOLhOmFnOEFQnuIpWsEuIlHEf7UPtzH96VLNWCAjAX+FHvo7ew6nybhUxniN3gz5Ea+9DiU/uVB2xgIrjg90+WJQK6e0UqGij7WTKoVVFw2D43vBtitaq+AF4uO+QfEHrvFYFGgpz47P7g5kgCkFcefGig+dxYZXMPNtpqCIs1K2nFCufBoVV/VBk9n68vvADqTcl8XPoJa0+2MffP5i0UimPUeqnf6YxUjjNVbIWh8nWRpJBflJheHfEFeEE5eNe6etHmTnWbfhMp38uJk2Ur+//bcm0m2tMgxBaNIB02GsAqwJU5aA6upPhtA=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2019 10:30:38.9751
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4c34372-fa5c-4ec0-b0e9-08d726ebc6fe
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0802MB2602
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 01:18:46PM -0700, Luck, Tony wrote:
-> On Tue, Aug 20, 2019 at 04:57:35PM +0200, Peter Zijlstra wrote:
-
-> As I mentioned above, there are some folks internally that think
-> NP == Network Processor is too narrow a pigeonhole for this CPU.
-> 
-> But _NPAOS (Network Processor And Other Stuff) doesn't sound helpful.
-
-So what is 'other stuff'; is there really no general term that describes
-well what's been done to this SoC; or is it secret and we're in a catch
-22 here?
-
-> > Note that for the big cores we added the NNPI thing, which was for
-> > Neural Network Processing something.
-> 
-> I'm sure that we will invent all sorts of strings for the "OPTDIFF"
-> part of the name (many of which will only be used once or twice).
-
-That's a bit sad; because as shown by the patches just send out; there
-really isn't _that_ much variation right now.
-
-Anyway, lets just give the thing a name; _NP whatever, and we can
-rename it if needed.
+T24gTW9uLCBBdWcgMTIsIDIwMTkgYXQgMTE6MjM6NDFBTSArMDAwMCwgamFtZXMgcWlhbiB3YW5n
+IChBcm0gVGVjaG5vbG9neSBDaGluYSkgd3JvdGU6DQo+IEZpeGVkIHR3byAtV3VudXNlZC1idXQt
+c2V0LXZhcmlhYmxlIHdhcm5pbmdzOg0KPiANCj4gL2FybS9saW51eC9kaXNwbGF5L2Fvc3AtNC4x
+NC1kcm0tbmV4dC9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9rbXMu
+YzogSW4gZnVuY3Rpb24g4oCYa29tZWRhX2NydGNfbm9ybWFsaXplX3pwb3PigJk6DQo+IC9hcm0v
+bGludXgvZGlzcGxheS9hb3NwLTQuMTQtZHJtLW5leHQvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNw
+bGF5L2tvbWVkYS9rb21lZGFfa21zLmM6MTUwOjI2OiB3YXJuaW5nOiB2YXJpYWJsZSDigJhmYuKA
+mSBzZXQgYnV0IG5vdCB1c2VkIFstV3VudXNlZC1idXQtc2V0LXZhcmlhYmxlXQ0KPiAgIHN0cnVj
+dCBkcm1fZnJhbWVidWZmZXIgKmZiOw0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+DQo+
+IC9hcm0vbGludXgvZGlzcGxheS9hb3NwLTQuMTQtZHJtLW5leHQvZHJpdmVycy9ncHUvZHJtL2Fy
+bS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfa21zLmM6IEluIGZ1bmN0aW9uIOKAmGtvbWVkYV9rbXNf
+Y2hlY2vigJk6DQo+IC9hcm0vbGludXgvZGlzcGxheS9hb3NwLTQuMTQtZHJtLW5leHQvZHJpdmVy
+cy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfa21zLmM6MjA5OjI1OiB3YXJuaW5n
+OiB2YXJpYWJsZSDigJhvbGRfY3J0Y19zdOKAmSBzZXQgYnV0IG5vdCB1c2VkIFstV3VudXNlZC1i
+dXQtc2V0LXZhcmlhYmxlXQ0KPiAgIHN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqb2xkX2NydGNfc3Qs
+ICpuZXdfY3J0Y19zdDsNCj4gICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+DQo+
+IA0KPiBTaWduZWQtb2ZmLWJ5OiBqYW1lcyBxaWFuIHdhbmcgKEFybSBUZWNobm9sb2d5IENoaW5h
+KSA8amFtZXMucWlhbi53YW5nQGFybS5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL2Fy
+bS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfa21zLmMgfCA2ICsrLS0tLQ0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDIgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9rbXMuYyBiL2RyaXZlcnMv
+Z3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ttcy5jDQo+IGluZGV4IGQ1MGU3NWYw
+YjJiZC4uMWYwZTNmNGU4ZDc0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rp
+c3BsYXkva29tZWRhL2tvbWVkYV9rbXMuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rp
+c3BsYXkva29tZWRhL2tvbWVkYV9rbXMuYw0KPiBAQCAtMTQ3LDcgKzE0Nyw2IEBAIHN0YXRpYyBp
+bnQga29tZWRhX2NydGNfbm9ybWFsaXplX3pwb3Moc3RydWN0IGRybV9jcnRjICpjcnRjLA0KPiAg
+CXN0cnVjdCBrb21lZGFfY3J0Y19zdGF0ZSAqa2NydGNfc3QgPSB0b19rY3J0Y19zdChjcnRjX3N0
+KTsNCj4gIAlzdHJ1Y3Qga29tZWRhX3BsYW5lX3N0YXRlICprcGxhbmVfc3Q7DQo+ICAJc3RydWN0
+IGRybV9wbGFuZV9zdGF0ZSAqcGxhbmVfc3Q7DQo+IC0Jc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAq
+ZmI7DQo+ICAJc3RydWN0IGRybV9wbGFuZSAqcGxhbmU7DQo+ICAJc3RydWN0IGxpc3RfaGVhZCB6
+b3JkZXJfbGlzdDsNCj4gIAlpbnQgb3JkZXIgPSAwLCBlcnI7DQo+IEBAIC0xNzMsNyArMTcyLDYg
+QEAgc3RhdGljIGludCBrb21lZGFfY3J0Y19ub3JtYWxpemVfenBvcyhzdHJ1Y3QgZHJtX2NydGMg
+KmNydGMsDQo+ICANCj4gIAlsaXN0X2Zvcl9lYWNoX2VudHJ5KGtwbGFuZV9zdCwgJnpvcmRlcl9s
+aXN0LCB6bGlzdF9ub2RlKSB7DQo+ICAJCXBsYW5lX3N0ID0gJmtwbGFuZV9zdC0+YmFzZTsNCj4g
+LQkJZmIgPSBwbGFuZV9zdC0+ZmI7DQo+ICAJCXBsYW5lID0gcGxhbmVfc3QtPnBsYW5lOw0KPiAg
+DQo+ICAJCXBsYW5lX3N0LT5ub3JtYWxpemVkX3pwb3MgPSBvcmRlcisrOw0KPiBAQCAtMjA2LDcg
+KzIwNCw3IEBAIHN0YXRpYyBpbnQga29tZWRhX2ttc19jaGVjayhzdHJ1Y3QgZHJtX2RldmljZSAq
+ZGV2LA0KPiAgCQkJICAgIHN0cnVjdCBkcm1fYXRvbWljX3N0YXRlICpzdGF0ZSkNCj4gIHsNCj4g
+IAlzdHJ1Y3QgZHJtX2NydGMgKmNydGM7DQo+IC0Jc3RydWN0IGRybV9jcnRjX3N0YXRlICpvbGRf
+Y3J0Y19zdCwgKm5ld19jcnRjX3N0Ow0KPiArCXN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqbmV3X2Ny
+dGNfc3Q7DQo+ICAJaW50IGksIGVycjsNCj4gIA0KPiAgCWVyciA9IGRybV9hdG9taWNfaGVscGVy
+X2NoZWNrX21vZGVzZXQoZGV2LCBzdGF0ZSk7DQo+IEBAIC0yMTcsNyArMjE1LDcgQEAgc3RhdGlj
+IGludCBrb21lZGFfa21zX2NoZWNrKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYsDQo+ICAJICogc28g
+bmVlZCB0byBhZGQgYWxsIGFmZmVjdGVkX3BsYW5lcyAoZXZlbiB1bmNoYW5nZWQpIHRvDQo+ICAJ
+ICogZHJtX2F0b21pY19zdGF0ZS4NCj4gIAkgKi8NCj4gLQlmb3JfZWFjaF9vbGRuZXdfY3J0Y19p
+bl9zdGF0ZShzdGF0ZSwgY3J0Yywgb2xkX2NydGNfc3QsIG5ld19jcnRjX3N0LCBpKSB7DQo+ICsJ
+Zm9yX2VhY2hfbmV3X2NydGNfaW5fc3RhdGUoc3RhdGUsIGNydGMsIG5ld19jcnRjX3N0LCBpKSB7
+DQo+ICAJCWVyciA9IGRybV9hdG9taWNfYWRkX2FmZmVjdGVkX3BsYW5lcyhzdGF0ZSwgY3J0Yyk7
+DQo+ICAJCWlmIChlcnIpDQo+ICAJCQlyZXR1cm4gZXJyOw0KPiAtLSANCkxvb2tzIGdvb2QgdG8g
+bWUuDQpSZXZpZXdlZC1ieTogQXlhbiBLdW1hciBIYWxkZXIgPGF5YW4uaGFsZGVyQGFybS5jb20+
+DQoNCj4gMi4yMC4xDQo+IA0K
