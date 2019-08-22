@@ -2,53 +2,52 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E483FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51A4C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD5202064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC17D2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494861;
-	bh=wKXD6gj0JrSo8P6g8TBDInk14gTgVAubp7XlhD41KnY=;
+	s=default; t=1566494863;
+	bh=7XQ9J0euC29pJ7X/Bgu7TFHLAcOWBqAHFO3NB5bCm28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dKc+k386YdM6A4in+Uw72TYddcnNfV8WI7xZp4EyhyIcObar2MZ3azQ+v7nRQbdBj
-	 7sjOnuG38X9dqw17H0gyxJ53rSqGO/n0kAeW6Bj0ZUQdz6M4PEMct7yOcRXy0ZTWU8
-	 7kMXjdIcQGJZ/rIuHTRs2T45ywYmPqNZ5OlNNQ2E=
+	b=hJREwQsUxKB793v2AxZOaQHafgT3zGhcu6uEDumA0f2r4VOKQD7Xk4/LQ5nmYy45f
+	 lnHZfOBJJIlWXpBdz5XJrxcm2c6kb2QJeZlNIGO1bhhUoUcxWiVrd6fK+AQKpC8zUB
+	 C4ymPNAL1CgkL6jskuDOaifiajvdqWGvFHlyFBEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404852AbfHVR1k (ORCPT
+        id S2404812AbfHVR1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:27:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50902 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404606AbfHVR0H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:26:07 -0400
+        id S2404643AbfHVR0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:26:11 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A1CE2341C;
-        Thu, 22 Aug 2019 17:26:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3057523400;
+        Thu, 22 Aug 2019 17:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494766;
-        bh=wKXD6gj0JrSo8P6g8TBDInk14gTgVAubp7XlhD41KnY=;
+        s=default; t=1566494770;
+        bh=7XQ9J0euC29pJ7X/Bgu7TFHLAcOWBqAHFO3NB5bCm28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RdEx9xa8Vw5PT5wZJgCkL0ygf0HDNKLnMtIMNZorpUFk7GUqpu+3XqM8H30XA/maZ
-         2xEf4KaaBm+DDuHFgtBXIPmfIg/SgNM8wF6hxedX2fC5hNQBYF+/ZJi8Ly6I2yE2jJ
-         WgY0uRtYMAjH8Q17OZM2M/k3XDABKgw4vo4kgHfM=
+        b=ThfHAbYN8LylXuVFBzoJRhAnM9Zbf1zT47pP6b9T5lWbvCUnaFDXldL5u2FK7jEyw
+         FliCXaFjZuVld+pmyLKmZJPTbXkTEkEc8jyID4iyKl4kqCrzgjgwby+t8scwu/76hz
+         HcrdrOJFVda6Q6586ubiJienQa9Au1cgPd+u5sxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Qian Cai <cai@lca.pw>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 43/85] arm64/efi: fix variable si set but not used
-Date:   Thu, 22 Aug 2019 10:19:16 -0700
-Message-Id: <20190822171733.156230259@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 74/85] bonding: Add vlan tx offload to hw_enc_features
+Date:   Thu, 22 Aug 2019 10:19:47 -0700
+Message-Id: <20190822171734.344856622@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -61,43 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f1d4836201543e88ebe70237e67938168d5fab19 ]
+From: YueHaibing <yuehaibing@huawei.com>
 
-GCC throws out this warning on arm64.
+[ Upstream commit d595b03de2cb0bdf9bcdf35ff27840cc3a37158f ]
 
-drivers/firmware/efi/libstub/arm-stub.c: In function 'efi_entry':
-drivers/firmware/efi/libstub/arm-stub.c:132:22: warning: variable 'si'
-set but not used [-Wunused-but-set-variable]
+As commit 30d8177e8ac7 ("bonding: Always enable vlan tx offload")
+said, we should always enable bonding's vlan tx offload, pass the
+vlan packets to the slave devices with vlan tci, let them to handle
+vlan implementation.
 
-Fix it by making free_screen_info() a static inline function.
+Now if encapsulation protocols like VXLAN is used, skb->encapsulation
+may be set, then the packet is passed to vlan device which based on
+bonding device. However in netif_skb_features(), the check of
+hw_enc_features:
 
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+	 if (skb->encapsulation)
+                 features &= dev->hw_enc_features;
+
+clears NETIF_F_HW_VLAN_CTAG_TX/NETIF_F_HW_VLAN_STAG_TX. This results
+in same issue in commit 30d8177e8ac7 like this:
+
+vlan_dev_hard_start_xmit
+  -->dev_queue_xmit
+    -->validate_xmit_skb
+      -->netif_skb_features //NETIF_F_HW_VLAN_CTAG_TX is cleared
+      -->validate_xmit_vlan
+        -->__vlan_hwaccel_push_inside //skb->tci is cleared
+...
+ --> bond_start_xmit
+   --> bond_xmit_hash //BOND_XMIT_POLICY_ENCAP34
+     --> __skb_flow_dissect // nhoff point to IP header
+        -->  case htons(ETH_P_8021Q)
+             // skb_vlan_tag_present is false, so
+             vlan = __skb_header_pointer(skb, nhoff, sizeof(_vlan),
+             //vlan point to ip header wrongly
+
+Fixes: b2a103e6d0af ("bonding: convert to ndo_fix_features")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/include/asm/efi.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/bonding/bond_main.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/include/asm/efi.h b/arch/arm64/include/asm/efi.h
-index 7ed320895d1f4..f52a2968a3b69 100644
---- a/arch/arm64/include/asm/efi.h
-+++ b/arch/arm64/include/asm/efi.h
-@@ -94,7 +94,11 @@ static inline unsigned long efi_get_max_initrd_addr(unsigned long dram_base,
- 	((protocol##_t *)instance)->f(instance, ##__VA_ARGS__)
- 
- #define alloc_screen_info(x...)		&screen_info
--#define free_screen_info(x...)
-+
-+static inline void free_screen_info(efi_system_table_t *sys_table_arg,
-+				    struct screen_info *si)
-+{
-+}
- 
- /* redeclare as 'hidden' so the compiler will generate relative references */
- extern struct screen_info screen_info __attribute__((__visibility__("hidden")));
--- 
-2.20.1
-
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1102,6 +1102,8 @@ static void bond_compute_features(struct
+ done:
+ 	bond_dev->vlan_features = vlan_features;
+ 	bond_dev->hw_enc_features = enc_features | NETIF_F_GSO_ENCAP_ALL |
++				    NETIF_F_HW_VLAN_CTAG_TX |
++				    NETIF_F_HW_VLAN_STAG_TX |
+ 				    NETIF_F_GSO_UDP_L4;
+ 	bond_dev->gso_max_segs = gso_max_segs;
+ 	netif_set_gso_max_size(bond_dev, gso_max_size);
 
 
