@@ -2,129 +2,95 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB44C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3523C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BDC2342E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:33:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQ7p6IVC"
+	by mail.kernel.org (Postfix) with ESMTP id 91E35233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732405AbfHVIdQ (ORCPT
+        id S1732421AbfHVIfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:33:16 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51196 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfHVIdP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:33:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v15so4742685wml.0;
-        Thu, 22 Aug 2019 01:33:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7EauMan5wC2oHmJwa9VSCeeLzs1qH85S7tn6KqheO0Y=;
-        b=OQ7p6IVC1NIw7fex5ur1IYa1YmEGcmleiVeN1rAeX0LVjJz/+s8L+/4nTeG0Tr2Zm7
-         KOdjCjmLzgRxyDZjhzwqrfcOYWmX7FWZv8dwg8zAJOdeAQqNRxSiTXIiw7hwH7dofsmW
-         CMveJQR7Vtpbpz95ituoxFtAjIhxDa0pF6ZgZvqZuaiPAe4Z75dCgIrcLYaoBDHnN0vF
-         r7jwHMqyAir8eYR8R4oYIEpdspGiSRf1vVIYgjpklTqJSbOTmKcQuUOGJxlneCaO5wD3
-         hyXv99UXj/cNZ92Fi/DurOZsSnoGXeDaOwQDzubRKWZ6rB0ZDZaABc4b6rWXLOuYikjn
-         7Fkg==
+        Thu, 22 Aug 2019 04:35:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48614 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730987AbfHVIfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 04:35:18 -0400
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2F7337FDF4
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:35:18 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id 19so2642497wmk.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:35:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7EauMan5wC2oHmJwa9VSCeeLzs1qH85S7tn6KqheO0Y=;
-        b=ip+UcbIt20XKBAPtc6xuI9SVPVFBbUHzVc+oPyAJc3weaz78VJ7HXYJC4L2r+uGFWV
-         3MF+Admcon4HKRK8kQNcVwFjhFe5mhpW3WJO8NUlVTe+ngtN60AepJQyCICMPXTBdSIv
-         OXnWN/LMWjwoBT7z4yTRB+jRHRt1HgcqgHdl2SZgqEGVJ5FuFdTTKCxxRcd896Rmg14a
-         WAjgm3366k87/Csu+Ix7xYh5mF4hZnH2TAU90YDezr7gc2yyXsRcepLS/g14IvoDVYDs
-         EJjKNZLSATIY9gv3L8qj0niFle3/b6mLXxingapjB1byWcSoOZgwZCn/sNE2rGEGowHe
-         zy6g==
-X-Gm-Message-State: APjAAAV10Ut5CLAsGAMpKzauMCpgjU2m3f/jPCEF8dcvpO94AC6mRyZC
-        aeRPktJMDSfvfpHgV66Ja5/7ZybYFtEDff9F1HM=
-X-Google-Smtp-Source: APXvYqwp3ugo/OV/r/Cwj2DfvvMbvNm+soB016hMmOviIAU2t8QWMrxQSxMeAbb9I1qyMe3BKgqWpfLfM68frYMNOPU=
-X-Received: by 2002:a7b:c155:: with SMTP id z21mr4840886wmi.137.1566462793252;
- Thu, 22 Aug 2019 01:33:13 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=503gwfkLwN2+9M3xVVSL4KHdkFSBybLeuL3BTe28L04=;
+        b=C+Tfjq5SEsDSKXMn5sdnlOimC5TTiJq4EzoJiiKRMNb1J7gbMDeAHxQ0IvyrktluGt
+         W+H2FZ/ydYp2SDeXWoFdUB3FfH0qL44nijHQMwTqRm8Cj7FJNgGyRKaByKxAjlo35/oD
+         84SssSE6rjgvaj7xwGTa787gRhJ+aJwkYAdiwF+Qa3zlnTTGQv2OSPy0Ab+0GlLHNWvt
+         NzJvbTvWIelmCPp++ytvHrTmecv2AU/auj1BIaVbKNeHGOQn2kAIuPYPzX5nyi+PcbPQ
+         DvZqcfOvodL0F2w3tZfS6OVPskHdfB0xJJrHH1xFPT620ClXyJnkMxr5GgXXR2t77skn
+         eaoA==
+X-Gm-Message-State: APjAAAURpnhESPIxDsqnaxIxxekZidtXxTgYPCMrKS6XLxa9juy4UEVY
+        +a0D/5WBPbNeqPWnNb6XMMLGEFWaQ8glX6WHgQPoYzm8AzPtf4dhvvjMyeomazAzahxCX9SSxu1
+        DPIrsiAYF0b+icWVepmNADiVz
+X-Received: by 2002:adf:ba4a:: with SMTP id t10mr44274891wrg.325.1566462916909;
+        Thu, 22 Aug 2019 01:35:16 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwy4qQ9wEFJUUnOh9sHeQbZqx7L5OjVN+mhbTK5RA/hJKA8heXCGy6dfXj4prjORXC40B78Sg==
+X-Received: by 2002:adf:ba4a:: with SMTP id t10mr44274867wrg.325.1566462916663;
+        Thu, 22 Aug 2019 01:35:16 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id j17sm20375395wru.24.2019.08.22.01.35.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Aug 2019 01:35:15 -0700 (PDT)
+Subject: Re: [PATCH v4 1/6] KVM: Fix leak vCPU's VMCS value into other pCPU
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        "# v3 . 10+" <stable@vger.kernel.org>
+References: <1564970604-10044-1-git-send-email-wanpengli@tencent.com>
+ <9acbc733-442f-0f65-9b56-ff800a3fa0f5@redhat.com>
+ <CANRm+CwH54S555nw-Zik-3NFDH9yqe+SOZrGc3mPoAU_qGxP-A@mail.gmail.com>
+ <e7b84893-42bf-e80e-61c9-ef5d1b200064@redhat.com>
+ <CANRm+CzJf9Or_45frTe9ivFx9QDfx6Nou7uLT6tm1NmcPKDn8A@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <728bf051-02eb-8fe8-042f-9893f23b4a68@redhat.com>
+Date:   Thu, 22 Aug 2019 10:35:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1323459733.69859.1566234633793.JavaMail.zimbra@nod.at>
- <20190819204504.GB10075@hsiangkao-HP-ZHAN-66-Pro-G1> <CAFLxGvxr2UMeVa29M9pjLtWMFPz7w6udRV38CRxEF1moyA9_Rw@mail.gmail.com>
- <20190821220251.GA3954@hsiangkao-HP-ZHAN-66-Pro-G1>
-In-Reply-To: <20190821220251.GA3954@hsiangkao-HP-ZHAN-66-Pro-G1>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Thu, 22 Aug 2019 10:33:01 +0200
-Message-ID: <CAFLxGvzLPgD22pVOV_jz1EvC-c7YU_2dEFbBt4q08bSkZ3U0Dg@mail.gmail.com>
-Subject: Re: erofs: Question on unused fields in on-disk structs
-To:     Gao Xiang <hsiangkao@aol.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CANRm+CzJf9Or_45frTe9ivFx9QDfx6Nou7uLT6tm1NmcPKDn8A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 12:03 AM Gao Xiang <hsiangkao@aol.com> wrote:
->
-> Hi Richard,
->
-> On Wed, Aug 21, 2019 at 11:37:30PM +0200, Richard Weinberger wrote:
-> > Gao Xiang,
-> >
-> > On Mon, Aug 19, 2019 at 10:45 PM Gao Xiang via Linux-erofs
-> > <linux-erofs@lists.ozlabs.org> wrote:
-> > > > struct erofs_super_block has "checksum" and "features" fields,
-> > > > but they are not used in the source.
-> > > > What is the plan for these?
-> > >
-> > > Yes, both will be used laterly (features is used for compatible
-> > > features, we already have some incompatible features in 5.3).
-> >
-> > Good. :-)
-> > I suggest to check the fields being 0 right now.
-> > Otherwise you are in danger that they get burned if an mkfs.erofs does not
-> > initialize the fields.
->
-> Sorry... I cannot get the point...
+On 22/08/19 02:46, Wanpeng Li wrote:
+> On Tue, 6 Aug 2019 at 14:20, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>>
+>> On 06/08/19 02:35, Wanpeng Li wrote:
+>>> Thank you, Paolo! Btw, how about other 5 patches?
+>>
+>> Queued everything else too.
+> 
+> How about patch 4/6~5/6, they are not in kvm/queue. :)
 
-Sorry for being unclear, let me explain in more detail.
+I queued 4.
 
-> super block chksum could be a compatible feature right? which means
-> new kernel can support it (maybe we can add a warning if such image
-> doesn't have a chksum then when mounting) but old kernel doesn't
-> care it.
+For patch 5, I don't really see the benefit since the hypercall
+arguments are already traced.
 
-Yes. But you need some why to indicate that the chksum field is now
-valid and must be used.
-
-The features field can be used for that, but you don't use it right now.
-I recommend to check it for being 0, 0 means then "no features".
-If somebody creates in future a erofs with more features this code
-can refuse to mount because it does not support these features.
-
-But be very sure that existing erofs filesystems actually have this field
-set to 0 or something other which is always the same.
-Otherwise you cannot use the field anymore because it could be anything.
-A common bug is that the mkfs program keeps such unused fields
-uninitialized and then it can be a more or less random value without
-notice.
-
-> Or maybe you mean these reserved fields? I have no idea all other
-> filesystems check these fields to 0 or not... But I think it should
-> be used with some other flag is set rather than directly use, right?
-
-Basically you want a way to know when a field shall be used and when not.
-Most filesystems have version/feature fields. Often multiple to denote different
-levels of compatibility.
-
--- 
-Thanks,
-//richard
+Paolo
