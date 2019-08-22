@@ -2,53 +2,60 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38073C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA5BC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029B22342B
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77142341D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494739;
-	bh=HlDQLuftn1O9UjIlU+fow3h4uIaKqMts3Ku4WtOcGYA=;
+	s=default; t=1566494747;
+	bh=yCufL5oWabHLxr/TC5mEPBrnDdyyJdmpuNvTjOW014U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m1N2KQgMVwYhT+ZgS4/0/NxT1+5mNIDN+AgLNRNtrb6C45ZjCHXnW89fK7O8A/oot
-	 RUaR9f9/ipEYzzUO/T6EKP5USzTfHmq+71TPPIMmh/BcdwryFaBwrjd1nji+JHGEeJ
-	 Y7ZKPQrDzvp+lZRs+W1HY9ZNSkXLNZtzsBfYIwAY=
+	b=rytuyZSQXvFoHXO1w4UFkmlYiobVhRd/79Cy9FrG1R7816xb8E3ytZ7N6WXW3bXo5
+	 kCoyMfZ78Efe2GYNjqkW2/Yu7wPkOWt+yThJ9Py+7WTp3hNRttxGa/WW5B//EhLO1X
+	 pkMkRZzw1iU0EMeVZdf/EnTNlnAQpsuFMA/YDDS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404461AbfHVRZh (ORCPT
+        id S2404491AbfHVRZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:25:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:25:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391600AbfHVRYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:52 -0400
+        id S2389976AbfHVRYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:53 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C90723400;
-        Thu, 22 Aug 2019 17:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF40623400;
+        Thu, 22 Aug 2019 17:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494691;
-        bh=HlDQLuftn1O9UjIlU+fow3h4uIaKqMts3Ku4WtOcGYA=;
+        s=default; t=1566494693;
+        bh=yCufL5oWabHLxr/TC5mEPBrnDdyyJdmpuNvTjOW014U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PsWDLiU+LxrqGxrCT2/vo4zv3Q7LT0FbQNMxXmjTa+zxpUDZd/pNLy/l8tZAjeP02
-         BQv56v/kt9bcxyZBLFWupRHZwuXUhH5WbN6eoT16WgffZUK/7gm2uGmEq++DDC63OE
-         QqGUmQAAMeXOKngbG2qLFdeUiDCQtdyY0SgocDoA=
+        b=KErfDO3RiDzNTxot2R9oMIYwy8f6NNqFWeP9NcRxYfczgTnHSVqrprZwcX53Q2cRS
+         pCCryDbbrNE9Qf4qdCPKZnLUDAtuvmgKqek+8jbjFmwXVMa2N69+ttgjvr0MyQgrkT
+         9QdFD8P0/4PKwnZZph1c7BXDXHc8Uw1JiTMyPmvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 39/71] drm: msm: Fix add_gpu_components
-Date:   Thu, 22 Aug 2019 10:19:14 -0700
-Message-Id: <20190822171729.591702318@linuxfoundation.org>
+        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.14 08/71] x86/mm: Use WRITE_ONCE() when setting PTEs
+Date:   Thu, 22 Aug 2019 10:18:43 -0700
+Message-Id: <20190822171727.056736535@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
 References: <20190822171726.131957995@linuxfoundation.org>
@@ -61,42 +68,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9ca7ad6c7706edeae331c1632d0c63897418ebad ]
+From: Nadav Amit <namit@vmware.com>
 
-add_gpu_components() adds found GPU nodes from the DT to the match list,
-regardless of the status of the nodes.  This is a problem, because if the
-nodes are disabled, they should not be on the match list because they will
-not be matched.  This prevents display from initing if a GPU node is
-defined, but it's status is disabled.
+commit 9bc4f28af75a91aea0ae383f50b0a430c4509303 upstream.
 
-Fix this by checking the node's status before adding it to the match list.
+When page-table entries are set, the compiler might optimize their
+assignment by using multiple instructions to set the PTE. This might
+turn into a security hazard if the user somehow manages to use the
+interim PTE. L1TF does not make our lives easier, making even an interim
+non-present PTE a security hazard.
 
-Fixes: dc3ea265b856 (drm/msm: Drop the gpu binding)
-Reviewed-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190626180015.45242-1-jeffrey.l.hugo@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Using WRITE_ONCE() to set PTEs and friends should prevent this potential
+security hazard.
+
+I skimmed the differences in the binary with and without this patch. The
+differences are (obviously) greater when CONFIG_PARAVIRT=n as more
+code optimizations are possible. For better and worse, the impact on the
+binary with this patch is pretty small. Skimming the code did not cause
+anything to jump out as a security hazard, but it seems that at least
+move_soft_dirty_pte() caused set_pte_at() to use multiple writes.
+
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Link: https://lkml.kernel.org/r/20180902181451.80520-1-namit@vmware.com
+[bwh: Backported to 4.14:
+ - Drop changes in pmdp_establish()
+ - 5-level paging is a compile-time option
+ - Update both cases in native_set_pgd()
+ - Adjust context]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/msm/msm_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/pgtable_64.h |   22 +++++++++++-----------
+ arch/x86/mm/pgtable.c             |    8 ++++----
+ 2 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index b970427e53a7a..77c45a2ebd833 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1060,7 +1060,8 @@ static int add_gpu_components(struct device *dev,
- 	if (!np)
- 		return 0;
+--- a/arch/x86/include/asm/pgtable_64.h
++++ b/arch/x86/include/asm/pgtable_64.h
+@@ -56,15 +56,15 @@ struct mm_struct;
+ void set_pte_vaddr_p4d(p4d_t *p4d_page, unsigned long vaddr, pte_t new_pte);
+ void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
  
--	drm_of_component_match_add(dev, matchptr, compare_of, np);
-+	if (of_device_is_available(np))
-+		drm_of_component_match_add(dev, matchptr, compare_of, np);
+-static inline void native_pte_clear(struct mm_struct *mm, unsigned long addr,
+-				    pte_t *ptep)
++static inline void native_set_pte(pte_t *ptep, pte_t pte)
+ {
+-	*ptep = native_make_pte(0);
++	WRITE_ONCE(*ptep, pte);
+ }
  
- 	of_node_put(np);
+-static inline void native_set_pte(pte_t *ptep, pte_t pte)
++static inline void native_pte_clear(struct mm_struct *mm, unsigned long addr,
++				    pte_t *ptep)
+ {
+-	*ptep = pte;
++	native_set_pte(ptep, native_make_pte(0));
+ }
  
--- 
-2.20.1
-
+ static inline void native_set_pte_atomic(pte_t *ptep, pte_t pte)
+@@ -74,7 +74,7 @@ static inline void native_set_pte_atomic
+ 
+ static inline void native_set_pmd(pmd_t *pmdp, pmd_t pmd)
+ {
+-	*pmdp = pmd;
++	WRITE_ONCE(*pmdp, pmd);
+ }
+ 
+ static inline void native_pmd_clear(pmd_t *pmd)
+@@ -110,7 +110,7 @@ static inline pmd_t native_pmdp_get_and_
+ 
+ static inline void native_set_pud(pud_t *pudp, pud_t pud)
+ {
+-	*pudp = pud;
++	WRITE_ONCE(*pudp, pud);
+ }
+ 
+ static inline void native_pud_clear(pud_t *pud)
+@@ -220,9 +220,9 @@ static inline pgd_t pti_set_user_pgd(pgd
+ static inline void native_set_p4d(p4d_t *p4dp, p4d_t p4d)
+ {
+ #if defined(CONFIG_PAGE_TABLE_ISOLATION) && !defined(CONFIG_X86_5LEVEL)
+-	p4dp->pgd = pti_set_user_pgd(&p4dp->pgd, p4d.pgd);
++	WRITE_ONCE(p4dp->pgd, pti_set_user_pgd(&p4dp->pgd, p4d.pgd));
+ #else
+-	*p4dp = p4d;
++	WRITE_ONCE(*p4dp, p4d);
+ #endif
+ }
+ 
+@@ -238,9 +238,9 @@ static inline void native_p4d_clear(p4d_
+ static inline void native_set_pgd(pgd_t *pgdp, pgd_t pgd)
+ {
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
+-	*pgdp = pti_set_user_pgd(pgdp, pgd);
++	WRITE_ONCE(*pgdp, pti_set_user_pgd(pgdp, pgd));
+ #else
+-	*pgdp = pgd;
++	WRITE_ONCE(*pgdp, pgd);
+ #endif
+ }
+ 
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -260,7 +260,7 @@ static void pgd_mop_up_pmds(struct mm_st
+ 		if (pgd_val(pgd) != 0) {
+ 			pmd_t *pmd = (pmd_t *)pgd_page_vaddr(pgd);
+ 
+-			pgdp[i] = native_make_pgd(0);
++			pgd_clear(&pgdp[i]);
+ 
+ 			paravirt_release_pmd(pgd_val(pgd) >> PAGE_SHIFT);
+ 			pmd_free(mm, pmd);
+@@ -430,7 +430,7 @@ int ptep_set_access_flags(struct vm_area
+ 	int changed = !pte_same(*ptep, entry);
+ 
+ 	if (changed && dirty)
+-		*ptep = entry;
++		set_pte(ptep, entry);
+ 
+ 	return changed;
+ }
+@@ -445,7 +445,7 @@ int pmdp_set_access_flags(struct vm_area
+ 	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
+ 
+ 	if (changed && dirty) {
+-		*pmdp = entry;
++		set_pmd(pmdp, entry);
+ 		/*
+ 		 * We had a write-protection fault here and changed the pmd
+ 		 * to to more permissive. No need to flush the TLB for that,
+@@ -465,7 +465,7 @@ int pudp_set_access_flags(struct vm_area
+ 	VM_BUG_ON(address & ~HPAGE_PUD_MASK);
+ 
+ 	if (changed && dirty) {
+-		*pudp = entry;
++		set_pud(pudp, entry);
+ 		/*
+ 		 * We had a write-protection fault here and changed the pud
+ 		 * to to more permissive. No need to flush the TLB for that,
 
 
