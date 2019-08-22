@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED73C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E988C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F166223402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78F823402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495619;
-	bh=1hKRuByecVlVLfQQ6iosXpCA9hG/cgMqUCWA0P8Ptts=;
+	s=default; t=1566495624;
+	bh=6KUXWNDA8/+Pde2MDNRP2/6V1yRx83M8Ry5DX+w5b6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p9esaEelt5bH0hmOTPG3epNynHojW1nyFIr9dJfJnbALseXWlnkDuni44GYs2JJk4
-	 VYDZfvsbuTcB78gXme9q0GH/R7cHHPhNWBWB89R2DLvuT+W6UmXoXvfTkjymdmlfPo
-	 OLRS0qestxEwyQKcmT4ClPWhjGJJbHQq8WNdosDE=
+	b=kHcIRk3pWAaxK87bYEhqv9AhsxSpxI1KdPFb9S8OSKi6MHYWF7HkWHsLJ1yiXUFiw
+	 gSz+qZGKrhOZGPHgLQ45UCJLu9YJIbPhuM59VcouIAJ5Yo9oBG+d/Z5w/92uICMdWp
+	 xoJKKDBOiSTQtL6mmA5JvriLLKJEU5iv2K39hCCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405053AbfHVRkR (ORCPT
+        id S2404083AbfHVRYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:40:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45180 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:24:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404086AbfHVRYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:08 -0400
+        id S2391556AbfHVRWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:49 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76AA123400;
-        Thu, 22 Aug 2019 17:24:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AC74233FE;
+        Thu, 22 Aug 2019 17:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494647;
-        bh=1hKRuByecVlVLfQQ6iosXpCA9hG/cgMqUCWA0P8Ptts=;
+        s=default; t=1566494568;
+        bh=6KUXWNDA8/+Pde2MDNRP2/6V1yRx83M8Ry5DX+w5b6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NQLERfQyJGNQM9RYMVN3gk+HftnBjMWfM3d9jyCDvKaI8A8alYwR6eGVs481PGV1b
-         rv7u3n0/Idnp0rwOyupVwwNB/mVTQ4TmXyrhvhTyDgpdN0I9ui25nWts7GgmzouUfi
-         n0dPKMcRuiyR87y+9aTmiFcwB4LTIUjri/Ois2wE=
+        b=t8T9IeOEzdB5bcmc3C1nto/O6YpadIn40vq5p+7G1WD+hvjx+lkyveEj86TTuyUc8
+         KUexa4nen13A5BORvuI0PQJ55NI0vWMaOiaJPCatfIiPOInhk9ghXooZGIx5SIgSzE
+         dMCoNmAKsnpqXtQDG4nh38lDxE7kI4Ttq5xTx+iw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.9 041/103] scsi: mpt3sas: Use 63-bit DMA addressing on SAS35 HBA
-Date:   Thu, 22 Aug 2019 10:18:29 -0700
-Message-Id: <20190822171730.468258675@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 58/78] usb: cdc-acm: make sure a refcount is taken early enough
+Date:   Thu, 22 Aug 2019 10:19:02 -0700
+Message-Id: <20190822171833.717553055@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
-References: <20190822171728.445189830@linuxfoundation.org>
+In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
+References: <20190822171832.012773482@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,78 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit df9a606184bfdb5ae3ca9d226184e9489f5c24f7 upstream.
+commit c52873e5a1ef72f845526d9f6a50704433f9c625 upstream.
 
-Although SAS3 & SAS3.5 IT HBA controllers support 64-bit DMA addressing, as
-per hardware design, if DMA-able range contains all 64-bits
-set (0xFFFFFFFF-FFFFFFFF) then it results in a firmware fault.
+destroy() will decrement the refcount on the interface, so that
+it needs to be taken so early that it never undercounts.
 
-E.g. SGE's start address is 0xFFFFFFFF-FFFF000 and data length is 0x1000
-bytes. when HBA tries to DMA the data at 0xFFFFFFFF-FFFFFFFF location then
-HBA will fault the firmware.
-
-Driver will set 63-bit DMA mask to ensure the above address will not be
-used.
-
-Cc: <stable@vger.kernel.org> # 5.1.20+
-Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 7fb57a019f94e ("USB: cdc-acm: Fix potential deadlock (lockdep warning)")
+Cc: stable <stable@vger.kernel.org>
+Reported-and-tested-by: syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20190808142119.7998-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/scsi/mpt3sas/mpt3sas_base.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/usb/class/cdc-acm.c |   18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -1707,9 +1707,11 @@ _base_config_dma_addressing(struct MPT3S
- {
- 	struct sysinfo s;
- 	u64 consistent_dma_mask;
-+	/* Set 63 bit DMA mask for all SAS3 and SAS35 controllers */
-+	int dma_mask = (ioc->hba_mpi_version_belonged > MPI2_VERSION) ? 63 : 64;
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -1319,13 +1319,6 @@ made_compressed_probe:
+ 	if (acm == NULL)
+ 		goto alloc_fail;
  
- 	if (ioc->dma_mask)
--		consistent_dma_mask = DMA_BIT_MASK(64);
-+		consistent_dma_mask = DMA_BIT_MASK(dma_mask);
- 	else
- 		consistent_dma_mask = DMA_BIT_MASK(32);
+-	minor = acm_alloc_minor(acm);
+-	if (minor < 0) {
+-		dev_err(&intf->dev, "no more free acm devices\n");
+-		kfree(acm);
+-		return -ENODEV;
+-	}
+-
+ 	ctrlsize = usb_endpoint_maxp(epctrl);
+ 	readsize = usb_endpoint_maxp(epread) *
+ 				(quirks == SINGLE_RX_URB ? 1 : 2);
+@@ -1333,6 +1326,16 @@ made_compressed_probe:
+ 	acm->writesize = usb_endpoint_maxp(epwrite) * 20;
+ 	acm->control = control_interface;
+ 	acm->data = data_interface;
++
++	usb_get_intf(acm->control); /* undone in destruct() */
++
++	minor = acm_alloc_minor(acm);
++	if (minor < 0) {
++		dev_err(&intf->dev, "no more free acm devices\n");
++		kfree(acm);
++		return -ENODEV;
++	}
++
+ 	acm->minor = minor;
+ 	acm->dev = usb_dev;
+ 	acm->ctrl_caps = ac_management_function;
+@@ -1474,7 +1477,6 @@ skip_countries:
+ 	usb_driver_claim_interface(&acm_driver, data_interface, acm);
+ 	usb_set_intfdata(data_interface, acm);
  
-@@ -1717,11 +1719,11 @@ _base_config_dma_addressing(struct MPT3S
- 		const uint64_t required_mask =
- 		    dma_get_required_mask(&pdev->dev);
- 		if ((required_mask > DMA_BIT_MASK(32)) &&
--		    !pci_set_dma_mask(pdev, DMA_BIT_MASK(64)) &&
-+		    !pci_set_dma_mask(pdev, DMA_BIT_MASK(dma_mask)) &&
- 		    !pci_set_consistent_dma_mask(pdev, consistent_dma_mask)) {
- 			ioc->base_add_sg_single = &_base_add_sg_single_64;
- 			ioc->sge_size = sizeof(Mpi2SGESimple64_t);
--			ioc->dma_mask = 64;
-+			ioc->dma_mask = dma_mask;
- 			goto out;
- 		}
- 	}
-@@ -1747,7 +1749,7 @@ static int
- _base_change_consistent_dma_mask(struct MPT3SAS_ADAPTER *ioc,
- 				      struct pci_dev *pdev)
- {
--	if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64))) {
-+	if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(ioc->dma_mask))) {
- 		if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32)))
- 			return -ENODEV;
- 	}
-@@ -3381,7 +3383,7 @@ _base_allocate_memory_pools(struct MPT3S
- 		total_sz += sz;
- 	} while (ioc->rdpq_array_enable && (++i < ioc->reply_queue_count));
- 
--	if (ioc->dma_mask == 64) {
-+	if (ioc->dma_mask > 32) {
- 		if (_base_change_consistent_dma_mask(ioc, ioc->pdev) != 0) {
- 			pr_warn(MPT3SAS_FMT
- 			    "no suitable consistent DMA mask for %s\n",
+-	usb_get_intf(control_interface);
+ 	tty_dev = tty_port_register_device(&acm->port, acm_tty_driver, minor,
+ 			&control_interface->dev);
+ 	if (IS_ERR(tty_dev)) {
 
 
