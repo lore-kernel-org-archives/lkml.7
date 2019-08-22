@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7BDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98932C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0102089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8642089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493837;
-	bh=VLvssIs057l9kxGVR3E5TdDzghmgW5FyKU+CmVHp3FQ=;
+	s=default; t=1566493840;
+	bh=pEYPkZqlavPya5XXQTmozjCedN/vAJk5AiBNMwSLs/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FPssHJIHRx0M1rUyFG7xb6U9AtNiX+iNx8xivn5SkKfibSkzjS248MUPVELoaMrka
-	 DyX4i1hc2oAmKhq0hWkuxU4OYo4I0wJ8m2DCn50C5dMvVJ92U+WIS7dG+ScWnnnFRR
-	 ZMDZ1eMRbtw9YqTE3dXjMoXbvE+lifK9Xl47OKoU=
+	b=NlXn1RaUgStC5ncuC4rto6iXpNpc5UNwMBjOQZQCQqMWG/LBEJH3v91O51/Df7jFz
+	 peHfoLwMdp/OVCQcpGlxUpEbzXMkb/VCr4WPZo4fISZVOGfdgRi0PB1WOX/wv90rzJ
+	 I6rkeZ3qdJtz655ssJ1jVwyys+pdbxPqTVQhUwYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390844AbfHVRKg (ORCPT
+        id S2390755AbfHVRJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59670 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390757AbfHVRJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:24 -0400
+        id S2390697AbfHVRJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:12 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89A5023405;
-        Thu, 22 Aug 2019 17:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8362E2342F;
+        Thu, 22 Aug 2019 17:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493763;
-        bh=VLvssIs057l9kxGVR3E5TdDzghmgW5FyKU+CmVHp3FQ=;
+        s=default; t=1566493751;
+        bh=pEYPkZqlavPya5XXQTmozjCedN/vAJk5AiBNMwSLs/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dXUchJVgvb1qO0bFQuu2+E4H3JEmRXA/veFt2LW8uH9xJOsWDuX6kQ4zQZwGToNPh
-         gf9a2tyqXb2EKva2b+eL9cXmmJGVDFHM/LfFlWogYMu1FY78or5tXfTNZFafd3Ba05
-         gnuJybhf+iyhM7ydRoXqPbxuQSXdperF/5Yxi76M=
+        b=p8FKBQrAAJSGYpuOeOm58xjWjHekDZVTLrO8CnuYgBtbUo5fvGpgmoPqA7k8WuMUl
+         cOJRefd4TncSj5Q3E7Vaj81/Kn/rZDjG2DwLZB7SiO/P/9pqfboiLSMWr9LISiXndn
+         HuZZiX5B6WuHqgHRzrRb58/srR4TKQzPwCnvOmrY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aya Levin <ayal@mellanox.com>, Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hui Wang <hui.wang@canonical.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 129/135] net/mlx5e: Fix false negative indication on tx reporter CQE recovery
-Date:   Thu, 22 Aug 2019 13:08:05 -0400
-Message-Id: <20190822170811.13303-130-sashal@kernel.org>
+Subject: [PATCH 5.2 106/135] Input: psmouse - fix build error of multiple definition
+Date:   Thu, 22 Aug 2019 13:07:42 -0400
+Message-Id: <20190822170811.13303-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,43 +66,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aya Levin <ayal@mellanox.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit d9a2fcf53c76a7edb2bcf99e94507935561a83d5 ]
+commit 49e6979e7e92cf496105b5636f1df0ac17c159c0 upstream.
 
-Remove wrong error return value when SQ is not in error state.
-CQE recovery on TX reporter queries the sq state. If the sq is not in
-error state, the sq is either in ready or reset state. Ready state is
-good state which doesn't require recovery and reset state is a temporal
-state which ends in ready state. With this patch, CQE recovery in this
-scenario is successful.
+trackpoint_detect() should be static inline while
+CONFIG_MOUSE_PS2_TRACKPOINT is not set, otherwise, we build fails:
 
-Fixes: de8650a82071 ("net/mlx5e: Add tx reporter support")
-Signed-off-by: Aya Levin <ayal@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+drivers/input/mouse/alps.o: In function `trackpoint_detect':
+alps.c:(.text+0x8e00): multiple definition of `trackpoint_detect'
+drivers/input/mouse/psmouse-base.o:psmouse-base.c:(.text+0x1b50): first defined here
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 55e3d9224b60 ("Input: psmouse - allow disabing certain protocol extensions")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hui Wang <hui.wang@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/input/mouse/trackpoint.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c
-index f3d98748b2117..b307234b4e05b 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c
-@@ -86,10 +86,8 @@ static int mlx5e_tx_reporter_err_cqe_recover(struct mlx5e_txqsq *sq)
- 		return err;
- 	}
- 
--	if (state != MLX5_SQC_STATE_ERR) {
--		netdev_err(dev, "SQ 0x%x not in ERROR state\n", sq->sqn);
--		return -EINVAL;
--	}
-+	if (state != MLX5_SQC_STATE_ERR)
-+		return 0;
- 
- 	mlx5e_tx_disable_queue(sq->txq);
- 
+diff --git a/drivers/input/mouse/trackpoint.h b/drivers/input/mouse/trackpoint.h
+index 0afffe8d824fa..77110f3ec21da 100644
+--- a/drivers/input/mouse/trackpoint.h
++++ b/drivers/input/mouse/trackpoint.h
+@@ -158,7 +158,8 @@ struct trackpoint_data {
+ #ifdef CONFIG_MOUSE_PS2_TRACKPOINT
+ int trackpoint_detect(struct psmouse *psmouse, bool set_properties);
+ #else
+-inline int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
++static inline int trackpoint_detect(struct psmouse *psmouse,
++				    bool set_properties)
+ {
+ 	return -ENOSYS;
+ }
 -- 
 2.20.1
 
