@@ -2,147 +2,205 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1842C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36573C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7CA206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A2E023402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pNUS4u9K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YoksQZH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390106AbfHVQiI (ORCPT
+        id S2390124AbfHVQir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:38:08 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35207 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730545AbfHVQiI (ORCPT
+        Thu, 22 Aug 2019 12:38:47 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38058 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730545AbfHVQio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:38:08 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g17so6056420otl.2;
-        Thu, 22 Aug 2019 09:38:07 -0700 (PDT)
+        Thu, 22 Aug 2019 12:38:44 -0400
+Received: by mail-io1-f68.google.com with SMTP id p12so13173299iog.5;
+        Thu, 22 Aug 2019 09:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WyFgxZ8d3nVnIxTzk3SzFsGbvL9UcVuLdickzGUtCvc=;
-        b=pNUS4u9KAU74XE2Qs3LPZ4RiFIECie7gEvHoyhAi3cBOF+MVy4suhmGU4C0z5AAkcT
-         bvztPO3bmuwye2BkHGcOh5IjyiZGmcM4r49PS5DFH0/rcmhAvHJPcXdpPfYZwTtySmhz
-         Vg+KX6sC6kTeBakOMyNapL4qGGiyA+HDx2rfkz2B6DxezEtMbCZ7lxkfsgmn15zGlOYA
-         gI6zjm4uXxe8JPjc9CgbmeiKIC/cR6wl5Vif+T5A6oV6PoaxeQCx/Ms1GdWmbXW65z4w
-         gAFGT1cRxdRLFkeZrAYKoalPMoaAAZ9hYNJIl9+EFjKwKQ4s81WY6x0xaifaNG9fiEzQ
-         upZw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q3FgN6tHPMtfR2eh2tcn0+eFg5p7QIcdpMVYh3HXblQ=;
+        b=YoksQZH6CZk9rispM3SOYYBOusbFtUm5rCwC6capVqF+tL2k5etGl9dtOzNww/DeIW
+         B7lKpSIveYDL+qGTWVEo1jV4Alwe1mYrnZ1DcUsI+IbRzPodvEHkUIYkQgQkhp+rBf0Z
+         Wu/ab1GuYxbWMikSOUCMaPBePwnYr1Tudq/JOzMMceWNH0XmhEubdBxFuYzHiLrSSwjW
+         vdWwzLmHl9xhse/616UGWp4M4C7FQQHwtlM0ZkkDaGEepsxCSKaV7Rl6/xewiMrsjt3j
+         5pNjVBzObfsDLHsrKls4T2blO6t151Z4lm/kSYXcCbKmx2BlTZr2kL+8+O4CpHoAPsDK
+         PmqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WyFgxZ8d3nVnIxTzk3SzFsGbvL9UcVuLdickzGUtCvc=;
-        b=JfHaAGaGa2/rOcoXRKvGLRobc8VnXdKmrmcbYqlKMcUFsDledlPLug6pKqPIY6P9Fq
-         Rul9Ae6yOQ0RIn753YLufodshrnmi2E71fkdOOpdjHylegE8PqDAuQro2WxauNR1BLyM
-         wjmO/28eHVY10L87as9irSqHjyUBhIy5Tqwu1wsj33nDxkEMubtjDPb0ojUviF53dVvg
-         Y06PB4esXM865snE6RntOtsMjONR+D5uimLHUPg/z7th2TCwTy80w2+LG0Lte5G+eoBA
-         4bovLECkLiDeN+1QbN618rUJOy9gUDD2PMHHPhvCQDTqB6a5tMYxyj7CCYaXu9JDmcsI
-         48Hg==
-X-Gm-Message-State: APjAAAUIM8t2ByPZMBAv1T0+ZiGTh/zEh+pgWYEgoiyac70k4mLAqL6P
-        tsebl0U4CJSBfJWl/sK1uPeph2hJ
-X-Google-Smtp-Source: APXvYqxxwjM89i+xNPWWqX5cOg5pJRJSw/DjeIx7Arfijg2OObLp1lB4Zevpd6i6GHs/NyR8mIvOmA==
-X-Received: by 2002:a9d:171:: with SMTP id 104mr415794otu.228.1566491887194;
-        Thu, 22 Aug 2019 09:38:07 -0700 (PDT)
-Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id v24sm9484otj.78.2019.08.22.09.38.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Aug 2019 09:38:05 -0700 (PDT)
-Subject: Re: [PATCH] bcma: fix incorrect update of BCMA_CORE_PCI_MDIO_DATA
-To:     Colin Ian King <colin.king@canonical.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        linux-wireless@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190822133524.6274-1-colin.king@canonical.com>
- <d3c16158-ef89-f5ee-2f67-4357c70e8fe9@lwfinger.net>
- <31258833-174f-080b-489e-85d3556bd1de@canonical.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <f1aa1f6f-d293-c2cd-d1fc-a6b10d49a1bb@lwfinger.net>
-Date:   Thu, 22 Aug 2019 11:38:04 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q3FgN6tHPMtfR2eh2tcn0+eFg5p7QIcdpMVYh3HXblQ=;
+        b=ZqN8dRBzepRPF4d3yTHPREuOgqCfnDgU9xkONFgRm0efPXiTtuLEBa37uhLS+V7+AL
+         vtezYQAdNA6m28PJWhkg0fuA4YstLKyQ4ZevEIoGwaAu0n3+2y2dCo7JETo2o2QFPIzX
+         i0nr2onlzznaHdUS52IWxlUsJ0rIjEieFANHqVeRWi7/hI2apmkCsfp9g1jeOJJt+Z5I
+         +0ACtCnRezrk2BHLm4QSXOT42GZo/Dc9ixVJGYISWeFDci5VOd0j1v3C6oLSKpstv1g6
+         JCOcK+jfIIdYhWJ3rlWnEnn7s0lbso3DS+bVXM4fIE3I3VW9VA0LWoBKoxp0VjiokTBj
+         W37Q==
+X-Gm-Message-State: APjAAAXZwTqZaoLvr2DKF3E02IBrOUVEqVVE6INvyx+7/AFiJh+eyRum
+        SnNha8vBTNwbwEukhtM0sLNvQb/g0KNjrku6YPU=
+X-Google-Smtp-Source: APXvYqzwldhCiG7ir76K/uWSEH120ud4pRYjWlRwuINIRmmSCViVvYmdKA/Qla5MKm403JbmwHQAN3MfzwJ6cMxzYhY=
+X-Received: by 2002:a6b:dd18:: with SMTP id f24mr679216ioc.97.1566491923755;
+ Thu, 22 Aug 2019 09:38:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <31258833-174f-080b-489e-85d3556bd1de@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <CGME20190822123045eucas1p125b6e106f0310bdb50e759ef41993a91@eucas1p1.samsung.com>
+ <20190822123037.28068-1-i.maximets@samsung.com>
+In-Reply-To: <20190822123037.28068-1-i.maximets@samsung.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 22 Aug 2019 09:38:32 -0700
+Message-ID: <CAKgT0Uf26P53EA4m503aehq3tWCX9b3C+17TW2Ursbue9Kp=_w@mail.gmail.com>
+Subject: Re: [PATCH net v2] ixgbe: fix double clean of tx descriptors with xdp
+To:     Ilya Maximets <i.maximets@samsung.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        William Tu <u9012063@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/19 11:11 AM, Colin Ian King wrote:
-> On 22/08/2019 17:03, Larry Finger wrote:
->> On 8/22/19 8:35 AM, Colin King wrote:
->>> From: Colin Ian King <colin.king@canonical.com>
->>>
->>> An earlier commit re-worked the setting of the bitmask and is now
->>> assigning v with some bit flags rather than bitwise or-ing them
->>> into v, consequently the earlier bit-settings of v are being lost.
->>> Fix this by replacing an assignment with the bitwise or instead.
->>>
->>> Addresses-Coverity: ("Unused value")
->>> Fixes: 2be25cac8402 ("bcma: add constants for PCI and use them")
->>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>> ---
->>>    drivers/bcma/driver_pci.c | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/bcma/driver_pci.c b/drivers/bcma/driver_pci.c
->>> index f499a469e66d..d219ee947c07 100644
->>> --- a/drivers/bcma/driver_pci.c
->>> +++ b/drivers/bcma/driver_pci.c
->>> @@ -78,7 +78,7 @@ static u16 bcma_pcie_mdio_read(struct bcma_drv_pci
->>> *pc, u16 device, u8 address)
->>>            v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
->>>        }
->>>    -    v = BCMA_CORE_PCI_MDIODATA_START;
->>> +    v |= BCMA_CORE_PCI_MDIODATA_START;
->>>        v |= BCMA_CORE_PCI_MDIODATA_READ;
->>>        v |= BCMA_CORE_PCI_MDIODATA_TA;
->>
->> I'm not sure the "Fixes" attribute is correct.
->>
->> The changes for this section in commit 2be25cac8402 are
->>
->> -       v = (1 << 30); /* Start of Transaction */
->> -       v |= (1 << 28); /* Write Transaction */
->> -       v |= (1 << 17); /* Turnaround */
->> -       v |= (0x1F << 18);
->> +       v = BCMA_CORE_PCI_MDIODATA_START;
->> +       v |= BCMA_CORE_PCI_MDIODATA_WRITE;
->> +       v |= (BCMA_CORE_PCI_MDIODATA_DEV_ADDR <<
->> +             BCMA_CORE_PCI_MDIODATA_DEVADDR_SHF);
->> +       v |= (BCMA_CORE_PCI_MDIODATA_BLK_ADDR <<
->> +             BCMA_CORE_PCI_MDIODATA_REGADDR_SHF);
->> +       v |= BCMA_CORE_PCI_MDIODATA_TA;
->>
->> Because the code has done quite a bit of work on v just above this
->> section, I agree that this is likely an error, but that error happened
->> in an earlier commit. Thus 2be25cac8402 did not introduce the error,
->> merely copied it.
-> 
-> Ugh, this goes back further. I didn't spot that. I'm less confident of
-> what the correct settings should be now.
-> 
->>
->> Has this change been tested?
-> 
-> Afraid not, I don't have the H/W.
+On Thu, Aug 22, 2019 at 5:30 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+>
+> Tx code doesn't clear the descriptors' status after cleaning.
+> So, if the budget is larger than number of used elems in a ring, some
+> descriptors will be accounted twice and xsk_umem_complete_tx will move
+> prod_tail far beyond the prod_head breaking the comletion queue ring.
+>
+> Fix that by limiting the number of descriptors to clean by the number
+> of used descriptors in the tx ring.
+>
+> 'ixgbe_clean_xdp_tx_irq()' function refactored to look more like
+> 'ixgbe_xsk_clean_tx_ring()' since we don't need most of the
+> complications implemented in the regular 'ixgbe_clean_tx_irq()'
+> and we're allowed to directly use 'next_to_clean' and 'next_to_use'
+> indexes.
+>
+> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
+> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+> ---
+>
+> Version 2:
+>   * 'ixgbe_clean_xdp_tx_irq()' refactored to look more like
+>     'ixgbe_xsk_clean_tx_ring()'.
+>
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c | 34 ++++++++------------
+>  1 file changed, 13 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+> index 6b609553329f..d1297660e14a 100644
+> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+> @@ -633,22 +633,23 @@ static void ixgbe_clean_xdp_tx_buffer(struct ixgbe_ring *tx_ring,
+>  bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
+>                             struct ixgbe_ring *tx_ring, int napi_budget)
+>  {
+> +       u16 ntc = tx_ring->next_to_clean, ntu = tx_ring->next_to_use;
+>         unsigned int total_packets = 0, total_bytes = 0;
+> -       u32 i = tx_ring->next_to_clean, xsk_frames = 0;
+>         unsigned int budget = q_vector->tx.work_limit;
+>         struct xdp_umem *umem = tx_ring->xsk_umem;
+> -       union ixgbe_adv_tx_desc *tx_desc;
+> -       struct ixgbe_tx_buffer *tx_bi;
+> +       u32 xsk_frames = 0;
+>         bool xmit_done;
+>
+> -       tx_bi = &tx_ring->tx_buffer_info[i];
+> -       tx_desc = IXGBE_TX_DESC(tx_ring, i);
+> -       i -= tx_ring->count;
+> +       while (likely(ntc != ntu && budget)) {
 
-I admit that I looked at this only because I found it hard to believe that the 
-collective wisdom of the list would have missed the usage of "=" instead of 
-"|=". At least that test was passed. :)
+I would say you can get rid of budget entirely. It was only really
+needed for the regular Tx case where you can have multiple CPUs
+feeding a single Tx queue and causing a stall. Since we have a 1:1
+mapping we should never have more than the Rx budget worth of packets
+to really process. In addition we can only make one pass through the
+ring since the ntu value is not updated while running the loop.
 
-Larry
+> +               union ixgbe_adv_tx_desc *tx_desc;
+> +               struct ixgbe_tx_buffer *tx_bi;
+> +
+> +               tx_desc = IXGBE_TX_DESC(tx_ring, ntc);
+>
+> -       do {
+>                 if (!(tx_desc->wb.status & cpu_to_le32(IXGBE_TXD_STAT_DD)))
+>                         break;
+>
+> +               tx_bi = &tx_ring->tx_buffer_info[ntc];
 
+Please don't move this logic into the loop. We were intentionally
+processing this outside of the loop once and then just doing the
+increments because it is faster that way. It takes several operations
+to compute tx_bi based on ntc, whereas just incrementing is a single
+operation.
+
+>                 total_bytes += tx_bi->bytecount;
+>                 total_packets += tx_bi->gso_segs;
+>
+> @@ -659,24 +660,15 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
+>
+>                 tx_bi->xdpf = NULL;
+>
+> -               tx_bi++;
+> -               tx_desc++;
+> -               i++;
+> -               if (unlikely(!i)) {
+> -                       i -= tx_ring->count;
+
+So these two lines can probably just be replaced by:
+if (unlikely(ntc == tx_ring->count)) {
+        ntc = 0;
+
+> -                       tx_bi = tx_ring->tx_buffer_info;
+> -                       tx_desc = IXGBE_TX_DESC(tx_ring, 0);
+> -               }
+> -
+> -               /* issue prefetch for next Tx descriptor */
+> -               prefetch(tx_desc);
+
+Did you just drop the prefetch? You are changing way too much with
+this patch. All you should need to do is replace i with ntc, replace
+the "do {" with "while (ntc != ntu) {", and remove the while at the
+end.
+
+> +               ntc++;
+> +               if (unlikely(ntc == tx_ring->count))
+> +                       ntc = 0;
+>
+>                 /* update budget accounting */
+>                 budget--;
+> -       } while (likely(budget));
+
+As I stated earlier, budget can be removed entirely.
+
+> +       }
+>
+> -       i += tx_ring->count;
+> -       tx_ring->next_to_clean = i;
+> +       tx_ring->next_to_clean = ntc;
+>
+>         u64_stats_update_begin(&tx_ring->syncp);
+>         tx_ring->stats.bytes += total_bytes;
+> --
+> 2.17.1
+>
