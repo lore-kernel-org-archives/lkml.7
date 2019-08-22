@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CD0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23F0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38889233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73FFF233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494034;
-	bh=Oh7XQow2ZDNdqQQwh8d/ZYTxfDgUlpgZcT0J10Y3w+Q=;
+	s=default; t=1566494041;
+	bh=3A6m9fMUKPW0uA/L4zOoMyYo00AiR3KuJVo9+xKS1CU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uBKMWmBARzkPKapLGK7CJ2WBvZlkrfqYsYrY0UJDyYu0pQ1sRfqIewGBba+I/sLY4
-	 8seDgKhKMLt0hCEQamxshAHm65chbq0r3i1YU/KUybkkYB2ZJmGYQdf1QrB4fOEgmx
-	 MAmIK9lelpCL6NpWMG3QUl4jMBx92a0QM9H4XCWg=
+	b=rw9sFZLhLoDQmkaQkEhz67TRu8WQQtEZpTOeZya0Ft0mYi+oj2HXNHHbzHAibnPSX
+	 p2jZZ5tmNXRuj3TexSD9wXUbLxO/Zv1fCCE+JQCOZ6Q+8pTGn9wMoGixyFOlbC0TLY
+	 WqovLLxURZI9tMmx1c+aN5AWiPvyCAtjcFlEQUUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391030AbfHVRNx (ORCPT
+        id S2389396AbfHVRN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:13:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59022 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:13:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390587AbfHVRI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:57 -0400
+        id S2390574AbfHVRI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:56 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 862F923406;
-        Thu, 22 Aug 2019 17:08:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C23023406;
+        Thu, 22 Aug 2019 17:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493736;
-        bh=Oh7XQow2ZDNdqQQwh8d/ZYTxfDgUlpgZcT0J10Y3w+Q=;
+        s=default; t=1566493735;
+        bh=3A6m9fMUKPW0uA/L4zOoMyYo00AiR3KuJVo9+xKS1CU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTyhZO5I4a1If+IYHs7K/X+0/SsqlilrOcFjkVG/78MydhTftB+nSOxA5yyZ1UXJ7
-         nuwOQDhsYj2hNmGkCc/Seq1MSDZjS+lfLj7tCb5sRyRNd6ZAYOLnGlUu1qS/vch8+1
-         g0XSsHj6otWcstpme6t/TYKdykdxqTrXNvTrOh0c=
+        b=V9RDPz/1wAmFIEaQl2NhgCSPMk5Mju20gZmfQ552c+YfSy7wbYrS304Tjv/w98rP+
+         1tTvEEMxrVQC08cE+nFAKg/yZIU858ifFo2jsfr06XE5QkJG2x8VrA0eYDT92d6gX+
+         cQaWCS0NFB76j8hMYU0c2F8gZXhkm+ypaK60VeDA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gal Pressman <galpress@amazon.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
+Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 078/135] RDMA/restrack: Track driver QP types in resource tracker
-Date:   Thu, 22 Aug 2019 13:07:14 -0400
-Message-Id: <20190822170811.13303-79-sashal@kernel.org>
+Subject: [PATCH 5.2 075/135] arm64/mm: fix variable 'tag' set but not used
+Date:   Thu, 22 Aug 2019 13:07:11 -0400
+Message-Id: <20190822170811.13303-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,51 +64,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gal Pressman <galpress@amazon.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit 52e0a118a20308dd6aa531e20a5ab5907d2264c8 ]
+[ Upstream commit 7732d20a160c76006c7fe7bca5178aea6af1d2e8 ]
 
-The check for QP type different than XRC has excluded driver QP
-types from the resource tracker.
-As a result, "rdma resource show" user command would not show opened
-driver QPs which does not reflect the real state of the system.
+When CONFIG_KASAN_SW_TAGS=n, set_tag() is compiled away. GCC throws a
+warning,
 
-Check QP type explicitly instead of assuming enum values/ordering.
+mm/kasan/common.c: In function '__kasan_kmalloc':
+mm/kasan/common.c:464:5: warning: variable 'tag' set but not used
+[-Wunused-but-set-variable]
+  u8 tag = 0xff;
+     ^~~
 
-Fixes: 40909f664d27 ("RDMA/efa: Add EFA verbs implementation")
-Signed-off-by: Gal Pressman <galpress@amazon.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20190801104354.11417-1-galpress@amazon.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+Fix it by making __tag_set() a static inline function the same as
+arch_kasan_set_tag() in mm/kasan/kasan.h for consistency because there
+is a macro in arch/arm64/include/asm/kasan.h,
+
+ #define arch_kasan_set_tag(addr, tag) __tag_set(addr, tag)
+
+However, when CONFIG_DEBUG_VIRTUAL=n and CONFIG_SPARSEMEM_VMEMMAP=y,
+page_to_virt() will call __tag_set() with incorrect type of a
+parameter, so fix that as well. Also, still let page_to_virt() return
+"void *" instead of "const void *", so will not need to add a similar
+cast in lowmem_page_address().
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/core_priv.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/memory.h | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/core/core_priv.h b/drivers/infiniband/core/core_priv.h
-index ff40a450b5d28..ff9e0d7fb4f31 100644
---- a/drivers/infiniband/core/core_priv.h
-+++ b/drivers/infiniband/core/core_priv.h
-@@ -292,7 +292,9 @@ static inline struct ib_qp *_ib_create_qp(struct ib_device *dev,
- 					  struct ib_udata *udata,
- 					  struct ib_uobject *uobj)
- {
-+	enum ib_qp_type qp_type = attr->qp_type;
- 	struct ib_qp *qp;
-+	bool is_xrc;
+diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+index b7ba75809751e..fb04f10a78ab3 100644
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -210,7 +210,11 @@ extern u64			vabits_user;
+ #define __tag_reset(addr)	untagged_addr(addr)
+ #define __tag_get(addr)		(__u8)((u64)(addr) >> 56)
+ #else
+-#define __tag_set(addr, tag)	(addr)
++static inline const void *__tag_set(const void *addr, u8 tag)
++{
++	return addr;
++}
++
+ #define __tag_reset(addr)	(addr)
+ #define __tag_get(addr)		0
+ #endif
+@@ -301,8 +305,8 @@ static inline void *phys_to_virt(phys_addr_t x)
+ #define page_to_virt(page)	({					\
+ 	unsigned long __addr =						\
+ 		((__page_to_voff(page)) | PAGE_OFFSET);			\
+-	unsigned long __addr_tag =					\
+-		 __tag_set(__addr, page_kasan_tag(page));		\
++	const void *__addr_tag =					\
++		__tag_set((void *)__addr, page_kasan_tag(page));	\
+ 	((void *)__addr_tag);						\
+ })
  
- 	if (!dev->ops.create_qp)
- 		return ERR_PTR(-EOPNOTSUPP);
-@@ -310,7 +312,8 @@ static inline struct ib_qp *_ib_create_qp(struct ib_device *dev,
- 	 * and more importantly they are created internaly by driver,
- 	 * see mlx5 create_dev_resources() as an example.
- 	 */
--	if (attr->qp_type < IB_QPT_XRC_INI) {
-+	is_xrc = qp_type == IB_QPT_XRC_INI || qp_type == IB_QPT_XRC_TGT;
-+	if ((qp_type < IB_QPT_MAX && !is_xrc) || qp_type == IB_QPT_DRIVER) {
- 		qp->res.type = RDMA_RESTRACK_QP;
- 		if (uobj)
- 			rdma_restrack_uadd(&qp->res);
 -- 
 2.20.1
 
