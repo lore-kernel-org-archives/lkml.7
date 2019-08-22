@@ -2,105 +2,96 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D6DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575EBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1B621743
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566480941;
-	bh=f4Shi7OJbAQFddQCcIcON3P7HQpCrzkyUrHEv2JczA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JjN5FtFfTEVU/bOftNZnhixb/DGLW2GfLriHVkJdVUJ1AbIcPxThEW0/Lo+L/42Ue
-	 R+iKIpTkorMW9L01eEfIDc/tGOWAIU4rd7pmpPcxssFZW7fW6INEIZHaQLbj1vMF1c
-	 ClZa3dfBQMHTRWPzM36INgsnVHoJIyWqlEDglmOI=
+	by mail.kernel.org (Postfix) with ESMTP id 36F1021743
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388815AbfHVNfk (ORCPT
+        id S2389046AbfHVNgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:35:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfHVNfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:35:40 -0400
-Received: from localhost (unknown [12.166.174.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E407A21743;
-        Thu, 22 Aug 2019 13:35:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566480939;
-        bh=f4Shi7OJbAQFddQCcIcON3P7HQpCrzkyUrHEv2JczA0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iO6wEfmf+gQ7nOlKfwuyFjU5jeVI2rZnSgOeM16Ti0I2n+JOS+OOymdFz46oOsFdJ
-         FFeIclTryQIqpryLiAElcVWvluKx8e8BAxk5GG4v9rPWJUbxFnRXsKkL2+teb9YrI1
-         ERMaC6zvC664/tiaAiwM8qWYQXDDsSkjQ1LBVVRU=
-Date:   Thu, 22 Aug 2019 06:35:38 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
-        Eric Biggers <ebiggers@kernel.org>
-Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
-Message-ID: <20190822133538.GA16793@kroah.com>
-References: <20190820222403.GB8120@kroah.com>
- <201908220959.x7M9xP8r011133@www262.sakura.ne.jp>
+        Thu, 22 Aug 2019 09:36:55 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:50595 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfHVNgz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 09:36:55 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id BDE321C000D;
+        Thu, 22 Aug 2019 13:36:50 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 15:36:49 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Ran Bi <ran.bi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        YT Shen <yt.shen@mediatek.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Flora Fu <flora.fu@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
+Message-ID: <20190822133649.GT27031@piout.net>
+References: <20190801110122.26834-1-ran.bi@mediatek.com>
+ <20190801110122.26834-3-ran.bi@mediatek.com>
+ <20190820201744.GZ3545@piout.net>
+ <1566477254.12318.41.camel@mhfsdcap03>
+ <20190822124628.GS27031@piout.net>
+ <1566480361.12318.50.camel@mhfsdcap03>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201908220959.x7M9xP8r011133@www262.sakura.ne.jp>
+In-Reply-To: <1566480361.12318.50.camel@mhfsdcap03>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 06:59:25PM +0900, Tetsuo Handa wrote:
-> Tetsuo Handa wrote:
-> > Greg Kroah-Hartman wrote:
-> > > Oh, nice!  This shouldn't break anything that is assuming that the read
-> > > will complete before a signal is delivered, right?
-> > >
-> > > I know userspace handling of "short" reads is almost always not there...
+On 22/08/2019 21:26:01+0800, Ran Bi wrote:
+> On Thu, 2019-08-22 at 14:46 +0200, Alexandre Belloni wrote:
+> > On 22/08/2019 20:34:14+0800, Ran Bi wrote:
+> > > > > +	/* RTC need POWERKEY1/2 match, then goto normal work mode */
+> > > > > +	mt2712_writel(rtc, MT2712_POWERKEY1, MT2712_POWERKEY1_KEY);
+> > > > > +	mt2712_writel(rtc, MT2712_POWERKEY2, MT2712_POWERKEY2_KEY);
+> > > > 
+> > > > This should be written when setting the time after power was lost.
+> > > > 
+> > > 
+> > > I suppose we can move this into mt2712_rtc_read_time function's "if
+> > > (p1 != MT2712_POWERKEY1_KEY || p2 != MT2712_POWERKEY2_KEY)" condition
+> > > which will be added at next patch. We need additional flag to mark this
+> > > condition or another if condition in mt2712_rtc_set_time fucntion if we
+> > > put these code in mt2712_rtc_set_time function.
+> > > 
 > > 
-> > Since this check will give up upon SIGKILL, userspace won't be able to see
-> > the return value from read(). Thus, returning 0 upon SIGKILL will be safe. ;-)
-> > Maybe we also want to add cond_resched()...
-> > 
-> > By the way, do we want similar check on write_mem() side?
-> > If aborting "write to /dev/mem" upon SIGKILL (results in partial write) is
-> > unexpected, we might want to ignore SIGKILL for write_mem() case.
-> > But copying data from killed threads (especially when killed by OOM killer
-> > and userspace memory is reclaimed by OOM reaper before write_mem() returns)
-> > would be after all unexpected. Then, it might be preferable to check SIGKILL
-> > on write_mem() side...
+> > It is fine to test both in read_time and in set_time.
 > > 
 > 
-> Ha, ha. syzbot reported the same problem using write_mem().
-> https://syzkaller.appspot.com/text?tag=CrashLog&x=1018055a600000
-> We want fatal_signal_pending() check on both sides.
-
-Ok, want to send a patch for that?
-
-And does anything use /dev/mem anymore?  I think X stopped using it a
-long time ago.
-
-> By the way, write_mem() worries me whether there is possibility of replacing
-> kernel code/data with user-defined memory data supplied from userspace.
-> If write_mem() were by chance replaced with code that does
+> Do you mean that we can test powerkey and then set powerkey both in
+> read_time and in set_time?
 > 
->    while (1);
-> 
-> we won't be able to return from write_mem() even if we added fatal_signal_pending() check.
-> Ditto for replacing local variables with unexpected values...
 
-I'm sorry, I don't really understand what you mean here, but I haven't
-had my morning coffee...  Any hints as to an example?
+I mean that can test in read_time and test and set in set_time
 
-thanks,
 
-greg k-h
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
