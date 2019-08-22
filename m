@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 828EAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBB2C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F67E23400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58CD8233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:34:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387486AbfHVJeh (ORCPT
+        id S1732010AbfHVJen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:34:37 -0400
-Received: from shell.v3.sk ([90.176.6.54]:35969 "EHLO shell.v3.sk"
+        Thu, 22 Aug 2019 05:34:43 -0400
+Received: from shell.v3.sk ([90.176.6.54]:35981 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731672AbfHVJeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:34:36 -0400
+        id S2387483AbfHVJel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:34:41 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id C80BDD749F;
-        Thu, 22 Aug 2019 11:34:32 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id 41370D755A;
+        Thu, 22 Aug 2019 11:34:36 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id QccKzYIIqiku; Thu, 22 Aug 2019 11:33:53 +0200 (CEST)
+        with ESMTP id o9Ang9bBG3yQ; Thu, 22 Aug 2019 11:33:59 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 1260CD755B;
+        by zimbra.v3.sk (Postfix) with ESMTP id 6650ED755C;
         Thu, 22 Aug 2019 11:33:06 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id lMDnA7AaNIck; Thu, 22 Aug 2019 11:33:01 +0200 (CEST)
+        with ESMTP id B8g1LW0JxeXx; Thu, 22 Aug 2019 11:33:01 +0200 (CEST)
 Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 8E992D756D;
+        by zimbra.v3.sk (Postfix) with ESMTPSA id D92BFD756F;
         Thu, 22 Aug 2019 11:26:52 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Olof Johansson <olof@lixom.net>
@@ -48,9 +48,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 19/20] phy: phy-mmp3-usb: add a new driver
-Date:   Thu, 22 Aug 2019 11:26:42 +0200
-Message-Id: <20190822092643.593488-20-lkundrak@v3.sk>
+Subject: [PATCH v2 20/20] ARM: dts: mmp3: Add MMP3 SoC dts file
+Date:   Thu, 22 Aug 2019 11:26:43 +0200
+Message-Id: <20190822092643.593488-21-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190822092643.593488-1-lkundrak@v3.sk>
 References: <20190822092643.593488-1-lkundrak@v3.sk>
@@ -61,370 +61,556 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the USB2 PHY as found on the Marvell MMP3 SoC. Based on Marvell G=
-PL
-release.
-
-While at that, also add a MAINTAINERS entry including the other MMP PHY
-driver.
+Describes most of the hardware found on Marvell MMP3, aka PXA2128, aka
+Armada 620. Missing bits are the LCD controller, HSIC controllers,
+Audio and GPU. Will be completed once bindings and drivers settle.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- MAINTAINERS                        |   7 +
- drivers/phy/marvell/Kconfig        |  11 ++
- drivers/phy/marvell/Makefile       |   1 +
- drivers/phy/marvell/phy-mmp3-usb.c | 291 +++++++++++++++++++++++++++++
- 4 files changed, 310 insertions(+)
- create mode 100644 drivers/phy/marvell/phy-mmp3-usb.c
+ arch/arm/boot/dts/mmp3.dtsi | 534 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 534 insertions(+)
+ create mode 100644 arch/arm/boot/dts/mmp3.dtsi
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 014f533d5aff8..a18e87a16623c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10798,6 +10798,13 @@ F:	arch/arm/boot/dts/mmp*
- F:	arch/arm/mach-mmp/
- F:	linux/soc/mmp/
-=20
-+MMP USB PHY DRIVERS
-+R:	Lubomir Rintel <lkundrak@v3.sk>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	drivers/phy/marvell/phy-mmp3-usb.c
-+F:	drivers/phy/marvell/phy-pxa-usb.c
-+
- MMU GATHER AND TLB INVALIDATION
- M:	Will Deacon <will@kernel.org>
- M:	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-diff --git a/drivers/phy/marvell/Kconfig b/drivers/phy/marvell/Kconfig
-index 0e1642419c0bf..d33ef35b3e51b 100644
---- a/drivers/phy/marvell/Kconfig
-+++ b/drivers/phy/marvell/Kconfig
-@@ -102,3 +102,14 @@ config PHY_PXA_USB
- 	  The PHY driver will be used by Marvell udc/ehci/otg driver.
-=20
- 	  To compile this driver as a module, choose M here.
-+
-+config PHY_MMP3_USB
-+	tristate "Marvell MMP3 USB PHY Driver"
-+	depends on MACH_MMP3_DT || COMPILE_TEST
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support Marvell MMP3 USB PHY driver for Marvell
-+	  SoC. This driver will do the PHY initialization and shutdown.
-+	  The PHY driver will be used by Marvell udc/ehci/otg driver.
-+
-+	  To compile this driver as a module, choose M here.
-diff --git a/drivers/phy/marvell/Makefile b/drivers/phy/marvell/Makefile
-index 434eb9ca6cc3f..5a106b1549f41 100644
---- a/drivers/phy/marvell/Makefile
-+++ b/drivers/phy/marvell/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+=3D phy-armada375-usb2.o
- obj-$(CONFIG_PHY_BERLIN_SATA)		+=3D phy-berlin-sata.o
- obj-$(CONFIG_PHY_BERLIN_USB)		+=3D phy-berlin-usb.o
-+obj-$(CONFIG_PHY_MMP3_USB)		+=3D phy-mmp3-usb.o
- obj-$(CONFIG_PHY_MVEBU_A3700_COMPHY)	+=3D phy-mvebu-a3700-comphy.o
- obj-$(CONFIG_PHY_MVEBU_A3700_UTMI)	+=3D phy-mvebu-a3700-utmi.o
- obj-$(CONFIG_PHY_MVEBU_A38X_COMPHY)	+=3D phy-armada38x-comphy.o
-diff --git a/drivers/phy/marvell/phy-mmp3-usb.c b/drivers/phy/marvell/phy=
--mmp3-usb.c
+diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
 new file mode 100644
-index 0000000000000..499869595a582
+index 0000000000000..5a6275257ebdd
 --- /dev/null
-+++ b/drivers/phy/marvell/phy-mmp3-usb.c
-@@ -0,0 +1,291 @@
-+// SPDX-License-Identifier: GPL-2.0
++++ b/arch/arm/boot/dts/mmp3.dtsi
+@@ -0,0 +1,534 @@
++// SPDX-License-Identifier: GPL-2.0+ OR MIT
 +/*
-+ * Copyright (C) 2011 Marvell International Ltd. All rights reserved.
-+ * Copyright (C) 2018,2019 Lubomir Rintel <lkundrak@v3.sk>
++ *  Copyright (C) 2019 Lubomir Rintel <lkundrak@v3.sk>
 + */
 +
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/soc/mmp/cputype.h>
++#include <dt-bindings/clock/marvell,mmp2.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
 +
-+#define USB2_PLL_REG0		0x4
-+#define USB2_PLL_REG1		0x8
-+#define USB2_TX_REG0		0x10
-+#define USB2_TX_REG1		0x14
-+#define USB2_TX_REG2		0x18
-+#define USB2_RX_REG0		0x20
-+#define USB2_RX_REG1		0x24
-+#define USB2_RX_REG2		0x28
-+#define USB2_ANA_REG0		0x30
-+#define USB2_ANA_REG1		0x34
-+#define USB2_ANA_REG2		0x38
-+#define USB2_DIG_REG0		0x3C
-+#define USB2_DIG_REG1		0x40
-+#define USB2_DIG_REG2		0x44
-+#define USB2_DIG_REG3		0x48
-+#define USB2_TEST_REG0		0x4C
-+#define USB2_TEST_REG1		0x50
-+#define USB2_TEST_REG2		0x54
-+#define USB2_CHARGER_REG0	0x58
-+#define USB2_OTG_REG0		0x5C
-+#define USB2_PHY_MON0		0x60
-+#define USB2_RESETVE_REG0	0x64
-+#define USB2_ICID_REG0		0x78
-+#define USB2_ICID_REG1		0x7C
++/ {
++	#address-cells =3D <1>;
++	#size-cells =3D <1>;
 +
-+/* USB2_PLL_REG0 */
++	aliases {
++		serial0 =3D &uart1;
++		serial1 =3D &uart2;
++		serial2 =3D &uart3;
++		serial3 =3D &uart4;
++	};
 +
-+/* This is for Ax stepping */
-+#define USB2_PLL_FBDIV_SHIFT_MMP3		0
-+#define USB2_PLL_FBDIV_MASK_MMP3		(0xFF << 0)
++	cpus {
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++		enable-method =3D "marvell,mmp3-smp";
 +
-+#define USB2_PLL_REFDIV_SHIFT_MMP3		8
-+#define USB2_PLL_REFDIV_MASK_MMP3		(0xF << 8)
++		cpu@0 {
++			compatible =3D "marvell,pj4b";
++			device_type =3D "cpu";
++			next-level-cache =3D <&l2>;
++			reg =3D <0>;
++		};
 +
-+#define USB2_PLL_VDD12_SHIFT_MMP3		12
-+#define USB2_PLL_VDD18_SHIFT_MMP3		14
++		cpu@1 {
++			compatible =3D "marvell,pj4b";
++			device_type =3D "cpu";
++			next-level-cache =3D <&l2>;
++			reg =3D <1>;
++		};
++	};
 +
-+/* This is for B0 stepping */
-+#define USB2_PLL_FBDIV_SHIFT_MMP3_B0		0
-+#define USB2_PLL_REFDIV_SHIFT_MMP3_B0		9
-+#define USB2_PLL_VDD18_SHIFT_MMP3_B0		14
-+#define USB2_PLL_FBDIV_MASK_MMP3_B0		0x01FF
-+#define USB2_PLL_REFDIV_MASK_MMP3_B0		0x3E00
++	soc {
++		#address-cells =3D <1>;
++		#size-cells =3D <1>;
++		compatible =3D "simple-bus";
++		interrupt-parent =3D <&gic>;
++		ranges;
 +
-+#define USB2_PLL_CAL12_SHIFT_MMP3		0
-+#define USB2_PLL_CALI12_MASK_MMP3		(0x3 << 0)
++		axi@d4200000 {
++			compatible =3D "simple-bus";
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			reg =3D <0xd4200000 0x00200000>;
++			ranges;
 +
-+#define USB2_PLL_VCOCAL_START_SHIFT_MMP3	2
++			interrupt-controller@d4282000 {
++				compatible =3D "marvell,mmp3-intc";
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0xd4282000 0x1000>,
++				      <0xd4284000 0x100>;
++				mrvl,intc-nr-irqs =3D <64>;
++			};
 +
-+#define USB2_PLL_KVCO_SHIFT_MMP3		4
-+#define USB2_PLL_KVCO_MASK_MMP3			(0x7<<4)
++			pmic_mux: interrupt-controller@d4282150 {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x150 0x4>, <0x168 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <4>;
++			};
 +
-+#define USB2_PLL_ICP_SHIFT_MMP3			8
-+#define USB2_PLL_ICP_MASK_MMP3			(0x7<<8)
++			rtc_mux: interrupt-controller@d4282154 {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x154 0x4>, <0x16c 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <2>;
++			};
 +
-+#define USB2_PLL_LOCK_BYPASS_SHIFT_MMP3		12
++			hsi3_mux: interrupt-controller@d42821bc {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x1bc 0x4>, <0x1a4 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <3>;
++			};
 +
-+#define USB2_PLL_PU_PLL_SHIFT_MMP3		13
-+#define USB2_PLL_PU_PLL_MASK			(0x1 << 13)
++			gpu_mux: interrupt-controller@d42821c0 {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x1c0 0x4>, <0x1a8 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <3>;
++			};
 +
-+#define USB2_PLL_READY_MASK_MMP3		(0x1 << 15)
++			twsi_mux: interrupt-controller@d4282158 {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x158 0x4>, <0x170 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <5>;
++			};
 +
-+/* USB2_TX_REG0 */
-+#define USB2_TX_IMPCAL_VTH_SHIFT_MMP3		8
-+#define USB2_TX_IMPCAL_VTH_MASK_MMP3		(0x7 << 8)
++			hsi2_mux: interrupt-controller@d42821c4 {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x1c4 0x4>, <0x1ac 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <2>;
++			};
 +
-+#define USB2_TX_RCAL_START_SHIFT_MMP3		13
++			dxo_mux: interrupt-controller@d42821c8 {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x1c8 0x4>, <0x1b0 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <2>;
++			};
 +
-+/* USB2_TX_REG1 */
-+#define USB2_TX_CK60_PHSEL_SHIFT_MMP3		0
-+#define USB2_TX_CK60_PHSEL_MASK_MMP3		(0xf << 0)
++			misc1_mux: interrupt-controller@d428215c {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x15c 0x4>, <0x174 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <31>;
++			};
 +
-+#define USB2_TX_AMP_SHIFT_MMP3			4
-+#define USB2_TX_AMP_MASK_MMP3			(0x7 << 4)
++			ci_mux: interrupt-controller@d42821cc {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x1cc 0x4>, <0x1b4 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <2>;
++			};
 +
-+#define USB2_TX_VDD12_SHIFT_MMP3		8
-+#define USB2_TX_VDD12_MASK_MMP3			(0x3 << 8)
++			ssp_mux: interrupt-controller@d4282160 {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x160 0x4>, <0x178 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <2>;
++			};
 +
-+/* USB2_TX_REG2 */
-+#define USB2_TX_DRV_SLEWRATE_SHIFT		10
++			hsi1_mux: interrupt-controller@d4282184 {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x184 0x4>, <0x17c 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <4>;
++			};
 +
-+/* USB2_RX_REG0 */
-+#define USB2_RX_SQ_THRESH_SHIFT_MMP3		4
-+#define USB2_RX_SQ_THRESH_MASK_MMP3		(0xf << 4)
++			misc2_mux: interrupt-controller@d4282188 {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x188 0x4>, <0x180 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <20>;
++			};
 +
-+#define USB2_RX_SQ_LENGTH_SHIFT_MMP3		10
-+#define USB2_RX_SQ_LENGTH_MASK_MMP3		(0x3 << 10)
++			hsi0_mux: interrupt-controller@d42821d0 {
++				compatible =3D "mrvl,mmp2-mux-intc";
++				interrupts =3D <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-controller;
++				#interrupt-cells =3D <1>;
++				reg =3D <0x1d0 0x4>, <0x1b8 0x4>;
++				reg-names =3D "mux status", "mux mask";
++				mrvl,intc-nr-irqs =3D <5>;
++			};
 +
-+/* USB2_ANA_REG1*/
-+#define USB2_ANA_PU_ANA_SHIFT_MMP3		14
++			usb_otg_phy0: usb-otg-phy@d4207000 {
++				compatible =3D "marvell,mmp3-usb-phy";
++				reg =3D <0xd4207000 0x40>;
++				#phy-cells =3D <0>;
++				status =3D "disabled";
++			};
 +
-+/* USB2_OTG_REG0 */
-+#define USB2_OTG_PU_OTG_SHIFT_MMP3		3
++			usb_otg0: usb-otg@d4208000 {
++				compatible =3D "marvell,pxau2o-ehci";
++				reg =3D <0xd4208000 0x200>;
++				interrupts =3D <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&soc_clocks MMP2_CLK_USB>;
++				clock-names =3D "USBCLK";
++				phys =3D <&usb_otg_phy0>;
++				phy-names =3D "usb";
++				status =3D "disabled";
++			};
 +
-+struct mmp3_usb_phy {
-+	struct phy *phy;
-+	void __iomem *base;
++			mmc1: mmc@d4280000 {
++				compatible =3D "mrvl,pxav3-mmc";
++				reg =3D <0xd4280000 0x120>;
++				clocks =3D <&soc_clocks MMP2_CLK_SDH0>;
++				clock-names =3D "io";
++				interrupts =3D <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++				status =3D "disabled";
++			};
++
++			mmc2: mmc@d4280800 {
++				compatible =3D "mrvl,pxav3-mmc";
++				reg =3D <0xd4280800 0x120>;
++				clocks =3D <&soc_clocks MMP2_CLK_SDH1>;
++				clock-names =3D "io";
++				interrupts =3D <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
++				status =3D "disabled";
++			};
++
++			mmc3: mmc@d4281000 {
++				compatible =3D "mrvl,pxav3-mmc";
++				reg =3D <0xd4281000 0x120>;
++				clocks =3D <&soc_clocks MMP2_CLK_SDH2>;
++				clock-names =3D "io";
++				interrupts =3D <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
++				status =3D "disabled";
++			};
++
++			mmc4: mmc@d4281800 {
++				compatible =3D "mrvl,pxav3-mmc";
++				reg =3D <0xd4281800 0x120>;
++				clocks =3D <&soc_clocks MMP2_CLK_SDH3>;
++				clock-names =3D "io";
++				interrupts =3D <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
++				status =3D "disabled";
++			};
++
++			camera0: camera@d420a000 {
++				compatible =3D "marvell,mmp2-ccic";
++				reg =3D <0xd420a000 0x800>;
++				interrupts =3D <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&soc_clocks MMP2_CLK_CCIC0>;
++				clock-names =3D "axi";
++				#clock-cells =3D <0>;
++				clock-output-names =3D "mclk";
++				status =3D "disabled";
++			};
++
++			camera1: camera@d420a800 {
++				compatible =3D "marvell,mmp2-ccic";
++				reg =3D <0xd420a800 0x800>;
++				interrupts =3D <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&soc_clocks MMP2_CLK_CCIC1>;
++				clock-names =3D "axi";
++				#clock-cells =3D <0>;
++				clock-output-names =3D "mclk";
++				status =3D "disabled";
++			};
++		};
++
++		apb@d4000000 {
++			compatible =3D "simple-bus";
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			reg =3D <0xd4000000 0x00200000>;
++			ranges;
++
++			timer: timer@d4014000 {
++				compatible =3D "mrvl,mmp-timer";
++				reg =3D <0xd4014000 0x100>;
++				interrupts =3D <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&soc_clocks MMP2_CLK_TIMER>;
++			};
++
++			uart1: uart@d4030000 {
++				compatible =3D "mrvl,mmp-uart";
++				reg =3D <0xd4030000 0x1000>;
++				interrupts =3D <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&soc_clocks MMP2_CLK_UART0>;
++				resets =3D <&soc_clocks MMP2_CLK_UART0>;
++				reg-shift =3D <2>;
++				status =3D "disabled";
++			};
++
++			uart2: uart@d4017000 {
++				compatible =3D "mrvl,mmp-uart";
++				reg =3D <0xd4017000 0x1000>;
++				interrupts =3D <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&soc_clocks MMP2_CLK_UART1>;
++				resets =3D <&soc_clocks MMP2_CLK_UART1>;
++				reg-shift =3D <2>;
++				status =3D "disabled";
++			};
++
++			uart3: uart@d4018000 {
++				compatible =3D "mrvl,mmp-uart";
++				reg =3D <0xd4018000 0x1000>;
++				interrupts =3D <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&soc_clocks MMP2_CLK_UART2>;
++				resets =3D <&soc_clocks MMP2_CLK_UART2>;
++				reg-shift =3D <2>;
++				status =3D "disabled";
++			};
++
++			uart4: uart@d4016000 {
++				compatible =3D "mrvl,mmp-uart";
++				reg =3D <0xd4016000 0x1000>;
++				interrupts =3D <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&soc_clocks MMP2_CLK_UART3>;
++				resets =3D <&soc_clocks MMP2_CLK_UART3>;
++				reg-shift =3D <2>;
++				status =3D "disabled";
++			};
++
++			gpio: gpio@d4019000 {
++				compatible =3D "marvell,mmp2-gpio";
++				#address-cells =3D <1>;
++				#size-cells =3D <1>;
++				reg =3D <0xd4019000 0x1000>;
++				gpio-controller;
++				#gpio-cells =3D <2>;
++				interrupts =3D <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names =3D "gpio_mux";
++				clocks =3D <&soc_clocks MMP2_CLK_GPIO>;
++				resets =3D <&soc_clocks MMP2_CLK_GPIO>;
++				interrupt-controller;
++				#interrupt-cells =3D <2>;
++				ranges;
++
++				gcb0: gpio@d4019000 {
++					reg =3D <0xd4019000 0x4>;
++				};
++
++				gcb1: gpio@d4019004 {
++					reg =3D <0xd4019004 0x4>;
++				};
++
++				gcb2: gpio@d4019008 {
++					reg =3D <0xd4019008 0x4>;
++				};
++
++				gcb3: gpio@d4019100 {
++					reg =3D <0xd4019100 0x4>;
++				};
++
++				gcb4: gpio@d4019104 {
++					reg =3D <0xd4019104 0x4>;
++				};
++
++				gcb5: gpio@d4019108 {
++					reg =3D <0xd4019108 0x4>;
++				};
++			};
++
++			twsi1: i2c@d4011000 {
++				compatible =3D "mrvl,mmp-twsi";
++				reg =3D <0xd4011000 0x1000>;
++				interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&soc_clocks MMP2_CLK_TWSI0>;
++				resets =3D <&soc_clocks MMP2_CLK_TWSI0>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				mrvl,i2c-fast-mode;
++				status =3D "disabled";
++			};
++
++			twsi2: i2c@d4031000 {
++				compatible =3D "mrvl,mmp-twsi";
++				reg =3D <0xd4031000 0x1000>;
++				interrupt-parent =3D <&twsi_mux>;
++				interrupts =3D <0>;
++				clocks =3D <&soc_clocks MMP2_CLK_TWSI1>;
++				resets =3D <&soc_clocks MMP2_CLK_TWSI1>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++
++			twsi3: i2c@d4032000 {
++				compatible =3D "mrvl,mmp-twsi";
++				reg =3D <0xd4032000 0x1000>;
++				interrupt-parent =3D <&twsi_mux>;
++				interrupts =3D <1>;
++				clocks =3D <&soc_clocks MMP2_CLK_TWSI2>;
++				resets =3D <&soc_clocks MMP2_CLK_TWSI2>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++
++			twsi4: i2c@d4033000 {
++				compatible =3D "mrvl,mmp-twsi";
++				reg =3D <0xd4033000 0x1000>;
++				interrupt-parent =3D <&twsi_mux>;
++				interrupts =3D <2>;
++				clocks =3D <&soc_clocks MMP2_CLK_TWSI3>;
++				resets =3D <&soc_clocks MMP2_CLK_TWSI3>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++
++
++			twsi5: i2c@d4033800 {
++				compatible =3D "mrvl,mmp-twsi";
++				reg =3D <0xd4033800 0x1000>;
++				interrupt-parent =3D <&twsi_mux>;
++				interrupts =3D <3>;
++				clocks =3D <&soc_clocks MMP2_CLK_TWSI4>;
++				resets =3D <&soc_clocks MMP2_CLK_TWSI4>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++
++			twsi6: i2c@d4034000 {
++				compatible =3D "mrvl,mmp-twsi";
++				reg =3D <0xd4034000 0x1000>;
++				interrupt-parent =3D <&twsi_mux>;
++				interrupts =3D <4>;
++				clocks =3D <&soc_clocks MMP2_CLK_TWSI5>;
++				resets =3D <&soc_clocks MMP2_CLK_TWSI5>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++
++			rtc: rtc@d4010000 {
++				compatible =3D "mrvl,mmp-rtc";
++				reg =3D <0xd4010000 0x1000>;
++				interrupts =3D <1 0>;
++				interrupt-names =3D "rtc 1Hz", "rtc alarm";
++				interrupt-parent =3D <&rtc_mux>;
++				clocks =3D <&soc_clocks MMP2_CLK_RTC>;
++				resets =3D <&soc_clocks MMP2_CLK_RTC>;
++				status =3D "disabled";
++			};
++
++			ssp1: spi@d4035000 {
++				compatible =3D "marvell,mmp2-ssp";
++				reg =3D <0xd4035000 0x1000>;
++				clocks =3D <&soc_clocks MMP2_CLK_SSP0>;
++				interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++
++			ssp2: spi@d4036000 {
++				compatible =3D "marvell,mmp2-ssp";
++				reg =3D <0xd4036000 0x1000>;
++				clocks =3D <&soc_clocks MMP2_CLK_SSP1>;
++				interrupts =3D <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++
++			ssp3: spi@d4037000 {
++				compatible =3D "marvell,mmp2-ssp";
++				reg =3D <0xd4037000 0x1000>;
++				clocks =3D <&soc_clocks MMP2_CLK_SSP2>;
++				interrupts =3D <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++
++			ssp4: spi@d4039000 {
++				compatible =3D "marvell,mmp2-ssp";
++				reg =3D <0xd4039000 0x1000>;
++				clocks =3D <&soc_clocks MMP2_CLK_SSP3>;
++				interrupts =3D <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++		};
++
++		l2: l2-cache-controller@d0020000 {
++			compatible =3D "marvell,tauros3-cache", "arm,pl310-cache";
++			reg =3D <0xd0020000 0x1000>;
++			cache-unified;
++			cache-level =3D <2>;
++		};
++
++		soc_clocks: clocks {
++			compatible =3D "marvell,mmp2-clock";
++			reg =3D <0xd4050000 0x1000>,
++			      <0xd4282800 0x400>,
++			      <0xd4015000 0x1000>;
++			reg-names =3D "mpmu", "apmu", "apbc";
++			#clock-cells =3D <1>;
++			#reset-cells =3D <1>;
++			#power-domain-cells =3D <1>;
++		};
++
++		snoop-control-unit@e0000000 {
++			compatible =3D "arm,arm11mp-scu";
++			reg =3D <0xe0000000 0x100>;
++		};
++
++		gic: interrupt-controller@e0001000 {
++			compatible =3D "arm,arm11mp-gic";
++			interrupt-controller;
++			#interrupt-cells =3D <3>;
++			reg =3D <0xe0001000 0x1000>,
++			      <0xe0000100 0x100>;
++		};
++
++		local-timer@e0000600 {
++			compatible =3D "arm,arm11mp-twd-timer";
++			interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
++						  IRQ_TYPE_EDGE_RISING)>;
++			reg =3D <0xe0000600 0x20>;
++		};
++
++		watchdog@2c000620 {
++			compatible =3D "arm,arm11mp-twd-wdt";
++			reg =3D <0xe0000620 0x20>;
++			interrupts =3D <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
++						  IRQ_TYPE_EDGE_RISING)>;
++		};
++	};
 +};
-+
-+static unsigned int u2o_get(void __iomem *base, unsigned int offset)
-+{
-+	return readl_relaxed(base + offset);
-+}
-+
-+static void u2o_set(void __iomem *base, unsigned int offset,
-+		unsigned int value)
-+{
-+	u32 reg;
-+
-+	reg =3D readl_relaxed(base + offset);
-+	reg |=3D value;
-+	writel_relaxed(reg, base + offset);
-+	readl_relaxed(base + offset);
-+}
-+
-+static void u2o_clear(void __iomem *base, unsigned int offset,
-+		unsigned int value)
-+{
-+	u32 reg;
-+
-+	reg =3D readl_relaxed(base + offset);
-+	reg &=3D ~value;
-+	writel_relaxed(reg, base + offset);
-+	readl_relaxed(base + offset);
-+}
-+
-+static int mmp3_usb_phy_init(struct phy *phy)
-+{
-+	struct mmp3_usb_phy *mmp3_usb_phy =3D phy_get_drvdata(phy);
-+	void __iomem *base =3D mmp3_usb_phy->base;
-+
-+	if (cpu_is_mmp3_a0()) {
-+		u2o_clear(base, USB2_PLL_REG0, (USB2_PLL_FBDIV_MASK_MMP3
-+			| USB2_PLL_REFDIV_MASK_MMP3));
-+		u2o_set(base, USB2_PLL_REG0,
-+			0xd << USB2_PLL_REFDIV_SHIFT_MMP3
-+			| 0xf0 << USB2_PLL_FBDIV_SHIFT_MMP3);
-+	} else if (cpu_is_mmp3_b0()) {
-+		u2o_clear(base, USB2_PLL_REG0, USB2_PLL_REFDIV_MASK_MMP3_B0
-+			| USB2_PLL_FBDIV_MASK_MMP3_B0);
-+		u2o_set(base, USB2_PLL_REG0,
-+			0xd << USB2_PLL_REFDIV_SHIFT_MMP3_B0
-+			| 0xf0 << USB2_PLL_FBDIV_SHIFT_MMP3_B0);
-+	} else {
-+		dev_err(&phy->dev, "unsupported silicon revision\n");
-+		return -ENODEV;
-+	}
-+
-+	u2o_clear(base, USB2_PLL_REG1, USB2_PLL_PU_PLL_MASK
-+		| USB2_PLL_ICP_MASK_MMP3
-+		| USB2_PLL_KVCO_MASK_MMP3
-+		| USB2_PLL_CALI12_MASK_MMP3);
-+	u2o_set(base, USB2_PLL_REG1, 1 << USB2_PLL_PU_PLL_SHIFT_MMP3
-+		| 1 << USB2_PLL_LOCK_BYPASS_SHIFT_MMP3
-+		| 3 << USB2_PLL_ICP_SHIFT_MMP3
-+		| 3 << USB2_PLL_KVCO_SHIFT_MMP3
-+		| 3 << USB2_PLL_CAL12_SHIFT_MMP3);
-+
-+	u2o_clear(base, USB2_TX_REG0, USB2_TX_IMPCAL_VTH_MASK_MMP3);
-+	u2o_set(base, USB2_TX_REG0, 2 << USB2_TX_IMPCAL_VTH_SHIFT_MMP3);
-+
-+	u2o_clear(base, USB2_TX_REG1, USB2_TX_VDD12_MASK_MMP3
-+		| USB2_TX_AMP_MASK_MMP3
-+		| USB2_TX_CK60_PHSEL_MASK_MMP3);
-+	u2o_set(base, USB2_TX_REG1, 3 << USB2_TX_VDD12_SHIFT_MMP3
-+		| 4 << USB2_TX_AMP_SHIFT_MMP3
-+		| 4 << USB2_TX_CK60_PHSEL_SHIFT_MMP3);
-+
-+	u2o_clear(base, USB2_TX_REG2, 3 << USB2_TX_DRV_SLEWRATE_SHIFT);
-+	u2o_set(base, USB2_TX_REG2, 2 << USB2_TX_DRV_SLEWRATE_SHIFT);
-+
-+	u2o_clear(base, USB2_RX_REG0, USB2_RX_SQ_THRESH_MASK_MMP3);
-+	u2o_set(base, USB2_RX_REG0, 0xa << USB2_RX_SQ_THRESH_SHIFT_MMP3);
-+
-+	u2o_set(base, USB2_ANA_REG1, 0x1 << USB2_ANA_PU_ANA_SHIFT_MMP3);
-+
-+	u2o_set(base, USB2_OTG_REG0, 0x1 << USB2_OTG_PU_OTG_SHIFT_MMP3);
-+
-+	return 0;
-+}
-+
-+static int mmp3_usb_phy_calibrate(struct phy *phy)
-+{
-+	struct mmp3_usb_phy *mmp3_usb_phy =3D phy_get_drvdata(phy);
-+	void __iomem *base =3D mmp3_usb_phy->base;
-+	int loops;
-+
-+	/*
-+	 * PLL VCO and TX Impedance Calibration Timing:
-+	 *
-+	 *                _____________________________________
-+	 * PU  __________|
-+	 *                        _____________________________
-+	 * VCOCAL START _________|
-+	 *                                 ___
-+	 * REG_RCAL_START ________________|   |________|_______
-+	 *               | 200us | 400us  | 40| 400us  | USB PHY READY
-+	 */
-+
-+	udelay(200);
-+	u2o_set(base, USB2_PLL_REG1, 1 << USB2_PLL_VCOCAL_START_SHIFT_MMP3);
-+	udelay(400);
-+	u2o_set(base, USB2_TX_REG0, 1 << USB2_TX_RCAL_START_SHIFT_MMP3);
-+	udelay(40);
-+	u2o_clear(base, USB2_TX_REG0, 1 << USB2_TX_RCAL_START_SHIFT_MMP3);
-+	udelay(400);
-+
-+	loops =3D 0;
-+	while ((u2o_get(base, USB2_PLL_REG1) & USB2_PLL_READY_MASK_MMP3) =3D=3D=
- 0) {
-+		mdelay(1);
-+		loops++;
-+		if (loops > 100) {
-+			dev_err(&phy->dev, "PLL_READY not set after 100mS.\n");
-+			return -ETIMEDOUT;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops mmp3_usb_phy_ops =3D {
-+	.init		=3D mmp3_usb_phy_init,
-+	.calibrate	=3D mmp3_usb_phy_calibrate,
-+	.owner		=3D THIS_MODULE,
-+};
-+
-+static const struct of_device_id mmp3_usb_phy_of_match[] =3D {
-+	{ .compatible =3D "marvell,mmp3-usb-phy", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, mmp3_usb_phy_of_match);
-+
-+static int mmp3_usb_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct resource *resource;
-+	struct mmp3_usb_phy *mmp3_usb_phy;
-+	struct phy_provider *provider;
-+
-+	mmp3_usb_phy =3D devm_kzalloc(dev, sizeof(*mmp3_usb_phy), GFP_KERNEL);
-+	if (!mmp3_usb_phy)
-+		return -ENOMEM;
-+
-+	resource =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mmp3_usb_phy->base =3D devm_ioremap_resource(dev, resource);
-+	if (IS_ERR(mmp3_usb_phy->base)) {
-+		dev_err(dev, "failed to remap PHY regs\n");
-+		return PTR_ERR(mmp3_usb_phy->base);
-+	}
-+
-+	mmp3_usb_phy->phy =3D devm_phy_create(dev, NULL, &mmp3_usb_phy_ops);
-+	if (IS_ERR(mmp3_usb_phy->phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(mmp3_usb_phy->phy);
-+	}
-+
-+	phy_set_drvdata(mmp3_usb_phy->phy, mmp3_usb_phy);
-+	provider =3D devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (IS_ERR(provider)) {
-+		dev_err(dev, "failed to register PHY provider\n");
-+		return PTR_ERR(provider);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver mmp3_usb_phy_driver =3D {
-+	.probe		=3D mmp3_usb_phy_probe,
-+	.driver		=3D {
-+		.name	=3D "mmp3-usb-phy",
-+		.of_match_table =3D mmp3_usb_phy_of_match,
-+	},
-+};
-+module_platform_driver(mmp3_usb_phy_driver);
-+
-+MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-+MODULE_DESCRIPTION("Marvell MMP3 USB PHY Driver");
-+MODULE_LICENSE("GPL v2");
 --=20
 2.21.0
 
