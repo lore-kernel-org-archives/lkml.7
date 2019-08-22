@@ -8,111 +8,130 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8955FC3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4FDBC3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6FA22DD3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93DE72339E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:43:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mc6wu6La"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSJhBF3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbfHVCmg (ORCPT
+        id S1730348AbfHVCnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 22:42:36 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46946 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbfHVCmf (ORCPT
+        Wed, 21 Aug 2019 22:43:46 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51478 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbfHVCnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 22:42:35 -0400
-Received: by mail-wr1-f65.google.com with SMTP id z1so3847707wru.13
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 19:42:34 -0700 (PDT)
+        Wed, 21 Aug 2019 22:43:46 -0400
+Received: by mail-wm1-f67.google.com with SMTP id k1so4072912wmi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 19:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TZTqUkxfZYE8+T40PWA8Sviu0JhKS/WcBoRu0Cn0BrM=;
-        b=mc6wu6La8/4N/vQ/oGhBjfkxaO0ZCMtFFiLDtkCyj7U5FVSV5+dN9NaY5PO9Il5wk5
-         TU3LAGPC6vYjU8+3nAVhF8ITJC6ap5ALHDs6MXIJ9VbYawneMwqAxE/I0Vzmw9Ou70fx
-         MhWbDwOFYVgHAeVoTodS4nb4F9gon/cnu85XusFz2tnUjLPE7Fg2TL/Xdvqf3QrnhTIP
-         CVDH6HLy4/aCWJJbj6CM+a2u3YcqxqFdFmC1gx05144uk1xPCEMyL6a36wYpPaoNmr6U
-         Aq11tSItE1YzqzBImzTNQe015vQK0I4J1yvAdhx4k8Yx94yMdNWhgriyMaxvTPhr+lr8
-         gMvQ==
+        bh=+2V9HhKKnOxcZwgG+smQxeIpzg5MY2WFsMF9dUz2ZWM=;
+        b=DSJhBF3Om5/KnpK+0LWyWxE8iGn6amDhoaCrc6WmWx+9OLDLwggvxVU9fYFk8iGW+C
+         r2LEowif2v/CyzooTyOh4UIyUjrXmBBMCR9llt2CoCGz+65AneozS1eJzxFdnB1jxqPt
+         UAO79ce9gqDDb7O511X3mihMdNPdeAV+dwUfNE1fp+5Lo2bFg09Ef8xSL4Ey7e/1dW7w
+         /vs3AKg7Jc4HkmrGxwWoGpYeKp0CcDrtUKvGbRckIjAmLrSbII/qGqgh3svbsDW1i6cb
+         o3q7PZDN9XyxJhTnhho44E5EptnAZ3rwRvPxdpPceedQ+PPVOsTzQEBrP97XeanaHMpC
+         aprA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TZTqUkxfZYE8+T40PWA8Sviu0JhKS/WcBoRu0Cn0BrM=;
-        b=ONClxmaAoluijO8rzFKHfpkb8lR62gpaaX5gyzJKpCvovsVEw/cyo3dYCtKUzTx9e3
-         20CiYki8AVzMslOHE6u092Qen4eOl2iMDMj1hncBUas8BX/XRgUjny/qrNJJ0JWK/+rT
-         lU+BRTEb2QNDhVyHBuuRCKtHrESlUOtpLXuFTgBHu5j4rLwN+3eaWKZlbb1FF/JLVRPs
-         B4fDUUIQG15wxQTxq6KXqFfqToEN0AejakHFjfAeFCkDFLXanOnNBOVxmv8ibeI1CpKn
-         yRlEfXahXRSEiJHxk6TcpmzZO29uuluSuvu49UIOWFWVkpqOBaw9hpJyyWKuli2r0FAx
-         QJxQ==
-X-Gm-Message-State: APjAAAUD9YA2mhMhtooNO4dX8ZdQZiqHy6eAQOuRo0xGYsocI2c68uOL
-        MPez8cH//a2okHunvG4F8WpNJiDKURc/gZi+2NM=
-X-Google-Smtp-Source: APXvYqxSqm3tWIWgCc/6KxQxwfATvNMi8h6Sxb5iMQ/oDJF0Re6IhFTmtGx5rG71zlRanlu/EWaTgaaMoJ/HYJ5KVOU=
-X-Received: by 2002:a5d:6ccd:: with SMTP id c13mr37920862wrc.4.1566441753566;
- Wed, 21 Aug 2019 19:42:33 -0700 (PDT)
+        bh=+2V9HhKKnOxcZwgG+smQxeIpzg5MY2WFsMF9dUz2ZWM=;
+        b=A7QbTE3SLo00roEbUfnA5Mi7uIClqmIf/O/sqbJJgWvqxdPGByX1+ocZwDWkaA5Urp
+         S/kJ/o0cTLI/dn1ZM7EE8S1dAEsyCVC5u2anq9JX4UrGPY9VIqe7X7Y4okEEe9tvHw5M
+         jXWNhSwWozT8MZqdKnRKhvEud3ICUwikMHgTHojnRAF8gVe8LGmQdo+IgmsVssu4Ze9G
+         63UI5VSaOJIJKdQn573C6dKz3PuXQLv92qyK5thQkp3JPsnX//Zbwu3/RBN/vE9Y/0qQ
+         at74bH0igtGvJP2R1GfjI3iRJetMFHJLdYZ/AFzpu+xBZ6LD1IKLD9wFK/I6iw2DJH4I
+         zkKA==
+X-Gm-Message-State: APjAAAU2XwW3TCwTI3Ef6JWPSnZe1nuuHEYwchuhcJ5eaxr3C2wCuaNy
+        h0JMdUFyTJb8zpFQo8dcxmWa3/zoK3tFkg8wW80=
+X-Google-Smtp-Source: APXvYqxD/E+UHdGoXQKABwQgWR8efld2lFuHM9IPgAUnitZqsTlwwXt9fBIBFdnmKBvWb0d4kUCa1hVLcgbbn7ZuZFo=
+X-Received: by 2002:a1c:1d42:: with SMTP id d63mr3041326wmd.34.1566441823801;
+ Wed, 21 Aug 2019 19:43:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190726075131.14688-1-yuehaibing@huawei.com>
-In-Reply-To: <20190726075131.14688-1-yuehaibing@huawei.com>
+References: <20190726140054.31388-1-yuehaibing@huawei.com>
+In-Reply-To: <20190726140054.31388-1-yuehaibing@huawei.com>
 From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 21 Aug 2019 22:42:21 -0400
-Message-ID: <CADnq5_PNA5L=O2=r22JGZ=HU4V5F_D6LMeo85mW+3KvvY1=QeQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: remove duplicated include from dc_link.c
+Date:   Wed, 21 Aug 2019 22:43:31 -0400
+Message-ID: <CADnq5_PcbKZDsqmoL2wK061sL=KfCedmEafn_hpbFZ9tNGrNdA@mail.gmail.com>
+Subject: Re: [PATCH] drm/amdkfd: remove set but not used variable 'pdd'
 To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Wentland, Harry" <harry.wentland@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
+Cc:     Oded Gabbay <oded.gabbay@gmail.com>,
         "Deucher, Alexander" <alexander.deucher@amd.com>,
         Christian Koenig <christian.koenig@amd.com>,
         Chunming Zhou <David1.Zhou@amd.com>,
         Dave Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
         Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>
+        <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied. thanks!
+Applied.  thanks!
 
 Alex
 
-On Fri, Jul 26, 2019 at 5:42 AM YueHaibing <yuehaibing@huawei.com> wrote:
+On Fri, Jul 26, 2019 at 11:58 AM YueHaibing <yuehaibing@huawei.com> wrote:
 >
-> Remove duplicated include.
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c: In function restore_process_worker:
+> drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:949:29: warning:
+>  variable pdd set but not used [-Wunused-but-set-variable]
+>
+> It is not used since
+> commit 5b87245faf57 ("drm/amdkfd: Simplify kfd2kgd interface")
 >
 > Reported-by: Hulk Robot <hulkci@huawei.com>
 > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  drivers/gpu/drm/amd/display/dc/core/dc_link.c | 4 ----
->  1 file changed, 4 deletions(-)
+>  drivers/gpu/drm/amd/amdkfd/kfd_process.c | 11 -----------
+>  1 file changed, 11 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> index 193d6f1..a14785d 100644
-> --- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> @@ -45,10 +45,6 @@
->  #include "dpcd_defs.h"
->  #include "dmcu.h"
->  #include "hw/clk_mgr.h"
-> -#if defined(CONFIG_DRM_AMD_DC_DCN2_0)
-> -#include "resource.h"
-> -#endif
-> -#include "hw/clk_mgr.h"
+> diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+> index 8f1076c..240bf68 100644
+> --- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+> +++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+> @@ -1042,7 +1042,6 @@ static void restore_process_worker(struct work_struct *work)
+>  {
+>         struct delayed_work *dwork;
+>         struct kfd_process *p;
+> -       struct kfd_process_device *pdd;
+>         int ret = 0;
 >
->  #define DC_LOGGER_INIT(logger)
+>         dwork = to_delayed_work(work);
+> @@ -1051,16 +1050,6 @@ static void restore_process_worker(struct work_struct *work)
+>          * lifetime of this thread, kfd_process p will be valid
+>          */
+>         p = container_of(dwork, struct kfd_process, restore_work);
+> -
+> -       /* Call restore_process_bos on the first KGD device. This function
+> -        * takes care of restoring the whole process including other devices.
+> -        * Restore can fail if enough memory is not available. If so,
+> -        * reschedule again.
+> -        */
+> -       pdd = list_first_entry(&p->per_device_data,
+> -                              struct kfd_process_device,
+> -                              per_device_list);
+> -
+>         pr_debug("Started restoring pasid %d\n", p->pasid);
 >
+>         /* Setting last_restore_timestamp before successful restoration.
 > --
 > 2.7.4
 >
 >
 > _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
