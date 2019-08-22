@@ -2,282 +2,196 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7825C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C065C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915DE233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:27:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="yyiFYg6U"
+	by mail.kernel.org (Postfix) with ESMTP id 707B5233A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389063AbfHVN1p (ORCPT
+        id S2389034AbfHVN2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:27:45 -0400
-Received: from mail-eopbgr700060.outbound.protection.outlook.com ([40.107.70.60]:24576
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389012AbfHVN1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:27:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lsy4bJ80cycWv1a5NQ3PC6vaKe7WK55KjSHJnCiftdt9Lc9YpMbTCSifrjZyUeq2kKvMOEQd8cSCzGGzEIbFdyXDu/ZbpTIPs+0HOquXmDl8DS4LjQPtOfRxTjhpFv87WChGFHIIC9d119UT2DAj+t6WAdzXi8YfNgFv7rAzs35j58hwtXrJkvWMWUj9vO5VleOSgQGHcJdWqYRDDJ0OBOLkEIOdOP6w8uacD4pmB96RPNAGH8R3n8+F71hUp6KwDMy/SNx9s4q/PXxNxsiOSBCsw0KJettU5oKeT2w59tPZlB5/PgjumTX9nnVOSCpRIkmxGXOw/OaX3h47HWd6Rw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=94UgWArO+0rf+wYFc7vaJfSwLAJG2ILNkKRHH3LEAoE=;
- b=ktRc6GqBcpcMozJZAW+D1SwpKQvJMkNB6PlJI+MMfE9foz4Fu3WHVoa+qJ5AiNFzL48jni4z01Jw99p8plSGUsyGhiVh3yPOXxKseokDI2D6nInjZJpQxWYMDxs4FmKuRY8mUv//FcJdY6pmAyssjmJ/xeIpSxFnIlu9HEHTg3ZfsPHQzDiC6k6Z1Fxbe2luGndzEKpR+kmUrPnqspIC6d90k3uG26p1RSA/cu7UsrzVbMiIE36QhFL5MgGOohV2xENhHzmzR/usiQ4aJPOhbg9X+PHK8Ke+Tyk/aeBKaj6vAPfX0s5wrYL2uuP/x1f+sSzRKni3Q0To37Nk/3EK3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=94UgWArO+0rf+wYFc7vaJfSwLAJG2ILNkKRHH3LEAoE=;
- b=yyiFYg6UCBoPE9ICtRH2fojKVxc6UCYkAHca/oYt4lC4pit4soA5/R37lTjBvW4ui2UUw/8xaTWhfZGtowjYV7uUMgYABgjCik4W33KRMFpShhkGMyVPkOseruCLjxRGBHRkxQChY1nlBu+Pp/xHR762TvohtZT4mx3td+1kLtE=
-Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.118.13) by
- DM6PR12MB2762.namprd12.prod.outlook.com (20.176.117.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Thu, 22 Aug 2019 13:27:25 +0000
-Received: from DM6PR12MB2682.namprd12.prod.outlook.com
- ([fe80::a410:b3e6:1557:7450]) by DM6PR12MB2682.namprd12.prod.outlook.com
- ([fe80::a410:b3e6:1557:7450%6]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
- 13:27:25 +0000
-From:   "Singh, Brijesh" <brijesh.singh@amd.com>
-To:     Borislav Petkov <bp@suse.de>
-CC:     "Singh, Brijesh" <brijesh.singh@amd.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 02/11] KVM: SVM: Add KVM_SEND_UPDATE_DATA command
-Thread-Topic: [PATCH v3 02/11] KVM: SVM: Add KVM_SEND_UPDATE_DATA command
-Thread-Index: AQHVN1vguB8xjUAmOk695EJ1xW718KcHVFcAgAAXmQA=
-Date:   Thu, 22 Aug 2019 13:27:25 +0000
-Message-ID: <9c8fd645-8908-7ece-b60d-20de6f246df8@amd.com>
-References: <20190710201244.25195-1-brijesh.singh@amd.com>
- <20190710201244.25195-3-brijesh.singh@amd.com>
- <20190822120254.GC11845@zn.tnic>
-In-Reply-To: <20190822120254.GC11845@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0501CA0088.namprd05.prod.outlook.com
- (2603:10b6:803:22::26) To DM6PR12MB2682.namprd12.prod.outlook.com
- (2603:10b6:5:42::13)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=brijesh.singh@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d3b4c4f9-31ce-4db5-f29c-08d727047867
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM6PR12MB2762;
-x-ms-traffictypediagnostic: DM6PR12MB2762:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB2762D0EE22B78E6F741A01B0E5A50@DM6PR12MB2762.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 01371B902F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(396003)(39860400002)(366004)(199004)(189003)(4326008)(64756008)(6436002)(102836004)(386003)(11346002)(476003)(2616005)(2906002)(486006)(14454004)(76176011)(6486002)(6506007)(53546011)(71190400001)(71200400001)(66574012)(229853002)(81156014)(52116002)(86362001)(81166006)(14444005)(6116002)(26005)(31696002)(3846002)(186003)(6246003)(53936002)(36756003)(316002)(478600001)(8936002)(7736002)(446003)(7416002)(25786009)(66946007)(8676002)(66476007)(66556008)(66446008)(99286004)(31686004)(305945005)(6512007)(5660300002)(6916009)(66066001)(256004)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2762;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: h0jji6a82tHtNUxSUgvtGd2ojkkJuX5PMgAKGGi3n5mV3GSYBcxQxlwZLR+E+7q3bmgQttMdZwh7hKY0TkM6a1f0zP8/VMsZaxoUM4Ay66JtkhhQOXidJbcsYeJr/rQlZ+mKSuRkUZysE5b3FUW9XseQm3rJvs251BhUPNRnnOJ4CFlr+ELvRByGCZyznoEOcWVzfrAz8+aIcFX8YRTr4PXxfa4RbPREpotcndIQWKhi3I1FQqykV2fkr4CbawziDelFdhXJxmxyw8lBNiIjQdeSZ+7pJv02VbFaFPapN+Up7a/sEqN5YUud1ngDifsafBeMX37wABpqdAXNAyu07ETL3WaJWkDzGarfvRqDiZJzqJjxxymee8/mEqEWIbM+85JzVCNHh+iO/117E2v+oC4XHbMn+VembJqDJRxP4lY=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <642748DF651E574E95F93592AA33D9AE@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 22 Aug 2019 09:28:25 -0400
+Received: from foss.arm.com ([217.140.110.172]:45780 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730723AbfHVN2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 09:28:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3D72337;
+        Thu, 22 Aug 2019 06:28:23 -0700 (PDT)
+Received: from e110439-lin.cambridge.arm.com (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3FD6E3F706;
+        Thu, 22 Aug 2019 06:28:21 -0700 (PDT)
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, cgroups@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>, Michal Koutny <mkoutny@suse.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Alessio Balsini <balsini@android.com>
+Subject: [PATCH v14 0/6] Add utilization clamping support (CGroups API)
+Date:   Thu, 22 Aug 2019 14:28:05 +0100
+Message-Id: <20190822132811.31294-1-patrick.bellasi@arm.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3b4c4f9-31ce-4db5-f29c-08d727047867
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 13:27:25.0694
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SaXrEFX9uXkwQbzVhg5mgsbSXj+i3C4v7ci/MLZe7SUbtkhAtHyc7qiYpZEExHHV8dT/OTVWuJqQ7dhTn4I0BQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2762
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDgvMjIvMTkgNzowMiBBTSwgQm9yaXNsYXYgUGV0a292IHdyb3RlOg0KPiBPbiBXZWQs
-IEp1bCAxMCwgMjAxOSBhdCAwODoxMzowMVBNICswMDAwLCBTaW5naCwgQnJpamVzaCB3cm90ZToN
-Cj4+IFRoZSBjb21tYW5kIGlzIHVzZWQgZm9yIGVuY3J5cHRpbmcgdGhlIGd1ZXN0IG1lbW9yeSBy
-ZWdpb24gdXNpbmcgdGhlIGVuY3J5cHRpb24NCj4+IGNvbnRleHQgY3JlYXRlZCB3aXRoIEtWTV9T
-RVZfU0VORF9TVEFSVC4NCj4+DQo+PiBDYzogVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9u
-aXguZGU+DQo+PiBDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+DQo+PiBDYzogIkgu
-IFBldGVyIEFudmluIiA8aHBhQHp5dG9yLmNvbT4NCj4+IENjOiBQYW9sbyBCb256aW5pIDxwYm9u
-emluaUByZWRoYXQuY29tPg0KPj4gQ2M6ICJSYWRpbSBLcsSNbcOhxZkiIDxya3JjbWFyQHJlZGhh
-dC5jb20+DQo+PiBDYzogSm9lcmcgUm9lZGVsIDxqb3JvQDhieXRlcy5vcmc+DQo+PiBDYzogQm9y
-aXNsYXYgUGV0a292IDxicEBzdXNlLmRlPg0KPj4gQ2M6IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxl
-bmRhY2t5QGFtZC5jb20+DQo+PiBDYzogeDg2QGtlcm5lbC5vcmcNCj4+IENjOiBrdm1Admdlci5r
-ZXJuZWwub3JnDQo+PiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPj4gU2lnbmVk
-LW9mZi1ieTogQnJpamVzaCBTaW5naCA8YnJpamVzaC5zaW5naEBhbWQuY29tPg0KPj4gLS0tDQo+
-PiAgIC4uLi92aXJ0dWFsL2t2bS9hbWQtbWVtb3J5LWVuY3J5cHRpb24ucnN0ICAgICB8ICAyNCAr
-KysrDQo+PiAgIGFyY2gveDg2L2t2bS9zdm0uYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
-IDEyMCArKysrKysrKysrKysrKysrKy0NCj4+ICAgaW5jbHVkZS91YXBpL2xpbnV4L2t2bS5oICAg
-ICAgICAgICAgICAgICAgICAgIHwgICA5ICsrDQo+PiAgIDMgZmlsZXMgY2hhbmdlZCwgMTQ5IGlu
-c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vdmlydHVhbC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdCBiL0RvY3VtZW50YXRp
-b24vdmlydHVhbC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdA0KPj4gaW5kZXggMGU5ZTFl
-OWY5Njg3Li4wNjBhYzIzMTZkNjkgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL3ZpcnR1
-YWwva3ZtL2FtZC1tZW1vcnktZW5jcnlwdGlvbi5yc3QNCj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
-dmlydHVhbC9rdm0vYW1kLW1lbW9yeS1lbmNyeXB0aW9uLnJzdA0KPj4gQEAgLTI2NSw2ICsyNjUs
-MzAgQEAgUmV0dXJuczogMCBvbiBzdWNjZXNzLCAtbmVnYXRpdmUgb24gZXJyb3INCj4+ICAgICAg
-ICAgICAgICAgICAgIF9fdTMyIHNlc3Npb25fbGVuOw0KPj4gICAgICAgICAgIH07DQo+PiAgIA0K
-Pj4gKzExLiBLVk1fU0VWX1NFTkRfVVBEQVRFX0RBVEENCj4+ICstLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tDQo+PiArDQo+PiArVGhlIEtWTV9TRVZfU0VORF9VUERBVEVfREFUQSBjb21tYW5k
-IGNhbiBiZSB1c2VkIGJ5IHRoZSBoeXBlcnZpc29yIHRvIGVuY3J5cHQgdGhlDQo+PiArb3V0Z29p
-bmcgZ3Vlc3QgbWVtb3J5IHJlZ2lvbiB3aXRoIHRoZSBlbmNyeXB0aW9uIGNvbnRleHQgY3JlYXRp
-bmcgdXNpbmcNCj4gDQo+IHMvY3JlYXRpbmcvY3JlYXRlZC8NCj4gDQo+PiArS1ZNX1NFVl9TRU5E
-X1NUQVJULg0KPj4gKw0KPj4gK1BhcmFtZXRlcnMgKGluKTogc3RydWN0IGt2bV9zZXZfc2VuZF91
-cGRhdGVfZGF0YQ0KPj4gKw0KPj4gK1JldHVybnM6IDAgb24gc3VjY2VzcywgLW5lZ2F0aXZlIG9u
-IGVycm9yDQo+PiArDQo+PiArOjoNCj4+ICsNCj4+ICsgICAgICAgIHN0cnVjdCBrdm1fc2V2X2xh
-dW5jaF9zZW5kX3VwZGF0ZV9kYXRhIHsNCj4+ICsgICAgICAgICAgICAgICAgX191NjQgaGRyX3Vh
-ZGRyOyAgICAgICAgLyogdXNlcnNwYWNlIGFkZHJlc3MgY29udGFpbmluZyB0aGUgcGFja2V0IGhl
-YWRlciAqLw0KPj4gKyAgICAgICAgICAgICAgICBfX3UzMiBoZHJfbGVuOw0KPj4gKw0KPj4gKyAg
-ICAgICAgICAgICAgICBfX3U2NCBndWVzdF91YWRkcjsgICAgICAvKiB0aGUgc291cmNlIG1lbW9y
-eSByZWdpb24gdG8gYmUgZW5jcnlwdGVkICovDQo+PiArICAgICAgICAgICAgICAgIF9fdTMyIGd1
-ZXN0X2xlbjsNCj4+ICsNCj4+ICsgICAgICAgICAgICAgICAgX191NjQgdHJhbnNfdWFkZHI7ICAg
-ICAgLyogdGhlIGRlc3RpdGlvbiBtZW1vcnkgcmVnaW9uICAqLw0KPiANCj4gcy9kZXN0aXRpb24v
-ZGVzdGluYXRpb24vDQo+IA0KPj4gKyAgICAgICAgICAgICAgICBfX3UzMiB0cmFuc19sZW47DQo+
-IA0KPiBUaG9zZSBhZGRyZXNzZXMgYXJlIGFsbCBzeXN0ZW0gcGh5c2ljYWwgYWRkcmVzc2VzLCBh
-Y2NvcmRpbmcgdG8gdGhlIGRvYy4NCj4gV2h5IGRvIHlvdSBjYWxsIHRoZW0gInVhZGRyIj8NCj4g
-DQoNCg0KRlcgYWNjZXB0cyB0aGUgc3lzdGVtIHBoeXNpY2FsIGFkZHJlc3MgYnV0IHRoZSB1c2Vy
-c3BhY2UgZG9lcyBub3Qga25vdw0KdGhlIHN5c3RlbSBwaHlzaWNhbCBpbnN0ZWFkIGl0IHdpbGwg
-Z2l2ZSBob3N0IHZpcnR1YWwgYWRkcmVzcyBhbmQgd2UNCndpbGwgZmluZCBpdHMgY29ycmVzcG9u
-ZGluZyBzeXN0ZW0gcGh5c2ljYWwgYWRkcmVzcyBhbmQgbWFrZSBhIEZXDQpjYWxsLiBUaGlzIGlz
-IGEgdXNlcnNwYWNlIGludGVyZmFjZSBhbmQgbm90IHRoZSBGVy4NCg0KDQo+PiArICAgICAgICB9
-Ow0KPj4gKw0KPj4gICBSZWZlcmVuY2VzDQo+PiAgID09PT09PT09PT0NCj4+ICAgDQo+PiBkaWZm
-IC0tZ2l0IGEvYXJjaC94ODYva3ZtL3N2bS5jIGIvYXJjaC94ODYva3ZtL3N2bS5jDQo+PiBpbmRl
-eCAwYjA5MzdmNTM1MjAuLjhlODE1YTUzYzQyMCAxMDA2NDQNCj4+IC0tLSBhL2FyY2gveDg2L2t2
-bS9zdm0uYw0KPj4gKysrIGIvYXJjaC94ODYva3ZtL3N2bS5jDQo+PiBAQCAtNDE4LDYgKzQxOCw3
-IEBAIGVudW0gew0KPj4gICANCj4+ICAgc3RhdGljIHVuc2lnbmVkIGludCBtYXhfc2V2X2FzaWQ7
-DQo+PiAgIHN0YXRpYyB1bnNpZ25lZCBpbnQgbWluX3Nldl9hc2lkOw0KPj4gK3N0YXRpYyB1bnNp
-Z25lZCBsb25nIHNldl9tZV9tYXNrOw0KPj4gICBzdGF0aWMgdW5zaWduZWQgbG9uZyAqc2V2X2Fz
-aWRfYml0bWFwOw0KPj4gICAjZGVmaW5lIF9fc21lX3BhZ2VfcGEoeCkgX19zbWVfc2V0KHBhZ2Vf
-dG9fcGZuKHgpIDw8IFBBR0VfU0hJRlQpDQo+PiAgIA0KPj4gQEAgLTEyMTYsMTYgKzEyMTcsMjEg
-QEAgc3RhdGljIGludCBhdmljX2dhX2xvZ19ub3RpZmllcih1MzIgZ2FfdGFnKQ0KPj4gICBzdGF0
-aWMgX19pbml0IGludCBzZXZfaGFyZHdhcmVfc2V0dXAodm9pZCkNCj4+ICAgew0KPj4gICAJc3Ry
-dWN0IHNldl91c2VyX2RhdGFfc3RhdHVzICpzdGF0dXM7DQo+PiArCWludCBlYXgsIGVieDsNCj4+
-ICAgCWludCByYzsNCj4+ICAgDQo+PiAtCS8qIE1heGltdW0gbnVtYmVyIG9mIGVuY3J5cHRlZCBn
-dWVzdHMgc3VwcG9ydGVkIHNpbXVsdGFuZW91c2x5ICovDQo+PiAtCW1heF9zZXZfYXNpZCA9IGNw
-dWlkX2VjeCgweDgwMDAwMDFGKTsNCj4+ICsJLyoNCj4+ICsJICogUXVlcnkgdGhlIG1lbW9yeSBl
-bmNyeXB0aW9uIGluZm9ybWF0aW9uLg0KPj4gKwkgKiAgRUJYOiAgQml0IDA6NSBQYWdldGFibGUg
-Yml0IHBvc2l0aW9uIHVzZWQgdG8gaW5kaWNhdGUgZW5jcnlwdGlvbiAoYWthIENiaXQpLg0KPj4g
-KwkgKiAgRUNYOiAgTWF4aW11bSBudW1iZXIgb2YgZW5jcnlwdGVkIGd1ZXN0cyBzdXBwb3J0ZWQg
-c2ltdWx0YW5lb3VzbHkuDQo+PiArCSAqICBFRFg6ICBNaW5pbXVtIEFTSUQgdmFsdWUgdGhhdCBz
-aG91bGQgYmUgdXNlZCBmb3IgU0VWIGd1ZXN0Lg0KPj4gKwkgKi8NCj4+ICsJY3B1aWQoMHg4MDAw
-MDAxZiwgJmVheCwgJmVieCwgJm1heF9zZXZfYXNpZCwgJm1pbl9zZXZfYXNpZCk7DQo+PiAgIA0K
-Pj4gICAJaWYgKCFtYXhfc2V2X2FzaWQpDQo+PiAgIAkJcmV0dXJuIDE7DQo+PiAgIA0KPj4gLQkv
-KiBNaW5pbXVtIEFTSUQgdmFsdWUgdGhhdCBzaG91bGQgYmUgdXNlZCBmb3IgU0VWIGd1ZXN0ICov
-DQo+PiAtCW1pbl9zZXZfYXNpZCA9IGNwdWlkX2VkeCgweDgwMDAwMDFGKTsNCj4+ICsJc2V2X21l
-X21hc2sgPSAxVUwgPDwgKGVieCAmIDB4M2YpOw0KPj4gICANCj4+ICAgCS8qIEluaXRpYWxpemUg
-U0VWIEFTSUQgYml0bWFwICovDQo+PiAgIAlzZXZfYXNpZF9iaXRtYXAgPSBiaXRtYXBfemFsbG9j
-KG1heF9zZXZfYXNpZCwgR0ZQX0tFUk5FTCk7DQo+PiBAQCAtNzA1OSw2ICs3MDY1LDEwOSBAQCBz
-dGF0aWMgaW50IHNldl9zZW5kX3N0YXJ0KHN0cnVjdCBrdm0gKmt2bSwgc3RydWN0IGt2bV9zZXZf
-Y21kICphcmdwKQ0KPj4gICAJcmV0dXJuIHJldDsNCj4+ICAgfQ0KPj4gICANCj4+ICtzdGF0aWMg
-aW50IHNldl9zZW5kX3VwZGF0ZV9kYXRhKHN0cnVjdCBrdm0gKmt2bSwgc3RydWN0IGt2bV9zZXZf
-Y21kICphcmdwKQ0KPj4gK3sNCj4+ICsJc3RydWN0IGt2bV9zZXZfaW5mbyAqc2V2ID0gJnRvX2t2
-bV9zdm0oa3ZtKS0+c2V2X2luZm87DQo+PiArCXN0cnVjdCBzZXZfZGF0YV9zZW5kX3VwZGF0ZV9k
-YXRhICpkYXRhOw0KPj4gKwlzdHJ1Y3Qga3ZtX3Nldl9zZW5kX3VwZGF0ZV9kYXRhIHBhcmFtczsN
-Cj4+ICsJdm9pZCAqaGRyID0gTlVMTCwgKnRyYW5zX2RhdGEgPSBOVUxMOw0KPj4gKwlzdHJ1Y3Qg
-cGFnZSAqKmd1ZXN0X3BhZ2UgPSBOVUxMOw0KPiANCj4gQWgsIEkgc2VlIHdoeSB5b3UgZG8gaW5p
-dCB0aGVtIHRvIE5VTEwgLSAtV21heWJlLXVuaW5pdGlhbGl6ZWQuIFNlZSBiZWxvdy4NCj4gDQo+
-PiArCXVuc2lnbmVkIGxvbmcgbjsNCj4+ICsJaW50IHJldCwgb2Zmc2V0Ow0KPj4gKw0KPj4gKwlp
-ZiAoIXNldl9ndWVzdChrdm0pKQ0KPj4gKwkJcmV0dXJuIC1FTk9UVFk7DQo+PiArDQo+PiArCWlm
-IChjb3B5X2Zyb21fdXNlcigmcGFyYW1zLCAodm9pZCBfX3VzZXIgKikodWludHB0cl90KWFyZ3At
-PmRhdGEsDQo+PiArCQkJc2l6ZW9mKHN0cnVjdCBrdm1fc2V2X3NlbmRfdXBkYXRlX2RhdGEpKSkN
-Cj4+ICsJCXJldHVybiAtRUZBVUxUOw0KPj4gKw0KPj4gKwlkYXRhID0ga3phbGxvYyhzaXplb2Yo
-KmRhdGEpLCBHRlBfS0VSTkVMKTsNCj4+ICsJaWYgKCFkYXRhKQ0KPj4gKwkJcmV0dXJuIC1FTk9N
-RU07DQo+PiArDQo+PiArCS8qIHVzZXJzcGFjZSB3YW50cyB0byBxdWVyeSBlaXRoZXIgaGVhZGVy
-IG9yIHRyYW5zIGxlbmd0aCAqLw0KPj4gKwlpZiAoIXBhcmFtcy50cmFuc19sZW4gfHwgIXBhcmFt
-cy5oZHJfbGVuKQ0KPj4gKwkJZ290byBjbWQ7DQo+PiArDQo+PiArCXJldCA9IC1FSU5WQUw7DQo+
-PiArCWlmICghcGFyYW1zLnRyYW5zX3VhZGRyIHx8ICFwYXJhbXMuZ3Vlc3RfdWFkZHIgfHwNCj4+
-ICsJICAgICFwYXJhbXMuZ3Vlc3RfbGVuIHx8ICFwYXJhbXMuaGRyX3VhZGRyKQ0KPj4gKwkJZ290
-byBlX2ZyZWU7DQo+PiArDQo+PiArCS8qIENoZWNrIGlmIHdlIGFyZSBjcm9zc2luZyB0aGUgcGFn
-ZSBib3VuZHJ5ICovDQo+IA0KPiBXQVJOSU5HOiAnYm91bmRyeScgbWF5IGJlIG1pc3NwZWxsZWQg
-LSBwZXJoYXBzICdib3VuZGFyeSc/DQo+IA0KPiBTbyB0aGUgZmFjdCB0aGF0IHlvdSBoYXZlIHRv
-IGluaXQgbG9jYWwgdmFyaWFibGVzIHRvIE5VTEwgbWVhbnMgdGhhdCBnY2MNCj4gZG9lc24ndCBz
-ZWUgdGhlIHRoYXQga2ZyZWUoKSBjYW4gdGFrZSBhIE5VTEwuDQo+IA0KPiBCdXQgYWxzbywgeW91
-IGNhbiByZXN0cnVjdHVyZSB5b3VyIGxhYmVscyBpbiBhIHdheSBzbyB0aGF0IGdjYyBzZWVzIHRo
-ZW0NCj4gcHJvcGVybHkgYW5kIGRvZXNuJ3QgaXNzdWUgdGhlIHdhcm5pbmcgZXZlbiB3aXRob3V0
-IGhhdmluZyB0byBpbml0IHRob3NlDQo+IGxvY2FsIHZhcmlhYmxlcy4NCj4gDQo+IEFuZCBhbHNv
-LCB5b3UgY2FuIGNsZWFudXAgdGhhdCBmdW5jdGlvbiBhbmQgc3BsaXQgb3V0IHRoZSBoZWFkZXIg
-YW5kDQo+IHRyYW5zIGxlbmd0aCBxdWVyeSBmdW5jdGlvbmFsaXR5IGludG8gYSBzZXBhcmF0ZSBo
-ZWxwZXIgYW5kIHRoaXMgd2F5DQo+IG1ha2UgaXQgYSBsb3QgbW9yZSByZWFkYWJsZS4gSSBnYXZl
-IGl0IGEgdHJ5IGhlcmUgYW5kIGl0IGxvb2tzIG1vcmUNCj4gcmVhZGFibGUgdG8gbWUgYnV0IHRo
-aXMgY291bGQgYmUganVzdCBtZS4NCj4gDQo+IEkgY291bGQndmUgbWlzc2VkIHNvbWUgY2FzZSB0
-b28uLi4gcGFzdGluZyB0aGUgd2hvbGUgdGhpbmcgZm9yIGVhc2llcg0KPiByZXZpZXcgdGhhbiBh
-cyBhIGRpZmY6DQo+IA0KDQpPa2F5LCBJIHdpbGwgdGFrZSBhIGxvb2sgYW5kIHdpbGwgcHJvYmFi
-bHkgcmV1c2UgeW91ciBmdW5jdGlvbnMuIHRoYW5rIHlvdS4NCg0KLUJyaWplc2gNCg0KPiANCj4g
-LS0tDQo+IC8qIFVzZXJzcGFjZSB3YW50cyB0byBxdWVyeSBlaXRoZXIgaGVhZGVyIG9yIHRyYW5z
-IGxlbmd0aC4gKi8NCj4gc3RhdGljIGludA0KPiBfX3Nldl9zZW5kX3VwZGF0ZV9kYXRhX3F1ZXJ5
-X2xlbmd0aHMoc3RydWN0IGt2bSAqa3ZtLCBzdHJ1Y3Qga3ZtX3Nldl9jbWQgKmFyZ3AsDQo+IAkJ
-CQkgICAgIHN0cnVjdCBrdm1fc2V2X3NlbmRfdXBkYXRlX2RhdGEgKnBhcmFtcykNCj4gew0KPiAJ
-c3RydWN0IGt2bV9zZXZfaW5mbyAqc2V2ID0gJnRvX2t2bV9zdm0oa3ZtKS0+c2V2X2luZm87DQo+
-IAlzdHJ1Y3Qgc2V2X2RhdGFfc2VuZF91cGRhdGVfZGF0YSBkYXRhOw0KPiANCj4gCW1lbXNldCgm
-ZGF0YSwgMCwgc2l6ZW9mKGRhdGEpKTsNCj4gDQo+IAlkYXRhLmhhbmRsZSA9IHNldi0+aGFuZGxl
-Ow0KPiAJc2V2X2lzc3VlX2NtZChrdm0sIFNFVl9DTURfU0VORF9VUERBVEVfREFUQSwgJmRhdGEs
-ICZhcmdwLT5lcnJvcik7DQo+IA0KPiAJcGFyYW1zLT5oZHJfbGVuICAgPSBkYXRhLmhkcl9sZW47
-DQo+IAlwYXJhbXMtPnRyYW5zX2xlbiA9IGRhdGEudHJhbnNfbGVuOw0KPiANCj4gCWlmIChjb3B5
-X3RvX3VzZXIoKHZvaWQgX191c2VyICopKHVpbnRwdHJfdClhcmdwLT5kYXRhLCBwYXJhbXMsDQo+
-IAkJCSBzaXplb2Yoc3RydWN0IGt2bV9zZXZfc2VuZF91cGRhdGVfZGF0YSkpKQ0KPiAJCXJldHVy
-biAtRUZBVUxUOw0KPiANCj4gCXJldHVybiAwOw0KPiB9DQo+IA0KPiBzdGF0aWMgaW50IHNldl9z
-ZW5kX3VwZGF0ZV9kYXRhKHN0cnVjdCBrdm0gKmt2bSwgc3RydWN0IGt2bV9zZXZfY21kICphcmdw
-KQ0KPiB7DQo+IAlzdHJ1Y3Qga3ZtX3Nldl9pbmZvICpzZXYgPSAmdG9fa3ZtX3N2bShrdm0pLT5z
-ZXZfaW5mbzsNCj4gCXN0cnVjdCBzZXZfZGF0YV9zZW5kX3VwZGF0ZV9kYXRhICpkYXRhOw0KPiAJ
-c3RydWN0IGt2bV9zZXZfc2VuZF91cGRhdGVfZGF0YSBwYXJhbXM7DQo+IAlzdHJ1Y3QgcGFnZSAq
-Kmd1ZXN0X3BhZ2U7DQo+IAl2b2lkICpoZHIsICp0cmFuc19kYXRhOw0KPiAJdW5zaWduZWQgbG9u
-ZyBuOw0KPiAJaW50IHJldCwgb2Zmc2V0Ow0KPiANCj4gCWlmICghc2V2X2d1ZXN0KGt2bSkpDQo+
-IAkJcmV0dXJuIC1FTk9UVFk7DQo+IA0KPiAJaWYgKGNvcHlfZnJvbV91c2VyKCZwYXJhbXMsDQo+
-IAkJCSAgICh2b2lkIF9fdXNlciAqKSh1aW50cHRyX3QpYXJncC0+ZGF0YSwNCj4gCQkJICAgc2l6
-ZW9mKHN0cnVjdCBrdm1fc2V2X3NlbmRfdXBkYXRlX2RhdGEpKSkNCj4gCQlyZXR1cm4gLUVGQVVM
-VDsNCj4gDQo+IAkvKiBVc2Vyc3BhY2Ugd2FudHMgdG8gcXVlcnkgZWl0aGVyIGhlYWRlciBvciB0
-cmFucyBsZW5ndGggKi8NCj4gCWlmICghcGFyYW1zLnRyYW5zX2xlbiB8fCAhcGFyYW1zLmhkcl9s
-ZW4pDQo+IAkJcmV0dXJuIF9fc2V2X3NlbmRfdXBkYXRlX2RhdGFfcXVlcnlfbGVuZ3Rocyhrdm0s
-IGFyZ3AsICZwYXJhbXMpOw0KPiANCj4gCWlmICghcGFyYW1zLnRyYW5zX3VhZGRyIHx8ICFwYXJh
-bXMuZ3Vlc3RfdWFkZHIgfHwNCj4gCSAgICAhcGFyYW1zLmd1ZXN0X2xlbiB8fCAhcGFyYW1zLmhk
-cl91YWRkcikNCj4gCQlyZXR1cm4gLUVJTlZBTDsNCj4gDQo+IAkvKiBDaGVjayBpZiB3ZSBhcmUg
-Y3Jvc3NpbmcgdGhlIHBhZ2UgYm91bmRhcnk6ICovDQo+IAlvZmZzZXQgPSBwYXJhbXMuZ3Vlc3Rf
-dWFkZHIgJiAoUEFHRV9TSVpFIC0gMSk7DQo+IAlpZiAoKHBhcmFtcy5ndWVzdF9sZW4gKyBvZmZz
-ZXQgPiBQQUdFX1NJWkUpKQ0KPiAJCXJldHVybiAtRUlOVkFMOw0KPiANCj4gCWhkciA9IGttYWxs
-b2MocGFyYW1zLmhkcl9sZW4sIEdGUF9LRVJORUwpOw0KPiAJaWYgKCFoZHIpDQo+IAkJcmV0dXJu
-IC1FTk9NRU07DQo+IA0KPiAJcmV0ID0gLUVOT01FTTsNCj4gCXRyYW5zX2RhdGEgPSBrbWFsbG9j
-KHBhcmFtcy50cmFuc19sZW4sIEdGUF9LRVJORUwpOw0KPiAJaWYgKCF0cmFuc19kYXRhKQ0KPiAJ
-CWdvdG8gZnJlZV9oZHI7DQo+IA0KPiAJZGF0YSA9IGt6YWxsb2Moc2l6ZW9mKCpkYXRhKSwgR0ZQ
-X0tFUk5FTCk7DQo+ICAgICAgICAgIGlmICghZGF0YSkNCj4gICAgICAgICAgICAgICAgICBnb3Rv
-IGZyZWVfdHJhbnM7DQo+IA0KPiAJLyogUGluIGd1ZXN0IG1lbW9yeSAqLw0KPiAJcmV0ID0gLUVG
-QVVMVDsNCj4gCWd1ZXN0X3BhZ2UgPSBzZXZfcGluX21lbW9yeShrdm0sIHBhcmFtcy5ndWVzdF91
-YWRkciAmIFBBR0VfTUFTSywgUEFHRV9TSVpFLCAmbiwgMCk7DQo+IAlpZiAoIWd1ZXN0X3BhZ2Up
-DQo+IAkJZ290byBmcmVlX2RhdGE7DQo+IA0KPiAJLyogVGhlIFNFTkRfVVBEQVRFX0RBVEEgY29t
-bWFuZCByZXF1aXJlcyBDLWJpdCB0byBiZSBhbHdheXMgc2V0LiAqLw0KPiAJZGF0YS0+Z3Vlc3Rf
-YWRkcmVzcwk9IChwYWdlX3RvX3BmbihndWVzdF9wYWdlWzBdKSA8PCBQQUdFX1NISUZUKSArIG9m
-ZnNldDsNCj4gCWRhdGEtPmd1ZXN0X2FkZHJlc3MgICAgIHw9IHNldl9tZV9tYXNrOw0KPiAJZGF0
-YS0+Z3Vlc3RfbGVuCQk9IHBhcmFtcy5ndWVzdF9sZW47DQo+IAlkYXRhLT5oZHJfYWRkcmVzcwk9
-IF9fcHNwX3BhKGhkcik7DQo+IAlkYXRhLT5oZHJfbGVuCQk9IHBhcmFtcy5oZHJfbGVuOw0KPiAJ
-ZGF0YS0+dHJhbnNfYWRkcmVzcwk9IF9fcHNwX3BhKHRyYW5zX2RhdGEpOw0KPiAJZGF0YS0+dHJh
-bnNfbGVuCQk9IHBhcmFtcy50cmFuc19sZW47DQo+IAlkYXRhLT5oYW5kbGUJCT0gc2V2LT5oYW5k
-bGU7DQo+IA0KPiAJcmV0ID0gc2V2X2lzc3VlX2NtZChrdm0sIFNFVl9DTURfU0VORF9VUERBVEVf
-REFUQSwgZGF0YSwgJmFyZ3AtPmVycm9yKTsNCj4gCWlmIChyZXQpDQo+IAkJZ290byB1bnBpbl9t
-ZW1vcnk7DQo+IA0KPiAJLyogQ29weSB0cmFuc3BvcnQgYnVmZmVyIHRvIHVzZXIgc3BhY2UuICov
-DQo+IAlyZXQgPSBjb3B5X3RvX3VzZXIoKHZvaWQgX191c2VyICopKHVpbnRwdHJfdClwYXJhbXMu
-dHJhbnNfdWFkZHIsIHRyYW5zX2RhdGEsIHBhcmFtcy50cmFuc19sZW4pOw0KPiAJaWYgKHJldCkN
-Cj4gCQlnb3RvIHVucGluX21lbW9yeTsNCj4gDQo+IAkvKiBDb3B5IHBhY2tldCBoZWFkZXIgdG8g
-dXNlcnNwYWNlLiAqLw0KPiAJcmV0ID0gY29weV90b191c2VyKCh2b2lkIF9fdXNlciAqKSh1aW50
-cHRyX3QpcGFyYW1zLmhkcl91YWRkciwgaGRyLCBwYXJhbXMuaGRyX2xlbik7DQo+IA0KPiB1bnBp
-bl9tZW1vcnk6DQo+IAlzZXZfdW5waW5fbWVtb3J5KGt2bSwgZ3Vlc3RfcGFnZSwgbik7DQo+IA0K
-PiBmcmVlX2RhdGE6DQo+IAlrZnJlZShkYXRhKTsNCj4gDQo+IGZyZWVfdHJhbnM6DQo+IAlrZnJl
-ZSh0cmFuc19kYXRhKTsNCj4gDQo+IGZyZWVfaGRyOg0KPiAJa2ZyZWUoaGRyKTsNCj4gDQo+IAly
-ZXR1cm4gcmV0Ow0KPiB9DQo+IA0K
+Hi all, this is a respin of:
+
+  https://lore.kernel.org/lkml/20190802090853.4810-1-patrick.bellasi@arm.com/
+
+which introduces only a small fix suggested by Michal and adds his Reviewed-by.
+Thanks Michal for your additional review!
+
+The series is based on top of today's tip/sched/core:
+
+  commit a46d14eca7b7 ("sched/fair: Use rq_lock/unlock in online_fair_sched_group")
+
+Since there was only minor changes, I've kept Tejun ACK tag.
+
+Cheers,
+Patrick
+
+
+Series Organization
+===================
+
+The full tree is available here:
+
+   git://linux-arm.org/linux-pb.git   lkml/utilclamp_v14
+   http://www.linux-arm.org/git?p=linux-pb.git;a=shortlog;h=refs/heads/lkml/utilclamp_v14
+
+
+Newcomer's Short Abstract
+=========================
+
+The Linux scheduler tracks a "utilization" signal for each scheduling entity
+(SE), e.g. tasks, to know how much CPU time they use. This signal allows the
+scheduler to know how "big" a task is and, in principle, it can support
+advanced task placement strategies by selecting the best CPU to run a task.
+Some of these strategies are represented by the Energy Aware Scheduler [1].
+
+When the schedutil cpufreq governor is in use, the utilization signal allows
+the Linux scheduler to also drive frequency selection. The CPU utilization
+signal, which represents the aggregated utilization of tasks scheduled on that
+CPU, is used to select the frequency which best fits the workload generated by
+the tasks.
+
+The current translation of utilization values into a frequency selection is
+simple: we go to max for RT tasks or to the minimum frequency which can
+accommodate the utilization of DL+FAIR tasks.
+However, utilization values by themselves cannot convey the desired
+power/performance behaviors of each task as intended by user-space.
+As such they are not ideally suited for task placement decisions.
+
+Task placement and frequency selection policies in the kernel can be improved
+by taking into consideration hints coming from authorized user-space elements,
+like for example the Android middleware or more generally any "System
+Management Software" (SMS) framework.
+
+Utilization clamping is a mechanism which allows to "clamp" (i.e. filter) the
+utilization generated by RT and FAIR tasks within a range defined by user-space.
+The clamped utilization value can then be used, for example, to enforce a
+minimum and/or maximum frequency depending on which tasks are active on a CPU.
+
+The main use-cases for utilization clamping are:
+
+ - boosting: better interactive response for small tasks which
+   are affecting the user experience.
+
+   Consider for example the case of a small control thread for an external
+   accelerator (e.g. GPU, DSP, other devices). Here, from the task utilization
+   the scheduler does not have a complete view of what the task's requirements
+   are and, if it's a small utilization task, it keeps selecting a more energy
+   efficient CPU, with smaller capacity and lower frequency, thus negatively
+   impacting the overall time required to complete task activations.
+
+ - capping: increase energy efficiency for background tasks not affecting the
+   user experience.
+
+   Since running on a lower capacity CPU at a lower frequency is more energy
+   efficient, when the completion time is not a main goal, then capping the
+   utilization considered for certain (maybe big) tasks can have positive
+   effects, both on energy consumption and thermal headroom.
+   This feature allows also to make RT tasks more energy friendly on mobile
+   systems where running them on high capacity CPUs and at the maximum
+   frequency is not required.
+
+From these two use-cases, it's worth noticing that frequency selection
+biasing, introduced by patches 9 and 10 of this series, is just one possible
+usage of utilization clamping. Another compelling extension of utilization
+clamping is in helping the scheduler in making tasks placement decisions.
+
+Utilization is (also) a task specific property the scheduler uses to know
+how much CPU bandwidth a task requires, at least as long as there is idle time.
+Thus, the utilization clamp values, defined either per-task or per-task_group,
+can represent tasks to the scheduler as being bigger (or smaller) than what
+they actually are.
+
+Utilization clamping thus enables interesting additional optimizations, for
+example on asymmetric capacity systems like Arm big.LITTLE and DynamIQ CPUs,
+where:
+
+ - boosting: try to run small/foreground tasks on higher-capacity CPUs to
+   complete them faster despite being less energy efficient.
+
+ - capping: try to run big/background tasks on low-capacity CPUs to save power
+   and thermal headroom for more important tasks
+
+This series does not present this additional usage of utilization clamping but
+it's an integral part of the EAS feature set, where [2] is one of its main
+components.
+
+Android kernels use SchedTune, a solution similar to utilization clamping, to
+bias both 'frequency selection' and 'task placement'. This series provides the
+foundation to add similar features to mainline while focusing, for the
+time being, just on schedutil integration.
+
+
+References
+==========
+
+[1] Energy Aware Scheduling
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/scheduler/sched-energy.txt?h=v5.1
+
+[2] Expressing per-task/per-cgroup performance hints
+    Linux Plumbers Conference 2018
+    https://linuxplumbersconf.org/event/2/contributions/128/
+
+
+Patrick Bellasi (6):
+  sched/core: uclamp: Extend CPU's cgroup controller
+  sched/core: uclamp: Propagate parent clamps
+  sched/core: uclamp: Propagate system defaults to root group
+  sched/core: uclamp: Use TG's clamps to restrict TASK's clamps
+  sched/core: uclamp: Update CPU's refcount on TG's clamp changes
+  sched/core: uclamp: always use enum uclamp_id for clamp_id values
+
+ Documentation/admin-guide/cgroup-v2.rst |  34 +++
+ init/Kconfig                            |  22 ++
+ kernel/sched/core.c                     | 375 ++++++++++++++++++++++--
+ kernel/sched/sched.h                    |  12 +-
+ 4 files changed, 421 insertions(+), 22 deletions(-)
+
+-- 
+2.22.0
+
