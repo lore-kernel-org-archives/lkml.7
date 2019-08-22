@@ -2,131 +2,118 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C66EDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2A7C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D46F23400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CB023400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:49:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sF3NPfIh"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="L8WPD7dT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389216AbfHVPs5 (ORCPT
+        id S2389596AbfHVPtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:48:57 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46235 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfHVPs5 (ORCPT
+        Thu, 22 Aug 2019 11:49:17 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38560 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfHVPtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:48:57 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m3so3878306pgv.13;
-        Thu, 22 Aug 2019 08:48:56 -0700 (PDT)
+        Thu, 22 Aug 2019 11:49:17 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r12so8610882edo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:49:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2gibvD/PE/0k2/MgxLtnC9v6hycHeC3vvECK4dop/Xo=;
-        b=sF3NPfIhqt3Hzc9KufbzNsaUbbCQVjOI0o8UDhRvQtYR6/vH4PpZ/wkdh5TWxLkeKj
-         mYde/YuazOc7nnSd8AxHozSoOH7LNUG36AuVSRCxuqqR4vLq89D4Nx3G4d9wbbqMCKyv
-         sNqskZoKRu0j6XgfoLa/t2g9/VruzpdsSCZdPFcMUMdYtbVL5xgYtz5X1SrxIeajHRWC
-         kLnexInTNp9iOEi9RBQoksUAmmznkbgNBXhYWHm1bttktZ0CHdI2PQW/PQESCCDkniES
-         m8iyUQRftUUQF4+y63MkpSC4J65mZgfABsePvyUm0wMae9ctxYXnF8FEgm1kfGX4Dqp/
-         1UfA==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DJ/eC3LGuOL6//+DGNThc9YJfZBuiT1PO54o1KGcu30=;
+        b=L8WPD7dTrU3n/Wq91GZgxnLyJoEfJzls7dAI7jRFPS2OQUmzaI3fJOHoWKcsrFZaVP
+         RvSdHC7FZ1z0sOk8IdvvB29K2NqNten9KEG0gvLCmSqtQFfFJ5uMgD4v43b36IcAv9bX
+         KTtYiU4ADpMXlaL5IafhA5DT+coI1u60NzoVzh5Rw8mz0K07RDv2bxZ/AeulQBVIFehw
+         kEYLsFZGGD1vqAftG2zGF3XUbDDqHOCP29WxaNddvB8HHtjCJm1SU7vcdk5mJlPG0h9V
+         x9uHHr9bupiR3K6DrnD2mLXjtMpcO3ASDogaK2ABY0czTEVx4Z8FVuvhwL6Xr5eg/0q4
+         gRHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2gibvD/PE/0k2/MgxLtnC9v6hycHeC3vvECK4dop/Xo=;
-        b=KKcL7djQSNRXdS/QWIR4w2HSOmv1vX6x9NXoS2WlQGxWKZUiXs+xEP81ZbOQkAbxfO
-         dmkZ23JSPNVqO0fhBJJ81exblUSUp0mC/SUm+XjTgKhfXhlVgY2IOv2+fNvAYiClixqN
-         MZ0lYgyOWWN4oD3aY2BbMictXpjHMBIRaunvKb1sr9Lesf0bqMzCNjcxBEIJuDQUL9Jh
-         0rIWRtODGrhl9U99HFS/QnBKdkuKOCCm8Lh9jY0zyhH60Ee6/deTfGy9micyZoVJUqzF
-         lo0W1dT0TX6pd1NMuRgZbk3/+CsJvkS5v3+FouiYXUlRcT+hMneadnI/hDwpIh+bYXsG
-         xQmQ==
-X-Gm-Message-State: APjAAAXrvv9gX+lskIo+dqfHUHoR/9HY3kqivvHO1AJiVDgsn7tw8qxC
-        t4PWdNatvratXyCDL6SI2zE=
-X-Google-Smtp-Source: APXvYqxoI/708laf6gtdOu/5W9IHi68WsTOyfXTApi1AbF+GqRB6Sp57tyWIM4vuUW9q1QIysQIBrg==
-X-Received: by 2002:a63:e148:: with SMTP id h8mr3032468pgk.275.1566488936083;
-        Thu, 22 Aug 2019 08:48:56 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id ay7sm3717pjb.4.2019.08.22.08.48.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 08:48:55 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        Fritz Koenig <frkoenig@google.com>,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DJ/eC3LGuOL6//+DGNThc9YJfZBuiT1PO54o1KGcu30=;
+        b=ZU5PMRhGYBoyBYIVZvUWgNMM9Uh6dPxtYEtmb9K5EmdJQ6mKDkzFd7riayFsNt1fu/
+         YQ9UcWK3ktuavCcCI7ypf6Ck+up4ldIh7grAKddN2JMP16bVPQG5jEkME7GLlzsCjuvZ
+         808cYwTHqXzcsTzO7XEaEj/c9a2wVMy56NCaCXTATtO8PFtKlnk+kgnYWwnPgUSXukod
+         2NIgSG2zCKZ7yyOjuecLzMjqR3UBk4217fj946xymq26AT3SmETKI7pQIHZd8CYH6arS
+         FIJRNdtRQk2EhmNKvcw1FETpmtYM/1+L6kLI6Ry0py2IgE8UkbFrZn1+q01UoACXLtlV
+         DphA==
+X-Gm-Message-State: APjAAAU5ly7Llqh9OlQPS+VEEB0cItYrxdvVVfo7Xs1CNY6r9lOGzCrV
+        ZjAj+TEWvFRBbq+4UkEvZFsh2g==
+X-Google-Smtp-Source: APXvYqzD5H/EuYEoQQqsHvjG6zA2nUnP7NlXkdSM5hi9Tt50tWsVXfctor7rYt6YdvlbkGgeWIoYpQ==
+X-Received: by 2002:a05:6402:50a:: with SMTP id m10mr21388362edv.173.1566488955883;
+        Thu, 22 Aug 2019 08:49:15 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id p20sm3710384eja.59.2019.08.22.08.49.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Aug 2019 08:49:15 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 7225D100853; Thu, 22 Aug 2019 18:49:14 +0300 (+03)
+Date:   Thu, 22 Aug 2019 18:49:14 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Michal Hocko <mhocko@kernel.org>, kirill.shutemov@linux.intel.com,
+        Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
+        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/msm/dpu: add rotation property
-Date:   Thu, 22 Aug 2019 08:46:21 -0700
-Message-Id: <20190822154644.11723-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
+Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
+Message-ID: <20190822154914.gb5clks2tzziobfx@box>
+References: <1566410125-66011-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190822080434.GF12785@dhcp22.suse.cz>
+ <ee048bbf-3563-d695-ea58-5f1504aee35c@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee048bbf-3563-d695-ea58-5f1504aee35c@suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Thu, Aug 22, 2019 at 02:56:56PM +0200, Vlastimil Babka wrote:
+> >> @@ -2816,11 +2821,14 @@ void free_transhuge_page(struct page *page)
+> >>  		ds_queue->split_queue_len--;
+> >>  		list_del(page_deferred_list(page));
+> >>  	}
+> >> +	__mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
+> >> +			      -page[2].nr_freeable);
+> >> +	page[2].nr_freeable = 0;
+> 
+> Wouldn't it be safer to fully tie the nr_freeable use to adding the page to the
+> deffered list? So here the code would be in the if (!list_empty()) { } part above.
+> 
+> >>  	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+> >>  	free_compound_page(page);
+> >>  }
+> >>  
+> >> -void deferred_split_huge_page(struct page *page)
+> >> +void deferred_split_huge_page(struct page *page, unsigned int nr)
+> >>  {
+> >>  	struct deferred_split *ds_queue = get_deferred_split_queue(page);
+> >>  #ifdef CONFIG_MEMCG
+> >> @@ -2844,6 +2852,9 @@ void deferred_split_huge_page(struct page *page)
+> >>  		return;
+> >>  
+> >>  	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+> >> +	page[2].nr_freeable += nr;
+> >> +	__mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
+> >> +			      nr);
+> 
+> Same here, only do this when adding to the list, below? Or we might perhaps
+> account base pages multiple times?
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+No, it cannot be under list_empty() check. Consider the case when a THP
+got unmapped 4k a time. You need to put it on the list once, but account
+it every time.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-index 45bfac9e3af7..970194958257 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-@@ -1040,8 +1040,21 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane)
- 				pstate->multirect_mode);
- 
- 	if (pdpu->pipe_hw->ops.setup_format) {
-+		unsigned int rotation;
-+
- 		src_flags = 0x0;
- 
-+		rotation = drm_rotation_simplify(state->rotation,
-+						 DRM_MODE_ROTATE_0 |
-+						 DRM_MODE_REFLECT_X |
-+						 DRM_MODE_REFLECT_Y);
-+
-+		if (rotation & DRM_MODE_REFLECT_X)
-+			src_flags |= DPU_SSPP_FLIP_LR;
-+
-+		if (rotation & DRM_MODE_REFLECT_Y)
-+			src_flags |= DPU_SSPP_FLIP_UD;
-+
- 		/* update format */
- 		pdpu->pipe_hw->ops.setup_format(pdpu->pipe_hw, fmt, src_flags,
- 				pstate->multirect_index);
-@@ -1522,6 +1535,13 @@ struct drm_plane *dpu_plane_init(struct drm_device *dev,
- 	if (ret)
- 		DPU_ERROR("failed to install zpos property, rc = %d\n", ret);
- 
-+	drm_plane_create_rotation_property(plane,
-+			DRM_MODE_ROTATE_0,
-+			DRM_MODE_ROTATE_0 |
-+			DRM_MODE_ROTATE_180 |
-+			DRM_MODE_REFLECT_X |
-+			DRM_MODE_REFLECT_Y);
-+
- 	drm_plane_enable_fb_damage_clips(plane);
- 
- 	/* success! finalize initialization */
 -- 
-2.21.0
-
+ Kirill A. Shutemov
