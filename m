@@ -2,203 +2,189 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814D1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038DDC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E0223401
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D696023401
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387794AbfHVPq1 (ORCPT
+        id S2387991AbfHVPsC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:46:27 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47285 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387751AbfHVPq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:46:27 -0400
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mkl@pengutronix.de>)
-        id 1i0pI6-0001kC-4z; Thu, 22 Aug 2019 17:46:22 +0200
-Received: from [IPv6:2001:67c:20a1:1192:1c6e:731:5705:ce35] (unknown [IPv6:2001:67c:20a1:1192:1c6e:731:5705:ce35])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
-        (Authenticated sender: mkl@blackshift.org)
-        by smtp.blackshift.org (Postfix) with ESMTPSA id 6270F449E7B;
-        Thu, 22 Aug 2019 15:46:18 +0000 (UTC)
-To:     Dan Murphy <dmurphy@ti.com>, wg@grandegger.com, davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        Thu, 22 Aug 2019 11:48:02 -0400
+Received: from mga01.intel.com ([192.55.52.88]:53780 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387880AbfHVPsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 11:48:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 08:48:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,417,1559545200"; 
+   d="scan'208";a="196274097"
+Received: from otc-lr-04.jf.intel.com ([10.54.39.122])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Aug 2019 08:48:01 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190509161109.10499-1-dmurphy@ti.com>
- <20190509161109.10499-3-dmurphy@ti.com>
- <bdf06ead-a2e8-09a9-8cdd-49b54ec9da72@pengutronix.de>
- <ff9e007b-6e39-3d64-b62b-93c281d69113@ti.com>
-From:   Marc Kleine-Budde <mkl@pengutronix.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [PATCH v12 3/5] dt-bindings: can: tcan4x5x: Add DT bindings for
- TCAN4x5X driver
-Message-ID: <6c2bf55f-e360-c51a-e7bb-effc86aa5b6c@pengutronix.de>
-Date:   Thu, 22 Aug 2019 17:46:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <ff9e007b-6e39-3d64-b62b-93c281d69113@ti.com>
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="b5orkHz9ibUbF7nWrPatgW4erJBEZbGjj"
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Cc:     eranian@google.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2] perf/x86: Consider pinned events for group validation
+Date:   Thu, 22 Aug 2019 08:47:46 -0700
+Message-Id: <1566488866-5975-1-git-send-email-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---b5orkHz9ibUbF7nWrPatgW4erJBEZbGjj
-Content-Type: multipart/mixed; boundary="r0SgaKD5BGhUZBvMER0VMyVCgXsPI8g3V";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Dan Murphy <dmurphy@ti.com>, wg@grandegger.com, davem@davemloft.net
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <6c2bf55f-e360-c51a-e7bb-effc86aa5b6c@pengutronix.de>
-Subject: Re: [PATCH v12 3/5] dt-bindings: can: tcan4x5x: Add DT bindings for
- TCAN4x5X driver
-References: <20190509161109.10499-1-dmurphy@ti.com>
- <20190509161109.10499-3-dmurphy@ti.com>
- <bdf06ead-a2e8-09a9-8cdd-49b54ec9da72@pengutronix.de>
- <ff9e007b-6e39-3d64-b62b-93c281d69113@ti.com>
-In-Reply-To: <ff9e007b-6e39-3d64-b62b-93c281d69113@ti.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
---r0SgaKD5BGhUZBvMER0VMyVCgXsPI8g3V
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
+perf stat -M metrics relies on weak groups to reject unschedulable
+groups and run them as non-groups.
+This uses the group validation code in the kernel. Unfortunately
+that code doesn't take pinned events, such as the NMI watchdog, into
+account. So some groups can pass validation, but then later still
+never schedule.
 
-On 8/22/19 4:20 PM, Dan Murphy wrote:
->>> +tcan4x5x: tcan4x5x@0 {
->>> +		compatible =3D "ti,tcan4x5x";
->>> +		reg =3D <0>;
->>> +		#address-cells =3D <1>;
->>> +		#size-cells =3D <1>;
->>> +		spi-max-frequency =3D <10000000>;
->>> +		bosch,mram-cfg =3D <0x0 0 0 32 0 0 1 1>;
->>> +		data-ready-gpios =3D <&gpio1 14 GPIO_ACTIVE_LOW>;
->> Can you convert this into a proper interrupt property? E.g.:
->=20
-> OK.=C2=A0 Do you want v13 or do you want patches on top for net-next?
+For example,
 
-Please use net-next/master as the base.
+ $echo 1 > /proc/sys/kernel/nmi_watchdog
+ $perf stat -M Page_Walks_Utilization
 
->>>                  interrupt-parent =3D <&gpio4>;
->>>                  interrupts =3D <13 0x2>;
->> See:
->> https://elixir.bootlin.com/linux/latest/source/Documentation/devicetre=
-e/bindings/net/can/microchip,mcp251x.txt#L21
->> https://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can-next.git=
-/tree/drivers/net/can/spi/mcp251x.c?h=3Dmcp251x#n945
+ Performance counter stats for 'system wide':
 
-I've removed the branch, as the patches are already upstream, have a
-look here:
+     <not counted>      itlb_misses.walk_pending
+(0.00%)
+     <not counted>      dtlb_load_misses.walk_pending
+(0.00%)
+     <not counted>      dtlb_store_misses.walk_pending
+(0.00%)
+     <not counted>      ept.walk_pending
+(0.00%)
+     <not counted>      cycles
+(0.00%)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/tree/d=
-rivers/net/can/spi/mcp251x.c#n921
+       1.176613558 seconds time elapsed
 
-Marc
+Current pinned events are always scheduled first. So the new group must
+can be scheduled together with current pinned events. Otherwise, it will
+never get a chance to be scheduled later.
+The trick is to pretend the current pinned events as part of the new
+group, and insert them into the fake_cpuc.
+The simulation result will tell if they can be scheduled successfully.
+The fake_cpuc never touch event state. The current pinned events will
+not be impacted.
+Disabling interrupts to prevent the events in current CPU's cpuc going
+away and getting freed.
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+It won't catch all possible cases that cannot be scheduled, such as
+events pinned differently on different CPUs, or complicated constraints.
+The validation is based on current environment. It doesn't help on the
+case, which first create a group and then a pinned event, either.
+But for the most common case, the NMI watchdog interacting with the
+current perf metrics, it is strong enough.
 
+After applying the patch,
 
---r0SgaKD5BGhUZBvMER0VMyVCgXsPI8g3V--
+ $echo 1 > /proc/sys/kernel/nmi_watchdog
+ $ perf stat -M Page_Walks_Utilization
 
---b5orkHz9ibUbF7nWrPatgW4erJBEZbGjj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+ Performance counter stats for 'system wide':
 
------BEGIN PGP SIGNATURE-----
+         2,491,910      itlb_misses.walk_pending  #      0.0
+Page_Walks_Utilization   (79.94%)
+        13,630,942      dtlb_load_misses.walk_pending
+(80.02%)
+           207,255      dtlb_store_misses.walk_pending
+(80.04%)
+                 0      ept.walk_pending
+(80.04%)
+       236,204,924      cycles
+(79.97%)
 
-iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl1euMAACgkQWsYho5Hk
-nSBRfgf/dgt6qwCU+00wQD4mEbAvVn39RyASlLw3AdaliduTEV6b3SDDe5Ip+Jp2
-cbrZOTfhAZ2Q2zBhP0jR4HlpjLtjLjKVN/i+3Y/Qgb8GFAMvySPcU520e03w++ug
-pzMnUP4hIFz2NuiG+eMgQ30mgTWEzjhyA0T5qVS3MSplYc+HNHwmy2BXnmTCsseA
-Mw7K1LA482sPDye52qJNyfBCfSyD2nQImgKC4PMZ640WY4pKmj8XL9St8M/aB+WN
-9RAQESJ60klKTxLCs9Oy7mbvTJzEOn1o+YQ18Qj+DFKKD859v+Tgbxc1Xvrd9jww
-ldc2jaor6zSIvISR8/2ATnzT5E7ruw==
-=t0jQ
------END PGP SIGNATURE-----
+       0.901785713 seconds time elapsed
 
---b5orkHz9ibUbF7nWrPatgW4erJBEZbGjj--
+Reported-by: Stephane Eranian <eranian@google.com>
+Suggested-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+
+The V2 still only check current CPU's cpuc. Because I think we cannot
+prevent the cpuc in other CPU without a lock. Adding a lock will
+introduce extra overhead in some critical path, e.g. context switch.
+The patch is good enough for the common case. We may leave the other
+complicated cases as they are.
+
+Changes since V1:
+- Disabling interrupts to prevent the events in current CPU's cpuc
+  going away and getting freed.
+- Update comments and description
+
+ arch/x86/events/core.c | 34 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 81b005e..b59154e 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2011,9 +2011,12 @@ static int validate_event(struct perf_event *event)
+  */
+ static int validate_group(struct perf_event *event)
+ {
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct perf_event *leader = event->group_leader;
+ 	struct cpu_hw_events *fake_cpuc;
+-	int ret = -EINVAL, n;
++	struct perf_event *pinned_event;
++	int ret = -EINVAL, n, i;
++	unsigned long flags;
+ 
+ 	fake_cpuc = allocate_fake_cpuc();
+ 	if (IS_ERR(fake_cpuc))
+@@ -2033,9 +2036,38 @@ static int validate_group(struct perf_event *event)
+ 	if (n < 0)
+ 		goto out;
+ 
++	/*
++	 * Disable interrupts to prevent the events in this CPU's cpuc
++	 * going away and getting freed.
++	 */
++	local_irq_save(flags);
++
++	/*
++	 * The new group must can be scheduled together with current pinned
++	 * events. Otherwise, it will never get a chance to be scheduled later.
++	 *
++	 * It won't catch all possible cases that cannot schedule, such as
++	 * events pinned on CPU1, but the validation for a new CPU1 event
++	 * running on other CPU. However, it's good enough to handle common
++	 * cases like the global NMI watchdog.
++	 */
++	for (i = 0; i < cpuc->n_events; i++) {
++		pinned_event = cpuc->event_list[i];
++		if (WARN_ON_ONCE(!pinned_event))
++			continue;
++		if (!pinned_event->attr.pinned)
++			continue;
++		fake_cpuc->n_events = n;
++		n = collect_events(fake_cpuc, pinned_event, false);
++		if (n < 0)
++			goto irq;
++	}
++
+ 	fake_cpuc->n_events = 0;
+ 	ret = x86_pmu.schedule_events(fake_cpuc, n, NULL);
+ 
++irq:
++	local_irq_restore(flags);
+ out:
+ 	free_fake_cpuc(fake_cpuc);
+ 	return ret;
+-- 
+2.7.4
+
