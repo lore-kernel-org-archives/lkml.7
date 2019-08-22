@@ -2,142 +2,100 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98BAC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17890C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C64FA22CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7A42339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387811AbfHVLNT (ORCPT
+        id S1732607AbfHVLOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:13:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:44100 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728594AbfHVLNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:13:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 811CF344;
-        Thu, 22 Aug 2019 04:13:18 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFA4E3F246;
-        Thu, 22 Aug 2019 04:13:17 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 12:13:16 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Jonathan Chocron <jonnyc@amazon.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk,
-        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
-        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
-        hhhawa@amazon.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 7/7] PCI: dwc: Add validation that PCIe core is set to
- correct mode
-Message-ID: <20190822111315.GN23903@e119886-lin.cambridge.arm.com>
-References: <20190821153545.17635-1-jonnyc@amazon.com>
- <20190821154745.31834-3-jonnyc@amazon.com>
+        Thu, 22 Aug 2019 07:14:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42110 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726844AbfHVLOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 07:14:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7E2A6AF11;
+        Thu, 22 Aug 2019 11:14:31 +0000 (UTC)
+Subject: Re: [PATCH 2/3] xfs: add kmem_alloc_io()
+To:     Dave Chinner <david@fromorbit.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        penguin-kernel@I-love.SAKURA.ne.jp
+References: <20190821083820.11725-1-david@fromorbit.com>
+ <20190821083820.11725-3-david@fromorbit.com>
+ <20190821232440.GB24904@infradead.org>
+ <20190822003131.GR1119@dread.disaster.area>
+ <20190822075948.GA31346@infradead.org>
+ <20190822085130.GI2349@hirez.programming.kicks-ass.net>
+ <20190822091057.GK2386@hirez.programming.kicks-ass.net>
+ <20190822101441.GY1119@dread.disaster.area>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <ddcdc274-be61-6e40-5a14-a4faa954f090@suse.cz>
+Date:   Thu, 22 Aug 2019 13:14:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821154745.31834-3-jonnyc@amazon.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190822101441.GY1119@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 06:47:45PM +0300, Jonathan Chocron wrote:
-> Some PCIe controllers can be set to either Host or EP according to some
-> early boot FW. To make sure there is no discrepancy (e.g. FW configured
-> the port to EP mode while the DT specifies it as a host bridge or vice
-> versa), a check has been added for each mode.
+On 8/22/19 12:14 PM, Dave Chinner wrote:
+> On Thu, Aug 22, 2019 at 11:10:57AM +0200, Peter Zijlstra wrote:
+>> 
+>> Ah, current_gfp_context() already seems to transfer PF_MEMALLOC_NOFS
+>> into the GFP flags.
+>> 
+>> So are we sure it is broken and needs mending?
 > 
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-ep.c   | 8 ++++++++
->  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
->  2 files changed, 16 insertions(+)
+> Well, that's what we are trying to work out. The problem is that we
+> have code that takes locks and does allocations that is called both
+> above and below the reclaim "lock" context. Once it's been seen
+> below the reclaim lock context, calling it with GFP_KERNEL context
+> above the reclaim lock context throws a deadlock warning.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 2bf5a35c0570..00e59a134b93 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -531,6 +531,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  	int ret;
->  	u32 reg;
->  	void *addr;
-> +	u8 hdr_type;
->  	unsigned int nbars;
->  	unsigned int offset;
->  	struct pci_epc *epc;
-> @@ -543,6 +544,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  		return -EINVAL;
->  	}
->  
-> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-> +	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-> +		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
-> +			hdr_type);
-> +		return -EIO;
-> +	}
-> +
->  	ret = of_property_read_u32(np, "num-ib-windows", &ep->num_ib_windows);
->  	if (ret < 0) {
->  		dev_err(dev, "Unable to read *num-ib-windows* property\n");
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index f93252d0da5b..d2ca748e4c85 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  	struct pci_bus *child;
->  	struct pci_host_bridge *bridge;
->  	struct resource *cfg_res;
-> +	u8 hdr_type;
->  	int ret;
->  
->  	raw_spin_lock_init(&pci->pp.lock);
-> @@ -396,6 +397,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  		}
->  	}
->  
-> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-
-Do we know if it's always safe to read these registers at this point in time?
-
-Later in dw_pcie_host_init we call pp->ops->host_init - looking at the
-implementations of .host_init I can see:
-
- - resets being performed (qcom_ep_reset_assert,
-   artpec6_pcie_assert_core_reset, imx6_pcie_assert_core_reset)
- - changes to config space registers (ks_pcie_init_id, dw_pcie_setup_rc)
-   including setting PCI_CLASS_DEVICE
- - and clocks being enabled (qcom_pcie_init_1_0_0)
-
-I'm not sure if your changes would cause anything to break for these other
-controllers (or future controllers) as I couldn't see any other reads to the
-config.
-
-Given that we are reading config space should dw_pcie_rd_own_conf be used?
-(For example kirin_pcie_rd_own_conf does something special).
-
-Thanks,
-
-Andrew Murray
-
-> +	if (hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-> +		dev_err(pci->dev, "PCIe controller is not set to bridge type (hdr_type: 0x%x)!\n",
-> +			hdr_type);
-> +		return -EIO;
-> +	}
-> +
->  	pp->mem_base = pp->mem->start;
->  
->  	if (!pp->va_cfg0_base) {
-> -- 
-> 2.17.1
+> The only way around that was to mark these allocation sites as
+> GFP_NOFS so lockdep is never allowed to see that recursion through
+> reclaim occur. Even though it isn't a deadlock vector.
 > 
+> What we're looking at is whether PF_MEMALLOC_NOFS changes this - I
+> don't think it does solve this problem. i.e. if we define the
+> allocation as GFP_KERNEL and then use PF_MEMALLOC_NOFS where reclaim
+> is not allowed, we still have GFP_KERNEL allocations in code above
+> reclaim that has also been seen below relcaim. And so we'll get
+> false positive warnings again.
+
+If I understand both you and the code directly, the code sites won't call
+__fs_reclaim_acquire when called with current->flags including PF_MEMALLOC_NOFS.
+So that would mean they "won't be seen below the reclaim" and all would be fine,
+right?
+
+> What I think we are going to have to do here is manually audit
+> each of the KM_NOFS call sites as we remove the NOFS from them and
+> determine if ___GFP_NOLOCKDEP is needed to stop lockdep from trying
+> to track these allocation sites. We've never used this tag because
+> we'd already fixed most of these false positives with explicit
+> GFP_NOFS tags long before ___GFP_NOLOCKDEP was created.
+> 
+> But until someone starts doing the work, I don't know if it will
+> work or even whether conversion PF_MEMALLOC_NOFS is going to
+> introduce a bunch of new ways to get false positives from lockdep...
+> 
+> Cheers,
+> 
+> Dave.
+> 
+
