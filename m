@@ -7,73 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AC1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84C2C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17D9F23426
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE9EA23404
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493700;
-	bh=qilmrSz0Yqh8giWWt9Gr7R/6ySvCEXEHCsxy9Pi5a+M=;
+	s=default; t=1566493702;
+	bh=5ruvj0Kl7Jdtk416ercWYo2lT39P6j9MkmjDWCdDYv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nsYRn3lkUGIi7Bp2HMmcrUUrYCQLU6OMxvRyc3AkOwStRx5QgHEwWd5mCT6/fHfbL
-	 k0Oc17VntEORFc1sG8UEAzo+cxvsvLk1cE9XCbjpSg8MozQUqrEaYZn1Q9NGHHFiU0
-	 f5Wy6S8/Hkf1yqs31gNS3pPXOww6Vupjbn/TrhtU=
+	b=LcgBkvLZeki2nOZFn0lGrm5o4xr1VOCSzhJQG/fXavHiO1SAzFnRfwkeTlEq5c5YF
+	 3WIQEMPy0DH330KEEZM21SFJJn3SrhYFzsdQ+YOWXNj+XryCR6wSaas2H5nG5WZXHl
+	 t6mW5asa0BitXce7BgY6AelOt4u2buUuptAx1DRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390261AbfHVRIT (ORCPT
+        id S2390279AbfHVRIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57618 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390237AbfHVRIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:17 -0400
+        id S2390254AbfHVRIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:19 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1AF023400;
-        Thu, 22 Aug 2019 17:08:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A8562341C;
+        Thu, 22 Aug 2019 17:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493696;
-        bh=qilmrSz0Yqh8giWWt9Gr7R/6ySvCEXEHCsxy9Pi5a+M=;
+        s=default; t=1566493698;
+        bh=5ruvj0Kl7Jdtk416ercWYo2lT39P6j9MkmjDWCdDYv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ECeQwqszIuyu/n8fDFHaWKiT5KlJxMKdc/EM0cO5h+DsimuYahDwuyYiEcdIrfRIg
-         ujg45itQmEcFicst8izsjgKQfImc2O0zbBv5VxxzAk9Xv+xI6FnvTZHwJvmf5PnJVu
-         lcz9lwxEaPYv5x7qarVO7fRpvPgG/eIrX5C4kJTk=
+        b=KxyQr/4vd3vFm0b+a1nCpKZEKQAFPjuXxuMI0QPPmprYXF7GhGuzwc31ZBG6xMdbo
+         oRfQajM5iyKILsdoXpHjfxd/jN1ejdGFW+x9bOMjqWHDNLeohdExGos2saa73ybabX
+         d9vEgiu6+plGv71VwMDzpSCYhNHtdKqdzUMKUVV4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Christoph Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
+Cc:     Henry Burns <henryburns@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Vitaly Vul <vitaly.vul@sony.com>,
+        Vitaly Wool <vitalywool@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Henry Burns <henrywolfeburns@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 004/135] mm/hmm: fix bad subpage pointer in try_to_unmap_one
-Date:   Thu, 22 Aug 2019 13:06:00 -0400
-Message-Id: <20190822170811.13303-5-sashal@kernel.org>
+Subject: [PATCH 5.2 007/135] mm/z3fold.c: fix z3fold_destroy_pool() ordering
+Date:   Thu, 22 Aug 2019 13:06:03 -0400
+Message-Id: <20190822170811.13303-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.2.y
@@ -88,79 +73,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ralph Campbell <rcampbell@nvidia.com>
+From: Henry Burns <henryburns@google.com>
 
-commit 1de13ee59225dfc98d483f8cce7d83f97c0b31de upstream.
+commit 6051d3bd3b91e96c59e62b8be2dba1cc2b19ee40 upstream.
 
-When migrating an anonymous private page to a ZONE_DEVICE private page,
-the source page->mapping and page->index fields are copied to the
-destination ZONE_DEVICE struct page and the page_mapcount() is
-increased.  This is so rmap_walk() can be used to unmap and migrate the
-page back to system memory.
+The constraint from the zpool use of z3fold_destroy_pool() is there are
+no outstanding handles to memory (so no active allocations), but it is
+possible for there to be outstanding work on either of the two wqs in
+the pool.
 
-However, try_to_unmap_one() computes the subpage pointer from a swap pte
-which computes an invalid page pointer and a kernel panic results such
-as:
+If there is work queued on pool->compact_workqueue when it is called,
+z3fold_destroy_pool() will do:
 
-  BUG: unable to handle page fault for address: ffffea1fffffffc8
+   z3fold_destroy_pool()
+     destroy_workqueue(pool->release_wq)
+     destroy_workqueue(pool->compact_wq)
+       drain_workqueue(pool->compact_wq)
+         do_compact_page(zhdr)
+           kref_put(&zhdr->refcount)
+             __release_z3fold_page(zhdr, ...)
+               queue_work_on(pool->release_wq, &pool->work) *BOOM*
 
-Currently, only single pages can be migrated to device private memory so
-no subpage computation is needed and it can be set to "page".
+So compact_wq needs to be destroyed before release_wq.
 
-[rcampbell@nvidia.com: add comment]
-  Link: http://lkml.kernel.org/r/20190724232700.23327-4-rcampbell@nvidia.com
-Link: http://lkml.kernel.org/r/20190719192955.30462-4-rcampbell@nvidia.com
-Fixes: a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVICE page in migration")
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
+Link: http://lkml.kernel.org/r/20190726224810.79660-1-henryburns@google.com
+Fixes: 5d03a6613957 ("mm/z3fold.c: use kref to prevent page free/compact race")
+Signed-off-by: Henry Burns <henryburns@google.com>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Jonathan Adams <jwadams@google.com>
+Cc: Vitaly Vul <vitaly.vul@sony.com>
+Cc: Vitaly Wool <vitalywool@gmail.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Al Viro <viro@zeniv.linux.org.uk
+Cc: Henry Burns <henrywolfeburns@gmail.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/rmap.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ mm/z3fold.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index e5dfe2ae6b0d5..003377e242323 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1475,7 +1475,15 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 			/*
- 			 * No need to invalidate here it will synchronize on
- 			 * against the special swap migration pte.
-+			 *
-+			 * The assignment to subpage above was computed from a
-+			 * swap PTE which results in an invalid pointer.
-+			 * Since only PAGE_SIZE pages can currently be
-+			 * migrated, just set it to page. This will need to be
-+			 * changed when hugepage migrations to device private
-+			 * memory are supported.
- 			 */
-+			subpage = page;
- 			goto discard;
- 		}
+diff --git a/mm/z3fold.c b/mm/z3fold.c
+index 3b27094dc42e1..d06d7f9560028 100644
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -820,8 +820,15 @@ static void z3fold_destroy_pool(struct z3fold_pool *pool)
+ {
+ 	kmem_cache_destroy(pool->c_handle);
+ 	z3fold_unregister_migration(pool);
+-	destroy_workqueue(pool->release_wq);
++
++	/*
++	 * We need to destroy pool->compact_wq before pool->release_wq,
++	 * as any pending work on pool->compact_wq will call
++	 * queue_work(pool->release_wq, &pool->work).
++	 */
++
+ 	destroy_workqueue(pool->compact_wq);
++	destroy_workqueue(pool->release_wq);
+ 	kfree(pool);
+ }
  
 -- 
 2.20.1
