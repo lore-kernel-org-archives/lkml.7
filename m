@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E98C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520A5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC6D233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ADFC233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494218;
-	bh=Pi5oWISMQ3clPukYbzRDrIssXpOIiF0xTx9td2Nxsno=;
+	s=default; t=1566494225;
+	bh=QK85sgzqt77uYmmnnf7QigCZMyphAJAAnG+jNPOGMkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z0ckkicXbiVFqJnWS1le685uZ3rdj6LIi1/oeTqtTZ5MZkPGBBEnCSMy5C1iGbRmA
-	 GXUWxSSuHwaghPRWuZ/ZqKHtj1XvkIjt6O3QXR/3Csa4Tn6APSZx/U5gKb9XV0g22H
-	 bh9w9bzwOdHlcKC5cVOBlygInwyUx3zCk6zb/CLM=
+	b=lMeierbc+kHSqjfQRbhec0/yYhUlTbbc2oG1lc8nfECL1dmxqOR8vdnrThqq3jxHh
+	 3NXuw+aj669X5vr06rkQ9m23o/z7HrR4MCIGlreNOfZ9ltT0n+L6U1kf8EHeURV1jp
+	 FvRn6wb8ZyINtIGBvGrOWuYU+C63M4w5hlddjAYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389145AbfHVRQ5 (ORCPT
+        id S2391266AbfHVRRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:16:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:17:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390367AbfHVRIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:32 -0400
+        id S2390361AbfHVRIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:31 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E668723405;
-        Thu, 22 Aug 2019 17:08:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF112233FC;
+        Thu, 22 Aug 2019 17:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493711;
-        bh=Pi5oWISMQ3clPukYbzRDrIssXpOIiF0xTx9td2Nxsno=;
+        s=default; t=1566493710;
+        bh=QK85sgzqt77uYmmnnf7QigCZMyphAJAAnG+jNPOGMkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b2swMwEt7laZSW6sYMxAgbtS9As+rzJVCVE64+F0AMJluIlEXp/wT3E8HuMomzfu6
-         XGlHsBvjUxb8WVHrZDY+8HA/pt44M2QFjURd6blxX7NAiKNtmRNmUFo/ObwEGunwrb
-         McicPEoyZELVL9PB+aXlom7Bot/rGw+ViC0BMxhE=
+        b=tLGwZooTSQlgq0/7idiw3RmLNppNVuORuRjyD692JACW9lrUs5A0KpltkZ3iM2Q3b
+         hnVsCyC8DvQGM5rP0v15hktCTc0F+IFPXo4zmW0SYvTw34AMNyEBaTc3h/au7DPPgR
+         oZbYhoY7F5QrO3zN/NUAINEkwOezi742zpf06GUU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        syzbot+276ddebab3382bbf72db@syzkaller.appspotmail.com,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+Cc:     Denis Kirjanov <kda@linux-powerpc.org>,
+        syzbot+3499a83b2d062ae409d4@syzkaller.appspotmail.com,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 031/135] netfilter: ebtables: also count base chain policies
-Date:   Thu, 22 Aug 2019 13:06:27 -0400
-Message-Id: <20190822170811.13303-32-sashal@kernel.org>
+Subject: [PATCH 5.2 029/135] net: usb: pegasus: fix improper read if get_registers() fail
+Date:   Thu, 22 Aug 2019 13:06:25 -0400
+Message-Id: <20190822170811.13303-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,81 +66,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Denis Kirjanov <kda@linux-powerpc.org>
 
-commit 3b48300d5cc7c7bed63fddb006c4046549ed4aec upstream.
+commit 224c04973db1125fcebefffd86115f99f50f8277 upstream.
 
-ebtables doesn't include the base chain policies in the rule count,
-so we need to add them manually when we call into the x_tables core
-to allocate space for the comapt offset table.
+get_registers() may fail with -ENOMEM and in this
+case we can read a garbage from the status variable tmp.
 
-This lead syzbot to trigger:
-WARNING: CPU: 1 PID: 9012 at net/netfilter/x_tables.c:649
-xt_compat_add_offset.cold+0x11/0x36 net/netfilter/x_tables.c:649
-
-Reported-by: syzbot+276ddebab3382bbf72db@syzkaller.appspotmail.com
-Fixes: 2035f3ff8eaa ("netfilter: ebtables: compat: un-break 32bit setsockopt when no rules are present")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Reported-by: syzbot+3499a83b2d062ae409d4@syzkaller.appspotmail.com
+Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/netfilter/ebtables.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ drivers/net/usb/pegasus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index 963dfdc148272..1fa9ac483173d 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -1770,20 +1770,28 @@ static int compat_calc_entry(const struct ebt_entry *e,
- 	return 0;
- }
- 
-+static int ebt_compat_init_offsets(unsigned int number)
-+{
-+	if (number > INT_MAX)
-+		return -EINVAL;
-+
-+	/* also count the base chain policies */
-+	number += NF_BR_NUMHOOKS;
-+
-+	return xt_compat_init_offsets(NFPROTO_BRIDGE, number);
-+}
- 
- static int compat_table_info(const struct ebt_table_info *info,
- 			     struct compat_ebt_replace *newinfo)
+diff --git a/drivers/net/usb/pegasus.c b/drivers/net/usb/pegasus.c
+index 6d25dea5ad4b2..f7d117d80cfbb 100644
+--- a/drivers/net/usb/pegasus.c
++++ b/drivers/net/usb/pegasus.c
+@@ -282,7 +282,7 @@ static void mdio_write(struct net_device *dev, int phy_id, int loc, int val)
+ static int read_eprom_word(pegasus_t *pegasus, __u8 index, __u16 *retdata)
  {
- 	unsigned int size = info->entries_size;
- 	const void *entries = info->entries;
-+	int ret;
+ 	int i;
+-	__u8 tmp;
++	__u8 tmp = 0;
+ 	__le16 retdatai;
+ 	int ret;
  
- 	newinfo->entries_size = size;
--	if (info->nentries) {
--		int ret = xt_compat_init_offsets(NFPROTO_BRIDGE,
--						 info->nentries);
--		if (ret)
--			return ret;
--	}
-+	ret = ebt_compat_init_offsets(info->nentries);
-+	if (ret)
-+		return ret;
- 
- 	return EBT_ENTRY_ITERATE(entries, size, compat_calc_entry, info,
- 							entries, newinfo);
-@@ -2234,11 +2242,9 @@ static int compat_do_replace(struct net *net, void __user *user,
- 
- 	xt_compat_lock(NFPROTO_BRIDGE);
- 
--	if (tmp.nentries) {
--		ret = xt_compat_init_offsets(NFPROTO_BRIDGE, tmp.nentries);
--		if (ret < 0)
--			goto out_unlock;
--	}
-+	ret = ebt_compat_init_offsets(tmp.nentries);
-+	if (ret < 0)
-+		goto out_unlock;
- 
- 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
- 	if (ret < 0)
 -- 
 2.20.1
 
