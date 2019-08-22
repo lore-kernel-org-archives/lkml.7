@@ -2,168 +2,123 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18976C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3ACC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2B8233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B19214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eA3CVPHO"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AFlhnsKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731436AbfHVHQy (ORCPT
+        id S1731448AbfHVHSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:16:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43406 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731332AbfHVHQy (ORCPT
+        Thu, 22 Aug 2019 03:18:20 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48834 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727476AbfHVHSU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:16:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v12so3307306pfn.10
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 00:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KDK904pFN7jivNdco2xyrNcDuDX6KrPhUsZA40Vbhtg=;
-        b=eA3CVPHOYL8XiTCU7ukjfFiS+M57k8US/Lwpr50Q4O3lT8by8UYD373rTuAnCa+GjK
-         C52hQnD5tSzHl+YWf5voBAdHnUS6+HTn3s+59Z6+u9rHrSiwZBNbV8NCcBPTdT2Rc12g
-         MngDDmJrh3ew2YkVw93QmvDja6lgsyZgbhf/E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KDK904pFN7jivNdco2xyrNcDuDX6KrPhUsZA40Vbhtg=;
-        b=Y1WYF1jGfMtlqaSJYlG7XCYDK6T9ZRrgOXblkO5Ig3eMJiipsaw3yPA3Nh3WJqngCc
-         RgieAdew2qvvVPnqyx9Ga6KFCKSetArExiwIm/tbidm4UVMJWZ7yyqeRTUEHg+7DVK1s
-         /gknrDRUF+v6Lu5lOyFxEcAHzs1lOEBqhS8DeQx/r3iel59A8Jzyi8sU/4xpbwHiuthv
-         HXEQ6SNGa87WYLfpGGCc54Q37l49NfDZA4fjdxcJSVN3cEZistexNIANvqVUOm0xukT0
-         j4Gmhb28YS4Y9TlOHFIsaKDU+ay4Q+p/igfyT/XnyPsUM3ePO/zAH3Pvb3srlAviya1Y
-         04fg==
-X-Gm-Message-State: APjAAAVNabNzpMpbb3qVwdo+GG0+WalHABfWqgG3VbL9ZXA9ZMpcl6c8
-        jHwZ5Qlp9Gm7StcJ8QnBqUBGWA==
-X-Google-Smtp-Source: APXvYqxdasLiYU//BopbU4CHgppxD5KX1YKpYkS67ssYX7XEfeVynJBp2KHO6i85bqDNk9/dEa3BUQ==
-X-Received: by 2002:a17:90a:e983:: with SMTP id v3mr3839574pjy.81.1566458213442;
-        Thu, 22 Aug 2019 00:16:53 -0700 (PDT)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id w26sm30233450pfq.100.2019.08.22.00.16.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 22 Aug 2019 00:16:52 -0700 (PDT)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org,
-        "Theodore Y . Ts'o" <tytso@mit.edu>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wei Li <liwei391@huawei.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Waiman Long <longman@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Grzegorz Halat <ghalat@redhat.com>,
-        Len Brown <len.brown@intel.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Yury Norov <ynorov@marvell.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 3/3] arm64: kexec_file: add rng-seed support
-Date:   Thu, 22 Aug 2019 15:15:23 +0800
-Message-Id: <20190822071522.143986-4-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190822071522.143986-1-hsinyi@chromium.org>
-References: <20190822071522.143986-1-hsinyi@chromium.org>
+        Thu, 22 Aug 2019 03:18:20 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7M7HnkY025732;
+        Thu, 22 Aug 2019 09:17:52 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=oVgJvQsPM5uwDHjpfeIZOdzAAgSti1coKyBfUwZGJIY=;
+ b=AFlhnsKlcLff90I7OHojSuwyL2oy2rYruOezE27q3xG2Bj1ZGPONJvddSX0SyeBaYew0
+ Y5M4f2lcvnHLXTXr14kdbskyofTMvQchdwziah2wddoa9kOdJ5wOSXw+4GK1+ABepSY/
+ qD7fnrKIUY6cq56Pz25u3+GKvbMfb6q0yuhf1bJrbQ7Ms0KsTslqjCoDAJuRJyKC3Y2E
+ g/xhaul0Rht1Pb4f+ZoyLqlkIcYf8f9ZyClZUxzL2gklto2cs6iBv92O+cTYZlQGdlt6
+ 2eb+FCaa6uOwPgb3wrDc5Al5dVkFVccZ/Htptu+EaadefRh6LjKjoxbC8Jylpmc73OJ9 dg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2ue8fh333m-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 22 Aug 2019 09:17:52 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1D7A641;
+        Thu, 22 Aug 2019 07:17:42 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F146C2B3429;
+        Thu, 22 Aug 2019 09:17:41 +0200 (CEST)
+Received: from SFHDAG5NODE1.st.com (10.75.127.13) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 22 Aug
+ 2019 09:17:41 +0200
+Received: from SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6]) by
+ SFHDAG5NODE1.st.com ([fe80::cc53:528c:36c8:95f6%20]) with mapi id
+ 15.00.1473.003; Thu, 22 Aug 2019 09:17:41 +0200
+From:   Gerald BAEZA <gerald.baeza@st.com>
+To:     "acme@kernel.org" <arnaldo.melo@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: RE: perf tool issue following 'perf stat: Fix --no-scale' patch
+ integration
+Thread-Topic: perf tool issue following 'perf stat: Fix --no-scale' patch
+ integration
+Thread-Index: AdVYKdLDPGQJ05vWQp+GPnpQmBTpIQAApzCAAAdGDIAAG+0v0A==
+Date:   Thu, 22 Aug 2019 07:17:41 +0000
+Message-ID: <dc163c5ae1d3418c95e02e13a6205719@SFHDAG5NODE1.st.com>
+References: <f686372a96ea490785c0a76cc96b3434@SFHDAG5NODE1.st.com>
+ <20190821162635.GB36669@tassilo.jf.intel.com>
+ <20190821195451.GG3929@kernel.org>
+In-Reply-To: <20190821195451.GG3929@kernel.org>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding "rng-seed" to dtb. It's fine to add this property if original
-fdt doesn't contain it. Since original seed will be wiped after
-read, so use a default size 128 bytes here.
+Hello Arnaldo and Andi
 
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
-No change since v7.
----
- arch/arm64/kernel/machine_kexec_file.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+Indeed, 'aligned(8)' instead of 'aligned(64)'.
+Thanks for your quick feedbacks and I am going to prepare the patch.
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index ba78ee7ca990..7b08bf9499b6 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -27,6 +27,8 @@
- #define FDT_PROP_INITRD_END	"linux,initrd-end"
- #define FDT_PROP_BOOTARGS	"bootargs"
- #define FDT_PROP_KASLR_SEED	"kaslr-seed"
-+#define FDT_PROP_RNG_SEED	"rng-seed"
-+#define RNG_SEED_SIZE		128
- 
- const struct kexec_file_ops * const kexec_file_loaders[] = {
- 	&kexec_image_ops,
-@@ -102,6 +104,19 @@ static int setup_dtb(struct kimage *image,
- 				FDT_PROP_KASLR_SEED);
- 	}
- 
-+	/* add rng-seed */
-+	if (rng_is_initialized()) {
-+		u8 rng_seed[RNG_SEED_SIZE];
-+		get_random_bytes(rng_seed, RNG_SEED_SIZE);
-+		ret = fdt_setprop(dtb, off, FDT_PROP_RNG_SEED, rng_seed,
-+				RNG_SEED_SIZE);
-+		if (ret)
-+			goto out;
-+	} else {
-+		pr_notice("RNG is not initialised: omitting \"%s\" property\n",
-+				FDT_PROP_RNG_SEED);
-+	}
-+
- out:
- 	if (ret)
- 		return (ret == -FDT_ERR_NOSPACE) ? -ENOMEM : -EINVAL;
-@@ -110,7 +125,8 @@ static int setup_dtb(struct kimage *image,
- }
- 
- /*
-- * More space needed so that we can add initrd, bootargs and kaslr-seed.
-+ * More space needed so that we can add initrd, bootargs, kaslr-seed, and
-+ * rng-seed.
-  */
- #define DTB_EXTRA_SPACE 0x1000
- 
--- 
-2.20.1
+G=E9rald
+=20
 
+
+> Em Wed, Aug 21, 2019 at 09:26:35AM -0700, Andi Kleen escreveu:
+> > >
+> > >    +             char contents[] __attribute__((aligned(64)));
+> >
+> > I think you want aligned(8). The parameter is bytes, not bits.
+> >
+> > >
+> > >
+> > >    But the xyarray structure is generic so I think this patch cannot =
+be the
+> > >    final one.
+> >
+> > I think it's fine actually to just apply this generically (with 8). It
+> > will only waste a few bytes on other 32bit architectures and should be
+> > a nop on 64bit, not worth doing anything more sophisticated.
+> >
+> > I would just submit a patch to do that.
+>=20
+> Agreed.
+>=20
+> - Arnaldo
