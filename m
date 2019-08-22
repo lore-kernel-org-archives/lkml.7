@@ -2,81 +2,171 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C9DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD64AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED1023404
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:30:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566477057;
-	bh=nnLd0ca321zcCp1UOcKyv0fRgu4H2HqkuFST/nYvp0I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sddn/pAXCN3PPfTmNqmnocnlgTrqNYX4aI2YYzl1n8wyFwZ3A3JguRtJRJy4xXuLW
-	 sldYYmLLF5gpqYpPFefzjynk069tiJboouzDhJ3NufBiEX+VaHyAmwWZ62rZEFKH4w
-	 798jhePdN/C+Ab7xwE97IHvjd94BBe/QPxr+9qKc=
+	by mail.kernel.org (Postfix) with ESMTP id B6944206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733286AbfHVMa4 (ORCPT
+        id S2387537AbfHVMbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:30:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbfHVMaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:30:55 -0400
-Received: from localhost (unknown [12.166.174.5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50FB8206BB;
-        Thu, 22 Aug 2019 12:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566477054;
-        bh=nnLd0ca321zcCp1UOcKyv0fRgu4H2HqkuFST/nYvp0I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JSLemMNcBM/FceM+Q02WJF8r7HVkdw9hmqciBJlavQfSOF0YbbNPPO+0UPOvT3Nxm
-         UkwuBAaGyYD5Ul+sVqN3Ir1g0eQRR5n5gW8Ydod106dl183i4w1UR+q+Cm+/YQ+B5K
-         i8+EyqwRusAf48a9DKJrIMnSJvkQCYGXdZKHpwIY=
-Date:   Thu, 22 Aug 2019 05:30:53 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Neil MacLeod <neil@nmacleod.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] x86/boot: Fix boot failure regression
-Message-ID: <20190822123053.GC12941@kroah.com>
-References: <CAFbqK8=RUaCnk_WkioodkdwLsDina=yW+eLvzckSbVx_3Py_-A@mail.gmail.com>
- <20190821192513.20126-1-jhubbard@nvidia.com>
- <CAFbqK8=BodLiMr4pdHjdqsZtk8iHUC_9oyRRALJt0xLz4y_4sQ@mail.gmail.com>
- <alpine.DEB.2.21.1908212323290.1983@nanos.tec.linutronix.de>
+        Thu, 22 Aug 2019 08:31:47 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:50609 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732707AbfHVMbr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:31:47 -0400
+Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id F261424000B;
+        Thu, 22 Aug 2019 12:31:43 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 14:31:43 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 07/11] media: cedrus: Specify H264 startcode and
+ decoding mode
+Message-ID: <20190822123143.GB1627@aptenodytes>
+References: <20190816160132.7352-1-ezequiel@collabora.com>
+ <20190816160132.7352-8-ezequiel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LpQ9ahxlCli8rRTG"
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908212323290.1983@nanos.tec.linutronix.de>
+In-Reply-To: <20190816160132.7352-8-ezequiel@collabora.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 11:24:28PM +0200, Thomas Gleixner wrote:
-> On Wed, 21 Aug 2019, Neil MacLeod wrote:
-> 
-> > I can confirm 5.3-rc5 is booting again from internal M2 drive on
-> > Skylake i5 NUC with this commit - many thanks!
-> 
-> I've queued that in x86/urgent and it's en route for rc6 and stable.
 
-I've dropped the original patch from the stable trees now to wait for
-this fix to hit Linus's tree.
+--LpQ9ahxlCli8rRTG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also the original doesn't seem to have fixed the build warning I'm
-seeing on my Fedora test build systems, which is odd, I need to dig into
-that...
+Hi,
 
-thanks,
+On Fri 16 Aug 19, 13:01, Ezequiel Garcia wrote:
+> The cedrus VPU is slice-based and expects V4L2_PIX_FMT_H264_SLICE
+> buffers to contain H264 slices with no start code.
 
-greg k-h
+For clarification, cedrus does not expect any of the two options we have
+specified but something in-between that is rather broken (a single frame
+composed of a single slice only, in the format that our userspace currently
+fills).
+
+So at this point, the uAPI is not yet harmonized across cedrus and hantro
+although the new controls from this series are exposed on both.
+
+This situation makes me realize that perhaps we should have a formal discus=
+sion
+on the roadmap we want to take for stabilizing the API. I see many points t=
+hat
+need significant adjustments and the new controls that allow Rockchip suppo=
+rt
+are just one aspect.
+
+Having both drivers abide by the API seems like the next logical step (as f=
+ar
+as I understood, this is what Hans is expecting now), but I want to stress =
+the
+fact that it is really not enough to make a proper API and things are still
+pretty broken all around.
+
+Cheers,
+
+Paul=20
+
+> Expose this to userspace with the newly added menu control.
+>=20
+> These two controls are specified as mandatory for applications,
+> but we mark them as non-required on the driver side for
+> backwards compatibility.
+>=20
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+> Changes in v7:
+> * None.
+> Changes in v6:
+> * Remove incorrect menu_skip_mask.
+> Changes in v6:
+> * Adjust to control renames.
+> Changes in v5:
+> * Clarify commit log.
+> Changes in v4:
+> * New patch.
+> ---
+>  drivers/staging/media/sunxi/cedrus/cedrus.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>=20
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/stagin=
+g/media/sunxi/cedrus/cedrus.c
+> index 7bdc413bf727..2d3ea8b74dfd 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+> @@ -77,6 +77,24 @@ static const struct cedrus_control cedrus_controls[] =
+=3D {
+>  		.codec		=3D CEDRUS_CODEC_H264,
+>  		.required	=3D true,
+>  	},
+> +	{
+> +		.cfg =3D {
+> +			.id	=3D V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE,
+> +			.max	=3D V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
+> +			.def	=3D V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
+> +		},
+> +		.codec		=3D CEDRUS_CODEC_H264,
+> +		.required	=3D false,
+> +	},
+> +	{
+> +		.cfg =3D {
+> +			.id	=3D V4L2_CID_MPEG_VIDEO_H264_START_CODE,
+> +			.max	=3D V4L2_MPEG_VIDEO_H264_START_CODE_NONE,
+> +			.def	=3D V4L2_MPEG_VIDEO_H264_START_CODE_NONE,
+> +		},
+> +		.codec		=3D CEDRUS_CODEC_H264,
+> +		.required	=3D false,
+> +	},
+>  };
+> =20
+>  #define CEDRUS_CONTROLS_COUNT	ARRAY_SIZE(cedrus_controls)
+> --=20
+> 2.22.0
+>=20
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--LpQ9ahxlCli8rRTG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl1eiy8ACgkQ3cLmz3+f
+v9GOYgf9F51621BWqMfkbW3Yux6S7OMfF6dKTdIZX4GXqjqxXCIubBMlLE1VrFEe
+RoZ7Num71kBlgoTAX/vigjajD1L51lkIuRvAJnDxC7dvOJmWl8tEqiKDFoop3JGA
+x3YH7vafJlkhZEcvc1I5mLCiq07dDt3/R96V1T0bq9Y7yU5UnPMcWhJb5SRraw0J
+kf1nWwwKhgmgVHhYWQyGclg2pQ6X7jYeYas5u+77/kVINtW14U534sHpb2+Du9Nm
+fpM4UAWg6ByHr138378pB0E4BaMwDWzdACAYIp6MXxzvjRBRHvAUO4ysBd+AnaPk
+T//dmu8yitAKEziiw2ZZ0O2NQfoBTA==
+=7jOE
+-----END PGP SIGNATURE-----
+
+--LpQ9ahxlCli8rRTG--
