@@ -2,232 +2,223 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A34C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BA7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B3F23405
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C246423405
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566463062;
+	bh=XE3xK9iG8Wy7wo/kPx8rxFjUegSzi/UaDRIOdgmeG7Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OP6clpVQZ8q+8aBq1LsplVS6IU/VxPJsj81g3wIisKecudPMDVpsNob7tSLK3iFLz
+	 cEMJKwUAC8xqB28/my1mq5EBgSee7aXH4GStjwY7WIu5LfdRXpsZ+VIvGZ5VqL2SPW
+	 HzRL/B0FR/JrZ7ERKJ7nJruQHt6VSrRHffg9GcHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732476AbfHVIgg (ORCPT
+        id S1732486AbfHVIhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:36:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38204 "EHLO mx1.redhat.com"
+        Thu, 22 Aug 2019 04:37:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731306AbfHVIgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:36:36 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        id S1731984AbfHVIhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 04:37:41 -0400
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2A7C5C059B7C
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:36:35 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id k15so2839390wrw.18
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:36:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F/CA3yJBePJIOa2lwtouHU0Vi+UpQ8uKRx7RlTCtpQc=;
-        b=VgmmUoArEzvAAjBgZ6EGCp4uJ+i/rKKyJ7iYB1nfBcMvAIWgGmgpFfNNBI8wAjRlEq
-         KOKOnX8C1Roe8FrFktxas4RHBPL1MY5ZcKSqo89vVZZLG5Juy4G+rF9jg6VJScb0/hpr
-         sHyIurjJojNRXCXytTGciny5FyjL43QKaYz77Hz9HVTvbO2wIBhd6qnqf6Ddt+6kaS5c
-         nRHc8LIoJJb87w/ZPsqUIbFPNorBUazYxDSabEL5jaJEa34tO+wWkY04jRObj37/zNIt
-         dZtA0zud99iyXGlM1yJLuO+lsYmnwi+ms/8t8ECN0w7DugRtLJ15WnMBkN+xvoJjB8LO
-         Lg9A==
-X-Gm-Message-State: APjAAAV29iafY94fGiwsVVW+9bFp1LLgIxUez9eXOQ1Z07UDaQWtR2An
-        jzPhyQXBmUTsAoEOZKcTVfh/mVejFKEnR2cSlnWG5MJk3wYDbrW8uJZ12QgSyph8dsTkhQ4U4VB
-        kv9er1kAk4vFnRjKwOPV6cKNh
-X-Received: by 2002:a1c:c747:: with SMTP id x68mr5100317wmf.14.1566462993324;
-        Thu, 22 Aug 2019 01:36:33 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzo+mdWWH//qKkrO86S0TTLfrmI6kauAkuHQ1kwBBRtM296AcoVn/38wmJCRR23uW6v9EcHYQ==
-X-Received: by 2002:a1c:c747:: with SMTP id x68mr5100274wmf.14.1566462992973;
-        Thu, 22 Aug 2019 01:36:32 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id t198sm6138656wmt.39.2019.08.22.01.36.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 01:36:32 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     linux-hyperv@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2] x86/hyper-v: enable TSC page clocksource on 32bit
-Date:   Thu, 22 Aug 2019 10:36:30 +0200
-Message-Id: <20190822083630.17059-1-vkuznets@redhat.com>
-X-Mailer: git-send-email 2.20.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 339BF23427;
+        Thu, 22 Aug 2019 08:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566463059;
+        bh=XE3xK9iG8Wy7wo/kPx8rxFjUegSzi/UaDRIOdgmeG7Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jhs218aNaLA4Bq8OPujJ/oKGM90+zjHunggojHGSt42VmXqMKgeNTPazw8Mmev1Je
+         JwhDX50NdqNblLusEM/+477jQps0EsJvAhuJqHOEuGRyDPBMUO588mLhb49EyqUQu8
+         uON7wCWTLLCkC28QdqMP+2McwTT40RKkfLdU2OOE=
+Received: by mail-lj1-f179.google.com with SMTP id h15so4731563ljg.10;
+        Thu, 22 Aug 2019 01:37:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAUcc0ABIBYnRNScEKkjjmWx5PaRSzszsLzE/+EP/xYyiZg5h/FE
+        Sa9AOW+KamagdVqYkkTgrrcY3FsZEDr0mzYDlhc=
+X-Google-Smtp-Source: APXvYqxXD3xVQJzrJLwcWiHpcv+TEgK10V+ZrGUMTV7We6eP5yS2aPqV9SO+VlhvYHW+opZdR7L81464kePe1T4gEFc=
+X-Received: by 2002:a2e:b4d4:: with SMTP id r20mr21412900ljm.5.1566463057314;
+ Thu, 22 Aug 2019 01:37:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20190821064211epcas2p43ed73f4fd126bcc5b470c9136db6aabc@epcas2p4.samsung.com>
+ <003d01d557eb$8f6ca210$ae45e630$@samsung.com>
+In-Reply-To: <003d01d557eb$8f6ca210$ae45e630$@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 22 Aug 2019 10:37:26 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdK3ZzQXjzPZLzu5q0HZsL1vohQ4UxYTONcWdtDbEe2ng@mail.gmail.com>
+Message-ID: <CAJKOXPdK3ZzQXjzPZLzu5q0HZsL1vohQ4UxYTONcWdtDbEe2ng@mail.gmail.com>
+Subject: Re: [PATCH 1/9] crypt: Add diskcipher
+To:     "boojin.kim" <boojin.kim@samsung.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-fscrypt@vger.kernel.org, linux-mmc@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-block@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no particular reason to not enable TSC page clocksource
-on 32-bit. mul_u64_u64_shr() is available and despite the increased
-computational complexity (compared to 64bit) TSC page is still a huge
-win compared to MSR-based clocksource.
+On Wed, 21 Aug 2019 at 08:42, boojin.kim <boojin.kim@samsung.com> wrote:
+>
+> Diskcipher supports cryptographic operations of inline crypto engines like
+> FMP. Inline crypto engine refers to hardware and solutions implemented
+> to encrypt data stored in storage device.
+>
+> When encrypting using the FMP, Additional control is required
+> to carry and maintain the crypto information between
+> the encryption user(fscrypt, DM-crypt) and FMP driver.
+> Diskcipher provides this control.
+>
+> Diskcipher is a symmetric key cipher in linux crypto API to support FMP.
+> FMP are registered with the cihper algorithm that uses diskcipher.
+>
+> Diskcipher has three major steps.
+> The first step is to assign a cipher and set the key.
+> The second step is to pass the cipher through the BIO to the storage
+> driver.
+> The third step is to get the cipher from BIO and request a crypt
+> to FMP algorithm.
+>
+> In the first step, encryption users such as fscrypt or dm-crypt
+> allocate/release a diskcipher and set key into the diskcipher.
+> Diskcipher provides allocate(), free(), and setkey() that are similar
+> to existing ciphers.
+>
+> In the second step, BIO is used to pass the diskcipher to the storage
+> driver.
+> The BIO submitters such as ext4, f2fs and DM-crypt set diskcipher to BIO.
+> Diskcipher provides the set () API for this.
+>
+> In the third step, the storage driver extracts the diskcipher from the BIO
+> and requests the actual encryption behavior to inline crypto engine driver.
+> Diskcipher provides get() and crypt() APIs for this.
+>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Boojin Kim <boojin.kim@samsung.com>
+> ---
+>  crypto/Kconfig              |   9 ++
+>  crypto/Makefile             |   1 +
+>  crypto/diskcipher.c         | 349
+> ++++++++++++++++++++++++++++++++++++++++++++
+>  crypto/testmgr.c            | 157 ++++++++++++++++++++
+>  include/crypto/diskcipher.h | 245 +++++++++++++++++++++++++++++++
+>  include/linux/crypto.h      |   1 +
+>  6 files changed, 762 insertions(+)
+>  create mode 100644 crypto/diskcipher.c
+>  create mode 100644 include/crypto/diskcipher.h
+>
+> diff --git a/crypto/Kconfig b/crypto/Kconfig
+> index 455a335..382d43a 100644
+> --- a/crypto/Kconfig
+> +++ b/crypto/Kconfig
+> @@ -1636,6 +1636,15 @@ config CRYPTO_TWOFISH_AVX_X86_64
+>           See also:
+>           <http://www.schneier.com/twofish.html>
+>
+> +config CRYPTO_DISKCIPHER
+> +       bool "Diskcipher support"
+> +       default n
+> +       help
+> +         Disk cipher algorithm
+> +
+> +         This cipher supports the crypt operation of the block host device
+> +         that has inline crypto engine.
+> +
+>  comment "Compression"
+>
+>  config CRYPTO_DEFLATE
+> diff --git a/crypto/Makefile b/crypto/Makefile
+> index 0d2cdd5..71df76a 100644
+> --- a/crypto/Makefile
+> +++ b/crypto/Makefile
+> @@ -165,6 +165,7 @@ obj-$(CONFIG_CRYPTO_USER_API_AEAD) += algif_aead.o
+>  obj-$(CONFIG_CRYPTO_ZSTD) += zstd.o
+>  obj-$(CONFIG_CRYPTO_OFB) += ofb.o
+>  obj-$(CONFIG_CRYPTO_ECC) += ecc.o
+> +obj-$(CONFIG_CRYPTO_DISKCIPHER) += diskcipher.o
+>
+>  ecdh_generic-y += ecdh.o
+>  ecdh_generic-y += ecdh_helper.o
+> diff --git a/crypto/diskcipher.c b/crypto/diskcipher.c
+> new file mode 100644
+> index 0000000..ffe95a5
+> --- /dev/null
+> +++ b/crypto/diskcipher.c
+> @@ -0,0 +1,349 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Copyright (C) 2017 Samsung Electronics Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/blkdev.h>
+> +#include <linux/errno.h>
+> +#include <linux/module.h>
+> +#include <linux/seq_file.h>
+> +#include <linux/string.h>
+> +#include <linux/crypto.h>
+> +#include <crypto/algapi.h>
+> +#include <crypto/diskcipher.h>
+> +#include <linux/delay.h>
+> +#include <linux/mm_types.h>
+> +#include <linux/fs.h>
+> +#include <linux/fscrypt.h>
+> +
+> +#include "internal.h"
+> +
+> +static int crypto_diskcipher_check(struct bio *bio)
+> +{
+> +       struct crypto_diskcipher *ci = NULL;
+> +       struct inode *inode = NULL;
+> +       struct page *page = NULL;
+> +
+> +       if (!bio) {
+> +               pr_err("%s: doesn't exist bio\n", __func__);
+> +               return 0;
+> +       }
+> +
+> +       /* enc without fscrypt */
+> +       ci = bio->bi_aux_private;
+> +       if (!ci->inode)
+> +               return 0;
+> +       if (ci->algo == 0)
+> +               return 0;
+> +
+> +       page = bio->bi_io_vec[0].bv_page;
+> +       if (!page || PageAnon(page) || !page->mapping ||
+> !page->mapping->host)
 
-In-kernel reads:
-  MSR based clocksource: 3361 cycles
-  TSC page clocksource: 49 cycles
+Your patch looks corrupted - wrapped by mailer. The easiest way
+usually is to use git format-patch and git send-email - then you do
+not have to worry about formatting etc.
 
-Reads from userspace (utilizing vDSO in case of TSC page):
-  MSR based clocksource: 5664 cycles
-  TSC page clocksource: 131 cycles
-
-Enabling TSC page on 32bits allows to get rid of CONFIG_HYPERV_TSCPAGE as
-it is now not any different from CONFIG_HYPERV_TIMER.
-
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-Changes since v1:
-- Fix a couple of nits in changelog [Michael Kelley, Thomas Gleixner]
-- Fixed a comment with CONFIG_HYPERV_TSC_PAGE [Michael Kelley]
-- Added Michael's Reviewed-by: tag
-- Rebased on timers/core [Thomas Gleixner]
----
- arch/x86/include/asm/vdso/gettimeofday.h |  6 +++---
- drivers/clocksource/hyperv_timer.c       | 11 -----------
- drivers/hv/Kconfig                       |  3 ---
- include/clocksource/hyperv_timer.h       |  8 +++-----
- 4 files changed, 6 insertions(+), 22 deletions(-)
-
-diff --git a/arch/x86/include/asm/vdso/gettimeofday.h b/arch/x86/include/asm/vdso/gettimeofday.h
-index ae91429129a6..bcbf901befbe 100644
---- a/arch/x86/include/asm/vdso/gettimeofday.h
-+++ b/arch/x86/include/asm/vdso/gettimeofday.h
-@@ -51,7 +51,7 @@ extern struct pvclock_vsyscall_time_info pvclock_page
- 	__attribute__((visibility("hidden")));
- #endif
- 
--#ifdef CONFIG_HYPERV_TSCPAGE
-+#ifdef CONFIG_HYPERV_TIMER
- extern struct ms_hyperv_tsc_page hvclock_page
- 	__attribute__((visibility("hidden")));
- #endif
-@@ -192,7 +192,7 @@ static u64 vread_pvclock(void)
- }
- #endif
- 
--#ifdef CONFIG_HYPERV_TSCPAGE
-+#ifdef CONFIG_HYPERV_TIMER
- static u64 vread_hvclock(void)
- {
- 	return hv_read_tsc_page(&hvclock_page);
-@@ -215,7 +215,7 @@ static inline u64 __arch_get_hw_counter(s32 clock_mode)
- 		return vread_pvclock();
- 	}
- #endif
--#ifdef CONFIG_HYPERV_TSCPAGE
-+#ifdef CONFIG_HYPERV_TIMER
- 	if (clock_mode == VCLOCK_HVCLOCK) {
- 		barrier();
- 		return vread_hvclock();
-diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-index dad8af198e20..51b4d7ba959c 100644
---- a/drivers/clocksource/hyperv_timer.c
-+++ b/drivers/clocksource/hyperv_timer.c
-@@ -212,8 +212,6 @@ EXPORT_SYMBOL_GPL(hv_stimer_global_cleanup);
- struct clocksource *hyperv_cs;
- EXPORT_SYMBOL_GPL(hyperv_cs);
- 
--#ifdef CONFIG_HYPERV_TSCPAGE
--
- static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
- static u64 hv_sched_clock_offset __ro_after_init;
- 
-@@ -245,7 +243,6 @@ static struct clocksource hyperv_cs_tsc = {
- 	.mask	= CLOCKSOURCE_MASK(64),
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
- };
--#endif
- 
- static u64 notrace read_hv_clock_msr(struct clocksource *arg)
- {
-@@ -272,7 +269,6 @@ static struct clocksource hyperv_cs_msr = {
- 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
- };
- 
--#ifdef CONFIG_HYPERV_TSCPAGE
- static bool __init hv_init_tsc_clocksource(void)
- {
- 	u64		tsc_msr;
-@@ -304,13 +300,6 @@ static bool __init hv_init_tsc_clocksource(void)
- 
- 	return true;
- }
--#else
--static bool __init hv_init_tsc_clocksource(void)
--{
--	return false;
--}
--#endif
--
- 
- void __init hv_init_clocksource(void)
- {
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index 9a59957922d4..79e5356a737a 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -14,9 +14,6 @@ config HYPERV
- config HYPERV_TIMER
- 	def_bool HYPERV
- 
--config HYPERV_TSCPAGE
--       def_bool HYPERV && X86_64
--
- config HYPERV_UTILS
- 	tristate "Microsoft Hyper-V Utilities driver"
- 	depends on HYPERV && CONNECTOR && NLS
-diff --git a/include/clocksource/hyperv_timer.h b/include/clocksource/hyperv_timer.h
-index a821deb8ecb2..422f5e5237be 100644
---- a/include/clocksource/hyperv_timer.h
-+++ b/include/clocksource/hyperv_timer.h
-@@ -28,12 +28,10 @@ extern void hv_stimer_cleanup(unsigned int cpu);
- extern void hv_stimer_global_cleanup(void);
- extern void hv_stimer0_isr(void);
- 
--#if IS_ENABLED(CONFIG_HYPERV)
-+#ifdef CONFIG_HYPERV_TIMER
- extern struct clocksource *hyperv_cs;
- extern void hv_init_clocksource(void);
--#endif /* CONFIG_HYPERV */
- 
--#ifdef CONFIG_HYPERV_TSCPAGE
- extern struct ms_hyperv_tsc_page *hv_get_tsc_page(void);
- 
- static inline notrace u64
-@@ -91,7 +89,7 @@ hv_read_tsc_page(const struct ms_hyperv_tsc_page *tsc_pg)
- 	return hv_read_tsc_page_tsc(tsc_pg, &cur_tsc);
- }
- 
--#else /* CONFIG_HYPERV_TSC_PAGE */
-+#else /* CONFIG_HYPERV_TIMER */
- static inline struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
- {
- 	return NULL;
-@@ -102,6 +100,6 @@ static inline u64 hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg,
- {
- 	return U64_MAX;
- }
--#endif /* CONFIG_HYPERV_TSCPAGE */
-+#endif /* CONFIG_HYPERV_TIMER */
- 
- #endif
--- 
-2.20.1
-
+Best regards,
+Krzysztof
