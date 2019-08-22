@@ -2,196 +2,96 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5D1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B08C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E31B20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495646;
-	bh=6DYQE+1R7IQvpF3fAifJcj3NciHz5naE1Vm4B1MTcyg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cSCYj2xNJySPlO2gG2XRw7VMItp0x3DXEBtE8vCjModvffXab5kqLwgm0KIZsO7h0
-	 VhAdYFgtUixVmD+kX3lrNIBJFapTo99v9UAklssO7rnd+0kG5Aedq10+U2qm5qqtmx
-	 51emZBE2wAxqFC1dbilSJqWzQ8FAWnYEszIjEOCQ=
+	by mail.kernel.org (Postfix) with ESMTP id D420720856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="L+91U0S2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404043AbfHVRYD (ORCPT
+        id S2405087AbfHVRkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:24:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403980AbfHVRXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:40 -0400
-Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E95A23405;
-        Thu, 22 Aug 2019 17:23:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494619;
-        bh=6DYQE+1R7IQvpF3fAifJcj3NciHz5naE1Vm4B1MTcyg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HNAZFYnb0nKkijWtVaDQ9EMbZJde99EAK7bJsnQtTmMwXjsX2q0HkAbM4hA6lYkH6
-         gMdT9HAIVIpuvPpwHLhOmMIOXYTVF/8393ajQzsYlR4g4GPiYbJB4cWsDx3Bqytw2d
-         afx59gY8KD/AJH0z7RlsFPy4Zi81HnvePs2iU6cY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Haibin Zhang <haibinzhang@tencent.com>,
-        Yunfang Tai <yunfangtai@tencent.com>,
-        Lidong Chen <lidongchen@tencent.com>,
+        Thu, 22 Aug 2019 13:40:49 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:48297 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732134AbfHVRkp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:40:45 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 41EAF2203C;
+        Thu, 22 Aug 2019 13:40:44 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 22 Aug 2019 13:40:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=8pZAXt
+        RMx+VEVnKNoMyIg9vofEv03RCUzdqHEbFK3i0=; b=L+91U0S2PhF9g2vi4rzc2P
+        PBexqJj7AJXB1KXWWokVHUTqufsRT2AD0HhEgN9iW2SrGLe5Lj01pIJKzvvuB/Gk
+        xQIn3uW5Yh4OcK6qWlUrxP7I/7iz9xRL6WPpDrFeD5XB9pIE8I0LQ4N74zULhe1P
+        Zg2p5y66v9p2c/NzyIYmfcOxylhdbQbyRjkXUmPe3aeVC42zN1Nvb/h/HE2kQuvH
+        /gmLNfW60k9Q78aEGUItMPezmyTC6CIVLJr0Cdu5K7b+xkFenGsehH4ZMS45z+xy
+        Fm6IhwHhkPXt2oG7SU2P2HDwZiqrrJCOCZu2sRdhUiqpvx2n+n+kjhx3Vg1a5BEQ
+        ==
+X-ME-Sender: <xms:mNNeXeN0UdKgY1F-hENgR-z4lL9n0VGomxrWJz4uzLvSeO7uZYNRWQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegiedgjedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepkfguohcu
+    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecukfhppedule
+    efrdegjedrudeihedrvdehudenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghh
+    sehiughoshgthhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:mNNeXV98ba5k99kqioo2w-XUShKxDAWrHyAFgGA-Eql2RGeAhIpqDA>
+    <xmx:mNNeXe9hzGJVmDYuTRtpdd7V7qA1V22xMiAlj-u61j9XcDSGGbx2ig>
+    <xmx:mNNeXVq8ol-MJ7TBtkakg-oaxRMBG8jalBhWY7NW_LSrEXSW1mYaDA>
+    <xmx:nNNeXYAihIpqzhbMXatYfHrqZwcjWkx8G4qvFNds9LApIjAJv1Sk_w>
+Received: from localhost (unknown [193.47.165.251])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B76EA80059;
+        Thu, 22 Aug 2019 13:40:39 -0400 (EDT)
+Date:   Thu, 22 Aug 2019 20:40:37 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Andrew Lunn <andrew@lunn.ch>, arnd@arndb.de
+Cc:     Aya Levin <ayal@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.9 048/103] vhost-net: set packet weight of tx polling to 2 * vq size
-Date:   Thu, 22 Aug 2019 10:18:36 -0700
-Message-Id: <20190822171730.736833456@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
-References: <20190822171728.445189830@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [net] devlink: Add method for time-stamp on reporter's dump
+Message-ID: <20190822174037.GA18030@splinter>
+References: <1566461871-21992-1-git-send-email-ayal@mellanox.com>
+ <20190822140635.GH13020@lunn.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822140635.GH13020@lunn.ch>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: haibinzhang(张海斌) <haibinzhang@tencent.com>
+On Thu, Aug 22, 2019 at 04:06:35PM +0200, Andrew Lunn wrote:
+> On Thu, Aug 22, 2019 at 11:17:51AM +0300, Aya Levin wrote:
+> > When setting the dump's time-stamp, use ktime_get_real in addition to
+> > jiffies. This simplifies the user space implementation and bypasses
+> > some inconsistent behavior with translating jiffies to current time.
+> 
+> Hi Aya
+> 
+> Is this year 2038 safe? I don't know enough about this to answer the
+> question myself.
 
-commit a2ac99905f1ea8b15997a6ec39af69aa28a3653b upstream.
+Hi Andrew,
 
-handle_tx will delay rx for tens or even hundreds of milliseconds when tx busy
-polling udp packets with small length(e.g. 1byte udp payload), because setting
-VHOST_NET_WEIGHT takes into account only sent-bytes but no single packet length.
+Good point. 'struct timespec' is not considered year 2038 safe and
+unfortunately I recently made the mistake of using it to communicate
+timestamps to user space over netlink. :/ The code is still in net-next,
+so I will fix it while I can.
 
-Ping-Latencies shown below were tested between two Virtual Machines using
-netperf (UDP_STREAM, len=1), and then another machine pinged the client:
+Arnd, would it be acceptable to use 'struct __kernel_timespec' instead?
 
-vq size=256
-Packet-Weight   Ping-Latencies(millisecond)
-                   min      avg       max
-Origin           3.319   18.489    57.303
-64               1.643    2.021     2.552
-128              1.825    2.600     3.224
-256              1.997    2.710     4.295
-512              1.860    3.171     4.631
-1024             2.002    4.173     9.056
-2048             2.257    5.650     9.688
-4096             2.093    8.508    15.943
-
-vq size=512
-Packet-Weight   Ping-Latencies(millisecond)
-                   min      avg       max
-Origin           6.537   29.177    66.245
-64               2.798    3.614     4.403
-128              2.861    3.820     4.775
-256              3.008    4.018     4.807
-512              3.254    4.523     5.824
-1024             3.079    5.335     7.747
-2048             3.944    8.201    12.762
-4096             4.158   11.057    19.985
-
-Seems pretty consistent, a small dip at 2 VQ sizes.
-Ring size is a hint from device about a burst size it can tolerate. Based on
-benchmarks, set the weight to 2 * vq size.
-
-To evaluate this change, another tests were done using netperf(RR, TX) between
-two machines with Intel(R) Xeon(R) Gold 6133 CPU @ 2.50GHz, and vq size was
-tweaked through qemu. Results shown below does not show obvious changes.
-
-vq size=256 TCP_RR                vq size=512 TCP_RR
-size/sessions/+thu%/+normalize%   size/sessions/+thu%/+normalize%
-   1/       1/  -7%/        -2%      1/       1/   0%/        -2%
-   1/       4/  +1%/         0%      1/       4/  +1%/         0%
-   1/       8/  +1%/        -2%      1/       8/   0%/        +1%
-  64/       1/  -6%/         0%     64/       1/  +7%/        +3%
-  64/       4/   0%/        +2%     64/       4/  -1%/        +1%
-  64/       8/   0%/         0%     64/       8/  -1%/        -2%
- 256/       1/  -3%/        -4%    256/       1/  -4%/        -2%
- 256/       4/  +3%/        +4%    256/       4/  +1%/        +2%
- 256/       8/  +2%/         0%    256/       8/  +1%/        -1%
-
-vq size=256 UDP_RR                vq size=512 UDP_RR
-size/sessions/+thu%/+normalize%   size/sessions/+thu%/+normalize%
-   1/       1/  -5%/        +1%      1/       1/  -3%/        -2%
-   1/       4/  +4%/        +1%      1/       4/  -2%/        +2%
-   1/       8/  -1%/        -1%      1/       8/  -1%/         0%
-  64/       1/  -2%/        -3%     64/       1/  +1%/        +1%
-  64/       4/  -5%/        -1%     64/       4/  +2%/         0%
-  64/       8/   0%/        -1%     64/       8/  -2%/        +1%
- 256/       1/  +7%/        +1%    256/       1/  -7%/         0%
- 256/       4/  +1%/        +1%    256/       4/  -3%/        -4%
- 256/       8/  +2%/        +2%    256/       8/  +1%/        +1%
-
-vq size=256 TCP_STREAM            vq size=512 TCP_STREAM
-size/sessions/+thu%/+normalize%   size/sessions/+thu%/+normalize%
-  64/       1/   0%/        -3%     64/       1/   0%/         0%
-  64/       4/  +3%/        -1%     64/       4/  -2%/        +4%
-  64/       8/  +9%/        -4%     64/       8/  -1%/        +2%
- 256/       1/  +1%/        -4%    256/       1/  +1%/        +1%
- 256/       4/  -1%/        -1%    256/       4/  -3%/         0%
- 256/       8/  +7%/        +5%    256/       8/  -3%/         0%
- 512/       1/  +1%/         0%    512/       1/  -1%/        -1%
- 512/       4/  +1%/        -1%    512/       4/   0%/         0%
- 512/       8/  +7%/        -5%    512/       8/  +6%/        -1%
-1024/       1/   0%/        -1%   1024/       1/   0%/        +1%
-1024/       4/  +3%/         0%   1024/       4/  +1%/         0%
-1024/       8/  +8%/        +5%   1024/       8/  -1%/         0%
-2048/       1/  +2%/        +2%   2048/       1/  -1%/         0%
-2048/       4/  +1%/         0%   2048/       4/   0%/        -1%
-2048/       8/  -2%/         0%   2048/       8/   5%/        -1%
-4096/       1/  -2%/         0%   4096/       1/  -2%/         0%
-4096/       4/  +2%/         0%   4096/       4/   0%/         0%
-4096/       8/  +9%/        -2%   4096/       8/  -5%/        -1%
-
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Haibin Zhang <haibinzhang@tencent.com>
-Signed-off-by: Yunfang Tai <yunfangtai@tencent.com>
-Signed-off-by: Lidong Chen <lidongchen@tencent.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/vhost/net.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -39,6 +39,10 @@ MODULE_PARM_DESC(experimental_zcopytx, "
-  * Using this limit prevents one virtqueue from starving others. */
- #define VHOST_NET_WEIGHT 0x80000
- 
-+/* Max number of packets transferred before requeueing the job.
-+ * Using this limit prevents one virtqueue from starving rx. */
-+#define VHOST_NET_PKT_WEIGHT(vq) ((vq)->num * 2)
-+
- /* MAX number of TX used buffers for outstanding zerocopy */
- #define VHOST_MAX_PEND 128
- #define VHOST_GOODCOPY_LEN 256
-@@ -372,6 +376,7 @@ static void handle_tx(struct vhost_net *
- 	struct socket *sock;
- 	struct vhost_net_ubuf_ref *uninitialized_var(ubufs);
- 	bool zcopy, zcopy_used;
-+	int sent_pkts = 0;
- 
- 	mutex_lock(&vq->mutex);
- 	sock = vq->private_data;
-@@ -474,7 +479,8 @@ static void handle_tx(struct vhost_net *
- 			vhost_zerocopy_signal_used(net, vq);
- 		total_len += len;
- 		vhost_net_tx_packet(net);
--		if (unlikely(total_len >= VHOST_NET_WEIGHT)) {
-+		if (unlikely(total_len >= VHOST_NET_WEIGHT) ||
-+		    unlikely(++sent_pkts >= VHOST_NET_PKT_WEIGHT(vq))) {
- 			vhost_poll_queue(&vq->poll);
- 			break;
- 		}
-
-
+Thanks
