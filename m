@@ -2,312 +2,79 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 473B1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D15C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17DF1233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA17A233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:10:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391531AbfHVTIV (ORCPT
+        id S2387847AbfHVTKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 15:08:21 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:43347 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731943AbfHVTIF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 15:08:05 -0400
-Received: from uno.localdomain (unknown [87.18.63.98])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C9B8E200003;
-        Thu, 22 Aug 2019 19:07:57 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 21:09:26 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 16/19] drm: rcar-du: kms: Collect CMM instances
-Message-ID: <20190822190926.t2dm7nbaagnxgvns@uno.localdomain>
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
- <20190706140746.29132-17-jacopo+renesas@jmondi.org>
- <20190820175457.GJ10820@pendragon.ideasonboard.com>
+        Thu, 22 Aug 2019 15:10:38 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23126 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730427AbfHVTKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 15:10:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 12:10:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,417,1559545200"; 
+   d="scan'208";a="190695444"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga002.jf.intel.com with ESMTP; 22 Aug 2019 12:10:37 -0700
+Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 22 Aug 2019 12:10:36 -0700
+Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.127]) by
+ FMSMSX153.amr.corp.intel.com ([169.254.9.165]) with mapi id 14.03.0439.000;
+ Thu, 22 Aug 2019 12:10:36 -0700
+From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
+To:     "justin.he@arm.com" <justin.he@arm.com>,
+        "jmoyer@redhat.com" <jmoyer@redhat.com>
+CC:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
+Subject: Re: [PATCH 2/2] drivers/dax/kmem: give a warning if
+ CONFIG_DEV_DAX_PMEM_COMPAT is enabled
+Thread-Topic: [PATCH 2/2] drivers/dax/kmem: give a warning if
+ CONFIG_DEV_DAX_PMEM_COMPAT is enabled
+Thread-Index: AQHVWRtCI+fbHAl24k6KFAKDmutKnqcH/a+A
+Date:   Thu, 22 Aug 2019 19:10:35 +0000
+Message-ID: <91b07911eb6d307c4cb652da6ec53bad661ec066.camel@intel.com>
+References: <20190816111844.87442-1-justin.he@arm.com>
+         <20190816111844.87442-3-justin.he@arm.com>
+         <x49tva9ni68.fsf@segfault.boston.devel.redhat.com>
+In-Reply-To: <x49tva9ni68.fsf@segfault.boston.devel.redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+x-originating-ip: [10.232.112.185]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FE4E6340A0DCFB4990BDFDF7F44BCDE4@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7zzvgsrbklkt3dp5"
-Content-Disposition: inline
-In-Reply-To: <20190820175457.GJ10820@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---7zzvgsrbklkt3dp5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Laurent,
-
-On Tue, Aug 20, 2019 at 08:54:57PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> Thank you for the patch.
->
-> On Sat, Jul 06, 2019 at 04:07:43PM +0200, Jacopo Mondi wrote:
-> > Implement device tree parsing to collect the available CMM instances
-> > described by the 'cmms' property. Associate CMMs with CRTCs and store a
-> > mask of active CMMs in the DU group for later enablement.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  |  6 +++
-> >  drivers/gpu/drm/rcar-du/rcar_du_crtc.h  |  2 +
-> >  drivers/gpu/drm/rcar-du/rcar_du_drv.h   |  3 ++
-> >  drivers/gpu/drm/rcar-du/rcar_du_group.h |  2 +
-> >  drivers/gpu/drm/rcar-du/rcar_du_kms.c   | 50 +++++++++++++++++++++++++
-> >  5 files changed, 63 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > index 2da46e3dc4ae..23f1d6cc1719 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > @@ -1194,6 +1194,12 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
-> >  	if (ret < 0)
-> >  		return ret;
-> >
-> > +	/* CMM might be disabled for this CRTC. */
-> > +	if (rcdu->cmms[swindex]) {
-> > +		rcrtc->cmm = rcdu->cmms[swindex];
-> > +		rgrp->cmms_mask |= BIT(hwindex % 2);
-> > +	}
-> > +
-> >  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
-> >
-> >  	/* Start with vertical blanking interrupt reporting disabled. */
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> > index 3b7fc668996f..5f2940c42225 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> > @@ -39,6 +39,7 @@ struct rcar_du_vsp;
-> >   * @vblank_wait: wait queue used to signal vertical blanking
-> >   * @vblank_count: number of vertical blanking interrupts to wait for
-> >   * @group: CRTC group this CRTC belongs to
-> > + * @cmm: CMM associated with this CRTC
-> >   * @vsp: VSP feeding video to this CRTC
-> >   * @vsp_pipe: index of the VSP pipeline feeding video to this CRTC
-> >   * @writeback: the writeback connector
-> > @@ -64,6 +65,7 @@ struct rcar_du_crtc {
-> >  	unsigned int vblank_count;
-> >
-> >  	struct rcar_du_group *group;
-> > +	struct platform_device *cmm;
-> >  	struct rcar_du_vsp *vsp;
-> >  	unsigned int vsp_pipe;
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.h b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-> > index a00dccc447aa..300ec60ba31b 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.h
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/wait.h>
-> >
-> > +#include "rcar_cmm.h"
-> >  #include "rcar_du_crtc.h"
-> >  #include "rcar_du_group.h"
-> >  #include "rcar_du_vsp.h"
-> > @@ -70,6 +71,7 @@ struct rcar_du_device_info {
-> >
-> >  #define RCAR_DU_MAX_CRTCS		4
-> >  #define RCAR_DU_MAX_GROUPS		DIV_ROUND_UP(RCAR_DU_MAX_CRTCS, 2)
-> > +#define RCAR_DU_MAX_CMMS		4
-> >  #define RCAR_DU_MAX_VSPS		4
-> >
-> >  struct rcar_du_device {
-> > @@ -86,6 +88,7 @@ struct rcar_du_device {
-> >  	struct rcar_du_encoder *encoders[RCAR_DU_OUTPUT_MAX];
-> >
-> >  	struct rcar_du_group groups[RCAR_DU_MAX_GROUPS];
-> > +	struct platform_device *cmms[RCAR_DU_MAX_CMMS];
-> >  	struct rcar_du_vsp vsps[RCAR_DU_MAX_VSPS];
-> >
-> >  	struct {
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.h b/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> > index 87950c1f6a52..b0c1466593a3 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> > @@ -22,6 +22,7 @@ struct rcar_du_device;
-> >   * @mmio_offset: registers offset in the device memory map
-> >   * @index: group index
-> >   * @channels_mask: bitmask of populated DU channels in this group
-> > + * @cmms_mask: bitmask of enabled CMMs in this group
->
-> enabled or available ?
->
-
-I considered having a 'cmm' entry in DT as enabling it, but it is
-actually just available.
-
-> >   * @num_crtcs: number of CRTCs in this group (1 or 2)
-> >   * @use_count: number of users of the group (rcar_du_group_(get|put))
-> >   * @used_crtcs: number of CRTCs currently in use
-> > @@ -37,6 +38,7 @@ struct rcar_du_group {
-> >  	unsigned int index;
-> >
-> >  	unsigned int channels_mask;
-> > +	unsigned int cmms_mask;
-> >  	unsigned int num_crtcs;
-> >  	unsigned int use_count;
-> >  	unsigned int used_crtcs;
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > index f8f7fff34dff..b79cda2f5531 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > @@ -18,6 +18,7 @@
-> >  #include <drm/drm_vblank.h>
-> >
-> >  #include <linux/of_graph.h>
-> > +#include <linux/of_platform.h>
-> >  #include <linux/wait.h>
-> >
-> >  #include "rcar_du_crtc.h"
-> > @@ -534,6 +535,51 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
-> >  	return ret;
-> >  }
-> >
-> > +static int rcar_du_cmm_init(struct rcar_du_device *rcdu)
-> > +{
-> > +	const struct device_node *np = rcdu->dev->of_node;
-> > +	unsigned int i;
-> > +	int cells;
-> > +
-> > +	cells = of_property_count_u32_elems(np, "cmms");
-> > +	if (cells == -EINVAL)
-> > +		return 0;
-> > +
-> > +	if (cells > RCAR_DU_MAX_CMMS || cells > rcdu->num_crtcs) {
->
-> Should this be
->
-> 	if (cells != rcdu->num_crtcs)
->
-> or do we want to support cases where not all DU channels have a CMM in
-> DT ?
->
-
-That was my idea yes, but I'm not sure it makes sense, as ideally CMM
-should be specified in DT for all SoC that provides it.
-
-> > +		dev_err(rcdu->dev, "Invalid 'cmms' property format\n");
->
-> How about "Invalid number of entries in 'cmms' property" ?
->
-
-Ok
-
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	for (i = 0; i < cells; ++i) {
-> > +		struct platform_device *pdev;
-> > +		struct device_node *cmm;
-> > +
-> > +		cmm = of_parse_phandle(np, "cmms", i);
-> > +		if (IS_ERR(cmm)) {
-> > +			dev_err(rcdu->dev, "Failed to parse 'cmms' property\n");
-> > +			return PTR_ERR(cmm);
-> > +		}
-> > +
-> > +		pdev = of_find_device_by_node(cmm);
-> > +		if (IS_ERR(pdev)) {
-> > +			dev_err(rcdu->dev, "No device found for cmms[%u]\n", i);
->
-> s/cmms[%u]/CMM%u/ ?
->
-> > +			of_node_put(cmm);
-> > +			return PTR_ERR(pdev);
-> > +		}
-> > +
-> > +		if (!of_device_is_available(cmm)) {
->
-> Should this come before the pdev check, as there will be no pdev in that
-> case ?
->
-
-No pdev if the device is not enabled in DT ? Anyway, yes, I could move
-it up and save retrieving pdev in case the device is not available.
-
-> > +			/* It's fine to have a phandle to a non-enabled CMM. */
-> > +			of_node_put(cmm);
-> > +			continue;
-> > +		}
-> > +
-> > +		of_node_put(cmm);
-> > +		rcdu->cmms[i] = pdev;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  int rcar_du_modeset_init(struct rcar_du_device *rcdu)
-> >  {
-> >  	static const unsigned int mmio_offsets[] = {
-> > @@ -624,6 +670,10 @@ int rcar_du_modeset_init(struct rcar_du_device *rcdu)
-> >  			return ret;
-> >  	}
-> >
-> > +	/* Initialize the Color Management Modules. */
-> > +	if (rcar_du_cmm_init(rcdu))
-> > +		return ret;
->
-> 	ret = rcar_du_cmm_init(rcdu);
-> 	if (ret < 0)
-> 		return ret;
->
-
-Ups, this was probably returning void in some earlier version and I
-failed to assign it properly, thanks for spotting this!
-
-Thanks
-   j
-
-> > +
-> >  	/* Create the CRTCs. */
-> >  	for (swindex = 0, hwindex = 0; swindex < rcdu->num_crtcs; ++hwindex) {
-> >  		struct rcar_du_group *rgrp;
->
-> --
-> Regards,
->
-> Laurent Pinchart
-
---7zzvgsrbklkt3dp5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1e6GYACgkQcjQGjxah
-VjwpSRAAqbRBAhf5TvtYJGIhFWGdX/7+Fpew/lO+mMRddCMuHayg4x5mOUha1uEF
-fa/r10CcLslXPMZZoiCRbY6V69p6jGu8vBk0MSTVrf0WfoFjb4I1kS1RGCSRXHcG
-yC/7LklOldH+w0m0XGd5w0EhMnbz/1Dj74rIINKMkOUYoLF3BxbQ9WKZEQO6r4lj
-pFNgFdRYS/soViJUUVEoirEdiU9cNLlHmREn0csxGCu5HErQHdO7/uFKQxtfkaZT
-wQzBbyZ4eYSf9nenWVD6BbET6AD+rGetQCtQgr8T6sKtuMA/Hc0dJvxG3bfrkFPZ
-/QOiXUzYFoSBPv1ETVeLFs0agMXl3Za9xtGmEvVbee+C3Fk0NRiF023lZOy8pdti
-SCzQ2DgInFcTxMmV6S3NxysUS7Z5oaIPWN5mGNDWwmw0ZDdjfWtBXk3sWonPSYFF
-L/aBWri6cxbi1rJ8iMzYZI6izIbQ+xvILN3hpGYVpHD/0lZJpFnkmxa9IC/HieII
-HgTs+pd5ddp3lJpFBovYqV8vr+26uv/fEU65DiOsp5HlBYnDkw+tfA4W3OYp1Y2o
-E41HQABh7QbvxS/+ZPjV+oNnMA4jVe3m/Jc+MVAso3UhLejVJ4uDmM5hH0thMSFx
-8NzUEvDecuCHjJD6pXOEi2AT/Pr6yOrTomXeMam4p0P58pW+YCc=
-=4RUV
------END PGP SIGNATURE-----
-
---7zzvgsrbklkt3dp5--
+T24gVGh1LCAyMDE5LTA4LTIyIGF0IDE0OjU1IC0wNDAwLCBKZWZmIE1veWVyIHdyb3RlOg0KPiAN
+Cj4gV2hlbiB1c2luZyBkYXhjdGwgdG8gb25saW5lIG1lbW9yeSwgeW91IGFscmVhZHkgZ2V0IHRo
+ZSBmb2xsb3dpbmcNCj4gbWVzc2FnZToNCj4gDQo+IGxpYmRheGN0bDogZGF4Y3RsX2Rldl9kaXNh
+YmxlOiBkYXgwLjA6IGVycm9yOiBkZXZpY2UgbW9kZWwgaXMgZGF4LWNsYXNzDQo+IA0KPiBUaGF0
+J3Mgc3RpbGwgbm90IHZlcnkgaGVscGZ1bC4gIEl0IHdvdWxkIGJlIGJldHRlciBpZiB0aGUgbWVz
+c2FnZQ0KPiBzdWdnZXN0ZWQgYSBmaXggKGxpa2UgdXNpbmcgbWlncmF0ZS1kZXZpY2UtbW9kZWwp
+LiAgVmlzaGFsPw0KDQpZZXMsIGl0IGlzIG9uIG15IGxpc3QgdG8gaW1wcm92ZSB0aGlzLiBDdXJy
+ZW50bHkgdGhlIG1hbiBwYWdlIHNob3dzIHRoZQ0KYWJvdmUgZXJyb3IgbWVzc2FnZSwgYW5kIHRh
+bGtzIGFib3V0IG1pZ3JhdGUtZGV2aWNlLW1vZGVsLCBidXQgSQ0KcmVjZWl2ZWQgbW9yZSBmZWVk
+YmFjayB0byBhZGQgYW5vdGhlciBicmVhZCBjcnVtYiBpbiB0aGUgcHJpbnRlZCBtZXNzYWdlDQpw
+b2ludGluZyB0byBtaWdyYXRlLWRldmljZS1tb2RlbC4gIEknbGwgc2VuZCBhIHBhdGNoIGZvciBp
+dCBzb29uLg0KDQpUaGFua3MsDQoJLVZpc2hhbA0K
