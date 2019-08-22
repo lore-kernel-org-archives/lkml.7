@@ -2,76 +2,115 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E28C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F2EC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E952A21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:59:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HUVknUFG"
+	by mail.kernel.org (Postfix) with ESMTP id 9EE2A2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731947AbfHVH7v (ORCPT
+        id S1730583AbfHVIEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:59:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58902 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731267AbfHVH7t (ORCPT
+        Thu, 22 Aug 2019 04:04:06 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:40753 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725856AbfHVIEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:59:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+paMvfjrV5Cyt2Na5QthK2etUNCHHInfRHmuAwrcRXg=; b=HUVknUFGmxnPC3xhkKvDw2rmF
-        l4o/EMby74fuU8xXgd3F0V1YMzmqwTkZdDtEQ3KiEzcKWZYu9AihjfRGdicwu5/QUW6rowDSQBxLg
-        xW4n+usCDfCdVWn0JmbjIiV/h8aG7LOdOJFu89iz+JLc77g5KlrPkEnkJOT41Fd9nvHH7OdF+Tcmt
-        AilUUmSBH4BNHa8NZhYkDsUBFMZAbwO/xtx3OCKOqq1GEC2kYxfFT0aLTpk2adq3ZkabfOkc8l62i
-        LA1sKd6GPgP58vDupgWvYs0WsUuhaoWkWgpxxFikZ45BotcyZ+d1CSro6QqVCO6Pm+DJ8BMcvFP7i
-        b9NHh6Mfg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i0i0a-0000bf-6I; Thu, 22 Aug 2019 07:59:48 +0000
-Date:   Thu, 22 Aug 2019 00:59:48 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 2/3] xfs: add kmem_alloc_io()
-Message-ID: <20190822075948.GA31346@infradead.org>
-References: <20190821083820.11725-1-david@fromorbit.com>
- <20190821083820.11725-3-david@fromorbit.com>
- <20190821232440.GB24904@infradead.org>
- <20190822003131.GR1119@dread.disaster.area>
+        Thu, 22 Aug 2019 04:04:06 -0400
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 0i4diaYaNThuu0i4hij7Mt; Thu, 22 Aug 2019 10:04:04 +0200
+Subject: Re: [PATCH v7 2/9] drm/i915/intel_hdmi: use
+ cec_notifier_conn_(un)register
+To:     Dariusz Marcinkiewicz <darekm@google.com>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
+Cc:     David Airlie <airlied@linux.ie>, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+References: <20190814104520.6001-1-darekm@google.com>
+ <20190814104520.6001-3-darekm@google.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <8d0c6d9b-d321-7e4b-8c06-92b9b816d029@xs4all.nl>
+Date:   Thu, 22 Aug 2019 10:03:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822003131.GR1119@dread.disaster.area>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190814104520.6001-3-darekm@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfFS6JYJ0+q2LAIYGCuj6fLd3vPJORYjU0ME/5k7e+ByKAWdY7DwySnd1VrwDnra4h8Liaj9h6QVz2CkpJPjMBXo/3g493dn33GbRBDTqxc7SkLG0XiEs
+ aBKLf9xZZV6Wi9Nx1llBJUoktu1pAR3UfKootbfsbcmnM2wadZF3tWvKfQUCQl/YOxE74kQSZS+TI4XeEB12wp7vRFL4nPMnrmV3CN/GLbothgeVWXH+VqBJ
+ p7/N3t/Ygq7nmyFKW0rf+TG225kLl+WcWMbettDkA+r1j94Yy+K0/EZRSUeyrQYncx9kRyGyAe+X8YB9xEQxmgoHuoXdzrJl3TouvBlhv4L8DrgKBBjJI/iM
+ 3V2sI548xb1YuHm/4IHB//h8YBfk17LaWcA0HSgTtQxZnQGWxcTNzg9x/btYbaUVl2XxLM9ph99szDuHgiH/Qthtx0Z6dQHLK7kSpKx4MqynPS1Xr+0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 10:31:32AM +1000, Dave Chinner wrote:
-> > Btw, I think we should eventually kill off KM_NOFS and just use
-> > PF_MEMALLOC_NOFS in XFS, as the interface makes so much more sense.
-> > But that's something for the future.
-> 
-> Yeah, and it's not quite as simple as just using PF_MEMALLOC_NOFS
-> at high levels - we'll still need to annotate callers that use KM_NOFS
-> to avoid lockdep false positives. i.e. any code that can be called from
-> GFP_KERNEL and reclaim context will throw false positives from
-> lockdep if we don't annotate tehm correctly....
+Ville or Rodrigo,
 
-Oh well.  For now we have the XFS kmem_wrappers to turn that into
-GFP_NOFS so we shouldn't be too worried, but I think that is something
-we should fix in lockdep to ensure it is generally useful.  I've added
-the maintainers and relevant lists to kick off a discussion.
+Can one of you either merge this patch or Ack it so that I can merge this?
+
+Thank you!
+
+Regards,
+
+	Hans
+
+On 8/14/19 12:45 PM, Dariusz Marcinkiewicz wrote:
+> Use the new cec_notifier_conn_(un)register() functions to
+> (un)register the notifier for the HDMI connector, and fill in
+> the cec_connector_info.
+> 
+> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> ---
+>  drivers/gpu/drm/i915/display/intel_hdmi.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_hdmi.c b/drivers/gpu/drm/i915/display/intel_hdmi.c
+> index b1ca8e5bdb56d..9fcf2c58c29c5 100644
+> --- a/drivers/gpu/drm/i915/display/intel_hdmi.c
+> +++ b/drivers/gpu/drm/i915/display/intel_hdmi.c
+> @@ -2752,8 +2752,9 @@ intel_hdmi_connector_register(struct drm_connector *connector)
+>  
+>  static void intel_hdmi_destroy(struct drm_connector *connector)
+>  {
+> -	if (intel_attached_hdmi(connector)->cec_notifier)
+> -		cec_notifier_put(intel_attached_hdmi(connector)->cec_notifier);
+> +	struct cec_notifier *n = intel_attached_hdmi(connector)->cec_notifier;
+> +
+> +	cec_notifier_conn_unregister(n);
+>  
+>  	intel_connector_destroy(connector);
+>  }
+> @@ -3068,6 +3069,7 @@ void intel_hdmi_init_connector(struct intel_digital_port *intel_dig_port,
+>  	struct drm_device *dev = intel_encoder->base.dev;
+>  	struct drm_i915_private *dev_priv = to_i915(dev);
+>  	enum port port = intel_encoder->port;
+> +	struct cec_connector_info conn_info;
+>  
+>  	DRM_DEBUG_KMS("Adding HDMI connector on port %c\n",
+>  		      port_name(port));
+> @@ -3120,8 +3122,11 @@ void intel_hdmi_init_connector(struct intel_digital_port *intel_dig_port,
+>  		I915_WRITE(PEG_BAND_GAP_DATA, (temp & ~0xf) | 0xd);
+>  	}
+>  
+> -	intel_hdmi->cec_notifier = cec_notifier_get_conn(dev->dev,
+> -							 port_identifier(port));
+> +	cec_fill_conn_info_from_drm(&conn_info, connector);
+> +
+> +	intel_hdmi->cec_notifier =
+> +		cec_notifier_conn_register(dev->dev, port_identifier(port),
+> +					   &conn_info);
+>  	if (!intel_hdmi->cec_notifier)
+>  		DRM_DEBUG_KMS("CEC notifier get failed\n");
+>  }
+> 
 
