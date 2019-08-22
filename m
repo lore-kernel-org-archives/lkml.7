@@ -2,111 +2,571 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D912C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653BCC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2B8233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 344C723401
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566500332;
+	bh=uw+zZayE9pWlGqZpCmNG0u1fWQ7raTr8S9YCtjJzvp4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qQ6mT6pLTZpDYqyX5k5Aqxlgrc7ie+gT1pLggMsgG0qzlqKI4WB8M5hideB00Xa+l
+	 wiymxdujk2FaOqgK83i2QO01yupY7dbk4KHbR34zIZ8uNniXBvIriZMfh0RHPZzBt8
+	 ILRfrzEi/AeQ7ebwmvDgFcQhbi0neOYw0xNL7L/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731765AbfHVS4C (ORCPT
+        id S2391231AbfHVS6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 14:56:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38108 "EHLO mx1.redhat.com"
+        Thu, 22 Aug 2019 14:58:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbfHVS4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 14:56:01 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1731854AbfHVS6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 14:58:50 -0400
+Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6B915300180E;
-        Thu, 22 Aug 2019 18:56:01 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C5F58600CD;
-        Thu, 22 Aug 2019 18:56:00 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Jia He <justin.he@arm.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: Re: [PATCH 2/2] drivers/dax/kmem: give a warning if CONFIG_DEV_DAX_PMEM_COMPAT is enabled
-References: <20190816111844.87442-1-justin.he@arm.com>
-        <20190816111844.87442-3-justin.he@arm.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Thu, 22 Aug 2019 14:55:59 -0400
-In-Reply-To: <20190816111844.87442-3-justin.he@arm.com> (Jia He's message of
-        "Fri, 16 Aug 2019 19:18:44 +0800")
-Message-ID: <x49tva9ni68.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52F50233A2;
+        Thu, 22 Aug 2019 18:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566500328;
+        bh=uw+zZayE9pWlGqZpCmNG0u1fWQ7raTr8S9YCtjJzvp4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=i4rGBMlt9whPcPtvpCvx5qsrpW4BSfOJeQ7EmDLxfgtqXij5gcuNYuIU1g645PjaY
+         hqTMg4bdY+AcABHH+NkFdmeRh/swCDoZ+AP2SFnpcFIpi/TvrwhJCHeMVzpSZSJTDl
+         DTX0QxI0wpqRiq59Pmmhn3J5Xk3UEvnv9OlaX+14=
+Date:   Thu, 22 Aug 2019 21:58:47 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     "sashal@kernel.org" <sashal@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "eranbe@mellanox.com" <eranbe@mellanox.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next,v4, 4/6] net/mlx5: Add HV VHCA infrastructure
+Message-ID: <20190822185847.GP29433@mtr-leonro.mtl.com>
+References: <1566450236-36757-1-git-send-email-haiyangz@microsoft.com>
+ <1566450236-36757-5-git-send-email-haiyangz@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 22 Aug 2019 18:56:01 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566450236-36757-5-git-send-email-haiyangz@microsoft.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jia He <justin.he@arm.com> writes:
-
-> commit c221c0b0308f ("device-dax: "Hotplug" persistent memory for use
-> like normal RAM") helps to add persistent memory as normal RAM blocks.
-> But this driver doesn't work if CONFIG_DEV_DAX_PMEM_COMPAT is enabled.
+On Thu, Aug 22, 2019 at 05:05:51AM +0000, Haiyang Zhang wrote:
+> From: Eran Ben Elisha <eranbe@mellanox.com>
 >
-> Here is the debugging call trace when CONFIG_DEV_DAX_PMEM_COMPAT is
-> enabled.
-> [    4.443730]  devm_memremap_pages+0x4b9/0x540
-> [    4.443733]  dev_dax_probe+0x112/0x220 [device_dax]
-> [    4.443735]  dax_pmem_compat_probe+0x58/0x92 [dax_pmem_compat]
-> [    4.443737]  nvdimm_bus_probe+0x6b/0x150
-> [    4.443739]  really_probe+0xf5/0x3d0
-> [    4.443740]  driver_probe_device+0x11b/0x130
-> [    4.443741]  device_driver_attach+0x58/0x60
-> [    4.443742]  __driver_attach+0xa3/0x140
+> HV VHCA is a layer which provides PF to VF communication channel based on
+> HyperV PCI config channel. It implements Mellanox's Inter VHCA control
+> communication protocol. The protocol contains control block in order to
+> pass messages between the PF and VF drivers, and data blocks in order to
+> pass actual data.
 >
-> Then the dax0.0 device will be registered as "nd" bus instead of
-> "dax" bus. This causes the error as follows:
-> root@ubuntu:~# echo dax0.0 > /sys/bus/dax/drivers/device_dax/unbind
-> -bash: echo: write error: No such device
+> The infrastructure is agent based. Each agent will be responsible of
+> contiguous buffer blocks in the VHCA config space. This infrastructure will
+> bind agents to their blocks, and those agents can only access read/write
+> the buffer blocks assigned to them. Each agent will provide three
+> callbacks (control, invalidate, cleanup). Control will be invoked when
+> block-0 is invalidated with a command that concerns this agent. Invalidate
+> callback will be invoked if one of the blocks assigned to this agent was
+> invalidated. Cleanup will be invoked before the agent is being freed in
+> order to clean all of its open resources or deferred works.
 >
-> This gives a warning to notify the user.
+> Block-0 serves as the control block. All execution commands from the PF
+> will be written by the PF over this block. VF will ack on those by
+> writing on block-0 as well. Its format is described by struct
+> mlx5_hv_vhca_control_block layout.
 >
-> Signed-off-by: Jia He <justin.he@arm.com>
+> Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+> Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 > ---
->  drivers/dax/kmem.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  drivers/net/ethernet/mellanox/mlx5/core/Makefile   |   2 +-
+>  .../net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c  | 253 +++++++++++++++++++++
+>  .../net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h  | 102 +++++++++
+>  drivers/net/ethernet/mellanox/mlx5/core/main.c     |   7 +
+>  include/linux/mlx5/driver.h                        |   2 +
+>  5 files changed, 365 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c
+>  create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
 >
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index ad62d551d94e..b77f0e880598 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -93,6 +93,11 @@ static struct dax_device_driver device_dax_kmem_driver = {
->  
->  static int __init dax_kmem_init(void)
->  {
-> +	if (IS_ENABLED(CONFIG_DEV_DAX_PMEM_COMPAT)) {
-> +		pr_warn("CONFIG_DEV_DAX_PMEM_COMPAT is not compatible\n");
-> +		pr_warn("kmem dax driver might not be workable\n");
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+> index fd32a5b..8d443fc 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
+> @@ -45,7 +45,7 @@ mlx5_core-$(CONFIG_MLX5_ESWITCH)   += eswitch.o eswitch_offloads.o eswitch_offlo
+>  mlx5_core-$(CONFIG_MLX5_MPFS)      += lib/mpfs.o
+>  mlx5_core-$(CONFIG_VXLAN)          += lib/vxlan.o
+>  mlx5_core-$(CONFIG_PTP_1588_CLOCK) += lib/clock.o
+> -mlx5_core-$(CONFIG_PCI_HYPERV_INTERFACE) += lib/hv.o
+> +mlx5_core-$(CONFIG_PCI_HYPERV_INTERFACE) += lib/hv.o lib/hv_vhca.o
+>
+>  #
+>  # Ipoib netdev
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c
+> new file mode 100644
+> index 0000000..84d1d75
+> --- /dev/null
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c
+> @@ -0,0 +1,253 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
+> +// Copyright (c) 2018 Mellanox Technologies
+> +
+> +#include <linux/hyperv.h>
+> +#include "mlx5_core.h"
+> +#include "lib/hv.h"
+> +#include "lib/hv_vhca.h"
+> +
+> +struct mlx5_hv_vhca {
+> +	struct mlx5_core_dev       *dev;
+> +	struct workqueue_struct    *work_queue;
+> +	struct mlx5_hv_vhca_agent  *agents[MLX5_HV_VHCA_AGENT_MAX];
+> +	struct mutex                agents_lock; /* Protect agents array */
+> +};
+> +
+> +struct mlx5_hv_vhca_work {
+> +	struct work_struct     invalidate_work;
+> +	struct mlx5_hv_vhca   *hv_vhca;
+> +	u64                    block_mask;
+> +};
+> +
+> +struct mlx5_hv_vhca_data_block {
+> +	u16     sequence;
+> +	u16     offset;
+> +	u8      reserved[4];
+> +	u64     data[15];
+> +};
+> +
+> +struct mlx5_hv_vhca_agent {
+> +	enum mlx5_hv_vhca_agent_type	 type;
+> +	struct mlx5_hv_vhca		*hv_vhca;
+> +	void				*priv;
+> +	u16                              seq;
+> +	void (*control)(struct mlx5_hv_vhca_agent *agent,
+> +			struct mlx5_hv_vhca_control_block *block);
+> +	void (*invalidate)(struct mlx5_hv_vhca_agent *agent,
+> +			   u64 block_mask);
+> +	void (*cleanup)(struct mlx5_hv_vhca_agent *agent);
+> +};
+> +
+> +struct mlx5_hv_vhca *mlx5_hv_vhca_create(struct mlx5_core_dev *dev)
+> +{
+> +	struct mlx5_hv_vhca *hv_vhca = NULL;
+> +
+> +	hv_vhca = kzalloc(sizeof(*hv_vhca), GFP_KERNEL);
+> +	if (!hv_vhca)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	hv_vhca->work_queue = create_singlethread_workqueue("mlx5_hv_vhca");
+
+I was under impression that usage of create_* interfaces is discouraged,
+It has WQ_MEMORY_LEGACY flag inside and commit b71ab8c2025ca talks about
+this interface as legacy one.
+
+> +	if (!hv_vhca->work_queue) {
+> +		kfree(hv_vhca);
+> +		return ERR_PTR(-ENOMEM);
 > +	}
 > +
->  	return dax_driver_register(&device_dax_kmem_driver);
->  }
+> +	hv_vhca->dev = dev;
+> +	mutex_init(&hv_vhca->agents_lock);
+> +
+> +	return hv_vhca;
+> +}
+> +
+> +void mlx5_hv_vhca_destroy(struct mlx5_hv_vhca *hv_vhca)
+> +{
+> +	if (IS_ERR_OR_NULL(hv_vhca))
+> +		return;
+> +
+> +	destroy_workqueue(hv_vhca->work_queue);
+> +	kfree(hv_vhca);
+> +}
+> +
+> +static void mlx5_hv_vhca_invalidate_work(struct work_struct *work)
+> +{
+> +	struct mlx5_hv_vhca_work *hwork;
+> +	struct mlx5_hv_vhca *hv_vhca;
+> +	int i;
+> +
+> +	hwork = container_of(work, struct mlx5_hv_vhca_work, invalidate_work);
+> +	hv_vhca = hwork->hv_vhca;
+> +
+> +	mutex_lock(&hv_vhca->agents_lock);
+> +	for (i = 0; i < MLX5_HV_VHCA_AGENT_MAX; i++) {
+> +		struct mlx5_hv_vhca_agent *agent = hv_vhca->agents[i];
+> +
+> +		if (!agent || !agent->invalidate)
+> +			continue;
+> +
+> +		if (!(BIT(agent->type) & hwork->block_mask))
+> +			continue;
+> +
+> +		agent->invalidate(agent, hwork->block_mask);
+> +	}
+> +	mutex_unlock(&hv_vhca->agents_lock);
+> +
+> +	kfree(hwork);
+> +}
+> +
+> +void mlx5_hv_vhca_invalidate(void *context, u64 block_mask)
+> +{
+> +	struct mlx5_hv_vhca *hv_vhca = (struct mlx5_hv_vhca *)context;
+> +	struct mlx5_hv_vhca_work *work;
+> +
+> +	work = kzalloc(sizeof(*work), GFP_ATOMIC);
+> +	if (!work)
+> +		return;
+> +
+> +	INIT_WORK(&work->invalidate_work, mlx5_hv_vhca_invalidate_work);
+> +	work->hv_vhca    = hv_vhca;
+> +	work->block_mask = block_mask;
+> +
+> +	queue_work(hv_vhca->work_queue, &work->invalidate_work);
+> +}
+> +
+> +int mlx5_hv_vhca_init(struct mlx5_hv_vhca *hv_vhca)
+> +{
+> +	if (IS_ERR_OR_NULL(hv_vhca))
+> +		return IS_ERR_OR_NULL(hv_vhca);
+> +
+> +	return mlx5_hv_register_invalidate(hv_vhca->dev, hv_vhca,
+> +					   mlx5_hv_vhca_invalidate);
+> +}
+> +
+> +void mlx5_hv_vhca_cleanup(struct mlx5_hv_vhca *hv_vhca)
+> +{
+> +	int i;
+> +
+> +	if (IS_ERR_OR_NULL(hv_vhca))
+> +		return;
+> +
+> +	mutex_lock(&hv_vhca->agents_lock);
+> +	for (i = 0; i < MLX5_HV_VHCA_AGENT_MAX; i++)
+> +		WARN_ON(hv_vhca->agents[i]);
+> +
+> +	mutex_unlock(&hv_vhca->agents_lock);
+> +
+> +	mlx5_hv_unregister_invalidate(hv_vhca->dev);
+> +}
+> +
+> +struct mlx5_hv_vhca_agent *
+> +mlx5_hv_vhca_agent_create(struct mlx5_hv_vhca *hv_vhca,
+> +			  enum mlx5_hv_vhca_agent_type type,
+> +			  void (*control)(struct mlx5_hv_vhca_agent*,
+> +					  struct mlx5_hv_vhca_control_block *block),
+> +			  void (*invalidate)(struct mlx5_hv_vhca_agent*,
+> +					     u64 block_mask),
+> +			  void (*cleaup)(struct mlx5_hv_vhca_agent *agent),
+> +			  void *priv)
+> +{
+> +	struct mlx5_hv_vhca_agent *agent;
+> +
+> +	if (IS_ERR_OR_NULL(hv_vhca))
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	if (type >= MLX5_HV_VHCA_AGENT_MAX)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	mutex_lock(&hv_vhca->agents_lock);
+> +	if (hv_vhca->agents[type]) {
+> +		mutex_unlock(&hv_vhca->agents_lock);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +	mutex_unlock(&hv_vhca->agents_lock);
+> +
+> +	agent = kzalloc(sizeof(*agent), GFP_KERNEL);
+> +	if (!agent)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	agent->type      = type;
+> +	agent->hv_vhca   = hv_vhca;
+> +	agent->priv      = priv;
+> +	agent->control   = control;
+> +	agent->invalidate = invalidate;
+> +	agent->cleanup   = cleaup;
+> +
+> +	mutex_lock(&hv_vhca->agents_lock);
+> +	hv_vhca->agents[type] = agent;
+> +	mutex_unlock(&hv_vhca->agents_lock);
+> +
+> +	return agent;
+> +}
+> +
+> +void mlx5_hv_vhca_agent_destroy(struct mlx5_hv_vhca_agent *agent)
+> +{
+> +	struct mlx5_hv_vhca *hv_vhca = agent->hv_vhca;
+> +
+> +	mutex_lock(&hv_vhca->agents_lock);
+> +
+> +	if (WARN_ON(agent != hv_vhca->agents[agent->type])) {
+> +		mutex_unlock(&hv_vhca->agents_lock);
+> +		return;
+> +	}
+> +
+> +	hv_vhca->agents[agent->type] = NULL;
+> +	mutex_unlock(&hv_vhca->agents_lock);
+> +
+> +	if (agent->cleanup)
+> +		agent->cleanup(agent);
+> +
+> +	kfree(agent);
+> +}
+> +
+> +static int mlx5_hv_vhca_data_block_prepare(struct mlx5_hv_vhca_agent *agent,
+> +					   struct mlx5_hv_vhca_data_block *data_block,
+> +					   void *src, int len, int *offset)
+> +{
+> +	int bytes = min_t(int, (int)sizeof(data_block->data), len);
+> +
+> +	data_block->sequence = agent->seq;
+> +	data_block->offset   = (*offset)++;
+> +	memcpy(data_block->data, src, bytes);
+> +
+> +	return bytes;
+> +}
+> +
+> +static void mlx5_hv_vhca_agent_seq_update(struct mlx5_hv_vhca_agent *agent)
+> +{
+> +	agent->seq++;
+> +}
+> +
+> +int mlx5_hv_vhca_agent_write(struct mlx5_hv_vhca_agent *agent,
+> +			     void *buf, int len)
+> +{
+> +	int offset = agent->type * HV_CONFIG_BLOCK_SIZE_MAX;
+> +	int block_offset = 0;
+> +	int total = 0;
+> +	int err;
+> +
+> +	while (len) {
+> +		struct mlx5_hv_vhca_data_block data_block = {0};
+> +		int bytes;
+> +
+> +		bytes = mlx5_hv_vhca_data_block_prepare(agent, &data_block,
+> +							buf + total,
+> +							len, &block_offset);
+> +		if (!bytes)
+> +			return -ENOMEM;
+> +
+> +		err = mlx5_hv_write_config(agent->hv_vhca->dev, &data_block,
+> +					   sizeof(data_block), offset);
+> +		if (err)
+> +			return err;
+> +
+> +		total += bytes;
+> +		len   -= bytes;
+> +	}
+> +
+> +	mlx5_hv_vhca_agent_seq_update(agent);
+> +
+> +	return 0;
+> +}
+> +
+> +void *mlx5_hv_vhca_agent_priv(struct mlx5_hv_vhca_agent *agent)
+> +{
+> +	return agent->priv;
+> +}
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
+> new file mode 100644
+> index 0000000..cdf1303
+> --- /dev/null
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
+> @@ -0,0 +1,102 @@
+> +/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
+> +/* Copyright (c) 2019 Mellanox Technologies. */
+> +
+> +#ifndef __LIB_HV_VHCA_H__
+> +#define __LIB_HV_VHCA_H__
+> +
+> +#include "en.h"
+> +#include "lib/hv.h"
+> +
+> +struct mlx5_hv_vhca_agent;
+> +struct mlx5_hv_vhca;
+> +struct mlx5_hv_vhca_control_block;
+> +
+> +enum mlx5_hv_vhca_agent_type {
+> +	MLX5_HV_VHCA_AGENT_MAX = 32,
+> +};
+> +
+> +#if IS_ENABLED(CONFIG_PCI_HYPERV_INTERFACE)
+> +
+> +struct mlx5_hv_vhca_control_block {
+> +	u32     capabilities;
+> +	u32     control;
+> +	u16     command;
+> +	u16     command_ack;
+> +	u16     version;
+> +	u16     rings;
+> +	u32     reserved1[28];
+> +};
+> +
+> +struct mlx5_hv_vhca *mlx5_hv_vhca_create(struct mlx5_core_dev *dev);
+> +void mlx5_hv_vhca_destroy(struct mlx5_hv_vhca *hv_vhca);
+> +int mlx5_hv_vhca_init(struct mlx5_hv_vhca *hv_vhca);
+> +void mlx5_hv_vhca_cleanup(struct mlx5_hv_vhca *hv_vhca);
+> +void mlx5_hv_vhca_invalidate(void *context, u64 block_mask);
+> +
+> +struct mlx5_hv_vhca_agent *
+> +mlx5_hv_vhca_agent_create(struct mlx5_hv_vhca *hv_vhca,
+> +			  enum mlx5_hv_vhca_agent_type type,
+> +			  void (*control)(struct mlx5_hv_vhca_agent*,
+> +					  struct mlx5_hv_vhca_control_block *block),
+> +			  void (*invalidate)(struct mlx5_hv_vhca_agent*,
+> +					     u64 block_mask),
+> +			  void (*cleanup)(struct mlx5_hv_vhca_agent *agent),
+> +			  void *context);
+> +
+> +void mlx5_hv_vhca_agent_destroy(struct mlx5_hv_vhca_agent *agent);
+> +int mlx5_hv_vhca_agent_write(struct mlx5_hv_vhca_agent *agent,
+> +			     void *buf, int len);
+> +void *mlx5_hv_vhca_agent_priv(struct mlx5_hv_vhca_agent *agent);
+> +
+> +#else
+> +
+> +static inline struct mlx5_hv_vhca *
+> +mlx5_hv_vhca_create(struct mlx5_core_dev *dev)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline void mlx5_hv_vhca_destroy(struct mlx5_hv_vhca *hv_vhca)
+> +{
+> +}
+> +
+> +static inline int mlx5_hv_vhca_init(struct mlx5_hv_vhca *hv_vhca)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void mlx5_hv_vhca_cleanup(struct mlx5_hv_vhca *hv_vhca)
+> +{
+> +}
+> +
+> +static inline void mlx5_hv_vhca_invalidate(void *context,
+> +					   u64 block_mask)
+> +{
+> +}
+> +
+> +static inline struct mlx5_hv_vhca_agent *
+> +mlx5_hv_vhca_agent_create(struct mlx5_hv_vhca *hv_vhca,
+> +			  enum mlx5_hv_vhca_agent_type type,
+> +			  void (*control)(struct mlx5_hv_vhca_agent*,
+> +					  struct mlx5_hv_vhca_control_block *block),
+> +			  void (*invalidate)(struct mlx5_hv_vhca_agent*,
+> +					     u64 block_mask),
+> +			  void (*cleanup)(struct mlx5_hv_vhca_agent *agent),
+> +			  void *context)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline void mlx5_hv_vhca_agent_destroy(struct mlx5_hv_vhca_agent *agent)
+> +{
+> +}
+> +
+> +static inline int
+> +mlx5_hv_vhca_write_agent(struct mlx5_hv_vhca_agent *agent,
+> +			 void *buf, int len)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+> +#endif /* __LIB_HV_VHCA_H__ */
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+> index 0b70b1d..61388ca 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+> @@ -69,6 +69,7 @@
+>  #include "lib/pci_vsc.h"
+>  #include "diag/fw_tracer.h"
+>  #include "ecpf.h"
+> +#include "lib/hv_vhca.h"
+>
+>  MODULE_AUTHOR("Eli Cohen <eli@mellanox.com>");
+>  MODULE_DESCRIPTION("Mellanox 5th generation network adapters (ConnectX series) core driver");
+> @@ -870,6 +871,7 @@ static int mlx5_init_once(struct mlx5_core_dev *dev)
+>  	}
+>
+>  	dev->tracer = mlx5_fw_tracer_create(dev);
+> +	dev->hv_vhca = mlx5_hv_vhca_create(dev);
+>
+>  	return 0;
+>
+> @@ -900,6 +902,7 @@ static int mlx5_init_once(struct mlx5_core_dev *dev)
+>
+>  static void mlx5_cleanup_once(struct mlx5_core_dev *dev)
+>  {
+> +	mlx5_hv_vhca_destroy(dev->hv_vhca);
+>  	mlx5_fw_tracer_destroy(dev->tracer);
+>  	mlx5_fpga_cleanup(dev);
+>  	mlx5_eswitch_cleanup(dev->priv.eswitch);
+> @@ -1067,6 +1070,8 @@ static int mlx5_load(struct mlx5_core_dev *dev)
+>  		goto err_fw_tracer;
+>  	}
+>
+> +	mlx5_hv_vhca_init(dev->hv_vhca);
 
-This logic is wrong (and the error message is *very* confusing).  You
-can have the driver configured, but not loaded.  In that case, the kmem
-driver will load and work properly.
+What is the point to declare this function as "int ..." if you are not
+interested in result?
 
-When using daxctl to online memory, you already get the following
-message:
-
-libdaxctl: daxctl_dev_disable: dax0.0: error: device model is dax-class
-
-That's still not very helpful.  It would be better if the message
-suggested a fix (like using migrate-device-model).  Vishal?
-
-Cheers,
-Jeff
+> +
+>  	err = mlx5_fpga_device_start(dev);
+>  	if (err) {
+>  		mlx5_core_err(dev, "fpga device start failed %d\n", err);
+> @@ -1122,6 +1127,7 @@ static int mlx5_load(struct mlx5_core_dev *dev)
+>  err_ipsec_start:
+>  	mlx5_fpga_device_stop(dev);
+>  err_fpga_start:
+> +	mlx5_hv_vhca_cleanup(dev->hv_vhca);
+>  	mlx5_fw_tracer_cleanup(dev->tracer);
+>  err_fw_tracer:
+>  	mlx5_eq_table_destroy(dev);
+> @@ -1142,6 +1148,7 @@ static void mlx5_unload(struct mlx5_core_dev *dev)
+>  	mlx5_accel_ipsec_cleanup(dev);
+>  	mlx5_accel_tls_cleanup(dev);
+>  	mlx5_fpga_device_stop(dev);
+> +	mlx5_hv_vhca_cleanup(dev->hv_vhca);
+>  	mlx5_fw_tracer_cleanup(dev->tracer);
+>  	mlx5_eq_table_destroy(dev);
+>  	mlx5_irq_table_destroy(dev);
+> diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
+> index df23f17..13b4cf2 100644
+> --- a/include/linux/mlx5/driver.h
+> +++ b/include/linux/mlx5/driver.h
+> @@ -659,6 +659,7 @@ struct mlx5_clock {
+>  struct mlx5_fw_tracer;
+>  struct mlx5_vxlan;
+>  struct mlx5_geneve;
+> +struct mlx5_hv_vhca;
+>
+>  struct mlx5_core_dev {
+>  	struct device *device;
+> @@ -706,6 +707,7 @@ struct mlx5_core_dev {
+>  	struct mlx5_ib_clock_info  *clock_info;
+>  	struct mlx5_fw_tracer   *tracer;
+>  	u32                      vsc_addr;
+> +	struct mlx5_hv_vhca	*hv_vhca;
+>  };
+>
+>  struct mlx5_db {
+> --
+> 1.8.3.1
+>
