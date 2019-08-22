@@ -2,88 +2,115 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB4DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F7CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33A7B2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2458206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389669AbfHVP7W (ORCPT
+        id S2388178AbfHVQAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:59:22 -0400
-Received: from relay.sw.ru ([185.231.240.75]:58148 "EHLO relay.sw.ru"
+        Thu, 22 Aug 2019 12:00:17 -0400
+Received: from mga06.intel.com ([134.134.136.31]:53602 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389588AbfHVP7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:59:21 -0400
-Received: from [172.16.25.5]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1i0pUE-0000T6-2I; Thu, 22 Aug 2019 18:58:54 +0300
-Subject: Re: [PATCH 1/2] riscv: Add memmove string operation.
-To:     Nick Hu <nickhu@andestech.com>, alankao@andestech.com,
-        paul.walmsley@sifive.com, palmer@sifive.com, aou@eecs.berkeley.edu,
-        green.hu@gmail.com, deanbo422@gmail.com, tglx@linutronix.de,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        glider@google.com, dvyukov@google.com, Anup.Patel@wdc.com,
-        gregkh@linuxfoundation.org, alexios.zavras@intel.com,
-        atish.patra@wdc.com, zong@andestech.com, kasan-dev@googlegroups.com
-References: <cover.1565161957.git.nickhu@andestech.com>
- <a6c24ce01dc40da10d58fdd30bc3e1316035c832.1565161957.git.nickhu@andestech.com>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <09d5108e-f0ba-13d3-be9e-119f49f6bd85@virtuozzo.com>
-Date:   Thu, 22 Aug 2019 18:59:02 +0300
+        id S1729819AbfHVQAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 12:00:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 09:00:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,417,1559545200"; 
+   d="scan'208";a="330433624"
+Received: from rsetyawa-mobl1.amr.corp.intel.com (HELO [10.251.3.78]) ([10.251.3.78])
+  by orsmga004.jf.intel.com with ESMTP; 22 Aug 2019 09:00:14 -0700
+Subject: Re: [alsa-devel] [RFC PATCH 0/5] ASoC: SOF: Intel: SoundWire initial
+ integration
+To:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+References: <20190821201720.17768-1-pierre-louis.bossart@linux.intel.com>
+ <20190822151928.GB1200@ubuntu>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <5cf3425a-9b09-dee8-04ab-1bd746d33723@linux.intel.com>
+Date:   Thu, 22 Aug 2019 11:00:14 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <a6c24ce01dc40da10d58fdd30bc3e1316035c832.1565161957.git.nickhu@andestech.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190822151928.GB1200@ubuntu>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/7/19 10:19 AM, Nick Hu wrote:
-> There are some features which need this string operation for compilation,
-> like KASAN. So the purpose of this porting is for the features like KASAN
-> which cannot be compiled without it.
+
+
+> In patch 4/5 I forgot to mention superfluous braces around dev_err()
+> in sdw_config_stream() and sdw_free_stream(). Otherwise for the series:
+
+Will fix, thanks for spotting this.
+
+> Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+
+Thanks, I appreciate the overnight review!
+
 > 
-
-Compilation error can be fixed by diff bellow (I didn't test it).
-If you don't need memmove very early (before kasan_early_init()) than arch-specific not-instrumented memmove()
-isn't necessary to have.
-
----
- mm/kasan/common.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-index 6814d6d6a023..897f9520bab3 100644
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -107,6 +107,7 @@ void *memset(void *addr, int c, size_t len)
- 	return __memset(addr, c, len);
- }
- 
-+#ifdef __HAVE_ARCH_MEMMOVE
- #undef memmove
- void *memmove(void *dest, const void *src, size_t len)
- {
-@@ -115,6 +116,7 @@ void *memmove(void *dest, const void *src, size_t len)
- 
- 	return __memmove(dest, src, len);
- }
-+#endif
- 
- #undef memcpy
- void *memcpy(void *dest, const void *src, size_t len)
--- 
-2.21.0
-
-
-
+> Thanks
+> Guennadi
+> 
+> On Wed, Aug 21, 2019 at 03:17:15PM -0500, Pierre-Louis Bossart wrote:
+>> This RFC is the companion of the other RFC 'soundwire: intel: simplify
+>> DAI/PDI handling​'. Our purpose at this point is to gather feedback on
+>> the interfaces between the Intel SOF parts and the SoundWire code.
+>>
+>> The suggested solution is a simple init/release inserted at
+>> probe/remove and resume/suspend, as well as two callbacks for the SOF
+>> driver to generate IPC configurations with the firmware. That level of
+>> separation completely hides the details of the SoundWire DAIs and will
+>> allow for 'transparent' multi-cpu DAI support, which will be handled
+>> in the machine driver and the soundwire DAIs.
+>>
+>> This solution was tested on IceLake and CometLake, and captures the
+>> feedback from SOF contributors on an initial integration that was
+>> deemed too complicated (and rightly so).
+>>
+>> Pierre-Louis Bossart (5):
+>>    ASoC: SOF: IPC: dai-intel: move ALH declarations in header file
+>>    ASoC: SOF: Intel: hda: add helper to initialize SoundWire IP
+>>    ASoC: SOF: Intel: hda: add SoundWire IP support
+>>    ASoC: SOF: Intel: hda: add SoundWire stream config/free callbacks
+>>    ASoC: SOF: Intel: add support for SoundWire suspend/resume
+>>
+>>   include/sound/sof/dai-intel.h |  18 ++--
+>>   sound/soc/sof/intel/hda-dsp.c |  11 +++
+>>   sound/soc/sof/intel/hda.c     | 157 ++++++++++++++++++++++++++++++++++
+>>   sound/soc/sof/intel/hda.h     |  11 +++
+>>   4 files changed, 188 insertions(+), 9 deletions(-)
+>>
+>>
+>> base-commit: 3b3aaa017e8072b1bfddda92be296b3463d870be
+>> -- 
+>> 2.20.1
+>>
+>> _______________________________________________
+>> Alsa-devel mailing list
+>> Alsa-devel@alsa-project.org
+>> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+> 
