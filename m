@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0BCC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8BDC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E3C20870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A4323400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495973;
-	bh=Xc5OMN/+A9L0ei6L7NpIsibPfNtCCMTOms0AB/X0oM0=;
+	s=default; t=1566495979;
+	bh=G8LchBmt1VAVngPgsDs7T/u2yerKpz+40DXVd0aEkhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bh0UQtaQh4DQBW+/NJN3k8c9hMLV8aXVj6B4ymfLEGM+W+/D8N2AWQA/Y40Bzziem
-	 +7wKusmgJWZ+ijlzlqj7DY/aSr6ia/IG5VPwdbdI9zkzfjxbBYputpzX+hTLZhQ36h
-	 WiTtXY4K6O9eJ5EwlEFunOskFJlsHEJoYU9Smo/4=
+	b=0DqWpXWlQEh5/yWH+GvHjefz5MBn9WR5qj0t1CLmyIYLDToNx68170QejyQqmgUxF
+	 UVMxlrJklgJJqVcZ7PUqUFmug+Sv7dd8I5Ftna0pG1628kedenvGTlb/jKrrEbExUx
+	 RF4aL406z/+BEMhWb23N0Eozm+ONpI/qoryDCeRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393057AbfHVRqI (ORCPT
+        id S2393077AbfHVRqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42050 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:46:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391683AbfHVRW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:58 -0400
+        id S2391674AbfHVRW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:57 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 581DC23402;
-        Thu, 22 Aug 2019 17:22:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3C7523406;
+        Thu, 22 Aug 2019 17:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494577;
-        bh=Xc5OMN/+A9L0ei6L7NpIsibPfNtCCMTOms0AB/X0oM0=;
+        s=default; t=1566494576;
+        bh=G8LchBmt1VAVngPgsDs7T/u2yerKpz+40DXVd0aEkhU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h36Fq7tAQsyoauWWkDL6oTqjNa9Pz8aPIJ1hmB8RYBD4eIRc5WEKjYyIbhpzSZmQh
-         4z1X6MN6IDz4629sSuK0MGW7cR0s2nd6Z3Q7w6OaUCdvKox0wRKNr4iu9jvICiXOYc
-         HcxRTwCuEfSNdD+scy9QFhtlrrytnT00gO/61znA=
+        b=fcKURPDmWq7FK8pqSs6ZCxU20iUaTpO2E5j3OyOWXRYqV/1qY2/wS9rMwxUexmXnZ
+         brkbMGZexCdDOZNKDdw56J86vOv2vAajl17UslEDZwdxSW4+kEmpqSqaXTjdgMC/zm
+         +MyvPtjmEwMScbww/NSkfw8FAVyeQi1S8Vc6mzQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 4.4 69/78] RDMA: Directly cast the sockaddr union to sockaddr
-Date:   Thu, 22 Aug 2019 10:19:13 -0700
-Message-Id: <20190822171834.026854849@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.4 67/78] asm-generic: default BUG_ON(x) to if(x)BUG()
+Date:   Thu, 22 Aug 2019 10:19:11 -0700
+Message-Id: <20190822171833.970801534@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -58,73 +58,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 641114d2af312d39ca9bbc2369d18a5823da51c6 upstream.
+commit 3c047057d1206ec0f3b88c7809cacba478067a0c upstream.
 
-gcc 9 now does allocation size tracking and thinks that passing the member
-of a union and then accessing beyond that member's bounds is an overflow.
+When CONFIG_BUG is disabled, BUG_ON() will only evaluate the condition,
+but will not actually stop the current thread. GCC warns about a couple
+of BUG_ON() users where this actually leads to further undefined
+behavior:
 
-Instead of using the union member, use the entire union with a cast to
-get to the sockaddr. gcc will now know that the memory extends the full
-size of the union.
+include/linux/ceph/osdmap.h: In function 'ceph_can_shift_osds':
+include/linux/ceph/osdmap.h:54:1: warning: control reaches end of non-void function
+fs/ext4/inode.c: In function 'ext4_map_blocks':
+fs/ext4/inode.c:548:5: warning: 'retval' may be used uninitialized in this function
+drivers/mfd/db8500-prcmu.c: In function 'prcmu_config_clkout':
+drivers/mfd/db8500-prcmu.c:762:10: warning: 'div_mask' may be used uninitialized in this function
+drivers/mfd/db8500-prcmu.c:769:13: warning: 'mask' may be used uninitialized in this function
+drivers/mfd/db8500-prcmu.c:757:7: warning: 'bits' may be used uninitialized in this function
+drivers/tty/serial/8250/8250_core.c: In function 'univ8250_release_irq':
+drivers/tty/serial/8250/8250_core.c:252:18: warning: 'i' may be used uninitialized in this function
+drivers/tty/serial/8250/8250_core.c:235:19: note: 'i' was declared here
 
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+There is an obvious conflict of interest here: on the one hand, someone
+who disables CONFIG_BUG() will want the kernel to be as small as possible
+and doesn't care about printing error messages to a console that nobody
+looks at. On the other hand, running into a BUG_ON() condition means that
+something has gone wrong, and we probably want to also stop doing things
+that might cause data corruption.
+
+This patch picks the second choice, and changes the NOP to BUG(), which
+normally stops the execution of the current thread in some form (endless
+loop or a trap). This follows the logic we applied in a4b5d580e078 ("bug:
+Make BUG() always stop the machine").
+
+For ARM multi_v7_defconfig, the size slightly increases:
+
+section		CONFIG_BUG=y	CONFIG_BUG=n	CONFIG_BUG=n+patch
+
+  .text            8320248   |     8180944   |     8207688
+  .rodata          3633720   |     3567144   |     3570648
+  __bug_table        32508   |         ---   |         ---
+  __modver             692   |        1584   |        2176
+  .init.text        558132   |      548300   |      550088
+  .exit.text         12380   |       12256   |       12380
+  .data            1016672   |     1016064   |     1016128
+  Total           14622556   |    14374510   |    14407326
+
+So instead of saving 1.70% of the total image size, we only save 1.48%
+by turning off CONFIG_BUG, but in return we can ensure that we don't run
+into cases of uninitialized variable or return code uses when something
+bad happens. Aside from that, we significantly reduce the number of
+warnings in randconfig builds, which makes it easier to fix the warnings
+about other problems.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/addr.c |   15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ include/asm-generic/bug.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/addr.c
-+++ b/drivers/infiniband/core/addr.c
-@@ -481,14 +481,13 @@ int rdma_addr_find_dmac_by_grh(const uni
- 	struct net_device *dev;
+--- a/include/asm-generic/bug.h
++++ b/include/asm-generic/bug.h
+@@ -143,7 +143,7 @@ extern void warn_slowpath_null(const cha
+ #endif
  
- 	union {
--		struct sockaddr     _sockaddr;
- 		struct sockaddr_in  _sockaddr_in;
- 		struct sockaddr_in6 _sockaddr_in6;
- 	} sgid_addr, dgid_addr;
+ #ifndef HAVE_ARCH_BUG_ON
+-#define BUG_ON(condition) do { if (condition) ; } while (0)
++#define BUG_ON(condition) do { if (condition) BUG(); } while (0)
+ #endif
  
- 
--	rdma_gid2ip(&sgid_addr._sockaddr, sgid);
--	rdma_gid2ip(&dgid_addr._sockaddr, dgid);
-+	rdma_gid2ip((struct sockaddr *)&sgid_addr, sgid);
-+	rdma_gid2ip((struct sockaddr *)&dgid_addr, dgid);
- 
- 	memset(&dev_addr, 0, sizeof(dev_addr));
- 	dev_addr.bound_dev_if = if_index;
-@@ -496,8 +495,9 @@ int rdma_addr_find_dmac_by_grh(const uni
- 
- 	ctx.addr = &dev_addr;
- 	init_completion(&ctx.comp);
--	ret = rdma_resolve_ip(&self, &sgid_addr._sockaddr, &dgid_addr._sockaddr,
--			&dev_addr, 1000, resolve_cb, &ctx);
-+	ret = rdma_resolve_ip(&self, (struct sockaddr *)&sgid_addr,
-+			      (struct sockaddr *)&dgid_addr, &dev_addr, 1000,
-+			      resolve_cb, &ctx);
- 	if (ret)
- 		return ret;
- 
-@@ -519,16 +519,15 @@ int rdma_addr_find_smac_by_sgid(union ib
- 	int ret = 0;
- 	struct rdma_dev_addr dev_addr;
- 	union {
--		struct sockaddr     _sockaddr;
- 		struct sockaddr_in  _sockaddr_in;
- 		struct sockaddr_in6 _sockaddr_in6;
- 	} gid_addr;
- 
--	rdma_gid2ip(&gid_addr._sockaddr, sgid);
-+	rdma_gid2ip((struct sockaddr *)&gid_addr, sgid);
- 
- 	memset(&dev_addr, 0, sizeof(dev_addr));
- 	dev_addr.net = &init_net;
--	ret = rdma_translate_ip(&gid_addr._sockaddr, &dev_addr, vlan_id);
-+	ret = rdma_translate_ip((struct sockaddr *)&gid_addr, &dev_addr, vlan_id);
- 	if (ret)
- 		return ret;
- 
+ #ifndef HAVE_ARCH_WARN_ON
 
 
