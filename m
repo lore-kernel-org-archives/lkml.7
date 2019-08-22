@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1D2C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BBAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DB3523400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D81523400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493717;
-	bh=QbEZQBkyRzh5gb4inivLOKwAYp/yyLAyxOPGsojb4jc=;
+	s=default; t=1566493719;
+	bh=SUeVgyj9KGoSJ+/rEsQbWqM3p6Wy0GHD60j0+1FUhQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ls96f2aTe8WLcU1ZEttVEkO4LkoxVyABwmgxwlUM/hlATtKKpkOT9PgFUtgpPeaxE
-	 T+xW8UAByakqFl3hZCXSlu5mBrSSHP1H0cvHkabf9cl5ZZqb39tgZCvDue7+hBnpA0
-	 QtHz/h3CaaPXEwlJTXaa8xSx6MBvTALVTBaWcWuk=
+	b=JB15XEYf8wiWmHHYpKKra3rhcE8oJ77jXWi2DXJ91Ow0cl41fdozV7FWYO/V/fwe3
+	 SEfURDx9ygij1NvikAg7c92pbuwQj/QHgd6KjgGa/Qf5YNzER2X2khH/XvR/Kyq2OX
+	 ZunkeqTnD4S4iFXSZ/paJN7RRHm9LtG4rEw99lKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390405AbfHVRIg (ORCPT
+        id S2390427AbfHVRIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57996 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390363AbfHVRIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:31 -0400
+        id S2390392AbfHVRIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:35 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7474E2341D;
-        Thu, 22 Aug 2019 17:08:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6674D23400;
+        Thu, 22 Aug 2019 17:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493710;
-        bh=QbEZQBkyRzh5gb4inivLOKwAYp/yyLAyxOPGsojb4jc=;
+        s=default; t=1566493714;
+        bh=SUeVgyj9KGoSJ+/rEsQbWqM3p6Wy0GHD60j0+1FUhQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1AXiv8wrraoMVBaL5m7m6s3rWZc7TC1C+CzEpAuuUutFJ9KlQISs0pvJvSANBkaB
-         oyEViYyh5/2mcrhUufOM5aGqoTZpMvlX7gYrYptxlBQlm1LdPURjVlfjpxWNf6Wobc
-         I0xjX/OiEAO15AsYnu/r8/gVPRZR5BofkiOlTor0=
+        b=lCNd0KQAwbOld+hekrh5ANnXQlgH2YWV7ENHX08m/xdJHMprZ5BIFVWWflseC8GXT
+         0VfmWb2ypAfdpbMiDktfOyLohcfdBwSHpS7fccsaKWLE/YwU3qzu4KXxZPNj95z1ur
+         waMMrhA4RBxL+fBO+Hxx57IsQ1LPKKHJYzDiyYK4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 030/135] bpf: fix access to skb_shared_info->gso_segs
-Date:   Thu, 22 Aug 2019 13:06:26 -0400
-Message-Id: <20190822170811.13303-31-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 038/135] IB/mlx5: Replace kfree with kvfree
+Date:   Thu, 22 Aug 2019 13:06:34 -0400
+Message-Id: <20190822170811.13303-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,67 +65,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 06a22d897d82f12776d44dbf0850f5895469cb2a upstream.
+[ Upstream commit b7f406bb883ba7ac3222298f6b44cebc4cfe2dde ]
 
-It is possible we reach bpf_convert_ctx_access() with
-si->dst_reg == si->src_reg
+Memory allocated by kvzalloc should not be freed by kfree(), use kvfree()
+instead.
 
-Therefore, we need to load BPF_REG_AX before eventually
-mangling si->src_reg.
-
-syzbot generated this x86 code :
-   3:   55                      push   %rbp
-   4:   48 89 e5                mov    %rsp,%rbp
-   7:   48 81 ec 00 00 00 00    sub    $0x0,%rsp // Might be avoided ?
-   e:   53                      push   %rbx
-   f:   41 55                   push   %r13
-  11:   41 56                   push   %r14
-  13:   41 57                   push   %r15
-  15:   6a 00                   pushq  $0x0
-  17:   31 c0                   xor    %eax,%eax
-  19:   48 8b bf c0 00 00 00    mov    0xc0(%rdi),%rdi
-  20:   44 8b 97 bc 00 00 00    mov    0xbc(%rdi),%r10d
-  27:   4c 01 d7                add    %r10,%rdi
-  2a:   48 0f b7 7f 06          movzwq 0x6(%rdi),%rdi // Crash
-  2f:   5b                      pop    %rbx
-  30:   41 5f                   pop    %r15
-  32:   41 5e                   pop    %r14
-  34:   41 5d                   pop    %r13
-  36:   5b                      pop    %rbx
-  37:   c9                      leaveq
-  38:   c3                      retq
-
-Fixes: d9ff286a0f59 ("bpf: allow BPF programs access skb_shared_info->gso_segs field")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 813e90b1aeaa ("IB/mlx5: Add advise_mr() support")
+Link: https://lore.kernel.org/r/20190717082101.14196-1-hslester96@gmail.com
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/infiniband/hw/mlx5/odp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index f681fb772940c..534c310bb0893 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -7325,12 +7325,12 @@ static u32 bpf_convert_ctx_access(enum bpf_access_type type,
- 	case offsetof(struct __sk_buff, gso_segs):
- 		/* si->dst_reg = skb_shinfo(SKB); */
- #ifdef NET_SKBUFF_DATA_USES_OFFSET
--		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct sk_buff, head),
--				      si->dst_reg, si->src_reg,
--				      offsetof(struct sk_buff, head));
- 		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct sk_buff, end),
- 				      BPF_REG_AX, si->src_reg,
- 				      offsetof(struct sk_buff, end));
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct sk_buff, head),
-+				      si->dst_reg, si->src_reg,
-+				      offsetof(struct sk_buff, head));
- 		*insn++ = BPF_ALU64_REG(BPF_ADD, si->dst_reg, BPF_REG_AX);
- #else
- 		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct sk_buff, end),
+diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
+index 91507a2e92900..f6e5351ba4d50 100644
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@ -1765,7 +1765,7 @@ static void mlx5_ib_prefetch_mr_work(struct work_struct *work)
+ 
+ 	num_pending_prefetch_dec(to_mdev(w->pd->device), w->sg_list,
+ 				 w->num_sge, 0);
+-	kfree(w);
++	kvfree(w);
+ }
+ 
+ int mlx5_ib_advise_mr_prefetch(struct ib_pd *pd,
+@@ -1807,7 +1807,7 @@ int mlx5_ib_advise_mr_prefetch(struct ib_pd *pd,
+ 	if (valid_req)
+ 		queue_work(system_unbound_wq, &work->work);
+ 	else
+-		kfree(work);
++		kvfree(work);
+ 
+ 	srcu_read_unlock(&dev->mr_srcu, srcu_key);
+ 
 -- 
 2.20.1
 
