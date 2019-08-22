@@ -2,102 +2,115 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35A3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6CEC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4767206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB98233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733062AbfHVLuU (ORCPT
+        id S1733105AbfHVLwx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:50:20 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58326 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731963AbfHVLuU (ORCPT
+        Thu, 22 Aug 2019 07:52:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14814 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732223AbfHVLww (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:50:20 -0400
-X-UUID: 71a13bff9db64a2fa70989b6ffec4cbb-20190822
-X-UUID: 71a13bff9db64a2fa70989b6ffec4cbb-20190822
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <ran.bi@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1308780366; Thu, 22 Aug 2019 19:50:14 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs07n2.mediatek.inc
- (172.21.101.141) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 22 Aug
- 2019 19:50:08 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 22 Aug 2019 19:50:06 +0800
-Message-ID: <1566474611.12318.9.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
-From:   Ran Bi <ran.bi@mediatek.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
+        Thu, 22 Aug 2019 07:52:52 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7MBmpGZ049083
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 07:52:50 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uhqy1pccs-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 07:52:49 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Thu, 22 Aug 2019 12:52:47 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 22 Aug 2019 12:52:44 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7MBqhY831260730
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 11:52:43 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EB44D4C052;
+        Thu, 22 Aug 2019 11:52:42 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BE844C050;
+        Thu, 22 Aug 2019 11:52:42 +0000 (GMT)
+Received: from localhost (unknown [9.199.32.226])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 22 Aug 2019 11:52:42 +0000 (GMT)
+Date:   Thu, 22 Aug 2019 17:22:42 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH v5] arm64: implement KPROBES_ON_FTRACE
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, YT Shen <yt.shen@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        "Flora Fu" <flora.fu@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>
-Date:   Thu, 22 Aug 2019 19:50:11 +0800
-In-Reply-To: <20190822092008.GR27031@piout.net>
-References: <20190801110122.26834-1-ran.bi@mediatek.com>
-         <20190801110122.26834-3-ran.bi@mediatek.com>
-         <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
-         <20190822092008.GR27031@piout.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190822191351.3796aca8@xhacker.debian>
+In-Reply-To: <20190822191351.3796aca8@xhacker.debian>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19082211-4275-0000-0000-0000035BDF6A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082211-4276-0000-0000-0000386E055A
+Message-Id: <1566474733.p35psfjpl2.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=622 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908220129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-22 at 11:20 +0200, Alexandre Belloni wrote:
-> On 22/08/2019 11:12:29+0200, Matthias Brugger wrote:
-> > 
-> > 
-> > On 01/08/2019 13:01, Ran Bi wrote:
-> > > This add support for the MediaTek MT2712 RTC. It was SoC based RTC, but
-> > > had different architecture compared with MT7622 RTC.
-> > > 
-> > > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> > > ---
-> > >  drivers/rtc/Kconfig      |  10 +
-> > >  drivers/rtc/Makefile     |   1 +
-> > >  drivers/rtc/rtc-mt2712.c | 444 +++++++++++++++++++++++++++++++++++++++
-> > 
-> > Can't we just adjust rtc-mt7622.c (and rename it) to unify the source for both
-> > devices. What is the difference that we need to write a driver of our own?
-> > 
+Jisheng Zhang wrote:
+> KPROBES_ON_FTRACE avoids much of the overhead with regular kprobes as it
+> eliminates the need for a trap, as well as the need to emulate or
+> single-step instructions.
 > 
-> If they are compatible, this is the way to go but the file can't be
-> renamed (and that is fine).
+> Tested on berlin arm64 platform.
 > 
+> ~ # mount -t debugfs debugfs /sys/kernel/debug/
+> ~ # cd /sys/kernel/debug/
+> /sys/kernel/debug # echo 'p _do_fork' > tracing/kprobe_events
 > 
+> before the patch:
+> 
+> /sys/kernel/debug # cat kprobes/list
+> ffffff801009fe28  k  _do_fork+0x0    [DISABLED]
+> 
+> after the patch:
+> 
+> /sys/kernel/debug # cat kprobes/list
+> ffffff801009ff54  k  _do_fork+0x4    [DISABLED][FTRACE]
+> 
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-They are not compatible. Both registers and operating methods are
-different.
+Reviewed-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
-Best Regards,
-Ran
+
+- Naveen
 
