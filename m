@@ -2,109 +2,176 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2A7C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01926C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAF421743
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06C2206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403976AbfHVTRn (ORCPT
+        id S2404028AbfHVTSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 15:17:43 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46571 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391860AbfHVTRn (ORCPT
+        Thu, 22 Aug 2019 15:18:05 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:52417 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403983AbfHVTSC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 15:17:43 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z17so6471255otk.13;
-        Thu, 22 Aug 2019 12:17:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=24eP7T52+CYL2dNJV8R097RDf634lSS5yuSIePFHGwk=;
-        b=eAbrKm5FJNzAHkCS/Z5RTD47hOZKeWADSxBDfsmBNfsJa31aNePzf2DAaBqnqn+TcN
-         cE6/kDiRsa4mthXJs42kKSP5E3jo1dtIjG1EoYi8ecz9tgmWp3xWrNniJhAxNcU5cT6B
-         5N57E849AJefGrd7xA4mMC5jrWcWLH/P0B1gaPs+wEwfvKVe3gEw5/eBrVebsO0CrZPI
-         5ifJJOXkzLBJMYgJr0qz+HSfHrRieVvlty7C3ioBSzq5L+GbxOW5RWJo2esyu3cQuIqh
-         pB38rZMsIIQ6K5avEvVQzxHRuU2q/uGX1GyIjlAADceGGKw5vMCY/+Y+VOIgkQXyOpc0
-         XcQA==
-X-Gm-Message-State: APjAAAUbqws7Ok41kGbUAZJeq/ROhgLjIO9Jcz0rWCtbhYtQusVcm/mR
-        EPc19iKyO2mt6bZtfTqBiPI=
-X-Google-Smtp-Source: APXvYqxop+1c9JiQDuqjxLlVpuweprhgD1ihezKlsMDwXHi6Dx3GUbjgB7f6MqabctH5Zf2GXdALrg==
-X-Received: by 2002:a05:6830:1db2:: with SMTP id z18mr1087490oti.110.1566501462198;
-        Thu, 22 Aug 2019 12:17:42 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id j6sm157680otq.16.2019.08.22.12.17.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 12:17:41 -0700 (PDT)
-Subject: Re: [PATCH v7 08/14] nvmet-core: allow one host per passthru-ctrl
-From:   Sagi Grimberg <sagi@grimberg.me>
-To:     Max Gurtovoy <maxg@mellanox.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Stephen Bates <sbates@raithlin.com>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
-References: <20190801234514.7941-1-logang@deltatee.com>
- <20190801234514.7941-9-logang@deltatee.com>
- <05a74e81-1dbd-725f-1369-5ca5c5918db1@mellanox.com>
- <a6b9db95-a7f0-d1f6-1fa2-8dc13a6aa29e@deltatee.com>
- <5717f515-e051-c420-07b7-299bcfcd1f32@mellanox.com>
- <b0921c72-93f1-f67a-c4b3-31baeb1c39cb@grimberg.me>
- <b352c7f1-2629-e72f-9c85-785e0cf7c2c1@mellanox.com>
- <24e2ddd0-4b2a-8092-cf91-df8c0fb482e5@grimberg.me>
-Message-ID: <e4430207-7def-8776-0289-0d58689dc0cd@grimberg.me>
-Date:   Thu, 22 Aug 2019 12:17:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 15:18:02 -0400
+X-Originating-IP: 87.18.63.98
+Received: from uno.localdomain (unknown [87.18.63.98])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 52EAEC0007;
+        Thu, 22 Aug 2019 19:17:56 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 21:19:25 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 19/19] drm: rcar-du: kms: Update CMM in atomic commit
+ tail
+Message-ID: <20190822191925.dnbdihnt3ole2nqx@uno.localdomain>
+References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
+ <20190706140746.29132-20-jacopo+renesas@jmondi.org>
+ <20190820184215.GM10820@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <24e2ddd0-4b2a-8092-cf91-df8c0fb482e5@grimberg.me>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3qbfvdcd762hsr7u"
+Content-Disposition: inline
+In-Reply-To: <20190820184215.GM10820@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
->>>> I don't understand why we don't limit a regular ctrl to single 
->>>> access and we do it for the PT ctrl.
->>>>
->>>> I guess the block layer helps to sync between multiple access in 
->>>> parallel but we can do it as well.
->>>>
->>>> Also, let's say you limit the access to this subsystem to 1 user, 
->>>> the bdev is still accessibly for local user and also you can create 
->>>> a different subsystem that will use this device (PT and non-PT ctrl).
->>>>
->>>> Sagi,
->>>>
->>>> can you explain the trouble you meant and how this limitation solve 
->>>> it ?
->>>
->>> Its different to emulate the controller with all its admin
->>> commands vs. passing it through to the nvme device.. (think of format 
->>> nvm)
->>>
->>>
->>>
->> we don't need to support format command for PT ctrl as we don't 
->> support other commands such create_sq/cq.
-> 
-> That is just an example, basically every command that we are not aware
-> of we simply passthru to the drive without knowing the implications
-> on a multi-host environment..
+--3qbfvdcd762hsr7u
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-If we were to change the logic of nvmet_parse_passthru_admin_cmd to
-have the default case do nvmet_parse_admin_cmd, and only have
-the vendor-specific space opcodes do nvmet_passthru_execute_cmd
-then I could not see at the moment how we can break a multi-host
-export...
+Hi Laurent,
+
+On Tue, Aug 20, 2019 at 09:42:15PM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Sat, Jul 06, 2019 at 04:07:46PM +0200, Jacopo Mondi wrote:
+> > Update CMM settings at in the atomic commit tail helper method.
+> >
+> > The CMM is updated with new gamma values provided to the driver
+> > in the GAMMA_LUT blob property.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 35 +++++++++++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > index b79cda2f5531..f9aece78ca5f 100644
+> > --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/of_platform.h>
+> >  #include <linux/wait.h>
+> >
+> > +#include "rcar_cmm.h"
+> >  #include "rcar_du_crtc.h"
+> >  #include "rcar_du_drv.h"
+> >  #include "rcar_du_encoder.h"
+> > @@ -287,6 +288,37 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
+> >   * Atomic Check and Update
+> >   */
+> >
+> > +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
+> > +					     struct drm_crtc_state *old_state)
+> > +{
+> > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> > +	struct rcar_cmm_config cmm_config = {};
+> > +
+> > +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
+> > +		return;
+> > +
+> > +	if (!crtc->state->gamma_lut) {
+> > +		cmm_config.lut.enable = false;
+> > +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> > +
+> > +		return;
+> > +	}
+> > +
+> > +	cmm_config.lut.enable = true;
+> > +	cmm_config.lut.table = (struct drm_color_lut *)
+> > +			       crtc->state->gamma_lut->data;
+> > +
+> > +	/* Set LUT table size to 0 if entries should not be updated. */
+> > +	if (!old_state->gamma_lut ||
+> > +	    old_state->gamma_lut->base.id != crtc->state->gamma_lut->base.id)
+> > +		cmm_config.lut.size = crtc->state->gamma_lut->length
+> > +				    / sizeof(cmm_config.lut.table[0]);
+> > +	else
+> > +		cmm_config.lut.size = 0;
+> > +
+> > +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
+> > +}
+> > +
+> >  static int rcar_du_atomic_check(struct drm_device *dev,
+> >  				struct drm_atomic_state *state)
+> >  {
+> > @@ -329,6 +361,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
+> >  			rcdu->dpad1_source = rcrtc->index;
+> >  	}
+> >
+> > +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
+> > +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
+> > +
+>
+> I think this looks good overall, but I wonder if we couldn't simplify
+> the CMM driver suspend/resume and LUT caching due to config while not
+> enabled by handling it on the DU side. I have a rework on the commit
+> tail handler in progress, I'll think how this could be done. For now I
+> think you can leave it as is.
+>
+
+Does this mean I have your R-b tag ? :)
+
+Thanks
+  j
+
+> >  	/* Apply the atomic update. */
+> >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+> >  	drm_atomic_helper_commit_planes(dev, old_state,
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+--3qbfvdcd762hsr7u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1e6r0ACgkQcjQGjxah
+VjwIoBAAnnFT2D1f5giY7bIuwi3DtCaXzY6/kEPbXXSqxroLRiNDRATdQXBA+HVr
+Z212k0ILVX4BkLQcksmd6ZXdac9TxS2y6/ejFF6474NE8LJ5TpkDQzSzgSMb1Y0F
+LrJOEw7xVImUIDt5Lo7tpFoyT3KdMRgYbpGYFDVRvhxGsApsmDz8KIA/QTrw+PTB
+P74B9kKM5V0FxMbSaTJotxiyqY5J1mQtwCNGdX2ud8rZc1AC1uhKVOxtYLTLPiIp
+PIOTWPimzIpVmFN7GLQDfObLARsrN6kfnqk3SZheOJCA7AG1YGoW8nza7iX/cWkl
+Dn+Tvs955Czre7c+z1HOAo/bc6Ch3Ejux7sMtkF1b26Pgvrb3u5GSiByf+4nnfk1
+uGox2IFORT0pfKHDnqDfQwVYD3vWrOBa6fZvsv1+rk/WldQrinYeDf9HPNG1KH+J
+AJBrEbKMmvjJvQNWNOGGdyuHngQtfMPNFQ980olWNhAj5Rgl44dnY0/kIgOXuEN+
+St996VyO46itGP7zygleeEtmWIFryzbDymhBTUaahhL0WUyUutNauZ6KZ7iwNQzY
+FVZzaq8ZtjRifFiwy8F924rJd+VdNwjDHaY8lmEmr18m3EWoL73sva3qn/AZ57cV
+CWzAE/kTGqiyxfMRSnIM5bU4GXMdpg5sBnWzHoftuLI/i5xjTLw=
+=IuZt
+-----END PGP SIGNATURE-----
+
+--3qbfvdcd762hsr7u--
