@@ -2,115 +2,114 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6642C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38015C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB41233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D86C233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sBLkeISC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389149AbfHVNhR (ORCPT
+        id S2389154AbfHVNhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:37:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60710 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387577AbfHVNhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:37:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E9B54ADCB;
-        Thu, 22 Aug 2019 13:37:13 +0000 (UTC)
-Message-ID: <1566481032.8347.44.camel@suse.com>
-Subject: Re: [PATCH] HID: quirks: Disable runtime suspend on Microsoft Corp.
- Basic Optical Mouse v2.0
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Date:   Thu, 22 Aug 2019 15:37:12 +0200
-In-Reply-To: <D6E31CB0-BC2B-4B52-AF18-4BE990D3FDA5@canonical.com>
-References: <20190822091744.3451-1-kai.heng.feng@canonical.com>
-         <1566467151.8347.23.camel@suse.com>
-         <AD8A4135-0275-45B3-BEB9-031737A2C756@canonical.com>
-         <1566470325.8347.35.camel@suse.com>
-         <D6E31CB0-BC2B-4B52-AF18-4BE990D3FDA5@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 22 Aug 2019 09:37:51 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:59272 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfHVNhu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 09:37:50 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7MDbgsP118773;
+        Thu, 22 Aug 2019 08:37:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1566481062;
+        bh=KClX8zGAqMXvkwVK0aEixQaZyFMmTporptwJb8u6V+k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=sBLkeISChmSwkWhg08PvCyN4PNBBbzKWkyNMvSxHRNBmU7Ha0th9o25KubOjKNLli
+         JL+mmWNgjNkoqXwaO/A11G4Fd8BarnqcyvJDExMRNClzAtmd4CRwxG+GidsxwZz5vL
+         sehwone1NfXleBLD1bicxkXE/2BsoTM7ka99d5Xw=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7MDbgpQ039456
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 22 Aug 2019 08:37:42 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 22
+ Aug 2019 08:37:41 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 22 Aug 2019 08:37:41 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7MDbdn5046197;
+        Thu, 22 Aug 2019 08:37:40 -0500
+Subject: Re: [PATCH] usb: gadget: udc: core: Fix error case while binding
+ pending gadget drivers
+To:     Alan Stern <stern@rowland.harvard.edu>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <Pine.LNX.4.44L0.1908211027430.1816-100000@iolanthe.rowland.org>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <9eba7e43-5692-b9c7-b30c-39a60e3239a6@ti.com>
+Date:   Thu, 22 Aug 2019 16:37:39 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <Pine.LNX.4.44L0.1908211027430.1816-100000@iolanthe.rowland.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, den 22.08.2019, 21:23 +0800 schrieb Kai-Heng Feng:
-> at 18:38, Oliver Neukum <oneukum@suse.com> wrote:
-> > Well, sort of. The USB spec merely states how to enter and exit
-> > a suspended state and that device state must not be lost.
-> > It does not tell you what a suspended device must be able to do.
+
+
+On 21/08/2019 17:30, Alan Stern wrote:
+> On Wed, 21 Aug 2019, Roger Quadros wrote:
 > 
-> But shouldn’t remote wakeup signaling wakes the device up and let it exit  
-> suspend state?
-
-Yes. Have you tested using a button? If they indeed do not work, then
-the device lies about supporting remote wakeup. That would warrant a
-quirk, but for remote wakeup.
-
-> Or it’s okay to let the device be suspended when remote wakeup is needed  
-> but broken?
-
-Again, the HID spec does not specify what should trigger a remote
-wakeup. Limiting this to mouse buttons but not movements is
-inconvinient, but not buggy.
-
-This is indeed what Windows does. The device is suspended when the
-screen saver switches on. That we do not do that is a deficiency
-of X.
-To use runtime PM regularly you need an .ini file
-
-
-> > In other words, if on your system it is on, you need to look
-> > at udev, not the kernel.
+>> If binding a pending gadget driver fails we should not
+>> remove it from the pending driver list, otherwise it
+>> will cause a segmentation fault later when the gadget driver is
+>> unloaded.
 > 
-> So if a device is broken when “power/control” is flipped by user, we should  
-> deal it at userspace? That doesn’t sound right to me.
-
-If it is broken, as in crashing we could talk about it. If it merely
-does not do what you want, then, yes, that is for user space to deal
-with.
-
-> > Well, no. Runtime PM is a trade off. You lose something if you use
-> > it. If it worked just as well as full power, you would never use
-> > full power, would you?
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>  drivers/usb/gadget/udc/core.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
+>> index 7cf34beb50df..c272c8014772 100644
+>> --- a/drivers/usb/gadget/udc/core.c
+>> +++ b/drivers/usb/gadget/udc/core.c
+>> @@ -1142,7 +1142,7 @@ static int check_pending_gadget_drivers(struct usb_udc *udc)
+>>  		if (!driver->udc_name || strcmp(driver->udc_name,
+>>  						dev_name(&udc->dev)) == 0) {
+>>  			ret = udc_bind_to_driver(udc, driver);
+>> -			if (ret != -EPROBE_DEFER)
+>> +			if (!ret)
+>>  				list_del(&driver->pending);
+>>  			break;
+>>  		}
 > 
-> I am not asking the suspended state to work as full power, but to prevent a  
-> device enters suspend state because of broken remote wakeup.
-
-What then would be the difference between suspended and active? A small
-delay in data transfer?
-
-> > Whether the loss of functionality or performance is worth the energy
-> > savings is a policy decision. Hence it belongs into udev.
-> > Ideally the kernel would tell user space what will work in a
-> > suspended state. Unfortunately HID does not provide support for that.
+> This is kind of a policy question.  If binding a pending gadget driver 
+> fails, should the driver remain pending?
 > 
-> I really don’t think “loss of functionally” belongs to policy decision. But  
-> that’s just my opinion.
+> Depending on the answer to this question, you might want to change the 
+> list_del to list_del_init.  That should fix the segmentation fault 
+> just as well.
 
-That is just what we do if, for example, you choose between the configs
-of a USB device or when you use authorization.
+OK. I'll send a revised patch to retain existing policy.
 
-> Maybe just calling usb_autopm_put_interface() in usbhid_close() to balance  
-> the refcount?
-
-No, the refcount is good. If remote wakeup is totally broken, you need
-to introduce a quirk that will prevent the kernel from believing the
-device when it claims to support it.
-
-	Regards
-		Oliver
-
+cheers,
+-roger
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
