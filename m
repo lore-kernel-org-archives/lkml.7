@@ -2,105 +2,91 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5F7C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2423CC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49B8214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:21:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566458498;
-	bh=YrrYzS7VJUb1dvv13ntfn8EPHV31xDrEpIVFZXMZ6oU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lip8heN7gbYSkgWgjgv1199VRAoP+ek15pJqsGc2gLdTIf4FntAyI07rXGYuU7sas
-	 pT4AoTXhFpbSa+Dubso4oalESVBJ+i22tJxL5jQcM45KxakdRg2RvP0MWCpY2wJZAI
-	 tYyJkLB+eiZl2lvH01hDEqVGknb4gX8yLZxSCg4Y=
+	by mail.kernel.org (Postfix) with ESMTP id F3917214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:22:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731525AbfHVHVh (ORCPT
+        id S1731538AbfHVHWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:21:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35268 "EHLO mx1.suse.de"
+        Thu, 22 Aug 2019 03:22:11 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5190 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727310AbfHVHVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:21:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 56018AE1C;
-        Thu, 22 Aug 2019 07:21:35 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 09:21:34 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Edward Chron <echron@arista.com>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
-Subject: Re: [PATCH] mm/oom: Add oom_score_adj value to oom Killed process
- message
-Message-ID: <20190822072134.GD12785@dhcp22.suse.cz>
-References: <20190821001445.32114-1-echron@arista.com>
- <alpine.DEB.2.21.1908202024300.141379@chino.kir.corp.google.com>
- <20190821064732.GW3111@dhcp22.suse.cz>
- <alpine.DEB.2.21.1908210017320.177871@chino.kir.corp.google.com>
- <20190821074721.GY3111@dhcp22.suse.cz>
- <CAM3twVR5Z1LG4+pqMF94mCw8R0sJ3VJtnggQnu+047c7jxJVug@mail.gmail.com>
+        id S1729213AbfHVHWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 03:22:11 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CE148C189EDC0E632B6D;
+        Thu, 22 Aug 2019 15:22:06 +0800 (CST)
+Received: from [127.0.0.1] (10.119.195.53) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 22 Aug 2019
+ 15:21:58 +0800
+Subject: Re: [Question] audit_names use after delete in audit_filter_inodes
+To:     Paul Moore <paul@paul-moore.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-audit@redhat.com>,
+        Eric Paris <eparis@redhat.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+References: <4997df37-4a80-5cf5-effc-0a6f040c4528@huawei.com>
+ <CAHC9VhS_DCBRX6kkmiSYBzq+ELN2AYRypRN6vR_J1+JOi2FDvw@mail.gmail.com>
+From:   Chen Wandun <chenwandun@huawei.com>
+Message-ID: <ce8efa9d-f2b6-5adc-0442-c73e632c6903@huawei.com>
+Date:   Thu, 22 Aug 2019 15:22:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM3twVR5Z1LG4+pqMF94mCw8R0sJ3VJtnggQnu+047c7jxJVug@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHC9VhS_DCBRX6kkmiSYBzq+ELN2AYRypRN6vR_J1+JOi2FDvw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.119.195.53]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 21-08-19 16:12:08, Edward Chron wrote:
-[...]
-> Additionally (which you know, but mentioning for reference) the OOM
-> output used to look like this:
-> 
-> Nov 14 15:23:48 oldserver kernel: [337631.991218] Out of memory: Kill
-> process 19961 (python) score 17 or sacrifice child
-> Nov 14 15:23:48 oldserver kernel: [337631.991237] Killed process 31357
-> (sh) total-vm:5400kB, anon-rss:252kB, file-rss:4kB, shmem-rss:0kB
-> 
-> It now looks like this with 5.3.0-rc5 (minus the oom_score_adj):
-> 
-> Jul 22 10:42:40 newserver kernel:
-> oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,global_oom,task_memcg=/user.slice/user-10383.slice/user@10383.service,task=oomprocs,pid=3035,uid=10383
-> Jul 22 10:42:40 newserver kernel: Out of memory: Killed process 3035
-> (oomprocs) total-vm:1056800kB, anon-rss:8kB, file-rss:4kB,
-> shmem-rss:0kB
-> Jul 22 10:42:40 newserver kernel: oom_reaper: reaped process 3035
-> (oomprocs), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
-> 
-> The old output did explain that a oom_score of 17 must have either
-> tied for highest or was the highest.
-> This did document why OOM selected the process it did, even if ends up
-> killing the related sh process.
-> 
-> With the newer format that added constraint message, it does provide
-> uid which can be helpful and
-> the oom_reaper showing that the memory was reclaimed is certainly reassuring.
-> 
-> My understanding now is that printing the oom_score is discouraged.
-> This seems unfortunate.  The oom_score_adj can be adjusted
-> appropriately if oom_score is known.
-> So It would be useful to have both.
 
-As already mentioned in our previous discussion I am really not happy
-about exporting oom_score withtout a larger context - aka other tasks
-scores to have something to compare against. Other than that the value
-is an internal implementation detail and it is meaningless without
-knowing the exact algorithm which can change at any times so no
-userspace should really depend on it. All important metrics should be
-displayed by the oom report message already.
 
--- 
-Michal Hocko
-SUSE Labs
+On 2019/8/21 23:36, Paul Moore wrote:
+> On Wed, Aug 21, 2019 at 5:31 AM Chen Wandun <chenwandun@huawei.com> wrote:
+>>
+>> Hi,
+>> Recently, I hit a use after delete in audit_filter_inodes,
+> 
+> ...
+> 
+>> the call stack is below:
+>> [321315.077117] CPU: 6 PID: 8944 Comm: DefSch0100 Tainted: G           OE  ----V-------   3.10.0-327.62.59.83.w75.x86_64 #1
+>> [321315.077117] Hardware name: OpenStack Foundation OpenStack Nova, BIOS rel-1.8.1-0-g4adadbd-20170107_142945-9_64_246_229 04/01/2014
+> 
+> It looks like this is a vendor kernel and not an upstream kernel, yes?
+
+I analysed the upstream kernel about audit, and found there is no significant change
+in audit_names add/read/delete since v3.10.
+
+audit_names could be delete in __audit_syscall_exit, do_exit, copy_process
+on upstream kernel(same as v3.10).
+
+if we are reading audit_names, such as
+	__audit_syscall_exit
+		audit_filter_inodes
+			read each audit_names ...
+			
+
+is there any situation could delete audit_names at the same time?
+
+>   Assuming that is the case I would suggest you contact your distro for
+> help/debugging/support; we simply don't know enough about your kernel
+> (what patches are included, how was it built/configured/etc.) to
+> comment with any certainty.
+> 
+> Linux Kernels based on v3.10.0 are extremely old from an upstream
+> perspective, with a number of fixes and changes to the audit subsystem
+> since v3.10.0 was released.  If you see the same problem on a modern
+> upstream kernel please let us know, we'll be happy to help.
+> 
+
