@@ -6,83 +6,111 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52D1C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296DDC41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90534214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089AA2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731547AbfHVHXq (ORCPT
+        id S1731574AbfHVHaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:23:46 -0400
-Received: from mga01.intel.com ([192.55.52.88]:6996 "EHLO mga01.intel.com"
+        Thu, 22 Aug 2019 03:30:11 -0400
+Received: from mail.ispras.ru ([83.149.199.45]:41652 "EHLO mail.ispras.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728104AbfHVHXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:23:45 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 00:23:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,415,1559545200"; 
-   d="scan'208";a="378408813"
-Received: from gliakhov-mobl2.ger.corp.intel.com (HELO ubuntu) ([10.249.36.176])
-  by fmsmga005.fm.intel.com with ESMTP; 22 Aug 2019 00:23:39 -0700
-Date:   Thu, 22 Aug 2019 09:23:39 +0200
-From:   Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 4/5] ASoC: SOF: Intel: hda: add SoundWire stream
- config/free callbacks
-Message-ID: <20190822072338.GA30465@ubuntu>
-References: <20190821201720.17768-1-pierre-louis.bossart@linux.intel.com>
- <20190821201720.17768-5-pierre-louis.bossart@linux.intel.com>
- <20190822071835.GA30262@ubuntu>
+        id S1729718AbfHVHaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 03:30:10 -0400
+Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru [188.32.48.208])
+        by mail.ispras.ru (Postfix) with ESMTPSA id 7FD1C540089;
+        Thu, 22 Aug 2019 10:30:07 +0300 (MSK)
+Subject: Re: [PATCH] lib/memweight.c: optimize by inlining bitmap_weight()
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>, Jan Kara <jack@suse.cz>,
+        Matthew Wilcox <matthew@wil.cx>, linux-kernel@vger.kernel.org,
+        dm-devel@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-media@vger.kernel.org, Erdem Tumurov <erdemus@gmail.com>,
+        Vladimir Shelekhov <vshel@iis.nsk.su>
+References: <20190821074200.2203-1-efremov@ispras.ru>
+ <20190821182507.b0dea16f57360cf0ac40deb6@linux-foundation.org>
+From:   Denis Efremov <efremov@ispras.ru>
+Message-ID: <ad15bc93-0283-2518-8185-7683614d9965@ispras.ru>
+Date:   Thu, 22 Aug 2019 10:30:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822071835.GA30262@ubuntu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190821182507.b0dea16f57360cf0ac40deb6@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 09:18:35AM +0200, Guennadi Liakhovetski wrote:
 
-[snip]
 
-> >  static int hda_sdw_init(struct snd_sof_dev *sdev)
-> >  {
-> >  	acpi_handle handle;
-> > @@ -67,6 +131,8 @@ static int hda_sdw_init(struct snd_sof_dev *sdev)
-> >  	res.mmio_base = sdev->bar[HDA_DSP_BAR];
-> >  	res.irq = sdev->ipc_irq;
-> >  	res.parent = sdev->dev;
-> > +	res.ops = &sdw_callback;
-> > +	res.arg = sdev;
-> >  
-> >  	sdw = sdw_intel_init(handle, &res);
-> >  	if (!sdw) {
+On 22.08.2019 04:25, Andrew Morton wrote:
+> On Wed, 21 Aug 2019 10:42:00 +0300 Denis Efremov <efremov@ispras.ru> wrote:
 > 
-> Hm, looks like this function is using spaces for indentation... Let me check 
-> if this is coming from an earlier patch
+>> This patch inlines bitmap_weight() call.
+> 
+> It is better to say the patch "open codes" the bitmap_weight() call.
+> 
+>> Thus, removing the BUG_ON,
+> 
+> Why is that OK to do?
 
-Ouch, it's mutt or whatever editor it's using... Sorry for the noise.
+BUG_ON was necessary here to check that bitmap_weight will return a correct value,
+i.e. the computed weight will fit the int type: 
+static __always_inline int bitmap_weight(const unsigned long *src, unsigned int nbits);
 
-Thanks
-Guennadi
+BUG_ON was added in the memweight v2
+https://lore.kernel.org/lkml/20120523092113.GG10452@quack.suse.cz/
+Jan Kara wrote:
+>> +
+>> +	for (longs = bytes / sizeof(long); longs > 0; ) {
+>> +		size_t bits = min_t(size_t, INT_MAX & ~(BITS_PER_LONG - 1),
+> +					longs * BITS_PER_LONG);
+>  I find it highly unlikely that someone would have such a large bitmap
+> (256 MB or more on 32-bit). Also the condition as you wrote it can just
+> overflow so it won't have the desired effect. Just do
+>	BUG_ON(longs >= ULONG_MAX / BITS_PER_LONG);
+> and remove the loop completely. If someone comes with such a huge bitmap,
+> the code can be modified easily (after really closely inspecting whether
+> such a huge bitmap is really well justified).
+>> +
+>> +		w += bitmap_weight(bitmap.ptr, bits);
+>> +		bytes -= bits / BITS_PER_BYTE;
+>> +		bitmap.address += bits / BITS_PER_BYTE;
+>> +		longs -= bits / BITS_PER_LONG;
+
+Akinobu Mita wrote:
+> The bits argument of bitmap_weight() is int type. So this should be
+>
+>        BUG_ON(longs >= INT_MAX / BITS_PER_LONG);
+
+We don't need this check, since we removed the bitmap_weight call and
+control the computation directly with size_t everywhere.
+
+We could add BUG_ON(bytes >= SIZE_MAX / BITS_PER_BYTE);
+at the very beginning of the function to check that the array is not
+very big (>2000PiB), but it seems excessive.
+
+> 
+> I expect all the code size improvements are from doing this?
+
+Yes, but I thought it's good to show that the total size is not
+increasing because of the manual "inlining".
+
+> 
+>> and 'longs to bits -> bits to longs' conversion by directly calling
+>> hweight_long().
+>>
+>> ./scripts/bloat-o-meter lib/memweight.o.old lib/memweight.o.new
+>> add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-10 (-10)
+>> Function                                     old     new   delta
+>> memweight                                    162     152     -10
+>>
+> 
+
+Regards,
+Denis
