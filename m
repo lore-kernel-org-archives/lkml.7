@@ -2,81 +2,97 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5754DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E81E8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:33:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6A3233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FC1233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:33:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388301AbfHVLdm (ORCPT
+        id S2388310AbfHVLdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:33:42 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:34750 "EHLO inva020.nxp.com"
+        Thu, 22 Aug 2019 07:33:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46382 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388192AbfHVLc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:32:59 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C69D31A05E3;
-        Thu, 22 Aug 2019 13:32:57 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E9F731A02E3;
-        Thu, 22 Aug 2019 13:32:47 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D290B40318;
-        Thu, 22 Aug 2019 19:32:35 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.co, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, andrew.murray@arm.com
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v2 04/10] dt-bindings: pci: layerscape-pci: add compatible strings for ls1088a and ls2088a
-Date:   Thu, 22 Aug 2019 19:22:36 +0800
-Message-Id: <20190822112242.16309-4-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190822112242.16309-1-xiaowei.bao@nxp.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S2388192AbfHVLdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 07:33:43 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C765389F38E;
+        Thu, 22 Aug 2019 11:33:42 +0000 (UTC)
+Received: from lacos-laptop-7.usersys.redhat.com (unknown [10.36.118.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 97F1F1001B32;
+        Thu, 22 Aug 2019 11:33:38 +0000 (UTC)
+Subject: Re: [PATCH v5] drm/virtio: use virtio_max_dma_size
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190821111210.27165-1-kraxel@redhat.com>
+From:   Laszlo Ersek <lersek@redhat.com>
+Message-ID: <2e6eba7b-5f46-e9e8-f6b2-3e80e95754e9@redhat.com>
+Date:   Thu, 22 Aug 2019 13:33:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190821111210.27165-1-kraxel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Thu, 22 Aug 2019 11:33:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add compatible strings for ls1088a and ls2088a.
+On 08/21/19 13:12, Gerd Hoffmann wrote:
+> We must make sure our scatterlist segments are not too big, otherwise
+> we might see swiotlb failures (happens with sev, also reproducable with
+> swiotlb=force).
+> 
+> Suggested-by: Laszlo Ersek <lersek@redhat.com>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_object.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+> index b2da31310d24..09b526518f5a 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+> @@ -204,6 +204,7 @@ int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
+>  		.interruptible = false,
+>  		.no_wait_gpu = false
+>  	};
+> +	size_t max_segment;
+>  
+>  	/* wtf swapping */
+>  	if (bo->pages)
+> @@ -215,8 +216,13 @@ int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
+>  	if (!bo->pages)
+>  		goto out;
+>  
+> -	ret = sg_alloc_table_from_pages(bo->pages, pages, nr_pages, 0,
+> -					nr_pages << PAGE_SHIFT, GFP_KERNEL);
+> +	max_segment = virtio_max_dma_size(qdev->vdev);
+> +	max_segment &= PAGE_MASK;
+> +	if (max_segment > SCATTERLIST_MAX_SEGMENT)
+> +		max_segment = SCATTERLIST_MAX_SEGMENT;
+> +	ret = __sg_alloc_table_from_pages(bo->pages, pages, nr_pages, 0,
+> +					  nr_pages << PAGE_SHIFT,
+> +					  max_segment, GFP_KERNEL);
+>  	if (ret)
+>  		goto out;
+>  	return 0;
+> 
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
----
-v2:
- - No change.
+Reviewed-by: Laszlo Ersek <lersek@redhat.com>
 
- Documentation/devicetree/bindings/pci/layerscape-pci.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index e20ceaa..16f592e 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -22,7 +22,10 @@ Required properties:
-         "fsl,ls1043a-pcie"
-         "fsl,ls1012a-pcie"
-   EP mode:
--	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
-+	"fsl,ls-pcie-ep"
-+	"fsl,ls1046a-pcie-ep"
-+	"fsl,ls1088a-pcie-ep"
-+	"fsl,ls2088a-pcie-ep"
- - reg: base addresses and lengths of the PCIe controller register blocks.
- - interrupts: A list of interrupt outputs of the controller. Must contain an
-   entry for each entry in the interrupt-names property.
--- 
-2.9.5
-
+Thanks!
+Laszlo
