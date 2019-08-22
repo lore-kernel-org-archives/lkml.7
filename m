@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB256C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD4EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9397123400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5984A23400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495085;
-	bh=Q4i4je0b+xN++DwkKR4jmJG7VQLrh8a2Gpmm8Fx2NY8=;
+	s=default; t=1566495089;
+	bh=dj7mEkG4videPuN9hCV/MWfKJniVmyHGSAILoiUiZLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RR0o7iwqyeBgXF+iDqSbTIS8BMuCB81TB2BV1STCR+JaZnipY/PZJE1b61W2F/qfi
-	 +vQNW8Mc7vhQTenOWMmqV9j+J+sVmxE9ygjDgtDTeQZvmFG8Wv5KsswKjXIKPaKgzq
-	 v98FG9Z3U8U7vuVAppmmX0Ta5Ie9LVlYrrfSSiWo=
+	b=uPbDf7/QWwLd27JnEnPKokAJh2LRIOuhPsfKom/Xdv3iMTwpCuXON+YF0hn6y54u4
+	 Dg4RuWbyBu7w9XG6pwn5c/i9loMr50JXEU1A4+9tOOn7FpKabigh30vW52idgUgQ+M
+	 WWYxLXvogBFMxzxxN6T6Yll/DzszkUfgej8DrcjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404536AbfHVRZ4 (ORCPT
+        id S2392240AbfHVRb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47606 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:31:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731556AbfHVRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:59 -0400
+        id S2404534AbfHVRZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:56 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B60382341C;
-        Thu, 22 Aug 2019 17:24:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A79A52342B;
+        Thu, 22 Aug 2019 17:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494698;
-        bh=Q4i4je0b+xN++DwkKR4jmJG7VQLrh8a2Gpmm8Fx2NY8=;
+        s=default; t=1566494755;
+        bh=dj7mEkG4videPuN9hCV/MWfKJniVmyHGSAILoiUiZLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOqMSv2qSKrjcciV/3jdXadTI4fC6Twx5pxiFyvB9Z4haEg5bYM4NbpKidSHqkY29
-         JnRPVc/VSo52PUxISYs/3SH4jCqZWupXNphED9VzdGTp9Ft01ayotp4RFNl24m8Xm+
-         2fnEKK2O68rR8Ui2YW/g/Z7lgOumufZvcu+/aqAs=
+        b=ijfkt63oRWWACijW6697/D9l7LVsKcN0Ii0pOa2FdnPSdhd8cZxD1HAOJqF1LNsNQ
+         D5Md/WIp4Q2V9vQat/EmZn7aovuXl/0T9Iqr8547kOQrHYJj8jecLp+lEahFBt+2Ho
+         2w85P0OVMC65osWAQ0LMQXjfTaWGohln0zYYS8hs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Hiroyuki Yamamoto <hyamamo@allied-telesis.co.jp>,
-        Yoshiaki Okamoto <yokamoto@allied-telesis.co.jp>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 51/71] USB: serial: option: Add support for ZTE MF871A
-Date:   Thu, 22 Aug 2019 10:19:26 -0700
-Message-Id: <20190822171730.038267294@linuxfoundation.org>
+        stable@vger.kernel.org, David Binderman <dcb314@hotmail.com>,
+        Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.19 56/85] staging: comedi: dt3000: Fix signed integer overflow divider * base
+Date:   Thu, 22 Aug 2019 10:19:29 -0700
+Message-Id: <20190822171733.646826894@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
-References: <20190822171726.131957995@linuxfoundation.org>
+In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
+References: <20190822171731.012687054@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,49 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshiaki Okamoto <yokamoto@allied-telesis.co.jp>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-commit 7e7ae38bf928c5cfa6dd6e9a2cf8b42c84a27c92 upstream.
+commit b4d98bc3fc93ec3a58459948a2c0e0c9b501cd88 upstream.
 
-This patch adds support for MF871A USB modem (aka Speed USB STICK U03)
-to option driver. This modem is manufactured by ZTE corporation, and
-sold by KDDI.
+In `dt3k_ns_to_timer()` the following lines near the end of the function
+result in a signed integer overflow:
 
-Interface layout:
-0: AT
-1: MODEM
+	prescale = 15;
+	base = timer_base * (1 << prescale);
+	divider = 65535;
+	*nanosec = divider * base;
 
-usb-devices output:
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  9 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=19d2 ProdID=1481 Rev=52.87
-S:  Manufacturer=ZTE,Incorporated
-S:  Product=ZTE Technologies MSM
-S:  SerialNumber=1234567890ABCDEF
-C:  #Ifs= 2 Cfg#= 1 Atr=80 MxPwr=500mA
-I:  If#= 0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+(`divider`, `base` and `prescale` are type `int`, `timer_base` and
+`*nanosec` are type `unsigned int`.  The value of `timer_base` will be
+either 50 or 100.)
 
-Co-developed-by: Hiroyuki Yamamoto <hyamamo@allied-telesis.co.jp>
-Signed-off-by: Hiroyuki Yamamoto <hyamamo@allied-telesis.co.jp>
-Signed-off-by: Yoshiaki Okamoto <yokamoto@allied-telesis.co.jp>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+The main reason for the overflow is that the calculation for `base` is
+completely wrong.  It should be:
+
+	base = timer_base * (prescale + 1);
+
+which matches an earlier instance of this calculation in the same
+function.
+
+Reported-by: David Binderman <dcb314@hotmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20190812111517.26803-1-abbotti@mev.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/staging/comedi/drivers/dt3000.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1552,6 +1552,7 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1428, 0xff, 0xff, 0xff),  /* Telewell TW-LTE 4G v2 */
- 	  .driver_info = RSVD(2) },
- 	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x1476, 0xff) },	/* GosunCn ZTE WeLink ME3630 (ECM/NCM mode) */
-+	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1481, 0xff, 0x00, 0x00) }, /* ZTE MF871A */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1533, 0xff, 0xff, 0xff) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1534, 0xff, 0xff, 0xff) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1535, 0xff, 0xff, 0xff) },
+--- a/drivers/staging/comedi/drivers/dt3000.c
++++ b/drivers/staging/comedi/drivers/dt3000.c
+@@ -368,7 +368,7 @@ static int dt3k_ns_to_timer(unsigned int
+ 	}
+ 
+ 	prescale = 15;
+-	base = timer_base * (1 << prescale);
++	base = timer_base * (prescale + 1);
+ 	divider = 65535;
+ 	*nanosec = divider * base;
+ 	return (prescale << 16) | (divider);
 
 
