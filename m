@@ -2,156 +2,72 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFF8C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E9CC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B324233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566466552;
-	bh=LMbz0msR2O1TEK3U783cJtWTMHGs6gnyRFKKA4qw9FM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=h5I4PdffTVUnWUaOJ1CltsZaw4QZ46X4wf31V7+wDuvWTvV1oqM07sizPJAxpMUTt
-	 vIXssfQqDy9MKesFhg0b2W7bMHKdVOttSOz2MO0gURr2WN9yOX7nc48EbKQ6WI27z3
-	 4hzh4IVgk2rLEiBN/mucSsmEuKrXIB8YhBUIUfds=
+	by mail.kernel.org (Postfix) with ESMTP id 57414233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731219AbfHVJfv (ORCPT
+        id S1731943AbfHVJgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:35:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46834 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 05:36:11 -0400
+Received: from shell.v3.sk ([90.176.6.54]:35995 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725987AbfHVJfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:35:51 -0400
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 929B6233FD;
-        Thu, 22 Aug 2019 09:35:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566466549;
-        bh=LMbz0msR2O1TEK3U783cJtWTMHGs6gnyRFKKA4qw9FM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wbBT/iLZv5Wp9pUaZsoOmul3hbR3i44kk5j2aCaC8DqcNqkb8QApNnM0k4vsvgHAN
-         aMKjlKh3K5CM9JonHm6fzbo57cYnr6VBfpwbcEzpN/c8JTh86IVzyiGfr4wLImSiy1
-         r+EaZOw07sRHt8H3Lt1nBM5rAX/6K678k72nm6ZM=
-Received: by mail-lj1-f178.google.com with SMTP id t14so4923305lji.4;
-        Thu, 22 Aug 2019 02:35:49 -0700 (PDT)
-X-Gm-Message-State: APjAAAXLe5G5+5NUwYQVKopoIuXG0KvuSHd+kGW3/tYVsH3I+dJvFDTs
-        /ZMENoUpPBQzKO0S9d6t+gpQ4KCJ5t88r/5OR5Y=
-X-Google-Smtp-Source: APXvYqwPG6IU9fzrtES73q5HLxpelXNjNyTBalBXupuLQ+rX2BTYt8MTWVa27JDKckQ6Tyd1mVaeOKbvP/nwZOxlJaM=
-X-Received: by 2002:a2e:95d9:: with SMTP id y25mr17509040ljh.236.1566466547743;
- Thu, 22 Aug 2019 02:35:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190820094027.4144-1-ribalda@kernel.org> <20190820094027.4144-3-ribalda@kernel.org>
- <1566466282.3653.5.camel@pengutronix.de>
-In-Reply-To: <1566466282.3653.5.camel@pengutronix.de>
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date:   Thu, 22 Aug 2019 11:35:30 +0200
-X-Gmail-Original-Message-ID: <CAPybu_2jeu4m8o5nT932dot5LtY0s5zecK6XZ_owr1qVeV9+yQ@mail.gmail.com>
-Message-ID: <CAPybu_2jeu4m8o5nT932dot5LtY0s5zecK6XZ_owr1qVeV9+yQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] media: imx214: Add new control with V4L2_CID_UNIT_CELL_SIZE
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        id S1726738AbfHVJgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:36:11 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id BE832D7556;
+        Thu, 22 Aug 2019 11:36:09 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 1v5Ri6TRypyq; Thu, 22 Aug 2019 11:36:05 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 3B668D755A;
+        Thu, 22 Aug 2019 11:36:05 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id jvTFurhOyODo; Thu, 22 Aug 2019 11:36:04 +0200 (CEST)
+Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 009DDD7556;
+        Thu, 22 Aug 2019 11:36:03 +0200 (CEST)
+Message-ID: <1e13a307539b47b8d874bdc5c36b705ba7a72f7e.camel@v3.sk>
+Subject: Re: [PATCH] clk: tidy up the help tags in Kconfig
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 22 Aug 2019 11:36:02 +0200
+In-Reply-To: <20190816192707.DCC022133F@mail.kernel.org>
+References: <20190816185716.530013-1-lkundrak@v3.sk>
+         <20190816192707.DCC022133F@mail.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philipp
+On Fri, 2019-08-16 at 12:27 -0700, Stephen Boyd wrote:
+> Quoting Lubomir Rintel (2019-08-16 11:57:16)
+> > Sometimes an extraneous "---help---" follows "help". That is probably a
+> > copy&paste error stemming from their inconsistent use. Let's just replace
+> > them all with "help", removing the extra ones along the way.
+> 
+> Can you just send the patch to remove the extra ones? I don't really
+> care to make it consistent in the same patch.
 
-On Thu, Aug 22, 2019 at 11:31 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
->
-> On Tue, 2019-08-20 at 11:40 +0200, Ricardo Ribalda Delgado wrote:
-> > According to the product brief, the unit cell size is 1120 nanometers^2.
-> >
-> > https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
-> >
-> > Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> > ---
-> >  drivers/media/i2c/imx214.c | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >
-> > diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-> > index 159a3a604f0e..cc0a013ba7da 100644
-> > --- a/drivers/media/i2c/imx214.c
-> > +++ b/drivers/media/i2c/imx214.c
-> > @@ -47,6 +47,7 @@ struct imx214 {
-> >       struct v4l2_ctrl *pixel_rate;
-> >       struct v4l2_ctrl *link_freq;
-> >       struct v4l2_ctrl *exposure;
-> > +     struct v4l2_ctrl *unit_size;
->
-> This is never used.
->
-> Neither are pixel_rate and exposure, it appears. And link_freq is only
-> used locally in imx214_probe to set the read-only flag.
->
-> >
-> >       struct regulator_bulk_data      supplies[IMX214_NUM_SUPPLIES];
-> >
-> > @@ -941,6 +942,26 @@ static int __maybe_unused imx214_resume(struct device *dev)
-> >       return ret;
-> >  }
-> >
-> > +static void unit_size_init(const struct v4l2_ctrl *ctrl, u32 idx,
-> > +                  union v4l2_ctrl_ptr ptr)
-> > +{
-> > +     ptr.p_area->width = 1120;
-> > +     ptr.p_area->height = 1120;
-> > +}
-> > +
-> > +static const struct v4l2_ctrl_type_ops unit_size_ops = {
-> > +     .init = unit_size_init,
-> > +};
-> > +
-> > +static struct v4l2_ctrl *new_unit_size_ctrl(struct v4l2_ctrl_handler *handler)
-> > +{
-> > +     static struct v4l2_ctrl_config ctrl = {
-> > +             .id = V4L2_CID_UNIT_CELL_SIZE,
-> > +             .type_ops = &unit_size_ops,
-> > +     };
-> > +
-> > +     return v4l2_ctrl_new_custom(handler, &ctrl, NULL);
-> > +}
-> >  static int imx214_probe(struct i2c_client *client)
-> >  {
-> >       struct device *dev = &client->dev;
-> > @@ -1029,6 +1050,8 @@ static int imx214_probe(struct i2c_client *client)
-> >                                            V4L2_CID_EXPOSURE,
-> >                                            0, 3184, 1, 0x0c70);
-> >
-> > +     imx214->unit_size = new_unit_size_ctrl(&imx214->ctrls);
-> > +
-> >       ret = imx214->ctrls.error;
-> >       if (ret) {
-> >               dev_err(&client->dev, "%s control init failed (%d)\n",
->
-> This seems like a lot of parts to assemble in every sensor driver just
-> to provide a constant area control. Should this be turned into a
-> v4l2_ctrl_new_area helper that takes a const struct v4l2_area as an
-> argument?
+Sure. Just done so.
 
-I agree, I was planning on making a helper afterwards ;). I do not
-mind adding it to this series.
+Do you also care about making it consistent, or is it okay to just
+leave it as it is?
 
->
->         static const struct v4l2_area unit_cell_size = {
->                 .width = 1120,
->                 .height = 1120
->         };
->
->         v4l2_ctrl_new_area(&imx214->ctrls, V4L2_CID_UNIT_CELL_SIZE,
->                            &unit_cell_size);
->
-> regards
-> Philipp
+Thanks
+Lubo
+
