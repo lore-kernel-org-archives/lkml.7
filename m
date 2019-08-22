@@ -2,82 +2,64 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B6AC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E1EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 003BC216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913F421848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbfHVAu0 (ORCPT
+        id S1730319AbfHVAyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 20:50:26 -0400
-Received: from tartarus.angband.pl ([54.37.238.230]:47858 "EHLO
-        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfHVAu0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 20:50:26 -0400
-Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
-        (envelope-from <kilobyte@angband.pl>)
-        id 1i0bIy-0000Fv-Q6; Thu, 22 Aug 2019 02:50:20 +0200
-Date:   Thu, 22 Aug 2019 02:50:20 +0200
-From:   Adam Borowski <kilobyte@angband.pl>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bp@alien8.de" <bp@alien8.de>
-Subject: Re: [PATCH v3 0/8] AMD64 EDAC fixes
-Message-ID: <20190822005020.GA403@angband.pl>
-References: <20190821235938.118710-1-Yazen.Ghannam@amd.com>
+        Wed, 21 Aug 2019 20:54:38 -0400
+Received: from verein.lst.de ([213.95.11.211]:42321 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727553AbfHVAyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 20:54:38 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C7A8C68BFE; Thu, 22 Aug 2019 02:54:34 +0200 (CEST)
+Date:   Thu, 22 Aug 2019 02:54:34 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 00/38] posix-cpu-timers: Cleanup and consolidation
+Message-ID: <20190822005434.GA10938@lst.de>
+References: <20190821190847.665673890@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190821235938.118710-1-Yazen.Ghannam@amd.com>
-X-Junkbait: aaron@angband.pl, zzyx@angband.pl
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: kilobyte@angband.pl
-X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
+In-Reply-To: <20190821190847.665673890@linutronix.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 11:59:53PM +0000, Ghannam, Yazen wrote:
-> I've also added RFC patches to avoid the "ECC disabled" message for
-> nodes without memory. I haven't fully tested these, but I wanted to get
-> your thoughts. Here's an earlier discussion:
-> https://lkml.kernel.org/r/20180321191335.7832-1-Yazen.Ghannam@amd.com
+> The series applies on top of:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
+> 
+> and is available from git as well:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.timers/core
 
-While you're editing that code, could you please also cut the spam if ECC is
-actually disabled?  For example, a 2990WX with non-ECC RAM gets 1024 lines;
-64 copies of:
+Btw, for some reason git here seems to be very unhappy about that remote:
 
-[    8.186164] EDAC amd64: Node 0: DRAM ECC disabled.
-[    8.188364] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
-                Either enable ECC checking or force module loading by setting 'ecc_enable_override'.
-                (Note that use of the override may cause unknown side effects.)
-[    8.194762] EDAC amd64: Node 1: DRAM ECC disabled.
-[    8.196307] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
-                Either enable ECC checking or force module loading by setting 'ecc_enable_override'.
-                (Note that use of the override may cause unknown side effects.)
-[    8.199840] EDAC amd64: Node 2: DRAM ECC disabled.
-[    8.200963] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
-                Either enable ECC checking or force module loading by setting 'ecc_enable_override'.
-                (Note that use of the override may cause unknown side effects.)
-[    8.204326] EDAC amd64: Node 3: DRAM ECC disabled.
-[    8.205436] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
-                Either enable ECC checking or force module loading by setting 'ecc_enable_override'.
-                (Note that use of the override may cause unknown side effects.)
+Fetching tip
+error: cannot lock ref 'refs/remotes/tip/WIP.timers/core': 'refs/remotes/tip/WIP.timers' exists; cannot create 'refs/remotes/tip/WIP.timers/core'
+From https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+! [new branch]                WIP.timers/core -> tip/WIP.timers/core  (unable to update local ref)
+error: Could not fetch tip
 
-
-Meow!
--- 
-⢀⣴⠾⠻⢶⣦⠀
-⣾⠁⢠⠒⠀⣿⡁
-⢿⡄⠘⠷⠚⠋  The root of a real enemy is an imaginary friend.
-⠈⠳⣄⠀⠀⠀⠀
+which repeats every time I fetch.  I can't of anythign particular on
+my side that would cause this.
