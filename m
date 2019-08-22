@@ -2,101 +2,142 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A135C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98BAC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74C7822CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64FA22CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731982AbfHVLM4 (ORCPT
+        id S2387811AbfHVLNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:12:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33574 "EHLO mx1.redhat.com"
+        Thu, 22 Aug 2019 07:13:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:44100 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728594AbfHVLM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:12:56 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EF8098D5BA6;
-        Thu, 22 Aug 2019 11:12:55 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-200.str.redhat.com [10.33.192.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DE9B16E710;
-        Thu, 22 Aug 2019 11:12:54 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     "H.J. Lu" <hjl.tools@gmail.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>, binutils@sourceware.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: ELF NT_GNU_PROPERTY_TYPE_0 Questions
-References: <20190822110049.GE27757@arm.com>
-Date:   Thu, 22 Aug 2019 13:12:53 +0200
-In-Reply-To: <20190822110049.GE27757@arm.com> (Dave Martin's message of "Thu,
-        22 Aug 2019 12:00:50 +0100")
-Message-ID: <87k1b5xxl6.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        id S1728594AbfHVLNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 07:13:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 811CF344;
+        Thu, 22 Aug 2019 04:13:18 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFA4E3F246;
+        Thu, 22 Aug 2019 04:13:17 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 12:13:16 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
+        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
+        hhhawa@amazon.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] PCI: dwc: Add validation that PCIe core is set to
+ correct mode
+Message-ID: <20190822111315.GN23903@e119886-lin.cambridge.arm.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+ <20190821154745.31834-3-jonnyc@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 22 Aug 2019 11:12:56 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821154745.31834-3-jonnyc@amazon.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Dave Martin:
+On Wed, Aug 21, 2019 at 06:47:45PM +0300, Jonathan Chocron wrote:
+> Some PCIe controllers can be set to either Host or EP according to some
+> early boot FW. To make sure there is no discrepancy (e.g. FW configured
+> the port to EP mode while the DT specifies it as a host bridge or vice
+> versa), a check has been added for each mode.
+> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-designware-ep.c   | 8 ++++++++
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 2bf5a35c0570..00e59a134b93 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -531,6 +531,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  	int ret;
+>  	u32 reg;
+>  	void *addr;
+> +	u8 hdr_type;
+>  	unsigned int nbars;
+>  	unsigned int offset;
+>  	struct pci_epc *epc;
+> @@ -543,6 +544,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
+>  		return -EINVAL;
+>  	}
+>  
+> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
+> +	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
+> +		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
+> +			hdr_type);
+> +		return -EIO;
+> +	}
+> +
+>  	ret = of_property_read_u32(np, "num-ib-windows", &ep->num_ib_windows);
+>  	if (ret < 0) {
+>  		dev_err(dev, "Unable to read *num-ib-windows* property\n");
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> index f93252d0da5b..d2ca748e4c85 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  	struct pci_bus *child;
+>  	struct pci_host_bridge *bridge;
+>  	struct resource *cfg_res;
+> +	u8 hdr_type;
+>  	int ret;
+>  
+>  	raw_spin_lock_init(&pci->pp.lock);
+> @@ -396,6 +397,13 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>  		}
+>  	}
+>  
+> +	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
 
-> Hi there,
->
-> Can you clarify a couple of points about the SysV ABI Linux
-> Extensions [1] for me?
->
-> 1) Can there be more than one NT_GNU_PROPERTY_TYPE_0 note in a valid
-> ELF file?  I think the answer should be "no".
+Do we know if it's always safe to read these registers at this point in time?
 
-Yes, if it has been produced by a link editors which does not about
-property notes.  The ELF file still needs to be treated as valid, but
-the note should be ignored.
+Later in dw_pcie_host_init we call pp->ops->host_init - looking at the
+implementations of .host_init I can see:
 
-> 2) Is is permissible for an ELF ET_EXEC or ET_DYN file that contains
-> an NT_GNU_PROPERTY_TYPE_0 property not to have a PT_GNU_PROPERTY phdrs
-> entry mapping it?  Except for historical usage by RedHat (which
-> apparently can be worked round in userspace) it seems reasonable for
-> the answer to be "no", at least for Linux.
+ - resets being performed (qcom_ep_reset_assert,
+   artpec6_pcie_assert_core_reset, imx6_pcie_assert_core_reset)
+ - changes to config space registers (ks_pcie_init_id, dw_pcie_setup_rc)
+   including setting PCI_CLASS_DEVICE
+ - and clocks being enabled (qcom_pcie_init_1_0_0)
 
-Using an older link editor on a CET-enabled distribution will produce
-such binaries, too.  The ELF file still needs to be treated as valid,
-but the property date should be ignored.
+I'm not sure if your changes would cause anything to break for these other
+controllers (or future controllers) as I couldn't see any other reads to the
+config.
 
-> 3) Is it permissible for the PT_GNU_PROPERTY phdr (if present) to
-> map anything other than precisely one NT_GNU_PROPERTY_TYPE_0
-> note?  I think the answer should be "no".
-
-Correct.  Additional processing logic in the link editor is needed.
-
-> 4) Is an NT_GNU_PROPERTY_TYPE_0 note allowed to contain two or more
-> properties with the same pr_type?  I think the answer should be "no".
-
-H.J. needs to answer that.
-
-> 5) What's the rationale for sorting the properties by pr_type?  I can
-> see this would make it easier for the linker to merge
-> NT_GNU_PROPERTY_TYPE_0 notes from different files, but I'm wondering
-> whether the kernel really needs to enforce the ordering when loading
-> an ELF.  The kernel doesn't need to merge property lists together.
-
-Likewise.
-
-> 6) Do you have a view on the best way to define the Elf_Prop type in
-> headers?  bfd elf-bfd.h seems to have elf_property, but this doesn't
-> follow the style of the public ELF headers.
-
-We should put it into <elf.h> in glibc.  We don't want to rely on UAPI
-headers there because this version of <elf.h> is used in many places.
+Given that we are reading config space should dw_pcie_rd_own_conf be used?
+(For example kirin_pcie_rd_own_conf does something special).
 
 Thanks,
-Florian
+
+Andrew Murray
+
+> +	if (hdr_type != PCI_HEADER_TYPE_BRIDGE) {
+> +		dev_err(pci->dev, "PCIe controller is not set to bridge type (hdr_type: 0x%x)!\n",
+> +			hdr_type);
+> +		return -EIO;
+> +	}
+> +
+>  	pp->mem_base = pp->mem->start;
+>  
+>  	if (!pp->va_cfg0_base) {
+> -- 
+> 2.17.1
+> 
