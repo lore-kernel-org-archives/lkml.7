@@ -6,91 +6,88 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E79C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3384DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA8D216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6ED22CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbfHVAG5 (ORCPT
+        id S1728782AbfHVAJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 20:06:57 -0400
-Received: from verein.lst.de ([213.95.11.211]:41942 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726828AbfHVAG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 20:06:57 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id AEBD168C7B; Thu, 22 Aug 2019 02:06:52 +0200 (CEST)
-Date:   Thu, 22 Aug 2019 02:06:52 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Marta Rybczynska <mrybczyn@kalray.eu>
-Cc:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Samuel Jones <sjones@kalray.eu>,
-        Guillaume Missonnier <gmissonnier@kalray.eu>
-Subject: Re: [PATCH v2] nvme: allow 64-bit results in passthru commands
-Message-ID: <20190822000652.GF9511@lst.de>
-References: <89520652.56920183.1565948841909.JavaMail.zimbra@kalray.eu>
+        Wed, 21 Aug 2019 20:09:31 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39564 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726828AbfHVAJa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 20:09:30 -0400
+Received: by mail-wm1-f65.google.com with SMTP id i63so3872834wmg.4;
+        Wed, 21 Aug 2019 17:09:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=32/0yIVdzlJ2KJ3NplTUO5+v34KMaLLDclpZ7tzJ9aE=;
+        b=XFklBSV1ROpQHezo5lCXW6jYtyDmA7+IaKiARuK6gJadBKQ6t9IsUF+lJHd3ctp6DR
+         EG9mWqQgn35EdGLTGl2lsrVOh/JLzYrLDLZD4GH2jgI6l4slYeDi9js90BlNdDOxLX4l
+         2l1zjaGglt+QzvERRNqy+Ftw9z7BmxC7p2/Dfm/wUzLn0bWSB+Y/9/Ja2IPFzH5b+JZL
+         sn3ZbwzZLEe8ErXiSEgU4cUm5iY7/RoMaTHp3f2OOVoRr15iiHpHjqlqHSApm5jWi9dC
+         j7OWRhx7f2Om+zpynK3XovyzQYaU48ZlwKJuAHQtJIqQxgyAkpKFOtxN9HOiwFkHCroJ
+         0s6A==
+X-Gm-Message-State: APjAAAVANRDHLtpelZYVXCO4luEWska1FhKRGHLuri9D6M30WGm+UEBu
+        NWZSF7ZrUKT4zRpV3yUyrbY=
+X-Google-Smtp-Source: APXvYqwuT0kmih8HKsX3ht5823hsz+gh7dNnKBV5RVKrdbL46NznsoXAK7FHnNlGyRd4vEhe81JUTw==
+X-Received: by 2002:a1c:2314:: with SMTP id j20mr2598763wmj.152.1566432568173;
+        Wed, 21 Aug 2019 17:09:28 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id r16sm50444348wrc.81.2019.08.21.17.09.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 17:09:27 -0700 (PDT)
+Subject: Re: [PATCH v7 08/14] nvmet-core: allow one host per passthru-ctrl
+To:     Max Gurtovoy <maxg@mellanox.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Stephen Bates <sbates@raithlin.com>, Jens Axboe <axboe@fb.com>,
+        Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
+References: <20190801234514.7941-1-logang@deltatee.com>
+ <20190801234514.7941-9-logang@deltatee.com>
+ <05a74e81-1dbd-725f-1369-5ca5c5918db1@mellanox.com>
+ <a6b9db95-a7f0-d1f6-1fa2-8dc13a6aa29e@deltatee.com>
+ <5717f515-e051-c420-07b7-299bcfcd1f32@mellanox.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <b0921c72-93f1-f67a-c4b3-31baeb1c39cb@grimberg.me>
+Date:   Wed, 21 Aug 2019 17:09:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <89520652.56920183.1565948841909.JavaMail.zimbra@kalray.eu>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <5717f515-e051-c420-07b7-299bcfcd1f32@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 11:47:21AM +0200, Marta Rybczynska wrote:
-> It is not possible to get 64-bit results from the passthru commands,
-> what prevents from getting for the Capabilities (CAP) property value.
+
+> I don't understand why we don't limit a regular ctrl to single access 
+> and we do it for the PT ctrl.
 > 
-> As a result, it is not possible to implement IOL's NVMe Conformance
-> test 4.3 Case 1 for Fabrics targets [1] (page 123).
+> I guess the block layer helps to sync between multiple access in 
+> parallel but we can do it as well.
 > 
-> This issue has been already discussed [2], but without a solution.
+> Also, let's say you limit the access to this subsystem to 1 user, the 
+> bdev is still accessibly for local user and also you can create a 
+> different subsystem that will use this device (PT and non-PT ctrl).
 > 
-> This patch solves the problem by adding new ioctls with a new
-> passthru structure, including 64-bit results. The older ioctls stay
-> unchanged.
+> Sagi,
+> 
+> can you explain the trouble you meant and how this limitation solve it ?
 
-Ok, with my idea not being suitable I think I'm fine with this approach, a
-little nitpick below:
+Its different to emulate the controller with all its admin
+commands vs. passing it through to the nvme device.. (think of format nvm)
 
-> +static bool is_admin_cmd(unsigned int cmd)
-> +{
-> +	if ((cmd == NVME_IOCTL_ADMIN_CMD) || (cmd == NVME_IOCTL_ADMIN64_CMD))
-> +		return true;
-> +	return false;
-> +}
 
-No need for the inner braces.  But I'm actually not sure the current
-code structure is very suitable for extending it.
 
-> +
->  static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
->  		unsigned int cmd, unsigned long arg)
->  {
-> @@ -1418,13 +1473,13 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
->  	 * seperately and drop the ns SRCU reference early.  This avoids a
->  	 * deadlock when deleting namespaces using the passthrough interface.
->  	 */
-> -	if (cmd == NVME_IOCTL_ADMIN_CMD || is_sed_ioctl(cmd)) {
-> +	if (is_admin_cmd(cmd) || is_sed_ioctl(cmd)) {
-
-So maybe for this check we should have a is_ctrl_iocl() helper instead
-that includes the is_sed_ioctl check.
-
->  		struct nvme_ctrl *ctrl = ns->ctrl;
->  
->  		nvme_get_ctrl(ns->ctrl);
->  		nvme_put_ns_from_disk(head, srcu_idx);
->  
-> -		if (cmd == NVME_IOCTL_ADMIN_CMD)
-> +		if (is_admin_cmd(cmd))
->  			ret = nvme_user_cmd(ctrl, NULL, argp);
->  		else
->  			ret = sed_ioctl(ctrl->opal_dev, cmd, argp);
-
-And then we can move this whole branch into a helper function,
-which then switches on the ioctl cmd, with sed_ioctl as the fallback.
