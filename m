@@ -2,92 +2,96 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22213C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C662FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E491123406
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:32:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566505963;
-	bh=691IKZXOs5bNgX1Cw9v441siqH85puO0/NA5EVFiPrI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=w/Rj69cYSl+D0J2BRxXxkdAW3FxzVt+EGM+sp8tW1YOMSNpUCLwbUZk8UJXt0qczy
-	 zPSu0aX3C6losxLq2bgPRPP2jsxAAVlc5lS0yIhiQU2nPO0GWnfLwJBRFVVK2p0kog
-	 ucKamo2bSsBy5unTgB06r4lrYegry0Z9b6lwxAQ4=
+	by mail.kernel.org (Postfix) with ESMTP id 8999223401
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:34:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vKUmNCKT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404489AbfHVUcl (ORCPT
+        id S2393257AbfHVUeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404465AbfHVUcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:32:41 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 616B323401;
-        Thu, 22 Aug 2019 20:32:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566505960;
-        bh=691IKZXOs5bNgX1Cw9v441siqH85puO0/NA5EVFiPrI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KkTRXpJ+aOaCryBA6ibi6NK9bOproro2FpswK1C8wBCW4vU/Xc0TL2QTRko2m39VM
-         YRujAJEZtvZcRWbdEqHkJ00DDLjQs+FBiVaF01uogEIQtrxzjIQ9v6uz5u4tseIbE+
-         fzQvqB0hnHOz8CBXgFjny5uHEvDX9dTbkD9L1ZXg=
-Date:   Thu, 22 Aug 2019 15:32:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Lyude Paul <lyude@redhat.com>
-Subject: [GIT PULL] PCI fixes for v5.3
-Message-ID: <20190822203239.GL14450@google.com>
+        Thu, 22 Aug 2019 16:34:07 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46473 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388297AbfHVUeH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 16:34:07 -0400
+Received: by mail-io1-f65.google.com with SMTP id x4so14715277iog.13;
+        Thu, 22 Aug 2019 13:34:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/FTulEvcsnZLRIJmi7a8Mdwrg03XUfOFFyTuD5zY9FM=;
+        b=vKUmNCKTue8s/CxYkoRN6Og3RHlNelmXURcTgXf+AbQ7Vzi+sRccdpG/33PnqrETMv
+         k2BkaBpJdh2op5dsq//RsDIhD3MrCQg27tbWOrBjmWZWG3pphJsrJsyLfjkJ4Jzl4k+U
+         LtO7TswTJW59N95GvnxY5/bkOzvfX4gjfET4DHhGaPnOfsRm6PQ5MD7GalVw3VsBqMYn
+         LJK80RdOQAWHW4X7vHqWKZVMz0MjrMjAwvS4cikWXVRIP+zsMd7+CzjmMlpdhUq/G4Qp
+         X63s+lu8kxFd88mTHEJrfw0wntcczswYZQXPvWL4/F/TnJ4ajk5hy6jmx9JwmmfocWm6
+         OVJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/FTulEvcsnZLRIJmi7a8Mdwrg03XUfOFFyTuD5zY9FM=;
+        b=dkwY4Yr+3J5svR0vwwH43zjx5fRWMd8Hta3f/VcyzFneSQ94qC2lBmRjagS9TuISfP
+         jkhswpTCyOKfL3q2H35el+tGYTFQ0hHuIJtnXDRIS6XH74ENGdRjWezPsDyljT337+1n
+         n4ioK+486+Ayt5RGY4e7zmAwqjs5hoyMvyuJ33FpoZbb9zdWy/vgzyQn1SVzwTSOWUez
+         nIYjeoMGdupTR3N5ZM/0nskU1EOPJY8eJLKfM+9Pc/HwSb8lPrHGhbfeaErC9X9y51Qj
+         ATBWjffS7C8f3R/5q7TS9vdMJsPM7eo/YpNRMVfmikrLDumrKZt4fpM29wGl2caXv/t5
+         cNiQ==
+X-Gm-Message-State: APjAAAUclWCPKzDucCtf3KOfYGpLtkjT8IRvxztdFe464ZkHGEdYy1yk
+        9ZBj2bMc4OnWn11SeIqfGfSIdzZoEtHwJN3deLQ=
+X-Google-Smtp-Source: APXvYqzaM90LaKIlWUCqCFvD5hrgz/BA38zyAOawbdoEGYOoaKB+ToJwkrTl2nMFI1pf4q4gb9xJCWxu+P84PWaYtuE=
+X-Received: by 2002:a5e:8344:: with SMTP id y4mr1903385iom.213.1566506046286;
+ Thu, 22 Aug 2019 13:34:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190822080045.27609-1-olivier.tilmans@nokia-bell-labs.com>
+In-Reply-To: <20190822080045.27609-1-olivier.tilmans@nokia-bell-labs.com>
+From:   Dave Taht <dave.taht@gmail.com>
+Date:   Thu, 22 Aug 2019 13:33:55 -0700
+Message-ID: <CAA93jw5_LN_-zhHh=zZA8r6Zvv1CvA_AikT_rCgWyT8ytQM_rg@mail.gmail.com>
+Subject: Re: [PATCH net-next v5] sched: Add dualpi2 qdisc
+To:     "Tilmans, Olivier (Nokia - BE/Antwerp)" 
+        <olivier.tilmans@nokia-bell-labs.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Olga Albisser <olga@albisser.org>,
+        "De Schepper, Koen (Nokia - BE/Antwerp)" 
+        <koen.de_schepper@nokia-bell-labs.com>,
+        Bob Briscoe <research@bobbriscoe.net>,
+        Henrik Steen <henrist@henrist.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PCI fixes:
+This is vastly improved code, thank you!
 
-  - Reset both NVIDIA GPU and HDA in ThinkPad P50 quirk, which was
-    broken by another quirk that enabled the HDA device (Lyude Paul)
+1) Since we're still duking it out over the meaning of the bits - not
+just the SCE thing, but as best as I can
+tell (but could be wrong) the NQB idea wants to put something into the
+l4s fast queue? Or is NQB supposed to
+be a third queue?
 
-  - Fix pciebus-howto.rst documentation filename typo (Bjorn Helgaas)
+In those cases, the ecn_mask should just be mask.
 
+2) Is the intent to make the drop probability 0 by default? (10 in the
+pie rfc, not mentioned in the l4s rfc as yet)
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
-
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.3-fixes-1
-
-for you to fetch changes up to 7bafda88de20b2990461d253c5475007436e355c:
-
-  Documentation PCI: Fix pciebus-howto.rst filename typo (2019-08-15 12:12:38 -0500)
-
-----------------------------------------------------------------
-pci-v5.3-fixes-1
-
-----------------------------------------------------------------
-Bjorn Helgaas (1):
-      Documentation PCI: Fix pciebus-howto.rst filename typo
-
-Lyude Paul (1):
-      PCI: Reset both NVIDIA GPU and HDA in ThinkPad P50 workaround
-
- Documentation/PCI/index.rst                                | 2 +-
- Documentation/PCI/{picebus-howto.rst => pciebus-howto.rst} | 0
- drivers/pci/quirks.c                                       | 2 +-
- 3 files changed, 2 insertions(+), 2 deletions(-)
- rename Documentation/PCI/{picebus-howto.rst => pciebus-howto.rst} (100%)
+3) has this been tested on a hw mq system as yet? (10gigE is typically
+64 queues)
