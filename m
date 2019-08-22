@@ -2,100 +2,100 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FEAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF8AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78CC92064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883B62064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495060;
-	bh=kGtDqeZxm0c6tbdZKyPuwPX3uKUXHVT9pNmGAeapP+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s1Ui7ttcF0BI4w7tJ58OoOH5JSHpZKj3xZC4VtMvhM7wX73N28CE8ZOScts0v/MmY
-	 K8uV07UW3K7l7P/oMrzHaqWHiqZMvkbpMU5Xpx9zv7YFp9jAO8c/AGKcErtF+Z0HWW
-	 sBCBqpPLitPkyzegtSnK/eU60ijC8yH8XqeyXdLA=
+	s=default; t=1566495065;
+	bh=vSAa9ldWykU4vJubWpUyXhNCl9OsKu/vpNTRZRlXdzU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1ZBqI0qNnRvIJlU+AaUbOqoLPsKNmXpsG9+R07QANSdW1Ajb5hFaUrPCJglKskdTj
+	 +OP+6Fazy2xlaP0T5GI5t4tsy4NeBRZX03xUFjaTGLkRYCYc1FRfPus9eOMicFG+k0
+	 BhrcLne9RLdJUwKkvDLC/iLPwTah2I9Jrn8rQRls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392195AbfHVRa6 (ORCPT
+        id S2392201AbfHVRbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:30:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:44331 "EHLO mga07.intel.com"
+        Thu, 22 Aug 2019 13:31:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392174AbfHVRaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:30:55 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 10:30:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,417,1559545200"; 
-   d="scan'208";a="203494684"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga004.fm.intel.com with ESMTP; 22 Aug 2019 10:30:53 -0700
-Date:   Thu, 22 Aug 2019 11:28:56 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Ashton Holmes <root@scoopta.email>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: NVME timeout causing system hangs
-Message-ID: <20190822172856.GA15785@localhost.localdomain>
-References: <3a3b2436-b6e0-1504-fe69-756380f373cc@scoopta.email>
+        id S2404569AbfHVR0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:26:01 -0400
+Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9EC12341E;
+        Thu, 22 Aug 2019 17:26:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566494760;
+        bh=vSAa9ldWykU4vJubWpUyXhNCl9OsKu/vpNTRZRlXdzU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GAjsXIIdB2Ffeezb2dzMS9Vqa5PfyQzb5gEQyqZQKeD54N8o6SXl/oODKlD9RBc8T
+         hxmtoIGvqfupdANHj+88q0bfvAsFYfnKsGByxFoKXgIaL2SSGP1BmVP016XY29RRus
+         oVuus1ZF4mBvBMrOm9UmpQQf+cciTRU0XCz34wg0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+45a53506b65321c1fe91@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.19 62/85] USB: CDC: fix sanity checks in CDC union parser
+Date:   Thu, 22 Aug 2019 10:19:35 -0700
+Message-Id: <20190822171733.916043761@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
+References: <20190822171731.012687054@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a3b2436-b6e0-1504-fe69-756380f373cc@scoopta.email>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 04:33:45PM -0700, Ashton Holmes wrote:
-> When playing certain games on my PC dmesg will start spitting out NVME
-> timeout messages, this eventually results in BTRFS throwing errors and
-> remounting itself as read only. The drive passes smart's health check and
-> works fine when not playing games. The really weird part is this will happen
-> even if the game I'm playing isn't installed on that drive. I wanted to
-> bisect this but it happens on every kernel version I've tried. I've attached
-> my dmesg log. This was originally reported here
-> https://bugzilla.kernel.org/show_bug.cgi?id=202633 but no response was ever
-> given. In that report I state that 4.19.24 for whatever reason doesn't
-> trigger this however that doesn't seem to be the case anymore. I've updated
-> my UEFI since then, I wouldn't expect that to make a difference but I'm not
-> sure what else would have changed that.
+From: Oliver Neukum <oneukum@suse.com>
 
-This really looks like your nvme controller has gotten itself in an
-unresponsive state: it is not responding to IO, admin, or reset
-requests.
+commit 54364278fb3cabdea51d6398b07c87415065b3fc upstream.
 
-The only recommendation I have at the moment is to verify you have the
-most current firmware from your vendor installed on this controller,
-and update if not.
+A few checks checked for the size of the pointer to a structure
+instead of the structure itself. Copy & paste issue presumably.
 
- 
+Fixes: e4c6fb7794982 ("usbnet: move the CDC parser into USB core")
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot+45a53506b65321c1fe91@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20190813093541.18889-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> [  170.678837] nvme nvme0: I/O 128 QID 2 timeout, aborting
-> [  170.678845] nvme nvme0: I/O 129 QID 2 timeout, aborting
-> [  170.678850] nvme nvme0: I/O 167 QID 2 timeout, aborting
-> [  170.678853] nvme nvme0: I/O 168 QID 2 timeout, aborting
-> [  170.678856] nvme nvme0: I/O 169 QID 2 timeout, aborting
-> [  201.657527] nvme nvme0: I/O 128 QID 2 timeout, reset controller
-> [  232.372876] nvme nvme0: I/O 8 QID 0 timeout, reset controller
-> [  323.643688] nvme nvme0: Device not ready; aborting reset
-> [  323.675893] print_req_error: I/O error, dev nvme0n1, sector 1088653384 flags 80700
-> [  323.675902] print_req_error: I/O error, dev nvme0n1, sector 1001346664 flags 80700
-> [  323.675915] print_req_error: I/O error, dev nvme0n1, sector 1088646984 flags 84700
-> [  323.675920] print_req_error: I/O error, dev nvme0n1, sector 1088647240 flags 84700
-> [  323.675923] print_req_error: I/O error, dev nvme0n1, sector 1088647496 flags 84700
-> [  323.675927] print_req_error: I/O error, dev nvme0n1, sector 1088647752 flags 84700
-> [  323.675931] print_req_error: I/O error, dev nvme0n1, sector 1088648008 flags 84700
-> [  323.675935] print_req_error: I/O error, dev nvme0n1, sector 1088648264 flags 84700
-> [  323.675938] print_req_error: I/O error, dev nvme0n1, sector 1088648520 flags 84700
-> [  323.675942] print_req_error: I/O error, dev nvme0n1, sector 1088648776 flags 84700
-> [  323.675993] nvme nvme0: Abort status: 0x7
-> [  323.675995] nvme nvme0: Abort status: 0x7
-> [  323.675996] nvme nvme0: Abort status: 0x7
-> [  323.675998] nvme nvme0: Abort status: 0x7
-> [  323.675999] nvme nvme0: Abort status: 0x7
+---
+ drivers/usb/core/message.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -2211,14 +2211,14 @@ int cdc_parse_cdc_header(struct usb_cdc_
+ 				(struct usb_cdc_dmm_desc *)buffer;
+ 			break;
+ 		case USB_CDC_MDLM_TYPE:
+-			if (elength < sizeof(struct usb_cdc_mdlm_desc *))
++			if (elength < sizeof(struct usb_cdc_mdlm_desc))
+ 				goto next_desc;
+ 			if (desc)
+ 				return -EINVAL;
+ 			desc = (struct usb_cdc_mdlm_desc *)buffer;
+ 			break;
+ 		case USB_CDC_MDLM_DETAIL_TYPE:
+-			if (elength < sizeof(struct usb_cdc_mdlm_detail_desc *))
++			if (elength < sizeof(struct usb_cdc_mdlm_detail_desc))
+ 				goto next_desc;
+ 			if (detail)
+ 				return -EINVAL;
+
+
