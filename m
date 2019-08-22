@@ -2,112 +2,121 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF428C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6800C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B26F023400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F8E23400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:06:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566504362;
+	bh=E+RM8lcOXSVIMYx4+rXzzGMSVrhC1b6YIQ0v0hDRtG4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Wf1zFExSvzUDIuAY660G3bGG1xKYdJKlfGRIcrK/9EA7OYrQdIAg4IBchycAatdwH
+	 xkA8yA2mf1hOOrzxZZEiRUO41V0JXFhp/rNybpkGYDdky9qCb4YyHOtGTb/mgMMBeS
+	 Jbn5nJ7IYcDuJt9KrUbhyXL329mTgHv8x/Ktwrr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392571AbfHVUFT (ORCPT
+        id S2392614AbfHVUGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:05:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48288 "EHLO mx1.redhat.com"
+        Thu, 22 Aug 2019 16:06:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392539AbfHVUFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:05:19 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2387738AbfHVUGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 16:06:00 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6AD4485550;
-        Thu, 22 Aug 2019 20:05:18 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-11.bss.redhat.com [10.20.1.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B8856012A;
-        Thu, 22 Aug 2019 20:05:13 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     intel-gfx@lists.freedesktop.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>, stable@vger.kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/i915: Call dma_set_max_seg_size() in i915_ggtt_probe_hw()
-Date:   Thu, 22 Aug 2019 16:04:20 -0400
-Message-Id: <20190822200420.23485-1-lyude@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3463423400;
+        Thu, 22 Aug 2019 20:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566504359;
+        bh=E+RM8lcOXSVIMYx4+rXzzGMSVrhC1b6YIQ0v0hDRtG4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gEi5ksaa9IiQKCO40DUHyjA4t8hhezRyG4yFoVnlCwlS2OzU6PtiMBv4Q8C5C0EiR
+         Xb2cGtGYsiuDwF8yl5xp7I6QqeJNJl5DQyoJ8wXfjmgsVdYTELkfnLuoxmycnfv41b
+         mGOH0VBhCsjTJS6mkFr20D1ToX/qo7gS9DQ4EWyU=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 0/3] PCI: Add PCI_ERROR_RESPONSE, check for errors
+Date:   Thu, 22 Aug 2019 15:05:48 -0500
+Message-Id: <20190822200551.129039-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 22 Aug 2019 20:05:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, we don't call dma_set_max_seg_size() for i915 because we
-intentionally do not limit the segment length that the device supports.
-However, this results in a warning being emitted if we try to map
-anything larger than SZ_64K on a kernel with CONFIG_DMA_API_DEBUG_SG
-enabled:
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[    7.751926] DMA-API: i915 0000:00:02.0: mapping sg segment longer
-than device claims to support [len=98304] [max=65536]
-[    7.751934] WARNING: CPU: 5 PID: 474 at kernel/dma/debug.c:1220
-debug_dma_map_sg+0x20f/0x340
+Reads from a PCI device may fail if the device has been turned off (put
+into D3cold), removed, or if some other error occurs.  The PCI host bridge
+typically fabricates ~0 data to complete the CPU's read.
 
-This was originally brought up on
-https://bugs.freedesktop.org/show_bug.cgi?id=108517 , and the consensus
-there was it wasn't really useful to set a limit (and that dma-debug
-isn't really all that useful for i915 in the first place). Unfortunately
-though, CONFIG_DMA_API_DEBUG_SG is enabled in the debug configs for
-various distro kernels. Since a WARN_ON() will disable automatic problem
-reporting (and cause any CI with said option enabled to start
-complaining), we really should just fix the problem.
+We check for that in a few places, but not in a consistent way.  This
+series adds a PCI_ERROR_RESPONSE definition to make the checks more
+consistent and easier to find.  Note that ~0 may indicate a PCI error, but
+it may also be valid read data, so you need more information (such as
+knowing that a register can never contain ~0) before concluding that it's
+an error.
 
-Note that as me and Chris Wilson discussed, the other solution for this
-would be to make DMA-API not make such assumptions when a driver hasn't
-explicitly set a maximum segment size. But, taking a look at the commit
-which originally introduced this behavior, commit 78c47830a5cb
-("dma-debug: check scatterlist segments"), there is an explicit mention
-of this assumption and how it applies to devices with no segment size:
+This series also adds a new check for PCI_ERROR_RESPONSE in the power
+management code because that code frequently encounters devices in D3cold,
+where we previously misinterpreted ~0 data.  It also uses pci_power_name()
+to print D-state names more consistently.
 
-	Conversely, devices which are less limited than the rather
-	conservative defaults, or indeed have no limitations at all
-	(e.g. GPUs with their own internal MMU), should be encouraged to
-	set appropriate dma_parms, as they may get more efficient DMA
-	mapping performance out of it.
+Rafael, I didn't add your Reviewed-by to "PCI / PM: Return error when
+changing power state from D3cold" because I made small changes to try to
+make the messages more consistent, and I didn't want to presume they'd be
+OK with you.
 
-So unless there's any concerns (I'm open to discussion!), let's just
-follow suite and call dma_set_max_seg_size() with UINT_MAX as our limit
-to silence any warnings.
+Changes since v1:
+  - Add Rafael's Reviewed-By to the first two patches
+  - Drop "PCI / PM: Check for error when reading PME status" because Rafael
+    pointed out that some devices can signal PME even when in D3cold, so
+    this would require additional rework
+  - Drop "PCI / PM: Check for error when reading Power State" because
+    Rafael thinks it's mostly redundant
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: <stable@vger.kernel.org> # v4.18+
----
- drivers/gpu/drm/i915/i915_gem_gtt.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Bjorn Helgaas (3):
+  PCI: Add PCI_ERROR_RESPONSE definition
+  PCI / PM: Decode D3cold power state correctly
+  PCI / PM: Return error when changing power state from D3cold
 
-diff --git a/drivers/gpu/drm/i915/i915_gem_gtt.c b/drivers/gpu/drm/i915/i915_gem_gtt.c
-index 0b81e0b64393..a1475039d182 100644
---- a/drivers/gpu/drm/i915/i915_gem_gtt.c
-+++ b/drivers/gpu/drm/i915/i915_gem_gtt.c
-@@ -3152,6 +3152,11 @@ static int ggtt_probe_hw(struct i915_ggtt *ggtt, struct intel_gt *gt)
- 	if (ret)
- 		return ret;
- 
-+	/* We don't have a max segment size, so set it to the max so sg's
-+	 * debugging layer doesn't complain
-+	 */
-+	dma_set_max_seg_size(ggtt->vm.dma, UINT_MAX);
-+
- 	if ((ggtt->vm.total - 1) >> 32) {
- 		DRM_ERROR("We never expected a Global GTT with more than 32bits"
- 			  " of address space! Found %lldM!\n",
+ drivers/pci/access.c                          | 13 ++++----
+ .../pci/controller/dwc/pcie-designware-host.c |  2 +-
+ drivers/pci/controller/pci-aardvark.c         |  2 +-
+ drivers/pci/controller/pci-mvebu.c            |  4 +--
+ drivers/pci/controller/pci-thunder-ecam.c     | 20 ++++++------
+ drivers/pci/controller/pci-thunder-pem.c      |  2 +-
+ drivers/pci/controller/pcie-altera.c          |  2 +-
+ drivers/pci/controller/pcie-iproc.c           |  2 +-
+ drivers/pci/controller/pcie-mediatek.c        |  4 +--
+ drivers/pci/controller/pcie-rcar.c            |  2 +-
+ drivers/pci/controller/pcie-rockchip-host.c   |  2 +-
+ drivers/pci/controller/vmd.c                  |  2 +-
+ drivers/pci/hotplug/cpqphp_ctrl.c             | 12 +++----
+ drivers/pci/hotplug/cpqphp_pci.c              | 20 ++++++------
+ drivers/pci/hotplug/pciehp_hpc.c              |  6 ++--
+ drivers/pci/pci.c                             | 31 ++++++++++++-------
+ drivers/pci/pcie/dpc.c                        |  3 +-
+ drivers/pci/pcie/pme.c                        |  4 +--
+ drivers/pci/probe.c                           |  4 +--
+ drivers/pci/quirks.c                          |  2 +-
+ include/linux/pci.h                           |  7 +++++
+ 21 files changed, 81 insertions(+), 65 deletions(-)
+
 -- 
-2.21.0
+2.23.0.187.g17f5b7556c-goog
 
