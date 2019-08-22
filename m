@@ -2,179 +2,134 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DD0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6672C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7C523402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:30:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JyL+sIxw"
+	by mail.kernel.org (Postfix) with ESMTP id 7067A23400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:32:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566491556;
+	bh=I04z+ddymY5cY5iHreAhwy1C27cr7ZlQmFoupVvJDAM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Pku63Aqp1132HiZPRH6UC0uyppr9Md5Iq3tdBSPQVbtdpvASbirJhjoe6O/JTTsoH
+	 28PigYZXp0A7igiUg9UiFMNKWaVOQ5zyagW8aDoRfO3lg818SzL0kPU0euh7KyqzK4
+	 qLex0YyNX0pw6Xl/eBZvVr2Lsz2OpnoG6FfO6FsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389975AbfHVQam (ORCPT
+        id S2389984AbfHVQcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:30:42 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:26625 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389939AbfHVQal (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:30:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566491439; x=1598027439;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=KkV09y4B5mkQruE6IbrnT1eGI+VPuKeLj/rJNcIegm0=;
-  b=JyL+sIxw2Ou59y95gkhjxSnsrZGFbos0da1tiK0HJCawM1LTp3bBz1Rp
-   RWkCG2nQcTyK0NAxxweZjot70odCr6PipvoMo8aKfU1pI7nYwlwkBQ19V
-   Pfp4SIBJefJtNTpywSLzCCIZHqpSYqHE57ujTBLzUxwGYJ12gaebq0PQJ
-   s=;
-X-IronPort-AV: E=Sophos;i="5.64,417,1559520000"; 
-   d="scan'208";a="822736964"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 22 Aug 2019 16:30:33 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id D0D8DA276C;
-        Thu, 22 Aug 2019 16:30:32 +0000 (UTC)
-Received: from EX13D13UWA003.ant.amazon.com (10.43.160.181) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 22 Aug 2019 16:30:10 +0000
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13D13UWA003.ant.amazon.com (10.43.160.181) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 22 Aug 2019 16:30:09 +0000
-Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
- EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
- Thu, 22 Aug 2019 16:30:09 +0000
-From:   "Chocron, Jonathan" <jonnyc@amazon.com>
-To:     "andrew.murray@arm.com" <andrew.murray@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "Wasserstrom, Barak" <barakw@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>
-Subject: Re: [PATCH v4 7/7] PCI: dwc: Add validation that PCIe core is set to
- correct mode
-Thread-Topic: [PATCH v4 7/7] PCI: dwc: Add validation that PCIe core is set to
- correct mode
-Thread-Index: AQHVWDfYfXzAIUBUVEGXGWtVpGVRnqcHBMEAgABYiAA=
-Date:   Thu, 22 Aug 2019 16:30:09 +0000
-Message-ID: <f8fca74c8d252f000d60c52ead3fc41ed5d50b6d.camel@amazon.com>
-References: <20190821153545.17635-1-jonnyc@amazon.com>
-         <20190821154745.31834-3-jonnyc@amazon.com>
-         <20190822111315.GN23903@e119886-lin.cambridge.arm.com>
-In-Reply-To: <20190822111315.GN23903@e119886-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.162.137]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <28A81580BA6B964C814E165BCC9FC5A6@amazon.com>
-Content-Transfer-Encoding: base64
+        Thu, 22 Aug 2019 12:32:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:48772 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728591AbfHVQcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 12:32:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7AFD28;
+        Thu, 22 Aug 2019 09:32:32 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 877293F718;
+        Thu, 22 Aug 2019 09:32:31 -0700 (PDT)
+Subject: Re: [PATCH v2 05/12] irqchip/gic: Prepare for more than 16 PPIs
+To:     Julien <julien.thierry.kdev@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190806100121.240767-1-maz@kernel.org>
+ <20190806100121.240767-6-maz@kernel.org>
+ <1b2675f6-f839-80f8-b7d8-a7d402085745@gmail.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <ccd1a1f2-d1a5-4f35-eb5e-ba5acd33e3ea@kernel.org>
+Date:   Thu, 22 Aug 2019 17:32:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <1b2675f6-f839-80f8-b7d8-a7d402085745@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTIyIGF0IDEyOjEzICswMTAwLCBBbmRyZXcgTXVycmF5IHdyb3RlOg0K
-PiBPbiBXZWQsIEF1ZyAyMSwgMjAxOSBhdCAwNjo0Nzo0NVBNICswMzAwLCBKb25hdGhhbiBDaG9j
-cm9uIHdyb3RlOg0KPiA+IFNvbWUgUENJZSBjb250cm9sbGVycyBjYW4gYmUgc2V0IHRvIGVpdGhl
-ciBIb3N0IG9yIEVQIGFjY29yZGluZyB0bw0KPiA+IHNvbWUNCj4gPiBlYXJseSBib290IEZXLiBU
-byBtYWtlIHN1cmUgdGhlcmUgaXMgbm8gZGlzY3JlcGFuY3kgKGUuZy4gRlcNCj4gPiBjb25maWd1
-cmVkDQo+ID4gdGhlIHBvcnQgdG8gRVAgbW9kZSB3aGlsZSB0aGUgRFQgc3BlY2lmaWVzIGl0IGFz
-IGEgaG9zdCBicmlkZ2Ugb3INCj4gPiB2aWNlDQo+ID4gdmVyc2EpLCBhIGNoZWNrIGhhcyBiZWVu
-IGFkZGVkIGZvciBlYWNoIG1vZGUuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSm9uYXRoYW4g
-Q2hvY3JvbiA8am9ubnljQGFtYXpvbi5jb20+DQo+ID4gQWNrZWQtYnk6IEd1c3Rhdm8gUGltZW50
-ZWwgPGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtZXAuYyAgIHwgOCArKysrKysrKw0K
-PiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jIHwg
-OCArKysrKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKykNCj4gPiAN
-Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253
-YXJlLWVwLmMNCj4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2Fy
-ZS1lcC5jDQo+ID4gaW5kZXggMmJmNWEzNWMwNTcwLi4wMGU1OWExMzRiOTMgMTAwNjQ0DQo+ID4g
-LS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWVwLmMNCj4g
-PiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtZXAuYw0K
-PiA+IEBAIC01MzEsNiArNTMxLDcgQEAgaW50IGR3X3BjaWVfZXBfaW5pdChzdHJ1Y3QgZHdfcGNp
-ZV9lcCAqZXApDQo+ID4gIAlpbnQgcmV0Ow0KPiA+ICAJdTMyIHJlZzsNCj4gPiAgCXZvaWQgKmFk
-ZHI7DQo+ID4gKwl1OCBoZHJfdHlwZTsNCj4gPiAgCXVuc2lnbmVkIGludCBuYmFyczsNCj4gPiAg
-CXVuc2lnbmVkIGludCBvZmZzZXQ7DQo+ID4gIAlzdHJ1Y3QgcGNpX2VwYyAqZXBjOw0KPiA+IEBA
-IC01NDMsNiArNTQ0LDEzIEBAIGludCBkd19wY2llX2VwX2luaXQoc3RydWN0IGR3X3BjaWVfZXAg
-KmVwKQ0KPiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiA+ICAJfQ0KPiA+ICANCj4gPiArCWhkcl90
-eXBlID0gZHdfcGNpZV9yZWFkYl9kYmkocGNpLCBQQ0lfSEVBREVSX1RZUEUpOw0KPiA+ICsJaWYg
-KGhkcl90eXBlICE9IFBDSV9IRUFERVJfVFlQRV9OT1JNQUwpIHsNCj4gPiArCQlkZXZfZXJyKHBj
-aS0+ZGV2LCAiUENJZSBjb250cm9sbGVyIGlzIG5vdCBzZXQgdG8gRVANCj4gPiBtb2RlIChoZHJf
-dHlwZToweCV4KSFcbiIsDQo+ID4gKwkJCWhkcl90eXBlKTsNCj4gPiArCQlyZXR1cm4gLUVJTzsN
-Cj4gPiArCX0NCj4gPiArDQo+ID4gIAlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgIm51
-bS1pYi13aW5kb3dzIiwgJmVwLQ0KPiA+ID5udW1faWJfd2luZG93cyk7DQo+ID4gIAlpZiAocmV0
-IDwgMCkgew0KPiA+ICAJCWRldl9lcnIoZGV2LCAiVW5hYmxlIHRvIHJlYWQgKm51bS1pYi13aW5k
-b3dzKg0KPiA+IHByb3BlcnR5XG4iKTsNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29u
-dHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYw0KPiA+IGluZGV4IGY5MzI1MmQwZGE1
-Yi4uZDJjYTc0OGU0Yzg1IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-ZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jDQo+ID4gQEAgLTMyMyw2ICszMjMsNyBAQCBp
-bnQgZHdfcGNpZV9ob3N0X2luaXQoc3RydWN0IHBjaWVfcG9ydCAqcHApDQo+ID4gIAlzdHJ1Y3Qg
-cGNpX2J1cyAqY2hpbGQ7DQo+ID4gIAlzdHJ1Y3QgcGNpX2hvc3RfYnJpZGdlICpicmlkZ2U7DQo+
-ID4gIAlzdHJ1Y3QgcmVzb3VyY2UgKmNmZ19yZXM7DQo+ID4gKwl1OCBoZHJfdHlwZTsNCj4gPiAg
-CWludCByZXQ7DQo+ID4gIA0KPiA+ICAJcmF3X3NwaW5fbG9ja19pbml0KCZwY2ktPnBwLmxvY2sp
-Ow0KPiA+IEBAIC0zOTYsNiArMzk3LDEzIEBAIGludCBkd19wY2llX2hvc3RfaW5pdChzdHJ1Y3Qg
-cGNpZV9wb3J0ICpwcCkNCj4gPiAgCQl9DQo+ID4gIAl9DQo+ID4gIA0KPiA+ICsJaGRyX3R5cGUg
-PSBkd19wY2llX3JlYWRiX2RiaShwY2ksIFBDSV9IRUFERVJfVFlQRSk7DQo+IA0KPiBEbyB3ZSBr
-bm93IGlmIGl0J3MgYWx3YXlzIHNhZmUgdG8gcmVhZCB0aGVzZSByZWdpc3RlcnMgYXQgdGhpcyBw
-b2ludA0KPiBpbiB0aW1lPw0KPiANCj4gTGF0ZXIgaW4gZHdfcGNpZV9ob3N0X2luaXQgd2UgY2Fs
-bCBwcC0+b3BzLT5ob3N0X2luaXQgLSBsb29raW5nIGF0DQo+IHRoZQ0KPiBpbXBsZW1lbnRhdGlv
-bnMgb2YgLmhvc3RfaW5pdCBJIGNhbiBzZWU6DQo+IA0KPiAgLSByZXNldHMgYmVpbmcgcGVyZm9y
-bWVkIChxY29tX2VwX3Jlc2V0X2Fzc2VydCwNCj4gICAgYXJ0cGVjNl9wY2llX2Fzc2VydF9jb3Jl
-X3Jlc2V0LCBpbXg2X3BjaWVfYXNzZXJ0X2NvcmVfcmVzZXQpDQo+ICAtIGNoYW5nZXMgdG8gY29u
-ZmlnIHNwYWNlIHJlZ2lzdGVycyAoa3NfcGNpZV9pbml0X2lkLA0KPiBkd19wY2llX3NldHVwX3Jj
-KQ0KPiAgICBpbmNsdWRpbmcgc2V0dGluZyBQQ0lfQ0xBU1NfREVWSUNFDQo+ICAtIGFuZCBjbG9j
-a3MgYmVpbmcgZW5hYmxlZCAocWNvbV9wY2llX2luaXRfMV8wXzApDQo+IA0KR29vZCBwb2ludCEg
-VGhpcyBpbmRlZWQgbWlnaHQgYnJlYWsgaG9zdCBkcml2ZXJzIHdoaWNoIGFjdHVhbGx5IHNldHVw
-DQp0aGUgcmMgaW4gdGhlIGtlcm5lbCwgYW5kIGRvbid0IGRlcGVuZCBvbiBlYXJseSBib290IEZX
-LiBTbyB0aGUNCnZhbGlkYXRpb24gc2hvdWxkIHByb2JhYmx5IGJlIG1vdmVkIHRvIGFmdGVyIHBw
-LT5vcHMtPmhvc3RfaW5pdCgpIChhbmQNCnNpbWlsYXJseSBhZnRlciBlcC0+b3BzLT5lcF9pbml0
-KCkgZm9yIHRoZSBlcCBkcml2ZXIpLCByaWdodD8NCg0KPiBJJ20gbm90IHN1cmUgaWYgeW91ciBj
-aGFuZ2VzIHdvdWxkIGNhdXNlIGFueXRoaW5nIHRvIGJyZWFrIGZvciB0aGVzZQ0KPiBvdGhlcg0K
-PiBjb250cm9sbGVycyAob3IgZnV0dXJlIGNvbnRyb2xsZXJzKSBhcyBJIGNvdWxkbid0IHNlZSBh
-bnkgb3RoZXIgcmVhZHMNCj4gdG8gdGhlDQo+IGNvbmZpZy4NCj4gDQo+IEdpdmVuIHRoYXQgd2Ug
-YXJlIHJlYWRpbmcgY29uZmlnIHNwYWNlIHNob3VsZCBkd19wY2llX3JkX293bl9jb25mIGJlDQo+
-IHVzZWQ/DQoNClRoZSBjb25maWcgc3BhY2Ugb2YgdGhlIERXIGNvcmUgaXMgbG9jYXRlZCBhdCB0
-aGUgYmVnaW5uaW5nIG9mIHRoZSBEQkkNCnJlZ3NwYWNlLiBGdXJ0aGVybW9yZSwgdGhpcyB3b3Vs
-ZCBicmVhayB0aGUgInN5bW1ldHJ5IiBiZXR3ZWVuIHRoZSBob3N0DQphbmQgZXAgdmFsaWRhdGlv
-bnMgKHNpbmNlIHRoZSBlcCBoYXMgbm8gbm90aW9uIG9mIHJlYWRpbmcgZnJvbSBjb25maWcNCnNw
-YWNlIG5vciBhIC5yZWFkIGNhbGxiYWNrIGluIHN0cnVjdCBkd19wY2llX2VwX29wcykuIEkgYWdy
-ZWUgdGhhdA0KdGhlcmUgaXMgc29tZSBzb3J0IG9mIG92ZXJsYXAgYmV0d2VlbiB0aGUgZHdfcGNp
-ZV9yZWFkey93cml0ZX1fZGJpDQpkd19wY2llX3Jkey93cn1fb3duX2NvbmYgQVBJcywgd2hlbiBh
-Y2Nlc3NpbmcgdGhlIGhvc3QgbW9kZSBjb25maWcNCnNwYWNlLCBidXQgSSBhc3N1bWUgdGhhdCBh
-bnkgaG9zdCBkcml2ZXIgd2hpY2ggc3VwcGxpZXMgYSBjYWxsYmFjayBmb3INCi5yZF9vd25fY29u
-ZigpIG11c3Qgc3VwcGx5IGFuIGVxdWl2YWxlbnQgLnJlYWRfZGJpKCkgb25lIGFzIHdlbGwuDQoN
-Cj4gKEZvciBleGFtcGxlIGtpcmluX3BjaWVfcmRfb3duX2NvbmYgZG9lcyBzb21ldGhpbmcgc3Bl
-Y2lhbCkuDQo+IA0KVGhleSBzcGVjaWZpY2FsbHkgZGVmaW5lIGFuIGVxdWl2YWxlbnQga2lyaW5f
-cGNpZV9yZWFkX2RiaSgpLg0KDQo+IFRoYW5rcywNCj4gDQo+IEFuZHJldyBNdXJyYXkNCj4gDQo+
-ID4gKwlpZiAoaGRyX3R5cGUgIT0gUENJX0hFQURFUl9UWVBFX0JSSURHRSkgew0KPiA+ICsJCWRl
-dl9lcnIocGNpLT5kZXYsICJQQ0llIGNvbnRyb2xsZXIgaXMgbm90IHNldCB0byBicmlkZ2UNCj4g
-PiB0eXBlIChoZHJfdHlwZTogMHgleCkhXG4iLA0KPiA+ICsJCQloZHJfdHlwZSk7DQo+ID4gKwkJ
-cmV0dXJuIC1FSU87DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICAJcHAtPm1lbV9iYXNlID0gcHAtPm1l
-bS0+c3RhcnQ7DQo+ID4gIA0KPiA+ICAJaWYgKCFwcC0+dmFfY2ZnMF9iYXNlKSB7DQo+ID4gLS0g
-DQo+ID4gMi4xNy4xDQo+ID4gDQo=
+Hi Julien,
+
+On 22/08/2019 17:11, Julien wrote:
+> Hi Marc,
+> 
+> On 06/08/19 11:01, Marc Zyngier wrote:
+>> GICv3.1 allows up to 80 PPIs (16 legaci PPIs and 64 Extended PPIs),
+>> meaning we can't just leave the old 16 hardcoded everywhere.
+>>
+>> We also need to add the infrastructure to discover the number of PPIs
+>> on a per redistributor basis, although we still pretend there is only
+>> 16 of them for now.
+>>
+>> No functional change.
+>>
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>   drivers/irqchip/irq-gic-common.c | 19 ++++++++++++-------
+>>   drivers/irqchip/irq-gic-common.h |  2 +-
+>>   drivers/irqchip/irq-gic-v3.c     | 22 +++++++++++++++-------
+>>   drivers/irqchip/irq-gic.c        |  2 +-
+>>   drivers/irqchip/irq-hip04.c      |  2 +-
+>>   5 files changed, 30 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
+>> index 6900b6f0921c..14110db01c05 100644
+>> --- a/drivers/irqchip/irq-gic-common.c
+>> +++ b/drivers/irqchip/irq-gic-common.c
+>> @@ -128,26 +128,31 @@ void gic_dist_config(void __iomem *base, int gic_irqs,
+>>   		sync_access();
+>>   }
+>>   
+>> -void gic_cpu_config(void __iomem *base, void (*sync_access)(void))
+>> +void gic_cpu_config(void __iomem *base, int nr, void (*sync_access)(void))
+>>   {
+>>   	int i;
+>>   
+>>   	/*
+>>   	 * Deal with the banked PPI and SGI interrupts - disable all
+>> -	 * PPI interrupts, ensure all SGI interrupts are enabled.
+>> -	 * Make sure everything is deactivated.
+>> +	 * private interrupts. Make sure everything is deactivated.
+>>   	 */
+>> -	writel_relaxed(GICD_INT_EN_CLR_X32, base + GIC_DIST_ACTIVE_CLEAR);
+>> -	writel_relaxed(GICD_INT_EN_CLR_PPI, base + GIC_DIST_ENABLE_CLEAR);
+>> -	writel_relaxed(GICD_INT_EN_SET_SGI, base + GIC_DIST_ENABLE_SET);
+>> +	for (i = 0; i < nr; i += 32) {
+> 
+> You added "nr" as argument but if "nr" isn't a multiple of 32 weird 
+> things might happen, no?
+>
+> It would be worth specifying that somewhere, and checking it with a WARN().
+
+TBH, I'm unsure whether that's worth it. The architecture is completely
+built around having the private interrupts in blocks of 32, and you can
+only get something wrong if you misdecode the number of interrupts from
+the registers.
+
+> Maybe it might be worth reducing the granularity to manipulating 16 irqs 
+> since there are 16 SGI + 16 PPI + 64 EPPI, but that might not be very 
+> useful right now.
+
+I don't see what this brings us at this point. The architecture doesn't
+seem to go in the direction of adding more SGIs, so we're pretty safe on
+that front...
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead, it just smells funny...
