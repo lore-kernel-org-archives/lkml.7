@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE4CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF82C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48D52089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78702089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493847;
-	bh=nIjJKHeNEvGgEnQO4HTGcN074YQkaMe++jyaTSfgJXc=;
+	s=default; t=1566493854;
+	bh=Lja0FVf56EXqjcfkco10xOKcvCdEdpDIeNUFDwiV7NY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kNlwZJZmo1sMdUIVOubtgk3XjRcZ8NkLfLO7C5ugDTLxN1gfgOfIyPQSL51mT1jEj
-	 xFH5wUbxXOQpla4cZ+DXQVBYKtlQYKAtN8By/RgoCXm10CAPl4rftYXuEuXxO0IZtT
-	 ztSbJgAlVsNjrkOeGGsjTGACj6cF9zDIjvAmtrP0=
+	b=oVXaFV993D2CYIz/2poRdXt42aisD62Hgnm9eyKZGx6u2LWomQk55lMS4JUTIXwAD
+	 MacRDd1px5bQ4B4+6lGOfWWoPzQHgF3F19kP2hRGdpFr8ooZmLaS9chgsNMOtwHy20
+	 v65eVdv5+syGwqhI1G868XUQadD7x9Y7aTwKj44w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390744AbfHVRJV (ORCPT
+        id S1732660AbfHVRKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59350 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:10:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390673AbfHVRJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:08 -0400
+        id S2390734AbfHVRJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:20 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 074F223406;
-        Thu, 22 Aug 2019 17:09:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7225233FE;
+        Thu, 22 Aug 2019 17:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493747;
-        bh=nIjJKHeNEvGgEnQO4HTGcN074YQkaMe++jyaTSfgJXc=;
+        s=default; t=1566493760;
+        bh=Lja0FVf56EXqjcfkco10xOKcvCdEdpDIeNUFDwiV7NY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wjkXBp3E+YxgSFPk+ossmyx9sTQIG7G3dudAn2RWtpWvriCd3EzdC0pJdEn7RdN8D
-         NAPkiRNY3Oad/+Zx2ifWnpkBmhGqegMF/5YLeEZ+2Ml/H/OsbE5koGfpiI2sOFHlHi
-         NOGPQTQpKgleljoj1EmlA4mqwfLIRoxGPnb2BvL0=
+        b=hmE4a/nb1YFMPh9Wuk28FOauYIVSadU4TA0wNNbzIu9lTpX28TlrdAfTL/Mwm9O6E
+         vC85Mc+1ftILf3/X5JZZSqCZObnTTGXqvp0rWP2IYt/DHDhJl3uBClVW3otTLL2rvB
+         R5Ho4XpIBaVqk/ODywcHrB8bxt7k2Y3i7jYgw/Sk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com,
+Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 097/135] usb: cdc-acm: make sure a refcount is taken early enough
-Date:   Thu, 22 Aug 2019 13:07:33 -0400
-Message-Id: <20190822170811.13303-98-sashal@kernel.org>
+Subject: [PATCH 5.2 122/135] bnxt_en: Suppress HWRM errors for HWRM_NVM_GET_VARIABLE command
+Date:   Thu, 22 Aug 2019 13:07:58 -0400
+Message-Id: <20190822170811.13303-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,60 +66,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-commit c52873e5a1ef72f845526d9f6a50704433f9c625 upstream.
+[ Upstream commit b703ba751dbb4bcd086509ed4b28102bc1670b35 ]
 
-destroy() will decrement the refcount on the interface, so that
-it needs to be taken so early that it never undercounts.
+For newly added NVM parameters, older firmware may not have the support.
+Suppress the error message to avoid the unncessary error message which is
+triggered when devlink calls the driver during initialization.
 
-Fixes: 7fb57a019f94e ("USB: cdc-acm: Fix potential deadlock (lockdep warning)")
-Cc: stable <stable@vger.kernel.org>
-Reported-and-tested-by: syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20190808142119.7998-1-oneukum@suse.com
+Fixes: 782a624d00fa ("bnxt_en: Add bnxt_en initial params table and register it.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/class/cdc-acm.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
-index 183b41753c982..62f4fb9b362f1 100644
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -1301,10 +1301,6 @@ static int acm_probe(struct usb_interface *intf,
- 	tty_port_init(&acm->port);
- 	acm->port.ops = &acm_port_ops;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
+index 549c90d3e465f..c05d663212b20 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
+@@ -98,10 +98,13 @@ static int bnxt_hwrm_nvm_req(struct bnxt *bp, u32 param_id, void *msg,
+ 	if (idx)
+ 		req->dimensions = cpu_to_le16(1);
  
--	minor = acm_alloc_minor(acm);
--	if (minor < 0)
--		goto alloc_fail1;
+-	if (req->req_type == cpu_to_le16(HWRM_NVM_SET_VARIABLE))
++	if (req->req_type == cpu_to_le16(HWRM_NVM_SET_VARIABLE)) {
+ 		memcpy(data_addr, buf, bytesize);
 -
- 	ctrlsize = usb_endpoint_maxp(epctrl);
- 	readsize = usb_endpoint_maxp(epread) *
- 				(quirks == SINGLE_RX_URB ? 1 : 2);
-@@ -1312,6 +1308,13 @@ static int acm_probe(struct usb_interface *intf,
- 	acm->writesize = usb_endpoint_maxp(epwrite) * 20;
- 	acm->control = control_interface;
- 	acm->data = data_interface;
-+
-+	usb_get_intf(acm->control); /* undone in destruct() */
-+
-+	minor = acm_alloc_minor(acm);
-+	if (minor < 0)
-+		goto alloc_fail1;
-+
- 	acm->minor = minor;
- 	acm->dev = usb_dev;
- 	if (h.usb_cdc_acm_descriptor)
-@@ -1458,7 +1461,6 @@ static int acm_probe(struct usb_interface *intf,
- 	usb_driver_claim_interface(&acm_driver, data_interface, acm);
- 	usb_set_intfdata(data_interface, acm);
+-	rc = hwrm_send_message(bp, msg, msg_len, HWRM_CMD_TIMEOUT);
++		rc = hwrm_send_message(bp, msg, msg_len, HWRM_CMD_TIMEOUT);
++	} else {
++		rc = hwrm_send_message_silent(bp, msg, msg_len,
++					      HWRM_CMD_TIMEOUT);
++	}
+ 	if (!rc && req->req_type == cpu_to_le16(HWRM_NVM_GET_VARIABLE))
+ 		memcpy(buf, data_addr, bytesize);
  
--	usb_get_intf(control_interface);
- 	tty_dev = tty_port_register_device(&acm->port, acm_tty_driver, minor,
- 			&control_interface->dev);
- 	if (IS_ERR(tty_dev)) {
 -- 
 2.20.1
 
