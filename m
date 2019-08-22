@@ -2,85 +2,87 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF86C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52DBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C32233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81559205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:13:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8leEuBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390045AbfHVVMi (ORCPT
+        id S2390143AbfHVVNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:12:38 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:56203 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729718AbfHVVMh (ORCPT
+        Thu, 22 Aug 2019 17:13:22 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44119 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729718AbfHVVNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:12:37 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 5419DE0004;
-        Thu, 22 Aug 2019 21:12:34 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 23:12:33 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     a.zummo@towertech.it, leoyang.li@nxp.com, robh+dt@kernel.org,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        xiaobo.xie@nxp.com, jiafei.pan@nxp.com, ran.wang_1@nxp.com,
-        mark.rutland@arm.com, devicetree@vger.kernel.org
-Subject: Re: [v7,2/2] dt-bindings: rtc: add bindings for FlexTimer Module
-Message-ID: <20190822211233.GD27031@piout.net>
-References: <20190813030157.48590-1-biwen.li@nxp.com>
- <20190813030157.48590-2-biwen.li@nxp.com>
+        Thu, 22 Aug 2019 17:13:22 -0400
+Received: by mail-qt1-f194.google.com with SMTP id 44so9284286qtg.11;
+        Thu, 22 Aug 2019 14:13:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tVYGZF98cbwCuEnSEO1Hots0hv8R+WSge8zW0ooPbuk=;
+        b=O8leEuBYlqsOe/lClx0gekw2F1TuK5mIxCus51wwMx1g0I4yslglKjMsVWwhuis/R2
+         xJMkzHGBxGbvSRol1pOgOSxokHmAPmcbghciCuP00mBQxH+wGx7WpjanUSyVWm8PmLdV
+         xBjyd/J3cindAzLQJosmkpaI4erGlBzGELqic9Y/h3slZgHd9wQIqnEFpNZnph2Zb0lW
+         GnZ0zokq71rhJkwSdWfQ5iPkJ+4BDrklRBJG+QQ+VPWPz8HHJWCX/I6XTbvpGbpUpVNd
+         9nAKzfhvVosDtl3swmpYHHjXAMsFGES6cS/dQLjrnS/xXezmoW8z/axMpJZKsHEuppnt
+         Nvow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tVYGZF98cbwCuEnSEO1Hots0hv8R+WSge8zW0ooPbuk=;
+        b=fmxoB1DbPO4UslUStIGXCeWD8z9kjb6aWnMZUFW0rGuOHHtnl0X3FtV1ane85yb2F9
+         Gflt4YKtvpjO0cWYcDt5Vk9cef1KTaraQscngo4DQiyLuMp08pE2l8Jb7qqXdSFa4YDj
+         T619QPOaWz8h4Qpo8d+cNauoFbhagQUbe53TgkG7tE4Xvo8TVNzz3ieYiwSTZIUz9Tsg
+         oTL6jt4YaJNG79Yw2J6pIyLWm5hnt2e0ykB2HnaqSon7QIT+MhE8vC4+EAyvLUKTGRgv
+         w+e64h2PcTTwGW2EwTWK7+cF003vfMd6P9idz4llIv3BmWIAZIPCJrLOvFaaFGRhb1n0
+         dttw==
+X-Gm-Message-State: APjAAAXvy+atzf16Zk7k2G4avjb7dIeqdCFhW9KfJt17euiKmu6oYJkt
+        c0L/P/N5cMgRKfp96Wh/CtcHxnuIvHdRnn2tzW4=
+X-Google-Smtp-Source: APXvYqzabskoAr859ElJLB/1NTl9lcAlIyr0pZ6JF+n8KfqYiXfinYi4g1g8nmSaWxuXRxu+M4uvCzB5uOEvEw1AWps=
+X-Received: by 2002:ac8:358e:: with SMTP id k14mr1675089qtb.83.1566508400887;
+ Thu, 22 Aug 2019 14:13:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190813030157.48590-2-biwen.li@nxp.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <2755f638-7846-91f2-74f4-61031f3e34c8@web.de>
+In-Reply-To: <2755f638-7846-91f2-74f4-61031f3e34c8@web.de>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Thu, 22 Aug 2019 14:13:10 -0700
+Message-ID: <CAPhsuW4aH_kPc5NnWXQp5jgdvOZjq+eDWpUQGBgyZ9USEA6LKA@mail.gmail.com>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_net=2Fcore=2Fskmsg=3A_Delete_an_unnecessary_ch?=
+        =?UTF-8?Q?eck_before_the_function_call_=E2=80=9Cconsume=5Fskb=E2=80=9D?=
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/08/2019 11:01:57+0800, Biwen Li wrote:
-> The patch adds bindings for FlexTimer Module
-> 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
-> Change in v7:
->     - delete aliases
-> 
-> Change in v6:
->     - correct subject
->     - delete note
->     - remove reg property about IP Powerdown exception register
-> 
-> Change in v5:
->     - None
-> 
-> Change in v4:
->     - add note about dts and kernel options
->     - add aliases in example
-> 
-> Change in v3:
-> 	- remove reg-names property
-> 	- correct cells number
-> 
-> Change in v2:
-> 	- replace ls1043a with ls1088a as example
-> 	- add rcpm node and fsl,rcpm-wakeup property
-> 
->  .../bindings/rtc/rtc-fsl-ftm-alarm.txt        | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-fsl-ftm-alarm.txt
-> 
-Applied, thanks.
+On Thu, Aug 22, 2019 at 10:18 AM Markus Elfring <Markus.Elfring@web.de> wrote:
+>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Thu, 22 Aug 2019 18:00:40 +0200
+>
+> The consume_skb() function performs also input parameter validation.
+> Thus the test around the call is not needed.
+>
+> This issue was detected by using the Coccinelle software.
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Acked-by: Song Liu <songliubraving@fb.com>
