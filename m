@@ -2,51 +2,61 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AA0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537B5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B7E20870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F9A20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495508;
-	bh=M0ON+wcSMXQ4IP2Gj/v1u/IHC14XFEaaHkW20mRRtX4=;
+	s=default; t=1566495513;
+	bh=T/cO9sSANSOj2sVm3GHrDKOf5nGOMHkGGaYdGq+hUCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ENbpN6fduEiyhlcNS2ji/E32SPDnphMK1iVWtitrWQUejJJ04OU1Cr+iCFBaUHikX
-	 LBsgm4RQiR6CuQWJVLWliZTcKyRSFhH5/OUDq0yYDxxkJ4InWUYtiutKg9cnFu2JFo
-	 qVd2aMh5Z4/SlC2MdwXNkZRrNuRBjhky4nOGILvU=
+	b=cxmSsdMMSsG/fwcDiltqSRNBWygubKA3iIBhqnTKiOJWP2Bf7n8VNc9r7wOiujVN7
+	 KFFXGmawKtOhlkioD4exQNMLfeDMjTqtPhUYyfhSfX0nqOg/xEdrD9m2yU5J4f/sDM
+	 yPUelIcji4sVjSOcWRfhvEfgTJTIppsjxn9NhaRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404960AbfHVRi1 (ORCPT
+        id S2404969AbfHVRic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:38:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46036 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:38:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404187AbfHVRY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:28 -0400
+        id S2404183AbfHVRY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:27 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C0972341E;
-        Thu, 22 Aug 2019 17:24:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4905223407;
+        Thu, 22 Aug 2019 17:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494667;
-        bh=M0ON+wcSMXQ4IP2Gj/v1u/IHC14XFEaaHkW20mRRtX4=;
+        s=default; t=1566494666;
+        bh=T/cO9sSANSOj2sVm3GHrDKOf5nGOMHkGGaYdGq+hUCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kiBIxfYzDgxMGCEwJXi1uvk+1e9TsvbxG3tUAfkwLUP8vwyffM6jxMKUp69ovri0w
-         rvVdAHswXhWGPcLaZFWgbL1GE9KUOGiQLLTXiMAwu1YFBDI3dhUouOeVmTs8HrrrsQ
-         oCG/cQmX3YdS6/LbSMkMiDtJ1kwFbUHbBkjw93Yo=
+        b=Dcw73NGD4KK9kRia0ao5SIAvycHfJ9ioECfr55vtigZsYrcZ2eojbwoJBX6l+oERs
+         AIdeMRSUqB+pg9BrMgMYUe2Q7wVbLeeR9fkUSWST5heW1K2gqFIRpzOcvoMYM9j/iD
+         dn2YX/85KEoRb1aGVO2xxr+JB3uD1d/pcGzsjt6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Binderman <dcb314@hotmail.com>,
-        Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.9 081/103] staging: comedi: dt3000: Fix signed integer overflow divider * base
-Date:   Thu, 22 Aug 2019 10:19:09 -0700
-Message-Id: <20190822171732.247195281@linuxfoundation.org>
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Jakub Jelinek <jakub@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Bill Wendling <morbo@google.com>,
+        James Y Knight <jyknight@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 090/103] asm-generic: fix -Wtype-limits compiler warnings
+Date:   Thu, 22 Aug 2019 10:19:18 -0700
+Message-Id: <20190822171732.812246728@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -59,50 +69,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+[ Upstream commit cbedfe11347fe418621bd188d58a206beb676218 ]
 
-commit b4d98bc3fc93ec3a58459948a2c0e0c9b501cd88 upstream.
+Commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
+compilation warning because "rx_frag_size" is an "ushort" while
+PAGE_SHIFT here is 16.
 
-In `dt3k_ns_to_timer()` the following lines near the end of the function
-result in a signed integer overflow:
+The commit changed the get_order() to be a multi-line macro where
+compilers insist to check all statements in the macro even when
+__builtin_constant_p(rx_frag_size) will return false as "rx_frag_size"
+is a module parameter.
 
-	prescale = 15;
-	base = timer_base * (1 << prescale);
-	divider = 65535;
-	*nanosec = divider * base;
+In file included from ./arch/powerpc/include/asm/page_64.h:107,
+                 from ./arch/powerpc/include/asm/page.h:242,
+                 from ./arch/powerpc/include/asm/mmu.h:132,
+                 from ./arch/powerpc/include/asm/lppaca.h:47,
+                 from ./arch/powerpc/include/asm/paca.h:17,
+                 from ./arch/powerpc/include/asm/current.h:13,
+                 from ./include/linux/thread_info.h:21,
+                 from ./arch/powerpc/include/asm/processor.h:39,
+                 from ./include/linux/prefetch.h:15,
+                 from drivers/net/ethernet/emulex/benet/be_main.c:14:
+drivers/net/ethernet/emulex/benet/be_main.c: In function 'be_rx_cqs_create':
+./include/asm-generic/getorder.h:54:9: warning: comparison is always
+true due to limited range of data type [-Wtype-limits]
+   (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
+         ^
+drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
+of macro 'get_order'
+  adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
+                                 ^~~~~~~~~
 
-(`divider`, `base` and `prescale` are type `int`, `timer_base` and
-`*nanosec` are type `unsigned int`.  The value of `timer_base` will be
-either 50 or 100.)
+Fix it by moving all of this multi-line macro into a proper function,
+and killing __get_order() off.
 
-The main reason for the overflow is that the calculation for `base` is
-completely wrong.  It should be:
-
-	base = timer_base * (prescale + 1);
-
-which matches an earlier instance of this calculation in the same
-function.
-
-Reported-by: David Binderman <dcb314@hotmail.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20190812111517.26803-1-abbotti@mev.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+[akpm@linux-foundation.org: remove __get_order() altogether]
+[cai@lca.pw: v2]
+  Link: http://lkml.kernel.org/r/1564000166-31428-1-git-send-email-cai@lca.pw
+Link: http://lkml.kernel.org/r/1563914986-26502-1-git-send-email-cai@lca.pw
+Fixes: d66acc39c7ce ("bitops: Optimise get_order()")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jakub Jelinek <jakub@redhat.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Bill Wendling <morbo@google.com>
+Cc: James Y Knight <jyknight@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/comedi/drivers/dt3000.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/asm-generic/getorder.h | 50 ++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 30 deletions(-)
 
---- a/drivers/staging/comedi/drivers/dt3000.c
-+++ b/drivers/staging/comedi/drivers/dt3000.c
-@@ -377,7 +377,7 @@ static int dt3k_ns_to_timer(unsigned int
- 	}
+diff --git a/include/asm-generic/getorder.h b/include/asm-generic/getorder.h
+index 65e4468ac53da..52fbf236a90ea 100644
+--- a/include/asm-generic/getorder.h
++++ b/include/asm-generic/getorder.h
+@@ -6,24 +6,6 @@
+ #include <linux/compiler.h>
+ #include <linux/log2.h>
  
- 	prescale = 15;
--	base = timer_base * (1 << prescale);
-+	base = timer_base * (prescale + 1);
- 	divider = 65535;
- 	*nanosec = divider * base;
- 	return (prescale << 16) | (divider);
+-/*
+- * Runtime evaluation of get_order()
+- */
+-static inline __attribute_const__
+-int __get_order(unsigned long size)
+-{
+-	int order;
+-
+-	size--;
+-	size >>= PAGE_SHIFT;
+-#if BITS_PER_LONG == 32
+-	order = fls(size);
+-#else
+-	order = fls64(size);
+-#endif
+-	return order;
+-}
+-
+ /**
+  * get_order - Determine the allocation order of a memory size
+  * @size: The size for which to get the order
+@@ -42,19 +24,27 @@ int __get_order(unsigned long size)
+  * to hold an object of the specified size.
+  *
+  * The result is undefined if the size is 0.
+- *
+- * This function may be used to initialise variables with compile time
+- * evaluations of constants.
+  */
+-#define get_order(n)						\
+-(								\
+-	__builtin_constant_p(n) ? (				\
+-		((n) == 0UL) ? BITS_PER_LONG - PAGE_SHIFT :	\
+-		(((n) < (1UL << PAGE_SHIFT)) ? 0 :		\
+-		 ilog2((n) - 1) - PAGE_SHIFT + 1)		\
+-	) :							\
+-	__get_order(n)						\
+-)
++static inline __attribute_const__ int get_order(unsigned long size)
++{
++	if (__builtin_constant_p(size)) {
++		if (!size)
++			return BITS_PER_LONG - PAGE_SHIFT;
++
++		if (size < (1UL << PAGE_SHIFT))
++			return 0;
++
++		return ilog2((size) - 1) - PAGE_SHIFT + 1;
++	}
++
++	size--;
++	size >>= PAGE_SHIFT;
++#if BITS_PER_LONG == 32
++	return fls(size);
++#else
++	return fls64(size);
++#endif
++}
+ 
+ #endif	/* __ASSEMBLY__ */
+ 
+-- 
+2.20.1
+
 
 
