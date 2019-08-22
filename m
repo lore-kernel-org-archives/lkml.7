@@ -2,134 +2,135 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 815EFC3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FECC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573B62145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41FDF22CF7
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y1FjN65V"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="eUEkk9eW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730877AbfHVDgN (ORCPT
+        id S1730916AbfHVDgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 23:36:13 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36151 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfHVDgM (ORCPT
+        Wed, 21 Aug 2019 23:36:37 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:16891 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbfHVDgg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 23:36:12 -0400
-Received: by mail-io1-f65.google.com with SMTP id o9so9079206iom.3;
-        Wed, 21 Aug 2019 20:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Wl7Cl9P4ljL83LEC/VDtQhra4RC/CXvX5bYJJK5SHmI=;
-        b=Y1FjN65VZ6whH3eKmvSi6fAh815HQE++NXMef+ora2Dnh9pdeRp9FLuBeiWgwp6tzw
-         29g+UC5qbWF3KXY3eGObaSf2uEO17DbDlGTI6gacfOSLKnTQ24oEaeuJvR6LhtmsUQAn
-         VTlH3FN+ebsbTtO0tLQKG0BXeSUyV+EKvIk0iptC8AIf8vlPf5lAgHM48YiiSI5yWQFt
-         ZWO8cUa0h/Ul6vf6saqQEP3dZR3ly15T161i/Vfw3WtXRcvx67HjJsaQHFYMPP4qAIEQ
-         QGLHsvfRQ4b1AMv+4p80/BxZcAM+bUN3i4092+/n6oFeBVdEUYVRV1KR1I5zVkNN7kAk
-         MNGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wl7Cl9P4ljL83LEC/VDtQhra4RC/CXvX5bYJJK5SHmI=;
-        b=Uq2tqsxkm9lRYG0GeW5jG1Bi5AQosi9riPJ4596IkL/64AgOneDPhNrjRq5Hz0PN52
-         bVBGuLcEEZFGVJlSTkI1oQDNGD/xfWHg6Xzpn8aqMfanjLG98/gH5OBDAvGR/X0H/Tjt
-         e5wrHLMucagQp1uLDo+fL9iaJu5BtXJye7TYpJ39mhRTL4wuInKDEVxWrLUPLKAeyti0
-         9T5OYa3GZTjtkHSYR+5GrRU6Z/JQsKfY6MjknyS0yQuPYzsWjvoMJCUGVOeWD/Q9jwSY
-         Qytj899HEDNI25nXpj/ek2VR6dVJ5Zq8RtWhsy5UmYZNMBsOVCu0U8JRrBSBN2EU0Oo/
-         4HOg==
-X-Gm-Message-State: APjAAAVq1er7ymf2sWEOmz3uZKcVp1avqSLeVg4yPGz1gu6nX/LEfqxU
-        rQziQnEq8h6xsVxEJcjsQg==
-X-Google-Smtp-Source: APXvYqxEJ2XCHWvZF+u55HDjvMHUUPAUd8NXrrTBVREvcd66T38l7WLAOYRwTZM+H28ZTUUi9C+qOw==
-X-Received: by 2002:a05:6602:2298:: with SMTP id d24mr1187213iod.167.1566444972054;
-        Wed, 21 Aug 2019 20:36:12 -0700 (PDT)
-Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
-        by smtp.gmail.com with ESMTPSA id e12sm43671558iob.66.2019.08.21.20.36.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 21 Aug 2019 20:36:11 -0700 (PDT)
-Date:   Wed, 21 Aug 2019 23:36:09 -0400
-From:   Branden Bonaby <brandonbonaby94@gmail.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] drivers: hv: vmbus: add test attributes to debugfs
-Message-ID: <20190822033609.GB37262@Test-Virtual-Machine>
-References: <cover.1566340843.git.brandonbonaby94@gmail.com>
- <a17474c59601a98576f1e002a57192f6314b4aaf.1566340843.git.brandonbonaby94@gmail.com>
- <DM5PR21MB0137B4071E64688C5F902E83D7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
+        Wed, 21 Aug 2019 23:36:36 -0400
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x7M3aUer010801;
+        Thu, 22 Aug 2019 12:36:31 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x7M3aUer010801
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566444991;
+        bh=R9DdSYdCLpkt/LbQI9zbQtcp6/zLnu2cPiFV1+CyfHo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eUEkk9eWXjdoHatpVYwRKckiQipct8CNYZ1yNMX6zz/9a0vjuv5L2H/HYs7E93wIQ
+         Ye0JffRsJlJ03ayqyRx26a+RPd/Eb2Rg3D3R+tq7ICO2sF9RzuzRNC/+S4V4N6RhbN
+         o5gzZ4Q5WkP6o2fBnZ6rTTVnM2jSFLXMIoOVG3fdIKKBvRN8KjDRsVYJyIuV6FRW6f
+         UjPEtmBF0lRLM2klZ0M8yBpEplIwhCeJ1jACbKuw1GCgHrLcKdTBGDbJeDE2IVpD7F
+         y11AcLO+99qrOJj8oKWFrSU7Aj7mdhMnE/7G142WmmPiGNmr6C2qqj11DdnVQjzviE
+         KYEDrvQqW/BUg==
+X-Nifty-SrcIP: [209.85.222.52]
+Received: by mail-ua1-f52.google.com with SMTP id g11so1541686uak.0;
+        Wed, 21 Aug 2019 20:36:31 -0700 (PDT)
+X-Gm-Message-State: APjAAAWT43xTfUBYVGww77u79OvQjWbqR1WvjfMv8btve7dg3hX7c3uO
+        tAJHIDr0VM13hYDqD06H5ckq2rVLbxIO9RhE2AU=
+X-Google-Smtp-Source: APXvYqyP82w0LcNr90K+YIvYDLaC1gE8BN3JtOVy4zweoBYyINB1DSz23Tf3bwhMHYIOMB6f4JWmuGj3PmaxlGb6mu0=
+X-Received: by 2002:ab0:70d9:: with SMTP id r25mr3941384ual.109.1566444990083;
+ Wed, 21 Aug 2019 20:36:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM5PR21MB0137B4071E64688C5F902E83D7AA0@DM5PR21MB0137.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190509143859.9050-1-joe.lawrence@redhat.com>
+ <20190509143859.9050-7-joe.lawrence@redhat.com> <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com>
+ <20190812155626.GA19845@redhat.com> <CAK7LNATRLTBqA9c=b+Y38T-zWc9o5JMq18r9auA=enPC=p10pA@mail.gmail.com>
+ <alpine.LSU.2.21.1908161016430.2020@pobox.suse.cz> <6c7e4d19-b993-1c14-d6cf-6aa1ee891361@redhat.com>
+ <CAK7LNAS0Z95VT2n1o3V09bKf-rkPBMNdRryF67gpLKtnjAVAiA@mail.gmail.com>
+ <alpine.LSU.2.21.1908190928520.31051@pobox.suse.cz> <42254ffc-6422-19e1-62a2-6abc23fd089a@redhat.com>
+In-Reply-To: <42254ffc-6422-19e1-62a2-6abc23fd089a@redhat.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 22 Aug 2019 12:35:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS=yCP=me5_qc_yxjeQPvRtbHwp3CAe8-w6KE6P0+VS_w@mail.gmail.com>
+Message-ID: <CAK7LNAS=yCP=me5_qc_yxjeQPvRtbHwp3CAe8-w6KE6P0+VS_w@mail.gmail.com>
+Subject: Re: [PATCH v4 06/10] modpost: Add modinfo flag to livepatch modules
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        live-patching@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +What:           /sys/kernel/debug/hyperv/<UUID>/fuzz_test_state
-> > +Date:           August 2019
-> > +KernelVersion:  5.3
-> > +Contact:        Branden Bonaby <brandonbonaby94@gmail.com>
-> > +Description:    Fuzz testing status of a vmbus device, whether its in an ON
-> > +                state or a OFF state
-> 
-> Document what values are actually returned?  
-> 
-> > +Users:          Debugging tools
-> > +
-> > +What:           /sys/kernel/debug/hyperv/<UUID>/delay/fuzz_test_buffer_interrupt_delay
-> > +Date:           August 2019
-> > +KernelVersion:  5.3
-> > +Contact:        Branden Bonaby <brandonbonaby94@gmail.com>
-> > +Description:    Fuzz testing buffer delay value between 0 - 1000
-> 
-> It would be helpful to document the units -- I think this is 0 to 1000
-> microseconds.
+Hi Joe,
 
-you're right, that makes sense I'll add that information in. Also 
-to confirm, it is microseconds like you said.
-
-> > +static int hv_debugfs_delay_set(void *data, u64 val)
-> > +{
-> > +	if (val >= 1 && val <= 1000)
-> > +		*(u32 *)data = val;
-> > +	/*Best to not use else statement here since we want
-> > +	 * the delay to remain the same if val > 1000
-> > +	 */
-> 
-> The standard multi-line comment style would be:
-> 
-> 	/*
-> 	 * Best to not use else statement here since we want
-> 	 * the delay to remain the same if val > 1000
-> 	 */
+On Tue, Aug 20, 2019 at 1:02 AM Joe Lawrence <joe.lawrence@redhat.com> wrote:
 >
+> On 8/19/19 3:31 AM, Miroslav Benes wrote:
+> > On Mon, 19 Aug 2019, Masahiro Yamada wrote:
+> >
+> >>
+> >> I can review this series from the build system point of view,
+> >> but I am not familiar enough with live-patching itself.
+> >>
+> >> Some possibilities:
+> >>
+> >> [1] Merge this series thru the live-patch tree after the
+> >>      kbuild base patches land.
+> >>      This requires one extra development cycle (targeting for 5.5-rc1)
+> >>      but I think this is the official way if you do not rush into it.
+> >
+> > I'd prefer this option. There is no real rush and I think we can wait one
+> > extra development cycle.
+>
+> Agreed.  I'm in no hurry and was only curious about the kbuild changes
+> that this patchset is now dependent on -- how to note them for other
+> reviewers or anyone wishing to test.
+>
+> > Joe, could you submit one more revision with all the recent changes (once
+> > kbuild improvements settle down), please? We should take a look at the
+> > whole thing one more time? What do you think?
+> >
+>
+> Definitely, yes.  I occasionally force a push to:
+> https://github.com/joe-lawrence/linux/tree/klp-convert-v5-expanded
+>
+> as I've been updating and collecting feedback from v4.  Once updates
+> settle, I'll send out a new v5 set.
+>
+> -- Joe
 
-will change
+When you send v5, please squash the following clean-up too:
 
-> > +	else if (val <= 0)
-> > +		*(u32 *)data = 0;
-> 
-> You could consider returning an error for an invalid
-> value (< 0, or > 1000).
-> 
 
-its subtle but it does make sense and shows anyone
-reading that the only acceptable values in the 
-function are 0 <= 1000 at a glance. I'll add
-that in.
 
+diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
+index 89eaef0d3efc..9e77246d84e3 100644
+--- a/scripts/Makefile.modfinal
++++ b/scripts/Makefile.modfinal
+@@ -47,7 +47,7 @@ targets += $(modules) $(modules:.ko=.mod.o)
+ # Live Patch
+ # ---------------------------------------------------------------------------
+
+-$(modules-klp:.ko=.tmp.ko): %.tmp.ko: %.o %.mod.o Symbols.list FORCE
++%.tmp.ko: %.o %.mod.o Symbols.list FORCE
+        +$(call if_changed,ld_ko_o)
+
+ quiet_cmd_klp_convert = KLP     $@
+
+
+
+
+Thanks.
+
+
+-- 
+Best Regards
+Masahiro Yamada
