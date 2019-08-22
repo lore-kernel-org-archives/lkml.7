@@ -2,170 +2,93 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445CAC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BE6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C360233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D47F2233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:01:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566457293;
+	bh=1xRMbxjyV8ew6m3nfyvNCRRuTi1GhKBMZS5I0/ItEFg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZmnLqbs2zNR+51mKlFxENhg85PnYF4azPNTrVgi5Yp9xa2D7s2AYiBr52CHqeYaMc
+	 D1gZ7ESa2HE9aumNijv5cHkYoNxm5PW9dawFGswH+YkWdSFBFQa5CCCwnLQs6WCS9a
+	 t2xKtNaCrch3CW5Eq/bw3N/WWnY6NocbwG8hS4OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731938AbfHVHAp (ORCPT
+        id S1731945AbfHVHBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:00:45 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:24426 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728605AbfHVHAp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:00:45 -0400
-X-UUID: 17eb2086c4e3493798a5996dce96b8e8-20190822
-X-UUID: 17eb2086c4e3493798a5996dce96b8e8-20190822
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1696701101; Thu, 22 Aug 2019 15:00:40 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 22 Aug 2019 15:00:38 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 22 Aug 2019 15:00:34 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v5 03/13] pwm: mediatek: add a property "clock-frequency"
-Date:   Thu, 22 Aug 2019 14:58:33 +0800
-Message-ID: <1566457123-20791-4-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
-References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
+        Thu, 22 Aug 2019 03:01:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57630 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728605AbfHVHBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 03:01:32 -0400
+Received: from zzz.localdomain (unknown [67.218.105.90])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F266920870;
+        Thu, 22 Aug 2019 07:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566457291;
+        bh=1xRMbxjyV8ew6m3nfyvNCRRuTi1GhKBMZS5I0/ItEFg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mpIBtwgHmHmuv6opUL5a6B6cFIPtk4LNZPdCb6RvShauYyMt3Ayh5SfIFRxP3zzGb
+         oKFNmsRIOROoD9GQGu5F0k3dITGMsA1hEw+aJ70DCXKYFYvt6YZam3NMpGDnxi5VRD
+         MkwFk1Buqa7SbLimpx/sFmShbMNpUPyIHke2XAfc=
+Date:   Thu, 22 Aug 2019 00:01:29 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
+        jmorris@namei.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2] tomoyo: Don't check open/getattr permission on
+ sockets.
+Message-ID: <20190822070129.GL6111@zzz.localdomain>
+Mail-Followup-To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
+        jmorris@namei.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
+        "David S. Miller" <davem@davemloft.net>
+References: <8f874b03-b129-205f-5f05-125479701275@i-love.sakura.ne.jp>
+ <20190822063018.GK6111@zzz.localdomain>
+ <201908220655.x7M6tVmv029579@www262.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201908220655.x7M6tVmv029579@www262.sakura.ne.jp>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fix mt7628 pwm during configure from userspace. The SoC
-is legacy MIPS and has no complex clock tree. This patch add property
-clock-frequency to the SoC specific data and legacy MIPS SoC need to
-configure it in DT. This property is use for period calculation.
+On Thu, Aug 22, 2019 at 03:55:31PM +0900, Tetsuo Handa wrote:
+> Eric Biggers wrote:
+> > What happened to this patch?
+> 
+> I have to learn how to manage a git tree for sending
+> pull requests, but I can't find time to try.
+> 
+> > 
+> > Also, isn't the same bug in other places too?:
+> > 
+> > 	- tomoyo_path_chmod()
+> > 	- tomoyo_path_chown()
+> > 	- smack_inode_getsecurity()
+> > 	- smack_inode_setsecurity()
+> 
+> What's the bug? The file descriptor returned by open(O_PATH) cannot be
+> passed to read(2), write(2), fchmod(2), fchown(2), fgetxattr(2), mmap(2) etc.
+> 
 
-We will improve this fix by droping has-clks attribute and using
-clock-frequency to do the same thing in a new patch.
+chmod(2), chown(2), getxattr(2), and setxattr(2) take a path, not a fd.
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
----
-Changes since v5:
-1. Follow reviewer's comments
-Make the changes of fix mt7628 pwm as a single patch
-
-Changes since v4:
-- Follow reviewers's comments
-1. use pc->soc->has_clks to check clocks exist or not.
-2. Add error message when probe() unable to get clks
-- Fixes bug when SoC is old mips which has no complex clock tree.
-if clocks not exist, use the new property from DT to apply period caculation;
-otherwise, use clk_get_rate to get clock frequency and apply period caculation.
-
-Change-Id: Ibbe6d7a4f80b30f60725bcbeca1d02ce7834d28c
----
- drivers/pwm/pwm-mediatek.c | 39 ++++++++++++++++++++++++++++++--------
- 1 file changed, 31 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index ebd62629e3fe..1f18bff4800c 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -65,11 +65,13 @@ struct mtk_pwm_platform_data {
-  * @chip: linux PWM chip representation
-  * @regs: base address of PWM chip
-  * @clks: list of clocks
-+ * @clk_freq: the fix clock frequency of legacy MIPS SoC
-  */
- struct mtk_pwm_chip {
- 	struct pwm_chip chip;
- 	void __iomem *regs;
- 	struct clk *clks[MTK_CLK_MAX];
-+	unsigned int clk_freq;
- 	const struct mtk_pwm_platform_data *soc;
- };
- 
-@@ -141,19 +143,27 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 			  int duty_ns, int period_ns)
- {
- 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
--	struct clk *clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm];
-+	unsigned int clk_freq;
- 	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
- 	    reg_thres = PWMTHRES;
- 	u64 resolution;
- 	int ret;
- 
-+	if (pc->soc->has_clks) {
-+		struct clk *clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm];
-+
-+		clk_freq = clk_get_rate(clk);
-+	} else {
-+		clk_freq = pc->clk_freq;
-+	}
-+
- 	ret = mtk_pwm_clk_enable(chip, pwm);
- 	if (ret < 0)
- 		return ret;
- 
- 	/* Using resolution in picosecond gets accuracy higher */
- 	resolution = (u64)NSEC_PER_SEC * 1000;
--	do_div(resolution, clk_get_rate(clk));
-+	do_div(resolution, clk_freq);
- 
- 	cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000, resolution);
- 	while (cnt_period > 8191) {
-@@ -262,13 +272,26 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 		npwms = MTK_CLK_MAX - 2;
- 	}
- 
--	for (i = 0; i < npwms + 2 && pc->soc->has_clks; i++) {
--		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
--		if (IS_ERR(pc->clks[i])) {
--			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
--				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
--			return PTR_ERR(pc->clks[i]);
-+	if (pc->soc->has_clks) {
-+		for (i = 0; i < npwms + 2 ; i++) {
-+			pc->clks[i] = devm_clk_get(&pdev->dev,
-+						  mtk_pwm_clk_name[i]);
-+			if (IS_ERR(pc->clks[i])) {
-+				dev_err(&pdev->dev, "clock: %s fail: %ld\n",
-+					mtk_pwm_clk_name[i],
-+					PTR_ERR(pc->clks[i]));
-+				return PTR_ERR(pc->clks[i]);
-+			}
-+		}
-+	} else {
-+		unsigned int clk_freq;
-+
-+		ret = of_property_read_u32(np, "clock-frequency", &clk_freq);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "failed to get clock_frequency\n");
-+			return ret;
- 		}
-+		pc->clk_freq = clk_freq;
- 	}
- 
- 	platform_set_drvdata(pdev, pc);
--- 
-2.17.1
-
+- Eric
