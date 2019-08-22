@@ -2,595 +2,758 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189DDC3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69895C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE68F214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12192214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:32:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kC6yhi9p"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="htClZ8PS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731319AbfHVC0a (ORCPT
+        id S1730918AbfHVCcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 22:26:30 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40092 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728822AbfHVC03 (ORCPT
+        Wed, 21 Aug 2019 22:32:45 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:37602 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728042AbfHVCco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 22:26:29 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h8so5540076edv.7;
-        Wed, 21 Aug 2019 19:26:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Br8cbFCAwjIaWDowc7SRJFgCdzYJINLwpxro8ur2CIQ=;
-        b=kC6yhi9plenNZEOFY/VPf/sKTmFskYlYuKKeH+5xBhwwSjbLT7BM7EHwupmZ/uA0aQ
-         wXIVKG3eHlegNo+Igmz64vBaXlfy4XkHeZMHzewMUgIUTRhTBX4U1iDg6+eWLplXxo+/
-         XMvCBrBWtuF3liudBvtHhp1u6dM74PPLgL2TRkOxG0yAn3E6WTuqvo0dEYH1cftWu5e3
-         udfes++SdpImBd1nQbThQyY7Y1uhvZ11jXOje887eZoZCqs4fH5hZXnq3Pgr2bNHqiDG
-         KBvu1MX4hP7g5QOO91zMTAmCLnobQIsFaYE9sTCgQ3+bHtt3L31a/ouPZP35JXZRGpae
-         NJAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Br8cbFCAwjIaWDowc7SRJFgCdzYJINLwpxro8ur2CIQ=;
-        b=lccSjr99IYTeBQIpgnqkImzYWWhXmuh3RID/5ZD2wgociGQpp/DE2OSthAy1EFxjAd
-         bqjtLPBoNLdPCxaKji836qjz05Ir27nKMP+r67UXa/LKZN2ZlKKT8DvcFU+c1vD60PrQ
-         GokUSpukd5lpCH22Ys4akEtFiguL96zubKll6jCzC5AiZwEOYmX6T5AskgFE+23EYJEF
-         mlmjNpNBkvdO9B5pv3J/sz9SVeHH8V0NXpDBjRMB6YvhcR7yNOrxbPmM9D1szUEMPIbU
-         cc0l+WQyQBXEztU+5/uu3McEbIuFZjJUzXILoeXCVAWinabbrb9ai4nrDsS6gFA7sYNg
-         ms+g==
-X-Gm-Message-State: APjAAAWijX+1DhyTDEh/ceqTKIHcmdUzYzrpjnk1CTjRVHc7mIKEUTmp
-        Kux33QeSZ8r/KmZNakPBD0DdKr5rQ56DLaARyHwtkg==
-X-Google-Smtp-Source: APXvYqxap5afENutzAXIJdqQWPt1yjQuNGQCgTWfbdOmJcW23+GOHkmuLYerDyc1/OSH+7EtTGqGoQgZtG9xOYRMMP0=
-X-Received: by 2002:a50:c35b:: with SMTP id q27mr39590717edb.98.1566440787056;
- Wed, 21 Aug 2019 19:26:27 -0700 (PDT)
+        Wed, 21 Aug 2019 22:32:44 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4434D2DF;
+        Thu, 22 Aug 2019 04:32:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1566441158;
+        bh=Hi7/uSswDhi9qJmLVXSvk//zJ2fMZhwGx+tnnkHYTRk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=htClZ8PSiifvZURdJJNZ9L8FCTONLwLGgaCuhbvc+5Z2yoOGT/q6U54HsZ+rWlkze
+         3gWaJhl4sbhd8YfRk4s4c1afSXgb9E9OK8YywZNvz9F1+07Tn7wwsw1wvg640c0TtO
+         s1z5ReZ6HUBFfZ2Mb8/ctOWD4Pjk60862tzrDNXQ=
+Date:   Thu, 22 Aug 2019 05:32:32 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com,
+        zyc@rock-chips.com, linux-kernel@vger.kernel.org,
+        tfiga@chromium.org, hans.verkuil@cisco.com,
+        sakari.ailus@linux.intel.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com
+Subject: Re: [PATCH v8 04/14] media: rkisp1: add Rockchip MIPI Synopsys DPHY
+ driver
+Message-ID: <20190822023232.GE17402@pendragon.ideasonboard.com>
+References: <20190730184256.30338-1-helen.koike@collabora.com>
+ <20190730184256.30338-5-helen.koike@collabora.com>
+ <20190807130558.GF822@valkosipuli.retiisi.org.uk>
+ <c61498b0-dd4c-53af-db82-169f8dfdc6bd@collabora.com>
+ <20190815175440.GW5011@pendragon.ideasonboard.com>
+ <28b05c0e-2f68-aecb-536a-c543bcd43de1@collabora.com>
 MIME-Version: 1.0
-References: <20190820020739.8396-1-benchuanggli@gmail.com> <825b02a1-143b-c078-2dbf-26746f1bf160@intel.com>
-In-Reply-To: <825b02a1-143b-c078-2dbf-26746f1bf160@intel.com>
-From:   Ben Chuang <benchuanggli@gmail.com>
-Date:   Thu, 22 Aug 2019 10:26:15 +0800
-Message-ID: <CACT4zj9L_ygfsVPON5j4dz6Tb6ac7tj_okF2VTsq9e3ZhMy15A@mail.gmail.com>
-Subject: Re: [PATCH V5 4/4] mmc: host: sdhci-pci: Add Genesys Logic GL975x support
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Michael K. Johnson" <johnsonm@danlj.org>,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <28b05c0e-2f68-aecb-536a-c543bcd43de1@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry to resend the email because of non-plain text issues.
+Hi Helen,
 
-On Wed, Aug 21, 2019 at 8:30 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 20/08/19 5:07 AM, Ben Chuang wrote:
-> > From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-> >
-> > Add support for the GL9750 and GL9755 chipsets.
-> >
-> > The patches enable v4 mode and wait 5ms after set 1.8V signal enable for
-> > GL9750/GL9755. It fixed the value of SDHCI_MAX_CURRENT register and uses
-> > the vendor tuning flow for GL9750.
-> >
-> > Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-> > Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
-> > Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
-> > ---
-> >  drivers/mmc/host/Makefile         |   2 +-
-> >  drivers/mmc/host/sdhci-pci-core.c |   2 +
-> >  drivers/mmc/host/sdhci-pci-gli.c  | 381 ++++++++++++++++++++++++++++++
-> >  drivers/mmc/host/sdhci-pci.h      |   5 +
-> >  4 files changed, 389 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/mmc/host/sdhci-pci-gli.c
-> >
-> > diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> > index 73578718f119..661445415090 100644
-> > --- a/drivers/mmc/host/Makefile
-> > +++ b/drivers/mmc/host/Makefile
-> > @@ -13,7 +13,7 @@ obj-$(CONFIG_MMC_MXS)               += mxs-mmc.o
-> >  obj-$(CONFIG_MMC_SDHCI)              += sdhci.o
-> >  obj-$(CONFIG_MMC_SDHCI_PCI)  += sdhci-pci.o
-> >  sdhci-pci-y                  += sdhci-pci-core.o sdhci-pci-o2micro.o sdhci-pci-arasan.o \
-> > -                                sdhci-pci-dwc-mshc.o
-> > +                                sdhci-pci-dwc-mshc.o sdhci-pci-gli.o
-> >  obj-$(subst m,y,$(CONFIG_MMC_SDHCI_PCI))     += sdhci-pci-data.o
-> >  obj-$(CONFIG_MMC_SDHCI_ACPI) += sdhci-acpi.o
-> >  obj-$(CONFIG_MMC_SDHCI_PXAV3)        += sdhci-pxav3.o
-> > diff --git a/drivers/mmc/host/sdhci-pci-core.c b/drivers/mmc/host/sdhci-pci-core.c
-> > index 4154ee11b47d..e5835fbf73bc 100644
-> > --- a/drivers/mmc/host/sdhci-pci-core.c
-> > +++ b/drivers/mmc/host/sdhci-pci-core.c
-> > @@ -1682,6 +1682,8 @@ static const struct pci_device_id pci_ids[] = {
-> >       SDHCI_PCI_DEVICE(O2, SEABIRD1, o2),
-> >       SDHCI_PCI_DEVICE(ARASAN, PHY_EMMC, arasan),
-> >       SDHCI_PCI_DEVICE(SYNOPSYS, DWC_MSHC, snps),
-> > +     SDHCI_PCI_DEVICE(GLI, 9750, gl9750),
-> > +     SDHCI_PCI_DEVICE(GLI, 9755, gl9755),
-> >       SDHCI_PCI_DEVICE_CLASS(AMD, SYSTEM_SDHCI, PCI_CLASS_MASK, amd),
-> >       /* Generic SD host controller */
-> >       {PCI_DEVICE_CLASS(SYSTEM_SDHCI, PCI_CLASS_MASK)},
-> > diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
-> > new file mode 100644
-> > index 000000000000..99abb7830e62
-> > --- /dev/null
-> > +++ b/drivers/mmc/host/sdhci-pci-gli.c
-> > @@ -0,0 +1,381 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright (C) 2019 Genesys Logic, Inc.
-> > + *
-> > + * Authors: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-> > + *
-> > + * Version: v0.9.0 (2019-08-08)
-> > + */
-> > +
-> > +#include <linux/pci.h>
-> > +#include <linux/mmc/mmc.h>
-> > +#include <linux/delay.h>
-> > +#include "sdhci.h"
-> > +#include "sdhci-pci.h"
-> > +
-> > +/*  Genesys Logic extra registers */
-> > +#define SDHCI_GLI_9750_WT         0x800
-> > +#define SDHCI_GLI_9750_DRIVING    0x860
-> > +#define SDHCI_GLI_9750_PLL        0x864
-> > +#define SDHCI_GLI_9750_SW_CTRL    0x874
-> > +#define SDHCI_GLI_9750_MISC       0x878
-> > +
-> > +#define SDHCI_GLI_9750_TUNING_CONTROL                0x540
-> > +#define SDHCI_GLI_9750_TUNING_PARAMETERS     0x544
-> > +
-> > +#define GLI_MAX_TUNING_LOOP 40
-> > +
-> > +/* Genesys Logic chipset */
-> > +static void gli_set_9750(struct sdhci_host *host)
-> > +{
-> > +     u32 wt_value = 0;
-> > +     u32 driving_value = 0;
-> > +     u32 pll_value = 0;
-> > +     u32 sw_ctrl_value = 0;
-> > +     u32 misc_value = 0;
-> > +     u32 parameter_value = 0;
-> > +     u32 control_value = 0;
-> > +
-> > +     u16 ctrl2 = 0;
-> > +
-> > +     wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-> > +     if ((wt_value & 0x1) == 0) {
-> > +             wt_value |= 0x1;
-> > +             sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-> > +     }
-> > +
-> > +     driving_value = sdhci_readl(host, SDHCI_GLI_9750_DRIVING);
-> > +     pll_value = sdhci_readl(host, SDHCI_GLI_9750_PLL);
-> > +     sw_ctrl_value = sdhci_readl(host, SDHCI_GLI_9750_SW_CTRL);
-> > +     misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-> > +     parameter_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_PARAMETERS);
-> > +     control_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_CONTROL);
-> > +
-> > +     driving_value &= ~(0x0C000FFF);
-> > +     driving_value |= 0x0C000FFF;
-> > +     sdhci_writel(host, driving_value, SDHCI_GLI_9750_DRIVING);
-> > +
-> > +     sw_ctrl_value |= 0xc0;
-> > +     sdhci_writel(host, sw_ctrl_value, SDHCI_GLI_9750_SW_CTRL);
-> > +
-> > +     // reset the tuning flow after reinit and before starting tuning
->
-> For consistent style, please use C-style comments /* */ rather than //
+On Wed, Aug 21, 2019 at 06:46:15PM -0300, Helen Koike wrote:
+> On 8/15/19 2:54 PM, Laurent Pinchart wrote:
+> > On Wed, Aug 07, 2019 at 10:37:55AM -0300, Helen Koike wrote:
+> >> On 8/7/19 10:05 AM, Sakari Ailus wrote:
+> >>> On Tue, Jul 30, 2019 at 03:42:46PM -0300, Helen Koike wrote:
+> >>>> From: Jacob Chen <jacob2.chen@rock-chips.com>
+> >>>>
+> >>>> This commit adds a subdev driver for Rockchip MIPI Synopsys DPHY driver
+> >>>>
+> >>>> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+> >>>> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+> >>>> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> >>>> [migrate to phy framework]
+> >>>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> >>>> [update for upstream]
+> >>>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> >>>>
+> >>>> ---
+> >>>>
+> >>>> Changes in v8:
+> >>>> - Remove boiler plate license text
+> >>>>
+> >>>> Changes in v7:
+> >>>> - Migrate dphy specific code from
+> >>>> drivers/media/platform/rockchip/isp1/mipi_dphy_sy.c
+> >>>> to drivers/phy/rockchip/phy-rockchip-dphy.c
+> >>>> - Drop support for rk3288
+> >>>> - Drop support for dphy txrx
+> >>>> - code styling and checkpatch fixes
+> >>>>
+> >>>>  drivers/phy/rockchip/Kconfig             |   8 +
+> >>>>  drivers/phy/rockchip/Makefile            |   1 +
+> >>>>  drivers/phy/rockchip/phy-rockchip-dphy.c | 408 +++++++++++++++++++++++
+> >>>>  3 files changed, 417 insertions(+)
+> >>>>  create mode 100644 drivers/phy/rockchip/phy-rockchip-dphy.c
+> >>>>
+> >>>> diff --git a/drivers/phy/rockchip/Kconfig b/drivers/phy/rockchip/Kconfig
+> >>>> index c454c90cd99e..afd072f135e6 100644
+> >>>> --- a/drivers/phy/rockchip/Kconfig
+> >>>> +++ b/drivers/phy/rockchip/Kconfig
+> >>>> @@ -9,6 +9,14 @@ config PHY_ROCKCHIP_DP
+> >>>>  	help
+> >>>>  	  Enable this to support the Rockchip Display Port PHY.
+> >>>>  
+> >>>> +config PHY_ROCKCHIP_DPHY
+> >>>> +	tristate "Rockchip MIPI Synopsys DPHY driver"
+> > 
+> > How much of this PHY is Rockchip-specific ? Would it make sense to turn
+> > it into a Synopsys DPHY driver, with some Rockchip glue ? I suppose this
+> > could always be done later, if needed (and I also suppose there's no
+> > existing driver in drivers/phy/ that support the same Synopsys IP).
+> > 
+> >>>> +	depends on ARCH_ROCKCHIP && OF
+> >>>
+> >>> How about (...) || COMPILE_TEST ?
+> >>>
+> >>>> +	select GENERIC_PHY_MIPI_DPHY
+> >>>> +	select GENERIC_PHY
+> >>>> +	help
+> >>>> +	  Enable this to support the Rockchip MIPI Synopsys DPHY.
+> >>>> +
+> >>>>  config PHY_ROCKCHIP_EMMC
+> >>>>  	tristate "Rockchip EMMC PHY Driver"
+> >>>>  	depends on ARCH_ROCKCHIP && OF
+> >>>> diff --git a/drivers/phy/rockchip/Makefile b/drivers/phy/rockchip/Makefile
+> >>>> index fd21cbaf40dd..f62e9010bcaf 100644
+> >>>> --- a/drivers/phy/rockchip/Makefile
+> >>>> +++ b/drivers/phy/rockchip/Makefile
+> >>>> @@ -1,5 +1,6 @@
+> >>>>  # SPDX-License-Identifier: GPL-2.0
+> >>>>  obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
+> >>>> +obj-$(CONFIG_PHY_ROCKCHIP_DPHY)		+= phy-rockchip-dphy.o
+> >>>>  obj-$(CONFIG_PHY_ROCKCHIP_EMMC)		+= phy-rockchip-emmc.o
+> >>>>  obj-$(CONFIG_PHY_ROCKCHIP_INNO_HDMI)	+= phy-rockchip-inno-hdmi.o
+> >>>>  obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
+> >>>> diff --git a/drivers/phy/rockchip/phy-rockchip-dphy.c b/drivers/phy/rockchip/phy-rockchip-dphy.c
+> >>>> new file mode 100644
+> >>>> index 000000000000..3a29976c2dff
+> >>>> --- /dev/null
+> >>>> +++ b/drivers/phy/rockchip/phy-rockchip-dphy.c
+> >>>> @@ -0,0 +1,408 @@
+> >>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> >>>> +/*
+> >>>> + * Rockchip MIPI Synopsys DPHY driver
+> >>>> + *
+> >>>> + * Based on:
+> >>>> + *
+> >>>> + * Copyright (C) 2016 FuZhou Rockchip Co., Ltd.
+> >>>> + * Author: Yakir Yang <ykk@@rock-chips.com>
+> >>>> + */
+> >>>> +
+> >>>> +#include <linux/clk.h>
+> >>>> +#include <linux/io.h>
+> >>>> +#include <linux/mfd/syscon.h>
+> >>>> +#include <linux/module.h>
+> >>>> +#include <linux/of.h>
+> >>>> +#include <linux/of_device.h>
+> >>>> +#include <linux/phy/phy.h>
+> >>>> +#include <linux/phy/phy-mipi-dphy.h>
+> >>>> +#include <linux/platform_device.h>
+> >>>> +#include <linux/regmap.h>
+> >>>> +
+> >>>> +#define RK3399_GRF_SOC_CON9	0x6224
+> >>>> +#define RK3399_GRF_SOC_CON21	0x6254
+> >>>> +#define RK3399_GRF_SOC_CON22	0x6258
+> >>>> +#define RK3399_GRF_SOC_CON23	0x625c
+> >>>> +#define RK3399_GRF_SOC_CON24	0x6260
+> >>>> +#define RK3399_GRF_SOC_CON25	0x6264
+> >>>> +#define RK3399_GRF_SOC_STATUS1	0xe2a4
+> >>>> +
+> >>>> +#define CLOCK_LANE_HS_RX_CONTROL		0x34
+> >>>> +#define LANE0_HS_RX_CONTROL			0x44
+> >>>> +#define LANE1_HS_RX_CONTROL			0x54
+> >>>> +#define LANE2_HS_RX_CONTROL			0x84
+> >>>> +#define LANE3_HS_RX_CONTROL			0x94
+> >>>> +#define HS_RX_DATA_LANES_THS_SETTLE_CONTROL	0x75
+> >>>> +
+> >>>> +#define MAX_DPHY_CLK 8
+> >>>> +
+> >>>> +#define PHY_TESTEN_ADDR			(0x1 << 16)
+> >>>> +#define PHY_TESTEN_DATA			(0x0 << 16)
+> >>>> +#define PHY_TESTCLK			(0x1 << 1)
+> >>>> +#define PHY_TESTCLR			(0x1 << 0)
+> > 
+> > Maybe s/0x// for the previous four lines ?
+> > 
+> >>>> +#define THS_SETTLE_COUNTER_THRESHOLD	0x04
+> >>>> +
+> >>>> +#define HIWORD_UPDATE(val, mask, shift) \
+> >>>> +	((val) << (shift) | (mask) << ((shift) + 16))
+> > 
+> > As you use this in a single place, I would inline it, possibly with a
+> > small comment that explains what's happening.
+> > 
+> >>>> +
+> >>>> +#define GRF_SOC_CON12                           0x0274
+> >>>> +
+> >>>> +#define GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK   BIT(20)
+> >>>> +#define GRF_EDP_REF_CLK_SEL_INTER               BIT(4)
+> >>>> +
+> >>>> +#define GRF_EDP_PHY_SIDDQ_HIWORD_MASK           BIT(21)
+> >>>> +#define GRF_EDP_PHY_SIDDQ_ON                    0
+> >>>> +#define GRF_EDP_PHY_SIDDQ_OFF                   BIT(5)
+> > 
+> > I would recommend aligning the value of of all macros in the same way.
+> > 
+> >>>> +
+> >>>> +struct hsfreq_range {
+> >>>> +	u32 range_h;
+> > 
+> > The structure would be more compact if you turned this into a u16.
+> > 
+> >>>> +	u8 cfg_bit;
+> >>>> +};
+> >>>> +
+> >>>> +static const struct hsfreq_range rk3399_mipidphy_hsfreq_ranges[] = {
+> >>>> +	{  89, 0x00}, {  99, 0x10}, { 109, 0x20}, { 129, 0x01},
+> >>>> +	{ 139, 0x11}, { 149, 0x21}, { 169, 0x02}, { 179, 0x12},
+> >>>> +	{ 199, 0x22}, { 219, 0x03}, { 239, 0x13}, { 249, 0x23},
+> >>>> +	{ 269, 0x04}, { 299, 0x14}, { 329, 0x05}, { 359, 0x15},
+> >>>> +	{ 399, 0x25}, { 449, 0x06}, { 499, 0x16}, { 549, 0x07},
+> >>>> +	{ 599, 0x17}, { 649, 0x08}, { 699, 0x18}, { 749, 0x09},
+> >>>> +	{ 799, 0x19}, { 849, 0x29}, { 899, 0x39}, { 949, 0x0a},
+> >>>> +	{ 999, 0x1a}, {1049, 0x2a}, {1099, 0x3a}, {1149, 0x0b},
+> >>>> +	{1199, 0x1b}, {1249, 0x2b}, {1299, 0x3b}, {1349, 0x0c},
+> >>>> +	{1399, 0x1c}, {1449, 0x2c}, {1500, 0x3c}
+> > 
+> > Maybe s/{/{ / and s/}/ }/ to give it a bit more air ? :-)
+> > 
+> >>>> +};
+> >>>> +
+> >>>> +static const char * const rk3399_mipidphy_clks[] = {
+> >>>> +	"dphy-ref",
+> >>>> +	"dphy-cfg",
+> >>>> +	"grf",
+> >>>> +};
+> >>>> +
+> >>>> +enum dphy_reg_id {
+> >>>> +	GRF_DPHY_RX0_TURNDISABLE = 0,
+> >>>> +	GRF_DPHY_RX0_FORCERXMODE,
+> >>>> +	GRF_DPHY_RX0_FORCETXSTOPMODE,
+> >>>> +	GRF_DPHY_RX0_ENABLE,
+> >>>> +	GRF_DPHY_RX0_TESTCLR,
+> >>>> +	GRF_DPHY_RX0_TESTCLK,
+> >>>> +	GRF_DPHY_RX0_TESTEN,
+> >>>> +	GRF_DPHY_RX0_TESTDIN,
+> >>>> +	GRF_DPHY_RX0_TURNREQUEST,
+> >>>> +	GRF_DPHY_RX0_TESTDOUT,
+> >>>> +	GRF_DPHY_TX0_TURNDISABLE,
+> >>>> +	GRF_DPHY_TX0_FORCERXMODE,
+> >>>> +	GRF_DPHY_TX0_FORCETXSTOPMODE,
+> >>>> +	GRF_DPHY_TX0_TURNREQUEST,
+> >>>> +	GRF_DPHY_TX1RX1_TURNDISABLE,
+> >>>> +	GRF_DPHY_TX1RX1_FORCERXMODE,
+> >>>> +	GRF_DPHY_TX1RX1_FORCETXSTOPMODE,
+> >>>> +	GRF_DPHY_TX1RX1_ENABLE,
+> >>>> +	GRF_DPHY_TX1RX1_MASTERSLAVEZ,
+> >>>> +	GRF_DPHY_TX1RX1_BASEDIR,
+> >>>> +	GRF_DPHY_TX1RX1_ENABLECLK,
+> >>>> +	GRF_DPHY_TX1RX1_TURNREQUEST,
+> >>>> +	GRF_DPHY_RX1_SRC_SEL,
+> >>>> +	/* rk3288 only */
+> >>>> +	GRF_CON_DISABLE_ISP,
+> >>>> +	GRF_CON_ISP_DPHY_SEL,
+> >>>> +	GRF_DSI_CSI_TESTBUS_SEL,
+> >>>> +	GRF_DVP_V18SEL,
+> >>>> +	/* below is for rk3399 only */
+> >>>> +	GRF_DPHY_RX0_CLK_INV_SEL,
+> >>>> +	GRF_DPHY_RX1_CLK_INV_SEL,
+> >>>> +};
+> >>>> +
+> >>>> +struct dphy_reg {
+> >>>> +	u32 offset;
+> >>>> +	u32 mask;
+> >>>> +	u32 shift;
+> > 
+> > The offset should hold in 16 bits and the mask and shift in 8 bits. That
+> > would save space in the table below.
+> > 
+> >>>> +};
+> >>>> +
+> >>>> +#define PHY_REG(_offset, _width, _shift) \
+> >>>> +	{ .offset = _offset, .mask = BIT(_width) - 1, .shift = _shift, }
+> >>>> +
+> >>>> +static const struct dphy_reg rk3399_grf_dphy_regs[] = {
+> >>>> +	[GRF_DPHY_RX0_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON9, 4, 0),
+> >>>> +	[GRF_DPHY_RX0_CLK_INV_SEL] = PHY_REG(RK3399_GRF_SOC_CON9, 1, 10),
+> >>>> +	[GRF_DPHY_RX1_CLK_INV_SEL] = PHY_REG(RK3399_GRF_SOC_CON9, 1, 11),
+> >>>> +	[GRF_DPHY_RX0_ENABLE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 0),
+> >>>> +	[GRF_DPHY_RX0_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 4),
+> >>>> +	[GRF_DPHY_RX0_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 8),
+> >>>> +	[GRF_DPHY_RX0_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON21, 4, 12),
+> >>>> +	[GRF_DPHY_TX0_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 0),
+> >>>> +	[GRF_DPHY_TX0_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 4),
+> >>>> +	[GRF_DPHY_TX0_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 8),
+> >>>> +	[GRF_DPHY_TX0_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON22, 4, 12),
+> >>>> +	[GRF_DPHY_TX1RX1_ENABLE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 0),
+> >>>> +	[GRF_DPHY_TX1RX1_FORCERXMODE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 4),
+> >>>> +	[GRF_DPHY_TX1RX1_FORCETXSTOPMODE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 8),
+> >>>> +	[GRF_DPHY_TX1RX1_TURNDISABLE] = PHY_REG(RK3399_GRF_SOC_CON23, 4, 12),
+> >>>> +	[GRF_DPHY_TX1RX1_TURNREQUEST] = PHY_REG(RK3399_GRF_SOC_CON24, 4, 0),
+> >>>> +	[GRF_DPHY_RX1_SRC_SEL] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 4),
+> >>>> +	[GRF_DPHY_TX1RX1_BASEDIR] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 5),
+> >>>> +	[GRF_DPHY_TX1RX1_ENABLECLK] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 6),
+> >>>> +	[GRF_DPHY_TX1RX1_MASTERSLAVEZ] = PHY_REG(RK3399_GRF_SOC_CON24, 1, 7),
+> >>>> +	[GRF_DPHY_RX0_TESTDIN] = PHY_REG(RK3399_GRF_SOC_CON25, 8, 0),
+> >>>> +	[GRF_DPHY_RX0_TESTEN] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 8),
+> >>>> +	[GRF_DPHY_RX0_TESTCLK] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 9),
+> >>>> +	[GRF_DPHY_RX0_TESTCLR] = PHY_REG(RK3399_GRF_SOC_CON25, 1, 10),
+> >>>> +	[GRF_DPHY_RX0_TESTDOUT] = PHY_REG(RK3399_GRF_SOC_STATUS1, 8, 0),
+> > 
+> > The annoying part with such an indirection is that you can't really
+> > write multiple fields in a single register with a single operation.
+> > Is the register mapping completely different between the rk3288 and the
+> > rk3399, or are the fields grouped in registers in a similar way ? In the
+> > latter case we could possibly optimise it.
+> 
+> This would be the rk3288 version:
+> 
+> +static const struct dphy_reg rk3288_grf_dphy_regs[] = {
+> +	[GRF_CON_DISABLE_ISP] = PHY_REG(RK3288_GRF_SOC_CON6, 1, 0),
+> +	[GRF_CON_ISP_DPHY_SEL] = PHY_REG(RK3288_GRF_SOC_CON6, 1, 1),
+> +	[GRF_DSI_CSI_TESTBUS_SEL] = PHY_REG(RK3288_GRF_SOC_CON6, 1, 14),
+> +	[GRF_DPHY_TX0_TURNDISABLE] = PHY_REG(RK3288_GRF_SOC_CON8, 4, 0),
+> +	[GRF_DPHY_TX0_FORCERXMODE] = PHY_REG(RK3288_GRF_SOC_CON8, 4, 4),
+> +	[GRF_DPHY_TX0_FORCETXSTOPMODE] = PHY_REG(RK3288_GRF_SOC_CON8, 4, 8),
+> +	[GRF_DPHY_TX1RX1_TURNDISABLE] = PHY_REG(RK3288_GRF_SOC_CON9, 4, 0),
+> +	[GRF_DPHY_TX1RX1_FORCERXMODE] = PHY_REG(RK3288_GRF_SOC_CON9, 4, 4),
+> +	[GRF_DPHY_TX1RX1_FORCETXSTOPMODE] = PHY_REG(RK3288_GRF_SOC_CON9, 4, 8),
+> +	[GRF_DPHY_TX1RX1_ENABLE] = PHY_REG(RK3288_GRF_SOC_CON9, 4, 12),
+> +	[GRF_DPHY_RX0_TURNDISABLE] = PHY_REG(RK3288_GRF_SOC_CON10, 4, 0),
+> +	[GRF_DPHY_RX0_FORCERXMODE] = PHY_REG(RK3288_GRF_SOC_CON10, 4, 4),
+> +	[GRF_DPHY_RX0_FORCETXSTOPMODE] = PHY_REG(RK3288_GRF_SOC_CON10, 4, 8),
+> +	[GRF_DPHY_RX0_ENABLE] = PHY_REG(RK3288_GRF_SOC_CON10, 4, 12),
+> +	[GRF_DPHY_RX0_TESTCLR] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 0),
+> +	[GRF_DPHY_RX0_TESTCLK] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 1),
+> +	[GRF_DPHY_RX0_TESTEN] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 2),
+> +	[GRF_DPHY_RX0_TESTDIN] = PHY_REG(RK3288_GRF_SOC_CON14, 8, 3),
+> +	[GRF_DPHY_TX1RX1_ENABLECLK] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 12),
+> +	[GRF_DPHY_RX1_SRC_SEL] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 13),
+> +	[GRF_DPHY_TX1RX1_MASTERSLAVEZ] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 14),
+> +	[GRF_DPHY_TX1RX1_BASEDIR] = PHY_REG(RK3288_GRF_SOC_CON14, 1, 15),
+> +	[GRF_DPHY_RX0_TURNREQUEST] = PHY_REG(RK3288_GRF_SOC_CON15, 4, 0),
+> +	[GRF_DPHY_TX1RX1_TURNREQUEST] = PHY_REG(RK3288_GRF_SOC_CON15, 4, 4),
+> +	[GRF_DPHY_TX0_TURNREQUEST] = PHY_REG(RK3288_GRF_SOC_CON15, 3, 8),
+> +	[GRF_DVP_V18SEL] = PHY_REG(RK3288_GRF_IO_VSEL, 1, 1),
+> +	[GRF_DPHY_RX0_TESTDOUT] = PHY_REG(RK3288_GRF_SOC_STATUS21, 8, 0),
+> +};
+> 
+> Which seems different mask and shifts from rk3399. If you have any ideas in
+> how to optimize this I would appreciate it.
 
-Thanks. I will use C-style comments to replace // .
+It would be tricky indeed :-( Nevermind for now.
 
->
-> > +     pll_value |= 0x800000; // bit23-1
->
-> Please define bit fields and look at using GENMASK(), BIT(), FIELD_GET(),
-> FIELD_PREP()
->
+> >>>> +};
+> >>>> +
+> >>>> +struct dphy_drv_data {
+> >>>> +	const char * const *clks;
+> >>>> +	int num_clks;
+> > 
+> > This is never negative, you can make it an unsigned int.
+> > 
+> >>>> +	const struct hsfreq_range *hsfreq_ranges;
+> >>>> +	int num_hsfreq_ranges;
+> > 
+> > Same here.
+> > 
+> >>>> +	const struct dphy_reg *regs;
+> >>>> +};
+> >>>> +
+> >>>> +struct rockchip_dphy {
+> >>>> +	struct device *dev;
+> >>>> +	struct regmap *grf;
+> >>>> +	const struct dphy_reg *grf_regs;
+> >>>> +	struct clk_bulk_data clks[MAX_DPHY_CLK];
+> >>>> +
+> >>>> +	const struct dphy_drv_data *drv_data;
+> >>>> +	struct phy_configure_opts_mipi_dphy config;
+> >>>> +};
+> >>>> +
+> >>>> +static inline void write_grf_reg(struct rockchip_dphy *priv,
+> >>>> +				 int index, u8 value)
+> > 
+> > Maybe unsigned int index ?
+> > 
+> >>>> +{
+> >>>> +	const struct dphy_reg *reg = &priv->grf_regs[index];
+> >>>> +	unsigned int val = HIWORD_UPDATE(value, reg->mask, reg->shift);
+> >>>> +
+> >>>> +	WARN_ON(!reg->offset);
+> >>>> +	regmap_write(priv->grf, reg->offset, val);
+> >>>> +}
+> >>>> +
+> >>>> +static void mipidphy0_wr_reg(struct rockchip_dphy *priv,
+> >>>> +			     u8 test_code, u8 test_data)
+> > 
+> > Function (and structure) names have different prefixes, would it make
+> > sense to standardise them ? Maybe rockchip_dphy_ ? Or rk_dphy_ for a
+> > shorter version ? This could become rk_dphy_write_dphy(), and the
+> > previous function rk_dphy_write_grf().
+> > 
+> >>>> +{
+> >>>> +	/*
+> >>>> +	 * With the falling edge on TESTCLK, the TESTDIN[7:0] signal content
+> >>>> +	 * is latched internally as the current test code. Test data is
+> >>>> +	 * programmed internally by rising edge on TESTCLK.
+> >>>> +	 */
+> > 
+> > I've never understood why PHYs tend to have a register named TEST that
+> > contains way more than test data :-)
+> > 
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 1);
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTDIN, test_code);
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTEN, 1);
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 0);
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTEN, 0);
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTDIN, test_data);
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 1);
+> >>>> +}
+> >>>> +
+> >>>> +/* should be move to power_on */
+> > 
+> > s/move/moved/
+> > 
+> > Do you mean merging the two functions together ? What prevents from
+> > doing so ? 
+> 
+> Nothing really, this is a left over command as mipidphy_rx_stream_on() is already
+> being called from power_on, and I don't think we should merge it because
+> in the future we'll probably going to have mipidphy_txrx_stream_on() for dphy1.
 
-Got it. Thanks. I will define bit fields and use these pre-defined macro.
+Fine with me, let's just remove the comment then.
 
-> > +     pll_value &= ~(0x00700000); // bit22:20-0
-> > +
-> > +     misc_value &= ~(0x8); // bit3-0
-> > +     misc_value &= ~(0x4); // bit2-0
-> > +
-> > +     misc_value &= ~(0x70); // bit6:4-0
-> > +     misc_value |= 0x50; // bit6:4-5
-> > +
-> > +     parameter_value &= ~(0x7); // bit2:0-0
-> > +     parameter_value |= 0x1; // bit2:0-1
-> > +
-> > +     control_value &= ~(0x190000); // bit20:19-0, bit16-0
-> > +     control_value |=   0x110000; // bit20:19-b10, bit16-1
-> > +
-> > +     sdhci_writel(host, pll_value, SDHCI_GLI_9750_PLL);
-> > +     sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-> > +
-> > +     // disable tuned clk
-> > +     ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-> > +     ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
-> > +     sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
-> > +
-> > +     // 540 enable tuning parameters control
-> > +     control_value |= 0x10;
-> > +     sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
-> > +
-> > +     // write 544 tuning parameters
-> > +     sdhci_writel(host, parameter_value, SDHCI_GLI_9750_TUNING_PARAMETERS);
-> > +
-> > +     // 540 disable tuning parameters control
-> > +     control_value &= ~0x10;
-> > +     sdhci_writel(host, control_value, SDHCI_GLI_9750_TUNING_CONTROL);
-> > +
-> > +     // clear tuned clk
-> > +     ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-> > +     ctrl2 &= ~SDHCI_CTRL_TUNED_CLK;
-> > +     sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
-> > +
-> > +     udelay(1);
-> > +     wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-> > +     wt_value &= ~0x1;
-> > +     sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-> > +}
-> > +
-> > +static void sdhci_gli_do_reset(struct sdhci_host *host, u8 mask)
-> > +{
-> > +     host->ops->reset(host, mask);
-> > +
-> > +     if (mask & SDHCI_RESET_ALL) {
-> > +             if (host->flags & (SDHCI_USE_SDMA | SDHCI_USE_ADMA)) {
-> > +                     if (host->ops->enable_dma)
-> > +                             host->ops->enable_dma(host);
-> > +             }
-> > +
-> > +             /* Resetting the controller clears many */
-> > +             host->preset_enabled = false;
-> > +     }
-> > +}
-> > +
-> > +static void sdhci_gli_abort_tuning(struct sdhci_host *host, u32 opcode)
->
-> Pleased export sdhci_abort_tuning() instead.
->
+> >>>> +static int mipidphy_rx_stream_on(struct rockchip_dphy *priv)
+> >>>> +{
+> >>>> +	const struct dphy_drv_data *drv_data = priv->drv_data;
+> >>>> +	const struct hsfreq_range *hsfreq_ranges = drv_data->hsfreq_ranges;
+> >>>> +	struct phy_configure_opts_mipi_dphy *config = &priv->config;
+> >>>> +	unsigned int i, hsfreq = 0, data_rate_mbps = config->hs_clk_rate;
+> >>>> +	int num_hsfreq_ranges = drv_data->num_hsfreq_ranges;
+> >>>> +
+> >>>> +	do_div(data_rate_mbps, 1000 * 1000);
+> >>>> +
+> >>>> +	dev_dbg(priv->dev, "%s: lanes %d - data_rate_mbps %u\n",
+> >>>> +		__func__, config->lanes, data_rate_mbps);
+> >>>> +
+> >>>> +	for (i = 0; i < num_hsfreq_ranges; i++) {
+> >>>> +		if (hsfreq_ranges[i].range_h >= data_rate_mbps) {
+> >>>> +			hsfreq = hsfreq_ranges[i].cfg_bit;
+> >>>> +			break;
+> >>>> +		}
+> >>>> +	}
+> > 
+> > As num_hsfreq_ranges and hsfreq_ranges are only used in this loop, I
+> > would remove the local variables.
+> > 
+> >>>> +
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_FORCERXMODE, 0);
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_FORCETXSTOPMODE, 0);
+> >>>> +
+> >>>> +	/* Disable lan turn around, which is ignored in receive mode */
+> > 
+> > Is it "lan turn around", or "lane turn around" ?
+> > 
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TURNREQUEST, 0);
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TURNDISABLE, 0xf);
+> >>>> +
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_ENABLE, GENMASK(config->lanes - 1, 0));
+> >>>> +
+> >>>> +	/* dphy start */
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLK, 1);
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLR, 1);
+> >>>> +	usleep_range(100, 150);
+> >>>> +	write_grf_reg(priv, GRF_DPHY_RX0_TESTCLR, 0);
+> >>>> +	usleep_range(100, 150);
+> >>>> +
+> >>>> +	/* set clock lane */
+> >>>> +	/* HS hsfreq_range & lane 0  settle bypass */
+> >>>> +	mipidphy0_wr_reg(priv, CLOCK_LANE_HS_RX_CONTROL, 0);
+> >>>> +	/* HS RX Control of lane0 */
+> >>>> +	mipidphy0_wr_reg(priv, LANE0_HS_RX_CONTROL, hsfreq << 1);
+> >>>> +	/* HS RX Control of lane1 */
+> >>>> +	mipidphy0_wr_reg(priv, LANE1_HS_RX_CONTROL, 0);
+> >>>> +	/* HS RX Control of lane2 */
+> >>>> +	mipidphy0_wr_reg(priv, LANE2_HS_RX_CONTROL, 0);
+> >>>> +	/* HS RX Control of lane3 */
+> >>>> +	mipidphy0_wr_reg(priv, LANE3_HS_RX_CONTROL, 0);
+> > 
+> > Does this hardcode usage of a single lane ?
+> 
+> Rockchip seems to uses TEST* registers to set the hsfreqrange.
+> It mentions the test code 0x44 (which is LANE0_HS_RX_CONTROL)
+> but it doesn't mention the others lanes.
+> 
+> Replacing those call by
+> mipidphy0_wr_reg(priv, LANEx_HS_RX_CONTROL, hsfreq << 1);
+> seems to be working.
+> 
+> I can check if this changes the datarate (I just need to figure a proper
+> way to test this or get some docs).
+> 
+> Thanks for spotting this.
 
-Got it, thanks. I will export it if I need to use it.
+We've discussed this on IRC, it's not clear if the above code is
+incorrect or not. Let's add this to a list of open issues.
 
-> > +{
-> > +     sdhci_reset_tuning(host);
-> > +
-> > +     sdhci_gli_do_reset(host, SDHCI_RESET_CMD);
-> > +     sdhci_gli_do_reset(host, SDHCI_RESET_DATA);
-> > +
-> > +     sdhci_end_tuning(host);
-> > +
-> > +     mmc_abort_tuning(host->mmc, opcode);
-> > +}
-> > +
-> > +static void gli_set_9750_rx_inv(struct sdhci_host *host, bool b)
-> > +{
-> > +     u32 wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-> > +     u32 misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-> > +
-> > +     if ((wt_value & 0x1) == 0) {
-> > +             wt_value |= 0x1;
-> > +             sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-> > +     }
-> > +
-> > +     misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-> > +     if (b) {
-> > +             misc_value |= 0x8;
-> > +             sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-> > +     } else {
-> > +             misc_value &= ~0x8;
-> > +             sdhci_writel(host, misc_value, SDHCI_GLI_9750_MISC);
-> > +     }
-> > +
-> > +     wt_value = sdhci_readl(host, SDHCI_GLI_9750_WT);
-> > +     wt_value &= ~0x1;
-> > +     sdhci_writel(host, wt_value, SDHCI_GLI_9750_WT);
-> > +}
-> > +
-> > +static int __sdhci_execute_tuning_9750(struct sdhci_host *host, u32 opcode)
-> > +{
-> > +     int i;
-> > +     int rx_inv = 0;
-> > +
-> > +     for (rx_inv = 0; rx_inv < 2; rx_inv++) {
-> > +             if (rx_inv & 0x1)
-> > +                     gli_set_9750_rx_inv(host, true);
-> > +             else
-> > +                     gli_set_9750_rx_inv(host, false);
-> > +
-> > +             sdhci_start_tuning(host);
-> > +
-> > +             for (i = 0; i < GLI_MAX_TUNING_LOOP; i++) {
-> > +                     u16 ctrl;
-> > +
-> > +                     sdhci_send_tuning(host, opcode);
-> > +
-> > +                     if (!host->tuning_done) {
-> > +                             if (rx_inv == 1) {
-> > +                                     pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
-> > +                                             mmc_hostname(host->mmc));
-> > +                                     sdhci_gli_abort_tuning(host, opcode);
-> > +                                     return -ETIMEDOUT;
-> > +                             }
-> > +                             pr_info("%s: Tuning timeout, try next tuning\n",
-> > +                                     mmc_hostname(host->mmc));
-> > +                             sdhci_gli_abort_tuning(host, opcode);
-> > +                             break;
-> > +                     }
-> > +
-> > +                     ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-> > +                     if (!(ctrl & SDHCI_CTRL_EXEC_TUNING)) {
-> > +                             if (ctrl & SDHCI_CTRL_TUNED_CLK)
-> > +                                     return 0; /* Success! */
-> > +                             break;
-> > +                     }
-> > +             }
-> > +     }
-> > +
-> > +     pr_info("%s: Tuning failed, falling back to fixed sampling clock\n",
-> > +             mmc_hostname(host->mmc));
-> > +     sdhci_reset_tuning(host);
-> > +     return -EAGAIN;
-> > +}
-> > +
-> > +static int gl9750_execute_tuning(struct mmc_host *mmc, u32 opcode)
-> > +{
-> > +     struct sdhci_host *host = mmc_priv(mmc);
-> > +     int err = 0;
-> > +     unsigned int tuning_count = 0;
-> > +     bool hs400_tuning;
-> > +
-> > +     hs400_tuning = host->flags & SDHCI_HS400_TUNING;
-> > +
-> > +     if (host->tuning_mode == SDHCI_TUNING_MODE_1)
-> > +             tuning_count = host->tuning_count;
-> > +
-> > +     /*
-> > +      * The Host Controller needs tuning in case of SDR104 and DDR50
-> > +      * mode, and for SDR50 mode when Use Tuning for SDR50 is set in
-> > +      * the Capabilities register.
-> > +      * If the Host Controller supports the HS200 mode then the
-> > +      * tuning function has to be executed.
-> > +      */
-> > +     switch (host->timing) {
-> > +     /* HS400 tuning is done in HS200 mode */
-> > +     case MMC_TIMING_MMC_HS400:
-> > +             err = -EINVAL;
-> > +             goto out;
-> > +
-> > +     case MMC_TIMING_MMC_HS200:
-> > +             /*
-> > +              * Periodic re-tuning for HS400 is not expected to be needed, so
-> > +              * disable it here.
-> > +              */
-> > +             if (hs400_tuning)
-> > +                     tuning_count = 0;
-> > +             break;
-> > +
-> > +     case MMC_TIMING_UHS_SDR104:
-> > +     case MMC_TIMING_UHS_DDR50:
-> > +             break;
-> > +     case MMC_TIMING_UHS_SDR50:
-> > +             if (host->flags & SDHCI_SDR50_NEEDS_TUNING)
-> > +                     break;
-> > +             /* FALLTHROUGH */
-> > +
-> > +     default:
-> > +             goto out;
-> > +     }
-> > +
-> > +     if (host->ops->platform_execute_tuning) {
-> > +             err = host->ops->platform_execute_tuning(host, opcode);
-> > +             goto out;
-> > +     }
-> > +
-> > +     host->mmc->retune_period = tuning_count;
-> > +
-> > +     if (host->tuning_delay < 0)
-> > +             host->tuning_delay = opcode == MMC_SEND_TUNING_BLOCK;
-> > +
-> > +     gli_set_9750(host);
-> > +     host->tuning_err = __sdhci_execute_tuning_9750(host, opcode);
-> > +
-> > +     sdhci_end_tuning(host);
-> > +out:
-> > +     host->flags &= ~SDHCI_HS400_TUNING;
-> > +
-> > +     return err;
-> > +}
-> > +
-> > +static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
-> > +{
-> > +     struct sdhci_host *host = slot->host;
-> > +     struct mmc_host_ops *ops = &host->mmc_host_ops;
-> > +
-> > +     slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-> > +     sdhci_enable_v4_mode(host);
-> > +
-> > +     ops->execute_tuning = gl9750_execute_tuning;
->
-> It looks like there would be less duplicated code if you implemented
-> host->ops->platform_execute_tuning instead of mmc->ops->execute_tuning
+> >>>> +	/* HS RX Data Lanes Settle State Time Control */
+> >>>> +	mipidphy0_wr_reg(priv, HS_RX_DATA_LANES_THS_SETTLE_CONTROL,
+> >>>> +			 THS_SETTLE_COUNTER_THRESHOLD);
+> >>>> +
+> >>>> +	/* Normal operation */
+> >>>> +	mipidphy0_wr_reg(priv, 0x0, 0);
+> >>>> +
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static int rockchip_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
+> >>>> +{
+> >>>> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
+> >>>> +	int ret;
+> >>>> +
+> >>>> +	/* pass with phy_mipi_dphy_get_default_config (with pixel rate?) */
+> > 
+> > I'm not sure to understand what this means.
+> 
+> iirc, the question is if we should fail when phy_mipi_dphy_config_validate() fails,
+> or if we should use a default config.
+> 
+> Looking at other examples, is seems that only two drivers call
+> phy_mipi_dphy_get_default_config() in a totally diferent context, not in mipi path.
+> So I guess I would just remove this comment if this is ok with you.
 
-Thank you for comments.
-I will study host->ops->platform_execute_tuning and use it to reduce
-duplicated code.
+OK.
 
->
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
-> > +{
-> > +     struct sdhci_host *host = slot->host;
-> > +
-> > +     slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-> > +     sdhci_enable_v4_mode(host);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void sdhci_gli_voltage_switch(struct sdhci_host *host)
-> > +{
-> > +     usleep_range(5000, 5500);
-> > +}
-> > +
-> > +static void sdhci_gli_pci_hw_reset(struct sdhci_host *host)
-> > +{
-> > +     struct sdhci_pci_slot *slot = sdhci_priv(host);
-> > +
-> > +     if (slot->hw_reset)
-> > +             slot->hw_reset(host);
-> > +}
-> > +
-> > +static void sdhci_gl9750_reset(struct sdhci_host *host, u8 mask)
-> > +{
-> > +     ktime_t timeout;
-> > +
-> > +     sdhci_writeb(host, mask, SDHCI_SOFTWARE_RESET);
-> > +
-> > +     if (mask & SDHCI_RESET_ALL)
-> > +             host->clock = 0;
-> > +
-> > +     /* Wait max 100 ms */
-> > +     timeout = ktime_add_ms(ktime_get(), 100);
-> > +
-> > +     /* hw clears the bit when it's done */
-> > +     while (1) {
-> > +             bool timedout = ktime_after(ktime_get(), timeout);
-> > +
-> > +             if (!(sdhci_readb(host, SDHCI_SOFTWARE_RESET) & mask))
-> > +                     break;
-> > +             if (timedout) {
-> > +                     pr_err("%s: Reset 0x%x never completed.\n",
-> > +                             mmc_hostname(host->mmc), (int)mask);
-> > +                     sdhci_dumpregs(host);
-> > +                     return;
-> > +             }
-> > +             udelay(10);
-> > +     }
->
-> Please call sdhci_reset() instead of duplicating the code above.
->
+> >>>> +	ret = phy_mipi_dphy_config_validate(&opts->mipi_dphy);
+> >>>> +	if (ret)
+> >>>> +		return ret;
+> >>>> +
+> >>>> +	memcpy(&priv->config, opts, sizeof(priv->config));
+> >>>
+> >>> You could to:
+> >>>
+> >>> 	priv->config = *opts;
+> >>>
+> >>> Up to you. Some people like memcpy(). :-)
+> >>
+> >> your way is better thanks!
+> >>
+> >>>> +
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static int rockchip_dphy_power_on(struct phy *phy)
+> >>>> +{
+> >>>> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
+> >>>> +	int ret;
+> >>>> +
+> >>>> +	ret = clk_bulk_enable(priv->drv_data->num_clks, priv->clks);
+> >>>> +	if (ret)
+> >>>> +		return ret;
+> >>>> +
+> >>>> +	return mipidphy_rx_stream_on(priv);
+> > 
+> > Should you call clk_bulk_disable() if mipidphy_rx_stream_on() fails ?
+> > Actually that function never fails, so I'd make it a void function, and
+> > return 0 here.
+> 
+> Ack, I made it void, I'll send it in the next version.
+> 
+> > What happens if the clock rate is higher than the maximum supported by
+> > the PHY ? Shouldn't rockchip_dphy_configure() fail in that case ?
+> 
+> This is checked in function mipidphy_rx_stream_on(), if it is higher we just
+> configure the maximum supported rate. Is this ok?
 
-Thanks, I will modify it.
+I think it would be better to reject that in rockchip_dphy_configure()
+in order to let the user of the PHY handle the error as early as
+possible.
 
+> >>>> +}
+> >>>> +
+> >>>> +static int rockchip_dphy_power_off(struct phy *phy)
+> >>>> +{
+> >>>> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
+> >>>> +
+> > 
+> > No need to write any register ? That's scary, what will happen on the
+> > next power on, when the clocks gets enabled ?
+> 
+> Just for testing, I hacked the code to only call mipidphy_rx_stream_on() once,
+> when streaming for the first time, then I don't call it anymore and starting/stopping
+> streaming always works, so I guess it keeps the previous configuration when clocks
+> get enabled.
+> I wonder if this can be a problem when switching from dphy rx to txrx, but for now
+> we just support rx.
+> 
+> Maybe just calling rk_dphy_write_grf(priv, GRF_DPHY_RX0_ENABLE, 0) is enough.
 
-> > +     gli_set_9750(host);
-> > +}
-> > +
-> > +static u32 sdhci_gl9750_readl(struct sdhci_host *host, int reg)
-> > +{
-> > +     u32 value;
-> > +
-> > +     value = readl(host->ioaddr + reg);
-> > +     if (unlikely(reg == SDHCI_MAX_CURRENT)) {
-> > +             if (!(value & 0xff))
-> > +                     value |= 0xc8;
-> > +     }
-> > +     return value;
-> > +}
-> > +
-> > +static const struct sdhci_ops sdhci_gl9755_ops = {
-> > +     .set_clock              = sdhci_set_clock,
-> > +     .enable_dma             = sdhci_pci_enable_dma,
-> > +     .set_bus_width          = sdhci_set_bus_width,
-> > +     .reset                  = sdhci_reset,
-> > +     .set_uhs_signaling      = sdhci_set_uhs_signaling,
-> > +     .hw_reset               = sdhci_gli_pci_hw_reset,
->
-> You never set slot->hw_reset so it doesn't look like .hw_reset is needed
+If that works with disable/enable sequences I think it would be good to
+include it.
 
-I will removed it if testing is ok after removing .hw_reset.
+> >>>> +	clk_bulk_disable(priv->drv_data->num_clks, priv->clks);
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static int rockchip_dphy_init(struct phy *phy)
+> >>>> +{
+> >>>> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
+> >>>> +	int ret;
+> >>>> +
+> >>>> +	ret = clk_bulk_prepare(priv->drv_data->num_clks, priv->clks);
+> >>>
+> >>> return ...;
+> >>>
+> >>>> +	if (ret)
+> >>>> +		return ret;
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static int rockchip_dphy_exit(struct phy *phy)
+> >>>> +{
+> >>>> +	struct rockchip_dphy *priv = phy_get_drvdata(phy);
+> >>>> +
+> >>>> +	clk_bulk_unprepare(priv->drv_data->num_clks, priv->clks);
+> >>>> +	return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static const struct phy_ops rockchip_dphy_ops = {
+> >>>> +	.power_on	= rockchip_dphy_power_on,
+> >>>> +	.power_off	= rockchip_dphy_power_off,
+> >>>> +	.init		= rockchip_dphy_init,
+> >>>> +	.exit		= rockchip_dphy_exit,
+> >>>> +	.configure	= rockchip_dphy_configure,
+> >>>> +	.owner		= THIS_MODULE,
+> >>>> +};
+> >>>> +
+> >>>> +static const struct dphy_drv_data rk3399_mipidphy_drv_data = {
+> >>>> +	.clks = rk3399_mipidphy_clks,
+> >>>> +	.num_clks = ARRAY_SIZE(rk3399_mipidphy_clks),
+> >>>> +	.hsfreq_ranges = rk3399_mipidphy_hsfreq_ranges,
+> >>>> +	.num_hsfreq_ranges = ARRAY_SIZE(rk3399_mipidphy_hsfreq_ranges),
+> >>>> +	.regs = rk3399_grf_dphy_regs,
+> >>>
+> >>> Do you expect to support more of the similar PHY(s) --- are there such? If
+> >>> not, you could put these in the code that uses them.
+> >>
+> >> Yes, for rk3288 in the future.
+> >>
+> >>>> +};
+> >>>> +
+> >>>> +static const struct of_device_id rockchip_dphy_dt_ids[] = {
+> >>>> +	{
+> >>>> +		.compatible = "rockchip,rk3399-mipi-dphy",
+> >>>> +		.data = &rk3399_mipidphy_drv_data,
+> >>>> +	},
+> >>>> +	{}
+> >>>> +};
+> >>>> +MODULE_DEVICE_TABLE(of, rockchip_dphy_dt_ids);
+> >>>> +
+> >>>> +static int rockchip_dphy_probe(struct platform_device *pdev)
+> >>>> +{
+> >>>> +	struct device *dev = &pdev->dev;
+> >>>> +	struct device_node *np = dev->of_node;
+> >>>> +	const struct dphy_drv_data *drv_data;
+> >>>> +	struct phy_provider *phy_provider;
+> >>>> +	const struct of_device_id *of_id;
+> >>>> +	struct rockchip_dphy *priv;
+> >>>> +	struct regmap *grf;
+> >>>> +	struct phy *phy;
+> >>>> +	unsigned int i;
+> >>>> +	int ret;
+> >>>> +
+> >>>> +	if (!dev->parent || !dev->parent->of_node)
+> >>>> +		return -ENODEV;
+> >>>> +
+> >>>> +	if (platform_get_resource(pdev, IORESOURCE_MEM, 0)) {
+> >>>> +		dev_err(&pdev->dev, "Rockchip DPHY driver only suports rx\n");
+> > 
+> > You can replace pdev->dev with dev here and below.
+> > 
+> > s/rx/RX mode/ ?
+> > 
+> >>>> +		return -EINVAL;
+> >>>> +	}
+> >>>> +
+> >>>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> >>>> +	if (!priv)
+> >>>> +		return -ENOMEM;
+> >>>> +	priv->dev = dev;
+> >>>> +
+> >>>> +	grf = syscon_node_to_regmap(dev->parent->of_node);
+> >>>> +	if (IS_ERR(grf)) {
+> >>>> +		grf = syscon_regmap_lookup_by_phandle(dev->of_node,
+> >>>> +						      "rockchip,grf");
+> >>>> +		if (IS_ERR(grf)) {
+> >>>> +			dev_err(dev, "Can't find GRF syscon\n");
+> >>>> +			return -ENODEV;
+> >>>> +		}
+> >>>> +	}
+> >>>> +	priv->grf = grf;
+> >>>> +
+> >>>> +	of_id = of_match_device(rockchip_dphy_dt_ids, dev);
+> >>>> +	if (!of_id)
+> >>>> +		return -EINVAL;
+> >>>> +
+> >>>> +	drv_data = of_id->data;
+> >>>> +	priv->grf_regs = drv_data->regs;
+> > 
+> > Do you have to store grf_regs in priv, or could it be accessed through
+> > priv->drv_data->regs ?
+> > 
+> >>>> +	priv->drv_data = drv_data;
+> >>>> +	for (i = 0; i < drv_data->num_clks; i++)
+> >>>> +		priv->clks[i].id = drv_data->clks[i];
+> >>>> +	ret = devm_clk_bulk_get(&pdev->dev, drv_data->num_clks, priv->clks);
+> >>>> +	if (ret)
+> >>>> +		return ret;
+> >>>> +
+> >>>> +	phy = devm_phy_create(dev, np, &rockchip_dphy_ops);
+> >>>> +	if (IS_ERR(phy)) {
+> >>>> +		dev_err(dev, "failed to create phy\n");
+> >>>> +		return PTR_ERR(phy);
+> >>>> +	}
+> >>>> +	phy_set_drvdata(phy, priv);
+> >>>> +
+> >>>> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> >>>> +
+> >>>> +	return PTR_ERR_OR_ZERO(phy_provider);
+> >>>> +}
+> >>>> +
+> >>>> +static struct platform_driver rockchip_dphy_driver = {
+> >>>> +	.probe = rockchip_dphy_probe,
+> >>>> +	.driver = {
+> >>>> +		.name	= "rockchip-mipi-dphy",
+> >>>> +		.of_match_table = rockchip_dphy_dt_ids,
+> >>>> +	},
+> >>>> +};
+> >>>> +module_platform_driver(rockchip_dphy_driver);
+> >>>> +
+> >>>> +MODULE_AUTHOR("Ezequiel Garcia <ezequiel@collabora.com>");
+> >>>> +MODULE_DESCRIPTION("Rockchip MIPI Synopsys DPHY driver");
+> >>>> +MODULE_LICENSE("Dual MIT/GPL");
+> > 
+> > Overall this is quite good, there are only small issues.
+> 
+> Thank you a lot for your review
 
->
-> > +     .voltage_switch         = sdhci_gli_voltage_switch,
-> > +};
-> > +
-> > +const struct sdhci_pci_fixes sdhci_gl9755 = {
-> > +     .quirks         = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
-> > +     .quirks2        = SDHCI_QUIRK2_BROKEN_DDR50,
-> > +     .probe_slot     = gli_probe_slot_gl9755,
-> > +     .ops            = &sdhci_gl9755_ops,
-> > +};
-> > +
-> > +static const struct sdhci_ops sdhci_gl9750_ops = {
-> > +     .read_l                 = sdhci_gl9750_readl,
->
-> You need CONFIG_MMC_SDHCI_IO_ACCESSORS for read_l i.e.
+-- 
+Regards,
 
- I will add the condition define CONFIG_MMC_SDHCI_IO_ACCESSORS to the code.
-
->
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 14d89a108edd..c3bd967d8a1a 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -94,6 +94,7 @@ config MMC_SDHCI_PCI
->         depends on MMC_SDHCI && PCI
->         select MMC_CQHCI
->         select IOSF_MBI if X86
-> +       select MMC_SDHCI_IO_ACCESSORS
->         help
->           This selects the PCI Secure Digital Host Controller Interface.
->           Most controllers found today are PCI devices.
->
-> > +     .set_clock              = sdhci_set_clock,
-> > +     .enable_dma             = sdhci_pci_enable_dma,
-> > +     .set_bus_width          = sdhci_set_bus_width,
-> > +     .reset                  = sdhci_gl9750_reset,
-> > +     .set_uhs_signaling      = sdhci_set_uhs_signaling,
-> > +     .hw_reset               = sdhci_gli_pci_hw_reset,
-> > +     .voltage_switch         = sdhci_gli_voltage_switch,
-> > +};
-> > +
-> > +const struct sdhci_pci_fixes sdhci_gl9750 = {
-> > +     .quirks         = SDHCI_QUIRK_NO_ENDATTR_IN_NOPDESC,
-> > +     .quirks2        = SDHCI_QUIRK2_BROKEN_DDR50,
-> > +     .probe_slot     = gli_probe_slot_gl9750,
-> > +     .ops            = &sdhci_gl9750_ops,
-> > +};
-> > +
-> > diff --git a/drivers/mmc/host/sdhci-pci.h b/drivers/mmc/host/sdhci-pci.h
-> > index e5dc6e44c7a4..738ba5afcc20 100644
-> > --- a/drivers/mmc/host/sdhci-pci.h
-> > +++ b/drivers/mmc/host/sdhci-pci.h
-> > @@ -65,6 +65,9 @@
-> >
-> >  #define PCI_DEVICE_ID_SYNOPSYS_DWC_MSHC 0xc202
-> >
-> > +#define PCI_DEVICE_ID_GLI_9755               0x9755
-> > +#define PCI_DEVICE_ID_GLI_9750               0x9750
-> > +
-> >  /*
-> >   * PCI device class and mask
-> >   */
-> > @@ -185,5 +188,7 @@ int sdhci_pci_enable_dma(struct sdhci_host *host);
-> >  extern const struct sdhci_pci_fixes sdhci_arasan;
-> >  extern const struct sdhci_pci_fixes sdhci_snps;
-> >  extern const struct sdhci_pci_fixes sdhci_o2;
-> > +extern const struct sdhci_pci_fixes sdhci_gl9750;
-> > +extern const struct sdhci_pci_fixes sdhci_gl9755;
-> >
-> >  #endif /* __SDHCI_PCI_H */
-> >
->
-
-Thank you for reviewing.
+Laurent Pinchart
