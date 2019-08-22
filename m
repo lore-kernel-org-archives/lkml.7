@@ -2,122 +2,299 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFD4C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D47C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79DF7233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39DA9233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:52:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rE3mh1Kh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390171AbfHVQsX (ORCPT
+        id S2390179AbfHVQv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:48:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:48996 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731428AbfHVQsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:48:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E40FC28;
-        Thu, 22 Aug 2019 09:48:21 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C2FD3F718;
-        Thu, 22 Aug 2019 09:48:20 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 17:48:15 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>
-Subject: Re: [PATCHv2 0/4] Layerscape: Remove num-lanes property from PCIe
- nodes
-Message-ID: <20190822164815.GA12855@e121166-lin.cambridge.arm.com>
-References: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
+        Thu, 22 Aug 2019 12:51:58 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58768 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730719AbfHVQv6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 12:51:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pTQuSaZ0y064hBW3JcT9xVAG9FaJRln7HthFHLIaxKw=; b=rE3mh1KhRD5albGjLJLcHMxXz
+        uQNpAHKi9fUnp//XhXuJoL1qG+Jm/bqYzByuMFhMko+u1R4QDlgY0r+Ywvs2wPJz0BKm2xaJp8blp
+        2qGz6+QHP1KNkeJR9hOvymZfHbQ8lfGAD6rR5OW39+chPUKnsFI6NuQ8aRoxzAarhX9QfxphtsaWS
+        FHn73cIlD3SxBrvcCOw7SqjQPZL6yMt/5FzvKbAn96rwlAV8FDUTU62D+fzyZm969qbbsRI5xmV67
+        T7xCftbICv7arb4obbaajCzBga5+sgNfPJ9x5B29qcwCY3iALom+N7kFNDJhaRhjnagrs6/pcmF9E
+        DAtVXFinA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i0qJ7-0006C3-3W; Thu, 22 Aug 2019 16:51:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6AA87307145;
+        Thu, 22 Aug 2019 18:50:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7EA2720B74844; Thu, 22 Aug 2019 18:51:25 +0200 (CEST)
+Date:   Thu, 22 Aug 2019 18:51:25 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alessio Balsini <balsini@android.com>
+Cc:     mingo@kernel.org, juri.lelli@redhat.com,
+        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        luca.abeni@santannapisa.it, bristot@redhat.com, dvyukov@google.com,
+        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org,
+        kernel-team@android.com
+Subject: Re: [RFC][PATCH 01/13] sched/deadline: Impose global limits on
+ sched_attr::sched_period
+Message-ID: <20190822165125.GW2369@hirez.programming.kicks-ass.net>
+References: <20190726145409.947503076@infradead.org>
+ <20190726161357.397880775@infradead.org>
+ <20190802172104.GA134279@google.com>
+ <20190805115309.GJ2349@hirez.programming.kicks-ass.net>
+ <20190822122949.GA245353@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820073022.24217-1-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190822122949.GA245353@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 07:28:37AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> On FSL Layerscape SoCs, the number of lanes assigned to PCIe
-> controller is not fixed, it is determined by the selected
-> SerDes protocol. The current num-lanes indicates the max lanes
-> PCIe controller can support up to, instead of the lanes assigned
-> to the PCIe controller. This can result in PCIe link training fail
-> after hot-reset.
-> 
-> Hou Zhiqiang (4):
->   dt-bindings: PCI: designware: Remove the num-lanes from Required
->     properties
->   PCI: dwc: Return directly when num-lanes is not found
->   ARM: dts: ls1021a: Remove num-lanes property from PCIe nodes
->   arm64: dts: fsl: Remove num-lanes property from PCIe nodes
-> 
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 1 -
->  arch/arm/boot/dts/ls1021a.dtsi                            | 2 --
->  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi            | 1 -
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi            | 3 ---
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi            | 6 ------
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi            | 3 ---
->  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi            | 4 ----
->  drivers/pci/controller/dwc/pcie-designware.c              | 6 ++++--
->  8 files changed, 4 insertions(+), 22 deletions(-)
+On Thu, Aug 22, 2019 at 01:29:49PM +0100, Alessio Balsini wrote:
+> Yes, that's exactly what I meant!
+> What about this refactoring?
 
-What a mess.
+Makes sense; and now I spot a race (and sched_rt_handler() from which I
+copied this is susceptible too):
 
-I am going to apply these but first if anyone can explain to
-me what commit 907fce090253 was _supposed_ to to I would
-be grateful, I read it multiple times but I still have not
-understood it. This series does the right thing but why things
-are they way they are in the mainline honestly I have no
-idea, this does not make any sense in the slightest:
+> +int sched_dl_period_handler(struct ctl_table *table, int write,
+> +			    void __user *buffer, size_t *lenp,
+> +			    loff_t *ppos)
+> +{
+> +	unsigned int old_max, old_min;
+> +	static DEFINE_MUTEX(mutex);
+> +	int ret;
+> +
+> +	mutex_lock(&mutex);
+> +	old_max = sysctl_sched_dl_period_max;
+> +	old_min = sysctl_sched_dl_period_min;
+> +
+> +	ret = proc_douintvec(table, write, buffer, lenp, ppos);
 
-ret = of_property_read_u32(np, "num-lanes", &lanes);
-if (ret)
-	lanes = 0;
+Here the sysctl_* values have been changed, interleave with:
 
-/* Set the number of lanes */
-val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
-val &= ~PORT_LINK_MODE_MASK;
-switch (lanes) {
-case 1:
-	val |= PORT_LINK_MODE_1_LANES;
-	break;
-case 2:
-	val |= PORT_LINK_MODE_2_LANES;
-	break;
-case 4:
-	val |= PORT_LINK_MODE_4_LANES;
-	break;
-case 8:
-	val |= PORT_LINK_MODE_8_LANES;
-	break;
-default:
-	dev_err(pci->dev, "num-lanes %u: invalid value\n", lanes);
-	return;
-}
+> +	if (!ret && write) {
+> +		u64 max = (u64)sysctl_sched_dl_period_max * NSEC_PER_USEC;
+> +		u64 min = (u64)sysctl_sched_dl_period_min * NSEC_PER_USEC;
+> +
+> +		if (min < 1ULL << DL_SCALE || max < min) {
+> +			sysctl_sched_dl_period_max = old_max;
+> +			sysctl_sched_dl_period_min = old_min;
+> +			ret = -EINVAL;
+> +		}
+> +	}
+> +	mutex_unlock(&mutex);
+> +
+> +	return ret;
+> +}
 
-why do we need to set lanes to 0 if num-lanes is not present ? To print
-an error message ?
+> @@ -2675,12 +2713,21 @@ bool __checkparam_dl(const struct sched_attr *attr)
+>  	    attr->sched_period & (1ULL << 63))
+>  		return false;
+>  
+> +	period = attr->sched_period;
+> +	if (!period)
+> +		period = attr->sched_deadline;
+> +
+>  	/* runtime <= deadline <= period (if period != 0) */
+> -	if ((attr->sched_period != 0 &&
+> -	     attr->sched_period < attr->sched_deadline) ||
+> +	if (period < attr->sched_deadline ||
+>  	    attr->sched_deadline < attr->sched_runtime)
+>  		return false;
+>  
+> +	max = (u64)READ_ONCE(sysctl_sched_dl_period_max) * NSEC_PER_USEC;
+> +	min = (u64)READ_ONCE(sysctl_sched_dl_period_min) * NSEC_PER_USEC;
 
-I really do not understand this code.
+this, and we're using unvalidated numbers.
 
-Lorenzo
+> +	if (period < min || period > max)
+> +		return false;
+> +
+>  	return true;
+>  }
+
+Something like the completely untested (again, sorry) below ought to
+cure that I think; the same needs doing to sched_rt_handler() I'm
+thinking.
+
+---
+Subject: sched/deadline: Impose global limits on sched_attr::sched_period
+From: Alessio Balsini <balsini@android.com>
+Date: Thu, 22 Aug 2019 13:29:49 +0100
+
+There are two DoS scenarios with SCHED_DEADLINE related to
+sched_attr::sched_period:
+
+ - since access-control only looks at utilization and density, a very
+   large period can allow a very large runtime, which in turn can
+   incur a very large latency to lower priority tasks.
+
+ - for very short periods we can end up spending more time programming
+   the hardware timer than actually running the task.
+
+Mitigate these by imposing limits on the period.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Alessio Balsini <balsini@android.com>
+Cc: rostedt@goodmis.org
+Cc: mingo@kernel.org
+Cc: luca.abeni@santannapisa.it
+Cc: bristot@redhat.com
+Cc: vpillai@digitalocean.com
+Cc: kernel-team@android.com
+Cc: juri.lelli@redhat.com
+Cc: dietmar.eggemann@arm.com
+Cc: dvyukov@google.com
+Cc: tglx@linutronix.de
+---
+ include/linux/sched/sysctl.h |    7 +++++
+ kernel/sched/deadline.c      |   58 +++++++++++++++++++++++++++++++++++++++++--
+ kernel/sysctl.c              |   14 ++++++++++
+ 3 files changed, 77 insertions(+), 2 deletions(-)
+
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -56,6 +56,13 @@ int sched_proc_update_handler(struct ctl
+ extern unsigned int sysctl_sched_rt_period;
+ extern int sysctl_sched_rt_runtime;
+ 
++extern unsigned int sysctl_sched_dl_period_max;
++extern unsigned int sysctl_sched_dl_period_min;
++
++extern int sched_dl_period_handler(struct ctl_table *table, int write,
++		void __user *buffer, size_t *lenp,
++		loff_t *ppos);
++
+ #ifdef CONFIG_UCLAMP_TASK
+ extern unsigned int sysctl_sched_uclamp_util_min;
+ extern unsigned int sysctl_sched_uclamp_util_max;
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -2633,6 +2633,49 @@ void __getparam_dl(struct task_struct *p
+ }
+ 
+ /*
++ * Default limits for DL period: on the top end we guard against small util
++ * tasks still getting ridiculous long effective runtimes, on the bottom end we
++ * guard against timer DoS.
++ */
++unsigned int sysctl_sched_dl_period_max = 1 << 22; /* ~4 seconds */
++unsigned int sysctl_sched_dl_period_min = 100;     /* 100 us */
++
++int sched_dl_period_handler(struct ctl_table *table, int write,
++			    void __user *buffer, size_t *lenp,
++			    loff_t *ppos)
++{
++	unsigned int new_max, new_min;
++	struct ctl_table new_table;
++	static DEFINE_MUTEX(mutex);
++	int ret;
++
++	mutex_lock(&mutex);
++	new_max = sysctl_sched_dl_period_max;
++	new_min = sysctl_sched_dl_period_min;
++	new_table = *table;
++	if (new_table.data == &sysctl_sched_dl_period_max)
++		new_table.data = &new_max;
++	else
++		new_table.data = &new_min;
++
++	ret = proc_douintvec(&new_table, write, buffer, lenp, ppos);
++	if (!ret && write) {
++		u64 max = (u64)new_max * NSEC_PER_USEC;
++		u64 min = (u64)new_min * NSEC_PER_USEC;
++
++		if (min > 1ULL << DL_SCALE && max > min) {
++			WRITE_ONCE(sysctl_sched_dl_period_max, new_max);
++			WRITE_ONCE(sysctl_sched_dl_period_min, new_min);
++		} else {
++			ret = -EINVAL;
++		}
++	}
++	mutex_unlock(&mutex);
++
++	return ret;
++}
++
++/*
+  * This function validates the new parameters of a -deadline task.
+  * We ask for the deadline not being zero, and greater or equal
+  * than the runtime, as well as the period of being zero or
+@@ -2644,6 +2687,8 @@ void __getparam_dl(struct task_struct *p
+  */
+ bool __checkparam_dl(const struct sched_attr *attr)
+ {
++	u64 period, max, min;
++
+ 	/* special dl tasks don't actually use any parameter */
+ 	if (attr->sched_flags & SCHED_FLAG_SUGOV)
+ 		return true;
+@@ -2667,12 +2712,21 @@ bool __checkparam_dl(const struct sched_
+ 	    attr->sched_period & (1ULL << 63))
+ 		return false;
+ 
++	period = attr->sched_period;
++	if (!period)
++		period = attr->sched_deadline;
++
+ 	/* runtime <= deadline <= period (if period != 0) */
+-	if ((attr->sched_period != 0 &&
+-	     attr->sched_period < attr->sched_deadline) ||
++	if (period < attr->sched_deadline ||
+ 	    attr->sched_deadline < attr->sched_runtime)
+ 		return false;
+ 
++	max = (u64)READ_ONCE(sysctl_sched_dl_period_max) * NSEC_PER_USEC;
++	min = (u64)READ_ONCE(sysctl_sched_dl_period_min) * NSEC_PER_USEC;
++
++	if (period < min || period > max)
++		return false;
++
+ 	return true;
+ }
+ 
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -443,6 +443,20 @@ static struct ctl_table kern_table[] = {
+ 		.proc_handler	= sched_rt_handler,
+ 	},
+ 	{
++		.procname	= "sched_deadline_period_max_us",
++		.data		= &sysctl_sched_dl_period_max,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= sched_dl_period_handler,
++	},
++	{
++		.procname	= "sched_deadline_period_min_us",
++		.data		= &sysctl_sched_dl_period_min,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= sched_dl_period_handler,
++	},
++	{
+ 		.procname	= "sched_rr_timeslice_ms",
+ 		.data		= &sysctl_sched_rr_timeslice,
+ 		.maxlen		= sizeof(int),
