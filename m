@@ -2,137 +2,125 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA467C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D989EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC21233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACB3621848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GD8Za+na"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Q+bcAN9B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733090AbfHVJOc (ORCPT
+        id S1731428AbfHVJPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:14:32 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:33187 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfHVJOc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:14:32 -0400
-Received: by mail-pf1-f193.google.com with SMTP id g2so3544152pfq.0;
-        Thu, 22 Aug 2019 02:14:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/bGJNIGeHShUi2KAJrnIfqaAZ76Q6jv5SalNCR03uoY=;
-        b=GD8Za+nahfu3tp60ifZ+TzNV/Gc7aWKBoy5u7inJdjfDv3ymB2vWFu6vh+Tl1WP+UG
-         BoAX6Ro4izBSvkVZO5dyZ9TjfcRMO050Hv45zvqXhgXrs2UiZFfy4CnrZ0YLB0zfcP51
-         lLtA2Pt6KeIjM8pvdC2pn3vHGPHJp4sJ474i39Ij9g778nhvsVoR6LRHf65MpuzkJ9Gb
-         hFPr1GadkjKLZYrT32rtx06Zsx3xNsgOShPAzlSRlqutdN+YqzlFsMPnLVnE6d2w0cGE
-         /TCRwBnwDOflX4L57uKN7sC/USfVMT21usbtwy8jgHdss237aChRIG529Pf5xHqL6HVK
-         wF9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/bGJNIGeHShUi2KAJrnIfqaAZ76Q6jv5SalNCR03uoY=;
-        b=Hrd8V/L4/uXVkAuhpGUAWt7aNTETMKsSCB28Tp2ELbA4VSWQzWvB+8quj/pWy6U+9G
-         ePecPC6k6yJtYKN3welhKNMEWTKDSfRDJ4XB+kcAaCFS+rTiJ0JZbJfPXzVbo2y0s7Wb
-         an1hSc/IgWbmYoOwf9U/mPQ2T40kl4R1UK57e902M6Ow/tFQSZaj2Zt+ya/3K46LMr7E
-         4ZS74WEYqIEfgxS3da3j+V7KdiTkCyH+ONZn49Yc3djw3mvVTFc1G6s0H2xRlRfTXf+0
-         4KgFT4x6SVyOTcb+xys9UWm0NnMvPJJhXGGwC3PC/5PQZwdlgXFwVH0IhwclB/vpPET9
-         J3yw==
-X-Gm-Message-State: APjAAAVKTnq792fZwRXMHV8e5h+wPcasZOMKDAelp1Ww1gKKsItuhxTy
-        kvxTJg7Dya6nxMoPrgCpEbj+rS8Q+efPUdNmSE4=
-X-Google-Smtp-Source: APXvYqzUXOoO7jdGPjAKWz7nXwmlWYmfzAsnoLiS84XqAjcFRWSGZ/WnSNWu1MT5YbHpr7hkfHM0M3VTjLpmlKd9Ct4=
-X-Received: by 2002:a17:90a:fe07:: with SMTP id ck7mr4315418pjb.68.1566465271506;
- Thu, 22 Aug 2019 02:14:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190822053852.239309-1-Tianyu.Lan@microsoft.com> <87zhk1pp9p.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87zhk1pp9p.fsf@vitty.brq.redhat.com>
-From:   Tianyu Lan <lantianyu1986@gmail.com>
-Date:   Thu, 22 Aug 2019 17:14:20 +0800
-Message-ID: <CAOLK0px+=yGoXnGw_e_wC=pVAw+Op5f7dtgjaczLUT_edukfSA@mail.gmail.com>
-Subject: Re: [PATCH] x86/Hyper-V: Fix build error with CONFIG_HYPERV_TSCPAGE=N
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        linux-hyperv@vger.kernel.org,
-        "linux-kernel@vger kernel org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        michael.h.kelley@microsoft.com
+        Thu, 22 Aug 2019 05:15:25 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:48588 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725793AbfHVJPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:15:25 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id 1EAAA411F9;
+        Thu, 22 Aug 2019 09:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1566465322; x=1568279723; bh=xp4rY3o0M1wxzRezMXTNY4/zZ
+        Y+MCsy/eXZ7EF9Njsg=; b=Q+bcAN9BSsRThV9GpNDHrHQDoMM1IB3j9QOV2i2sX
+        rBBn3ufrgMs7oc2FFll6f/+BoXeUG5KN7w8LxDgEvXgQ1nVAytmlaimve+VXjWpN
+        KmozJuWXEWlOsrHz6y0DxBk5hAOmqQYrVHtQCUtAsJ5Cw3excV/RTCIUQKSp9j1d
+        FA=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id r3TcHeHOiQDd; Thu, 22 Aug 2019 12:15:22 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 4877541240;
+        Thu, 22 Aug 2019 12:15:20 +0300 (MSK)
+Received: from localhost.localdomain (172.17.15.69) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Thu, 22 Aug 2019 12:15:20 +0300
+Message-ID: <a022c0590f0fbf22cc8476b5ef3f1c22746429ac.camel@yadro.com>
+Subject: Re: [PATCH 3/3] watchdog/aspeed: add support for dual boot
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        <linux-watchdog@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        "Alexander Amelkin" <a.amelkin@yadro.com>
+Date:   Thu, 22 Aug 2019 12:15:20 +0300
+In-Reply-To: <20190821163220.GA11547@roeck-us.net>
+References: <1f2cd155057e5ab0cdb20a9a11614bbb09bb49ad.camel@yadro.com>
+         <20190821163220.GA11547@roeck-us.net>
+Organization: YADRO
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.17.15.69]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 4:39 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> lantianyu1986@gmail.com writes:
->
-> > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> >
-> > Both Hyper-V tsc page and Hyper-V tsc MSR code use variable
-> > hv_sched_clock_offset for their sched clock callback and so
-> > define the variable regardless of CONFIG_HYPERV_TSCPAGE setting.
->
-> CONFIG_HYPERV_TSCPAGE is gone after my "x86/hyper-v: enable TSC page
-> clocksource on 32bit" patch. Do we still have an issue to fix?
->
-Hi Vtialy:
-             Your patch also fixs the build issue. If it's not
-necessary to have a dedicated patch
-to fix the issue, please ignore it. Thanks.
+On Wed, 2019-08-21 at 09:32 -0700, Guenter Roeck wrote:
+> 
+> > +	writel(WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION,
+> > +			wdt->base + WDT_CLEAR_TIMEOUT_STATUS);
+> > +	wdt->wdd.bootstatus |= WDIOF_EXTERN1;
+> 
+> The variable reflects the _boot status_. It should not change after booting.
 
-> >
-> > Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> > ---
-> > This patch is based on the top of "git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-> > timers/core".
-> >
-> >  drivers/clocksource/hyperv_timer.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-> > index dad8af198e20..c322ab4d3689 100644
-> > --- a/drivers/clocksource/hyperv_timer.c
-> > +++ b/drivers/clocksource/hyperv_timer.c
-> > @@ -22,6 +22,7 @@
-> >  #include <asm/mshyperv.h>
-> >
-> >  static struct clock_event_device __percpu *hv_clock_event;
-> > +static u64 hv_sched_clock_offset __ro_after_init;
-> >
-> >  /*
-> >   * If false, we're using the old mechanism for stimer0 interrupts
-> > @@ -215,7 +216,6 @@ EXPORT_SYMBOL_GPL(hyperv_cs);
-> >  #ifdef CONFIG_HYPERV_TSCPAGE
-> >
-> >  static struct ms_hyperv_tsc_page tsc_pg __aligned(PAGE_SIZE);
-> > -static u64 hv_sched_clock_offset __ro_after_init;
-> >
-> >  struct ms_hyperv_tsc_page *hv_get_tsc_page(void)
-> >  {
->
-> --
-> Vitaly
+Okay, then perhaps may we set 'status' handler for watchdog device and check 
+'status' file? Right now 'bootstatus' and 'status' are same because there is no
+handler for 'status'.
 
+> > +
+> > +	return size;
+> > +}
+> > +static DEVICE_ATTR_WO(access_cs0);
+> > +
+> > +static struct attribute *bswitch_attrs[] = {
+> > +	&dev_attr_access_cs0.attr,
+> > +	NULL
+> > +};
+> > +ATTRIBUTE_GROUPS(bswitch);
+> > +
+> >  static const struct watchdog_ops aspeed_wdt_ops = {
+> >  	.start		= aspeed_wdt_start,
+> >  	.stop		= aspeed_wdt_stop,
+> > @@ -223,6 +248,9 @@ static int aspeed_wdt_probe(struct platform_device
+> > *pdev)
+> >  
+> >  	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
+> >  
+> > +	if (of_property_read_bool(np, "aspeed,alt-boot"))
+> > +		wdt->wdd.groups = bswitch_groups;
+> > +
+> Why does this have to be separate to the existing evaluation of
+> aspeed,alt-boot, and why does the existing code not work ?
+> 
+> Also, is it guaranteed that this does not interfer with existing
+> support for alt-boot ?
 
+It doesn't, it just provides for ast2400 switch to cs0 at side 1(cs1). Problem
+is that only one flash chip(side 1/cs1) is accessible on alternate boot, there
+is citation from the documentation in commit body. So if by some reason side 0
+is corrupted, need to switch into alternate boot to cs1, do the load from it,
+drop that bit to make side 0 accessible and do the flash of first side. On
+ast2500/2600 this problem is solved already, in alternate boot there both flash
+chips are present. It's additional requirement for alternate boot on ast2400, to
+make the possibility to access at all side 0 flash chip after we boot to the
+alternate side.
 
--- 
-Best regards
-Tianyu Lan
