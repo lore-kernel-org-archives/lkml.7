@@ -2,69 +2,111 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CB5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D912C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7129205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A2B8233A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:56:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391204AbfHVSz0 (ORCPT
+        id S1731765AbfHVS4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 14:55:26 -0400
-Received: from mga01.intel.com ([192.55.52.88]:9171 "EHLO mga01.intel.com"
+        Thu, 22 Aug 2019 14:56:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38108 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbfHVSzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 14:55:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 11:55:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,417,1559545200"; 
-   d="scan'208";a="208278528"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by fmsmga002.fm.intel.com with ESMTP; 22 Aug 2019 11:55:22 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 80D85300FFA; Thu, 22 Aug 2019 11:55:22 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 11:55:22 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     kan.liang@linux.intel.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, linux-kernel@vger.kernel.org, eranian@google.com
-Subject: Re: [PATCH V2] perf/x86: Consider pinned events for group validation
-Message-ID: <20190822185522.GE5447@tassilo.jf.intel.com>
-References: <1566488866-5975-1-git-send-email-kan.liang@linux.intel.com>
- <20190822182227.GD5447@tassilo.jf.intel.com>
- <alpine.DEB.2.21.1908222029210.1983@nanos.tec.linutronix.de>
+        id S1726142AbfHVS4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 14:56:01 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6B915300180E;
+        Thu, 22 Aug 2019 18:56:01 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C5F58600CD;
+        Thu, 22 Aug 2019 18:56:00 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Jia He <justin.he@arm.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Subject: Re: [PATCH 2/2] drivers/dax/kmem: give a warning if CONFIG_DEV_DAX_PMEM_COMPAT is enabled
+References: <20190816111844.87442-1-justin.he@arm.com>
+        <20190816111844.87442-3-justin.he@arm.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Thu, 22 Aug 2019 14:55:59 -0400
+In-Reply-To: <20190816111844.87442-3-justin.he@arm.com> (Jia He's message of
+        "Fri, 16 Aug 2019 19:18:44 +0800")
+Message-ID: <x49tva9ni68.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1908222029210.1983@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 22 Aug 2019 18:56:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 08:29:46PM +0200, Thomas Gleixner wrote:
-> On Thu, 22 Aug 2019, Andi Kleen wrote:
-> 
-> > > +	/*
-> > > +	 * Disable interrupts to prevent the events in this CPU's cpuc
-> > > +	 * going away and getting freed.
-> > > +	 */
-> > > +	local_irq_save(flags);
-> > 
-> > I believe it's also needed to disable preemption. Probably should
-> > add a comment, or better an explicit preempt_disable() too.
-> 
-> Preemption is implicit disabled by disabling interrupts.
+Jia He <justin.he@arm.com> writes:
 
-Yes it is, this is more for documentation.
+> commit c221c0b0308f ("device-dax: "Hotplug" persistent memory for use
+> like normal RAM") helps to add persistent memory as normal RAM blocks.
+> But this driver doesn't work if CONFIG_DEV_DAX_PMEM_COMPAT is enabled.
+>
+> Here is the debugging call trace when CONFIG_DEV_DAX_PMEM_COMPAT is
+> enabled.
+> [    4.443730]  devm_memremap_pages+0x4b9/0x540
+> [    4.443733]  dev_dax_probe+0x112/0x220 [device_dax]
+> [    4.443735]  dax_pmem_compat_probe+0x58/0x92 [dax_pmem_compat]
+> [    4.443737]  nvdimm_bus_probe+0x6b/0x150
+> [    4.443739]  really_probe+0xf5/0x3d0
+> [    4.443740]  driver_probe_device+0x11b/0x130
+> [    4.443741]  device_driver_attach+0x58/0x60
+> [    4.443742]  __driver_attach+0xa3/0x140
+>
+> Then the dax0.0 device will be registered as "nd" bus instead of
+> "dax" bus. This causes the error as follows:
+> root@ubuntu:~# echo dax0.0 > /sys/bus/dax/drivers/device_dax/unbind
+> -bash: echo: write error: No such device
+>
+> This gives a warning to notify the user.
+>
+> Signed-off-by: Jia He <justin.he@arm.com>
+> ---
+>  drivers/dax/kmem.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index ad62d551d94e..b77f0e880598 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -93,6 +93,11 @@ static struct dax_device_driver device_dax_kmem_driver = {
+>  
+>  static int __init dax_kmem_init(void)
+>  {
+> +	if (IS_ENABLED(CONFIG_DEV_DAX_PMEM_COMPAT)) {
+> +		pr_warn("CONFIG_DEV_DAX_PMEM_COMPAT is not compatible\n");
+> +		pr_warn("kmem dax driver might not be workable\n");
+> +	}
+> +
+>  	return dax_driver_register(&device_dax_kmem_driver);
+>  }
 
--Andi
+This logic is wrong (and the error message is *very* confusing).  You
+can have the driver configured, but not loaded.  In that case, the kmem
+driver will load and work properly.
+
+When using daxctl to online memory, you already get the following
+message:
+
+libdaxctl: daxctl_dev_disable: dax0.0: error: device model is dax-class
+
+That's still not very helpful.  It would be better if the message
+suggested a fix (like using migrate-device-model).  Vishal?
+
+Cheers,
+Jeff
