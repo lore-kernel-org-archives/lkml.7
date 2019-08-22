@@ -2,81 +2,343 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DBFC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0FFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F51E233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA79233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733240AbfHVL5D (ORCPT
+        id S1733295AbfHVL6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:57:03 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:34132 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731156AbfHVL5C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:57:02 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Ta8EzwU_1566475019;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Ta8EzwU_1566475019)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 22 Aug 2019 19:56:59 +0800
-Subject: Re: [PATCH 00/14] per memcg lru_lock
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>
-References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
- <6ba1ffb0-fce0-c590-c373-7cbc516dbebd@oracle.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <348495d2-b558-fdfd-a411-89c75d4a9c78@linux.alibaba.com>
-Date:   Thu, 22 Aug 2019 19:56:59 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Thu, 22 Aug 2019 07:58:50 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54634 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731156AbfHVL6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 07:58:49 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3DF28E1B4DC5F7842136;
+        Thu, 22 Aug 2019 19:58:42 +0800 (CST)
+Received: from [127.0.0.1] (10.133.211.147) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 22 Aug 2019
+ 19:58:38 +0800
+From:   c00423981 <caomeng5@huawei.com>
+Subject: [PATCH V2] cpustat: print watchdog time and statistics of soft and
+ hard interrupts in soft lockup scenes
+To:     Peter Zijlstra <peterz@infradead.org>
+References: <60319e82-3c2b-ff24-4ba7-4d58048130ff@huawei.com>
+ <20190820110430.GL2332@hirez.programming.kicks-ass.net>
+ <4eb6b499-b6b0-602a-ae89-0c1dceaa5088@huawei.com>
+ <20190821104643.GA2349@hirez.programming.kicks-ass.net>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <hpa@zytor.com>,
+        <x86@kernel.org>, <linux-kernel@vger.kernel.org>
+Message-ID: <40d9fb6d-ac9f-5af2-1726-f824c4d56fa2@huawei.com>
+Date:   Thu, 22 Aug 2019 19:58:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-In-Reply-To: <6ba1ffb0-fce0-c590-c373-7cbc516dbebd@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190821104643.GA2349@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.211.147]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently we cannot determine quickly if a soft lockup occurrs, and
+do not know what the cpu is doing in soft lockup scenes neither.
+
+The new feature adds a new interface(/proc/cpuirqstat) to view
+the statistics of interrupts in real time on a certain cpu, as well as
+the time occupancy of user space, system space and so on. Also, we can
+view the time after the last-time watchdog which is named cpu time.
+If cpu time is longer than twice of watchdot_thresh, a soft lockup occurrs.
+
+The feature enhances the ability of solving problems in soft lockup scenes.
+
+For example, if we want to view the statistics of interrupts on cpu 1, we can
+enter the following command to set the cpu index:
+		echo 1 > /proc/cpuirqstat
+And we can enter the following command to view the statistics:
+		cat /proc/cpuirqstat
+Then, the result is as follows:
+
+cpu index: 1
+cpu time: 2283720189 ns(HZ: 1000)
+occupied: 1000000 us, 3000000 sy, 0 ni, 2269677000 id, 2709000 wa, 0 hi, 0 si, 2000000 st
+softirq:
+         TIMER: 73
+        NET_TX: 10
+        NET_RX: 26
+         BLOCK: 1
+         SCHED: 22
+           RCU: 37
+hardirq:
+     irq(  72): delta     88, total:         0, timer4
+     irq(  73): delta      2, total:         0, resched4
+
+Also, we creat a watchdog thread for each cpu, and the watchdog
+thread is used to check if soft lockup occurs. If so, the statistics
+of interrupts will be printed automatically.
 
 
-在 2019/8/22 上午2:00, Daniel Jordan 写道:
->>
-> 
-> This is system-wide right, not per container?  Even per container, 89 usec isn't much contention over 20 seconds.  You may want to give this a try:
+Signed-off-by: Meng Cao <caomeng5@huawei.com>
+Signed-off-by: Chunmei Xu <xuchunmei@huawei.com>
+Suggested-by: Feilong Lin <linfeilong@kernel.org>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Reviewed-by: Jingxian He <hejingxian@huawei.com>
 
-yes, perf lock show the host info.
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice> 
-> It's also synthetic but it stresses lru_lock more than just anon alloc/free.  It hits the page activate path, which is where we see this lock in our database, and if enough memory is configured lru_lock also gets stressed during reclaim, similar to [1].
+---
+V1->V2
+- fix the broken interfaces: get_idle_time and get_iowait_time
 
-Thanks for the sharing, this patchset can not help the [1] case, since it's just relief the per container lock contention now. Yes, readtwice case could be more sensitive for this lru_lock changes in containers. I may try to use it in container with some tuning. But anyway, aim9 is also pretty good to show the problem and solutions. :)
-> 
-> It'd be better though, as Michal suggests, to use the real workload that's causing problems.  Where are you seeing contention?
+ kernel/cpustat.c | 214 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ kernel/cpustat.h |   7 ++
+ 2 files changed, 221 insertions(+)
+ create mode 100644 kernel/cpustat.c
+ create mode 100644 kernel/cpustat.h
 
-We repeatly create or delete a lot of different containers according to servers load/usage, so normal workload could cause lots of pages alloc/remove. aim9 could reflect part of scenarios. I don't know the DB scenario yet.
+diff --git a/kernel/cpustat.c b/kernel/cpustat.c
+new file mode 100644
+index 0000000..bb16160
+--- /dev/null
++++ b/kernel/cpustat.c
+@@ -0,0 +1,214 @@
++/*
++ * Copyright (C) 2016 Huawei Ltd
++ */
++#include <linux/kernel_stat.h>
++#include <linux/time.h>
++#include <linux/tick.h>
++#include <linux/proc_fs.h>
++#include <linux/seq_file.h>
++
++struct cpustat_info {
++	struct kernel_stat kstat;
++	struct kernel_cpustat cpustat;
++	unsigned long timestamp;
++};
++
++static struct cpustat_info __percpu *cpustat_data;
++
++#define cpustat_last_softirqs(cpu, i)  \
++	(per_cpu_ptr(cpustat_data, (cpu))->kstat.softirqs[i])
++#define cpustat_last_cputime(cpu, i)   \
++	(per_cpu_ptr(cpustat_data, (cpu))->cpustat.cpustat[i])
++#define cpustat_timestamp(cpu)         \
++	(per_cpu_ptr(cpustat_data, (cpu))->timestamp)
++
++static unsigned int cpustat_cpu_num;
++#define cpustat_print(m, args...)	\
++do {					\
++	if (m)				\
++		seq_printf(m, args);	\
++	else				\
++		pr_warn(args);		\
++} while (0)
++
++static u64 cpustat_curr_cputime(int cpu, int index)
++{
++	u64 time;
++	struct kernel_cpustat *kcs = &kcpustat_cpu(cpu);
++
++	if (index == CPUTIME_IDLE)
++		time = get_idle_time(kcs, cpu);
++	else if (index == CPUTIME_IOWAIT)
++		time = get_iowait_time(kcs, cpu);
++	else
++		time = kcpustat_cpu(cpu).cpustat[index];
++
++	return time;
++}
++
++static void cpustat_update_cputime(int cpu)
++{
++	int i;
++
++	for (i = 0; i < NR_STATS; i++)
++		cpustat_last_cputime(cpu, i) = cpustat_curr_cputime(cpu, i);
++
++	cpustat_timestamp(cpu) = ktime_to_ns(ktime_get());
++}
++
++static void cpustat_update_softirq(int cpu)
++{
++	int i;
++
++	for (i = 0; i < NR_SOFTIRQS; i++)
++		cpustat_last_softirqs(cpu, i) = kstat_softirqs_cpu(i, cpu);
++}
++
++static void cpustat_print_softirq(int cpu, struct seq_file *m)
++{
++	int i;
++	unsigned long count;
++
++	cpustat_print(m, "softirq:\n");
++	for (i = 0; i < NR_SOFTIRQS; i++) {
++		count = kstat_softirqs_cpu(i, cpu) -
++			cpustat_last_softirqs(cpu, i);
++		if (count)
++			cpustat_print(m, "%14s: %lu\n", softirq_to_name[i], count);
++	}
++}
++
++static void cpustat_print_hardirq(int cpu, struct seq_file *m)
++{
++	int irq;
++	unsigned long flag = 0;
++	unsigned int stat, diff;
++	struct irq_desc *desc;
++
++	cpustat_print(m, "hardirq:\n");
++	for_each_irq_desc(irq, desc) {
++		if (!desc)
++			continue;
++
++		stat = kstat_irqs_cpu(irq, cpu);
++		diff = kstat_irqs_diff_cpu(irq, cpu);
++		if (diff) {
++			cpustat_print(m, "     irq(%4d): delta %6u, total: %9u, %s\n",
++				irq, diff, stat,
++				desc->action ? desc->action->name : "none");
++			flag++;
++		}
++	}
++	if (flag == 0)
++		cpustat_print(m, "		no hard irqs found.\n");
++}
++
++void cpustat_update_cpu(void)
++{
++	int cpu;
++
++	if (!cpustat_data)
++		return;
++	cpu = smp_processor_id();
++	cpustat_update_cputime(cpu);
++	cpustat_update_softirq(cpu);
++	kstat_irq_update();
++}
++
++static void cpustat_print_cputime(int cpu, struct seq_file *m)
++{
++	int i;
++	unsigned long time;
++	u64 cputime[NR_STATS];
++
++	for (i = 0; i < NR_STATS; i++) {
++		cputime[i] = cpustat_curr_cputime(cpu, i);
++		cputime[i] -= cpustat_last_cputime(cpu, i);
++	}
++
++	time = ktime_to_ns(ktime_get()) - cpustat_timestamp(cpu);
++	cpustat_print(m, "cpu time: %lu ns(HZ: %d)\n", time, HZ);
++	cpustat_print(m, "occupied: %llu us, %llu sy, %llu ni,"
++		" %llu id, %llu wa, %llu hi, %llu si, %llu st\n",
++		cputime[CPUTIME_USER],
++		cputime[CPUTIME_SYSTEM],
++		cputime[CPUTIME_NICE],
++		cputime[CPUTIME_IDLE],
++		cputime[CPUTIME_IOWAIT],
++		cputime[CPUTIME_IRQ],
++		cputime[CPUTIME_SOFTIRQ],
++		cputime[CPUTIME_STEAL]);
++}
++
++void cpustat_print_cpu(void)
++{
++	int cpu;
++
++	if (!cpustat_data)
++		return;
++	cpu = smp_processor_id();
++	cpustat_print_cputime(cpu, NULL);
++	cpustat_print_softirq(cpu, NULL);
++	cpustat_print_hardirq(cpu, NULL);
++}
++
++static ssize_t proc_cpustat_write(struct file *file, const char __user *ubuf,
++		size_t cnt, loff_t *ppos)
++{
++	unsigned int val;
++	int ret;
++
++	ret = kstrtouint_from_user(ubuf, cnt, 0, &val);
++	if (ret) {
++		pr_err("[cpustat]: parse input parameter failed.\n");
++		return ret;
++	}
++
++	if (val >= num_online_cpus())
++		return -EINVAL;
++
++	cpustat_cpu_num = val;
++
++	return cnt;
++}
++
++static int cpustat_proc_show(struct seq_file *m, void *s)
++{
++	unsigned int cpu_num = cpustat_cpu_num;
++
++	if (cpu_num >= num_online_cpus())
++		return -EINVAL;
++
++	cpustat_print(m, "cpu index: %u\n", cpu_num);
++
++	cpustat_print_cputime(cpu_num, m);
++	cpustat_print_softirq(cpu_num, m);
++	cpustat_print_hardirq(cpu_num, m);
++	return 0;
++}
++
++static int proc_cpustat_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, cpustat_proc_show, PDE_DATA(inode));
++}
++
++static const struct file_operations proc_cpustat_file_operations = {
++	.owner		= THIS_MODULE,
++	.open		= proc_cpustat_open,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= single_release,
++	.write		= proc_cpustat_write,
++};
++
++void cpustat_init(void)
++{
++	cpustat_data = __alloc_percpu(sizeof(struct cpustat_info), 8);
++	if (!cpustat_data) {
++		pr_err("alloc percpu cpustat_info fail.\n");
++		return;
++	}
++
++	if (!proc_create("cpuirqstat", S_IRUSR|S_IWUSR, NULL, &proc_cpustat_file_operations)) {
++		pr_err("[cpuirqstat]: create /proc/cpuirqstat failed.\n");
++	}
++}
+diff --git a/kernel/cpustat.h b/kernel/cpustat.h
+new file mode 100644
+index 0000000..7a79ee8
+--- /dev/null
++++ b/kernel/cpustat.h
+@@ -0,0 +1,7 @@
++#ifndef LINUX_CPUSTAT_H
++#define LINUX_CPUSTAT_H
++
++extern void cpustat_init(void);
++extern void cpustat_print_cpu(void);
++extern void cpustat_update_cpu(void);
++#endif
+-- 
+1.8.3.1
 
-> 
->> With this patch series, lruvec->lru_lock show no contentions
->>          &(&lruvec->lru_l...          8          0               0       0               0               0
->>
->> and aim9 page_test/brk_test performance increased 5%~50%.
-> 
-> Where does the 50% number come in?  The numbers below seem to only show ~4% boost.
 
-the Setddev/CoeffVar case has about 50% performance increase. one of container's mmtests result as following:
-
-Stddev    page_test      245.15 (   0.00%)      189.29 (  22.79%)
-Stddev    brk_test      1258.60 (   0.00%)      629.16 (  50.01%)
-CoeffVar  page_test        0.71 (   0.00%)        0.53 (  26.05%)
-CoeffVar  brk_test         1.32 (   0.00%)        0.64 (  51.14%)
 
