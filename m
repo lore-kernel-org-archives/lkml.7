@@ -2,109 +2,88 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155B7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D63C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C282C233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:11:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="WxeWpafP";
-	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="WxeWpafP"
+	by mail.kernel.org (Postfix) with ESMTP id 193C121743
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:12:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391659AbfHVTLV (ORCPT
+        id S2403842AbfHVTMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 15:11:21 -0400
-Received: from fourecks.uuid.uk ([147.135.211.183]:41296 "EHLO
-        fourecks.uuid.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391583AbfHVTLT (ORCPT
+        Thu, 22 Aug 2019 15:12:02 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34442 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732147AbfHVTMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 15:11:19 -0400
-X-Greylist: delayed 525 seconds by postgrey-1.27 at vger.kernel.org; Thu, 22 Aug 2019 15:11:18 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-        Message-ID:Cc:Subject:From:To;
-        bh=OAlRsLcjaZiy9hKBh4Dzu9JGtVQv9+nMxxcC4DwGtVc=; b=WxeWpafPxyTD/Yx7uU7/sVPyES
-        vLEuatVHlSYt+cCWxhfhhN23j7A70drAHiB+TXncxIcFyuEa3u36xtIBsDozkVP28e4ED8s7s7P1+
-        F7URB9xp+J/Nh6kLGS4obyb/hB+wVfuR2FGaGFpbMwmy+0lauGf0+aewEkTfc6+j2ObVrFy8SPoxD
-        PazRuOaSxNbpy3KyV87drDdEXHuiB1r8GVDtfGj9zakVnrGkm5o/1nghdoGPgfY/aP3k/5RONooj+
-        k1csNBgvOoM/J+UqALUCu1lQ/wmDSp/nI9P2gHeHwXDrvpiRwnkkPzERJsL7XpyINscj50hqEC1lr
-        iwusU9IQ==;
-Received: by fourecks.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1i0sLd-0002LD-Cb; Thu, 22 Aug 2019 20:02:27 +0100
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
-        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
-        Message-ID:Cc:Subject:From:To;
-        bh=OAlRsLcjaZiy9hKBh4Dzu9JGtVQv9+nMxxcC4DwGtVc=; b=WxeWpafPxyTD/Yx7uU7/sVPyES
-        vLEuatVHlSYt+cCWxhfhhN23j7A70drAHiB+TXncxIcFyuEa3u36xtIBsDozkVP28e4ED8s7s7P1+
-        F7URB9xp+J/Nh6kLGS4obyb/hB+wVfuR2FGaGFpbMwmy+0lauGf0+aewEkTfc6+j2ObVrFy8SPoxD
-        PazRuOaSxNbpy3KyV87drDdEXHuiB1r8GVDtfGj9zakVnrGkm5o/1nghdoGPgfY/aP3k/5RONooj+
-        k1csNBgvOoM/J+UqALUCu1lQ/wmDSp/nI9P2gHeHwXDrvpiRwnkkPzERJsL7XpyINscj50hqEC1lr
-        iwusU9IQ==;
-Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <simon@octiron.net>)
-        id 1i0sLN-0006jX-Ag; Thu, 22 Aug 2019 20:02:10 +0100
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Simon Arlott <simon@octiron.net>
-Subject: [PATCH] mailmap: Add Simon Arlott (replacement for expired email
- address)
-Cc:     trivial@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Message-ID: <ab8c62db-b207-9aa1-e99c-16f9eb4152df@simon.arlott.org.uk>
-Date:   Thu, 22 Aug 2019 20:01:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 15:12:01 -0400
+Received: by mail-qt1-f194.google.com with SMTP id q4so8970757qtp.1;
+        Thu, 22 Aug 2019 12:12:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fb2qwZYsSzxhGRR5mo2zpxAtspNTusEf9sR5Gv8Wr0w=;
+        b=pbxKW2Wq8ozKXk1AjQ0mKJp6ifr7KAHxIaLtad7RSOq9eHi42/Pz7fgajmpFp7nr/p
+         ew30UMH3oZfrK15Tip2g3tkZlKEGRNTflzUC1wd+fHZeKolMNjYsW+EP4QdyTZlqaWL7
+         VzsPQF69g9dCK+2mVWTOtrBgTv0BxmsXerNVMU5HRKDsKGu5GaOaEYATkn37qrijuuU9
+         OixFqWrjuAPbhOihNA4oeRf6Msl4iv6n7P5U/j7lNGAHvEeUgGkHGxK0vY9Tj37vVZrV
+         l8549p7C7NuBT173DIBnSvW3jHYbCo+fVAGHSVUb/MmDVhGhJtC8Hb29QOSbLrNoH0v7
+         H23Q==
+X-Gm-Message-State: APjAAAWnsoRAp2dNirUbtJQ98JjiAhQGagEFm3/HycQDzY1WVaKIQNcQ
+        R1kO8vwTW2zB5FTz5mwrk66UtkABvEAdbM8SrVE=
+X-Google-Smtp-Source: APXvYqx1AMqI9CgyyZgqTV3YCcQ8BJ60y0NK4/Q/PHkzZ0zdX2ddG7itfNLle3CCeAzbO68hX/6eptJKTEUE5tWG7Ig=
+X-Received: by 2002:ac8:f99:: with SMTP id b25mr1258325qtk.142.1566501120558;
+ Thu, 22 Aug 2019 12:12:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+References: <1566461871-21992-1-git-send-email-ayal@mellanox.com>
+ <20190822140635.GH13020@lunn.ch> <20190822174037.GA18030@splinter>
+In-Reply-To: <20190822174037.GA18030@splinter>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 22 Aug 2019 21:11:42 +0200
+Message-ID: <CAK8P3a2mQHvQKzWSKofBPdzFDTZq9oJkDHqR2PR85Hswocy45g@mail.gmail.com>
+Subject: Re: [net] devlink: Add method for time-stamp on reporter's dump
+To:     Ido Schimmel <idosch@idosch.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Aya Levin <ayal@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add replacement email address for the one on my expired domain.
+On Thu, Aug 22, 2019 at 7:40 PM Ido Schimmel <idosch@idosch.org> wrote:
+> On Thu, Aug 22, 2019 at 04:06:35PM +0200, Andrew Lunn wrote:
+> > On Thu, Aug 22, 2019 at 11:17:51AM +0300, Aya Levin wrote:
+> > > When setting the dump's time-stamp, use ktime_get_real in addition to
+> > > jiffies. This simplifies the user space implementation and bypasses
+> > > some inconsistent behavior with translating jiffies to current time.
+> >
+> > Is this year 2038 safe? I don't know enough about this to answer the
+> > question myself.
+>
+> Good point. 'struct timespec' is not considered year 2038 safe and
+> unfortunately I recently made the mistake of using it to communicate
+> timestamps to user space over netlink. :/ The code is still in net-next,
+> so I will fix it while I can.
+>
+> Arnd, would it be acceptable to use 'struct __kernel_timespec' instead?
 
-Signed-off-by: Simon Arlott <simon@octiron.net>
----
-I'd prefer not to be in this "list of email addresses to spam" but it
-appears to be the only way to stop people searching for other addresses
-to misuse after I had to let my domain expire:
+The in-kernel representation should just use 'timespec64' if you need
+separate seconds and nanoseconds, you can convert that to
+__kernel_timespec while copying to user space.
 
-"Where, as of the withdrawal date and as a result of the withdrawal of
-the United Kingdom, a holder of a domain name does no longer fulfil the
-general eligibility criteria pursuant to Article 4(2)(b) of Regulation
-(EC) 733/2002, the Registry for .eu will be entitled to revoke such
-domain name on its own initiative and without submitting the dispute to
-any extrajudicial settlement of conflicts in accordance with point (b)
-of Article 20, first subparagraph, of Commission Regulation (EC) No
-874/2004."
+However, please consider two other points:
 
- .mailmap | 1 +
- 1 file changed, 1 insertion(+)
+- for simplicity, the general recommendation is to use 64-bit nanoseconds
+  without separate seconds for timestamps
+- instead of CLOCK_REALTIME, you could use CLOCK_MONOTONIC
+  timestamps that are not affected by clock_settime() or leap second jumps.
 
-diff --git a/.mailmap b/.mailmap
-index acba1a6163f1..468e328ee572 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -214,6 +214,7 @@ Shuah Khan <shuah@kernel.org> <shuahkhan@gmail.com>
- Shuah Khan <shuah@kernel.org> <shuah.khan@hp.com>
- Shuah Khan <shuah@kernel.org> <shuahkh@osg.samsung.com>
- Shuah Khan <shuah@kernel.org> <shuah.kh@samsung.com>
-+Simon Arlott <simon@octiron.net> <simon@fire.lp0.eu>
- Simon Kelley <simon@thekelleys.org.uk>
- Stéphane Witzmann <stephane.witzmann@ubpmes.univ-bpclermont.fr>
- Stephen Hemminger <shemminger@osdl.org>
--- 
-2.17.1
-
--- 
-Simon Arlott
+      Arnd
