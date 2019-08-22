@@ -2,540 +2,94 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596B7C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8BCC3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACB022CF7
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207F22145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Cf9CApzJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4ozXsYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730842AbfHVD0h (ORCPT
+        id S1730459AbfHVDcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 23:26:37 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46977 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbfHVD0h (ORCPT
+        Wed, 21 Aug 2019 23:32:02 -0400
+Received: from mail-qk1-f171.google.com ([209.85.222.171]:35898 "EHLO
+        mail-qk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729135AbfHVDcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 23:26:37 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m3so2594311pgv.13
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 20:26:36 -0700 (PDT)
+        Wed, 21 Aug 2019 23:32:01 -0400
+Received: by mail-qk1-f171.google.com with SMTP id d23so3912181qko.3;
+        Wed, 21 Aug 2019 20:32:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MCCskUXcrLlS5LTvVhURJAIX531PoVJ3wIvkbzzRBQk=;
-        b=Cf9CApzJnmHgZO/G8erfps/1ZvmfBBRlVQePSnZaeLyc5NT/ek+5kg+4tXORFNlOVP
-         xABL1S0jWhMNkF0vDkxMyMaHZa02dsBQOiIebT1xYkYdPhmu/IR8vzGB8HaYbRo2Demf
-         gG/v5NuBJBWX1ddhi9rSh+9HSd40kf3VY7E+X/oXwrbhv5Zrx8I5EvXwwmsZNxFMLYxl
-         Str4mHqzxaTA5ScfiKLIieFPaVS6g3IjgJ1FF7nG/zV5fzSKe1h2YcZwITppAbte7Kl8
-         KPv8HZehE4T3IBDkvkRJ9MnjUS6jvMrA0jUHCHfNOfLU792kDMnl6lZP29KLPWl8YJJm
-         iVXw==
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=UIoftVC7LBAw37MnDnt/TcuIgjHWo/AAuAOTs4kPi64=;
+        b=T4ozXsYlsqg+FqmlDhDACxtha3DXnmhopkQrh8TtP2IQHmxukmzjU2IorUOb6WnKpc
+         AqCdfYwKkpD+qm7ZT5mG/IcCzh3rw09DiBscZf3aadk7wdzswevNs7cHhUZwTHaW9FTi
+         5n1wkxRH8gCp4PbiAtJx8VUnS3kukeW64Tp7TzZMsQaSdakAUUDAORBBQ5mqmKaR4vLC
+         uQXG1yCQ25WTRnNxusVgFx+CYfhFd85TsFq2DhYc7Ugc8wn/a/rJGZDhCRHtTBh1/K1v
+         bfcxNhkbJIVovZtYY/2GBhkKgac28H5DFBINg1OC2BysRXQ8etTtD6A6JvoyMSfXlhTu
+         85bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MCCskUXcrLlS5LTvVhURJAIX531PoVJ3wIvkbzzRBQk=;
-        b=giAxN797NTHAj+qeBDFUxBweaWZLbCBBSBqtf4x+H8b47PmvlV8wIXif2rUfjpA1Lr
-         U+COucH7Th55vhu7dKjBGwgAOgvJDwZE0+hT8aVDwvbZzauMvZfRndG+93ldhKzO8qRx
-         N/ZEUxtH4B7L9T/PlyYyook2EoT5PqBJK8MzTAokzwneZXJI7zhpcX2hvf2Yr6jTekb9
-         0gQ25nO7NF6EBpkhDglxCg5G7Id393JpwFwPvIh1GpShQAl6u8uvt6aOiDnt1wMtdj/X
-         /6ykqouhYBe9VmiCrDt4kvhmWguXNNdqUS049FZ+TndrZUHA9m83bSfbJUoOi1oh29qb
-         GjZA==
-X-Gm-Message-State: APjAAAXA4MbaMXuc/kYuLmYGGRZ36mJD50lQoEIOYbVbF2VtW1dnJPd9
-        gOXfFp0gl6XKzLj7FSuFzGnRKvBSpgEguubTQVx6wQ==
-X-Google-Smtp-Source: APXvYqz2loRqruDuM7e43KFj1CzylFU4nts4tf2nXoZmvL2wydu05AszEJXWA9k4ezQgjHdwi2xc76rBACxA+pL0V2Q=
-X-Received: by 2002:a65:690b:: with SMTP id s11mr27819692pgq.10.1566444395734;
- Wed, 21 Aug 2019 20:26:35 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UIoftVC7LBAw37MnDnt/TcuIgjHWo/AAuAOTs4kPi64=;
+        b=o4oaetGs3g/rAakKSLXa48Tvvnmmw0OBiBzzN9856KaSlnMgBgQ6hZe5bfMttsI6kg
+         qEleUTw/WLF0m8akt+9zbUx4thDhMfDGkPTHLZsHWaxcB04M28Czn1roe4EjqmMxIgtH
+         fup5G6H9pxCIA53dDB1gM2b187OttRGM1NUMPnIIsAYDab6ZrmTomQo3Va9ZlwkROWQk
+         11gTm6yfM6uTzIMuy74eh4t4vhrYa5zh1cbJdC4g7+lpijJYkPmnKQ6gooHkFJ4wciCh
+         Y02auNoEzHDJp/WIbWduAgEJZ647boVPFStVZF2hKWCcDyNoJrvZL06h1wzuVrbtM3+K
+         HdCw==
+X-Gm-Message-State: APjAAAWpmjW7S2K7WthHQaqU94bkhSdGHN6eVESEwcLzcqpiIvsMS4q2
+        nBbeNA1cEjDpRVGPFbpe3LU=
+X-Google-Smtp-Source: APXvYqweYGEq09uXOhH+BQCSSJUCYM+eYQ8nwj9/pPcLK7kpk9M0Gz+m8Q1CkjOzDgP+tLuEX2kNqw==
+X-Received: by 2002:a37:a10:: with SMTP id 16mr33425377qkk.335.1566444720358;
+        Wed, 21 Aug 2019 20:32:00 -0700 (PDT)
+Received: from Davids-MacBook-Pro.local ([2604:2000:e8c5:d400:18a2:a8d5:6394:8e1f])
+        by smtp.googlemail.com with ESMTPSA id h66sm11118817qke.61.2019.08.21.20.31.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 21 Aug 2019 20:31:59 -0700 (PDT)
+Subject: Re: KMSAN: uninit-value in rtm_new_nexthop
+To:     syzbot <syzbot+4f3abbb335d1bed2287c@syzkaller.appspotmail.com>,
+        davem@davemloft.net, dsahern@kernel.org, glider@google.com,
+        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        yoshfuji@linux-ipv6.org
+References: <000000000000276f580590a83ac2@google.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <b6b5081d-0abe-2c39-27ee-c957996d4fc4@gmail.com>
+Date:   Wed, 21 Aug 2019 23:31:57 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <CAJkfWY4cHz+i8kYg2i1Krs-32nh7-WQU+psT=DRGYnTje6yj4Q@mail.gmail.com>
- <20190821174619.21935-1-nhuck@google.com>
-In-Reply-To: <20190821174619.21935-1-nhuck@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 21 Aug 2019 20:26:23 -0700
-Message-ID: <CAKwvOd=wKUhnWr4UhVvgn6NYh+=zQOpMmKG9d_zEqaKLa4_9FA@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: UNWINDER_FRAME_POINTER implementation for Clang
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        =?UTF-8?B?TWlsZXMgQ2hlbiAo6Zmz5rCR5qi6KQ==?= 
-        <miles.chen@mediatek.com>, Tri Vo <trong@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <000000000000276f580590a83ac2@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 10:46 AM Nathan Huckleberry <nhuck@google.com> wrote:
->
-> The stackframe setup when compiled with clang is different.
-> Since the stack unwinder expects the gcc stackframe setup it
-> fails to print backtraces. This patch adds support for the
-> clang stackframe setup.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/35
-> Cc: clang-built-linux@googlegroups.com
-> Suggested-by: Tri Vo <trong@google.com>
-> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> ---
-> Changes from v1->v2
-> * Fix indentation in various files
-> * Swap spaces for tabs
-> * Rename Ldsi to Lopcode
-> * Remove unused Ldsi entry
->
->  arch/arm/Kconfig.debug         |   2 +-
->  arch/arm/Makefile              |   5 +-
->  arch/arm/lib/Makefile          |   8 +-
->  arch/arm/lib/backtrace-clang.S | 229 +++++++++++++++++++++++++++++++++
->  4 files changed, 241 insertions(+), 3 deletions(-)
->  create mode 100644 arch/arm/lib/backtrace-clang.S
->
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index 85710e078afb..b9c674ec19e0 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -56,7 +56,7 @@ choice
->
->  config UNWINDER_FRAME_POINTER
->         bool "Frame pointer unwinder"
-> -       depends on !THUMB2_KERNEL && !CC_IS_CLANG
-> +       depends on !THUMB2_KERNEL
->         select ARCH_WANT_FRAME_POINTERS
->         select FRAME_POINTER
->         help
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index c3624ca6c0bc..6f251c201db0 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -36,7 +36,10 @@ KBUILD_CFLAGS        += $(call cc-option,-mno-unaligned-access)
->  endif
->
->  ifeq ($(CONFIG_FRAME_POINTER),y)
-> -KBUILD_CFLAGS  +=-fno-omit-frame-pointer -mapcs -mno-sched-prolog
-> +KBUILD_CFLAGS  +=-fno-omit-frame-pointer
-> +ifeq ($(CONFIG_CC_IS_GCC),y)
-> +KBUILD_CFLAGS += -mapcs -mno-sched-prolog
-> +endif
->  endif
->
->  ifeq ($(CONFIG_CPU_BIG_ENDIAN),y)
-> diff --git a/arch/arm/lib/Makefile b/arch/arm/lib/Makefile
-> index b25c54585048..6d2ba454f25b 100644
-> --- a/arch/arm/lib/Makefile
-> +++ b/arch/arm/lib/Makefile
-> @@ -5,7 +5,7 @@
->  # Copyright (C) 1995-2000 Russell King
->  #
->
-> -lib-y          := backtrace.o changebit.o csumipv6.o csumpartial.o   \
-> +lib-y          := changebit.o csumipv6.o csumpartial.o               \
->                    csumpartialcopy.o csumpartialcopyuser.o clearbit.o \
->                    delay.o delay-loop.o findbit.o memchr.o memcpy.o   \
->                    memmove.o memset.o setbit.o                        \
-> @@ -19,6 +19,12 @@ lib-y                := backtrace.o changebit.o csumipv6.o csumpartial.o   \
->  mmu-y          := clear_user.o copy_page.o getuser.o putuser.o       \
->                    copy_from_user.o copy_to_user.o
->
-> +ifdef CONFIG_CC_IS_CLANG
-> +  lib-y        += backtrace-clang.o
-> +else
-> +  lib-y        += backtrace.o
-> +endif
-> +
->  # using lib_ here won't override already available weak symbols
->  obj-$(CONFIG_UACCESS_WITH_MEMCPY) += uaccess_with_memcpy.o
->
-> diff --git a/arch/arm/lib/backtrace-clang.S b/arch/arm/lib/backtrace-clang.S
-> new file mode 100644
-> index 000000000000..6f2a8a57d0fb
-> --- /dev/null
-> +++ b/arch/arm/lib/backtrace-clang.S
-> @@ -0,0 +1,229 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + *  linux/arch/arm/lib/backtrace-clang.S
-> + *
-> + *  Copyright (C) 2019 Nathan Huckleberry
-> + *
-> + */
-> +#include <linux/kern_levels.h>
-> +#include <linux/linkage.h>
-> +#include <asm/assembler.h>
-> +               .text
-> +
-> +/* fp is 0 or stack frame */
-> +
-> +#define frame  r4
-> +#define sv_fp  r5
-> +#define sv_pc  r6
-> +#define mask   r7
-> +#define sv_lr  r8
-> +
-> +ENTRY(c_backtrace)
-> +
-> +#if !defined(CONFIG_FRAME_POINTER) || !defined(CONFIG_PRINTK)
-> +               ret     lr
-> +ENDPROC(c_backtrace)
-> +#else
-> +
-> +
-> +/*
-> + * Clang does not store pc or sp in function prologues
-> + * so we don't know exactly where the function
-> + * starts.
+On 8/21/19 6:38 PM, syzbot wrote:
+> ==================================================================
+> BUG: KMSAN: uninit-value in rtm_to_nh_config net/ipv4/nexthop.c:1317
+> [inline]
+> BUG: KMSAN: uninit-value in rtm_new_nexthop+0x447/0x98e0
+> net/ipv4/nexthop.c:1474
 
-To quickly re-wrap text (if you're using vim) such as with comments like these:
-shift+v (VISUAL LINE MODE)
-j or k to highlight lines
-gq (to rewrap)
-You may need `set cc=80` (not sure).
+I believed this is fixed in net by commit:
 
-> + *
-> + * We can treat the current frame's lr as the saved pc and the
-> + * preceding frame's lr as the current frame's lr,
-> + * but we can't trace the most recent call.
-> + * Inserting a false stack frame allows us to reference the
-> + * function called last in the stacktrace.
-> + *
-> + * If the call instruction was a bl we can look at the callers
-> + * branch instruction to calculate the saved pc.
-> + * We can recover the pc in most cases, but in cases such as
-> + * calling function pointers we cannot. In this
-> + * case, default to using the lr. This will be
-> + * some address in the function, but will not
-> + * be the function start.
-> + *
-> + * Unfortunately due to the stack frame layout we can't dump
-> + *              r0 - r3, but these are less frequently saved.
+Author: David Ahern <dsahern@gmail.com>
+Date:   Mon Aug 12 13:07:07 2019 -0700
 
-I guess if they were spilled, but I'm ok with this; I'd rather have a
-working unwinder than disabled config.  The printing is a debug
-feature that's nice to have, but the main focus should be unwinding.
-We can always revisit improving support.
+    netlink: Fix nlmsg_parse as a wrapper for strict message parsing
 
-> + *
-> + * Stack frame layout:
-> + *             <larger addresses>
-> + *             saved lr
-> + *     frame=> saved fp
-> + *             optionally saved caller registers (r4 - r10)
-> + *             optionally saved arguments (r0 - r3)
-> + *             <top of stack frame>
-> + *             <smaller addresses>
-> + *
-> + * Functions start with the following code sequence:
-> + * corrected pc =>  stmfd sp!, {..., fp, lr}
-> + *             add fp, sp, #x
-> + *             stmfd sp!, {r0 - r3} (optional)
-> + *
-> + *
-> + *
-> + *
-> + *
-> + *
-> + * The diagram below shows an example stack setup
-> + * for dump_stack.
-> + *
-> + * The frame for c_backtrace has pointers to the
-> + * code of dump_stack. This is why the frame of
-> + * c_backtrace is used to for the pc calculation
-> + * of dump_stack. This is why we must move back
-> + * a frame to print dump_stack.
-> + *
-> + * The stored locals for dump_stack are in dump_stack's
-> + * frame. This means that to fully print dump_stack's frame
-> + * we need both the frame for dump_stack (for locals) and the
-> + * frame that was called by dump_stack (for pc).
-> + *
-> + * To print locals we must know where the function start is. If
-> + * we read the function prologue opcodes we can determine
-> + * which variables are stored in the stack frame.
-> + *
-> + * To find the function start of dump_stack we can look at the
-> + * stored LR of show_stack. It points at the instruction
-> + * directly after the bl dump_stack. We can then read the
-> + * offset from the bl opcode to determine where the branch takes us.
-> + * The address calculated must be the start of dump_stack.
-> + *
-> + * c_backtrace frame           dump_stack:
-> + * {[LR]    }  ============|   ...
-> + * {[FP]    }  =======|    |   bl c_backtrace
-> + *                    |    |=> ...
-> + * {[R4-R10]}         |
-> + * {[R0-R3] }         |        show_stack:
-> + * dump_stack frame   |        ...
-> + * {[LR]    } =============|   bl dump_stack
-> + * {[FP]    } <=======|    |=> ...
-> + * {[R4-R10]}
-> + * {[R0-R3] }
-> + */
-> +
-
-===>
-
-> +stmfd   sp!, {r4 - r9, fp, lr} @ Save an extra register
-> +                               @ to ensure 8 byte alignment
-> +movs   frame, r0               @ if frame pointer is zero
-> +beq    no_frame                @ we have no stack frames
-> +
-> +tst    r1, #0x10               @ 26 or 32-bit mode?
-> +moveq  mask, #0xfc000003
-> +movne  mask, #0                @ mask for 32-bit
-
-<== this section of the patch has weird indentation. The rest uses 2
-tabs, this has none.
-
-> +
-> +/*
-> + * Switches the current frame to be the frame for dump_stack.
-> + */
-> +               add     frame, sp, #24          @ switch to false frame
-> +for_each_frame:        tst     frame, mask             @ Check for address exceptions
-> +               bne     no_frame
-> +
-> +/*
-> + * sv_fp is the stack frame with the locals for the current considered
-> + * function.
-> + *
-> + * sv_pc is the saved lr frame the frame above. This is a pointer to a
-> + * code address within the current considered function, but
-> + * it is not the function start. This value gets updated to be
-> + * the function start later if it is possible.
-> + */
-> +1001:          ldr     sv_pc, [frame, #4]      @ get saved 'pc'
-> +1002:          ldr     sv_fp, [frame, #0]      @ get saved fp
-> +
-> +               teq     sv_fp, mask             @ make sure next frame exists
-> +               beq     no_frame
-> +
-> +/*
-> + * sv_lr is the lr from the function that called the current function. This
-> + * is a pointer to a code address in the current function's caller.
-> + * sv_lr-4 is the instruction used to call the current function.
-> + *
-> + * This sv_lr can be used to calculate the function start if the function
-> + * was called using a bl instruction. If the function start
-> + * can be recovered sv_pc is overwritten with the function start.
-> + *
-> + * If the current function was called using a function pointer we cannot
-> + * recover the function start and instead continue with sv_pc as
-> + * an arbitrary value within the current function. If this is the case
-> + * we cannot print registers for the current function, but the stacktrace
-> + * is still printed properly.
-> + */
-> +1003:          ldr     sv_lr, [sv_fp, #4]      @ get saved lr from next frame
-> +
-> +               ldr     r0, [sv_lr, #-4]        @ get call instruction
-> +               ldr     r3, .Lopcode+4
-> +               and     r2, r3, r0              @ is this a bl call
-> +               teq     r2, r3
-> +               bne     finished_setup          @ give up if it's not
-> +               and     r0, #0xffffff           @ get call offset 24-bit int
-> +               lsl     r0, r0, #8              @ sign extend offset
-> +               asr     r0, r0, #8
-> +               ldr     sv_pc, [sv_fp, #4]      @ get lr address
-> +               add     sv_pc, sv_pc, #-4       @ get call instruction address
-> +               add     sv_pc, sv_pc, #8        @ take care of prefetch
-> +               add     sv_pc, sv_pc, r0, lsl #2@ find function start
-> +
-> +finished_setup:
-> +
-> +               bic     sv_pc, sv_pc, mask      @ mask PC/LR for the mode
-> +
-> +/*
-> + * Print the function (sv_pc) and where it was called
-> + * from (sv_lr).
-> + */
-> +1004:          mov     r0, sv_pc
-> +
-> +               mov     r1, sv_lr
-> +               mov     r2, frame
-> +               bic     r1, r1, mask            @ mask PC/LR for the mode
-> +               bl      dump_backtrace_entry
-> +
-> +/*
-> + * Test if the function start is a stmfd instruction
-> + * to determine which registers were stored in the function
-> + * prologue.
-> + *
-> + * If we could not recover the sv_pc because we were called through
-> + * a function pointer the comparison will fail and no registers
-> + * will print.
-
-Will we still unwind though?
-
-> + */
-> +1005:          ldr     r1, [sv_pc, #0]         @ if stmfd sp!, {..., fp, lr}
-> +               ldr     r3, .Lopcode            @ instruction exists,
-> +               teq     r3, r1, lsr #11
-> +               ldr     r0, [frame]             @ locals are stored in
-> +                                               @ the preceding frame
-> +               subeq   r0, r0, #4
-> +               bleq    dump_backtrace_stm      @ dump saved registers
-> +
-> +/*
-> + * If we are out of frames or if the next frame is invalid.
-> + */
-> +               teq     sv_fp, #0               @ zero saved fp means
-> +               beq     no_frame                @ no further frames
-> +
-> +               cmp     sv_fp, frame            @ next frame must be
-> +               mov     frame, sv_fp            @ above the current frame
-> +               bhi     for_each_frame
-> +
-> +1006:          adr     r0, .Lbad
-> +               mov     r1, frame
-> +               bl      printk
-> +no_frame:      ldmfd   sp!, {r4 - r9, fp, pc}
-> +ENDPROC(c_backtrace)
-> +               .pushsection __ex_table,"a"
-> +               .align  3
-> +               .long   1001b, 1006b
-> +               .long   1002b, 1006b
-> +               .long   1003b, 1006b
-> +               .long   1004b, 1006b
-> +               .long   1005b, 1006b
-> +               .popsection
-> +
-> +.Lbad:         .asciz  "Backtrace aborted due to bad frame pointer <%p>\n"
-> +               .align
-> +.Lopcode:      .word   0xe92d4800 >> 11        @ stmfd sp!, {... fp, lr}
-> +               .word   0x0b000000              @ bl if these bits are set
-> +
-> +#endif
-> --
-> 2.23.0.rc1.153.gdeed80330f-goog
->
-
-OK, with you patch applied on today's Linux next,
-CONFIG_UNWINDER_FRAME_POINTER, and ToT Clang:
-
-$ qemu-system-arm -kernel arch/arm/boot/zImage -nographic -m 2048
---append "console=ttyAMA0 root=/dev/ram0" -machine virt
-[    0.000000] Linux version 5.3.0-rc5-07709-gac2d7d4a10c1-dirty
-(ndesaulniers@ndesaulniers1.mtv.corp.google.com) (clang version 10.0.0
-(https://github.com/llvm/llvm-project.git
-da648ab8de3638ff82d6b9349c603b854a0224d6)) #53 SMP Wed Aug 21 20:05:15
-PDT 2019
-...
-[    0.957046] Kernel panic - not syncing: VFS: Unable to mount root
-fs on unknown-block(1,0)
-[    0.957490] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-5.3.0-rc5-07709-gac2d7d4a10c1-dirty #53
-[    0.957808] Hardware name: Generic DT based system
-[    0.958046] Backtrace:
-[    0.958504] [<c030da98>] (dump_backtrace) from [<c030da94>]
-(show_stack+0x14/0x18)
-[    0.958844]  r10:c16f585c r6:00000000 r5:c198c7e4 r4:600000d3
-[    0.959085] [<c030da80>] (show_stack) from [<c106c2c8>]
-(dump_stack+0xac/0xd8)
-[    0.959358] [<c106c21c>] (dump_stack) from [<c03504a0>] (panic+0x118/0x354)
-[    0.959568]  r5:c19a61b5 r4:c1427ce5
-[    0.959722] [<c0350388>] (panic) from [<c1601624>]
-(mount_block_root+0x13c/0x1f0)
-[    0.959947] [<c16014e8>] (mount_block_root) from [<c1601a48>]
-(mount_root+0xb0/0xb4)
-[    0.960210]  r10:00000000 r9:00000000 r8:00000000 r7:00000000
-r6:00000000 r5:00100000
-[    0.960492]  r4:c1427d49
-[    0.960600] [<c1601998>] (mount_root) from [<c1601d0c>]
-(prepare_namespace+0x1ec/0x1f0)
-[    0.960886]  r5:c19a3d30 r4:c16f5868
-[    0.961021] [<c1601b20>] (prepare_namespace) from [<c16011ac>]
-(kernel_init_freeable+0xe0/0xf4)
-[    0.961330]  r5:00000000 r4:c19a3d1c
-[    0.961468] [<c16010cc>] (kernel_init_freeable) from [<c10868d8>]
-(kernel_init+0xc/0x2ac)
-[    0.961761]  r5:c10868cc r4:00000000
-[    0.961913] [<c10868d8>] (kernel_init) from [<c03010e8>]
-(ret_from_fork+0x14/0x2c)
-[    0.962210] Exception stack(0xea09bf94 to 0xea09bfdc)
-[    0.962490] bf80:
-c10868d8 00000000 c10868cc
-[    0.962883] bfa0: 00000000 00000000 00000000 c03010e8 00000000
-00000000 00000000 00000000
-[    0.963202] bfc0: 00000000 00000000 00000000 00000000 00000000
-00000000 00000000
-[    0.963936] ---[ end Kernel panic - not syncing: VFS: Unable to
-mount root fs on unknown-block(1,0) ]---
-
-For comparison, the reference implementation:
-[    0.000000] Linux version 5.3.0-rc5-07709-gac2d7d4a10c1-dirty
-(ndesaulniers@ndesaulniers1.mtv.corp.google.com) (gcc version 8.2.0
-(Debian 8.2.0-14+build1)) #54 SMP Wed Aug 21 20:15:27 PDT 2019
-...
-[    1.048134] Kernel panic - not syncing: VFS: Unable to mount root
-fs on unknown-block(1,0)
-[    1.048617] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-5.3.0-rc5-07709-gac2d7d4a10c1-dirty #54
-[    1.048935] Hardware name: Generic DT based system
-[    1.049191] Backtrace:
-[    1.049663] [<c030dff8>] (dump_backtrace) from [<c030e368>]
-(show_stack+0x18/0x1c)
-[    1.050038]  r7:c16ed85c r6:600000d3 r5:00000000 r4:c198f804
-[    1.050292] [<c030e350>] (show_stack) from [<c0f550bc>]
-(dump_stack+0xbc/0xd0)
-[    1.050581] [<c0f55000>] (dump_stack) from [<c0349fe8>] (panic+0x118/0x330)
-[    1.050834]  r7:c16ed85c r6:c13404fc r5:00000000 r4:c19a5870
-[    1.051078] [<c0349ed4>] (panic) from [<c16017dc>]
-(mount_block_root+0x264/0x284)
-[    1.051344]  r3:0ed1c175 r2:0ed1c175 r1:ea09be84 r0:c13404fc
-[    1.051553]  r7:c16ed85c
-[    1.051661] [<c1601578>] (mount_block_root) from [<c1601a64>]
-(mount_root+0x124/0x140)
-[    1.051936]  r10:ffffe000 r9:c16ed858 r8:c19a3400 r7:c1809100
-r6:00000008 r5:c1804c48
-[    1.052238]  r4:00100000
-[    1.052351] [<c1601940>] (mount_root) from [<c1601c04>]
-(prepare_namespace+0x184/0x1cc)
-[    1.052638]  r10:ffffe000 r9:c16ed858 r8:c19a3400 r7:c19a3400
-r6:00000008 r5:c19a3430
-[    1.052915]  r4:c16ed85c
-[    1.053025] [<c1601a80>] (prepare_namespace) from [<c1601308>]
-(kernel_init_freeable+0x2f8/0x308)
-[    1.053337]  r6:00000008 r5:c177b7c0 r4:c16ed838
-[    1.053507] [<c1601010>] (kernel_init_freeable) from [<c0f6ceb0>]
-(kernel_init+0x10/0x118)
-[    1.053798]  r10:00000000 r9:00000000 r8:00000000 r7:00000000
-r6:00000000 r5:c0f6cea0
-[    1.054083]  r4:00000000
-[    1.054190] [<c0f6cea0>] (kernel_init) from [<c03010e8>]
-(ret_from_fork+0x14/0x2c)
-[    1.054501] Exception stack(0xea09bfb0 to 0xea09bff8)
-[    1.054792] bfa0:                                     00000000
-00000000 00000000 00000000
-[    1.055169] bfc0: 00000000 00000000 00000000 00000000 00000000
-00000000 00000000 00000000
-[    1.055526] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-[    1.055795]  r5:c0f6cea0 r4:00000000
-[    1.056410] ---[ end Kernel panic - not syncing: VFS: Unable to
-mount root fs on unknown-block(1,0) ]---
-
-So the stack traces look comparable (same unwind "path").  Looks like
-GCC spilled r0-r3 in panic(), but not much else.  I guess Clang could
-have spilled these anywhere and we simply wont be able to print them.
-Maybe making the comment about this in you patch ALL CAPS might draw
-attention to it in case someone ever notices a difference between the
-unwind printout and the disassembly, but I assume that's unlikely, but
-I also don't know if this functionality is relied upon heavily for
-debugging.
-
-In that sense:
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-(you can carry that on to v3)
-With the above suggestions, I'd be happy to then add my reviewed by
-tag.  Thanks for all of the work that went into this.
--- 
-Thanks,
-~Nick Desaulniers
