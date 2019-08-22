@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1181FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88972C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD9AB2342D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0A423429
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493723;
-	bh=gx8SFavgzOTEOESs7rzfvsJIXbtJJ880k7HdXMQfhM4=;
+	s=default; t=1566493726;
+	bh=YWZMTuicYL37W61tyGEDFMuUQiDu4m6h46X35x3t5h4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=snNBMKS0uWm36oQJ5d2JeYYPw66iAfuenI9aARaEimrdowZK//Je+c333SCi9DlVE
-	 Hdm+MZ/uCH/av5Kjdo0bNzFMEbXhcADZ/m4T1vQk2/Q3mDtve7VP378P2oEXy+QQxL
-	 +l5bUDbArJO6+9chutQFKSaJ7E//emcZz0xGYhpo=
+	b=MdIB3K81ghZwWGEC5KRzV2G4xoJzuHIQ3BjA/ELAJrGHMOw8adC1GM3+JOmmKL4zR
+	 IgpM8R9nwgE140HAlEma7VCxCNsxXvBk20Dl5K7dQto7mlcDnOf8GdC5YcS0ANmgI+
+	 HkLednHFBEOeFQJs4jzsCh6m0aT7sWsd9/YkYBIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388856AbfHVRIm (ORCPT
+        id S2390498AbfHVRIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58456 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390440AbfHVRIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:41 -0400
+        id S2390481AbfHVRIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:44 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48A6D2341C;
-        Thu, 22 Aug 2019 17:08:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C8F523400;
+        Thu, 22 Aug 2019 17:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493720;
-        bh=gx8SFavgzOTEOESs7rzfvsJIXbtJJ880k7HdXMQfhM4=;
+        s=default; t=1566493723;
+        bh=YWZMTuicYL37W61tyGEDFMuUQiDu4m6h46X35x3t5h4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OIyUd3a/cnUdJvGcxv6Be0T4oMNOlAI+8TxottRWM4R5EmWUmmPyJ988PP7tEblpw
-         bE/akwP3R2yldW1KtvtO3kGzAzp7JW7ds0oy1FgzfZTUGwULJ7gv47l1WHECPFyQEi
-         zGPpjAzha56qJ5aY/lsPYD6+06r/iMB7hM3WZDBI=
+        b=VrSouZeYjrlALJn/lWm7u9YJz7Gv31wBgqp5KnQWFogyrg00hoN4hHEDXkivBUF9q
+         ZXyEhBKclMovlQuttrev8iB0jUEmOAPPfw2FaNDtVJhLYVl4RqaEUqCmcZ/iuJoOqE
+         XtuUtmx0mkeDeIh6ep+NhoyUZDwcbze7rZ5/gisk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 049/135] f2fs: fix to read source block before invalidating it
-Date:   Thu, 22 Aug 2019 13:06:45 -0400
-Message-Id: <20190822170811.13303-50-sashal@kernel.org>
+Cc:     Yuki Tsunashima <ytsunashima@jp.adit-jv.com>,
+        Suresh Udipi <sudipi@jp.adit-jv.com>,
+        Adam Miartus <amiartus@de.adit-jv.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 054/135] ALSA: pcm: fix lost wakeup event scenarios in snd_pcm_drain
+Date:   Thu, 22 Aug 2019 13:06:50 -0400
+Message-Id: <20190822170811.13303-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -64,125 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Yuki Tsunashima <ytsunashima@jp.adit-jv.com>
 
-[ Upstream commit 543b8c468f55f27f3c0178a22a91a51aabbbc428 ]
+[ Upstream commit 37151a41df800493cfcbbef4f7208ffe04feb959 ]
 
-f2fs_allocate_data_block() invalidates old block address and enable new block
-address. Then, if we try to read old block by f2fs_submit_page_bio(), it will
-give WARN due to reading invalid blocks.
+lost wakeup can occur after enabling irq, therefore put task
+into interruptible before enabling interrupts,
 
-Let's make the order sanely back.
+without this change, task can be put to sleep and snd_pcm_drain
+will delay
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: f2b3614cefb6 ("ALSA: PCM - Don't check DMA time-out too shortly")
+Signed-off-by: Yuki Tsunashima <ytsunashima@jp.adit-jv.com>
+Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+[ported from 4.9]
+Signed-off-by: Adam Miartus <amiartus@de.adit-jv.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/gc.c | 70 +++++++++++++++++++++++++---------------------------
- 1 file changed, 34 insertions(+), 36 deletions(-)
+ sound/core/pcm_native.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 963fb4571fd98..bb6fd5a506d39 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -794,6 +794,29 @@ static int move_data_block(struct inode *inode, block_t bidx,
- 	if (lfs_mode)
- 		down_write(&fio.sbi->io_order_lock);
+diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+index 12dd9b318db18..703857aab00fc 100644
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -1873,6 +1873,7 @@ static int snd_pcm_drain(struct snd_pcm_substream *substream,
+ 		if (!to_check)
+ 			break; /* all drained */
+ 		init_waitqueue_entry(&wait, current);
++		set_current_state(TASK_INTERRUPTIBLE);
+ 		add_wait_queue(&to_check->sleep, &wait);
+ 		snd_pcm_stream_unlock_irq(substream);
+ 		if (runtime->no_period_wakeup)
+@@ -1885,7 +1886,7 @@ static int snd_pcm_drain(struct snd_pcm_substream *substream,
+ 			}
+ 			tout = msecs_to_jiffies(tout * 1000);
+ 		}
+-		tout = schedule_timeout_interruptible(tout);
++		tout = schedule_timeout(tout);
  
-+	mpage = f2fs_grab_cache_page(META_MAPPING(fio.sbi),
-+					fio.old_blkaddr, false);
-+	if (!mpage)
-+		goto up_out;
-+
-+	fio.encrypted_page = mpage;
-+
-+	/* read source block in mpage */
-+	if (!PageUptodate(mpage)) {
-+		err = f2fs_submit_page_bio(&fio);
-+		if (err) {
-+			f2fs_put_page(mpage, 1);
-+			goto up_out;
-+		}
-+		lock_page(mpage);
-+		if (unlikely(mpage->mapping != META_MAPPING(fio.sbi) ||
-+						!PageUptodate(mpage))) {
-+			err = -EIO;
-+			f2fs_put_page(mpage, 1);
-+			goto up_out;
-+		}
-+	}
-+
- 	f2fs_allocate_data_block(fio.sbi, NULL, fio.old_blkaddr, &newaddr,
- 					&sum, CURSEG_COLD_DATA, NULL, false);
- 
-@@ -801,44 +824,18 @@ static int move_data_block(struct inode *inode, block_t bidx,
- 				newaddr, FGP_LOCK | FGP_CREAT, GFP_NOFS);
- 	if (!fio.encrypted_page) {
- 		err = -ENOMEM;
--		goto recover_block;
--	}
--
--	mpage = f2fs_pagecache_get_page(META_MAPPING(fio.sbi),
--					fio.old_blkaddr, FGP_LOCK, GFP_NOFS);
--	if (mpage) {
--		bool updated = false;
--
--		if (PageUptodate(mpage)) {
--			memcpy(page_address(fio.encrypted_page),
--					page_address(mpage), PAGE_SIZE);
--			updated = true;
--		}
- 		f2fs_put_page(mpage, 1);
--		invalidate_mapping_pages(META_MAPPING(fio.sbi),
--					fio.old_blkaddr, fio.old_blkaddr);
--		if (updated)
--			goto write_page;
--	}
--
--	err = f2fs_submit_page_bio(&fio);
--	if (err)
--		goto put_page_out;
--
--	/* write page */
--	lock_page(fio.encrypted_page);
--
--	if (unlikely(fio.encrypted_page->mapping != META_MAPPING(fio.sbi))) {
--		err = -EIO;
--		goto put_page_out;
--	}
--	if (unlikely(!PageUptodate(fio.encrypted_page))) {
--		err = -EIO;
--		goto put_page_out;
-+		goto recover_block;
- 	}
- 
--write_page:
-+	/* write target block */
- 	f2fs_wait_on_page_writeback(fio.encrypted_page, DATA, true, true);
-+	memcpy(page_address(fio.encrypted_page),
-+				page_address(mpage), PAGE_SIZE);
-+	f2fs_put_page(mpage, 1);
-+	invalidate_mapping_pages(META_MAPPING(fio.sbi),
-+				fio.old_blkaddr, fio.old_blkaddr);
-+
- 	set_page_dirty(fio.encrypted_page);
- 	if (clear_page_dirty_for_io(fio.encrypted_page))
- 		dec_page_count(fio.sbi, F2FS_DIRTY_META);
-@@ -869,11 +866,12 @@ static int move_data_block(struct inode *inode, block_t bidx,
- put_page_out:
- 	f2fs_put_page(fio.encrypted_page, 1);
- recover_block:
--	if (lfs_mode)
--		up_write(&fio.sbi->io_order_lock);
- 	if (err)
- 		f2fs_do_replace_block(fio.sbi, &sum, newaddr, fio.old_blkaddr,
- 								true, true);
-+up_out:
-+	if (lfs_mode)
-+		up_write(&fio.sbi->io_order_lock);
- put_out:
- 	f2fs_put_dnode(&dn);
- out:
+ 		snd_pcm_stream_lock_irq(substream);
+ 		group = snd_pcm_stream_group_ref(substream);
 -- 
 2.20.1
 
