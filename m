@@ -2,187 +2,75 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494B0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5064C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F05A21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:54:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X098aRZX"
+	by mail.kernel.org (Postfix) with ESMTP id 8016021848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:54:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388682AbfHVOyR (ORCPT
+        id S2388724AbfHVOyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:54:17 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37378 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732015AbfHVOyQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:54:16 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d1so3820047pgp.4
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 07:54:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x7HSKfWMUdaVga31So0a+mtOQLYUde3yUivJl3LTw5g=;
-        b=X098aRZXbyr7BUOHnuJL2JXqRpr5e8XAyVfqVyBfBqCtVhZ7IhjfP8E2B2YJsJ1E0G
-         hxrJCy7aZCex7/tusPNBr3Dk+TUi2Uwh0d7M8r9WxoaRjHtqVEksWyah5Pz0eVCpc0hA
-         a2RB13MNX+AXvTFptX7uLFfFQu42+Wva+JnVRz9CPZ8aHNHbzEVgQuZ7GlHvsTFMZ2Re
-         9+3DEOUzSPmQQ6y6Iw8eTnhvhWUuiv7lOUZAheY/d3VBCFzstRbAVPMox3Op4bEU5SVH
-         bJz5itsV0o+KwP5fpzjw1LqkIzlKhbxjVOee0aspB7QkzT3IOl36C3jwon6b3oGly1KY
-         JTVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x7HSKfWMUdaVga31So0a+mtOQLYUde3yUivJl3LTw5g=;
-        b=k0NlCN1BL9lGwKAG3IcweSRrJ9//reMtD74P9WHN7tbflVbJK+ZQHu3mRBA5j1g8q1
-         /hoOkB0G1of65e/qN+/J7mL/CU2u0XhNXLfMq2ajjLZFswmnTxDgXKz1MEXfsipT2sby
-         EMxd0BaS0HltHp42uE28SgnpJfysWKQm+qB9s+D2vGSASeMfFqbb+uSQsVLoi+YeibgP
-         m63LEgMmsLtZ0V42iK1mPPF0fdrRoD4bvQL57HvUbjwsQnrb5QA8g0ElVJ/fDc5FVcK3
-         VKz5H02j6HHjv3KorpO70TRkB9ltdPjBrTbg6s8wEjukJwfEBhrpPbz4ISKilL554t21
-         cTAw==
-X-Gm-Message-State: APjAAAUoDKqXn8AS+jbQzcPTYz8MWb7IoRBRM8daykz+J82CgcM5wjRd
-        yGDZO3e91csIeFDqS3qrEST3ibNG8KuAQAwfapAEZg==
-X-Google-Smtp-Source: APXvYqzBNvIpEvVab5uvhNpSX4tVDr7f0wZOMhTUXFg77KUDSGwsULUFa1wN7ajsvNDzlVTzNqendNlf5megUHX/qys=
-X-Received: by 2002:a17:90a:858a:: with SMTP id m10mr11906pjn.129.1566485655293;
- Thu, 22 Aug 2019 07:54:15 -0700 (PDT)
+        Thu, 22 Aug 2019 10:54:31 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5199 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732015AbfHVOyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:54:31 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 261EB583877201832F75;
+        Thu, 22 Aug 2019 22:36:33 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 22 Aug 2019
+ 22:36:27 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <yuehaibing@huawei.com>, <tglx@linutronix.de>,
+        <allison@lohutok.net>, <gregkh@linuxfoundation.org>,
+        <info@metux.net>
+CC:     <patches@opensource.cirrus.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] ASoC: wm8988: fix typo in wm8988_right_line_controls
+Date:   Thu, 22 Aug 2019 22:36:08 +0800
+Message-ID: <20190822143608.59824-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <000000000000d9f094057a17b97b@google.com> <000000000000b439370586498dff@google.com>
- <CAAeHK+zUHJswwHfVUCV0qTgvFVFZpT0hJqioLyYgbA0yQC0H8Q@mail.gmail.com>
- <CAAeHK+w+asSQ3axWymToQ+uzPfEAYS2QimVBL85GuJRBtxkjDA@mail.gmail.com> <CAAeHK+y-2DZ1sWUE5bESrd=dUAaGrHXzR5+gFJFgiAaWo+D2dw@mail.gmail.com>
-In-Reply-To: <CAAeHK+y-2DZ1sWUE5bESrd=dUAaGrHXzR5+gFJFgiAaWo+D2dw@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 22 Aug 2019 16:54:04 +0200
-Message-ID: <CAAeHK+wL4pmXo3Li2dcULu4Wx+zUQLX_94BDizoZWQ+vMdz5Lw@mail.gmail.com>
-Subject: Re: WARNING in rollback_registered_many (2)
-To:     syzbot <syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com>,
-        USB list <linux-usb@vger.kernel.org>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>, avagin@virtuozzo.com,
-        "David S. Miller" <davem@davemloft.net>,
-        devel@driverdev.osuosl.org,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Eric Dumazet <edumazet@google.com>,
-        florian.c.schilhabel@googlemail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        ktkhai@virtuozzo.com, LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, straube.linux@gmail.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        tyhicks@canonical.com, Matthew Wilcox <willy@infradead.org>,
-        Oliver Neukum <oneukum@suse.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 3:07 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> On Wed, Aug 7, 2019 at 4:03 PM Andrey Konovalov <andreyknvl@google.com> wrote:
-> >
-> > On Fri, Apr 12, 2019 at 1:32 PM Andrey Konovalov <andreyknvl@google.com> wrote:
-> > >
-> > > On Fri, Apr 12, 2019 at 1:29 AM syzbot
-> > > <syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com> wrote:
-> > > >
-> > > > syzbot has found a reproducer for the following crash on:
-> > > >
-> > > > HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-> > > > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=10d552b7200000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=40918e4d826fb2ff9b96
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a4c1af200000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=121b274b200000
-> > > >
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com
-> > > >
-> > > > usb 1-1: r8712u: MAC Address from efuse = 00:e0:4c:87:00:00
-> > > > usb 1-1: r8712u: Loading firmware from "rtlwifi/rtl8712u.bin"
-> > > > usb 1-1: USB disconnect, device number 2
-> > > > usb 1-1: Direct firmware load for rtlwifi/rtl8712u.bin failed with error -2
-> > > > usb 1-1: r8712u: Firmware request failed
-> > > > WARNING: CPU: 0 PID: 575 at net/core/dev.c:8152
-> > > > rollback_registered_many+0x1f3/0xe70 net/core/dev.c:8152
-> > > > Kernel panic - not syncing: panic_on_warn set ...
-> > > > CPU: 0 PID: 575 Comm: kworker/0:4 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > Google 01/01/2011
-> > > > Workqueue: usb_hub_wq hub_event
-> > > > Call Trace:
-> > > >   __dump_stack lib/dump_stack.c:77 [inline]
-> > > >   dump_stack+0xe8/0x16e lib/dump_stack.c:113
-> > > >   panic+0x29d/0x5f2 kernel/panic.c:214
-> > > >   __warn.cold+0x20/0x48 kernel/panic.c:571
-> > > >   report_bug+0x262/0x2a0 lib/bug.c:186
-> > > >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
-> > > >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> > > >   do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
-> > > >   do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
-> > > >   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-> > > > RIP: 0010:rollback_registered_many+0x1f3/0xe70 net/core/dev.c:8152
-> > > > Code: 05 00 00 31 ff 44 89 fe e8 5a 15 f3 f4 45 84 ff 0f 85 49 ff ff ff e8
-> > > > 1c 14 f3 f4 0f 1f 44 00 00 e8 12 14 f3 f4 e8 0d 14 f3 f4 <0f> 0b 4c 89 e7
-> > > > e8 33 72 f2 f6 31 ff 41 89 c4 89 c6 e8 27 15 f3 f4
-> > > > RSP: 0018:ffff88809d087698 EFLAGS: 00010293
-> > > > RAX: ffff88809d058000 RBX: ffff888096240000 RCX: ffffffff8c7eb146
-> > > > RDX: 0000000000000000 RSI: ffffffff8c7eb163 RDI: 0000000000000001
-> > > > RBP: ffff88809d0877c8 R08: ffff88809d058000 R09: fffffbfff2708111
-> > > > R10: fffffbfff2708110 R11: ffffffff93840887 R12: ffff888096240070
-> > > > R13: dffffc0000000000 R14: ffff88809d087758 R15: 0000000000000000
-> > > >   rollback_registered+0xf7/0x1c0 net/core/dev.c:8228
-> > > >   unregister_netdevice_queue net/core/dev.c:9275 [inline]
-> > > >   unregister_netdevice_queue+0x1dc/0x2b0 net/core/dev.c:9268
-> > > >   unregister_netdevice include/linux/netdevice.h:2655 [inline]
-> > > >   unregister_netdev+0x1d/0x30 net/core/dev.c:9316
-> > > >   r871xu_dev_remove+0xe7/0x223 drivers/staging/rtl8712/usb_intf.c:604
-> > > >   usb_unbind_interface+0x1c9/0x980 drivers/usb/core/driver.c:423
-> > > >   __device_release_driver drivers/base/dd.c:1082 [inline]
-> > > >   device_release_driver_internal+0x436/0x4f0 drivers/base/dd.c:1113
-> > > >   bus_remove_device+0x302/0x5c0 drivers/base/bus.c:556
-> > > >   device_del+0x467/0xb90 drivers/base/core.c:2269
-> > > >   usb_disable_device+0x242/0x790 drivers/usb/core/message.c:1235
-> > > >   usb_disconnect+0x298/0x870 drivers/usb/core/hub.c:2197
-> > > >   hub_port_connect drivers/usb/core/hub.c:4940 [inline]
-> > > >   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-> > > >   port_event drivers/usb/core/hub.c:5350 [inline]
-> > > >   hub_event+0xcd2/0x3b00 drivers/usb/core/hub.c:5432
-> > > >   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-> > > >   process_scheduled_works kernel/workqueue.c:2331 [inline]
-> > > >   worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
-> > > >   kthread+0x313/0x420 kernel/kthread.c:253
-> > > >   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-> > > > Kernel Offset: disabled
-> > > > Rebooting in 86400 seconds..
-> > > >
-> > >
-> > > +linux-usb mailing list
-> >
-> > This USB bug is the most frequently triggered one right now with over
-> > 27k kernel crashes.
->
-> OK, this report is confusing. It was initially reported on the
-> upstream instance a long time ago, but since then has stopped
-> happening, as it was probably fixed. Then when we launched the USB
-> fuzzing instance, it has started producing similarly named reports
-> (with a different root cause though), and they were bucketed into this
-> bug by syzkaller. I've improved parsing titles of such reports in
-> syzkaller, so I'm invalidating this one, and syzbot should send a
-> properly attributed USB report soon.
->
-> #syz invalid
+sound/soc/codecs/wm8988.c:270:30: warning:
+ wm8988_rline_enum defined but not used [-Wunused-const-variable=]
 
-This has been reported as:
+wm8988_rline_enum should be used in wm8988_right_line_controls.
 
-WARNING in r871xu_dev_remove
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 5409fb4e327a ("ASoC: Add WM8988 CODEC driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ sound/soc/codecs/wm8988.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-https://syzkaller.appspot.com/bug?extid=80899a8a8efe8968cde7
+diff --git a/sound/soc/codecs/wm8988.c b/sound/soc/codecs/wm8988.c
+index 25e74cf..85bfd04 100644
+--- a/sound/soc/codecs/wm8988.c
++++ b/sound/soc/codecs/wm8988.c
+@@ -273,7 +273,7 @@ static const struct soc_enum wm8988_rline_enum =
+ 			      wm8988_line_texts,
+ 			      wm8988_line_values);
+ static const struct snd_kcontrol_new wm8988_right_line_controls =
+-	SOC_DAPM_ENUM("Route", wm8988_lline_enum);
++	SOC_DAPM_ENUM("Route", wm8988_rline_enum);
+ 
+ /* Left Mixer */
+ static const struct snd_kcontrol_new wm8988_left_mixer_controls[] = {
+-- 
+2.7.4
+
+
