@@ -2,100 +2,145 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4767C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D919BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBE1214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEAA1214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:58:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rws6jNKs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732827AbfHVI5p (ORCPT
+        id S1732840AbfHVI61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:57:45 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59411 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729109AbfHVI5p (ORCPT
+        Thu, 22 Aug 2019 04:58:27 -0400
+Received: from mail-wm1-f46.google.com ([209.85.128.46]:39558 "EHLO
+        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731987AbfHVI61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:57:45 -0400
-Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1i0iuc-0005yi-0z; Thu, 22 Aug 2019 10:57:42 +0200
-Date:   Thu, 22 Aug 2019 10:57:40 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Chris Clayton <chris2553@googlemail.com>
-cc:     LKML <linux-kernel@vger.kernel.org>, vincenzo.frascino@arm.com,
-        catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: Regression in 5.3-rc1 and later
-In-Reply-To: <faaa3843-09a6-1a21-3448-072eeed1ea00@googlemail.com>
-Message-ID: <alpine.DEB.2.21.1908221047250.1983@nanos.tec.linutronix.de>
-References: <faaa3843-09a6-1a21-3448-072eeed1ea00@googlemail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 22 Aug 2019 04:58:27 -0400
+Received: by mail-wm1-f46.google.com with SMTP id i63so4911341wmg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:58:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=HwcMDsi2XQejCpwJcqSON0QYDIy6of9C4lFX3vq5Vd8=;
+        b=rws6jNKsi1M8Rkg+o1TcSh47k+MBIMlZ2PG9GVoXpHOHN3MDWajZ42qf2bwZzNxViW
+         DAkPKntHOYRZpDPuvQBKP7zUv/xa/jRR6w1y4bYMxRKUh79SEfgnY5pr5iHYPMjsgAXC
+         tHtspKL5+LLP11iVlGZn7uqXQIsYg61EWdpwaohwUKU3vfXKzvl5DkkrMzXQtl+wnfPB
+         JStOH5mMiyjBhPn0AYgSLb0WOsyjKgkMJnEmj3SR0AeYOSficjQrUV73JMO1ziA+o0Jb
+         fVTYxfpb0LpU0FytZ+oQndnyNIff/g8nsrg8CJDfgs0FuxT66v2GorScxqX5dSepeJNF
+         /zXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=HwcMDsi2XQejCpwJcqSON0QYDIy6of9C4lFX3vq5Vd8=;
+        b=NiL+mq2G4bdAwKeC4Q70QkvwT/MnywRGKIgJ0WRl+0uDQhAygML5GNducBWNhDt9YQ
+         x0WhN0ChQSDun+LcSoUkKrEFCbMrkpCqo2wjgoogtkLb5WYxFWL27hkdiZ5q50NjRY/7
+         rg4hLd03SHDRQWEcQ8guuJ9w/N47v/4NuODPBdDqKvI7NmWSbu+RSFLajsuJ4Tv1lwtR
+         bYj/Gf3IchhVZbJ4rQ3M5n+zaBw0k/C+5d1QF7u68pHBnR4yB6H0Vw/Qj5374U+EekJS
+         oLQSq7ZHxty3SSI/F0kVwYtj7dWxInbvrCzEkz+WD48Z/9iBOracahXY7hI/6NWeu3Dw
+         JZ+Q==
+X-Gm-Message-State: APjAAAXEoj8oY79KwzzkkHV5/CcGiTbJpSVW71C4nlDBIQEEbRYuTbqo
+        F/6cmYGXWMiCtFSFKLpyI7TTbQ==
+X-Google-Smtp-Source: APXvYqzgkuUd3Clm72tSW8GGQTeQfG2PdkhGXmhwJPw5o1ZGmT8q4h5wuwHYjYXTZwrWLB1jLkoBHg==
+X-Received: by 2002:a1c:cc09:: with SMTP id h9mr4860686wmb.32.1566464305103;
+        Thu, 22 Aug 2019 01:58:25 -0700 (PDT)
+Received: from [192.168.0.100] (146-241-115-105.dyn.eolo.it. [146.241.115.105])
+        by smtp.gmail.com with ESMTPSA id t198sm6286486wmt.39.2019.08.22.01.58.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Aug 2019 01:58:24 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
+ porportional controller
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190820151903.GH2263813@devbig004.ftw2.facebook.com>
+Date:   Thu, 22 Aug 2019 10:58:22 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>, newella@fb.com, clm@fb.com,
+        Josef Bacik <josef@toxicpanda.com>, dennisz@fb.com,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>, kernel-team@fb.com,
+        cgroups@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        bpf@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9EB760CE-0028-4766-AE9D-6E90028D8579@linaro.org>
+References: <20190614015620.1587672-1-tj@kernel.org>
+ <20190614175642.GA657710@devbig004.ftw2.facebook.com>
+ <5A63F937-F7B5-4D09-9DB4-C73D6F571D50@linaro.org>
+ <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
+ <20190820151903.GH2263813@devbig004.ftw2.facebook.com>
+To:     Tejun Heo <tj@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris,
 
-On Thu, 22 Aug 2019, Chris Clayton wrote:
 
-Trimmed cc list
+> Il giorno 20 ago 2019, alle ore 17:19, Tejun Heo <tj@kernel.org> ha =
+scritto:
+>=20
+> Hello, Paolo.
+>=20
+> On Tue, Aug 20, 2019 at 05:04:25PM +0200, Paolo Valente wrote:
+>> and makes one fio instance generate I/O for each group.  The =
+bandwidth
+>> reported above is that reported by the fio instance emulating the
+>> target client.
+>>=20
+>> Am I missing something?
+>=20
+> If you didn't configure QoS targets, the controller is using device
+> qdepth saturation as the sole guidance in determining whether the
+> device needs throttling.  Please try configuring the target latencies.
+> The bandwidth you see for single stream of rand ios should have direct
+> correlation with how the latency targets are configured.  The head
+> letter for the patchset has some examples.
+>=20
 
-> I've found a problem that isn't present in 5.2 series or 4.19 series
-> kernels, and seems to have arrived in 5.3-rc1. The problem is that if I
-> suspend (to ram) my laptop, on resume 14 minutes or more after
-> suspending, I have no networking functionality. If I resume the laptop
-> after 13 minutes or less, networking works fine. I haven't tried to get
-> finer grained timings between 13 and 14 minutes, but can do if it would
-> help.
-> 
-> ifconfig shows that wlan0 is still up and still has its assigned ip
-> address but, for instance, a ping of any other device on my network,
-> fails as does pinging, say, kernel.org. I've tried "downing" the network
-> with (/sbin/ifdown) and unloading the iwlmvm module and then reloading
-> the module and "upping" (/sbin/ifup) the network, but my network is still
-> unusable. I should add that the problem also manifests if I hibernate the
-> laptop, although my testing of this has been minimal. I can do more if
-> required.
+Ok, I tried with the parameters reported for a SATA SSD:
 
-What happens if you restart the network manager and/or wpa_supplicant or
-whatever your distro uses for that.
+rpct=3D95.00 rlat=3D10000 wpct=3D95.00 wlat=3D20000 min=3D50.00 =
+max=3D400.00
 
-> As I say, the problem first appears in 5.3-rc1, so I've bisected between
-> 5.2.0 and 5.3-rc1 and that concluded with:
+and with a simpler configuration [1]: one target doing random reads
+and only four interferers doing sequential reads, with all the
+processes (groups) having the same weight.
 
-Just for confirmation, it's still broken as of 5.3-rc5, right? We had fixes
-post rc1.
+But there seemed to be little or no control on I/O, because the target
+got only 1.84 MB/s, against 1.15 MB/s without any control.
 
->     x86/vdso: Switch to generic vDSO implementation
- 
-> To confirm my bisection was correct, I did a git checkout of
-> 7ac8707479886c75f353bfb6a8273f423cfccb2. As expected, the kernel
-> exhibited the problem I've described. However, a kernel built at the
-> immediately preceding (parent?) commit
-> (bfe801ebe84f42b4666d3f0adde90f504d56e35b) has a working network after a
-> (>= 14minute) suspend/resume cycle.
+So I tried with rlat=3D1000 and rlat=3D100.
 
-~14 minutes is odd. I can't come up with anything which rolls over, wraps
-or overflows at that point.
+Control did improve, with same results for both values of rlat.  The
+problem is that these results still seem rather bad, both in terms of
+throughput guaranteed to the target and in terms of total throughput.
+Here are results compared with BFQ (throughputs measured in MB/s):
 
-Can you please provide the output of:
+                           io.weight            BFQ
+target's throughput        3.415                6.224       =20
+total throughput           159.14               321.375
 
-  dmesg | grep -i TSC
+Am I doing something else wrong?
 
 Thanks,
+Paolo
 
-	tglx
+[1] sudo ./bandwidth-latency.sh -t randread -s none -b weight -n 4
+
+> Thanks.
+>=20
+> --=20
+> tejun
+
