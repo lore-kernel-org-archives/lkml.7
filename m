@@ -2,114 +2,141 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A382C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB33C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16773235EE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD6F2342F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:32:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E8c1BVe7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732400AbfHVIbs (ORCPT
+        id S1731444AbfHVIcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:31:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:41150 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727484AbfHVIbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:31:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13188360;
-        Thu, 22 Aug 2019 01:31:47 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61F1A3F706;
-        Thu, 22 Aug 2019 01:31:46 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 09:31:44 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Jonathan Chocron <jonnyc@amazon.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk,
-        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
-        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
-        hhhawa@amazon.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 2/7] PCI: Add ACS quirk for Amazon Annapurna Labs root
- ports
-Message-ID: <20190822083144.GL23903@e119886-lin.cambridge.arm.com>
-References: <20190821153545.17635-1-jonnyc@amazon.com>
- <20190821153545.17635-3-jonnyc@amazon.com>
+        Thu, 22 Aug 2019 04:32:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33986 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727484AbfHVIcb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 04:32:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s18so4572023wrn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4b70yh01yux8LseDePSC/DiDISC+4IVFYV73p/rz2+o=;
+        b=E8c1BVe7EBu6yhtFK7db335Fb1S6eHZXaT/G0r9s6o7yCfITCEzNdfIuD0wirYp7vb
+         MjBwnsVUgiHDSiSTUkyjG1wIB9iwROJpD58qta21td0tKHQDUmwhpZdduxFB2zp6sebi
+         jvUrA8A2D58nA2kFTgHoHam8Ya25z0Z5isgC5uLEVljRxOWdTmXYFCNu7V4jDwDYcxXO
+         Tn/AhSkcu56p/oJC8gZNa9b0VNYEfc0WGmMiTJsmx6lTnUJ/u4ugOnZ+1Lqv9VyOuAkr
+         NNngborlwcNM9CtXvqO9XoNQpVYvf7o4NuBeerxAGsY42aYL3eOxwqRmbKc320uBtg6u
+         wCNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4b70yh01yux8LseDePSC/DiDISC+4IVFYV73p/rz2+o=;
+        b=WqbzcC4BpPhkW8OIdjhNMBRfcym4WlaabmJ2oWC84EMiZMrMfHHX8XSqp6Fl4WiM8/
+         UUpcc/gd6mL7pIGfK2OosaOoXmiRNKGougc8xK20Xsh6DRa+F8IN1OVLa4E/oUIyGPyK
+         R967GgklpH3XEkqQ6oUJb8pY0Cb7yBsmTchFuLfwFyZg5SB+EHbKuH5lt8XzRfOJUq0V
+         0OCvL/CPtLPM2Ef2teFU/k9xptmRDfXF2V1EDzZqpCEfJnNSU3Dj3zS3VbgEYv9BkGiu
+         ZQmqUbh5IDPwsLO/dvHWH/XOY1wRW0fV2BM9zoI6pi/7nicXXqjRHjF3jRL9JOGcb+Rd
+         1CSA==
+X-Gm-Message-State: APjAAAV2sXZCCiS1cnf77VNmwQVESMi1x3kT9dwlrB7hqW+gVQKFqAZw
+        DjOAmcOfmY6Fvuv4nsOT7BEuuLTqbUsbAJZO
+X-Google-Smtp-Source: APXvYqzhncQ2sLyFAXkyHMIdbyY5WIElP1PH9XUf0yABxgLd2l6QYEsJKT4aB0mYksaQ3+iKPSinPA==
+X-Received: by 2002:a5d:4ec6:: with SMTP id s6mr7356600wrv.327.1566462748883;
+        Thu, 22 Aug 2019 01:32:28 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id p4sm22917436wrs.6.2019.08.22.01.32.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 01:32:27 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 09:32:23 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        arnd@arndb.de, geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        hpa@zytor.com, jeyu@kernel.org, joel@joelfernandes.org,
+        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
+        maco@android.com, maco@google.com, michal.lkml@markovi.net,
+        mingo@redhat.com, oneukum@suse.com, pombredanne@nexb.com,
+        sam@ravnborg.org, sspatil@google.com, stern@rowland.harvard.edu,
+        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
+        x86@kernel.org, yamada.masahiro@socionext.com
+Subject: Re: [PATCH v3 10/11] RFC: usb-storage: export symbols in USB_STORAGE
+ namespace
+Message-ID: <20190822083223.GA15709@google.com>
+References: <20190813121733.52480-1-maennich@google.com>
+ <20190821114955.12788-1-maennich@google.com>
+ <20190821114955.12788-11-maennich@google.com>
+ <20190821231329.GA369@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190821153545.17635-3-jonnyc@amazon.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20190821231329.GA369@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 06:35:42PM +0300, Jonathan Chocron wrote:
-> From: Ali Saidi <alisaidi@amazon.com>
-> 
-> The Amazon's Annapurna Labs root ports don't advertise an ACS
-> capability, but they don't allow peer-to-peer transactions and do
-> validate bus numbers through the SMMU. Additionally, it's not possible
-> for one RP to pass traffic to another RP.
-> 
-> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
->  drivers/pci/quirks.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 208aacf39329..23672680dba7 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4366,6 +4366,23 @@ static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
->  	return ret;
->  }
->  
-> +static int pci_quirk_al_acs(struct pci_dev *dev, u16 acs_flags)
-> +{
-> +	/*
-> +	 * Amazon's Annapurna Labs root ports don't include an ACS capability,
-> +	 * but do include ACS-like functionality. The hardware doesn't support
-> +	 * peer-to-peer transactions via the root port and each has a unique
-> +	 * segment number.
-> +	 * Additionally, the root ports cannot send traffic to each other.
+On Wed, Aug 21, 2019 at 04:13:29PM -0700, Christoph Hellwig wrote:
+>On Wed, Aug 21, 2019 at 12:49:25PM +0100, Matthias Maennich wrote:
+>> Modules using these symbols are required to explicitly import the
+>> namespace. This patch was generated with the following steps and serves
+>> as a reference to use the symbol namespace feature:
+>>
+>>  1) Define DEFAULT_SYMBOL_NAMESPACE in the corresponding Makefile
+>>  2) make  (see warnings during modpost about missing imports)
+>>  3) make nsdeps
+>>
+>> Instead of a DEFAULT_SYMBOL_NAMESPACE definition, the EXPORT_SYMBOL_NS
+>> variants can be used to explicitly specify the namespace. The advantage
+>> of the method used here is that newly added symbols are automatically
+>> exported and existing ones are exported without touching their
+>> respective EXPORT_SYMBOL macro expansion.
+>
+>So what is USB_STORAGE here?  It isn't a C string, so where does it
+>come from?  To me using a C string would seem like the nicer interface
+>vs a random cpp symbol that gets injected somewhere.
 
-Nit: I'd probably put a new line between the above two lines, or start the
-'Additionally' sentence on the first line. But either way...
+To be honest, I would also prefer an interface that uses C strings or
+literals for the new EXPORT_SYMBOLS* macros:
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+  EXPORT_SYMBOL_NS(mysym, "USB_STORAGE");
+
+  or
+
+  const char USB_STORAGE_NS[] = "USB_STORAGE";
+  EXPORT_SYMBOL_NS(mysym, USB_STORAGE_NS);
+
+The DEFAULT_SYMBOL_NAMESPACE define within Makefiles would get a bit
+more verbose in that case to express the literal:
+  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE="\"USB_STORAGE\""
 
 
-> +	 */
-> +	acs_flags &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_SV | PCI_ACS_UF);
-> +
-> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-> +		return -ENOTTY;
-> +
-> +	return acs_flags ? 0 : 1;
-> +}
-> +
->  /*
->   * Sunrise Point PCH root ports implement ACS, but unfortunately as shown in
->   * the datasheet (Intel 100 Series Chipset Family PCH Datasheet, Vol. 2,
-> @@ -4559,6 +4576,8 @@ static const struct pci_dev_acs_enabled {
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-> +	/* Amazon Annapurna Labs */
-> +	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
->  	{ 0 }
->  };
->  
-> -- 
-> 2.17.1
-> 
+The main reason against that, is, that in the expansion of
+EXPORT_SYMBOL_NS, we define the ksymtab entry, which name is
+constructed partly by the name of the namespace:
+
+   static const struct kernel_symbol __ksymtab_##sym##__##ns  ...
+                                                        ^^^^
+
+For that we depend on a cpp symbol to construct the name. I am not sure
+there is a reasonable way of getting rid of that without ending up
+constructing the ksymtab entries completely in asm as it is already done
+in case of PREL32_RELOCATIONS. But I am happy to be corrected.
+
+For reference that is done in patch 03/11 of this series:
+https://lore.kernel.org/lkml/20190821114955.12788-4-maennich@google.com/
+
+Cheers,
+Matthias
