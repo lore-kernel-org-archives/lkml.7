@@ -2,56 +2,59 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299B8C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970CEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23DC2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692512089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494121;
-	bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
+	s=default; t=1566494124;
+	bh=s6L8OP4RVDz/IuSN61W9whRCpF375hdigkwWMzjI6no=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VF2QdfQK62mo0ZcHEMJ+n+Tbo/WcLrh6RP5p91+bqfXSzRkaBugMV7a/8djRONz3J
-	 FcGkeCtPla8zEkErOMvtAf9PHa+YqrdN7QrbjpgRCKJKwOcDCciMS2egPArRe1W0IU
-	 OknmiFxGuKDt4/v6xH7EUfgSdcdsAHp6qG/w7SYE=
+	b=PEa3wpzQO5VwhnbToRGxR6sm6VrC7sJKDy3OsmbdntNwi5eojmtJmjvTsbDRnitDP
+	 zcQIkGh0Eh0uVsnnCyj8m99CVwoIRffxiMCigZcHN/P3E/zU7vn+yWcRvcFXCNYAAF
+	 uJX0MiV0EmN2mnBdV+IjtnZOE9KhvM8hWeFOnlpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391161AbfHVRPT (ORCPT
+        id S2390486AbfHVRIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:15:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58596 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390484AbfHVRIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:45 -0400
+        id S2390450AbfHVRIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:41 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D5E4233FD;
-        Thu, 22 Aug 2019 17:08:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC88123429;
+        Thu, 22 Aug 2019 17:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493724;
-        bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
+        s=default; t=1566493721;
+        bh=s6L8OP4RVDz/IuSN61W9whRCpF375hdigkwWMzjI6no=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqfI3tlSvV0cFtXj2kdrq/AavTyoZIXzObJK7zWBhQN/oLZWac2e9p1FqsLpNbTKQ
-         Utdpo2OTPJk0g5ITeb+Jv5r9Op2NmU8tSxbbMa3gOwld7D5zhdkm372zyyC41e/Mr4
-         fQ+Jl5SemSRaq9vwlSfiw5gQY0y8S0KpowdYZtwU=
+        b=WE2AHv5X4zU4oBsSYG6JlHOWuTZHT0QP5DP5s9mMVyGaxVG3xkwG/E9Y8IgPULjj0
+         cgJIy4MA5dTxGRUC86F6ep0ImSbZ41Ea34gMLhyz1knyyZ5QsDWI4XSZZlz3/xUJVU
+         et0gRl9kUZxZ/lWQZagtdgx/rVmSKw8DsTCvAcgA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 055/135] libata: zpodd: Fix small read overflow in zpodd_get_mech_type()
-Date:   Thu, 22 Aug 2019 13:06:51 -0400
-Message-Id: <20190822170811.13303-56-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
+        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 050/135] tools perf beauty: Fix usbdevfs_ioctl table generator to handle _IOC()
+Date:   Thu, 22 Aug 2019 13:06:46 -0400
+Message-Id: <20190822170811.13303-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.2.y
@@ -66,50 +69,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 71d6c505b4d9e6f76586350450e785e3d452b346 ]
+[ Upstream commit 7ee526152db7a75d7b8713346dac76ffc3662b29 ]
 
-Jeffrin reported a KASAN issue:
+In addition to _IOW() and _IOR(), to handle this case:
 
-  BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
-  Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
-  ...
-  The buggy address belongs to the variable:
-    cdb.48319+0x0/0x40
+  #define USBDEVFS_CONNINFO_EX(len)  _IOC(_IOC_READ, 'U', 32, len)
 
-Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
-eject_tray()"), this fixes a cdb[] buffer length, this time in
-zpodd_get_mech_type():
+That will happen in the next sync of this header file.
 
-We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
-ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
-
-Reported-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Fixes: afe759511808c ("libata: identify and init ZPODD devices")
-Link: https://lore.kernel.org/lkml/201907181423.E808958@keescook/
-Tested-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-3br5e4t64e4lp0goo84che3s@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-zpodd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/trace/beauty/usbdevfs_ioctl.sh | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
-index 173e6f2dd9af0..eefda51f97d35 100644
---- a/drivers/ata/libata-zpodd.c
-+++ b/drivers/ata/libata-zpodd.c
-@@ -56,7 +56,7 @@ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
- 	unsigned int ret;
- 	struct rm_feature_desc *desc;
- 	struct ata_taskfile tf;
--	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
-+	static const char cdb[ATAPI_CDB_LEN] = {  GPCMD_GET_CONFIGURATION,
- 			2,      /* only 1 feature descriptor requested */
- 			0, 3,   /* 3, removable medium feature */
- 			0, 0, 0,/* reserved */
+diff --git a/tools/perf/trace/beauty/usbdevfs_ioctl.sh b/tools/perf/trace/beauty/usbdevfs_ioctl.sh
+index 930b80f422e83..aa597ae537470 100755
+--- a/tools/perf/trace/beauty/usbdevfs_ioctl.sh
++++ b/tools/perf/trace/beauty/usbdevfs_ioctl.sh
+@@ -3,10 +3,13 @@
+ 
+ [ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
+ 
++# also as:
++# #define USBDEVFS_CONNINFO_EX(len)  _IOC(_IOC_READ, 'U', 32, len)
++
+ printf "static const char *usbdevfs_ioctl_cmds[] = {\n"
+-regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)[[:space:]]+_IO[WR]{0,2}\([[:space:]]*'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
+-egrep $regex ${header_dir}/usbdevice_fs.h | egrep -v 'USBDEVFS_\w+32[[:space:]]' | \
+-	sed -r "s/$regex/\2 \1/g"	| \
++regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)(\(\w+\))?[[:space:]]+_IO[CWR]{0,2}\([[:space:]]*(_IOC_\w+,[[:space:]]*)?'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
++egrep "$regex" ${header_dir}/usbdevice_fs.h | egrep -v 'USBDEVFS_\w+32[[:space:]]' | \
++	sed -r "s/$regex/\4 \1/g"	| \
+ 	sort | xargs printf "\t[%s] = \"%s\",\n"
+ printf "};\n\n"
+ printf "#if 0\n"
 -- 
 2.20.1
 
