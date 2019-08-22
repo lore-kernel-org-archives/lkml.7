@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F02BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287BBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450B220856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED0C20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495327;
-	bh=REioKAwsOa9H+uPgPJjP3ontKaXmkUPrRMiNHa3pRCo=;
+	s=default; t=1566495331;
+	bh=UGZ0fhU4URahXcKQQgFdEvR738c2iJmax9EO1kQkkho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j6h3nDSj0yoeo1KhnctlJju4A8iEZcCLRT5wHXwjHNwUnc+jAhHXE1rTTmy9IOEAo
-	 9v6De2zQcWzUpC9t2Q4l2mlp1cz+FWznOhTChqZd1vw0yS1rERQ80V6E+dF0xZ7vpv
-	 wWg95vu2oCVJyh3G9hgkm4lLGM8KhHU6TZR2RMW0=
+	b=vIsu12NlSqnENCocc0FTQJ1EvI1g1yZVUKRwZMm1CORqfWv0pa88Q2FHJy+d5udyO
+	 frpkltqQ41IQyvEsn3OuXqkLkpKudz2gQqa8bjFJD9D3eSckVYC4UK0lhE/f/c8ZFp
+	 On5zsufXEnDR1mpKM/xxj0nWNd1fiYvLNL5n/ZSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404928AbfHVRf0 (ORCPT
+        id S2392418AbfHVRfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:35:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48126 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404332AbfHVRZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:08 -0400
+        id S2390376AbfHVRZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:09 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD2652341E;
-        Thu, 22 Aug 2019 17:25:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 306DF2341F;
+        Thu, 22 Aug 2019 17:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494707;
-        bh=REioKAwsOa9H+uPgPJjP3ontKaXmkUPrRMiNHa3pRCo=;
+        s=default; t=1566494709;
+        bh=UGZ0fhU4URahXcKQQgFdEvR738c2iJmax9EO1kQkkho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KRZHAFvDzrnnOC/sI3oW8mFPEFn8fSbHnB9P/JuKbMy+qxAeGP3c0Z1fCIgPioSlX
-         FtsHg/jkLVfc1aJtYTWbwFrFHrLLqYk5hYxKjMfaP1nEnHNdhRUyNMqo3JtoSy9i+6
-         cLfSwuoxNdsYsiCsp2w3Iq4Gga2TnywcBlDVj3aw=
+        b=mEyO+ShQktOpXpSriMbN5i9CoGnKJrdatyBNeja7gVKd2TQuBcmbyoRhshpegd0ff
+         puXM7U5K/3rErOivDHZDKv93FsjAe0Bah9c8raV5sJpFEsKWcH0X4lb8jpd8fr172G
+         GxnHHhKTwDirW22Vj9EHIq01/vIm4HMlEfmnqgU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Tariq Toukan <tariqt@mellanox.com>,
+        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.14 62/71] net/mlx4_en: fix a memory leak bug
-Date:   Thu, 22 Aug 2019 10:19:37 -0700
-Message-Id: <20190822171730.442260348@linuxfoundation.org>
+Subject: [PATCH 4.14 64/71] sctp: fix the transport error_count check
+Date:   Thu, 22 Aug 2019 10:19:39 -0700
+Message-Id: <20190822171730.517039150@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
 References: <20190822171726.131957995@linuxfoundation.org>
@@ -60,45 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 48ec7014c56e5eb2fbf6f479896143622d834f3b ]
+[ Upstream commit a1794de8b92ea6bc2037f445b296814ac826693e ]
 
-In mlx4_en_config_rss_steer(), 'rss_map->indir_qp' is allocated through
-kzalloc(). After that, mlx4_qp_alloc() is invoked to configure RSS
-indirection. However, if mlx4_qp_alloc() fails, the allocated
-'rss_map->indir_qp' is not deallocated, leading to a memory leak bug.
+As the annotation says in sctp_do_8_2_transport_strike():
 
-To fix the above issue, add the 'qp_alloc_err' label to free
-'rss_map->indir_qp'.
+  "If the transport error count is greater than the pf_retrans
+   threshold, and less than pathmaxrtx ..."
 
-Fixes: 4931c6ef04b4 ("net/mlx4_en: Optimized single ring steering")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+It should be transport->error_count checked with pathmaxrxt,
+instead of asoc->pf_retrans.
+
+Fixes: 5aa93bcf66f4 ("sctp: Implement quick failover draft from tsvwg")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/en_rx.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sctp/sm_sideeffect.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-@@ -1193,7 +1193,7 @@ int mlx4_en_config_rss_steer(struct mlx4
- 	err = mlx4_qp_alloc(mdev->dev, priv->base_qpn, rss_map->indir_qp);
- 	if (err) {
- 		en_err(priv, "Failed to allocate RSS indirection QP\n");
--		goto rss_err;
-+		goto qp_alloc_err;
- 	}
+--- a/net/sctp/sm_sideeffect.c
++++ b/net/sctp/sm_sideeffect.c
+@@ -541,7 +541,7 @@ static void sctp_do_8_2_transport_strike
+ 	 */
+ 	if (net->sctp.pf_enable &&
+ 	   (transport->state == SCTP_ACTIVE) &&
+-	   (asoc->pf_retrans < transport->pathmaxrxt) &&
++	   (transport->error_count < transport->pathmaxrxt) &&
+ 	   (transport->error_count > asoc->pf_retrans)) {
  
- 	rss_map->indir_qp->event = mlx4_en_sqp_event;
-@@ -1247,6 +1247,7 @@ indir_err:
- 		       MLX4_QP_STATE_RST, NULL, 0, 0, rss_map->indir_qp);
- 	mlx4_qp_remove(mdev->dev, rss_map->indir_qp);
- 	mlx4_qp_free(mdev->dev, rss_map->indir_qp);
-+qp_alloc_err:
- 	kfree(rss_map->indir_qp);
- 	rss_map->indir_qp = NULL;
- rss_err:
+ 		sctp_assoc_control_transport(asoc, transport,
 
 
