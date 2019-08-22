@@ -2,91 +2,85 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7F6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE74C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541B821848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC0C1206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731631AbfHVHmw (ORCPT
+        id S1731650AbfHVHoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:42:52 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:52075 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731525AbfHVHmw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:42:52 -0400
-Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7M7gR6B078219;
-        Thu, 22 Aug 2019 16:42:27 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp);
- Thu, 22 Aug 2019 16:42:27 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7M7gQ1A078163;
-        Thu, 22 Aug 2019 16:42:26 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: (from i-love@localhost)
-        by www262.sakura.ne.jp (8.15.2/8.15.2/Submit) id x7M7gQJW078160;
-        Thu, 22 Aug 2019 16:42:26 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Message-Id: <201908220742.x7M7gQJW078160@www262.sakura.ne.jp>
-X-Authentication-Warning: www262.sakura.ne.jp: i-love set sender to penguin-kernel@i-love.sakura.ne.jp using -f
-Subject: Re: [PATCH v2] tomoyo: Don't check open/getattr permission on sockets.
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
-        syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
-        jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
-        "David S. Miller" <davem@davemloft.net>
-MIME-Version: 1.0
-Date:   Thu, 22 Aug 2019 16:42:26 +0900
-References: <201908220655.x7M6tVmv029579@www262.sakura.ne.jp> <20190822070129.GL6111@zzz.localdomain>
-In-Reply-To: <20190822070129.GL6111@zzz.localdomain>
-Content-Type: text/plain; charset="ISO-2022-JP"
-Content-Transfer-Encoding: 7bit
+        Thu, 22 Aug 2019 03:44:13 -0400
+Received: from mga06.intel.com ([134.134.136.31]:14230 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727875AbfHVHoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 03:44:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 00:44:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,415,1559545200"; 
+   d="scan'208";a="183791042"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by orsmga006.jf.intel.com with ESMTP; 22 Aug 2019 00:44:06 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, alan@linux.intel.com,
+        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com, rahul.tanwar@intel.com,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v1 0/2] x86/rtc: Add option to skip using RTC
+Date:   Thu, 22 Aug 2019 15:44:02 +0800
+Message-Id: <cover.1566456205.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric Biggers wrote:
-> On Thu, Aug 22, 2019 at 03:55:31PM +0900, Tetsuo Handa wrote:
-> > > Also, isn't the same bug in other places too?:
-> > > 
-> > > 	- tomoyo_path_chmod()
-> > > 	- tomoyo_path_chown()
-> > > 	- smack_inode_getsecurity()
-> > > 	- smack_inode_setsecurity()
-> > 
-> > What's the bug? The file descriptor returned by open(O_PATH) cannot be
-> > passed to read(2), write(2), fchmod(2), fchown(2), fgetxattr(2), mmap(2) etc.
-> > 
-> 
-> chmod(2), chown(2), getxattr(2), and setxattr(2) take a path, not a fd.
-> 
+Platform init ops get_wallclock()/set_wallclock() are by default setup such
+that they use MC146818A RTC/CMOS device to set & read time. However, some
+products might not support RTC. One such example is Intel Atom based Lightning
+Mountain network processor SOC. 
 
-OK. Then, is the correct fix
+Patch 1: Use status standard property of motorola,mc146818 compatible DT node
+to determine if RTC is supported. Skip read/write from RTC device only when
+this node is present and status is disabled.
 
-  inode_lock(inode);
-  if (SOCKET_I(inode)->sk) {
-    // Can access SOCKET_I(sock)->sk->*
-  } else {
-    // Already close()d. Don't touch.
-  }
-  inode_unlock(inode);
+For non DT machines, do not change anything, proceed same as before.
 
-thanks to
+For DT machines, if this node is not present, proceed same as before.
 
-  commit 6d8c50dcb029872b ("socket: close race condition between sock_close() and sockfs_setattr()")
-  commit ff7b11aa481f682e ("net: socket: set sock->sk to NULL after calling proto_ops::release()")
+For DT machines, if this node is present but newly introduced status property
+is not defined in DTS, proceed same as before.
 
-changes?
+For DT machines, if this node is present and status property indicates
+"disabled", then skip read/write from RTC/CMOS device. If status property
+indicates "okay", proceed same as before.
+
+Patch 2: Update dt bindings document to add status property.
+
+These patches are baselined upon Linux 5.3-rc5 at below Git tree:
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
+
+
+Rahul Tanwar (2):
+  x86/rtc: Add option to skip using RTC
+  dt-bindings: rtc: Add optional status property
+
+ Documentation/devicetree/bindings/rtc/rtc-cmos.txt |  4 ++++
+ arch/x86/kernel/rtc.c                              | 17 +++++++++++++++++
+ 2 files changed, 21 insertions(+)
+
+-- 
+2.11.0
+
