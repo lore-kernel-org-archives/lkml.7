@@ -2,189 +2,110 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038DDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC12DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D696023401
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16A823401
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566488886;
+	bh=uipZavMt5Z1fZAX+sVlMS1INMUxP9WzC4H4BLym3E3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nxJiawPTwk9XVtsW/wRNz8xUxEX9GPd8i694D/dfVzhzEQqwTxAJcYXONSeZ44L4B
+	 COsoxs/J1Ux80tj2dO3FeeemxUKGG6W8enowCy8+DVvM4JVu9WgmV05Iqbz6z/YqzC
+	 k65RPV2MtRsi7+d9eZNmcupOs6dnBbejeJBfcUpI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387991AbfHVPsC (ORCPT
+        id S2388174AbfHVPsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:48:02 -0400
-Received: from mga01.intel.com ([192.55.52.88]:53780 "EHLO mga01.intel.com"
+        Thu, 22 Aug 2019 11:48:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387880AbfHVPsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:48:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 08:48:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,417,1559545200"; 
-   d="scan'208";a="196274097"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.122])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Aug 2019 08:48:01 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     eranian@google.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2] perf/x86: Consider pinned events for group validation
-Date:   Thu, 22 Aug 2019 08:47:46 -0700
-Message-Id: <1566488866-5975-1-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S2387880AbfHVPsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 11:48:05 -0400
+Received: from zzz.localdomain (ip-173-136-158-138.anahca.spcsdns.net [173.136.158.138])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 684B523400;
+        Thu, 22 Aug 2019 15:48:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566488884;
+        bh=uipZavMt5Z1fZAX+sVlMS1INMUxP9WzC4H4BLym3E3M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jHKmYzwY8waO4dpG6B4Fjk/MSEZD03cPKRGG5tDzo3xWM2ikozg6sh9qTjWAFn9xF
+         Ok+z1PnH1dQl7NBvJDL+TTolIZMAt5KQ2llFU4mxFXKRkZN5zZSj7Nb9imaaBL5XG7
+         36ip3+Y6lJyDNPTuNR2SzLdgobtgHdHxUCsigCe8=
+Date:   Thu, 22 Aug 2019 08:47:59 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
+        jmorris@namei.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2] tomoyo: Don't check open/getattr permission on
+ sockets.
+Message-ID: <20190822154759.GA2020@zzz.localdomain>
+Mail-Followup-To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
+        jmorris@namei.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
+        "David S. Miller" <davem@davemloft.net>
+References: <201908220655.x7M6tVmv029579@www262.sakura.ne.jp>
+ <20190822070129.GL6111@zzz.localdomain>
+ <201908220742.x7M7gQJW078160@www262.sakura.ne.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201908220742.x7M7gQJW078160@www262.sakura.ne.jp>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Thu, Aug 22, 2019 at 04:42:26PM +0900, Tetsuo Handa wrote:
+> Eric Biggers wrote:
+> > On Thu, Aug 22, 2019 at 03:55:31PM +0900, Tetsuo Handa wrote:
+> > > > Also, isn't the same bug in other places too?:
+> > > > 
+> > > > 	- tomoyo_path_chmod()
+> > > > 	- tomoyo_path_chown()
+> > > > 	- smack_inode_getsecurity()
+> > > > 	- smack_inode_setsecurity()
+> > > 
+> > > What's the bug? The file descriptor returned by open(O_PATH) cannot be
+> > > passed to read(2), write(2), fchmod(2), fchown(2), fgetxattr(2), mmap(2) etc.
+> > > 
+> > 
+> > chmod(2), chown(2), getxattr(2), and setxattr(2) take a path, not a fd.
+> > 
+> 
+> OK. Then, is the correct fix
+> 
+>   inode_lock(inode);
+>   if (SOCKET_I(inode)->sk) {
+>     // Can access SOCKET_I(sock)->sk->*
+>   } else {
+>     // Already close()d. Don't touch.
+>   }
+>   inode_unlock(inode);
+> 
+> thanks to
+> 
+>   commit 6d8c50dcb029872b ("socket: close race condition between sock_close() and sockfs_setattr()")
+>   commit ff7b11aa481f682e ("net: socket: set sock->sk to NULL after calling proto_ops::release()")
+> 
+> changes?
 
-perf stat -M metrics relies on weak groups to reject unschedulable
-groups and run them as non-groups.
-This uses the group validation code in the kernel. Unfortunately
-that code doesn't take pinned events, such as the NMI watchdog, into
-account. So some groups can pass validation, but then later still
-never schedule.
+inode_lock() is already held during security_path_chmod(),
+security_path_chown(), and security_inode_setxattr().
+So you can't just take it again.
 
-For example,
-
- $echo 1 > /proc/sys/kernel/nmi_watchdog
- $perf stat -M Page_Walks_Utilization
-
- Performance counter stats for 'system wide':
-
-     <not counted>      itlb_misses.walk_pending
-(0.00%)
-     <not counted>      dtlb_load_misses.walk_pending
-(0.00%)
-     <not counted>      dtlb_store_misses.walk_pending
-(0.00%)
-     <not counted>      ept.walk_pending
-(0.00%)
-     <not counted>      cycles
-(0.00%)
-
-       1.176613558 seconds time elapsed
-
-Current pinned events are always scheduled first. So the new group must
-can be scheduled together with current pinned events. Otherwise, it will
-never get a chance to be scheduled later.
-The trick is to pretend the current pinned events as part of the new
-group, and insert them into the fake_cpuc.
-The simulation result will tell if they can be scheduled successfully.
-The fake_cpuc never touch event state. The current pinned events will
-not be impacted.
-Disabling interrupts to prevent the events in current CPU's cpuc going
-away and getting freed.
-
-It won't catch all possible cases that cannot be scheduled, such as
-events pinned differently on different CPUs, or complicated constraints.
-The validation is based on current environment. It doesn't help on the
-case, which first create a group and then a pinned event, either.
-But for the most common case, the NMI watchdog interacting with the
-current perf metrics, it is strong enough.
-
-After applying the patch,
-
- $echo 1 > /proc/sys/kernel/nmi_watchdog
- $ perf stat -M Page_Walks_Utilization
-
- Performance counter stats for 'system wide':
-
-         2,491,910      itlb_misses.walk_pending  #      0.0
-Page_Walks_Utilization   (79.94%)
-        13,630,942      dtlb_load_misses.walk_pending
-(80.02%)
-           207,255      dtlb_store_misses.walk_pending
-(80.04%)
-                 0      ept.walk_pending
-(80.04%)
-       236,204,924      cycles
-(79.97%)
-
-       0.901785713 seconds time elapsed
-
-Reported-by: Stephane Eranian <eranian@google.com>
-Suggested-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
-
-The V2 still only check current CPU's cpuc. Because I think we cannot
-prevent the cpuc in other CPU without a lock. Adding a lock will
-introduce extra overhead in some critical path, e.g. context switch.
-The patch is good enough for the common case. We may leave the other
-complicated cases as they are.
-
-Changes since V1:
-- Disabling interrupts to prevent the events in current CPU's cpuc
-  going away and getting freed.
-- Update comments and description
-
- arch/x86/events/core.c | 34 +++++++++++++++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 81b005e..b59154e 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2011,9 +2011,12 @@ static int validate_event(struct perf_event *event)
-  */
- static int validate_group(struct perf_event *event)
- {
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct perf_event *leader = event->group_leader;
- 	struct cpu_hw_events *fake_cpuc;
--	int ret = -EINVAL, n;
-+	struct perf_event *pinned_event;
-+	int ret = -EINVAL, n, i;
-+	unsigned long flags;
- 
- 	fake_cpuc = allocate_fake_cpuc();
- 	if (IS_ERR(fake_cpuc))
-@@ -2033,9 +2036,38 @@ static int validate_group(struct perf_event *event)
- 	if (n < 0)
- 		goto out;
- 
-+	/*
-+	 * Disable interrupts to prevent the events in this CPU's cpuc
-+	 * going away and getting freed.
-+	 */
-+	local_irq_save(flags);
-+
-+	/*
-+	 * The new group must can be scheduled together with current pinned
-+	 * events. Otherwise, it will never get a chance to be scheduled later.
-+	 *
-+	 * It won't catch all possible cases that cannot schedule, such as
-+	 * events pinned on CPU1, but the validation for a new CPU1 event
-+	 * running on other CPU. However, it's good enough to handle common
-+	 * cases like the global NMI watchdog.
-+	 */
-+	for (i = 0; i < cpuc->n_events; i++) {
-+		pinned_event = cpuc->event_list[i];
-+		if (WARN_ON_ONCE(!pinned_event))
-+			continue;
-+		if (!pinned_event->attr.pinned)
-+			continue;
-+		fake_cpuc->n_events = n;
-+		n = collect_events(fake_cpuc, pinned_event, false);
-+		if (n < 0)
-+			goto irq;
-+	}
-+
- 	fake_cpuc->n_events = 0;
- 	ret = x86_pmu.schedule_events(fake_cpuc, n, NULL);
- 
-+irq:
-+	local_irq_restore(flags);
- out:
- 	free_fake_cpuc(fake_cpuc);
- 	return ret;
--- 
-2.7.4
-
+- Eric
