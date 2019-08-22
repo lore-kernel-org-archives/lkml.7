@@ -2,104 +2,186 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A22C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BE1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E42821743
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE9B21743
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387669AbfHVOQa (ORCPT
+        id S2387731AbfHVOR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:16:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:46538 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731614AbfHVOQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:16:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8ED5F337;
-        Thu, 22 Aug 2019 07:16:29 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 686233F706;
-        Thu, 22 Aug 2019 07:16:27 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] dt-bindings: iommu/arm,smmu: add compatible string
- for Marvell
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        Hanna Hawa <hannah@marvell.com>
-References: <20190711150242.25290-1-gregory.clement@bootlin.com>
- <20190711150242.25290-4-gregory.clement@bootlin.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5208b371-c81a-23a0-0870-2810fce3c7fa@arm.com>
-Date:   Thu, 22 Aug 2019 15:16:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 22 Aug 2019 10:17:29 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:40894 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732473AbfHVOR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:17:28 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 95EBB64521012408328E;
+        Thu, 22 Aug 2019 22:17:25 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 22 Aug 2019 22:17:25 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 22 Aug 2019 22:17:24 +0800
+Date:   Thu, 22 Aug 2019 22:16:44 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        "Alexander Viro" <viro@zeniv.linux.org.uk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Pavel Machek <pavel@denx.de>, Jan Kara <jack@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dave Chinner <david@fromorbit.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Li Guifu <bluce.liguifu@huawei.com>,
+        "David Sterba" <dsterba@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Richard Weinberger" <richard@nod.at>,
+        Miao Xie <miaoxie@huawei.com>, Fang Wei <fangwei1@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Zefan Li <lizefan@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v8 00/24] erofs: promote erofs from staging v8
+Message-ID: <20190822141641.GA195034@architecture4>
+References: <20190815044155.88483-1-gaoxiang25@huawei.com>
+ <20190815090603.GD4938@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20190711150242.25290-4-gregory.clement@bootlin.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190815090603.GD4938@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme709-chm.china.huawei.com (10.1.199.105) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/07/2019 16:02, Gregory CLEMENT wrote:
-> From: Hanna Hawa <hannah@marvell.com>
+Hi Greg,
+
+On Thu, Aug 15, 2019 at 11:06:03AM +0200, Greg Kroah-Hartman wrote:
+> On Thu, Aug 15, 2019 at 12:41:31PM +0800, Gao Xiang wrote:
+> > [I strip the previous cover letter, the old one can be found in v6:
+> >  https://lore.kernel.org/r/20190802125347.166018-1-gaoxiang25@huawei.com/]
+> > 
+> > We'd like to submit a formal moving patch applied to staging tree
+> > for 5.4, before that we'd like to hear if there are some ACKs,
+> > suggestions or NAKs, objections of EROFS. Therefore, we can improve
+> > it in this round or rethink about the whole thing.
+> > 
+> > As related materials mentioned [1] [2], the goal of EROFS is to
+> > save extra storage space with guaranteed end-to-end performance
+> > for read-only files, which has better performance over exist Linux
+> > compression filesystems based on fixed-sized output compression
+> > and inplace decompression. It even has better performance in
+> > a large compression ratio range compared with generic uncompressed
+> > filesystems with proper CPU-storage combinations. And we think this
+> > direction is correct and a dedicated kernel team is continuously /
+> > actively working on improving it, enough testers and beta / end
+> > users using it.
+> > 
+> > EROFS has been applied to almost all in-service HUAWEI smartphones
+> > (Yes, the number is still increasing by time) and it seems like
+> > a success. It can be used in more wider scenarios. We think it's
+> > useful for Linux / Android OS community and it's the time moving
+> > out of staging.
+> > 
+> > In order to get started, latest stable mkfs.erofs is available at
+> > 
+> > git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b dev
+> > 
+> > with README in the repository.
+> > 
+> > We are still tuning sequential read performance for ultra-fast
+> > speed NVME SSDs like Samsung 970PRO, but at least now you can
+> > try on your PC with some data with proper compression ratio,
+> > the latest Linux kernel, USB stick for convenience sake and
+> > a not very old-fashioned CPU. There are also benchmarks available
+> > in the above materials mentioned.
+> > 
+> > EROFS is a self-contained filesystem driver. Although there are
+> > still some TODOs to be more generic, we will actively keep on
+> > developping / tuning EROFS with the evolution of Linux kernel
+> > as the other in-kernel filesystems.
+> > 
+> > As I mentioned before in LSF/MM 2019, in the future, we'd like
+> > to generalize the decompression engine into a library for other
+> > fses to use after the whole system is mature like fscrypt.
+> > However, such metadata should be designed respectively for
+> > each fs, and synchronous metadata read cost will be larger
+> > than EROFS because of those ondisk limitation. Therefore EROFS
+> > is still a better choice for read-only scenarios.
+> > 
+> > EROFS is now ready for reviewing and moving, and the code is
+> > already cleaned up as shiny floors... Please kindly take some
+> > precious time, share your comments about EROFS and let us know
+> > your opinion about this. It's really important for us since
+> > generally speaking, we like to use Linux _in-tree_ stuffs rather
+> > than lack of supported out-of-tree / orphan stuffs as well.
 > 
-> Add specific compatible string for Marvell usage due errata of
-> accessing 64bits registers of ARM SMMU, in AP806.
+> I know everyone is busy, but given the length this has been in staging,
+> and the constant good progress toward cleaning it all up that has been
+> happening, I want to get this moved out of staging soon.
 > 
-> AP806 SoC uses the generic ARM-MMU500, and there's no specific
-> implementation of Marvell, this compatible is used for errata only.
+> So, unless there are any objections, I'll take this patchset in a week
+> into my staging tree to move the filesystem into the "real" part of the
+> kernel.
 
-Forgive me for repeating myself[1], but:
+It seem that the time is passed, as a brief conclusion, it seems we don't
+get "real" objection in the previous week.
 
-"Given that, I think something more specific like:
+During these days, we have enhanced our robustness against corrupted images
+by our first fuzzer based on mkfs.erofs these days (since it's a RO fs, it
+will generate reproductable images). Although the original intended use case
+of EROFS is on the top of dm-verity for Android, we still want to gain more
+wider use so we quickly build a fuzzer and addresses them (yes, we will
+develop another independent fuzzer tools as well.)
 
-	"marvell,ap806-smmu", "arm,mmu-500";
+And thanks all people for all useful suggestions these days, and we think
+these wonderful fses (ext4/xfs/btrfs/...) have awesome rich tools, that's
+also our next step to address on, especially debugging tools.
 
-would be most appropriate. Otherwise, if some future Marvell SoC were to
-ever come out with a *different* MMU-500 integration problem, you'd
-already have painted yourself into a corner."
+As a Newborn communities, we only have a few paid-job people working on
+that, but we are doing our best on EROFS, please kindly give us some time
+to grow up (I personally speed my all spare/working time on EROFS from its
+start), and apply EROFS to more wider use like what we did successfully
+for many many HUAWEI smartphones...
 
-Robin.
+As Greg said before [1], we have already proven the advantage of EROFS
+solutions, the next step is to develop it more actively... And we would
+also like to generalize the decompression engine into a library for other
+general fses to use (we're very happy to share our efforts), it seems
+interesting to other fs as well [2].
 
-[1] 
-https://lore.kernel.org/linux-arm-kernel/3ce1d67a-4e3c-e8d8-f7fc-79649f1def68@arm.com/
+I sent several patchsets from July 4, 2019 (v1-v8), Cc most of fs people
+at the first beginning and get responses and suggestions from people (Ted,
+Pavel, Eric, Stephen, Amir, David, Jan, Richard, Linus...), so could you
+kindly consider the following moving patch [3] and let us join, contribute
+Linux "real" part community more actively, again, we have a steady stream
+of work on EROFS, and will do our best on it. Thank you all very much!
 
-> Signed-off-by: Hanna Hawa <hannah@marvell.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-> ---
->   Documentation/devicetree/bindings/iommu/arm,smmu.txt | 1 +
->   1 file changed, 1 insertion(+)
+Sorry about my English...
+
+[1] https://lore.kernel.org/r/20190618064523.GA6015@kroah.com/
+[2] https://lore.kernel.org/r/20190820162510.GC10232@mit.edu/
+[3] https://lore.kernel.org/r/20190817082313.21040-1-hsiangkao@aol.com/
+
+Thanks,
+Gao Xiang
+
 > 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> index 3133f3ba7567..7ed58d51846e 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -16,6 +16,7 @@ conditions.
->                           "arm,mmu-400"
->                           "arm,mmu-401"
->                           "arm,mmu-500"
-> +                        "marvell,mmu-500"
->                           "cavium,smmu-v2"
->                           "qcom,smmu-v2"
->   
+> thanks,
 > 
+> greg k-h
