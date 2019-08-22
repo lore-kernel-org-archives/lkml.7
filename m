@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EF5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC84C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D226B206DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168AF23400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494820;
-	bh=t36UPhkS7v7+v2KG+YnUGO5OS8HNCdTGNZFAPBglJ6E=;
+	s=default; t=1566494824;
+	bh=fmHX5gFkRLE6HEbw4pNjyFQ6FzlHrGcqNU+mkFP+Wpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KB2wBmzXOV0v70SRxKJWAolhrRQjICYjzWhEQ3JNoRmUFylbypbD+PZppqr5NC/z1
-	 a8FYm2ZjnWaxS7zlC296JLHW3Pv/rHGwv6TZVTLi7LUmmqmaFPxmA7rFzBEfLf9pTw
-	 p6Rx9v7/K2dZU77kSOFExWXkCtDAtQnJeIl1nGfw=
+	b=seGojM9ec+RIB2m/zN7YXZkWjqga50M+zBhtXJrrkkAXLS8PQcD6CfuecqlQ3yNg6
+	 NNtUc/TH0TApi9n+ir9NPxGm97LqJMbebarnwDd5OrYLiDDr1EQ5yUUjNgcHa/cANm
+	 6FsN4R/HUA+x/PgxEt840NFmFGueAOxXt6S2D0oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391939AbfHVR07 (ORCPT
+        id S2391943AbfHVR1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:26:59 -0400
+        Thu, 22 Aug 2019 13:27:03 -0400
 Received: from mail.kernel.org ([198.145.29.99]:49894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404482AbfHVRZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:43 -0400
+        id S2404474AbfHVRZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:45 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E89952341E;
-        Thu, 22 Aug 2019 17:25:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D98E23426;
+        Thu, 22 Aug 2019 17:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494742;
-        bh=t36UPhkS7v7+v2KG+YnUGO5OS8HNCdTGNZFAPBglJ6E=;
+        s=default; t=1566494744;
+        bh=fmHX5gFkRLE6HEbw4pNjyFQ6FzlHrGcqNU+mkFP+Wpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zm4T8pjIxg6Wk+UlXI3h+ln179BQuTKR3R9VCFoeRHWxa8g9gYZAXgPthFpesa+l+
-         F7LZvZySwwiq3Tk7y96zXe5Y2XzaVRczLRFRQAuy4H6AZhcURCwIgV6yEEls0r30Dh
-         PmNkZt1GCI2p4NqQiFMrgzANwoRo8ApnklJhTy48=
+        b=Of1vQEaaXfq+bTfXupDr1W1+mBMHaVAOuyWGjrjvVcZJzSN6i1NK6OFNVodFAkJDr
+         8ZDFDB0a18LfNZecrY5X9Wtfp0QktKE9wIp2wHvhk72Hg375sci0G8uzBpmX+y+xem
+         gwksi8lUUWepr6Ys+9Yea+RjhXB1rLQBN0PDcxRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/85] drm/bridge: lvds-encoder: Fix build error while CONFIG_DRM_KMS_HELPER=m
-Date:   Thu, 22 Aug 2019 10:19:08 -0700
-Message-Id: <20190822171732.863224842@linuxfoundation.org>
+Subject: [PATCH 4.19 38/85] scsi: qla2xxx: Fix possible fcport null-pointer dereferences
+Date:   Thu, 22 Aug 2019 10:19:11 -0700
+Message-Id: <20190822171732.971558743@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -61,37 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f4cc743a98136df3c3763050a0e8223b52d9a960 ]
+[ Upstream commit e82f04ec6ba91065fd33a6201ffd7cab840e1475 ]
 
-If DRM_LVDS_ENCODER=y but CONFIG_DRM_KMS_HELPER=m,
-build fails:
+In qla2x00_alloc_fcport(), fcport is assigned to NULL in the error
+handling code on line 4880:
+    fcport = NULL;
 
-drivers/gpu/drm/bridge/lvds-encoder.o: In function `lvds_encoder_probe':
-lvds-encoder.c:(.text+0x155): undefined reference to `devm_drm_panel_bridge_add'
+Then fcport is used on lines 4883-4886:
+    INIT_WORK(&fcport->del_work, qla24xx_delete_sess_fn);
+	INIT_WORK(&fcport->reg_work, qla_register_fcport_fn);
+	INIT_LIST_HEAD(&fcport->gnl_entry);
+	INIT_LIST_HEAD(&fcport->list);
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: dbb58bfd9ae6 ("drm/bridge: Fix lvds-encoder since the panel_bridge rework.")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190729071216.27488-1-yuehaibing@huawei.com
+Thus, possible null-pointer dereferences may occur.
+
+To fix these bugs, qla2x00_alloc_fcport() directly returns NULL
+in the error handling code.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla2xxx/qla_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index bf6cad6c9178b..7a3e5a8f6439b 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -46,6 +46,7 @@ config DRM_DUMB_VGA_DAC
- config DRM_LVDS_ENCODER
- 	tristate "Transparent parallel to LVDS encoder support"
- 	depends on OF
-+	select DRM_KMS_HELPER
- 	select DRM_PANEL_BRIDGE
- 	help
- 	  Support for transparent parallel to LVDS encoders that don't require
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index f84f9bf150278..ddce32fe0513a 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -4732,7 +4732,7 @@ qla2x00_alloc_fcport(scsi_qla_host_t *vha, gfp_t flags)
+ 		ql_log(ql_log_warn, vha, 0xd049,
+ 		    "Failed to allocate ct_sns request.\n");
+ 		kfree(fcport);
+-		fcport = NULL;
++		return NULL;
+ 	}
+ 	INIT_WORK(&fcport->del_work, qla24xx_delete_sess_fn);
+ 	INIT_LIST_HEAD(&fcport->gnl_entry);
 -- 
 2.20.1
 
