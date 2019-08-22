@@ -2,113 +2,121 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E5CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A00C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822D921848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF70C233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:13:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yezPFauY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e+s77JT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388383AbfHVMNi (ORCPT
+        id S2388397AbfHVMNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:13:38 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:46310 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfHVMNh (ORCPT
+        Thu, 22 Aug 2019 08:13:50 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:42104 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388386AbfHVMNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:13:37 -0400
-Received: by mail-ua1-f65.google.com with SMTP id y19so1885508ual.13
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 05:13:36 -0700 (PDT)
+        Thu, 22 Aug 2019 08:13:40 -0400
+Received: by mail-vs1-f67.google.com with SMTP id b187so3660673vsc.9
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 05:13:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Mvo3obOpukOfhgTtLVmsxidJD3UDOJN2LjSEIs/pCEY=;
-        b=yezPFauYmhYaA1IvJm9bJpL2dY24hl2CuZ23kSamOTyei7zmkpM9OwfeezL77smNmy
-         brPejKcqSkGbdeG0TZhPjVTnbbSR+wUP/ef7qlhKjm1WrevaaTKdM1H5BJlulQSNFFBu
-         ffPG25/rp7o/Np+uiVJ5mzu29geogy+OlShFowhzezrqK6jSKy2/ttts946z7KwBEK5H
-         wnQkO/mNQJxlV1Z14pPtRBkgMBP1xn5E1R8TR3s9I8XCM+WYiRCE1b8xj+vvhDBM350a
-         eawe58pkj08f/lPQkGSdVpLTGANBXb3hC9izuEQG64fH8ePiwIAUom1q0sA5Yp1ctCCV
-         rMUg==
+        bh=4Ly6KX3kvL/W0ycoaNLTVk5Ihkvoe8Wnu3biVwC7K5k=;
+        b=e+s77JT2cpzLx6Bok8gRYEyL3sIJy4MY0tlRRujMgKNbw6Z8D3adtcuYtllumK+DjH
+         LrHgjsL1mpImPi9hm6KbpBAAchu2bX0CfUzY6uYJjTeSuNqn6Wcgz2KcEnwVw6Pe/JpD
+         oKBN8X226wmaOyQuFVPK5p8PY+SwbN9m5mTaOL+YUCPd9ztzxrq/fneELEak3mkQUbRD
+         MYNbzBNBfg0IIdZfwMJqM9/zCu0TyPnJ89zkl32BKEuddVAN7XgJLendjEh+3sU1emMB
+         Q9iajclIOnQww/YNvGzunL8wkFKWjd3INZO0vdCfiVEOCPZMpO7URRy4oOPu0Mi57523
+         ZeVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Mvo3obOpukOfhgTtLVmsxidJD3UDOJN2LjSEIs/pCEY=;
-        b=LCl0nlnUqiKTiySpOwyIv6dnJc4eRkaqUUMcd+Y1hxmmDup4VtYerUppD3HSZTPeuG
-         3l9G/v75IURCA/5lvI89TV6SAcCosqLlqaSaTpLirqqOTimiJeimlxixCvcvMtyYRXYB
-         uYiofqt7G2XR8maicB3hOyU0CTfTa9y6VuNKj9ZTgLN5Xd+lAxa38UscC3txe9P3iKjY
-         mLmC2Ty20fv8tZUv1s7eQfLoMaQn1IfX4B4apr8VPYb5jrOok5gWi/NL45Br/1/H+4on
-         /5dtQ6rIa5MV/j++QFvmw7UPjPxSNGs5S4jz7qMlRamD08Gc/sCop7uXGg+qM5asghff
-         5SIA==
-X-Gm-Message-State: APjAAAXr9OsX4BO15CWQyfprV0hPayRJqyKTuny6+vEGm0y7Web4QfLm
-        o0eBCpR/h72VA88sxrwRr8Lw1Vb2kz1uzHQT/51Mdg==
-X-Google-Smtp-Source: APXvYqw7ToGHxamlJhqcq3M4yWdo5/jCqSU8fUkV8Z6lMD/B9TiMtkFuCTmQqe2Zj1ICY4zk9zXEx7jisLrgFwz9Yzs=
-X-Received: by 2002:ab0:1562:: with SMTP id p31mr5468313uae.15.1566476015930;
- Thu, 22 Aug 2019 05:13:35 -0700 (PDT)
+        bh=4Ly6KX3kvL/W0ycoaNLTVk5Ihkvoe8Wnu3biVwC7K5k=;
+        b=AtOoc7TZXVJpCwKxFH1qwcvhcPyfmdxkazvAvEDBbceIkFBMagMlJdIE8qxpOm4hFi
+         7f4bYRvm1Z7wb2QK8N6PO7gfRb5g3kMSM3wfsvQiNYSAn1LTfBtj1g2+0rWXy+ySLnTY
+         hyaeAGZbmOFBGm4bin+bopbO417ObV5ni5nd2VMNY2DEHZ0vuBCrIy/pJwadotQLe6GT
+         wPAq0WXoWwNlKYB8Vf3bmnGkbM7ghtMHvNGndrBUrMvyg+IrSBosm2dB5hQhcZhsTxld
+         RcZzPta59UxPfba6MdffWAkjpqnPXbJKShZ3uXnxMeS0HDGX6418Yffm4sGMJ5jI3xpj
+         c0Fg==
+X-Gm-Message-State: APjAAAVBmgkDnurJFVFydAc8ArSIFra4ygmMAVPydlVJHxbW2unWYV8H
+        P1P9FE5v0wBnaHZMX6RcWtytsQR10AQ5282+q18sWQ==
+X-Google-Smtp-Source: APXvYqytHCOMHR5M9lts8SdpAxk1X76n5u7WLvfmxOXVJUEBRHaXV9qwemPTTdfSZATLeZEry7/4cv0gzsDJKxqcftg=
+X-Received: by 2002:a67:61c7:: with SMTP id v190mr24652042vsb.165.1566476019397;
+ Thu, 22 Aug 2019 05:13:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
- <CAPDyKFrUr8_VP1JLRk48zR8_p1Y62wKLBnS0iTgdhUSArwD49Q@mail.gmail.com> <20190809080842.zl4ytbjyt54bj6ta@M43218.corp.atmel.com>
-In-Reply-To: <20190809080842.zl4ytbjyt54bj6ta@M43218.corp.atmel.com>
+References: <20190814072649.8237-1-yinbo.zhu@nxp.com> <20190814072649.8237-4-yinbo.zhu@nxp.com>
+In-Reply-To: <20190814072649.8237-4-yinbo.zhu@nxp.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 22 Aug 2019 14:12:59 +0200
-Message-ID: <CAPDyKFp_UdPqnOtqsOZcNxt+fTayMYm89_YLNH8J5-=VRcWTJA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mmc: sdhci-of-at91: add quirk for broken HS200
-To:     Eugen.Hristev@microchip.com,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Nicolas Ferre <Nicolas.Ferre@microchip.com>,
+Date:   Thu, 22 Aug 2019 14:13:03 +0200
+Message-ID: <CAPDyKFpwGGPAShEoXPK8Ksg5FPEVrbD3-HfeTSMACPsDC_V5FA@mail.gmail.com>
+Subject: Re: [PATCH v1 4/4] mmc: sdhci-of-esdhc: add erratum A011334 support
+ in ls1028a 1.0 SoC
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Amit Jain <amit.jain_1@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>,
+        Rajesh Bhagat <rajesh.bhagat@nxp.com>,
+        Ashish Kumar <Ashish.Kumar@nxp.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Xiaobo Xie <xiaobo.xie@nxp.com>,
+        Jiafei Pan <jiafei.pan@nxp.com>,
+        Alison Wang <alison.wang@nxp.com>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Catalin Horghidan <catalin.horghidan@nxp.com>,
+        Rajat Srivastava <rajat.srivastava@nxp.com>,
+        linuxppc-dev@lists.ozlabs.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 9 Aug 2019 at 10:09, Ludovic Desroches
-<ludovic.desroches@microchip.com> wrote:
+On Wed, 14 Aug 2019 at 09:24, Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
 >
-> On Thu, Aug 08, 2019 at 05:23:00PM +0200, Ulf Hansson wrote:
-> > On Thu, 8 Aug 2019 at 10:35, <Eugen.Hristev@microchip.com> wrote:
-> > >
-> > > From: Eugen Hristev <eugen.hristev@microchip.com>
-> > >
-> > > HS200 is not implemented in the driver, but the controller claims it
-> > > through caps.
-> > > Remove it via quirk.
-> > > Without this quirk, the mmc core will try to enable hs200, which will fail,
-> > > and the eMMC initialization will fail.
-> > >
-> > > Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> >
-> > Should this be applied as a fix and possibly tagged for stable?
-> >
-> > In such case, do you have a specific commit that it fixes?
+> This patch is to add erratum A011334 support in ls1028a 1.0 SoC
 >
-> I think so, I would say:
-> Fixes: bb5f8ea4d514 ("mmc: sdhci-of-at91: introduce driver for the Atmel SDMMC")
-> Cc: stable@vger.kernel.org #v4.4 and later
->
-> It doesn't apply on 4.4 but resolution is trivial.
->
-> Regards
->
-> Ludovic
->
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
 
-[...]
-
-Applied for fixes, by adding the above tags, thanks!
+Applied for next, thanks!
 
 Kind regards
 Uffe
+
+
+> ---
+>  drivers/mmc/host/sdhci-of-esdhc.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+> index b16f7d440f78..eb2b290447fc 100644
+> --- a/drivers/mmc/host/sdhci-of-esdhc.c
+> +++ b/drivers/mmc/host/sdhci-of-esdhc.c
+> @@ -1006,6 +1006,7 @@ static struct soc_device_attribute soc_incorrect_hostver[] = {
+>  static struct soc_device_attribute soc_fixup_sdhc_clkdivs[] = {
+>         { .family = "QorIQ LX2160A", .revision = "1.0", },
+>         { .family = "QorIQ LX2160A", .revision = "2.0", },
+> +       { .family = "QorIQ LS1028A", .revision = "1.0", },
+>         { },
+>  };
+>
+> --
+> 2.17.1
+>
