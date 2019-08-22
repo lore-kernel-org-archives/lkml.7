@@ -2,135 +2,110 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FECC3A5A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA584C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41FDF22CF7
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:36:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="eUEkk9eW"
+	by mail.kernel.org (Postfix) with ESMTP id C142D21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbfHVDgh (ORCPT
+        id S1730397AbfHVDhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 23:36:37 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:16891 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfHVDgg (ORCPT
+        Wed, 21 Aug 2019 23:37:20 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:42898 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728275AbfHVDhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 23:36:36 -0400
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x7M3aUer010801;
-        Thu, 22 Aug 2019 12:36:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x7M3aUer010801
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566444991;
-        bh=R9DdSYdCLpkt/LbQI9zbQtcp6/zLnu2cPiFV1+CyfHo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eUEkk9eWXjdoHatpVYwRKckiQipct8CNYZ1yNMX6zz/9a0vjuv5L2H/HYs7E93wIQ
-         Ye0JffRsJlJ03ayqyRx26a+RPd/Eb2Rg3D3R+tq7ICO2sF9RzuzRNC/+S4V4N6RhbN
-         o5gzZ4Q5WkP6o2fBnZ6rTTVnM2jSFLXMIoOVG3fdIKKBvRN8KjDRsVYJyIuV6FRW6f
-         UjPEtmBF0lRLM2klZ0M8yBpEplIwhCeJ1jACbKuw1GCgHrLcKdTBGDbJeDE2IVpD7F
-         y11AcLO+99qrOJj8oKWFrSU7Aj7mdhMnE/7G142WmmPiGNmr6C2qqj11DdnVQjzviE
-         KYEDrvQqW/BUg==
-X-Nifty-SrcIP: [209.85.222.52]
-Received: by mail-ua1-f52.google.com with SMTP id g11so1541686uak.0;
-        Wed, 21 Aug 2019 20:36:31 -0700 (PDT)
-X-Gm-Message-State: APjAAAWT43xTfUBYVGww77u79OvQjWbqR1WvjfMv8btve7dg3hX7c3uO
-        tAJHIDr0VM13hYDqD06H5ckq2rVLbxIO9RhE2AU=
-X-Google-Smtp-Source: APXvYqyP82w0LcNr90K+YIvYDLaC1gE8BN3JtOVy4zweoBYyINB1DSz23Tf3bwhMHYIOMB6f4JWmuGj3PmaxlGb6mu0=
-X-Received: by 2002:ab0:70d9:: with SMTP id r25mr3941384ual.109.1566444990083;
- Wed, 21 Aug 2019 20:36:30 -0700 (PDT)
+        Wed, 21 Aug 2019 23:37:20 -0400
+IronPort-SDR: 3IyRZjWhAPCvFyFzdZKgUjmoPesQJQtV4T2H9YWESXKo2QpeaGQtmTQDLotdCW7pLJs+YmqE3x
+ p5hV/VdWUDxCoqbEZVqRQiJ8bRkhDHdP5gLQM69zyNjCl7k4ADmK5c7yV7TzGdeb5kk354WawT
+ 7LqLUWojhrQzJgCjNCUY8mVeS7wUUHxCUCcUXWW8B8Ya+lP2bE7xMvnLnCk/caD+tymqBChyWp
+ lGXM7h2ncaiesREDGX4gnv3USNo8cyXw1XDW2Fi6NOQpq9h6kekFMJsM4gJjM38SiajlenZuka
+ l3g=
+X-IronPort-AV: E=Sophos;i="5.64,415,1559548800"; 
+   d="scan'208";a="40633198"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa2.mentor.iphmx.com with ESMTP; 21 Aug 2019 19:37:19 -0800
+IronPort-SDR: knej7h//JlhpiEVQ7A8cM21t3Tj7uWAZJhNy2Dh3bBaBtIWQdiB9h6lYm/zpZN+JDJpP+NZg5Y
+ U3GEISDT8GZaSNBgDT9qNRwVVj3KqEwKysOmlob4/TXPHgbukoACxZtsbeURHRBYESudzFruBC
+ +jjsxSHPyJY2OnKuvDljpLJWSa91MevcS6/dAr0vkHJUHqqUP62BSl6uvrfL5+nV2BJhMr136/
+ 2FGMwfdjUaHjM2uiD251CbOk0rRt7vpdpVbK8xwirDE+jvJQu7XHoL5EMG+T0HwJ1Ol41hwezO
+ awU=
+Subject: Re: [PATCH v1 03/63] Input: atmel_mxt_ts - only read messages in
+ mxt_acquire_irq() when necessary
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     <nick@shmanahar.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <george_davis@mentor.com>
+References: <20190816082952.17985-1-jiada_wang@mentor.com>
+ <20190816082952.17985-4-jiada_wang@mentor.com>
+ <20190816171622.GF121898@dtor-ws>
+ <558e1227-7671-0838-d4e0-f234833c0973@mentor.com>
+ <20190821175422.GE76194@dtor-ws>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <cab8d0cd-21ec-3844-5e4f-eb5b582aa432@mentor.com>
+Date:   Thu, 22 Aug 2019 12:37:12 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190509143859.9050-1-joe.lawrence@redhat.com>
- <20190509143859.9050-7-joe.lawrence@redhat.com> <CAK7LNAQuS-YcXecfJ21BGzc0CimzWxQcYST5-1xRgnCQGtcL4A@mail.gmail.com>
- <20190812155626.GA19845@redhat.com> <CAK7LNATRLTBqA9c=b+Y38T-zWc9o5JMq18r9auA=enPC=p10pA@mail.gmail.com>
- <alpine.LSU.2.21.1908161016430.2020@pobox.suse.cz> <6c7e4d19-b993-1c14-d6cf-6aa1ee891361@redhat.com>
- <CAK7LNAS0Z95VT2n1o3V09bKf-rkPBMNdRryF67gpLKtnjAVAiA@mail.gmail.com>
- <alpine.LSU.2.21.1908190928520.31051@pobox.suse.cz> <42254ffc-6422-19e1-62a2-6abc23fd089a@redhat.com>
-In-Reply-To: <42254ffc-6422-19e1-62a2-6abc23fd089a@redhat.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 22 Aug 2019 12:35:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS=yCP=me5_qc_yxjeQPvRtbHwp3CAe8-w6KE6P0+VS_w@mail.gmail.com>
-Message-ID: <CAK7LNAS=yCP=me5_qc_yxjeQPvRtbHwp3CAe8-w6KE6P0+VS_w@mail.gmail.com>
-Subject: Re: [PATCH v4 06/10] modpost: Add modinfo flag to livepatch modules
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Miroslav Benes <mbenes@suse.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        live-patching@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190821175422.GE76194@dtor-ws>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+Hi
 
-On Tue, Aug 20, 2019 at 1:02 AM Joe Lawrence <joe.lawrence@redhat.com> wrote:
->
-> On 8/19/19 3:31 AM, Miroslav Benes wrote:
-> > On Mon, 19 Aug 2019, Masahiro Yamada wrote:
-> >
-> >>
-> >> I can review this series from the build system point of view,
-> >> but I am not familiar enough with live-patching itself.
-> >>
-> >> Some possibilities:
-> >>
-> >> [1] Merge this series thru the live-patch tree after the
-> >>      kbuild base patches land.
-> >>      This requires one extra development cycle (targeting for 5.5-rc1)
-> >>      but I think this is the official way if you do not rush into it.
-> >
-> > I'd prefer this option. There is no real rush and I think we can wait one
-> > extra development cycle.
->
-> Agreed.  I'm in no hurry and was only curious about the kbuild changes
-> that this patchset is now dependent on -- how to note them for other
-> reviewers or anyone wishing to test.
->
-> > Joe, could you submit one more revision with all the recent changes (once
-> > kbuild improvements settle down), please? We should take a look at the
-> > whole thing one more time? What do you think?
-> >
->
-> Definitely, yes.  I occasionally force a push to:
-> https://github.com/joe-lawrence/linux/tree/klp-convert-v5-expanded
->
-> as I've been updating and collecting feedback from v4.  Once updates
-> settle, I'll send out a new v5 set.
->
-> -- Joe
+On 2019/08/22 2:54, Dmitry Torokhov wrote:
+> On Wed, Aug 21, 2019 at 10:26:31PM +0900, Jiada Wang wrote:
+>> Hi Dmitry
+>>
+>> On 2019/08/17 2:16, Dmitry Torokhov wrote:
+>>> On Fri, Aug 16, 2019 at 05:28:52PM +0900, Jiada Wang wrote:
+>>>> From: Nick Dyer <nick.dyer@itdev.co.uk>
+>>>>
+>>>> The workaround of reading all messages until an invalid is received is a
+>>>> way of forcing the CHG line high, which means that when using
+>>>> edge-triggered interrupts the interrupt can be acquired.
+>>>>
+>>>> With level-triggered interrupts the workaround is unnecessary.
+>>>>
+>>>> Also, most recent maXTouch chips have a feature called RETRIGEN which, when
+>>>> enabled, reasserts the interrupt line every cycle if there are messages
+>>>> waiting. This also makes the workaround unnecessary.
+>>>>
+>>>> Note: the RETRIGEN feature is only in some firmware versions/chips, it's
+>>>> not valid simply to enable the bit.
+>>>
+>>> Instead of trying to work around of misconfiguration for IRQ/firmware,
+>>> can we simply error out of probe if we see a level interrupt with
+>>> !RETRIGEN firmware?
+>>>
+>> I think for old firmwares, which doesn't support RETRIGEN feature, this
+>> workaround is needed, otherwise we will break all old firmwares, which
+>> configured with edge-triggered IRQ
+> 
+> Do you know if there are any? I know Chrome OS firmware have RETRIGEN
+> activated and they are pretty old (original Pixel is from 2013). But if
+> we indeed have devices with edge interrupt and old not firmware that
+> does not retrigger, I guess we'll have to keep it...
+> 
 
-When you send v5, please squash the following clean-up too:
+Honestly I don't know firmwares/chips which don't support RETRIGEN feature.
 
-
-
-diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-index 89eaef0d3efc..9e77246d84e3 100644
---- a/scripts/Makefile.modfinal
-+++ b/scripts/Makefile.modfinal
-@@ -47,7 +47,7 @@ targets += $(modules) $(modules:.ko=.mod.o)
- # Live Patch
- # ---------------------------------------------------------------------------
-
--$(modules-klp:.ko=.tmp.ko): %.tmp.ko: %.o %.mod.o Symbols.list FORCE
-+%.tmp.ko: %.o %.mod.o Symbols.list FORCE
-        +$(call if_changed,ld_ko_o)
-
- quiet_cmd_klp_convert = KLP     $@
+BUT Dyer originally authored this patch in 2012, I assume here "old" 
+firmware/chips means, those before 2012.
 
 
+Thanks,
+Jiada
 
-
-Thanks.
-
-
--- 
-Best Regards
-Masahiro Yamada
+> Thanks.
+> 
