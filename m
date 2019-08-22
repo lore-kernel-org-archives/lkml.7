@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF82C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BCBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78702089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3FFE233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493854;
-	bh=Lja0FVf56EXqjcfkco10xOKcvCdEdpDIeNUFDwiV7NY=;
+	s=default; t=1566493861;
+	bh=GiWhgEtmw+CrWmKoy5ECUngRb5KMcXW1Dpi5tpfSIjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oVXaFV993D2CYIz/2poRdXt42aisD62Hgnm9eyKZGx6u2LWomQk55lMS4JUTIXwAD
-	 MacRDd1px5bQ4B4+6lGOfWWoPzQHgF3F19kP2hRGdpFr8ooZmLaS9chgsNMOtwHy20
-	 v65eVdv5+syGwqhI1G868XUQadD7x9Y7aTwKj44w=
+	b=QyYMOC5UJ6i1Syu5HQ+KXggN1RJ8ZS/liLq9t/XLNJ1Azuva8CKqJwkZOm32hXPLk
+	 Lcv9UdP67cp6Ll8AG3fdfjeBjHcj9NS50uFoQNfS6hFKcIeKvmXQgXJ1Tk/QqR+Wp+
+	 W3sHY8V6qH1vPY+EblZTVjIHpBr+AfM6pDaCfgS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732660AbfHVRKx (ORCPT
+        id S2390870AbfHVRLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:10:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59670 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390734AbfHVRJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:20 -0400
+        id S2390728AbfHVRJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:19 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7225233FE;
-        Thu, 22 Aug 2019 17:09:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FDE32342D;
+        Thu, 22 Aug 2019 17:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493760;
-        bh=Lja0FVf56EXqjcfkco10xOKcvCdEdpDIeNUFDwiV7NY=;
+        s=default; t=1566493758;
+        bh=GiWhgEtmw+CrWmKoy5ECUngRb5KMcXW1Dpi5tpfSIjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hmE4a/nb1YFMPh9Wuk28FOauYIVSadU4TA0wNNbzIu9lTpX28TlrdAfTL/Mwm9O6E
-         vC85Mc+1ftILf3/X5JZZSqCZObnTTGXqvp0rWP2IYt/DHDhJl3uBClVW3otTLL2rvB
-         R5Ho4XpIBaVqk/ODywcHrB8bxt7k2Y3i7jYgw/Sk=
+        b=hANLY8XznmejT/iEGSfDNH5kPnVX8TLn/WCLIFNDsNzI/1Bry798GB285+oOhxAW6
+         rCdsG0DD5m/cww/vui41UxjBjb/81mCErRBa4qVADk3s3j4/EGFUIx+X7iB4vWL3A8
+         Y8cg2v+UFIcK5fINBktEVOR1sPL3bGEAfywJxoXI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+Cc:     Michael Chan <michael.chan@broadcom.com>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 122/135] bnxt_en: Suppress HWRM errors for HWRM_NVM_GET_VARIABLE command
-Date:   Thu, 22 Aug 2019 13:07:58 -0400
-Message-Id: <20190822170811.13303-123-sashal@kernel.org>
+Subject: [PATCH 5.2 119/135] bnxt_en: Fix VNIC clearing logic for 57500 chips.
+Date:   Thu, 22 Aug 2019 13:07:55 -0400
+Message-Id: <20190822170811.13303-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,44 +65,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit b703ba751dbb4bcd086509ed4b28102bc1670b35 ]
+[ Upstream commit a46ecb116fb7f722fa8cb2da01959c36e4e10c41 ]
 
-For newly added NVM parameters, older firmware may not have the support.
-Suppress the error message to avoid the unncessary error message which is
-triggered when devlink calls the driver during initialization.
+During device shutdown, the VNIC clearing sequence needs to be modified
+to free the VNIC first before freeing the RSS contexts.  The current
+code is doing the reverse and we can get mis-directed RX completions
+to CP ring ID 0 when the RSS contexts are freed and zeroed.  The clearing
+of RSS contexts is not required with the new sequence.
 
-Fixes: 782a624d00fa ("bnxt_en: Add bnxt_en initial params table and register it.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Refactor the VNIC clearing logic into a new function bnxt_clear_vnic()
+and do the chip specific VNIC clearing sequence.
+
+Fixes: 7b3af4f75b81 ("bnxt_en: Add RSS support for 57500 chips.")
 Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 26 ++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-index 549c90d3e465f..c05d663212b20 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-@@ -98,10 +98,13 @@ static int bnxt_hwrm_nvm_req(struct bnxt *bp, u32 param_id, void *msg,
- 	if (idx)
- 		req->dimensions = cpu_to_le16(1);
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 7afae9d80e758..d9eaafa93970b 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -6963,19 +6963,29 @@ static void bnxt_hwrm_clear_vnic_rss(struct bnxt *bp)
+ 		bnxt_hwrm_vnic_set_rss(bp, i, false);
+ }
  
--	if (req->req_type == cpu_to_le16(HWRM_NVM_SET_VARIABLE))
-+	if (req->req_type == cpu_to_le16(HWRM_NVM_SET_VARIABLE)) {
- 		memcpy(data_addr, buf, bytesize);
--
--	rc = hwrm_send_message(bp, msg, msg_len, HWRM_CMD_TIMEOUT);
-+		rc = hwrm_send_message(bp, msg, msg_len, HWRM_CMD_TIMEOUT);
-+	} else {
-+		rc = hwrm_send_message_silent(bp, msg, msg_len,
-+					      HWRM_CMD_TIMEOUT);
-+	}
- 	if (!rc && req->req_type == cpu_to_le16(HWRM_NVM_GET_VARIABLE))
- 		memcpy(buf, data_addr, bytesize);
- 
+-static void bnxt_hwrm_resource_free(struct bnxt *bp, bool close_path,
+-				    bool irq_re_init)
++static void bnxt_clear_vnic(struct bnxt *bp)
+ {
+-	if (bp->vnic_info) {
+-		bnxt_hwrm_clear_vnic_filter(bp);
++	if (!bp->vnic_info)
++		return;
++
++	bnxt_hwrm_clear_vnic_filter(bp);
++	if (!(bp->flags & BNXT_FLAG_CHIP_P5)) {
+ 		/* clear all RSS setting before free vnic ctx */
+ 		bnxt_hwrm_clear_vnic_rss(bp);
+ 		bnxt_hwrm_vnic_ctx_free(bp);
+-		/* before free the vnic, undo the vnic tpa settings */
+-		if (bp->flags & BNXT_FLAG_TPA)
+-			bnxt_set_tpa(bp, false);
+-		bnxt_hwrm_vnic_free(bp);
+ 	}
++	/* before free the vnic, undo the vnic tpa settings */
++	if (bp->flags & BNXT_FLAG_TPA)
++		bnxt_set_tpa(bp, false);
++	bnxt_hwrm_vnic_free(bp);
++	if (bp->flags & BNXT_FLAG_CHIP_P5)
++		bnxt_hwrm_vnic_ctx_free(bp);
++}
++
++static void bnxt_hwrm_resource_free(struct bnxt *bp, bool close_path,
++				    bool irq_re_init)
++{
++	bnxt_clear_vnic(bp);
+ 	bnxt_hwrm_ring_free(bp, close_path);
+ 	bnxt_hwrm_ring_grp_free(bp);
+ 	if (irq_re_init) {
 -- 
 2.20.1
 
