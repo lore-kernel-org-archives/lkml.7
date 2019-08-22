@@ -2,93 +2,97 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF78C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34214C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF8420870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566496105;
-	bh=l0WcdKM9midXBSgbS0kuvCLb/a3DAIBaazN2F+3+060=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nAjAGSKZw5jZPO4t5dFOJGaJ8fGU5USviOyHfwR/Bx7/Z1+okE6DoXuZ1OBEXwVYg
-	 Rnl2Mcfed/1d8ckTVe2muE/tOMnPETJpK1igos18gVs+MBot0TgBK1MFWtGBZKHTw/
-	 mnzNR8jS32+LNOcddBW1YeUHk+58WYyDHqgq7At8=
+	by mail.kernel.org (Postfix) with ESMTP id 0C42D20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fRfhrMA6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391324AbfHVRW2 (ORCPT
+        id S2393268AbfHVRs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:22:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390280AbfHVRWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:24 -0400
-Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4090A233FD;
-        Thu, 22 Aug 2019 17:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494544;
-        bh=l0WcdKM9midXBSgbS0kuvCLb/a3DAIBaazN2F+3+060=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jVDtOGmeixsynIokytC2oRnHONprsDT27tEK5k+XxBaU/xfM7CgOEJK0dWECeIdqM
-         ZrwoaWxopXqrTq4qUCwDgrm4lZLkCM6sKiyZXdSfneYCSJW7OGZZ6F52Y29oBusOto
-         Vho85inNpJn2hyDMi3+FrQIaDFil+NG5gZ5kaooA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
-        syzbot+513e4d0985298538bf9b@syzkaller.appspotmail.com,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.4 25/78] can: peak_usb: pcan_usb_fd: Fix info-leaks to USB devices
-Date:   Thu, 22 Aug 2019 10:18:29 -0700
-Message-Id: <20190822171832.771598059@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
-References: <20190822171832.012773482@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 22 Aug 2019 13:48:28 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46058 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390153AbfHVRsW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:48:22 -0400
+Received: by mail-pf1-f196.google.com with SMTP id w26so4419547pfq.12
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 10:48:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aKPaTzLWDYHVrXr9xDJMJ0YlW1PawE9mWGi+KiPZfk4=;
+        b=fRfhrMA61H6irTDGq+QNDBg7D/WfWx6Aa7Ry6MaNiZ5jo8Ao7ORFSCjqwXoE9PGvkc
+         nnUTPsSgPK1kwHFnLVdRLxmv4ZtxNrw7F6i7nY5dKPHFlD039ZdQtJPiBxGo2P/k9nYm
+         QxOU5Y6gjKYKCQKdmtk+qw1HRBjedVFZX5sSo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aKPaTzLWDYHVrXr9xDJMJ0YlW1PawE9mWGi+KiPZfk4=;
+        b=Y/y25tJQ8p5gz7BdoshWfdfQMe46U3JMtn09kc7PGm4cAMvnn4RpW5g3hgwXysKhb+
+         Zy57sJP2yBBX+on0ntQbbg0mJEzY/GH/UXRN8vQcEqn1v8swvexx6tPCHPexdmuidHoX
+         SdbHVI+sjK1VMVUhmtop/YL6jE6ITrchabFsiH6+KQFTFjuSzC7eih10vJVci8tNAo9G
+         m70ZXywCfDE6sWceTCQfJjLiTZ3O067jPSOmWAe2/LeTakb0vVySSzgRHzLCUqtpSzWo
+         n+aEBna0HF3ZKJqQljd0ZvdVUaVBf8VX/WVjx+lRwRpWnM/Pv4o0N/Eurxei8ZCm05ve
+         JJ2g==
+X-Gm-Message-State: APjAAAWvv7S6Fp7A2HUy68gHkDibbhAGoKiHyUJbsDPUyA4WopToRxQe
+        gh8WYrDRluoQRQ3BcWUU2jBTug==
+X-Google-Smtp-Source: APXvYqyABwKNcJpe0wLJVSYK7zv+DWUUI9QzW8L3iG7a6vg6E5gDC+/cfX9TidXavQMb+eYaKUhDcw==
+X-Received: by 2002:a17:90a:d149:: with SMTP id t9mr937055pjw.58.1566496101340;
+        Thu, 22 Aug 2019 10:48:21 -0700 (PDT)
+Received: from localhost ([2620:15c:202:201:2b10:8627:31e7:c5ec])
+        by smtp.gmail.com with ESMTPSA id m37sm8943184pjb.0.2019.08.22.10.48.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Aug 2019 10:48:20 -0700 (PDT)
+From:   Matthew Wang <matthewmwang@chromium.org>
+To:     johannes@sipsolutions.net
+Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthew Wang <matthewmwang@chromium.org>
+Subject: [PATCH] nl80211: add NL80211_CMD_UPDATE_FT_IES to supported commands
+Date:   Thu, 22 Aug 2019 10:48:06 -0700
+Message-Id: <20190822174806.2954-1-matthewmwang@chromium.org>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Bortoli <tomasbortoli@gmail.com>
+Add NL80211_CMD_UPDATE_FT_IES to supported commands. In mac80211 drivers,
+this can be implemented via existing NL80211_CMD_AUTHENTICATE and
+NL80211_ATTR_IE, but non-mac80211 drivers have a separate command for
+this. A driver supports FT if it either is mac80211 or supports this
+command.
 
-commit 30a8beeb3042f49d0537b7050fd21b490166a3d9 upstream.
-
-Uninitialized Kernel memory can leak to USB devices.
-
-Fix by using kzalloc() instead of kmalloc() on the affected buffers.
-
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Reported-by: syzbot+513e4d0985298538bf9b@syzkaller.appspotmail.com
-Fixes: 0a25e1f4f185 ("can: peak_usb: add support for PEAK new CANFD USB adapters")
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Matthew Wang <matthewmwang@chromium.org>
+Change-Id: I93e3d09a6d949466d1aea48bff2c3ad862edccc6
 ---
- drivers/net/can/usb/peak_usb/pcan_usb_fd.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/wireless/nl80211.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
-@@ -851,7 +851,7 @@ static int pcan_usb_fd_init(struct peak_
- 			goto err_out;
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index fd05ae1437a9..c2f9e6b429b2 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -2065,6 +2065,7 @@ static int nl80211_send_wiphy(struct cfg80211_registered_device *rdev,
+ 				CMD(add_tx_ts, ADD_TX_TS);
+ 			CMD(set_multicast_to_unicast, SET_MULTICAST_TO_UNICAST);
+ 			CMD(update_connect_params, UPDATE_CONNECT_PARAMS);
++			CMD(update_ft_ies, UPDATE_FT_IES);
+ 		}
+ #undef CMD
  
- 		/* allocate command buffer once for all for the interface */
--		pdev->cmd_buffer_addr = kmalloc(PCAN_UFD_CMD_BUFFER_SIZE,
-+		pdev->cmd_buffer_addr = kzalloc(PCAN_UFD_CMD_BUFFER_SIZE,
- 						GFP_KERNEL);
- 		if (!pdev->cmd_buffer_addr)
- 			goto err_out_1;
-
+-- 
+2.23.0.187.g17f5b7556c-goog
 
