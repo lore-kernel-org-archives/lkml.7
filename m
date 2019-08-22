@@ -2,139 +2,153 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4614EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE960C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 153D0233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566490283;
-	bh=zOMLxHs2VWka/qFMYIuywdwW7/bJZ8chpRACeFjJll8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XO2JgRLk1rk9slkiMA6PSSIzjGs2MbpzNfFgW4iRw8OO42y4A0Sx2ykj+bRMD9uIJ
-	 Ahw36sqJWONxi3On3MAPiEoyd3ugHscgrgjwk6lnw6pqdofMAamXRDTEowuzeqkNUO
-	 Jfelna5cN48YZ8UNTA0qevdUTvELQQA+gX4ug770=
+	by mail.kernel.org (Postfix) with ESMTP id A69C921743
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389833AbfHVQLW (ORCPT
+        id S2389847AbfHVQLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 22 Aug 2019 12:11:25 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41391 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731582AbfHVQLW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 12:11:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732895AbfHVQLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:11:21 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E72B0233FD;
-        Thu, 22 Aug 2019 16:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566490281;
-        bh=zOMLxHs2VWka/qFMYIuywdwW7/bJZ8chpRACeFjJll8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Gx4N0gs5HtgNNNI/UK3B/3JnCYAtGMrYh/avF9aHXY/GFEJZDbLYFPe7BcU+uefo6
-         1z2B/Cbb3Iwz6+HSYwszt9a4aVUn1gi1UUcz0vNkCCM/RQqTD4+ZHTyVumsknbyAib
-         dqf8F5Co7o3Nq/0oOfMLaWbluVThrfcPlqT0P8nc=
-Received: by mail-qt1-f169.google.com with SMTP id t12so8330749qtp.9;
-        Thu, 22 Aug 2019 09:11:20 -0700 (PDT)
-X-Gm-Message-State: APjAAAWsWUSAwK7W0Ym9mRCjVl7HPxKlNKqLSt+sGM/1oioVRnZQK9bB
-        oi4l2PHNhfwdyLuFviOfDaabbUG7iPw9zhsfBA==
-X-Google-Smtp-Source: APXvYqy6FBlK1ClzTIESpRbzxj+d3ls/cIRjhDZi4Cfkk62DRf1Upbl2njPgECs0QSQz5nK0p9oVjHnL75jmEGJ+Cvc=
-X-Received: by 2002:ad4:4050:: with SMTP id r16mr122097qvp.200.1566490280005;
- Thu, 22 Aug 2019 09:11:20 -0700 (PDT)
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i0pgF-0008Cz-UX; Thu, 22 Aug 2019 16:11:20 +0000
+To:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        linux-wireless@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190822133524.6274-1-colin.king@canonical.com>
+ <d3c16158-ef89-f5ee-2f67-4357c70e8fe9@lwfinger.net>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: Re: [PATCH] bcma: fix incorrect update of BCMA_CORE_PCI_MDIO_DATA
+Message-ID: <31258833-174f-080b-489e-85d3556bd1de@canonical.com>
+Date:   Thu, 22 Aug 2019 17:11:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190809133407.25918-1-srinivas.kandagatla@linaro.org>
- <20190809133407.25918-2-srinivas.kandagatla@linaro.org> <20190821214436.GA13936@bogus>
- <0272eafd-0aa5-f695-64e4-f6ad7157a3a6@linaro.org> <CAL_JsqJJCJB9obR_Jn3hmn4gq+RQjY-8M+xkdYA185Uaw0MHcw@mail.gmail.com>
- <90b9fa33-3a49-c414-4352-66e26673a05d@linaro.org>
-In-Reply-To: <90b9fa33-3a49-c414-4352-66e26673a05d@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 22 Aug 2019 11:11:08 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLuH5=PLSVvyd=5oOECfcV3mgf8b842Y4ppJKG_NHds-g@mail.gmail.com>
-Message-ID: <CAL_JsqLuH5=PLSVvyd=5oOECfcV3mgf8b842Y4ppJKG_NHds-g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: soundwire: add slave bindings
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Vinod <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d3c16158-ef89-f5ee-2f67-4357c70e8fe9@lwfinger.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 7:56 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 22/08/2019 13:36, Rob Herring wrote:
-> >>>> +soundwire@c2d0000 {
-> >>>> +    compatible = "qcom,soundwire-v1.5.0"
-> >>>> +    reg = <0x0c2d0000 0x2000>;
-> >>>> +
-> >>>> +    spkr_left:wsa8810-left{
-> >>>> +            compatible = "sdw0110217201000";
-> >>>> +            ...
-> >>>> +    };
-> >>>> +
-> >>>> +    spkr_right:wsa8810-right{
-> >>>> +            compatible = "sdw0120217201000";
-> >>> The normal way to distinguish instances is with 'reg'. So I think you
-> >>> need 'reg' with Instance ID moved there at least. Just guessing, but
-> >>> perhaps Link ID, too? And for 2 different classes of device is that
-> >>> enough?
-> >> In previous bindings (https://lists.gt.net/linux/kernel/3403276  ) we
-> >> did have instance-id as different property, however Pierre had some good
-> >> suggestion to make it align with _ADR encoding as per MIPI DisCo spec.
-> >>
-> >> Do you still think that we should split the instance id to reg property?
-> > Assuming you could have more than 1 of the same device on the bus,
-> > then you need some way to distinguish them and the way that's done for
-> > DT is unit-address/reg. And compatible strings should be constant for
-> > each instance.
-> That is a good point!
-> Okay that makes more sense keep compatible string constant.
-> Class ID would be constant for given functionality that the driver will
-> provide.
->
-> So we will end up with some thing like this:
->
-> soundwire@c2d0000 {
->         compatible = "qcom,soundwire-v1.5.0"
->         reg = <0x0c2d0000 0x2000>;
->          #address-cells = <1>;
->          #size-cells = <0>;
->
->         spkr_left:skpr@1{
->                 compatible = "sdw10217201000";
->                 reg = <0x1>
->                 sdw-link-id = <0>;
+On 22/08/2019 17:03, Larry Finger wrote:
+> On 8/22/19 8:35 AM, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> An earlier commit re-worked the setting of the bitmask and is now
+>> assigning v with some bit flags rather than bitwise or-ing them
+>> into v, consequently the earlier bit-settings of v are being lost.
+>> Fix this by replacing an assignment with the bitwise or instead.
+>>
+>> Addresses-Coverity: ("Unused value")
+>> Fixes: 2be25cac8402 ("bcma: add constants for PCI and use them")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>   drivers/bcma/driver_pci.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/bcma/driver_pci.c b/drivers/bcma/driver_pci.c
+>> index f499a469e66d..d219ee947c07 100644
+>> --- a/drivers/bcma/driver_pci.c
+>> +++ b/drivers/bcma/driver_pci.c
+>> @@ -78,7 +78,7 @@ static u16 bcma_pcie_mdio_read(struct bcma_drv_pci
+>> *pc, u16 device, u8 address)
+>>           v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
+>>       }
+>>   -    v = BCMA_CORE_PCI_MDIODATA_START;
+>> +    v |= BCMA_CORE_PCI_MDIODATA_START;
+>>       v |= BCMA_CORE_PCI_MDIODATA_READ;
+>>       v |= BCMA_CORE_PCI_MDIODATA_TA;
+> 
+> I'm not sure the "Fixes" attribute is correct.
+> 
+> The changes for this section in commit 2be25cac8402 are
+> 
+> -       v = (1 << 30); /* Start of Transaction */
+> -       v |= (1 << 28); /* Write Transaction */
+> -       v |= (1 << 17); /* Turnaround */
+> -       v |= (0x1F << 18);
+> +       v = BCMA_CORE_PCI_MDIODATA_START;
+> +       v |= BCMA_CORE_PCI_MDIODATA_WRITE;
+> +       v |= (BCMA_CORE_PCI_MDIODATA_DEV_ADDR <<
+> +             BCMA_CORE_PCI_MDIODATA_DEVADDR_SHF);
+> +       v |= (BCMA_CORE_PCI_MDIODATA_BLK_ADDR <<
+> +             BCMA_CORE_PCI_MDIODATA_REGADDR_SHF);
+> +       v |= BCMA_CORE_PCI_MDIODATA_TA;
+> 
+> Because the code has done quite a bit of work on v just above this
+> section, I agree that this is likely an error, but that error happened
+> in an earlier commit. Thus 2be25cac8402 did not introduce the error,
+> merely copied it.
 
-Not really sure what Link ID is, but maybe it should be part of reg
-too if it is part of how you address a device.
+Ugh, this goes back further. I didn't spot that. I'm less confident of
+what the correct settings should be now.
 
->                 ...
->         };
->
->         spkr_right:spkr@2{
->                 compatible = "sdw10217201000";
->                 reg = <0x2>
->                 sdw-link-id = <0>;
->         };
-> };
->
-> I will spin this in next version!
->
-> Thanks,
-> srini
->
-> >
-> > Rob
+> 
+> Has this change been tested?
+
+Afraid not, I don't have the H/W.
+
+> 
+> Larry
+
