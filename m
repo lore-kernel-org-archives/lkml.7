@@ -2,110 +2,121 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA584C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8861C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C142D21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F5E22CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:39:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="eXE3475x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbfHVDhU (ORCPT
+        id S1730238AbfHVDjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 23:37:20 -0400
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:42898 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728275AbfHVDhU (ORCPT
+        Wed, 21 Aug 2019 23:39:45 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34461 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbfHVDjo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 23:37:20 -0400
-IronPort-SDR: 3IyRZjWhAPCvFyFzdZKgUjmoPesQJQtV4T2H9YWESXKo2QpeaGQtmTQDLotdCW7pLJs+YmqE3x
- p5hV/VdWUDxCoqbEZVqRQiJ8bRkhDHdP5gLQM69zyNjCl7k4ADmK5c7yV7TzGdeb5kk354WawT
- 7LqLUWojhrQzJgCjNCUY8mVeS7wUUHxCUCcUXWW8B8Ya+lP2bE7xMvnLnCk/caD+tymqBChyWp
- lGXM7h2ncaiesREDGX4gnv3USNo8cyXw1XDW2Fi6NOQpq9h6kekFMJsM4gJjM38SiajlenZuka
- l3g=
-X-IronPort-AV: E=Sophos;i="5.64,415,1559548800"; 
-   d="scan'208";a="40633198"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 21 Aug 2019 19:37:19 -0800
-IronPort-SDR: knej7h//JlhpiEVQ7A8cM21t3Tj7uWAZJhNy2Dh3bBaBtIWQdiB9h6lYm/zpZN+JDJpP+NZg5Y
- U3GEISDT8GZaSNBgDT9qNRwVVj3KqEwKysOmlob4/TXPHgbukoACxZtsbeURHRBYESudzFruBC
- +jjsxSHPyJY2OnKuvDljpLJWSa91MevcS6/dAr0vkHJUHqqUP62BSl6uvrfL5+nV2BJhMr136/
- 2FGMwfdjUaHjM2uiD251CbOk0rRt7vpdpVbK8xwirDE+jvJQu7XHoL5EMG+T0HwJ1Ol41hwezO
- awU=
-Subject: Re: [PATCH v1 03/63] Input: atmel_mxt_ts - only read messages in
- mxt_acquire_irq() when necessary
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     <nick@shmanahar.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <george_davis@mentor.com>
-References: <20190816082952.17985-1-jiada_wang@mentor.com>
- <20190816082952.17985-4-jiada_wang@mentor.com>
- <20190816171622.GF121898@dtor-ws>
- <558e1227-7671-0838-d4e0-f234833c0973@mentor.com>
- <20190821175422.GE76194@dtor-ws>
-From:   Jiada Wang <jiada_wang@mentor.com>
-Message-ID: <cab8d0cd-21ec-3844-5e4f-eb5b582aa432@mentor.com>
-Date:   Thu, 22 Aug 2019 12:37:12 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 21 Aug 2019 23:39:44 -0400
+Received: by mail-oi1-f194.google.com with SMTP id g128so3340033oib.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 20:39:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DcgDXQJ7Sbm8FXh01qFeLyuuK1Iph1Tzrxc/aBWGcaU=;
+        b=eXE3475xcHKKW5d+UZ3aQkd3F+q2lJG32c4rQx+Ll5k/X1A8KvcDqn+zrnRMvF2zXu
+         DvqY89e1izlDq1R7kc5hmQRlOI+bJRAO1zmN4/b3qaKNzXZEkGJlRFKeT4CTOupOuefj
+         zg9VgInCIVMy17OpVT7sSsuEFLnfkPgH4Gpr0vKEB8Vx/2OPR6n/2+AhC+sMP0CDaZU/
+         FdO6j0esA09TtJJjBjWhXyr0/bc6Xz85XfBzDl4KZ06k2rGr/ypYbAv5CJMHqZLXIPHd
+         tFqZvTuZvIngmIS+OxaCARJSeAjrwdpjWtfnrGylPxg7K5loiMiHMpdLjy2Eaq/1cmyW
+         dn7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DcgDXQJ7Sbm8FXh01qFeLyuuK1Iph1Tzrxc/aBWGcaU=;
+        b=s7YE0jbrMH/LrAP9wjJ1gCTwddHwVggRvxJ16Eut5eOsDTYuHFDyqXmM6E3TdGtJAS
+         HrGa1XkNZKGrm+72I2jF/Hy8lmkEjw95OAAvXCiCglES0FLsjL1GTV0nox66SymXhxUQ
+         buM8jqgXHxYnvwPI6B2Dxqq78J+jEE+Ud9e/Wh89lDiZXVg1miqSa+mRsWB9Cx4/j+wh
+         lUXOTPFPnHW1vkh9QffTp9dUCXwm2HNZwA021RNabHEvFh3W116o2EleEhCZMWLia6/P
+         gxYCssVOykEopTapUj9PgGBnq5Ow5k8flWNYZE8jDBDAWTgVe11MeR6QMhr5GR7MsE5O
+         WPuA==
+X-Gm-Message-State: APjAAAWJ+qmb2YRBbIup0+5JEuzPHG4ZdsL2HBPEd+5lrVxQUj/pqfOG
+        qLhLjM8ID173im2Bt6qpHyeHmh86HpjQMTZsoW6wtA==
+X-Google-Smtp-Source: APXvYqzSAJh90ed5uEoS1LSslo2SckTHl8JI7KY/tC5msX3Q9Ql8Er8WnuH87s+JOWBY8v+KaWLN9APIZd2VEdUR1OM=
+X-Received: by 2002:aca:d707:: with SMTP id o7mr2421106oig.105.1566445183805;
+ Wed, 21 Aug 2019 20:39:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190821175422.GE76194@dtor-ws>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+References: <20190818090557.17853-1-hch@lst.de> <20190818090557.17853-3-hch@lst.de>
+ <CAPcyv4iYytOoX3QMRmvNLbroxD0szrVLauXFjnQMvtQOH3as_w@mail.gmail.com>
+ <20190820132649.GD29225@mellanox.com> <CAPcyv4hfowyD4L0W3eTJrrPK5rfrmU6G29_vBVV+ea54eoJenA@mail.gmail.com>
+ <20190821162420.GI8667@mellanox.com> <20190821235055.GQ8667@mellanox.com>
+In-Reply-To: <20190821235055.GQ8667@mellanox.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 21 Aug 2019 20:39:32 -0700
+Message-ID: <CAPcyv4iiuFD+5qNEpU9Cpg7ry-tLu2ycvLv8Hfomnuu+857sww@mail.gmail.com>
+Subject: Re: [PATCH 2/4] memremap: remove the dev field in struct dev_pagemap
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Ira Weiny <ira.weiny@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Wed, Aug 21, 2019 at 4:51 PM Jason Gunthorpe <jgg@mellanox.com> wrote:
+>
+> On Wed, Aug 21, 2019 at 01:24:20PM -0300, Jason Gunthorpe wrote:
+> > On Tue, Aug 20, 2019 at 07:58:22PM -0700, Dan Williams wrote:
+> > > On Tue, Aug 20, 2019 at 6:27 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
+> > > >
+> > > > On Mon, Aug 19, 2019 at 06:44:02PM -0700, Dan Williams wrote:
+> > > > > On Sun, Aug 18, 2019 at 2:12 AM Christoph Hellwig <hch@lst.de> wrote:
+> > > > > >
+> > > > > > The dev field in struct dev_pagemap is only used to print dev_name in
+> > > > > > two places, which are at best nice to have.  Just remove the field
+> > > > > > and thus the name in those two messages.
+> > > > > >
+> > > > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > > > > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > > > >
+> > > > > Needs the below as well.
+> > > > >
+> > > > > /me goes to check if he ever merged the fix to make the unit test
+> > > > > stuff get built by default with COMPILE_TEST [1]. Argh! Nope, didn't
+> > > > > submit it for 5.3-rc1, sorry for the thrash.
+> > > > >
+> > > > > You can otherwise add:
+> > > > >
+> > > > > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> > > > >
+> > > > > [1]: https://lore.kernel.org/lkml/156097224232.1086847.9463861924683372741.stgit@dwillia2-desk3.amr.corp.intel.com/
+> > > >
+> > > > Can you get this merged? Do you want it to go with this series?
+> > >
+> > > Yeah, makes some sense to let you merge it so that you can get
+> > > kbuild-robot reports about any follow-on memremap_pages() work that
+> > > may trip up the build. Otherwise let me know and I'll get it queued
+> > > with the other v5.4 libnvdimm pending bits.
+> >
+> > Done, I used it already to test build the last series from CH..
+>
+> It failed 0-day, I'm guessing some missing kconfig stuff
+>
+> For now I dropped it, but, if you send a v2 I can forward it toward
+> 0-day again!
 
-On 2019/08/22 2:54, Dmitry Torokhov wrote:
-> On Wed, Aug 21, 2019 at 10:26:31PM +0900, Jiada Wang wrote:
->> Hi Dmitry
->>
->> On 2019/08/17 2:16, Dmitry Torokhov wrote:
->>> On Fri, Aug 16, 2019 at 05:28:52PM +0900, Jiada Wang wrote:
->>>> From: Nick Dyer <nick.dyer@itdev.co.uk>
->>>>
->>>> The workaround of reading all messages until an invalid is received is a
->>>> way of forcing the CHG line high, which means that when using
->>>> edge-triggered interrupts the interrupt can be acquired.
->>>>
->>>> With level-triggered interrupts the workaround is unnecessary.
->>>>
->>>> Also, most recent maXTouch chips have a feature called RETRIGEN which, when
->>>> enabled, reasserts the interrupt line every cycle if there are messages
->>>> waiting. This also makes the workaround unnecessary.
->>>>
->>>> Note: the RETRIGEN feature is only in some firmware versions/chips, it's
->>>> not valid simply to enable the bit.
->>>
->>> Instead of trying to work around of misconfiguration for IRQ/firmware,
->>> can we simply error out of probe if we see a level interrupt with
->>> !RETRIGEN firmware?
->>>
->> I think for old firmwares, which doesn't support RETRIGEN feature, this
->> workaround is needed, otherwise we will break all old firmwares, which
->> configured with edge-triggered IRQ
-> 
-> Do you know if there are any? I know Chrome OS firmware have RETRIGEN
-> activated and they are pretty old (original Pixel is from 2013). But if
-> we indeed have devices with edge interrupt and old not firmware that
-> does not retrigger, I guess we'll have to keep it...
-> 
+The system works!
 
-Honestly I don't know firmwares/chips which don't support RETRIGEN feature.
-
-BUT Dyer originally authored this patch in 2012, I assume here "old" 
-firmware/chips means, those before 2012.
-
-
-Thanks,
-Jiada
-
-> Thanks.
-> 
+Sorry for that thrash, I'll track it down.
