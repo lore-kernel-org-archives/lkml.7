@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EAAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F49C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57502064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0702064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495305;
-	bh=zIfP67664aEVv+fIKjsDN4CirKW2v0Scuw+XBMIunBI=;
+	s=default; t=1566495308;
+	bh=L8KNJQqZq4g+oYpcWRJKSAmbT9LsK86v1HqLWj25K2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZpjdA+UAmxHaYMwLS/hDKt8KEtrncsQ/WgDz+0Tthz7v6zOCWuXewULqlAzrzogm6
-	 iRxVGPmGdbJkQ+eGA2tyKTl1LnsmWVfAgd3TIjhCk7Tg8dSajBbse71NsEFL7dQaVb
-	 +3FpWX0hHW6UZmW1Ll1hWtvHN2mX1gEkB1RtP4qk=
+	b=iEJdHL77ayEeP9JtVAIEPOXTwiaXMFTED4OVnmKhXyBbcuqq1R1V0rRlqkLzIOlia
+	 kzEfyl+WDq7c44jh9JTihaXsSmNCpl01vQJfUwqntq981QKgNZewP8BcbhDw216Dut
+	 824aOzs2/lhKQwCtc4GKMo8YKiZK0OUDpz7Al8Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392402AbfHVRfA (ORCPT
+        id S2391840AbfHVRe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:35:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48366 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:34:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404356AbfHVRZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2391839AbfHVRZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 13:25:15 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9A7523400;
-        Thu, 22 Aug 2019 17:25:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A4242064A;
+        Thu, 22 Aug 2019 17:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494713;
-        bh=zIfP67664aEVv+fIKjsDN4CirKW2v0Scuw+XBMIunBI=;
+        s=default; t=1566494714;
+        bh=L8KNJQqZq4g+oYpcWRJKSAmbT9LsK86v1HqLWj25K2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rc6QD4iThFzI4k2GdT6ssErF53Q2mGmDGsdxJJzjsbt5QUFlqGnACNnxY2f/NZyfK
-         54q7gpujVvggYk0JNUwpUwIPHgUkQasily0mr9lbsTv37d0P9Cn31KhvPaLjTqTCwo
-         a8Io55miOPuaA+HV2tGFuv1aJ0KaKUi9UfMuZwuQ=
+        b=zET46HfAtL4Z0CoFoFlB387D4AbfTPDvzlbGkah9KuZ3WQ3i/kxpYIt+sX9FzZ5Gq
+         TsmF1b7QaBAdViU1r5EJuNBoQAMl//inW7fGEnUGg4u3Ng8Mi3P15v6Jazt037NCHq
+         XK9l1A3lDkwwAMu5Jxe6g+rpLgK2WOl1rWJm7H0M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 69/71] bonding: Add vlan tx offload to hw_enc_features
-Date:   Thu, 22 Aug 2019 10:19:44 -0700
-Message-Id: <20190822171730.709906512@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.14 70/71] mmc: sdhci-of-arasan: Do now show error message in case of deffered probe
+Date:   Thu, 22 Aug 2019 10:19:45 -0700
+Message-Id: <20190822171730.744747146@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
 References: <20190822171726.131957995@linuxfoundation.org>
@@ -60,62 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Michal Simek <michal.simek@xilinx.com>
 
-[ Upstream commit d595b03de2cb0bdf9bcdf35ff27840cc3a37158f ]
+commit 60208a267208c27fa3f23dfd36cbda180471fa98 upstream.
 
-As commit 30d8177e8ac7 ("bonding: Always enable vlan tx offload")
-said, we should always enable bonding's vlan tx offload, pass the
-vlan packets to the slave devices with vlan tci, let them to handle
-vlan implementation.
+When mmc-pwrseq property is passed mmc_pwrseq_alloc() can return
+-EPROBE_DEFER because driver for power sequence provider is not probed
+yet. Do not show error message when this situation happens.
 
-Now if encapsulation protocols like VXLAN is used, skb->encapsulation
-may be set, then the packet is passed to vlan device which based on
-bonding device. However in netif_skb_features(), the check of
-hw_enc_features:
-
-	 if (skb->encapsulation)
-                 features &= dev->hw_enc_features;
-
-clears NETIF_F_HW_VLAN_CTAG_TX/NETIF_F_HW_VLAN_STAG_TX. This results
-in same issue in commit 30d8177e8ac7 like this:
-
-vlan_dev_hard_start_xmit
-  -->dev_queue_xmit
-    -->validate_xmit_skb
-      -->netif_skb_features //NETIF_F_HW_VLAN_CTAG_TX is cleared
-      -->validate_xmit_vlan
-        -->__vlan_hwaccel_push_inside //skb->tci is cleared
-...
- --> bond_start_xmit
-   --> bond_xmit_hash //BOND_XMIT_POLICY_ENCAP34
-     --> __skb_flow_dissect // nhoff point to IP header
-        -->  case htons(ETH_P_8021Q)
-             // skb_vlan_tag_present is false, so
-             vlan = __skb_header_pointer(skb, nhoff, sizeof(_vlan),
-             //vlan point to ip header wrongly
-
-Fixes: b2a103e6d0af ("bonding: convert to ndo_fix_features")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/bonding/bond_main.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -1108,7 +1108,9 @@ static void bond_compute_features(struct
+---
+ drivers/mmc/host/sdhci-of-arasan.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -638,7 +638,8 @@ static int sdhci_arasan_probe(struct pla
  
- done:
- 	bond_dev->vlan_features = vlan_features;
--	bond_dev->hw_enc_features = enc_features | NETIF_F_GSO_ENCAP_ALL;
-+	bond_dev->hw_enc_features = enc_features | NETIF_F_GSO_ENCAP_ALL |
-+				    NETIF_F_HW_VLAN_CTAG_TX |
-+				    NETIF_F_HW_VLAN_STAG_TX;
- 	bond_dev->gso_max_segs = gso_max_segs;
- 	netif_set_gso_max_size(bond_dev, gso_max_size);
+ 	ret = mmc_of_parse(host->mmc);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "parsing dt failed (%d)\n", ret);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "parsing dt failed (%d)\n", ret);
+ 		goto unreg_clk;
+ 	}
  
 
 
