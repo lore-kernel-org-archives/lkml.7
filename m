@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F7CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B3CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD6E23407
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3FB223426
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494611;
-	bh=cIsKSAV/T1+AbC/OE5lBEwYl+TyKGRXDcTYNbIuHLRs=;
+	s=default; t=1566494616;
+	bh=v1qJUyEw14ffyTtAkJ2MRHYdOutA6FVC35Hnd5dLXyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TmZd57YJrCxPPtp+TAzgtVz7RuylQWQO1nYG1GA3or/ELg+7ADeFjz5qZKMD0SSl1
-	 VueJzGnY7ekoSW9m7/k0K9e81pmq0D3c4vpT8WJYs6SHMhT8mfztxmoaiZG+xWjSKi
-	 dDRMMXDJqwdb14wjSQhsE4jtEknIAgoPvgA9qCGg=
+	b=ZQFKnrGnrno912Z7nQCs4rjCURrrTlcCxOjpGjxLLE3ZLwXxIxQPJfun9Evno69Qy
+	 92cSJlXGyGz45mkvABU+AZ3NB4PKwuL6bVT2SmdeTaYFh2yek3ddOLviaimAcmt+Uc
+	 0h048crJtzLVPZElEbj7pox070o32nJodSXHimZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391488AbfHVRXa (ORCPT
+        id S2391564AbfHVRXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42878 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:23:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733026AbfHVRXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:21 -0400
+        id S2403928AbfHVRXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:22 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DB1023402;
-        Thu, 22 Aug 2019 17:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AD6323405;
+        Thu, 22 Aug 2019 17:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494601;
-        bh=cIsKSAV/T1+AbC/OE5lBEwYl+TyKGRXDcTYNbIuHLRs=;
+        s=default; t=1566494602;
+        bh=v1qJUyEw14ffyTtAkJ2MRHYdOutA6FVC35Hnd5dLXyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NfLNEpU7wkZlUbyAUdVny2yugXFqvjyN/WwFrOZWd7y2rg/hrlIA5zgZ+3JUPVWal
-         jnprE3LSQ+ZhF1fGJazu0gUYyPRRia7MiYzpY0tMdwYX6bEB+USSqfJ5QqMIi3FgrF
-         BfLCj3c1cP1NQEORzL6BfM2NvOrUFAfeKvmzGAV0=
+        b=Oav2r/vitdIrmKCRvSE09WZtHfC2ag8RE4bEI1aJUfiN5cvn2Qt9UYorGMC9DKea5
+         OF+41jO+gCDrgNrje3uQNA7MLiDFtcSajx6R4Am7tyKjT/WSK3wgw99EAZ/Hms2PVH
+         osHicVlYP8wsXfRpNqJbxbMH6+qUXhPZZRUE9wAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Roland Kammerer <roland.kammerer@linbit.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 023/103] drbd: dynamically allocate shash descriptor
-Date:   Thu, 22 Aug 2019 10:18:11 -0700
-Message-Id: <20190822171729.789153391@linuxfoundation.org>
+Subject: [PATCH 4.9 024/103] ACPI/IORT: Fix off-by-one check in iort_dev_find_its_id()
+Date:   Thu, 22 Aug 2019 10:18:12 -0700
+Message-Id: <20190822171729.831400354@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -61,67 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 77ce56e2bfaa64127ae5e23ef136c0168b818777 ]
+[ Upstream commit 5a46d3f71d5e5a9f82eabc682f996f1281705ac7 ]
 
-Building with clang and KASAN, we get a warning about an overly large
-stack frame on 32-bit architectures:
+Static analysis identified that index comparison against ITS entries in
+iort_dev_find_its_id() is off by one.
 
-drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
-      [-Werror,-Wframe-larger-than=]
+Update the comparison condition and clarify the resulting error
+message.
 
-We already allocate other data dynamically in this function, so
-just do the same for the shash descriptor, which makes up most of
-this memory.
-
-Link: https://lore.kernel.org/lkml/20190617132440.2721536-1-arnd@arndb.de/
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Roland Kammerer <roland.kammerer@linbit.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 4bf2efd26d76 ("ACPI: Add new IORT functions to support MSI domain handling")
+Link: https://lore.kernel.org/linux-arm-kernel/20190613065410.GB16334@mwanda/
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_receiver.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/acpi/arm64/iort.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 83957a1e15ed7..8e8e4ccb128f3 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -5297,7 +5297,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	unsigned int key_len;
- 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
- 	unsigned int resp_size;
--	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
-+	struct shash_desc *desc;
- 	struct packet_info pi;
- 	struct net_conf *nc;
- 	int err, rv;
-@@ -5310,6 +5310,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	memcpy(secret, nc->shared_secret, key_len);
- 	rcu_read_unlock();
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index 6b81746cd13c8..e5b1b3f1c2319 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -324,8 +324,8 @@ static int iort_dev_find_its_id(struct device *dev, u32 req_id,
  
-+	desc = kmalloc(sizeof(struct shash_desc) +
-+		       crypto_shash_descsize(connection->cram_hmac_tfm),
-+		       GFP_KERNEL);
-+	if (!desc) {
-+		rv = -1;
-+		goto fail;
-+	}
- 	desc->tfm = connection->cram_hmac_tfm;
- 	desc->flags = 0;
- 
-@@ -5452,7 +5459,10 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	kfree(peers_ch);
- 	kfree(response);
- 	kfree(right_response);
--	shash_desc_zero(desc);
-+	if (desc) {
-+		shash_desc_zero(desc);
-+		kfree(desc);
-+	}
- 
- 	return rv;
- }
+ 	/* Move to ITS specific data */
+ 	its = (struct acpi_iort_its_group *)node->node_data;
+-	if (idx > its->its_count) {
+-		dev_err(dev, "requested ITS ID index [%d] is greater than available [%d]\n",
++	if (idx >= its->its_count) {
++		dev_err(dev, "requested ITS ID index [%d] overruns ITS entries [%d]\n",
+ 			idx, its->its_count);
+ 		return -ENXIO;
+ 	}
 -- 
 2.20.1
 
