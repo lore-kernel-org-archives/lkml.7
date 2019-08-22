@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287BBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732A2C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED0C20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B4720856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495331;
-	bh=UGZ0fhU4URahXcKQQgFdEvR738c2iJmax9EO1kQkkho=;
+	s=default; t=1566495338;
+	bh=Lqhqryb78B7k7zekpbzy+H9JJH5FFlViKcIlItaGoIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIsu12NlSqnENCocc0FTQJ1EvI1g1yZVUKRwZMm1CORqfWv0pa88Q2FHJy+d5udyO
-	 frpkltqQ41IQyvEsn3OuXqkLkpKudz2gQqa8bjFJD9D3eSckVYC4UK0lhE/f/c8ZFp
-	 On5zsufXEnDR1mpKM/xxj0nWNd1fiYvLNL5n/ZSk=
+	b=sAIGU44oDkBRz7JzXUvH3gspGWgwFD9Qp2uUcMYK29y1c2xUBjmZ3k+tuUPt+f7su
+	 3MCWkqzLl3hA3eE8EaUh1qb5iXLFlozEymn0ARR7g281bo9QlKJg5sMXcBqGAn+WxP
+	 S6agYwQLwzX7TyW7HF3Csbl6AohQ3cHeKxVmmTB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392418AbfHVRfV (ORCPT
+        id S2392425AbfHVRfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:35:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48182 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:35:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390376AbfHVRZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:09 -0400
+        id S2391829AbfHVRZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:05 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 306DF2341F;
-        Thu, 22 Aug 2019 17:25:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F97E2341F;
+        Thu, 22 Aug 2019 17:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494709;
-        bh=UGZ0fhU4URahXcKQQgFdEvR738c2iJmax9EO1kQkkho=;
+        s=default; t=1566494704;
+        bh=Lqhqryb78B7k7zekpbzy+H9JJH5FFlViKcIlItaGoIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mEyO+ShQktOpXpSriMbN5i9CoGnKJrdatyBNeja7gVKd2TQuBcmbyoRhshpegd0ff
-         puXM7U5K/3rErOivDHZDKv93FsjAe0Bah9c8raV5sJpFEsKWcH0X4lb8jpd8fr172G
-         GxnHHhKTwDirW22Vj9EHIq01/vIm4HMlEfmnqgU4=
+        b=kpSCT1O8GueukkbN8FeDUCIt5uaKhwxBSLwzrYw6gS3WaPLMuLj+YM6BrduJbFslI
+         qAr5wc/1J685clEpz86CCVJJK0EcpQxv58lQcda1qMYBNa6/FV46yJKu0p00i9FLHo
+         al4uQ3d3I2za0tcH9GMRO8gFGTv5/qFHsbY9mnNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.14 64/71] sctp: fix the transport error_count check
-Date:   Thu, 22 Aug 2019 10:19:39 -0700
-Message-Id: <20190822171730.517039150@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hui Wang <hui.wang@canonical.com>
+Subject: [PATCH 4.14 59/71] Input: psmouse - fix build error of multiple definition
+Date:   Thu, 22 Aug 2019 10:19:34 -0700
+Message-Id: <20190822171730.332203555@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
 References: <20190822171726.131957995@linuxfoundation.org>
@@ -60,37 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit a1794de8b92ea6bc2037f445b296814ac826693e ]
+commit 49e6979e7e92cf496105b5636f1df0ac17c159c0 upstream.
 
-As the annotation says in sctp_do_8_2_transport_strike():
+trackpoint_detect() should be static inline while
+CONFIG_MOUSE_PS2_TRACKPOINT is not set, otherwise, we build fails:
 
-  "If the transport error count is greater than the pf_retrans
-   threshold, and less than pathmaxrtx ..."
+drivers/input/mouse/alps.o: In function `trackpoint_detect':
+alps.c:(.text+0x8e00): multiple definition of `trackpoint_detect'
+drivers/input/mouse/psmouse-base.o:psmouse-base.c:(.text+0x1b50): first defined here
 
-It should be transport->error_count checked with pathmaxrxt,
-instead of asoc->pf_retrans.
-
-Fixes: 5aa93bcf66f4 ("sctp: Implement quick failover draft from tsvwg")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 55e3d9224b60 ("Input: psmouse - allow disabing certain protocol extensions")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hui Wang <hui.wang@canonical.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sctp/sm_sideeffect.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sctp/sm_sideeffect.c
-+++ b/net/sctp/sm_sideeffect.c
-@@ -541,7 +541,7 @@ static void sctp_do_8_2_transport_strike
- 	 */
- 	if (net->sctp.pf_enable &&
- 	   (transport->state == SCTP_ACTIVE) &&
--	   (asoc->pf_retrans < transport->pathmaxrxt) &&
-+	   (transport->error_count < transport->pathmaxrxt) &&
- 	   (transport->error_count > asoc->pf_retrans)) {
- 
- 		sctp_assoc_control_transport(asoc, transport,
+---
+ drivers/input/mouse/trackpoint.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/input/mouse/trackpoint.h
++++ b/drivers/input/mouse/trackpoint.h
+@@ -161,7 +161,8 @@ struct trackpoint_data {
+ #ifdef CONFIG_MOUSE_PS2_TRACKPOINT
+ int trackpoint_detect(struct psmouse *psmouse, bool set_properties);
+ #else
+-inline int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
++static inline int trackpoint_detect(struct psmouse *psmouse,
++				    bool set_properties)
+ {
+ 	return -ENOSYS;
+ }
 
 
