@@ -2,52 +2,50 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72630C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E24C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E7520856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16D0320870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495961;
-	bh=yo7f+q1QbQwbGiU+1mAHtPu9a7FxJ6ekTojdAJIKf1s=;
+	s=default; t=1566495965;
+	bh=9UDlhyyS2aO2cxY5EODwhbEEZ833nR8tz9Zsgi607ws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qBbH6cJOXeqejOTPrwrwXWEZpZMoMc9VNG+tUS8wFUp73/RVvaJhwpWBaddGDQdtX
-	 tJQT62pQ0+jL3jHlxUYRha6b1wcBlCdy4QqKdbIIIZZbqKevctNkc/kZtKVI8iYOD8
-	 yR0YZF6Bu8gFTKnAEpUlsDddThXBSgpIslga2cd4=
+	b=hZMgv9819Jm65iLxTUk7Qj9kDC0mb+iVLT9oaZ6iHO3o5QaxGlM45O7vdlqm0qmir
+	 be3qosAyzTcS+c4Wigy7UMSXErIJD/rkSpuPb6ocQqqqCcQWqU9NfWwy70ocX5Y1fz
+	 /4eyca/qI37M0NPO8ZHnRuOPgM961TKjWMCmgdCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391697AbfHVRW7 (ORCPT
+        id S2393046AbfHVRqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:22:59 -0400
+        Thu, 22 Aug 2019 13:46:03 -0400
 Received: from mail.kernel.org ([198.145.29.99]:41832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391655AbfHVRWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:54 -0400
+        id S2391573AbfHVRW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:58 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E023123406;
-        Thu, 22 Aug 2019 17:22:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C00521743;
+        Thu, 22 Aug 2019 17:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494573;
-        bh=yo7f+q1QbQwbGiU+1mAHtPu9a7FxJ6ekTojdAJIKf1s=;
+        s=default; t=1566494578;
+        bh=9UDlhyyS2aO2cxY5EODwhbEEZ833nR8tz9Zsgi607ws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jr4Cr93MZN1HTxogH4D1jPu+83egL9xRKpBhd8ZeWA26rDI6LIVSfzaIaThIZqggc
-         WRNiCz4lj/bz+o7w0q2nNoM4pLG9CzVAMlU/x33/bofjxoxqb9dQ8aje9xoSRQg+C3
-         QM/CAw/VnXLbQdTXd0ObpfEoooawuP31C0qL2454=
+        b=O2Qh6WWFukX0brnqVgPHtTIdJzJ6I/Yrqpw9+ymSjF49cee58DN8ycBDsrRB4bg/T
+         L9qpaQpY4vJgRfqQ/gtcN5WxHxiLI24ocDralbaWEpScF8GPNJdC5HRWzZjQkGULeg
+         8C0PMCMMDNn14K5Hl/K6gRmdRM4JnzaCCFA13pJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rolf Eike Beer <eb@emlix.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 63/78] Backport minimal compiler_attributes.h to support GCC 9
-Date:   Thu, 22 Aug 2019 10:19:07 -0700
-Message-Id: <20190822171833.857641411@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Ledford <dledford@redhat.com>
+Subject: [PATCH 4.4 70/78] IB/mlx5: Make coding style more consistent
+Date:   Thu, 22 Aug 2019 10:19:14 -0700
+Message-Id: <20190822171834.056892056@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -60,49 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for __copy to v4.9.y so that we can use it in
-init/exit_module to avoid -Werror=missing-attributes errors on GCC 9.
+From: Doug Ledford <dledford@redhat.com>
 
-Link: https://lore.kernel.org/lkml/259986242.BvXPX32bHu@devpool35/
-Cc: <stable@vger.kernel.org>
-Suggested-by: Rolf Eike Beer <eb@emlix.com>
-Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+commit 0025b0bdeae7c13b8ab1dce64b0108ed9c071e2e upstream.
+
+These three related functions can't agree whether to put the
+umrwr on the stack dirty and then memset it, or to initialize
+it on the stack.  Make them all agree.
+
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/compiler.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/infiniband/hw/mlx5/mr.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index ed772311ec1fb..5508011cc0c79 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -52,6 +52,22 @@ extern void __chk_io_ptr(const volatile void __iomem *);
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -792,7 +792,7 @@ static struct mlx5_ib_mr *reg_umr(struct
+ 	struct device *ddev = dev->ib_dev.dma_device;
+ 	struct umr_common *umrc = &dev->umrc;
+ 	struct mlx5_ib_umr_context umr_context;
+-	struct mlx5_umr_wr umrwr;
++	struct mlx5_umr_wr umrwr = {};
+ 	struct ib_send_wr *bad;
+ 	struct mlx5_ib_mr *mr;
+ 	struct ib_sge sg;
+@@ -839,7 +839,6 @@ static struct mlx5_ib_mr *reg_umr(struct
+ 		goto free_pas;
+ 	}
  
- #ifdef __KERNEL__
+-	memset(&umrwr, 0, sizeof(umrwr));
+ 	umrwr.wr.wr_id = (u64)(unsigned long)&umr_context;
+ 	prep_umr_reg_wqe(pd, &umrwr.wr, &sg, dma, npages, mr->mmr.key,
+ 			 page_shift, virt_addr, len, access_flags);
+@@ -1163,11 +1162,10 @@ static int unreg_umr(struct mlx5_ib_dev
+ {
+ 	struct umr_common *umrc = &dev->umrc;
+ 	struct mlx5_ib_umr_context umr_context;
+-	struct mlx5_umr_wr umrwr;
++	struct mlx5_umr_wr umrwr = {};
+ 	struct ib_send_wr *bad;
+ 	int err;
  
-+/*
-+ * Minimal backport of compiler_attributes.h to add support for __copy
-+ * to v4.9.y so that we can use it in init/exit_module to avoid
-+ * -Werror=missing-attributes errors on GCC 9.
-+ */
-+#ifndef __has_attribute
-+# define __has_attribute(x) __GCC4_has_attribute_##x
-+# define __GCC4_has_attribute___copy__                0
-+#endif
-+
-+#if __has_attribute(__copy__)
-+# define __copy(symbol)                 __attribute__((__copy__(symbol)))
-+#else
-+# define __copy(symbol)
-+#endif
-+
- #ifdef __GNUC__
- #include <linux/compiler-gcc.h>
- #endif
--- 
-2.20.1
-
+-	memset(&umrwr.wr, 0, sizeof(umrwr));
+ 	umrwr.wr.wr_id = (u64)(unsigned long)&umr_context;
+ 	prep_umr_unreg_wqe(dev, &umrwr.wr, mr->mmr.key);
+ 
 
 
