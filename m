@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4309DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E68FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124C223400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1423A23400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566496146;
-	bh=RDbTLskwpQBZpN6cKRNg14/3KcnmdNXMHCAJABzMeoA=;
+	s=default; t=1566496154;
+	bh=c2aGwSnqIaoyFvTTMzz/8AWODC8ihLJ526QwK1gtMRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OGI0k5ZQrN6OnCocI5PkMrco9LL0pUJGTbGzvRI7XyTCEBBepfK86EljhXabJ6458
-	 3aXct1xo3Vt6tLn8o+up2HJgWhSI0CpCweLcXOxuM7jc6jHSFk1ks/z7VX/Wfe/x8n
-	 sJxJGIqY1m4cCf87XDdKbPAcYSnxeK5kVn6a1+fE=
+	b=Qrd0O7jgQuqmRY61CCwAdwTrWZ/wsJzUerUSjgeAdw0bvnKDRpO4EvEQgm2V7KxYl
+	 EjiWwctgb11jf+g4E3GDFF69hePuMTH2grH1n8xzBoHFCtRvAX6tSLQ0mGUOnWdysR
+	 dSHW2ZjJ4G0IGWqijkArwVx3eQ6kGtcnyYdL0qc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393359AbfHVRtF (ORCPT
+        id S2403966AbfHVRtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40008 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:49:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389884AbfHVRWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:18 -0400
+        id S2389818AbfHVRWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:17 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5F7F233FC;
-        Thu, 22 Aug 2019 17:22:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0EE523400;
+        Thu, 22 Aug 2019 17:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1566494537;
-        bh=RDbTLskwpQBZpN6cKRNg14/3KcnmdNXMHCAJABzMeoA=;
+        bh=c2aGwSnqIaoyFvTTMzz/8AWODC8ihLJ526QwK1gtMRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fHE6UUMBb731m84LTPwHCKSlr+xMyrfXqwKbnp+1ccC3zcWSLWnAcL0wukEdupsMB
-         xyOFCTRlrM3olvxw2iWSIfTh1xc4Qi9mp4sTgmNn4Vo9k+LoAccWvgmxmMtuU4PWFL
-         JlsEA6UaqEuCOEXNdGs+kH9laT0RlvjSlpbmIk6g=
+        b=iQwVQ86IW0JfQBKuajV0Tm5ZOn0atZ359lBDIPYZW9MhROrTOKSJhxKpgzMSgixPh
+         M+4QKLB0AZHwdwXT3eQOa7hTX+rfaOrAIjNytIDhA4r2ddyJQIQS9wdIZINRkIVUKI
+         8glCi7GnCxGZG2NB7JANhbhNf3DdRdGgoC42GFCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Charles Keepax <ckeepax@opensource.cirrus.com>,
         Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 17/78] ALSA: compress: Be more restrictive about when a drain is allowed
-Date:   Thu, 22 Aug 2019 10:18:21 -0700
-Message-Id: <20190822171832.543568472@linuxfoundation.org>
+Subject: [PATCH 4.4 16/78] ALSA: compress: Prevent bypasses of set_params
+Date:   Thu, 22 Aug 2019 10:18:20 -0700
+Message-Id: <20190822171832.514498053@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -61,47 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b8179944cb0dd53e5223996966746cdc8a60657 ]
+[ Upstream commit 26c3f1542f5064310ad26794c09321780d00c57d ]
 
-Draining makes little sense in the situation of hardware overrun, as the
-hardware will have consumed all its available samples. Additionally,
-draining whilst the stream is paused would presumably get stuck as no
-data is being consumed on the DSP side.
+Currently, whilst in SNDRV_PCM_STATE_OPEN it is possible to call
+snd_compr_stop, snd_compr_drain and snd_compr_partial_drain, which
+allow a transition to SNDRV_PCM_STATE_SETUP. The stream should
+only be able to move to the setup state once it has received a
+SNDRV_COMPRESS_SET_PARAMS ioctl. Fix this issue by not allowing
+those ioctls whilst in the open state.
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Acked-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/compress_offload.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/core/compress_offload.c | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
 diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index d0a21a5867673..771d7b334ad87 100644
+index 16269e7ff3904..d0a21a5867673 100644
 --- a/sound/core/compress_offload.c
 +++ b/sound/core/compress_offload.c
-@@ -749,7 +749,10 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
- 	case SNDRV_PCM_STATE_OPEN:
- 	case SNDRV_PCM_STATE_SETUP:
- 	case SNDRV_PCM_STATE_PREPARED:
-+	case SNDRV_PCM_STATE_PAUSED:
+@@ -688,9 +688,15 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
+ {
+ 	int retval;
+ 
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
  		return -EPERM;
-+	case SNDRV_PCM_STATE_XRUN:
-+		return -EPIPE;
- 	default:
- 		break;
- 	}
-@@ -794,7 +797,10 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
- 	case SNDRV_PCM_STATE_OPEN:
- 	case SNDRV_PCM_STATE_SETUP:
- 	case SNDRV_PCM_STATE_PREPARED:
-+	case SNDRV_PCM_STATE_PAUSED:
++	default:
++		break;
++	}
++
+ 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
+ 	if (!retval) {
+ 		snd_compr_drain_notify(stream);
+@@ -739,9 +745,14 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
+ {
+ 	int retval;
+ 
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
  		return -EPERM;
-+	case SNDRV_PCM_STATE_XRUN:
-+		return -EPIPE;
- 	default:
- 		break;
- 	}
++	default:
++		break;
++	}
+ 
+ 	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_DRAIN);
+ 	if (retval) {
+@@ -778,9 +789,16 @@ static int snd_compr_next_track(struct snd_compr_stream *stream)
+ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
+ {
+ 	int retval;
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
+ 		return -EPERM;
++	default:
++		break;
++	}
++
+ 	/* stream can be drained only when next track has been signalled */
+ 	if (stream->next_track == false)
+ 		return -EPERM;
 -- 
 2.20.1
 
