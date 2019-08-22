@@ -2,111 +2,140 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0BFC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641E3C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7FB23407
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:32:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566487937;
-	bh=FenMIIN8efZlIv+jG/NK+H9OQ3jMfcpw2WdlasXBso8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l9ovEiP4cOtWQAtPM5S1KglDhQeqF0szSXzFaL+tHkpWHbigX7TFcpdvWgZlh8n7A
-	 rv9OQbVpzG6iIEWrA1DZUfXA1208ovLH5zcHyxVjE10IssxIB8NK4EqTxyCXOHKifw
-	 UfJFKwz5hqIq8NZ9as74UOxmHqtMPLaLBelrkqHQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3DCD5233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732752AbfHVPcQ (ORCPT
+        id S2389216AbfHVPdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:32:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50172 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 11:33:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:19604 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730839AbfHVPcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:32:16 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD57E233FD;
-        Thu, 22 Aug 2019 15:32:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566487935;
-        bh=FenMIIN8efZlIv+jG/NK+H9OQ3jMfcpw2WdlasXBso8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AzCth3OmTPsgRWEWytdDhBm8Bxm0ELUBxEptklX/I8s7/IL0usG4Qp9KTphMPFOrX
-         3TpQMdV+GB5K4diQ/gvIVC/Bxg8VZx46hkXPAGZN3mf3kqhLy+HkYxgJr6Td7FudB9
-         X8b+IBU8Ufl4y22aEIiZ8is5Rd4fjEt4/mrw4BVg=
-Date:   Thu, 22 Aug 2019 17:32:13 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [patch V2 17/38] posix-cpu-timers: Create a container struct
-Message-ID: <20190822153212.GU22020@lenoir>
-References: <20190821190847.665673890@linutronix.de>
- <20190821192920.819418976@linutronix.de>
+        id S1732950AbfHVPdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 11:33:16 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 08:33:15 -0700
+X-IronPort-AV: E=Sophos;i="5.64,417,1559545200"; 
+   d="scan'208";a="330425538"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 08:33:15 -0700
+Message-ID: <31b75078d004a1ccf77b710b35b8f847f404de9a.camel@linux.intel.com>
+Subject: Re: [PATCH v6 0/6] mm / virtio: Provide support for unused page
+ reporting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Pankaj Gupta <pagupta@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     nitesh@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
+        david@redhat.com, dave hansen <dave.hansen@intel.com>,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, osalvador@suse.de,
+        yang zhang wz <yang.zhang.wz@gmail.com>, riel@surriel.com,
+        konrad wilk <konrad.wilk@oracle.com>, lcapitulino@redhat.com,
+        wei w wang <wei.w.wang@intel.com>, aarcange@redhat.com,
+        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>
+Date:   Thu, 22 Aug 2019 08:32:59 -0700
+In-Reply-To: <1297409377.9866813.1566470593223.JavaMail.zimbra@redhat.com>
+References: <20190821145806.20926.22448.stgit@localhost.localdomain>
+         <1297409377.9866813.1566470593223.JavaMail.zimbra@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821192920.819418976@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:09:04PM +0200, Thomas Gleixner wrote:
-> --- a/include/linux/posix-timers.h
-> +++ b/include/linux/posix-timers.h
-> @@ -62,6 +62,40 @@ static inline int clockid_to_fd(const cl
->  	return ~(clk >> 3);
->  }
+On Thu, 2019-08-22 at 06:43 -0400, Pankaj Gupta wrote:
+> > This series provides an asynchronous means of reporting to a hypervisor
+> > that a guest page is no longer in use and can have the data associated
+> > with it dropped. To do this I have implemented functionality that allows
+> > for what I am referring to as unused page reporting
+> > 
+> > The functionality for this is fairly simple. When enabled it will allocate
+> > statistics to track the number of reported pages in a given free area.
+> > When the number of free pages exceeds this value plus a high water value,
+> > currently 32, it will begin performing page reporting which consists of
+> > pulling pages off of free list and placing them into a scatter list. The
+> > scatterlist is then given to the page reporting device and it will perform
+> > the required action to make the pages "reported", in the case of
+> > virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+> > and as such they are forced out of the guest. After this they are placed
+> > back on the free list, and an additional bit is added if they are not
+> > merged indicating that they are a reported buddy page instead of a
+> > standard buddy page. The cycle then repeats with additional non-reported
+> > pages being pulled until the free areas all consist of reported pages.
+> > 
+> > I am leaving a number of things hard-coded such as limiting the lowest
+> > order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
+> > determine what the limit is on how many pages it wants to allocate to
+> > process the hints. The upper limit for this is based on the size of the
+> > queue used to store the scattergather list.
+> > 
+> > My primary testing has just been to verify the memory is being freed after
+> > allocation by running memhog 40g on a 40g guest and watching the total
+> > free memory via /proc/meminfo on the host. With this I have verified most
+> > of the memory is freed after each iteration. 
+> 
+> I tried to go through the entire patch series. I can see you reported a
+> -3.27 drop from the baseline. If its because of re-faulting the page after
+> host has freed them? Can we avoid freeing all the pages from the guest free_area
+> and keep some pages(maybe some mixed order), so that next allocation is done from
+> the guest itself than faulting to host. This will work with real workload where
+> allocation and deallocation happen at regular intervals. 
+> 
+> This can be further optimized based on other factors like host memory pressure etc.
+> 
+> Thanks,
+> Pankaj  
 
-Shouldn't you start the #ifdef CONFIG_POSIX_TIMERS here?
-Because you're redefining struct posix_cputimers otherwise.
+When I originally started implementing and testing this code I was seeing
+less than a 1% regression. I didn't feel like that was really an accurate
+result since it wasn't putting much stress on the changed code so I have
+modified my tests and kernel so that I have memory shuffting and THP
+enabled. In addition I have gone out of my way to lock things down to a
+single NUMA node on my host system as the code I had would sometimes
+perform better than baseline when running the test due to the fact that
+memory was being freed back to the hose and then reallocated which
+actually allowed for better NUMA locality.
 
-> +/**
-> + * posix_cputimers - Container for posix CPU timer related data
-> + * @cpu_timers:		List heads to queue posix CPU timers
-> + *
-> + * Used in task_struct and signal_struct
-> + */
-> +struct posix_cputimers {
-> +	struct list_head	cpu_timers[CPUCLOCK_MAX];
-> +};
-> +
-> +static inline void posix_cputimers_init(struct posix_cputimers *pct)
-> +{
-> +	INIT_LIST_HEAD(&pct->cpu_timers[0]);
-> +	INIT_LIST_HEAD(&pct->cpu_timers[1]);
-> +	INIT_LIST_HEAD(&pct->cpu_timers[2]);
-> +}
-> +
-> +#ifdef CONFIG_POSIX_TIMERS
-> +/* Init task static initializer */
-> +#define INIT_CPU_TIMERLISTS(c)	{					\
-> +	LIST_HEAD_INIT(c.cpu_timers[0]),				\
-> +	LIST_HEAD_INIT(c.cpu_timers[1]),				\
-> +	LIST_HEAD_INIT(c.cpu_timers[2]),				\
-> +}
-> +
-> +#define INIT_CPU_TIMERS(s)						\
-> +	.posix_cputimers = {						\
-> +		.cpu_timers = INIT_CPU_TIMERLISTS(s.posix_cputimers),	\
-> +	},
-> +#else
-> +struct posix_cputimers { };
-> +#define INIT_CPU_TIMERS(s)
-> +#endif
-> +
+The general idea was I wanted to know what the worst case penalty would be
+for running this code, and it turns out most of that is just the cost of
+faulting back in the pages. By enabling memory shuffling I am forcing the
+memory to churn as pages are added to both the head and tail of the
+free_list. The test itself was modified so that it didn't allocate order 0
+pages and instead was allocating transparent huge pages so the effects
+were as visible as possible. Without that the page faulting overhead would
+mostly fall into the noise of having to allocate the memory as order 0
+pages, that is what I had essentially seen earlier when I was running the
+stock page_fault1 test.
 
-Other than that:
+This code does no hinting on anything smaller than either MAX_ORDER - 1 or
+HUGETLB_PAGE_ORDER pages, and it only starts when there are at least 32 of
+them available to hint on. This results in us not starting to perform the
+hinting until there is 64MB to 128MB of memory sitting in the higher order
+regions of the zone.
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+The hinting itself stops as soon as we run out of unhinted pages to pull
+from. When this occurs we let any pages that are freed after that
+accumulate until we get back to 32 pages being free in a given order.
+During this time we should build up the cache of warm pages that you
+mentioned, assuming that shuffling is not enabled.
+
+As far as further optimizations I don't think there is anything here that
+prevents us from doing that. For now I am focused on just getting the
+basics in place so we have a foundation to start from.
+
+Thanks.
+
+- Alex
+
