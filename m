@@ -2,186 +2,135 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360E5C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7A4C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082CA21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE70E21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731776AbfHVH4Z (ORCPT
+        id S1731799AbfHVH5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:56:25 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:37435 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725799AbfHVH4Z (ORCPT
+        Thu, 22 Aug 2019 03:57:16 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:34307 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfHVH5P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:56:25 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 0hxCiaUu9Thuu0hxFij4sI; Thu, 22 Aug 2019 09:56:22 +0200
-Subject: Re: [PATCH v2 1/3] media: add V4L2_CID_UNIT_CELL_SIZE control
-To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190820094027.4144-1-ribalda@kernel.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <58ea3b45-1936-7326-5064-e2ac2a862b81@xs4all.nl>
-Date:   Thu, 22 Aug 2019 09:56:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 22 Aug 2019 03:57:15 -0400
+IronPort-SDR: ZSeoSX1oBghHHzRNQ7o6UK41ShWYdlIOcXTBP6WJDycpgG5OgFcgtpFk1MWfF5DboRYa5uJqhB
+ B6/CIHqCiH527kAcmDvxzObRigDui8MGU5X4zXMLP7OI7sUDfSlXAxzIJBu1ZNdtoa+WcW50yT
+ GF4Co34we5MoqxrBoCUqG0nhyOXPDt6uMLaS+WyrQTdSE1gdV6On2BAINzuvb9Y8A+c1r6onGs
+ TDl9qbi1VS40EXKBObBKkL2xiEBbHhhChnjXiaNK8lLeTx4Y7kne+BQLcSwvLiIeeVWhCIjNsR
+ KEc=
+X-IronPort-AV: E=Sophos;i="5.64,415,1559548800"; 
+   d="scan'208";a="40637609"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa2.mentor.iphmx.com with ESMTP; 21 Aug 2019 23:57:15 -0800
+IronPort-SDR: S5FHnPkZl+154JHRdXpegyD1qv7BLTvnLiG7lncwgts/R5Vr+iFloCy0FswjaeR0f+zLsRk0Vo
+ SvE+/3jVi3/7LFTSxv8txRm6B6oYOKcaC0l1dlLUzu+vQNemORbXuagY6717k4Q7PyuMwqkFsD
+ FjIBXWpxIK3Rm/2L81+4WErRYtCz5KwYDZwM7+x1+AXfTreMc4B5emulG3/vf9slfYPivJynE6
+ wef7XEPSpVQR6cJPcRmTclRNB68IHSEhFuGTpUpL6v1I6U3u42oI0N0E9KzuM2zng2YknUtiq8
+ M44=
+Subject: Re: [PATCH v1 39/63] Input: touchscreen: Atmel: Add device tree
+ support for T15 key array objects
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     <nick@shmanahar.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <george_davis@mentor.com>
+References: <20190816083525.19071-1-jiada_wang@mentor.com>
+ <20190816083525.19071-5-jiada_wang@mentor.com>
+ <20190816172500.GI121898@dtor-ws>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <f40a8123-6d94-26ff-d6f1-cc8c9db313a4@mentor.com>
+Date:   Thu, 22 Aug 2019 16:57:10 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190820094027.4144-1-ribalda@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190816172500.GI121898@dtor-ws>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfKgjC887wzIfi44vqDnXdGcskFyB4NBnkDhIJF/p0Y1w/SHkGHJbp/xQR/mRdpM447xV7ErGWTz3kpydEcWWetLPDxHW+GIVzBIYjrt3Ovyy5vcvSZp3
- 2jQw3UWiVOZ4W4LxsN+WmJH7ZrBewXq3doOVvAgenidciV+a9IlVRBQ36EkyI726ngvSzMrYiO/R4tpsEA3/SqdfeYyfDNhG8YSPl2wsLzWTPqq/rffBjP7L
- FegziwyDCq7i1B7nPQZDVipFoHOSEg153RTMHbUjBvxfqLLwJDoapWWwbHdAndcKScDvZMyFeZ/EbIfJDQskYRVq6vStg9XYCPwOadgTt3F5tLuygnQZBsfM
- LXWDZ6KE
+X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/19 11:40 AM, Ricardo Ribalda Delgado wrote:
-> This control returns the unit cell size in nanometres. The struct provides
-> the width and the height in separated fields to take into consideration
-> asymmetric pixels and/or hardware binning.
-> This control is required for automatic calibration of sensors/cameras.
+Hi
+
+On 2019/08/17 2:25, Dmitry Torokhov wrote:
+> On Fri, Aug 16, 2019 at 05:35:01PM +0900, Jiada Wang wrote:
+>> From: Daniel Gong <Zhanli.Gong@cn.bosch.com>
 > 
-> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
-> ---
->  drivers/media/v4l2-core/v4l2-ctrls.c | 11 +++++++++++
->  include/media/v4l2-ctrls.h           |  2 ++
->  include/uapi/linux/v4l2-controls.h   |  3 +++
->  include/uapi/linux/videodev2.h       | 11 +++++++++++
->  4 files changed, 27 insertions(+)
+> This should be with the code adding T15 handling.
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index cd1ae016706f..ec949453a081 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -978,6 +978,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_AUTO_FOCUS_RANGE:		return "Auto Focus, Range";
->  	case V4L2_CID_PAN_SPEED:		return "Pan, Speed";
->  	case V4L2_CID_TILT_SPEED:		return "Tilt, Speed";
-> +	case V4L2_CID_UNIT_CELL_SIZE:		return "Unit Cell Size";
->  
->  	/* FM Radio Modulator controls */
->  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-> @@ -1357,6 +1358,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:
->  		*type = V4L2_CTRL_TYPE_VP8_FRAME_HEADER;
->  		break;
-> +	case V4L2_CID_UNIT_CELL_SIZE:
-> +		*type = V4L2_CTRL_TYPE_AREA;
-> +		break;
->  	default:
->  		*type = V4L2_CTRL_TYPE_INTEGER;
->  		break;
-> @@ -1423,6 +1427,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  	case V4L2_CID_RDS_RX_TRAFFIC_ANNOUNCEMENT:
->  	case V4L2_CID_RDS_RX_TRAFFIC_PROGRAM:
->  	case V4L2_CID_RDS_RX_MUSIC_SPEECH:
-> +	case V4L2_CID_UNIT_CELL_SIZE:
->  		*flags |= V4L2_CTRL_FLAG_READ_ONLY;
->  		break;
->  	case V4L2_CID_RF_TUNER_PLL_LOCK:
-> @@ -1705,6 +1710,9 @@ static int std_validate_compound(const struct v4l2_ctrl *ctrl, u32 idx,
->  	case V4L2_CTRL_TYPE_FWHT_PARAMS:
->  		break;
->  
-> +	case V4L2_CTRL_TYPE_AREA:
-> +		break;
-> +
->  	case V4L2_CTRL_TYPE_H264_SPS:
->  	case V4L2_CTRL_TYPE_H264_PPS:
->  	case V4L2_CTRL_TYPE_H264_SCALING_MATRIX:
-> @@ -2403,6 +2411,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
->  	case V4L2_CTRL_TYPE_VP8_FRAME_HEADER:
->  		elem_size = sizeof(struct v4l2_ctrl_vp8_frame_header);
->  		break;
-> +	case V4L2_CTRL_TYPE_AREA:
-> +		elem_size = sizeof(struct v4l2_area);
-> +		break;
->  	default:
->  		if (type < V4L2_CTRL_COMPOUND_TYPES)
->  			elem_size = sizeof(s32);
-> diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
-> index 570ff4b0205a..9a3d11350e67 100644
-> --- a/include/media/v4l2-ctrls.h
-> +++ b/include/media/v4l2-ctrls.h
-> @@ -50,6 +50,7 @@ struct poll_table_struct;
->   * @p_h264_slice_params:	Pointer to a struct v4l2_ctrl_h264_slice_params.
->   * @p_h264_decode_params:	Pointer to a struct v4l2_ctrl_h264_decode_params.
->   * @p_vp8_frame_header:		Pointer to a VP8 frame header structure.
-> + * @p_area:			Pointer to an area.
->   * @p:				Pointer to a compound value.
->   */
->  union v4l2_ctrl_ptr {
-> @@ -68,6 +69,7 @@ union v4l2_ctrl_ptr {
->  	struct v4l2_ctrl_h264_slice_params *p_h264_slice_params;
->  	struct v4l2_ctrl_h264_decode_params *p_h264_decode_params;
->  	struct v4l2_ctrl_vp8_frame_header *p_vp8_frame_header;
-> +	struct v4l2_area *p_area;
->  	void *p;
->  };
->  
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index a2669b79b294..1332eabd27b1 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -912,6 +912,9 @@ enum v4l2_auto_focus_range {
->  #define V4L2_CID_PAN_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+32)
->  #define V4L2_CID_TILT_SPEED			(V4L2_CID_CAMERA_CLASS_BASE+33)
->  
-> +#define V4L2_CID_UNIT_CELL_SIZE			(V4L2_CID_CAMERA_CLASS_BASE+34)
-> +
-> +
->  /* FM Modulator class control IDs */
->  
->  #define V4L2_CID_FM_TX_CLASS_BASE		(V4L2_CTRL_CLASS_FM_TX | 0x900)
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 2427bc4d8eba..751e2065ac02 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -422,6 +422,11 @@ struct v4l2_fract {
->  	__u32   denominator;
->  };
->  
-> +struct v4l2_area {
-> +	__u32   width;
-> +	__u32   height;
-> +};
-> +
->  /**
->    * struct v4l2_capability - Describes V4L2 device caps returned by VIDIOC_QUERYCAP
->    *
-> @@ -1718,6 +1723,12 @@ enum v4l2_ctrl_type {
->  	V4L2_CTRL_TYPE_U8	     = 0x0100,
->  	V4L2_CTRL_TYPE_U16	     = 0x0101,
->  	V4L2_CTRL_TYPE_U32	     = 0x0102,
-> +	/*
-> +	 * V4L2_CTRL_TYPE_MPEG2_SLICE_PARAMS = 0x0103,
-> +	 * V4L2_CTRL_TYPE_MPEG2_QUANTIZATION = 0x0104,
-> +	 * V4L2_CTRL_TYPE_FWHT_PARAMS = 0x0105,
-> +	 */
-> +	V4L2_CTRL_TYPE_AREA    = 0x0106,
+will squash this patch into T15 handling one in v2 patchset
 
-This new type should be documented.
-
-Regards,
-
-	Hans
-
->  };
->  
->  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
+Thanks,
+Jiada
+>>
+>> Signed-off-by: Daniel Gong <Zhanli.Gong@cn.bosch.com>
+>> Signed-off-by: George G. Davis <george_davis@mentor.com>
+>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+>> ---
+>>   drivers/input/touchscreen/atmel_mxt_ts.c | 29 ++++++++++++++++++++++++
+>>   1 file changed, 29 insertions(+)
+>>
+>> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> index be63002c2b31..3b9544c0a209 100644
+>> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+>> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> @@ -4143,10 +4143,12 @@ static int mxt_parse_device_properties(struct mxt_data *data)
+>>   {
+>>   	static const char keymap_property[] = "linux,gpio-keymap";
+>>   	static const char gpios_property[] = "atmel,gpios";
+>> +	static const char buttons_property[] = "atmel,key-buttons";
+>>   	struct device *dev = &data->client->dev;
+>>   	struct device_node *np = dev ? dev->of_node : NULL;
+>>   	struct device_node *np_gpio;
+>>   	u32 *keymap;
+>> +	u32 *buttonmap;
+>>   	int n_keys;
+>>   	int error;
+>>   
+>> @@ -4181,6 +4183,33 @@ static int mxt_parse_device_properties(struct mxt_data *data)
+>>   		data->t19_num_keys = n_keys;
+>>   	}
+>>   
+>> +	if (device_property_present(dev, buttons_property)) {
+>> +		n_keys = device_property_read_u32_array(dev, buttons_property,
+>> +							NULL, 0);
+>> +		if (n_keys <= 0) {
+>> +			error = n_keys < 0 ? n_keys : -EINVAL;
+>> +			dev_err(dev, "invalid/malformed '%s' property: %d\n",
+>> +				buttons_property, error);
+>> +			return error;
+>> +		}
+>> +
+>> +		buttonmap = devm_kmalloc_array(dev, n_keys, sizeof(*buttonmap),
+>> +					       GFP_KERNEL);
+>> +		if (!buttonmap)
+>> +			return -ENOMEM;
+>> +
+>> +		error = device_property_read_u32_array(dev, buttons_property,
+>> +						       buttonmap, n_keys);
+>> +		if (error) {
+>> +			dev_err(dev, "failed to parse '%s' property: %d\n",
+>> +				buttons_property, error);
+>> +			return error;
+>> +		}
+>> +
+>> +		data->t15_keymap = buttonmap;
+>> +		data->t15_num_keys = n_keys;
+>> +	}
+>> +
+>>   	device_property_read_u32(dev, "atmel,suspend-mode", &data->suspend_mode);
+>>   
+>>   	np_gpio = of_get_child_by_name(np, gpios_property);
+>> -- 
+>> 2.19.2
+>>
 > 
-
