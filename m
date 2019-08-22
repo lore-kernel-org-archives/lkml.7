@@ -2,103 +2,115 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B9EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 06:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C879C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 06:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B652339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 06:23:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEGZiwC7"
+	by mail.kernel.org (Postfix) with ESMTP id 11C6E205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 06:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731666AbfHVGX0 (ORCPT
+        id S1731677AbfHVGZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 02:23:26 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33368 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731098AbfHVGX0 (ORCPT
+        Thu, 22 Aug 2019 02:25:11 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:1589 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731207AbfHVGZK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 02:23:26 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n190so2933301pgn.0;
-        Wed, 21 Aug 2019 23:23:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=CjmFFn8T4mzBuFjitRp7RHPNL4LmUIeCq1YFn9vP/g8=;
-        b=QEGZiwC7PSpT28dJZ3fuiwQkE1MeAaFFXllRO2uS5DfgLvh3/FvXeIY8ycRsnEi7BP
-         AQNrazwXFFilJiBwLE4Ky/0/sroiOAnMVWPxSIFL0ut+R+jKuqF/SUYUeQ871N2+08Ey
-         qDC9Ecyuabc15K33WD1LI3XDwk86AHsoxlUtP5hAG7oUcaZRP33ZvcqKx9BARjXCt7iU
-         BDI8FIOuSJsfSKP8nqhTlAMTPhGgzqC7so1s+zxuPjXunz9u+1m6d9St+qOXQ7/IUscw
-         rNPpNa6F/jsNs9hpU4sDnYD30cfplht66IfY2JCUy9BfkXctMDpD2zUfy2drbDKk7fnm
-         zaZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=CjmFFn8T4mzBuFjitRp7RHPNL4LmUIeCq1YFn9vP/g8=;
-        b=DCGSeu9dU/GzKu22Mdih/TnRHBIicBoJKoH4mAZCUhlDwd6NIQUmDTVMLnollizZxb
-         lsCV4cUrURU3Vn/5zE/g2Fx2jugP7YRZSLygTsoPubQDExZlRoeukhTVs2bN4frW846F
-         nmaR7J0O7RI7z2hQMtfLmCB0okOdENWV8+xMNqmbgwUesM2b9KsOAht/DW+aNq6Bacqq
-         3gVURcdJTf4mjy0a971H0ErjOYL8k3FZkn3dvPwW6lQ1YplL8tWYRRCQspUq3EGdprHQ
-         nnzKP7fEnIWM/DGO2G+5xkUYIJugXPhnr0nXAox44AEykWF759OgUwf1ch5ubUvT3EPH
-         VFaw==
-X-Gm-Message-State: APjAAAXfxpqpbhsf1Czmwnn4eBot0DQ6g9tCmKu38HpShCY8Lu7fOwGR
-        leM3RnRruygooDX+lzE3b8g=
-X-Google-Smtp-Source: APXvYqxqwtKEpKPumsqvkHiy9cX5AXzad66+0qTPgdR4eANJvlZhZ/oekh/WwciHXrrpsQk1ODTj6g==
-X-Received: by 2002:a17:90a:b115:: with SMTP id z21mr3747216pjq.79.1566455005334;
-        Wed, 21 Aug 2019 23:23:25 -0700 (PDT)
-Received: from LGEARND20B15 ([27.122.242.75])
-        by smtp.gmail.com with ESMTPSA id y14sm54159373pfq.85.2019.08.21.23.23.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 23:23:24 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 15:23:20 +0900
-From:   Austin Kim <austindh.kim@gmail.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, austindh.kim@gmail.com
-Subject: [PATCH] xfs: Use BUG_ON rather than BUG() to remove unreachable code
-Message-ID: <20190822062320.GA35267@LGEARND20B15>
+        Thu, 22 Aug 2019 02:25:10 -0400
+IronPort-SDR: TGKdgOxBsUdqfC9rwbY+8tp1qCxvPZewjXJTNNl0+k28R5SIEptml7RGqD3vai/Ij1QEz4Zdye
+ areO5hTMBQqxr0Ed4M4uyV3d5M+2qQnifjzHuKpwO/ErJhaElddjig8Dg7xz3Y7pYaPt7ejGxo
+ 2ibzWytEja7pdi6w6EIxEuIwnJDCxf1pC7QU6oK1aqli54NNjJS29d+KCnBdI+Jo+GWzYzZUx4
+ +eJ5oJaeFwcBzdkPlL5+ahqOa6vcHJ6n9f0Xup/V8rxywv2dFpnMz/zfDesdafm6US7l+iY1fd
+ Xng=
+X-IronPort-AV: E=Sophos;i="5.64,415,1559548800"; 
+   d="scan'208";a="40635811"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa2.mentor.iphmx.com with ESMTP; 21 Aug 2019 22:25:09 -0800
+IronPort-SDR: v0CzMTbbBoGL4OTJN3qsIqkQxhM69euwIsQ8Ps1PRYARSfL3gKyJNMUqi9ypXepFXZUVXu8bZe
+ ezta3FO60VPwdZTRvZnJkqqPkCCi3UVgQjon0A71Y5L3u1CYYwS5o0nsKDMViYra94Lh1YjE/x
+ 7uCa+69KPpEtNCiAVlrQYGdCmcJ30Edl4abi6zR7f1x6lAYM6EawHKqQ7WTYq89rkwvRJMzC1P
+ VrTjmvSYkA5Ph6BcnfNai6QMSo931on2xsnl/2/UT/q4KzI+DKuMpieQE1UduVFKicFudwUJ8q
+ 56k=
+Subject: Re: [PATCH v1 41/63] Input: touchscreen: Atmel: Enable
+ IRQ_DISABLE_UNLAZY flag for interrupt
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     <nick@shmanahar.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <george_davis@mentor.com>
+References: <20190816083558.19189-1-jiada_wang@mentor.com>
+ <20190816083558.19189-2-jiada_wang@mentor.com>
+ <20190816172615.GJ121898@dtor-ws>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <0c4edce0-1295-e36b-e658-c109dfca867e@mentor.com>
+Date:   Thu, 22 Aug 2019 15:25:05 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190816172615.GJ121898@dtor-ws>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Code after BUG is unreachable since system would be crashed
-after the call to BUG is made.
-So change BUG_ON instead of BUG() to remove unreachable code.
----
- fs/xfs/xfs_mount.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+Hi Dmitry
 
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index 322da69..a681808 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -213,13 +213,7 @@ xfs_initialize_perag(
- 			goto out_hash_destroy;
- 
- 		spin_lock(&mp->m_perag_lock);
--		if (radix_tree_insert(&mp->m_perag_tree, index, pag)) {
--			BUG();
--			spin_unlock(&mp->m_perag_lock);
--			radix_tree_preload_end();
--			error = -EEXIST;
--			goto out_hash_destroy;
--		}
-+		BUG_ON(radix_tree_insert(&mp->m_perag_tree, index, pag));
- 		spin_unlock(&mp->m_perag_lock);
- 		radix_tree_preload_end();
- 		/* first new pag is fully initialized */
--- 
-2.6.2
+On 2019/08/17 2:26, Dmitry Torokhov wrote:
+> On Fri, Aug 16, 2019 at 05:35:36PM +0900, Jiada Wang wrote:
+>> From: Bhuvanesh Surachari <bhuvanesh_surachari@mentor.com>
+>>
+>> The de-/serializer driver has defined only irq_mask "ds90ub927_irq_mask" and
+>> irq_unmask "ds90ub927_irq_unmask" callback functions. And de-/serializer
+>> driver doesn't implement the irq_disable and irq_enable callback functions.
+>> Hence inorder to invoke irq_mask callback function when disable_irq_nosync is
+>> called the IRQ_DISABLE_UNLAZY interrupt flag should be set. If not the
+>> disable_irq_nosync will just increment the depth field in the irq
+>> descriptor only once as shown below.
+>>
+>> disable_irq_nosync
+>>   __disable_irq_nosync
+>>    __disable_irq (desc->depth++)
+>>     irq_disable
+>>      if irq_disable present -----------> if IRQ_DISABLE_UNLAZYflag set
+>>               |                  no                  |
+>>           yes |                                  yes |
+>>               |                                      |
+>>       desc->irq_data.chip->irq_disable   desc->irq_data.chip->irq_unmask
+>>                                           (ds90ub927_irq_mask)
+>>                                            disable_irq
+>>                                             __disable_irq_nosync
+>>                                              __disable_irq
+>> (desc->depth++)
+>> But the enable_irq will try to decrement the depth field twice which generates
+>> the backtrace stating "Unbalanced enable for irq 293". This is because there is
+>> no IRQ_DISABLE_UNLAZY flag check while calling irq_unmask callback function
+>> of the "ds90ub927_irq_unmask" de-/serializer via enable_irq.
+>>
+>> enable_irq
+>>   __enable_irq (desc->depth--)
+>>    irq_enable
+>>     if irq_enable present -------------> desc->irq_data.chip->irq_unmask
+>>                |                no        (ds90ub927_irq_unmask)
+>>            yes |                            enable_irq
+>>                |                             __enable_irq (desc->depth--)
+>>      (desc->irq_data.chip->irq_enable)
+> 
+> I'd prefer if we instead did not use the disable_irq_nosync() in the
+> driver.
+>
+sorry for the mistake, during forward port,
+I have already eliminated disable_irq_nosync(),
+so this patch is no longer needed,
+will drop it in v2 patch-set
 
+Thanks，
+Jiada
+
+> Thanks.
+> 
