@@ -2,125 +2,97 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BD0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E57C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E28023400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566501785;
-	bh=RNbDexMDysdWsuN5UkHpnUeN85ZtkPTDONKeQdrbsFc=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Tc8QYuqLvgoIttqAkXK3hHXVLBNAvJ7EoPx5uLdxew33U/sjxEA/lfzhIkS+6UNgD
-	 PU6lcidav19QYhfHM5LnaOrR96wnBh2Uqkc8VzWbLAEZCHm9oUITUqaCLVm4HecL/C
-	 3aU5ubmysxyXm5fTovHSpCLEJ7r+3q8HdlX9fOgQ=
+	by mail.kernel.org (Postfix) with ESMTP id 523082082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:24:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VTfI3oF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404166AbfHVTXE (ORCPT
+        id S2391874AbfHVTYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 15:23:04 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58486 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731683AbfHVTXC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 15:23:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Jthvcsal19IOXZ8heWx5wwt/W5rsQQFGdSuSyZmBYtQ=; b=t+y9YMa5Vq9z
-        X9CP6Ekoqy5sSeg4pR5RRrKUyJZMXfC3eUH0LwM2fPPXL8s+WIhb5NwSzV5a58LQmC31I+ivcVFkA
-        NvmW8/ZTsmc/+OhMQYUZVDR+nfGVRadoMrnsOMC1qnF4Fe9xkTdc0T6ECkksWJlJNCoV3DMaKFo99
-        74Ziw=;
-Received: from 92.40.26.78.threembb.co.uk ([92.40.26.78] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1i0sfi-00080S-LY; Thu, 22 Aug 2019 19:22:58 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id CF419D02CB0; Thu, 22 Aug 2019 20:22:57 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Ashish Kumar <Ashish.Kumar@nxp.com>
-Cc:     broonie@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        mark.rutland@arm.com, robh+dt@kernel.org
-Subject: Applied "spi: fsl-qspi: Enhance binding to extend example for flash entry" to the spi tree
-In-Reply-To:  <1565691791-26167-3-git-send-email-Ashish.Kumar@nxp.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190822192257.CF419D02CB0@fitzroy.sirena.org.uk>
-Date:   Thu, 22 Aug 2019 20:22:57 +0100 (BST)
+        Thu, 22 Aug 2019 15:24:17 -0400
+Received: from mout.gmx.net ([212.227.15.15]:49153 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731683AbfHVTYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 15:24:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1566501837;
+        bh=NpNeLeI+gS2GGYSJDr8S/ivIOUCFCz5f1UMmFg9+C0w=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=VTfI3oF2k9qohyTn446GbuYKUa0xRulhMim8YJaa+TFPFeM1Uv0kf3psMV8WjzoJr
+         ZFiuHpZ14E90qjW0tTT53N67gEjzvAZW1J292hcL96Irw7jj+ydR2bYy+FR5PtllGA
+         JnauoqrvnrDzeXwfVdafq2uIsyBb6K2UEv7s1FXM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [217.61.154.89] ([217.61.154.89]) by web-mail.gmx.net
+ (3c-app-gmx-bs43.server.lan [172.19.170.95]) (via HTTP); Thu, 22 Aug 2019
+ 21:23:57 +0200
+MIME-Version: 1.0
+Message-ID: <trinity-584a4b1c-18c9-43ae-8c1a-5057933ad905-1566501837738@3c-app-gmx-bs43>
+From:   "Frank Wunderlich" <frank-w@public-files.de>
+To:     "Liam Girdwood" <lgirdwood@gmail.com>
+Cc:     "Mark Brown" <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        =?UTF-8?Q?=22Ren=C3=A9_van_Dorst=22?= <opensource@vdorst.com>
+Subject: BUG: devm_regulator_get returns EPROBE_DEFER
+ (5.3-rc5..next-20190822) for bpi-r2/mt7623/mt7530
+Content-Type: text/plain; charset=UTF-8
+Date:   Thu, 22 Aug 2019 21:23:57 +0200
+Importance: normal
+Sensitivity: Normal
+X-Priority: 3
+X-Provags-ID: V03:K1:f9r3uHKHHbamY6L7y+siJCFDx7adfRfrg4NPWU0VlSWzwn3UIbhajPDTvypqLWh2e2Z87
+ nup9CtPrIaq4Yu4tnfsTLcWCkoc+aGqkD0AFXDpmKUQLpRtHncZFtvFtSU01XE+hEZwcrq6NgZqN
+ Yhw5n6SBqN5tOsdEPMr1Sxa/naxgvgXcYvpNViu0DpD480qhgxI0vaS8GLWlHzBS1IHw/j/N7ual
+ WUhJDReF0HvuP+jg6512sX1g+7o4/gJVDU2IzGLYoCH/Tt7Q2aYVP7vrapy4tMDClOOxSdf/5VNG
+ xY=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7fkmO6iHJ9Y=:Vgye3BcdvOM05q6643M7Iu
+ zQumxsyp/3XZXOW+H4zutForeCza+q+QcLxgKobSr5NxpAUAt+pv52Zzwwd3WieRAfVRxTZnn
+ p/WBhM+t9AC+xlZzDV4HyrKCSyGSonN/GlKntjtWfDd3cX2h8RsonhcFzqz1MHx8qw2dD5t7z
+ ocUnRIrL6Ld/zaLGOtaIrjy0zleCipPpjOsob4I36xbEw/tC0DsrU5HnOMtejxpJ2DsWc6TaM
+ rxasSXhpdgvmcdiaSpnnDBThPh5Cw/JkLmUWP6dh3O+mz696EUf/civ3veu9HLJ+53J8IQNGn
+ joDmO9WNZZLokNElFCjCbckC5axZDSeaqXCoRPhgxqU18f96/dI9/NhPxF6/q3F6sVtPBd6Qm
+ mX7ghj12vJZwHJcD9dGNjdLf+VEY28SGKWMQTNSRUqTGZvLz0WPLh09oU6SZNw1FryAQ6TPiF
+ 3zHPbQNdqKRCvu81Y7w66oqkXTLyWRACP5iGpJlGtl49yInSBYhdMxH4uCI2GW2zOSirKb+/Q
+ X89caGMHa16t+uU45PRGoFlIQ7VWSfPrlXHAkcqkFI24tqQ2xLp+dmooSuDXGeizEAvMgizu1
+ kYPhw8nevSgP6aR02eFbvJNIbt0Z89/WlIEM8Fqqjc6YQh2fm+zgYyBfcbGsyjeIKpUX7s/tL
+ OSywzmj8yEpDW9kId+UK5pqeDI+7zaABjL6HxdkuvuAWu+A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi,
 
-   spi: fsl-qspi: Enhance binding to extend example for flash entry
+i've encountered a bug in regulator between 5.3-rc5 and next-20190822
 
-has been applied to the spi tree at
+i build for bananapi-r2/mt7623 using this branch (includes next-patches):
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+https://github.com/vDorst/linux-1/blob/c34582d96520566c45068b92e080620458ffc1ff/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts#L166
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+and noticed that switch does not came up
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+priv->core_pwr = devm_regulator_get(&mdiodev->dev, "core"); returns 517
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+located here:
+https://github.com/vDorst/linux-1/blob/c34582d96520566c45068b92e080620458ffc1ff/drivers/net/dsa/mt7530.c#L1590
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+#define EPROBE_DEFER 517/* Driver requests probe retry */
 
-Thanks,
-Mark
+https://elixir.bootlin.com/linux/latest/source/drivers/regulator/core.c#L1726
 
-From 303290e130bfd504a8230f49e545f6b91e120553 Mon Sep 17 00:00:00 2001
-From: Ashish Kumar <Ashish.Kumar@nxp.com>
-Date: Tue, 13 Aug 2019 15:53:11 +0530
-Subject: [PATCH] spi: fsl-qspi: Enhance binding to extend example for flash
- entry
+seems of_find_regulator_by_node(node); is failing here, but i see the dts-node (mt6323_vpa_reg: buck_vpa) in /sys/firmware/devicetree/...
 
-Add example for adding flash entry on various boards' dts
-using flash manufacture spansion/cypress.
+tried without next-patches and switch came up including dsa-ports.
 
-Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
-Link: https://lore.kernel.org/r/1565691791-26167-3-git-send-email-Ashish.Kumar@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+i found no commit yet which breaks the regulator-setup
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-index e8f1d627d288..1b23cfd7b39b 100644
---- a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
-@@ -34,7 +34,11 @@ qspi0: quadspi@40044000 {
- 	clock-names = "qspi_en", "qspi";
- 
- 	flash0: s25fl128s@0 {
--		....
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl128s", "jedec,spi-nor";
-+		spi-max-frequency = <50000000>;
-+		reg = <0>;
- 	};
- };
- 
--- 
-2.20.1
+any idea about this?
 
+regards Frank
