@@ -2,128 +2,214 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16030C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C923FC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C4E205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B643205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732180AbfHVKls (ORCPT
+        id S2387676AbfHVKnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 06:41:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6106 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725804AbfHVKls (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:41:48 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7MAcTtq130317
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 06:41:47 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uhs8ngmrx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 06:41:46 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <mamatha4@linux.vnet.ibm.com>;
-        Thu, 22 Aug 2019 11:41:44 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 22 Aug 2019 11:41:39 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7MAfcZE54853694
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 22 Aug 2019 10:41:38 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD156A4057;
-        Thu, 22 Aug 2019 10:41:38 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E1C75A4053;
-        Thu, 22 Aug 2019 10:41:34 +0000 (GMT)
-Received: from oc3276512013.ibm.com (unknown [9.120.237.31])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 22 Aug 2019 10:41:34 +0000 (GMT)
-Subject: Re: [PATCH V1]Perf: Return error code for perf_session__new function
- on failure
-To:     Mukesh Ojha <mojha@codeaurora.org>, linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, kstewart@linuxfoundation.org,
-        gregkh@linuxfoundation.org, jeremie.galarneau@efficios.com,
-        shawn@git.icu, tstoyanov@vmware.com, tglx@linutronix.de,
-        alexey.budankov@linux.intel.com, adrian.hunter@intel.com,
-        songliubraving@fb.com, ravi.bangoria@linux.ibm.com
-References: <20190820105645.4920.55590.stgit@localhost.localdomain>
- <a35bc9b3-f9af-1cfc-160c-b5951d5d994b@codeaurora.org>
-From:   Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
-Date:   Thu, 22 Aug 2019 16:11:33 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 06:43:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34718 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbfHVKnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 06:43:16 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F13843082B02;
+        Thu, 22 Aug 2019 10:43:14 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CAB785888;
+        Thu, 22 Aug 2019 10:43:14 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id A7C1024F2F;
+        Thu, 22 Aug 2019 10:43:13 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 06:43:13 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     nitesh@redhat.com, kvm@vger.kernel.org, mst@redhat.com,
+        david@redhat.com, dave hansen <dave.hansen@intel.com>,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, osalvador@suse.de,
+        yang zhang wz <yang.zhang.wz@gmail.com>, riel@surriel.com,
+        konrad wilk <konrad.wilk@oracle.com>, lcapitulino@redhat.com,
+        wei w wang <wei.w.wang@intel.com>, aarcange@redhat.com,
+        pbonzini@redhat.com, dan j williams <dan.j.williams@intel.com>,
+        alexander h duyck <alexander.h.duyck@linux.intel.com>
+Message-ID: <1297409377.9866813.1566470593223.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190821145806.20926.22448.stgit@localhost.localdomain>
+References: <20190821145806.20926.22448.stgit@localhost.localdomain>
+Subject: Re: [PATCH v6 0/6] mm / virtio: Provide support for unused page
+ reporting
 MIME-Version: 1.0
-In-Reply-To: <a35bc9b3-f9af-1cfc-160c-b5951d5d994b@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19082210-4275-0000-0000-0000035BD699
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082210-4276-0000-0000-0000386DFC57
-Message-Id: <91b4e3c1-d2b3-c8a0-088d-1ff6466873ca@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908220115
+X-Originating-IP: [10.67.116.181, 10.4.195.5]
+Thread-Topic: mm / virtio: Provide support for unused page reporting
+Thread-Index: xHUmoXrRE8GpYbacHABVEp4l9hFR1A==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 22 Aug 2019 10:43:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 21/08/19 1:07 AM, Mukesh Ojha wrote:
->
-> On 8/20/2019 4:51 PM, Mamatha Inamdar wrote:
->> This Patch is to return error code of perf_new_session function
->> on failure instead of NULL
->> ----------------------------------------------
->> Test Results:
->>
->> Before Fix:
->>
->> $ perf c2c report -input
->> failed to open nput: No such file or directory
->>
->> $ echo $?
->> 0
->> ------------------------------------------
->> After Fix:
->>
->> $ ./perf c2c report -input
->> failed to open nput: No such file or directory
->>
->> $ echo $?
->> 254
->>
->> Signed-off-by: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
->> Acked-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
->> Reported-by: Nageswara R Sastry <rnsastry@linux.vnet.ibm.com>
->> Tested-by: Nageswara R Sastry <rnsastry@linux.vnet.ibm.com>
->
-> Looks good to me.
->
-> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
->
-> Thanks,
-> Mukesh
->
-Mukesh,
+> 
+> This series provides an asynchronous means of reporting to a hypervisor
+> that a guest page is no longer in use and can have the data associated
+> with it dropped. To do this I have implemented functionality that allows
+> for what I am referring to as unused page reporting
+> 
+> The functionality for this is fairly simple. When enabled it will allocate
+> statistics to track the number of reported pages in a given free area.
+> When the number of free pages exceeds this value plus a high water value,
+> currently 32, it will begin performing page reporting which consists of
+> pulling pages off of free list and placing them into a scatter list. The
+> scatterlist is then given to the page reporting device and it will perform
+> the required action to make the pages "reported", in the case of
+> virtio-balloon this results in the pages being madvised as MADV_DONTNEED
+> and as such they are forced out of the guest. After this they are placed
+> back on the free list, and an additional bit is added if they are not
+> merged indicating that they are a reported buddy page instead of a
+> standard buddy page. The cycle then repeats with additional non-reported
+> pages being pulled until the free areas all consist of reported pages.
+> 
+> I am leaving a number of things hard-coded such as limiting the lowest
+> order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
+> determine what the limit is on how many pages it wants to allocate to
+> process the hints. The upper limit for this is based on the size of the
+> queue used to store the scattergather list.
+> 
+> My primary testing has just been to verify the memory is being freed after
+> allocation by running memhog 40g on a 40g guest and watching the total
+> free memory via /proc/meminfo on the host. With this I have verified most
+> of the memory is freed after each iteration. 
 
-Thanks for reviewing the patch..
+I tried to go through the entire patch series. I can see you reported a
+-3.27 drop from the baseline. If its because of re-faulting the page after
+host has freed them? Can we avoid freeing all the pages from the guest free_area
+and keep some pages(maybe some mixed order), so that next allocation is done from
+the guest itself than faulting to host. This will work with real workload where
+allocation and deallocation happen at regular intervals. 
 
+This can be further optimized based on other factors like host memory pressure etc.
+
+Thanks,
+Pankaj       
+
+As far as performance I have
+> been mainly focusing on the will-it-scale/page_fault1 test running with
+> 16 vcpus. I have modified it to use Transparent Huge Pages. With this I
+> see almost no difference, -0.08%, with the patches applied and the feature
+> disabled. I see a regression of -0.86% with the feature enabled, but the
+> madvise disabled in the hypervisor due to a device being assigned. With
+> the feature fully enabled I see a regression of -3.27% versus the baseline
+> without these patches applied. In my testing I found that most of the
+> overhead was due to the page zeroing that comes as a result of the pages
+> having to be faulted back into the guest.
+> 
+> One side effect of these patches is that the guest becomes much more
+> resilient in terms of NUMA locality. With the pages being freed and then
+> reallocated when used it allows for the pages to be much closer to the
+> active thread, and as a result there can be situations where this patch
+> set will out-perform the stock kernel when the guest memory is not local
+> to the guest vCPUs. To avoid that in my testing I set the affinity of all
+> the vCPUs and QEMU instance to the same node.
+> 
+> Changes from the RFC:
+> https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
+> Moved aeration requested flag out of aerator and into zone->flags.
+> Moved boundary out of free_area and into local variables for aeration.
+> Moved aeration cycle out of interrupt and into workqueue.
+> Left nr_free as total pages instead of splitting it between raw and aerated.
+> Combined size and physical address values in virtio ring into one 64b value.
+> 
+> Changes from v1:
+> https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
+> Dropped "waste page treatment" in favor of "page hinting"
+> Renamed files and functions from "aeration" to "page_hinting"
+> Moved from page->lru list to scatterlist
+> Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
+> Virtio now uses scatterlist directly instead of intermediate array
+> Moved stats out of free_area, now in separate area and pointed to from zone
+> Merged patch 5 into patch 4 to improve review-ability
+> Updated various code comments throughout
+> 
+> Changes from v2:
+> https://lore.kernel.org/lkml/20190724165158.6685.87228.stgit@localhost.localdomain/
+> Dropped "page hinting" in favor of "page reporting"
+> Renamed files from "hinting" to "reporting"
+> Replaced "Hinted" page type with "Reported" page flag
+> Added support for page poisoning while hinting is active
+> Add QEMU patch that implements PAGE_POISON feature
+> 
+> Changes from v3:
+> https://lore.kernel.org/lkml/20190801222158.22190.96964.stgit@localhost.localdomain/
+> Added mutex lock around page reporting startup and shutdown
+> Fixed reference to "page aeration" in patch 2
+> Split page reporting function bit out into separate QEMU patch
+> Limited capacity of scatterlist to vq size - 1 instead of vq size
+> Added exception handling for case of virtio descriptor allocation failure
+> 
+> Changes from v4:
+> https://lore.kernel.org/lkml/20190807224037.6891.53512.stgit@localhost.localdomain/
+> Replaced spin_(un)lock with spin_(un)lock_irq in page_reporting_cycle()
+> Dropped if/continue for ternary operator in page_reporting_process()
+> Added checks for isolate and cma types to
+> for_each_reporting_migratetype_order
+> Added virtio-dev, Michal Hocko, and Oscar Salvador to to:/cc:
+> Rebased on latest linux-next and QEMU git trees
+> 
+> Changes from v5:
+> https://lore.kernel.org/lkml/20190812213158.22097.30576.stgit@localhost.localdomain/
+> Replaced spin_(un)lock with spin_(un)lock_irq in page_reporting_startup()
+> Updated shuffle code to use "shuffle_pick_tail" and updated patch description
+> Dropped storage of order and migratettype while page is being reported
+> Used get_pfnblock_migratetype to determine migratetype of page
+> Renamed put_reported_page to free_reported_page, added order as argument
+> Dropped check for CMA type as I believe we should be reporting those
+> Added code to allow moving of reported pages into and out of isolation
+> Defined page reporting order as minimum of Huge Page size vs MAX_ORDER - 1
+> Cleaned up use of static branch usage for page_reporting_notify_enabled
+> 
+> ---
+> 
+> Alexander Duyck (6):
+>       mm: Adjust shuffle code to allow for future coalescing
+>       mm: Move set/get_pcppage_migratetype to mmzone.h
+>       mm: Use zone and order instead of free area in free_list manipulators
+>       mm: Introduce Reported pages
+>       virtio-balloon: Pull page poisoning config out of free page hinting
+>       virtio-balloon: Add support for providing unused page reports to host
+> 
+> 
+>  drivers/virtio/Kconfig              |    1
+>  drivers/virtio/virtio_balloon.c     |   84 ++++++++-
+>  include/linux/mmzone.h              |  124 ++++++++-----
+>  include/linux/page-flags.h          |   11 +
+>  include/linux/page_reporting.h      |  177 ++++++++++++++++++
+>  include/uapi/linux/virtio_balloon.h |    1
+>  mm/Kconfig                          |    5 +
+>  mm/Makefile                         |    1
+>  mm/internal.h                       |   18 ++
+>  mm/memory_hotplug.c                 |    1
+>  mm/page_alloc.c                     |  216 ++++++++++++++++-------
+>  mm/page_reporting.c                 |  336
+>  +++++++++++++++++++++++++++++++++++
+>  mm/shuffle.c                        |   40 +++-
+>  mm/shuffle.h                        |   12 +
+>  14 files changed, 896 insertions(+), 131 deletions(-)
+>  create mode 100644 include/linux/page_reporting.h
+>  create mode 100644 mm/page_reporting.c
+> 
+> --
+> 
+> 
