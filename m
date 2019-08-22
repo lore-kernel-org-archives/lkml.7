@@ -2,122 +2,125 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A250C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C37BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E3023402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495274;
-	bh=Bs8dqzPgeMnC/DyyXQe3A2jAYl71NSYWfolTte+15Gk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0n/cXktn/nQ7izh1ZXGBvO4AUxORlwWEIO5P01B3I5cfxKbrYxjNErrFpWEEZ6C6+
-	 Z3gDLTLuMFU5HOyWB/a592ijGqxIHh55jw6zps9Trneyu1w7ErPEqRsp7+JEtXT13A
-	 +Fc+eFbS75aQtsDODKdE+wzN0w0MxqdxO4c7R+rc=
+	by mail.kernel.org (Postfix) with ESMTP id 757AE23406
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TOXDCBl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404382AbfHVRZT (ORCPT
+        id S2392796AbfHVRef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:25:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404311AbfHVRYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:44 -0400
-Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26E2F23426;
-        Thu, 22 Aug 2019 17:24:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494684;
-        bh=Bs8dqzPgeMnC/DyyXQe3A2jAYl71NSYWfolTte+15Gk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=no0ErYIHedf5D4IOl/slrHxEJtCCIWb80T6S/22I+HajTfeHnWQ7386o5yECD6u/+
-         OYX7rfjPEvUbT6vq6qq5xPqMKnnXxucNrnv+xYTATnOrenS9tQpz41sPsUPJHDliBD
-         7TPGXMiicrB1OobDEtA0mKONHRh3zSVrjgdFc4qE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
-        Scott Teel <scott.teel@microsemi.com>,
-        Scott Benesh <scott.benesh@microsemi.com>,
-        Kevin Barnett <kevin.barnett@microsemi.com>,
-        Don Brace <don.brace@microsemi.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 30/71] scsi: hpsa: correct scsi command status issue after reset
-Date:   Thu, 22 Aug 2019 10:19:05 -0700
-Message-Id: <20190822171729.264126833@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
-References: <20190822171726.131957995@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 22 Aug 2019 13:34:35 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46731 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404374AbfHVRZS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:18 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c2so3826784plz.13
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 10:25:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Y6Dgg0LHIAz3laO+y1ntUkl0I7eVRTHEz+QlpqCcJzM=;
+        b=TOXDCBl6f8xlElGz/1VgT87+cdII1cmN5ZgoolaAd7oEb3dKLp1S1aL8eIAK602wRA
+         rFV3kajNzuMqA4UEKTCS3p+weiq9BteIBukmbisFxA48gsaY84KdHTxbIl+R7uti/zmz
+         vKmYinXsuEL5HmhH7cQg7SvGd3IMVzS+tidp1iSw7IeQ5I3BILh31uDv6xkYym/ZUF22
+         I+N3iNN6gjUqxDsC7MVj180HA/sXR/waBKbKAC6Ujfjt91vw4asNcnDuH9yG8hcd+pla
+         GAc0mCLgB3uLH3bVSL7ZcOSv9zFfBCOpTcrSc+K2XP/54ZTAa50tjiJvklrL9DieJktS
+         oDYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Y6Dgg0LHIAz3laO+y1ntUkl0I7eVRTHEz+QlpqCcJzM=;
+        b=FXPpJ+FG/zBUDwvPya3KJAFWMx8R4gnpHjFhdkAV70BzRuEF53f63OTF7/bQEcLt72
+         lgueAvz8YB57e+UbOAOecGpfCRsbRyhnTXNTj8YrdKgt1e9ODX3RPNKPBUalwWOEUYOr
+         ceVUVlstdxEHr0WuKatCQIHZXc2xhMlN9V1vghtCS6JWCicIyZJxB+CMYhkO2uCsyqjf
+         IwqstXYZvI3eHibp2cgzAH2V3sq9BUuBFCcFMBI4iNYURbQbu2nFlmE5eC/+u8RTLbf/
+         +IXaZe306+fKTWwjwf/oX0N62USfI3+R0eGYG0MhUQdoXOl2Tqtl3vONhrX6DjjVpq5X
+         Ctlg==
+X-Gm-Message-State: APjAAAXASOoTgNNevjlp0VQmIlbUP91yQ1Ma6sPCqpfj1+HBeC+RNQlB
+        ClG++QP/la6nITZjGblqNazzjKz/Ug==
+X-Google-Smtp-Source: APXvYqyQha/e6kS2nojAOGpDDw4shsyn1hRc1sxUaHNJWwVW+IOzYG5yHHeYZaNx46NEZ2lrt6i+Eg==
+X-Received: by 2002:a17:902:ab8f:: with SMTP id f15mr41150750plr.301.1566494717986;
+        Thu, 22 Aug 2019 10:25:17 -0700 (PDT)
+Received: from localhost.localdomain ([2405:204:71cc:5738:24ad:193e:4b59:8a76])
+        by smtp.gmail.com with ESMTPSA id r12sm31705798pgb.73.2019.08.22.10.25.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 10:25:17 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        fisher.cheng@bitmain.com, alec.lin@bitmain.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v4 5/8] arm64: dts: bitmain: Add clock controller support for BM1880 SoC
+Date:   Thu, 22 Aug 2019 22:54:23 +0530
+Message-Id: <20190822172426.25879-6-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190822172426.25879-1-manivannan.sadhasivam@linaro.org>
+References: <20190822172426.25879-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eeebce1862970653cdf5c01e98bc669edd8f529a ]
+Add clock controller support for Bitmain BM1880 SoC.
 
-Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
-Reviewed-by: Scott Teel <scott.teel@microsemi.com>
-Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
-Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
-Signed-off-by: Don Brace <don.brace@microsemi.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/scsi/hpsa.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 6d520e8945f73..3b892918d8219 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -2266,6 +2266,8 @@ static int handle_ioaccel_mode2_error(struct ctlr_info *h,
- 	case IOACCEL2_SERV_RESPONSE_COMPLETE:
- 		switch (c2->error_data.status) {
- 		case IOACCEL2_STATUS_SR_TASK_COMP_GOOD:
-+			if (cmd)
-+				cmd->result = 0;
- 			break;
- 		case IOACCEL2_STATUS_SR_TASK_COMP_CHK_COND:
- 			cmd->result |= SAM_STAT_CHECK_CONDITION;
-@@ -2425,8 +2427,10 @@ static void process_ioaccel2_completion(struct ctlr_info *h,
+diff --git a/arch/arm64/boot/dts/bitmain/bm1880.dtsi b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
+index d65453f99a99..8471662413da 100644
+--- a/arch/arm64/boot/dts/bitmain/bm1880.dtsi
++++ b/arch/arm64/boot/dts/bitmain/bm1880.dtsi
+@@ -4,6 +4,7 @@
+  * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+  */
  
- 	/* check for good status */
- 	if (likely(c2->error_data.serv_response == 0 &&
--			c2->error_data.status == 0))
-+			c2->error_data.status == 0)) {
-+		cmd->result = 0;
- 		return hpsa_cmd_free_and_done(h, c, cmd);
-+	}
++#include <dt-bindings/clock/bm1880-clock.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset/bitmain,bm1880-reset.h>
  
- 	/*
- 	 * Any RAID offload error results in retry which will use
-@@ -5494,6 +5498,12 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
- 	}
- 	c = cmd_tagged_alloc(h, cmd);
+@@ -66,6 +67,12 @@
+ 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+ 	};
  
-+	/*
-+	 * This is necessary because the SML doesn't zero out this field during
-+	 * error recovery.
-+	 */
-+	cmd->result = 0;
++	osc: osc {
++		compatible = "fixed-clock";
++		clock-frequency = <25000000>;
++		#clock-cells = <0>;
++	};
 +
- 	/*
- 	 * Call alternate submit routine for I/O accelerated commands.
- 	 * Retries always go down the normal I/O path.
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+@@ -94,6 +101,15 @@
+ 				reg = <0x400 0x120>;
+ 			};
+ 
++			clk: clock-controller@e8 {
++				compatible = "bitmain,bm1880-clk";
++				reg = <0xe8 0x0c>, <0x800 0xb0>;
++				reg-names = "pll", "sys";
++				clocks = <&osc>;
++				clock-names = "osc";
++				#clock-cells = <1>;
++			};
++
+ 			rst: reset-controller@c00 {
+ 				compatible = "bitmain,bm1880-reset";
+ 				reg = <0xc00 0x8>;
 -- 
-2.20.1
-
-
+2.17.1
 
