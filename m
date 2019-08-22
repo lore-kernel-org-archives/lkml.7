@@ -2,196 +2,88 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFDDCC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6117C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9956423784
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:23:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="G8PGFUZf"
+	by mail.kernel.org (Postfix) with ESMTP id C3DBD23784
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732321AbfHVIXh (ORCPT
+        id S1732336AbfHVIYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:23:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39954 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730987AbfHVIXg (ORCPT
+        Thu, 22 Aug 2019 04:24:53 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:43278 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731207AbfHVIYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:23:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c3so4513748wrd.7
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:23:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=pdSEt99/CAmqV4fLv18bovPaZEVnOI86pAE/GZZ1s8o=;
-        b=G8PGFUZfNXXmilf161dMeUTcpEBj+qTrlmsTnkGZuXZyum2+F9+g8Uj4QM9Ou+A/+z
-         QlSOh3eqahxos/JE8qqoby3HAWtEadv0K7tJAHNg3vMTkCoOh9MMuE3/JkaBnPsv19Mu
-         Zc+47ASy/6fCfJEiM1+2V3ttMKInkjAkWSrnkl5UrW1k38gmLEbCRA43mKcj1U9BGUdG
-         O8kr+27+CSQ41Yw7KCkv0UwP2zfK+fHMqINg8PtnUMk/s2tO0TNrhRpKSqRH0TJfXBFl
-         lw1RU1aTNxbVSoBqMwR+r5akQOdWyYCo+QJ2DqoNOma+h0JJE5G4L7xpgRCZPHaZKMh9
-         kbtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=pdSEt99/CAmqV4fLv18bovPaZEVnOI86pAE/GZZ1s8o=;
-        b=CQfVMZh6SGKHWDR0h0eiHdNP8G1q3bHulqOsiqtPbWvCf5HWYXEuj5iMdfP83LDMeu
-         pZIA+bwTqwLjJePvc/fv2xVeLkkoF26Mz9zLYd82kn8od4TdHXUJTx5IVe3oRBXsAcKJ
-         VvzPNgm5k/vl2+WhGMpdE4CJmfYH4qeCMJPTOFchrvnsJK5AufU+s0SilCTs26kyLW+d
-         I7x4PGq1RBWjSHyu6wl3F/s/tjQUEncVZP6NKxef5HmHjN4VYRZkM7Y5wWvLN0R476fS
-         812kXaXgubgrUX4E5TVQRlJnwt3BQWi3YAS9OZdu/rxj5YxD/onzYxrbQrznH1IooLPO
-         4XVA==
-X-Gm-Message-State: APjAAAU9xH4CainUshCDYPM3NOU19VsuxQDdxai5UPkbJjsAStRTYOnv
-        +wlwNiK8NNeBT8iRpDojyERDZfZd+QWYng==
-X-Google-Smtp-Source: APXvYqxZAhFzPIllWHgOfm1YJnUgWV3//Of7Tq/vW5OyikIqSWVvyroTMOmPiwWv1xAe+2JPFgJNSw==
-X-Received: by 2002:adf:a54d:: with SMTP id j13mr992885wrb.261.1566462213455;
-        Thu, 22 Aug 2019 01:23:33 -0700 (PDT)
-Received: from [192.168.1.62] (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id f134sm4484687wmg.20.2019.08.22.01.23.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 01:23:32 -0700 (PDT)
-Subject: Re: [PATCH 4/5] arm64: dts: meson-sm1-sei610: add HDMI display
- support
-To:     Kevin Hilman <khilman@baylibre.com>, ulf.hansson@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190821114121.10430-1-narmstrong@baylibre.com>
- <20190821114121.10430-5-narmstrong@baylibre.com>
- <7ho90i5c41.fsf@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <09a5372b-3ff1-b6fc-9a06-d8f9c235e763@baylibre.com>
-Date:   Thu, 22 Aug 2019 10:23:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 04:24:53 -0400
+X-UUID: 01fbca1311e54c78adea42e8c0d5164f-20190822
+X-UUID: 01fbca1311e54c78adea42e8c0d5164f-20190822
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1885262594; Thu, 22 Aug 2019 16:24:38 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 22 Aug 2019 16:24:35 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 22 Aug 2019 16:24:35 +0800
+Message-ID: <1566462278.26641.1.camel@mtksdaap41>
+Subject: Re: [PATCH RESEND] i2c: mediatek: disable zero-length transfers for
+ mt8183
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     Wolfram Sang <wsa@the-dreams.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Alexandru M Stan <amstan@chromium.org>,
+        Jun Gao <jun.gao@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Qii Wang <qii.wang@mediatek.com>
+Date:   Thu, 22 Aug 2019 16:24:38 +0800
+In-Reply-To: <20190822055737.142384-1-hsinyi@chromium.org>
+References: <20190822055737.142384-1-hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <7ho90i5c41.fsf@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: CDD14A64F1E5A4DF5E573825EDBC482C6C80C91A52820B01E0AE08A9F54881602000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/08/2019 01:31, Kevin Hilman wrote:
-> Neil Armstrong <narmstrong@baylibre.com> writes:
-> 
->> Update compatible of the pwc-vpu node and add the HDMI support nodes
->> for the Amlogic SM1 Based SEI610 Board.
-> 
-> I think this changelog is out of date.  It's not doing anything with the
-> VPU pwrc node.
+On Thu, 2019-08-22 at 13:57 +0800, Hsin-Yi Wang wrote:
+> When doing i2cdetect quick write mode, we would get transfer
+> error ENOMEM, and i2cdetect shows there's no device at the address.
+> Quoting from mt8183 datasheet, the number of transfers to be
+> transferred in one transaction should be set to bigger than 1,
+> so we should forbid zero-length transfer and update functionality.
 
-Exact, thanks for pointing it
 
-> 
-> Kevin
-> 
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  .../boot/dts/amlogic/meson-sm1-sei610.dts     | 23 +++++++++++++++++++
->>  1 file changed, 23 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
->> index 12dab0ba2f26..66bd3bfbaf91 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dts
->> @@ -51,6 +51,17 @@
->>  		};
->>  	};
->>  
->> +	hdmi-connector {
->> +		compatible = "hdmi-connector";
->> +		type = "a";
->> +
->> +		port {
->> +			hdmi_connector_in: endpoint {
->> +				remote-endpoint = <&hdmi_tx_tmds_out>;
->> +			};
->> +		};
->> +	};
->> +
->>  	leds {
->>  		compatible = "gpio-leds";
->>  
->> @@ -177,6 +188,18 @@
->>  	phy-mode = "rmii";
->>  };
->>  
->> +&hdmi_tx {
->> +	status = "okay";
->> +	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
->> +	pinctrl-names = "default";
->> +};
->> +
->> +&hdmi_tx_tmds_port {
->> +	hdmi_tx_tmds_out: endpoint {
->> +		remote-endpoint = <&hdmi_connector_in>;
->> +	};
->> +};
->> +
->>  &i2c3 {
->>  	status = "okay";
->>  	pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
->> -- 
->> 2.22.0
+<...>
+
+> @@ -933,8 +942,8 @@ static int mtk_i2c_probe(struct platform_device *pdev)
+>  	i2c->dev = &pdev->dev;
+>  	i2c->adap.dev.parent = &pdev->dev;
+>  	i2c->adap.owner = THIS_MODULE;
+> -	i2c->adap.algo = &mtk_i2c_algorithm;
+>  	i2c->adap.quirks = i2c->dev_comp->quirks;
+> +	i2c->adap.algo = &mtk_i2c_algorithm;
+>  	i2c->adap.timeout = 2 * HZ;
+>  	i2c->adap.retries = 1;
+>  
+
+Why do you need to change this part?
+
+Joe.C
+
+
 
