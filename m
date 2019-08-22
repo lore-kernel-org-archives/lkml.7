@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12006C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CD4C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB74C2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877812089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493998;
-	bh=sRXrwARtkwNs+gUqC/kzGbrhnVeKcYJ+cMWizTaGyi8=;
+	s=default; t=1566494000;
+	bh=8eiQAAiot3lKz22lYGS7QHSgMck+Aovg7d6oIfpVbzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mXHpTHTDvuMrgDKR1uWmfEhMA0v+bNJlEaFszzLcP7uHTKnr/F60XejFGb8PglyV/
-	 wGuTSIZ7f4KIgdem8NUDXqWfXBATRe2eZ85m2I7pcO7fg7Y7XsST/DJYCtLUg35wga
-	 OT9cqU8ij2nEcnJtRbmj//p/6mQvh6zg96LrKhnY=
+	b=Yss4nXroEv2ufpMNAJfpTkQKe/p4NGXNaH7+vtoO6kfT9unoMfP7BWTOjJK0tVia3
+	 hrqjojTvzIbzPI1heQjU7qm8sGihJkx0SbEbDxgUcYBmCQVuWrbxfvsm95162MTY8P
+	 /CF+7xRPzUlMdKEJgDTAIzENWjOvO1YUl8wYsdeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390626AbfHVRJC (ORCPT
+        id S2391033AbfHVRNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59014 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:13:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390506AbfHVRI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:57 -0400
+        id S2390624AbfHVRJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:02 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E58F8233FE;
-        Thu, 22 Aug 2019 17:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E38623407;
+        Thu, 22 Aug 2019 17:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493736;
-        bh=sRXrwARtkwNs+gUqC/kzGbrhnVeKcYJ+cMWizTaGyi8=;
+        s=default; t=1566493741;
+        bh=8eiQAAiot3lKz22lYGS7QHSgMck+Aovg7d6oIfpVbzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zLBOryh1tOWWYPulCQF15qoQUp7XSp81Ya4oVmqyTS9p+CTkFGRBcBV5S9a9KlkPH
-         kFG1KgdeA5NLoOEvShcxBzG3EZH5UOJCl6pJ+TdDgTb+oiCGmTtuYdIzLvG8rX12WA
-         Q39ihRPoS8IL59utX1MN6yloXKp6qXrCB38c/3h4=
+        b=0hahZBIxSAwFPCGjaDnjw2yG+UNDNsef5jx1TSVo76N2U8lJ/1iHURa/LUnUfxbtM
+         8dl22RrXDjf8zD4FUY2fUs2M0v6AElHrv5gLATjaBdrJfPO6iOfMI5/WxrUC6eROnX
+         C+6SHnUjvn60hpcf5+7QdHBvWcl0skiDtawISr+Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guy Levi <guyle@mellanox.com>, Moni Shoua <monis@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 077/135] IB/mlx5: Fix MR registration flow to use UMR properly
-Date:   Thu, 22 Aug 2019 13:07:13 -0400
-Message-Id: <20190822170811.13303-78-sashal@kernel.org>
+Subject: [PATCH 5.2 087/135] ocfs2: remove set but not used variable 'last_hash'
+Date:   Thu, 22 Aug 2019 13:07:23 -0400
+Message-Id: <20190822170811.13303-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,108 +72,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guy Levi <guyle@mellanox.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit e5366d309a772fef264ec85e858f9ea46f939848 ]
+[ Upstream commit 7bc36e3ce91471b6377c8eadc0a2f220a2280083 ]
 
-Driver shouldn't allow to use UMR to register a MR when
-umr_modify_atomic_disabled is set. Otherwise it will always end up with a
-failure in the post send flow which sets the UMR WQE to modify atomic access
-right.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: c8d75a980fab ("IB/mlx5: Respect new UMR capabilities")
-Signed-off-by: Guy Levi <guyle@mellanox.com>
-Reviewed-by: Moni Shoua <monis@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20190731081929.32559-1-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+  fs/ocfs2/xattr.c: In function ocfs2_xattr_bucket_find:
+  fs/ocfs2/xattr.c:3828:6: warning: variable last_hash set but not used [-Wunused-but-set-variable]
+
+It's never used and can be removed.
+
+Link: http://lkml.kernel.org/r/20190716132110.34836-1-yuehaibing@huawei.com
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/mr.c | 27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
+ fs/ocfs2/xattr.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
-index e54bec2c29654..d239fc58c0020 100644
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -51,22 +51,12 @@ static void clean_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr);
- static void dereg_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr);
- static int mr_cache_max_order(struct mlx5_ib_dev *dev);
- static int unreg_umr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr);
--static bool umr_can_modify_entity_size(struct mlx5_ib_dev *dev)
--{
--	return !MLX5_CAP_GEN(dev->mdev, umr_modify_entity_size_disabled);
--}
+diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+index 385f3aaa24480..90c830e3758e2 100644
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -3825,7 +3825,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
+ 	u16 blk_per_bucket = ocfs2_blocks_per_xattr_bucket(inode->i_sb);
+ 	int low_bucket = 0, bucket, high_bucket;
+ 	struct ocfs2_xattr_bucket *search;
+-	u32 last_hash;
+ 	u64 blkno, lower_blkno = 0;
  
- static bool umr_can_use_indirect_mkey(struct mlx5_ib_dev *dev)
- {
- 	return !MLX5_CAP_GEN(dev->mdev, umr_indirect_mkey_disabled);
- }
+ 	search = ocfs2_xattr_bucket_new(inode);
+@@ -3869,8 +3868,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
+ 		if (xh->xh_count)
+ 			xe = &xh->xh_entries[le16_to_cpu(xh->xh_count) - 1];
  
--static bool use_umr(struct mlx5_ib_dev *dev, int order)
--{
--	return order <= mr_cache_max_order(dev) &&
--		umr_can_modify_entity_size(dev);
--}
+-		last_hash = le32_to_cpu(xe->xe_name_hash);
 -
- static int destroy_mkey(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr)
- {
- 	int err = mlx5_core_destroy_mkey(dev->mdev, &mr->mmkey);
-@@ -1271,7 +1261,7 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
- {
- 	struct mlx5_ib_dev *dev = to_mdev(pd->device);
- 	struct mlx5_ib_mr *mr = NULL;
--	bool populate_mtts = false;
-+	bool use_umr;
- 	struct ib_umem *umem;
- 	int page_shift;
- 	int npages;
-@@ -1303,29 +1293,30 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
- 	if (err < 0)
- 		return ERR_PTR(err);
+ 		/* record lower_blkno which may be the insert place. */
+ 		lower_blkno = blkno;
  
--	if (use_umr(dev, order)) {
-+	use_umr = !MLX5_CAP_GEN(dev->mdev, umr_modify_entity_size_disabled) &&
-+		  (!MLX5_CAP_GEN(dev->mdev, umr_modify_atomic_disabled) ||
-+		   !MLX5_CAP_GEN(dev->mdev, atomic));
-+
-+	if (order <= mr_cache_max_order(dev) && use_umr) {
- 		mr = alloc_mr_from_cache(pd, umem, virt_addr, length, ncont,
- 					 page_shift, order, access_flags);
- 		if (PTR_ERR(mr) == -EAGAIN) {
- 			mlx5_ib_dbg(dev, "cache empty for order %d\n", order);
- 			mr = NULL;
- 		}
--		populate_mtts = false;
- 	} else if (!MLX5_CAP_GEN(dev->mdev, umr_extended_translation_offset)) {
- 		if (access_flags & IB_ACCESS_ON_DEMAND) {
- 			err = -EINVAL;
- 			pr_err("Got MR registration for ODP MR > 512MB, not supported for Connect-IB\n");
- 			goto error;
- 		}
--		populate_mtts = true;
-+		use_umr = false;
- 	}
- 
- 	if (!mr) {
--		if (!umr_can_modify_entity_size(dev))
--			populate_mtts = true;
- 		mutex_lock(&dev->slow_path_mutex);
- 		mr = reg_create(NULL, pd, virt_addr, length, umem, ncont,
--				page_shift, access_flags, populate_mtts);
-+				page_shift, access_flags, !use_umr);
- 		mutex_unlock(&dev->slow_path_mutex);
- 	}
- 
-@@ -1341,7 +1332,7 @@ struct ib_mr *mlx5_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
- 
- 	update_odp_mr(mr);
- 
--	if (!populate_mtts) {
-+	if (use_umr) {
- 		int update_xlt_flags = MLX5_IB_UPD_XLT_ENABLE;
- 
- 		if (access_flags & IB_ACCESS_ON_DEMAND)
 -- 
 2.20.1
 
