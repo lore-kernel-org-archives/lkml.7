@@ -2,135 +2,354 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5416BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C341C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27026233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:14:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08EB721848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cAnyMpYG"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aLLvZ9tS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388410AbfHVMN6 (ORCPT
+        id S1733283AbfHVMOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:13:58 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:43853 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388389AbfHVMNp (ORCPT
+        Thu, 22 Aug 2019 08:14:38 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:34288 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729716AbfHVMOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:13:45 -0400
-Received: by mail-ua1-f68.google.com with SMTP id y7so1897226uae.10
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 05:13:44 -0700 (PDT)
+        Thu, 22 Aug 2019 08:14:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z8Whq5t8q9GwheJahJvFQp/NfuL/9ssSVrrEeSWFZQU=;
-        b=cAnyMpYGBwM8IXEcyZhXp6XNeJ4oqG8RVl6vX5Xv/J9d/FHqRPyEMmdNKw9wf1KDCE
-         tLTajI7r01JOL69r+MoFBwfA1kjTucGY+G1R14bZq8SmlCM6PO3BGBBN9yuq69YNiacP
-         mYmpS/C4rlbiZnBN3MJkIjzZi5QjJIBgqTDkqsktrLNUQCVUDKxJoAxYiNOrTY+ddK7Q
-         6hojXA83VxhzBp+wgoJjn3HcUYPgqfT3ruM7jraS3qKSkrTGl/9vDXPvOZTN+kPk59su
-         yaT/o07Qu6Cu/gc8sHAXfdaN6Zaf43AQzGWM4IaU3HTRALrleGzaFrp9e7J8oqudmz8J
-         twXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z8Whq5t8q9GwheJahJvFQp/NfuL/9ssSVrrEeSWFZQU=;
-        b=qkGp6gTD3Tgg18jTaIk5YYt1FrrESyCw6WjxtBr4Y3S5qxWpHt6MQjQqapg82kEa++
-         z1YUbzyHJmI9+QBjwxvnoQLTTv8x6PnUt3zFPNV+6KsBytMtzQMjlaMCV9m2I8GVkbs+
-         Imy4L0+NyFcoyVqZSXqoCgF+zwNL6jzfIAzDNWDz8P/7Ln0H7IZbwMvv3Q1jEUcmmXms
-         Rs0HjlraJciN90sNcJviqybe2Yi7+IRIQ0GaAVW3bsxbwYUaPsn3E155dQbQ9k+VffVs
-         hWwiVLtaZnhZLiOnCzc/P4gJXioMEzCLe+mPVNc3EyXfgHQpMC6mSttOX2y1irtyBTK1
-         /eoQ==
-X-Gm-Message-State: APjAAAWAfVFhRj1FX7aaSO9D3xD2y2vMXKjIZG68MXYf9T1Mv5TFxWX0
-        fYVvwEfOoyYkDBhl+R3ISbQqrrp9n5OsSlCTDNglw4qu
-X-Google-Smtp-Source: APXvYqwyfK3+XunOkjrMGsFKUo/ps28tqmznFkFmVvl2sGgjI2r67E341S3VzcLrmVKcgXCaRvFrYS6XYbcLEdIXitk=
-X-Received: by 2002:ab0:6883:: with SMTP id t3mr5681666uar.104.1566476024313;
- Thu, 22 Aug 2019 05:13:44 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1566476076; x=1598012076;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ZJ4ckYYyF8r8s7slEeqr042gWZQrAlSIM2NHq1YgTxY=;
+  b=aLLvZ9tSq5VFRUUiou0n1RpLQqHqruMMhpD0DGuc/sfVwsJAgm8y3VO2
+   FhStmMWvrAoDNqbSbnNT0do9DesupyxZe7B5vWMAG3ynZrKEH2dwJqx/f
+   mGTevQqYVjCeh8Yt1SvM2WiGvURZcjTwkF7RafszsylKU8dmDeXK8sB00
+   8=;
+X-IronPort-AV: E=Sophos;i="5.64,416,1559520000"; 
+   d="scan'208";a="411093680"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 22 Aug 2019 12:14:33 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-f14f4a47.us-west-2.amazon.com (Postfix) with ESMTPS id 7C2A6A2CA0;
+        Thu, 22 Aug 2019 12:14:32 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 22 Aug 2019 12:14:32 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.160.211) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 22 Aug 2019 12:14:28 +0000
+Subject: Re: [PATCH v5 10/20] RISC-V: KVM: Handle MMIO exits for VCPU
+To:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190822084131.114764-1-anup.patel@wdc.com>
+ <20190822084131.114764-11-anup.patel@wdc.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <917cea87-42c0-e50a-6508-d5b577c8b702@amazon.com>
+Date:   Thu, 22 Aug 2019 14:14:25 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190808165301.GA30877@embeddedor>
-In-Reply-To: <20190808165301.GA30877@embeddedor>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 22 Aug 2019 14:13:07 +0200
-Message-ID: <CAPDyKFoS3_RJvOxjQXpYT6YUgqJM7WXfvdHe1f6cTkab0rgsEQ@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-cadence: use struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190822084131.114764-11-anup.patel@wdc.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.160.211]
+X-ClientProxiedBy: EX13D25UWC001.ant.amazon.com (10.43.162.44) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 8 Aug 2019 at 18:53, Gustavo A. R. Silva <gustavo@embeddedor.com> wrote:
->
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
->
-> struct sdhci_cdns_priv {
->         ...
->         struct sdhci_cdns_phy_param phy_params[0];
-> };
->
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
->
-> So, replace the following form:
->
-> sizeof(*priv) + sizeof(priv->phy_params[0]) * nr_phy_params
->
-> with:
->
-> struct_size(priv, phy_params, nr_phy_params)
->
-> Also, notice that, in this case, variable priv_size is not necessary,
-> hence it is removed.
->
-> This code was detected with the help of Coccinelle.
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
-Applied for next, thanks!
-
-Kind regards
-Uffe
-
-
+On 22.08.19 10:44, Anup Patel wrote:
+> We will get stage2 page faults whenever Guest/VM access SW emulated
+> MMIO device or unmapped Guest RAM.
+> 
+> This patch implements MMIO read/write emulation by extracting MMIO
+> details from the trapped load/store instruction and forwarding the
+> MMIO read/write to user-space. The actual MMIO emulation will happen
+> in user-space and KVM kernel module will only take care of register
+> updates before resuming the trapped VCPU.
+> 
+> The handling for stage2 page faults for unmapped Guest RAM will be
+> implemeted by a separate patch later.
+> 
+> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 > ---
->  drivers/mmc/host/sdhci-cadence.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-> index 163d1cf4367e..1768a13f89be 100644
-> --- a/drivers/mmc/host/sdhci-cadence.c
-> +++ b/drivers/mmc/host/sdhci-cadence.c
-> @@ -337,7 +337,6 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
->         struct sdhci_pltfm_host *pltfm_host;
->         struct sdhci_cdns_priv *priv;
->         struct clk *clk;
-> -       size_t priv_size;
->         unsigned int nr_phy_params;
->         int ret;
->         struct device *dev = &pdev->dev;
-> @@ -351,8 +350,8 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
->                 return ret;
->
->         nr_phy_params = sdhci_cdns_phy_param_count(dev->of_node);
-> -       priv_size = sizeof(*priv) + sizeof(priv->phy_params[0]) * nr_phy_params;
-> -       host = sdhci_pltfm_init(pdev, &sdhci_cdns_pltfm_data, priv_size);
-> +       host = sdhci_pltfm_init(pdev, &sdhci_cdns_pltfm_data,
-> +                               struct_size(priv, phy_params, nr_phy_params));
->         if (IS_ERR(host)) {
->                 ret = PTR_ERR(host);
->                 goto disable_clk;
-> --
-> 2.22.0
->
+>   arch/riscv/include/asm/kvm_host.h |  11 +
+>   arch/riscv/kvm/mmu.c              |   7 +
+>   arch/riscv/kvm/vcpu_exit.c        | 436 +++++++++++++++++++++++++++++-
+>   3 files changed, 451 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> index 18f1097f1d8d..4388bace6d70 100644
+> --- a/arch/riscv/include/asm/kvm_host.h
+> +++ b/arch/riscv/include/asm/kvm_host.h
+> @@ -53,6 +53,12 @@ struct kvm_arch {
+>   	phys_addr_t pgd_phys;
+>   };
+>   
+> +struct kvm_mmio_decode {
+> +	unsigned long insn;
+> +	int len;
+> +	int shift;
+> +};
+> +
+>   struct kvm_cpu_context {
+>   	unsigned long zero;
+>   	unsigned long ra;
+> @@ -141,6 +147,9 @@ struct kvm_vcpu_arch {
+>   	unsigned long irqs_pending;
+>   	unsigned long irqs_pending_mask;
+>   
+> +	/* MMIO instruction details */
+> +	struct kvm_mmio_decode mmio_decode;
+> +
+>   	/* VCPU power-off state */
+>   	bool power_off;
+>   
+> @@ -160,6 +169,8 @@ static inline void kvm_arch_vcpu_block_finish(struct kvm_vcpu *vcpu) {}
+>   int kvm_riscv_setup_vsip(void);
+>   void kvm_riscv_cleanup_vsip(void);
+>   
+> +int kvm_riscv_stage2_map(struct kvm_vcpu *vcpu, gpa_t gpa, unsigned long hva,
+> +			 bool is_write);
+>   void kvm_riscv_stage2_flush_cache(struct kvm_vcpu *vcpu);
+>   int kvm_riscv_stage2_alloc_pgd(struct kvm *kvm);
+>   void kvm_riscv_stage2_free_pgd(struct kvm *kvm);
+> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
+> index 04dd089b86ff..2b965f9aac07 100644
+> --- a/arch/riscv/kvm/mmu.c
+> +++ b/arch/riscv/kvm/mmu.c
+> @@ -61,6 +61,13 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+>   	return 0;
+>   }
+>   
+> +int kvm_riscv_stage2_map(struct kvm_vcpu *vcpu, gpa_t gpa, unsigned long hva,
+> +			 bool is_write)
+> +{
+> +	/* TODO: */
+> +	return 0;
+> +}
+> +
+>   void kvm_riscv_stage2_flush_cache(struct kvm_vcpu *vcpu)
+>   {
+>   	/* TODO: */
+> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
+> index e4d7c8f0807a..efc06198c259 100644
+> --- a/arch/riscv/kvm/vcpu_exit.c
+> +++ b/arch/riscv/kvm/vcpu_exit.c
+> @@ -6,9 +6,371 @@
+>    *     Anup Patel <anup.patel@wdc.com>
+>    */
+>   
+> +#include <linux/bitops.h>
+>   #include <linux/errno.h>
+>   #include <linux/err.h>
+>   #include <linux/kvm_host.h>
+> +#include <asm/csr.h>
+> +
+> +#define INSN_MATCH_LB		0x3
+> +#define INSN_MASK_LB		0x707f
+> +#define INSN_MATCH_LH		0x1003
+> +#define INSN_MASK_LH		0x707f
+> +#define INSN_MATCH_LW		0x2003
+> +#define INSN_MASK_LW		0x707f
+> +#define INSN_MATCH_LD		0x3003
+> +#define INSN_MASK_LD		0x707f
+> +#define INSN_MATCH_LBU		0x4003
+> +#define INSN_MASK_LBU		0x707f
+> +#define INSN_MATCH_LHU		0x5003
+> +#define INSN_MASK_LHU		0x707f
+> +#define INSN_MATCH_LWU		0x6003
+> +#define INSN_MASK_LWU		0x707f
+> +#define INSN_MATCH_SB		0x23
+> +#define INSN_MASK_SB		0x707f
+> +#define INSN_MATCH_SH		0x1023
+> +#define INSN_MASK_SH		0x707f
+> +#define INSN_MATCH_SW		0x2023
+> +#define INSN_MASK_SW		0x707f
+> +#define INSN_MATCH_SD		0x3023
+> +#define INSN_MASK_SD		0x707f
+> +
+> +#define INSN_MATCH_C_LD		0x6000
+> +#define INSN_MASK_C_LD		0xe003
+> +#define INSN_MATCH_C_SD		0xe000
+> +#define INSN_MASK_C_SD		0xe003
+> +#define INSN_MATCH_C_LW		0x4000
+> +#define INSN_MASK_C_LW		0xe003
+> +#define INSN_MATCH_C_SW		0xc000
+> +#define INSN_MASK_C_SW		0xe003
+> +#define INSN_MATCH_C_LDSP	0x6002
+> +#define INSN_MASK_C_LDSP	0xe003
+> +#define INSN_MATCH_C_SDSP	0xe002
+> +#define INSN_MASK_C_SDSP	0xe003
+> +#define INSN_MATCH_C_LWSP	0x4002
+> +#define INSN_MASK_C_LWSP	0xe003
+> +#define INSN_MATCH_C_SWSP	0xc002
+> +#define INSN_MASK_C_SWSP	0xe003
+> +
+> +#define INSN_LEN(insn)		((((insn) & 0x3) < 0x3) ? 2 : 4)
+> +
+> +#ifdef CONFIG_64BIT
+> +#define LOG_REGBYTES		3
+> +#else
+> +#define LOG_REGBYTES		2
+> +#endif
+> +#define REGBYTES		(1 << LOG_REGBYTES)
+> +
+> +#define SH_RD			7
+> +#define SH_RS1			15
+> +#define SH_RS2			20
+> +#define SH_RS2C			2
+> +
+> +#define RV_X(x, s, n)		(((x) >> (s)) & ((1 << (n)) - 1))
+> +#define RVC_LW_IMM(x)		((RV_X(x, 6, 1) << 2) | \
+> +				 (RV_X(x, 10, 3) << 3) | \
+> +				 (RV_X(x, 5, 1) << 6))
+> +#define RVC_LD_IMM(x)		((RV_X(x, 10, 3) << 3) | \
+> +				 (RV_X(x, 5, 2) << 6))
+> +#define RVC_LWSP_IMM(x)		((RV_X(x, 4, 3) << 2) | \
+> +				 (RV_X(x, 12, 1) << 5) | \
+> +				 (RV_X(x, 2, 2) << 6))
+> +#define RVC_LDSP_IMM(x)		((RV_X(x, 5, 2) << 3) | \
+> +				 (RV_X(x, 12, 1) << 5) | \
+> +				 (RV_X(x, 2, 3) << 6))
+> +#define RVC_SWSP_IMM(x)		((RV_X(x, 9, 4) << 2) | \
+> +				 (RV_X(x, 7, 2) << 6))
+> +#define RVC_SDSP_IMM(x)		((RV_X(x, 10, 3) << 3) | \
+> +				 (RV_X(x, 7, 3) << 6))
+> +#define RVC_RS1S(insn)		(8 + RV_X(insn, SH_RD, 3))
+> +#define RVC_RS2S(insn)		(8 + RV_X(insn, SH_RS2C, 3))
+> +#define RVC_RS2(insn)		RV_X(insn, SH_RS2C, 5)
+> +
+> +#define SHIFT_RIGHT(x, y)		\
+> +	((y) < 0 ? ((x) << -(y)) : ((x) >> (y)))
+> +
+> +#define REG_MASK			\
+> +	((1 << (5 + LOG_REGBYTES)) - (1 << LOG_REGBYTES))
+> +
+> +#define REG_OFFSET(insn, pos)		\
+> +	(SHIFT_RIGHT((insn), (pos) - LOG_REGBYTES) & REG_MASK)
+> +
+> +#define REG_PTR(insn, pos, regs)	\
+> +	(ulong *)((ulong)(regs) + REG_OFFSET(insn, pos))
+> +
+> +#define GET_RM(insn)		(((insn) >> 12) & 7)
+> +
+> +#define GET_RS1(insn, regs)	(*REG_PTR(insn, SH_RS1, regs))
+> +#define GET_RS2(insn, regs)	(*REG_PTR(insn, SH_RS2, regs))
+> +#define GET_RS1S(insn, regs)	(*REG_PTR(RVC_RS1S(insn), 0, regs))
+> +#define GET_RS2S(insn, regs)	(*REG_PTR(RVC_RS2S(insn), 0, regs))
+> +#define GET_RS2C(insn, regs)	(*REG_PTR(insn, SH_RS2C, regs))
+> +#define GET_SP(regs)		(*REG_PTR(2, 0, regs))
+> +#define SET_RD(insn, regs, val)	(*REG_PTR(insn, SH_RD, regs) = (val))
+> +#define IMM_I(insn)		((s32)(insn) >> 20)
+> +#define IMM_S(insn)		(((s32)(insn) >> 25 << 5) | \
+> +				 (s32)(((insn) >> 7) & 0x1f))
+> +#define MASK_FUNCT3		0x7000
+> +
+> +#define STR(x)			XSTR(x)
+> +#define XSTR(x)			#x
+> +
+> +/* TODO: Handle traps due to unpriv load and redirect it back to VS-mode */
+> +static ulong get_insn(struct kvm_vcpu *vcpu)
+> +{
+> +	ulong __sepc = vcpu->arch.guest_context.sepc;
+> +	ulong __hstatus, __sstatus, __vsstatus;
+> +#ifdef CONFIG_RISCV_ISA_C
+> +	ulong rvc_mask = 3, tmp;
+> +#endif
+> +	ulong flags, val;
+> +
+> +	local_irq_save(flags);
+> +
+> +	__vsstatus = csr_read(CSR_VSSTATUS);
+> +	__sstatus = csr_read(CSR_SSTATUS);
+> +	__hstatus = csr_read(CSR_HSTATUS);
+> +
+> +	csr_write(CSR_VSSTATUS, __vsstatus | SR_MXR);
+> +	csr_write(CSR_SSTATUS, vcpu->arch.guest_context.sstatus | SR_MXR);
+> +	csr_write(CSR_HSTATUS, vcpu->arch.guest_context.hstatus | HSTATUS_SPRV);
+
+What happens when the insn load triggers a page fault, maybe because the 
+guest was malicious and did
+
+   1) Run on page 0x1000
+   2) Remove map for 0x1000, do *not* flush TLB
+   3) Trigger MMIO
+
+That would DOS the host here, as the host kernel would continue running 
+in guest address space, right?
+
+
+Alex
+
+> +
+> +#ifndef CONFIG_RISCV_ISA_C
+> +	asm ("\n"
+> +#ifdef CONFIG_64BIT
+> +		STR(LWU) " %[insn], (%[addr])\n"
+> +#else
+> +		STR(LW) " %[insn], (%[addr])\n"
+> +#endif
+> +		: [insn] "=&r" (val) : [addr] "r" (__sepc));
+> +#else
+> +	asm ("and %[tmp], %[addr], 2\n"
+> +		"bnez %[tmp], 1f\n"
+> +#ifdef CONFIG_64BIT
+> +		STR(LWU) " %[insn], (%[addr])\n"
+> +#else
+> +		STR(LW) " %[insn], (%[addr])\n"
+> +#endif
+> +		"and %[tmp], %[insn], %[rvc_mask]\n"
+> +		"beq %[tmp], %[rvc_mask], 2f\n"
+> +		"sll %[insn], %[insn], %[xlen_minus_16]\n"
+> +		"srl %[insn], %[insn], %[xlen_minus_16]\n"
+> +		"j 2f\n"
+> +		"1:\n"
+> +		"lhu %[insn], (%[addr])\n"
+> +		"and %[tmp], %[insn], %[rvc_mask]\n"
+> +		"bne %[tmp], %[rvc_mask], 2f\n"
+> +		"lhu %[tmp], 2(%[addr])\n"
+> +		"sll %[tmp], %[tmp], 16\n"
+> +		"add %[insn], %[insn], %[tmp]\n"
+> +		"2:"
+> +	: [vsstatus] "+&r" (__vsstatus), [insn] "=&r" (val),
+> +	  [tmp] "=&r" (tmp)
+> +	: [addr] "r" (__sepc), [rvc_mask] "r" (rvc_mask),
+> +	  [xlen_minus_16] "i" (__riscv_xlen - 16));
+> +#endif
+> +
+> +	csr_write(CSR_HSTATUS, __hstatus);
+> +	csr_write(CSR_SSTATUS, __sstatus);
+> +	csr_write(CSR_VSSTATUS, __vsstatus);
+> +
+> +	local_irq_restore(flags);
+> +
+> +	return val;
+> +}
+
