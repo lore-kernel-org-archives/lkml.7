@@ -2,92 +2,46 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3C1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DBFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03ECC205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:55:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="heb4RNlk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MEIM/3bH"
+	by mail.kernel.org (Postfix) with ESMTP id 8F51E233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733217AbfHVLzM (ORCPT
+        id S1733240AbfHVL5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:55:12 -0400
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:41565 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727894AbfHVLzJ (ORCPT
+        Thu, 22 Aug 2019 07:57:03 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:34132 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731156AbfHVL5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:55:09 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6C0AD1174;
-        Thu, 22 Aug 2019 07:55:08 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Thu, 22 Aug 2019 07:55:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=zSJauXLFTt8FQXHSlqnwC5NrdUuNC7V
-        HRKBipmoRJdY=; b=heb4RNlkCmWc7wvfj7j8Rt9uoYjYOFLWgs0NIxIojr5kZMT
-        D9Df7dJCG+Yab+3QD5oJKByXQ89US4AU3N8ekxbt4aWOzHvfST54N/qNAppAxQlh
-        wkNiufu110JRd0I+yVa132Mum168IgXiEHMChstVTBSpWR9vhtwJWiUWidJsyTrd
-        N8Rs6791JPsFq0im3wvOdIl8w5lLPaElZTkrXLrHbYsJhQeSn/tvcMIOuxCFpk/D
-        oSXGZLOLOZv21cY9F8U80taZxrtxBCs4wsblTDej4BBaKywE1rkclqosnjpsx+8t
-        EK8WC6YZqYFOLFzi+IeGUX2aTkJZu+9mmxuRbmA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=zSJauX
-        LFTt8FQXHSlqnwC5NrdUuNC7VHRKBipmoRJdY=; b=MEIM/3bHWqZn7L00pCocy9
-        IodbZoNJGAn9RRMErPLnplhfBcW3iVEISY/iFJyCfA9M0NybFkfsRfI4AiK/+mSJ
-        ac05sSBMQMFcPC7JQtrGBx6byDbw+XjdkDrC6//7D1BsNxtXFRCfx/AE3flbwItF
-        H0es8drXgSQ5upSzBxhrDvBEojIQ7FoECCHGMke5oMGJJpL0632oDLU6/YC8wDsK
-        necKhXlgIHPZ+8arUzZ1LkgFmJyzSLDLdJT+bs5ZOvF2KPofLOb4i5o5L+rr4IOL
-        cOrVgDiqk/2QLjbqqO6G8jLCDo7tlAMmr3qZB74FxDTYVxtDSjGgBSIDBPwCUs/A
-        ==
-X-ME-Sender: <xms:m4JeXT6I4UBQ0qr8jl0ELmtNTLNRx9CLFsUS7_jsTEVK8RhKDtt-ew>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegiedgtddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:m4JeXf63ejuLicYWDghgGybdL-6oSIhCb_Nw6jkeYOQpf8azJxo8pA>
-    <xmx:m4JeXV-sGWjJYX2i6u8iMn3yQC_g3L8hai70ELfkAqqmTouOFz-T1A>
-    <xmx:m4JeXd_bIx8VxH6JTvHGVtif74ia7vPGAZmBFIU6miSPxSD2Bh-G3g>
-    <xmx:nIJeXe1xfSUuGvdvoZeaP7FbUh4Hu97elHgqQwJfJoEtDsMHM4c1hg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 633BCE00A4; Thu, 22 Aug 2019 07:55:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-916-g49fca03-fmstable-20190821v7
-Mime-Version: 1.0
-Message-Id: <c78d4c45-477b-4078-b269-aec72571c8cd@www.fastmail.com>
-In-Reply-To: <CAPDyKFrDPxFMm710Z25i-euOT2rrgCNXVa4na-fye0xamMXq_A@mail.gmail.com>
-References: <20190807003629.2974-1-andrew@aj.id.au>
- <20190807003629.2974-2-andrew@aj.id.au>
- <CACPK8Xe6Zp1uOqEffEc0b6oGa7portEAifGPRqb876HmA+oZeg@mail.gmail.com>
- <6c94aada-9c4a-4f55-9a43-349282ad12af@www.fastmail.com>
- <CAPDyKFrDPxFMm710Z25i-euOT2rrgCNXVa4na-fye0xamMXq_A@mail.gmail.com>
-Date:   Thu, 22 Aug 2019 21:25:24 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Ulf Hansson" <ulf.hansson@linaro.org>
-Cc:     "Joel Stanley" <joel@jms.id.au>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Adrian Hunter" <adrian.hunter@intel.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Ryan Chen" <ryanchen.aspeed@gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mmc: Document Aspeed SD controller
-Content-Type: text/plain
+        Thu, 22 Aug 2019 07:57:02 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Ta8EzwU_1566475019;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Ta8EzwU_1566475019)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 22 Aug 2019 19:56:59 +0800
+Subject: Re: [PATCH 00/14] per memcg lru_lock
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>
+References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
+ <6ba1ffb0-fce0-c590-c373-7cbc516dbebd@oracle.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <348495d2-b558-fdfd-a411-89c75d4a9c78@linux.alibaba.com>
+Date:   Thu, 22 Aug 2019 19:56:59 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <6ba1ffb0-fce0-c590-c373-7cbc516dbebd@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -95,60 +49,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On Thu, 22 Aug 2019, at 21:15, Ulf Hansson wrote:
-> On Thu, 15 Aug 2019 at 07:37, Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> >
-> >
-> > On Thu, 15 Aug 2019, at 15:06, Joel Stanley wrote:
-> > > On Wed, 7 Aug 2019 at 00:38, Andrew Jeffery <andrew@aj.id.au> wrote:
-> > > >
-> > > > The ASPEED SD/SDIO/MMC controller exposes two slots implementing the
-> > > > SDIO Host Specification v2.00, with 1 or 4 bit data buses, or an 8 bit
-> > > > data bus if only a single slot is enabled.
-> > > >
-> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > >
-> > > Reviewed-by: Joel Stanley <joel@jms.id.au>
-> > >
-> > > Two minor comments below.
-> > >
-> > > > +++ b/Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
-> > > > @@ -0,0 +1,105 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > >
-> > > No "Copyright IBM" ?
-> >
-> > I'm going rogue.
-> >
-> > That reminds me I should chase up where we got to with the binding
-> > licensing.
-> >
-> > >
-> > > > +%YAML 1.2
-> > > > +---
-> > >
-> > > > +
-> > > > +examples:
-> > > > +  - |
-> > > > +    #include <dt-bindings/clock/aspeed-clock.h>
-> > > > +    sdc@1e740000 {
-> > > > +            compatible = "aspeed,ast2500-sd-controller";
-> > > > +            reg = <0x1e740000 0x100>;
-> > > > +            #address-cells = <1>;
-> > > > +            #size-cells = <1>;
-> > > > +            ranges = <0 0x1e740000 0x10000>;
-> > >
-> > > According to the datasheet this could be 0x20000. It does not matter
-> > > though, as there's nothing in it past 0x300.
-> >
-> > Good catch.
-> >
+在 2019/8/22 上午2:00, Daniel Jordan 写道:
+>>
 > 
-> Are you planning on sending a v6 or you want me to apply this and you
-> can post a patch on top?
+> This is system-wide right, not per container?  Even per container, 89 usec isn't much contention over 20 seconds.  You may want to give this a try:
 
-Yeah, sorry, I wasn't very clear there. I was hoping just to do a follow-up
-patch with the cleanups if you're okay with that?
+yes, perf lock show the host info.
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice> 
+> It's also synthetic but it stresses lru_lock more than just anon alloc/free.  It hits the page activate path, which is where we see this lock in our database, and if enough memory is configured lru_lock also gets stressed during reclaim, similar to [1].
 
-Andrew
+Thanks for the sharing, this patchset can not help the [1] case, since it's just relief the per container lock contention now. Yes, readtwice case could be more sensitive for this lru_lock changes in containers. I may try to use it in container with some tuning. But anyway, aim9 is also pretty good to show the problem and solutions. :)
+> 
+> It'd be better though, as Michal suggests, to use the real workload that's causing problems.  Where are you seeing contention?
+
+We repeatly create or delete a lot of different containers according to servers load/usage, so normal workload could cause lots of pages alloc/remove. aim9 could reflect part of scenarios. I don't know the DB scenario yet.
+
+> 
+>> With this patch series, lruvec->lru_lock show no contentions
+>>          &(&lruvec->lru_l...          8          0               0       0               0               0
+>>
+>> and aim9 page_test/brk_test performance increased 5%~50%.
+> 
+> Where does the 50% number come in?  The numbers below seem to only show ~4% boost.
+
+the Setddev/CoeffVar case has about 50% performance increase. one of container's mmtests result as following:
+
+Stddev    page_test      245.15 (   0.00%)      189.29 (  22.79%)
+Stddev    brk_test      1258.60 (   0.00%)      629.16 (  50.01%)
+CoeffVar  page_test        0.71 (   0.00%)        0.53 (  26.05%)
+CoeffVar  brk_test         1.32 (   0.00%)        0.64 (  51.14%)
+
