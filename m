@@ -2,39 +2,39 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C27C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4127AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE72D233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1809223400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:37:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="rMJkgk0v"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="f0FQSMzw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389277AbfHVOh1 (ORCPT
+        id S2389294AbfHVOha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:37:27 -0400
-Received: from onstation.org ([52.200.56.107]:46764 "EHLO onstation.org"
+        Thu, 22 Aug 2019 10:37:30 -0400
+Received: from onstation.org ([52.200.56.107]:46788 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729731AbfHVOh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:37:26 -0400
+        id S1729731AbfHVOh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:37:28 -0400
 Received: from ins7386.localdomain (unknown [207.110.43.92])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 50C6F3E8A5;
-        Thu, 22 Aug 2019 14:37:24 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id 36E633E912;
+        Thu, 22 Aug 2019 14:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1566484646;
-        bh=t6TP/PN3jeU5M3ONQYp1VGGuOKetsTewE0YXyKvmcNg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=rMJkgk0v/7E+UXNxanhygtbLA3/xPZcasXZyYflUk1Ew5ryK8QGcQsOTFqwhLB08r
-         fEHi2aWzztbdf36E9FYl3Sz6uVeuOkrY2fQi/xnkom8/1bw7rZ0GIGwp5uFESDnGO6
-         QJjKagQ3mCgBIC6vL4eCKPZcJoR07bN7vmjrdxrA=
+        s=default; t=1566484647;
+        bh=F9Sip3jo21nK0PL6SYRVys4FFM6eVl/kv2dV2SZpQt0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=f0FQSMzwzVEd2hAOiwOYKZfFEX0Zaui0RyyF7+Wakw/SFrqCUz2XRCtxR3nqXlEJI
+         g1rtnYBoYyMTJxbQsbala2B+wSDkwBmg0SjSiuaRamMwfuphHL0SvvW1TdoZeZLycv
+         FfLZXVV0/Rblq4EAZKWX7mMlr/28ucu0FfP3efcY=
 From:   Brian Masney <masneyb@onstation.org>
 To:     agross@kernel.org, robdclark@gmail.com, sean@poorly.run,
         robh+dt@kernel.org, bjorn.andersson@linaro.org
@@ -42,11 +42,13 @@ Cc:     airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
         jonathan@marek.ca, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        jcrouse@codeaurora.org
-Subject: [PATCH v6 0/7] qcom: add OCMEM support
-Date:   Thu, 22 Aug 2019 07:36:56 -0700
-Message-Id: <20190822143703.13030-1-masneyb@onstation.org>
+        jcrouse@codeaurora.org, Rob Herring <robh@kernel.org>
+Subject: [PATCH v6 1/7] dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
+Date:   Thu, 22 Aug 2019 07:36:57 -0700
+Message-Id: <20190822143703.13030-2-masneyb@onstation.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190822143703.13030-1-masneyb@onstation.org>
+References: <20190822143703.13030-1-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,58 +56,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series adds support for Qualcomm's On Chip MEMory (OCMEM)
-that is needed in order to support some a3xx and a4xx-based GPUs
-upstream. This is based on Rob Clark's patch series that he submitted
-in October 2015 and I am resubmitting updated patches with his
-permission. See the individual patches for the changelog.
+Add device tree bindings for the On Chip Memory (OCMEM) that is present
+on some Qualcomm Snapdragon SoCs.
 
-This was tested with the GPU on a LG Nexus 5 (hammerhead) phone and
-this will work on other msm8974-based systems. For a summary of what
-currently works upstream on the Nexus 5, see my status page at
-https://masneyb.github.io/nexus-5-upstream/.
-
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 Changes since v5:
-- Rename ocmem device tree property to sram
+- None
 
-See individual patches for changelogs for previous versions.
+Changes since v4:
+- remove qcom from path in $id
 
-Brian Masney (5):
-  dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
-  dt-bindings: display: msm: gmu: add optional ocmem property
-  soc: qcom: add OCMEM driver
-  drm/msm/gpu: add ocmem init/cleanup functions
-  ARM: qcom_defconfig: add ocmem support
+Changes since v3:
+- add ranges property
+- remove unnecessary literal block |
+- add #address-cells and #size-cells to binding
+- rename path devicetree/bindings/sram/qcom/ to devicetree/bindings/sram/ since
+  this is the only qcom binding in the sram namespace. That was a holdover from
+  when I originally put this in the soc namespace.
 
-Rob Clark (2):
-  firmware: qcom: scm: add OCMEM lock/unlock interface
-  firmware: qcom: scm: add support to restore secure config to
-    qcm_scm-32
+Changes since v2:
+- Add *-sram node and gmu-sram to example.
 
- .../devicetree/bindings/display/msm/gmu.txt   |  50 ++
- .../devicetree/bindings/sram/qcom,ocmem.yaml  |  96 ++++
- arch/arm/configs/qcom_defconfig               |   1 +
- drivers/firmware/qcom_scm-32.c                |  52 ++-
- drivers/firmware/qcom_scm-64.c                |  12 +
- drivers/firmware/qcom_scm.c                   |  53 +++
- drivers/firmware/qcom_scm.h                   |   9 +
- drivers/gpu/drm/msm/Kconfig                   |   1 +
- drivers/gpu/drm/msm/adreno/a3xx_gpu.c         |  28 +-
- drivers/gpu/drm/msm/adreno/a3xx_gpu.h         |   3 +-
- drivers/gpu/drm/msm/adreno/a4xx_gpu.c         |  25 +-
- drivers/gpu/drm/msm/adreno/a4xx_gpu.h         |   3 +-
- drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  40 ++
- drivers/gpu/drm/msm/adreno/adreno_gpu.h       |  10 +
- drivers/soc/qcom/Kconfig                      |  10 +
- drivers/soc/qcom/Makefile                     |   1 +
- drivers/soc/qcom/ocmem.c                      | 433 ++++++++++++++++++
- include/linux/qcom_scm.h                      |  26 ++
- include/soc/qcom/ocmem.h                      |  62 +++
- 19 files changed, 870 insertions(+), 45 deletions(-)
+Changes since v1:
+- Rename qcom,ocmem-msm8974 to qcom,msm8974-ocmem
+- Renamed reg-names to ctrl and mem
+- update hardware description
+- moved from soc to sram namespace in the device tree bindings
+
+ .../devicetree/bindings/sram/qcom,ocmem.yaml  | 96 +++++++++++++++++++
+ 1 file changed, 96 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
- create mode 100644 drivers/soc/qcom/ocmem.c
- create mode 100644 include/soc/qcom/ocmem.h
 
+diff --git a/Documentation/devicetree/bindings/sram/qcom,ocmem.yaml b/Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
+new file mode 100644
+index 000000000000..222990f9923c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
+@@ -0,0 +1,96 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sram/qcom,ocmem.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: On Chip Memory (OCMEM) that is present on some Qualcomm Snapdragon SoCs.
++
++maintainers:
++  - Brian Masney <masneyb@onstation.org>
++
++description: |
++  The On Chip Memory (OCMEM) is typically used by the GPU, camera/video, and
++  audio components on some Snapdragon SoCs.
++
++properties:
++  compatible:
++    const: qcom,msm8974-ocmem
++
++  reg:
++    items:
++      - description: Control registers
++      - description: OCMEM address range
++
++  reg-names:
++    items:
++      - const: ctrl
++      - const: mem
++
++  clocks:
++    items:
++      - description: Core clock
++      - description: Interface clock
++
++  clock-names:
++    items:
++      - const: core
++      - const: iface
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - '#address-cells'
++  - '#size-cells'
++
++patternProperties:
++  "^.+-sram$":
++    type: object
++    description: A region of reserved memory.
++
++    properties:
++      reg:
++        maxItems: 1
++
++      ranges:
++        maxItems: 1
++
++    required:
++      - reg
++      - ranges
++
++examples:
++  - |
++      #include <dt-bindings/clock/qcom,rpmcc.h>
++      #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
++
++      ocmem: ocmem@fdd00000 {
++        compatible = "qcom,msm8974-ocmem";
++
++        reg = <0xfdd00000 0x2000>,
++              <0xfec00000 0x180000>;
++        reg-names = "ctrl",
++                    "mem";
++
++        clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
++                 <&mmcc OCMEMCX_OCMEMNOC_CLK>;
++        clock-names = "core",
++                      "iface";
++
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        gmu-sram@0 {
++                reg = <0x0 0x100000>;
++                ranges = <0 0 0xfec00000 0x100000>;
++        };
++      };
 -- 
 2.21.0
 
