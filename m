@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27618C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBA1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E236C23404
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3A8233FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493808;
-	bh=3n4m7aF82NQQ1fzSPxJnHjp9PaDInQWklKCaCaI7JXc=;
+	s=default; t=1566493813;
+	bh=1+cD3yyBs8vg4X+NKzUB2ZuYtAnjfvDsOU5GLpaTueE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zdgrePU7bQVZkOAVThY95tGgTj+OuPLJDiFsPUsV+URix5Hj5S4ZAHNm5RtV7JD9r
-	 X7QeqC+QDB3dspbDt8pSjHm+MbxB67zzY7iur2f7nf9z/AmGjM4kMQ12Q7Q/JwaXni
-	 tj3QyAiyDrYKA/nGb/EpeoexoW6aSd0uI82U+6To=
+	b=a2RZyoYzSlnhf13D1ggvNfnCVvIXrZUrXQ0bUrZIxDywqHYh6VupmhdOINnVNpCqo
+	 XFj3DcWXBZdzmGskED7N5A7amsxZS9bCWQiPVD7ieYPiH5VvZDgrbhHE5nlwz0HsgC
+	 Geg+RK4PMIundV1DVDDV/vhtjkmResUYElumehQ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403758AbfHVRJm (ORCPT
+        id S1729797AbfHVRJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59656 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390742AbfHVRJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:23 -0400
+        id S2390699AbfHVRJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:13 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1C26233FC;
-        Thu, 22 Aug 2019 17:09:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19FCE2343A;
+        Thu, 22 Aug 2019 17:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493763;
-        bh=3n4m7aF82NQQ1fzSPxJnHjp9PaDInQWklKCaCaI7JXc=;
+        s=default; t=1566493752;
+        bh=1+cD3yyBs8vg4X+NKzUB2ZuYtAnjfvDsOU5GLpaTueE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0CXR1WVPlTIjyf0BZKlaLpgKAVrnfmTOVb7/r1u+kW8+nZYoMqcDioiZ6AdeNheA/
-         7Wjbr8dx8kZZBcribVVf3FBVUBoeFxfj6D2/SLye5jwUWjImkJEDu2PEAtdy3DEyzD
-         R0v9xXiz+VOmxgdwKfg13j+HBNHvv9683sE+boms=
+        b=J7tuL4OfEQE3YeyN37YX0vVNrL5uvwvuxGkRenGAjCF/sDK/ZUdYZpOt5nckfuq27
+         UNTr/mvHBJuu+xZ2vRz/N6qcw7ZQQFOtn90xtx4sqZHcevux4ICgMod4z0Mp5YjlbP
+         j/gZ7mXG31CHYxx3nytw/dnrx8aILdXWaDxnxGWY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mohamad Heib <mohamadh@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+Cc:     Manish Chopra <manishc@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        Shahed Shaikh <shshaikh@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 128/135] net/mlx5e: ethtool, Avoid setting speed to 56GBASE when autoneg off
-Date:   Thu, 22 Aug 2019 13:08:04 -0400
-Message-Id: <20190822170811.13303-129-sashal@kernel.org>
+Subject: [PATCH 5.2 107/135] bnx2x: Fix VF's VLAN reconfiguration in reload.
+Date:   Thu, 22 Aug 2019 13:07:43 -0400
+Message-Id: <20190822170811.13303-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,41 +67,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohamad Heib <mohamadh@mellanox.com>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit 5faf5b70c51dd9c9905bf8209e33cbd867486607 ]
+[ Upstream commit 4a4d2d372fb9b9229327e2ed01d5d9572eddf4de ]
 
-Setting speed to 56GBASE is allowed only with auto-negotiation enabled.
+Commit 04f05230c5c13 ("bnx2x: Remove configured vlans as
+part of unload sequence."), introduced a regression in driver
+that as a part of VF's reload flow, VLANs created on the VF
+doesn't get re-configured in hardware as vlan metadata/info
+was not getting cleared for the VFs which causes vlan PING to stop.
 
-This patch prevent setting speed to 56GBASE when auto-negotiation disabled.
+This patch clears the vlan metadata/info so that VLANs gets
+re-configured back in the hardware in VF's reload flow and
+PING/traffic continues for VLANs created over the VFs.
 
-Fixes: f62b8bb8f2d3 ("net/mlx5: Extend mlx5_core to support ConnectX-4 Ethernet functionality")
-Signed-off-by: Mohamad Heib <mohamadh@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 04f05230c5c13 ("bnx2x: Remove configured vlans as part of unload sequence.")
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Sudarsana Kalluru <skalluru@marvell.com>
+Signed-off-by: Shahed Shaikh <shshaikh@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |  7 ++++---
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h |  2 ++
+ .../net/ethernet/broadcom/bnx2x/bnx2x_main.c    | 17 ++++++++++++-----
+ 3 files changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-index 22d5101769651..06f9bd6a45e33 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -1060,6 +1060,14 @@ int mlx5e_ethtool_set_link_ksettings(struct mlx5e_priv *priv,
- 	link_modes = autoneg == AUTONEG_ENABLE ? ethtool2ptys_adver_func(adver) :
- 		mlx5e_port_speed2linkmodes(mdev, speed, !ext);
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+index 4039a9599d79c..9d582b3ebc88d 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+@@ -3057,12 +3057,13 @@ int bnx2x_nic_unload(struct bnx2x *bp, int unload_mode, bool keep_link)
+ 	/* if VF indicate to PF this function is going down (PF will delete sp
+ 	 * elements and clear initializations
+ 	 */
+-	if (IS_VF(bp))
++	if (IS_VF(bp)) {
++		bnx2x_clear_vlan_info(bp);
+ 		bnx2x_vfpf_close_vf(bp);
+-	else if (unload_mode != UNLOAD_RECOVERY)
++	} else if (unload_mode != UNLOAD_RECOVERY) {
+ 		/* if this is a normal/close unload need to clean up chip*/
+ 		bnx2x_chip_cleanup(bp, unload_mode, keep_link);
+-	else {
++	} else {
+ 		/* Send the UNLOAD_REQUEST to the MCP */
+ 		bnx2x_send_unload_req(bp, unload_mode);
  
-+	if ((link_modes & MLX5E_PROT_MASK(MLX5E_56GBASE_R4)) &&
-+	    autoneg != AUTONEG_ENABLE) {
-+		netdev_err(priv->netdev, "%s: 56G link speed requires autoneg enabled\n",
-+			   __func__);
-+		err = -EINVAL;
-+		goto out;
-+	}
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
+index c2f6e44e9a3f7..8b08cb18e3638 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
+@@ -425,6 +425,8 @@ void bnx2x_set_reset_global(struct bnx2x *bp);
+ void bnx2x_disable_close_the_gate(struct bnx2x *bp);
+ int bnx2x_init_hw_func_cnic(struct bnx2x *bp);
+ 
++void bnx2x_clear_vlan_info(struct bnx2x *bp);
 +
- 	link_modes = link_modes & eproto.cap;
- 	if (!link_modes) {
- 		netdev_err(priv->netdev, "%s: Not supported link mode(s) requested",
+ /**
+  * bnx2x_sp_event - handle ramrods completion.
+  *
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index 2cc14db8f0ec9..192ff8d5da324 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -8482,11 +8482,21 @@ int bnx2x_set_vlan_one(struct bnx2x *bp, u16 vlan,
+ 	return rc;
+ }
+ 
++void bnx2x_clear_vlan_info(struct bnx2x *bp)
++{
++	struct bnx2x_vlan_entry *vlan;
++
++	/* Mark that hw forgot all entries */
++	list_for_each_entry(vlan, &bp->vlan_reg, link)
++		vlan->hw = false;
++
++	bp->vlan_cnt = 0;
++}
++
+ static int bnx2x_del_all_vlans(struct bnx2x *bp)
+ {
+ 	struct bnx2x_vlan_mac_obj *vlan_obj = &bp->sp_objs[0].vlan_obj;
+ 	unsigned long ramrod_flags = 0, vlan_flags = 0;
+-	struct bnx2x_vlan_entry *vlan;
+ 	int rc;
+ 
+ 	__set_bit(RAMROD_COMP_WAIT, &ramrod_flags);
+@@ -8495,10 +8505,7 @@ static int bnx2x_del_all_vlans(struct bnx2x *bp)
+ 	if (rc)
+ 		return rc;
+ 
+-	/* Mark that hw forgot all entries */
+-	list_for_each_entry(vlan, &bp->vlan_reg, link)
+-		vlan->hw = false;
+-	bp->vlan_cnt = 0;
++	bnx2x_clear_vlan_info(bp);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
