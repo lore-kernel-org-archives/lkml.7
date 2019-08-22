@@ -2,678 +2,131 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C378DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D83BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7820423400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:37:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="hmPlCQoo"
+	by mail.kernel.org (Postfix) with ESMTP id 7A571233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389400AbfHVOhu (ORCPT
+        id S2388453AbfHVOix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:37:50 -0400
-Received: from onstation.org ([52.200.56.107]:46892 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389311AbfHVOhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:37:34 -0400
-Received: from ins7386.localdomain (unknown [207.110.43.92])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id A28054BB65;
-        Thu, 22 Aug 2019 14:37:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1566484652;
-        bh=ZWGTuESn0zCyVsI4EMLCOZAr0ElMVXMOfxolAjwOg58=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hmPlCQoomc+xIvxoXCUx/lTqfYqWJS4soVup2fSm1EUpgALp7mtBfhevFKn3yz+B4
-         IO248GNbfMQ09tkFYcSlVxcR4s1X+m6z9wGWXv9l+W+Kw9A1jcdbqdjPrUP5weuZMF
-         LZjFbqnTJRdJM/+dtYcrABWgULngfD64NhKgfxoQ=
-From:   Brian Masney <masneyb@onstation.org>
-To:     agross@kernel.org, robdclark@gmail.com, sean@poorly.run,
-        robh+dt@kernel.org, bjorn.andersson@linaro.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        jonathan@marek.ca, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        jcrouse@codeaurora.org
-Subject: [PATCH v6 5/7] soc: qcom: add OCMEM driver
-Date:   Thu, 22 Aug 2019 07:37:01 -0700
-Message-Id: <20190822143703.13030-6-masneyb@onstation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190822143703.13030-1-masneyb@onstation.org>
-References: <20190822143703.13030-1-masneyb@onstation.org>
+        Thu, 22 Aug 2019 10:38:53 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34836 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfHVOix (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:38:53 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 8DB5828D11B
+Message-ID: <5ad0899e81ef8f22545bcb6b01833c493ce2bdc9.camel@collabora.com>
+Subject: Re: [PATCH v7 02/11] media: uapi: h264: Rename pixel format
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-media@vger.kernel.org, kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Date:   Thu, 22 Aug 2019 11:38:42 -0300
+In-Reply-To: <5a6432ce-6d90-9efa-9ae8-400b5ca1d653@xs4all.nl>
+References: <20190816160132.7352-1-ezequiel@collabora.com>
+         <20190816160132.7352-3-ezequiel@collabora.com>
+         <20190819124110.GB32182@aptenodytes>
+         <e618bf01-3f82-ff06-1842-9d21a379d7ee@xs4all.nl>
+         <20190822115453.GA1627@aptenodytes>
+         <5a6432ce-6d90-9efa-9ae8-400b5ca1d653@xs4all.nl>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The OCMEM driver handles allocation and configuration of the On Chip
-MEMory that is present on some Snapdragon SoCs. Devices which have
-OCMEM do not have GMEM inside the GPU core, so the GPU must instead
-use OCMEM to be functional. Since the GPU is currently the only OCMEM
-user with an upstream driver, this is just a minimal implementation
-sufficient for statically allocating to the GPU it's chunk of OCMEM.
+On Thu, 2019-08-22 at 15:47 +0200, Hans Verkuil wrote:
+> On 8/22/19 1:54 PM, Paul Kocialkowski wrote:
+> > Hi,
+> > 
+> > On Mon 19 Aug 19, 17:53, Hans Verkuil wrote:
+> > > On 8/19/19 2:41 PM, Paul Kocialkowski wrote:
+> > > > Hi,
+> > > > 
+> > > > On Fri 16 Aug 19, 13:01, Ezequiel Garcia wrote:
+> > > > > The V4L2_PIX_FMT_H264_SLICE_RAW name was originally suggested
+> > > > > because the pixel format would represent H264 slices without any
+> > > > > start code.
+> > > > > 
+> > > > > However, as we will now introduce a start code menu control,
+> > > > > give the pixel format a more meaningful name, while it's
+> > > > > still early enough to do so.
+> > > > 
+> > > > I definitely agree that SLICE_RAW is not the suffix we are looking for, but I'm
+> > > > not sure that _SLICE is self-describing given that we can operate either
+> > > > per-frame or per-slice, and _SLICE sort of implies the latter. Also, VP8 uses
+> > > > _FRAME to clearly indicate that it operates per-frame.
+> > > 
+> > > Well, VP8 doesn't support slices at all.
+> > > 
+> > > > In addition, the _SLICE suffix is used by MPEG-2 in the stable API. Since we
+> > > 
+> > > Regarding MPEG-2: while it has a concept of slices, it is my understanding
+> > > that you never process slices separately, but only full pictures. I may be
+> > > wrong here.
+> > 
+> > I don't think that is the case since ffmpeg clearly implements decoding on a
+> > per-slice basis (mpeg_decode_slice).
+> > 
+> > Information is also passed on a per-slice basis to VAAPI 
+> > (vaapi_mpeg2_decode_slice) with a distinct data buffer and slice parameter
+> > buffer for each slice. Among other things, it contains the vertical and
+> > horizontal positions for the slice, which we can set in the hardware.
+> > 
+> > > > certainly want MPEG-2 to allow per-slice and per-frame decoding as well as
+> > > > H.264 and that the _SLICE format is specified to be the broken "concatenated
+> > > > slices" that cedrus expects, we probably want to use another suffix. This way,
+> > > > we could deprecated MPEG2_SLICE and introduce a new format for MPEG-2 that would
+> > > > have consistent naming with the other mpeg formats.
+> > > 
+> > > I actually think that H264_SLICE is a decent name.
+> > > 
+> > > I'm less sure about MPEG2_SLICE since I am not sure if it means the same as
+> > > a H264 slice.
+> > 
+> > The main problem I see is that we have already specified MPEG2_SLICE in a way
+> > that is incompatible with the future improvments we want to bring to the API:
+> > " The output buffer must contain the appropriate number of macroblocks to
+> > decode a full corresponding frame to the matching capture buffer."
+> > 
+> > So I only see two possibilities: either we decide to change the specification
+> > of the pixel format and we can keep using the _SLICE suffix, either we need to
+> > introduce a new pixel format with another suffix, which should also be reflected
+> > on other MPEG formats for consistency. Then we can deprecate MPEG2_SLICE and
+> > have drivers stop using it.
+> > 
+> > What do you think?
+> 
+> I'd change the specification of the pixel format. So MPEG2_SLICE now supports
+> multiple slices if the hardware supports it as well.
+> 
+> We would need an MPEG2_DECODING_MODE control as well, that currently would
+> read FRAME based only.
+> 
 
-This driver currently does not read the gmu-sram node that is described
-in the device tree bindings. The starting memory address of the GPU's
-reserved memory region is hardcoded to zero to match what the hardware
-expects. The driver can be updated to read the reserved memory regions
-from device tree once other users of OCMEM are added upstream.
+That's exactly what I was about to suggest.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Co-developed-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Rob Clark <robdclark@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-Changes since v5:
-- rename ocmem property to sram
-
-Changes since v4:
-- Change 'GPL' to 'GPL v2' in MODULE_LICENSE
-
-Changes since v3:
-- None
-
-Changes since v2
-- Changed static inline stubs return -ENODEV when OCMEM is not
-  configured into the kernel.
-
-Changes since v1:
-- ocmem_allocate(): check for alignment and minimum allocation size.
-  The 64K values came from the downstream MSM kernel sources.
-- add locking to memory allocations based on the client
-- use clk_bulk_*() functions
-- rename qcom,ocmem-msm8974 to qcom,msm8974-ocmem
-- rename reg-names to ctrl and mem
-- remove ocmem.xml.h file; use FIELD_PREP() instead for some nice cleanups
-- add static inline noop versions of public-facing functions when ocmem
-  is disabled to remove #ifdefs in adrenu_gpu.c
-- use unsigned long for memory addresses
-- move ocmem_dev_remove() below _probe() function
-- remove error check from platform_get_resource_byname for ctrl resource
-- add MODULE_DESCRIPTION() and MODULE_LICENSE()
-- add description to top of ocmem.[ch]
-- correct thin mode bit in update_ocmem()
-- add 'WARN_ON(client != OCMEM_GRAPHICS)' to device_address()
-- make of_get_ocmem return error codes via ERR_PTR instead of NULL
-- ocmem_{allocate,free} - WARN_ON() if client != OCMEM_GRAPHICS.
-  Simplify if statements.
-- allow NULL to be passed into ocmem_free
-- remove unnecessary initialization of i in update_ocmem()
-- add dev_dbg to ocmem_allocate
-
-Changes since Rob's last version of this patch from 2015:
-https://patchwork.kernel.org/patch/7379801/
-- reformatted driver to allow multiple instances
-- updated logging of error paths during device probing
-- remove unused psgsc_ctrl
-- remove _clk from clock names
-- propagate error code from devm_ioremap_resource()
-- use device_get_match_data()
-- SPDX license tags
-- remove QCOM_SMD in Kconfig
-- select ARCH_QCOM in Kconfig
-- select ARCH_QCOM in Kconfig
-- select QCOM_SCM in Kconfig
-- longer description in Kconfig
-
- drivers/soc/qcom/Kconfig  |  10 +
- drivers/soc/qcom/Makefile |   1 +
- drivers/soc/qcom/ocmem.c  | 433 ++++++++++++++++++++++++++++++++++++++
- include/soc/qcom/ocmem.h  |  62 ++++++
- 4 files changed, 506 insertions(+)
- create mode 100644 drivers/soc/qcom/ocmem.c
- create mode 100644 include/soc/qcom/ocmem.h
-
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 661e47acc354..adbf3bfae805 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -74,6 +74,16 @@ config QCOM_MDT_LOADER
- 	tristate
- 	select QCOM_SCM
- 
-+config QCOM_OCMEM
-+	tristate "Qualcomm On Chip Memory (OCMEM) driver"
-+	depends on ARCH_QCOM
-+	select QCOM_SCM
-+	help
-+          The On Chip Memory (OCMEM) allocator allows various clients to
-+          allocate memory from OCMEM based on performance, latency and power
-+          requirements. This is typically used by the GPU, camera/video, and
-+          audio components on some Snapdragon SoCs.
-+
- config QCOM_PM
- 	bool "Qualcomm Power Management"
- 	depends on ARCH_QCOM && !ARM64
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index 162788701a77..aab333720bfd 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
- obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
- obj-$(CONFIG_QCOM_GSBI)	+=	qcom_gsbi.o
- obj-$(CONFIG_QCOM_MDT_LOADER)	+= mdt_loader.o
-+obj-$(CONFIG_QCOM_OCMEM)	+= ocmem.o
- obj-$(CONFIG_QCOM_PM)	+=	spm.o
- obj-$(CONFIG_QCOM_QMI_HELPERS)	+= qmi_helpers.o
- qmi_helpers-y	+= qmi_encdec.o qmi_interface.o
-diff --git a/drivers/soc/qcom/ocmem.c b/drivers/soc/qcom/ocmem.c
-new file mode 100644
-index 000000000000..f9e31be5d844
---- /dev/null
-+++ b/drivers/soc/qcom/ocmem.c
-@@ -0,0 +1,433 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * The On Chip Memory (OCMEM) allocator allows various clients to allocate
-+ * memory from OCMEM based on performance, latency and power requirements.
-+ * This is typically used by the GPU, camera/video, and audio components on
-+ * some Snapdragon SoCs.
-+ *
-+ * Copyright (C) 2019 Brian Masney <masneyb@onstation.org>
-+ * Copyright (C) 2015 Red Hat. Author: Rob Clark <robdclark@gmail.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/qcom_scm.h>
-+#include <linux/sizes.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <soc/qcom/ocmem.h>
-+
-+enum region_mode {
-+	WIDE_MODE = 0x0,
-+	THIN_MODE,
-+	MODE_DEFAULT = WIDE_MODE,
-+};
-+
-+enum ocmem_macro_state {
-+	PASSTHROUGH = 0,
-+	PERI_ON = 1,
-+	CORE_ON = 2,
-+	CLK_OFF = 4,
-+};
-+
-+struct ocmem_region {
-+	bool interleaved;
-+	enum region_mode mode;
-+	unsigned int num_macros;
-+	enum ocmem_macro_state macro_state[4];
-+	unsigned long macro_size;
-+	unsigned long region_size;
-+};
-+
-+struct ocmem_config {
-+	uint8_t num_regions;
-+	unsigned long macro_size;
-+};
-+
-+struct ocmem {
-+	struct device *dev;
-+	const struct ocmem_config *config;
-+	struct resource *memory;
-+	void __iomem *mmio;
-+	unsigned int num_ports;
-+	unsigned int num_macros;
-+	bool interleaved;
-+	struct ocmem_region *regions;
-+	unsigned long active_allocations;
-+};
-+
-+#define OCMEM_MIN_ALIGN				SZ_64K
-+#define OCMEM_MIN_ALLOC				SZ_64K
-+
-+#define OCMEM_REG_HW_VERSION			0x00000000
-+#define OCMEM_REG_HW_PROFILE			0x00000004
-+
-+#define OCMEM_REG_REGION_MODE_CTL		0x00001000
-+#define OCMEM_REGION_MODE_CTL_REG0_THIN		0x00000001
-+#define OCMEM_REGION_MODE_CTL_REG1_THIN		0x00000002
-+#define OCMEM_REGION_MODE_CTL_REG2_THIN		0x00000004
-+#define OCMEM_REGION_MODE_CTL_REG3_THIN		0x00000008
-+
-+#define OCMEM_REG_GFX_MPU_START			0x00001004
-+#define OCMEM_REG_GFX_MPU_END			0x00001008
-+
-+#define OCMEM_HW_PROFILE_NUM_PORTS(val)		FIELD_PREP(0x0000000f, (val))
-+#define OCMEM_HW_PROFILE_NUM_MACROS(val)	FIELD_PREP(0x00003f00, (val))
-+
-+#define OCMEM_HW_PROFILE_LAST_REGN_HALFSIZE	0x00010000
-+#define OCMEM_HW_PROFILE_INTERLEAVING		0x00020000
-+#define OCMEM_REG_GEN_STATUS			0x0000000c
-+
-+#define OCMEM_REG_PSGSC_STATUS			0x00000038
-+#define OCMEM_REG_PSGSC_CTL(i0)			(0x0000003c + 0x1*(i0))
-+
-+#define OCMEM_PSGSC_CTL_MACRO0_MODE(val)	FIELD_PREP(0x00000007, (val))
-+#define OCMEM_PSGSC_CTL_MACRO1_MODE(val)	FIELD_PREP(0x00000070, (val))
-+#define OCMEM_PSGSC_CTL_MACRO2_MODE(val)	FIELD_PREP(0x00000700, (val))
-+#define OCMEM_PSGSC_CTL_MACRO3_MODE(val)	FIELD_PREP(0x00007000, (val))
-+
-+#define OCMEM_CLK_CORE_IDX			0
-+static struct clk_bulk_data ocmem_clks[] = {
-+	{
-+		.id = "core",
-+	},
-+	{
-+		.id = "iface",
-+	},
-+};
-+
-+static inline void ocmem_write(struct ocmem *ocmem, u32 reg, u32 data)
-+{
-+	writel(data, ocmem->mmio + reg);
-+}
-+
-+static inline u32 ocmem_read(struct ocmem *ocmem, u32 reg)
-+{
-+	return readl(ocmem->mmio + reg);
-+}
-+
-+static void update_ocmem(struct ocmem *ocmem)
-+{
-+	uint32_t region_mode_ctrl = 0x0;
-+	int i;
-+
-+	if (!qcom_scm_ocmem_lock_available()) {
-+		for (i = 0; i < ocmem->config->num_regions; i++) {
-+			struct ocmem_region *region = &ocmem->regions[i];
-+
-+			if (region->mode == THIN_MODE)
-+				region_mode_ctrl |= BIT(i);
-+		}
-+
-+		dev_dbg(ocmem->dev, "ocmem_region_mode_control %x\n",
-+			region_mode_ctrl);
-+		ocmem_write(ocmem, OCMEM_REG_REGION_MODE_CTL, region_mode_ctrl);
-+	}
-+
-+	for (i = 0; i < ocmem->config->num_regions; i++) {
-+		struct ocmem_region *region = &ocmem->regions[i];
-+		u32 data;
-+
-+		data = OCMEM_PSGSC_CTL_MACRO0_MODE(region->macro_state[0]) |
-+			OCMEM_PSGSC_CTL_MACRO1_MODE(region->macro_state[1]) |
-+			OCMEM_PSGSC_CTL_MACRO2_MODE(region->macro_state[2]) |
-+			OCMEM_PSGSC_CTL_MACRO3_MODE(region->macro_state[3]);
-+
-+		ocmem_write(ocmem, OCMEM_REG_PSGSC_CTL(i), data);
-+	}
-+}
-+
-+static unsigned long phys_to_offset(struct ocmem *ocmem,
-+				    unsigned long addr)
-+{
-+	if (addr < ocmem->memory->start || addr >= ocmem->memory->end)
-+		return 0;
-+
-+	return addr - ocmem->memory->start;
-+}
-+
-+static unsigned long device_address(struct ocmem *ocmem,
-+				    enum ocmem_client client,
-+				    unsigned long addr)
-+{
-+	WARN_ON(client != OCMEM_GRAPHICS);
-+
-+	/* TODO: gpu uses phys_to_offset, but others do not.. */
-+	return phys_to_offset(ocmem, addr);
-+}
-+
-+static void update_range(struct ocmem *ocmem, struct ocmem_buf *buf,
-+			 enum ocmem_macro_state mstate, enum region_mode rmode)
-+{
-+	unsigned long offset = 0;
-+	int i, j;
-+
-+	for (i = 0; i < ocmem->config->num_regions; i++) {
-+		struct ocmem_region *region = &ocmem->regions[i];
-+
-+		if (buf->offset <= offset && offset < buf->offset + buf->len)
-+			region->mode = rmode;
-+
-+		for (j = 0; j < region->num_macros; j++) {
-+			if (buf->offset <= offset &&
-+			    offset < buf->offset + buf->len)
-+				region->macro_state[j] = mstate;
-+
-+			offset += region->macro_size;
-+		}
-+	}
-+
-+	update_ocmem(ocmem);
-+}
-+
-+struct ocmem *of_get_ocmem(struct device *dev)
-+{
-+	struct platform_device *pdev;
-+	struct device_node *devnode;
-+
-+	devnode = of_parse_phandle(dev->of_node, "sram", 0);
-+	if (!devnode) {
-+		dev_err(dev, "Cannot look up sram phandle\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	pdev = of_find_device_by_node(devnode);
-+	if (!pdev) {
-+		dev_err(dev, "Cannot find device node %s\n", devnode->name);
-+		return ERR_PTR(-EPROBE_DEFER);
-+	}
-+
-+	return platform_get_drvdata(pdev);
-+}
-+EXPORT_SYMBOL(of_get_ocmem);
-+
-+struct ocmem_buf *ocmem_allocate(struct ocmem *ocmem, enum ocmem_client client,
-+				 unsigned long size)
-+{
-+	struct ocmem_buf *buf;
-+	int ret;
-+
-+	/* TODO: add support for other clients... */
-+	if (WARN_ON(client != OCMEM_GRAPHICS))
-+		return ERR_PTR(-ENODEV);
-+
-+	if (size < OCMEM_MIN_ALLOC || !IS_ALIGNED(size, OCMEM_MIN_ALIGN))
-+		return ERR_PTR(-EINVAL);
-+
-+	if (test_and_set_bit_lock(BIT(client), &ocmem->active_allocations))
-+		return ERR_PTR(-EBUSY);
-+
-+	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
-+	if (!buf) {
-+		ret = -ENOMEM;
-+		goto err_unlock;
-+	}
-+
-+	buf->offset = 0;
-+	buf->addr = device_address(ocmem, client, buf->offset);
-+	buf->len = size;
-+
-+	update_range(ocmem, buf, CORE_ON, WIDE_MODE);
-+
-+	if (qcom_scm_ocmem_lock_available()) {
-+		ret = qcom_scm_ocmem_lock(QCOM_SCM_OCMEM_GRAPHICS_ID,
-+					  buf->offset, buf->len, WIDE_MODE);
-+		if (ret) {
-+			dev_err(ocmem->dev, "could not lock: %d\n", ret);
-+			ret = -EINVAL;
-+			goto err_kfree;
-+		}
-+	} else {
-+		ocmem_write(ocmem, OCMEM_REG_GFX_MPU_START, buf->offset);
-+		ocmem_write(ocmem, OCMEM_REG_GFX_MPU_END,
-+			    buf->offset + buf->len);
-+	}
-+
-+	dev_dbg(ocmem->dev, "using %ldK of OCMEM at 0x%08lx for client %d\n",
-+		size / 1024, buf->addr, client);
-+
-+	return buf;
-+
-+err_kfree:
-+	kfree(buf);
-+err_unlock:
-+	clear_bit_unlock(BIT(client), &ocmem->active_allocations);
-+
-+	return ERR_PTR(ret);
-+}
-+EXPORT_SYMBOL(ocmem_allocate);
-+
-+void ocmem_free(struct ocmem *ocmem, enum ocmem_client client,
-+		struct ocmem_buf *buf)
-+{
-+	/* TODO: add support for other clients... */
-+	if (WARN_ON(client != OCMEM_GRAPHICS))
-+		return;
-+
-+	update_range(ocmem, buf, CLK_OFF, MODE_DEFAULT);
-+
-+	if (qcom_scm_ocmem_lock_available()) {
-+		int ret;
-+
-+		ret = qcom_scm_ocmem_unlock(QCOM_SCM_OCMEM_GRAPHICS_ID,
-+					    buf->offset, buf->len);
-+		if (ret)
-+			dev_err(ocmem->dev, "could not unlock: %d\n", ret);
-+	} else {
-+		ocmem_write(ocmem, OCMEM_REG_GFX_MPU_START, 0x0);
-+		ocmem_write(ocmem, OCMEM_REG_GFX_MPU_END, 0x0);
-+	}
-+
-+	kfree(buf);
-+
-+	clear_bit_unlock(BIT(client), &ocmem->active_allocations);
-+}
-+EXPORT_SYMBOL(ocmem_free);
-+
-+static int ocmem_dev_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	unsigned long reg, region_size;
-+	int i, j, ret, num_banks;
-+	struct resource *res;
-+	struct ocmem *ocmem;
-+
-+	if (!qcom_scm_is_available())
-+		return -EPROBE_DEFER;
-+
-+	ocmem = devm_kzalloc(dev, sizeof(*ocmem), GFP_KERNEL);
-+	if (!ocmem)
-+		return -ENOMEM;
-+
-+	ocmem->dev = dev;
-+	ocmem->config = device_get_match_data(dev);
-+
-+	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(ocmem_clks), ocmem_clks);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Unable to get clocks\n");
-+
-+		return ret;
-+	}
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctrl");
-+	ocmem->mmio = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(ocmem->mmio)) {
-+		dev_err(&pdev->dev, "Failed to ioremap ocmem_ctrl resource\n");
-+		return PTR_ERR(ocmem->mmio);
-+	}
-+
-+	ocmem->memory = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						     "mem");
-+	if (!ocmem->memory) {
-+		dev_err(dev, "Could not get mem region\n");
-+		return -ENXIO;
-+	}
-+
-+	/* The core clock is synchronous with graphics */
-+	WARN_ON(clk_set_rate(ocmem_clks[OCMEM_CLK_CORE_IDX].clk, 1000) < 0);
-+
-+	ret = clk_bulk_prepare_enable(ARRAY_SIZE(ocmem_clks), ocmem_clks);
-+	if (ret) {
-+		dev_info(ocmem->dev, "Failed to enable clocks\n");
-+		return ret;
-+	}
-+
-+	if (qcom_scm_restore_sec_cfg_available()) {
-+		dev_dbg(dev, "configuring scm\n");
-+		ret = qcom_scm_restore_sec_cfg(QCOM_SCM_OCMEM_DEV_ID, 0);
-+		if (ret) {
-+			dev_err(dev, "Could not enable secure configuration\n");
-+			goto err_clk_disable;
-+		}
-+	}
-+
-+	reg = ocmem_read(ocmem, OCMEM_REG_HW_PROFILE);
-+	ocmem->num_ports = OCMEM_HW_PROFILE_NUM_PORTS(reg);
-+	ocmem->num_macros = OCMEM_HW_PROFILE_NUM_MACROS(reg);
-+	ocmem->interleaved = !!(reg & OCMEM_HW_PROFILE_INTERLEAVING);
-+
-+	num_banks = ocmem->num_ports / 2;
-+	region_size = ocmem->config->macro_size * num_banks;
-+
-+	dev_info(dev, "%u ports, %u regions, %u macros, %sinterleaved\n",
-+		 ocmem->num_ports, ocmem->config->num_regions,
-+		 ocmem->num_macros, ocmem->interleaved ? "" : "not ");
-+
-+	ocmem->regions = devm_kcalloc(dev, ocmem->config->num_regions,
-+				      sizeof(struct ocmem_region), GFP_KERNEL);
-+	if (!ocmem->regions) {
-+		ret = -ENOMEM;
-+		goto err_clk_disable;
-+	}
-+
-+	for (i = 0; i < ocmem->config->num_regions; i++) {
-+		struct ocmem_region *region = &ocmem->regions[i];
-+
-+		if (WARN_ON(num_banks > ARRAY_SIZE(region->macro_state))) {
-+			ret = -EINVAL;
-+			goto err_clk_disable;
-+		}
-+
-+		region->mode = MODE_DEFAULT;
-+		region->num_macros = num_banks;
-+
-+		if (i == (ocmem->config->num_regions - 1) &&
-+		    reg & OCMEM_HW_PROFILE_LAST_REGN_HALFSIZE) {
-+			region->macro_size = ocmem->config->macro_size / 2;
-+			region->region_size = region_size / 2;
-+		} else {
-+			region->macro_size = ocmem->config->macro_size;
-+			region->region_size = region_size;
-+		}
-+
-+		for (j = 0; j < ARRAY_SIZE(region->macro_state); j++)
-+			region->macro_state[j] = CLK_OFF;
-+	}
-+
-+	platform_set_drvdata(pdev, ocmem);
-+
-+	return 0;
-+
-+err_clk_disable:
-+	clk_bulk_disable_unprepare(ARRAY_SIZE(ocmem_clks), ocmem_clks);
-+	return ret;
-+}
-+
-+static int ocmem_dev_remove(struct platform_device *pdev)
-+{
-+	clk_bulk_disable_unprepare(ARRAY_SIZE(ocmem_clks), ocmem_clks);
-+
-+	return 0;
-+}
-+
-+static const struct ocmem_config ocmem_8974_config = {
-+	.num_regions = 3,
-+	.macro_size = SZ_128K,
-+};
-+
-+static const struct of_device_id ocmem_of_match[] = {
-+	{ .compatible = "qcom,msm8974-ocmem", .data = &ocmem_8974_config },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, ocmem_of_match);
-+
-+static struct platform_driver ocmem_driver = {
-+	.probe = ocmem_dev_probe,
-+	.remove = ocmem_dev_remove,
-+	.driver = {
-+		.name = "ocmem",
-+		.of_match_table = ocmem_of_match,
-+	},
-+};
-+
-+module_platform_driver(ocmem_driver);
-+
-+MODULE_DESCRIPTION("On Chip Memory (OCMEM) allocator for some Snapdragon SoCs");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/soc/qcom/ocmem.h b/include/soc/qcom/ocmem.h
-new file mode 100644
-index 000000000000..a0ae336ba78b
---- /dev/null
-+++ b/include/soc/qcom/ocmem.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * The On Chip Memory (OCMEM) allocator allows various clients to allocate
-+ * memory from OCMEM based on performance, latency and power requirements.
-+ * This is typically used by the GPU, camera/video, and audio components on
-+ * some Snapdragon SoCs.
-+ *
-+ * Copyright (C) 2019 Brian Masney <masneyb@onstation.org>
-+ * Copyright (C) 2015 Red Hat. Author: Rob Clark <robdclark@gmail.com>
-+ */
-+
-+#ifndef __OCMEM_H__
-+#define __OCMEM_H__
-+
-+enum ocmem_client {
-+	/* GMEM clients */
-+	OCMEM_GRAPHICS = 0x0,
-+	/*
-+	 * TODO add more once ocmem_allocate() is clever enough to
-+	 * deal with multiple clients.
-+	 */
-+	OCMEM_CLIENT_MAX,
-+};
-+
-+struct ocmem;
-+
-+struct ocmem_buf {
-+	unsigned long offset;
-+	unsigned long addr;
-+	unsigned long len;
-+};
-+
-+#if IS_ENABLED(CONFIG_QCOM_OCMEM)
-+
-+struct ocmem *of_get_ocmem(struct device *dev);
-+struct ocmem_buf *ocmem_allocate(struct ocmem *ocmem, enum ocmem_client client,
-+				 unsigned long size);
-+void ocmem_free(struct ocmem *ocmem, enum ocmem_client client,
-+		struct ocmem_buf *buf);
-+
-+#else /* IS_ENABLED(CONFIG_QCOM_OCMEM) */
-+
-+static inline struct ocmem *of_get_ocmem(struct device *dev)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline struct ocmem_buf *ocmem_allocate(struct ocmem *ocmem,
-+					       enum ocmem_client client,
-+					       unsigned long size)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline void ocmem_free(struct ocmem *ocmem, enum ocmem_client client,
-+			      struct ocmem_buf *buf)
-+{
-+}
-+
-+#endif /* IS_ENABLED(CONFIG_QCOM_OCMEM) */
-+
-+#endif /* __OCMEM_H__ */
--- 
-2.21.0
+Regards,
+Ezequiel
 
