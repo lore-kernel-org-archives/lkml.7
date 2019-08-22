@@ -2,170 +2,207 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBA1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E05C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3A8233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493813;
-	bh=1+cD3yyBs8vg4X+NKzUB2ZuYtAnjfvDsOU5GLpaTueE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a2RZyoYzSlnhf13D1ggvNfnCVvIXrZUrXQ0bUrZIxDywqHYh6VupmhdOINnVNpCqo
-	 XFj3DcWXBZdzmGskED7N5A7amsxZS9bCWQiPVD7ieYPiH5VvZDgrbhHE5nlwz0HsgC
-	 Geg+RK4PMIundV1DVDDV/vhtjkmResUYElumehQ4=
+	by mail.kernel.org (Postfix) with ESMTP id 8D8BB2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZeE/ndS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbfHVRJc (ORCPT
+        id S2389051AbfHVRKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390699AbfHVRJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:13 -0400
-Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19FCE2343A;
-        Thu, 22 Aug 2019 17:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493752;
-        bh=1+cD3yyBs8vg4X+NKzUB2ZuYtAnjfvDsOU5GLpaTueE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J7tuL4OfEQE3YeyN37YX0vVNrL5uvwvuxGkRenGAjCF/sDK/ZUdYZpOt5nckfuq27
-         UNTr/mvHBJuu+xZ2vRz/N6qcw7ZQQFOtn90xtx4sqZHcevux4ICgMod4z0Mp5YjlbP
-         j/gZ7mXG31CHYxx3nytw/dnrx8aILdXWaDxnxGWY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Manish Chopra <manishc@marvell.com>,
-        Sudarsana Kalluru <skalluru@marvell.com>,
-        Shahed Shaikh <shshaikh@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 107/135] bnx2x: Fix VF's VLAN reconfiguration in reload.
-Date:   Thu, 22 Aug 2019 13:07:43 -0400
-Message-Id: <20190822170811.13303-108-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
-References: <20190822170811.13303-1-sashal@kernel.org>
+        Thu, 22 Aug 2019 13:10:15 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38122 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbfHVRKO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:10:14 -0400
+Received: by mail-io1-f68.google.com with SMTP id p12so13402440iog.5;
+        Thu, 22 Aug 2019 10:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K5QxQnSR1sLnNyiZrXphHKuKyO7cUdQ482SPnqH2Tkk=;
+        b=JZeE/ndS1DDujsWeRS5HHIOitkPdDWwkdvUijQTRdl10J4ikvIGwKcnxTEeiPD/glP
+         8LNmLqcP32sXsX9C441KhzG+UbUW1rMLLN/J+Gl9QZMYun+cNyBouIl9LkyhucUbZiJU
+         hkQt1brp14uFu+rFvfVUnXkHHSc+SX6ZADNiOz2mkVmglTPNTAYhFst+eREl/wsnPI4Z
+         sdMPsgDdl9XBXRSCCXr64YinRK3h0ngVl/3Tk2xINqJr5dbUZ0s+CK5KhbF6Kp3KdAHs
+         BlhhWb3VC+dtCno14FTjRi96i1hNhIJhhzfwuUlnVJZ5V1j3l6aOj+r9/phFZhDepJEn
+         HRxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K5QxQnSR1sLnNyiZrXphHKuKyO7cUdQ482SPnqH2Tkk=;
+        b=F2tEuqNGB0iOvS4bzA9CWmhWV/rF7vNLjZcVvxKjP/AIcndaQDAhj6OSFNXBBpCCyb
+         Rh3TXBMI3jCfsJQ9Zlz5vL7sbFp9zNaGmUiVLUXS1o3w8A5C1n8D/8j+XRG1qPbyOhV7
+         YSGU9y2Xq+K5WCZMteySqTXMUoBgbvZMN7SmmAItJVCnGjLSGLFV+xDH1oRUjy1J8hB9
+         wvkmyc5qBUUIqz3dP4NZsvXNuIcFWpeyzE7QX3hRPvvCoGx6xI5GrOJGXREPwGiwgfJe
+         n7OUgIH6V9ZBQlgiZfpLigZ4jZxNnnEn+CgiGrT0MGPUfxyNxY/LXWVZdEukNycFuAVX
+         chYw==
+X-Gm-Message-State: APjAAAXl9IedxL0Svx8updOA28F0QgO5aoaBE7gNWMTLF0WKmyEycbDL
+        PfXEm4Xuz8PMwhfIsT2GQ6vZz8tjFO+dBaZ60nE=
+X-Google-Smtp-Source: APXvYqznlGzO9///GQlTHFipqOf1FjBgjp6ACdYOP1geIv85E7YyB8iPkGCWyBpLM9moASJ09UVXiyq3iPmIzFQzdVE=
+X-Received: by 2002:a02:810:: with SMTP id 16mr521044jac.121.1566493812923;
+ Thu, 22 Aug 2019 10:10:12 -0700 (PDT)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.2.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.2.10-rc1
-X-KernelTest-Deadline: 2019-08-24T17:07+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <CGME20190822123045eucas1p125b6e106f0310bdb50e759ef41993a91@eucas1p1.samsung.com>
+ <20190822123037.28068-1-i.maximets@samsung.com> <CAKgT0Uf26P53EA4m503aehq3tWCX9b3C+17TW2Ursbue9Kp=_w@mail.gmail.com>
+ <7e9e426c-92eb-ebf8-2447-6c804a0c7135@samsung.com>
+In-Reply-To: <7e9e426c-92eb-ebf8-2447-6c804a0c7135@samsung.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 22 Aug 2019 10:10:01 -0700
+Message-ID: <CAKgT0Uetca8i4o89YHukoKTW_TTdrW8n-gKON7sXUi=U7bqrSw@mail.gmail.com>
+Subject: Re: [PATCH net v2] ixgbe: fix double clean of tx descriptors with xdp
+To:     Ilya Maximets <i.maximets@samsung.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        William Tu <u9012063@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+On Thu, Aug 22, 2019 at 9:58 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+>
+> On 22.08.2019 19:38, Alexander Duyck wrote:
+> > On Thu, Aug 22, 2019 at 5:30 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+> >>
+> >> Tx code doesn't clear the descriptors' status after cleaning.
+> >> So, if the budget is larger than number of used elems in a ring, some
+> >> descriptors will be accounted twice and xsk_umem_complete_tx will move
+> >> prod_tail far beyond the prod_head breaking the comletion queue ring.
+> >>
+> >> Fix that by limiting the number of descriptors to clean by the number
+> >> of used descriptors in the tx ring.
+> >>
+> >> 'ixgbe_clean_xdp_tx_irq()' function refactored to look more like
+> >> 'ixgbe_xsk_clean_tx_ring()' since we don't need most of the
+> >> complications implemented in the regular 'ixgbe_clean_tx_irq()'
+> >> and we're allowed to directly use 'next_to_clean' and 'next_to_use'
+> >> indexes.
+> >>
+> >> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
+> >> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+> >> ---
+> >>
+> >> Version 2:
+> >>   * 'ixgbe_clean_xdp_tx_irq()' refactored to look more like
+> >>     'ixgbe_xsk_clean_tx_ring()'.
+> >>
+> >>  drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c | 34 ++++++++------------
+> >>  1 file changed, 13 insertions(+), 21 deletions(-)
+> >>
+> >> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+> >> index 6b609553329f..d1297660e14a 100644
+> >> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+> >> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+> >> @@ -633,22 +633,23 @@ static void ixgbe_clean_xdp_tx_buffer(struct ixgbe_ring *tx_ring,
+> >>  bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
+> >>                             struct ixgbe_ring *tx_ring, int napi_budget)
+> >>  {
+> >> +       u16 ntc = tx_ring->next_to_clean, ntu = tx_ring->next_to_use;
+> >>         unsigned int total_packets = 0, total_bytes = 0;
+> >> -       u32 i = tx_ring->next_to_clean, xsk_frames = 0;
+> >>         unsigned int budget = q_vector->tx.work_limit;
+> >>         struct xdp_umem *umem = tx_ring->xsk_umem;
+> >> -       union ixgbe_adv_tx_desc *tx_desc;
+> >> -       struct ixgbe_tx_buffer *tx_bi;
+> >> +       u32 xsk_frames = 0;
+> >>         bool xmit_done;
+> >>
+> >> -       tx_bi = &tx_ring->tx_buffer_info[i];
+> >> -       tx_desc = IXGBE_TX_DESC(tx_ring, i);
+> >> -       i -= tx_ring->count;
+> >> +       while (likely(ntc != ntu && budget)) {
+> >
+> > I would say you can get rid of budget entirely. It was only really
+> > needed for the regular Tx case where you can have multiple CPUs
+> > feeding a single Tx queue and causing a stall. Since we have a 1:1
+> > mapping we should never have more than the Rx budget worth of packets
+> > to really process. In addition we can only make one pass through the
+> > ring since the ntu value is not updated while running the loop.
+>
+> OK. Will remove.
+>
+> >
+> >> +               union ixgbe_adv_tx_desc *tx_desc;
+> >> +               struct ixgbe_tx_buffer *tx_bi;
+> >> +
+> >> +               tx_desc = IXGBE_TX_DESC(tx_ring, ntc);
+> >>
+> >> -       do {
+> >>                 if (!(tx_desc->wb.status & cpu_to_le32(IXGBE_TXD_STAT_DD)))
+> >>                         break;
+> >>
+> >> +               tx_bi = &tx_ring->tx_buffer_info[ntc];
+> >
+> > Please don't move this logic into the loop. We were intentionally
+> > processing this outside of the loop once and then just doing the
+> > increments because it is faster that way. It takes several operations
+> > to compute tx_bi based on ntc, whereas just incrementing is a single
+> > operation.
+>
+> OK.
+>
+> >
+> >>                 total_bytes += tx_bi->bytecount;
+> >>                 total_packets += tx_bi->gso_segs;
+> >>
+> >> @@ -659,24 +660,15 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
+> >>
+> >>                 tx_bi->xdpf = NULL;
+> >>
+> >> -               tx_bi++;
+> >> -               tx_desc++;
+> >> -               i++;
+> >> -               if (unlikely(!i)) {
+> >> -                       i -= tx_ring->count;
+> >
+> > So these two lines can probably just be replaced by:
+> > if (unlikely(ntc == tx_ring->count)) {
+> >         ntc = 0;
+>
+> Sure.
+>
+> >
+> >> -                       tx_bi = tx_ring->tx_buffer_info;
+> >> -                       tx_desc = IXGBE_TX_DESC(tx_ring, 0);
+> >> -               }
+> >> -
+> >> -               /* issue prefetch for next Tx descriptor */
+> >> -               prefetch(tx_desc);
+> >
+> > Did you just drop the prefetch?
+>
+> I'll keep the prefetch in v3 because, as you fairly mentioned, it's not
+> related to this patch. However, I'm not sure if this prefetch makes any
+> sense here, because there is only one comparison operation between the
+> prefetch and the data usage:
+>
+>  while (ntc != ntu) {
+>      if (!(tx_desc->wb.status ...
+>      <...>
+>      prefetch(tx_desc);
+>  }
 
-[ Upstream commit 4a4d2d372fb9b9229327e2ed01d5d9572eddf4de ]
-
-Commit 04f05230c5c13 ("bnx2x: Remove configured vlans as
-part of unload sequence."), introduced a regression in driver
-that as a part of VF's reload flow, VLANs created on the VF
-doesn't get re-configured in hardware as vlan metadata/info
-was not getting cleared for the VFs which causes vlan PING to stop.
-
-This patch clears the vlan metadata/info so that VLANs gets
-re-configured back in the hardware in VF's reload flow and
-PING/traffic continues for VLANs created over the VFs.
-
-Fixes: 04f05230c5c13 ("bnx2x: Remove configured vlans as part of unload sequence.")
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Sudarsana Kalluru <skalluru@marvell.com>
-Signed-off-by: Shahed Shaikh <shshaikh@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c |  7 ++++---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h |  2 ++
- .../net/ethernet/broadcom/bnx2x/bnx2x_main.c    | 17 ++++++++++++-----
- 3 files changed, 18 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-index 4039a9599d79c..9d582b3ebc88d 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -3057,12 +3057,13 @@ int bnx2x_nic_unload(struct bnx2x *bp, int unload_mode, bool keep_link)
- 	/* if VF indicate to PF this function is going down (PF will delete sp
- 	 * elements and clear initializations
- 	 */
--	if (IS_VF(bp))
-+	if (IS_VF(bp)) {
-+		bnx2x_clear_vlan_info(bp);
- 		bnx2x_vfpf_close_vf(bp);
--	else if (unload_mode != UNLOAD_RECOVERY)
-+	} else if (unload_mode != UNLOAD_RECOVERY) {
- 		/* if this is a normal/close unload need to clean up chip*/
- 		bnx2x_chip_cleanup(bp, unload_mode, keep_link);
--	else {
-+	} else {
- 		/* Send the UNLOAD_REQUEST to the MCP */
- 		bnx2x_send_unload_req(bp, unload_mode);
- 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-index c2f6e44e9a3f7..8b08cb18e3638 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-@@ -425,6 +425,8 @@ void bnx2x_set_reset_global(struct bnx2x *bp);
- void bnx2x_disable_close_the_gate(struct bnx2x *bp);
- int bnx2x_init_hw_func_cnic(struct bnx2x *bp);
- 
-+void bnx2x_clear_vlan_info(struct bnx2x *bp);
-+
- /**
-  * bnx2x_sp_event - handle ramrods completion.
-  *
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index 2cc14db8f0ec9..192ff8d5da324 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -8482,11 +8482,21 @@ int bnx2x_set_vlan_one(struct bnx2x *bp, u16 vlan,
- 	return rc;
- }
- 
-+void bnx2x_clear_vlan_info(struct bnx2x *bp)
-+{
-+	struct bnx2x_vlan_entry *vlan;
-+
-+	/* Mark that hw forgot all entries */
-+	list_for_each_entry(vlan, &bp->vlan_reg, link)
-+		vlan->hw = false;
-+
-+	bp->vlan_cnt = 0;
-+}
-+
- static int bnx2x_del_all_vlans(struct bnx2x *bp)
- {
- 	struct bnx2x_vlan_mac_obj *vlan_obj = &bp->sp_objs[0].vlan_obj;
- 	unsigned long ramrod_flags = 0, vlan_flags = 0;
--	struct bnx2x_vlan_entry *vlan;
- 	int rc;
- 
- 	__set_bit(RAMROD_COMP_WAIT, &ramrod_flags);
-@@ -8495,10 +8505,7 @@ static int bnx2x_del_all_vlans(struct bnx2x *bp)
- 	if (rc)
- 		return rc;
- 
--	/* Mark that hw forgot all entries */
--	list_for_each_entry(vlan, &bp->vlan_reg, link)
--		vlan->hw = false;
--	bp->vlan_cnt = 0;
-+	bnx2x_clear_vlan_info(bp);
- 
- 	return 0;
- }
--- 
-2.20.1
-
+I'm not opposed to dropping the prefetch, but if you are going to do
+it you should do it in a separate patch.
