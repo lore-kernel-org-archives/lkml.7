@@ -2,44 +2,43 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2414C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD421C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6BC2341F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9388C23401
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566507701;
-	bh=IBqiPN6ChiLoVXwLy2Gjf+RWJWqd2x5IQJwf5/RTDYA=;
+	s=default; t=1566507704;
+	bh=7QJeaCM/EmOzx9dCNR4OQrM6Xv9vqQ89oItlIcuFH0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jpQboJWdydfhMXp4S3ZZDLTvgApAUq3cLMXii7ry3aY6gVPh/VDrca7WuWZahnEDh
-	 PN1LVcha2RbxUTOqk1MqfAWIoVw5VL3jBdHvI1VyejTbBd7ta37xWEgNNmFgQnGthy
-	 z6DApsdpMzOqKhVE4JXEL08Hq58Hptgbu1W2ohTg=
+	b=DPKDl6MprHH7O8aJ63z3OKO2qEQnFPoRCtdFjB5IOBkGBOWHiKJyJaf+JDoimkeMv
+	 L8KePMLurgn3jeyX0EqFW//gNO5ZfWDxxNv7c8nhhUl2UV+/Xdz31JgbYBl3bvzKve
+	 XPaQFBqtST2B7PGHhWiKfVfkyOwR3QTWa9PPpc2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404774AbfHVVBk (ORCPT
+        id S2404810AbfHVVBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:01:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42748 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 17:01:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404733AbfHVVBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:01:37 -0400
+        id S2404733AbfHVVBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 17:01:41 -0400
 Received: from quaco.ghostprotocols.net (unknown [177.158.141.211])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D215423402;
-        Thu, 22 Aug 2019 21:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2BC5233FC;
+        Thu, 22 Aug 2019 21:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566507697;
-        bh=IBqiPN6ChiLoVXwLy2Gjf+RWJWqd2x5IQJwf5/RTDYA=;
+        s=default; t=1566507701;
+        bh=7QJeaCM/EmOzx9dCNR4OQrM6Xv9vqQ89oItlIcuFH0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DWDrdYDjdRzZoU0q2NtvHkAVyYtDTl4PX1pEDOxh0xf1pZYMv7RV2QBIrNUWkA5gU
-         Ei+o+OgQdiNVKLFaI8ICb86VMEddfutrDv3gwBN/pBo82L/pWzswqYeou1wNdNHWE2
-         AtF++KcuIDbEFF6RkeX1j8Ln10CfShctRDWvMsHM=
+        b=kR5fjxXNg3YXt5UOg9lctX+pRohSO2iGw04X44ulf3f7ax3pAuDl6uIuNfeWPd/fP
+         Bj9Jh628I6XQ4AzQm5pq3LDhuZzHB+ZfkQJu69ZKIrMvwZcCeRmyPTZf/1C13b+9aK
+         BXwqVGmbGw8a8aLISck2yjC0sDizAUtDxMu+F7+k=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,10 +46,11 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 06/25] perf kvm s390: Add missing string.h header
-Date:   Thu, 22 Aug 2019 18:00:41 -0300
-Message-Id: <20190822210100.3461-7-acme@kernel.org>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH 07/25] perf metricgroup: Remove needless includes from metricgroup.h
+Date:   Thu, 22 Aug 2019 18:00:42 -0300
+Message-Id: <20190822210100.3461-8-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190822210100.3461-1-acme@kernel.org>
 References: <20190822210100.3461-1-acme@kernel.org>
@@ -63,31 +63,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-It uses strstr(), needs to include string.h or its not going to build
-when we remove string.h from the place it is getting from indirectly, by
-luck.
+There we need just some struct forward declarations, do that instead and
+add the includes needed by metricgroup.c.
+
+That should help with needless rebuilds when changing the removed
+headers from metricgroup.h.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-72y0i0uiaqght5b83e3ae7p4@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-1fkskjws6imir2hhztqhdyb0@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/util/kvm-stat.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/metricgroup.c |  3 ++-
+ tools/perf/util/metricgroup.h | 13 ++++++++-----
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/arch/s390/util/kvm-stat.c b/tools/perf/arch/s390/util/kvm-stat.c
-index dac78441338c..0fd4e9f49ed0 100644
---- a/tools/perf/arch/s390/util/kvm-stat.c
-+++ b/tools/perf/arch/s390/util/kvm-stat.c
-@@ -7,6 +7,7 @@
-  */
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index fdb0d1c5c5cf..aaf55444f81b 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -7,18 +7,19 @@
  
+ #include "metricgroup.h"
+ #include "evlist.h"
++#include "evsel.h"
+ #include "strbuf.h"
+ #include "pmu.h"
+ #include "expr.h"
+ #include "rblist.h"
+ #include <string.h>
+-#include <stdbool.h>
  #include <errno.h>
-+#include <string.h>
- #include "../../util/kvm-stat.h"
- #include "../../util/evsel.h"
- #include <asm/sie.h>
+ #include "pmu-events/pmu-events.h"
+ #include "strlist.h"
+ #include <assert.h>
+ #include <linux/ctype.h>
+ #include <linux/zalloc.h>
++#include <subcmd/parse-options.h>
+ 
+ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+ 					 struct evsel *evsel,
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index 500e828533f8..e5092f6404ae 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -1,11 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0-only
+ #ifndef METRICGROUP_H
+ #define METRICGROUP_H 1
+ 
+-#include "linux/list.h"
+-#include "rblist.h"
+-#include <subcmd/parse-options.h>
+-#include "evlist.h"
+-#include "strbuf.h"
++#include <linux/list.h>
++#include <linux/rbtree.h>
++#include <stdbool.h>
++
++struct evsel;
++struct option;
++struct rblist;
+ 
+ struct metric_event {
+ 	struct rb_node nd;
 -- 
 2.21.0
 
