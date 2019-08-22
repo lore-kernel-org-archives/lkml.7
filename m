@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4467FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A1CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014AB2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8D22089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493962;
-	bh=gHKN6VO5FHUT4n/WevuPBAN7VBwc4Wg2WGpEHcz+kKs=;
+	s=default; t=1566493971;
+	bh=yoK6E85K/l2xZlICnFSN1g8SzZTgncSSZLt/CSFHhmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=veG8d2fN4VbDwZiHXUV2NEJBlGBr5jAmYJ2l1ydttTG/bAKWgWVUnzsr32PAGzoHr
-	 FNOmlvVFJKq5eGSPoeWMWFkr/re/+c0DDD9vdd/2JDj+SMWKBmu67dElabpdnsaDgA
-	 Rlrczzch1UbC0mlzCDrFqM3XhavrAgdodCKyRsTM=
+	b=HjdDq0KL/KUHSsmTOE8aGr1If4NAqSt6/Ahvq4alDJibl3v8I4huDAX8duYM3mvE0
+	 7PrfkQXttvxtgw/SV4h9H5DcQJ1EigzAERtVDGqOAzjHSdgDr36MOq65mtTFEsrlAm
+	 Yo8H0R664xSGTkjW0hgWF3V0klj3tmldwIUo70Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390660AbfHVRJG (ORCPT
+        id S2389332AbfHVRMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59084 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:12:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388965AbfHVRI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:59 -0400
+        id S2390654AbfHVRJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:06 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EC382341E;
-        Thu, 22 Aug 2019 17:08:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 230A72342A;
+        Thu, 22 Aug 2019 17:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493738;
-        bh=gHKN6VO5FHUT4n/WevuPBAN7VBwc4Wg2WGpEHcz+kKs=;
+        s=default; t=1566493745;
+        bh=yoK6E85K/l2xZlICnFSN1g8SzZTgncSSZLt/CSFHhmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sub19L+3xTto1xgiFeElnjz0hGjgd8GO27LjLl9QGeQmtNE3+oXowbwRmXla3vhbv
-         WQtKnqgkezLc35Wh7xkWIyAchPSTIrl8IcUfVgLJUYUckgeWkfxbDdwVyqk02R0CwD
-         +5ziD/Mc8N72yv793TPO2fw5g2WoRpcfDYf2osBI=
+        b=aWHd/DeT/dd3eqJbYoyG8AmRUDXRDOLOC77kW4XKncclaUAIUO5OWLKbMj8KD/oxi
+         sFb7EN2Q8yHu3tFKVpIxPdeY6Ixn4PaCnffnBYtcUjWkdO+0ijuVVXfLZXRNt9V/dS
+         YlNfNwrW8aoDzViejEHYjZsOgVXHsGszwbHTydsc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 082/135] RDMA/hns: Fix error return code in hns_roce_v1_rsv_lp_qp()
-Date:   Thu, 22 Aug 2019 13:07:18 -0400
-Message-Id: <20190822170811.13303-83-sashal@kernel.org>
+Cc:     Ian Abbott <abbotti@mev.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.2 093/135] staging: comedi: dt3000: Fix rounding up of timer divisor
+Date:   Thu, 22 Aug 2019 13:07:29 -0400
+Message-Id: <20190822170811.13303-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,40 +64,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-[ Upstream commit 020fb3bebc224dfe9353a56ecbe2d5fac499dffc ]
+commit 8e2a589a3fc36ce858d42e767c3bcd8fc62a512b upstream.
 
-Fix to return error code -ENOMEM from the rdma_zalloc_drv_obj() error
-handling case instead of 0, as done elsewhere in this function.
+`dt3k_ns_to_timer()` determines the prescaler and divisor to use to
+produce a desired timing period.  It is influenced by a rounding mode
+and can round the divisor up, down, or to the nearest value.  However,
+the code for rounding up currently does the same as rounding down!  Fix
+ir by using the `DIV_ROUND_UP()` macro to calculate the divisor when
+rounding up.
 
-Fixes: e8ac9389f0d7 ("RDMA: Fix allocation failure on pointer pd")
-Fixes: 21a428a019c9 ("RDMA: Handle PD allocations by IB/core")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20190801012725.150493-1-weiyongjun1@huawei.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Also, change the types of the `divider`, `base` and `prescale` variables
+from `int` to `unsigned int` to avoid mixing signed and unsigned types
+in the calculations.
+
+Also fix a typo in a nearby comment: "improvment" => "improvement".
+
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190812120814.21188-1-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_hw_v1.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/staging/comedi/drivers/dt3000.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-index e068a02122f5e..9496c69fff3a2 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_hw_v1.c
-@@ -745,8 +745,10 @@ static int hns_roce_v1_rsv_lp_qp(struct hns_roce_dev *hr_dev)
+diff --git a/drivers/staging/comedi/drivers/dt3000.c b/drivers/staging/comedi/drivers/dt3000.c
+index 4ad176fc14ad1..caf4d4df4bd30 100644
+--- a/drivers/staging/comedi/drivers/dt3000.c
++++ b/drivers/staging/comedi/drivers/dt3000.c
+@@ -342,9 +342,9 @@ static irqreturn_t dt3k_interrupt(int irq, void *d)
+ static int dt3k_ns_to_timer(unsigned int timer_base, unsigned int *nanosec,
+ 			    unsigned int flags)
+ {
+-	int divider, base, prescale;
++	unsigned int divider, base, prescale;
  
- 	ibdev = &hr_dev->ib_dev;
- 	pd = rdma_zalloc_drv_obj(ibdev, ib_pd);
--	if (!pd)
-+	if (!pd) {
-+		ret = -ENOMEM;
- 		goto alloc_mem_failed;
-+	}
+-	/* This function needs improvment */
++	/* This function needs improvement */
+ 	/* Don't know if divider==0 works. */
  
- 	pd->device  = ibdev;
- 	ret = hns_roce_alloc_pd(pd, NULL);
+ 	for (prescale = 0; prescale < 16; prescale++) {
+@@ -358,7 +358,7 @@ static int dt3k_ns_to_timer(unsigned int timer_base, unsigned int *nanosec,
+ 			divider = (*nanosec) / base;
+ 			break;
+ 		case CMDF_ROUND_UP:
+-			divider = (*nanosec) / base;
++			divider = DIV_ROUND_UP(*nanosec, base);
+ 			break;
+ 		}
+ 		if (divider < 65536) {
 -- 
 2.20.1
 
