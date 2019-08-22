@@ -2,62 +2,53 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C5CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 038C9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285FA206DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48F0206DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494797;
-	bh=MuTRzXQVssnmsgs7TU8p4pJGF5vKfdve0MkBk76vhb4=;
+	s=default; t=1566494799;
+	bh=Qlp3x3U+zOCKY7hCtsldlsB4qi6UWQSOuURbtxgayK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KN4kbufBaO4O2uWSrh72jUY/9Vo9Me4eL8ZQ5mH6WCP5T/D6iNrX12E3AoMuS8j7c
-	 rCyDC179ayEQVxBaiuoBJwDCjwCzhtvrB3X9VnzVzsH+THRKFSNUBBzb2RDBrRcFrP
-	 if7x+mtKPXan8vR7YvSZKEwjXmN0L3jRwZZil+p8=
+	b=HH8BsfO7rbjaa7nVbPMfU7xIJAxLLi/IfCZPnBIjrVOUVpmx8MHqJ7E6NU5UsTKuI
+	 wmWFuAKiIOWzqwAWmmsIvkQqkvY+E8vIvzqIXmI9ie1jN6SA0bX78CNs5mCRzI6W3v
+	 tnUuQye1aHZo5JCMkgrenPL3VO2wOq8h0rOtXeUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404737AbfHVR0g (ORCPT
+        id S2391893AbfHVR0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:26:36 -0400
+        Thu, 22 Aug 2019 13:26:38 -0400
 Received: from mail.kernel.org ([198.145.29.99]:48536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404384AbfHVRZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:21 -0400
+        id S2404396AbfHVRZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:22 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64B9D23400;
-        Thu, 22 Aug 2019 17:25:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2B192064A;
+        Thu, 22 Aug 2019 17:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494720;
-        bh=MuTRzXQVssnmsgs7TU8p4pJGF5vKfdve0MkBk76vhb4=;
+        s=default; t=1566494722;
+        bh=Qlp3x3U+zOCKY7hCtsldlsB4qi6UWQSOuURbtxgayK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hvdg+UFUza5JAWoIF4t2E7W9SEO1CYi3BPQjiDRDdX+qrodNFOIooVFOw8Y/V3kVs
-         agG9qlhHz4hl3DKb6XE4k/kYuu8Wn7emsD7ZMoThOsgq7K/pX7ZMl/V2h6EK4q1mDl
-         sx3LfjvEPbywvc5DdjCCAXwYjk2CKvdL4JClVz1k=
+        b=iihzBwBHjdv86Nt0AEsk+L+L7I1VK5+z1fvQbWrpLzgGBv9upfZ+UlI++gjXsUMF8
+         4SVH5kvJQsaE2EyEmmKvbPvBMVa/hwqFSgXEBW3xwD5LB99r144dxuN6FG6eA4tcBV
+         lSqDIBKRFC7/bWKgGXeNlgXZJBUqr9LDEsHR80mg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 40/71] ocfs2: remove set but not used variable last_hash
-Date:   Thu, 22 Aug 2019 10:19:15 -0700
-Message-Id: <20190822171729.630623272@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH 4.19 10/85] xtensa: add missing isync to the cpu_reset TLB code
+Date:   Thu, 22 Aug 2019 10:18:43 -0700
+Message-Id: <20190822171731.471245216@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
-References: <20190822171726.131957995@linuxfoundation.org>
+In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
+References: <20190822171731.012687054@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,54 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7bc36e3ce91471b6377c8eadc0a2f220a2280083 ]
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+commit cd8869f4cb257f22b89495ca40f5281e58ba359c upstream.
 
-  fs/ocfs2/xattr.c: In function ocfs2_xattr_bucket_find:
-  fs/ocfs2/xattr.c:3828:6: warning: variable last_hash set but not used [-Wunused-but-set-variable]
+ITLB entry modifications must be followed by the isync instruction
+before the new entries are possibly used. cpu_reset lacks one isync
+between ITLB way 6 initialization and jump to the identity mapping.
+Add missing isync to xtensa cpu_reset.
 
-It's never used and can be removed.
+Cc: stable@vger.kernel.org
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Link: http://lkml.kernel.org/r/20190716132110.34836-1-yuehaibing@huawei.com
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/xattr.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/xtensa/kernel/setup.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
-index fb0a4eec310ce..77740ef5a8e85 100644
---- a/fs/ocfs2/xattr.c
-+++ b/fs/ocfs2/xattr.c
-@@ -3832,7 +3832,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
- 	u16 blk_per_bucket = ocfs2_blocks_per_xattr_bucket(inode->i_sb);
- 	int low_bucket = 0, bucket, high_bucket;
- 	struct ocfs2_xattr_bucket *search;
--	u32 last_hash;
- 	u64 blkno, lower_blkno = 0;
- 
- 	search = ocfs2_xattr_bucket_new(inode);
-@@ -3876,8 +3875,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
- 		if (xh->xh_count)
- 			xe = &xh->xh_entries[le16_to_cpu(xh->xh_count) - 1];
- 
--		last_hash = le32_to_cpu(xe->xe_name_hash);
--
- 		/* record lower_blkno which may be the insert place. */
- 		lower_blkno = blkno;
- 
--- 
-2.20.1
-
+--- a/arch/xtensa/kernel/setup.c
++++ b/arch/xtensa/kernel/setup.c
+@@ -515,6 +515,7 @@ void cpu_reset(void)
+ 				      "add	%2, %2, %7\n\t"
+ 				      "addi	%0, %0, -1\n\t"
+ 				      "bnez	%0, 1b\n\t"
++				      "isync\n\t"
+ 				      /* Jump to identity mapping */
+ 				      "jx	%3\n"
+ 				      "2:\n\t"
 
 
