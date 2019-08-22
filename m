@@ -2,99 +2,148 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D158C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983BDC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C8020856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A423233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pedrovanzella.com header.i=@pedrovanzella.com header.b="ljLXxfEE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="P3m3D40b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393024AbfHVUTS (ORCPT
+        id S2393077AbfHVUT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:19:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35632 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391015AbfHVUTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:19:06 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BB6BB10576D9;
-        Thu, 22 Aug 2019 20:19:06 +0000 (UTC)
-Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C40425D713;
-        Thu, 22 Aug 2019 20:19:05 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 15:19:03 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Raphael Gault <raphael.gault@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com,
-        julien.thierry.kdev@gmail.com, raph.gault+kdev@gmail.com
-Subject: Re: [RFC v4 16/18] arm64: crypto: Add exceptions for crypto object
- to prevent stack analysis
-Message-ID: <20190822201903.srbxynoabrarnlyw@treble>
-References: <20190816122403.14994-1-raphael.gault@arm.com>
- <20190816122403.14994-17-raphael.gault@arm.com>
+        Thu, 22 Aug 2019 16:19:27 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:47373 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2392859AbfHVUTD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 16:19:03 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 5DC2F21F4C;
+        Thu, 22 Aug 2019 16:19:02 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Thu, 22 Aug 2019 16:19:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        pedrovanzella.com; h=from:to:cc:subject:date:message-id
+        :in-reply-to:references:mime-version:content-transfer-encoding;
+         s=fm3; bh=dJnrPuaV25ABykzS4FLNIsBUys6IgKfAK34wtssm9ns=; b=ljLXx
+        fEEMW22wAPO67cdymHSP1ujN73zY9csukL3ZPBLtgNjFmIOkSlkaTPoJqcpgHmGw
+        uHlp5PwUmloNJWR8amT2eIa/KTbtcSsmHYPSUJiyZFPJALPz6Vj3k5jaxWB3qFNH
+        IPtG/s9/IvQU59rshFpJDpxTAIIXyJcNFE4XtD0BVrqOlpRFJD0Zu7hPFpJZ2g5a
+        KNYaBK5yiwYXqrQQdrPmfQyBdXhD4Hw8oEZpx/aEnXCZH9l8YziUED+2YmF/bOFz
+        amBiW/Jf2ybhKVZWXb6KU0W+k6Lbj2BI9xkKWUrCwVDpvSLFVvDAjKmYiyiKDUYN
+        hS5zzglzziKlndVqw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=dJnrPuaV25ABykzS4FLNIsBUys6IgKfAK34wtssm9ns=; b=P3m3D40b
+        uZw9fNhdPu+G1c911m0LD78EN+vfLnvOlQ/QZEA+EXzSFr3pWKZQ0E4uH7ZggnLS
+        tY7CBxR0cEqXVuVbWAVvTF9hS+oSDEBE3w/paTq5oy1Fpl/ipoTTvAlvXKZINBdX
+        UUAtwqzpAKIRgL+pi9SIZSTXvJ/FJFzxEPx7wlaeCLITsT44X4X3pYuqDxUcTn8U
+        m8OmVRMIrrsHH6tgQ9db7qrwIGwO+zmmvt2bY/vQBXOtv7uxw5IF0efXnN0G5c+U
+        TxWE/NGHCPtImXdiO9gGGKzbhyAfQ5KYcBAZRuI7ooxtZAyYa8YSbMLwN+4loYKl
+        iPP19lRYLE7K4A==
+X-ME-Sender: <xms:tvheXUGGTfZsXvt2R4I-Y2iganKuva5MQrABt3Pd6k92CIe1W1Mkyg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegiedguddtgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomheprfgvughr
+    ohcugggrnhiivghllhgruceophgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomh
+    eqnecukfhppedujeegrdekkedrledrudegleenucfrrghrrghmpehmrghilhhfrhhomhep
+    phgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomhenucevlhhushhtvghrufhiii
+    gvpedt
+X-ME-Proxy: <xmx:tvheXekQZkNsFTM5E66rnNLg06H7rqBmG1mmAQNZZ5IEtSiX-4ZRBw>
+    <xmx:tvheXTdEElgRPkSso6xVxpufKz9DwDPOWtVy-uBOQmBOXEgm2nZ1WQ>
+    <xmx:tvheXUAH_Uzgb9tE6qMqTk_N9lHdVRHFZ8dtsrA3EHBFIeV51aW2dQ>
+    <xmx:tvheXUe7JurA7wMaKlcjE9rtF1Hmumz-4QxYdqvhOREnWYrKjRnPVg>
+Received: from localhost (toroon020aw-lp130-07-174-88-9-149.dsl.bell.ca [174.88.9.149])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E8A768005B;
+        Thu, 22 Aug 2019 16:19:01 -0400 (EDT)
+From:   Pedro Vanzella <pedro@pedrovanzella.com>
+To:     linux-input@vger.kernel.org
+Cc:     lains@archlinux.org, Pedro Vanzella <pedro@pedrovanzella.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/4] hid-logitech-hidpp: subscribe to battery voltage events
+Date:   Thu, 22 Aug 2019 16:18:48 -0400
+Message-Id: <20190822201849.28924-5-pedro@pedrovanzella.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190822201849.28924-1-pedro@pedrovanzella.com>
+References: <20190822201849.28924-1-pedro@pedrovanzella.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190816122403.14994-17-raphael.gault@arm.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Thu, 22 Aug 2019 20:19:06 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 01:24:01PM +0100, Raphael Gault wrote:
-> Some crypto modules contain `.word` of data in the .text section.
-> Since objtool can't make the distinction between data and incorrect
-> instruction, it gives a warning about the instruction beeing unknown
-> and stops the analysis of the object file.
-> 
-> The exception can be removed if the data are moved to another section
-> or if objtool is tweaked to handle this particular case.
-> 
-> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+Like we do for other ways of interacting with the battery for other
+devices, refresh the battery status and notify the power supply
+subsystem of the changes in voltage and status.
 
-If the data can be moved to .rodata then I think that would be a much
-better solution.
+Signed-off-by: Pedro Vanzella <pedro@pedrovanzella.com>
+---
+ drivers/hid/hid-logitech-hidpp.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-> ---
->  arch/arm64/crypto/Makefile | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm64/crypto/Makefile b/arch/arm64/crypto/Makefile
-> index 0435f2a0610e..e2a25919ebaa 100644
-> --- a/arch/arm64/crypto/Makefile
-> +++ b/arch/arm64/crypto/Makefile
-> @@ -43,9 +43,11 @@ aes-neon-blk-y := aes-glue-neon.o aes-neon.o
->  
->  obj-$(CONFIG_CRYPTO_SHA256_ARM64) += sha256-arm64.o
->  sha256-arm64-y := sha256-glue.o sha256-core.o
-> +OBJECT_FILES_NON_STANDARD_sha256-core.o := y
->  
->  obj-$(CONFIG_CRYPTO_SHA512_ARM64) += sha512-arm64.o
->  sha512-arm64-y := sha512-glue.o sha512-core.o
-> +OBJECT_FILES_NON_STANDARD_sha512-core.o := y
->  
->  obj-$(CONFIG_CRYPTO_CHACHA20_NEON) += chacha-neon.o
->  chacha-neon-y := chacha-neon-core.o chacha-neon-glue.o
-> @@ -58,6 +60,7 @@ aes-arm64-y := aes-cipher-core.o aes-cipher-glue.o
->  
->  obj-$(CONFIG_CRYPTO_AES_ARM64_BS) += aes-neon-bs.o
->  aes-neon-bs-y := aes-neonbs-core.o aes-neonbs-glue.o
-> +OBJECT_FILES_NON_STANDARD_aes-neonbs-core.o := y
->  
->  CFLAGS_aes-glue-ce.o	:= -DUSE_V8_CRYPTO_EXTENSIONS
->  
-> -- 
-> 2.17.1
-> 
-
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 06bee97d33b4..9f09ed6abbad 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -1310,6 +1310,35 @@ static int hidpp20_query_battery_voltage_info(struct hidpp_device *hidpp)
+ 	return 0;
+ }
+ 
++static int hidpp20_battery_voltage_event(struct hidpp_device *hidpp,
++					 u8 *data, int size)
++{
++	struct hidpp_report *report = (struct hidpp_report *)data;
++	int status, voltage;
++	bool changed;
++
++	if (report->fap.feature_index != hidpp->battery.voltage_feature_index ||
++	    report->fap.funcindex_clientid !=
++		    EVENT_BATTERY_LEVEL_STATUS_BROADCAST)
++		return 0;
++
++	status = hidpp20_battery_map_status_voltage(report->fap.params,
++						    &voltage);
++
++	hidpp->battery.online = status != POWER_SUPPLY_STATUS_NOT_CHARGING;
++
++	changed = voltage != hidpp->battery.voltage ||
++		  status != hidpp->battery.status;
++
++	if (changed) {
++		hidpp->battery.voltage = voltage;
++		hidpp->battery.status = status;
++		if (hidpp->battery.ps)
++			power_supply_changed(hidpp->battery.ps);
++	}
++	return 0;
++}
++
+ static enum power_supply_property hidpp_battery_props[] = {
+ 	POWER_SUPPLY_PROP_ONLINE,
+ 	POWER_SUPPLY_PROP_STATUS,
+@@ -3178,6 +3207,9 @@ static int hidpp_raw_hidpp_event(struct hidpp_device *hidpp, u8 *data,
+ 		ret = hidpp_solar_battery_event(hidpp, data, size);
+ 		if (ret != 0)
+ 			return ret;
++		ret = hidpp20_battery_voltage_event(hidpp, data, size);
++		if (ret != 0)
++			return ret;
+ 	}
+ 
+ 	if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP10_BATTERY) {
 -- 
-Josh
+2.23.0
+
