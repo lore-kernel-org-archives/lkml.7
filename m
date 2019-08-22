@@ -2,155 +2,87 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16476C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E0DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E5923400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:45:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGE5sSHQ"
+	by mail.kernel.org (Postfix) with ESMTP id 12B4323400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387647AbfHVPps (ORCPT
+        id S2387739AbfHVPqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:45:48 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33745 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732460AbfHVPpr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:45:47 -0400
-Received: by mail-ed1-f65.google.com with SMTP id s15so8631838edx.0;
-        Thu, 22 Aug 2019 08:45:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GYu7zsBdj1jnCt6c3x3YjXV2Cnd1ioGPP+PRK3JHESc=;
-        b=IGE5sSHQKv6OSUMGtyTjSZSn712cmN6asq206J67r0R5nE9K9ajyrPYzS8mf3698xO
-         /Bf1k1CfJv5B/Di5xZZK2l8vrXDhw36tvH84o/gVegxcYI7CnOSHUFVaxvNnYWwfdKuD
-         tFEHWpeHgWMDehvzUMuM1ossD++xxpRK7QIEx+ISMSqfzpRMTKEaVW0nU0xsSrKmblEb
-         0IfyFft60u/eVwjp12clVdCIf/njfXBlxp/E+xiwnj9EHc6AtPvJZ5hZ0WEZw3FR28Ac
-         rE1+oZaurtozP2Ku1CeI9x8OiEqRhc1W6xSleNS31lsz8CL5mq5DFP02ReZYtyAo+SkM
-         j4lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GYu7zsBdj1jnCt6c3x3YjXV2Cnd1ioGPP+PRK3JHESc=;
-        b=MJyyyES66J7uI0IUrQ1SNLJjCxF6NNdpzQETrV1iMFycjL5osXFw98MiilYyVIfkCj
-         fXiizvVDTh7bY8RlQTQl+0DQjN7kgv2EwIYqNi9081l6SfJJWMhXDRm7OrAgcnIPldPS
-         6r+rI6CiAxERGHht1kPEL5VvKkCAwh64bL08zkBxkmKmgNHu5Jo5oR8WBgZW/8Nni0Xs
-         g/zHn1n/GVrfttefW4yUkRAOMkJ+nHwL+w8vB3oCAtl1HJ2EK13i3kUO3t7rVYOpEtOL
-         Xi6aJ80D2U710lwMbK0Db670ZKuNlHUD/wYVm5NkUNth5HscilwhP5ZAyUXy2h084C4K
-         YLIw==
-X-Gm-Message-State: APjAAAWwXcMAkMDVqxiHw/SFmmLtYa3JnBYkjrn6N1Zeja2+1lg//w2k
-        8THOgORSsFsrYHRh9dLxZN9xBZ2c+E6REFflhJQ=
-X-Google-Smtp-Source: APXvYqw6+5qAoTilFTwi7FVNMPf6lYbD6sLsar4I5GBuXGtchjEIQXsi/LtP+QemR24ZypLxHTOFZiYB9fSrC2jZYrM=
-X-Received: by 2002:a17:906:228e:: with SMTP id p14mr3235779eja.258.1566488745872;
- Thu, 22 Aug 2019 08:45:45 -0700 (PDT)
+        Thu, 22 Aug 2019 11:46:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:48276 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730741AbfHVPqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 11:46:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A80BA337;
+        Thu, 22 Aug 2019 08:46:13 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7BD53F718;
+        Thu, 22 Aug 2019 08:46:11 -0700 (PDT)
+Subject: Re: [PATCH v3 04/10] KVM: Implement kvm_put_guest()
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org
+References: <20190821153656.33429-1-steven.price@arm.com>
+ <20190821153656.33429-5-steven.price@arm.com>
+ <20190822152854.GE25467@linux.intel.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <e2abc69b-74c2-64ef-e270-43d93513eaae@arm.com>
+Date:   Thu, 22 Aug 2019 16:46:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190822015756.30807-1-robdclark@gmail.com> <20190822122652.GM5942@intel.com>
-In-Reply-To: <20190822122652.GM5942@intel.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 22 Aug 2019 08:45:34 -0700
-Message-ID: <CAF6AEGv4=PTJtD6au1=j-fe0BaDMsDHW0dTe+-GojOD1sh+o+Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: add rotation property
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Fritz Koenig <frkoenig@google.com>,
-        David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bruce Wang <bzwang@chromium.org>, Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190822152854.GE25467@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 5:26 AM Ville Syrj=C3=A4l=C3=A4
-<ville.syrjala@linux.intel.com> wrote:
->
-> On Wed, Aug 21, 2019 at 06:57:24PM -0700, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/dr=
-m/msm/disp/dpu1/dpu_plane.c
-> > index 45bfac9e3af7..c5653771e8fa 100644
-> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-> > @@ -1040,8 +1040,21 @@ static void dpu_plane_sspp_atomic_update(struct =
-drm_plane *plane)
-> >                               pstate->multirect_mode);
-> >
-> >       if (pdpu->pipe_hw->ops.setup_format) {
-> > +             unsigned int rotation;
-> > +
-> >               src_flags =3D 0x0;
-> >
-> > +             rotation =3D drm_rotation_simplify(state->rotation,
-> > +                                              DRM_MODE_ROTATE_0 |
-> > +                                              DRM_MODE_REFLECT_X |
-> > +                                              DRM_MODE_REFLECT_Y);
-> > +
-> > +             if (rotation & DRM_MODE_REFLECT_X)
-> > +                     src_flags |=3D DPU_SSPP_FLIP_UD;
-> > +
-> > +             if (rotation & DRM_MODE_REFLECT_Y)
-> > +                     src_flags |=3D DPU_SSPP_FLIP_LR;
-> > +
->
-> UD vs. LR (assuming those mean what I think they mean) seem the wrong
-> way around here.
+On 22/08/2019 16:28, Sean Christopherson wrote:
+> On Wed, Aug 21, 2019 at 04:36:50PM +0100, Steven Price wrote:
+>> kvm_put_guest() is analogous to put_user() - it writes a single value to
+>> the guest physical address. The implementation is built upon put_user()
+>> and so it has the same single copy atomic properties.
+> 
+> What you mean by "single copy atomic"?  I.e. what guarantees does
+> put_user() provide that __copy_to_user() does not?
 
-ahh, right, reflect "along" vs "around"..
+Single-copy atomicity is defined by the Arm architecture[1] and I'm not
+going to try to go into the full details here, so this is a summary.
 
-BR,
--R
+For the sake of this feature what we care about is that the value
+written/read cannot be "torn". In other words if there is a read (in
+this case from another VCPU) that is racing with the write then the read
+will either get the old value or the new value. It cannot return a
+mixture. (This is of course assuming that the read is using a
+single-copy atomic safe method).
 
->
-> >
-> >               /* update format */
-> >               pdpu->pipe_hw->ops.setup_format(pdpu->pipe_hw, fmt, src_f=
-lags,
-> >                               pstate->multirect_index);
-> > @@ -1522,6 +1535,13 @@ struct drm_plane *dpu_plane_init(struct drm_devi=
-ce *dev,
-> >       if (ret)
-> >               DPU_ERROR("failed to install zpos property, rc =3D %d\n",=
- ret);
-> >
-> > +     drm_plane_create_rotation_property(plane,
-> > +                     DRM_MODE_ROTATE_0,
-> > +                     DRM_MODE_ROTATE_0 |
-> > +                     DRM_MODE_ROTATE_180 |
-> > +                     DRM_MODE_REFLECT_X |
-> > +                     DRM_MODE_REFLECT_Y);
-> > +
-> >       drm_plane_enable_fb_damage_clips(plane);
-> >
-> >       /* success! finalize initialization */
-> > --
-> > 2.21.0
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->
-> --
-> Ville Syrj=C3=A4l=C3=A4
-> Intel
+__copy_to_user() is implemented as a memcpy() and as such cannot provide
+single-copy atomicity in the general case (the buffer could easily be
+bigger than the architecture can guarantee).
+
+put_user() on the other hand is implemented (on arm64) as an explicit
+store instruction and therefore is guaranteed by the architecture to be
+single-copy atomic (i.e. another CPU cannot see a half-written value).
+
+Steve
+
+[1] https://static.docs.arm.com/ddi0487/ea/DDI0487E_a_armv8_arm.pdf#page=110
