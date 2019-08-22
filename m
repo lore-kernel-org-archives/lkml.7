@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8337DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B6FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5031C2341E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EDF12064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494707;
-	bh=q/HJ4AnTe5uwkoNVoSG0CmxitIRVdUXr5MAmYEai4A0=;
+	s=default; t=1566494723;
+	bh=noJJsstsbGvqi9jta6FlFj+xAvTqt6tEB6u0vxcuLOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=087ZSQ+IjWAbRlutUEAfuFNK+79C2FN7BZ155esRhZWdppNVcM+VE25yrzRcvtjbH
-	 E2sF7OxYVsb/AZIfb+nYz/65DAyA67a38XzcDrDdXysBzWkLmxi60UGPQaS1NLZIcl
-	 Lknf5kSvCo0wt6EraRpahn3G5X6qRQ+OrCfVYS+Y=
+	b=E0zmPEnxcz+7sditbgrete+Gn1cRVWYNbk7XfJVPORalkhfUn5L+zYEbI0udhJOVD
+	 wp3fwtKw77QVYFYKJVpKKhqLFWSmiob1bzKukc3hEk4ivK6QwlYnORf1si7BEYGkRl
+	 WMw4lkWkPJ9eIbIvV7zX41l/lloMBFi+TO+fXqes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391835AbfHVRZG (ORCPT
+        id S2404398AbfHVRZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:25:06 -0400
+        Thu, 22 Aug 2019 13:25:22 -0400
 Received: from mail.kernel.org ([198.145.29.99]:46670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404291AbfHVRYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:42 -0400
+        id S2404306AbfHVRYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:44 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EE1123405;
-        Thu, 22 Aug 2019 17:24:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6760B23427;
+        Thu, 22 Aug 2019 17:24:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494681;
-        bh=q/HJ4AnTe5uwkoNVoSG0CmxitIRVdUXr5MAmYEai4A0=;
+        s=default; t=1566494683;
+        bh=noJJsstsbGvqi9jta6FlFj+xAvTqt6tEB6u0vxcuLOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DHIag41GfVk1r/w+NwMoYN5lNQ3ScclcEf5Z7i+7BLA+BGxOwYv79bQEg8TxN2lpf
-         MfVKArEb7lhiYMdcm3Hey00d74lUlaEYczZquhsjtV9jIpPug3+/bi0DeAMQUvme0V
-         0YuUIyxFUdkga92uNuFASgLEhIhqdDROGDa/4H+8=
+        b=XfROHBedIaFcD2oEVeqVQiqBzqyGIpAoYrT0k11Tu122V09Gae5lUU0SwHiD7OkaZ
+         ICw82wPfMCiWRKVbm/1/FlUNdk7R/RhaJHOfIvP9i0cSTc3Japld0WB3VlkWgV4lvS
+         5lE0k5JKAlD2XPQd4feQnD2Kj5e+hQzHTmWwkaPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 26/71] perf header: Fix divide by zero error if f_header.attr_size==0
-Date:   Thu, 22 Aug 2019 10:19:01 -0700
-Message-Id: <20190822171728.886027331@linuxfoundation.org>
+Subject: [PATCH 4.14 29/71] drm/bridge: lvds-encoder: Fix build error while CONFIG_DRM_KMS_HELPER=m
+Date:   Thu, 22 Aug 2019 10:19:04 -0700
+Message-Id: <20190822171729.224955605@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
 References: <20190822171726.131957995@linuxfoundation.org>
@@ -64,50 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7622236ceb167aa3857395f9bdaf871442aa467e ]
+[ Upstream commit f4cc743a98136df3c3763050a0e8223b52d9a960 ]
 
-So I have been having lots of trouble with hand-crafted perf.data files
-causing segfaults and the like, so I have started fuzzing the perf tool.
+If DRM_LVDS_ENCODER=y but CONFIG_DRM_KMS_HELPER=m,
+build fails:
 
-First issue found:
+drivers/gpu/drm/bridge/lvds-encoder.o: In function `lvds_encoder_probe':
+lvds-encoder.c:(.text+0x155): undefined reference to `devm_drm_panel_bridge_add'
 
-If f_header.attr_size is 0 in the perf.data file, then perf will crash
-with a divide-by-zero error.
-
-Committer note:
-
-Added a pr_err() to tell the user why the command failed.
-
-Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907231100440.14532@macbook-air
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: dbb58bfd9ae6 ("drm/bridge: Fix lvds-encoder since the panel_bridge rework.")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190729071216.27488-1-yuehaibing@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/bridge/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index c892a28e7b048..baec3e9833256 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2901,6 +2901,13 @@ int perf_session__read_header(struct perf_session *session)
- 			   file->path);
- 	}
- 
-+	if (f_header.attr_size == 0) {
-+		pr_err("ERROR: The %s file's attr size field is 0 which is unexpected.\n"
-+		       "Was the 'perf record' command properly terminated?\n",
-+		       file->path);
-+		return -EINVAL;
-+	}
-+
- 	nr_attrs = f_header.attrs.size / f_header.attr_size;
- 	lseek(fd, f_header.attrs.offset, SEEK_SET);
- 
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index adf9ae0e0b7c9..85aa824317f01 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -35,6 +35,7 @@ config DRM_DUMB_VGA_DAC
+ config DRM_LVDS_ENCODER
+ 	tristate "Transparent parallel to LVDS encoder support"
+ 	depends on OF
++	select DRM_KMS_HELPER
+ 	select DRM_PANEL_BRIDGE
+ 	help
+ 	  Support for transparent parallel to LVDS encoders that don't require
 -- 
 2.20.1
 
