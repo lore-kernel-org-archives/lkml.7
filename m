@@ -2,70 +2,70 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416CEC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5271DC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19D5621726
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C5021726
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388019AbfHVLHK (ORCPT
+        id S2388032AbfHVLHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:07:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60187 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730029AbfHVLHJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:07:09 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i0kvp-0000BI-NN; Thu, 22 Aug 2019 11:07:05 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Benjamin LaHaise <bcrl@kvack.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, linux-aio@kvack.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] aio: remove redundant assignment to variable ret
-Date:   Thu, 22 Aug 2019 12:07:05 +0100
-Message-Id: <20190822110705.19065-1-colin.king@canonical.com>
+        Thu, 22 Aug 2019 07:07:23 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:35576 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730029AbfHVLHW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 07:07:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 6A36EFB03;
+        Thu, 22 Aug 2019 13:07:20 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 20gLphEHrcFq; Thu, 22 Aug 2019 13:07:19 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 1D3224014F; Thu, 22 Aug 2019 13:07:19 +0200 (CEST)
+From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Carlo Caione <ccaione@baylibre.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1] arch: arm64: imx8mq: Add mux-controller to iomuxc_gpr
+Date:   Thu, 22 Aug 2019 13:07:18 +0200
+Message-Id: <cover.1566471985.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+This adds a mux-controller to the iomuxc_gpr syscon. It will e.g. be used by
+the NWL DSI host controller driver.
 
-The variable ret is being set to -EINVAL however this is never read
-and later it is being reassigned to a new value. The assignment is
-redundant and hence can be removed.
+Guido Günther (1):
+  arm64: dts: imx8mq: Add mux controller to iomuxc_gpr
 
-Addresses-Coverity: ("Unused Value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/aio.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/fs/aio.c b/fs/aio.c
-index f9f441b59966..3e290dfac10a 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -1528,7 +1528,6 @@ static int aio_read(struct kiocb *req, const struct iocb *iocb,
- 	file = req->ki_filp;
- 	if (unlikely(!(file->f_mode & FMODE_READ)))
- 		return -EBADF;
--	ret = -EINVAL;
- 	if (unlikely(!file->f_op->read_iter))
- 		return -EINVAL;
- 
 -- 
 2.20.1
 
