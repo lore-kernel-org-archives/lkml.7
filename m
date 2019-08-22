@@ -2,267 +2,133 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EFEC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABECC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E812120870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C19F20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:09:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YBY+JuSI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732063AbfHVIIo (ORCPT
+        id S1732068AbfHVIJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:08:44 -0400
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:55301 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725987AbfHVIIn (ORCPT
+        Thu, 22 Aug 2019 04:09:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60858 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbfHVIJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:08:43 -0400
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 0i96iaakLThuu0i99ij8lY; Thu, 22 Aug 2019 10:08:40 +0200
-Subject: Re: [PATCH v7 1/9] drm_dp_cec: add connector info support.
-To:     Dariusz Marcinkiewicz <darekm@google.com>,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, nouveau@lists.freedesktop.org,
-        Dhinakaran Pandiyan <dhinakaran.pandiyan@intel.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        amd-gfx@lists.freedesktop.org,
-        "Jerry (Fangzhi) Zuo" <Jerry.Zuo@amd.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Leo Li <sunpeng.li@amd.com>,
-        intel-gfx@lists.freedesktop.org,
-        Maxime Ripard <mripard@kernel.org>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Sean Paul <sean@poorly.run>, Thomas Lim <Thomas.Lim@amd.com>,
-        linux-kernel@vger.kernel.org,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-References: <20190814104520.6001-1-darekm@google.com>
- <20190814104520.6001-2-darekm@google.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <38cda4f5-3299-2bd4-65f5-9a0f948902c6@xs4all.nl>
-Date:   Thu, 22 Aug 2019 10:08:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 22 Aug 2019 04:09:36 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7M89Ehm064504;
+        Thu, 22 Aug 2019 08:09:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=qys3SBVljwg3jKlIyMl5SvReoKqkq2nisQb3LkrhQDw=;
+ b=YBY+JuSIibdufBFGTGBEgKeO7zKlER3pUamqGDq3xDajOKHNIq5nhzqUBYtVcnhk1RCp
+ Q30fJtYCTPsEzVAlQcHfX5LkylbdSuSfGrlf81F7l56p00v0c/9C50RRUjliblVvDuB8
+ XohbH+d1fvIHOTImncpt7lWtTDatfNqJueWrUy75E/mpgWzXsockNmLKyM5BJc5k2vlx
+ HKu3PszAXfUJ6uKYFG640vYL6e7yDcIfM1C9hDRe2S3NnpatzFZpecSNLrdKNNGZL0Nb
+ wsJ8eoe1aGOa417n+H1ZcJlNeH9bOR9VGzRQ5IfHsUKD9ZggCqtbKLlASvG3eirBuVx1 kA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2ue90turmf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 08:09:25 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7M88xxL047033;
+        Thu, 22 Aug 2019 08:09:24 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2ugj7rcmw7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 08:09:18 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7M88s8g016428;
+        Thu, 22 Aug 2019 08:08:55 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 22 Aug 2019 01:08:54 -0700
+Date:   Thu, 22 Aug 2019 11:08:48 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jerry Chuang <jerry-chuang@realtek.com>,
+        John Whitmore <johnfwhitmore@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: Added Realtek rtl8192u driver to staging - static analysis
+ report.
+Message-ID: <20190822080848.GF4451@kadam>
+References: <cb1222a8-4c67-8fac-f1d9-755e97699caa@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20190814104520.6001-2-darekm@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfPWtQbBtTbaDHxFeyBb7ygW2PsLRysFGSHFJf5O77Fe4xUN5k2EdXnE0k7b/68OB9T5KEn44P6ppCAbw0dKuKCywDe8zm2wKSTiCBpX5SNOGqVkb+NkH
- AJcLKlyAB//eccrjvPOeJLJsJK0K+70oXNtIJaZvhqK/YLWfEEOkUvT0ArUq6VTzPHf7174IRQ+YIGgidYvEejsPLFEqO4uhuQggI19K7VTgah8OIdPO9Syc
- Z7f3kPcFLErs32csa0DU442Kf0WsarTHrq1h84vUwR5/WgiNv1WR2bvY+bpWxVUyuMfbFndXuLHrfnYy20OLCc+SHVhCoR9pJYHsHxjgaG+Ks6c/hAB66KLf
- O6XLRHzKukQFd3u4AMuayXJ1R1Zp2Yt5gQf2X0u+nh5fUlIa2wip6REiiPAFwzznY6poFrYtGgbh+eBswkL7JujosqgNqfRXxVTiqaUIayHykZ7Bz22LSorn
- lETmFGAc/4pT6khECdVKTjraKmIy8KLPJCRSCiVFXNn8yZCS20yAJuUm6NuTVdWMxjJJ/EoG6Arz+/VCb3GrZrbNClOVNMeocFWKcqFVpzq0XQXhvkNaKH98
- KlN2IMqi1QvcP1za1UwcJhpGb1ZZIp1nHDpE9/GW8mHyXz2JQbLYLW7HQ1anGajADr6z6DFfazz0VrECE3YMsM+FHkPaGpJwWI/eEqA4RGk0TkW9k0YpWbr6
- hNq5s6AgmbGrf6n6ha0EQHPan75U8yNT/qPTUQiRdHfQWcVJjzmW7YKAeJ5bjxH5DvX9ve1SyjxOFwF4YSS7W303CBIQy+GFpdBLEkKSuqSbEc8mcWd56sQk
- ZEmk6NHZBNgJqPBkInqxhwHiE3qB6tO4TQDaKcyQYuYzY5QqdOPQv6rJ7Toe4utCVUKOywgFCZRtGoqdeYhQAIGb+l+aTtdLrFDEEgVo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb1222a8-4c67-8fac-f1d9-755e97699caa@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908220089
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908220089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alex, Ville/Rodrigo, Ben,
-
-Can you (hopefully) Ack this patch so that I can merge it?
-
-Thank you!
-
-	Hans
-
-On 8/14/19 12:44 PM, Dariusz Marcinkiewicz wrote:
-> Pass the connector info to the CEC adapter. This makes it possible
-> to associate the CEC adapter with the corresponding drm connector.
+On Wed, Aug 21, 2019 at 07:18:39PM +0100, Colin Ian King wrote:
+> Hi,
 > 
-> Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
-> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> ---
->  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |  2 +-
->  drivers/gpu/drm/drm_dp_cec.c                  | 25 ++++++++++++-------
->  drivers/gpu/drm/i915/display/intel_dp.c       |  4 +--
->  drivers/gpu/drm/nouveau/nouveau_connector.c   |  3 +--
->  include/drm/drm_dp_helper.h                   | 17 ++++++-------
->  5 files changed, 27 insertions(+), 24 deletions(-)
+> Static analysis of linux-next picked up an issue with the following commit:
 > 
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-> index 16218a202b591..5ec14efd4d8cb 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-> @@ -416,7 +416,7 @@ void amdgpu_dm_initialize_dp_connector(struct amdgpu_display_manager *dm,
->  
->  	drm_dp_aux_register(&aconnector->dm_dp_aux.aux);
->  	drm_dp_cec_register_connector(&aconnector->dm_dp_aux.aux,
-> -				      aconnector->base.name, dm->adev->dev);
-> +				      &aconnector->base);
->  	aconnector->mst_mgr.cbs = &dm_mst_cbs;
->  	drm_dp_mst_topology_mgr_init(
->  		&aconnector->mst_mgr,
-> diff --git a/drivers/gpu/drm/drm_dp_cec.c b/drivers/gpu/drm/drm_dp_cec.c
-> index b15cee85b702b..b457c16c3a8bb 100644
-> --- a/drivers/gpu/drm/drm_dp_cec.c
-> +++ b/drivers/gpu/drm/drm_dp_cec.c
-> @@ -8,7 +8,9 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
-> +#include <drm/drm_connector.h>
->  #include <drm/drm_dp_helper.h>
-> +#include <drm/drmP.h>
->  #include <media/cec.h>
->  
->  /*
-> @@ -295,7 +297,10 @@ static void drm_dp_cec_unregister_work(struct work_struct *work)
->   */
->  void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid)
->  {
-> -	u32 cec_caps = CEC_CAP_DEFAULTS | CEC_CAP_NEEDS_HPD;
-> +	struct drm_connector *connector = aux->cec.connector;
-> +	u32 cec_caps = CEC_CAP_DEFAULTS | CEC_CAP_NEEDS_HPD |
-> +		       CEC_CAP_CONNECTOR_INFO;
-> +	struct cec_connector_info conn_info;
->  	unsigned int num_las = 1;
->  	u8 cap;
->  
-> @@ -344,13 +349,17 @@ void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid)
->  
->  	/* Create a new adapter */
->  	aux->cec.adap = cec_allocate_adapter(&drm_dp_cec_adap_ops,
-> -					     aux, aux->cec.name, cec_caps,
-> +					     aux, connector->name, cec_caps,
->  					     num_las);
->  	if (IS_ERR(aux->cec.adap)) {
->  		aux->cec.adap = NULL;
->  		goto unlock;
->  	}
-> -	if (cec_register_adapter(aux->cec.adap, aux->cec.parent)) {
-> +
-> +	cec_fill_conn_info_from_drm(&conn_info, connector);
-> +	cec_s_conn_info(aux->cec.adap, &conn_info);
-> +
-> +	if (cec_register_adapter(aux->cec.adap, connector->dev->dev)) {
->  		cec_delete_adapter(aux->cec.adap);
->  		aux->cec.adap = NULL;
->  	} else {
-> @@ -406,22 +415,20 @@ EXPORT_SYMBOL(drm_dp_cec_unset_edid);
->  /**
->   * drm_dp_cec_register_connector() - register a new connector
->   * @aux: DisplayPort AUX channel
-> - * @name: name of the CEC device
-> - * @parent: parent device
-> + * @connector: drm connector
->   *
->   * A new connector was registered with associated CEC adapter name and
->   * CEC adapter parent device. After registering the name and parent
->   * drm_dp_cec_set_edid() is called to check if the connector supports
->   * CEC and to register a CEC adapter if that is the case.
->   */
-> -void drm_dp_cec_register_connector(struct drm_dp_aux *aux, const char *name,
-> -				   struct device *parent)
-> +void drm_dp_cec_register_connector(struct drm_dp_aux *aux,
-> +				   struct drm_connector *connector)
->  {
->  	WARN_ON(aux->cec.adap);
->  	if (WARN_ON(!aux->transfer))
->  		return;
-> -	aux->cec.name = name;
-> -	aux->cec.parent = parent;
-> +	aux->cec.connector = connector;
->  	INIT_DELAYED_WORK(&aux->cec.unregister_work,
->  			  drm_dp_cec_unregister_work);
->  }
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index 1092499115760..de2486fe7bf2d 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -5497,7 +5497,6 @@ static int
->  intel_dp_connector_register(struct drm_connector *connector)
->  {
->  	struct intel_dp *intel_dp = intel_attached_dp(connector);
-> -	struct drm_device *dev = connector->dev;
->  	int ret;
->  
->  	ret = intel_connector_register(connector);
-> @@ -5512,8 +5511,7 @@ intel_dp_connector_register(struct drm_connector *connector)
->  	intel_dp->aux.dev = connector->kdev;
->  	ret = drm_dp_aux_register(&intel_dp->aux);
->  	if (!ret)
-> -		drm_dp_cec_register_connector(&intel_dp->aux,
-> -					      connector->name, dev->dev);
-> +		drm_dp_cec_register_connector(&intel_dp->aux, connector);
->  	return ret;
->  }
->  
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-> index 330d7d29a6e34..8aa703347eb54 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-> @@ -1416,8 +1416,7 @@ nouveau_connector_create(struct drm_device *dev,
->  	switch (type) {
->  	case DRM_MODE_CONNECTOR_DisplayPort:
->  	case DRM_MODE_CONNECTOR_eDP:
-> -		drm_dp_cec_register_connector(&nv_connector->aux,
-> -					      connector->name, dev->dev);
-> +		drm_dp_cec_register_connector(&nv_connector->aux, connector);
->  		break;
->  	}
->  
-> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-> index 8364502f92cfe..7972b925a952b 100644
-> --- a/include/drm/drm_dp_helper.h
-> +++ b/include/drm/drm_dp_helper.h
-> @@ -1230,20 +1230,19 @@ struct drm_dp_aux_msg {
->  
->  struct cec_adapter;
->  struct edid;
-> +struct drm_connector;
->  
->  /**
->   * struct drm_dp_aux_cec - DisplayPort CEC-Tunneling-over-AUX
->   * @lock: mutex protecting this struct
->   * @adap: the CEC adapter for CEC-Tunneling-over-AUX support.
-> - * @name: name of the CEC adapter
-> - * @parent: parent device of the CEC adapter
-> + * @connector: the connector this CEC adapter is associated with
->   * @unregister_work: unregister the CEC adapter
->   */
->  struct drm_dp_aux_cec {
->  	struct mutex lock;
->  	struct cec_adapter *adap;
-> -	const char *name;
-> -	struct device *parent;
-> +	struct drm_connector *connector;
->  	struct delayed_work unregister_work;
->  };
->  
-> @@ -1451,8 +1450,8 @@ drm_dp_has_quirk(const struct drm_dp_desc *desc, enum drm_dp_quirk quirk)
->  
->  #ifdef CONFIG_DRM_DP_CEC
->  void drm_dp_cec_irq(struct drm_dp_aux *aux);
-> -void drm_dp_cec_register_connector(struct drm_dp_aux *aux, const char *name,
-> -				   struct device *parent);
-> +void drm_dp_cec_register_connector(struct drm_dp_aux *aux,
-> +				   struct drm_connector *connector);
->  void drm_dp_cec_unregister_connector(struct drm_dp_aux *aux);
->  void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid);
->  void drm_dp_cec_unset_edid(struct drm_dp_aux *aux);
-> @@ -1461,9 +1460,9 @@ static inline void drm_dp_cec_irq(struct drm_dp_aux *aux)
->  {
->  }
->  
-> -static inline void drm_dp_cec_register_connector(struct drm_dp_aux *aux,
-> -						 const char *name,
-> -						 struct device *parent)
-> +static inline void
-> +drm_dp_cec_register_connector(struct drm_dp_aux *aux,
-> +			      struct drm_connector *connector)
->  {
->  }
->  
+> commit 8fc8598e61f6f384f3eaf1d9b09500c12af47b37
+> Author: Jerry Chuang <jerry-chuang@realtek.com>
+> Date:   Tue Nov 3 07:17:11 2009 -0200
 > 
+>     Staging: Added Realtek rtl8192u driver to staging
+> 
+> In drivers/staging/rtl8192u/ieee80211/ieee80211_softmac.c we have:
+> 
+> CID 48331 (#1 of 1): Unused value (UNUSED_VALUE) assigned_pointer
+> 
+> Assigning value from ieee->crypt[ieee->tx_keyidx] to crypt here, but
+> that stored value is not used.
+> 
+> 746        crypt = ieee->crypt[ieee->tx_keyidx];
+> 747        if (encrypt)
+> 748                beacon_buf->capability |=
+> cpu_to_le16(WLAN_CAPABILITY_PRIVACY);
+
+Earlir in the function we have:
+
+   695          crypt = ieee->crypt[ieee->tx_keyidx];
+   696  
+   697          encrypt = ieee->host_encrypt && crypt && crypt->ops &&
+   698                  ((0 == strcmp(crypt->ops->name, "WEP") || wpa_ie_len));
+   699          /* HT ralated element */
+
+So the "crypt" assignment is dublicate and should definitely be removed.
+The "if (encrypt) " check looks correct and it sort of matches what we
+do in ieee80211_assoc_resp().
+
+   840          encrypt = crypt && crypt->ops;
+   841  
+   842          if (encrypt)
+   843                  assoc->capability |= cpu_to_le16(WLAN_CAPABILITY_PRIVACY);
+   844  
+
+So let's leave it as-is, just delete the crypt assignment.  If you want,
+you can send this patch and I can give you a Reviewed-by tag or if you
+want I can send the patch and give you Reported-by credit.
+
+regards,
+dan carpenter
 
