@@ -2,121 +2,144 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A156DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EA4C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B2522CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:53:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RIpf24nR"
+	by mail.kernel.org (Postfix) with ESMTP id C48A223400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731652AbfHVNxB (ORCPT
+        id S1731708AbfHVNxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:53:01 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:37745 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbfHVNxB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:53:01 -0400
-Received: by mail-vs1-f65.google.com with SMTP id q188so3888281vsa.4
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 06:53:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tuGMouOtFOL6qd6oBESyF32JYfPiKh5leEjrSnKcwpo=;
-        b=RIpf24nRH3NUjh7tR/MywKsXGcriypUW3Nw3anrRX3qatgw7KCnHTkXo3cU/OFH3X2
-         NQeZCbxcPKcmtt7MbN/GPbEOg9oYcgPV2XCjK02rdsa0QPEezNRFzYcsNkaBHcH5Pe6y
-         UqMYqZIINSZ39LZeTGVvj7L/jZXZFHzYNFSUmk7gxCW974AGFMP85ICYFbaLD2jmircr
-         bHH603dKDy9u//yt275AVzVyqZ+GIXaLMYfSmSyxAUt/ZZqlHex64BJXlaG9J0iUkY1B
-         SY++cLbJvsB6MHyhQotX+Y+tXTaF1SCJAFRyK71QAX/he5OHCp3ajltLGSNtA833uZNO
-         esaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tuGMouOtFOL6qd6oBESyF32JYfPiKh5leEjrSnKcwpo=;
-        b=cCmx7oNsJBvQH7gY2N7QlS7F2VKOVA7mJsjde5cbsfdjAyXSlDTgg36GPj2jYzIYKc
-         21PHneTFBEpmjp4DLYYhAsiCDWt/nYpePxKG8FURw7Gv1J/SkjWIvCDIgbcGNK5e4G4s
-         S47P5JeDjW3ioya3m7PdpIRQe4k3JXNpLZcpSE7jzb09/HT3GpILh/0HMVrrYvtVW8By
-         vDt2XCy7qD/XPhn9mVKHyGQ8MOdq4+j8HFEhyFga2IXZn48bwpif1lKvkuAw8csphQd8
-         vqIKsgLYmIEcplsVKoCD1PPI8Eeb9DG0slX3q+NhhYZEeAeyi9dhGuQMqXt0lBmbz9Yj
-         +hTA==
-X-Gm-Message-State: APjAAAWcDIAihYCYCeMrN5GJ2lLHhetOol+fNv45klj099ap1dGWB9yF
-        KbnALmPr5gCUN/qJ3h2QehlybxtvFeS2BnRkaBzs7A==
-X-Google-Smtp-Source: APXvYqwLUBPKQGwaCHNT/xqZtRG5kBo+RsrpLvjiu+PO1wXYnj3Lf88aoVFjhAhrpB2zEipWIW/7o+VlnllMarHDCvA=
-X-Received: by 2002:a67:61c7:: with SMTP id v190mr24937528vsb.165.1566481980346;
- Thu, 22 Aug 2019 06:53:00 -0700 (PDT)
+        Thu, 22 Aug 2019 09:53:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24281 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731483AbfHVNxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 09:53:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 06:53:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,416,1559545200"; 
+   d="scan'208";a="203417795"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 22 Aug 2019 06:53:09 -0700
+Received: from tcwomach-mobl1.amr.corp.intel.com (unknown [10.255.34.51])
+        by linux.intel.com (Postfix) with ESMTP id ABF455803A5;
+        Thu, 22 Aug 2019 06:53:06 -0700 (PDT)
+Subject: Re: [RFC PATCH 4/5] ASoC: SOF: Intel: hda: add SoundWire stream
+ config/free callbacks
+To:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20190821201720.17768-1-pierre-louis.bossart@linux.intel.com>
+ <20190821201720.17768-5-pierre-louis.bossart@linux.intel.com>
+ <20190822071835.GA30262@ubuntu>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <f73796d6-fcfa-97c8-69ae-0a183edbbd97@linux.intel.com>
+Date:   Thu, 22 Aug 2019 08:53:06 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190708173330.13217-1-martin.blumenstingl@googlemail.com> <20190708173330.13217-3-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20190708173330.13217-3-martin.blumenstingl@googlemail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 22 Aug 2019 15:52:24 +0200
-Message-ID: <CAPDyKFoFQ_QvHD-+Mg_VAR5rqs3CM_h7dw25p81JTzE1Yz7d1A@mail.gmail.com>
-Subject: Re: [PATCH RFC v1 2/2] mmc: host: meson-mx-sdhc: new driver for the
- Amlogic Meson SDHC host
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, jianxin.pan@amlogic.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190822071835.GA30262@ubuntu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 8 Jul 2019 at 19:33, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> WiP - only partially working - see performance numbers.
->
-> Odroid-C1 eMMC (HS-200):
-> Amlogic's vendor driver @ Linux 3.10:
->   7781351936 bytes (7.8 GB) copied, 134.714 s, 57.8 MB/s
-> This driver:
->   7781351936 bytes (7.8 GB, 7.2 GiB) copied, 189.02 s, 41.2 MB/s
->
-> EC-100 eMMC (HS MMC):
-> Amlogic's vendor driver @ Linux 3.10:
->   15762194432 bytes (16 GB) copied, 422.967 s, 37.3 MB/s
-> This driver:
->   15762194432 bytes (16 GB, 15 GiB) copied, 9232.65 s, 1.7 MB/s
->
-> 1) Amlogic's vendor driver does some magic with the divider:
->       clk_div = input_rate / clk_ios - !(input_rate%clk_ios);
->       if (!(clk_div & 0x01)) // if even number, turn it to an odd one
->          clk_div++;
->    It's not clear to me whether what the reason behind this is, what is
->    supposed to be achieved with this?
->
-> 2) The hardcoded RX clock phases are taken from the vendor driver. It
->    seems that these are only valid when fclk_div3 is used as input
->    clock (however, there are four more inputs). It's not clear to me how
->    to calculate the RX clock phases in set_ios based on the input clock
->    and the ios rate.
->
-> 3) The hardware supports a timeout IRQ but the max_busy_timeout is not
->    documented anywhere.
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Thanks for the review Guennadi
 
-Martin, overall this looks good to me. Once you moved from RFC to a
-formal patch I will check again, of course.
+>> +static int sdw_config_stream(void *arg, void *s, void *dai,
+>> +			     void *params, int link_id, int alh_stream_id)
+> 
+> I realise, that these function prototypes aren't being introduced by these
+> patches, but just wondering whether such overly generic prototype is really
+> a good idea here, whether some of those "void *" pointers could be given
+> real types. The first one could be "struct device *" etc.
 
-There are a couple of calls to readl_poll_timeout(), for different
-reasons, that I have some questions about, but we can discuss those in
-the next step.
+In this case the 'arg' parameter is actually a private 'struct 
+snd_sof_dev', as shown below [1]. We probably want to keep this 
+relatively opaque, this is a context that doesn't need to be exposed to 
+the SoundWire code.
 
-[...]
+The dai and params are indeed cases where we could use stronger types, 
+they are snd_soc_dai and hw_params respectively. I don't recall why the 
+existing code is this way, Vinod and Sanyog may have the history of this.
 
-Kind regards
-Uffe
+> 
+>> +{
+>> +	struct snd_sof_dev *sdev = arg;
+>> +	struct snd_soc_dai *d = dai;
+[1]
+
+>> +	struct sof_ipc_dai_config config;
+>> +	struct sof_ipc_reply reply;
+>> +	int ret;
+>> +	u32 size = sizeof(config);
+>> +
+>> +	memset(&config, 0, size);
+>> +	config.hdr.size = size;
+>> +	config.hdr.cmd = SOF_IPC_GLB_DAI_MSG | SOF_IPC_DAI_CONFIG;
+>> +	config.type = SOF_DAI_INTEL_ALH;
+>> +	config.dai_index = (link_id << 8) | (d->id);
+>> +	config.alh.stream_id = alh_stream_id;
+> 
+> Entirely up to you, in such cases I usually do something like
+> 
+> +	struct sof_ipc_dai_config config = {
+> +		.type = SOF_DAI_INTEL_ALH,
+> +		.hre = {
+> +			.size = sizeof(config),
+> +			.cmd = SOF_IPC_GLB_DAI_MSG | SOF_IPC_DAI_CONFIG,
+> +			...
+> 
+> which then also avoids a memset(). But that's mostly a matter of personal
+> preference, since this is on stack, the compiler would probably internally
+> anyway translate the above initialisation to a memset() with all the
+> following assignments.
+
+I have no preference, so in this case I will go with consistency with 
+existing code, which uses the suggested style for all IPCs.
+
+> 
+>> +
+>> +	/* send message to DSP */
+>> +	ret = sof_ipc_tx_message(sdev->ipc,
+>> +				 config.hdr.cmd, &config, size, &reply,
+>> +				 sizeof(reply));
+>> +	if (ret < 0) {
+>> +		dev_err(sdev->dev,
+>> +			"error: failed to set DAI hw_params for link %d dai->id %d ALH %d\n",
+> 
+> Are readers really expected to understand what "dai->id" means? Wouldn't
+> "DAI ID" be friendlier, although I understand you - who might not know
+> what "x->y" stands for?.. ;-)
+
+I was trying to avoid a confusion here, we have config->dai_index which 
+are shared concepts between topology and firmware, and dai->id which is 
+shared between topology and machine driver (which refers to the dai in 
+the dai_link which has its own .id). In topology files we have the three 
+indices and of course after a couple of weeks I can't recall which one 
+maps to what.
+I am afraid DAI ID might be confused with dai_index. If there are 
+suggestions on this I am all ears, all I care about is avoiding 
+ambiguity and having to ask Ranjani what index this really is :-)
