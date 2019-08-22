@@ -2,52 +2,53 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B166C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A3CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549FF20870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A575233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566496168;
-	bh=tkEmI7RqUTaTZ6SsqJB23aw8Lx/Dj950ZxCE59nDzs0=;
+	s=default; t=1566496181;
+	bh=52G3IbNtdjCFYSivWyFPoNfiYP84vqJ2kmDsyIsh2/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=knuQ7zL8NHeC4cDFaN6ElIM2lx7Y/hyuBJp/YmrTHk0YbDU3RYM4IuYka8YPJn/FX
-	 J2bVbsjKzxyqqhEvdtAtEEHdTSqzWRnN3oBuLJLR7Lqb6rT6acBfSod/AosooXgGLV
-	 XRwgGchJ9SFz69Sfz6m/86H3MKh/xqXnzXdBgUUg=
+	b=ZoWHWYA74D7o/O0BqlXT+CYRDI2uhvkN1ZPoCbWfIMGu0D68UBdv72olmhTGIYmX9
+	 Ui1N0NNn+S5turMiWLPe5me8Ncq/Rp+JLW8EWEa42v0IG2wxI2rnxuZC4gcUyrPDp2
+	 1/JX4vYO54H+l/9aXZoHTq//apFUgX0OYQCLrafs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393390AbfHVRt1 (ORCPT
+        id S2393206AbfHVRrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:49:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40008 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:47:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389710AbfHVRWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:14 -0400
+        id S2391376AbfHVRWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:35 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B60721743;
-        Thu, 22 Aug 2019 17:22:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B649A233FE;
+        Thu, 22 Aug 2019 17:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494534;
-        bh=tkEmI7RqUTaTZ6SsqJB23aw8Lx/Dj950ZxCE59nDzs0=;
+        s=default; t=1566494554;
+        bh=52G3IbNtdjCFYSivWyFPoNfiYP84vqJ2kmDsyIsh2/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WlJPWqs4N11ADUTCaMiW9+Rn6YjeGXNxzmNntS9bDCNnMPXEn2O9QfxTgGZaGdDMq
-         AOwZB3gAOqYTCptuf0dCQXOiJqLmRcLdLGSWf32xBe1LTjzNBOZNtC4dvdZAbrnUl/
-         5HBBCKZZhz6Lo92a9Oq8POGuwm5mOXpwQVO50ei0=
+        b=wXrS+3cORfy/zJtxEKblgi1sNN08mjy6/1hXRrAIozYXFDtQVS+EXpyoMoDUVI715
+         KHoNRoDBQG63b+r64wZCiLflOI7EE8xC29mQmyQYHU7hpL3mEy4U1+9yuPTMQbB+cV
+         mrlr5D2qVsHkbA4nDD25GPfh/+khkinshrh55mAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjoern Gerhart <gerhart@posteo.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 12/78] hwmon: (nct6775) Fix register address and added missed tolerance for nct6106
-Date:   Thu, 22 Aug 2019 10:18:16 -0700
-Message-Id: <20190822171832.398069261@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 32/78] scsi: mpt3sas: Use 63-bit DMA addressing on SAS35 HBA
+Date:   Thu, 22 Aug 2019 10:18:36 -0700
+Message-Id: <20190822171832.973388881@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -60,42 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f3d43e2e45fd9d44ba52d20debd12cd4ee9c89bf ]
+From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 
-Fixed address of third NCT6106_REG_WEIGHT_DUTY_STEP, and
-added missed NCT6106_REG_TOLERANCE_H.
+commit df9a606184bfdb5ae3ca9d226184e9489f5c24f7 upstream.
 
-Fixes: 6c009501ff200 ("hwmon: (nct6775) Add support for NCT6102D/6106D")
-Signed-off-by: Bjoern Gerhart <gerhart@posteo.de>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Although SAS3 & SAS3.5 IT HBA controllers support 64-bit DMA addressing, as
+per hardware design, if DMA-able range contains all 64-bits
+set (0xFFFFFFFF-FFFFFFFF) then it results in a firmware fault.
+
+E.g. SGE's start address is 0xFFFFFFFF-FFFF000 and data length is 0x1000
+bytes. when HBA tries to DMA the data at 0xFFFFFFFF-FFFFFFFF location then
+HBA will fault the firmware.
+
+Driver will set 63-bit DMA mask to ensure the above address will not be
+used.
+
+Cc: <stable@vger.kernel.org> # 5.1.20+
+Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
 ---
- drivers/hwmon/nct6775.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/mpt3sas/mpt3sas_base.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
-index d3c6115f16b90..db38dff3f9867 100644
---- a/drivers/hwmon/nct6775.c
-+++ b/drivers/hwmon/nct6775.c
-@@ -696,7 +696,7 @@ static const u16 NCT6106_REG_TARGET[] = { 0x111, 0x121, 0x131 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_SEL[] = { 0x168, 0x178, 0x188 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_STEP[] = { 0x169, 0x179, 0x189 };
- static const u16 NCT6106_REG_WEIGHT_TEMP_STEP_TOL[] = { 0x16a, 0x17a, 0x18a };
--static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x17c };
-+static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x18b };
- static const u16 NCT6106_REG_WEIGHT_TEMP_BASE[] = { 0x16c, 0x17c, 0x18c };
- static const u16 NCT6106_REG_WEIGHT_DUTY_BASE[] = { 0x16d, 0x17d, 0x18d };
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -1686,9 +1686,11 @@ _base_config_dma_addressing(struct MPT3S
+ {
+ 	struct sysinfo s;
+ 	u64 consistent_dma_mask;
++	/* Set 63 bit DMA mask for all SAS3 and SAS35 controllers */
++	int dma_mask = (ioc->hba_mpi_version_belonged > MPI2_VERSION) ? 63 : 64;
  
-@@ -3478,6 +3478,7 @@ static int nct6775_probe(struct platform_device *pdev)
- 		data->REG_FAN_TIME[0] = NCT6106_REG_FAN_STOP_TIME;
- 		data->REG_FAN_TIME[1] = NCT6106_REG_FAN_STEP_UP_TIME;
- 		data->REG_FAN_TIME[2] = NCT6106_REG_FAN_STEP_DOWN_TIME;
-+		data->REG_TOLERANCE_H = NCT6106_REG_TOLERANCE_H;
- 		data->REG_PWM[0] = NCT6106_REG_PWM;
- 		data->REG_PWM[1] = NCT6106_REG_FAN_START_OUTPUT;
- 		data->REG_PWM[2] = NCT6106_REG_FAN_STOP_OUTPUT;
--- 
-2.20.1
-
+ 	if (ioc->dma_mask)
+-		consistent_dma_mask = DMA_BIT_MASK(64);
++		consistent_dma_mask = DMA_BIT_MASK(dma_mask);
+ 	else
+ 		consistent_dma_mask = DMA_BIT_MASK(32);
+ 
+@@ -1696,11 +1698,11 @@ _base_config_dma_addressing(struct MPT3S
+ 		const uint64_t required_mask =
+ 		    dma_get_required_mask(&pdev->dev);
+ 		if ((required_mask > DMA_BIT_MASK(32)) &&
+-		    !pci_set_dma_mask(pdev, DMA_BIT_MASK(64)) &&
++		    !pci_set_dma_mask(pdev, DMA_BIT_MASK(dma_mask)) &&
+ 		    !pci_set_consistent_dma_mask(pdev, consistent_dma_mask)) {
+ 			ioc->base_add_sg_single = &_base_add_sg_single_64;
+ 			ioc->sge_size = sizeof(Mpi2SGESimple64_t);
+-			ioc->dma_mask = 64;
++			ioc->dma_mask = dma_mask;
+ 			goto out;
+ 		}
+ 	}
+@@ -1726,7 +1728,7 @@ static int
+ _base_change_consistent_dma_mask(struct MPT3SAS_ADAPTER *ioc,
+ 				      struct pci_dev *pdev)
+ {
+-	if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64))) {
++	if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(ioc->dma_mask))) {
+ 		if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32)))
+ 			return -ENODEV;
+ 	}
+@@ -3325,7 +3327,7 @@ _base_allocate_memory_pools(struct MPT3S
+ 		total_sz += sz;
+ 	} while (ioc->rdpq_array_enable && (++i < ioc->reply_queue_count));
+ 
+-	if (ioc->dma_mask == 64) {
++	if (ioc->dma_mask > 32) {
+ 		if (_base_change_consistent_dma_mask(ioc, ioc->pdev) != 0) {
+ 			pr_warn(MPT3SAS_FMT
+ 			    "no suitable consistent DMA mask for %s\n",
 
 
