@@ -2,235 +2,247 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56099C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E56EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE0B206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3F6206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:29:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JVE0MbAL"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="jo6+B+Np"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732705AbfHVM2S (ORCPT
+        id S1732778AbfHVM3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:28:18 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:51274 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731393AbfHVM2R (ORCPT
+        Thu, 22 Aug 2019 08:29:55 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36064 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729212AbfHVM3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:28:17 -0400
+        Thu, 22 Aug 2019 08:29:54 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g67so5591958wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 05:29:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566476897; x=1598012897;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=6jGO3GKdtMlkptHboxb/29pWETQeNc5OyEC5UrcFIn0=;
-  b=JVE0MbAL7oJ1yYZkxVUoitjdNSyu3+W3GHAA20PL9IGJyWq807Vpl0R8
-   o/sTYyD+gKfhqL3CWgZYA6Vvc9MLbj9ViRZxtwo+O1UwiusXhnpl11mfx
-   XMIjI05bPOXhXcip066gjuAqsMR6jPLgdAn2aWVgswqfY8BkqVLCGHjuQ
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.64,416,1559520000"; 
-   d="scan'208";a="416934097"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 22 Aug 2019 12:28:13 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (Postfix) with ESMTPS id B7551A2796;
-        Thu, 22 Aug 2019 12:28:11 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 22 Aug 2019 12:28:11 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.67) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 22 Aug 2019 12:28:07 +0000
-Subject: Re: [PATCH v5 13/20] RISC-V: KVM: Implement stage2 page table
- programming
-To:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190822084131.114764-1-anup.patel@wdc.com>
- <20190822084131.114764-14-anup.patel@wdc.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <77b9ff3c-292f-ee17-ddbb-134c0666fde7@amazon.com>
-Date:   Thu, 22 Aug 2019 14:28:05 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        d=android.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gzVL8rDH4XSsN4Vadk8YEc7OcsBJCS9WRckj0x2C9Ng=;
+        b=jo6+B+NpeyoMYop+k8YaZLPGyu9ng5kpuG+vz4e+uEg0XA4IL9M3+BxBzgSZRtGwL+
+         s+10j+X6pNtZhI76jyPX3eIodKSoF+pfFAW2rPFu29tImIAmnJJTCYkDEyCUOABrqpyM
+         LRugCuLZzp3iC8q2r2yipyqL64I8DWruZ2rzGbWuRFG6MVxqgJ2zlv6HTMQ7bhiCFtza
+         I1c1yW8oYEjln+Plulp2reEQMKP2rxVhajR/qoFVbfx8/UHcFcTPR99sOFk2DRuy81aC
+         cW4T38dhHMttNZAzKzIJ22KOliC5ONTAih0rRMsp0TRXbE3RT9X/5r3dA4XdOOFG75aH
+         ypAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gzVL8rDH4XSsN4Vadk8YEc7OcsBJCS9WRckj0x2C9Ng=;
+        b=iFvQMgQEkXE6gepitqtV21RDqaeshGCht40WwRviBZ6EWvuupxW+zmPmLhTyqTIDoB
+         LXXJeovCMe457V8mMA4czHIbeSlIJQyub+yDzybzgDAc8PBjwbi7vyrsqs1oBi+jtvYL
+         JWs+tVaCDmHZnEZxubzmdRRJzFJ5FkTwAc5WxLIZ+++i6CEa3aFc3HSrhn+Cnh5zRWv/
+         AwmXwAkRiYyHz84AZjx8TurZgY+gQ9S71KwKO0563iWP8pH4fcztRdu1LuXHmKZxxGCY
+         9WZpiZPDU1fJnDFG06LgVHLyxi3SQq0Uroovrvd9kMZxOIrVr7bWH3ahHN0/ksv7Tlfl
+         yNgw==
+X-Gm-Message-State: APjAAAXRC2FWEhPysRCFlP/l+lqAU5tRc/P3F+y3iq9CSoe9vtAWn9wH
+        Ba1DOBs8k3dahgCnVUUSgwIdXQ==
+X-Google-Smtp-Source: APXvYqx4LnQ+mAcp8cDDK0S1ahpLGmUy9KpuKp1HNeHAho8YzwnoyQ3sHFxGNGxJWABsAzxcpmujPg==
+X-Received: by 2002:a1c:9950:: with SMTP id b77mr6301928wme.46.1566476991805;
+        Thu, 22 Aug 2019 05:29:51 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e751:37a0:1e95:e65d])
+        by smtp.gmail.com with ESMTPSA id f6sm54981340wrh.30.2019.08.22.05.29.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 05:29:51 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 13:29:49 +0100
+From:   Alessio Balsini <balsini@android.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, juri.lelli@redhat.com,
+        linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com,
+        luca.abeni@santannapisa.it, bristot@redhat.com, dvyukov@google.com,
+        tglx@linutronix.de, vpillai@digitalocean.com, rostedt@goodmis.org,
+        kernel-team@android.com
+Subject: Re: [RFC][PATCH 01/13] sched/deadline: Impose global limits on
+ sched_attr::sched_period
+Message-ID: <20190822122949.GA245353@google.com>
+References: <20190726145409.947503076@infradead.org>
+ <20190726161357.397880775@infradead.org>
+ <20190802172104.GA134279@google.com>
+ <20190805115309.GJ2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190822084131.114764-14-anup.patel@wdc.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.162.67]
-X-ClientProxiedBy: EX13D01UWB002.ant.amazon.com (10.43.161.136) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190805115309.GJ2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.08.19 10:45, Anup Patel wrote:
-> This patch implements all required functions for programming
-> the stage2 page table for each Guest/VM.
+On Mon, Aug 05, 2019 at 01:53:09PM +0200, Peter Zijlstra wrote:
 > 
-> At high-level, the flow of stage2 related functions is similar
-> from KVM ARM/ARM64 implementation but the stage2 page table
-> format is quite different for KVM RISC-V.
+> Like so?
 > 
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/riscv/include/asm/kvm_host.h     |  10 +
->   arch/riscv/include/asm/pgtable-bits.h |   1 +
->   arch/riscv/kvm/mmu.c                  | 637 +++++++++++++++++++++++++-
->   3 files changed, 638 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> index 3b09158f80f2..a37775c92586 100644
-> --- a/arch/riscv/include/asm/kvm_host.h
-> +++ b/arch/riscv/include/asm/kvm_host.h
-> @@ -72,6 +72,13 @@ struct kvm_mmio_decode {
->   	int shift;
->   };
->   
-> +#define KVM_MMU_PAGE_CACHE_NR_OBJS	32
-> +
-> +struct kvm_mmu_page_cache {
-> +	int nobjs;
-> +	void *objects[KVM_MMU_PAGE_CACHE_NR_OBJS];
-> +};
-> +
->   struct kvm_cpu_context {
->   	unsigned long zero;
->   	unsigned long ra;
-> @@ -163,6 +170,9 @@ struct kvm_vcpu_arch {
->   	/* MMIO instruction details */
->   	struct kvm_mmio_decode mmio_decode;
->   
-> +	/* Cache pages needed to program page tables with spinlock held */
-> +	struct kvm_mmu_page_cache mmu_page_cache;
-> +
->   	/* VCPU power-off state */
->   	bool power_off;
->   
-> diff --git a/arch/riscv/include/asm/pgtable-bits.h b/arch/riscv/include/asm/pgtable-bits.h
-> index bbaeb5d35842..be49d62fcc2b 100644
-> --- a/arch/riscv/include/asm/pgtable-bits.h
-> +++ b/arch/riscv/include/asm/pgtable-bits.h
-> @@ -26,6 +26,7 @@
->   
->   #define _PAGE_SPECIAL   _PAGE_SOFT
->   #define _PAGE_TABLE     _PAGE_PRESENT
-> +#define _PAGE_LEAF      (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC)
->   
->   /*
->    * _PAGE_PROT_NONE is set on not-present pages (and ignored by the hardware) to
-> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-> index 2b965f9aac07..9e95ab6769f6 100644
-> --- a/arch/riscv/kvm/mmu.c
-> +++ b/arch/riscv/kvm/mmu.c
-> @@ -18,6 +18,432 @@
->   #include <asm/page.h>
->   #include <asm/pgtable.h>
->   
-> +#ifdef CONFIG_64BIT
-> +#define stage2_have_pmd		true
-> +#define stage2_gpa_size		((phys_addr_t)(1ULL << 39))
-> +#define stage2_cache_min_pages	2
-> +#else
-> +#define pmd_index(x)		0
-> +#define pfn_pmd(x, y)		({ pmd_t __x = { 0 }; __x; })
-> +#define stage2_have_pmd		false
-> +#define stage2_gpa_size		((phys_addr_t)(1ULL << 32))
-> +#define stage2_cache_min_pages	1
-> +#endif
-> +
-> +static int stage2_cache_topup(struct kvm_mmu_page_cache *pcache,
-> +			      int min, int max)
-> +{
-> +	void *page;
-> +
-> +	BUG_ON(max > KVM_MMU_PAGE_CACHE_NR_OBJS);
-> +	if (pcache->nobjs >= min)
-> +		return 0;
-> +	while (pcache->nobjs < max) {
-> +		page = (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
-> +		if (!page)
-> +			return -ENOMEM;
-> +		pcache->objects[pcache->nobjs++] = page;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void stage2_cache_flush(struct kvm_mmu_page_cache *pcache)
-> +{
-> +	while (pcache && pcache->nobjs)
-> +		free_page((unsigned long)pcache->objects[--pcache->nobjs]);
-> +}
-> +
-> +static void *stage2_cache_alloc(struct kvm_mmu_page_cache *pcache)
-> +{
-> +	void *p;
-> +
-> +	if (!pcache)
-> +		return NULL;
-> +
-> +	BUG_ON(!pcache->nobjs);
-> +	p = pcache->objects[--pcache->nobjs];
-> +
-> +	return p;
-> +}
-> +
-> +struct local_guest_tlb_info {
-> +	struct kvm_vmid *vmid;
-> +	gpa_t addr;
-> +};
-> +
-> +static void local_guest_tlb_flush_vmid_gpa(void *info)
-> +{
-> +	struct local_guest_tlb_info *infop = info;
-> +
-> +	__kvm_riscv_hfence_gvma_vmid_gpa(READ_ONCE(infop->vmid->vmid_version),
-> +					 infop->addr);
-> +}
-> +
-> +static void stage2_remote_tlb_flush(struct kvm *kvm, gpa_t addr)
-> +{
-> +	struct local_guest_tlb_info info;
-> +	struct kvm_vmid *vmid = &kvm->arch.vmid;
-> +
-> +	/* TODO: This should be SBI call */
-> +	info.vmid = vmid;
-> +	info.addr = addr;
-> +	preempt_disable();
-> +	smp_call_function_many(cpu_all_mask, local_guest_tlb_flush_vmid_gpa,
-> +			       &info, true);
 
-This is all nice and dandy on the toy 4 core systems we have today, but 
-it will become a bottleneck further down the road.
+Yes, that's exactly what I meant!
+What about this refactoring?
 
-How many VMIDs do you have? Could you just allocate a new one every time 
-you switch host CPUs? Then you know exactly which CPUs to flush by 
-looking at all your vcpu structs and a local field that tells you which 
-pCPU they're on at this moment.
+Thanks,
+Alessio
 
-Either way, it's nothing that should block inclusion. For today, we're fine.
+---
+From 459d5488acb3fac938b0f35f480a81a6e401ef92 Mon Sep 17 00:00:00 2001
+From: Alessio Balsini <balsini@android.com>
+Date: Thu, 22 Aug 2019 12:55:55 +0100
+Subject: [PATCH] sched/deadline: Impose global limits on
+ sched_attr::sched_period
+
+There are two DoS scenarios with SCHED_DEADLINE related to
+sched_attr::sched_period:
+
+ - since access-control only looks at utilization and density, a very
+   large period can allow a very large runtime, which in turn can
+   incur a very large latency to lower priority tasks.
+
+ - for very short periods we can end up spending more time programming
+   the hardware timer than actually running the task.
+
+Mitigate these by imposing limits on the period.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Alessio Balsini <balsini@android.com>
+---
+ include/linux/sched/sysctl.h |  7 +++++
+ kernel/sched/deadline.c      | 51 ++++++++++++++++++++++++++++++++++--
+ kernel/sysctl.c              | 14 ++++++++++
+ 3 files changed, 70 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+index d4f6215ee03f7..7c8ef07e52133 100644
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -56,6 +56,13 @@ int sched_proc_update_handler(struct ctl_table *table, int write,
+ extern unsigned int sysctl_sched_rt_period;
+ extern int sysctl_sched_rt_runtime;
+ 
++extern unsigned int sysctl_sched_dl_period_max;
++extern unsigned int sysctl_sched_dl_period_min;
++
++extern int sched_dl_period_handler(struct ctl_table *table, int write,
++		void __user *buffer, size_t *lenp,
++		loff_t *ppos);
++
+ #ifdef CONFIG_UCLAMP_TASK
+ extern unsigned int sysctl_sched_uclamp_util_min;
+ extern unsigned int sysctl_sched_uclamp_util_max;
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 0b9cbfb2b1d4f..fcdf70d9c0516 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -2640,6 +2640,42 @@ void __getparam_dl(struct task_struct *p, struct sched_attr *attr)
+ 	attr->sched_flags = dl_se->flags;
+ }
+ 
++/*
++ * Default limits for DL period: on the top end we guard against small util
++ * tasks still getting ridiculous long effective runtimes, on the bottom end we
++ * guard against timer DoS.
++ */
++unsigned int sysctl_sched_dl_period_max = 1 << 22; /* ~4 seconds */
++unsigned int sysctl_sched_dl_period_min = 100;     /* 100 us */
++
++int sched_dl_period_handler(struct ctl_table *table, int write,
++			    void __user *buffer, size_t *lenp,
++			    loff_t *ppos)
++{
++	unsigned int old_max, old_min;
++	static DEFINE_MUTEX(mutex);
++	int ret;
++
++	mutex_lock(&mutex);
++	old_max = sysctl_sched_dl_period_max;
++	old_min = sysctl_sched_dl_period_min;
++
++	ret = proc_douintvec(table, write, buffer, lenp, ppos);
++	if (!ret && write) {
++		u64 max = (u64)sysctl_sched_dl_period_max * NSEC_PER_USEC;
++		u64 min = (u64)sysctl_sched_dl_period_min * NSEC_PER_USEC;
++
++		if (min < 1ULL << DL_SCALE || max < min) {
++			sysctl_sched_dl_period_max = old_max;
++			sysctl_sched_dl_period_min = old_min;
++			ret = -EINVAL;
++		}
++	}
++	mutex_unlock(&mutex);
++
++	return ret;
++}
++
+ /*
+  * This function validates the new parameters of a -deadline task.
+  * We ask for the deadline not being zero, and greater or equal
+@@ -2652,6 +2688,8 @@ void __getparam_dl(struct task_struct *p, struct sched_attr *attr)
+  */
+ bool __checkparam_dl(const struct sched_attr *attr)
+ {
++	u64 period, max, min;
++
+ 	/* special dl tasks don't actually use any parameter */
+ 	if (attr->sched_flags & SCHED_FLAG_SUGOV)
+ 		return true;
+@@ -2675,12 +2713,21 @@ bool __checkparam_dl(const struct sched_attr *attr)
+ 	    attr->sched_period & (1ULL << 63))
+ 		return false;
+ 
++	period = attr->sched_period;
++	if (!period)
++		period = attr->sched_deadline;
++
+ 	/* runtime <= deadline <= period (if period != 0) */
+-	if ((attr->sched_period != 0 &&
+-	     attr->sched_period < attr->sched_deadline) ||
++	if (period < attr->sched_deadline ||
+ 	    attr->sched_deadline < attr->sched_runtime)
+ 		return false;
+ 
++	max = (u64)READ_ONCE(sysctl_sched_dl_period_max) * NSEC_PER_USEC;
++	min = (u64)READ_ONCE(sysctl_sched_dl_period_min) * NSEC_PER_USEC;
++
++	if (period < min || period > max)
++		return false;
++
+ 	return true;
+ }
+ 
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 078950d9605ba..0d07e4707e9d2 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -442,6 +442,20 @@ static struct ctl_table kern_table[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= sched_rt_handler,
+ 	},
++	{
++		.procname	= "sched_deadline_period_max_us",
++		.data		= &sysctl_sched_dl_period_max,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= sched_dl_period_handler,
++	},
++	{
++		.procname	= "sched_deadline_period_min_us",
++		.data		= &sysctl_sched_dl_period_min,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= sched_dl_period_handler,
++	},
+ 	{
+ 		.procname	= "sched_rr_timeslice_ms",
+ 		.data		= &sysctl_sched_rr_timeslice,
+-- 
+2.23.0.187.g17f5b7556c-goog
 
 
-Alex
