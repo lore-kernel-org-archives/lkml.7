@@ -2,97 +2,94 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F267BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A43C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C02D0233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:59:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWkmECEl"
+	by mail.kernel.org (Postfix) with ESMTP id C85A02173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388824AbfHVM7F (ORCPT
+        id S2388838AbfHVM7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:59:05 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:41777 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388104AbfHVM7F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:59:05 -0400
-Received: by mail-qk1-f196.google.com with SMTP id g17so4972361qkk.8;
-        Thu, 22 Aug 2019 05:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hgTctn29ieSv42p2+UtUFKnO4/1RmHVD+YhjeOyxIkc=;
-        b=EWkmECElqhtsrNcDzn/8gJrVEyuTH1LM8EeTirRu6j4hw16YSC/ShSf13iIJwM+lEg
-         HI/Xaa/mIQzx03+OV+jZ+yMvTsNOBugf9QgcSOvSVz0seHqgETn9XdwOCDzSDrLZ6QRM
-         P4YoY925I+dUFpyyC06GaMWTWaqIAub97oqThKyygb1GxhcVgqELF+vBZcHIQbWBfBZn
-         7KPN/hjwmh7dvVkRTJsYeOtmNp2q0y5HRas9Tjld0rTRzzM1zaNuLa8Pgm0gXCqfs5RM
-         YE7ec9stdw3EuNcSvywrt8gxcIFeMlsuGAdWqfuiVhM1rfgY3GUxWel4kC/OcqdVUGT7
-         PJcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hgTctn29ieSv42p2+UtUFKnO4/1RmHVD+YhjeOyxIkc=;
-        b=YEY1u3DhsUoLyJKFSdjL+HQJONJ+No93TCku+54V5ltA7k0p2UG1prmB142fn4OMTP
-         LqeUB/9srZh1oPXDWurSJ7NiWg0jL3tfHADZ5c9SUy6Wo7c0Plh470p7EAIxikAwOaqA
-         u/49ZaFoy//Pt8EczmMUZScP5U3vaeJUS+a6WjepL5KB1FkUAw/HWma6Uq9IIH6WoH6Q
-         e2+BUnZ7vXpuH7/yu1VyRmvHWNaRb7j1tTdVhuFiv4KX7Eaixn6p3ECbaGa2gnMYn045
-         +Ahmkgc1q9zuUFUzgBFPRQsRPR3BGRqd5CYKSlY599+ISNn6J+rJaLJ2ha7rplR/CNGi
-         6xcA==
-X-Gm-Message-State: APjAAAW7L5p2lDwdKJvfimLxCHOeIdoJGWUkgmuFoppZmXuVOIqUb7OW
-        wGa+W9YPSLBOQak3UTnQoDMplboa
-X-Google-Smtp-Source: APXvYqxBzrFOaOTMQLkBXGPUP5i5IIF1I2NgcDOCjyFnzR2FN1V85TTPRbD+YqOZ9Zssy9F1QgDVjw==
-X-Received: by 2002:a37:4dc5:: with SMTP id a188mr35732368qkb.206.1566478743913;
-        Thu, 22 Aug 2019 05:59:03 -0700 (PDT)
-Received: from Davids-MacBook-Pro.local ([2604:2000:e8c5:d400:18a2:a8d5:6394:8e1f])
-        by smtp.googlemail.com with ESMTPSA id n66sm11210601qkf.89.2019.08.22.05.59.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 05:59:03 -0700 (PDT)
-Subject: Re: [PATCH] nexthops: remove redundant assignment to variable err
-To:     Colin King <colin.king@canonical.com>,
-        David Ahern <dsahern@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190822125340.30783-1-colin.king@canonical.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <ad6d4f72-c299-5704-31ee-a300c9c67396@gmail.com>
-Date:   Thu, 22 Aug 2019 08:59:02 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Thu, 22 Aug 2019 08:59:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48218 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387779AbfHVM7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:59:33 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1C3EE18C4261;
+        Thu, 22 Aug 2019 12:59:33 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 406585D772;
+        Thu, 22 Aug 2019 12:59:28 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id C5CFA223CFC; Thu, 22 Aug 2019 08:59:27 -0400 (EDT)
+Date:   Thu, 22 Aug 2019 08:59:27 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Liu Bo <bo.liu@linux.alibaba.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu,
+        stefanha@redhat.com, dgilbert@redhat.com,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Peng Tao <tao.peng@linux.alibaba.com>
+Subject: Re: [PATCH 11/19] fuse, dax: Implement dax read/write operations
+Message-ID: <20190822125927.GA8999@redhat.com>
+References: <20190821175720.25901-1-vgoyal@redhat.com>
+ <20190821175720.25901-12-vgoyal@redhat.com>
+ <20190821194934.rqswgc52juisunl2@US-160370MP2.local>
 MIME-Version: 1.0
-In-Reply-To: <20190822125340.30783-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821194934.rqswgc52juisunl2@US-160370MP2.local>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Thu, 22 Aug 2019 12:59:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/19 8:53 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Wed, Aug 21, 2019 at 12:49:34PM -0700, Liu Bo wrote:
+
+[..]
+> > +static int iomap_begin_upgrade_mapping(struct inode *inode, loff_t pos,
+> > +					 loff_t length, unsigned flags,
+> > +					 struct iomap *iomap)
+> > +{
+> > +	struct fuse_inode *fi = get_fuse_inode(inode);
+> > +	struct fuse_dax_mapping *dmap;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * Take exclusive lock so that only one caller can try to setup
+> > +	 * mapping and others wait.
+> > +	 */
+> > +	down_write(&fi->i_dmap_sem);
+> > +	dmap = fuse_dax_interval_tree_iter_first(&fi->dmap_tree, pos, pos);
+> > +
+> > +	/* We are holding either inode lock or i_mmap_sem, and that should
+> > +	 * ensure that dmap can't reclaimed or truncated and it should still
+> > +	 * be there in tree despite the fact we dropped and re-acquired the
+> > +	 * lock.
+> > +	 */
+> > +	ret = -EIO;
+> > +	if (WARN_ON(!dmap))
+> > +		goto out_err;
+> > +
+> > +	/* Maybe another thread already upgraded mapping while we were not
+> > +	 * holding lock.
+> > +	 */
+> > +	if (dmap->writable)
+> > +		goto out_fill_iomap;
 > 
-> Variable err is initialized to a value that is never read and it is
-> re-assigned later. The initialization is redundant and can be removed.
-> 
-> Addresses-Coverity: ("Unused Value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  net/ipv4/nexthop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> @ret needs to be reset here.
 > 
 
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Good catch. Will fix it.
+
+Vivek
