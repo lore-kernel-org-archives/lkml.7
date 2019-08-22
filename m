@@ -2,141 +2,129 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB33C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB44C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD6F2342F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BDC2342E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E8c1BVe7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQ7p6IVC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731444AbfHVIcb (ORCPT
+        id S1732405AbfHVIdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:32:31 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33986 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbfHVIcb (ORCPT
+        Thu, 22 Aug 2019 04:33:16 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51196 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfHVIdP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:32:31 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s18so4572023wrn.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:32:29 -0700 (PDT)
+        Thu, 22 Aug 2019 04:33:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v15so4742685wml.0;
+        Thu, 22 Aug 2019 01:33:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4b70yh01yux8LseDePSC/DiDISC+4IVFYV73p/rz2+o=;
-        b=E8c1BVe7EBu6yhtFK7db335Fb1S6eHZXaT/G0r9s6o7yCfITCEzNdfIuD0wirYp7vb
-         MjBwnsVUgiHDSiSTUkyjG1wIB9iwROJpD58qta21td0tKHQDUmwhpZdduxFB2zp6sebi
-         jvUrA8A2D58nA2kFTgHoHam8Ya25z0Z5isgC5uLEVljRxOWdTmXYFCNu7V4jDwDYcxXO
-         Tn/AhSkcu56p/oJC8gZNa9b0VNYEfc0WGmMiTJsmx6lTnUJ/u4ugOnZ+1Lqv9VyOuAkr
-         NNngborlwcNM9CtXvqO9XoNQpVYvf7o4NuBeerxAGsY42aYL3eOxwqRmbKc320uBtg6u
-         wCNA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7EauMan5wC2oHmJwa9VSCeeLzs1qH85S7tn6KqheO0Y=;
+        b=OQ7p6IVC1NIw7fex5ur1IYa1YmEGcmleiVeN1rAeX0LVjJz/+s8L+/4nTeG0Tr2Zm7
+         KOdjCjmLzgRxyDZjhzwqrfcOYWmX7FWZv8dwg8zAJOdeAQqNRxSiTXIiw7hwH7dofsmW
+         CMveJQR7Vtpbpz95ituoxFtAjIhxDa0pF6ZgZvqZuaiPAe4Z75dCgIrcLYaoBDHnN0vF
+         r7jwHMqyAir8eYR8R4oYIEpdspGiSRf1vVIYgjpklTqJSbOTmKcQuUOGJxlneCaO5wD3
+         hyXv99UXj/cNZ92Fi/DurOZsSnoGXeDaOwQDzubRKWZ6rB0ZDZaABc4b6rWXLOuYikjn
+         7Fkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4b70yh01yux8LseDePSC/DiDISC+4IVFYV73p/rz2+o=;
-        b=WqbzcC4BpPhkW8OIdjhNMBRfcym4WlaabmJ2oWC84EMiZMrMfHHX8XSqp6Fl4WiM8/
-         UUpcc/gd6mL7pIGfK2OosaOoXmiRNKGougc8xK20Xsh6DRa+F8IN1OVLa4E/oUIyGPyK
-         R967GgklpH3XEkqQ6oUJb8pY0Cb7yBsmTchFuLfwFyZg5SB+EHbKuH5lt8XzRfOJUq0V
-         0OCvL/CPtLPM2Ef2teFU/k9xptmRDfXF2V1EDzZqpCEfJnNSU3Dj3zS3VbgEYv9BkGiu
-         ZQmqUbh5IDPwsLO/dvHWH/XOY1wRW0fV2BM9zoI6pi/7nicXXqjRHjF3jRL9JOGcb+Rd
-         1CSA==
-X-Gm-Message-State: APjAAAV2sXZCCiS1cnf77VNmwQVESMi1x3kT9dwlrB7hqW+gVQKFqAZw
-        DjOAmcOfmY6Fvuv4nsOT7BEuuLTqbUsbAJZO
-X-Google-Smtp-Source: APXvYqzhncQ2sLyFAXkyHMIdbyY5WIElP1PH9XUf0yABxgLd2l6QYEsJKT4aB0mYksaQ3+iKPSinPA==
-X-Received: by 2002:a5d:4ec6:: with SMTP id s6mr7356600wrv.327.1566462748883;
-        Thu, 22 Aug 2019 01:32:28 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id p4sm22917436wrs.6.2019.08.22.01.32.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 01:32:27 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 09:32:23 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        arnd@arndb.de, geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        hpa@zytor.com, jeyu@kernel.org, joel@joelfernandes.org,
-        kstewart@linuxfoundation.org, linux-arch@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-modules@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-usb@vger.kernel.org, lucas.de.marchi@gmail.com,
-        maco@android.com, maco@google.com, michal.lkml@markovi.net,
-        mingo@redhat.com, oneukum@suse.com, pombredanne@nexb.com,
-        sam@ravnborg.org, sspatil@google.com, stern@rowland.harvard.edu,
-        tglx@linutronix.de, usb-storage@lists.one-eyed-alien.net,
-        x86@kernel.org, yamada.masahiro@socionext.com
-Subject: Re: [PATCH v3 10/11] RFC: usb-storage: export symbols in USB_STORAGE
- namespace
-Message-ID: <20190822083223.GA15709@google.com>
-References: <20190813121733.52480-1-maennich@google.com>
- <20190821114955.12788-1-maennich@google.com>
- <20190821114955.12788-11-maennich@google.com>
- <20190821231329.GA369@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7EauMan5wC2oHmJwa9VSCeeLzs1qH85S7tn6KqheO0Y=;
+        b=ip+UcbIt20XKBAPtc6xuI9SVPVFBbUHzVc+oPyAJc3weaz78VJ7HXYJC4L2r+uGFWV
+         3MF+Admcon4HKRK8kQNcVwFjhFe5mhpW3WJO8NUlVTe+ngtN60AepJQyCICMPXTBdSIv
+         OXnWN/LMWjwoBT7z4yTRB+jRHRt1HgcqgHdl2SZgqEGVJ5FuFdTTKCxxRcd896Rmg14a
+         WAjgm3366k87/Csu+Ix7xYh5mF4hZnH2TAU90YDezr7gc2yyXsRcepLS/g14IvoDVYDs
+         EJjKNZLSATIY9gv3L8qj0niFle3/b6mLXxingapjB1byWcSoOZgwZCn/sNE2rGEGowHe
+         zy6g==
+X-Gm-Message-State: APjAAAV10Ut5CLAsGAMpKzauMCpgjU2m3f/jPCEF8dcvpO94AC6mRyZC
+        aeRPktJMDSfvfpHgV66Ja5/7ZybYFtEDff9F1HM=
+X-Google-Smtp-Source: APXvYqwp3ugo/OV/r/Cwj2DfvvMbvNm+soB016hMmOviIAU2t8QWMrxQSxMeAbb9I1qyMe3BKgqWpfLfM68frYMNOPU=
+X-Received: by 2002:a7b:c155:: with SMTP id z21mr4840886wmi.137.1566462793252;
+ Thu, 22 Aug 2019 01:33:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190821231329.GA369@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1323459733.69859.1566234633793.JavaMail.zimbra@nod.at>
+ <20190819204504.GB10075@hsiangkao-HP-ZHAN-66-Pro-G1> <CAFLxGvxr2UMeVa29M9pjLtWMFPz7w6udRV38CRxEF1moyA9_Rw@mail.gmail.com>
+ <20190821220251.GA3954@hsiangkao-HP-ZHAN-66-Pro-G1>
+In-Reply-To: <20190821220251.GA3954@hsiangkao-HP-ZHAN-66-Pro-G1>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Thu, 22 Aug 2019 10:33:01 +0200
+Message-ID: <CAFLxGvzLPgD22pVOV_jz1EvC-c7YU_2dEFbBt4q08bSkZ3U0Dg@mail.gmail.com>
+Subject: Re: erofs: Question on unused fields in on-disk structs
+To:     Gao Xiang <hsiangkao@aol.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 04:13:29PM -0700, Christoph Hellwig wrote:
->On Wed, Aug 21, 2019 at 12:49:25PM +0100, Matthias Maennich wrote:
->> Modules using these symbols are required to explicitly import the
->> namespace. This patch was generated with the following steps and serves
->> as a reference to use the symbol namespace feature:
->>
->>  1) Define DEFAULT_SYMBOL_NAMESPACE in the corresponding Makefile
->>  2) make  (see warnings during modpost about missing imports)
->>  3) make nsdeps
->>
->> Instead of a DEFAULT_SYMBOL_NAMESPACE definition, the EXPORT_SYMBOL_NS
->> variants can be used to explicitly specify the namespace. The advantage
->> of the method used here is that newly added symbols are automatically
->> exported and existing ones are exported without touching their
->> respective EXPORT_SYMBOL macro expansion.
+On Thu, Aug 22, 2019 at 12:03 AM Gao Xiang <hsiangkao@aol.com> wrote:
 >
->So what is USB_STORAGE here?  It isn't a C string, so where does it
->come from?  To me using a C string would seem like the nicer interface
->vs a random cpp symbol that gets injected somewhere.
+> Hi Richard,
+>
+> On Wed, Aug 21, 2019 at 11:37:30PM +0200, Richard Weinberger wrote:
+> > Gao Xiang,
+> >
+> > On Mon, Aug 19, 2019 at 10:45 PM Gao Xiang via Linux-erofs
+> > <linux-erofs@lists.ozlabs.org> wrote:
+> > > > struct erofs_super_block has "checksum" and "features" fields,
+> > > > but they are not used in the source.
+> > > > What is the plan for these?
+> > >
+> > > Yes, both will be used laterly (features is used for compatible
+> > > features, we already have some incompatible features in 5.3).
+> >
+> > Good. :-)
+> > I suggest to check the fields being 0 right now.
+> > Otherwise you are in danger that they get burned if an mkfs.erofs does not
+> > initialize the fields.
+>
+> Sorry... I cannot get the point...
 
-To be honest, I would also prefer an interface that uses C strings or
-literals for the new EXPORT_SYMBOLS* macros:
+Sorry for being unclear, let me explain in more detail.
 
-  EXPORT_SYMBOL_NS(mysym, "USB_STORAGE");
+> super block chksum could be a compatible feature right? which means
+> new kernel can support it (maybe we can add a warning if such image
+> doesn't have a chksum then when mounting) but old kernel doesn't
+> care it.
 
-  or
+Yes. But you need some why to indicate that the chksum field is now
+valid and must be used.
 
-  const char USB_STORAGE_NS[] = "USB_STORAGE";
-  EXPORT_SYMBOL_NS(mysym, USB_STORAGE_NS);
+The features field can be used for that, but you don't use it right now.
+I recommend to check it for being 0, 0 means then "no features".
+If somebody creates in future a erofs with more features this code
+can refuse to mount because it does not support these features.
 
-The DEFAULT_SYMBOL_NAMESPACE define within Makefiles would get a bit
-more verbose in that case to express the literal:
-  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE="\"USB_STORAGE\""
+But be very sure that existing erofs filesystems actually have this field
+set to 0 or something other which is always the same.
+Otherwise you cannot use the field anymore because it could be anything.
+A common bug is that the mkfs program keeps such unused fields
+uninitialized and then it can be a more or less random value without
+notice.
 
+> Or maybe you mean these reserved fields? I have no idea all other
+> filesystems check these fields to 0 or not... But I think it should
+> be used with some other flag is set rather than directly use, right?
 
-The main reason against that, is, that in the expansion of
-EXPORT_SYMBOL_NS, we define the ksymtab entry, which name is
-constructed partly by the name of the namespace:
+Basically you want a way to know when a field shall be used and when not.
+Most filesystems have version/feature fields. Often multiple to denote different
+levels of compatibility.
 
-   static const struct kernel_symbol __ksymtab_##sym##__##ns  ...
-                                                        ^^^^
-
-For that we depend on a cpp symbol to construct the name. I am not sure
-there is a reasonable way of getting rid of that without ending up
-constructing the ksymtab entries completely in asm as it is already done
-in case of PREL32_RELOCATIONS. But I am happy to be corrected.
-
-For reference that is done in patch 03/11 of this series:
-https://lore.kernel.org/lkml/20190821114955.12788-4-maennich@google.com/
-
-Cheers,
-Matthias
+-- 
+Thanks,
+//richard
