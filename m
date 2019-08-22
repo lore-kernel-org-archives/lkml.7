@@ -2,425 +2,110 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB18C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE08DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD7C22CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:01:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="SLoyt31s"
+	by mail.kernel.org (Postfix) with ESMTP id BB9B822CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732404AbfHVOBB (ORCPT
+        id S1732460AbfHVOBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:01:01 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50376 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfHVOBB (ORCPT
+        Thu, 22 Aug 2019 10:01:21 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:59231 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbfHVOBV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:01:01 -0400
-Received: by mail-wm1-f68.google.com with SMTP id v15so5767535wml.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 07:00:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BYa6tjL2V3XaMoQE3BhKW3UPDRomuHKgIfVfgHeXWkk=;
-        b=SLoyt31scpRwxQBpNMLbyMa2/JRzuZ/BvQpsmqigUavDoqB3UBrVcOQ2zNbgB93tJY
-         7gmE1ESkIu45NoMKahMGZ6mucJ2K0ER3t14M60WH5wltnZNqZy/sR52AK5Og1ZxvPafC
-         tpatC5C8yYAPSjBPnPPx5L52ONkg0uwedvI/Np7gQqHMvV6taKwsQGI+x4yyHTjrFdOY
-         xGqn79jRZheK7D9l85xO+Jaje7akWcupNQ8OX9Lkftj5kSsriFrZHMdgLwbwY2IQn3VP
-         3k2MDSqvA3TE7le83FB3i3F1gvmxdh1xyTyIAbRxwaUSnoz4kGwz+gbxZIf6TwqrMOyP
-         roWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BYa6tjL2V3XaMoQE3BhKW3UPDRomuHKgIfVfgHeXWkk=;
-        b=Lu6CfYisKxARRpq63M46imDJzMPSCtVcFnghszW7ZRRYF6hnkfUjnSh9TeotF1kzjh
-         3fia6/BCrNt1LgzW8o/+k/HP+4xQe1yKjmp3LTcNluTp0iXfXESoa34edM6C/Wt38ftP
-         YS7jN5iysrNviKhM1orgb8RT82RMfm8/al6yrsu0dE6+o6nS9eOPODeXwpmVO6G+/3CD
-         eLcFjqM0wFkJTS2FrrSx1Lu0r4f328nZmhdD123KszkLVc6VnlU/J4HmX6qvsccAjLFB
-         vJRYBxqS7aVt1pHeOxZ0a41S6uONnXNLU9y4tj9TegmYL09qCYXnndGLhvH1qRKlLHXc
-         oRTA==
-X-Gm-Message-State: APjAAAVDhXPPBidWgorvIlrOuSM3rRGRQc6ffcG+qJyajKjYMefyT7Tq
-        B5VrjgRDDkTwiXr4+K1WKwpIz0WxqcW3PVnxNEhAYw==
-X-Google-Smtp-Source: APXvYqww1WWneVrQ4WkvUlVG34D6g7hmpsx3qbNxfWrjylvCb0bpJgFZDZJaUwFYA8VxxwoXD8Ib3QvAG/0D3LLNp/g=
-X-Received: by 2002:a1c:c909:: with SMTP id f9mr6776316wmb.52.1566482456476;
- Thu, 22 Aug 2019 07:00:56 -0700 (PDT)
+        Thu, 22 Aug 2019 10:01:21 -0400
+Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x7ME14I4050794;
+        Thu, 22 Aug 2019 23:01:04 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp);
+ Thu, 22 Aug 2019 23:01:04 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav105.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x7ME14Oi050789
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 22 Aug 2019 23:01:04 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+References: <20190820222403.GB8120@kroah.com>
+ <201908220959.x7M9xP8r011133@www262.sakura.ne.jp>
+ <20190822133538.GA16793@kroah.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <e8d3ce30-8c61-048e-2606-f8a4e8f08d87@i-love.sakura.ne.jp>
+Date:   Thu, 22 Aug 2019 23:00:59 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190822084131.114764-1-anup.patel@wdc.com> <20190822084131.114764-9-anup.patel@wdc.com>
- <d306ffaf-c9ac-4a9f-4382-95001487364d@amazon.com>
-In-Reply-To: <d306ffaf-c9ac-4a9f-4382-95001487364d@amazon.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 22 Aug 2019 19:30:45 +0530
-Message-ID: <CAAhSdy0t7P1a_eYmLo9sSYTCbumCqqWcvuv4yJXGCBQOXvw5TQ@mail.gmail.com>
-Subject: Re: [PATCH v5 08/20] RISC-V: KVM: Implement KVM_GET_ONE_REG/KVM_SET_ONE_REG
- ioctls
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190822133538.GA16793@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 5:31 PM Alexander Graf <graf@amazon.com> wrote:
->
-> On 22.08.19 10:44, Anup Patel wrote:
-> > For KVM RISC-V, we use KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls to access
-> > VCPU config and registers from user-space.
-> >
-> > We have three types of VCPU registers:
-> > 1. CONFIG - these are VCPU config and capabilities
-> > 2. CORE   - these are VCPU general purpose registers
-> > 3. CSR    - these are VCPU control and status registers
-> >
-> > The CONFIG registers available to user-space are ISA and TIMEBASE. Out
-> > of these, TIMEBASE is a read-only register which inform user-space about
-> > VCPU timer base frequency. The ISA register is a read and write register
-> > where user-space can only write the desired VCPU ISA capabilities before
-> > running the VCPU.
-> >
-> > The CORE registers available to user-space are PC, RA, SP, GP, TP, A0-A7,
-> > T0-T6, S0-S11 and MODE. Most of these are RISC-V general registers except
-> > PC and MODE. The PC register represents program counter whereas the MODE
-> > register represent VCPU privilege mode (i.e. S/U-mode).
-> >
-> > The CSRs available to user-space are SSTATUS, SIE, STVEC, SSCRATCH, SEPC,
-> > SCAUSE, STVAL, SIP, and SATP. All of these are read/write registers.
-> >
-> > In future, more VCPU register types will be added (such as FP) for the
-> > KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls.
-> >
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> > ---
-> >   arch/riscv/include/uapi/asm/kvm.h |  40 ++++-
-> >   arch/riscv/kvm/vcpu.c             | 235 +++++++++++++++++++++++++++++-
-> >   2 files changed, 272 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-> > index 6dbc056d58ba..024f220eb17e 100644
-> > --- a/arch/riscv/include/uapi/asm/kvm.h
-> > +++ b/arch/riscv/include/uapi/asm/kvm.h
-> > @@ -23,8 +23,15 @@
-> >
-> >   /* for KVM_GET_REGS and KVM_SET_REGS */
-> >   struct kvm_regs {
-> > +     /* out (KVM_GET_REGS) / in (KVM_SET_REGS) */
-> > +     struct user_regs_struct regs;
-> > +     unsigned long mode;
->
-> Is there any particular reason you're reusing kvm_regs and don't invent
-> your own struct? kvm_regs is explicitly meant for the get_regs and
-> set_regs ioctls.
+On 2019/08/22 22:35, Greg Kroah-Hartman wrote:
+> On Thu, Aug 22, 2019 at 06:59:25PM +0900, Tetsuo Handa wrote:
+>> Tetsuo Handa wrote:
+>>> Greg Kroah-Hartman wrote:
+>>>> Oh, nice!  This shouldn't break anything that is assuming that the read
+>>>> will complete before a signal is delivered, right?
+>>>>
+>>>> I know userspace handling of "short" reads is almost always not there...
+>>>
+>>> Since this check will give up upon SIGKILL, userspace won't be able to see
+>>> the return value from read(). Thus, returning 0 upon SIGKILL will be safe. ;-)
+>>> Maybe we also want to add cond_resched()...
+>>>
+>>> By the way, do we want similar check on write_mem() side?
+>>> If aborting "write to /dev/mem" upon SIGKILL (results in partial write) is
+>>> unexpected, we might want to ignore SIGKILL for write_mem() case.
+>>> But copying data from killed threads (especially when killed by OOM killer
+>>> and userspace memory is reclaimed by OOM reaper before write_mem() returns)
+>>> would be after all unexpected. Then, it might be preferable to check SIGKILL
+>>> on write_mem() side...
+>>>
+>>
+>> Ha, ha. syzbot reported the same problem using write_mem().
+>> https://syzkaller.appspot.com/text?tag=CrashLog&x=1018055a600000
+>> We want fatal_signal_pending() check on both sides.
+> 
+> Ok, want to send a patch for that?
 
-We are implementing only ONE_REG interface so most of these
-structs are unused hence we tried to reuse these struct instead
-of introducing new structs. (Similar to KVM ARM64)
+Yes. But before sending a patch, I'm trying to dump values using debug printk().
 
->
-> >   };
-> >
-> > +/* Possible privilege modes for kvm_regs */
-> > +#define KVM_RISCV_MODE_S     1
-> > +#define KVM_RISCV_MODE_U     0
-> > +
-> >   /* for KVM_GET_FPU and KVM_SET_FPU */
-> >   struct kvm_fpu {
-> >   };
-> > @@ -41,10 +48,41 @@ struct kvm_guest_debug_arch {
-> >   struct kvm_sync_regs {
-> >   };
-> >
-> > -/* dummy definition */
-> > +/* for KVM_GET_SREGS and KVM_SET_SREGS */
-> >   struct kvm_sregs {
-> > +     unsigned long sstatus;
-> > +     unsigned long sie;
-> > +     unsigned long stvec;
-> > +     unsigned long sscratch;
-> > +     unsigned long sepc;
-> > +     unsigned long scause;
-> > +     unsigned long stval;
-> > +     unsigned long sip;
-> > +     unsigned long satp;
->
-> Same comment here.
+> 
+> And does anything use /dev/mem anymore?  I think X stopped using it a
+> long time ago.
+> 
+>> By the way, write_mem() worries me whether there is possibility of replacing
+>> kernel code/data with user-defined memory data supplied from userspace.
+>> If write_mem() were by chance replaced with code that does
+>>
+>>    while (1);
+>>
+>> we won't be able to return from write_mem() even if we added fatal_signal_pending() check.
+>> Ditto for replacing local variables with unexpected values...
+> 
+> I'm sorry, I don't really understand what you mean here, but I haven't
+> had my morning coffee...  Any hints as to an example?
 
-Same as above, we are trying to use unused struct.
+Probably similar idea: "lockdown: Restrict /dev/{mem,kmem,port} when the kernel is locked down"
 
->
-> >   };
-> >
-> > +#define KVM_REG_SIZE(id)             \
-> > +     (1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
-> > +
-> > +/* If you need to interpret the index values, here is the key: */
-> > +#define KVM_REG_RISCV_TYPE_MASK              0x00000000FF000000
-> > +#define KVM_REG_RISCV_TYPE_SHIFT     24
-> > +
-> > +/* Config registers are mapped as type 1 */
-> > +#define KVM_REG_RISCV_CONFIG         (0x01 << KVM_REG_RISCV_TYPE_SHIFT)
-> > +#define KVM_REG_RISCV_CONFIG_ISA     0x0
-> > +#define KVM_REG_RISCV_CONFIG_TIMEBASE        0x1
-> > +
-> > +/* Core registers are mapped as type 2 */
-> > +#define KVM_REG_RISCV_CORE           (0x02 << KVM_REG_RISCV_TYPE_SHIFT)
-> > +#define KVM_REG_RISCV_CORE_REG(name) \
-> > +             (offsetof(struct kvm_regs, name) / sizeof(unsigned long))
->
-> I see, you're trying to implicitly use the struct offsets as index.
->
-> I'm not a really big fan of it, but I can't pinpoint exactly why just
-> yet. It just seems too magical (read: potentially breaking down the
-> road) for me.
->
-> > +
-> > +/* Control and status registers are mapped as type 3 */
-> > +#define KVM_REG_RISCV_CSR            (0x03 << KVM_REG_RISCV_TYPE_SHIFT)
-> > +#define KVM_REG_RISCV_CSR_REG(name)  \
-> > +             (offsetof(struct kvm_sregs, name) / sizeof(unsigned long))
-> > +
-> >   #endif
-> >
-> >   #endif /* __LINUX_KVM_RISCV_H */
-> > diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> > index 7f59e85c6af8..9396a83c0611 100644
-> > --- a/arch/riscv/kvm/vcpu.c
-> > +++ b/arch/riscv/kvm/vcpu.c
-> > @@ -164,6 +164,215 @@ vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
-> >       return VM_FAULT_SIGBUS;
-> >   }
-> >
-> > +static int kvm_riscv_vcpu_get_reg_config(struct kvm_vcpu *vcpu,
-> > +                                      const struct kvm_one_reg *reg)
-> > +{
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CONFIG);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     switch (reg_num) {
-> > +     case KVM_REG_RISCV_CONFIG_ISA:
-> > +             reg_val = vcpu->arch.isa;
-> > +             break;
-> > +     case KVM_REG_RISCV_CONFIG_TIMEBASE:
-> > +             reg_val = riscv_timebase;
->
-> What does this reflect? The current guest time hopefully not? An offset?
-> Related to what?
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/char/mem.c?h=next-20190822&id=9b9d8dda1ed72e9bd560ab0ca93d322a9440510e
 
-riscv_timebase is the frequency in HZ of the system timer.
-
-The name "timebase" is not appropriate but we have been
-carrying it since quite some time now.
-
->
-> All ONE_REG registers should be documented in
-> Documentation/virtual/kvm/api.txt. Please add them there.
-
-Sure, I will update in next revision.
-
->
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     };
-> > +
-> > +     if (copy_to_user(uaddr, &reg_val, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int kvm_riscv_vcpu_set_reg_config(struct kvm_vcpu *vcpu,
-> > +                                      const struct kvm_one_reg *reg)
-> > +{
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CONFIG);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     if (copy_from_user(&reg_val, uaddr, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     switch (reg_num) {
-> > +     case KVM_REG_RISCV_CONFIG_ISA:
-> > +             if (!vcpu->arch.ran_atleast_once) {
-> > +                     vcpu->arch.isa = reg_val;
-> > +                     vcpu->arch.isa &= riscv_isa_extension_base(NULL);
-> > +                     vcpu->arch.isa &= KVM_RISCV_ISA_ALLOWED;
->
-> This register definitely needs proper documentation too ;). You may want
-> to reconsider to put a few of the helper bits from patch 02/20 into
-> uapi, so that user space can directly use them.
-
-Sure, I will add details about ISA register in Documentation/virt/kvm/api.txt
-
-Regards,
-Anup
-
-
->
-> > +             } else {
-> > +                     return -ENOTSUPP;
-> > +             }
-> > +             break;
-> > +     case KVM_REG_RISCV_CONFIG_TIMEBASE:
-> > +             return -ENOTSUPP;
-> > +     default:
-> > +             return -EINVAL;
-> > +     };
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int kvm_riscv_vcpu_get_reg_core(struct kvm_vcpu *vcpu,
-> > +                                    const struct kvm_one_reg *reg)
-> > +{
-> > +     struct kvm_cpu_context *cntx = &vcpu->arch.guest_context;
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CORE);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     if (reg_num == KVM_REG_RISCV_CORE_REG(regs.pc))
-> > +             reg_val = cntx->sepc;
-> > +     else if (KVM_REG_RISCV_CORE_REG(regs.pc) < reg_num &&
-> > +              reg_num <= KVM_REG_RISCV_CORE_REG(regs.t6))
-> > +             reg_val = ((unsigned long *)cntx)[reg_num];
-> > +     else if (reg_num == KVM_REG_RISCV_CORE_REG(mode))
-> > +             reg_val = (cntx->sstatus & SR_SPP) ?
-> > +                             KVM_RISCV_MODE_S : KVM_RISCV_MODE_U;
-> > +     else
-> > +             return -EINVAL;
-> > +
-> > +     if (copy_to_user(uaddr, &reg_val, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int kvm_riscv_vcpu_set_reg_core(struct kvm_vcpu *vcpu,
-> > +                                    const struct kvm_one_reg *reg)
-> > +{
-> > +     struct kvm_cpu_context *cntx = &vcpu->arch.guest_context;
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CORE);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     if (copy_from_user(&reg_val, uaddr, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     if (reg_num == KVM_REG_RISCV_CORE_REG(regs.pc))
-> > +             cntx->sepc = reg_val;
-> > +     else if (KVM_REG_RISCV_CORE_REG(regs.pc) < reg_num &&
-> > +              reg_num <= KVM_REG_RISCV_CORE_REG(regs.t6))
-> > +             ((unsigned long *)cntx)[reg_num] = reg_val;
-> > +     else if (reg_num == KVM_REG_RISCV_CORE_REG(mode)) {
-> > +             if (reg_val == KVM_RISCV_MODE_S)
-> > +                     cntx->sstatus |= SR_SPP;
-> > +             else
-> > +                     cntx->sstatus &= ~SR_SPP;
-> > +     } else
-> > +             return -EINVAL;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int kvm_riscv_vcpu_get_reg_csr(struct kvm_vcpu *vcpu,
-> > +                                   const struct kvm_one_reg *reg)
-> > +{
-> > +     struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CSR);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +     if (reg_num >= sizeof(struct kvm_sregs) / sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     if (reg_num == KVM_REG_RISCV_CSR_REG(sip))
-> > +             kvm_riscv_vcpu_flush_interrupts(vcpu);
-> > +
-> > +     reg_val = ((unsigned long *)csr)[reg_num];
-> > +
-> > +     if (copy_to_user(uaddr, &reg_val, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int kvm_riscv_vcpu_set_reg_csr(struct kvm_vcpu *vcpu,
-> > +                                   const struct kvm_one_reg *reg)
-> > +{
-> > +     struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CSR);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +     if (reg_num >= sizeof(struct kvm_sregs) / sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     if (copy_from_user(&reg_val, uaddr, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     ((unsigned long *)csr)[reg_num] = reg_val;
-> > +
-> > +     if (reg_num == KVM_REG_RISCV_CSR_REG(sip))
-> > +             WRITE_ONCE(vcpu->arch.irqs_pending_mask, 0);
->
-> Why does writing SIP clear all pending interrupts?
->
->
-> Alex
+Then, syzbot might want to blacklist writing to /dev/mem .
