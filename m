@@ -2,212 +2,194 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F752C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2FBC3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02CBE22CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:18:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OGJR3HzN"
+	by mail.kernel.org (Postfix) with ESMTP id 4788A21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbfHVASi (ORCPT
+        id S1728994AbfHVA1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 20:18:38 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:42243 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727291AbfHVASh (ORCPT
+        Wed, 21 Aug 2019 20:27:16 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3816 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726693AbfHVA1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 20:18:37 -0400
-Received: by mail-yw1-f66.google.com with SMTP id z63so1673390ywz.9
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 17:18:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZJuGzxgYEJJmtKKSqq5f5g5uuFonx8YcgqfrLKyhRok=;
-        b=OGJR3HzNBSkdxYQw12UylRSGalg3ZnUXc9khh8ugaTnSxiwGLyoqbvdJDRuiPVL5dq
-         W+thHR2a+jBR5rpUNM8m6s3mT6WKRquEPTeG8xY99LdyfhLdKt3uCCaPg/rV7ckJXu5n
-         OsNKtbYz2BYemMwWG5sDjuPUHFyCSF6QzmkxBYBC3d/oeOYwAa5vNHE1eHNq0786FWtF
-         6ecG5zWqihf5X0jV20hIfWIVsnmitAHpClsGMHYPFPfvOhVG39dzoeHYqc/VYVBUp50E
-         9ZUcG2Rk7y9l+AbK+XO0h2oFSucyA24vqWhTV8lv1UTfMUEa+I0syRiUsiMyaBpbl59Q
-         R0ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZJuGzxgYEJJmtKKSqq5f5g5uuFonx8YcgqfrLKyhRok=;
-        b=SuyiAhhsIWr03sjonl9OLFQk61IQuVEmkg+zC17RL8Jlbw2n18TKnUG0EoY7ZhSkyp
-         nLAuFW6lK14ozvrc+x3W7a6u8aJX1IkQyJU14hNLsRXgmXB9Awx4AxHl4l59QSTyDwSA
-         88z7qZpLB8s1ijT7pCYABwLI6XDcemWZkYY8K9WEf662/k9Cql70VamfMRVOmsONF1ra
-         rOpzqLQpfSdFMvS3n8czCkFut6srhabGmzlRnc+Boivl9PqfY5rlq5UVRGcVt5A3jdBY
-         gWWc+xz0n86yp9glTcwYHSedm7zuxkpVY6Bfzi6NivbYTsMaq4PQrxj7u5GJbSC2s6eH
-         3zvA==
-X-Gm-Message-State: APjAAAXED+Dhr8sWGctJm29t1gQSs2jzhdFyeksRhHP+zxGPiCbt/Ye0
-        muhfyjUd4fxZd4wbjzB1MZzjpzO6C1AlH8YwDwAzpQ==
-X-Google-Smtp-Source: APXvYqz/+KzvuSRCI+8UB3npquns8i4yJV3iPDKr0QXmZdcoTE4nWyBLXhfOM65gga62VJI5FjurjupIFIYWSHTGLk4=
-X-Received: by 2002:a81:2e84:: with SMTP id u126mr25699468ywu.398.1566433116409;
- Wed, 21 Aug 2019 17:18:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190822000933.180870-1-khazhy@google.com> <20190822000933.180870-3-khazhy@google.com>
-In-Reply-To: <20190822000933.180870-3-khazhy@google.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 21 Aug 2019 17:18:25 -0700
-Message-ID: <CALvZod5d1iyJtfwzW0qtHLJ4cB5zQqAHuVBM_ay9cWD=TTSPSw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] fuse: pass gfp flags to fuse_request_alloc
-To:     Khazhismel Kumykov <khazhy@google.com>
-Cc:     miklos@szeredi.hu, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Wed, 21 Aug 2019 20:27:15 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7M0N6Eq135815
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 20:27:14 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhf7ja8k8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 20:27:14 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Thu, 22 Aug 2019 01:27:12 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 22 Aug 2019 01:27:10 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7M0R9lu33816988
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 00:27:09 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C54EC42049;
+        Thu, 22 Aug 2019 00:27:09 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C1BF42047;
+        Thu, 22 Aug 2019 00:27:09 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 22 Aug 2019 00:27:09 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 04713A021A;
+        Thu, 22 Aug 2019 10:27:08 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 22 Aug 2019 10:27:07 +1000
+In-Reply-To: <a0ad8dd8-2f5d-256d-9e88-e9c236335bb8@c-s.fr>
+References: <de7a813c71c4823797bb351bea8be15acae83be2.1565970465.git.christophe.leroy@c-s.fr>
+         <9887dada07278cb39051941d1a47d50349d9fde0.camel@au1.ibm.com>
+         <a0ad8dd8-2f5d-256d-9e88-e9c236335bb8@c-s.fr>
+Organization: IBM Australia
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19082200-0008-0000-0000-0000030BA0E9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082200-0009-0000-0000-00004A29CD79
+Message-Id: <fcc94e7f347c3759a1698444239a7250b22cde7d.camel@au1.ibm.com>
+Subject: RE: [RFC PATCH] powerpc: Convert ____flush_dcache_icache_phys() to C
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=958 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908220002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 5:10 PM Khazhismel Kumykov <khazhy@google.com> wrote:
->
-> Instead of having a helper per flag
->
-> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+On Wed, 2019-08-21 at 22:27 +0200, Christophe Leroy wrote:
+> 
+> Le 20/08/2019 à 06:36, Alastair D'Silva a écrit :
+> > On Fri, 2019-08-16 at 15:52 +0000, Christophe Leroy wrote:
+> 
+> [...]
+> 
+> > 
+> > Thanks Christophe,
+> > 
+> > I'm trying a somewhat different approach that requires less
+> > knowledge
+> > of assembler. Handling of CPU_FTR_COHERENT_ICACHE is outside this
+> > function. The code below is not a patch as my tree is a bit messy,
+> > sorry:
+> 
+> Can we be 100% sure that GCC won't add any code accessing some
+> global 
+> data or stack while the Data MMU is OFF ?
+> 
+> Christophe
+> 
 
-I think it would be better to re-order the patch 2 and 3 of this
-series. There will be less code churn.
++mpe
 
-> ---
->  fs/fuse/dev.c    | 22 +++-------------------
->  fs/fuse/file.c   |  6 +++---
->  fs/fuse/fuse_i.h |  6 +-----
->  fs/fuse/inode.c  |  4 ++--
->  4 files changed, 9 insertions(+), 29 deletions(-)
->
-> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-> index a0d166a6596f..c957620ce7ba 100644
-> --- a/fs/fuse/dev.c
-> +++ b/fs/fuse/dev.c
-> @@ -66,7 +66,7 @@ static struct page **fuse_req_pages_alloc(unsigned int npages, gfp_t flags,
->         return pages;
->  }
->
-> -static struct fuse_req *__fuse_request_alloc(unsigned npages, gfp_t flags)
-> +struct fuse_req *fuse_request_alloc(unsigned int npages, gfp_t flags)
->  {
->         struct fuse_req *req = kmem_cache_zalloc(fuse_req_cachep, flags);
->         if (req) {
-> @@ -90,24 +90,8 @@ static struct fuse_req *__fuse_request_alloc(unsigned npages, gfp_t flags)
->         }
->         return req;
->  }
-> -
-> -struct fuse_req *fuse_request_alloc(unsigned npages)
-> -{
-> -       return __fuse_request_alloc(npages, GFP_KERNEL);
-> -}
->  EXPORT_SYMBOL_GPL(fuse_request_alloc);
->
-> -struct fuse_req *fuse_request_alloc_account(unsigned int npages)
-> -{
-> -       return __fuse_request_alloc(npages, GFP_KERNEL_ACCOUNT);
-> -}
-> -EXPORT_SYMBOL_GPL(fuse_request_alloc_account);
-> -
-> -struct fuse_req *fuse_request_alloc_nofs(unsigned npages)
-> -{
-> -       return __fuse_request_alloc(npages, GFP_NOFS);
-> -}
-> -
->  static void fuse_req_pages_free(struct fuse_req *req)
->  {
->         if (req->pages != req->inline_pages)
-> @@ -207,7 +191,7 @@ static struct fuse_req *__fuse_get_req(struct fuse_conn *fc, unsigned npages,
->         if (fc->conn_error)
->                 goto out;
->
-> -       req = fuse_request_alloc(npages);
-> +       req = fuse_request_alloc(npages, GFP_KERNEL);
->         err = -ENOMEM;
->         if (!req) {
->                 if (for_background)
-> @@ -316,7 +300,7 @@ struct fuse_req *fuse_get_req_nofail_nopages(struct fuse_conn *fc,
->         wait_event(fc->blocked_waitq, fc->initialized);
->         /* Matches smp_wmb() in fuse_set_initialized() */
->         smp_rmb();
-> -       req = fuse_request_alloc(0);
-> +       req = fuse_request_alloc(0, GFP_KERNEL);
->         if (!req)
->                 req = get_reserved_req(fc, file);
->
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index c584ad7478b3..ae8c8016bb8e 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -50,7 +50,7 @@ struct fuse_file *fuse_file_alloc(struct fuse_conn *fc)
->                 return NULL;
->
->         ff->fc = fc;
-> -       ff->reserved_req = fuse_request_alloc_account(0);
-> +       ff->reserved_req = fuse_request_alloc(0, GFP_KERNEL_ACCOUNT);
->         if (unlikely(!ff->reserved_req)) {
->                 kfree(ff);
->                 return NULL;
-> @@ -1703,7 +1703,7 @@ static int fuse_writepage_locked(struct page *page)
->
->         set_page_writeback(page);
->
-> -       req = fuse_request_alloc_nofs(1);
-> +       req = fuse_request_alloc(1, GFP_NOFS);
->         if (!req)
->                 goto err;
->
-> @@ -1923,7 +1923,7 @@ static int fuse_writepages_fill(struct page *page,
->                 struct fuse_inode *fi = get_fuse_inode(inode);
->
->                 err = -ENOMEM;
-> -               req = fuse_request_alloc_nofs(FUSE_REQ_INLINE_PAGES);
-> +               req = fuse_request_alloc(FUSE_REQ_INLINE_PAGES, GFP_NOFS);
->                 if (!req) {
->                         __free_page(tmp_page);
->                         goto out_unlock;
-> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> index 08161b2d9b08..8080a51096e9 100644
-> --- a/fs/fuse/fuse_i.h
-> +++ b/fs/fuse/fuse_i.h
-> @@ -902,11 +902,7 @@ void __exit fuse_ctl_cleanup(void);
->  /**
->   * Allocate a request
->   */
-> -struct fuse_req *fuse_request_alloc(unsigned npages);
-> -
-> -struct fuse_req *fuse_request_alloc_account(unsigned int npages);
-> -
-> -struct fuse_req *fuse_request_alloc_nofs(unsigned npages);
-> +struct fuse_req *fuse_request_alloc(unsigned int npages, gfp_t flags);
->
->  bool fuse_req_realloc_pages(struct fuse_conn *fc, struct fuse_req *req,
->                             gfp_t flags);
-> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> index eab44ddc68b9..ad92e93eaddd 100644
-> --- a/fs/fuse/inode.c
-> +++ b/fs/fuse/inode.c
-> @@ -1178,13 +1178,13 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
->         /* Root dentry doesn't have .d_revalidate */
->         sb->s_d_op = &fuse_dentry_operations;
->
-> -       init_req = fuse_request_alloc(0);
-> +       init_req = fuse_request_alloc(0, GFP_KERNEL);
->         if (!init_req)
->                 goto err_put_root;
->         __set_bit(FR_BACKGROUND, &init_req->flags);
->
->         if (is_bdev) {
-> -               fc->destroy_req = fuse_request_alloc(0);
-> +               fc->destroy_req = fuse_request_alloc(0, GFP_KERNEL);
->                 if (!fc->destroy_req)
->                         goto err_free_init_req;
->         }
-> --
-> 2.23.0.187.g17f5b7556c-goog
->
+I'm not sure how we would go about making such a guarantee, but I've
+tied every variable used to a register and addr is passed in a
+register, so there is no stack usage, and every call in there only
+operates on it's operands.
+
+The calls to the inline cache helpers (for the PPC32 case) are all
+constants, so I can't see a reasonable scenario where there would be a
+function call and reordered to after the DR bit is turned off, but I
+guess if we want to be paranoid, we could always add an mb() call
+before the DR bit is manipulated to prevent the compiler from
+reordering across the section where the data MMU is disabled.
+
+
+> 
+> > /**
+> >   * flush_dcache_icache_phys() - Flush a page by it's physical
+> > address
+> >   * @addr: the physical address of the page
+> >   */
+> > static void flush_dcache_icache_phys(unsigned long addr)
+> > {
+> > 	register unsigned long msr;
+> > 	register unsigned long dlines = PAGE_SIZE >> l1_dcache_shift();
+> > 	register unsigned long dbytes = l1_dcache_bytes();
+> > 	register unsigned long ilines = PAGE_SIZE >> l1_icache_shift();
+> > 	register unsigned long ibytes = l1_icache_bytes();
+> > 	register unsigned long i;
+> > 	register unsigned long address = addr;
+> > 
+> > 	/*
+> > 	 * Clear the DR bit so that we operate on physical
+> > 	 * rather than virtual addresses
+> > 	 */
+> > 	msr = mfmsr();
+> > 	mtmsr(msr & ~(MSR_DR));
+> > 
+> > 	/* Write out the data cache */
+> > 	for (i = 0; i < dlines; i++, address += dbytes)
+> > 		dcbst((void *)address);
+> > 
+> > 	/* Invalidate the instruction cache */
+> > 	address = addr;
+> > 	for (i = 0; i < ilines; i++, address += ibytes)
+> > 		icbi((void *)address);
+> > 
+> > 	mtmsr(msr);
+> > }
+> > 
+> > void test_flush_phys(unsigned long addr)
+> > {
+> > 	flush_dcache_icache_phys(addr);
+> > }
+> > 
+> > 
+> > This gives the following assembler (using pmac32_defconfig):
+> > 000003cc <test_flush_phys>:
+> >   3cc:   94 21 ff f0     stwu    r1,-16(r1)
+> >   3d0:   7d 00 00 a6     mfmsr   r8
+> >   3d4:   55 09 07 34     rlwinm  r9,r8,0,28,26
+> >   3d8:   7d 20 01 24     mtmsr   r9
+> >   3dc:   39 20 00 80     li      r9,128
+> >   3e0:   7d 29 03 a6     mtctr   r9
+> >   3e4:   39 43 10 00     addi    r10,r3,4096
+> >   3e8:   7c 69 1b 78     mr      r9,r3
+> >   3ec:   7c 00 48 6c     dcbst   0,r9
+> >   3f0:   39 29 00 20     addi    r9,r9,32
+> >   3f4:   42 00 ff f8     bdnz    3ec <test_flush_phys+0x20>
+> >   3f8:   7c 00 1f ac     icbi    0,r3
+> >   3fc:   38 63 00 20     addi    r3,r3,32
+> >   400:   7f 8a 18 40     cmplw   cr7,r10,r3
+> >   404:   40 9e ff f4     bne     cr7,3f8 <test_flush_phys+0x2c>
+> >   408:   7d 00 01 24     mtmsr   r8
+> >   40c:   38 21 00 10     addi    r1,r1,16
+> >   410:   4e 80 00 20     blr
+> > 
+> > 
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
