@@ -2,58 +2,51 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFA7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCDFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8DA620870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B602520856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495531;
-	bh=nMFYjPTxcPdrrFI4O258toqIKPFroB9lSfcn3O8O7Ck=;
+	s=default; t=1566495535;
+	bh=JhDJFf/uCjrXkIsJfuzBaAiGGlV24nhfnGt6L1EGX+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C4Tk63ExILgm5N+eT4f1DDj3G5mA2+w1U4FBLEqL/OwA6fFRYr9BEQxsgRS2S+wXb
-	 toj2Q5KhygjQOZpZZMGSzwGmu0dQgUP4ui1sXPZi7AX9nRqVaiSljm4vbQS0VuRouH
-	 /gE9bCIGZ7f37FlQ4UxrcNhh9jT0a8NEV0Riy+MU=
+	b=nmHIj/MqAVTQPpz0dI4e0zEqwbvXFig5bSgqnEQSgHeXYf76V0bhXvVLZlpBruFJE
+	 x4/qg4Z/l8a40KQ1FtMhqSr2U6QXCLpgok9qu6zijCj6wU2ue744NGCFRH1avilezp
+	 c5joEyhNW3iujNXNA0gBGRSeUosKJuzyFm2rVzho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391543AbfHVRYW (ORCPT
+        id S2392717AbfHVRiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:24:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391767AbfHVRX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:59 -0400
+        id S2391535AbfHVRYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:22 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5E802341D;
-        Thu, 22 Aug 2019 17:23:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B777C21743;
+        Thu, 22 Aug 2019 17:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494638;
-        bh=nMFYjPTxcPdrrFI4O258toqIKPFroB9lSfcn3O8O7Ck=;
+        s=default; t=1566494661;
+        bh=JhDJFf/uCjrXkIsJfuzBaAiGGlV24nhfnGt6L1EGX+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NlU6iJfhTXQa7AcNopQZ7IDsxdRjyVyaKGcWFzl3sMCdzliNyQkbnlupFiE+V5ykP
-         kuef+6jt0la5ai5mD0mO1MRp34nOltj8E4KZ6P3DH7x35VnsUDlXMCkkkr2I0rfc6g
-         2At94ISnU33vLeLExx3wYlHEv7q/deC+TRvR+L/U=
+        b=MXhQ1eWwrgLX24cWdfz9wDrysJsxgYeqnToKCwQkMsf6DQmzkmaslYchqE31gOWvq
+         fV1H9lH8HLn2xEbk6Ml8trPJk7nfRP/QXB/QGquFT86KswKMDCq0ZosFIcx+Z4putc
+         p7d/bCLVUl8/f+k+jR6OVHheisQWMV1InUl33PBc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Drayton <mbd@fb.com>, Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 071/103] perf header: Fix use of unitialized value warning
-Date:   Thu, 22 Aug 2019 10:18:59 -0700
-Message-Id: <20190822171731.763340998@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 084/103] usb: cdc-acm: make sure a refcount is taken early enough
+Date:   Thu, 22 Aug 2019 10:19:12 -0700
+Message-Id: <20190822171732.543001370@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -66,68 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 20f9781f491360e7459c589705a2e4b1f136bee9 ]
+From: Oliver Neukum <oneukum@suse.com>
 
-When building our local version of perf with MSAN (Memory Sanitizer) and
-running the perf record command, MSAN throws a use of uninitialized
-value warning in "tools/perf/util/util.c:333:6".
+commit c52873e5a1ef72f845526d9f6a50704433f9c625 upstream.
 
-This warning stems from the "buf" variable being passed into "write".
-It originated as the variable "ev" with the type union perf_event*
-defined in the "perf_event__synthesize_attr" function in
-"tools/perf/util/header.c".
+destroy() will decrement the refcount on the interface, so that
+it needs to be taken so early that it never undercounts.
 
-In the "perf_event__synthesize_attr" function they allocate space with a malloc
-call using ev, then go on to only assign some of the member variables before
-passing "ev" on as a parameter to the "process" function therefore "ev"
-contains uninitialized memory. Changing the malloc call to zalloc to initialize
-all the members of "ev" which gets rid of the warning.
+Fixes: 7fb57a019f94e ("USB: cdc-acm: Fix potential deadlock (lockdep warning)")
+Cc: stable <stable@vger.kernel.org>
+Reported-and-tested-by: syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20190808142119.7998-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-To reproduce this warning, build perf by running:
-make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
- -fsanitize-memory-track-origins"
-
-(Additionally, llvm might have to be installed and clang might have to
-be specified as the compiler - export CC=/usr/bin/clang)
-
-then running:
-tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
- -i - --stdio
-
-Please see the cover letter for why false positive warnings may be
-generated.
-
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Drayton <mbd@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190724234500.253358-2-nums@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/class/cdc-acm.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 693dcd4ea6a38..61e3c482935ad 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2943,7 +2943,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
- 	size += sizeof(struct perf_event_header);
- 	size += ids * sizeof(u64);
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -1264,10 +1264,6 @@ made_compressed_probe:
+ 	if (acm == NULL)
+ 		goto alloc_fail;
  
--	ev = malloc(size);
-+	ev = zalloc(size);
+-	minor = acm_alloc_minor(acm);
+-	if (minor < 0)
+-		goto alloc_fail1;
+-
+ 	ctrlsize = usb_endpoint_maxp(epctrl);
+ 	readsize = usb_endpoint_maxp(epread) *
+ 				(quirks == SINGLE_RX_URB ? 1 : 2);
+@@ -1275,6 +1271,13 @@ made_compressed_probe:
+ 	acm->writesize = usb_endpoint_maxp(epwrite) * 20;
+ 	acm->control = control_interface;
+ 	acm->data = data_interface;
++
++	usb_get_intf(acm->control); /* undone in destruct() */
++
++	minor = acm_alloc_minor(acm);
++	if (minor < 0)
++		goto alloc_fail1;
++
+ 	acm->minor = minor;
+ 	acm->dev = usb_dev;
+ 	if (h.usb_cdc_acm_descriptor)
+@@ -1420,7 +1423,6 @@ skip_countries:
+ 	usb_driver_claim_interface(&acm_driver, data_interface, acm);
+ 	usb_set_intfdata(data_interface, acm);
  
- 	if (ev == NULL)
- 		return -ENOMEM;
--- 
-2.20.1
-
+-	usb_get_intf(control_interface);
+ 	tty_dev = tty_port_register_device(&acm->port, acm_tty_driver, minor,
+ 			&control_interface->dev);
+ 	if (IS_ERR(tty_dev)) {
 
 
