@@ -2,149 +2,72 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC423C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54193C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A130C21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBBD21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="C3g11sbi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2YBLfaiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388439AbfHVUHq (ORCPT
+        id S2392759AbfHVUI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:07:46 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35364 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731461AbfHVUHq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:07:46 -0400
-Received: by mail-pl1-f195.google.com with SMTP id gn20so4081220plb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 13:07:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=T7WELdrj1lpZKb10glO64Ci1A/cHC9qRquQl0ZBFVYE=;
-        b=C3g11sbiJLWJXhTVKSRs7RsmwmyNDMWE2NR02ihZhTaX8aV3FEKZ5YdkwOxo6qCVWq
-         m8jJkKYj85QU0HpYZJ1Drc4qi0TJV0r3IGjyGWOOP0/s3ieUNAmBO2MVB0IRxNYezn93
-         Ta1X+nvAuArVldordiVEZgCtlKT/kaqGj7nFc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=T7WELdrj1lpZKb10glO64Ci1A/cHC9qRquQl0ZBFVYE=;
-        b=PDIZWCQXBHg5tBx94xIL6FL8yU8hbQzS97j9HV2ZXTU4rDd360+JSbDj1cZtxmdKhF
-         P8e56BVm1oD5BV+eIXlQ8p5m4mgmUJx573eQXppmv5AHIOgY+uNbXD5lsHwz4yrV3vtV
-         ZO5km3dMne11B6waGLfN1KEs2liS3uscicUDQLyowT93/8B7XX5k27WeVIWAeUIl/aqJ
-         WmUq0v0P6riJ4amlzf7R50qQn7+6+jBH3QUyV4uHyF9kGPyK2Of4sYHI5rtQYzL4+fWb
-         Y+puBM1cRD9JqIRrcnfb9IFhwn4RUnMSupI0D2/2z5ZAr//g6MTQsy3QLEMxNrXAnqX2
-         VYIA==
-X-Gm-Message-State: APjAAAUZTbrfQMBQGMCyDMNZk77fKs3ZOIj9PzsbT3uQ4I3/obKS9xib
-        wYbnP8AtKkCEQV8lIW7Trl4+/w==
-X-Google-Smtp-Source: APXvYqwPgliCGszErOKKFpnP9RfEOJ+aybpl80q46iwpUnIp/wgrGOyV1u3N0905b4Kuaoc0P8jo7w==
-X-Received: by 2002:a17:902:1027:: with SMTP id b36mr585958pla.203.1566504465286;
-        Thu, 22 Aug 2019 13:07:45 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id k5sm229441pfg.167.2019.08.22.13.07.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 13:07:44 -0700 (PDT)
-Subject: Re: [PATCH 2/7] firmware: add offset to request_firmware_into_buf
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org
-References: <20190822192451.5983-1-scott.branden@broadcom.com>
- <20190822192451.5983-3-scott.branden@broadcom.com>
- <20190822194712.GG16384@42.do-not-panic.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <7ee02971-e177-af05-28e0-90575ebe12e0@broadcom.com>
-Date:   Thu, 22 Aug 2019 13:07:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 16:08:26 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:52874 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731461AbfHVUIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 16:08:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=Ouh1hyA4cnUUtU66BbaszA14lgEbgI+hW7TPxZskfjA=; b=2YBLfaiSJjF9YvxwEJ63tFNfLf
+        NgaAM1cajy0G+MKXV0ek0VyWAA2A2jdYFKagzeAznZj+f1uhGOamR9xPHUmjNRKRI4NEn774Y6oog
+        pQlCVkQA/uY9HkHC7rtBXUbBi13ZDESxVdM4S/9OOKhAMjzpFLWZeDaaKqoJ3UxH5oH4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i0tNZ-0007Bu-Ol; Thu, 22 Aug 2019 22:08:17 +0200
+Date:   Thu, 22 Aug 2019 22:08:17 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
+        davem@davemloft.net, UNGLinuxDriver@microchip.com,
+        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bridge@lists.linux-foundation.org
+Subject: Re: [PATCH 1/3] net: Add HW_BRIDGE offload feature
+Message-ID: <20190822200817.GD21295@lunn.ch>
+References: <1566500850-6247-1-git-send-email-horatiu.vultur@microchip.com>
+ <1566500850-6247-2-git-send-email-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20190822194712.GG16384@42.do-not-panic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566500850-6247-2-git-send-email-horatiu.vultur@microchip.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luis,
+> +/* Determin if the SW bridge can be offloaded to HW. Return true if all
+> + * the interfaces of the bridge have the feature NETIF_F_HW_SWITCHDEV set
+> + * and have the same netdev_ops.
+> + */
 
-On 2019-08-22 12:47 p.m., Luis Chamberlain wrote:
-> On Thu, Aug 22, 2019 at 12:24:46PM -0700, Scott Branden wrote:
->> @@ -923,16 +936,22 @@ EXPORT_SYMBOL_GPL(firmware_request_cache);
->>    */
->>   int
->>   request_firmware_into_buf(const struct firmware **firmware_p, const char *name,
->> -			  struct device *device, void *buf, size_t size)
->> +			  struct device *device, void *buf, size_t size,
->> +			  size_t offset, unsigned int pread_flags)
-> This implies you having to change the other callers, and while currently
-> our list of drivers is small,
+Hi Horatiu
 
-Yes, the list is small, very small.
+Why do you need these restrictions. The HW bridge should be able to
+learn that a destination MAC address can be reached via the SW
+bridge. The software bridge can then forward it out the correct
+interface.
 
-There is a single driver making a call to the existing API.
+Or are you saying your hardware cannot learn from frames which come
+from the CPU?
 
-And, the existing API was never tested until I submitted a test case.
-
-And, the maintainer of that driver wanted
-
-to start utilizing my enhanced API instead of the current API.
-
-As such I think it is very reasonable to update the API right now.
-
-> following the history of the firmware API
-> and the long history of debate of *how* we should evolve its API, its
-> preferred we add yet another new caller for this functionality. So
-> please add a new caller, and use EXPORT_SYMBOL_GPL().
->
-> And while at it, pleaase use firmware_request_*() as the prefix, as we
-> have want to use that as the instilled prefix. We have yet to complete
-> the rename of the others older callers but its just a matter of time.
->
-> So something like: firmware_request_into_buf_offset()
-
-I would prefer to rename the API at this time given there is only a 
-single user.
-
-Otherwise I would need to duplicate quite a bit in the test code to 
-support testing
-
-the single user of the old api and then enhanced API.
-
-Or, I can leave existing API in place and change the test case to
-
-just test the enhanced API to keep things simpler in the test code?
-
->
-> And thanks for adding a test case!
->
->    Luis
-
-Regards,
-
-  Scott
-
+	Andrew
