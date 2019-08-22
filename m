@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA83C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4575C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9637120870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB8E20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495693;
-	bh=lP9m1NorUH5z/y3KWy07mtIG+q/fbsq/E5dtd35zv0E=;
+	s=default; t=1566495701;
+	bh=wmOdyM7qu6MZj6p+db67ADtj4fezjw0RJGL3SrM3QJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KI4lIkz7vhzuuqsl5UHPJvco/LHfjftOWt1tdxc/2bNS9dfTzjxTGMwYjL2E4sPfP
-	 FVYiPIVE4aftoBcCjthd1UlAX0IH/9bCO2mw9S+ZcXBaxrQUpauNlMoXevj7VcODyw
-	 yrK8aGU2CU+PTGanGfKA/e7tPGSyKVxtxmtOthkY=
+	b=R5ljoANyttswsgPSITNGuYnndKfwRQRogo9yG9SAsodOTVpel9RnvCXhs1Kywq6wI
+	 2+jXRz1mXzb12unGwP/vpTfjkTK7oAzuQ58nIGy7ZnIdSaVVdl+Lo14qi70fnGvoP2
+	 /kSKVSszbrqmqhol0EzevwFKzndOzeCwrzDtpRAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392383AbfHVRlc (ORCPT
+        id S2404965AbfHVRlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:41:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44776 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:41:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391762AbfHVRX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:58 -0400
+        id S2390884AbfHVRX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:56 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E7A621743;
-        Thu, 22 Aug 2019 17:23:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A18F72341C;
+        Thu, 22 Aug 2019 17:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494637;
-        bh=lP9m1NorUH5z/y3KWy07mtIG+q/fbsq/E5dtd35zv0E=;
+        s=default; t=1566494635;
+        bh=wmOdyM7qu6MZj6p+db67ADtj4fezjw0RJGL3SrM3QJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sLkzJyb05u55xwBhUtGh+JLqGH/XQpCQ0HV+cs4dO48ASv5CoJLNTSTletxwdvfQ/
-         OD9yi2clKuoMSTcByJT1PWqPOV7DYcABjjuiH55+E2QrQVALEk0/yvyA6J7ajPlvQ5
-         BmuabPb6IZWJzJhDi9hauZyDbyD1AoLlRbj/btuY=
+        b=nGRN8BW0wYdb58Z1aurx2vaK6nYGtU9AJeOfabf5Ia6mYaWZPO2w155uFDt7SjM6s
+         JS1QJ01M9O/hS4aFIzTxOPL+c1o/QMVRyLTKzPlVRFZqmb2/3/FcsOK3csMnKT+DOX
+         /ixerwizMij96D92XSGq01s/d9aEN7yCaZjhuXp8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 070/103] perf header: Fix divide by zero error if f_header.attr_size==0
-Date:   Thu, 22 Aug 2019 10:18:58 -0700
-Message-Id: <20190822171731.710829593@linuxfoundation.org>
+Subject: [PATCH 4.9 068/103] xen/pciback: remove set but not used variable old_state
+Date:   Thu, 22 Aug 2019 10:18:56 -0700
+Message-Id: <20190822171731.606566555@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -64,50 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7622236ceb167aa3857395f9bdaf871442aa467e ]
+[ Upstream commit 09e088a4903bd0dd911b4f1732b250130cdaffed ]
 
-So I have been having lots of trouble with hand-crafted perf.data files
-causing segfaults and the like, so I have started fuzzing the perf tool.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-First issue found:
+drivers/xen/xen-pciback/conf_space_capability.c: In function pm_ctrl_write:
+drivers/xen/xen-pciback/conf_space_capability.c:119:25: warning:
+ variable old_state set but not used [-Wunused-but-set-variable]
 
-If f_header.attr_size is 0 in the perf.data file, then perf will crash
-with a divide-by-zero error.
+It is never used so can be removed.
 
-Committer note:
-
-Added a pr_err() to tell the user why the command failed.
-
-Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907231100440.14532@macbook-air
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/xen/xen-pciback/conf_space_capability.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 283148104ffbe..693dcd4ea6a38 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2854,6 +2854,13 @@ int perf_session__read_header(struct perf_session *session)
- 			   file->path);
- 	}
+diff --git a/drivers/xen/xen-pciback/conf_space_capability.c b/drivers/xen/xen-pciback/conf_space_capability.c
+index 7f83e9083e9dd..b1a1d7de0894e 100644
+--- a/drivers/xen/xen-pciback/conf_space_capability.c
++++ b/drivers/xen/xen-pciback/conf_space_capability.c
+@@ -115,13 +115,12 @@ static int pm_ctrl_write(struct pci_dev *dev, int offset, u16 new_value,
+ {
+ 	int err;
+ 	u16 old_value;
+-	pci_power_t new_state, old_state;
++	pci_power_t new_state;
  
-+	if (f_header.attr_size == 0) {
-+		pr_err("ERROR: The %s file's attr size field is 0 which is unexpected.\n"
-+		       "Was the 'perf record' command properly terminated?\n",
-+		       file->path);
-+		return -EINVAL;
-+	}
-+
- 	nr_attrs = f_header.attrs.size / f_header.attr_size;
- 	lseek(fd, f_header.attrs.offset, SEEK_SET);
+ 	err = pci_read_config_word(dev, offset, &old_value);
+ 	if (err)
+ 		goto out;
  
+-	old_state = (pci_power_t)(old_value & PCI_PM_CTRL_STATE_MASK);
+ 	new_state = (pci_power_t)(new_value & PCI_PM_CTRL_STATE_MASK);
+ 
+ 	new_value &= PM_OK_BITS;
 -- 
 2.20.1
 
