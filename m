@@ -2,149 +2,169 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02D5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1610C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A06FB206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF76206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:54:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="CzG0Wk2h";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="HDTkOQrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731747AbfHVHyN (ORCPT
+        id S1731766AbfHVHyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:54:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:40530 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfHVHyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:54:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5216E344;
-        Thu, 22 Aug 2019 00:54:12 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E94F3F706;
-        Thu, 22 Aug 2019 00:54:11 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 08:54:10 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Jonathan Chocron <jonnyc@amazon.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk,
-        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
-        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
-        hhhawa@amazon.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 4/7] PCI: Add quirk to disable MSI-X support for
- Amazon's Annapurna Labs Root Port
-Message-ID: <20190822075409.GK23903@e119886-lin.cambridge.arm.com>
-References: <20190821153545.17635-1-jonnyc@amazon.com>
- <20190821153545.17635-5-jonnyc@amazon.com>
+        Thu, 22 Aug 2019 03:54:40 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:31242 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726197AbfHVHyk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 03:54:40 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7M7rDAQ014066;
+        Thu, 22 Aug 2019 00:54:20 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=asebsleGK7BS9fcN0sbFoB+K9iif492vBVE8Xdi5FeQ=;
+ b=CzG0Wk2hiwnX3ZvlUP5KvMLq5bXCo6EddrcdAkcv6GcXLsXzceJcbd4xM0tgAIElrXIX
+ pKjGfBkgcb3Z/3qUyAvbY1qFMbMASM412bl/R6Ft3kQqSfMtLFelI/AmjknnL/+H9hIX
+ 8M8SHADGHbvNjLehwLL1Vqx/pGmewOIby0k= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2uhegj9kqw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 22 Aug 2019 00:54:20 -0700
+Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
+ ash-exhub204.TheFacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 22 Aug 2019 00:54:19 -0700
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 22 Aug 2019 00:54:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iwvSH3MaJAuQUZblhwSCxYPIOsGxw5zKRCiXXab5RFl5o6yc3EuWW+MnayHvb7ApgynF14VXRMUSfBKAX5TCPauIy4xn6qajJXrBf5UIv/tneTOo3n0GuY3H6LMLZ0H6aiN3FXoLfqg9lpoUbbKbkXnCRky7UVCrXz8LQJ4kAXU74I6nd0wudHaIRxROUSLl7/n4CmQGxHis4207Q/ZwaetW9kdmtPUni4m9LBNfGQoJYK430qxFLXLZ2/ityOAHGG0VvaXVqJJqabwE8o33iaGREt/VLRkAHcpb7H1BMVelpbBWToRsnPtcYmOfeZxsMXrqhjZlOB+xEbOboCRxmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=asebsleGK7BS9fcN0sbFoB+K9iif492vBVE8Xdi5FeQ=;
+ b=D59uEi+FlyOfrW2/6hTkq5wfQpI7xI8gdbOZutnlhnxGo3u2E40KDzOROKdQdss//gA1MKdF0kHbRPURelJdDkzOfufLdDLu70oC9JJXPB2I9PVAlxmxt3O+DW0miXhi1pNoID2+GErs1UxRvONuBD51Jdsr+eIaw292bHTpEPlk1sGyerzZvzvSv/rkQ0mbJIs8ydqxBSe8qrN7RJxje78Fx7xTaTu1BBXR2Y/0dgcZaimQwTf5Msx4jyJzmeqo9T/6GO8GdHbJLidzmnOZi/+m9RhXArupQUdfsBidUNlIsBYmn++gm2Jr2QFR29hbrfwTnLsC67ZLAkmganIeyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=asebsleGK7BS9fcN0sbFoB+K9iif492vBVE8Xdi5FeQ=;
+ b=HDTkOQrxqeR49ENyDjKyi8HRe+R8pECuFtJ+qUbtVQQO5zRsGBgGg1ddJKnKuNkUxz74NX3AHDWOE9PZ96QNigfqw5pDYzK+tZEKeT0kacoLY95aV6jfpovl5fZKkPYcgyygK+D9Xbz5suu6/9HyR53ETP70lt+fhluyUt58DtI=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1885.namprd15.prod.outlook.com (10.174.254.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Thu, 22 Aug 2019 07:54:17 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::45ee:bc50:acfa:60a5]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::45ee:bc50:acfa:60a5%3]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
+ 07:54:16 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Yonghong Song <yhs@fb.com>, Daniel Xu <dxu@dxuuu.xyz>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>
+Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add
+ PERF_EVENT_IOC_QUERY_PROBE ioctl
+Thread-Topic: [PATCH v3 bpf-next 1/4] tracing/probe: Add
+ PERF_EVENT_IOC_QUERY_PROBE ioctl
+Thread-Index: AQHVVIJ7G4XJ12jTyke2vfGd3/MIdKcEIq6AgAA2IICAAR/TAIAAYKGAgAAbI4CAAANTgIAA2v6AgAAB3AA=
+Date:   Thu, 22 Aug 2019 07:54:16 +0000
+Message-ID: <E9CB8C05-8972-4454-9D19-FA2D0D94F32D@fb.com>
+References: <20190820144503.GV2332@hirez.programming.kicks-ass.net>
+ <BWENHQJIN885.216UOYEIWNGFU@dlxu-fedora-R90QNFJV>
+ <20190821110856.GB2349@hirez.programming.kicks-ass.net>
+ <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
+ <20190821183155.GE2349@hirez.programming.kicks-ass.net>
+ <5ecdcd72-255d-26d1-baf3-dc64498753c2@fb.com>
+ <20190822074737.GG2349@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190822074737.GG2349@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:180::e026]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0cdcba2f-0c3e-4bff-3f28-08d726d5eea4
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR15MB1885;
+x-ms-traffictypediagnostic: MWHPR15MB1885:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB1885B41075E3CB544065DDACB3A50@MWHPR15MB1885.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:935;
+x-forefront-prvs: 01371B902F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(39860400002)(376002)(136003)(189003)(199004)(81166006)(6436002)(486006)(8936002)(50226002)(305945005)(53546011)(7736002)(8676002)(76176011)(6512007)(33656002)(36756003)(4744005)(446003)(186003)(46003)(11346002)(7416002)(2616005)(81156014)(102836004)(6506007)(229853002)(476003)(316002)(54906003)(256004)(6486002)(4326008)(86362001)(99286004)(57306001)(6246003)(2906002)(14454004)(25786009)(6916009)(5660300002)(71200400001)(71190400001)(6116002)(53936002)(64756008)(478600001)(66946007)(66556008)(76116006)(66446008)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1885;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: xxpOIh9lLSmcwDEpAlmVuonsMMF05icV2Qmc89Pept6ASvRENv4SKafzXmaMLrR7np2+FH1EEGvdDp9E4PDc41ym0MSLw57xl55Cr5TruPv81TOh52k3kh5Jbq5T3GkLU92TlQTiDDeq2JlMhqdrrbgc5ExeFYukrbOa2M36c82TDzJfZaHRRHchRgoLwZCFydJ07LWE1KLv9uOf3UtPF7mqQljaFwq66wzi2sJg5uyYIj7NdpqJ0IsoRfrtEVRuybDVnAVmHwgLl8Xo+bKjHrm4e7MjQ6iav+3z8VWgLgCcwLmcLFPfR9vR0Af/V2GjlSKSTyQJjQ9TL4pfIUMLNCStxu2aFFT6ZbdWYif+98SglzxGqZpJh1FzMxlBXiOKCgjtBGPK10uaQg68wDPoaYGm8nMUGi+bDinnn66/m44=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B02A8AEC4F72A14E9779D9B3EE834119@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821153545.17635-5-jonnyc@amazon.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0cdcba2f-0c3e-4bff-3f28-08d726d5eea4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 07:54:16.7601
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6UulFcHtRBE8xLEXBvAHmU95EusYg9Kq0w5rgZNlAMXe6Z+gRrhKtL1rPcAT3nkecMLYrA5cuwueKanBZvD87w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1885
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908220086
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 06:35:44PM +0300, Jonathan Chocron wrote:
-> The Root Port (identified by [1c36:0031]) doesn't support MSI-X. On some
-> platforms it is configured to not advertise the capability at all, while
-> on others it (mistakenly) does. This causes a panic during
-> initialization by the pcieport driver, since it tries to configure the
-> MSI-X capability. Specifically, when trying to access the MSI-X table
-> a "non-existing addr" exception occurs.
-> 
-> Example stacktrace snippet:
-> 
-> [    1.632363] SError Interrupt on CPU2, code 0xbf000000 -- SError
-> [    1.632364] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
-> [    1.632365] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
-> [    1.632365] pstate: 80000005 (Nzcv daif -PAN -UAO)
-> [    1.632366] pc : __pci_enable_msix_range+0x4e4/0x608
-> [    1.632367] lr : __pci_enable_msix_range+0x498/0x608
-> [    1.632367] sp : ffffff80117db700
-> [    1.632368] x29: ffffff80117db700 x28: 0000000000000001
-> [    1.632370] x27: 0000000000000001 x26: 0000000000000000
-> [    1.632372] x25: ffffffd3e9d8c0b0 x24: 0000000000000000
-> [    1.632373] x23: 0000000000000000 x22: 0000000000000000
-> [    1.632375] x21: 0000000000000001 x20: 0000000000000000
-> [    1.632376] x19: ffffffd3e9d8c000 x18: ffffffffffffffff
-> [    1.632378] x17: 0000000000000000 x16: 0000000000000000
-> [    1.632379] x15: ffffff80116496c8 x14: ffffffd3e9844503
-> [    1.632380] x13: ffffffd3e9844502 x12: 0000000000000038
-> [    1.632382] x11: ffffffffffffff00 x10: 0000000000000040
-> [    1.632384] x9 : ffffff801165e270 x8 : ffffff801165e268
-> [    1.632385] x7 : 0000000000000002 x6 : 00000000000000b2
-> [    1.632387] x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
-> [    1.632388] x3 : 0000000000000000 x2 : 0000000000000000
-> [    1.632390] x1 : 0000000000000000 x0 : ffffffd3e9844680
-> [    1.632392] Kernel panic - not syncing: Asynchronous SError Interrupt
-> [    1.632393] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
-> [    1.632394] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
-> [    1.632394] Call trace:
-> [    1.632395]  dump_backtrace+0x0/0x140
-> [    1.632395]  show_stack+0x14/0x20
-> [    1.632396]  dump_stack+0xa8/0xcc
-> [    1.632396]  panic+0x140/0x334
-> [    1.632397]  nmi_panic+0x6c/0x70
-> [    1.632398]  arm64_serror_panic+0x74/0x88
-> [    1.632398]  __pte_error+0x0/0x28
-> [    1.632399]  el1_error+0x84/0xf8
-> [    1.632400]  __pci_enable_msix_range+0x4e4/0x608
-> [    1.632400]  pci_alloc_irq_vectors_affinity+0xdc/0x150
-> [    1.632401]  pcie_port_device_register+0x2b8/0x4e0
-> [    1.632402]  pcie_portdrv_probe+0x34/0xf0
-> 
-> Notice that this quirk also disables MSI (which may work, but hasn't
-> been tested nor has a current use case), since currently there is no
-> standard way to disable only MSI-X.
-> 
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> ---
->  drivers/pci/quirks.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 23672680dba7..b6e6e7df3f7b 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2925,6 +2925,24 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
->  			quirk_msi_intx_disable_qca_bug);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
->  			quirk_msi_intx_disable_qca_bug);
-> +
-> +/*
-> + * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-X, so it
-> + * should be disabled on platforms where the device (mistakenly) advertises it.
-> + *
-> + * Notice that this quirk also disables MSI (which may work, but hasn't been
-> + * tested), since currently there is no standard way to disable only MSI-X.
+Hi Peter,=20
 
-Thanks for adding this.
+> On Aug 22, 2019, at 12:47 AM, Peter Zijlstra <peterz@infradead.org> wrote=
+:
+>=20
+> On Wed, Aug 21, 2019 at 06:43:49PM +0000, Yonghong Song wrote:
+>> On 8/21/19 11:31 AM, Peter Zijlstra wrote:
+>=20
+>>> So extending PERF_RECORD_LOST doesn't work. But PERF_FORMAT_LOST might
+>>> still work fine; but you get to implement it for all software events.
+>>=20
+>> Could you give more specifics about PERF_FORMAT_LOST? Googling=20
+>> "PERF_FORMAT_LOST" only yields two emails which we are discussing here :=
+-(
+>=20
+> Look at what the other PERF_FORMAT_ flags do? Basically it is adding a
+> field to the read(2) output.
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Do we need to implement PERF_FORMAT_LOST for all software events? If user
+space asks for PERF_FORMAT_LOST for events that do not support it, can we
+just fail sys_perf_event_open()?
 
+Thanks,
+Song
 
-> + *
-> + * The 0031 device id is reused for other non Root Port device types,
-> + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
-> + */
-> +static void quirk_al_msi_disable(struct pci_dev *dev)
-> +{
-> +	dev->no_msi = 1;
-> +	pci_warn(dev, "Disabling MSI/MSI-X\n");
-> +}
-> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
-> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_msi_disable);
->  #endif /* CONFIG_PCI_MSI */
->  
->  /*
-> -- 
-> 2.17.1
-> 
