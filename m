@@ -2,122 +2,149 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A49C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02D5C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE68206BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06FB206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731730AbfHVHwV (ORCPT
+        id S1731747AbfHVHyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:52:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52264 "EHLO mx1.redhat.com"
+        Thu, 22 Aug 2019 03:54:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:40530 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbfHVHwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:52:21 -0400
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 073B2C057E9F
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 07:52:21 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id d64so2594591wmc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 00:52:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=7BKcrVO8Nhd+WXGWUEZTUpLjr5rNDrS+NAVt7gSeayI=;
-        b=EY10/OMQcfCH+mRTScK/Hh1GWEoXGxVhBjC2qxXq+L075wgV4pHDVwOEmAbJWj6bFz
-         sLZ5wKAEuH2mUuKbUQvByBkenlS6BN7ZBgIdroFh3IS74wSOcefkTxyoSI2VaCH05M8L
-         LMnptInic52wHzlaoJWYCNysh55YNKa1YcPJx6m/ImZ2LFXk1cQiCe4co4Cm6fHvlEdq
-         OrTb45udrz6cRGeuvF6Y/xASM5Kd0gCuFVX0PRpBKdzogaK7wUwbRm0lUM/KOHthtXVH
-         gA90VRBHiRFV0Zg+jwJ8gg9eTzmVFXHmRNEtzIpqCvk/iKDoBwICF+DyVg8Ea4UG8olQ
-         GYfg==
-X-Gm-Message-State: APjAAAU1j+xjg7Naj8QKH4xEMbbtoDFS7XPWvPh+/F8vW+1LRNuBeagi
-        Vp826zfuPcxoF+UOLGs3389PHuOJOTKccOzcn9mWDbYrRmKOKFjXW7G2aj+r6KBXRjm9gz2q87U
-        /M6eW0D47z4PATyhDiGSDVo5Q
-X-Received: by 2002:a7b:c0d4:: with SMTP id s20mr4324437wmh.122.1566460336705;
-        Thu, 22 Aug 2019 00:52:16 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwWuWvgDKAuh+xWDFJnsdBvnUFY6ufegdNELeez5PrP8mvCRsuw/nstCz8A23ZrVau0d9htVA==
-X-Received: by 2002:a7b:c0d4:: with SMTP id s20mr4324415wmh.122.1566460336454;
-        Thu, 22 Aug 2019 00:52:16 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id i5sm26461922wrn.48.2019.08.22.00.52.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 00:52:15 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] x86/hyper-v: enable TSC page clocksource on 32bit
-In-Reply-To: <alpine.DEB.2.21.1908212321320.1983@nanos.tec.linutronix.de>
-References: <20190821095650.1841-1-vkuznets@redhat.com> <alpine.DEB.2.21.1908212316040.1983@nanos.tec.linutronix.de> <alpine.DEB.2.21.1908212321320.1983@nanos.tec.linutronix.de>
-Date:   Thu, 22 Aug 2019 09:52:14 +0200
-Message-ID: <877e75r61d.fsf@vitty.brq.redhat.com>
+        id S1726197AbfHVHyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 03:54:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5216E344;
+        Thu, 22 Aug 2019 00:54:12 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E94F3F706;
+        Thu, 22 Aug 2019 00:54:11 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 08:54:10 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
+        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
+        hhhawa@amazon.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 4/7] PCI: Add quirk to disable MSI-X support for
+ Amazon's Annapurna Labs Root Port
+Message-ID: <20190822075409.GK23903@e119886-lin.cambridge.arm.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+ <20190821153545.17635-5-jonnyc@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821153545.17635-5-jonnyc@amazon.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner <tglx@linutronix.de> writes:
+On Wed, Aug 21, 2019 at 06:35:44PM +0300, Jonathan Chocron wrote:
+> The Root Port (identified by [1c36:0031]) doesn't support MSI-X. On some
+> platforms it is configured to not advertise the capability at all, while
+> on others it (mistakenly) does. This causes a panic during
+> initialization by the pcieport driver, since it tries to configure the
+> MSI-X capability. Specifically, when trying to access the MSI-X table
+> a "non-existing addr" exception occurs.
+> 
+> Example stacktrace snippet:
+> 
+> [    1.632363] SError Interrupt on CPU2, code 0xbf000000 -- SError
+> [    1.632364] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
+> [    1.632365] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+> [    1.632365] pstate: 80000005 (Nzcv daif -PAN -UAO)
+> [    1.632366] pc : __pci_enable_msix_range+0x4e4/0x608
+> [    1.632367] lr : __pci_enable_msix_range+0x498/0x608
+> [    1.632367] sp : ffffff80117db700
+> [    1.632368] x29: ffffff80117db700 x28: 0000000000000001
+> [    1.632370] x27: 0000000000000001 x26: 0000000000000000
+> [    1.632372] x25: ffffffd3e9d8c0b0 x24: 0000000000000000
+> [    1.632373] x23: 0000000000000000 x22: 0000000000000000
+> [    1.632375] x21: 0000000000000001 x20: 0000000000000000
+> [    1.632376] x19: ffffffd3e9d8c000 x18: ffffffffffffffff
+> [    1.632378] x17: 0000000000000000 x16: 0000000000000000
+> [    1.632379] x15: ffffff80116496c8 x14: ffffffd3e9844503
+> [    1.632380] x13: ffffffd3e9844502 x12: 0000000000000038
+> [    1.632382] x11: ffffffffffffff00 x10: 0000000000000040
+> [    1.632384] x9 : ffffff801165e270 x8 : ffffff801165e268
+> [    1.632385] x7 : 0000000000000002 x6 : 00000000000000b2
+> [    1.632387] x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
+> [    1.632388] x3 : 0000000000000000 x2 : 0000000000000000
+> [    1.632390] x1 : 0000000000000000 x0 : ffffffd3e9844680
+> [    1.632392] Kernel panic - not syncing: Asynchronous SError Interrupt
+> [    1.632393] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
+> [    1.632394] Hardware name: Annapurna Labs Alpine V3 EVP (DT)
+> [    1.632394] Call trace:
+> [    1.632395]  dump_backtrace+0x0/0x140
+> [    1.632395]  show_stack+0x14/0x20
+> [    1.632396]  dump_stack+0xa8/0xcc
+> [    1.632396]  panic+0x140/0x334
+> [    1.632397]  nmi_panic+0x6c/0x70
+> [    1.632398]  arm64_serror_panic+0x74/0x88
+> [    1.632398]  __pte_error+0x0/0x28
+> [    1.632399]  el1_error+0x84/0xf8
+> [    1.632400]  __pci_enable_msix_range+0x4e4/0x608
+> [    1.632400]  pci_alloc_irq_vectors_affinity+0xdc/0x150
+> [    1.632401]  pcie_port_device_register+0x2b8/0x4e0
+> [    1.632402]  pcie_portdrv_probe+0x34/0xf0
+> 
+> Notice that this quirk also disables MSI (which may work, but hasn't
+> been tested nor has a current use case), since currently there is no
+> standard way to disable only MSI-X.
+> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> ---
+>  drivers/pci/quirks.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 23672680dba7..b6e6e7df3f7b 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2925,6 +2925,24 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
+>  			quirk_msi_intx_disable_qca_bug);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
+>  			quirk_msi_intx_disable_qca_bug);
+> +
+> +/*
+> + * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-X, so it
+> + * should be disabled on platforms where the device (mistakenly) advertises it.
+> + *
+> + * Notice that this quirk also disables MSI (which may work, but hasn't been
+> + * tested), since currently there is no standard way to disable only MSI-X.
 
-> On Wed, 21 Aug 2019, Thomas Gleixner wrote:
->
->> On Wed, 21 Aug 2019, Vitaly Kuznetsov wrote:
->> 
->> > There is no particular reason to not enable TSC page clocksource
->> > on 32-bit. mul_u64_u64_shr() is available and despite the increased
->> > computational complexity (compared to 64bit) TSC page is still a huge
->> > win compared to MSR-based clocksource.
->> > 
->> > In-kernel reads:
->> >   MSR based clocksource: 3361 cycles
->> >   TSC page clocksource: 49 cycles
->> > 
->> > Reads from userspace (unilizing vDSO in case of TSC page):
->> >   MSR based clocksource: 5664 cycles
->> >   TSC page clocksource: 131 cycles
->> > 
->> > Enabling TSC page on 32bits allows us to get rid of CONFIG_HYPERV_TSCPAGE
->> 
->> s/allows us/allows/
->> 
->> > as it is now not any different from CONFIG_HYPERV_TIMER.
->> > 
->> > Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> > ---
->> >  arch/x86/include/asm/vdso/gettimeofday.h |  6 +++---
->> >  drivers/clocksource/hyperv_timer.c       | 11 -----------
->> >  drivers/hv/Kconfig                       |  3 ---
->> >  include/clocksource/hyperv_timer.h       |  6 ++----
->> >  4 files changed, 5 insertions(+), 21 deletions(-)
->> 
->> Really nice cleanup as a side effect of adding functionality.
->
-> That said, could you please rebase that on
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/core
->
-> as I just applied the TSC page patches there and this conflicts left and
-> right.
+Thanks for adding this.
 
-Sure, v2 is coming!
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
--- 
-Vitaly
+
+> + *
+> + * The 0031 device id is reused for other non Root Port device types,
+> + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
+> + */
+> +static void quirk_al_msi_disable(struct pci_dev *dev)
+> +{
+> +	dev->no_msi = 1;
+> +	pci_warn(dev, "Disabling MSI/MSI-X\n");
+> +}
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
+> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_msi_disable);
+>  #endif /* CONFIG_PCI_MSI */
+>  
+>  /*
+> -- 
+> 2.17.1
+> 
