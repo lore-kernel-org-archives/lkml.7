@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 285B5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806AEC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E836423402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C78B2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494992;
-	bh=y/o8gR2vvWI7XQe4CdqvH2MvoSSYXk9D2PFtuVz2B2Y=;
+	s=default; t=1566494997;
+	bh=kXRucsdsAK4OLv/WjohIRPoTXP06ovk62bEuIB4hmX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O5Ngtyqt81kVY1GTJYkM2Fe1+2kKM99N1tyGRdTlCr1vnAjSXE5k/koCf5HaeMlcI
-	 94n4moBWJhXZzOiPbpsrJXKseK67mjPVi2xG7+pPjcNYzKAyLHIB5mE6bCtZPIVirb
-	 pEem1GItFq4tCk+DtfW5Y+t9t/NICms204auUQbA=
+	b=eEuCVskfqy0wvLQM8+KhFykvDR4lDhd9B0ZceAvIH349qsFKA3f39tekECFmqaLpU
+	 DD9jNuNhMHwVOM7g0n9ppqJ+in+tBkgt6EDy34HlAINTWc8MhJH5fvGW7G9Xl5Psju
+	 s1gf/7u7C/OktcfAdr/GieoBs7jbPl/uV57uiTNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392073AbfHVR3u (ORCPT
+        id S2392085AbfHVR3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:29:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51754 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:29:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404697AbfHVR0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:26:19 -0400
+        id S2404692AbfHVR0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:26:18 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7FB423400;
-        Thu, 22 Aug 2019 17:26:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 825CA2341B;
+        Thu, 22 Aug 2019 17:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494779;
-        bh=y/o8gR2vvWI7XQe4CdqvH2MvoSSYXk9D2PFtuVz2B2Y=;
+        s=default; t=1566494777;
+        bh=kXRucsdsAK4OLv/WjohIRPoTXP06ovk62bEuIB4hmX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2b8MmEQlJWiccxkPJ3HCE2zrITcpWZcFG6Tr2iS4vsxpPUQVJ421BtUh0VT1wrZ6Z
-         heKAknghn7HCgaEgS5PwUvudWfDKOgrUgXj2XlyYuXippT8A4+5y14F0IvtnragNqF
-         kJ+XFHR79OuFSjHEn89URBpJbcHRJQYQnkkTqhD4=
+        b=kvV2LQewKriHCK5LT/znsa47jsP6gX6fiXTnnOuHai+1FWjtbbiVxPEan62d5wN/j
+         1TacJpO8+RYpszvjVePgHEnOzyQ/V2G3TIaDDzalUOr3VFs2O5w9BIHCdalAJQTCxf
+         6w4gWjhQNC07nSTRjL8NF/s3mEpBk9d1KpDPK+V0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 85/85] mmc: sdhci-of-arasan: Do now show error message in case of deffered probe
-Date:   Thu, 22 Aug 2019 10:19:58 -0700
-Message-Id: <20190822171734.734466747@linuxfoundation.org>
+        stable@vger.kernel.org, Huy Nguyen <huyn@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.19 83/85] net/mlx5e: Only support tx/rx pause setting for port owner
+Date:   Thu, 22 Aug 2019 10:19:56 -0700
+Message-Id: <20190822171734.652218299@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -59,33 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Simek <michal.simek@xilinx.com>
+From: Huy Nguyen <huyn@mellanox.com>
 
-commit 60208a267208c27fa3f23dfd36cbda180471fa98 upstream.
+[ Upstream commit 466df6eb4a9e813b3cfc674363316450c57a89c5 ]
 
-When mmc-pwrseq property is passed mmc_pwrseq_alloc() can return
--EPROBE_DEFER because driver for power sequence provider is not probed
-yet. Do not show error message when this situation happens.
+Only support changing tx/rx pause frame setting if the net device
+is the vport group manager.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 3c2d18ef22df ("net/mlx5e: Support ethtool get/set_pauseparam")
+Signed-off-by: Huy Nguyen <huyn@mellanox.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/mmc/host/sdhci-of-arasan.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -788,7 +788,8 @@ static int sdhci_arasan_probe(struct pla
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
+@@ -1083,6 +1083,9 @@ static int mlx5e_set_pauseparam(struct n
+ 	struct mlx5_core_dev *mdev = priv->mdev;
+ 	int err;
  
- 	ret = mmc_of_parse(host->mmc);
- 	if (ret) {
--		dev_err(&pdev->dev, "parsing dt failed (%d)\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "parsing dt failed (%d)\n", ret);
- 		goto unreg_clk;
- 	}
++	if (!MLX5_CAP_GEN(mdev, vport_group_manager))
++		return -EOPNOTSUPP;
++
+ 	if (pauseparam->autoneg)
+ 		return -EINVAL;
  
 
 
