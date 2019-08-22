@@ -2,373 +2,433 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1463DC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7F9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77AC2339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20CDA21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:18:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="LJSQO+uY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e7vWV5uD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731325AbfHVFGA (ORCPT
+        id S1729898AbfHVFSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 01:06:00 -0400
-Received: from mail-eopbgr810109.outbound.protection.outlook.com ([40.107.81.109]:28619
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731265AbfHVFF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 01:05:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TkPtwYFnYZI/Tw4k7pPQtxCvNqnyyON489wgbNGDI4jV+JLfNPEWztCdk6Ui4j0tM+Tay7vr4Oi/eZtI6YNGcZcgUtrUnw7WkL3sDGiZw4h636wbwiFCPWXf6a6LnWfXBei5ilfpsJDu0fYvrqM+7SF2Xb9BFXgEMXMlEAYvZHnMqV8kRCqeNnZZqlWsBgOVQ4hUKdx+v4dj+gKOKzpeQQ7Yz1BM7EbJQIBT3FwqHLqAkd066GZTRU9suBSff3yrgbtdBR+1xbndQ4/Th4iOHY7BJQIzfm528ZenNivK1+kRGpwcaqd1ThYxnq2Nw/JEndYGsCAXSpqJVW4B9ekicg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=49pCCLY0UQGnJr+msFhZ/lhUbgof+155r2+qubA1C+M=;
- b=jDoBaVB25UbAHKXDbaMS/agrHDlkKxo9EizbOS3w9cp8acb5OPGxn/QBboR4NLXPVLhmWqECsUEhFYZwftwWv8WRVr8gvs0G5Il/vzd74lLwjv32baK9C3ZdC96SlFzfeGVsxMtZnaz5WdM264tpQsHIpapOQnB7QcG/2hrebrFEYEcH17QCNTjrOJmPyvf1eAkka9sPnrJgA40lFXaa/zYZ4r7rLxvqR9ABCE56FDVko92Lj34sjOeY8c1yZAxIl9qMbuiNOVnuh5Ptq6hzkQ2exfx/oYlB9l9Ip/e1TLWQV7y9jtHF2H29hBHztjgctqQ1F4dItZvaDwFAtl55lw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=49pCCLY0UQGnJr+msFhZ/lhUbgof+155r2+qubA1C+M=;
- b=LJSQO+uYHJpdU/1w7GHsK3EaRQe99OQFpEF7x57EbR5z7QfUltwzd2sRqVfH+frDVGUAFfF7Q5U44TqNHYVYgW+SJRI5wiP3uT070qsL3+aFrh0BrwOjgmPV4ktLnSXaImGJURCDHCakCgcAqO4//G8o3q+nvo8wYU5z1pPBSmY=
-Received: from MN2PR21MB1248.namprd21.prod.outlook.com (20.179.20.225) by
- MN2PR21MB1279.namprd21.prod.outlook.com (20.179.21.91) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.4; Thu, 22 Aug 2019 05:05:41 +0000
-Received: from MN2PR21MB1248.namprd21.prod.outlook.com
- ([fe80::147a:ea1f:326d:832e]) by MN2PR21MB1248.namprd21.prod.outlook.com
- ([fe80::147a:ea1f:326d:832e%3]) with mapi id 15.20.2199.011; Thu, 22 Aug 2019
- 05:05:41 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     "sashal@kernel.org" <sashal@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "eranbe@mellanox.com" <eranbe@mellanox.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next,v4, 2/6] PCI: hv: Add a Hyper-V PCI interface driver
- for software backchannel interface
-Thread-Topic: [PATCH net-next,v4, 2/6] PCI: hv: Add a Hyper-V PCI interface
- driver for software backchannel interface
-Thread-Index: AQHVWKc+GNFRZDxadEKTuhFzjn601Q==
-Date:   Thu, 22 Aug 2019 05:05:41 +0000
-Message-ID: <1566450236-36757-3-git-send-email-haiyangz@microsoft.com>
-References: <1566450236-36757-1-git-send-email-haiyangz@microsoft.com>
-In-Reply-To: <1566450236-36757-1-git-send-email-haiyangz@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR14CA0039.namprd14.prod.outlook.com
- (2603:10b6:300:12b::25) To MN2PR21MB1248.namprd21.prod.outlook.com
- (2603:10b6:208:3b::33)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 2
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6cc3dabc-c434-4b75-a945-08d726be60fb
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600158)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR21MB1279;
-x-ms-traffictypediagnostic: MN2PR21MB1279:|MN2PR21MB1279:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR21MB1279BADAEE59C4AD531A7106ACA50@MN2PR21MB1279.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01371B902F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(136003)(366004)(376002)(346002)(189003)(199004)(71200400001)(71190400001)(186003)(446003)(66066001)(2616005)(4326008)(36756003)(6392003)(6436002)(256004)(53936002)(7846003)(7416002)(6512007)(26005)(6486002)(11346002)(316002)(2906002)(2201001)(110136005)(22452003)(54906003)(10090500001)(476003)(25786009)(386003)(7736002)(64756008)(81156014)(66946007)(66446008)(8936002)(10290500003)(478600001)(66476007)(2501003)(102836004)(4720700003)(6116002)(3846002)(6506007)(305945005)(5660300002)(486006)(99286004)(66556008)(81166006)(14454004)(50226002)(8676002)(52116002)(76176011)(142933001)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1279;H:MN2PR21MB1248.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 72v0/CFGN8vThzVMTEhTdEdxs/E/tKB6nRzM6iykUNo4cEGmzfBkG9uF25cFTlpQBf7pgSjHhbE73mEExtYpLJPOAx+uYf4s2e/TZ17OPQiIjrlj2eV/78M9hY8DN09KhP/cXSQQc9KhsyIm9qiiHm5++wH+2WBITzUBp58mGRNPKpXMHmvsHlX3k5HEx/Bk3KcWX8XqOwddGHeVWpQTMD+bS3F/7luEjeYEjQUYcYkywg9mf+LLodiqZT35KcA0Eqkuv8sQK5PRaHHYK7JDMRIney95HOrsjVbnSBrqaQmxbbT9gz8ZdlQWacYoCMXFCHe/DRDDploZAWPVL+x+zOrDJ5B/vFCd5e/aKe5xm9/h+puwY4erTioe4Ard4OshjHTxPwl2JcSJLpzF6sP8672jC9JZy/HeZJ2oCN+OPik=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 22 Aug 2019 01:18:34 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46817 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727310AbfHVFSd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 01:18:33 -0400
+Received: by mail-pg1-f196.google.com with SMTP id m3so2775216pgv.13;
+        Wed, 21 Aug 2019 22:18:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=iXHNUccWqFsxDsUpEA4HFgfiuRoSIsxb+X2sAiYxRTk=;
+        b=e7vWV5uDWAhyQNNIHSNsC9RR7as+xpmRdW3F4zNo/fcykfjsq0/qaVSv6cHTGjye8/
+         8L68/iWvnNkEin/Lab4aT5ssrdor5mVkgYZuQNJXkB2rbjB6DRVanfzaUkwZ7k0TxWDs
+         VRAJewy0wOe/M6lnUe3s8W9MRFxma2+u1/f3mvqI3snQEPZGbyfCMNlgr02jucPnJIBA
+         Hel5Ib7ZEbz4M70oo50xHMqxAXHvzNHsRk0Xejllr4WyXhPt29lKxw4frKrAsf3LG3Al
+         LdFyNAP37TKnIx1lGi5Ek1ZqKdKgs0H6z7IpvzyR0svz6DvGmwfk9llG42A71ZKL/EbE
+         uphg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=iXHNUccWqFsxDsUpEA4HFgfiuRoSIsxb+X2sAiYxRTk=;
+        b=HJzu6t3PVeBEw0xKf11PIosLEMRkE+VQNGYzEK6lQTpg4edPl+GJbhs7uTDk0l8ra/
+         Ku+LZw7bPEE6Xz5owPMului1y6SI1ehHvC0WoK/MoBEUEC1CxQ4kNNJ1QZjLnh7Clz5x
+         iH9r46xq626oW8zITADjGE/U35S48/f4fMcY1F9thphCeOcvLYtFH+cl8Hpi1I5w98qm
+         i1QGFZ5LN2pnSTvVnBuukuKnhyAoDD7XCOkBPkDHK3wkMExtXFEJsOze7dbznEpikuyC
+         QFYfaxoJFoZWMnS+vvBVhLjCdEi0zTqo0KQi+nONZ4Rav9X3gC+pw1LBy9Lcub51I6Ka
+         lvDg==
+X-Gm-Message-State: APjAAAXlib8KOIUrqcBgzSEzgX8sT8fte6FQMKY78sw9LEDHKaJqPPQ0
+        T34D13UfrSczI0pwxG7J6hk=
+X-Google-Smtp-Source: APXvYqyAGqb/LU7PAogJtMNpNOTBuRVQDjjsalnYDNzZv6RnYRVYukBbxuxf3taPJrNsuQqyBxJv+w==
+X-Received: by 2002:a63:b46:: with SMTP id a6mr32689753pgl.235.1566451112386;
+        Wed, 21 Aug 2019 22:18:32 -0700 (PDT)
+Received: from wafer.ozlabs.ibm.com ([122.99.82.10])
+        by smtp.googlemail.com with ESMTPSA id j6sm42686111pfg.158.2019.08.21.22.18.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2019 22:18:31 -0700 (PDT)
+Message-ID: <23135466fc524a13cd76532ec59f84de51152a1c.camel@gmail.com>
+Subject: Re: [PATCH v2 2/4] powerpc: expose secure variables to userspace
+ via sysfs
+From:   Oliver O'Halloran <oohall@gmail.com>
+To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>
+Date:   Thu, 22 Aug 2019 15:18:23 +1000
+In-Reply-To: <1566400103-18201-3-git-send-email-nayna@linux.ibm.com>
+References: <1566400103-18201-1-git-send-email-nayna@linux.ibm.com>
+         <1566400103-18201-3-git-send-email-nayna@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6cc3dabc-c434-4b75-a945-08d726be60fb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 05:05:41.1020
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TaUir6IjTJRJOpq7UNeP5OJE0+rky/6WYXoU0LxdrcCIgK3zTTLhYb+hFOCFUP3ESxTrOyN1zw3kAKEWegWTqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1279
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This interface driver is a helper driver allows other drivers to
-have a common interface with the Hyper-V PCI frontend driver.
+On Wed, 2019-08-21 at 11:08 -0400, Nayna Jain wrote:
+> PowerNV secure variables, which store the keys used for OS kernel
+> verification, are managed by the firmware. These secure variables need to
+> be accessed by the userspace for addition/deletion of the certificates.
+> 
+> This patch adds the sysfs interface to expose secure variables for PowerNV
+> secureboot. The users shall use this interface for manipulating
+> the keys stored in the secure variables.
+> 
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> ---
+>  Documentation/ABI/testing/sysfs-secvar |  27 ++++
+>  arch/powerpc/Kconfig                   |   9 ++
+>  arch/powerpc/kernel/Makefile           |   1 +
+>  arch/powerpc/kernel/secvar-sysfs.c     | 210 +++++++++++++++++++++++++
+>  4 files changed, 247 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-secvar
+>  create mode 100644 arch/powerpc/kernel/secvar-sysfs.c
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-secvar b/Documentation/ABI/testing/sysfs-secvar
+> new file mode 100644
+> index 000000000000..68f0e03d873d
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-secvar
+> @@ -0,0 +1,27 @@
+> +What:		/sys/firmware/secvar
+> +Date:		August 2019
+> +Contact:	Nayna Jain <nayna@linux.ibm.com>
+> +Description:
+> +		This directory exposes interfaces for interacting with
+> +		the secure variables managed by OPAL firmware.
+> +
+> +		This is only for the powerpc/powernv platform.
+> +
+> +		Directory:
+> +		vars:		This directory lists all the variables that
+> +				are supported by the OPAL. The variables are
+> +				represented in the form of directories with
+> +				their variable names. The variable name is
+> +				unique and is in ASCII representation. The data
+> +				and size can be determined by reading their
+> +				respective attribute files.
+> +
+> +		Each variable directory has the following files:
+> +		name:		An ASCII representation of the variable name
+> +		data:		A read-only file containing the value of the
+> +				variable
+> +		size:		An integer representation of the size of the
+> +				content of the variable. In other works, it
+> +				represents the size of the data
+> +		update:		A write-only file that is used to submit the new
+> +				value for the variable.
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 42109682b727..b4bdf77837b2 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -925,6 +925,15 @@ config PPC_SECURE_BOOT
+>  	  allows user to enable OS Secure Boot on PowerPC systems that
+>  	  have firmware secure boot support.
+>  
+> +config SECVAR_SYSFS
+> +        tristate "Enable sysfs interface for POWER secure variables"
+> +        depends on PPC_SECURE_BOOT
+> +        help
+> +          POWER secure variables are managed and controlled by firmware.
+> +          These variables are exposed to userspace via sysfs to enable
+> +          read/write operations on these variables. Say Y if you have
+> +	  secure boot enabled and want to expose variables to userspace.
+> +
+>  endmenu
+>  
+>  config ISA_DMA_API
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index 9041563f1c74..4ea7b738c3a3 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -158,6 +158,7 @@ obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
+>  obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
+>  
+>  obj-$(CONFIG_PPC_SECURE_BOOT)	+= secboot.o ima_arch.o secvar-ops.o
+> +obj-$(CONFIG_SECVAR_SYSFS)     += secvar-sysfs.o
+>  
+>  # Disable GCOV, KCOV & sanitizers in odd or sensitive code
+>  GCOV_PROFILE_prom_init.o := n
+> diff --git a/arch/powerpc/kernel/secvar-sysfs.c b/arch/powerpc/kernel/secvar-sysfs.c
+> new file mode 100644
+> index 000000000000..e46986bb29a0
+> --- /dev/null
+> +++ b/arch/powerpc/kernel/secvar-sysfs.c
+> @@ -0,0 +1,210 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2019 IBM Corporation <nayna@linux.ibm.com>
+> + *
+> + * This code exposes secure variables to user via sysfs
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/compat.h>
+> +#include <linux/string.h>
+> +#include <asm/opal.h>
+> +#include <asm/secvar.h>
+> +
+> +//Approximating it for now, it is bound to change.
+> +#define VARIABLE_MAX_SIZE  32000
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
----
- MAINTAINERS                              |  1 +
- drivers/pci/Kconfig                      |  1 +
- drivers/pci/controller/Kconfig           |  7 ++++
- drivers/pci/controller/Makefile          |  1 +
- drivers/pci/controller/pci-hyperv-intf.c | 67 ++++++++++++++++++++++++++++=
-++++
- drivers/pci/controller/pci-hyperv.c      | 12 ++++--
- include/linux/hyperv.h                   | 30 ++++++++++----
- 7 files changed, 108 insertions(+), 11 deletions(-)
- create mode 100644 drivers/pci/controller/pci-hyperv-intf.c
+this needs to be communicated from the secvar backend, maybe via a
+field in the ops structure?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a406947..9860853 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7469,6 +7469,7 @@ F:	drivers/hid/hid-hyperv.c
- F:	drivers/hv/
- F:	drivers/input/serio/hyperv-keyboard.c
- F:	drivers/pci/controller/pci-hyperv.c
-+F:	drivers/pci/controller/pci-hyperv-intf.c
- F:	drivers/net/hyperv/
- F:	drivers/scsi/storvsc_drv.c
- F:	drivers/uio/uio_hv_generic.c
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 2ab9240..c313de9 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -182,6 +182,7 @@ config PCI_LABEL
- config PCI_HYPERV
-         tristate "Hyper-V PCI Frontend"
-         depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_6=
-4
-+	select PCI_HYPERV_INTERFACE
-         help
-           The PCI device frontend driver allows the kernel to import arbit=
-rary
-           PCI devices from a PCI backend to support PCI driver domains.
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfi=
-g
-index fe9f9f1..70e0782 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -281,5 +281,12 @@ config VMD
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called vmd.
-=20
-+config PCI_HYPERV_INTERFACE
-+	tristate "Hyper-V PCI Interface"
-+	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
-+	help
-+	  The Hyper-V PCI Interface is a helper driver allows other drivers to
-+	  have a common interface with the Hyper-V PCI frontend driver.
-+
- source "drivers/pci/controller/dwc/Kconfig"
- endmenu
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makef=
-ile
-index d56a507..a2a22c9 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -4,6 +4,7 @@ obj-$(CONFIG_PCIE_CADENCE_HOST) +=3D pcie-cadence-host.o
- obj-$(CONFIG_PCIE_CADENCE_EP) +=3D pcie-cadence-ep.o
- obj-$(CONFIG_PCI_FTPCI100) +=3D pci-ftpci100.o
- obj-$(CONFIG_PCI_HYPERV) +=3D pci-hyperv.o
-+obj-$(CONFIG_PCI_HYPERV_INTERFACE) +=3D pci-hyperv-intf.o
- obj-$(CONFIG_PCI_MVEBU) +=3D pci-mvebu.o
- obj-$(CONFIG_PCI_AARDVARK) +=3D pci-aardvark.o
- obj-$(CONFIG_PCI_TEGRA) +=3D pci-tegra.o
-diff --git a/drivers/pci/controller/pci-hyperv-intf.c b/drivers/pci/control=
-ler/pci-hyperv-intf.c
-new file mode 100644
-index 0000000..cc96be4
---- /dev/null
-+++ b/drivers/pci/controller/pci-hyperv-intf.c
-@@ -0,0 +1,67 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) Microsoft Corporation.
-+ *
-+ * Author:
-+ *   Haiyang Zhang <haiyangz@microsoft.com>
-+ *
-+ * This small module is a helper driver allows other drivers to
-+ * have a common interface with the Hyper-V PCI frontend driver.
-+ */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/hyperv.h>
-+
-+struct hyperv_pci_block_ops hvpci_block_ops;
-+EXPORT_SYMBOL_GPL(hvpci_block_ops);
-+
-+int hyperv_read_cfg_blk(struct pci_dev *dev, void *buf, unsigned int buf_l=
-en,
-+			unsigned int block_id, unsigned int *bytes_returned)
-+{
-+	if (!hvpci_block_ops.read_block)
-+		return -EOPNOTSUPP;
-+
-+	return hvpci_block_ops.read_block(dev, buf, buf_len, block_id,
-+					  bytes_returned);
-+}
-+EXPORT_SYMBOL_GPL(hyperv_read_cfg_blk);
-+
-+int hyperv_write_cfg_blk(struct pci_dev *dev, void *buf, unsigned int len,
-+			 unsigned int block_id)
-+{
-+	if (!hvpci_block_ops.write_block)
-+		return -EOPNOTSUPP;
-+
-+	return hvpci_block_ops.write_block(dev, buf, len, block_id);
-+}
-+EXPORT_SYMBOL_GPL(hyperv_write_cfg_blk);
-+
-+int hyperv_reg_block_invalidate(struct pci_dev *dev, void *context,
-+				void (*block_invalidate)(void *context,
-+							 u64 block_mask))
-+{
-+	if (!hvpci_block_ops.reg_blk_invalidate)
-+		return -EOPNOTSUPP;
-+
-+	return hvpci_block_ops.reg_blk_invalidate(dev, context,
-+						  block_invalidate);
-+}
-+EXPORT_SYMBOL_GPL(hyperv_reg_block_invalidate);
-+
-+static void __exit exit_hv_pci_intf(void)
-+{
-+}
-+
-+static int __init init_hv_pci_intf(void)
-+{
-+	return 0;
-+}
-+
-+module_init(init_hv_pci_intf);
-+module_exit(exit_hv_pci_intf);
-+
-+MODULE_DESCRIPTION("Hyper-V PCI Interface");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/p=
-ci-hyperv.c
-index 57adeca..9c93ac2 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -983,7 +983,6 @@ int hv_read_config_block(struct pci_dev *pdev, void *bu=
-f, unsigned int len,
- 	*bytes_returned =3D comp_pkt.bytes_returned;
- 	return 0;
- }
--EXPORT_SYMBOL(hv_read_config_block);
-=20
- /**
-  * hv_pci_write_config_compl() - Invoked when a response packet for a writ=
-e
-@@ -1070,7 +1069,6 @@ int hv_write_config_block(struct pci_dev *pdev, void =
-*buf, unsigned int len,
-=20
- 	return 0;
- }
--EXPORT_SYMBOL(hv_write_config_block);
-=20
- /**
-  * hv_register_block_invalidate() - Invoked when a config block invalidati=
-on
-@@ -1101,7 +1099,6 @@ int hv_register_block_invalidate(struct pci_dev *pdev=
-, void *context,
- 	return 0;
-=20
- }
--EXPORT_SYMBOL(hv_register_block_invalidate);
-=20
- /* Interrupt management hooks */
- static void hv_int_desc_free(struct hv_pci_dev *hpdev,
-@@ -3045,10 +3042,19 @@ static int hv_pci_remove(struct hv_device *hdev)
- static void __exit exit_hv_pci_drv(void)
- {
- 	vmbus_driver_unregister(&hv_pci_drv);
-+
-+	hvpci_block_ops.read_block =3D NULL;
-+	hvpci_block_ops.write_block =3D NULL;
-+	hvpci_block_ops.reg_blk_invalidate =3D NULL;
- }
-=20
- static int __init init_hv_pci_drv(void)
- {
-+	/* Initialize PCI block r/w interface */
-+	hvpci_block_ops.read_block =3D hv_read_config_block;
-+	hvpci_block_ops.write_block =3D hv_write_config_block;
-+	hvpci_block_ops.reg_blk_invalidate =3D hv_register_block_invalidate;
-+
- 	return vmbus_driver_register(&hv_pci_drv);
- }
-=20
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 9d37f8c..2afe6fd 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1579,18 +1579,32 @@ struct vmpacket_descriptor *
- 	    pkt =3D hv_pkt_iter_next(channel, pkt))
-=20
- /*
-- * Functions for passing data between SR-IOV PF and VF drivers.  The VF dr=
-iver
-+ * Interface for passing data between SR-IOV PF and VF drivers. The VF dri=
-ver
-  * sends requests to read and write blocks. Each block must be 128 bytes o=
-r
-  * smaller. Optionally, the VF driver can register a callback function whi=
-ch
-  * will be invoked when the host says that one or more of the first 64 blo=
-ck
-  * IDs is "invalid" which means that the VF driver should reread them.
-  */
- #define HV_CONFIG_BLOCK_SIZE_MAX 128
--int hv_read_config_block(struct pci_dev *dev, void *buf, unsigned int buf_=
-len,
--			 unsigned int block_id, unsigned int *bytes_returned);
--int hv_write_config_block(struct pci_dev *dev, void *buf, unsigned int len=
-,
--			  unsigned int block_id);
--int hv_register_block_invalidate(struct pci_dev *dev, void *context,
--				 void (*block_invalidate)(void *context,
--							  u64 block_mask));
-+
-+int hyperv_read_cfg_blk(struct pci_dev *dev, void *buf, unsigned int buf_l=
-en,
-+			unsigned int block_id, unsigned int *bytes_returned);
-+int hyperv_write_cfg_blk(struct pci_dev *dev, void *buf, unsigned int len,
-+			 unsigned int block_id);
-+int hyperv_reg_block_invalidate(struct pci_dev *dev, void *context,
-+				void (*block_invalidate)(void *context,
-+							 u64 block_mask));
-+
-+struct hyperv_pci_block_ops {
-+	int (*read_block)(struct pci_dev *dev, void *buf, unsigned int buf_len,
-+			  unsigned int block_id, unsigned int *bytes_returned);
-+	int (*write_block)(struct pci_dev *dev, void *buf, unsigned int len,
-+			   unsigned int block_id);
-+	int (*reg_blk_invalidate)(struct pci_dev *dev, void *context,
-+				  void (*block_invalidate)(void *context,
-+							   u64 block_mask));
-+};
-+
-+extern struct hyperv_pci_block_ops hvpci_block_ops;
-+
- #endif /* _HYPERV_H */
---=20
-1.8.3.1
+> +
+> +static struct kobject *powerpc_kobj;
+Call it secvar_kobj or something.
+
+> +static struct secvar_operations *secvarops;
+Ah, the old I-can't-believe-it's-not-global trick.
+
+> +struct kset *secvar_kset;
+shouldn't that be static too?
+
+> +
+> +static ssize_t name_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +			 char *buf)
+> +{
+> +	return sprintf(buf, "%s", kobj->name);
+> +}
+> +
+> +static ssize_t size_show(struct kobject *kobj, struct kobj_attribute *attr,
+> +			 char *buf)
+> +{
+> +	unsigned long dsize;
+> +	int rc;
+> +
+> +	rc = secvarops->get_variable(kobj->name, strlen(kobj->name) + 1, NULL,
+> +				     &dsize);
+> +	if (rc) {
+> +		pr_err("Error retrieving variable size %d\n", rc);
+> +		return rc;
+> +	}
+> +
+> +	rc = sprintf(buf, "%ld", dsize);
+> +
+> +	return rc;
+> +}
+> +
+> +static ssize_t data_read(struct file *filep, struct kobject *kobj,
+> +			 struct bin_attribute *attr, char *buf, loff_t off,
+> +			 size_t count)
+> +{
+> +	unsigned long dsize;
+> +	int rc;
+> +	char *data;
+> +
+> +	rc = secvarops->get_variable(kobj->name, strlen(kobj->name) + 1, NULL,
+> +				     &dsize);
+> +	if (rc) {
+> +		pr_err("Error getting variable size %d\n", rc);
+> +		return rc;
+> +	}
+> +	pr_debug("dsize is %ld\n", dsize);
+> +
+> +	data = kzalloc(dsize, GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	rc = secvarops->get_variable(kobj->name, strlen(kobj->name)+1, data,
+> +				     &dsize);
+> +	if (rc) {
+> +		pr_err("Error getting variable %d\n", rc);
+> +		goto data_fail;
+> +	}
+> +
+> +	rc = memory_read_from_buffer(buf, count, &off, data, dsize);
+> +
+> +data_fail:
+> +	kfree(data);
+> +	return rc;
+> +}
+> +
+> +static ssize_t update_write(struct file *filep, struct kobject *kobj,
+> +			    struct bin_attribute *attr, char *buf, loff_t off,
+> +			    size_t count)
+> +{
+> +	int rc;
+> +
+> +	pr_debug("count is %ld\n", count);
+> +	rc = secvarops->set_variable(kobj->name, strlen(kobj->name)+1, buf,
+> +				     count);
+> +	if (rc) {
+> +		pr_err("Error setting the variable %s\n", kobj->name);
+> +		return rc;
+> +	}
+> +
+> +	return count;
+> +}
+> +
+> +static struct kobj_attribute name_attr =
+> +__ATTR(name, 0444, name_show, NULL);
+> +
+> +static struct kobj_attribute size_attr =
+> +__ATTR(size, 0444, size_show, NULL);
+> +
+
+> +static struct bin_attribute data_attr = {
+> +	.attr = {.name = "data", .mode = 0444},
+> +	.size = VARIABLE_MAX_SIZE,
+> +	.read = data_read,
+> +};
+
+Should they be globally readable? If efivars is globally readable I'm
+happy to follow that example, but mpe might have opinions.
+
+> +
+> +
+> +static struct bin_attribute update_attr = {
+> +	.attr = {.name = "update", .mode = 0200},
+> +	.size = VARIABLE_MAX_SIZE,
+> +	.write = update_write,
+> +};
+> +
+> +static struct bin_attribute  *secvar_bin_attrs[] = {
+> +	&data_attr,
+> +	&update_attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute *secvar_attrs[] = {
+> +	&name_attr.attr,
+> +	&size_attr.attr,
+> +	NULL,
+> +};
+> +
+> +const struct attribute_group secvar_attr_group = {
+> +	.attrs = secvar_attrs,
+> +	.bin_attrs = secvar_bin_attrs,
+> +};
+> +
+> +int secvar_sysfs_load(void)
+> +{
+> +
+> +	char *name;
+> +	unsigned long namesize;
+> +	struct kobject *kobj;
+> +	int status;
+> +	int rc = 0;
+> +
+> +	name = kzalloc(1024, GFP_KERNEL);
+> +	if (!name)
+> +		return -ENOMEM;
+
+Where'd the 1024 restriction on the length of the variable name come
+from? is that enforced by firmware? If so, how does firmware
+communicate the limited key length?
+
+> +
+> +	do {
+> +
+
+> +		status = secvarops->get_next_variable(name, &namesize, 1024);
+does namesize need to be initialised for the first call?
+
+> +		if (status != OPAL_SUCCESS)
+> +			break;
+
+You might want to differentiate between the error case and the "no
+extra variables" case. Come to think of it, since the point of
+abstracting secvar ops is to make this code indepdendent of the backend
+why are we checking for OPAL_SUCCESS? The ops functions should be
+returning linux return code (EIO, etc) rather than OPAL codes.
+
+> +
+> +		pr_info("name is %s\n", name);
+pr_info?
+
+> +		kobj = kobject_create_and_add(name, &(secvar_kset->kobj));
+> +		if (kobj) {
+> +			rc = sysfs_create_group(kobj, &secvar_attr_group);
+> +			if (rc)
+> +				pr_err("Error creating attributes for %s variable\n",
+> +				name);
+> +		} else {
+> +			pr_err("Error creating sysfs entry for %s variable\n",
+> +				name);
+> +			rc = -EINVAL;
+> +		}
+> +
+> +	} while ((status == OPAL_SUCCESS) && (rc == 0));
+
+Checking status here isn't needed here since we checked it above and
+broken out of the loop.
+
+> +
+> +	kfree(name);
+> +	return rc;
+> +}
+> +
+> +int secvar_sysfs_init(void)
+> +{
+> +	powerpc_kobj = kobject_create_and_add("secvar", firmware_kobj);
+> +	if (!powerpc_kobj) {
+> +		pr_err("secvar: Failed to create firmware kobj\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	secvar_kset = kset_create_and_add("vars", NULL, powerpc_kobj);
+> +	if (!secvar_kset) {
+> +		pr_err("secvar: sysfs kobject registration failed.\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	secvarops = get_secvar_ops();
+> +	if (!secvarops) {
+> +		kobject_put(powerpc_kobj);
+> +		pr_err("secvar: failed to retrieve secvar operations.\n");
+> +		return -ENODEV;
+> +	}
+
+Not having secvar support isn't an error. IMO checking if the ops are
+defined is the first thing you should be doing. If we don't have a
+defined set of ops then we don't need to do anything else.
+
+> +
+> +	secvar_sysfs_load();
+> +	pr_info("Secure variables sysfs initialized");
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(secvar_sysfs_init);
+> +
+> +static void secvar_sysfs_exit(void)
+> +{
+> +	kobject_put(powerpc_kobj);
+> +}
+> +EXPORT_SYMBOL_GPL(secvar_sysfs_exit);
+> +
+> +module_init(secvar_sysfs_init);
+> +module_exit(secvar_sysfs_exit);
+> +
+
+> +MODULE_AUTHOR("Nayna Jain<nayna@linux.ibm.com>");
+needs a space between your name and the opening '<' of the email
+> +MODULE_DESCRIPTION("sysfs interface to POWER secure variables");
+> +MODULE_LICENSE("GPL");
 
