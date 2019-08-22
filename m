@@ -2,51 +2,51 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9391C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBE0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9DD23402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA118233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494576;
-	bh=p81gYO1OegpMvTe0u5jGw4T/neWGhQp383tbYVrdTTA=;
+	s=default; t=1566494578;
+	bh=7Y1M18/AqFCRN9z+eM39Z9krN+UijCQpwgxQQok3FF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TZiUs6+5jGdoSE7PCRu5IrTaQ9ugc0r6HSor9aCjbepHw6lrV16zekFw7WPeM9Y4h
-	 unsGe1S9I26SA0kE7gEvH07GY7lED4WN59H8RPsEUT2PfrMLugL8JEKAoC4dS+wa+h
-	 6EwApzxt/OiFPfi7Uspgq+1z2EQXngjsG82f+YWo=
+	b=iD3MMRYZnlz/HTrX9t5nooZ3A0wFPgPzmYwWvzoNhpjVAGIaxO14QAdD/wR5QWU6Z
+	 PqzsmfISvoGvjHFajIt9Z5Ki5VcYwGV7u67eDLMxT1chEHtJiiDqjEM9fwbsWlBwdQ
+	 U6nP78LNAcX+S40R7oYFO0trkUqP5135XHmjvDp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391671AbfHVRWz (ORCPT
+        id S2391686AbfHVRW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:22:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41448 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:22:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391527AbfHVRWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2391573AbfHVRWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 13:22:49 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE24023406;
-        Thu, 22 Aug 2019 17:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F848233FD;
+        Thu, 22 Aug 2019 17:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494568;
-        bh=p81gYO1OegpMvTe0u5jGw4T/neWGhQp383tbYVrdTTA=;
+        s=default; t=1566494569;
+        bh=7Y1M18/AqFCRN9z+eM39Z9krN+UijCQpwgxQQok3FF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j7MCdEf9mHCtc/MGWL2MReR9OJkMedgAxPr7JCVKPhWcw0nCLu9+7E4uqkCfQpWdr
-         2RAT6H9jAef0q8TB5iPGCRb00esVdwz2hLLGwa8+zXq3HtBrmSUk1AS/8gyo13PQKw
-         QhX0dl5o4ms1/YvVnyl+n7VhPfhD1WGVvs/3qaTU=
+        b=mhKcS8DGS4otSorCM7e//ATsjsrbJBkwITvXOdgkLH1FBI1ZNIM2HhKyk+BqB/yWf
+         NiPb9xQoEV/qKUw2Nfpv/iX7HF/ZpptcZB1BlOEYIbx38we5rG3GAiN3lTAPPpOeWQ
+         RGOGT+pe+SZn2mBGYXTi/gmo7mohdCnHC9HztwmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 57/78] USB: core: Fix races in character device registration and deregistraion
-Date:   Thu, 22 Aug 2019 10:19:01 -0700
-Message-Id: <20190822171833.689551533@linuxfoundation.org>
+        stable@vger.kernel.org, Rogan Dawes <rogan@dawes.za.net>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.4 59/78] USB: serial: option: add D-Link DWM-222 device ID
+Date:   Thu, 22 Aug 2019 10:19:03 -0700
+Message-Id: <20190822171833.745570709@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -59,89 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Rogan Dawes <rogan@dawes.za.net>
 
-commit 303911cfc5b95d33687d9046133ff184cf5043ff upstream.
+commit 552573e42aab5f75aff9bab855a9677979d9a7d5 upstream.
 
-The syzbot fuzzer has found two (!) races in the USB character device
-registration and deregistration routines.  This patch fixes the races.
+Add device id for D-Link DWM-222 A2.
 
-The first race results from the fact that usb_deregister_dev() sets
-usb_minors[intf->minor] to NULL before calling device_destroy() on the
-class device.  This leaves a window during which another thread can
-allocate the same minor number but will encounter a duplicate name
-error when it tries to register its own class device.  A typical error
-message in the system log would look like:
+MI_00 D-Link HS-USB Diagnostics
+MI_01 D-Link HS-USB Modem
+MI_02 D-Link HS-USB AT Port
+MI_03 D-Link HS-USB NMEA
+MI_04 D-Link HS-USB WWAN Adapter (qmi_wwan)
+MI_05 USB Mass Storage Device
 
-    sysfs: cannot create duplicate filename '/class/usbmisc/ldusb0'
-
-The patch fixes this race by destroying the class device first.
-
-The second race is in usb_register_dev().  When that routine runs, it
-first allocates a minor number, then drops minor_rwsem, and then
-creates the class device.  If the device creation fails, the minor
-number is deallocated and the whole routine returns an error.  But
-during the time while minor_rwsem was dropped, there is a window in
-which the minor number is allocated and so another thread can
-successfully open the device file.  Typically this results in
-use-after-free errors or invalid accesses when the other thread closes
-its open file reference, because the kernel then tries to release
-resources that were already deallocated when usb_register_dev()
-failed.  The patch fixes this race by keeping minor_rwsem locked
-throughout the entire routine.
-
-Reported-and-tested-by: syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1908121607590.1659-100000@iolanthe.rowland.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Rogan Dawes <rogan@dawes.za.net>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/file.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/usb/serial/option.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/core/file.c
-+++ b/drivers/usb/core/file.c
-@@ -191,9 +191,10 @@ int usb_register_dev(struct usb_interfac
- 		intf->minor = minor;
- 		break;
- 	}
--	up_write(&minor_rwsem);
--	if (intf->minor < 0)
-+	if (intf->minor < 0) {
-+		up_write(&minor_rwsem);
- 		return -EXFULL;
-+	}
- 
- 	/* create a usb class device for this usb interface */
- 	snprintf(name, sizeof(name), class_driver->name, minor - minor_base);
-@@ -206,12 +207,11 @@ int usb_register_dev(struct usb_interfac
- 				      MKDEV(USB_MAJOR, minor), class_driver,
- 				      "%s", temp);
- 	if (IS_ERR(intf->usb_dev)) {
--		down_write(&minor_rwsem);
- 		usb_minors[minor] = NULL;
- 		intf->minor = -1;
--		up_write(&minor_rwsem);
- 		retval = PTR_ERR(intf->usb_dev);
- 	}
-+	up_write(&minor_rwsem);
- 	return retval;
- }
- EXPORT_SYMBOL_GPL(usb_register_dev);
-@@ -237,12 +237,12 @@ void usb_deregister_dev(struct usb_inter
- 		return;
- 
- 	dev_dbg(&intf->dev, "removing %d minor\n", intf->minor);
-+	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
- 
- 	down_write(&minor_rwsem);
- 	usb_minors[intf->minor] = NULL;
- 	up_write(&minor_rwsem);
- 
--	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
- 	intf->usb_dev = NULL;
- 	intf->minor = -1;
- 	destroy_usb_class();
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1949,6 +1949,8 @@ static const struct usb_device_id option
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2001, 0x7e35, 0xff),			/* D-Link DWM-222 */
+ 	  .driver_info = RSVD(4) },
++	{ USB_DEVICE_INTERFACE_CLASS(0x2001, 0x7e3d, 0xff),			/* D-Link DWM-222 A2 */
++	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
 
 
