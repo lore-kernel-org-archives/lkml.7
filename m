@@ -2,200 +2,131 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BA2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D54C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA14233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0AB623407
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYEQpTru"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sacpK1DF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389588AbfHVQBc (ORCPT
+        id S2389676AbfHVQED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:01:32 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39289 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387647AbfHVQBb (ORCPT
+        Thu, 22 Aug 2019 12:04:03 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42599 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387983AbfHVQED (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:01:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f17so4246445pfn.6;
-        Thu, 22 Aug 2019 09:01:31 -0700 (PDT)
+        Thu, 22 Aug 2019 12:04:03 -0400
+Received: by mail-oi1-f196.google.com with SMTP id o6so4741850oic.9;
+        Thu, 22 Aug 2019 09:04:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=98w2GcKCN663QK9TeclkQTSI7rJh8WNm1jNEnO7e0aQ=;
-        b=VYEQpTruVCXeLl7kVzcZ1GS0qiWbvPwn5x3IbGR6aAqF/r+h4/bU2H+kxGqp2QEyYx
-         EDEALQ0LYuCKOomqkK+UoXAkQWK3ORrCM5ziynJprIxVNXIkonT+npeLOzPJ6aqKLFxf
-         G4Ak8rDlSHi7so5ebuMX5XSq4zOOyPBsJjDT9zf2yAPoIBLDHAj8+t0yUFs5hBLkJNLp
-         0zzZt8FfC+fl9RMMhgGi53HXi+d669q46yc6gc/sEOiE/Clz4SRK8WkXboz7336TceCD
-         6zuA/Cs3A7cdDwePnXPdMxqwVnay6j6FPv8RBapsINpKdWQBEymRcxsl/uNmCjccECUj
-         uXkw==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GBqP/ktuDGSBujCj4ySFUE1r43iYNWnAgUqr6yfzCLc=;
+        b=sacpK1DFhY2NjeHiJrvhMHp2c3nBJWDxgdfRxO+/3pTtFNjBooj1Cp+CNQEO5D5Qwf
+         UPUXQdqiMZpDr6VAKf67EHPSXsq4o5kEoZup57cblAyhWKTDlNKz3Fxv5MjQ9/lqVpE8
+         /8z81Xnz7Th7T7QwHFnU3SrCopb6zFce1a6pIS6rdKmkQZHO7qUJatgmJdRf7dISqqXt
+         x5x3u0ZR6V7aL3eXcz0sPKvS+vIlMR56TEvh9kq/cFlvoNPDxG4rWtEs/egrHmpqzBV2
+         gixW7lP4ogsAmTAbPsziolXE60TFzVfyLycaUYa1GyyrpXcUtX1b1eziQRVky5Rv4xtM
+         nhBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=98w2GcKCN663QK9TeclkQTSI7rJh8WNm1jNEnO7e0aQ=;
-        b=b2OteXSB0tNAJrs69irOmYVnCiCLwjeKnFxFUqwAnHmglWdQj5oHNq1qu/YIJNzmu7
-         HakCRYJZgEigKzzIsl0E84W4zwJulA2tUOk9+uXO2hrfDc5d2NQdLgbJBIETjDcxiswg
-         F3P/w82UKOtv/c66AI7xpeBw0fmtZmYgyDCw5ePrBDNNSexbC7Z5fIK3opd2UUOZYjG1
-         cpr+xwG5KVn04yK7ODfK8NXw/5Mx6WCvKjZDBVERN67AvjV5bVmoqgsWcaGDM64HEc9r
-         xBAkYe87Mp1vZBy4J6840KlIbEk26UKPNXtVyOTX4XF7hozt53OWsx+eAtFWCH9rIX18
-         h18A==
-X-Gm-Message-State: APjAAAWTqkfT7IsyTaOZPS0jN6tWjjxbH7RW/Qhm6vS3Da2q73bVg27A
-        KhKHQaz9FPsAYiL8onVlkh8=
-X-Google-Smtp-Source: APXvYqxhzhQQCIJ9upWMd5eHMV/mPBB3qC6EoA0i0AwZ2PrrA62XyDUSenyDovW0vqb1IWGs5baOgA==
-X-Received: by 2002:a62:6c1:: with SMTP id 184mr41294058pfg.230.1566489691040;
-        Thu, 22 Aug 2019 09:01:31 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z189sm22267905pfb.137.2019.08.22.09.01.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 09:01:29 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 09:01:28 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Alexander Amelkin <a.amelkin@yadro.com>
-Cc:     Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] watchdog/aspeed: add support for dual boot
-Message-ID: <20190822160127.GA6992@roeck-us.net>
-References: <1f2cd155057e5ab0cdb20a9a11614bbb09bb49ad.camel@yadro.com>
- <20190821163220.GA11547@roeck-us.net>
- <9e7fe5cc-ba1b-b8b6-69c5-c3c6cf508a36@yadro.com>
- <20190821181008.GB15127@roeck-us.net>
- <5cb20f52-884a-b921-c904-ebf244092318@yadro.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GBqP/ktuDGSBujCj4ySFUE1r43iYNWnAgUqr6yfzCLc=;
+        b=kPf7BGzaku04mn/PCrhnAOrDE2gevws+NGoWVoafhCN5Zt1+5e5TMa9mdA2RDSKrf4
+         j+Rp36fkOBt9UUD/G1h5cXafb3mDxw/JWss9lUZ9PgiuuNaOT73adCBU79Ux2DTsJZ9c
+         NwdI4Ir5k7KI7vCXB4ZdvQPfdx9L/Ars7mgZHzRz7zKJwJtXffa0N2WjjbFhUvSnNPKN
+         pbxv70Apf+j1Pwj9XHE1hJ6NIlUHpLAHzKl18U8bqv8x3zcBV9Jswo3GvkMoe4pgjRLk
+         IJGlrZtKRTY8MnEgNj65OlQ9ZPJFJKU++HTb7tt4fRvqpoOHwygnF3wXVlInoyzGZI7g
+         jjdQ==
+X-Gm-Message-State: APjAAAW6yGmB0oVdRAZGxNsWvUtsqhFmLzYPYLJrH5W2vrjFY7xz3ia/
+        Q3GLUjIryIGdFZkrn42j4YNnwsgz
+X-Google-Smtp-Source: APXvYqzeiAa5TM9spsllNTRTadA9Xnvo0WU25z8M5m3fs1is6Hlwh4aX1n81TZzI9Dr9XbTL0NxQrw==
+X-Received: by 2002:aca:dd8a:: with SMTP id u132mr3992794oig.150.1566489841764;
+        Thu, 22 Aug 2019 09:04:01 -0700 (PDT)
+Received: from [192.168.1.112] (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
+        by smtp.gmail.com with ESMTPSA id k10sm8904656otl.21.2019.08.22.09.03.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Aug 2019 09:04:00 -0700 (PDT)
+Subject: Re: [PATCH] bcma: fix incorrect update of BCMA_CORE_PCI_MDIO_DATA
+To:     Colin King <colin.king@canonical.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        linux-wireless@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190822133524.6274-1-colin.king@canonical.com>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+Message-ID: <d3c16158-ef89-f5ee-2f67-4357c70e8fe9@lwfinger.net>
+Date:   Thu, 22 Aug 2019 11:03:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5cb20f52-884a-b921-c904-ebf244092318@yadro.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190822133524.6274-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 05:36:21PM +0300, Alexander Amelkin wrote:
-> 21.08.2019 21:10, Guenter Roeck wrote:
-> > On Wed, Aug 21, 2019 at 08:42:24PM +0300, Alexander Amelkin wrote:
-> >> 21.08.2019 19:32, Guenter Roeck wrote:
-> >>> On Wed, Aug 21, 2019 at 06:57:43PM +0300, Ivan Mikhaylov wrote:
-> >>>> Set WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION into WDT_CLEAR_TIMEOUT_STATUS
-> >>>> to clear out boot code source and re-enable access to the primary SPI flash
-> >>>> chip while booted via wdt2 from the alternate chip.
-> >>>>
-> >>>> AST2400 datasheet says:
-> >>>> "In the 2nd flash booting mode, all the address mapping to CS0# would be
-> >>>> re-directed to CS1#. And CS0# is not accessable under this mode. To access
-> >>>> CS0#, firmware should clear the 2nd boot mode register in the WDT2 status
-> >>>> register WDT30.bit[1]."
-> >>> Is there reason to not do this automatically when loading the module
-> >>> in alt-boot mode ? What means does userspace have to determine if CS0
-> >>> or CS1 is active at any given time ? If there is reason to ever have CS1
-> >>> active instead of CS0, what means would userspace have to enable it ?
-> >> Yes, there is. The driver is loaded long before the filesystems are mounted.
-> >> The filesystems, in the event of alternate/recovery boot, need to be mounted
-> >> from the same chip that the kernel was booted. For one reason because the main
-> >> chip at CS0 is most probably corrupt. If you clear that bit when driver is
-> >> loaded, your software will not know that and will try to mount the wrong
-> >> filesystems. The whole idea of ASPEED's switching chipselects is to have
-> >> identical firmware in both chips, without the need to process the alternate
-> >> boot state in any way except for indicating a successful boot and restoring
-> >> access to CS0 when needed.
-> >>
-> >> The userspace can read bootstatus sysfs node to determine if an alternate
-> >> boot has occured.
-> >>
-> >> With ASPEED, CS1 is activated automatically by wdt2 when system fails to boot
-> >> from the primary flash chip (at CS0) and disable the watchdog to indicate a
-> >> successful boot. When that happens, both CS0 and CS1 controls  get routed in
-> >> hardware to CS1 line, making the primary flash chip inaccessible. Depending
-> >> on the architecture of the user-space software, it may choose to re-enable
-> >> access to the primary chip via CS0 at different times. There must be a way to do so.
-> >>
-> > So by activating cs0, userspace would essentially pull its own root file system
-> > from underneath itself ?
+On 8/22/19 8:35 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Exactly. That's why for alternate boot the firmware would usually copy
-> all filesystems to memory and mount from there. Some embedded systems
-> do that always, regardless of which chip they boot from.
+> An earlier commit re-worked the setting of the bitmask and is now
+> assigning v with some bit flags rather than bitwise or-ing them
+> into v, consequently the earlier bit-settings of v are being lost.
+> Fix this by replacing an assignment with the bitwise or instead.
 > 
-That is different, though, to what you said earlier. Linux would then start
-with a clean file system, and not need access to the file system in cs1 at all.
-Clearing the flag when starting the driver would then be ok.
+> Addresses-Coverity: ("Unused value")
+> Fixes: 2be25cac8402 ("bcma: add constants for PCI and use them")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   drivers/bcma/driver_pci.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/bcma/driver_pci.c b/drivers/bcma/driver_pci.c
+> index f499a469e66d..d219ee947c07 100644
+> --- a/drivers/bcma/driver_pci.c
+> +++ b/drivers/bcma/driver_pci.c
+> @@ -78,7 +78,7 @@ static u16 bcma_pcie_mdio_read(struct bcma_drv_pci *pc, u16 device, u8 address)
+>   		v |= (address << BCMA_CORE_PCI_MDIODATA_REGADDR_SHF_OLD);
+>   	}
+>   
+> -	v = BCMA_CORE_PCI_MDIODATA_START;
+> +	v |= BCMA_CORE_PCI_MDIODATA_START;
+>   	v |= BCMA_CORE_PCI_MDIODATA_READ;
+>   	v |= BCMA_CORE_PCI_MDIODATA_TA;
 
-> However, to be able to recover the main flash chip, the system needs CS0
-> to function as such (not as CS1). That's why this control is needed.
-> 
-If what you said is correct, not really. It should be fine and create more
-predictive behavior if the probe function selects cs0 automatically.
+I'm not sure the "Fixes" attribute is correct.
 
-Guenter
+The changes for this section in commit 2be25cac8402 are
 
-> As Ivan mentioned, for AST2500 and the upcoming AST2600 the behavior
-> is slightly different. They don't just connect both CS controls to CS1 but instead
-> swap them so the primary chip becomes secondary from the software point
-> of view. The means to restore the normal wiring may still be needed.
-> 
-> >
-> >> This code most probably adds nothing at the assembly level.
-> >>
-> > That seems quite unlikely. Please demonstrate.
-> 
-> Yes, you were right. It adds 7 instructions. We'll drop the check.
-> It's just my DO-178 background, I add 'robustness' checks everywhere.
-> 
-> >>>> +	writel(WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION,
-> >>>> +			wdt->base + WDT_CLEAR_TIMEOUT_STATUS);
-> >>>> +	wdt->wdd.bootstatus |= WDIOF_EXTERN1;
-> >>> The variable reflects the _boot status_. It should not change after booting.
-> >> Is there any documentation that dictates that? All I could find is
-> >>
-> >> "bootstatus: status of the device after booting". That doesn't look to me like it absolutely can not change to reflect the updated status (that is, to reflect that the originally set up alternate CS routing has been reset to normal).
-> >>
-> > You choose to interpret "after booting" in a kind of novel way,
-> > which I find a bit disturbing. I am not really sure how else to
-> > describe "boot status" in a way that does not permit such
-> > reinterpratation of the term.
-> 
-> How about "Reflects reasons that caused a reboot, remains constant until the next boot" ?
-> 
-> > On top of that, how specifically would "WDIOF_EXTERN1" reflect
-> > what you claim it does ? Not only you are hijacking bootstatus9
-> > (which is supposed to describe the reason for a reboot), you
-> > are also hijacking WDIOF_EXTERN1. That seems highly arbitrary
-> > to me, and is not really how an API/ABI should be used.
-> 
-> We used WDIOF_EXTERN1 because:
-> 
-> 1. We thought that bootstatus _can_ change
-> 
-> 2. We thought that adding extra bits wouldn't be appreciated
-> 
-> Now as you clarified that assumption 1 was wrong we are going to implement status as I proposed earlier:
-> 
-> >
-> >> I think we could make 'access_cs0' readable instead, so it could report the
-> >> current state of the boot code selection bit. Reverted, I suppose. That
-> >> way 'access_cs0' would report 1 after 1 has been written to it (it wouldn't
-> >> be possible to write a zero).
-> 
-> With best regards,
-> Alexander Amelkin,
-> BIOS/BMC Team Lead, YADRO
-> https://yadro.com
-> 
-> 
+-       v = (1 << 30); /* Start of Transaction */
+-       v |= (1 << 28); /* Write Transaction */
+-       v |= (1 << 17); /* Turnaround */
+-       v |= (0x1F << 18);
++       v = BCMA_CORE_PCI_MDIODATA_START;
++       v |= BCMA_CORE_PCI_MDIODATA_WRITE;
++       v |= (BCMA_CORE_PCI_MDIODATA_DEV_ADDR <<
++             BCMA_CORE_PCI_MDIODATA_DEVADDR_SHF);
++       v |= (BCMA_CORE_PCI_MDIODATA_BLK_ADDR <<
++             BCMA_CORE_PCI_MDIODATA_REGADDR_SHF);
++       v |= BCMA_CORE_PCI_MDIODATA_TA;
 
+Because the code has done quite a bit of work on v just above this section, I 
+agree that this is likely an error, but that error happened in an earlier 
+commit. Thus 2be25cac8402 did not introduce the error, merely copied it.
 
+Has this change been tested?
 
+Larry
