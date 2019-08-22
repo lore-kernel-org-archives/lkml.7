@@ -2,65 +2,73 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6935C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C5AAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADCC233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:06:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SYHDb2AM"
+	by mail.kernel.org (Postfix) with ESMTP id 3CC65233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566482832;
+	bh=6Q864FYY4/HBduQ+sQ/y/22Mq1RXMXDNwMdAd0odO7s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mnKi4WKc2MrQyPEPmo6qhdkDAp5LlpgiP2WrMTm+RKGkFxiJlRrtOhCDto3u/jJPE
+	 jq1/4pSBMmUFWjvVOHaPoKQghUF/7N/KQllCm30I//1Se+VG4v236KGwo947Lk8j3B
+	 XdHaaEhpCZSJ6umHE6WHTIOVugi1fY9ZQM4kZ6PQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732897AbfHVOGl (ORCPT
+        id S1732967AbfHVOHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:06:41 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:51930 "EHLO vps0.lunn.ch"
+        Thu, 22 Aug 2019 10:07:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfHVOGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:06:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=1Lk6vpvXEnqyBIiF7mfosTDxjQHB/xspWO9Lu1M6UoE=; b=SYHDb2AMXYKCedEm6oL6F8881D
-        Myw8GGHu+VRMM0ooZwWvUSN8DLSJWjAb5MhofINo3qOLQaLj/4WdWZtvUCwSPaqX7bXjMvZPXhBDR
-        xhbtyeM836pJvFfOpwg/61bxyzxrewNQyul6M4JdG82AF+HOMA9+QMnm396ONYAbDDYY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i0njX-0004VA-A1; Thu, 22 Aug 2019 16:06:35 +0200
-Date:   Thu, 22 Aug 2019 16:06:35 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Aya Levin <ayal@mellanox.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [net] devlink: Add method for time-stamp on reporter's dump
-Message-ID: <20190822140635.GH13020@lunn.ch>
-References: <1566461871-21992-1-git-send-email-ayal@mellanox.com>
+        id S1725987AbfHVOHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:07:11 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3EA422CE3;
+        Thu, 22 Aug 2019 14:07:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566482830;
+        bh=6Q864FYY4/HBduQ+sQ/y/22Mq1RXMXDNwMdAd0odO7s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tHn6AFP8kpVWK/koEfACur+OcTyuE2pdd1uaud8QmsD80f55EjAdD7FcjXaoXZqWu
+         JGUZ+YrM4lbzZptTC5kQVfJP/dzXpJc92dMch47Bv3Vo/8n73AQYCKigNo8ya3YI3z
+         X2R5l594jFl+l776ZsiDSDXU+Dh1QHbETK1byCk8=
+Date:   Thu, 22 Aug 2019 16:07:07 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 10/38] posix-cpu-timers: Use clock ID in
+ posix_cpu_timer_get()
+Message-ID: <20190822140706.GN22020@lenoir>
+References: <20190821190847.665673890@linutronix.de>
+ <20190821192920.155487201@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1566461871-21992-1-git-send-email-ayal@mellanox.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190821192920.155487201@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 11:17:51AM +0300, Aya Levin wrote:
-> When setting the dump's time-stamp, use ktime_get_real in addition to
-> jiffies. This simplifies the user space implementation and bypasses
-> some inconsistent behavior with translating jiffies to current time.
+On Wed, Aug 21, 2019 at 09:08:57PM +0200, Thomas Gleixner wrote:
+> Extract the clock ID (PROF/VIRT/SCHED) from the clock selector and use it
+> as argument to the sample functions. That allows to simplify them once all
+> callers are fixed.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Hi Aya
-
-Is this year 2038 safe? I don't know enough about this to answer the
-question myself.
-
-Thanks
-	Andrew
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
