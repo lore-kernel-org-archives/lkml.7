@@ -2,114 +2,168 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38015C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6562DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D86C233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE38233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:39:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sBLkeISC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vcFXE6Fv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389154AbfHVNhv (ORCPT
+        id S2389184AbfHVNjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:37:51 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59272 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfHVNhu (ORCPT
+        Thu, 22 Aug 2019 09:39:05 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:39164 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389173AbfHVNjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:37:50 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x7MDbgsP118773;
-        Thu, 22 Aug 2019 08:37:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1566481062;
-        bh=KClX8zGAqMXvkwVK0aEixQaZyFMmTporptwJb8u6V+k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=sBLkeISChmSwkWhg08PvCyN4PNBBbzKWkyNMvSxHRNBmU7Ha0th9o25KubOjKNLli
-         JL+mmWNgjNkoqXwaO/A11G4Fd8BarnqcyvJDExMRNClzAtmd4CRwxG+GidsxwZz5vL
-         sehwone1NfXleBLD1bicxkXE/2BsoTM7ka99d5Xw=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x7MDbgpQ039456
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 22 Aug 2019 08:37:42 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 22
- Aug 2019 08:37:41 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 22 Aug 2019 08:37:41 -0500
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x7MDbdn5046197;
-        Thu, 22 Aug 2019 08:37:40 -0500
-Subject: Re: [PATCH] usb: gadget: udc: core: Fix error case while binding
- pending gadget drivers
-To:     Alan Stern <stern@rowland.harvard.edu>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <Pine.LNX.4.44L0.1908211027430.1816-100000@iolanthe.rowland.org>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <9eba7e43-5692-b9c7-b30c-39a60e3239a6@ti.com>
-Date:   Thu, 22 Aug 2019 16:37:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 09:39:03 -0400
+Received: by mail-ua1-f66.google.com with SMTP id k7so1997967uao.6
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 06:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FeL+2QSM5K1YLKKF/js9TmuXZpGlOsVDG+4zs7enb+s=;
+        b=vcFXE6FvKpiU/zrPeYmswemc9N4V2PgJ6+b3JrTcb/leP+MyngmDkrXMX6fNCC6dqn
+         5U5DxhJ0+6trsoUFiL1UHaJoAtvD3avRnS5Jjn0hIWhxZH5BNh+UbEx7r03YoAl794Jw
+         HR5w6Fc5AQ9DT3i4m4j2/UueQP7AxJY/ZOBZgowVNQz1pcUgPIDl6VPhzseEWNH2yhVL
+         sFvrbBxAIf0ixOmb1AbOZTeD4bKcIaPo7/IS32eixFYAFFMtH0FSJExgG3ZVVpz5HtpK
+         wpmlq/Au0mkNCg+tpVy6s1iBWLieOP1LhX0U0hAfS+Vy8qt+5L2lehHVNPiimzJsKJTU
+         YaRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FeL+2QSM5K1YLKKF/js9TmuXZpGlOsVDG+4zs7enb+s=;
+        b=eswtkjh3VMOnH91ClKfIIFyUd8wauT7Zab3IKno74SOnmNi7sr6XXrkVVLj4E6HoPC
+         S9Q1ILLuB5XOwlkqssG/zd9OzP+Y/VIVqw+R3SjoHZZ3Ewe3uGsmLebHEFbKx3KonEIX
+         LW3pamcYGzlZwOKxCz0OXesjCB0w7NZodDhH/Z/yWZPhZbJTjUpJ9Yq6PkQzqw/sn+jC
+         8iGHHtROP31Knp9f+RU6k+sm/KITx9clGHXLW/UBNWVjCDOvtRKRK6u3ZfaGkCJS9WOr
+         l4iIgTzL+whdjY3/4djpT64mMBn91+F1Gi7gWTHxHXOUNkEHZvbK0HjTCM4P2bskMZW6
+         9pdA==
+X-Gm-Message-State: APjAAAVCM6fWAvIhZOcdenkoqkOYbJpxljFab2bIZFa3FatUJYfikbkb
+        D2J1GsqKVLaG320eYqCEAC4vN9uZcS6420tJPqM1uA==
+X-Google-Smtp-Source: APXvYqyNGgp4CW1Vx1Kr/v3sCAPsdONPj1D+yM9NJraECZoktBBfmsmh2N05UsLj8cJbC+xyyKQktBrLSJpWnqXuTU4=
+X-Received: by 2002:ab0:15e9:: with SMTP id j38mr5992611uae.19.1566481142313;
+ Thu, 22 Aug 2019 06:39:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.44L0.1908211027430.1816-100000@iolanthe.rowland.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
+ <1561958991-21935-2-git-send-email-manish.narani@xilinx.com>
+ <20190722215404.GA28292@bogus> <MN2PR02MB602907616249FF19C1A737D8C1C70@MN2PR02MB6029.namprd02.prod.outlook.com>
+ <CAPDyKFostBKYipTkCsDbggsrux7w8BPqARx7fwRsL1XqEEX2NQ@mail.gmail.com> <MN2PR02MB60299EB8B83C4EA68A0F2B33C1A80@MN2PR02MB6029.namprd02.prod.outlook.com>
+In-Reply-To: <MN2PR02MB60299EB8B83C4EA68A0F2B33C1A80@MN2PR02MB6029.namprd02.prod.outlook.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 22 Aug 2019 15:38:26 +0200
+Message-ID: <CAPDyKFqdLE7d9uz_KcpO0CihM+QsFyKbNsoDMoNLT2Qy_TmNdw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/11] dt-bindings: mmc: arasan: Update documentation
+ for SD Card Clock
+To:     Manish Narani <MNARANI@xilinx.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Michal Simek <michals@xilinx.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "christoph.muellner@theobroma-systems.com" 
+        <christoph.muellner@theobroma-systems.com>,
+        "philipp.tomsich@theobroma-systems.com" 
+        <philipp.tomsich@theobroma-systems.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
+        "ayaka@soulik.info" <ayaka@soulik.info>,
+        "kernel@esmil.dk" <kernel@esmil.dk>,
+        "tony.xie@rock-chips.com" <tony.xie@rock-chips.com>,
+        Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>,
+        Nava kishore Manne <navam@xilinx.com>,
+        "mdf@kernel.org" <mdf@kernel.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[...]
 
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 15
+> > ++++++++++-
+> > > > ----
+> > > > >  1 file changed, 10 insertions(+), 5 deletions(-)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > > > b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > > > > index 1edbb04..15c6397 100644
+> > > > > --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > > > > +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> > > > > @@ -23,6 +23,10 @@ Required Properties:
+> > > > >    - reg: From mmc bindings: Register location and length.
+> > > > >    - clocks: From clock bindings: Handles to clock inputs.
+> > > > >    - clock-names: From clock bindings: Tuple including "clk_xin" and
+> > "clk_ahb"
+> > > > > +            Apart from these two there is one more optional clock which
+> > > > > +            is "clk_sdcard". This clock represents output clock from
+> > > > > +            controller and card. This must be specified when #clock-cells
+> > > > > +            is specified.
+> > > > >    - interrupts: Interrupt specifier
+> > > > >
+> > > > >  Required Properties for "arasan,sdhci-5.1":
+> > > > > @@ -36,9 +40,10 @@ Optional Properties:
+> > > > >    - clock-output-names: If specified, this will be the name of the card
+> > clock
+> > > > >      which will be exposed by this device.  Required if #clock-cells is
+> > > > >      specified.
+> > > > > -  - #clock-cells: If specified this should be the value <0>.  With this
+> > property
+> > > > > -    in place we will export a clock representing the Card Clock.  This clock
+> > > > > -    is expected to be consumed by our PHY.  You must also specify
+> > > > > +  - #clock-cells: If specified this should be the value <0>. With this
+> > > > > +    property in place we will export one clock representing the Card
+> > > > > +    Clock. This clock is expected to be consumed by our PHY. You must
+> > also
+> > > > > +    specify
+> > > >
+> > > > specify what?
+> > > I think this line was already there, I missed to correct it, Will update in v3.
+> > >
+> > > >
+> > > > The 3rd clock input I assume? This statement means any existing users
+> > > > with 2 clock inputs and #clock-cells are in error now. Is that correct?
+> > > Yes, this is correct. So far there was only one vendor using '#clock-cells'
+> > which is Rockchip. I have sent DT patch (02/11) for that also.
+> > > Here this is needed as earlier implementation isn't correct as suggested by
+> > Uffe. (https://lkml.org/lkml/2019/6/20/486) .
+> >
+> > I am not sure how big of a problem the backwards compatible thingy
+> > with DT is, in general we must not break it. What do you say Manish?
+>
+> Though I agree with Uffe on this, there is no other way from my understanding. Please suggest.
+>
+> >
+> > As a workaround, would it be possible to use
+> > of_clk_get_from_provider() somehow to address the compatibility issue?
+>
+> For this to be used we have to parse 'clkspec' from the DT node and pass the same as an argument to this function. In this case also the DT node needs to be updated, which is same as we have done in this series.
 
-On 21/08/2019 17:30, Alan Stern wrote:
-> On Wed, 21 Aug 2019, Roger Quadros wrote:
-> 
->> If binding a pending gadget driver fails we should not
->> remove it from the pending driver list, otherwise it
->> will cause a segmentation fault later when the gadget driver is
->> unloaded.
-> 
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>  drivers/usb/gadget/udc/core.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/usb/gadget/udc/core.c b/drivers/usb/gadget/udc/core.c
->> index 7cf34beb50df..c272c8014772 100644
->> --- a/drivers/usb/gadget/udc/core.c
->> +++ b/drivers/usb/gadget/udc/core.c
->> @@ -1142,7 +1142,7 @@ static int check_pending_gadget_drivers(struct usb_udc *udc)
->>  		if (!driver->udc_name || strcmp(driver->udc_name,
->>  						dev_name(&udc->dev)) == 0) {
->>  			ret = udc_bind_to_driver(udc, driver);
->> -			if (ret != -EPROBE_DEFER)
->> +			if (!ret)
->>  				list_del(&driver->pending);
->>  			break;
->>  		}
-> 
-> This is kind of a policy question.  If binding a pending gadget driver 
-> fails, should the driver remain pending?
-> 
-> Depending on the answer to this question, you might want to change the 
-> list_del to list_del_init.  That should fix the segmentation fault 
-> just as well.
+Alright. I guess breaking DTBs for Rockchip platforms isn't
+acceptable, especially if those are already widely deployed, which I
+have no idea of....
 
-OK. I'll send a revised patch to retain existing policy.
+And having support for both options in the driver seems not a great
+option either, so it looks like you need to convert back into the old
+v1 approach. Huh, sorry.
 
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Kind regards
+Uffe
