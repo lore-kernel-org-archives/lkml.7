@@ -2,411 +2,183 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AB3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C56DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0556B233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E16723402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:36:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566477407;
+	bh=ga6b31QBXofW14aPOhrj0afNHMcSfr0f4f2qhLAjSZY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jUHjfu/S7BySfuDHZXhVp+Jrd6Svi3DcxPy8sQ6tMKiL7u0Y7D/9fjSGwqfpKxLJP
+	 ekghs4KLnoZcEvn9nkDcx3Wd5PPPqseiTeM+RfmzApC2nfrrG8gQvaN/C52lXKOLIf
+	 V5TwNIxBitTiNfBr0Gs3K13tKHlL5iDF8YkAoR40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732412AbfHVMfo (ORCPT
+        id S2387755AbfHVMgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:35:44 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:20351 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725856AbfHVMfn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:35:43 -0400
-X-UUID: 592448d0be024390b0d39049756024ea-20190822
-X-UUID: 592448d0be024390b0d39049756024ea-20190822
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 435136641; Thu, 22 Aug 2019 20:35:37 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 22 Aug 2019 20:35:31 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 22 Aug 2019 20:35:30 +0800
-From:   <qii.wang@mediatek.com>
-To:     <robh+dt@kernel.org>
-CC:     <matthias.bgg@gmail.com>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
-        <qii.wang@mediatek.com>
-Subject: [PATCH] arm64: dts: mt8183: add I2C nodes
-Date:   Thu, 22 Aug 2019 20:35:16 +0800
-Message-ID: <1566477316-13245-1-git-send-email-qii.wang@mediatek.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 22 Aug 2019 08:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfHVMgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:36:45 -0400
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 625422341C;
+        Thu, 22 Aug 2019 12:36:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566477404;
+        bh=ga6b31QBXofW14aPOhrj0afNHMcSfr0f4f2qhLAjSZY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=g2mTxzcL+6XNgmErJ9kMiY3PPEq2ZMtzru9TPrxdGUohnxDtsE67ZneTZy0eck/yq
+         zq1pp4KgfNUEfjwQMBfukukqpXmKK0kpFiXpL5ce206wKBkz0Ni4/t+a2esWyiRcst
+         iUUIKkppW4adHUGQ02tZ0ogfNItNFHsOBVSWDgIA=
+Received: by mail-qk1-f181.google.com with SMTP id w18so4954359qki.0;
+        Thu, 22 Aug 2019 05:36:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAXIqfqnJSOQkSL3fECc9671kgvpAZWox0nhWQ+Z00mfTvAIaSb9
+        7/diQU3llZCuh9JUVYUfThyHQfHKtuzzs8h8kw==
+X-Google-Smtp-Source: APXvYqw9D+dMZT14AHbYvh+UEVNMDJoszz23u/BEVj7KMPjMnlla91PDTwHFIvTe4a0csE3FYX96NJVL1APNKz9t2Y4=
+X-Received: by 2002:a37:4941:: with SMTP id w62mr3483805qka.119.1566477403498;
+ Thu, 22 Aug 2019 05:36:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+References: <20190809133407.25918-1-srinivas.kandagatla@linaro.org>
+ <20190809133407.25918-2-srinivas.kandagatla@linaro.org> <20190821214436.GA13936@bogus>
+ <0272eafd-0aa5-f695-64e4-f6ad7157a3a6@linaro.org>
+In-Reply-To: <0272eafd-0aa5-f695-64e4-f6ad7157a3a6@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 22 Aug 2019 07:36:32 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJJCJB9obR_Jn3hmn4gq+RQjY-8M+xkdYA185Uaw0MHcw@mail.gmail.com>
+Message-ID: <CAL_JsqJJCJB9obR_Jn3hmn4gq+RQjY-8M+xkdYA185Uaw0MHcw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: soundwire: add slave bindings
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Vinod <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qii Wang <qii.wang@mediatek.com>
+On Thu, Aug 22, 2019 at 5:12 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+>
+>
+> On 21/08/2019 22:44, Rob Herring wrote:
+> > On Fri, Aug 09, 2019 at 02:34:04PM +0100, Srinivas Kandagatla wrote:
+> >> This patch adds bindings for Soundwire Slave devices that includes how
+> >> SoundWire enumeration address and Link ID are used to represented in
+> >> SoundWire slave device tree nodes.
+> >>
+> >> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> >> ---
+> >>   .../devicetree/bindings/soundwire/slave.txt   | 51 +++++++++++++++++++
+> >>   1 file changed, 51 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/soundwire/slave.txt
+> >
+> > Can you convert this to DT schema given it is a common binding.
+> >
+>
+> I will give that a go in next version!
+>
+> > What does the host controller look like? You need to define the node
+> > hierarchy. Bus controller schemas should then include the bus schema.
+> > See spi-controller.yaml.
+>
+> Host controller is always parent of these devices which is represented
+> in the example.
+>
+> In my previous patches, i did put this slave bindings in bus.txt, but
+> Vinod suggested to move it to slave.txt.
+>
+> Are you suggesting to add two yamls here, one for slave and one for bus
+> Or just document this in one bus bindings?
 
-Add i2c nodes to mt8183 and mt8183-evb.
+One. Like I said, see spi-controller.yaml.
 
-Signed-off-by: Qii Wang <qii.wang@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts |  96 ++++++++++++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 189 ++++++++++++++++++++++++++++
- 2 files changed, 285 insertions(+)
+> >> diff --git a/Documentation/devicetree/bindings/soundwire/slave.txt b/Documentation/devicetree/bindings/soundwire/slave.txt
+> >> new file mode 100644
+> >> index 000000000000..201f65d2fafa
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/soundwire/slave.txt
+> >> @@ -0,0 +1,51 @@
+> >> +SoundWire slave device bindings.
+> >> +
+> >> +SoundWire is a 2-pin multi-drop interface with data and clock line.
+> >> +It facilitates development of low cost, efficient, high performance systems.
+> >> +
+> >> +SoundWire slave devices:
+> >> +Every SoundWire controller node can contain zero or more child nodes
+> >> +representing slave devices on the bus. Every SoundWire slave device is
+> >> +uniquely determined by the enumeration address containing 5 fields:
+> >> +SoundWire Version, Instance ID, Manufacturer ID, Part ID
+> >> +and Class ID for a device. Addition to below required properties,
+> >> +child nodes can have device specific bindings.
+> >> +
+> >> +Required properties:
+> >> +- compatible:        "sdw<LinkID><VersionID><InstanceID><MFD><PID><CID>".
+> >> +              Is the textual representation of SoundWire Enumeration
+> >> +              address along with Link ID. compatible string should contain
+> >> +              SoundWire Link ID, SoundWire Version ID, Instance ID,
+> >> +              Manufacturer ID, Part ID and Class ID in order
+> >> +              represented as above and shall be in lower-case hexadecimal
+> >> +              with leading zeroes. Vaild sizes of these fields are
+> >> +              LinkID is 1 nibble,
+> >> +              Version ID is 1 nibble
+> >> +              Instance ID in 1 nibble
+> >> +              MFD in 4 nibbles
+> >> +              PID in 4 nibbles
+> >> +              CID is 2 nibbles
+> >> +
+> >> +              Version number '0x1' represents SoundWire 1.0
+> >> +              Version number '0x2' represents SoundWire 1.1
+> >
+> > This can all be a regex.
+> >
+> >> +              ex: "sdw0110217201000" represents 0 LinkID,
+> >> +              SoundWire 1.0 version slave with Instance ID 1.
+> >> +              More Information on detail of encoding of these fields can be
+> >> +              found in MIPI Alliance DisCo & SoundWire 1.0 Specifications.
+> >> +
+> >> +SoundWire example for Qualcomm's SoundWire controller:
+> >> +
+> >> +soundwire@c2d0000 {
+> >> +    compatible = "qcom,soundwire-v1.5.0"
+> >> +    reg = <0x0c2d0000 0x2000>;
+> >> +
+> >> +    spkr_left:wsa8810-left{
+> >> +            compatible = "sdw0110217201000";
+> >> +            ...
+> >> +    };
+> >> +
+> >> +    spkr_right:wsa8810-right{
+> >> +            compatible = "sdw0120217201000";
+> >
+> > The normal way to distinguish instances is with 'reg'. So I think you
+> > need 'reg' with Instance ID moved there at least. Just guessing, but
+> > perhaps Link ID, too? And for 2 different classes of device is that
+> > enough?
+>
+> In previous bindings ( https://lists.gt.net/linux/kernel/3403276 ) we
+> did have instance-id as different property, however Pierre had some good
+> suggestion to make it align with _ADR encoding as per MIPI DisCo spec.
+>
+> Do you still think that we should split the instance id to reg property?
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index d8e555c..1fb195c 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -30,7 +30,103 @@
- 	status = "okay";
- };
- 
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c_pins_0>;
-+	status = "okay";
-+	clock-frequency = <100000>;
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c_pins_1>;
-+	status = "okay";
-+	clock-frequency = <100000>;
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c_pins_2>;
-+	status = "okay";
-+	clock-frequency = <100000>;
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c_pins_3>;
-+	status = "okay";
-+	clock-frequency = <100000>;
-+};
-+
-+&i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c_pins_4>;
-+	status = "okay";
-+	clock-frequency = <1000000>;
-+};
-+
-+&i2c5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c_pins_5>;
-+	status = "okay";
-+	clock-frequency = <1000000>;
-+};
-+
- &pio {
-+	i2c_pins_0: i2c0{
-+		pins_i2c{
-+			pinmux = <PINMUX_GPIO82__FUNC_SDA0>,
-+				 <PINMUX_GPIO83__FUNC_SCL0>;
-+			mediatek,pull-up-adv = <3>;
-+			mediatek,drive-strength-adv = <00>;
-+		};
-+	};
-+
-+	i2c_pins_1: i2c1{
-+		pins_i2c{
-+			pinmux = <PINMUX_GPIO81__FUNC_SDA1>,
-+				 <PINMUX_GPIO84__FUNC_SCL1>;
-+			mediatek,pull-up-adv = <3>;
-+			mediatek,drive-strength-adv = <00>;
-+		};
-+	};
-+
-+	i2c_pins_2: i2c2{
-+		pins_i2c{
-+			pinmux = <PINMUX_GPIO103__FUNC_SCL2>,
-+				 <PINMUX_GPIO104__FUNC_SDA2>;
-+			mediatek,pull-up-adv = <3>;
-+			mediatek,drive-strength-adv = <00>;
-+		};
-+	};
-+
-+	i2c_pins_3: i2c3{
-+		pins_i2c{
-+			pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
-+				 <PINMUX_GPIO51__FUNC_SDA3>;
-+			mediatek,pull-up-adv = <3>;
-+			mediatek,drive-strength-adv = <00>;
-+		};
-+	};
-+
-+	i2c_pins_4: i2c4{
-+		pins_i2c{
-+			pinmux = <PINMUX_GPIO105__FUNC_SCL4>,
-+				 <PINMUX_GPIO106__FUNC_SDA4>;
-+			mediatek,pull-up-adv = <3>;
-+			mediatek,drive-strength-adv = <00>;
-+		};
-+	};
-+
-+	i2c_pins_5: i2c5{
-+		pins_i2c{
-+			pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
-+				 <PINMUX_GPIO49__FUNC_SDA5>;
-+			mediatek,pull-up-adv = <3>;
-+			mediatek,drive-strength-adv = <00>;
-+		};
-+	};
-+
- 	spi_pins_0: spi0{
- 		pins_spi{
- 			pinmux = <PINMUX_GPIO85__FUNC_SPI0_MI>,
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index c2749c4..ab71291 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -16,6 +16,21 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-+	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
-+		i2c4 = &i2c4;
-+		i2c5 = &i2c5;
-+		i2c6 = &i2c6;
-+		i2c7 = &i2c7;
-+		i2c8 = &i2c8;
-+		i2c9 = &i2c9;
-+		i2c10 = &i2c10;
-+		i2c11 = &i2c11;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -294,6 +309,64 @@
- 			status = "disabled";
- 		};
- 
-+		i2c6: i2c@11005000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x11005000 0 0x1000>,
-+			      <0 0x11000600 0 0x80>;
-+			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C6>,
-+				 <&infracfg CLK_INFRA_AP_DMA>;
-+			clock-names = "main", "dma";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c0: i2c@11007000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x11007000 0 0x1000>,
-+			      <0 0x11000080 0 0x80>;
-+			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C0>,
-+				 <&infracfg CLK_INFRA_AP_DMA>;
-+			clock-names = "main", "dma";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@11008000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x11008000 0 0x1000>,
-+			      <0 0x11000100 0 0x80>;
-+			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C1>,
-+				 <&infracfg CLK_INFRA_AP_DMA>,
-+				 <&infracfg CLK_INFRA_I2C1_ARBITER>;
-+			clock-names = "main", "dma","arb";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@11009000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x11009000 0 0x1000>,
-+			      <0 0x11000280 0 0x80>;
-+			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C2>,
-+				 <&infracfg CLK_INFRA_AP_DMA>,
-+				 <&infracfg CLK_INFRA_I2C2_ARBITER>;
-+			clock-names = "main", "dma", "arb";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		spi0: spi@1100a000 {
- 			compatible = "mediatek,mt8183-spi";
- 			#address-cells = <1>;
-@@ -307,6 +380,20 @@
- 			status = "disabled";
- 		};
- 
-+		i2c3: i2c@1100f000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x1100f000 0 0x1000>,
-+			      <0 0x11000400 0 0x80>;
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C3>,
-+				 <&infracfg CLK_INFRA_AP_DMA>;
-+			clock-names = "main", "dma";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		spi1: spi@11010000 {
- 			compatible = "mediatek,mt8183-spi";
- 			#address-cells = <1>;
-@@ -320,6 +407,20 @@
- 			status = "disabled";
- 		};
- 
-+		i2c1: i2c@11011000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x11011000 0 0x1000>,
-+			      <0 0x11000480 0 0x80>;
-+			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C4>,
-+				 <&infracfg CLK_INFRA_AP_DMA>;
-+			clock-names = "main", "dma";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		spi2: spi@11012000 {
- 			compatible = "mediatek,mt8183-spi";
- 			#address-cells = <1>;
-@@ -346,6 +447,66 @@
- 			status = "disabled";
- 		};
- 
-+		i2c9: i2c@11014000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x11014000 0 0x1000>,
-+			      <0 0x11000180 0 0x80>;
-+			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C1_IMM>,
-+				 <&infracfg CLK_INFRA_AP_DMA>,
-+				 <&infracfg CLK_INFRA_I2C1_ARBITER>;
-+			clock-names = "main", "dma", "arb";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c10: i2c@11015000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x11015000 0 0x1000>,
-+			      <0 0x11000300 0 0x80>;
-+			interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C2_IMM>,
-+				 <&infracfg CLK_INFRA_AP_DMA>,
-+				 <&infracfg CLK_INFRA_I2C2_ARBITER>;
-+			clock-names = "main", "dma", "arb";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c5: i2c@11016000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x11016000 0 0x1000>,
-+			      <0 0x11000500 0 0x80>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C5>,
-+				 <&infracfg CLK_INFRA_AP_DMA>,
-+				 <&infracfg CLK_INFRA_I2C5_ARBITER>;
-+			clock-names = "main", "dma", "arb";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c11: i2c@11017000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x11017000 0 0x1000>,
-+			      <0 0x11000580 0 0x80>;
-+			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C5_IMM>,
-+				 <&infracfg CLK_INFRA_AP_DMA>,
-+				 <&infracfg CLK_INFRA_I2C5_ARBITER>;
-+			clock-names = "main", "dma", "arb";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		spi4: spi@11018000 {
- 			compatible = "mediatek,mt8183-spi";
- 			#address-cells = <1>;
-@@ -372,6 +533,34 @@
- 			status = "disabled";
- 		};
- 
-+		i2c7: i2c@1101a000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x1101a000 0 0x1000>,
-+			      <0 0x11000680 0 0x80>;
-+			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C7>,
-+				 <&infracfg CLK_INFRA_AP_DMA>;
-+			clock-names = "main", "dma";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c8: i2c@1101b000 {
-+			compatible = "mediatek,mt8183-i2c";
-+			reg = <0 0x1101b000 0 0x1000>,
-+			      <0 0x11000700 0 0x80>;
-+			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_I2C8>,
-+				 <&infracfg CLK_INFRA_AP_DMA>;
-+			clock-names = "main", "dma";
-+			clock-div = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
- 		audiosys: syscon@11220000 {
- 			compatible = "mediatek,mt8183-audiosys", "syscon";
- 			reg = <0 0x11220000 0 0x1000>;
--- 
-1.9.1
+Assuming you could have more than 1 of the same device on the bus,
+then you need some way to distinguish them and the way that's done for
+DT is unit-address/reg. And compatible strings should be constant for
+each instance.
 
+Rob
