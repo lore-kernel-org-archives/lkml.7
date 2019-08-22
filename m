@@ -2,85 +2,82 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAF2C41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B6AC3A5A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A729522CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:47:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VC4S9hTF"
+	by mail.kernel.org (Postfix) with ESMTP id 003BC216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 00:50:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbfHVArb (ORCPT
+        id S1730260AbfHVAu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 20:47:31 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37532 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727493AbfHVArb (ORCPT
+        Wed, 21 Aug 2019 20:50:26 -0400
+Received: from tartarus.angband.pl ([54.37.238.230]:47858 "EHLO
+        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbfHVAu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 20:47:31 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f17so3893354otq.4;
-        Wed, 21 Aug 2019 17:47:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p5+8V3eJWfGGDoM+IoGi8PvkamL+iQCdi1rQoKthzls=;
-        b=VC4S9hTFe2NMNT+NR6RJSwaryBnEIZOo9KBE05W4eqXmpufXycj0tFoZZAVxBXtkuS
-         xgwkYC85pjHmSrOmYTvGrYS4O1pYB7wM67YmTJEeSsTDB14S8f/SRIUv5fN1QbGKzmU7
-         6UEY1dNlIGm5fN/Mo1ZSrXaIQjOlsMOOn25chYGV4nhBeEQqKmZ6kPr4psq0s39Vz47B
-         p/F8KlIYS7RfH0/4gucRql7iV7PofXa0mNE+Y7Xrg4+fqgCAH78nxSO1bu9x3TC67X+z
-         2mZORlLmQAek2qImmOIPUNBrjesPTc+YJDOBgctxox95cm1bORcVYCvBrVO21AypqUY3
-         UYJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p5+8V3eJWfGGDoM+IoGi8PvkamL+iQCdi1rQoKthzls=;
-        b=ZQsF/fbW4DzLsDDgOn9klcSPCeO0NGxGEivCTA1HOk6EGoem4vlniST0oeHuYlvfjl
-         nU/dDrkyoErTlCbSXkKHOKMr8nAQ0rYZ1nwhTRg3fz+9U62yItx5aUlBjwd5xU9GTPDr
-         IkbY1QvGCBCbeeb9uzlp7hx5uJOjTBPrY1TimWvHlPVYYEw5UklW2NEgob3cTr3Wrf6k
-         G5SISQK81lEpT7ZKQDqqMuF+06ZYVWF0AkFXifTXM7+AH4jhwNxwk9ryvbYfLZshezHR
-         6J8SjwXDAbcCCie5dGmdSa939xkHL5wfQp86G/f8U7MhVQixrY+06S4Y/s8eaMcvZ/Tz
-         hfnA==
-X-Gm-Message-State: APjAAAXMSu2T3abFYKekQkasebl/wL6zJU22DiyMNrdpuJSIrSpthTKP
-        Adh57l4kwZ4ApQ/OgPQtjNjMbT7y4SbNhMhioBs=
-X-Google-Smtp-Source: APXvYqx1ubxmdTzLEQJe8vEwiBwjrYjEbwhI0GFJNumYWCLD2E6HSMOS2uc/P0Wmp89hRIcF4zjFhZmu9oqKzebqNKU=
-X-Received: by 2002:a9d:4590:: with SMTP id x16mr77827ote.254.1566434850855;
- Wed, 21 Aug 2019 17:47:30 -0700 (PDT)
+        Wed, 21 Aug 2019 20:50:26 -0400
+Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
+        (envelope-from <kilobyte@angband.pl>)
+        id 1i0bIy-0000Fv-Q6; Thu, 22 Aug 2019 02:50:20 +0200
+Date:   Thu, 22 Aug 2019 02:50:20 +0200
+From:   Adam Borowski <kilobyte@angband.pl>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>
+Subject: Re: [PATCH v3 0/8] AMD64 EDAC fixes
+Message-ID: <20190822005020.GA403@angband.pl>
+References: <20190821235938.118710-1-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-References: <1564970604-10044-1-git-send-email-wanpengli@tencent.com>
- <9acbc733-442f-0f65-9b56-ff800a3fa0f5@redhat.com> <CANRm+CwH54S555nw-Zik-3NFDH9yqe+SOZrGc3mPoAU_qGxP-A@mail.gmail.com>
- <e7b84893-42bf-e80e-61c9-ef5d1b200064@redhat.com>
-In-Reply-To: <e7b84893-42bf-e80e-61c9-ef5d1b200064@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 22 Aug 2019 08:46:57 +0800
-Message-ID: <CANRm+CzJf9Or_45frTe9ivFx9QDfx6Nou7uLT6tm1NmcPKDn8A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] KVM: Fix leak vCPU's VMCS value into other pCPU
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        "# v3 . 10+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190821235938.118710-1-Yazen.Ghannam@amd.com>
+X-Junkbait: aaron@angband.pl, zzyx@angband.pl
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: kilobyte@angband.pl
+X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 6 Aug 2019 at 14:20, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 06/08/19 02:35, Wanpeng Li wrote:
-> > Thank you, Paolo! Btw, how about other 5 patches?
->
-> Queued everything else too.
+On Wed, Aug 21, 2019 at 11:59:53PM +0000, Ghannam, Yazen wrote:
+> I've also added RFC patches to avoid the "ECC disabled" message for
+> nodes without memory. I haven't fully tested these, but I wanted to get
+> your thoughts. Here's an earlier discussion:
+> https://lkml.kernel.org/r/20180321191335.7832-1-Yazen.Ghannam@amd.com
 
-How about patch 4/6~5/6, they are not in kvm/queue. :)
+While you're editing that code, could you please also cut the spam if ECC is
+actually disabled?  For example, a 2990WX with non-ECC RAM gets 1024 lines;
+64 copies of:
 
-Regards,
-Wanpeng Li
+[    8.186164] EDAC amd64: Node 0: DRAM ECC disabled.
+[    8.188364] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
+                Either enable ECC checking or force module loading by setting 'ecc_enable_override'.
+                (Note that use of the override may cause unknown side effects.)
+[    8.194762] EDAC amd64: Node 1: DRAM ECC disabled.
+[    8.196307] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
+                Either enable ECC checking or force module loading by setting 'ecc_enable_override'.
+                (Note that use of the override may cause unknown side effects.)
+[    8.199840] EDAC amd64: Node 2: DRAM ECC disabled.
+[    8.200963] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
+                Either enable ECC checking or force module loading by setting 'ecc_enable_override'.
+                (Note that use of the override may cause unknown side effects.)
+[    8.204326] EDAC amd64: Node 3: DRAM ECC disabled.
+[    8.205436] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
+                Either enable ECC checking or force module loading by setting 'ecc_enable_override'.
+                (Note that use of the override may cause unknown side effects.)
+
+
+Meow!
+-- 
+⢀⣴⠾⠻⢶⣦⠀
+⣾⠁⢠⠒⠀⣿⡁
+⢿⡄⠘⠷⠚⠋  The root of a real enemy is an imaginary friend.
+⠈⠳⣄⠀⠀⠀⠀
