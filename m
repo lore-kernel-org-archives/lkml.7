@@ -2,148 +2,104 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDF0C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57677C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA31621848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DDE205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="NKZs40b0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iSiNnufs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731457AbfHVItf (ORCPT
+        id S1731728AbfHVIug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:49:35 -0400
-Received: from mail-eopbgr700086.outbound.protection.outlook.com ([40.107.70.86]:27489
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725857AbfHVItf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:49:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SDxToYdmuCVjotsBUw+BWDuOIiBc27pXQZOZRUtRgfDlLs3DDxg0WMHEqYDkFuZa5RAH7cbhirAC/G8wY7cufY9XUIuEl+SAg2/blNOOpgwEOg6U5Cy5i1qn5tKRf/4mBkTic7/lGbDoxiE0yDbi2AQuUX7/BeXnPPilux+y8obO78O14q7Zqwkzr26+YKab/WhXwpo+1M71Puug2qvSdTIEEzBFh9DpHLJxaO5K6R13V788St6ehwTwHVKTxrTQ9/8d82vHScDwT7h8oFS/V5JsSuWSZoa3B7hjfejRebdplTxlAcLWST0jRCo95m4FhTeJARbPq26JwBdaw8ETpQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uRIVbmD87mP7lywA6ZM2ve2/SJYR+gHsTHLAgIqJLEc=;
- b=BQUa60gUZL4+QgoNq3bSs3/doInzgWCd0bVtv0Q0P3/VVdk9vv8JpDZb5iI8fmV9I9RnX0zM1d+Yb/aaq77B7eHLFnLTi5I2eY/6OxIWQf+nplW5QX0ZkE4xPqFrShU63wEJmqAjO2g37Dgwu1DX9Pu01DDIoDGcrtD2F6yEAC1ptlQSnKM9Fex6itiCgYWRgOmn0ZuDljupmOJtm822yU5aa2idBRrDlYSEwSpantB/ZKB3WVutd/ogKeF5UH17CEz/gBnXhXIzwuIe78yRW/kT85hYql4+NH35nEiViO0Pe5E0QkcHUn3gOucDq9nltrn7jn9wiz0+TBFh77gc2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=oracle.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uRIVbmD87mP7lywA6ZM2ve2/SJYR+gHsTHLAgIqJLEc=;
- b=NKZs40b0iyQr/KaYgl79uprz9kU6N7g7ekJvR6MahOspi/sChfJR0T8w39FsHTDF8Xn6iK2vFK8WQzNzcXC8gsOgKcZGqmy/IaOiTPZof66usIKr2FE8fnq8qBVLIILMNDkPy06+5XLKJfJbC67WCXAPo2kAqwRo2YnqJHos3qg=
-Received: from MWHPR0201CA0046.namprd02.prod.outlook.com
- (2603:10b6:301:73::23) by BN7PR02MB4034.namprd02.prod.outlook.com
- (2603:10b6:406:fe::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2178.16; Thu, 22 Aug
- 2019 08:49:19 +0000
-Received: from SN1NAM02FT011.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::201) by MWHPR0201CA0046.outlook.office365.com
- (2603:10b6:301:73::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2199.14 via Frontend
- Transport; Thu, 22 Aug 2019 08:49:19 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT011.mail.protection.outlook.com (10.152.72.82) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2199.13
- via Frontend Transport; Thu, 22 Aug 2019 08:49:18 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1i0imU-0005Iz-9f; Thu, 22 Aug 2019 01:49:18 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1i0imP-0005wS-6Q; Thu, 22 Aug 2019 01:49:13 -0700
-Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x7M8n7bc027385;
-        Thu, 22 Aug 2019 01:49:07 -0700
-Received: from [172.30.17.116]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1i0imJ-0005q3-Ek; Thu, 22 Aug 2019 01:49:07 -0700
-Subject: Re: [PATCH 1/4] misc: xilinx_sdfec: Fix a couple small information
- leaks
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190821070606.GA26957@mwanda>
- <58e9a151-3d92-c730-eea6-5cfde90934a4@xilinx.com>
- <20190822082831.GH3964@kadam>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <3877ba50-8c3b-bc88-95d3-3aeb3e09fcf1@xilinx.com>
-Date:   Thu, 22 Aug 2019 10:49:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 04:50:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36772 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730488AbfHVIug (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 04:50:36 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7M8nQqm124526;
+        Thu, 22 Aug 2019 08:50:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=lApRD2BRq+7hJJnluRFUtj3dNodqui2pOpL9TsZdsvQ=;
+ b=iSiNnufs8VT/Fp6eeTleeLVU8AU9c4CqoxJehp52aW8SCgldaYQEv3hRjXlp3sib6Bv8
+ +I8QdH45Ej0gWl/KtOdi5C6VBfmseZWUmuEVsWLIxjbrKPdWO+kic2yP2LcSVxURHZi6
+ olxLndkXNmG9qo76vKM8saAj9DpSMdW94krPu+cvawH/rqCol75autCPPATW7dGah6CM
+ dHJvSAYjZOkBX0L9z8YJ0zaNl2eoR7kHKivMywZIDorRa/emJ4Lv+t3ltxq9wiR7O7HN
+ 11fGb/PJO7mtrj784NFwD6spzxe8XNuCF1PnzxXBWV8/luhvx/N/0hRGa/TKu+pqwbPP Uw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2uea7r3x7s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 08:50:17 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7M8nHSC081461;
+        Thu, 22 Aug 2019 08:50:17 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2uh83prxbk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 08:50:17 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7M8oGGJ026765;
+        Thu, 22 Aug 2019 08:50:16 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 22 Aug 2019 01:50:15 -0700
+Date:   Thu, 22 Aug 2019 11:50:08 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Whitmore <johnfwhitmore@gmail.com>,
+        devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8192u: remove redundant assignment to
+ pointer crypt
+Message-ID: <20190822085008.GH4451@kadam>
+References: <20190822084609.8971-1-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20190822082831.GH3964@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(2980300002)(199004)(189003)(9786002)(4744005)(486006)(476003)(126002)(50466002)(70206006)(70586007)(44832011)(6246003)(31696002)(446003)(336012)(426003)(11346002)(2616005)(305945005)(8676002)(81156014)(81166006)(26005)(5660300002)(8936002)(186003)(110136005)(478600001)(356004)(6666004)(2906002)(4326008)(36386004)(316002)(229853002)(58126008)(54906003)(31686004)(106002)(47776003)(230700001)(14444005)(65956001)(76176011)(23676004)(65806001)(52146003)(2486003)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4034;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 69648e9e-2c2c-4e77-51f8-08d726dd9ec6
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(4709080)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:BN7PR02MB4034;
-X-MS-TrafficTypeDiagnostic: BN7PR02MB4034:
-X-Microsoft-Antispam-PRVS: <BN7PR02MB4034DFBA6D81505FAC474B23C6A50@BN7PR02MB4034.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-Forefront-PRVS: 01371B902F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: DsRzjuNo/se7hjdVoaDL3MXAJ6Fy4SM8y85AT+wetVM9CZS+bQpDIbrwKRUmYCdm+Mh05KQGS4S6bglBfx5Z4j55cqdLTbQVHvjQSXF4BWvf5/vUjZBrJf2D4KzmAEEsmPiscxYgF+MYsJCklne/aAG7Y7cs9uoEPcXTP+3xA6X+v4OD+1x3p3E9hVJsmhveU/sbFFFa26RRGHMpTMEoPT5hk5mVq3HMHn07EZPz5ghVpxh+MFZo4BV1+ln5U0EuESvlIPYqAP3I8c2I4KZCc5LOZVfRT4Xw+ybMp8bdnrfRHPo8ziibofoST+CvgxHCZI/kIhDVIm3Txe641cttp8FUM4O7oqbH0AVbbuE53Mu2KM67a1cmvHz72eAvYlA3WRWRKlPXau48OGqIL3OzhMXhSvOUBJETzmqtDaiq/Fo=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2019 08:49:18.6897
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69648e9e-2c2c-4e77-51f8-08d726dd9ec6
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4034
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822084609.8971-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908220097
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908220097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22. 08. 19 10:28, Dan Carpenter wrote:
-> On Thu, Aug 22, 2019 at 10:14:12AM +0200, Michal Simek wrote:
->> Hi Dan,
->>
->> On 21. 08. 19 9:06, Dan Carpenter wrote:
->>> These structs have holes in them so we end up disclosing a few bytes of
->>> uninitialized stack data.
->>>
->>> drivers/misc/xilinx_sdfec.c:305 xsdfec_get_status() warn: check that 'status' doesn't leak information (struct has a hole after 'activity')
->>> drivers/misc/xilinx_sdfec.c:449 xsdfec_get_turbo() warn: check that 'turbo_params' doesn't leak information (struct has a hole after 'scale')
->>
->> Who is generating these warnings? Is this any new GCC or different tool?
->> I see that 3byte padding but never seen these warnings.
+On Thu, Aug 22, 2019 at 09:46:09AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> This is a Smatch check.
+> The pointer crypt is being set with a value that is never read,
+> the assignment is redundant and hence can be removed.
+> 
+> Thanks to Dan Carpenter for sanity checking that this was indeed
+> redundant.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-ok. It looks like I need to update it to latest version. My version is
-not showing these.
+Thanks!
 
-Anyway thanks for patches,
-Michal
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+regards,
+dan carpenter
+
