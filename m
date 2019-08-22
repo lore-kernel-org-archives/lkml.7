@@ -2,108 +2,113 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17EDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3588CC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A69AE21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:47:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0QYEvGju"
+	by mail.kernel.org (Postfix) with ESMTP id 0397421848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:51:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566460281;
+	bh=gLTtUwjy64ipJy2k/NTk5sFH5pVXBUlnIh6g4ASn+h8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CcVWKkaBDNZSWPZ8LZ/KPc2vkGeQeSP0vvpjt9b4sltDPqKkLjrygVd0OuBjLINLb
+	 wnyIdvZi+kMa8c2Rl/cL9LyNTTXy30tVEkilxf0QtKmj+4u57O5krjwTbvkPxf+Ves
+	 Q7gzwbwjTyVD5oUT/jMXRxTZo8Wxef+1mMtrbUlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbfHVHrw (ORCPT
+        id S1731436AbfHVHvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:47:52 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:53872 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbfHVHrw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:47:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EmuC6Fpk11rSVocpKbT8KYAej4t4mP+c/Oiv8Dne6MM=; b=0QYEvGjuKtc+q7j2b3hiPyDeJ
-        mg+zKCYg+iMWtehpQ0UGDVQL+lL8lvCqx+Ir/+dDLouDYR3kku+370uVmT8IlsWWLWt5c+aUW1S2+
-        sOf23i/MrMkrfQ3ovgUWXSatBtVcvNoZYkZ+e9qSoJlBEqe6YW68A9ifz1pjxe2WlqFJuT0vxJl89
-        9e6aFuKufIXKwAkuD2WVUHN8ZjgzpMaRbhcLwTCUVlOl7Vp8CJDYIR3QjhwrUYjDwK2y+ME2HWrQd
-        gbAWnBGY7KAl4H/UwgZJ5Jc+UznTzMhWTu+YeFw0vsuYvWqRu4Lnv6yiSZxHdOzfxg10axRX22vH1
-        EX2KcvCgA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i0hoq-0000Bt-PY; Thu, 22 Aug 2019 07:47:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 22 Aug 2019 03:51:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726096AbfHVHvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 03:51:19 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E693A307598;
-        Thu, 22 Aug 2019 09:47:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9034020C3BF31; Thu, 22 Aug 2019 09:47:37 +0200 (CEST)
-Date:   Thu, 22 Aug 2019 09:47:37 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Daniel Xu <dxu@dxuuu.xyz>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add
- PERF_EVENT_IOC_QUERY_PROBE ioctl
-Message-ID: <20190822074737.GG2349@hirez.programming.kicks-ass.net>
-References: <20190820144503.GV2332@hirez.programming.kicks-ass.net>
- <BWENHQJIN885.216UOYEIWNGFU@dlxu-fedora-R90QNFJV>
- <20190821110856.GB2349@hirez.programming.kicks-ass.net>
- <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
- <20190821183155.GE2349@hirez.programming.kicks-ass.net>
- <5ecdcd72-255d-26d1-baf3-dc64498753c2@fb.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14431206BB;
+        Thu, 22 Aug 2019 07:51:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566460278;
+        bh=gLTtUwjy64ipJy2k/NTk5sFH5pVXBUlnIh6g4ASn+h8=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=Ky2LBlrT7dFKvo9bJZuLrmlUMzoL9mOIepdmpgN/5J0U2GQszKq8c812XWtyPgZAJ
+         VQvOcfVXrgKM1EtiW/FChHV8/AgFYBqM992VbtmAy8hGBAp/PrrbpQv1zWt7fcmGsP
+         tR3+UWfrdGzHxQLWk0LXQMb34AAoDtpVDawK0ge8=
+Date:   Thu, 22 Aug 2019 09:51:07 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+cc:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
+        linux-input@vger.kernel.org,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] HID: hidraw: Fix invalid read in hidraw_ioctl
+In-Reply-To: <Pine.LNX.4.44L0.1908211323030.1816-100000@iolanthe.rowland.org>
+Message-ID: <nycvar.YFH.7.76.1908220950470.27147@cbobk.fhfr.pm>
+References: <Pine.LNX.4.44L0.1908211323030.1816-100000@iolanthe.rowland.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5ecdcd72-255d-26d1-baf3-dc64498753c2@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 06:43:49PM +0000, Yonghong Song wrote:
-> On 8/21/19 11:31 AM, Peter Zijlstra wrote:
+On Wed, 21 Aug 2019, Alan Stern wrote:
 
-> > So extending PERF_RECORD_LOST doesn't work. But PERF_FORMAT_LOST might
-> > still work fine; but you get to implement it for all software events.
+> The syzbot fuzzer has reported a pair of problems in the
+> hidraw_ioctl() function: slab-out-of-bounds read and use-after-free
+> read.  An example of the first:
 > 
-> Could you give more specifics about PERF_FORMAT_LOST? Googling 
-> "PERF_FORMAT_LOST" only yields two emails which we are discussing here :-(
-
-Look at what the other PERF_FORMAT_ flags do? Basically it is adding a
-field to the read(2) output.
-
-> >> Maybe we can still use ioctl based approach which is light weighted
-> >> compared to ring buffer approach? If a fd has bpf attached, nhit/nmisses
-> >> means the kprobe is processed by bpf program or not.
-> > 
-> > There is nothing kprobe specific here. Kprobes just appear to be the
-> > only one actually accounting the recursion cases, but everyone has
-> > them.
+> BUG: KASAN: slab-out-of-bounds in strlen+0x79/0x90 lib/string.c:525
+> Read of size 1 at addr ffff8881c8035f38 by task syz-executor.4/2833
 > 
-> Sorry to be specific, kprobe is just an example, I actually refers to 
-> any perf event where bpf can attach to, which theoretically are any
-> perf events which can be opened with "perf_event_open" syscall although 
-> some of them (e.g., software events?) may not have bpf running hooks yet.
+> CPU: 1 PID: 2833 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #1
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description+0x6a/0x32c mm/kasan/report.c:351
+>   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+>   kasan_report+0xe/0x12 mm/kasan/common.c:612
+>   strlen+0x79/0x90 lib/string.c:525
+>   strlen include/linux/string.h:281 [inline]
+>   hidraw_ioctl+0x245/0xae0 drivers/hid/hidraw.c:446
+>   vfs_ioctl fs/ioctl.c:46 [inline]
+>   file_ioctl fs/ioctl.c:509 [inline]
+>   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
+>   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
+>   __do_sys_ioctl fs/ioctl.c:720 [inline]
+>   __se_sys_ioctl fs/ioctl.c:718 [inline]
+>   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
+>   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x459829
+> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007f7a68f6dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
+> RDX: 0000000000000000 RSI: 0000000080404805 RDI: 0000000000000004
+> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7a68f6e6d4
+> R13: 00000000004c21de R14: 00000000004d5620 R15: 00000000ffffffff
+> 
+> The two problems have the same cause: hidraw_ioctl() fails to test
+> whether the device has been removed.  This patch adds the missing test.
+> 
+> Reported-and-tested-by: syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com
+> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
 
-Yes, BPF is sucky that way.
+Thanks a lot Alan for chasing this; I've applied the patch.
+
+-- 
+Jiri Kosina
+SUSE Labs
 
