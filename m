@@ -2,52 +2,60 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2943FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9785C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A9820870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4F920856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566496115;
-	bh=9lz0j7Dg9kHYcPRsVc6Xu+Ax0xEBjstIGrwUByaMt1k=;
+	s=default; t=1566496122;
+	bh=qo9Zen2R4r484S61D4d6Us+9FdV8fr2IZi4Twuqx+FM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N3sXq9jyubzXp6eaOy8THkBamtiIBshSrJe9Hmu+MJHq8L2jZ0BxENA0ov/IjeJ+t
-	 vwoM7NlgabbSWJIT8pUFNy5tW0kdzTF8koizxvye/Lh/pvRlylStJOYgba3YBWQa3o
-	 uv86LwEsoE6u6iBgJD3kqBSuXIo7cBj94/rtWXTc=
+	b=PvUbHBeeFrie0IXjwKklsyLYxcpjwsexsZ+aNxfAukd5s6SPKTvX3PK+sc4uKzH+O
+	 BU8BRLO8flos6E6OlAgMlONF2WLoUFbL5/gk1kCIV2RpKorDehDhpDq/9kXkkB+Gqa
+	 yxcVJbPHJ1MlSTKQaasHdsWqoh88IPn/aF0vUr1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391244AbfHVRse (ORCPT
+        id S2390579AbfHVRsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40682 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391317AbfHVRW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:27 -0400
+        id S2389950AbfHVRWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:24 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47CF823400;
-        Thu, 22 Aug 2019 17:22:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9D44233FC;
+        Thu, 22 Aug 2019 17:22:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494547;
-        bh=9lz0j7Dg9kHYcPRsVc6Xu+Ax0xEBjstIGrwUByaMt1k=;
+        s=default; t=1566494542;
+        bh=qo9Zen2R4r484S61D4d6Us+9FdV8fr2IZi4Twuqx+FM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkwaVH8GlH7Fj541EgreIqKGGRw9BCtmUtJwNrkHNT1ljJ2zOhVNADaZCpOZQVeJY
-         3rnd4mRFdIe4e3ID3NUwvadwTsbxGGSwkovZ3t8uKsN3ZFQ4yEdcFAEEw0IagfZwmx
-         I7WoAqP1bE0e4JN3Xg1Sj6tV+zbpQTqotGrKVfWE=
+        b=HUiizBiMTtoDnPaT1vHqttMWYLH3R2ojDq0G+1shLtNofwyG8y6CV7xuskFKWaYsf
+         SGD0POWKAMY9IA3DuPNd3paNu+KJKh9WhZpiLHJbPEHJQ6+s9CwJc6rUMagr7KtyIl
+         QArvw0+1cpso0PKp6dI1JHabCAOp51/v4sd8m+js=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 4.4 29/78] SMB3: Fix deadlock in validate negotiate hits reconnect
-Date:   Thu, 22 Aug 2019 10:18:33 -0700
-Message-Id: <20190822171832.888396613@linuxfoundation.org>
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Frank Li <Frank.li@nxp.com>, Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 23/78] perf/core: Fix creating kernel counters for PMUs that override event->cpu
+Date:   Thu, 22 Aug 2019 10:18:27 -0700
+Message-Id: <20190822171832.715033577@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -60,38 +68,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+[ Upstream commit 4ce54af8b33d3e21ca935fc1b89b58cbba956051 ]
 
-commit e99c63e4d86d3a94818693147b469fa70de6f945 upstream.
+Some hardware PMU drivers will override perf_event.cpu inside their
+event_init callback. This causes a lockdep splat when initialized through
+the kernel API:
 
-Currently we skip SMB2_TREE_CONNECT command when checking during
-reconnect because Tree Connect happens when establishing
-an SMB session. For SMB 3.0 protocol version the code also calls
-validate negotiate which results in SMB2_IOCL command being sent
-over the wire. This may deadlock on trying to acquire a mutex when
-checking for reconnect. Fix this by skipping SMB2_IOCL command
-when doing the reconnect check.
+ WARNING: CPU: 0 PID: 250 at kernel/events/core.c:2917 ctx_sched_out+0x78/0x208
+ pc : ctx_sched_out+0x78/0x208
+ Call trace:
+  ctx_sched_out+0x78/0x208
+  __perf_install_in_context+0x160/0x248
+  remote_function+0x58/0x68
+  generic_exec_single+0x100/0x180
+  smp_call_function_single+0x174/0x1b8
+  perf_install_in_context+0x178/0x188
+  perf_event_create_kernel_counter+0x118/0x160
 
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by calling perf_install_in_context with event->cpu, just like
+perf_event_open
 
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Frank Li <Frank.li@nxp.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Will Deacon <will@kernel.org>
+Link: https://lkml.kernel.org/r/c4ebe0503623066896d7046def4d6b1e06e0eb2e.1563972056.git.leonard.crestez@nxp.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2pdu.c |    2 +-
+ kernel/events/core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -171,7 +171,7 @@ smb2_reconnect(__le16 smb2_command, stru
- 	if (tcon == NULL)
- 		return 0;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 41fe80e3380f5..a7014f854e67b 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8757,7 +8757,7 @@ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
+ 		goto err_free;
+ 	}
  
--	if (smb2_command == SMB2_TREE_CONNECT)
-+	if (smb2_command == SMB2_TREE_CONNECT || smb2_command == SMB2_IOCTL)
- 		return 0;
+-	perf_install_in_context(ctx, event, cpu);
++	perf_install_in_context(ctx, event, event->cpu);
+ 	perf_unpin_context(ctx);
+ 	mutex_unlock(&ctx->mutex);
  
- 	if (tcon->tidStatus == CifsExiting) {
+-- 
+2.20.1
+
 
 
