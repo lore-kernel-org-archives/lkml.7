@@ -2,185 +2,107 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E498C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD70C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B917233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:29:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z6HymoiN"
+	by mail.kernel.org (Postfix) with ESMTP id D2F652339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566509380;
+	bh=4mCTf/YMc7uLJWwtQlQ8SwMozynVGioIXfvvNvxBVjk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wWkcToUxvo41UBUtw5RQ2QWaGaSPJOMcycWoW02e1Z9I7iYkox/P0Ow80rOcwz55F
+	 DQuajLdu1WUbxLAITf87gxyJqXNY2F3BOZvfuP6zh2N4GGBG436Jvhk7nh98AjmwXX
+	 ASo1vgPQHTDjDHKvWjOQO0IZpqUIjJTTIklFu0Qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390039AbfHVV3T (ORCPT
+        id S2390306AbfHVV3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:29:19 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39080 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730242AbfHVV3S (ORCPT
+        Thu, 22 Aug 2019 17:29:39 -0400
+Received: from mail-lj1-f174.google.com ([209.85.208.174]:37457 "EHLO
+        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbfHVV3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:29:18 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i63so7130877wmg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 14:29:17 -0700 (PDT)
+        Thu, 22 Aug 2019 17:29:39 -0400
+Received: by mail-lj1-f174.google.com with SMTP id t14so6942351lji.4
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 14:29:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=abk/fHiB5arccADE4hjcjXei5qBzPz06VPd+ovt4c7U=;
-        b=Z6HymoiNrfDvmuXKNP47F4pXs/IWLPsbv3bDkBxbvnmiXGGp3+NJYUXU+nVZiHjHOL
-         X7/cjTWNhStOdDrdJ5DNaQOkv4BW2KQn7obTPnlh8spVWZ1f0LPI91drZ0pYASqkXbVA
-         LpIq9ZpDBEE2/YWQyjz2D+41CI9dY2XomHR5dDHtOIyMGTAlSqCQ+UAX+mG8Rf2yiiBb
-         OgZK2iAivQHaezJSk7B+8RuMpkhpHjCyESvZktm7IoRZZ2bm66BaBOGbms6eTtqchhot
-         aF7ZJbKW+1KiGpeIjIZ6ryxdZbWqxi5rU9etq9NILB5Dk3JUsEAiylDM1sSNGJwnK7fB
-         ixcg==
+        bh=fS+5NiIBvdct0VjclwamoBpBG6dKC44mUuBwDfUw2D4=;
+        b=MP9hAWayJfCwqRyESr8IozbkfAYF/PFq2y/4RL+vBXU2y6uYRRCJkCFxh27ome1tE2
+         r05Ks1U/mjRzFMEmhfKg3VM2tJkZ/87slWoQM+c4oNqV4jcrkcxE6XTmMtc7ADZOO63U
+         iqfnUz6oiLq2XUY6iCMTeryyeT2TsSMB48yrE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=abk/fHiB5arccADE4hjcjXei5qBzPz06VPd+ovt4c7U=;
-        b=hskJMOw6Q8Zntf/cjKsim+rEKOPGoY7yj9jV+RXEUBEoycvPG7CTEWrYlteKOpWWT1
-         p4niDhJPN19BcIBstajiaFpv2K9eTxvUx4Kz7GE76wB3SHnVeuKrUxNSRkooJn4KzYLh
-         qtLtYOvHHrE/9d319oHp4q0HCVJaJI0yz8YIYdOC5I1DNvpqxffRobiqzgWsS1nf+LQM
-         xv9JdprONjN50Z8wFdOKZkr+gudlUC96BtuCU+J/31zoz6f4YneKaXGMls18IFpzn3iC
-         01rV7MkG/9WdMcSxwqwS6XCkjk8O5xlkeNWanN0VIo8nhm2mTNXTI7J8i9WI4syLCCrz
-         CMhA==
-X-Gm-Message-State: APjAAAUvnFIqCnFE+i1JRoZ1vhO6E78+gKwBEWgixuBDVar3QlGfQPrE
-        iiB8bifAaoDN+t3ErQ+uYxiKwSDtUNNJTSt2+5xBgg==
-X-Google-Smtp-Source: APXvYqzTDaHrpYtZDyX5sO5xcuQItXl5PGCNVrqcUG85MZXFaE7uhViXyMROxlaIUnmTW8OOeZFpBft1GRNqgY7OGbI=
-X-Received: by 2002:a1c:c5c4:: with SMTP id v187mr1152547wmf.30.1566509355910;
- Thu, 22 Aug 2019 14:29:15 -0700 (PDT)
+        bh=fS+5NiIBvdct0VjclwamoBpBG6dKC44mUuBwDfUw2D4=;
+        b=rmQDK3jSgk1mXIsVhOTRF8qZZsHMfv3IHLOX/1A2bvwuwrj8C37VV5jaj4nRZinHx4
+         buXH0WIEfTGUX0cdP7cxkmJBH2ED0q/eex6mnGuvfLGEttGOAcqcATlRUkTm+QuaoGfM
+         b1ThgrV9dmhsoUJZjGN7pUlGeiwj4UjhEq3LMiIXiUv0YNf5bv1c6BnOFjSEk4//2roK
+         oV63zFGItLCqVV6TW4R3pzpeQ4UZ9PIGQQyK8j09WccRX73QgXQc8fnwD+4C9dFE6BR8
+         esOp1oV3u2FopjTrLdw47tGwinjGvjsP6JC/Q7+axK0AmRfE1ZESD6kfAGh2ZG+i/tVM
+         sKJQ==
+X-Gm-Message-State: APjAAAU+uMiBlyigf72Ru3nScr8uMEXtsgnKfXNO0Ob1tvYNcT6PX8wF
+        HkkkdHx91CDd/golkRyw8sr8p32NAmY=
+X-Google-Smtp-Source: APXvYqzhhWbi6W/k+p4InSNJojmO7LzYJWfCY6k8WWPGBYXmwocwsA0zzgnEJkBZmxK1H584Lc+Fag==
+X-Received: by 2002:a2e:875a:: with SMTP id q26mr813844ljj.107.1566509376818;
+        Thu, 22 Aug 2019 14:29:36 -0700 (PDT)
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
+        by smtp.gmail.com with ESMTPSA id e11sm205037ljo.19.2019.08.22.14.29.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Aug 2019 14:29:35 -0700 (PDT)
+Received: by mail-lf1-f45.google.com with SMTP id x3so5595022lfn.6
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 14:29:35 -0700 (PDT)
+X-Received: by 2002:ac2:5c42:: with SMTP id s2mr685171lfp.61.1566509375347;
+ Thu, 22 Aug 2019 14:29:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190724234500.253358-1-nums@google.com> <20190807203812.GA20129@kernel.org>
-In-Reply-To: <20190807203812.GA20129@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 22 Aug 2019 14:29:03 -0700
-Message-ID: <CAP-5=fURDxS6DSjc34MNOgqb_UX4YKHT5uHHtzi0X9qVQ8ZqcQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Perf uninitialized value fixes
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>, mbd@fb.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+References: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <1566338811-4464-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 22 Aug 2019 14:29:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whK4d0cO+98mEcTfb+Cpxt7W8dpdux9KJc_h6AO6PXtcw@mail.gmail.com>
+Message-ID: <CAHk-=whK4d0cO+98mEcTfb+Cpxt7W8dpdux9KJc_h6AO6PXtcw@mail.gmail.com>
+Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 7, 2019 at 1:38 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
+On Tue, Aug 20, 2019 at 3:07 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
 >
-> Em Wed, Jul 24, 2019 at 04:44:57PM -0700, Numfor Mbiziwo-Tiapo escreveu:
-> > These patches are all warnings that the MSAN (Memory Sanitizer) build
-> > of perf has caught.
-> >
-> > To build perf with MSAN enabled run:
-> > make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
-> >  -fsanitize-memory-track-origins"
-> >
-> > (The -fsanitizer-memory-track-origins makes the bugs clearer but
-> > isn't strictly necessary.)
-> >
-> > (Additionally, llvm might have to be installed and clang might have to
-> > be specified as the compiler - export CC=/usr/bin/clang).
-> >
-> > The patches "Fix util.c use of uninitialized value warning" and "Fix
-> > annotate.c use of uninitialized value error" build on top of each other
-> > (the changes in Fix util.c use of uninitialized value warning must be
-> > made first).
-> >
-> > When running the commands provided in the repro instructions, MSAN will
-> > generate false positive uninitialized memory errors. This is happening
-> > because libc is not MSAN-instrumented. Finding a way to build libc with
-> > MSAN will get rid of these false positives and allow the real warnings
-> > mentioned in the patches to be shown.
->
-> So this is because I'm not running a glibc linked with MSAN? Do you have
-> any pointer to help building glibc with MSAN? I want to do that inside a
-> container so that I can use these sanitizers, thanks,
->
-> [root@quaco ~]# perf record -o - ls / | perf --no-pager annotate -i -  --stdio
-> ==29732==WARNING: MemorySanitizer: use-of-uninitialized-value
-> ==29733==WARNING: MemorySanitizer: use-of-uninitialized-value
->     #0 0xcc136d in add_path /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:130:6
->     #1 0xcc075e in setup_path /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:146:2
->     #2 0x71298d in main /home/acme/git/perf/tools/perf/perf.c:512:2
->     #0 0xcc136d in add_path /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:130:6
->     #1 0xcc075e in setup_path /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:146:2
->     #2 0x71298d in main /home/acme/git/perf/tools/perf/perf.c:512:2
->     #3 0x7f45b9e29f32 in __libc_start_main (/lib64/libc.so.6+0x23f32)
->     #4 0x447dcd in _start (/home/acme/bin/perf+0x447dcd)
->
->   Uninitialized value was created by a heap allocation
->     #3 0x7fd6433cff32 in __libc_start_main (/lib64/libc.so.6+0x23f32)
->     #4 0x447dcd in _start (/home/acme/bin/perf+0x447dcd)
->
->   Uninitialized value was created by a heap allocation
->     #0 0x4507d2 in malloc /home/acme/git/llvm/projects/compiler-rt/lib/msan/msan_interceptors.cc:916:3
->     #1 0x7f45b9e7fc47 in __vasprintf_internal (/lib64/libc.so.6+0x79c47)
->
-> SUMMARY: MemorySanitizer: use-of-uninitialized-value /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:130:6 in add_path
-> Exiting
->     #0 0x4507d2 in malloc /home/acme/git/llvm/projects/compiler-rt/lib/msan/msan_interceptors.cc:916:3
->     #1 0x7fd643425c47 in __vasprintf_internal (/lib64/libc.so.6+0x79c47)
->
-> SUMMARY: MemorySanitizer: use-of-uninitialized-value /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:130:6 in add_path
-> Exiting
-> [root@quaco ~]#
->
-> > Numfor Mbiziwo-Tiapo (3):
-> >   Fix util.c use of uninitialized value warning
-> >   Fix annotate.c use of uninitialized value error
-> >   Fix sched-messaging.c use of uninitialized value errors
-> >
-> >  tools/perf/bench/sched-messaging.c |  3 ++-
-> >  tools/perf/util/annotate.c         | 15 +++++++++++----
-> >  tools/perf/util/header.c           |  2 +-
-> >  3 files changed, 14 insertions(+), 6 deletions(-)
+> -       while (count > 0) {
+> +       while (count > 0 && !fatal_signal_pending(current)) {
 
-Thanks Arnaldo! Debugging the issue it isn't down glibc, there are
-interceptors in the sanitizers for asprintf to recognize it as a
-source of memory allocation. The problem is the sanitizers don't
-support _FORTIFY_SOURCE [1] and this is causing the false positives.
-The following patch works to resolve the false-positive issue for me:
+Please just use the normal pattern of doing
 
------
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -20,7 +20,13 @@ MAKEFLAGS += --no-print-directory
-LIBFILE = $(OUTPUT)libsubcmd.a
+        if (fatal_signal_pending(current))
+                return -EINTR;
 
-CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
--CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE
--D_FORTIFY_SOURCE=2 -fPIC
-+CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
-+
-+ifeq ($(DEBUG),0)
-+  ifeq ($(feature-fortify-source), 1)
-+    CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
-+  endif
-+endif
+inside the loop instead.
 
-ifeq ($(CC_NO_CLANG), 0)
-  CFLAGS += -O3
------
+(Ok, in this case I think it wants
 
-Thanks,
-Ian
+        err = -EINTR;
+        if (fatal_signal_pending(current))
+                break;
 
-[1] https://github.com/google/sanitizers/wiki/AddressSanitizer#faq
+instead, but the point is to make it look like signal handling, just
+with the special "fatal signals can sometimes be handled even when
+regular signals might not make it through".
 
-> > --
-> > 2.22.0.657.g960e92d24f-goog
->
-> --
->
-> - Arnaldo
+              Linus
