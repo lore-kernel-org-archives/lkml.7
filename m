@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A87DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D01BBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14ED233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6DB1233FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493776;
-	bh=4qbaXH5sM+XOTj+157enUJeOpnIDsLrcUa+ZqSU4zWM=;
+	s=default; t=1566493777;
+	bh=sVSvY0EcxvdjzECryodqnKsV/E68UaqplmGCkJsmK7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1pRoRMhQos8hJkq1X7rHm9hSumLDx60JHoUG5s3jZBxMTUS4YzhCgIkHdMJZchghI
-	 Tp6YdnClhc89fZHhyO40cLEwWgYxGKGzk6lLzxB8znnA85DXD4RKVSdfvSqTtqHRSl
-	 oV4/cRD1+vPf2CwyL8j81UJIC6WBCGBAGBYdZUkY=
+	b=xs0fbTMYsouEMd2iZ7Z1PdHEos2ZzCviJB0dFlGWSCfO/BrEE9GighcfrHAwrjRZh
+	 nd/DFVfDFHj5CNzu8z9fKSTZPOdB5T0nblq6eDuLOGH0/QNPTeMjcXe5tgdYaKKND/
+	 yP7bxwgYJn0Sd5RaWzCQBG6z6GQPq+TarrqK5iUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390799AbfHVRJe (ORCPT
+        id S2387411AbfHVRJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390732AbfHVRJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:20 -0400
+        id S2390726AbfHVRJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:21 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C1322342F;
-        Thu, 22 Aug 2019 17:09:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DFE92341E;
+        Thu, 22 Aug 2019 17:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493759;
-        bh=4qbaXH5sM+XOTj+157enUJeOpnIDsLrcUa+ZqSU4zWM=;
+        s=default; t=1566493760;
+        bh=sVSvY0EcxvdjzECryodqnKsV/E68UaqplmGCkJsmK7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WDQ8WDvrLwBFH54VvDCNwIun9FmBxYXX6mewZNMtzQER7FYR4GmQ65rkRzItoM2Ao
-         RrvlAJQ10OGtIIaNU6EVi5z4eykhjRw+6K6hI5SRfxXnRzNeBvDoeUCWxIi/WrLV1+
-         dIv1XVs8qduqdGIm8ZnyzAtdTGR3w/qgFIXRyIDk=
+        b=pFkL2nu/rzwMcLEdzkSiuXmPziUvwi9tCYC5+HXNJI8sD27z2va54Yz0dXdo2RE9C
+         W1kHPa6//BOvW2KNI92ocWOkkRujDzJj25wdqDYL6N4nz7wi2i9gKh4GOh0TxE4uWX
+         4R/EFyQ1M+eHiJzjpM6Yh3lzjcQinjxj7YNQlMcE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+Cc:     Venkat Duvvuru <venkatkumar.duvvuru@broadcom.com>,
         Michael Chan <michael.chan@broadcom.com>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 121/135] bnxt_en: Fix handling FRAG_ERR when NVM_INSTALL_UPDATE cmd fails
-Date:   Thu, 22 Aug 2019 13:07:57 -0400
-Message-Id: <20190822170811.13303-122-sashal@kernel.org>
+Subject: [PATCH 5.2 123/135] bnxt_en: Use correct src_fid to determine direction of the flow
+Date:   Thu, 22 Aug 2019 13:07:59 -0400
+Message-Id: <20190822170811.13303-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,55 +66,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Venkat Duvvuru <venkatkumar.duvvuru@broadcom.com>
 
-[ Upstream commit dd2ebf3404c7c295014bc025dea23960960ceb1a ]
+[ Upstream commit 685ec6a81bb0d47faf1dba49437d5bdaede2733d ]
 
-If FW returns FRAG_ERR in response error code, driver is resending the
-command only when HWRM command returns success. Fix the code to resend
-NVM_INSTALL_UPDATE command with DEFRAG install flags, if FW returns
-FRAG_ERR in its response error code.
+Direction of the flow is determined using src_fid. For an RX flow,
+src_fid is PF's fid and for TX flow, src_fid is VF's fid. Direction
+of the flow must be specified, when getting statistics for that flow.
+Currently, for DECAP flow, direction is determined incorrectly, i.e.,
+direction is initialized as TX for DECAP flow, instead of RX. Because
+of which, stats are not reported for this DECAP flow, though it is
+offloaded and there is traffic for that flow, resulting in flow age out.
 
-Fixes: cb4d1d626145 ("bnxt_en: Retry failed NVM_INSTALL_UPDATE with defragmentation flag enabled.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+This patch fixes the problem by determining the DECAP flow's direction
+using correct fid.  Set the flow direction in all cases for consistency
+even if 64-bit flow handle is not used.
+
+Fixes: abd43a13525d ("bnxt_en: Support for 64-bit flow handle.")
+Signed-off-by: Venkat Duvvuru <venkatkumar.duvvuru@broadcom.com>
 Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index a6c7baf38036a..b761a2e28a101 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -2016,21 +2016,19 @@ static int bnxt_flash_package_from_file(struct net_device *dev,
- 	mutex_lock(&bp->hwrm_cmd_lock);
- 	hwrm_err = _hwrm_send_message(bp, &install, sizeof(install),
- 				      INSTALL_PACKAGE_TIMEOUT);
--	if (hwrm_err)
--		goto flash_pkg_exit;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+index 44d6c5743fb90..a25ed190b5b2e 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
+@@ -1285,9 +1285,7 @@ static int bnxt_tc_add_flow(struct bnxt *bp, u16 src_fid,
+ 		goto free_node;
+ 
+ 	bnxt_tc_set_src_fid(bp, flow, src_fid);
 -
--	if (resp->error_code) {
-+	if (hwrm_err) {
- 		u8 error_code = ((struct hwrm_err_output *)resp)->cmd_err;
+-	if (bp->fw_cap & BNXT_FW_CAP_OVS_64BIT_HANDLE)
+-		bnxt_tc_set_flow_dir(bp, flow, src_fid);
++	bnxt_tc_set_flow_dir(bp, flow, flow->src_fid);
  
--		if (error_code == NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
-+		if (resp->error_code && error_code ==
-+		    NVM_INSTALL_UPDATE_CMD_ERR_CODE_FRAG_ERR) {
- 			install.flags |= cpu_to_le16(
- 			       NVM_INSTALL_UPDATE_REQ_FLAGS_ALLOWED_TO_DEFRAG);
- 			hwrm_err = _hwrm_send_message(bp, &install,
- 						      sizeof(install),
- 						      INSTALL_PACKAGE_TIMEOUT);
--			if (hwrm_err)
--				goto flash_pkg_exit;
- 		}
-+		if (hwrm_err)
-+			goto flash_pkg_exit;
- 	}
- 
- 	if (resp->result) {
+ 	if (!bnxt_tc_can_offload(bp, flow)) {
+ 		rc = -EOPNOTSUPP;
 -- 
 2.20.1
 
