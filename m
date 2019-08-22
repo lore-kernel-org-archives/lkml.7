@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0002FC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A90C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76EB233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE1F233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495213;
-	bh=vCnG6nfAkHenqBbOG37dUmz84sjUM/PCLY/Ncld4Su4=;
+	s=default; t=1566495217;
+	bh=lskgYeZNHSd00T7mpTIc9WyO9UKYa4hoSTdPJf2t+GY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t2SNcdvaFZophWFfvWxGD8WtqViNO1clzS9arNmmFVNWaR9cwe0jTIK5GT26imOaJ
-	 d2k6Lfxa4dbvT4VBOkpZjKcRMlRAJ0YxAW13zzkD94Ld/Diq4SV5Xg3f6BLJ+G4y0U
-	 cTjRNx2xYcdh30WDG6NWhmVVJFHKA+SXWEvpqKI8=
+	b=uxfBcxYFSta2laKsRSBw5jDgIyobv1npPI1e82VJNUBGyCfN1lceP1P1yt9JZhn+r
+	 xQ9R59pC/UxDUpGae/6pNaDVqPTU3hitn5bNmfS3/OmvsPfSBySlfuAKWqAUQgEN5O
+	 c9xcnfmb7yPJVq8eWmyyrHkoJsYWWJ4I0QXjBuVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404422AbfHVRZ1 (ORCPT
+        id S2389955AbfHVRdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46936 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:33:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388119AbfHVRYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:47 -0400
+        id S2404428AbfHVRZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:27 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77EBF21743;
-        Thu, 22 Aug 2019 17:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E2AD206DD;
+        Thu, 22 Aug 2019 17:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494686;
-        bh=vCnG6nfAkHenqBbOG37dUmz84sjUM/PCLY/Ncld4Su4=;
+        s=default; t=1566494727;
+        bh=lskgYeZNHSd00T7mpTIc9WyO9UKYa4hoSTdPJf2t+GY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gwPyqHt64CQbCCAr7qPXFNaurOGGy52UmqqV4aU0WZX/EM7IgUB8EtlN+AbP32GB6
-         xG64d1U7LA2/9cUS3qFtZwcy7zuODQ0pefT+U/OU+OnmZJtXfs+CYhCr9KY02n5Z56
-         PJlIHGrrJ8Kr+giNrDpS8Jpyv+sutRTT6xLEshxM=
+        b=DceOe9iekFxVB1pyt7vp/disgPp1FrnDfMAg9puMXwNfcb/PL97GZkYbWAnN1dYyR
+         G8Wrm7Ok0VfM6+aQ6Y4wkWDjo/R0rPaMZ5XHymC3ouB4aBmcJtzsDxjX5IJMZ7m6qL
+         EIjXcthpoy/1u/69Ewp26AAadL47cXH4q/CTZMy8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 4.14 06/71] bpf: restrict access to core bpf sysctls
-Date:   Thu, 22 Aug 2019 10:18:41 -0700
-Message-Id: <20190822171726.829659211@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 17/85] ALSA: hda - Let all conexant codec enter D3 when rebooting
+Date:   Thu, 22 Aug 2019 10:18:50 -0700
+Message-Id: <20190822171731.873025620@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
-References: <20190822171726.131957995@linuxfoundation.org>
+In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
+References: <20190822171731.012687054@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,102 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 2e4a30983b0f9b19b59e38bbf7427d7fdd480d98 upstream.
+commit 401714d9534aad8c24196b32600da683116bbe09 upstream.
 
-Given BPF reaches far beyond just networking these days, it was
-never intended to allow setting and in some cases reading those
-knobs out of a user namespace root running without CAP_SYS_ADMIN,
-thus tighten such access.
+We have 3 new lenovo laptops which have conexant codec 0x14f11f86,
+these 3 laptops also have the noise issue when rebooting, after
+letting the codec enter D3 before rebooting or poweroff, the noise
+disappers.
 
-Also the bpf_jit_enable = 2 debugging mode should only be allowed
-if kptr_restrict is not set since it otherwise can leak addresses
-to the kernel log. Dump a note to the kernel log that this is for
-debugging JITs only when enabled.
+Instead of adding a new ID again in the reboot_notify(), let us make
+this function apply to all conexant codec. In theory make codec enter
+D3 before rebooting or poweroff is harmless, and I tested this change
+on a couple of other Lenovo laptops which have different conexant
+codecs, there is no side effect so far.
 
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-[bwh: Backported to 4.14: We don't have bpf_dump_raw_ok(), so drop the
- condition based on it. This condition only made it a bit harder for a
- privileged user to do something silly.]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/sysctl_net_core.c |   41 ++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 38 insertions(+), 3 deletions(-)
 
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -251,6 +251,41 @@ static int proc_do_rss_key(struct ctl_ta
- 	return proc_dostring(&fake_table, write, buffer, lenp, ppos);
- }
+---
+ sound/pci/hda/patch_conexant.c |    9 ---------
+ 1 file changed, 9 deletions(-)
+
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -176,15 +176,6 @@ static void cx_auto_reboot_notify(struct
+ {
+ 	struct conexant_spec *spec = codec->spec;
  
-+#ifdef CONFIG_BPF_JIT
-+static int proc_dointvec_minmax_bpf_enable(struct ctl_table *table, int write,
-+					   void __user *buffer, size_t *lenp,
-+					   loff_t *ppos)
-+{
-+	int ret, jit_enable = *(int *)table->data;
-+	struct ctl_table tmp = *table;
-+
-+	if (write && !capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	tmp.data = &jit_enable;
-+	ret = proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
-+	if (write && !ret) {
-+		*(int *)table->data = jit_enable;
-+		if (jit_enable == 2)
-+			pr_warn("bpf_jit_enable = 2 was set! NEVER use this in production, only for JIT debugging!\n");
-+	}
-+	return ret;
-+}
-+
-+# ifdef CONFIG_HAVE_EBPF_JIT
-+static int
-+proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
-+				    void __user *buffer, size_t *lenp,
-+				    loff_t *ppos)
-+{
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-+}
-+# endif
-+#endif
-+
- static struct ctl_table net_core_table[] = {
- #ifdef CONFIG_NET
- 	{
-@@ -326,7 +361,7 @@ static struct ctl_table net_core_table[]
- 		.data		= &bpf_jit_enable,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
-+		.proc_handler	= proc_dointvec_minmax_bpf_enable,
- # ifdef CONFIG_BPF_JIT_ALWAYS_ON
- 		.extra1		= &one,
- 		.extra2		= &one,
-@@ -341,7 +376,7 @@ static struct ctl_table net_core_table[]
- 		.data		= &bpf_jit_harden,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0600,
--		.proc_handler	= proc_dointvec_minmax,
-+		.proc_handler	= proc_dointvec_minmax_bpf_restricted,
- 		.extra1		= &zero,
- 		.extra2		= &two,
- 	},
-@@ -350,7 +385,7 @@ static struct ctl_table net_core_table[]
- 		.data		= &bpf_jit_kallsyms,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0600,
--		.proc_handler	= proc_dointvec_minmax,
-+		.proc_handler	= proc_dointvec_minmax_bpf_restricted,
- 		.extra1		= &zero,
- 		.extra2		= &one,
- 	},
+-	switch (codec->core.vendor_id) {
+-	case 0x14f12008: /* CX8200 */
+-	case 0x14f150f2: /* CX20722 */
+-	case 0x14f150f4: /* CX20724 */
+-		break;
+-	default:
+-		return;
+-	}
+-
+ 	/* Turn the problematic codec into D3 to avoid spurious noises
+ 	   from the internal speaker during (and after) reboot */
+ 	cx_auto_turn_eapd(codec, spec->num_eapds, spec->eapds, false);
 
 
