@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BCBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D43C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FFE233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADDA233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493861;
-	bh=GiWhgEtmw+CrWmKoy5ECUngRb5KMcXW1Dpi5tpfSIjA=;
+	s=default; t=1566493866;
+	bh=DoT9S0gprPtByE9wu5OYh8hWRFkIVSatF+SD1AXibZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QyYMOC5UJ6i1Syu5HQ+KXggN1RJ8ZS/liLq9t/XLNJ1Azuva8CKqJwkZOm32hXPLk
-	 Lcv9UdP67cp6Ll8AG3fdfjeBjHcj9NS50uFoQNfS6hFKcIeKvmXQgXJ1Tk/QqR+Wp+
-	 W3sHY8V6qH1vPY+EblZTVjIHpBr+AfM6pDaCfgS0=
+	b=0pPiaCHkNNKUSEWguU06cvSewtgfKh3nFVmrJP9n5aNu03OSQoIM40j0sI8zB2R5R
+	 2cVfyGdiStzCmIi60TPetWP4ldNKgjrqg1G/pR4jGvUMVLLwqhdpdEL5604JGAW5UW
+	 0AQT56qL5ib77qOJB6mTQiDJjvzZ6+Dik7N2/Hvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390870AbfHVRLA (ORCPT
+        id S2390884AbfHVRLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:11:00 -0400
+        Thu, 22 Aug 2019 13:11:05 -0400
 Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390728AbfHVRJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:19 -0400
+        id S2390721AbfHVRJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:18 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FDE32342D;
-        Thu, 22 Aug 2019 17:09:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0663D23404;
+        Thu, 22 Aug 2019 17:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493758;
-        bh=GiWhgEtmw+CrWmKoy5ECUngRb5KMcXW1Dpi5tpfSIjA=;
+        s=default; t=1566493757;
+        bh=DoT9S0gprPtByE9wu5OYh8hWRFkIVSatF+SD1AXibZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hANLY8XznmejT/iEGSfDNH5kPnVX8TLn/WCLIFNDsNzI/1Bry798GB285+oOhxAW6
-         rCdsG0DD5m/cww/vui41UxjBjb/81mCErRBa4qVADk3s3j4/EGFUIx+X7iB4vWL3A8
-         Y8cg2v+UFIcK5fINBktEVOR1sPL3bGEAfywJxoXI=
+        b=eV5oyAIcwo/Wnz2epDMjVfKJl12QV18X41c1lm++vX5hxvMKNUp4JK409ozqO1dJj
+         44W9maemEp7OLJEw3ei7ptKvUWULwrV2ur3dqo+289ZwCYrLzltS6WzpIJ0ZRj5TtK
+         Jgf5eIL1EPWTtSe1F2d7dQ+fibjP7vlHhDD20r6o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Chan <michael.chan@broadcom.com>,
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Jon Maloy <jon.maloy@ericsson.com>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 119/135] bnxt_en: Fix VNIC clearing logic for 57500 chips.
-Date:   Thu, 22 Aug 2019 13:07:55 -0400
-Message-Id: <20190822170811.13303-120-sashal@kernel.org>
+Subject: [PATCH 5.2 116/135] tipc: initialise addr_trail_end when setting node addresses
+Date:   Thu, 22 Aug 2019 13:07:52 -0400
+Message-Id: <20190822170811.13303-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,69 +66,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-[ Upstream commit a46ecb116fb7f722fa8cb2da01959c36e4e10c41 ]
+[ Upstream commit 8874ecae2977e5a2d4f0ba301364435b81c05938 ]
 
-During device shutdown, the VNIC clearing sequence needs to be modified
-to free the VNIC first before freeing the RSS contexts.  The current
-code is doing the reverse and we can get mis-directed RX completions
-to CP ring ID 0 when the RSS contexts are freed and zeroed.  The clearing
-of RSS contexts is not required with the new sequence.
+We set the field 'addr_trial_end' to 'jiffies', instead of the current
+value 0, at the moment the node address is initialized. This guarantees
+we don't inadvertently enter an address trial period when the node
+address is explicitly set by the user.
 
-Refactor the VNIC clearing logic into a new function bnxt_clear_vnic()
-and do the chip specific VNIC clearing sequence.
-
-Fixes: 7b3af4f75b81 ("bnxt_en: Add RSS support for 57500 chips.")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Acked-by: Jon Maloy <jon.maloy@ericsson.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 26 ++++++++++++++++-------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+ net/tipc/addr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 7afae9d80e758..d9eaafa93970b 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -6963,19 +6963,29 @@ static void bnxt_hwrm_clear_vnic_rss(struct bnxt *bp)
- 		bnxt_hwrm_vnic_set_rss(bp, i, false);
+diff --git a/net/tipc/addr.c b/net/tipc/addr.c
+index b88d48d009130..0f1eaed1bd1b3 100644
+--- a/net/tipc/addr.c
++++ b/net/tipc/addr.c
+@@ -75,6 +75,7 @@ void tipc_set_node_addr(struct net *net, u32 addr)
+ 		tipc_set_node_id(net, node_id);
+ 	}
+ 	tn->trial_addr = addr;
++	tn->addr_trial_end = jiffies;
+ 	pr_info("32-bit node address hash set to %x\n", addr);
  }
  
--static void bnxt_hwrm_resource_free(struct bnxt *bp, bool close_path,
--				    bool irq_re_init)
-+static void bnxt_clear_vnic(struct bnxt *bp)
- {
--	if (bp->vnic_info) {
--		bnxt_hwrm_clear_vnic_filter(bp);
-+	if (!bp->vnic_info)
-+		return;
-+
-+	bnxt_hwrm_clear_vnic_filter(bp);
-+	if (!(bp->flags & BNXT_FLAG_CHIP_P5)) {
- 		/* clear all RSS setting before free vnic ctx */
- 		bnxt_hwrm_clear_vnic_rss(bp);
- 		bnxt_hwrm_vnic_ctx_free(bp);
--		/* before free the vnic, undo the vnic tpa settings */
--		if (bp->flags & BNXT_FLAG_TPA)
--			bnxt_set_tpa(bp, false);
--		bnxt_hwrm_vnic_free(bp);
- 	}
-+	/* before free the vnic, undo the vnic tpa settings */
-+	if (bp->flags & BNXT_FLAG_TPA)
-+		bnxt_set_tpa(bp, false);
-+	bnxt_hwrm_vnic_free(bp);
-+	if (bp->flags & BNXT_FLAG_CHIP_P5)
-+		bnxt_hwrm_vnic_ctx_free(bp);
-+}
-+
-+static void bnxt_hwrm_resource_free(struct bnxt *bp, bool close_path,
-+				    bool irq_re_init)
-+{
-+	bnxt_clear_vnic(bp);
- 	bnxt_hwrm_ring_free(bp, close_path);
- 	bnxt_hwrm_ring_grp_free(bp);
- 	if (irq_re_init) {
 -- 
 2.20.1
 
