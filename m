@@ -2,196 +2,157 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529EDC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC9CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326C621848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845A121848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="X5tSxEVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392000AbfHVTdL (ORCPT
+        id S2404043AbfHVTdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 15:33:11 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37656 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732558AbfHVTdK (ORCPT
+        Thu, 22 Aug 2019 15:33:14 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36906 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391893AbfHVTdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 15:33:10 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id A786928CAE4
-Subject: Re: [PATCH] platform/chrome: wilco_ec: Add batt_ppid_info command to
- telemetry driver
-To:     Nick Crews <ncrews@chromium.org>, bleung@chromium.org
-Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
-        djkurtz@chromium.org, dtor@google.com, sjg@chromium.org
-References: <20190805202214.3408-1-ncrews@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <44b2fcef-4192-7931-b0dc-6f674d2ff5b6@collabora.com>
-Date:   Thu, 22 Aug 2019 21:33:03 +0200
+        Thu, 22 Aug 2019 15:33:12 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y9so4260599pfl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 12:33:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Kxz8pVF8gu53BVgVWU7hUlZxdFRU3sKUz9YMeEmEGGo=;
+        b=X5tSxEVI7ukEorlWcO4kGGG81nwWerw3aBzMRrKLdaQbUCef4vcl5SUGE+qxmCRd70
+         IpO8xy44ce+zENMbDowj9r6RsW5hg5Nn85pyoxqRuhXpYfBvRh5YbBUDtBE3PNyDYhBI
+         zeTzJKiiOkMfEykSPew3FMtBD2vATJosslK18=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Kxz8pVF8gu53BVgVWU7hUlZxdFRU3sKUz9YMeEmEGGo=;
+        b=HO0+AVxgYpoV9IpBHEd4fIu7sapDSmQHUZulSF+n2ayrkHA/OkT+Uo0fXAg8FmXaKz
+         3Zs+Ilf3D0lhBGdHUFmlrPITBwVsfclqLmWIwi1cKqwGjgcKcp7pjP8nSFA6Jxej9xRL
+         kScPGmQrj7YhxOmuLDQY5vUy5lnWWfdNBtEHIGDyAxASAtRAxTNcW5pxemvJOB+Kgk7Z
+         IwT+WouBBX5uquUjt7tciLayLtI2pZUkGXq3T1Dycw5T183iwelCmIf2hrT9tD0+B49u
+         zutpz7GFD19g9zkHgsyCy9FcW5xSeM5JA1Q9eOBlhWVJ4jlJBrhiK6hmtLDv+4Nrnv5R
+         biQg==
+X-Gm-Message-State: APjAAAVOZHNEJ+Mw79FTYVT7sNhkZbAuP5ytg2kDyuPanUN4IpxjW5Yo
+        JXWxQEmgB/MC4st7bHJLREDVAA==
+X-Google-Smtp-Source: APXvYqx8Gm5xHLxdatCmdZBfwRCaxp8P3W/bi/mbQO7XiW3v0WPBitVletu99INnW2yU13lDvUqw9A==
+X-Received: by 2002:a17:90a:9b08:: with SMTP id f8mr1330067pjp.103.1566502391469;
+        Thu, 22 Aug 2019 12:33:11 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id p10sm193711pff.132.2019.08.22.12.33.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Aug 2019 12:33:10 -0700 (PDT)
+Subject: Re: [PATCH 3/3] soc: qcom: mdt_loader: add offset to
+ request_firmware_into_buf
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>
+References: <20190523025113.4605-1-scott.branden@broadcom.com>
+ <20190523025113.4605-4-scott.branden@broadcom.com>
+ <20190523055212.GA22946@kroah.com>
+ <c12872f5-4dc3-9bc4-f89b-27037dc0b6ff@broadcom.com>
+ <20190523165605.GB21048@kroah.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <9727af14-e368-97f8-7b98-36278fbef9de@broadcom.com>
+Date:   Thu, 22 Aug 2019 12:33:08 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190805202214.3408-1-ncrews@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <20190523165605.GB21048@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
+Hi Greg,
 
-On 5/8/19 22:22, Nick Crews wrote:
-> Add the GET_BATT_PPID_INFO=0x8A command to the allowlist of accepted
-> telemetry commands. In addition, since this new command requires
-> verifying the contents of some of the arguments, I also restructure
-> the request to use a union of the argument structs. Also, zero out the
-> request buffer before each request, and change "whitelist" to
-> "allowlist".
-> 
-> Signed-off-by: Nick Crews <ncrews@chromium.org>
+On 2019-05-23 9:56 a.m., Greg Kroah-Hartman wrote:
+> On Thu, May 23, 2019 at 09:41:49AM -0700, Scott Branden wrote:
+>> Hi Greg,
+>>
+>> On 2019-05-22 10:52 p.m., Greg Kroah-Hartman wrote:
+>>> On Wed, May 22, 2019 at 07:51:13PM -0700, Scott Branden wrote:
+>>>> Adjust request_firmware_into_buf API to allow for portions
+>>>> of firmware file to be read into a buffer.  mdt_loader still
+>>>> retricts request fo whole file read into buffer.
+>>>>
+>>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+>>>> ---
+>>>>    drivers/soc/qcom/mdt_loader.c | 7 +++++--
+>>>>    1 file changed, 5 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
+>>>> index 1c488024c698..ad20d159699c 100644
+>>>> --- a/drivers/soc/qcom/mdt_loader.c
+>>>> +++ b/drivers/soc/qcom/mdt_loader.c
+>>>> @@ -172,8 +172,11 @@ static int __qcom_mdt_load(struct device *dev, const struct firmware *fw,
+>>>>    		if (phdr->p_filesz) {
+>>>>    			sprintf(fw_name + fw_name_len - 3, "b%02d", i);
+>>>> -			ret = request_firmware_into_buf(&seg_fw, fw_name, dev,
+>>>> -							ptr, phdr->p_filesz);
+>>>> +			ret = request_firmware_into_buf
+>>>> +						(&seg_fw, fw_name, dev,
+>>>> +						 ptr, phdr->p_filesz,
+>>>> +						 0,
+>>>> +						 KERNEL_PREAD_FLAG_WHOLE);
+>>> So, all that work in the first 2 patches for no real change at all?  Why
+>>> are these changes even needed?
+>> The first two patches allow partial read of files into memory.
+>>
+>> Existing kernel drivers haven't need such functionality so, yes, there
+>> should be no real change
+>>
+>> with first two patches other than adding such partial file read support.
+>>
+>> We have a new driver in development which needs partial read of files
+>> supported in the kernel.
+> As I said before, I can not take new apis without any in-kernel user.
+> So let's wait for your new code that thinks it needs this, and then we
+> will be glad to evaluate all of this at that point in time.
 
-Sorry for my late reply on this, I took some vacations :)
+I have submitted all the necessary patches you requested here.
 
-I added for the patch for the autobuilders to play with and if everything goes
-well I'll add the patch to chrome-platform-5.4
+These include first adding tests for existing API that never had a 
+kernel selftest:
+
+https://lkml.org/lkml/2019/8/22/1367
+
+Followed by API enhancement, tests updated, and a new driver requiring 
+enhanced API:
+
+https://lkml.org/lkml/2019/8/22/1404
+
+>
+> To do so otherwise is to have loads of unused "features" aquiring cruft
+> in the kernel source, and you do not want that.
+>
+> thanks,
+>
+> greg k-h
 
 Thanks,
-Enric
 
-> ---
->  drivers/platform/chrome/wilco_ec/telemetry.c | 64 +++++++++++++-------
->  1 file changed, 43 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/wilco_ec/telemetry.c b/drivers/platform/chrome/wilco_ec/telemetry.c
-> index 94cdc166c840..b9d03c33d8dc 100644
-> --- a/drivers/platform/chrome/wilco_ec/telemetry.c
-> +++ b/drivers/platform/chrome/wilco_ec/telemetry.c
-> @@ -9,7 +9,7 @@
->   * the OS sends a command to the EC via a write() to a char device,
->   * and can read the response with a read(). The write() request is
->   * verified by the driver to ensure that it is performing only one
-> - * of the whitelisted commands, and that no extraneous data is
-> + * of the allowlisted commands, and that no extraneous data is
->   * being transmitted to the EC. The response is passed directly
->   * back to the reader with no modification.
->   *
-> @@ -59,21 +59,10 @@ static DEFINE_IDA(telem_ida);
->  #define WILCO_EC_TELEM_GET_TEMP_INFO		0x95
->  #define WILCO_EC_TELEM_GET_TEMP_READ		0x2C
->  #define WILCO_EC_TELEM_GET_BATT_EXT_INFO	0x07
-> +#define WILCO_EC_TELEM_GET_BATT_PPID_INFO	0x8A
->  
->  #define TELEM_ARGS_SIZE_MAX	30
->  
-> -/**
-> - * struct wilco_ec_telem_request - Telemetry command and arguments sent to EC.
-> - * @command: One of WILCO_EC_TELEM_GET_* command codes.
-> - * @reserved: Must be 0.
-> - * @args: The first N bytes are one of telem_args_get_* structs, the rest is 0.
-> - */
-> -struct wilco_ec_telem_request {
-> -	u8 command;
-> -	u8 reserved;
-> -	u8 args[TELEM_ARGS_SIZE_MAX];
-> -} __packed;
-> -
->  /*
->   * The following telem_args_get_* structs are embedded within the |args| field
->   * of wilco_ec_telem_request.
-> @@ -122,6 +111,32 @@ struct telem_args_get_batt_ext_info {
->  	u8 var_args[5];
->  } __packed;
->  
-> +struct telem_args_get_batt_ppid_info {
-> +	u8 always1; /* Should always be 1 */
-> +} __packed;
-> +
-> +/**
-> + * struct wilco_ec_telem_request - Telemetry command and arguments sent to EC.
-> + * @command: One of WILCO_EC_TELEM_GET_* command codes.
-> + * @reserved: Must be 0.
-> + * @args: The first N bytes are one of telem_args_get_* structs, the rest is 0.
-> + */
-> +struct wilco_ec_telem_request {
-> +	u8 command;
-> +	u8 reserved;
-> +	union {
-> +		u8 buf[TELEM_ARGS_SIZE_MAX];
-> +		struct telem_args_get_log		get_log;
-> +		struct telem_args_get_version		get_version;
-> +		struct telem_args_get_fan_info		get_fan_info;
-> +		struct telem_args_get_diag_info		get_diag_info;
-> +		struct telem_args_get_temp_info		get_temp_info;
-> +		struct telem_args_get_temp_read		get_temp_read;
-> +		struct telem_args_get_batt_ext_info	get_batt_ext_info;
-> +		struct telem_args_get_batt_ppid_info	get_batt_ppid_info;
-> +	} args;
-> +} __packed;
-> +
->  /**
->   * check_telem_request() - Ensure that a request from userspace is valid.
->   * @rq: Request buffer copied from userspace.
-> @@ -133,7 +148,7 @@ struct telem_args_get_batt_ext_info {
->   * We do not want to allow userspace to send arbitrary telemetry commands to
->   * the EC. Therefore we check to ensure that
->   * 1. The request follows the format of struct wilco_ec_telem_request.
-> - * 2. The supplied command code is one of the whitelisted commands.
-> + * 2. The supplied command code is one of the allowlisted commands.
->   * 3. The request only contains the necessary data for the header and arguments.
->   */
->  static int check_telem_request(struct wilco_ec_telem_request *rq,
-> @@ -146,25 +161,31 @@ static int check_telem_request(struct wilco_ec_telem_request *rq,
->  
->  	switch (rq->command) {
->  	case WILCO_EC_TELEM_GET_LOG:
-> -		max_size += sizeof(struct telem_args_get_log);
-> +		max_size += sizeof(rq->args.get_log);
->  		break;
->  	case WILCO_EC_TELEM_GET_VERSION:
-> -		max_size += sizeof(struct telem_args_get_version);
-> +		max_size += sizeof(rq->args.get_version);
->  		break;
->  	case WILCO_EC_TELEM_GET_FAN_INFO:
-> -		max_size += sizeof(struct telem_args_get_fan_info);
-> +		max_size += sizeof(rq->args.get_fan_info);
->  		break;
->  	case WILCO_EC_TELEM_GET_DIAG_INFO:
-> -		max_size += sizeof(struct telem_args_get_diag_info);
-> +		max_size += sizeof(rq->args.get_diag_info);
->  		break;
->  	case WILCO_EC_TELEM_GET_TEMP_INFO:
-> -		max_size += sizeof(struct telem_args_get_temp_info);
-> +		max_size += sizeof(rq->args.get_temp_info);
->  		break;
->  	case WILCO_EC_TELEM_GET_TEMP_READ:
-> -		max_size += sizeof(struct telem_args_get_temp_read);
-> +		max_size += sizeof(rq->args.get_temp_read);
->  		break;
->  	case WILCO_EC_TELEM_GET_BATT_EXT_INFO:
-> -		max_size += sizeof(struct telem_args_get_batt_ext_info);
-> +		max_size += sizeof(rq->args.get_batt_ext_info);
-> +		break;
-> +	case WILCO_EC_TELEM_GET_BATT_PPID_INFO:
-> +		if (rq->args.get_batt_ppid_info.always1 != 1)
-> +			return -EINVAL;
-> +
-> +		max_size += sizeof(rq->args.get_batt_ppid_info);
->  		break;
->  	default:
->  		return -EINVAL;
-> @@ -250,6 +271,7 @@ static ssize_t telem_write(struct file *filp, const char __user *buf,
->  
->  	if (count > sizeof(sess_data->request))
->  		return -EMSGSIZE;
-> +	memset(&sess_data->request, 0, sizeof(sess_data->request));
->  	if (copy_from_user(&sess_data->request, buf, count))
->  		return -EFAULT;
->  	ret = check_telem_request(&sess_data->request, count);
-> 
+Scott
+
