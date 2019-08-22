@@ -2,57 +2,39 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A3CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7707C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A575233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566496181;
-	bh=52G3IbNtdjCFYSivWyFPoNfiYP84vqJ2kmDsyIsh2/0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZoWHWYA74D7o/O0BqlXT+CYRDI2uhvkN1ZPoCbWfIMGu0D68UBdv72olmhTGIYmX9
-	 Ui1N0NNn+S5turMiWLPe5me8Ncq/Rp+JLW8EWEa42v0IG2wxI2rnxuZC4gcUyrPDp2
-	 1/JX4vYO54H+l/9aXZoHTq//apFUgX0OYQCLrafs=
+	by mail.kernel.org (Postfix) with ESMTP id B93B72133F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393206AbfHVRrh (ORCPT
+        id S2390360AbfHVRun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391376AbfHVRWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:35 -0400
-Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B649A233FE;
-        Thu, 22 Aug 2019 17:22:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494554;
-        bh=52G3IbNtdjCFYSivWyFPoNfiYP84vqJ2kmDsyIsh2/0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wXrS+3cORfy/zJtxEKblgi1sNN08mjy6/1hXRrAIozYXFDtQVS+EXpyoMoDUVI715
-         KHoNRoDBQG63b+r64wZCiLflOI7EE8xC29mQmyQYHU7hpL3mEy4U1+9yuPTMQbB+cV
-         mrlr5D2qVsHkbA4nDD25GPfh/+khkinshrh55mAo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suganath Prabu <suganath-prabu.subramani@broadcom.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 32/78] scsi: mpt3sas: Use 63-bit DMA addressing on SAS35 HBA
-Date:   Thu, 22 Aug 2019 10:18:36 -0700
-Message-Id: <20190822171832.973388881@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
-References: <20190822171832.012773482@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 22 Aug 2019 13:50:43 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:49570 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731077AbfHVRum (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:50:42 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0Ta9PNTk_1566496230;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0Ta9PNTk_1566496230)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 23 Aug 2019 01:50:36 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     kirill.shutemov@linux.intel.com, ktkhai@virtuozzo.com,
+        hannes@cmpxchg.org, mhocko@suse.com, hughd@google.com,
+        shakeelb@google.com, rientjes@google.com, cai@lca.pw,
+        akpm@linux-foundation.org
+Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [v6 PATCH 0/4] Make deferred split shrinker memcg aware
+Date:   Fri, 23 Aug 2019 01:50:23 +0800
+Message-Id: <1566496227-84952-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,78 +43,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
 
-commit df9a606184bfdb5ae3ca9d226184e9489f5c24f7 upstream.
+Currently THP deferred split shrinker is not memcg aware, this may cause
+premature OOM with some configuration. For example the below test would
+run into premature OOM easily:
 
-Although SAS3 & SAS3.5 IT HBA controllers support 64-bit DMA addressing, as
-per hardware design, if DMA-able range contains all 64-bits
-set (0xFFFFFFFF-FFFFFFFF) then it results in a firmware fault.
+$ cgcreate -g memory:thp
+$ echo 4G > /sys/fs/cgroup/memory/thp/memory/limit_in_bytes
+$ cgexec -g memory:thp transhuge-stress 4000
 
-E.g. SGE's start address is 0xFFFFFFFF-FFFF000 and data length is 0x1000
-bytes. when HBA tries to DMA the data at 0xFFFFFFFF-FFFFFFFF location then
-HBA will fault the firmware.
+transhuge-stress comes from kernel selftest.
 
-Driver will set 63-bit DMA mask to ensure the above address will not be
-used.
+It is easy to hit OOM, but there are still a lot THP on the deferred
+split queue, memcg direct reclaim can't touch them since the deferred
+split shrinker is not memcg aware.
 
-Cc: <stable@vger.kernel.org> # 5.1.20+
-Signed-off-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Convert deferred split shrinker memcg aware by introducing per memcg
+deferred split queue.  The THP should be on either per node or per memcg
+deferred split queue if it belongs to a memcg.  When the page is
+immigrated to the other memcg, it will be immigrated to the target
+memcg's deferred split queue too.
+
+Reuse the second tail page's deferred_list for per memcg list since the
+same THP can't be on multiple deferred split queues.
+
+Make deferred split shrinker not depend on memcg kmem since it is not slab.
+It doesn’t make sense to not shrink THP even though memcg kmem is disabled.
+
+With the above change the test demonstrated above doesn’t trigger OOM even
+though with cgroup.memory=nokmem.
 
 
----
- drivers/scsi/mpt3sas/mpt3sas_base.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -1686,9 +1686,11 @@ _base_config_dma_addressing(struct MPT3S
- {
- 	struct sysinfo s;
- 	u64 consistent_dma_mask;
-+	/* Set 63 bit DMA mask for all SAS3 and SAS35 controllers */
-+	int dma_mask = (ioc->hba_mpi_version_belonged > MPI2_VERSION) ? 63 : 64;
+Changelog:
+v6: * Added comments about SHRINKER_NONSLAB per Kirill Tkhai (patch 3/4).
+    * Simplified deferred split queue dereference per Kirill Tkhai (patch 4/4).
+    * Collected Reviewed-by tag from Kirill Tkhai.
+v5: * Fixed the issue reported by Qian Cai, folded the fix in.
+    * Squashed build fix patches in.
+v4: * Replace list_del() to list_del_init() per Andrew.
+    * Fixed the build failure for different kconfig combo and tested the
+      below combo:
+          MEMCG + TRANSPARENT_HUGEPAGE
+          !MEMCG + TRANSPARENT_HUGEPAGE
+          MEMCG + !TRANSPARENT_HUGEPAGE
+          !MEMCG + !TRANSPARENT_HUGEPAGE
+    * Added Acked-by from Kirill Shutemov. 
+v3: * Adopted the suggestion from Kirill Shutemov to move mem_cgroup_uncharge()
+      out of __page_cache_release() in order to handle THP free properly. 
+    * Adjusted the sequence of the patches per Kirill Shutemov. Dropped the
+      patch 3/4 in v2.
+    * Moved enqueuing THP onto "to" memcg deferred split queue after
+      page->mem_cgroup is changed in memcg account move per Kirill Tkhai.
  
- 	if (ioc->dma_mask)
--		consistent_dma_mask = DMA_BIT_MASK(64);
-+		consistent_dma_mask = DMA_BIT_MASK(dma_mask);
- 	else
- 		consistent_dma_mask = DMA_BIT_MASK(32);
- 
-@@ -1696,11 +1698,11 @@ _base_config_dma_addressing(struct MPT3S
- 		const uint64_t required_mask =
- 		    dma_get_required_mask(&pdev->dev);
- 		if ((required_mask > DMA_BIT_MASK(32)) &&
--		    !pci_set_dma_mask(pdev, DMA_BIT_MASK(64)) &&
-+		    !pci_set_dma_mask(pdev, DMA_BIT_MASK(dma_mask)) &&
- 		    !pci_set_consistent_dma_mask(pdev, consistent_dma_mask)) {
- 			ioc->base_add_sg_single = &_base_add_sg_single_64;
- 			ioc->sge_size = sizeof(Mpi2SGESimple64_t);
--			ioc->dma_mask = 64;
-+			ioc->dma_mask = dma_mask;
- 			goto out;
- 		}
- 	}
-@@ -1726,7 +1728,7 @@ static int
- _base_change_consistent_dma_mask(struct MPT3SAS_ADAPTER *ioc,
- 				      struct pci_dev *pdev)
- {
--	if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64))) {
-+	if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(ioc->dma_mask))) {
- 		if (pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32)))
- 			return -ENODEV;
- 	}
-@@ -3325,7 +3327,7 @@ _base_allocate_memory_pools(struct MPT3S
- 		total_sz += sz;
- 	} while (ioc->rdpq_array_enable && (++i < ioc->reply_queue_count));
- 
--	if (ioc->dma_mask == 64) {
-+	if (ioc->dma_mask > 32) {
- 		if (_base_change_consistent_dma_mask(ioc, ioc->pdev) != 0) {
- 			pr_warn(MPT3SAS_FMT
- 			    "no suitable consistent DMA mask for %s\n",
+v2: * Adopted the suggestion from Krill Shutemov to extract deferred split
+      fields into a struct to reduce code duplication (patch 1/4).  With this
+      change, the lines of change is shrunk down to 198 from 278.
+    * Removed memcg_deferred_list. Use deferred_list for both global and memcg.
+      With the code deduplication, it doesn't make too much sense to keep it.
+      Kirill Tkhai also suggested so.
+    * Fixed typo for SHRINKER_NONSLAB.
 
+
+Yang Shi (4):
+      mm: thp: extract split_queue_* into a struct
+      mm: move mem_cgroup_uncharge out of __page_cache_release()
+      mm: shrinker: make shrinker not depend on memcg kmem
+      mm: thp: make deferred split shrinker memcg aware
+
+ include/linux/huge_mm.h    |   9 ++++++
+ include/linux/memcontrol.h |  23 +++++++++-----
+ include/linux/mm_types.h   |   1 +
+ include/linux/mmzone.h     |  12 ++++++--
+ include/linux/shrinker.h   |   3 +-
+ mm/huge_memory.c           | 111 ++++++++++++++++++++++++++++++++++++++++++++++++++----------------
+ mm/memcontrol.c            |  33 +++++++++++++++-----
+ mm/page_alloc.c            |   9 ++++--
+ mm/swap.c                  |   2 +-
+ mm/vmscan.c                |  66 +++++++++++++++++++--------------------
+ 10 files changed, 186 insertions(+), 83 deletions(-)
 
