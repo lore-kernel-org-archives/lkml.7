@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF69C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD56C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3927520856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8600120856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495706;
-	bh=GxpXIsPHFbuaZBKjNQf/MJm4SWd/jFG6S2Ae0i4PNOU=;
+	s=default; t=1566495709;
+	bh=Hx/oTr1LiKPxSvknHAXUYWhatBWqSa8VofgNXmS2oX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U4Ot/JTHFNQfuBJfo+fh4nL4YYNzinUfdWerfgsiTTPI+5NfFtsXrlExr3W6CW31P
-	 BUbJKJ7fZ7i/cUzeZhHuOp8jicH3ZUOPBaTwQvG+GMMJ+OOybBVszuTpiWzsGWYUUa
-	 Sy6IaXD1Hw1XizCErL0fCEHqPybLUmdmSQ4FXpW0=
+	b=ugaV3bmcPwkd/OkaVFMD+4Fa5KQehnpNgXbeoQl7cy32Ee7ddr/KplE7KDBn/auXg
+	 XPbvYWKL50sj4Prvuu8z9Eaf4KoihZV+ntBCEtHDXiy1rTI8lBxpfF4GgHDwclUVTU
+	 +/i7gANGQLtmaAo1wkuP5JKdSIa0tyoaU+WcXyUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391757AbfHVRX4 (ORCPT
+        id S2392586AbfHVRls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43748 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:41:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391508AbfHVRXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:36 -0400
+        id S2391751AbfHVRXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:55 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B21D2342A;
-        Thu, 22 Aug 2019 17:23:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB70C23402;
+        Thu, 22 Aug 2019 17:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494615;
-        bh=GxpXIsPHFbuaZBKjNQf/MJm4SWd/jFG6S2Ae0i4PNOU=;
+        s=default; t=1566494635;
+        bh=Hx/oTr1LiKPxSvknHAXUYWhatBWqSa8VofgNXmS2oX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MUaStPYp0lx+Hke2I4jPMKom8ENvG8efuMTEvYXwjQpqkpGU9Z0gMnVPKAmQVXv6c
-         x5fTRxGRc7SSMpuk/eLsUR9jz1hx2EruuIlepEwKIgRoPlpJYVXzIXAviH5+IfT3DJ
-         GN8jvJTxZnJLSSFmfp7gB6ruu/7XAzz1m+mUeZFI=
+        b=OQ5mGaOuiro7kvl4kP08gm/1HHmnc4+B4jzPJ89YXY5zX1PWxOO7yDxIgddEFDthy
+         55lHPQQC/IhLneIHw5tabM9lYJ+2ok3ptrGLwzjZwVKA52aTCKSjqcpBG4Tqfeqhtf
+         crLyqVYj27+KMAzsBatdtBDWpXsZdobHOwcu9rVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 035/103] ALSA: hda - Dont override global PCM hw info flag
-Date:   Thu, 22 Aug 2019 10:18:23 -0700
-Message-Id: <20190822171730.238296406@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+3499a83b2d062ae409d4@syzkaller.appspotmail.com,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 067/103] net: usb: pegasus: fix improper read if get_registers() fail
+Date:   Thu, 22 Aug 2019 10:18:55 -0700
+Message-Id: <20190822171731.556979488@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -58,42 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Denis Kirjanov <kda@linux-powerpc.org>
 
-commit c1c6c877b0c79fd7e05c931435aa42211eaeebaf upstream.
+commit 224c04973db1125fcebefffd86115f99f50f8277 upstream.
 
-The commit bfcba288b97f ("ALSA - hda: Add support for link audio time
-reporting") introduced the conditional PCM hw info setup, but it
-overwrites the global azx_pcm_hw object.  This will cause a problem if
-any other HD-audio controller, as it'll inherit the same bit flag
-although another controller doesn't support that feature.
+get_registers() may fail with -ENOMEM and in this
+case we can read a garbage from the status variable tmp.
 
-Fix the bug by setting the PCM hw info flag locally.
-
-Fixes: bfcba288b97f ("ALSA - hda: Add support for link audio time reporting")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: syzbot+3499a83b2d062ae409d4@syzkaller.appspotmail.com
+Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_controller.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/usb/pegasus.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/hda_controller.c
-+++ b/sound/pci/hda/hda_controller.c
-@@ -609,11 +609,9 @@ static int azx_pcm_open(struct snd_pcm_s
- 	}
- 	runtime->private_data = azx_dev;
+--- a/drivers/net/usb/pegasus.c
++++ b/drivers/net/usb/pegasus.c
+@@ -285,7 +285,7 @@ static void mdio_write(struct net_device
+ static int read_eprom_word(pegasus_t *pegasus, __u8 index, __u16 *retdata)
+ {
+ 	int i;
+-	__u8 tmp;
++	__u8 tmp = 0;
+ 	__le16 retdatai;
+ 	int ret;
  
--	if (chip->gts_present)
--		azx_pcm_hw.info = azx_pcm_hw.info |
--			SNDRV_PCM_INFO_HAS_LINK_SYNCHRONIZED_ATIME;
--
- 	runtime->hw = azx_pcm_hw;
-+	if (chip->gts_present)
-+		runtime->hw.info |= SNDRV_PCM_INFO_HAS_LINK_SYNCHRONIZED_ATIME;
- 	runtime->hw.channels_min = hinfo->channels_min;
- 	runtime->hw.channels_max = hinfo->channels_max;
- 	runtime->hw.formats = hinfo->formats;
 
 
