@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57FBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C46BAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8283823404
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E9623431
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493749;
-	bh=dtU8+RpwY19weS2U2fBU4mBvlZSRIjER+zgtKJaJmek=;
+	s=default; t=1566493751;
+	bh=dmpAG+jXk1w4jDYTvVqCkRzkHJ94KtVhPWJc1JIVRwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gxfrazYbNr71dD7s5DgDGtviUdwM8bPrw0Kfc2DeMuSHBQP4qeDR0/m0uD08ngGIu
-	 7O1PtEJe7xQY0oVtVQlJkaTj0mLEH5wUFYvqE0LwEfKukKL9wlVY0WtH+3QcYzYqfX
-	 UQfmJISEXRdRgTkMRryEs4mYT1hXcvwgp9EBpIOA=
+	b=R0XsAIFP6owZj6Js3Nrnal0BZ5DpW1qgcS1o+3jbHFPscTJPephdQ1qvrxoTaoODq
+	 6spocxHHpfilJZYnt0I0uPVXLXHK6M+bfyvJ+sLpXmcZJyuKu0PlXCRHsFQrhmQpnR
+	 z1xSDfR4MhGTLDUTos4IgG48GcwJc+u0uZgsMKmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390676AbfHVRJI (ORCPT
+        id S2390690AbfHVRJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59248 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390647AbfHVRJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:04 -0400
+        id S2390652AbfHVRJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:05 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C0F92341B;
-        Thu, 22 Aug 2019 17:09:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABA6123427;
+        Thu, 22 Aug 2019 17:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493743;
-        bh=dtU8+RpwY19weS2U2fBU4mBvlZSRIjER+zgtKJaJmek=;
+        s=default; t=1566493744;
+        bh=dmpAG+jXk1w4jDYTvVqCkRzkHJ94KtVhPWJc1JIVRwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aXq1I6NqOxzOBSYIeHOUKQw79AO00LtnKZphublNCsWZ8l+RJ0L2nJXZ+BJNpyAHU
-         DpHV3lMwm1un25yo7eC3sPp57OT64SxOd+YjGo8EUbVlOz57/0JmD1FPGLpumAxfL+
-         vHCMbCsHx0hb132RDAKizOjCkHEhWyWp3M6hoUJo=
+        b=OZDN8NLVnWgPBSKRMs0yQWr3TSAKXCB/BruXsrQgeBEhit5QP3rr8Nl+gFub+DmQa
+         tqFiN+CAvdN8Obe9CgDTDU/G0XZ1n9gnbc9iTKujIDBsytR1Ke1uENwKYjj6clAwwF
+         ZTxeZdQCxdvpZDHOBagw/62xdhqrBEg7nhfsRqNI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nayna Jain <nayna@linux.ibm.com>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 090/135] tpm: tpm_ibm_vtpm: Fix unallocated banks
-Date:   Thu, 22 Aug 2019 13:07:26 -0400
-Message-Id: <20190822170811.13303-91-sashal@kernel.org>
+Cc:     Ian Abbott <abbotti@mev.co.uk>,
+        David Binderman <dcb314@hotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.2 092/135] staging: comedi: dt3000: Fix signed integer overflow 'divider * base'
+Date:   Thu, 22 Aug 2019 13:07:28 -0400
+Message-Id: <20190822170811.13303-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.2.y
@@ -69,169 +65,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nayna Jain <nayna@linux.ibm.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-[ Upstream commit fa4f99c05320eb28bf6ba52a9adf64d888da1f9e ]
+commit b4d98bc3fc93ec3a58459948a2c0e0c9b501cd88 upstream.
 
-The nr_allocated_banks and allocated banks are initialized as part of
-tpm_chip_register. Currently, this is done as part of auto startup
-function. However, some drivers, like the ibm vtpm driver, do not run
-auto startup during initialization. This results in uninitialized memory
-issue and causes a kernel panic during boot.
+In `dt3k_ns_to_timer()` the following lines near the end of the function
+result in a signed integer overflow:
 
-This patch moves the pcr allocation outside the auto startup function
-into tpm_chip_register. This ensures that allocated banks are initialized
-in any case.
+	prescale = 15;
+	base = timer_base * (1 << prescale);
+	divider = 65535;
+	*nanosec = divider * base;
 
-Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with PCR read")
-Reported-by: Michal Suchanek <msuchanek@suse.de>
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Tested-by: Michal Suchánek <msuchanek@suse.de>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+(`divider`, `base` and `prescale` are type `int`, `timer_base` and
+`*nanosec` are type `unsigned int`.  The value of `timer_base` will be
+either 50 or 100.)
+
+The main reason for the overflow is that the calculation for `base` is
+completely wrong.  It should be:
+
+	base = timer_base * (prescale + 1);
+
+which matches an earlier instance of this calculation in the same
+function.
+
+Reported-by: David Binderman <dcb314@hotmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20190812111517.26803-1-abbotti@mev.co.uk
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/char/tpm/tpm-chip.c | 20 ++++++++++++++++++++
- drivers/char/tpm/tpm.h      |  2 ++
- drivers/char/tpm/tpm1-cmd.c | 36 ++++++++++++++++++++++++------------
- drivers/char/tpm/tpm2-cmd.c |  6 +-----
- 4 files changed, 47 insertions(+), 17 deletions(-)
+ drivers/staging/comedi/drivers/dt3000.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index bf868260f4353..4838c6a9f0f2c 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -554,6 +554,20 @@ static int tpm_add_hwrng(struct tpm_chip *chip)
- 	return hwrng_register(&chip->hwrng);
- }
- 
-+static int tpm_get_pcr_allocation(struct tpm_chip *chip)
-+{
-+	int rc;
-+
-+	rc = (chip->flags & TPM_CHIP_FLAG_TPM2) ?
-+	     tpm2_get_pcr_allocation(chip) :
-+	     tpm1_get_pcr_allocation(chip);
-+
-+	if (rc > 0)
-+		return -ENODEV;
-+
-+	return rc;
-+}
-+
- /*
-  * tpm_chip_register() - create a character device for the TPM chip
-  * @chip: TPM chip to use.
-@@ -573,6 +587,12 @@ int tpm_chip_register(struct tpm_chip *chip)
- 	if (rc)
- 		return rc;
- 	rc = tpm_auto_startup(chip);
-+	if (rc) {
-+		tpm_chip_stop(chip);
-+		return rc;
-+	}
-+
-+	rc = tpm_get_pcr_allocation(chip);
- 	tpm_chip_stop(chip);
- 	if (rc)
- 		return rc;
-diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-index e503ffc3aa39c..a7fea3e0ca86a 100644
---- a/drivers/char/tpm/tpm.h
-+++ b/drivers/char/tpm/tpm.h
-@@ -394,6 +394,7 @@ int tpm1_pcr_read(struct tpm_chip *chip, u32 pcr_idx, u8 *res_buf);
- ssize_t tpm1_getcap(struct tpm_chip *chip, u32 subcap_id, cap_t *cap,
- 		    const char *desc, size_t min_cap_length);
- int tpm1_get_random(struct tpm_chip *chip, u8 *out, size_t max);
-+int tpm1_get_pcr_allocation(struct tpm_chip *chip);
- unsigned long tpm_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
- int tpm_pm_suspend(struct device *dev);
- int tpm_pm_resume(struct device *dev);
-@@ -449,6 +450,7 @@ int tpm2_unseal_trusted(struct tpm_chip *chip,
- ssize_t tpm2_get_tpm_pt(struct tpm_chip *chip, u32 property_id,
- 			u32 *value, const char *desc);
- 
-+ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip);
- int tpm2_auto_startup(struct tpm_chip *chip);
- void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
- unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
-diff --git a/drivers/char/tpm/tpm1-cmd.c b/drivers/char/tpm/tpm1-cmd.c
-index faacbe1ffa1a9..149e953ca3699 100644
---- a/drivers/char/tpm/tpm1-cmd.c
-+++ b/drivers/char/tpm/tpm1-cmd.c
-@@ -699,18 +699,6 @@ int tpm1_auto_startup(struct tpm_chip *chip)
- 		goto out;
+diff --git a/drivers/staging/comedi/drivers/dt3000.c b/drivers/staging/comedi/drivers/dt3000.c
+index 2edf3ee913000..4ad176fc14ad1 100644
+--- a/drivers/staging/comedi/drivers/dt3000.c
++++ b/drivers/staging/comedi/drivers/dt3000.c
+@@ -368,7 +368,7 @@ static int dt3k_ns_to_timer(unsigned int timer_base, unsigned int *nanosec,
  	}
  
--	chip->allocated_banks = kcalloc(1, sizeof(*chip->allocated_banks),
--					GFP_KERNEL);
--	if (!chip->allocated_banks) {
--		rc = -ENOMEM;
--		goto out;
--	}
--
--	chip->allocated_banks[0].alg_id = TPM_ALG_SHA1;
--	chip->allocated_banks[0].digest_size = hash_digest_size[HASH_ALGO_SHA1];
--	chip->allocated_banks[0].crypto_id = HASH_ALGO_SHA1;
--	chip->nr_allocated_banks = 1;
--
- 	return rc;
- out:
- 	if (rc > 0)
-@@ -779,3 +767,27 @@ int tpm1_pm_suspend(struct tpm_chip *chip, u32 tpm_suspend_pcr)
- 	return rc;
- }
- 
-+/**
-+ * tpm1_get_pcr_allocation() - initialize the allocated bank
-+ * @chip: TPM chip to use.
-+ *
-+ * The function initializes the SHA1 allocated bank to extend PCR
-+ *
-+ * Return:
-+ * * 0 on success,
-+ * * < 0 on error.
-+ */
-+int tpm1_get_pcr_allocation(struct tpm_chip *chip)
-+{
-+	chip->allocated_banks = kcalloc(1, sizeof(*chip->allocated_banks),
-+					GFP_KERNEL);
-+	if (!chip->allocated_banks)
-+		return -ENOMEM;
-+
-+	chip->allocated_banks[0].alg_id = TPM_ALG_SHA1;
-+	chip->allocated_banks[0].digest_size = hash_digest_size[HASH_ALGO_SHA1];
-+	chip->allocated_banks[0].crypto_id = HASH_ALGO_SHA1;
-+	chip->nr_allocated_banks = 1;
-+
-+	return 0;
-+}
-diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
-index d103545e40550..ba9acae83bff1 100644
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -840,7 +840,7 @@ struct tpm2_pcr_selection {
- 	u8  pcr_select[3];
- } __packed;
- 
--static ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
-+ssize_t tpm2_get_pcr_allocation(struct tpm_chip *chip)
- {
- 	struct tpm2_pcr_selection pcr_selection;
- 	struct tpm_buf buf;
-@@ -1040,10 +1040,6 @@ int tpm2_auto_startup(struct tpm_chip *chip)
- 			goto out;
- 	}
- 
--	rc = tpm2_get_pcr_allocation(chip);
--	if (rc)
--		goto out;
--
- 	rc = tpm2_get_cc_attrs_tbl(chip);
- 
- out:
+ 	prescale = 15;
+-	base = timer_base * (1 << prescale);
++	base = timer_base * (prescale + 1);
+ 	divider = 65535;
+ 	*nanosec = divider * base;
+ 	return (prescale << 16) | (divider);
 -- 
 2.20.1
 
