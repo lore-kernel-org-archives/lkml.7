@@ -2,119 +2,113 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEA6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B46C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A8A233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:19:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494396;
-	bh=gnDqYprqryBgYwsbaoWSzJtYzfvv0NyZ3hqDyWJpqlk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZE8W38VMOWlUlyc9xGNV11JnhMCmSQsLIhddxhZBGHZCvO/1OO8sKB8bwz+Fthbfw
-	 E+faDGkOlOwvluZwa/CoOm3ajIrIMhU2N5HiYLL3pC5c916T5F7PP4uecU0dpsh6re
-	 e79liEoUUwmiW5a2/zV2MUxjvFOY4te8g2GrGsnY=
+	by mail.kernel.org (Postfix) with ESMTP id D58E22089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:21:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bLz1UxSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733009AbfHVRTn (ORCPT
+        id S2389626AbfHVRV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:19:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58046 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbfHVRIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:25 -0400
-Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2E6F23406;
-        Thu, 22 Aug 2019 17:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493705;
-        bh=gnDqYprqryBgYwsbaoWSzJtYzfvv0NyZ3hqDyWJpqlk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oXYb1aFvuwQUIselXl+Tey3g0bRbkwRyFNabQVKfdI1liKGn9rkNsQFsYNKWnEjiQ
-         chcuPtVSazpO0QJxe2R04HW58sDyCiKaASJ4hIR2LABTFU6BEaKSrSZRozxj+xjrkf
-         d9p+fdNfTAK7h/LIOQPe3BKz7zmBfQ0Yx+0ShhOQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hui Peng <benquike@gmail.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 019/135] ALSA: usb-audio: Fix an OOB bug in parse_audio_mixer_unit
-Date:   Thu, 22 Aug 2019 13:06:15 -0400
-Message-Id: <20190822170811.13303-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
-References: <20190822170811.13303-1-sashal@kernel.org>
+        Thu, 22 Aug 2019 13:21:27 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33242 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730997AbfHVRV0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:21:26 -0400
+Received: by mail-io1-f68.google.com with SMTP id z3so13513311iog.0;
+        Thu, 22 Aug 2019 10:21:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aLr+sd5BMRYCClHI4smsxLPlBWSdoS3nfQ+XpNRCO6U=;
+        b=bLz1UxSg3goHpLmdM1XGhxTgPMZasAb3H3QPWRN13W+SCAgmQtFI59RkBF9I1BoCJ3
+         gfRTGkAtZBHs5sOF5tM7Khx4mYb3AP6M7MXD1f6xuIe8/SXnKS9oo6RYV4MIkKamVuru
+         iVoY5Ljg7iov3VuRbjauI0Sg79O0/G3qyJde2n4wkKIl+nVzSEmRKCBB/Xn0DC0g39Um
+         f/x0pzC3lDmi3nSbI6X+6MNSUMXbIPZ7/Z9BEpkck9KXUKhTqFXZ7gFl0cQT9jNgWi9/
+         9BSNLwRyKkqqgogpRFtZkWxcmAqawm1GyV4bX/86wQZFTQ+ME0Q6GpJFGHPkG6DfwaOV
+         5mfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aLr+sd5BMRYCClHI4smsxLPlBWSdoS3nfQ+XpNRCO6U=;
+        b=CH4vkIMzBCzE7R5qYyDv8neBVUs3bnmISBIMKfI/9a6en9Zql5v+C6+5IOXKFTCFDA
+         Heb4bxDonvtkfFT7ZCiJWOJcS3RWlExcmy/AXbRb9paNtxQMI9exR/m2LXTifhuCBsf/
+         a2MSVYpkuYnM1hYydAcmV0nEIpndz0uGIQZkpxjH18TToupsTpc1pCaY8A/YXW586EK/
+         yThtaBNLHAf0wZWALAEWSzqhk35gYkDqSOSlhsHZCPNpGg3mXWLggUm7WdoDgyGz2abs
+         0jYFuQZiYn6GkgyVjyt0ZQgxAl4V377BjvCUcKSqXaLOxffR5vQpDYot3XM0nso8Dj1K
+         yMqw==
+X-Gm-Message-State: APjAAAX9jT/ojJqiNKAsDEMeU5cYtULPyfypXicAs/Cum98mIMffW+tv
+        XnBXgq1nbQbyijvqYItexF3sh/G1UMK4DG/oHZY=
+X-Google-Smtp-Source: APXvYqykF88NuCgoRLHTX/hVhk0s0dNsXSMT17jlWltng3t8DPaOm3ksoWuywjYftSzM8MoX7TQAYwNO1f30b9Sh0cI=
+X-Received: by 2002:a5d:8908:: with SMTP id b8mr965993ion.237.1566494485368;
+ Thu, 22 Aug 2019 10:21:25 -0700 (PDT)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.2.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.2.10-rc1
-X-KernelTest-Deadline: 2019-08-24T17:07+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <CGME20190822171243eucas1p12213f2239d6c36be515dade41ed7470b@eucas1p1.samsung.com>
+ <20190822171237.20798-1-i.maximets@samsung.com>
+In-Reply-To: <20190822171237.20798-1-i.maximets@samsung.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 22 Aug 2019 10:21:14 -0700
+Message-ID: <CAKgT0UepBGqx=FiqrdC-r3kvkMxVAHonkfc6rDt_HVQuzahZPQ@mail.gmail.com>
+Subject: Re: [PATCH net v3] ixgbe: fix double clean of tx descriptors with xdp
+To:     Ilya Maximets <i.maximets@samsung.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        William Tu <u9012063@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Peng <benquike@gmail.com>
+On Thu, Aug 22, 2019 at 10:12 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+>
+> Tx code doesn't clear the descriptors' status after cleaning.
+> So, if the budget is larger than number of used elems in a ring, some
+> descriptors will be accounted twice and xsk_umem_complete_tx will move
+> prod_tail far beyond the prod_head breaking the completion queue ring.
+>
+> Fix that by limiting the number of descriptors to clean by the number
+> of used descriptors in the tx ring.
+>
+> 'ixgbe_clean_xdp_tx_irq()' function refactored to look more like
+> 'ixgbe_xsk_clean_tx_ring()' since we're allowed to directly use
+> 'next_to_clean' and 'next_to_use' indexes.
+>
+> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
+> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+> ---
+>
+> Version 3:
+>   * Reverted some refactoring made for v2.
+>   * Eliminated 'budget' for tx clean.
+>   * prefetch returned.
+>
+> Version 2:
+>   * 'ixgbe_clean_xdp_tx_irq()' refactored to look more like
+>     'ixgbe_xsk_clean_tx_ring()'.
+>
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c | 29 ++++++++------------
+>  1 file changed, 11 insertions(+), 18 deletions(-)
 
-commit daac07156b330b18eb5071aec4b3ddca1c377f2c upstream.
+Thanks for addressing my concerns.
 
-The `uac_mixer_unit_descriptor` shown as below is read from the
-device side. In `parse_audio_mixer_unit`, `baSourceID` field is
-accessed from index 0 to `bNrInPins` - 1, the current implementation
-assumes that descriptor is always valid (the length  of descriptor
-is no shorter than 5 + `bNrInPins`). If a descriptor read from
-the device side is invalid, it may trigger out-of-bound memory
-access.
-
-```
-struct uac_mixer_unit_descriptor {
-	__u8 bLength;
-	__u8 bDescriptorType;
-	__u8 bDescriptorSubtype;
-	__u8 bUnitID;
-	__u8 bNrInPins;
-	__u8 baSourceID[];
-}
-```
-
-This patch fixes the bug by add a sanity check on the length of
-the descriptor.
-
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- sound/usb/mixer.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 2051a64fa2904..b5927c3d5bc0b 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -745,6 +745,8 @@ static int uac_mixer_unit_get_channels(struct mixer_build *state,
- 		return -EINVAL;
- 	if (!desc->bNrInPins)
- 		return -EINVAL;
-+	if (desc->bLength < sizeof(*desc) + desc->bNrInPins)
-+		return -EINVAL;
- 
- 	switch (state->mixer->protocol) {
- 	case UAC_VERSION_1:
--- 
-2.20.1
-
+Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
