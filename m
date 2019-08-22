@@ -2,191 +2,121 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162B6C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0EEC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D743C233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988AD21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731340AbfHVFsG (ORCPT
+        id S1731434AbfHVFxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 01:48:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47828 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726693AbfHVFsG (ORCPT
+        Thu, 22 Aug 2019 01:53:02 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:18443 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731379AbfHVFxC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 01:48:06 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7M5leXS010274
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:48:05 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uhjbs4x41-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:48:05 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Thu, 22 Aug 2019 06:48:03 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 22 Aug 2019 06:47:59 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7M5lwED56360970
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 22 Aug 2019 05:47:59 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BACB3AE051;
-        Thu, 22 Aug 2019 05:47:58 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30D3DAE055;
-        Thu, 22 Aug 2019 05:47:58 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 22 Aug 2019 05:47:58 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 225ACA021A;
-        Thu, 22 Aug 2019 15:47:55 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 22 Aug 2019 15:47:54 +1000
-In-Reply-To: <c22dfd19-872a-afe1-40c6-82e11b0af9e1@c-s.fr>
-References: <de7a813c71c4823797bb351bea8be15acae83be2.1565970465.git.christophe.leroy@c-s.fr>
-         <9887dada07278cb39051941d1a47d50349d9fde0.camel@au1.ibm.com>
-         <a0ad8dd8-2f5d-256d-9e88-e9c236335bb8@c-s.fr>
-         <fcc94e7f347c3759a1698444239a7250b22cde7d.camel@au1.ibm.com>
-         <c22dfd19-872a-afe1-40c6-82e11b0af9e1@c-s.fr>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Thu, 22 Aug 2019 01:53:02 -0400
+IronPort-SDR: Rz/vsKz/ZrCwjli1wyH8FQkneU0NPS8mLn5x8RbAx625ZpfvcoM9XkZJBr45q9X5F6RemBp6wV
+ juh9wupgc8dV5wxXD/uui0ChjT7IVWIqO/hCKW2/XBK4AxLAZIic/0saDMNmPSlavjZvRRVqzh
+ sBPRfI0tmzrms7PDsAuZKhDP+n9wWsUUcUMScfa5W/fUG+wFbNlYcnpB/zkCe1b8fb7ZDNU2hn
+ SRgqY0LuuwqJnnQ8Z/rKb5Wd/NuTq0t0bBsXs0QWXXBsmFXYoznpuhun7FLErreJHSCe7rRAUB
+ +Oc=
+X-IronPort-AV: E=Sophos;i="5.64,415,1559548800"; 
+   d="scan'208";a="40663374"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 21 Aug 2019 21:53:01 -0800
+IronPort-SDR: O8JRi/Ew6E4tPqjpwTRnG377DfKmvYUuUS4skw+4Ce9z5P/4q5k8t5ZpaW6q4+kYLQwKYYlw8/
+ v0D0yPPIvXgUh4O2s3y6hZlzR2JLLKgHmYUvw9Z3QFv6vDHGAujdFQzedvp0f4VPofyZMufQOp
+ nFpivY9vOX9HAb37zTzjC+29heVpwI8YzynO3mVzQsaeBXQSuJes/hJAg6iIIWrdxzxhKBGhlP
+ k+waTjLK53o+LGXWF46DdJFBMZuE1G1CtlbPKi0y6drqd3g5S9ZzwiCUBKri4u//JG4eB0zA8Z
+ U2w=
+Subject: Re: [PATCH v1 06/63] Input: atmel_mxt_ts - output status from T42
+ Touch Suppression
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     <nick@shmanahar.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <george_davis@mentor.com>
+References: <20190816083130.18250-1-jiada_wang@mentor.com>
+ <20190816083130.18250-2-jiada_wang@mentor.com>
+ <20190816173426.GM121898@dtor-ws>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <07f3ff0d-5076-2b36-ece4-5fce8ceada8f@mentor.com>
+Date:   Thu, 22 Aug 2019 14:52:57 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19082205-4275-0000-0000-0000035BBE7F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082205-4276-0000-0000-0000386DE354
-Message-Id: <381baa08d36bc8a8f7051ec8bdbe9620e83f925d.camel@au1.ibm.com>
-Subject: RE: [RFC PATCH] powerpc: Convert ____flush_dcache_icache_phys() to C
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908220061
+In-Reply-To: <20190816173426.GM121898@dtor-ws>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-22 at 07:06 +0200, Christophe Leroy wrote:
+Hi
+
+On 2019/08/17 2:34, Dmitry Torokhov wrote:
+> On Fri, Aug 16, 2019 at 05:30:33PM +0900, Jiada Wang wrote:
+>> From: Nick Dyer <nick.dyer@itdev.co.uk>
+>>
+>> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+>> Acked-by: Benson Leung <bleung@chromium.org>
+>> Acked-by: Yufeng Shen <miletus@chromium.org>
+>> (cherry picked from ndyer/linux/for-upstream commit ab95b5a309999d2c098daaa9f88d9fcfae7eb516)
+>> Signed-off-by: George G. Davis <george_davis@mentor.com>
+>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+>> ---
+>>   drivers/input/touchscreen/atmel_mxt_ts.c | 25 ++++++++++++++++++++++++
+>>   1 file changed, 25 insertions(+)
+>>
+>> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> index a75c35c6f9f9..9226ec528adf 100644
+>> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+>> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> @@ -155,6 +155,9 @@ struct t37_debug {
+>>   #define MXT_RESET_VALUE		0x01
+>>   #define MXT_BACKUP_VALUE	0x55
+>>   
+>> +/* Define for MXT_PROCI_TOUCHSUPPRESSION_T42 */
+>> +#define MXT_T42_MSG_TCHSUP	BIT(0)
+>> +
+>>   /* T100 Multiple Touch Touchscreen */
+>>   #define MXT_T100_CTRL		0
+>>   #define MXT_T100_CFG1		1
+>> @@ -323,6 +326,8 @@ struct mxt_data {
+>>   	u8 T9_reportid_max;
+>>   	u16 T18_address;
+>>   	u8 T19_reportid;
+>> +	u8 T42_reportid_min;
+>> +	u8 T42_reportid_max;
+>>   	u16 T44_address;
+>>   	u8 T48_reportid;
+>>   	u8 T100_reportid_min;
+>> @@ -978,6 +983,17 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
+>>   	data->update_input = true;
+>>   }
+>>   
+>> +static void mxt_proc_t42_messages(struct mxt_data *data, u8 *msg)
+>> +{
+>> +	struct device *dev = &data->client->dev;
+>> +	u8 status = msg[1];
+>> +
+>> +	if (status & MXT_T42_MSG_TCHSUP)
+>> +		dev_info(dev, "T42 suppress\n");
+>> +	else
+>> +		dev_info(dev, "T42 normal\n");
 > 
-> Le 22/08/2019 à 02:27, Alastair D'Silva a écrit :
-> > On Wed, 2019-08-21 at 22:27 +0200, Christophe Leroy wrote:
-> > > Le 20/08/2019 à 06:36, Alastair D'Silva a écrit :
-> > > > On Fri, 2019-08-16 at 15:52 +0000, Christophe Leroy wrote:
-> > > 
-> > > [...]
-> > > 
-> > > > Thanks Christophe,
-> > > > 
-> > > > I'm trying a somewhat different approach that requires less
-> > > > knowledge
-> > > > of assembler. Handling of CPU_FTR_COHERENT_ICACHE is outside
-> > > > this
-> > > > function. The code below is not a patch as my tree is a bit
-> > > > messy,
-> > > > sorry:
-> > > 
-> > > Can we be 100% sure that GCC won't add any code accessing some
-> > > global
-> > > data or stack while the Data MMU is OFF ?
-> > > 
-> > > Christophe
-> > > 
-> > 
-> > +mpe
-> > 
-> > I'm not sure how we would go about making such a guarantee, but
-> > I've
-> > tied every variable used to a register and addr is passed in a
-> > register, so there is no stack usage, and every call in there only
-> > operates on it's operands.
-> > 
-> > The calls to the inline cache helpers (for the PPC32 case) are all
-> > constants, so I can't see a reasonable scenario where there would
-> > be a
-> > function call and reordered to after the DR bit is turned off, but
-> > I
-> > guess if we want to be paranoid, we could always add an mb() call
-> > before the DR bit is manipulated to prevent the compiler from
-> > reordering across the section where the data MMU is disabled.
-> > 
-> > 
+> dev_dbg(). There is no need to flood the logs with this. I'd assume this
+> is for assisting in bringup. Should there be some more generic way of
+> monitoring the status?
 > 
-> Anyway, I think the benefit of converting that function to C is
-> pretty 
-> small. flush_dcache_range() and friends were converted to C mainly
-> in 
-> order to inline them. But this __flush_dcache_icache_phys() is too
-> big 
-> to be worth inlining, yet small and stable enough to remain in
-> assembly 
-> for the time being.
-> 
-I disagree on this point, after converting it to C, using
-44x/currituck.defconfig, the compiler definitely will inline it (noting
-that there is only 1 caller of it):
+will replace with dev_dbg() in v2 patchset
 
-00000134 <flush_dcache_icache_page>:
- 134:   94 21 ff f0     stwu    r1,-16(r1)
- 138:   3d 20 00 00     lis     r9,0
- 13c:   81 29 00 00     lwz     r9,0(r9)
- 140:   7c 08 02 a6     mflr    r0
- 144:   38 81 00 0c     addi    r4,r1,12
- 148:   90 01 00 14     stw     r0,20(r1)
- 14c:   91 21 00 0c     stw     r9,12(r1)
- 150:   48 00 00 01     bl      150 <flush_dcache_icache_page+0x1c>
- 154:   39 00 00 20     li      r8,32
- 158:   39 43 10 00     addi    r10,r3,4096
- 15c:   7c 69 1b 78     mr      r9,r3
- 160:   7d 09 03 a6     mtctr   r8
- 164:   7c 00 48 6c     dcbst   0,r9
- 168:   39 29 00 80     addi    r9,r9,128
- 16c:   42 00 ff f8     bdnz    164 <flush_dcache_icache_page+0x30>
- 170:   7c 00 04 ac     hwsync
- 174:   7c 69 1b 78     mr      r9,r3
- 178:   7c 00 4f ac     icbi    0,r9
- 17c:   39 29 00 80     addi    r9,r9,128
- 180:   7f 8a 48 40     cmplw   cr7,r10,r9
- 184:   40 9e ff f4     bne     cr7,178 <flush_dcache_icache_page+0x44>
- 188:   7c 00 04 ac     hwsync
- 18c:   4c 00 01 2c     isync
- 190:   80 01 00 14     lwz     r0,20(r1)
- 194:   38 21 00 10     addi    r1,r1,16
- 198:   7c 08 03 a6     mtlr    r0
- 19c:   48 00 00 00     b       19c <flush_dcache_icache_page+0x68>
-
-
-> So I suggest you keep it aside your series for now, just move 
-> PURGE_PREFETCHED_INS inside it directly as it will be the only
-> remaining 
-> user of it.
-> 
-> Christophe
-
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
-
+thanks,
+Jiada
