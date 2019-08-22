@@ -2,152 +2,80 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37883C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D008EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE4F2339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:54:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FdbAKJGU"
+	by mail.kernel.org (Postfix) with ESMTP id A33582339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387782AbfHVTyR (ORCPT
+        id S2388040AbfHVTzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 15:54:17 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:50732 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbfHVTyR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 15:54:17 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4CC8C2B2;
-        Thu, 22 Aug 2019 21:54:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1566503654;
-        bh=GHCA3gkwB4RNKsfkuiYa//90I1sQp0GbRnug/PQKMuY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FdbAKJGU0PAGTJJ+3FUf2mZfUKKsADKgnVPfWCsjSgjgW8GbyBxNCS46RRYy2FRbm
-         asG6pEl8oQNjGBRvEv73m3+dT/Zn4Y0xQxQ7TR5aig7k5ocPn+gNtEAf1HJrfFAG0G
-         sg0AQ5sWUKh5Il1ccVxw6hQC/7g8swIGeA5PmaXs=
-Date:   Thu, 22 Aug 2019 22:54:07 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 19/19] drm: rcar-du: kms: Update CMM in atomic commit
- tail
-Message-ID: <20190822195407.GL5027@pendragon.ideasonboard.com>
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
- <20190706140746.29132-20-jacopo+renesas@jmondi.org>
- <20190820184215.GM10820@pendragon.ideasonboard.com>
- <20190822191925.dnbdihnt3ole2nqx@uno.localdomain>
+        Thu, 22 Aug 2019 15:55:37 -0400
+Received: from mx2.math.uh.edu ([129.7.128.33]:52178 "EHLO mx2.math.uh.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727953AbfHVTzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 15:55:37 -0400
+X-Greylist: delayed 968 seconds by postgrey-1.27 at vger.kernel.org; Thu, 22 Aug 2019 15:55:37 EDT
+Received: from epithumia.math.uh.edu ([129.7.128.2])
+        by mx2.math.uh.edu with esmtp (Exim 4.92)
+        (envelope-from <tibbs@math.uh.edu>)
+        id 1i0sve-0004Tw-Mp; Thu, 22 Aug 2019 14:39:28 -0500
+Received: by epithumia.math.uh.edu (Postfix, from userid 7225)
+        id 9C2EF801554; Thu, 22 Aug 2019 14:39:26 -0500 (CDT)
+From:   Jason L Tibbitts III <tibbs@math.uh.edu>
+To:     linux-nfs@vger.kernel.org
+Cc:     km@cm4all.com, linux-kernel@vger.kernel.org
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+Date:   Thu, 22 Aug 2019 14:39:26 -0500
+In-Reply-To: <ufak1bhyuew.fsf@epithumia.math.uh.edu> (Jason L. Tibbitts, III's
+        message of "Tue, 13 Aug 2019 10:08:55 -0500")
+Message-ID: <ufapnkxkn0x.fsf@epithumia.math.uh.edu>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190822191925.dnbdihnt3ole2nqx@uno.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
+I now have another user reporting the same failure of readdir on a long
+directory which showed up in 5.1.20 and was traced to
+3536b79ba75ba44b9ac1a9f1634f2e833bbb735c.  I'm not sure what to do to
+get more traction besides reposting and adding some addresses to the CC
+list.  If there is any information I can provide which might help to get
+to the bottom of this, please let me know.
 
-On Thu, Aug 22, 2019 at 09:19:25PM +0200, Jacopo Mondi wrote:
-> On Tue, Aug 20, 2019 at 09:42:15PM +0300, Laurent Pinchart wrote:
-> > On Sat, Jul 06, 2019 at 04:07:46PM +0200, Jacopo Mondi wrote:
-> > > Update CMM settings at in the atomic commit tail helper method.
-> > >
-> > > The CMM is updated with new gamma values provided to the driver
-> > > in the GAMMA_LUT blob property.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > ---
-> > >  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 35 +++++++++++++++++++++++++++
-> > >  1 file changed, 35 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > > index b79cda2f5531..f9aece78ca5f 100644
-> > > --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > > @@ -21,6 +21,7 @@
-> > >  #include <linux/of_platform.h>
-> > >  #include <linux/wait.h>
-> > >
-> > > +#include "rcar_cmm.h"
-> > >  #include "rcar_du_crtc.h"
-> > >  #include "rcar_du_drv.h"
-> > >  #include "rcar_du_encoder.h"
-> > > @@ -287,6 +288,37 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
-> > >   * Atomic Check and Update
-> > >   */
-> > >
-> > > +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
-> > > +					     struct drm_crtc_state *old_state)
-> > > +{
-> > > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> > > +	struct rcar_cmm_config cmm_config = {};
-> > > +
-> > > +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
-> > > +		return;
-> > > +
-> > > +	if (!crtc->state->gamma_lut) {
-> > > +		cmm_config.lut.enable = false;
-> > > +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> > > +
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	cmm_config.lut.enable = true;
-> > > +	cmm_config.lut.table = (struct drm_color_lut *)
-> > > +			       crtc->state->gamma_lut->data;
-> > > +
-> > > +	/* Set LUT table size to 0 if entries should not be updated. */
-> > > +	if (!old_state->gamma_lut ||
-> > > +	    old_state->gamma_lut->base.id != crtc->state->gamma_lut->base.id)
-> > > +		cmm_config.lut.size = crtc->state->gamma_lut->length
-> > > +				    / sizeof(cmm_config.lut.table[0]);
-> > > +	else
-> > > +		cmm_config.lut.size = 0;
-> > > +
-> > > +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> > > +}
-> > > +
-> > >  static int rcar_du_atomic_check(struct drm_device *dev,
-> > >  				struct drm_atomic_state *state)
-> > >  {
-> > > @@ -329,6 +361,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
-> > >  			rcdu->dpad1_source = rcrtc->index;
-> > >  	}
-> > >
-> > > +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
-> > > +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
-> > > +
-> >
-> > I think this looks good overall, but I wonder if we couldn't simplify
-> > the CMM driver suspend/resume and LUT caching due to config while not
-> > enabled by handling it on the DU side. I have a rework on the commit
-> > tail handler in progress, I'll think how this could be done. For now I
-> > think you can leave it as is.
-> 
-> Does this mean I have your R-b tag ? :)
+To recap:
 
-I'd like to review this in the context of v3 :-)
+5.1.20 introduced a regression reading some large directories.  In this
+case, the directory should have 7800 files or so in it:
 
-> > >  	/* Apply the atomic update. */
-> > >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
-> > >  	drm_atomic_helper_commit_planes(dev, old_state,
+[root@ld00 ~]# ls -l ~dblecher|wc -l
+ls: reading directory '/home/dblecher': Input/output error
+1844
+[root@ld00 ~]# cat /proc/version Linux version 5.1.20-300.fc30.x86_64 (mockbuild@bkernel04.phx2.fedoraproject.org) (gcc version 9.1.1 20190503 (Red Hat 9.1.1-1) (GCC)) #1 SMP Fri Jul 26 15:03:11 UTC 2019
 
--- 
-Regards,
+(The server is a Centos 7 machine running kernel 3.10.0-957.12.2.el7.x86_64.)
 
-Laurent Pinchart
+Building a kernel which reverts commit 3536b79ba75ba44b9ac1a9f1634f2e833bbb735c:
+  Revert "NFS: readdirplus optimization by cache mechanism" (memleak)
+fixes the issue, but of course that revert was fixing a real issue so
+I'm not sure what to do.
+
+I can trivially reproduce this by simply trying to list the problematic
+directories but I'm not sure how to construct such a directory; simply
+creating 10000 files doesn't cause the problem for me.  I am willing to
+test patches and can build my own kernels, and I'm happy to provide any
+debugging information you might require.  Unfortunately I don't know
+enough to dig in and figure out for myself what's going wrong.
+
+I did file https://bugzilla.redhat.com/show_bug.cgi?id=1740954 just to
+have this in a bug tracker somewhere.  I'm happy to file one somewhere
+else if that would help.
+
+ - J<
