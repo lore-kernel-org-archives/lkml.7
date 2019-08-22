@@ -2,103 +2,139 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A72C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD61C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE60E23402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l6U7Lyf0"
+	by mail.kernel.org (Postfix) with ESMTP id 6799C23402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566494978;
+	bh=sRrp4AB5ZZgmgXo65N7/Viju2DCUUVDpt6ASET+gznA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=i8JG3qflSn5FEDF4zF1F2YspgXUxAxR7Sb0t502+9ChkxLOi7YRQLq0hks1n3KBUx
+	 WuKfjn+0DlZP2YXYD46bNxwycLPXeR3dpy0/mWhVrJ7KTYSXCc7Vbds2k+7e0ibN6t
+	 Rspmhmejn7wK7R8bPoOuGi6vhIa48f6oXMyqkbK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391067AbfHVR3d (ORCPT
+        id S2404827AbfHVR1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:29:33 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38164 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390631AbfHVR3a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:29:30 -0400
-Received: by mail-pg1-f194.google.com with SMTP id e11so4053669pga.5
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 10:29:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=ukVWNvitz/UHIvotHd8untO0xzPRYvc+1WN6pDOo+Js=;
-        b=l6U7Lyf0pAC/hPrTqdj669gt+CJ2CBM5J0Opg6CFM4CUAfgfTtm4KpO9FqRIop85Qz
-         og1xd2wgn2De8IsjsrP8/RZGxBgAftfBiGPbR1jyBC+m6ItdST7JEQuPdc27GZqj+TUy
-         FVB72DFh2flIuP8MmLebo1Fe4pP6NVI95/AvQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=ukVWNvitz/UHIvotHd8untO0xzPRYvc+1WN6pDOo+Js=;
-        b=nsaoeDYmzEzpfe1GV2Oh3iWydjuD8MBZRPgrclRUK2FisDs1jdhJwb2rCMasSSYS15
-         +alLrz494CDqQouYj0fzqVutSrqMQvnoGKKTiJgRwavgMjnZ0eoZkX0KDgLFN2++/LTK
-         203mFUc64HW1AjXc1pfUN08fdEOom/JVpXf+Il766+L32CHE5NgNcFsMqZDn1BmRy8tG
-         MN7FinIFrUw0Aq7VxmIzJrbwLfRLwjUWftxskIIqSGZ9SzlvTtTe1/HIVKO+ZEhcR51i
-         DX3lBjBJ8VYyIiD06BJ1IOyzaLX4O74Rht7KZpqHkEPH1I5OC3G26KW2VAc9HMaaYiK4
-         97AA==
-X-Gm-Message-State: APjAAAXNihOr8VlFY4MDbZ7XsOM9kMJ53TyCKZFip82VuBkCeF5kElOD
-        OZ4fi/kdvFj6F7gZ2XK9zG/AmA==
-X-Google-Smtp-Source: APXvYqz4lxbTsv5Z2JO/gKEg6i2DpoNEniiFZCAuMi/Tl3YoY+PSd8B4B3xWz6iKO9e1ZGHdDvWg5A==
-X-Received: by 2002:a17:90a:380a:: with SMTP id w10mr798893pjb.138.1566494969205;
-        Thu, 22 Aug 2019 10:29:29 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b6sm23644299pgq.26.2019.08.22.10.29.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 10:29:28 -0700 (PDT)
-Message-ID: <5d5ed0f8.1c69fb81.46245.daf8@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 22 Aug 2019 13:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404603AbfHVR0G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:26:06 -0400
+Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD1F9206DD;
+        Thu, 22 Aug 2019 17:26:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566494765;
+        bh=sRrp4AB5ZZgmgXo65N7/Viju2DCUUVDpt6ASET+gznA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z17/3clyvxm5nlhXTRmEnMrpX0mXIrdvI8oZaumun4bsfiDmpSlSdEp7EQiqWC0xf
+         W3+Ha0/qOP6XyV+evJc0fH+x8ZjtuPlJrZVsloUAD6+0Qum1H+p5/s/JBjZbLLWyWm
+         zfZe9wnujRxCXEJVe75+PWsAjoJHRH0qtTecDU9c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.19 69/85] arm64: ftrace: Ensure module ftrace trampoline is coherent with I-side
+Date:   Thu, 22 Aug 2019 10:19:42 -0700
+Message-Id: <20190822171734.175450632@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
+References: <20190822171731.012687054@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190821175846.ewcrpam44fdm27ya@linux.intel.com>
-References: <20190812223622.73297-1-swboyd@chromium.org> <20190812223622.73297-5-swboyd@chromium.org> <20190819164005.evg35d2hcuslbnrj@linux.intel.com> <5d5ad7f0.1c69fb81.ebfc2.7e1d@mx.google.com> <20190821175846.ewcrpam44fdm27ya@linux.intel.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>
-Subject: Re: [PATCH v4 4/6] tpm: tpm_tis_spi: Export functionality to other drivers
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 22 Aug 2019 10:29:27 -0700
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jarkko Sakkinen (2019-08-21 10:58:46)
-> On Mon, Aug 19, 2019 at 10:10:08AM -0700, Stephen Boyd wrote:
-> > Quoting Jarkko Sakkinen (2019-08-19 09:40:05)
-> > >=20
-> > > Instead there should be a single tpm_tis_spi driver that dynamically
-> > > either TCG or CR50. I rather take some extra bytes in the LKM than
-> > > the added complexity.
-> > >=20
-> >=20
-> > Ok. I had that patch originally[1]. Do you want me to resend that patch
-> > and start review over from there?
-> >=20
-> > [1] https://lkml.kernel.org/r/5d2f955d.1c69fb81.35877.7018@mx.google.com
->=20
-> What if:
->=20
-> 1. You mostly use this solution but have it as a separate source module
->    only.
-> 2. Use TPM_IS_CR50 only once to bind the callbacks.
->=20
+From: Will Deacon <will@kernel.org>
 
-Ok I think I understand. Take the callback approach from these patches
-and combine that with the TPM_IS_CR50 changes I made in [1]. I'll try it
-out and resend.
+commit b6143d10d23ebb4a77af311e8b8b7f019d0163e6 upstream.
+
+The initial support for dynamic ftrace trampolines in modules made use
+of an indirect branch which loaded its target from the beginning of
+a special section (e71a4e1bebaf7 ("arm64: ftrace: add support for far
+branches to dynamic ftrace")). Since no instructions were being patched,
+no cache maintenance was needed. However, later in be0f272bfc83 ("arm64:
+ftrace: emit ftrace-mod.o contents through code") this code was reworked
+to output the trampoline instructions directly into the PLT entry but,
+unfortunately, the necessary cache maintenance was overlooked.
+
+Add a call to __flush_icache_range() after writing the new trampoline
+instructions but before patching in the branch to the trampoline.
+
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: <stable@vger.kernel.org>
+Fixes: be0f272bfc83 ("arm64: ftrace: emit ftrace-mod.o contents through code")
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/arm64/kernel/ftrace.c |   21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -76,7 +76,7 @@ int ftrace_make_call(struct dyn_ftrace *
+ 
+ 	if (offset < -SZ_128M || offset >= SZ_128M) {
+ #ifdef CONFIG_ARM64_MODULE_PLTS
+-		struct plt_entry trampoline;
++		struct plt_entry trampoline, *dst;
+ 		struct module *mod;
+ 
+ 		/*
+@@ -104,24 +104,27 @@ int ftrace_make_call(struct dyn_ftrace *
+ 		 * is added in the future, but for now, the pr_err() below
+ 		 * deals with a theoretical issue only.
+ 		 */
++		dst = mod->arch.ftrace_trampoline;
+ 		trampoline = get_plt_entry(addr);
+-		if (!plt_entries_equal(mod->arch.ftrace_trampoline,
+-				       &trampoline)) {
+-			if (!plt_entries_equal(mod->arch.ftrace_trampoline,
+-					       &(struct plt_entry){})) {
++		if (!plt_entries_equal(dst, &trampoline)) {
++			if (!plt_entries_equal(dst, &(struct plt_entry){})) {
+ 				pr_err("ftrace: far branches to multiple entry points unsupported inside a single module\n");
+ 				return -EINVAL;
+ 			}
+ 
+ 			/* point the trampoline to our ftrace entry point */
+ 			module_disable_ro(mod);
+-			*mod->arch.ftrace_trampoline = trampoline;
++			*dst = trampoline;
+ 			module_enable_ro(mod, true);
+ 
+-			/* update trampoline before patching in the branch */
+-			smp_wmb();
++			/*
++			 * Ensure updated trampoline is visible to instruction
++			 * fetch before we patch in the branch.
++			 */
++			__flush_icache_range((unsigned long)&dst[0],
++					     (unsigned long)&dst[1]);
+ 		}
+-		addr = (unsigned long)(void *)mod->arch.ftrace_trampoline;
++		addr = (unsigned long)dst;
+ #else /* CONFIG_ARM64_MODULE_PLTS */
+ 		return -EINVAL;
+ #endif /* CONFIG_ARM64_MODULE_PLTS */
+
 
