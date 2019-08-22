@@ -2,59 +2,55 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A881EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8745C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C782064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A925233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495141;
-	bh=UrRX+YAvAnzmTTdaf0EAwx3YweqXDSSy+g35XFQF+ks=;
+	s=default; t=1566495144;
+	bh=xwobzQCBfNShWtmlyQSWxiukM+RcWbEW9xop9qTy3zM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rL8J9lBqHnPUx7nV3g0iKnoSYBmgyq9FUyqk9xcyYNeQ19xVqGhLu0D2m7vNQK9Pp
-	 oIdr4Uhe+tcIMMMQ0j3k8ou/1JLoDq9Rm0VS8HTshUNcQpXPJ1Fgnvn1G/rR6fSCJM
-	 UlEFt0JWrgr3FJqlaRMDyBb54UiyieqmnksY6b7Y=
+	b=TNAm+UkL/NSGaf45cXfHGgaV/M2EoM5MVs5XSYRohW0/R7reZVMnkygetFmWmofnq
+	 ur/i1FM6tR+VUEtXL8AADGjTQOhNouSAXINH5l+/wJvs+J+ySa0Ht+LATgHZt1Cmuw
+	 NS9YB1N+5o0iwKZdHg2SEk0TE1CX6TFYLkVmb6ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404485AbfHVRZm (ORCPT
+        id S2391429AbfHVRcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:25:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47042 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:32:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391602AbfHVRYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:53 -0400
+        id S2391600AbfHVRZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:43 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 372CE23407;
-        Thu, 22 Aug 2019 17:24:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6F0523429;
+        Thu, 22 Aug 2019 17:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494692;
-        bh=UrRX+YAvAnzmTTdaf0EAwx3YweqXDSSy+g35XFQF+ks=;
+        s=default; t=1566494742;
+        bh=xwobzQCBfNShWtmlyQSWxiukM+RcWbEW9xop9qTy3zM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OcsVHLCuwrFvIN+raKTxrMuTt1OR/j+Ms92j937ajJq/nlg8DVHkOdNkfyj6qCAn2
-         XeyqJ+MkxZc2MCNP4I1yTPH+YE+y4GORDR0Vtvd4O4LvCjmzNXPgyjZavjnEXtZ0Vd
-         FKsEEvKqAi20mcARDx0LbF7hqU4eTXhzau0Qz7lQ=
+        b=oTBeC9Fb4Cw46FlL51BUFp68qq5Ca0tIVa3VQWgBvkJ650HhCiio1N3/yR1Gksfsx
+         ebCW70R4xZ8ndudylWfnM9zTJTUC2cc6jR35xHlW2i5OOIhSvwOW+v1Tk9fzdNdMvh
+         dMWMpOvdpLZiTHlJ/ZiEpeWH7jimnuNXJitlLpqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>
-Subject: [PATCH 4.14 07/71] bpf: add bpf_jit_limit knob to restrict unpriv allocations
-Date:   Thu, 22 Aug 2019 10:18:42 -0700
-Message-Id: <20190822171726.904054988@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 36/85] Btrfs: fix deadlock between fiemap and transaction commits
+Date:   Thu, 22 Aug 2019 10:19:09 -0700
+Message-Id: <20190822171732.892648246@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
-References: <20190822171726.131957995@linuxfoundation.org>
+In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
+References: <20190822171731.012687054@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,199 +60,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+[ Upstream commit a6d155d2e363f26290ffd50591169cb96c2a609e ]
 
-commit ede95a63b5e84ddeea6b0c473b36ab8bfd8c6ce3 upstream.
+The fiemap handler locks a file range that can have unflushed delalloc,
+and after locking the range, it tries to attach to a running transaction.
+If the running transaction started its commit, that is, it is in state
+TRANS_STATE_COMMIT_START, and either the filesystem was mounted with the
+flushoncommit option or the transaction is creating a snapshot for the
+subvolume that contains the file that fiemap is operating on, we end up
+deadlocking. This happens because fiemap is blocked on the transaction,
+waiting for it to complete, and the transaction is waiting for the flushed
+dealloc to complete, which requires locking the file range that the fiemap
+task already locked. The following stack traces serve as an example of
+when this deadlock happens:
 
-Rick reported that the BPF JIT could potentially fill the entire module
-space with BPF programs from unprivileged users which would prevent later
-attempts to load normal kernel modules or privileged BPF programs, for
-example. If JIT was enabled but unsuccessful to generate the image, then
-before commit 290af86629b2 ("bpf: introduce BPF_JIT_ALWAYS_ON config")
-we would always fall back to the BPF interpreter. Nowadays in the case
-where the CONFIG_BPF_JIT_ALWAYS_ON could be set, then the load will abort
-with a failure since the BPF interpreter was compiled out.
+  (...)
+  [404571.515510] Workqueue: btrfs-endio-write btrfs_endio_write_helper [btrfs]
+  [404571.515956] Call Trace:
+  [404571.516360]  ? __schedule+0x3ae/0x7b0
+  [404571.516730]  schedule+0x3a/0xb0
+  [404571.517104]  lock_extent_bits+0x1ec/0x2a0 [btrfs]
+  [404571.517465]  ? remove_wait_queue+0x60/0x60
+  [404571.517832]  btrfs_finish_ordered_io+0x292/0x800 [btrfs]
+  [404571.518202]  normal_work_helper+0xea/0x530 [btrfs]
+  [404571.518566]  process_one_work+0x21e/0x5c0
+  [404571.518990]  worker_thread+0x4f/0x3b0
+  [404571.519413]  ? process_one_work+0x5c0/0x5c0
+  [404571.519829]  kthread+0x103/0x140
+  [404571.520191]  ? kthread_create_worker_on_cpu+0x70/0x70
+  [404571.520565]  ret_from_fork+0x3a/0x50
+  [404571.520915] kworker/u8:6    D    0 31651      2 0x80004000
+  [404571.521290] Workqueue: btrfs-flush_delalloc btrfs_flush_delalloc_helper [btrfs]
+  (...)
+  [404571.537000] fsstress        D    0 13117  13115 0x00004000
+  [404571.537263] Call Trace:
+  [404571.537524]  ? __schedule+0x3ae/0x7b0
+  [404571.537788]  schedule+0x3a/0xb0
+  [404571.538066]  wait_current_trans+0xc8/0x100 [btrfs]
+  [404571.538349]  ? remove_wait_queue+0x60/0x60
+  [404571.538680]  start_transaction+0x33c/0x500 [btrfs]
+  [404571.539076]  btrfs_check_shared+0xa3/0x1f0 [btrfs]
+  [404571.539513]  ? extent_fiemap+0x2ce/0x650 [btrfs]
+  [404571.539866]  extent_fiemap+0x2ce/0x650 [btrfs]
+  [404571.540170]  do_vfs_ioctl+0x526/0x6f0
+  [404571.540436]  ksys_ioctl+0x70/0x80
+  [404571.540734]  __x64_sys_ioctl+0x16/0x20
+  [404571.540997]  do_syscall_64+0x60/0x1d0
+  [404571.541279]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  (...)
+  [404571.543729] btrfs           D    0 14210  14208 0x00004000
+  [404571.544023] Call Trace:
+  [404571.544275]  ? __schedule+0x3ae/0x7b0
+  [404571.544526]  ? wait_for_completion+0x112/0x1a0
+  [404571.544795]  schedule+0x3a/0xb0
+  [404571.545064]  schedule_timeout+0x1ff/0x390
+  [404571.545351]  ? lock_acquire+0xa6/0x190
+  [404571.545638]  ? wait_for_completion+0x49/0x1a0
+  [404571.545890]  ? wait_for_completion+0x112/0x1a0
+  [404571.546228]  wait_for_completion+0x131/0x1a0
+  [404571.546503]  ? wake_up_q+0x70/0x70
+  [404571.546775]  btrfs_wait_ordered_extents+0x27c/0x400 [btrfs]
+  [404571.547159]  btrfs_commit_transaction+0x3b0/0xae0 [btrfs]
+  [404571.547449]  ? btrfs_mksubvol+0x4a4/0x640 [btrfs]
+  [404571.547703]  ? remove_wait_queue+0x60/0x60
+  [404571.547969]  btrfs_mksubvol+0x605/0x640 [btrfs]
+  [404571.548226]  ? __sb_start_write+0xd4/0x1c0
+  [404571.548512]  ? mnt_want_write_file+0x24/0x50
+  [404571.548789]  btrfs_ioctl_snap_create_transid+0x169/0x1a0 [btrfs]
+  [404571.549048]  btrfs_ioctl_snap_create_v2+0x11d/0x170 [btrfs]
+  [404571.549307]  btrfs_ioctl+0x133f/0x3150 [btrfs]
+  [404571.549549]  ? mem_cgroup_charge_statistics+0x4c/0xd0
+  [404571.549792]  ? mem_cgroup_commit_charge+0x84/0x4b0
+  [404571.550064]  ? __handle_mm_fault+0xe3e/0x11f0
+  [404571.550306]  ? do_raw_spin_unlock+0x49/0xc0
+  [404571.550608]  ? _raw_spin_unlock+0x24/0x30
+  [404571.550976]  ? __handle_mm_fault+0xedf/0x11f0
+  [404571.551319]  ? do_vfs_ioctl+0xa2/0x6f0
+  [404571.551659]  ? btrfs_ioctl_get_supported_features+0x30/0x30 [btrfs]
+  [404571.552087]  do_vfs_ioctl+0xa2/0x6f0
+  [404571.552355]  ksys_ioctl+0x70/0x80
+  [404571.552621]  __x64_sys_ioctl+0x16/0x20
+  [404571.552864]  do_syscall_64+0x60/0x1d0
+  [404571.553104]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  (...)
 
-Add a global limit and enforce it for unprivileged users such that in case
-of BPF interpreter compiled out we fail once the limit has been reached
-or we fall back to BPF interpreter earlier w/o using module mem if latter
-was compiled in. In a next step, fair share among unprivileged users can
-be resolved in particular for the case where we would fail hard once limit
-is reached.
+If we were joining the transaction instead of attaching to it, we would
+not risk a deadlock because a join only blocks if the transaction is in a
+state greater then or equals to TRANS_STATE_COMMIT_DOING, and the delalloc
+flush performed by a transaction is done before it reaches that state,
+when it is in the state TRANS_STATE_COMMIT_START. However a transaction
+join is intended for use cases where we do modify the filesystem, and
+fiemap only needs to peek at delayed references from the current
+transaction in order to determine if extents are shared, and, besides
+that, when there is no current transaction or when it blocks to wait for
+a current committing transaction to complete, it creates a new transaction
+without reserving any space. Such unnecessary transactions, besides doing
+unnecessary IO, can cause transaction aborts (-ENOSPC) and unnecessary
+rotation of the precious backup roots.
 
-Fixes: 290af86629b2 ("bpf: introduce BPF_JIT_ALWAYS_ON config")
-Fixes: 0a14842f5a3c ("net: filter: Just In Time compiler for x86-64")
-Co-Developed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+So fix this by adding a new transaction join variant, named join_nostart,
+which behaves like the regular join, but it does not create a transaction
+when none currently exists or after waiting for a committing transaction
+to complete.
+
+Fixes: 03628cdbc64db6 ("Btrfs: do not start a transaction during fiemap")
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/sysctl/net.txt |    8 +++++++
- include/linux/filter.h       |    1 
- kernel/bpf/core.c            |   49 ++++++++++++++++++++++++++++++++++++++++---
- net/core/sysctl_net_core.c   |   10 +++++++-
- 4 files changed, 63 insertions(+), 5 deletions(-)
+ fs/btrfs/backref.c     |  2 +-
+ fs/btrfs/transaction.c | 22 ++++++++++++++++++----
+ fs/btrfs/transaction.h |  3 +++
+ 3 files changed, 22 insertions(+), 5 deletions(-)
 
---- a/Documentation/sysctl/net.txt
-+++ b/Documentation/sysctl/net.txt
-@@ -91,6 +91,14 @@ Values :
- 	0 - disable JIT kallsyms export (default value)
- 	1 - enable JIT kallsyms export for privileged users only
+diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
+index ac6c383d63140..19855659f6503 100644
+--- a/fs/btrfs/backref.c
++++ b/fs/btrfs/backref.c
+@@ -1485,7 +1485,7 @@ int btrfs_check_shared(struct btrfs_root *root, u64 inum, u64 bytenr)
+ 		goto out;
+ 	}
  
-+bpf_jit_limit
-+-------------
-+
-+This enforces a global limit for memory allocations to the BPF JIT
-+compiler in order to reject unprivileged JIT requests once it has
-+been surpassed. bpf_jit_limit contains the value of the global limit
-+in bytes.
-+
- dev_weight
- --------------
+-	trans = btrfs_attach_transaction(root);
++	trans = btrfs_join_transaction_nostart(root);
+ 	if (IS_ERR(trans)) {
+ 		if (PTR_ERR(trans) != -ENOENT && PTR_ERR(trans) != -EROFS) {
+ 			ret = PTR_ERR(trans);
+diff --git a/fs/btrfs/transaction.c b/fs/btrfs/transaction.c
+index f1ca53a3ff0bf..26317bca56499 100644
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -28,15 +28,18 @@ static const unsigned int btrfs_blocked_trans_types[TRANS_STATE_MAX] = {
+ 	[TRANS_STATE_COMMIT_START]	= (__TRANS_START | __TRANS_ATTACH),
+ 	[TRANS_STATE_COMMIT_DOING]	= (__TRANS_START |
+ 					   __TRANS_ATTACH |
+-					   __TRANS_JOIN),
++					   __TRANS_JOIN |
++					   __TRANS_JOIN_NOSTART),
+ 	[TRANS_STATE_UNBLOCKED]		= (__TRANS_START |
+ 					   __TRANS_ATTACH |
+ 					   __TRANS_JOIN |
+-					   __TRANS_JOIN_NOLOCK),
++					   __TRANS_JOIN_NOLOCK |
++					   __TRANS_JOIN_NOSTART),
+ 	[TRANS_STATE_COMPLETED]		= (__TRANS_START |
+ 					   __TRANS_ATTACH |
+ 					   __TRANS_JOIN |
+-					   __TRANS_JOIN_NOLOCK),
++					   __TRANS_JOIN_NOLOCK |
++					   __TRANS_JOIN_NOSTART),
+ };
  
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -729,6 +729,7 @@ struct sock *do_sk_redirect_map(struct s
- extern int bpf_jit_enable;
- extern int bpf_jit_harden;
- extern int bpf_jit_kallsyms;
-+extern int bpf_jit_limit;
- 
- typedef void (*bpf_jit_fill_hole_t)(void *area, unsigned int size);
- 
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -290,10 +290,13 @@ struct bpf_prog *bpf_patch_insn_single(s
+ void btrfs_put_transaction(struct btrfs_transaction *transaction)
+@@ -531,7 +534,8 @@ again:
+ 		ret = join_transaction(fs_info, type);
+ 		if (ret == -EBUSY) {
+ 			wait_current_trans(fs_info);
+-			if (unlikely(type == TRANS_ATTACH))
++			if (unlikely(type == TRANS_ATTACH ||
++				     type == TRANS_JOIN_NOSTART))
+ 				ret = -ENOENT;
+ 		}
+ 	} while (ret == -EBUSY);
+@@ -647,6 +651,16 @@ struct btrfs_trans_handle *btrfs_join_transaction_nolock(struct btrfs_root *root
+ 				 BTRFS_RESERVE_NO_FLUSH, true);
  }
  
- #ifdef CONFIG_BPF_JIT
-+# define BPF_JIT_LIMIT_DEFAULT	(PAGE_SIZE * 40000)
-+
- /* All BPF JIT sysctl knobs here. */
- int bpf_jit_enable   __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_ALWAYS_ON);
- int bpf_jit_harden   __read_mostly;
- int bpf_jit_kallsyms __read_mostly;
-+int bpf_jit_limit    __read_mostly = BPF_JIT_LIMIT_DEFAULT;
- 
- static __always_inline void
- bpf_get_prog_addr_region(const struct bpf_prog *prog,
-@@ -489,27 +492,64 @@ int bpf_get_kallsym(unsigned int symnum,
- 	return ret;
- }
- 
-+static atomic_long_t bpf_jit_current;
-+
-+#if defined(MODULES_VADDR)
-+static int __init bpf_jit_charge_init(void)
++/*
++ * Similar to regular join but it never starts a transaction when none is
++ * running or after waiting for the current one to finish.
++ */
++struct btrfs_trans_handle *btrfs_join_transaction_nostart(struct btrfs_root *root)
 +{
-+	/* Only used as heuristic here to derive limit. */
-+	bpf_jit_limit = min_t(u64, round_up((MODULES_END - MODULES_VADDR) >> 2,
-+					    PAGE_SIZE), INT_MAX);
-+	return 0;
-+}
-+pure_initcall(bpf_jit_charge_init);
-+#endif
-+
-+static int bpf_jit_charge_modmem(u32 pages)
-+{
-+	if (atomic_long_add_return(pages, &bpf_jit_current) >
-+	    (bpf_jit_limit >> PAGE_SHIFT)) {
-+		if (!capable(CAP_SYS_ADMIN)) {
-+			atomic_long_sub(pages, &bpf_jit_current);
-+			return -EPERM;
-+		}
-+	}
-+
-+	return 0;
++	return start_transaction(root, 0, TRANS_JOIN_NOSTART,
++				 BTRFS_RESERVE_NO_FLUSH, true);
 +}
 +
-+static void bpf_jit_uncharge_modmem(u32 pages)
-+{
-+	atomic_long_sub(pages, &bpf_jit_current);
-+}
-+
- struct bpf_binary_header *
- bpf_jit_binary_alloc(unsigned int proglen, u8 **image_ptr,
- 		     unsigned int alignment,
- 		     bpf_jit_fill_hole_t bpf_fill_ill_insns)
- {
- 	struct bpf_binary_header *hdr;
--	unsigned int size, hole, start;
-+	u32 size, hole, start, pages;
+ /*
+  * btrfs_attach_transaction() - catch the running transaction
+  *
+diff --git a/fs/btrfs/transaction.h b/fs/btrfs/transaction.h
+index 4cbb1b55387dc..c1d34cc704722 100644
+--- a/fs/btrfs/transaction.h
++++ b/fs/btrfs/transaction.h
+@@ -97,11 +97,13 @@ struct btrfs_transaction {
+ #define __TRANS_JOIN		(1U << 11)
+ #define __TRANS_JOIN_NOLOCK	(1U << 12)
+ #define __TRANS_DUMMY		(1U << 13)
++#define __TRANS_JOIN_NOSTART	(1U << 14)
  
- 	/* Most of BPF filters are really small, but if some of them
- 	 * fill a page, allow at least 128 extra bytes to insert a
- 	 * random section of illegal instructions.
- 	 */
- 	size = round_up(proglen + sizeof(*hdr) + 128, PAGE_SIZE);
-+	pages = size / PAGE_SIZE;
-+
-+	if (bpf_jit_charge_modmem(pages))
-+		return NULL;
- 	hdr = module_alloc(size);
--	if (hdr == NULL)
-+	if (!hdr) {
-+		bpf_jit_uncharge_modmem(pages);
- 		return NULL;
-+	}
+ #define TRANS_START		(__TRANS_START | __TRANS_FREEZABLE)
+ #define TRANS_ATTACH		(__TRANS_ATTACH)
+ #define TRANS_JOIN		(__TRANS_JOIN | __TRANS_FREEZABLE)
+ #define TRANS_JOIN_NOLOCK	(__TRANS_JOIN_NOLOCK)
++#define TRANS_JOIN_NOSTART	(__TRANS_JOIN_NOSTART)
  
- 	/* Fill space with illegal/arch-dep instructions. */
- 	bpf_fill_ill_insns(hdr, size);
+ #define TRANS_EXTWRITERS	(__TRANS_START | __TRANS_ATTACH)
  
--	hdr->pages = size / PAGE_SIZE;
-+	hdr->pages = pages;
- 	hole = min_t(unsigned int, size - (proglen + sizeof(*hdr)),
- 		     PAGE_SIZE - sizeof(*hdr));
- 	start = (get_random_int() % hole) & ~(alignment - 1);
-@@ -522,7 +562,10 @@ bpf_jit_binary_alloc(unsigned int progle
- 
- void bpf_jit_binary_free(struct bpf_binary_header *hdr)
- {
-+	u32 pages = hdr->pages;
-+
- 	module_memfree(hdr);
-+	bpf_jit_uncharge_modmem(pages);
- }
- 
- /* This symbol is only overridden by archs that have different
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -272,7 +272,6 @@ static int proc_dointvec_minmax_bpf_enab
- 	return ret;
- }
- 
--# ifdef CONFIG_HAVE_EBPF_JIT
- static int
- proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 				    void __user *buffer, size_t *lenp,
-@@ -283,7 +282,6 @@ proc_dointvec_minmax_bpf_restricted(stru
- 
- 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- }
--# endif
- #endif
- 
- static struct ctl_table net_core_table[] = {
-@@ -390,6 +388,14 @@ static struct ctl_table net_core_table[]
- 		.extra2		= &one,
- 	},
- # endif
-+	{
-+		.procname	= "bpf_jit_limit",
-+		.data		= &bpf_jit_limit,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0600,
-+		.proc_handler	= proc_dointvec_minmax_bpf_restricted,
-+		.extra1		= &one,
-+	},
- #endif
- 	{
- 		.procname	= "netdev_tstamp_prequeue",
+@@ -187,6 +189,7 @@ struct btrfs_trans_handle *btrfs_start_transaction_fallback_global_rsv(
+ 					int min_factor);
+ struct btrfs_trans_handle *btrfs_join_transaction(struct btrfs_root *root);
+ struct btrfs_trans_handle *btrfs_join_transaction_nolock(struct btrfs_root *root);
++struct btrfs_trans_handle *btrfs_join_transaction_nostart(struct btrfs_root *root);
+ struct btrfs_trans_handle *btrfs_attach_transaction(struct btrfs_root *root);
+ struct btrfs_trans_handle *btrfs_attach_transaction_barrier(
+ 					struct btrfs_root *root);
+-- 
+2.20.1
+
 
 
