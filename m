@@ -2,87 +2,122 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461CAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02698C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15AB42173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D217D2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732242AbfHVNQW (ORCPT
+        id S1732460AbfHVNSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:16:22 -0400
-Received: from mga12.intel.com ([192.55.52.136]:16964 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727685AbfHVNQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:16:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 06:16:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,416,1559545200"; 
-   d="scan'208";a="196245250"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by fmsmga001.fm.intel.com with ESMTP; 22 Aug 2019 06:16:19 -0700
-Date:   Thu, 22 Aug 2019 21:17:45 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
-        mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        yu.c.zhang@intel.com, alazar@bitdefender.com
-Subject: Re: [PATCH RESEND v4 7/9] KVM: VMX: Handle SPP induced vmexit and
- page fault
-Message-ID: <20190822131745.GA20168@local-michael-cet-test>
-References: <20190814070403.6588-1-weijiang.yang@intel.com>
- <20190814070403.6588-8-weijiang.yang@intel.com>
- <5f6ba406-17c4-a552-2352-2ff50569aac0@redhat.com>
- <fb6cd8b4-eee9-6e58-4047-550811bffd58@redhat.com>
- <20190820134435.GE4828@local-michael-cet-test.sh.intel.com>
+        Thu, 22 Aug 2019 09:18:52 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:40689 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732271AbfHVNSw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 09:18:52 -0400
+Received: from dread.disaster.area (pa49-181-142-13.pa.nsw.optusnet.com.au [49.181.142.13])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 2D8DF361886;
+        Thu, 22 Aug 2019 23:18:47 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i0myB-0002Bq-P1; Thu, 22 Aug 2019 23:17:39 +1000
+Date:   Thu, 22 Aug 2019 23:17:39 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-xfs@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, penguin-kernel@I-love.SAKURA.ne.jp
+Subject: Re: [PATCH 2/3] xfs: add kmem_alloc_io()
+Message-ID: <20190822131739.GB1119@dread.disaster.area>
+References: <20190821083820.11725-3-david@fromorbit.com>
+ <20190821232440.GB24904@infradead.org>
+ <20190822003131.GR1119@dread.disaster.area>
+ <20190822075948.GA31346@infradead.org>
+ <20190822085130.GI2349@hirez.programming.kicks-ass.net>
+ <20190822091057.GK2386@hirez.programming.kicks-ass.net>
+ <20190822101441.GY1119@dread.disaster.area>
+ <ddcdc274-be61-6e40-5a14-a4faa954f090@suse.cz>
+ <20190822120725.GA1119@dread.disaster.area>
+ <ad8037c8-d1af-fb4f-1226-af585df492d3@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820134435.GE4828@local-michael-cet-test.sh.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <ad8037c8-d1af-fb4f-1226-af585df492d3@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0
+        a=pdRIKMFd4+xhzJrg6WzXNA==:117 a=pdRIKMFd4+xhzJrg6WzXNA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=0gar0xGGpDVc-5Bg6r8A:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 09:44:35PM +0800, Yang Weijiang wrote:
-> On Mon, Aug 19, 2019 at 05:04:23PM +0200, Paolo Bonzini wrote:
-> > On 19/08/19 16:43, Paolo Bonzini wrote:
-> > >> +			/*
-> > >> +			 * Record write protect fault caused by
-> > >> +			 * Sub-page Protection, let VMI decide
-> > >> +			 * the next step.
-> > >> +			 */
-> > >> +			if (spte & PT_SPP_MASK) {
-> > > Should this be "if (spte & PT_WRITABLE_MASK)" instead?  That is, if the
-> > > page is already writable, the fault must be an SPP fault.
+On Thu, Aug 22, 2019 at 02:19:04PM +0200, Vlastimil Babka wrote:
+> On 8/22/19 2:07 PM, Dave Chinner wrote:
+> > On Thu, Aug 22, 2019 at 01:14:30PM +0200, Vlastimil Babka wrote:
 > > 
-> > Hmm, no I forgot how SPP works; still, this is *not* correct.  For
-> > example, if SPP marks part of a page as read-write, but KVM wants to
-> > write-protect the whole page for access or dirty tracking, that should
-> > not cause an SPP exit.
+> > No, the problem is this (using kmalloc as a general term for
+> > allocation, whether it be kmalloc, kmem_cache_alloc, alloc_page, etc)
 > > 
-> > So I think that when KVM wants to write-protect the whole page
-> > (wrprot_ad_disabled_spte) it must also clear PT_SPP_MASK; for example it
-> > could save it in bit 53 (PT64_SECOND_AVAIL_BITS_SHIFT + 1).  If the
-> > saved bit is set, fast_page_fault must then set PT_SPP_MASK instead of
-> > PT_WRITABLE_MASK.
-> Sure, will change the processing flow.
+> >    some random kernel code
+> >     kmalloc(GFP_KERNEL)
+> >      reclaim
+> >      PF_MEMALLOC
+> >      shrink_slab
+> >       xfs_inode_shrink
+> >        XFS_ILOCK
+> >         xfs_buf_allocate_memory()
+> >          kmalloc(GFP_KERNEL)
+> > 
+> > And so locks on inodes in reclaim are seen below reclaim. Then
+> > somewhere else we have:
+> > 
+> >    some high level read-only xfs code like readdir
+> >     XFS_ILOCK
+> >      xfs_buf_allocate_memory()
+> >       kmalloc(GFP_KERNEL)
+> >        reclaim
+> > 
+> > And this one throws false positive lockdep warnings because we
+> > called into reclaim with XFS_ILOCK held and GFP_KERNEL alloc
 > 
-> > On re-entry this will cause an SPP vmexit;
-> > fast_page_fault should never trigger an SPP userspace exit on its own,
-> > all the SPP handling should go through handle_spp.
- Hi, Paolo,
- According to the latest SDM(28.2.4), handle_spp only handles SPPT miss and SPPT
- misconfig(exit_reason==66), subpage write access violation causes EPT violation,
- so have to deal with the two cases into handlers.
-> > Paolo
+> OK, and what exactly makes this positive a false one? Why can't it continue like
+> the first example where reclaim leads to another XFS_ILOCK, thus deadlock?
+
+Because above reclaim we only have operations being done on
+referenced inodes, and below reclaim we only have unreferenced
+inodes. We never lock the same inode both above and below reclaim
+at the same time.
+
+IOWs, an operation above reclaim cannot see, access or lock
+unreferenced inodes, except in inode write clustering, and that uses
+trylocks so cannot deadlock with reclaim.
+
+An operation below reclaim cannot see, access or lock referenced
+inodes except during inode write clustering, and that uses trylocks
+so cannot deadlock with code above reclaim.
+
+FWIW, I'm trying to make the inode writeback clustering go away from
+reclaim at the moment, so even that possibility is going away soon.
+That will change everything to trylocks in reclaim context, so
+lockdep is going to stop tracking it entirely.
+
+Hmmm - maybe we're getting to the point where we actually
+don't need GFP_NOFS/PF_MEMALLOC_NOFS at all in XFS anymore.....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
