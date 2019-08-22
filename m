@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77F2C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD108C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B268233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D812341F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493739;
-	bh=Qy8p0t2orEtpqAiJVyCKiKQTIy0DM+ggYlbtmfpPT8E=;
+	s=default; t=1566493744;
+	bh=0/I9yaWwLfbVKWZtR4EeIsv5AWU4gyl+tYZMLtkaT/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=viVc08YYREMMnEpI39dX/TAo+WPOnhZswL/JVh9cR1RI1oGMILPvqI/byK8nXlBNz
-	 /PH43azsehtybq9TWsSV4UfRvKcozcBjKQE3eRih4FonOM2IucctFrDA7QpjcJv206
-	 3Kz3kNYhUXTd+RIkqtxVahW97qfW8wC++VHQ2+pw=
+	b=Gc1o3TtlOAwKzMiNxcAmbgA++Mnajk6nt9hTHmTMH7ivlaPV9lIHzXFHB0YErroQO
+	 SIv89BBGD0SP2Ir3HWhC79ptHjauSK4E0VMAt4Zcpo9LkpmVDGYKwG+xcDIqRC3E78
+	 iF+ArhptyhjhxuBZJLN7oIXty3crtoPeergitCiI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390597AbfHVRI6 (ORCPT
+        id S2390646AbfHVRJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58752 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388965AbfHVRIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:50 -0400
+        id S2390603AbfHVRI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:59 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9731C23426;
-        Thu, 22 Aug 2019 17:08:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBD0223404;
+        Thu, 22 Aug 2019 17:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493729;
-        bh=Qy8p0t2orEtpqAiJVyCKiKQTIy0DM+ggYlbtmfpPT8E=;
+        s=default; t=1566493739;
+        bh=0/I9yaWwLfbVKWZtR4EeIsv5AWU4gyl+tYZMLtkaT/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVK4qGGW6m3TcEtDSRDFJfyPFnk+F6N7FGTHJDV93/rodUeiOgd5GSf3H289g0khL
-         HCikcTUX2oRvGTtP/RyD/0+mlEo+qKDy5VsGVvdNwyMMV2fRDkb0MWAjlApZFV68Ux
-         VJMhawNIPFeyB8lcPtc16K7YaIz50istqG13r5Vs=
+        b=eh/T2zu4SsSPhJkCBuz6UiNEY3rNnaOdYE4LxDVjt5SZp76DGvwU7zC17/FtImI5z
+         bdBffyGuJA9fGDN9ZeseGpznp8OfB/dN4h2jAg6TzaneRCHuI4PN+ZNQxUA3+0hvjt
+         SOpXNnNgED0b8i6OIwpo6PEXJ45pajWlYlqGQCBE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Chunming Zhou <david1.zhou@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Inki Dae <inki.dae@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 065/135] drm/amdgpu: fix error handling in amdgpu_cs_process_fence_dep
-Date:   Thu, 22 Aug 2019 13:07:01 -0400
-Message-Id: <20190822170811.13303-66-sashal@kernel.org>
+Subject: [PATCH 5.2 083/135] drm/exynos: fix missing decrement of retry counter
+Date:   Thu, 22 Aug 2019 13:07:19 -0400
+Message-Id: <20190822170811.13303-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.2.y
@@ -67,66 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 67d0859e2758ef992fd32499747ce4b1038a63c0 ]
+[ Upstream commit 1bbbab097a05276e312dd2462791d32b21ceb1ee ]
 
-We always need to drop the ctx reference and should check
-for errors first and then dereference the fence pointer.
+Currently the retry counter is not being decremented, leading to a
+potential infinite spin if the scalar_reads don't change state.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Addresses-Coverity: ("Infinite loop")
+Fixes: 280e54c9f614 ("drm/exynos: scaler: Reset hardware before starting the operation")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Inki Dae <inki.dae@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/exynos/exynos_drm_scaler.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-index 2f6239b6be6fe..fe028561dc0e6 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cs.c
-@@ -1093,29 +1093,27 @@ static int amdgpu_cs_process_fence_dep(struct amdgpu_cs_parser *p,
- 			return r;
- 		}
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_scaler.c b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
+index ec9c1b7d31033..8989f8af716b7 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_scaler.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
+@@ -94,12 +94,12 @@ static inline int scaler_reset(struct scaler_context *scaler)
+ 	scaler_write(SCALER_CFG_SOFT_RESET, SCALER_CFG);
+ 	do {
+ 		cpu_relax();
+-	} while (retry > 1 &&
++	} while (--retry > 1 &&
+ 		 scaler_read(SCALER_CFG) & SCALER_CFG_SOFT_RESET);
+ 	do {
+ 		cpu_relax();
+ 		scaler_write(1, SCALER_INT_EN);
+-	} while (retry > 0 && scaler_read(SCALER_INT_EN) != 1);
++	} while (--retry > 0 && scaler_read(SCALER_INT_EN) != 1);
  
--		fence = amdgpu_ctx_get_fence(ctx, entity,
--					     deps[i].handle);
-+		fence = amdgpu_ctx_get_fence(ctx, entity, deps[i].handle);
-+		amdgpu_ctx_put(ctx);
-+
-+		if (IS_ERR(fence))
-+			return PTR_ERR(fence);
-+		else if (!fence)
-+			continue;
- 
- 		if (chunk->chunk_id == AMDGPU_CHUNK_ID_SCHEDULED_DEPENDENCIES) {
--			struct drm_sched_fence *s_fence = to_drm_sched_fence(fence);
-+			struct drm_sched_fence *s_fence;
- 			struct dma_fence *old = fence;
- 
-+			s_fence = to_drm_sched_fence(fence);
- 			fence = dma_fence_get(&s_fence->scheduled);
- 			dma_fence_put(old);
- 		}
- 
--		if (IS_ERR(fence)) {
--			r = PTR_ERR(fence);
--			amdgpu_ctx_put(ctx);
-+		r = amdgpu_sync_fence(p->adev, &p->job->sync, fence, true);
-+		dma_fence_put(fence);
-+		if (r)
- 			return r;
--		} else if (fence) {
--			r = amdgpu_sync_fence(p->adev, &p->job->sync, fence,
--					true);
--			dma_fence_put(fence);
--			amdgpu_ctx_put(ctx);
--			if (r)
--				return r;
--		}
- 	}
- 	return 0;
+ 	return retry ? 0 : -EIO;
  }
 -- 
 2.20.1
