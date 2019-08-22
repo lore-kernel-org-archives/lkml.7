@@ -2,228 +2,255 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E956C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3A9C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2550320870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E7F2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="TVt3XxUN"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="hJut2qKE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387431AbfHVMTW (ORCPT
+        id S2387471AbfHVMTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:19:22 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:62393 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbfHVMTW (ORCPT
+        Thu, 22 Aug 2019 08:19:41 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42868 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731976AbfHVMTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:19:22 -0400
+        Thu, 22 Aug 2019 08:19:40 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b16so5197965wrq.9
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 05:19:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1566476362; x=1598012362;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=NUsQatsxKYNB87527GnfXFNToYtVT+w6m283v7nP9NI=;
-  b=TVt3XxUNDp7jkPL9muhbDWu3oWJQwL3RfjgrzZpJ99yIbmngB7lgCd6k
-   kuRxwUk9J+W4DdGEnpZR49oU/VJLL2u/YHdkm7f3VwA0DgfYHlTuVO86O
-   3N37DYGoLvjx1z4xDNWt9yUUGdwKJJRNmqz6YLvDfRseAwwImVvOrDdsU
-   o=;
-X-IronPort-AV: E=Sophos;i="5.64,416,1559520000"; 
-   d="scan'208";a="822655259"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 22 Aug 2019 12:19:21 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 8C1431A73D5;
-        Thu, 22 Aug 2019 12:19:20 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 22 Aug 2019 12:19:19 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.161.67) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 22 Aug 2019 12:19:15 +0000
-Subject: Re: [PATCH v5 11/20] RISC-V: KVM: Handle WFI exits for VCPU
-To:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=23esRf+qutJ/4Zjmjr2DsaAEcc0FSRnxzzaj4f2NFxA=;
+        b=hJut2qKEkjWlJMyeu6kEMusHO5uh0ABejYZzWvr2BXiCgsjRFTUrTFacrJYZcExTLV
+         sOvP/iIp+Vr13p3aJDJBRcvSp0MpCUybvRA6ZdEAmNgp0ZK32Ob9xip9D5MdXqLkr1+x
+         9rHe4mK9NNQrh3kYKR2u1St3mWeUnR7NmXYMtGcWhAF3MFJUghzrHCkz9qJNhkxPfl7y
+         3V0ooz+UKYBIBgvPpPtUWYa6JdxpGEourKYm5Bn0QFO3CMRpDxTqMz46zDnSOGi5vbqd
+         xCVBlQLw3qHQ5EFKGf8cKxWSTPzyxxUxV4CZmOoSyOwmUusjTXM9aSmkAPWs/EqCkLt4
+         8tiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=23esRf+qutJ/4Zjmjr2DsaAEcc0FSRnxzzaj4f2NFxA=;
+        b=gu8S21ov4fHq2z6kYp8vE8Hv6POWlXB7kFD8cgQSQuLDOp7o9/eeSqnMWKRywrXEVL
+         F2x2QcloTt85dYQ2pDjYoJi6O9OCOCJRd1+hala+L07oRA4pgGYvIF39Q+ELJ9hjXqrP
+         +Ft8RNBw2htKZr/6eO8OnKeUIiTVrE+DizonPfYQC7X+HaDvPEpn6F/DufClD2AJIj5Z
+         XwlFOUX0yCoCTQOeoYraZ7WmUyAe4FxCJ3MWvezoO0MDgqB03+xAH1EPO2ajkfg3XCvz
+         ywndOFKb8wvAGxgIxnOd17qKwnAyClwqBwqfbbhvqGIWAtIY/n9S46c0bVjLTX56o1bk
+         NNhQ==
+X-Gm-Message-State: APjAAAXakhoLx/ltAt2G/GFSP0ioQeShkFMDWA/P5vFx4oi0p+dppWQt
+        CEdpLbS7WYUTdbhX3zl8sxzOfQ==
+X-Google-Smtp-Source: APXvYqz/DpUn+PnTGTXshmgqhmY60Kw+P7T4S7qlIEEW4/LuqC77g22f4ieCvJdEAJh0fO42JfSnRw==
+X-Received: by 2002:adf:e708:: with SMTP id c8mr47467734wrm.25.1566476378070;
+        Thu, 22 Aug 2019 05:19:38 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id l14sm38643774wrn.42.2019.08.22.05.19.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 05:19:37 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 14:19:36 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Cornelia Huck <cohuck@redhat.com>,
         "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190822084131.114764-1-anup.patel@wdc.com>
- <20190822084131.114764-12-anup.patel@wdc.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <29b8f7c6-4b9d-91fc-61e7-82ecfd26ff88@amazon.com>
-Date:   Thu, 22 Aug 2019 14:19:12 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        cjia <cjia@nvidia.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+Message-ID: <20190822121936.GC2276@nanopsycho.orion>
+References: <20190820222051.7aeafb69@x1.home>
+ <AM0PR05MB48664CDF05C3D02F9441440DD1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <20190820225722.237a57d2@x1.home>
+ <AM0PR05MB4866AE8FC4AA3CC24B08B326D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <20190820232622.164962d3@x1.home>
+ <AM0PR05MB4866437FAA63C447CACCD7E5D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <20190822092903.GA2276@nanopsycho.orion>
+ <AM0PR05MB4866A20F831A5D42E6C79EFED1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
+ <20190822095823.GB2276@nanopsycho.orion>
+ <AM0PR05MB4866144FD76C302D04DA04B9D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190822084131.114764-12-anup.patel@wdc.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.161.67]
-X-ClientProxiedBy: EX13D02UWC001.ant.amazon.com (10.43.162.243) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR05MB4866144FD76C302D04DA04B9D1A50@AM0PR05MB4866.eurprd05.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.08.19 10:45, Anup Patel wrote:
-> We get illegal instruction trap whenever Guest/VM executes WFI
-> instruction.
-> 
-> This patch handles WFI trap by blocking the trapped VCPU using
-> kvm_vcpu_block() API. The blocked VCPU will be automatically
-> resumed whenever a VCPU interrupt is injected from user-space
-> or from in-kernel IRQCHIP emulation.
-> 
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/riscv/kvm/vcpu_exit.c | 88 ++++++++++++++++++++++++++++++++++++++
->   1 file changed, 88 insertions(+)
-> 
-> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-> index efc06198c259..fbc04fe335ad 100644
-> --- a/arch/riscv/kvm/vcpu_exit.c
-> +++ b/arch/riscv/kvm/vcpu_exit.c
-> @@ -12,6 +12,9 @@
->   #include <linux/kvm_host.h>
->   #include <asm/csr.h>
->   
-> +#define INSN_MASK_WFI		0xffffff00
-> +#define INSN_MATCH_WFI		0x10500000
-> +
->   #define INSN_MATCH_LB		0x3
->   #define INSN_MASK_LB		0x707f
->   #define INSN_MATCH_LH		0x1003
-> @@ -179,6 +182,87 @@ static ulong get_insn(struct kvm_vcpu *vcpu)
->   	return val;
->   }
->   
-> +typedef int (*illegal_insn_func)(struct kvm_vcpu *vcpu,
-> +				 struct kvm_run *run,
-> +				 ulong insn);
-> +
-> +static int truly_illegal_insn(struct kvm_vcpu *vcpu,
-> +			      struct kvm_run *run,
-> +			      ulong insn)
-> +{
-> +	/* TODO: Redirect trap to Guest VCPU */
-> +	return -ENOTSUPP;
-> +}
-> +
-> +static int system_opcode_insn(struct kvm_vcpu *vcpu,
-> +			      struct kvm_run *run,
-> +			      ulong insn)
-> +{
-> +	if ((insn & INSN_MASK_WFI) == INSN_MATCH_WFI) {
-> +		vcpu->stat.wfi_exit_stat++;
-> +		if (!kvm_arch_vcpu_runnable(vcpu)) {
-> +			srcu_read_unlock(&vcpu->kvm->srcu, vcpu->arch.srcu_idx);
-> +			kvm_vcpu_block(vcpu);
-> +			vcpu->arch.srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
-> +			kvm_clear_request(KVM_REQ_UNHALT, vcpu);
-> +		}
-> +		vcpu->arch.guest_context.sepc += INSN_LEN(insn);
-> +		return 1;
-> +	}
-> +
-> +	return truly_illegal_insn(vcpu, run, insn);
-> +}
-> +
-> +static illegal_insn_func illegal_insn_table[32] = {
+Thu, Aug 22, 2019 at 12:04:02PM CEST, parav@mellanox.com wrote:
+>
+>
+>> -----Original Message-----
+>> From: Jiri Pirko <jiri@resnulli.us>
+>> Sent: Thursday, August 22, 2019 3:28 PM
+>> To: Parav Pandit <parav@mellanox.com>
+>> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri Pirko
+>> <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>; Kirti
+>> Wankhede <kwankhede@nvidia.com>; Cornelia Huck <cohuck@redhat.com>;
+>> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia <cjia@nvidia.com>;
+>> netdev@vger.kernel.org
+>> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+>> 
+>> Thu, Aug 22, 2019 at 11:42:13AM CEST, parav@mellanox.com wrote:
+>> >
+>> >
+>> >> -----Original Message-----
+>> >> From: Jiri Pirko <jiri@resnulli.us>
+>> >> Sent: Thursday, August 22, 2019 2:59 PM
+>> >> To: Parav Pandit <parav@mellanox.com>
+>> >> Cc: Alex Williamson <alex.williamson@redhat.com>; Jiri Pirko
+>> >> <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>; Kirti
+>> >> Wankhede <kwankhede@nvidia.com>; Cornelia Huck
+>> <cohuck@redhat.com>;
+>> >> kvm@vger.kernel.org; linux-kernel@vger.kernel.org; cjia
+>> >> <cjia@nvidia.com>; netdev@vger.kernel.org
+>> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+>> >>
+>> >> Wed, Aug 21, 2019 at 08:23:17AM CEST, parav@mellanox.com wrote:
+>> >> >
+>> >> >
+>> >> >> -----Original Message-----
+>> >> >> From: Alex Williamson <alex.williamson@redhat.com>
+>> >> >> Sent: Wednesday, August 21, 2019 10:56 AM
+>> >> >> To: Parav Pandit <parav@mellanox.com>
+>> >> >> Cc: Jiri Pirko <jiri@mellanox.com>; David S . Miller
+>> >> >> <davem@davemloft.net>; Kirti Wankhede <kwankhede@nvidia.com>;
+>> >> >> Cornelia Huck <cohuck@redhat.com>; kvm@vger.kernel.org;
+>> >> >> linux-kernel@vger.kernel.org; cjia <cjia@nvidia.com>;
+>> >> >> netdev@vger.kernel.org
+>> >> >> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
+>> >> >>
+>> >> >> > > > > Just an example of the alias, not proposing how it's set.
+>> >> >> > > > > In fact, proposing that the user does not set it,
+>> >> >> > > > > mdev-core provides one
+>> >> >> > > automatically.
+>> >> >> > > > >
+>> >> >> > > > > > > Since there seems to be some prefix overhead, as I ask
+>> >> >> > > > > > > about above in how many characters we actually have to
+>> >> >> > > > > > > work with in IFNAMESZ, maybe we start with 8
+>> >> >> > > > > > > characters (matching your "index" namespace) and
+>> >> >> > > > > > > expand as necessary for
+>> >> disambiguation.
+>> >> >> > > > > > > If we can eliminate overhead in IFNAMESZ, let's start with 12.
+>> >> >> > > > > > > Thanks,
+>> >> >> > > > > > >
+>> >> >> > > > > > If user is going to choose the alias, why does it have
+>> >> >> > > > > > to be limited to
+>> >> >> sha1?
+>> >> >> > > > > > Or you just told it as an example?
+>> >> >> > > > > >
+>> >> >> > > > > > It can be an alpha-numeric string.
+>> >> >> > > > >
+>> >> >> > > > > No, I'm proposing a different solution where mdev-core
+>> >> >> > > > > creates an alias based on an abbreviated sha1.  The user
+>> >> >> > > > > does not provide the
+>> >> >> alias.
+>> >> >> > > > >
+>> >> >> > > > > > Instead of mdev imposing number of characters on the
+>> >> >> > > > > > alias, it should be best
+>> >> >> > > > > left to the user.
+>> >> >> > > > > > Because in future if netdev improves on the naming
+>> >> >> > > > > > scheme, mdev will be
+>> >> >> > > > > limiting it, which is not right.
+>> >> >> > > > > > So not restricting alias size seems right to me.
+>> >> >> > > > > > User configuring mdev for networking devices in a given
+>> >> >> > > > > > kernel knows what
+>> >> >> > > > > user is doing.
+>> >> >> > > > > > So user can choose alias name size as it finds suitable.
+>> >> >> > > > >
+>> >> >> > > > > That's not what I'm proposing, please read again.  Thanks,
+>> >> >> > > >
+>> >> >> > > > I understood your point. But mdev doesn't know how user is
+>> >> >> > > > going to use
+>> >> >> > > udev/systemd to name the netdev.
+>> >> >> > > > So even if mdev chose to pick 12 characters, it could result in
+>> collision.
+>> >> >> > > > Hence the proposal to provide the alias by the user, as user
+>> >> >> > > > know the best
+>> >> >> > > policy for its use case in the environment its using.
+>> >> >> > > > So 12 character sha1 method will still work by user.
+>> >> >> > >
+>> >> >> > > Haven't you already provided examples where certain drivers or
+>> >> >> > > subsystems have unique netdev prefixes?  If mdev provides a
+>> >> >> > > unique alias within the subsystem, couldn't we simply define a
+>> >> >> > > netdev prefix for the mdev subsystem and avoid all other
+>> >> >> > > collisions?  I'm not in favor of the user providing both a
+>> >> >> > > uuid and an alias/instance.  Thanks,
+>> >> >> > >
+>> >> >> > For a given prefix, say ens2f0, can two UUID->sha1 first 9
+>> >> >> > characters have
+>> >> >> collision?
+>> >> >>
+>> >> >> I think it would be a mistake to waste so many chars on a prefix,
+>> >> >> but
+>> >> >> 9 characters of sha1 likely wouldn't have a collision before we
+>> >> >> have 10s of thousands of devices.  Thanks,
+>> >> >>
+>> >> >> Alex
+>> >> >
+>> >> >Jiri, Dave,
+>> >> >Are you ok with it for devlink/netdev part?
+>> >> >Mdev core will create an alias from a UUID.
+>> >> >
+>> >> >This will be supplied during devlink port attr set such as,
+>> >> >
+>> >> >devlink_port_attrs_mdev_set(struct devlink_port *port, const char
+>> >> >*mdev_alias);
+>> >> >
+>> >> >This alias is used to generate representor netdev's phys_port_name.
+>> >> >This alias from the mdev device's sysfs will be used by the
+>> >> >udev/systemd to
+>> >> generate predicable netdev's name.
+>> >> >Example: enm<mdev_alias_first_12_chars>
+>> >>
+>> >> What happens in unlikely case of 2 UUIDs collide?
+>> >>
+>> >Since users sees two devices with same phys_port_name, user should destroy
+>> recently created mdev and recreate mdev with different UUID?
+>> 
+>> Driver should make sure phys port name wont collide, 
+>So when mdev creation is initiated, mdev core calculates the alias and if there is any other mdev with same alias exist, it returns -EEXIST error before progressing further.
+>This way user will get to know upfront in event of collision before the mdev device gets created.
+>How about that?
 
-Every time I did experiments on PowerPC with indirect tables like this 
-over switch() in C, the switch() code won. CPUs are pretty good at 
-predicting branches. Predicting indirect jumps however, they are 
-terrible at.
+Sounds fine to me. Now the question is how many chars do we want to
+have.
 
-So unless you consider the jump table more readable / maintainable, I 
-would suggest to use a simple switch() statement. It will be faster and 
-smaller.
-
-
-Alex
-
-
-> +	truly_illegal_insn, /* 0 */
-> +	truly_illegal_insn, /* 1 */
-> +	truly_illegal_insn, /* 2 */
-> +	truly_illegal_insn, /* 3 */
-> +	truly_illegal_insn, /* 4 */
-> +	truly_illegal_insn, /* 5 */
-> +	truly_illegal_insn, /* 6 */
-> +	truly_illegal_insn, /* 7 */
-> +	truly_illegal_insn, /* 8 */
-> +	truly_illegal_insn, /* 9 */
-> +	truly_illegal_insn, /* 10 */
-> +	truly_illegal_insn, /* 11 */
-> +	truly_illegal_insn, /* 12 */
-> +	truly_illegal_insn, /* 13 */
-> +	truly_illegal_insn, /* 14 */
-> +	truly_illegal_insn, /* 15 */
-> +	truly_illegal_insn, /* 16 */
-> +	truly_illegal_insn, /* 17 */
-> +	truly_illegal_insn, /* 18 */
-> +	truly_illegal_insn, /* 19 */
-> +	truly_illegal_insn, /* 20 */
-> +	truly_illegal_insn, /* 21 */
-> +	truly_illegal_insn, /* 22 */
-> +	truly_illegal_insn, /* 23 */
-> +	truly_illegal_insn, /* 24 */
-> +	truly_illegal_insn, /* 25 */
-> +	truly_illegal_insn, /* 26 */
-> +	truly_illegal_insn, /* 27 */
-> +	system_opcode_insn, /* 28 */
-> +	truly_illegal_insn, /* 29 */
-> +	truly_illegal_insn, /* 30 */
-> +	truly_illegal_insn  /* 31 */
-> +};
-> +
-> +static int illegal_inst_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
-> +			      unsigned long stval)
-> +{
-> +	ulong insn = stval;
-> +
-> +	if (unlikely((insn & 3) != 3)) {
-> +		if (insn == 0)
-> +			insn = get_insn(vcpu);
-> +		if ((insn & 3) != 3)
-> +			return truly_illegal_insn(vcpu, run, insn);
-> +	}
-> +
-> +	return illegal_insn_table[(insn & 0x7c) >> 2](vcpu, run, insn);
-> +}
-> +
->   static int emulate_load(struct kvm_vcpu *vcpu, struct kvm_run *run,
->   			unsigned long fault_addr)
->   {
-> @@ -439,6 +523,10 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
->   	ret = -EFAULT;
->   	run->exit_reason = KVM_EXIT_UNKNOWN;
->   	switch (scause) {
-> +	case EXC_INST_ILLEGAL:
-> +		if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
-> +			ret = illegal_inst_fault(vcpu, run, stval);
-> +		break;
->   	case EXC_INST_PAGE_FAULT:
->   	case EXC_LOAD_PAGE_FAULT:
->   	case EXC_STORE_PAGE_FAULT:
-> 
-
+>
+>
+>> in this case that it does
+>> not provide 2 same attrs for 2 different ports.
+>> Hmm, so the order of creation matters. That is not good.
+>> 
+>> >>
+>> >> >I took Ethernet mdev as an example.
+>> >> >New prefix 'm' stands for mediated device.
+>> >> >Remaining 12 characters are first 12 chars of the mdev alias.
+>> >>
+>> >> Does this resolve the identification of devlink port representor?
+>> >Not sure if I understood your question correctly, attemping to answer below.
+>> >phys_port_name of devlink port is defined by the first 12 characters of mdev
+>> alias.
+>> >> I assume you want to use the same 12(or so) chars, don't you?
+>> >Mdev's netdev will also use the same mdev alias from the sysfs to rename
+>> netdev name from ethX to enm<mdev_alias>, where en=Etherenet, m=mdev.
+>> >
+>> >So yes, same 12 characters are use for mdev's netdev and mdev devlink port's
+>> phys_port_name.
+>> >
+>> >Is that what are you asking?
+>> 
+>> Yes. Then you have 3 chars to handle the rest of the name (pci, pf)...
