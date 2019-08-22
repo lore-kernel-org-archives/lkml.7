@@ -2,141 +2,126 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBD0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7F4C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1763233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D43A2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="YZYTmMTT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RPXiTZyR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389519AbfHVPSr (ORCPT
+        id S2389527AbfHVPTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:18:47 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43675 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732532AbfHVPSr (ORCPT
+        Thu, 22 Aug 2019 11:19:19 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39794 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727874AbfHVPTS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:18:47 -0400
-Received: by mail-io1-f65.google.com with SMTP id 18so12540034ioe.10
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:18:47 -0700 (PDT)
+        Thu, 22 Aug 2019 11:19:18 -0400
+Received: by mail-qt1-f196.google.com with SMTP id l9so8129965qtu.6
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:19:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ucbMC5erml7tFi/vSKgs7cW+rQvFN8BeI/aLj2HiGCA=;
-        b=YZYTmMTTAUoOOm7zx6b8VkiKIgXdfcyNMBNzJf1Tp1aK74EHJ6WpyOPgC8F7mErT9y
-         CdjdKGw80pxYRkvnrKtEbdPeKVcUxu46hvc/UoO0h5Id0XFLumdbv99KM/mujNRftI6p
-         Qvj4MPl2Usvr1Wm5DhDc4gwPnXB2xFvT4IJvx/Ygq8gTldqRtXqgxJ9W68Vrd3O8AA/a
-         2DlkVF13FqTrH13tM2JPhppfC+YzRfUmpB7HEJWNIi+6RF6byJeicuzlWa6cEYCW4N3p
-         F8xoBxrOBkG2uUCT0Hyas8VCHzh1gidg+7iaSJ8qn0XFKig9EwRQ4wPAjvLBEhEGaIZ8
-         C87Q==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Mf7WlHglYJOzVxlRAETexTf7b5FZsaOV3O7fbNGdKwk=;
+        b=RPXiTZyRinsAKcVVnkM055Rx2dB0XOroizYdCvBXJjCx0SFiaxk3sH7jrshKYKnsi+
+         3zaG6L4ga6wqsIHcPnNDY1v7SY6R65s+wq5Fv8NrgNLQMlm5jGJZkUiAXjS3lRPW0Evy
+         mfjUh4zE1N+K8idKHqQYL+mcIm7OAf5FEFAfyJ288YqCiGmkAo5r3PDZsbUDEl99qQR/
+         /n1InykkJNeDR6Bx78mR52BYfn0e6/LSn/YvpqIajKaJ0YKxYaGBGw8xlJ0ok2l5SKBW
+         hWELG6mz/3QzsQNNumg++FDP+8issKFggmEuojYWuhgG4zuKCIl3xCs64Dp4Vq/dnbp1
+         +ZNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ucbMC5erml7tFi/vSKgs7cW+rQvFN8BeI/aLj2HiGCA=;
-        b=PMs2ppS+PFtg14oKWfg8/btY/OWGrQUQeS1pmIfCPTS2bxKODErDbfhECT9FbH9NPo
-         kSQlipNeK6KDVob1c0c7oTrw3KgA4UaUEUwxgAQp7YwF7p2MbkUD85GXOf+HtZCObury
-         xEZjm1SRpvUsQyJnMZL6M5k0HOQKM8lZwBGkLFlKfvkKIIcRQmSFPPIDE7rGHjf8thxv
-         hEwuTxm+3GUsoylBAqXQ5ukIfXCydZI7H0WBmRd7naq5xgm0Fxtv2z9jkVS1P5PuENp2
-         qDfLUOSZjklq3sbcYOqNm2C6pXtsJPdkqbO7azjbjdyr1/xlM2VoOb4ewYXdwh7t+3aD
-         v45w==
-X-Gm-Message-State: APjAAAVWO4VXhUx/LCba1cdWSIpQu4xUCPwjmAhOr8cEe3x170XRGPQ+
-        bNCmHbHENZZibAoFP//ZnGDZ5ZFqxTj9uRzR2ktAhA==
-X-Google-Smtp-Source: APXvYqzSxaxcqctxZa5RITBEENPgzu/1OGXUYLJbWIF/dhksERQTojjrUppwO1XqQ1ZQFpYDc5ZJhHQMitFVWYudvZk=
-X-Received: by 2002:a02:ba91:: with SMTP id g17mr15990319jao.11.1566487126538;
- Thu, 22 Aug 2019 08:18:46 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Mf7WlHglYJOzVxlRAETexTf7b5FZsaOV3O7fbNGdKwk=;
+        b=jWY4ITAyK1zYKC1KKD2GcjTOiPqh5cGGoXWLdpr7nMFxi3ttXZFZX30lmEZZjekUgu
+         41r9em+kmN5xv6Qua8geqR+Tbl7hElPuuWd/XUUImldHEpL71ssB7D2F7QRHIeGxekzH
+         kcNIfE97rmEYB6KCSffBJrzFEku4gihFYIcemMjYGV8CWLIRo6jSOa8BHFpMQjHd/Jkv
+         7h8etovvY4O1a/iDPvexJd8nN55HH31/SMaxr/JACKPIok0QkorlUMU49XCvfyCE00i1
+         AthZNKlcfVFOZgyfPv+lt+Af1thJ7tTqFsJHsNsVgyjdLGRTJ2y3f762ShLwB/3WDDkc
+         7K9g==
+X-Gm-Message-State: APjAAAUr3qL9eaXEEebZ/2NA8Hd2aL2HtnUtsmDSolD/FHNEA+kIzqaj
+        xqrUJAwKAuHPAbMP/aHokLY=
+X-Google-Smtp-Source: APXvYqwvqWdedQh8TLdCEWjT4y78ICqzV/83/BAw74OMc/Dix033fzaVrXg4349PIyDcCbhhgVeekw==
+X-Received: by 2002:aed:3e96:: with SMTP id n22mr42807qtf.247.1566487157884;
+        Thu, 22 Aug 2019 08:19:17 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id i25sm11622248qki.49.2019.08.22.08.19.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 08:19:17 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4D01240340; Thu, 22 Aug 2019 12:19:15 -0300 (-03)
+Date:   Thu, 22 Aug 2019 12:19:15 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        Nageswara R Sastry <nasastry@in.ibm.com>
+Subject: Re: [PATCH] perf c2c: Fix report with offline cpus
+Message-ID: <20190822151915.GC29569@kernel.org>
+References: <20190822085045.25108-1-ravi.bangoria@linux.ibm.com>
+ <20190822101026.GE28439@krava>
 MIME-Version: 1.0
-References: <20190821001445.32114-1-echron@arista.com> <alpine.DEB.2.21.1908202024300.141379@chino.kir.corp.google.com>
- <20190821064732.GW3111@dhcp22.suse.cz> <alpine.DEB.2.21.1908210017320.177871@chino.kir.corp.google.com>
-In-Reply-To: <alpine.DEB.2.21.1908210017320.177871@chino.kir.corp.google.com>
-From:   Edward Chron <echron@arista.com>
-Date:   Thu, 22 Aug 2019 08:18:35 -0700
-Message-ID: <CAM3twVQO6DPND39RLyMGWc7FGVUkWa4j-yXsa8sfLTbiGpL+cw@mail.gmail.com>
-Subject: Re: [PATCH] mm/oom: Add oom_score_adj value to oom Killed process message
-To:     David Rientjes <rientjes@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Ivan Delalande <colona@arista.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822101026.GE28439@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 12:19 AM David Rientjes <rientjes@google.com> wrote:
->
-> On Wed, 21 Aug 2019, Michal Hocko wrote:
->
-> > > vm.oom_dump_tasks is pretty useful, however, so it's curious why you
-> > > haven't left it enabled :/
-> >
-> > Because it generates a lot of output potentially. Think of a workload
-> > with too many tasks which is not uncommon.
->
-> Probably better to always print all the info for the victim so we don't
-> need to duplicate everything between dump_tasks() and dump_oom_summary().
->
-> Edward, how about this?
+Em Thu, Aug 22, 2019 at 12:10:26PM +0200, Jiri Olsa escreveu:
+> On Thu, Aug 22, 2019 at 02:20:45PM +0530, Ravi Bangoria wrote:
+> > If c2c is recorded on a machine where any cpus are offline,
+> > 'perf c2c report' throws an error "node/cpu topology bugFailed
+> > setup nodes". It fails because while preparing node-cpu mapping
+> > we don't consider offline cpus.
+> > 
+> > Fixes: 1e181b92a2da ("perf c2c report: Add 'node' sort key")
+> > Reported-by: Nageswara R Sastry <nasastry@in.ibm.com>
+> > Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-It is worth mentioning that David's suggested change, while I agree with Michal
-that it should be a separate issue from updating the OOM Killed process message,
-certainly has merit.  Though, it's not strictly necessary for what I
-was asking for.
+Thanks, applied.
 
-If you have scripts that scan your logs from OOM events, having a regular format
-to OOM output makes parsing easier. With David's suggestion there would always
-be a "Tasks state" section and the vm.oom_dump_tasks still works but
-it just prevents
-all the tasks from being dumped not from dumping the killed process.
+- Arnaldo
+ 
+> thanks,
+> jirka
+> 
+> > ---
+> >  tools/perf/builtin-c2c.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> > index 9e6cc86..fc68a94 100644
+> > --- a/tools/perf/builtin-c2c.c
+> > +++ b/tools/perf/builtin-c2c.c
+> > @@ -2027,7 +2027,7 @@ static int setup_nodes(struct perf_session *session)
+> >  		c2c.node_info = 2;
+> >  
+> >  	c2c.nodes_cnt = session->header.env.nr_numa_nodes;
+> > -	c2c.cpus_cnt  = session->header.env.nr_cpus_online;
+> > +	c2c.cpus_cnt  = session->header.env.nr_cpus_avail;
+> >  
+> >  	n = session->header.env.numa_nodes;
+> >  	if (!n)
+> > -- 
+> > 1.8.3.1
+> > 
 
-OOM output was reorganized not that long ago as we discussed earlier to provide
-improved organization of data, so this proposal would be in line with
-that change.
+-- 
 
-If there is interest in this I can submit a separate patch submission.
-
->
-> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> --- a/mm/oom_kill.c
-> +++ b/mm/oom_kill.c
-> @@ -420,11 +420,17 @@ static int dump_task(struct task_struct *p, void *arg)
->   * State information includes task's pid, uid, tgid, vm size, rss,
->   * pgtables_bytes, swapents, oom_score_adj value, and name.
->   */
-> -static void dump_tasks(struct oom_control *oc)
-> +static void dump_tasks(struct oom_control *oc, struct task_struct *victim)
->  {
->         pr_info("Tasks state (memory values in pages):\n");
->         pr_info("[  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n");
->
-> +       /* If vm.oom_dump_tasks is disabled, only show the victim */
-> +       if (!sysctl_oom_dump_tasks) {
-> +               dump_task(victim, oc);
-> +               return;
-> +       }
-> +
->         if (is_memcg_oom(oc))
->                 mem_cgroup_scan_tasks(oc->memcg, dump_task, oc);
->         else {
-> @@ -465,8 +471,8 @@ static void dump_header(struct oom_control *oc, struct task_struct *p)
->                 if (is_dump_unreclaim_slabs())
->                         dump_unreclaimable_slab();
->         }
-> -       if (sysctl_oom_dump_tasks)
-> -               dump_tasks(oc);
-> +       if (p || sysctl_oom_dump_tasks)
-> +               dump_tasks(oc, p);
->         if (p)
->                 dump_oom_summary(oc, p);
->  }
+- Arnaldo
