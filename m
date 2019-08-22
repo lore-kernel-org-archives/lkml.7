@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E79EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E083C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29AE233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB98620870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:46:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566496016;
-	bh=wmOdyM7qu6MZj6p+db67ADtj4fezjw0RJGL3SrM3QJs=;
+	s=default; t=1566496019;
+	bh=oxdxb3+q5l4YKRxmcQH3c+7PvrvDkfftZOxp4GEsiiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qt8UUybBAZmuehwrs60LIkuhCjT3SBIIRuHYeiXhoIBzhTqFowFItzziVWGxo8Wy4
-	 73+D4hNTnnDyPszd1NOexBjUR02naTkXZ2V+KoYmRFs4Rj46J/yiM5CBb4CWUkHEEq
-	 J6K+NOFyXktDaU2UvG7ItUwxP1MLcxOduP5VJq1w=
+	b=Bwrnj2YUq6ZnmKicMLmCDYVS6C7YKNlzh21b0vpdmtiMv4TsJOFFPymJPgTltNwuG
+	 ZhNhaxBktYY6Q//SYgvJ9ZO8ySnucQuJYsu8kHAkMQdkkNIiagVF4B/5uG8+YhjdO6
+	 zM2J2BEXyrWarzs3GXYhXEs0B13StZynwmlJBgnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391441AbfHVRWn (ORCPT
+        id S2393141AbfHVRq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:22:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41044 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:46:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391411AbfHVRWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:38 -0400
+        id S1732661AbfHVRWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:42 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A282C23400;
-        Thu, 22 Aug 2019 17:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14D8723406;
+        Thu, 22 Aug 2019 17:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494557;
-        bh=wmOdyM7qu6MZj6p+db67ADtj4fezjw0RJGL3SrM3QJs=;
+        s=default; t=1566494562;
+        bh=oxdxb3+q5l4YKRxmcQH3c+7PvrvDkfftZOxp4GEsiiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HjZ0tNTG6VYLufCbFR8KgnSCj2hdU+0LakzP5yCo6xbbpdLx6FU/ximxHx+YXQ9Ay
-         i9Js17JdpHlPhl+puDseIy2Lw0gkHRFKn9+/MuzY1GqiD2HW9100U2Ws41l+t8upbQ
-         GkvqKnUFoqLtjF8veO2syfYb0HFTH3P/T+52nXR8=
+        b=dQStUWK9QPcm5V6i2UihfrIp5PjDJHXkHd1IzyyCwmatK4y41ssZk5BjfW2dBQfO1
+         BVbx7tlo8lld9VkTCLuqIqq6XQfWA4hb6spDdZkN1yk2uScYXpWaF7wzR6w1kOpL0L
+         6i5qEm/O/htLUN2em9HVas/+Rk/uhqFegZCq5lY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 44/78] xen/pciback: remove set but not used variable old_state
-Date:   Thu, 22 Aug 2019 10:18:48 -0700
-Message-Id: <20190822171833.316469779@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 50/78] ata: libahci: do not complain in case of deferred probe
+Date:   Thu, 22 Aug 2019 10:18:54 -0700
+Message-Id: <20190822171833.492407824@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -62,44 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 09e088a4903bd0dd911b4f1732b250130cdaffed ]
+[ Upstream commit 090bb803708198e5ab6b0046398c7ed9f4d12d6b ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Retrieving PHYs can defer the probe, do not spawn an error when
+-EPROBE_DEFER is returned, it is normal behavior.
 
-drivers/xen/xen-pciback/conf_space_capability.c: In function pm_ctrl_write:
-drivers/xen/xen-pciback/conf_space_capability.c:119:25: warning:
- variable old_state set but not used [-Wunused-but-set-variable]
-
-It is never used so can be removed.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Fixes: b1a9edbda040 ("ata: libahci: allow to use multiple PHYs")
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xen-pciback/conf_space_capability.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/ata/libahci_platform.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/xen/xen-pciback/conf_space_capability.c b/drivers/xen/xen-pciback/conf_space_capability.c
-index 7f83e9083e9dd..b1a1d7de0894e 100644
---- a/drivers/xen/xen-pciback/conf_space_capability.c
-+++ b/drivers/xen/xen-pciback/conf_space_capability.c
-@@ -115,13 +115,12 @@ static int pm_ctrl_write(struct pci_dev *dev, int offset, u16 new_value,
- {
- 	int err;
- 	u16 old_value;
--	pci_power_t new_state, old_state;
-+	pci_power_t new_state;
+diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+index cd2eab6aa92ea..65371e1befe8a 100644
+--- a/drivers/ata/libahci_platform.c
++++ b/drivers/ata/libahci_platform.c
+@@ -300,6 +300,9 @@ static int ahci_platform_get_phy(struct ahci_host_priv *hpriv, u32 port,
+ 		hpriv->phys[port] = NULL;
+ 		rc = 0;
+ 		break;
++	case -EPROBE_DEFER:
++		/* Do not complain yet */
++		break;
  
- 	err = pci_read_config_word(dev, offset, &old_value);
- 	if (err)
- 		goto out;
- 
--	old_state = (pci_power_t)(old_value & PCI_PM_CTRL_STATE_MASK);
- 	new_state = (pci_power_t)(new_value & PCI_PM_CTRL_STATE_MASK);
- 
- 	new_value &= PM_OK_BITS;
+ 	default:
+ 		dev_err(dev,
 -- 
 2.20.1
 
