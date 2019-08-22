@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1443C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31512C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF6E233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074A923426
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494270;
-	bh=rK1OBrGuvm+R9TGIP4jYa7M0vAZtn4Rbs1nc+qSXYII=;
+	s=default; t=1566494276;
+	bh=zdlWUlopslHIVVFc4/X/Ym+gbxfUMbmngZmdRU2WrcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a2EM+jaftr7yK6BPKJL5HxMMgzHCnOA0Dqm5GqSxT1vOWTeYjBrWF9wMwy/+mLU9A
-	 YZmz/nOz6zvH2n8pwdB3CjydJ2/ZWpjolJ/VEFqFbyRRYKZgKDuPtEKZ3Jj6Ho3idR
-	 jy1K/R3MGKupN9Ek9GMJpUiabdTkqRbZwYt8Z13w=
+	b=MtnORzfQoZtc+cY9z/ahu1bWgvCuPhJfJkIRdnw3HjdHI7kGHtqgDARw54Lx5ZFaI
+	 TmsTkScVWE67w5p8wCysvh8nKDHSSnrtR6WbilciRp81dVn9+0ayfwY49SdKgdiVBb
+	 0UsvoTfN5XJsnkrMXwSIREGptVoZP2idbsdO9jBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390310AbfHVRIZ (ORCPT
+        id S2389601AbfHVRRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57700 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:17:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbfHVRIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:18 -0400
+        id S2390280AbfHVRIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:22 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F266023407;
-        Thu, 22 Aug 2019 17:08:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D3FC23428;
+        Thu, 22 Aug 2019 17:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493697;
-        bh=rK1OBrGuvm+R9TGIP4jYa7M0vAZtn4Rbs1nc+qSXYII=;
+        s=default; t=1566493701;
+        bh=zdlWUlopslHIVVFc4/X/Ym+gbxfUMbmngZmdRU2WrcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qpfH5gfC+GUz80zf2TqLhSEE0NgjbS7JtMwH/FNyDq7WNfpkMNFx3blxjA3AY+57i
-         Cn5ypQbrUWZEI0QSTfFgaCHogOTgdATQHp7D2WznxHAuwT4tAF7x+F/iKz5+Jx2oiT
-         qw0wrqWJF4c4yTomNLvcsFv3Lx5CrNMBD4fWkeZ4=
+        b=QNmUOp17F723zfGEluJwSJ6qtSK5XZOVliOAna2Sr58Cwbpqv70yokRcJj2Qq7MmP
+         0C+xpCnSRC3znll44qh+vauE/wnqumlqknqeI6qPuW5LfZnWN+yHsNBCVYAw1hxSPD
+         oQe3oLKhQ7lXSMZQDce08vhIHfBMp+Ee/4yZPDEg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 006/135] mm: mempolicy: handle vma with unmovable pages mapped correctly in mbind
-Date:   Thu, 22 Aug 2019 13:06:02 -0400
-Message-Id: <20190822170811.13303-7-sashal@kernel.org>
+Subject: [PATCH 5.2 013/135] drm/amdgpu: fix gfx9 soft recovery
+Date:   Thu, 22 Aug 2019 13:06:09 -0400
+Message-Id: <20190822170811.13303-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.2.y
@@ -69,198 +67,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
 
-commit a53190a4aaa36494f4d7209fd1fcc6f2ee08e0e0 upstream.
+commit 17b6d2d528542bc60ad400add35728b2259b3cc1 upstream.
 
-When running syzkaller internally, we ran into the below bug on 4.9.x
-kernel:
+The SOC15_REG_OFFSET() macro wasn't used, making the soft recovery fail.
 
-  kernel BUG at mm/huge_memory.c:2124!
-  invalid opcode: 0000 [#1] SMP KASAN
-  CPU: 0 PID: 1518 Comm: syz-executor107 Not tainted 4.9.168+ #2
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.5.1 01/01/2011
-  task: ffff880067b34900 task.stack: ffff880068998000
-  RIP: split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
-  Call Trace:
-    split_huge_page include/linux/huge_mm.h:100 [inline]
-    queue_pages_pte_range+0x7e1/0x1480 mm/mempolicy.c:538
-    walk_pmd_range mm/pagewalk.c:50 [inline]
-    walk_pud_range mm/pagewalk.c:90 [inline]
-    walk_pgd_range mm/pagewalk.c:116 [inline]
-    __walk_page_range+0x44a/0xdb0 mm/pagewalk.c:208
-    walk_page_range+0x154/0x370 mm/pagewalk.c:285
-    queue_pages_range+0x115/0x150 mm/mempolicy.c:694
-    do_mbind mm/mempolicy.c:1241 [inline]
-    SYSC_mbind+0x3c3/0x1030 mm/mempolicy.c:1370
-    SyS_mbind+0x46/0x60 mm/mempolicy.c:1352
-    do_syscall_64+0x1d2/0x600 arch/x86/entry/common.c:282
-    entry_SYSCALL_64_after_swapgs+0x5d/0xdb
-  Code: c7 80 1c 02 00 e8 26 0a 76 01 <0f> 0b 48 c7 c7 40 46 45 84 e8 4c
-  RIP  [<ffffffff81895d6b>] split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
-   RSP <ffff88006899f980>
+v2: use WREG32_SOC15 instead of WREG32 + SOC15_REG_OFFSET
 
-with the below test:
-
-  uint64_t r[1] = {0xffffffffffffffff};
-
-  int main(void)
-  {
-        syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
-                                intptr_t res = 0;
-        res = syscall(__NR_socket, 0x11, 3, 0x300);
-        if (res != -1)
-                r[0] = res;
-        *(uint32_t*)0x20000040 = 0x10000;
-        *(uint32_t*)0x20000044 = 1;
-        *(uint32_t*)0x20000048 = 0xc520;
-        *(uint32_t*)0x2000004c = 1;
-        syscall(__NR_setsockopt, r[0], 0x107, 0xd, 0x20000040, 0x10);
-        syscall(__NR_mmap, 0x20fed000, 0x10000, 0, 0x8811, r[0], 0);
-        *(uint64_t*)0x20000340 = 2;
-        syscall(__NR_mbind, 0x20ff9000, 0x4000, 0x4002, 0x20000340, 0x45d4, 3);
-        return 0;
-  }
-
-Actually the test does:
-
-  mmap(0x20000000, 16777216, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x20000000
-  socket(AF_PACKET, SOCK_RAW, 768)        = 3
-  setsockopt(3, SOL_PACKET, PACKET_TX_RING, {block_size=65536, block_nr=1, frame_size=50464, frame_nr=1}, 16) = 0
-  mmap(0x20fed000, 65536, PROT_NONE, MAP_SHARED|MAP_FIXED|MAP_POPULATE|MAP_DENYWRITE, 3, 0) = 0x20fed000
-  mbind(..., MPOL_MF_STRICT|MPOL_MF_MOVE) = 0
-
-The setsockopt() would allocate compound pages (16 pages in this test)
-for packet tx ring, then the mmap() would call packet_mmap() to map the
-pages into the user address space specified by the mmap() call.
-
-When calling mbind(), it would scan the vma to queue the pages for
-migration to the new node.  It would split any huge page since 4.9
-doesn't support THP migration, however, the packet tx ring compound
-pages are not THP and even not movable.  So, the above bug is triggered.
-
-However, the later kernel is not hit by this issue due to commit
-d44d363f6578 ("mm: don't assume anonymous pages have SwapBacked flag"),
-which just removes the PageSwapBacked check for a different reason.
-
-But, there is a deeper issue.  According to the semantic of mbind(), it
-should return -EIO if MPOL_MF_MOVE or MPOL_MF_MOVE_ALL was specified and
-MPOL_MF_STRICT was also specified, but the kernel was unable to move all
-existing pages in the range.  The tx ring of the packet socket is
-definitely not movable, however, mbind() returns success for this case.
-
-Although the most socket file associates with non-movable pages, but XDP
-may have movable pages from gup.  So, it sounds not fine to just check
-the underlying file type of vma in vma_migratable().
-
-Change migrate_page_add() to check if the page is movable or not, if it
-is unmovable, just return -EIO.  But do not abort pte walk immediately,
-since there may be pages off LRU temporarily.  We should migrate other
-pages if MPOL_MF_MOVE* is specified.  Set has_unmovable flag if some
-paged could not be not moved, then return -EIO for mbind() eventually.
-
-With this change the above test would return -EIO as expected.
-
-[yang.shi@linux.alibaba.com: fix review comments from Vlastimil]
-  Link: http://lkml.kernel.org/r/1563556862-54056-3-git-send-email-yang.shi@linux.alibaba.com
-Link: http://lkml.kernel.org/r/1561162809-59140-3-git-send-email-yang.shi@linux.alibaba.com
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/mempolicy.c | 32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index a1a8f5630245d..ca3f443c8fc15 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -403,7 +403,7 @@ static const struct mempolicy_operations mpol_ops[MPOL_MAX] = {
- 	},
- };
- 
--static void migrate_page_add(struct page *page, struct list_head *pagelist,
-+static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 				unsigned long flags);
- 
- struct queue_pages {
-@@ -463,12 +463,11 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
- 	flags = qp->flags;
- 	/* go to thp migration */
- 	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
--		if (!vma_migratable(walk->vma)) {
-+		if (!vma_migratable(walk->vma) ||
-+		    migrate_page_add(page, qp->pagelist, flags)) {
- 			ret = 1;
- 			goto unlock;
- 		}
--
--		migrate_page_add(page, qp->pagelist, flags);
- 	} else
- 		ret = -EIO;
- unlock:
-@@ -532,7 +531,14 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
- 				has_unmovable = true;
- 				break;
- 			}
--			migrate_page_add(page, qp->pagelist, flags);
-+
-+			/*
-+			 * Do not abort immediately since there may be
-+			 * temporary off LRU pages in the range.  Still
-+			 * need migrate other LRU pages.
-+			 */
-+			if (migrate_page_add(page, qp->pagelist, flags))
-+				has_unmovable = true;
- 		} else
- 			break;
- 	}
-@@ -961,7 +967,7 @@ static long do_get_mempolicy(int *policy, nodemask_t *nmask,
- /*
-  * page migration, thp tail pages can be passed.
-  */
--static void migrate_page_add(struct page *page, struct list_head *pagelist,
-+static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 				unsigned long flags)
- {
- 	struct page *head = compound_head(page);
-@@ -974,8 +980,19 @@ static void migrate_page_add(struct page *page, struct list_head *pagelist,
- 			mod_node_page_state(page_pgdat(head),
- 				NR_ISOLATED_ANON + page_is_file_cache(head),
- 				hpage_nr_pages(head));
-+		} else if (flags & MPOL_MF_STRICT) {
-+			/*
-+			 * Non-movable page may reach here.  And, there may be
-+			 * temporary off LRU pages or non-LRU movable pages.
-+			 * Treat them as unmovable pages since they can't be
-+			 * isolated, so they can't be moved at the moment.  It
-+			 * should return -EIO for this case too.
-+			 */
-+			return -EIO;
- 		}
- 	}
-+
-+	return 0;
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+index 2f18c64d531ff..2f7f0a2e4a6c5 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -4553,7 +4553,7 @@ static void gfx_v9_0_ring_soft_recovery(struct amdgpu_ring *ring, unsigned vmid)
+ 	value = REG_SET_FIELD(value, SQ_CMD, MODE, 0x01);
+ 	value = REG_SET_FIELD(value, SQ_CMD, CHECK_VMID, 1);
+ 	value = REG_SET_FIELD(value, SQ_CMD, VM_ID, vmid);
+-	WREG32(mmSQ_CMD, value);
++	WREG32_SOC15(GC, 0, mmSQ_CMD, value);
  }
  
- /* page allocation callback for NUMA node migration */
-@@ -1178,9 +1195,10 @@ static struct page *new_page(struct page *page, unsigned long start)
- }
- #else
- 
--static void migrate_page_add(struct page *page, struct list_head *pagelist,
-+static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 				unsigned long flags)
- {
-+	return -EIO;
- }
- 
- int do_migrate_pages(struct mm_struct *mm, const nodemask_t *from,
+ static void gfx_v9_0_set_gfx_eop_interrupt_state(struct amdgpu_device *adev,
 -- 
 2.20.1
 
