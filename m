@@ -2,95 +2,104 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2538C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C25C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 797B7233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:00:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566482433;
-	bh=DWwwr3qPkjE4y1klETI0/GZhGb33KyLJV8JKbxYx8mI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dB26z6Rsc7MDmJK3AvE6739yq38dNEJEG7pCMFdlNSttftPX/QUAyOlMANfDY7PkU
-	 x1FhE78nglFE2MpKMXd52ieRKBZJL/UJJdDXsvS8OeZwyWqbYXVpSsZnchOEjcWCeJ
-	 laoTBiod8nL7nLD8lXbXayJpfpjReFo69Qw5Xz7c=
+	by mail.kernel.org (Postfix) with ESMTP id 01FF7233FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732257AbfHVOAc (ORCPT
+        id S1732331AbfHVOAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbfHVOAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:00:32 -0400
-Received: from localhost (unknown [171.61.89.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5B0522CE3;
-        Thu, 22 Aug 2019 14:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566482431;
-        bh=DWwwr3qPkjE4y1klETI0/GZhGb33KyLJV8JKbxYx8mI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YvQJ7oGkcjX82C23lfVZfJm+UzNfRuqFQPgn7k1BocoUF1hWtH6zzXyf1nsxPScJV
-         VjLpanuLLNZj6ff3bpKSk+gvNOFOXjvgF+99cxCKinKhMAGe09mrLcWV5V60yoE+b7
-         wapypQsCjygzhmEuThSy+Famze8EnfqcYwxdJ5m4=
-Date:   Thu, 22 Aug 2019 19:29:17 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] clk: qcom: clk-rpmh: Convert to parent data scheme
-Message-ID: <20190822135917.GP12733@vkoul-mobl.Dlink>
-References: <20190819073947.17258-1-vkoul@kernel.org>
- <20190819073947.17258-3-vkoul@kernel.org>
- <20190820050829.GJ26807@tuxbook-pro>
+        Thu, 22 Aug 2019 10:00:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8928 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726096AbfHVOAu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:00:50 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7MDob8m085843;
+        Thu, 22 Aug 2019 10:00:43 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhuestxqv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 10:00:43 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7ME031x022877;
+        Thu, 22 Aug 2019 14:00:42 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma02dal.us.ibm.com with ESMTP id 2ue976q0mp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 14:00:42 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7ME0flH49938846
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 14:00:42 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E13E8B2067;
+        Thu, 22 Aug 2019 14:00:41 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C4662B2064;
+        Thu, 22 Aug 2019 14:00:41 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 22 Aug 2019 14:00:41 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9ACB716C265B; Thu, 22 Aug 2019 07:00:42 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 07:00:42 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     josh@joshtriplett.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu: don't include <linux/ktime.h> in rcutiny.h
+Message-ID: <20190822140042.GZ28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190822015343.4058-1-hch@lst.de>
+ <20190822030200.GX28441@linux.ibm.com>
+ <20190822034841.GA13668@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820050829.GJ26807@tuxbook-pro>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190822034841.GA13668@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908220146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-08-19, 22:08, Bjorn Andersson wrote:
-> On Mon 19 Aug 00:39 PDT 2019, Vinod Koul wrote:
-> 
-> > Convert the rpmh clock driver to use the new parent data scheme by
-> > specifying the parent data for board clock.
+On Thu, Aug 22, 2019 at 05:48:41AM +0200, Christoph Hellwig wrote:
+> On Wed, Aug 21, 2019 at 08:02:00PM -0700, Paul E. McKenney wrote:
+> > On Thu, Aug 22, 2019 at 10:53:43AM +0900, Christoph Hellwig wrote:
+> > > The kbuild reported a built failure due to a header loop when RCUTINY is
+> > > enabled with my pending riscv-nommu port.  Switch rcutiny.h to only
+> > > include the minimal required header to get HZ instead.
+> > > 
+> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  drivers/clk/qcom/clk-rpmh.c | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > Queued for review and testing, thank you!
 > > 
-> > diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
-> > index c3fd632af119..16d689e5bb3c 100644
-> > --- a/drivers/clk/qcom/clk-rpmh.c
-> > +++ b/drivers/clk/qcom/clk-rpmh.c
-> > @@ -95,7 +95,10 @@ static DEFINE_MUTEX(rpmh_clk_lock);
-> >  		.hw.init = &(struct clk_init_data){			\
-> >  			.ops = &clk_rpmh_ops,				\
-> >  			.name = #_name,					\
-> > -			.parent_names = (const char *[]){ "xo_board" },	\
-> > +			.parent_data =  &(const struct clk_parent_data){ \
-> > +					.fw_name = "xo",		\
-> > +					.name = "xo",		\
+> > Do you need this in v5.4?  My normal workflow would put it into v5.5.
 > 
-> Shouldn't .name be "xo_board" to retain backwards compatibility?
+> I hope the riscv-nommu coe gets merges for 5.4, so if we could queue
+> it up for that I'd appreciate it.
 
-Yes I have updated that
+OK, it did pass rcutorture's various !SMP scenarios, so this seems
+plausible.
 
-Thanks
--- 
-~Vinod
+I am sending my main pull request today, but will also put this patch
+where 0day and -next can see it.  If it does OK with that and with
+additional review/testing for a few days, I will send a second pull
+request with that patch some time next week.
+
+							Thanx, Paul
