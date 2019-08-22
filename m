@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6D7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2247BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6182323400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA49E2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494908;
-	bh=Lvq8rNLJsqaM/EklCJ4Ukw7thBl3zII0/AfzDhOLAp0=;
+	s=default; t=1566494916;
+	bh=UwMjA6/92uxn97FblUBFzyvPxR0wqAPJJgs1ZdS+/RI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lwXRi1uwYq5mPhX+P9cXhoLUj2nVsxhfOnAs2VTGI3pSnHLOp/W/XFJ9tFVVMRYm5
-	 C4hQNSLvLQtacqtF/jmck/4L2tCTxkMLyygJvuWnwYaw6xIIqEMJ0qFzOrp3OwUIj4
-	 rDVm9pkWdHODTtJ0UiHwJng2juTQj8SGosO1AX+c=
+	b=Rhs6ApeXrZ+e7VxEsKNOGWITVYtktO1NTVcDMbaWk+3vzaa4moavbrGodXvm60zYc
+	 7LazSVHKfqDNZG8WNXY/8Wra5OGNC5sUJHvfJY4GZUDr5fKNIVZB1Ssr94tB6gIEDe
+	 zaozO71jAsJFm2bigEBf3jtAkRmHV+gR4eo4FFUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404794AbfHVR1g (ORCPT
+        id S2392040AbfHVR1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50902 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:27:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404591AbfHVR0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:26:03 -0400
+        id S2404548AbfHVRZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:57 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB239206DD;
-        Thu, 22 Aug 2019 17:26:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 206782064A;
+        Thu, 22 Aug 2019 17:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494763;
-        bh=Lvq8rNLJsqaM/EklCJ4Ukw7thBl3zII0/AfzDhOLAp0=;
+        s=default; t=1566494757;
+        bh=UwMjA6/92uxn97FblUBFzyvPxR0wqAPJJgs1ZdS+/RI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=havpBHlx6Sy7LAfvbbvx+56GkSJdTbxLgqcimbllDjORLqSPF0FZE2sv0HNheEDTU
-         /XKCIU4eowHQywLlriVRPQQ42inSfDXxBEI3SpBY/XjGbawycAcgwVIvpiFlmekfi1
-         Nc8pZJLaQjJ/uFjT+wYU6n6mjWst3F5UjtGqhfGo=
+        b=U0jtuTBtpzwFWrIn5fI3Ew0tuSmekkF6i958vAZ1Jj2hol/mBpuU/l0EpROATTTs8
+         H9soPQIhkZzoCbOfx6Q1bAJXVyf3S0epOjSo8/bWZfftDlhyp3PnTCTFS4HRuwfQRC
+         QNJCD0lkZHfM0e0DkXznGL9MdEkDXEz48F08LgKE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Ham <bob.ham@puri.sm>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 65/85] USB: serial: option: add the BroadMobi BM818 card
-Date:   Thu, 22 Aug 2019 10:19:38 -0700
-Message-Id: <20190822171734.030555831@linuxfoundation.org>
+        stable@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 58/85] iio: adc: max9611: Fix temperature reading in probe
+Date:   Thu, 22 Aug 2019 10:19:31 -0700
+Message-Id: <20190822171733.738901968@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -60,45 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Ham <bob.ham@puri.sm>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-commit e5d8badf37e6b547842f2fcde10361b29e08bd36 upstream.
+commit b9ddd5091160793ee9fac10da765cf3f53d2aaf0 upstream.
 
-Add a VID:PID for the BroadMobi BM818 M.2 card
+The max9611 driver reads the die temperature at probe time to validate
+the communication channel. Use the actual read value to perform the test
+instead of the read function return value, which was mistakenly used so
+far.
 
-T:  Bus=01 Lev=03 Prnt=40 Port=03 Cnt=01 Dev#= 44 Spd=480 MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=2020 ProdID=2060 Rev=00.00
-S:  Manufacturer=Qualcomm, Incorporated
-S:  Product=Qualcomm CDMA Technologies MSM
-C:  #Ifs= 5 Cfg#= 1 Atr=e0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-I:  If#=0x1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=fe Prot=ff Driver=(none)
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+The temperature reading test was only successful because the 0 return
+value is in the range of supported temperatures.
 
-Signed-off-by: Bob Ham <bob.ham@puri.sm>
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
-Cc: stable <stable@vger.kernel.org>
-[ johan: use USB_DEVICE_INTERFACE_CLASS() ]
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 69780a3bbc0b ("iio: adc: Add Maxim max9611 ADC driver")
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iio/adc/max9611.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1960,6 +1960,8 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
- 	  .driver_info = RSVD(4) },
-+	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2060, 0xff),			/* BroadMobi BM818 */
-+	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x4000, 0xff) },			/* OLICARD300 - MT6225 */
- 	{ USB_DEVICE(INOVIA_VENDOR_ID, INOVIA_SEW858) },
- 	{ USB_DEVICE(VIATELECOM_VENDOR_ID, VIATELECOM_PRODUCT_CDS7) },
+--- a/drivers/iio/adc/max9611.c
++++ b/drivers/iio/adc/max9611.c
+@@ -483,7 +483,7 @@ static int max9611_init(struct max9611_d
+ 	if (ret)
+ 		return ret;
+ 
+-	regval = ret & MAX9611_TEMP_MASK;
++	regval &= MAX9611_TEMP_MASK;
+ 
+ 	if ((regval > MAX9611_TEMP_MAX_POS &&
+ 	     regval < MAX9611_TEMP_MIN_NEG) ||
 
 
