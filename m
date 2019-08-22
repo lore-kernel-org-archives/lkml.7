@@ -2,135 +2,122 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0F2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EBFC3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551AC216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:13:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vPJ+HTkP"
+	by mail.kernel.org (Postfix) with ESMTP id 6D6D4216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:17:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730848AbfHVCNE (ORCPT
+        id S1730862AbfHVCRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 22:13:04 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38556 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbfHVCNE (ORCPT
+        Wed, 21 Aug 2019 22:17:54 -0400
+Received: from shelob.surriel.com ([96.67.55.147]:33988 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728332AbfHVCRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 22:13:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id m125so4066049wmm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 Aug 2019 19:13:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ojaEvfqlKAAL2lTKmwRHpldmWlVYnPOGOZegIqvukh4=;
-        b=vPJ+HTkPwnSMhE+qk8hSEgNCinF4IuXtqDQft6K7Z6pWsZRigw83vmRIhHY25E6qfN
-         gG7UUcRGewF79O4OeMiXpE3WrqVd6YWw1gf+tajAQ42uAD+lyh9ocOcr3zTKvcDHW76K
-         mYTudpP2GdNQBAAecf9HQtxfVLHYL/u3Du+nHR+jhwDK90wV53KbznnQQgC/lbs8TdRx
-         A1lTRcezQS9D2/pFwd6SZFA5moefvJ06I9ZHAdIhAQf07OEXr8E8LICKyBcXMOmMpARm
-         B+F+n0typVorUhOxNHzx0Czag8LXcQCq2ZiRsJEwbMzSnWfDt40QVKe919bw5QR0A04D
-         16YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ojaEvfqlKAAL2lTKmwRHpldmWlVYnPOGOZegIqvukh4=;
-        b=Tn5c6zUmj0niHiZZXEy5IKnNutzojd+jHSJQs4fCku1tbEgY3sLvu0ALNUIBpliTrr
-         BrRodAvsR9Z9wx2YCle1eOvsv08X60Zw7mue9Vno2yIdVx4WteP82SNwHJ5mFSkURrLR
-         +kXCU/ugAGR0vLwXCodKgU5mK2p11PUgRJU040nCn/w55Xgm+O9DzYtHowYYGZQNpNQh
-         bwTrBZ1thJJU8ZtPv6Gjv8zejy/Tp2d4XZhqsVRHXaUKKjn94gov0WtsvCMWnAKDGd2W
-         /qcgyz9xh6GL4QIjpXkjKwEAgaNbd79EcoE68zHPZY5bJ1iBIE7bd2zs1qrgENazDxEN
-         2vqg==
-X-Gm-Message-State: APjAAAV+QqdSny88YcCcjhSZbiQgIZqXJjYMghUfFKCdeLBNqq2ToKrn
-        r9eoxBmzgEcoQioOWSqIVnuVWqZL3hub2Eo0bNQ=
-X-Google-Smtp-Source: APXvYqz1e6uwc2N1gK7CKn+4vyXXXefJ+pKwR+9EfXYJmVBylK261gkCDlDmCLca8YnY0HAftOAX0k6IOPy/Un811cA=
-X-Received: by 2002:a05:600c:352:: with SMTP id u18mr3004060wmd.141.1566439981994;
- Wed, 21 Aug 2019 19:13:01 -0700 (PDT)
+        Wed, 21 Aug 2019 22:17:54 -0400
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1i0cfW-0001S6-Vb; Wed, 21 Aug 2019 22:17:42 -0400
+From:   Rik van Riel <riel@surriel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kernel-team@fb.com, pjt@google.com, dietmar.eggemann@arm.com,
+        peterz@infradead.org, mingo@redhat.com, morten.rasmussen@arm.com,
+        tglx@linutronix.de, mgorman@techsingularity.net,
+        vincent.guittot@linaro.org
+Subject: [PATCH RFC v4 0/15] sched,fair: flatten CPU controller runqueues
+Date:   Wed, 21 Aug 2019 22:17:25 -0400
+Message-Id: <20190822021740.15554-1-riel@surriel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190820235713.3429-1-natechancellor@gmail.com> <f594d746-9eaf-76fe-d380-bb033cce06f8@amd.com>
-In-Reply-To: <f594d746-9eaf-76fe-d380-bb033cce06f8@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 21 Aug 2019 22:12:50 -0400
-Message-ID: <CADnq5_PH6gA2kMi5+sT4N=AQdfJkEg4ZhoZtYduLTDAyUT7cBA@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Fix 32-bit divide error in wait_for_alt_mode
-To:     Harry Wentland <hwentlan@amd.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  thanks!
+The current implementation of the CPU controller uses hierarchical
+runqueues, where on wakeup a task is enqueued on its group's runqueue,
+the group is enqueued on the runqueue of the group above it, etc.
 
-Alex
+This increases a fairly large amount of overhead for workloads that
+do a lot of wakeups a second, especially given that the default systemd
+hierarchy is 2 or 3 levels deep.
 
-On Wed, Aug 21, 2019 at 12:40 PM Harry Wentland <hwentlan@amd.com> wrote:
->
-> On 2019-08-20 7:57 p.m., Nathan Chancellor wrote:
-> > When building arm32 allyesconfig:
-> >
-> > ld.lld: error: undefined symbol: __aeabi_uldivmod
-> >>>> referenced by dc_link.c
-> >>>> gpu/drm/amd/display/dc/core/dc_link.o:(wait_for_alt_mode) in archive drivers/built-in.a
-> >>>> referenced by dc_link.c
-> >>>> gpu/drm/amd/display/dc/core/dc_link.o:(wait_for_alt_mode) in archive drivers/built-in.a
-> >
-> > time_taken_in_ns is of type unsigned long long so we need to use div_u64
-> > to avoid this error.
-> >
-> > Fixes: b5b1f4554904 ("drm/amd/display: Enable type C hotplug")
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
->
-> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
->
-> Harry
->
-> > ---
-> >  drivers/gpu/drm/amd/display/dc/core/dc_link.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link.c b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> > index f2d78d7b089e..8634923b4444 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> > +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link.c
-> > @@ -721,7 +721,7 @@ bool wait_for_alt_mode(struct dc_link *link)
-> >                       time_taken_in_ns = dm_get_elapse_time_in_ns(
-> >                               link->ctx, finish_timestamp, enter_timestamp);
-> >                       DC_LOG_WARNING("Alt mode entered finished after %llu ms\n",
-> > -                                    time_taken_in_ns / 1000000);
-> > +                                    div_u64(time_taken_in_ns, 1000000));
-> >                       return true;
-> >               }
-> >
-> > @@ -730,7 +730,7 @@ bool wait_for_alt_mode(struct dc_link *link)
-> >       time_taken_in_ns = dm_get_elapse_time_in_ns(link->ctx, finish_timestamp,
-> >                                                   enter_timestamp);
-> >       DC_LOG_WARNING("Alt mode has timed out after %llu ms\n",
-> > -                     time_taken_in_ns / 1000000);
-> > +                     div_u64(time_taken_in_ns, 1000000));
-> >       return false;
-> >  }
-> >
-> >
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+This patch series is an attempt at reducing that overhead, by placing
+all the tasks on the same runqueue, and scaling the task priority by
+the priority of the group, which is calculated periodically.
+
+My main TODO items for the next period of time are likely going to
+be testing, testing, and testing. I hope to find and flush out any
+corner case I can find, and make sure performance does not regress
+with any workloads, and hopefully improves some.
+
+Other TODO items:
+- More code cleanups.
+- Remove some more now unused code.
+- Reimplement CONFIG_CFS_BANDWIDTH.
+
+Plan for the CONFIG_CFS_BANDWIDTH reimplementation:
+- When a cgroup gets throttled, mark the cgroup and its children
+  as throttled.
+- When pick_next_entity finds a task that is on a throttled cgroup,
+  stash it on the cgroup runqueue (which is not used for runnable
+  tasks any more). Leave the vruntime unchanged, and adjust that
+  runqueue's vruntime to be that of the left-most task.
+- When a cgroup gets unthrottled, and has tasks on it, place it on
+  a vruntime ordered heap separate from the main runqueue.
+- Have pick_next_task_fair grab one task off that heap every time it
+  is called, and the min vruntime of that heap is lower than the
+  vruntime of the CPU's cfs_rq (or the CPU has no other runnable tasks).
+- Place that selected task on the CPU's cfs_rq, renormalizing its
+  vruntime with the GENTLE_FAIR_SLEEPERS logic. That should help
+  interleave the already runnable tasks with the recently unthrottled
+  group, and prevent thundering herd issues.
+- If the group gets throttled again before all of its task had a chance
+  to run, vruntime sorting ensures all the tasks in the throttled cgroup
+  get a chance to run over time.
+
+Changes from v3:
+- replace max_h_load with another hacky idea to ramp up the
+  task_se_h_weight; I believe this new idea is wrong as well, but
+  it will hopefully inspire a better solution (thanks to Peter Zijlstra)
+- fix the ordering inside enqueue_task_fair to get task weights set up right
+  (thanks to Peter Zijlstra)
+- change wakeup_preempt_entity to reduce the number of task preemptions,
+  hopefully resulting in behavior closer to what people configure in sysctl
+- various other small cleanups and fixes
+
+Changes from v2:
+- fixed the web server performance regression, in a way vaguely similar
+  to what Josef Bacik suggested (blame me for the implementation)
+- removed some code duplication so the diffstat is redder than before
+- propagate sum_exec_runtime up the tree, in preparation for CFS_BANDWIDTH
+- small cleanups left and right
+
+Changes from v1:
+- use task_se_h_weight instead of task_se_h_load in calc_delta_fair
+  and sched_slice, this seems to improve performance a little, but
+  I still have some remaining regression to chase with our web server
+  workload
+- implement a number of the changes suggested by Dietmar Eggemann
+  (still holding out for a better name for group_cfs_rq_of_parent)
+
+This series applies on top of 5.2
+
+ include/linux/sched.h |    7 
+ kernel/sched/core.c   |    3 
+ kernel/sched/debug.c  |   15 
+ kernel/sched/fair.c   |  803 +++++++++++++++++++++-----------------------------
+ kernel/sched/pelt.c   |   68 +---
+ kernel/sched/pelt.h   |    2 
+ kernel/sched/sched.h  |    9 
+ 7 files changed, 372 insertions(+), 535 deletions(-)
+
+
