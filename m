@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A38C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB256C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB3E23400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9397123400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495081;
-	bh=s0ApEAcmL3TT3fBlquZB8oeVyf6DwCkBqIEm+2y66aM=;
+	s=default; t=1566495085;
+	bh=Q4i4je0b+xN++DwkKR4jmJG7VQLrh8a2Gpmm8Fx2NY8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MTYr29Nn4hH/kJAQPBJ9Md9oIwvquXWCDgdpLPqpP6q7UZdLw9TDMrP6ibvVXReif
-	 i7Ir6Ab9hjDj+di3pDvmruHBb1fymQYWxv31tlAmuCYVosNuMSbubqD4y6i/IDWumC
-	 hc3mWn5BBps0YgWkAmA7VFjjbLYRKNaGQMKByn+4=
+	b=RR0o7iwqyeBgXF+iDqSbTIS8BMuCB81TB2BV1STCR+JaZnipY/PZJE1b61W2F/qfi
+	 +vQNW8Mc7vhQTenOWMmqV9j+J+sVmxE9ygjDgtDTeQZvmFG8Wv5KsswKjXIKPaKgzq
+	 v98FG9Z3U8U7vuVAppmmX0Ta5Ie9LVlYrrfSSiWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392221AbfHVRbQ (ORCPT
+        id S2404536AbfHVRZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:31:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50692 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:25:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404555AbfHVRZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:59 -0400
+        id S1731556AbfHVRY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:59 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D70F82341A;
-        Thu, 22 Aug 2019 17:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B60382341C;
+        Thu, 22 Aug 2019 17:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494758;
-        bh=s0ApEAcmL3TT3fBlquZB8oeVyf6DwCkBqIEm+2y66aM=;
+        s=default; t=1566494698;
+        bh=Q4i4je0b+xN++DwkKR4jmJG7VQLrh8a2Gpmm8Fx2NY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VIbekyjkmeP4Jkq/L5K+JiEDsFgg8R6lsQVnT0VZWHVdcw90LCWxl3HvmAm1Q89sN
-         vj/n5d+d0TkIu3hq+xJntaRUKfdUzSNwCJM3evTLln40LHRI8EspBvsAYFC+C65F9G
-         zAYC1lZ0FCq31g5H8fimcFxMzqfimRe5U3tkJ0/0=
+        b=AOqMSv2qSKrjcciV/3jdXadTI4fC6Twx5pxiFyvB9Z4haEg5bYM4NbpKidSHqkY29
+         JnRPVc/VSo52PUxISYs/3SH4jCqZWupXNphED9VzdGTp9Ft01ayotp4RFNl24m8Xm+
+         2fnEKK2O68rR8Ui2YW/g/Z7lgOumufZvcu+/aqAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 59/85] USB: core: Fix races in character device registration and deregistraion
-Date:   Thu, 22 Aug 2019 10:19:32 -0700
-Message-Id: <20190822171733.779726452@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Hiroyuki Yamamoto <hyamamo@allied-telesis.co.jp>,
+        Yoshiaki Okamoto <yokamoto@allied-telesis.co.jp>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 51/71] USB: serial: option: Add support for ZTE MF871A
+Date:   Thu, 22 Aug 2019 10:19:26 -0700
+Message-Id: <20190822171730.038267294@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
-References: <20190822171731.012687054@linuxfoundation.org>
+In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
+References: <20190822171726.131957995@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,89 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Yoshiaki Okamoto <yokamoto@allied-telesis.co.jp>
 
-commit 303911cfc5b95d33687d9046133ff184cf5043ff upstream.
+commit 7e7ae38bf928c5cfa6dd6e9a2cf8b42c84a27c92 upstream.
 
-The syzbot fuzzer has found two (!) races in the USB character device
-registration and deregistration routines.  This patch fixes the races.
+This patch adds support for MF871A USB modem (aka Speed USB STICK U03)
+to option driver. This modem is manufactured by ZTE corporation, and
+sold by KDDI.
 
-The first race results from the fact that usb_deregister_dev() sets
-usb_minors[intf->minor] to NULL before calling device_destroy() on the
-class device.  This leaves a window during which another thread can
-allocate the same minor number but will encounter a duplicate name
-error when it tries to register its own class device.  A typical error
-message in the system log would look like:
+Interface layout:
+0: AT
+1: MODEM
 
-    sysfs: cannot create duplicate filename '/class/usbmisc/ldusb0'
+usb-devices output:
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  9 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=19d2 ProdID=1481 Rev=52.87
+S:  Manufacturer=ZTE,Incorporated
+S:  Product=ZTE Technologies MSM
+S:  SerialNumber=1234567890ABCDEF
+C:  #Ifs= 2 Cfg#= 1 Atr=80 MxPwr=500mA
+I:  If#= 0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
 
-The patch fixes this race by destroying the class device first.
-
-The second race is in usb_register_dev().  When that routine runs, it
-first allocates a minor number, then drops minor_rwsem, and then
-creates the class device.  If the device creation fails, the minor
-number is deallocated and the whole routine returns an error.  But
-during the time while minor_rwsem was dropped, there is a window in
-which the minor number is allocated and so another thread can
-successfully open the device file.  Typically this results in
-use-after-free errors or invalid accesses when the other thread closes
-its open file reference, because the kernel then tries to release
-resources that were already deallocated when usb_register_dev()
-failed.  The patch fixes this race by keeping minor_rwsem locked
-throughout the entire routine.
-
-Reported-and-tested-by: syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1908121607590.1659-100000@iolanthe.rowland.org
+Co-developed-by: Hiroyuki Yamamoto <hyamamo@allied-telesis.co.jp>
+Signed-off-by: Hiroyuki Yamamoto <hyamamo@allied-telesis.co.jp>
+Signed-off-by: Yoshiaki Okamoto <yokamoto@allied-telesis.co.jp>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/file.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/usb/serial/option.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/core/file.c
-+++ b/drivers/usb/core/file.c
-@@ -193,9 +193,10 @@ int usb_register_dev(struct usb_interfac
- 		intf->minor = minor;
- 		break;
- 	}
--	up_write(&minor_rwsem);
--	if (intf->minor < 0)
-+	if (intf->minor < 0) {
-+		up_write(&minor_rwsem);
- 		return -EXFULL;
-+	}
- 
- 	/* create a usb class device for this usb interface */
- 	snprintf(name, sizeof(name), class_driver->name, minor - minor_base);
-@@ -203,12 +204,11 @@ int usb_register_dev(struct usb_interfac
- 				      MKDEV(USB_MAJOR, minor), class_driver,
- 				      "%s", kbasename(name));
- 	if (IS_ERR(intf->usb_dev)) {
--		down_write(&minor_rwsem);
- 		usb_minors[minor] = NULL;
- 		intf->minor = -1;
--		up_write(&minor_rwsem);
- 		retval = PTR_ERR(intf->usb_dev);
- 	}
-+	up_write(&minor_rwsem);
- 	return retval;
- }
- EXPORT_SYMBOL_GPL(usb_register_dev);
-@@ -234,12 +234,12 @@ void usb_deregister_dev(struct usb_inter
- 		return;
- 
- 	dev_dbg(&intf->dev, "removing %d minor\n", intf->minor);
-+	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
- 
- 	down_write(&minor_rwsem);
- 	usb_minors[intf->minor] = NULL;
- 	up_write(&minor_rwsem);
- 
--	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
- 	intf->usb_dev = NULL;
- 	intf->minor = -1;
- 	destroy_usb_class();
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1552,6 +1552,7 @@ static const struct usb_device_id option
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1428, 0xff, 0xff, 0xff),  /* Telewell TW-LTE 4G v2 */
+ 	  .driver_info = RSVD(2) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(ZTE_VENDOR_ID, 0x1476, 0xff) },	/* GosunCn ZTE WeLink ME3630 (ECM/NCM mode) */
++	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1481, 0xff, 0x00, 0x00) }, /* ZTE MF871A */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1533, 0xff, 0xff, 0xff) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1534, 0xff, 0xff, 0xff) },
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(ZTE_VENDOR_ID, 0x1535, 0xff, 0xff, 0xff) },
 
 
