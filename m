@@ -2,140 +2,87 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B377AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461CAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9070C21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15AB42173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732031AbfHVNOT (ORCPT
+        id S1732242AbfHVNQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:14:19 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:46797 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727685AbfHVNOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:14:19 -0400
-Received: from theinternet.molgen.mpg.de (theinternet.molgen.mpg.de [141.14.31.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: buczek)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id E8B0F201A3C3E;
-        Thu, 22 Aug 2019 15:14:16 +0200 (CEST)
-Subject: Re: Brocken/incomplete `/proc/vmcore`
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>
-Cc:     kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1d18de74-76e3-823c-7480-fad1d6012026@molgen.mpg.de>
-From:   Donald Buczek <buczek@molgen.mpg.de>
-Message-ID: <5431590a-e0fa-afac-2f38-8c3b60853d0d@molgen.mpg.de>
-Date:   Thu, 22 Aug 2019 15:14:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 09:16:22 -0400
+Received: from mga12.intel.com ([192.55.52.136]:16964 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727685AbfHVNQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 09:16:21 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 06:16:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,416,1559545200"; 
+   d="scan'208";a="196245250"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by fmsmga001.fm.intel.com with ESMTP; 22 Aug 2019 06:16:19 -0700
+Date:   Thu, 22 Aug 2019 21:17:45 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
+        mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        yu.c.zhang@intel.com, alazar@bitdefender.com
+Subject: Re: [PATCH RESEND v4 7/9] KVM: VMX: Handle SPP induced vmexit and
+ page fault
+Message-ID: <20190822131745.GA20168@local-michael-cet-test>
+References: <20190814070403.6588-1-weijiang.yang@intel.com>
+ <20190814070403.6588-8-weijiang.yang@intel.com>
+ <5f6ba406-17c4-a552-2352-2ff50569aac0@redhat.com>
+ <fb6cd8b4-eee9-6e58-4047-550811bffd58@redhat.com>
+ <20190820134435.GE4828@local-michael-cet-test.sh.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1d18de74-76e3-823c-7480-fad1d6012026@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820134435.GE4828@local-michael-cet-test.sh.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Paul,
-
-On 8/15/19 1:36 PM, Paul Menzel wrote:
-> Dear Linux folks,
+On Tue, Aug 20, 2019 at 09:44:35PM +0800, Yang Weijiang wrote:
+> On Mon, Aug 19, 2019 at 05:04:23PM +0200, Paolo Bonzini wrote:
+> > On 19/08/19 16:43, Paolo Bonzini wrote:
+> > >> +			/*
+> > >> +			 * Record write protect fault caused by
+> > >> +			 * Sub-page Protection, let VMI decide
+> > >> +			 * the next step.
+> > >> +			 */
+> > >> +			if (spte & PT_SPP_MASK) {
+> > > Should this be "if (spte & PT_WRITABLE_MASK)" instead?  That is, if the
+> > > page is already writable, the fault must be an SPP fault.
+> > 
+> > Hmm, no I forgot how SPP works; still, this is *not* correct.  For
+> > example, if SPP marks part of a page as read-write, but KVM wants to
+> > write-protect the whole page for access or dirty tracking, that should
+> > not cause an SPP exit.
+> > 
+> > So I think that when KVM wants to write-protect the whole page
+> > (wrprot_ad_disabled_spte) it must also clear PT_SPP_MASK; for example it
+> > could save it in bit 53 (PT64_SECOND_AVAIL_BITS_SHIFT + 1).  If the
+> > saved bit is set, fast_page_fault must then set PT_SPP_MASK instead of
+> > PT_WRITABLE_MASK.
+> Sure, will change the processing flow.
 > 
-> 
-> Using Linux 4.19.57 (configuration attached), crashing the system, and
-> starting it using the same Linux kernel as crash kernel, the available
-> `/proc/vmcore` seems to be incomplete.
-> 
-> Running GDB commands, working with `/proc/kcore`, do not work with
-> `/proc/vmcore`, and the addresses are not there.
-> 
-> In the running system, iterating through the tasks works.
-> 
-> ```
-> macro define offsetof(type, member) ((size_t)(&((type *)0)->member))
-> macro define container_of(ptr,type,member)  ((type *)((size_t)ptr-offsetof(type,member)))
-> ```
-> 
-> ### /proc/kcore ###
-> 
-> ```
-> Core was generated by `BOOT_IMAGE=/boot/bzImage-4.19.57.mx64.286 root=LABEL=root ro crashkernel=512M c'.
-> #0  0x0000000000000000 in irq_stack_union ()
-> (gdb) source gdb-macros.txt
-> (gdb) set $t=&init_task
-> (gdb) print $t->tasks
-> $1 = {next = 0xffff889ffbb0f080, prev = 0xffff88bff9b09300}
-> (gdb) print $t->pid
-> $2 = 0
-> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-> (gdb) print $t->tasks
-> $3 = {next = 0xffff889ffbb0e340, prev = 0xffffffff82411a80 <init_task+768>}
-> (gdb) print $t->pid
-> $4 = 1
-> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-> (gdb) print $t->tasks
-> $5 = {next = 0xffff889ffbb530c0, prev = 0xffff889ffbb0f080}
-> (gdb) print $t->pid
-> $6 = 2
-> ```
-> 
-> ### /proc/vmcore ###
-> 
-> After the crash by SysRQ trigger, values in `/proc/vmcore` are incorrect.
-> 
-> ```
-> (gdb) set $t=&init_task
-> (gdb) print $t->tasks
-> $1 = {next = 0xffff889ffbb0f080, prev = 0xffff88bff9b09300}
-> (gdb) print $t->pid
-> $2 = 0
-> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-> (gdb) print $t->tasks
-> $3 = {next = 0x0 <irq_stack_union>, prev = 0x0 <irq_stack_union>}
-> (gdb) print $t->pid
-> $4 = 0
-> ```
-> 
-> We can reproduce this in a virtual machine and on a big server.
-
-It is the same bug as the one described in my mail "/proc/vmcore and wrong PAGE_OFFSET". The task list can be walked if addresses are corrected by 0x0000008000000000:
-
-(gdb) set $t=&init_task
-(gdb) print $t->pid
-$1 = 0
-(gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-(gdb) set $t=(struct task_struct *)( (char *)$t - 0x0000008000000000)
-(gdb) print $t->pid
-$2 = 1
-(gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
-(gdb) set $t=(struct task_struct *)( (char *)$t - 0x0000008000000000)
-(gdb) print $t->pid
-$3 = 2
-
-The debugger has wrongly mapped the physical memory at virtual 0xffff880000000000 instead of at 0xffff888000000000, because the vmcore file says so for yet unknown reasons.
-
-Donald
-
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-
-
--- 
-Donald Buczek
-buczek@molgen.mpg.de
-Tel: +49 30 8413 1433
+> > On re-entry this will cause an SPP vmexit;
+> > fast_page_fault should never trigger an SPP userspace exit on its own,
+> > all the SPP handling should go through handle_spp.
+ Hi, Paolo,
+ According to the latest SDM(28.2.4), handle_spp only handles SPPT miss and SPPT
+ misconfig(exit_reason==66), subpage write access violation causes EPT violation,
+ so have to deal with the two cases into handlers.
+> > Paolo
