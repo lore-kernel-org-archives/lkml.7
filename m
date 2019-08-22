@@ -2,52 +2,52 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D59C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A37CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6EB20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3968223405
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495666;
-	bh=npn5csC58/Gqehne4ZrpsB2rfX7ftSA4a3/ETkSOceI=;
+	s=default; t=1566495670;
+	bh=oxdxb3+q5l4YKRxmcQH3c+7PvrvDkfftZOxp4GEsiiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xy/D4iLkfgXzGRd7g9hvfLROdDsiLn/sZ4SpSBuNGNUBu9yVHRJl4libpLbJ0XMwj
-	 p34+U+pB09wGFnIN/5TELVs1G6r3AElt5hQrST3znz5NJq+o8sA/SvmrjH5r7uIM+9
-	 OgGS9abJDWRROxI7iucq0bqAd8YeK79TGlSWlORs=
+	b=1DzMZbUGu1oaW62CcP7q1qKaYuZTwzVHkfyEOBU5baINuvqsTCdYThzxWKBk+QfWg
+	 h1ai4B5eQQitI/wl/vKeENtLZheau3i8hq4GHgB8OOohnmWhRWhoVJsYRSD9mjLwmN
+	 HdQZ3cPVDaOh2ZJKlZPGlFfChLoV1xWe1FUoTF20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405117AbfHVRlF (ORCPT
+        id S2405109AbfHVRlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 22 Aug 2019 13:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44842 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:44920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404016AbfHVRYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:00 -0400
+        id S2404021AbfHVRYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:01 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 206BA23406;
+        by mail.kernel.org (Postfix) with ESMTPSA id D33E82341B;
         Thu, 22 Aug 2019 17:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494640;
-        bh=npn5csC58/Gqehne4ZrpsB2rfX7ftSA4a3/ETkSOceI=;
+        s=default; t=1566494641;
+        bh=oxdxb3+q5l4YKRxmcQH3c+7PvrvDkfftZOxp4GEsiiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ePabi0ru1vQmcxmY1gpiBQ1qJHNiNjXNdhKmGy5rpvhaHB/90utEjme0+OYWeSwV5
-         E+q5Dt7nckov2W/Z47aQUay3p3Z/pLkhSF7JhxVr5UfiepXC6lt9o02sxVvkvXEKDF
-         H2J91tn9nTaZK1TjkUUk3XPi4Kfg9fju3pb/7COU=
+        b=TUe/cUce9IGnMUYaZllcculWoinQa9k8pCwpwXNTB7hBwmzWcO57of/YW/ebFyPQ0
+         J/sHDkGgtFuG4+SckzEIsDoaTjGN6BIUVaizmW+0+nVwPcDobV96DrMSP7ITp9eg1v
+         qb/LoJEmMkCW3VPXhzrUzdfvj9rtzbP84MQZ8UJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Subject: [PATCH 4.9 038/103] smb3: send CAP_DFS capability during session setup
-Date:   Thu, 22 Aug 2019 10:18:26 -0700
-Message-Id: <20190822171730.352987289@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 074/103] ata: libahci: do not complain in case of deferred probe
+Date:   Thu, 22 Aug 2019 10:19:02 -0700
+Message-Id: <20190822171731.917320933@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -60,40 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+[ Upstream commit 090bb803708198e5ab6b0046398c7ed9f4d12d6b ]
 
-commit 8d33096a460d5b9bd13300f01615df5bb454db10 upstream.
+Retrieving PHYs can defer the probe, do not spawn an error when
+-EPROBE_DEFER is returned, it is normal behavior.
 
-We had a report of a server which did not do a DFS referral
-because the session setup Capabilities field was set to 0
-(unlike negotiate protocol where we set CAP_DFS).  Better to
-send it session setup in the capabilities as well (this also
-more closely matches Windows client behavior).
-
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: b1a9edbda040 ("ata: libahci: allow to use multiple PHYs")
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2pdu.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/ata/libahci_platform.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -660,7 +660,12 @@ SMB2_sess_alloc_buffer(struct SMB2_sess_
- 	else
- 		req->SecurityMode = 0;
+diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+index cd2eab6aa92ea..65371e1befe8a 100644
+--- a/drivers/ata/libahci_platform.c
++++ b/drivers/ata/libahci_platform.c
+@@ -300,6 +300,9 @@ static int ahci_platform_get_phy(struct ahci_host_priv *hpriv, u32 port,
+ 		hpriv->phys[port] = NULL;
+ 		rc = 0;
+ 		break;
++	case -EPROBE_DEFER:
++		/* Do not complain yet */
++		break;
  
-+#ifdef CONFIG_CIFS_DFS_UPCALL
-+	req->Capabilities = cpu_to_le32(SMB2_GLOBAL_CAP_DFS);
-+#else
- 	req->Capabilities = 0;
-+#endif /* DFS_UPCALL */
-+
- 	req->Channel = 0; /* MBZ */
- 
- 	sess_data->iov[0].iov_base = (char *)req;
+ 	default:
+ 		dev_err(dev,
+-- 
+2.20.1
+
 
 
