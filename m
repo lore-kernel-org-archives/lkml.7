@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46039C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4323CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1514720856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1693A20856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495942;
-	bh=LGNaU8+gwT1lUJF7Cp5Zz30pkN0Csrayl+Ce2Av5jlY=;
+	s=default; t=1566495951;
+	bh=d4aXzbNgr0rYiq6xmLABKv62VPP5r1AMuZX8nIKaVVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T5E/rMwZEg9VWzVEyKCWn1ymn4Uz6epKphaV3e+bBdmYdNgmBPnBqZ5h7Mr+GqQtz
-	 KxUXelh7P/mZyF4rGcmt5Ns1TnlMSbz1VaEL1P3PXBh0cTF0ghLPekEtGtxYr7H6bk
-	 Z3Hsy1uYwtuIoclNpn9l7NNd38aJ2t+ngO6rkRqY=
+	b=dJAAwRJmrfPZbIl1rVQ4a3OhvU9Rj/geSy3fVppnZww0xavN2i4z4gRIg0bt/ACk6
+	 WO5Iwkl2x6o4nGnlBX9AcCyHrT7x8bB+MQAndeNwW3JEaC5yIRgUFeJpG1r5IjGb1c
+	 itVFdc0UIrZv44b6OWfCaXFFrWsCFEhHn+Nep3Is=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393013AbfHVRpl (ORCPT
+        id S2393026AbfHVRpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:45:41 -0400
+        Thu, 22 Aug 2019 13:45:49 -0400
 Received: from mail.kernel.org ([198.145.29.99]:42206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403790AbfHVRXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:03 -0400
+        id S1731760AbfHVRXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:02 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6423223407;
-        Thu, 22 Aug 2019 17:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2886923405;
+        Thu, 22 Aug 2019 17:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494583;
-        bh=LGNaU8+gwT1lUJF7Cp5Zz30pkN0Csrayl+Ce2Av5jlY=;
+        s=default; t=1566494581;
+        bh=d4aXzbNgr0rYiq6xmLABKv62VPP5r1AMuZX8nIKaVVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tQikkChu+K0GEplOeLzSLtok/mZtftLp2ngnYhRiKV2+O4VoXdQlDewzQudpzviEh
-         XEuddMqT1B+rTt2ydMdHNlFwYUr55+wqbDMphbXvFa9hH2KoXU8Xq612zjFRG2E7/G
-         xC11c2FHyZpHRu0JIe+ZuGd8Q6PPcCc8QAX0m57U=
+        b=k8DkKAiGIz8oTT9rXLLBQsQ/CApUIv6O3xdDKf/7dHtehuFfVxG5gNwYnYPrqlfwB
+         w20ecfOIPoKoaPBrIm3EoCYS1y5f+gKbMnylbqMubWXtHtOhgY7be+ZNUn5IYzMLCh
+         1B69vehjSh9xcQbiigYGE5+wpDX5h0xVEYkRsZ28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huy Nguyen <huyn@mellanox.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.4 76/78] net/mlx5e: Only support tx/rx pause setting for port owner
-Date:   Thu, 22 Aug 2019 10:19:20 -0700
-Message-Id: <20190822171834.232407289@linuxfoundation.org>
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.4 73/78] x86/boot: Disable the address-of-packed-member compiler warning
+Date:   Thu, 22 Aug 2019 10:19:17 -0700
+Message-Id: <20190822171834.147513311@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -60,33 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huy Nguyen <huyn@mellanox.com>
+From: Matthias Kaehlcke <mka@chromium.org>
 
-[ Upstream commit 466df6eb4a9e813b3cfc674363316450c57a89c5 ]
+commit 20c6c189045539d29f4854d92b7ea9c329e1edfc upstream.
 
-Only support changing tx/rx pause frame setting if the net device
-is the vport group manager.
+The clang warning 'address-of-packed-member' is disabled for the general
+kernel code, also disable it for the x86 boot code.
 
-Fixes: 3c2d18ef22df ("net/mlx5e: Support ethtool get/set_pauseparam")
-Signed-off-by: Huy Nguyen <huyn@mellanox.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+This suppresses a bunch of warnings like this when building with clang:
+
+./arch/x86/include/asm/processor.h:535:30: warning: taking address of
+  packed member 'sp0' of class or structure 'x86_hw_tss' may result in an
+  unaligned pointer value [-Waddress-of-packed-member]
+    return this_cpu_read_stable(cpu_tss.x86_tss.sp0);
+                                ^~~~~~~~~~~~~~~~~~~
+./arch/x86/include/asm/percpu.h:391:59: note: expanded from macro
+  'this_cpu_read_stable'
+    #define this_cpu_read_stable(var)       percpu_stable_op("mov", var)
+                                                                    ^~~
+./arch/x86/include/asm/percpu.h:228:16: note: expanded from macro
+  'percpu_stable_op'
+    : "p" (&(var)));
+             ^~~
+
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Cc: Doug Anderson <dianders@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20170725215053.135586-1-mka@chromium.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -855,6 +855,9 @@ static int mlx5e_set_pauseparam(struct n
- 	struct mlx5_core_dev *mdev = priv->mdev;
- 	int err;
+---
+ arch/x86/boot/compressed/Makefile |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -30,6 +30,7 @@ KBUILD_CFLAGS += $(cflags-y)
+ KBUILD_CFLAGS += -mno-mmx -mno-sse
+ KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
+ KBUILD_CFLAGS += $(call cc-option,-fno-stack-protector)
++KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
  
-+	if (!MLX5_CAP_GEN(mdev, vport_group_manager))
-+		return -EOPNOTSUPP;
-+
- 	if (pauseparam->autoneg)
- 		return -EINVAL;
- 
+ KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+ GCOV_PROFILE := n
 
 
