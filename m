@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C228C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD98EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DD92064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 959962064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494944;
-	bh=Hx/oTr1LiKPxSvknHAXUYWhatBWqSa8VofgNXmS2oX8=;
+	s=default; t=1566494948;
+	bh=5u86D2mnbw9aSHt54t/7AtwNfywdza/lGyREW78gyl8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YqetpSyZtExxbD+e4LIbx1YSf0k3AYhfV5jzlqFUFPqoWBsOoooLu8WSA45cgkZzs
-	 4VhZGMQbzkNRzDcEYFT1nztx6Qc0F5TULMtKbw6SoREpLL0JET1ehK9Ltww5zntMbj
-	 mC3heixR3GWC4UZRhnEnxNEZpf8lvb/TMyNk9pEo=
+	b=ZKmolR/fknApxQt85PvmNac+48afFXZXhkitqlugn5EF1kM2+Ujp2QNu97BHP9zpa
+	 VSqkarRcYyyPyEXm9Et3aTvQQCIud/OcLhj6osAqsFnsl7wC8F4uB33aFtfGAu8DiY
+	 DQmZHcz4MemlooloHo7eguBNavuqPUdJe+gT/O+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404754AbfHVR0t (ORCPT
+        id S2388019AbfHVR3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:26:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49348 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:29:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391853AbfHVRZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:33 -0400
+        id S2404751AbfHVR0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:26:49 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5160D23427;
-        Thu, 22 Aug 2019 17:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A96B2064A;
+        Thu, 22 Aug 2019 17:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494732;
-        bh=Hx/oTr1LiKPxSvknHAXUYWhatBWqSa8VofgNXmS2oX8=;
+        s=default; t=1566494809;
+        bh=5u86D2mnbw9aSHt54t/7AtwNfywdza/lGyREW78gyl8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZdzL05H5w+1oCU9fnbltB1oULIlHxMDAPvrXxGLpoDgCpmhDSfgfWjKHwIFlU6PrS
-         HxR/cD6RFKvYMsPzEhhpdL+eOWy3ttXGivFUAExxeMkGhEtsifXhC5uboRbAFpf1FH
-         Q2BV9uqibBDEqkx8643jOLxfr3wVlwMEnsIVOnuM=
+        b=I+7oz9QuupO7tkC6XOwZ1kSavWUyGLz52jh56rFCFsI+UrsFX2FFlWYJb3P/MrwGi
+         HaZ++k9fF7skZPFE3TIhr8UAYABYkSpZ13gBiz8tFKbtN194fsPey502LtIGw5z5Sl
+         V2F9nFX5E0tAq/swsLj/ROXu8X1Ef6sMzX/tOxqY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+3499a83b2d062ae409d4@syzkaller.appspotmail.com,
-        Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 23/85] net: usb: pegasus: fix improper read if get_registers() fail
-Date:   Thu, 22 Aug 2019 10:18:56 -0700
-Message-Id: <20190822171732.175012031@linuxfoundation.org>
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        "Wan Yusof, Wan Fahim AsqalaniX" 
+        <wan.fahim.asqalanix.wan.yusof@intel.com>
+Subject: [PATCH 4.19 67/85] drm/i915/cfl: Add a new CFL PCI ID.
+Date:   Thu, 22 Aug 2019 10:19:40 -0700
+Message-Id: <20190822171734.100250801@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -61,32 +62,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Kirjanov <kda@linux-powerpc.org>
+From: Rodrigo Vivi <rodrigo.vivi@intel.com>
 
-commit 224c04973db1125fcebefffd86115f99f50f8277 upstream.
+commit d0e062ebb3a44b56a7e672da568334c76f763552 upstream.
 
-get_registers() may fail with -ENOMEM and in this
-case we can read a garbage from the status variable tmp.
+One more CFL ID added to spec.
 
-Reported-by: syzbot+3499a83b2d062ae409d4@syzkaller.appspotmail.com
-Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: José Roberto de Souza <jose.souza@intel.com>
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180803232721.20038-1-rodrigo.vivi@intel.com
+Signed-off-by: Wan Yusof, Wan Fahim AsqalaniX <wan.fahim.asqalanix.wan.yusof@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/usb/pegasus.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/drm/i915_pciids.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/usb/pegasus.c
-+++ b/drivers/net/usb/pegasus.c
-@@ -285,7 +285,7 @@ static void mdio_write(struct net_device
- static int read_eprom_word(pegasus_t *pegasus, __u8 index, __u16 *retdata)
- {
- 	int i;
--	__u8 tmp;
-+	__u8 tmp = 0;
- 	__le16 retdatai;
- 	int ret;
+--- a/include/drm/i915_pciids.h
++++ b/include/drm/i915_pciids.h
+@@ -386,6 +386,7 @@
+ 	INTEL_VGA_DEVICE(0x3E91, info), /* SRV GT2 */ \
+ 	INTEL_VGA_DEVICE(0x3E92, info), /* SRV GT2 */ \
+ 	INTEL_VGA_DEVICE(0x3E96, info), /* SRV GT2 */ \
++	INTEL_VGA_DEVICE(0x3E98, info), /* SRV GT2 */ \
+ 	INTEL_VGA_DEVICE(0x3E9A, info)  /* SRV GT2 */
  
+ /* CFL H */
 
 
