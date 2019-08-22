@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DA1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C946C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422F7233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C5D205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495908;
-	bh=YLrwVatPL9+gX9zHsjW8OKCQyEPKpL14pEZk8waVw5M=;
+	s=default; t=1566495912;
+	bh=2lZWLAxLDs9rToWhxHHfjQSGkiHyEl+SzcW5iQL0/0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A5ebHmAVb7GBiF0ks6jjOd89g6L3s1gVWjvMDmUnyMLHZ3nW0PXbD+8A+sNHDGQJ4
-	 ikWHvueEy/1TXGxQC+5r6o0Es1XRqyX5qhOqoIibbXkoF4v7ydABVCrbsPfsvFAH9j
-	 +rVRhi1wU4hqHacJLpanW8LZbADgw33jYLT4n7xw=
+	b=xS20T/Pkg8oxXukQUiA71sgKYy13btsR2xXgP6G+l+TaiQPO54bHt/Jv7Dv8HG27a
+	 WJC7cWw2rZLbbpgmnFQpHdBqOGMPhiEIpEQrjLiI878CNQ0hoLjBGWDT2Ww/X5WVd8
+	 aShJ4hrBLb48T/EaMboyTw8pCs+kbaqIe1lZwJLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392905AbfHVRpG (ORCPT
+        id S2392918AbfHVRpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:45:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42604 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:45:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403826AbfHVRXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:11 -0400
+        id S2403843AbfHVRXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:09 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25D5C23407;
-        Thu, 22 Aug 2019 17:23:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4B0D21743;
+        Thu, 22 Aug 2019 17:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494590;
-        bh=YLrwVatPL9+gX9zHsjW8OKCQyEPKpL14pEZk8waVw5M=;
+        s=default; t=1566494588;
+        bh=2lZWLAxLDs9rToWhxHHfjQSGkiHyEl+SzcW5iQL0/0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UhEqwaxF4V96I/z4Vc3aH174YxrYcp47HatTiWMXM/ZOMN8YU4b/ayv39t8c8aK4s
-         gjb3qZM9zGz0l0T8kObep7B1urzlvBGwNB0yq2RmAuvNv2wT43ph9arEuyYCduKBUI
-         rCcW44gEsVYMWFKozROL9XNbNeTaySmDdx14k4M0=
+        b=I9mUrqhNRb7XkctrV58HIeyBcezJZUUZTmUR6ORzi4nwI8w/VRlNcICe1NdWR4tzi
+         mOaTlBmnNlddC6+GGK2m6ohQiHzdCmBb6l7FrhekW0CoBlY37RBo/v4yDNnBcvPdJV
+         rQ/9ZOSw0jAVkKzwxfzIU04L/ypRhbfN32rB7gOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gavin Li <git@thegavinli.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.9 001/103] usb: usbfs: fix double-free of usb memory upon submiturb error
-Date:   Thu, 22 Aug 2019 10:17:49 -0700
-Message-Id: <20190822171728.499909862@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.4 31/78] mwifiex: fix 802.11n/WPA detection
+Date:   Thu, 22 Aug 2019 10:18:35 -0700
+Message-Id: <20190822171832.944750860@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
-References: <20190822171728.445189830@linuxfoundation.org>
+In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
+References: <20190822171832.012773482@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,34 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Li <git@thegavinli.com>
+From: Brian Norris <briannorris@chromium.org>
 
-commit c43f28dfdc4654e738aa6d3fd08a105b2bee758d upstream.
+commit df612421fe2566654047769c6852ffae1a31df16 upstream.
 
-Upon an error within proc_do_submiturb(), dec_usb_memory_use_count()
-gets called once by the error handling tail and again by free_async().
-Remove the first call.
+Commit 63d7ef36103d ("mwifiex: Don't abort on small, spec-compliant
+vendor IEs") adjusted the ieee_types_vendor_header struct, which
+inadvertently messed up the offsets used in
+mwifiex_is_wpa_oui_present(). Add that offset back in, mirroring
+mwifiex_is_rsn_oui_present().
 
-Signed-off-by: Gavin Li <git@thegavinli.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190804235044.22327-1-gavinli@thegavinli.com
+As it stands, commit 63d7ef36103d breaks compatibility with WPA (not
+WPA2) 802.11n networks, since we hit the "info: Disable 11n if AES is
+not supported by AP" case in mwifiex_is_network_compatible().
+
+Fixes: 63d7ef36103d ("mwifiex: Don't abort on small, spec-compliant vendor IEs")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/usb/core/devio.c |    2 --
- 1 file changed, 2 deletions(-)
 
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -1810,8 +1810,6 @@ static int proc_do_submiturb(struct usb_
- 	return 0;
+---
+ drivers/net/wireless/mwifiex/main.h |    1 +
+ drivers/net/wireless/mwifiex/scan.c |    3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/net/wireless/mwifiex/main.h
++++ b/drivers/net/wireless/mwifiex/main.h
+@@ -108,6 +108,7 @@ enum {
  
-  error:
--	if (as && as->usbm)
--		dec_usb_memory_use_count(as->usbm, &as->usbm->urb_use_count);
- 	kfree(isopkt);
- 	kfree(dr);
- 	if (as)
+ #define MWIFIEX_MAX_TOTAL_SCAN_TIME	(MWIFIEX_TIMER_10S - MWIFIEX_TIMER_1S)
+ 
++#define WPA_GTK_OUI_OFFSET				2
+ #define RSN_GTK_OUI_OFFSET				2
+ 
+ #define MWIFIEX_OUI_NOT_PRESENT			0
+--- a/drivers/net/wireless/mwifiex/scan.c
++++ b/drivers/net/wireless/mwifiex/scan.c
+@@ -151,7 +151,8 @@ mwifiex_is_wpa_oui_present(struct mwifie
+ 	if (((bss_desc->bcn_wpa_ie) &&
+ 	     ((*(bss_desc->bcn_wpa_ie)).vend_hdr.element_id ==
+ 	      WLAN_EID_VENDOR_SPECIFIC))) {
+-		iebody = (struct ie_body *) bss_desc->bcn_wpa_ie->data;
++		iebody = (struct ie_body *)((u8 *)bss_desc->bcn_wpa_ie->data +
++					    WPA_GTK_OUI_OFFSET);
+ 		oui = &mwifiex_wpa_oui[cipher][0];
+ 		ret = mwifiex_search_oui_in_ie(iebody, oui);
+ 		if (ret)
 
 
