@@ -2,56 +2,57 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2310C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39332C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD152082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BB923405
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SXwJ5gNI"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="bqniYupz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404354AbfHVTZV (ORCPT
+        id S2404406AbfHVTZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 15:25:21 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45754 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404305AbfHVTZR (ORCPT
+        Thu, 22 Aug 2019 15:25:25 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37174 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404320AbfHVTZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 15:25:17 -0400
-Received: by mail-pg1-f193.google.com with SMTP id o13so4223017pgp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 12:25:17 -0700 (PDT)
+        Thu, 22 Aug 2019 15:25:19 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y9so4246596pfl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 12:25:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FyfNbWZdKxFWvrYaFX6247ohGc1n6i2IlhYtU0R4MSc=;
-        b=SXwJ5gNIh5SQY7nlTKo2WP1Un48e5LsC1U9OuOfWZkTgBdMg6RotiLVaK+P09DrmzE
-         QjzW950zBHesWWiKB0UCPDA3biOGksy2mAqj5HBPoZNCYLHLcGOPOHn2snAjD6IDFU6c
-         ETcf0sCqxyfbxlVxQRpeb7FNsT9aLWmfuIus8=
+        bh=/tIfWiDT7rhi/abpdmQcXHDvll3scxVbBQp4igt8ciU=;
+        b=bqniYupzhzFo73B02qXJRg6LDQw9VxDM0+7esSTGT6Ps6bYVMkEekcpx31lkcFmWkv
+         7SNJN6qVa3moqhjKAOIFDDCoSXg40jxDKh07tXdmszoHWAyUwJ3p9Ul7phjSkTMOoPf9
+         DRDocSsYUeMKoF7drMnUNK+sSXyjh1FDCJvoQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FyfNbWZdKxFWvrYaFX6247ohGc1n6i2IlhYtU0R4MSc=;
-        b=mSKWAFQYERomw8n4iBP46thbWnOQreKZkyGCYiYG5qq7vQQ7ktbd2oMCQuPt3dHG4/
-         tf9lueqXJ9Uwdto/+FmhmTpfKz2Fma7pyFIVWc4v0C2fspIy1OVl0zfjiQA41ZkBd4PM
-         KvPXBdMvinomI+PXTWWDEnT1W12+jAGFXpd1O81amJ39XcHAWcXICfExDJPjL02xR0rX
-         5ocVOj3hmgucLnCsS99c+KjGv7MqpdgWuuG+yQt/VupjcBlVwXczmumeoCyEx/3ufewf
-         PN1/pj1Dr1zjKFqhREiMNL0+FJd3pBgkIW+FyhPltjHE9ZfFCMATKpY4LNxXt1W/tMNH
-         waZQ==
-X-Gm-Message-State: APjAAAUQghckh57y7YOvaaDxH52Tnhp+cgcsUtmqgNfhSEysrcpkQ1fl
-        FIt5eOMeivmamD5xOT5VD/q5xw==
-X-Google-Smtp-Source: APXvYqz2G1wFBnjrDxHUN/2ILk5KhTVYDsdmpJ3R1CvZAlOJaP6PsyiVJGxATWi2HNcFU0jasc6Mvw==
-X-Received: by 2002:a17:90a:3266:: with SMTP id k93mr1361252pjb.46.1566501916581;
-        Thu, 22 Aug 2019 12:25:16 -0700 (PDT)
+        bh=/tIfWiDT7rhi/abpdmQcXHDvll3scxVbBQp4igt8ciU=;
+        b=tm6YPZVH5WlkvMcP3484HtT/I8dCY+c+WFsiTp4bCbyTLgPZanEkclDtC3yQjbCw9M
+         c5ATYLnVkPC3hdaJiQWlbAHKFBrvxTCqAgbawJNada9kgxsNR6CD8gROb5Cb4i64fbgk
+         sm9bbst0PbKuiPQlb0WFo7FH+tj4kkZdbAh2/dv0tz2FTOhMBtfoHvPsItyvFyf1URNz
+         J1EpS2PHiyu5qvIGacQejSTytSCYJyRoychv0u9SU2NIiVJWn84rBcL1W4bTchTwZO3T
+         RuqLMuDd7qcDn84qFOX0SwRHJw2Ge8Ie/gkQkP6ky5IUq6he9tCESXRRRhCAmHsN+txg
+         mrqw==
+X-Gm-Message-State: APjAAAV9MKMt5soL5eNW6PABfdj9y6fxcGLuenMmTeBYOe4f6H298xPo
+        Z7WHbVnK0jjnBLZyg50pYaTY/w==
+X-Google-Smtp-Source: APXvYqxvyPhjwJ4w7bJbI1T+twRUXk2u+vaBSyJc6vQBeCbOiTrbirkMaygnOedgYeGUk6QXZ7Wf7A==
+X-Received: by 2002:a17:90a:2767:: with SMTP id o94mr1264139pje.25.1566501918992;
+        Thu, 22 Aug 2019 12:25:18 -0700 (PDT)
 Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id c12sm198018pfc.22.2019.08.22.12.25.14
+        by smtp.gmail.com with ESMTPSA id c12sm198018pfc.22.2019.08.22.12.25.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 12:25:16 -0700 (PDT)
+        Thu, 22 Aug 2019 12:25:18 -0700 (PDT)
 From:   Scott Branden <scott.branden@broadcom.com>
 To:     Luis Chamberlain <mcgrof@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -71,9 +72,9 @@ Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
         Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH 4/7] selftests: firmware: Test partial file reads of request_firmware_into_buf
-Date:   Thu, 22 Aug 2019 12:24:48 -0700
-Message-Id: <20190822192451.5983-5-scott.branden@broadcom.com>
+Subject: [PATCH 5/7] bcm-vk: add bcm_vk UAPI
+Date:   Thu, 22 Aug 2019 12:24:49 -0700
+Message-Id: <20190822192451.5983-6-scott.branden@broadcom.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190822192451.5983-1-scott.branden@broadcom.com>
 References: <20190822192451.5983-1-scott.branden@broadcom.com>
@@ -82,125 +83,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add firmware tests for partial file reads of request_firmware_into_buf.
+Add user space api for bcm-vk driver.
 
 Signed-off-by: Scott Branden <scott.branden@broadcom.com>
 ---
- .../selftests/firmware/fw_filesystem.sh       | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
+ include/uapi/linux/misc/bcm_vk.h | 88 ++++++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 include/uapi/linux/misc/bcm_vk.h
 
-diff --git a/tools/testing/selftests/firmware/fw_filesystem.sh b/tools/testing/selftests/firmware/fw_filesystem.sh
-index 56894477c8bd..e973c658fe1a 100755
---- a/tools/testing/selftests/firmware/fw_filesystem.sh
-+++ b/tools/testing/selftests/firmware/fw_filesystem.sh
-@@ -126,6 +126,26 @@ config_unset_into_buf()
- 	echo 0 >  $DIR/config_into_buf
- }
- 
-+config_set_buf_size()
-+{
-+	echo $1 >  $DIR/config_buf_size
-+}
+diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
+new file mode 100644
+index 000000000000..df7dfd7f0702
+--- /dev/null
++++ b/include/uapi/linux/misc/bcm_vk.h
+@@ -0,0 +1,88 @@
++/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
++/*
++ * Copyright(c) 2018 Broadcom
++ */
 +
-+config_set_file_offset()
-+{
-+	echo $1 >  $DIR/config_file_offset
-+}
++#ifndef __UAPI_LINUX_MISC_BCM_VK_H
++#define __UAPI_LINUX_MISC_BCM_VK_H
 +
-+config_set_partial()
-+{
-+	echo 1 >  $DIR/config_partial
-+}
++#include <linux/ioctl.h>
++#include <linux/types.h>
 +
-+config_unset_partial()
-+{
-+	echo 0 >  $DIR/config_partial
-+}
++struct vk_metadata {
++	/* struct version, always backwards compatible */
++	__u32 version;
 +
- config_set_sync_direct()
- {
- 	echo 1 >  $DIR/config_sync_direct
-@@ -184,6 +204,35 @@ read_firmwares()
- 	done
- }
- 
-+read_firmwares_partial()
-+{
-+	if [ "$(cat $DIR/config_into_buf)" == "1" ]; then
-+		fwfile="${FW_INTO_BUF}"
-+	else
-+		fwfile="${FW}"
-+	fi
++	/* Version 0 fields */
++	__u32 card_status;
++#define VK_CARD_STATUS_FASTBOOT_READY BIT(0)
++#define VK_CARD_STATUS_FWLOADER_READY BIT(1)
 +
-+	if [ "$1" = "xzonly" ]; then
-+		fwfile="${fwfile}-orig"
-+	fi
++	__u32 firmware_version;
++	__u32 fw_status;
++	/* End version 0 fields */
 +
-+	# Strip fwfile down to match partial offset and length
-+	partial_data="$(cat $fwfile)"
-+	partial_data="${partial_data:$2:$3}"
++	__u64 reserved[14];
++	/* Total of 16*u64 for all versions */
++};
 +
-+	for i in $(seq 0 3); do
-+		config_set_read_fw_idx $i
++struct vk_image {
++	__u32 type;     /* Type of image */
++#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
++#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
++	char filename[64]; /* Filename of image */
++};
 +
-+		read_firmware="$(cat $DIR/read_firmware)"
++/* default firmware images names */
++#define VK_BOOT1_DEF_FILENAME	    "vk-boot1.bin"
++#define VK_BOOT2_DEF_FILENAME	    "vk-boot2.bin"
 +
-+		# Verify the contents are what we expect.
-+		if [ $read_firmware != $partial_data ]; then
-+			echo "request #$i: partial firmware was not loaded" >&2
-+			exit 1
-+		fi
-+	done
-+}
++struct vk_access {
++	__u8 barno;     /* BAR number to use */
++	__u8 type;      /* Type of access */
++#define VK_ACCESS_READ 0
++#define VK_ACCESS_WRITE 1
++	__u32 len;      /* length of data */
++	__u64 offset;   /* offset in BAR */
++	__u32 *data;    /* where to read/write data to */
++};
 +
- read_firmwares_expect_nofile()
- {
- 	for i in $(seq 0 3); do
-@@ -296,6 +345,21 @@ test_batched_request_firmware_into_buf()
- 	echo "OK"
- }
- 
-+test_batched_request_firmware_into_buf_partial()
-+{
-+	echo -n "Batched request_firmware_into_buf_partial() $2 off=$3 size=$4 try #$1: "
-+	config_reset
-+	config_set_name $TEST_FIRMWARE_INTO_BUF_FILENAME
-+	config_set_into_buf
-+	config_set_partial
-+	config_set_buf_size $4
-+	config_set_file_offset $3
-+	config_trigger_sync
-+	read_firmwares_partial $2 $3 $4
-+	release_all_firmware
-+	echo "OK"
-+}
++struct vk_reset {
++	__u32 arg1;
++	__u32 arg2;
++};
 +
- test_batched_request_firmware_direct()
- {
- 	echo -n "Batched request_firmware_direct() $2 try #$1: "
-@@ -348,6 +412,22 @@ for i in $(seq 1 5); do
- 	test_batched_request_firmware_into_buf $i normal
- done
- 
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf_partial $i normal 0 10
-+done
++#define VK_MAGIC              0x5E
 +
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf_partial $i normal 0 5
-+done
++/* Get metadata from Valkyrie (firmware version, card status, etc) */
++#define VK_IOCTL_GET_METADATA _IOR(VK_MAGIC, 0x1, struct vk_metadata)
 +
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf_partial $i normal 1 6
-+done
++/* Load image to Valkyrie */
++#define VK_IOCTL_LOAD_IMAGE   _IOW(VK_MAGIC, 0x2, struct vk_image)
 +
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf_partial $i normal 2 10
-+done
++/* Read data from Valkyrie */
++#define VK_IOCTL_ACCESS_BAR   _IOWR(VK_MAGIC, 0x3, struct vk_access)
 +
- for i in $(seq 1 5); do
- 	test_batched_request_firmware_direct $i normal
- done
++/* Send Reset to Valkyrie */
++#define VK_IOCTL_RESET        _IOW(VK_MAGIC, 0x4, struct vk_reset)
++
++/*
++ * message block - basic unit in the message where a message's size is always
++ *		   N x sizeof(basic_block)
++ */
++struct vk_msg_blk {
++	__u8 function_id;
++#define VK_FID_TRANS_BUF 5
++#define VK_FID_SHUTDOWN  8
++	__u8 size;
++	__u16 queue_id:4;
++	__u16 msg_id:12;
++	__u32 context_id;
++	__u32 args[2];
++#define VK_CMD_PLANES_MASK 0x000F /* number of planes to up/download */
++#define VK_CMD_UPLOAD      0x0400 /* memory transfer to vk */
++#define VK_CMD_DOWNLOAD    0x0500 /* memory transfer from vk */
++#define VK_CMD_MASK        0x0F00 /* command mask */
++};
++
++#endif /* __UAPI_LINUX_MISC_BCM_VK_H */
 -- 
 2.17.1
 
