@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2F0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4517C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95FD1233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AAC120856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495456;
-	bh=8YuwYjJzQhn4cLB3olIy40BOVZ1hEpJxinnUGLJp2HQ=;
+	s=default; t=1566495460;
+	bh=1wM/SEQJfDfuIKMxA3jc2vKJwCSpwRpH0U615cu6rx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=17QC3KGFBgjwVFYUEAt+iyfWHAIG28OOF9VRsYsE8qMcECVeZKw/H9PbX1TtaGQme
-	 SiWF/g86lfSUFHUpNIviHrfbV1bWHIbqlYiH5EDgK8uOGkuPH1lY618U5tc/OGQZkX
-	 1pRW7p74MSSNoS9SpCN6Tu8qUqiCC5Abj3xkI2WM=
+	b=0JSQYHo9aGWWe28Oi2wKloDlgKPqDBv8UfHrxcaMRbC2blwbuBoF0w9GqJTfVKAb6
+	 F2+2P9CDzjazCj/XMopkONN3C3NoaWc2yYzK3k04kuci30ZZctRz4Scnr3Iut3zfm+
+	 oJ9QwHTeusN2CHFQdjA3oJBPAUJmnsCC8HJx5njQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404332AbfHVRhf (ORCPT
+        id S2404934AbfHVRhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:37:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46354 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404244AbfHVRYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2404240AbfHVRYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 13:24:34 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 663032342B;
-        Thu, 22 Aug 2019 17:24:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA74F2341A;
+        Thu, 22 Aug 2019 17:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494674;
-        bh=8YuwYjJzQhn4cLB3olIy40BOVZ1hEpJxinnUGLJp2HQ=;
+        s=default; t=1566494673;
+        bh=1wM/SEQJfDfuIKMxA3jc2vKJwCSpwRpH0U615cu6rx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YtgAgx8P8rcHngB8+xT9W9TTq+Me22bvecuNZE6ZNKadXl9KWNbJpcK1pvFsGN6sx
-         Ih2dGyWA6s2kragiLpjWP7NvlafnZy4pmd+wJ//Y7xGVeBFupM01NciF4IGk/3rwZS
-         XUQn2lu6IGKU4civ6ISRm072o112cv9Ns8rIpLek=
+        b=cLD5DyUE5SNpMUyDlofT025BGkUDlqL9nhs4u+8ZddOsjD/g4j0lZqrv7CUB0WQct
+         VLZ1xkX3m8h/Eybv9AvLKE0egMJzFvwNfVZmPrHN/3zFX4jWiUOLslhViaNmG/kd4W
+         2pQI9n5fbc3hqzIrtCCYkfehnZVuy/CmDDrDGCd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com,
+        syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com,
         Oliver Neukum <oneukum@suse.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.14 18/71] Input: iforce - add sanity checks
-Date:   Thu, 22 Aug 2019 10:18:53 -0700
-Message-Id: <20190822171728.315771656@linuxfoundation.org>
+Subject: [PATCH 4.14 17/71] Input: kbtab - sanity check for endpoint type
+Date:   Thu, 22 Aug 2019 10:18:52 -0700
+Message-Id: <20190822171728.076175556@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
 References: <20190822171726.131957995@linuxfoundation.org>
@@ -63,34 +63,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-commit 849f5ae3a513c550cad741c68dd3d7eb2bcc2a2c upstream.
+commit c88090dfc84254fa149174eb3e6a8458de1912c4 upstream.
 
-The endpoint type should also be checked before a device
-is accepted.
+The driver should check whether the endpoint it uses has the correct
+type.
 
-Reported-by: syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com
+Reported-by: syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com
 Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/joystick/iforce/iforce-usb.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/input/tablet/kbtab.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/input/joystick/iforce/iforce-usb.c
-+++ b/drivers/input/joystick/iforce/iforce-usb.c
-@@ -145,7 +145,12 @@ static int iforce_usb_probe(struct usb_i
+--- a/drivers/input/tablet/kbtab.c
++++ b/drivers/input/tablet/kbtab.c
+@@ -125,6 +125,10 @@ static int kbtab_probe(struct usb_interf
+ 	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
  		return -ENODEV;
  
- 	epirq = &interface->endpoint[0].desc;
-+	if (!usb_endpoint_is_int_in(epirq))
++	endpoint = &intf->cur_altsetting->endpoint[0].desc;
++	if (!usb_endpoint_is_int_in(endpoint))
 +		return -ENODEV;
 +
- 	epout = &interface->endpoint[1].desc;
-+	if (!usb_endpoint_is_int_out(epout))
-+		return -ENODEV;
+ 	kbtab = kzalloc(sizeof(struct kbtab), GFP_KERNEL);
+ 	input_dev = input_allocate_device();
+ 	if (!kbtab || !input_dev)
+@@ -163,8 +167,6 @@ static int kbtab_probe(struct usb_interf
+ 	input_set_abs_params(input_dev, ABS_Y, 0, 0x1750, 4, 0);
+ 	input_set_abs_params(input_dev, ABS_PRESSURE, 0, 0xff, 0, 0);
  
- 	if (!(iforce = kzalloc(sizeof(struct iforce) + 32, GFP_KERNEL)))
- 		goto fail;
+-	endpoint = &intf->cur_altsetting->endpoint[0].desc;
+-
+ 	usb_fill_int_urb(kbtab->irq, dev,
+ 			 usb_rcvintpipe(dev, endpoint->bEndpointAddress),
+ 			 kbtab->data, 8,
 
 
