@@ -2,110 +2,131 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC12DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C66EDC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16A823401
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566488886;
-	bh=uipZavMt5Z1fZAX+sVlMS1INMUxP9WzC4H4BLym3E3M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nxJiawPTwk9XVtsW/wRNz8xUxEX9GPd8i694D/dfVzhzEQqwTxAJcYXONSeZ44L4B
-	 COsoxs/J1Ux80tj2dO3FeeemxUKGG6W8enowCy8+DVvM4JVu9WgmV05Iqbz6z/YqzC
-	 k65RPV2MtRsi7+d9eZNmcupOs6dnBbejeJBfcUpI=
+	by mail.kernel.org (Postfix) with ESMTP id 9D46F23400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:48:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sF3NPfIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388174AbfHVPsG (ORCPT
+        id S2389216AbfHVPs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:48:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387880AbfHVPsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:48:05 -0400
-Received: from zzz.localdomain (ip-173-136-158-138.anahca.spcsdns.net [173.136.158.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 684B523400;
-        Thu, 22 Aug 2019 15:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566488884;
-        bh=uipZavMt5Z1fZAX+sVlMS1INMUxP9WzC4H4BLym3E3M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jHKmYzwY8waO4dpG6B4Fjk/MSEZD03cPKRGG5tDzo3xWM2ikozg6sh9qTjWAFn9xF
-         Ok+z1PnH1dQl7NBvJDL+TTolIZMAt5KQ2llFU4mxFXKRkZN5zZSj7Nb9imaaBL5XG7
-         36ip3+Y6lJyDNPTuNR2SzLdgobtgHdHxUCsigCe8=
-Date:   Thu, 22 Aug 2019 08:47:59 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
-        syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
-        jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v2] tomoyo: Don't check open/getattr permission on
- sockets.
-Message-ID: <20190822154759.GA2020@zzz.localdomain>
-Mail-Followup-To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
-        syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
-        jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
-        "David S. Miller" <davem@davemloft.net>
-References: <201908220655.x7M6tVmv029579@www262.sakura.ne.jp>
- <20190822070129.GL6111@zzz.localdomain>
- <201908220742.x7M7gQJW078160@www262.sakura.ne.jp>
+        Thu, 22 Aug 2019 11:48:57 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46235 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfHVPs5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 11:48:57 -0400
+Received: by mail-pg1-f193.google.com with SMTP id m3so3878306pgv.13;
+        Thu, 22 Aug 2019 08:48:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2gibvD/PE/0k2/MgxLtnC9v6hycHeC3vvECK4dop/Xo=;
+        b=sF3NPfIhqt3Hzc9KufbzNsaUbbCQVjOI0o8UDhRvQtYR6/vH4PpZ/wkdh5TWxLkeKj
+         mYde/YuazOc7nnSd8AxHozSoOH7LNUG36AuVSRCxuqqR4vLq89D4Nx3G4d9wbbqMCKyv
+         sNqskZoKRu0j6XgfoLa/t2g9/VruzpdsSCZdPFcMUMdYtbVL5xgYtz5X1SrxIeajHRWC
+         kLnexInTNp9iOEi9RBQoksUAmmznkbgNBXhYWHm1bttktZ0CHdI2PQW/PQESCCDkniES
+         m8iyUQRftUUQF4+y63MkpSC4J65mZgfABsePvyUm0wMae9ctxYXnF8FEgm1kfGX4Dqp/
+         1UfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2gibvD/PE/0k2/MgxLtnC9v6hycHeC3vvECK4dop/Xo=;
+        b=KKcL7djQSNRXdS/QWIR4w2HSOmv1vX6x9NXoS2WlQGxWKZUiXs+xEP81ZbOQkAbxfO
+         dmkZ23JSPNVqO0fhBJJ81exblUSUp0mC/SUm+XjTgKhfXhlVgY2IOv2+fNvAYiClixqN
+         MZ0lYgyOWWN4oD3aY2BbMictXpjHMBIRaunvKb1sr9Lesf0bqMzCNjcxBEIJuDQUL9Jh
+         0rIWRtODGrhl9U99HFS/QnBKdkuKOCCm8Lh9jY0zyhH60Ee6/deTfGy9micyZoVJUqzF
+         lo0W1dT0TX6pd1NMuRgZbk3/+CsJvkS5v3+FouiYXUlRcT+hMneadnI/hDwpIh+bYXsG
+         xQmQ==
+X-Gm-Message-State: APjAAAXrvv9gX+lskIo+dqfHUHoR/9HY3kqivvHO1AJiVDgsn7tw8qxC
+        t4PWdNatvratXyCDL6SI2zE=
+X-Google-Smtp-Source: APXvYqxoI/708laf6gtdOu/5W9IHi68WsTOyfXTApi1AbF+GqRB6Sp57tyWIM4vuUW9q1QIysQIBrg==
+X-Received: by 2002:a63:e148:: with SMTP id h8mr3032468pgk.275.1566488936083;
+        Thu, 22 Aug 2019 08:48:56 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id ay7sm3717pjb.4.2019.08.22.08.48.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 08:48:55 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Bruce Wang <bzwang@chromium.org>,
+        Fritz Koenig <frkoenig@google.com>,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] drm/msm/dpu: add rotation property
+Date:   Thu, 22 Aug 2019 08:46:21 -0700
+Message-Id: <20190822154644.11723-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201908220742.x7M7gQJW078160@www262.sakura.ne.jp>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 04:42:26PM +0900, Tetsuo Handa wrote:
-> Eric Biggers wrote:
-> > On Thu, Aug 22, 2019 at 03:55:31PM +0900, Tetsuo Handa wrote:
-> > > > Also, isn't the same bug in other places too?:
-> > > > 
-> > > > 	- tomoyo_path_chmod()
-> > > > 	- tomoyo_path_chown()
-> > > > 	- smack_inode_getsecurity()
-> > > > 	- smack_inode_setsecurity()
-> > > 
-> > > What's the bug? The file descriptor returned by open(O_PATH) cannot be
-> > > passed to read(2), write(2), fchmod(2), fchown(2), fgetxattr(2), mmap(2) etc.
-> > > 
-> > 
-> > chmod(2), chown(2), getxattr(2), and setxattr(2) take a path, not a fd.
-> > 
-> 
-> OK. Then, is the correct fix
-> 
->   inode_lock(inode);
->   if (SOCKET_I(inode)->sk) {
->     // Can access SOCKET_I(sock)->sk->*
->   } else {
->     // Already close()d. Don't touch.
->   }
->   inode_unlock(inode);
-> 
-> thanks to
-> 
->   commit 6d8c50dcb029872b ("socket: close race condition between sock_close() and sockfs_setattr()")
->   commit ff7b11aa481f682e ("net: socket: set sock->sk to NULL after calling proto_ops::release()")
-> 
-> changes?
+From: Rob Clark <robdclark@chromium.org>
 
-inode_lock() is already held during security_path_chmod(),
-security_path_chown(), and security_inode_setxattr().
-So you can't just take it again.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-- Eric
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index 45bfac9e3af7..970194958257 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -1040,8 +1040,21 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane)
+ 				pstate->multirect_mode);
+ 
+ 	if (pdpu->pipe_hw->ops.setup_format) {
++		unsigned int rotation;
++
+ 		src_flags = 0x0;
+ 
++		rotation = drm_rotation_simplify(state->rotation,
++						 DRM_MODE_ROTATE_0 |
++						 DRM_MODE_REFLECT_X |
++						 DRM_MODE_REFLECT_Y);
++
++		if (rotation & DRM_MODE_REFLECT_X)
++			src_flags |= DPU_SSPP_FLIP_LR;
++
++		if (rotation & DRM_MODE_REFLECT_Y)
++			src_flags |= DPU_SSPP_FLIP_UD;
++
+ 		/* update format */
+ 		pdpu->pipe_hw->ops.setup_format(pdpu->pipe_hw, fmt, src_flags,
+ 				pstate->multirect_index);
+@@ -1522,6 +1535,13 @@ struct drm_plane *dpu_plane_init(struct drm_device *dev,
+ 	if (ret)
+ 		DPU_ERROR("failed to install zpos property, rc = %d\n", ret);
+ 
++	drm_plane_create_rotation_property(plane,
++			DRM_MODE_ROTATE_0,
++			DRM_MODE_ROTATE_0 |
++			DRM_MODE_ROTATE_180 |
++			DRM_MODE_REFLECT_X |
++			DRM_MODE_REFLECT_Y);
++
+ 	drm_plane_enable_fb_damage_clips(plane);
+ 
+ 	/* success! finalize initialization */
+-- 
+2.21.0
+
