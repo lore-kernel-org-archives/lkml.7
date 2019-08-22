@@ -7,50 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749F9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4462C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FF2233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937C7233FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494075;
-	bh=m5gHbQrcUMFbJ76EWBnK/TgYPTtChWNCLVydJT9814s=;
+	s=default; t=1566494085;
+	bh=cAGKbp3yMg0hERRPg2YNZCl7JyFl8IEGDe/FMwXLKGQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yoqR+vivE7R4odExEW+4HqtImmfxmE4gowqfHEkj3nR71hKOj0YpIhZd6lLuSBR6C
-	 ZS3u+xY2MIfKQNA0WhlrZ4GJVubNeQKSmff9xaAWvUL2Gfxd4Hrk8tzcj7v8p0vRT+
-	 +iikSrzz+hjH8Na/0HVGOtsTFS1AkgC6M9iJ7Jlc=
+	b=fqguBNftVLR2t76sYxFeHyjpYSZvx6ClYUbVxZ48nfDDo0oqoWbzXCjcqvEc0XBK0
+	 4NZeSp8GBuaDrgYdtmXBPmYgRynmoGwv3WU3BuKf7CwmHLmEbiGPdnbXYIo2oadefL
+	 LHZfM1llESkyzVw/sfWf5Y7+TRdL89dqN95fqvYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388784AbfHVROe (ORCPT
+        id S2391144AbfHVROo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:14:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58858 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:14:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390555AbfHVRIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:52 -0400
+        id S2390548AbfHVRIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:51 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A6FC23426;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EA05233FE;
         Thu, 22 Aug 2019 17:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493732;
-        bh=m5gHbQrcUMFbJ76EWBnK/TgYPTtChWNCLVydJT9814s=;
+        s=default; t=1566493731;
+        bh=cAGKbp3yMg0hERRPg2YNZCl7JyFl8IEGDe/FMwXLKGQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ebq7Wq23ZvKj83f0XkNZ8EyfABiK632RAvxEIWv3OaRHKCyr6zNQaQCkPiq2o5ujG
-         naWauOILhgl7iLc9MBBxSj+3Rs3y46w7zLU14PrNjil3AXPdjtkNRTHFo7pXgFro9y
-         X8peOQscRsYFxsxdH2GYg/CqJjPuCTlaqRFy17Lo=
+        b=lu0VXXUYQfT5kML5xpIo1PWQYpx5yIldPYw0TTXOtTSsGDncFuYYjZ6cJKO5vZlae
+         Xvg6aSAnRI/E9bQ1s63HKpygx0vhKwf5TQtVKU4zcSdt/0y8hX2yYmXth+a/fd7D6H
+         aytdr8OTNGE91rxzmdSeBXv3SnZfRtq3GbgZD58c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Peter Smith <peter.smith@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 069/135] kbuild: Check for unknown options with cc-option usage in Kconfig and clang
-Date:   Thu, 22 Aug 2019 13:07:05 -0400
-Message-Id: <20190822170811.13303-70-sashal@kernel.org>
+Subject: [PATCH 5.2 068/135] kbuild: modpost: handle KBUILD_EXTRA_SYMBOLS only for external modules
+Date:   Thu, 22 Aug 2019 13:07:04 -0400
+Message-Id: <20190822170811.13303-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -69,65 +64,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit e8de12fb7cde2c85bc31097cd098da79a4818305 ]
+[ Upstream commit cb4819934a7f9b87876f11ed05b8624c0114551b ]
 
-If the particular version of clang a user has doesn't enable
--Werror=unknown-warning-option by default, even though it is the
-default[1], then make sure to pass the option to the Kconfig cc-option
-command so that testing options from Kconfig files works properly.
-Otherwise, depending on the default values setup in the clang toolchain
-we will silently assume options such as -Wmaybe-uninitialized are
-supported by clang, when they really aren't.
+KBUILD_EXTRA_SYMBOLS makes sense only when building external modules.
+Moreover, the modpost sets 'external_module' if the -e option is given.
 
-A compilation issue only started happening for me once commit
-589834b3a009 ("kbuild: Add -Werror=unknown-warning-option to
-CLANG_FLAGS") was applied on top of commit b303c6df80c9 ("kbuild:
-compute false-positive -Wmaybe-uninitialized cases in Kconfig"). This
-leads kbuild to try and test for the existence of the
--Wmaybe-uninitialized flag with the cc-option command in
-scripts/Kconfig.include, and it doesn't see an error returned from the
-option test so it sets the config value to Y. Then the Makefile tries to
-pass the unknown option on the command line and
--Werror=unknown-warning-option catches the invalid option and breaks the
-build. Before commit 589834b3a009 ("kbuild: Add
--Werror=unknown-warning-option to CLANG_FLAGS") the build works fine,
-but any cc-option test of a warning option in Kconfig files silently
-evaluates to true, even if the warning option flag isn't supported on
-clang.
+I replaced $(patsubst %, -e %,...) with simpler $(addprefix -e,...)
+while I was here.
 
-Note: This doesn't change cc-option usages in Makefiles because those
-use a different rule that includes KBUILD_CFLAGS by default (see the
-__cc-option command in scripts/Kbuild.incluide). The KBUILD_CFLAGS
-variable already has the -Werror=unknown-warning-option flag set. Thanks
-to Doug for pointing out the different rule.
-
-[1] https://clang.llvm.org/docs/DiagnosticsReference.html#wunknown-warning-option
-Cc: Peter Smith <peter.smith@linaro.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kconfig.include | 2 +-
+ scripts/Makefile.modpost | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-index 8a5c4d645eb14..4bbf4fc163a29 100644
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -25,7 +25,7 @@ failure = $(if-success,$(1),n,y)
- 
- # $(cc-option,<flag>)
- # Return y if the compiler supports <flag>, n otherwise
--cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
-+cc-option = $(success,$(CC) -Werror $(CLANG_FLAGS) $(1) -E -x c /dev/null -o /dev/null)
- 
- # $(ld-option,<flag>)
- # Return y if the linker supports <flag>, n otherwise
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index 38d77353c66ab..cea276955147b 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -75,7 +75,7 @@ modpost = scripts/mod/modpost                    \
+  $(if $(CONFIG_MODULE_SRCVERSION_ALL),-a,)       \
+  $(if $(KBUILD_EXTMOD),-i,-o) $(kernelsymfile)   \
+  $(if $(KBUILD_EXTMOD),-I $(modulesymfile))      \
+- $(if $(KBUILD_EXTRA_SYMBOLS), $(patsubst %, -e %,$(KBUILD_EXTRA_SYMBOLS))) \
++ $(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS))) \
+  $(if $(KBUILD_EXTMOD),-o $(modulesymfile))      \
+  $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)  \
+  $(if $(KBUILD_MODPOST_WARN),-w)
 -- 
 2.20.1
 
