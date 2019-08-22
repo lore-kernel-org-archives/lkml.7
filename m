@@ -2,145 +2,131 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA867C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94328C3A5A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FAF121848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 680EB22DD3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nm6q66TI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVn+IM8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730776AbfHVDPM (ORCPT
+        id S1730804AbfHVDQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 23:15:12 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42465 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbfHVDPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 23:15:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46DV5P2lZHz9s3Z;
-        Thu, 22 Aug 2019 13:15:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566443708;
-        bh=FWaVWC9hKQVgW4ffnE0ESsDOTl/uHhq2zf25RGNfLHs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nm6q66TIHdKGwLXxL77K1mObonlc7ccgadLjX7SAKyUYqVITjiAsbmwiMYwj9YYBA
-         1Nsy/mH4R+WMiQoPA2bn7ER/gcGLH6tGNXQRo5TnUsCYw77tbruaSEwYecDwBD/5Eo
-         s58l8myWLRJmmxXKGvD21brRt4bRYiaY8UbI8Cen7FN1Vw1oNrv0yvC5K6565Uhc1F
-         ija/dYur8K30990eZfUz18RErxfh5rILIT3HhY9X1UXZPVim/1HiCc4dIN+8U4/bgx
-         AQbZ3nsg/cZhsc6iz0Bs6mNy2Zs2Bfw0qpHz4ys/B0/df9ZWiSfT2HReoE+G9kKUNA
-         FB9vtPBCiDLQg==
-Date:   Thu, 22 Aug 2019 13:15:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Dave Airlie <airlied@linux.ie>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: linux-next: manual merge of the drm-intel tree with the drm tree
-Message-ID: <20190822131504.13c1f47e@canb.auug.org.au>
+        Wed, 21 Aug 2019 23:16:36 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44218 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbfHVDQf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 23:16:35 -0400
+Received: by mail-io1-f66.google.com with SMTP id j4so655782iog.11;
+        Wed, 21 Aug 2019 20:16:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TtertmLvNhD994TQ2dS81rm18H0RxAIy1U/i+r1aP8c=;
+        b=fVn+IM8YO9kCNczHLi2YD/XfNxmhEf2UsVUOkmv4WYU8hT1mAb+2WclAcCAtXXAT69
+         uOW4AkayV4i+WXYIrra32kM+WRlTpOmvNOqQqHKl/haoonOyxCpomBLzuE1+eROW8XbT
+         srfKPnbYJS6DIz4M9psKQSJWlm3/SGmIU8wxw3yt+VAe/jG/cYhMkjvkVVowKIV4WBFX
+         WR2u/ja18MW73HyyNrP5+3OH1wz4Vvm2Zr82n+CggKaRQBQZS0FWynYy/wiT+2s1hIAs
+         ncuuL2/9p9waVgTPz4ycytEaTAdZTlGjVxEAu5Njw0OejAtaBmII079XLkcazxrbe7YM
+         Hgsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TtertmLvNhD994TQ2dS81rm18H0RxAIy1U/i+r1aP8c=;
+        b=Lvt5gG06m6VCSvgEpiFbixDKuVjSWNI2cWvozxvsmfmbU9JogwRoaFbRMGknlsSrWe
+         JqhKhwHGNuTb2fesqYbFWeZsckZS2yiblRZO3Z6rUsNrByTaMMBtxylcVhcOC+ac/SUT
+         iwkc6mxkl/DNn6EhIk3DMLu2NFbdYhz9IF8IM/BwByKlgghW6LGPqwROCNmmehCQaZik
+         hq0bzzdGlEjRoEwieTXNOjHmJuFTQPlQ7BjIjiJMSwLZ82lD8qdNZaolLRS2VPLB8c/3
+         u4KH1xgWo2M2/uxOY0snEouNrdJhVvf8LTFMWaBiFCz6fC6MD7FmvQcke9zU2NN1LnlR
+         yZTg==
+X-Gm-Message-State: APjAAAUyamKSXkAbd6r3OO+2VXB9zWKwJ40npz97XtoN282DSIQhDCte
+        bWdxKC8ZE9wiXpC0VX3g0g==
+X-Google-Smtp-Source: APXvYqziqhmkvV2PqA2POT4i7S3BQ4r8ivWZ0xA2khR9WBcWupbZZMTRTn+Gs2DRZBoSW5YMKVO9gQ==
+X-Received: by 2002:a6b:3c0a:: with SMTP id k10mr7951406iob.271.1566443794786;
+        Wed, 21 Aug 2019 20:16:34 -0700 (PDT)
+Received: from Test-Virtual-Machine (d24-141-106-246.home.cgocable.net. [24.141.106.246])
+        by smtp.gmail.com with ESMTPSA id 8sm19911023ion.26.2019.08.21.20.16.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 21 Aug 2019 20:16:32 -0700 (PDT)
+Date:   Wed, 21 Aug 2019 23:16:30 -0400
+From:   Branden Bonaby <brandonbonaby94@gmail.com>
+To:     Harry Zhang <harz@microsoft.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/3] tools: hv: add vmbus testing tool
+Message-ID: <20190822031630.GA37262@Test-Virtual-Machine>
+References: <cover.1566340843.git.brandonbonaby94@gmail.com>
+ <c63cae8e916cbfa4a3fe627da3a545736d0b45dc.1566340843.git.brandonbonaby94@gmail.com>
+ <PS1P15301MB02497E19A17D71913DA32857C0A50@PS1P15301MB0249.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/OZdfbKRhgv_ngs8_CRFNLlE";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PS1P15301MB02497E19A17D71913DA32857C0A50@PS1P15301MB0249.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/OZdfbKRhgv_ngs8_CRFNLlE
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 22, 2019 at 01:36:09AM +0000, Harry Zhang wrote:
+> Tool function issues:  Please validate args errors for  '-p' and '--path',  in or following validate_args_path().  
+> 
+> Comments of functionality:
+> -	it's confusing when fuzz_testing are all OFF, then user run ' python3 /home/lisa/vmbus_testing -p /sys/kernel/debug/hyperv/000d3a6e-4548-000d-3a6e-4548000d3a6e delay -d 0 0 -D ' which will enable all delay testing state ('Y' in state files).  even I used "-D", "--dis_all" param. 
+> -	if we have subparsers of "disable-all" for the testing tool, then probably we don't need the mutually_exclusive_group under subparsers of "delay"
+> -	the path argument (-p) could be an argument for subparsers of "delay" and "view" only.
+> 
+> Regards,
+> Harry
+>
 
-Hi all,
+So I made the choice to keep disabling the state and disabling delay
+testing seperate, because once we start adding other testing options
+you wouldn't want to inadvertently disable all testing especially
+if you were doing more than one type of test at a time.
+So with your configuration
 
-Today's linux-next merge of the drm-intel tree got a conflict in:
+'python3 /home/lisa/vmbus_testing -p /sys/kernel/debug/hyperv/000d3a6e-4548-000d-3a6e-4548000d3a6e delay -d 0 0 -D '
 
-  drivers/gpu/drm/i915/i915_vma.c
+this would stop all delay testing on all the devices but wouldn't change
+their test state to OFF 'N'.So thats why I have the option -s --state to
+change the state to Off with a -s 0. Then to disable all types of testing
+and change the state to OFF thats where the 'disable-all' subparser  comes in.
+with:
 
-between commit:
+'python3 /home/lisa/vmbus_testing disable-all
 
-  52791eeec1d9 ("dma-buf: rename reservation_object to dma_resv")
+For that last point I don't understand what you mean, are you saying it would be
+better to have something like this using  delay as an example?
 
-from the drm tree and commit:
+'python3 /home/lisa/vmbus_testing delay -p /sys/kernel/debug/hyperv/000d3a6e-4548-000d-3a6e-4548000d3a6e'
 
-  cd2a4eaf8c79 ("drm/i915: Report resv_obj allocation failure")
+If thats what you mean I figured it was better to make the -p accessible
+to all test type so I made it apart of the main parser. This would allow
+us to just have it there once instead of having to make a -p for every
+subparser.
 
-from the drm-intel tree.
+Also maybe I need to change the examples and the help text
+because with the -D option for delay you wouldnt actually need to put in 
+the path. As
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+'python3 /home/lisa/vmbus_testing delay -d 0 0 -D '
 
---=20
-Cheers,
-Stephen Rothwell
+would suffice to stop delay testing on all devices; -E would enable
+it for all devices and change the state to On 'Y' if it wasn't already.
 
-diff --cc drivers/gpu/drm/i915/i915_vma.c
-index 2645f4e850c2,252edef6c59e..000000000000
---- a/drivers/gpu/drm/i915/i915_vma.c
-+++ b/drivers/gpu/drm/i915/i915_vma.c
-@@@ -926,14 -906,22 +906,22 @@@ int i915_vma_move_to_active(struct i915
-  	if (unlikely(err))
-  		return err;
- =20
-- 	obj->write_domain =3D 0;
-  	if (flags & EXEC_OBJECT_WRITE) {
-- 		obj->write_domain =3D I915_GEM_DOMAIN_RENDER;
--=20
-- 		if (intel_fb_obj_invalidate(obj, ORIGIN_CS))
-- 			__i915_active_request_set(&obj->frontbuffer_write, rq);
-+ 		if (intel_frontbuffer_invalidate(obj->frontbuffer, ORIGIN_CS))
-+ 			i915_active_ref(&obj->frontbuffer->write,
-+ 					rq->timeline,
-+ 					rq);
- =20
- -		reservation_object_add_excl_fence(vma->resv, &rq->fence);
-++		dma_resv_add_excl_fence(vma->resv, &rq->fence);
-+ 		obj->write_domain =3D I915_GEM_DOMAIN_RENDER;
-  		obj->read_domains =3D 0;
-+ 	} else {
- -		err =3D reservation_object_reserve_shared(vma->resv, 1);
-++		err =3D dma_resv_reserve_shared(vma->resv, 1);
-+ 		if (unlikely(err))
-+ 			return err;
-+=20
- -		reservation_object_add_shared_fence(vma->resv, &rq->fence);
-++		dma_resv_add_shared_fence(vma->resv, &rq->fence);
-+ 		obj->write_domain =3D 0;
-  	}
-  	obj->read_domains |=3D I915_GEM_GPU_DOMAINS;
-  	obj->mm.dirty =3D true;
+let me know your thoughts
 
---Sig_/OZdfbKRhgv_ngs8_CRFNLlE
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1eCLgACgkQAVBC80lX
-0GxuUQf9G4hRvr4DgYRyVDh+YJeCJAh1S5g40itC+tJH2QeeeYFIY+SmWICsK2MJ
-3gV7RZmcvqNSNOWA/QebgIscbVKcXd53H07vNo4DO+tkd0Zq03JQ/d6NA0tWl2rE
-AM2UzcFwqTkTqiT9HZLyV65x2YWBfKxx/aPwDrJ7AdhKV3k1TG1qVWmO1WPfUoln
-I6y4igZIOLp+QHGaNYtQb2DsD3tal33Q2G33HfbgBl5qMgPgAnB3gmstBG5/8EMX
-4P1vj0JsZ/Z9PfO1q5lT9k/wex3iwwBF24ohTUqgHl6xcjZYxrKJ0Fvnl3+EpXpW
-aJZDeXq2iKMn1DPMx7F9SNCkif9FRg==
-=KOQn
------END PGP SIGNATURE-----
-
---Sig_/OZdfbKRhgv_ngs8_CRFNLlE--
+branden bonaby
