@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE8CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C75C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D84233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E263233A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389092AbfHVN2k (ORCPT
+        id S2389113AbfHVN2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:28:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:45820 "EHLO foss.arm.com"
+        Thu, 22 Aug 2019 09:28:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:45864 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730723AbfHVN2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:28:30 -0400
+        id S2389078AbfHVN2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 09:28:36 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE87715A2;
-        Thu, 22 Aug 2019 06:28:29 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DE5D15A2;
+        Thu, 22 Aug 2019 06:28:35 -0700 (PDT)
 Received: from e110439-lin.cambridge.arm.com (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0FF973F706;
-        Thu, 22 Aug 2019 06:28:26 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E5E743F706;
+        Thu, 22 Aug 2019 06:28:32 -0700 (PDT)
 From:   Patrick Bellasi <patrick.bellasi@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-api@vger.kernel.org, cgroups@vger.kernel.org
@@ -45,9 +44,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Steve Muckle <smuckle@google.com>,
         Suren Baghdasaryan <surenb@google.com>,
         Alessio Balsini <balsini@android.com>
-Subject: [PATCH v14 2/6] sched/core: uclamp: Propagate parent clamps
-Date:   Thu, 22 Aug 2019 14:28:07 +0100
-Message-Id: <20190822132811.31294-3-patrick.bellasi@arm.com>
+Subject: [PATCH v14 4/6] sched/core: uclamp: Use TG's clamps to restrict TASK's clamps
+Date:   Thu, 22 Aug 2019 14:28:09 +0100
+Message-Id: <20190822132811.31294-5-patrick.bellasi@arm.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190822132811.31294-1-patrick.bellasi@arm.com>
 References: <20190822132811.31294-1-patrick.bellasi@arm.com>
@@ -58,24 +57,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to properly support hierarchical resources control, the cgroup
-delegation model requires that attribute writes from a child group never
-fail but still are locally consistent and constrained based on parent's
-assigned resources. This requires to properly propagate and aggregate
-parent attributes down to its descendants.
+When a task specific clamp value is configured via sched_setattr(2), this
+value is accounted in the corresponding clamp bucket every time the task is
+{en,de}qeued. However, when cgroups are also in use, the task specific
+clamp values could be restricted by the task_group (TG) clamp values.
 
-Implement this mechanism by adding a new "effective" clamp value for each
-task group. The effective clamp value is defined as the smaller value
-between the clamp value of a group and the effective clamp value of its
-parent. This is the actual clamp value enforced on tasks in a task group.
+Update uclamp_cpu_inc() to aggregate task and TG clamp values. Every time a
+task is enqueued, it's accounted in the clamp bucket tracking the smaller
+clamp between the task specific value and its TG effective value. This
+allows to:
 
-Since it's possible for a cpu.uclamp.min value to be bigger than the
-cpu.uclamp.max value, ensure local consistency by restricting each
-"protection" (i.e. min utilization) with the corresponding "limit"
-(i.e. max utilization).
+1. ensure cgroup clamps are always used to restrict task specific requests,
+   i.e. boosted not more than its TG effective protection and capped at
+   least as its TG effective limit.
 
-Do that at effective clamps propagation to ensure all user-space write
-never fails while still always tracking the most restrictive values.
+2. implement a "nice-like" policy, where tasks are still allowed to request
+   less than what enforced by their TG effective limits and protections
+
+Do this by exploiting the concept of "effective" clamp, which is already
+used by a TG to track parent enforced restrictions.
+
+Apply task group clamp restrictions only to tasks belonging to a child
+group. While, for tasks in the root group or in an autogroup, system
+defaults are still enforced.
 
 Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
 Reviewed-by: Michal Koutny <mkoutny@suse.com>
@@ -84,99 +88,57 @@ Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Tejun Heo <tj@kernel.org>
 ---
- kernel/sched/core.c  | 44 ++++++++++++++++++++++++++++++++++++++++++++
- kernel/sched/sched.h |  2 ++
- 2 files changed, 46 insertions(+)
+ kernel/sched/core.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 7b610e1a4cda..8dab64247597 100644
+index 3ca054ad3f3e..04fc161e4dbe 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -1166,6 +1166,7 @@ static void __init init_uclamp(void)
- 		uclamp_default[clamp_id] = uc_max;
- #ifdef CONFIG_UCLAMP_TASK_GROUP
- 		root_task_group.uclamp_req[clamp_id] = uc_max;
-+		root_task_group.uclamp[clamp_id] = uc_max;
- #endif
- 	}
- }
-@@ -6824,6 +6825,7 @@ static inline void alloc_uclamp_sched_group(struct task_group *tg,
- 	for_each_clamp_id(clamp_id) {
- 		uclamp_se_set(&tg->uclamp_req[clamp_id],
- 			      uclamp_none(clamp_id), false);
-+		tg->uclamp[clamp_id] = parent->uclamp[clamp_id];
- 	}
- #endif
- }
-@@ -7070,6 +7072,45 @@ static void cpu_cgroup_attach(struct cgroup_taskset *tset)
+@@ -873,16 +873,42 @@ unsigned int uclamp_rq_max_value(struct rq *rq, unsigned int clamp_id,
+ 	return uclamp_idle_value(rq, clamp_id, clamp_value);
  }
  
- #ifdef CONFIG_UCLAMP_TASK_GROUP
-+static void cpu_util_update_eff(struct cgroup_subsys_state *css)
++static inline struct uclamp_se
++uclamp_tg_restrict(struct task_struct *p, unsigned int clamp_id)
 +{
-+	struct cgroup_subsys_state *top_css = css;
-+	struct uclamp_se *uc_parent = NULL;
-+	struct uclamp_se *uc_se = NULL;
-+	unsigned int eff[UCLAMP_CNT];
-+	unsigned int clamp_id;
-+	unsigned int clamps;
++	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
++#ifdef CONFIG_UCLAMP_TASK_GROUP
++	struct uclamp_se uc_max;
 +
-+	css_for_each_descendant_pre(css, top_css) {
-+		uc_parent = css_tg(css)->parent
-+			? css_tg(css)->parent->uclamp : NULL;
++	/*
++	 * Tasks in autogroups or root task group will be
++	 * restricted by system defaults.
++	 */
++	if (task_group_is_autogroup(task_group(p)))
++		return uc_req;
++	if (task_group(p) == &root_task_group)
++		return uc_req;
 +
-+		for_each_clamp_id(clamp_id) {
-+			/* Assume effective clamps matches requested clamps */
-+			eff[clamp_id] = css_tg(css)->uclamp_req[clamp_id].value;
-+			/* Cap effective clamps with parent's effective clamps */
-+			if (uc_parent &&
-+			    eff[clamp_id] > uc_parent[clamp_id].value) {
-+				eff[clamp_id] = uc_parent[clamp_id].value;
-+			}
-+		}
-+		/* Ensure protection is always capped by limit */
-+		eff[UCLAMP_MIN] = min(eff[UCLAMP_MIN], eff[UCLAMP_MAX]);
++	uc_max = task_group(p)->uclamp[clamp_id];
++	if (uc_req.value > uc_max.value || !uc_req.user_defined)
++		return uc_max;
++#endif
 +
-+		/* Propagate most restrictive effective clamps */
-+		clamps = 0x0;
-+		uc_se = css_tg(css)->uclamp;
-+		for_each_clamp_id(clamp_id) {
-+			if (eff[clamp_id] == uc_se[clamp_id].value)
-+				continue;
-+			uc_se[clamp_id].value = eff[clamp_id];
-+			uc_se[clamp_id].bucket_id = uclamp_bucket_id(eff[clamp_id]);
-+			clamps |= (0x1 << clamp_id);
-+		}
-+		if (!clamps)
-+			css = css_rightmost_descendant(css);
-+	}
++	return uc_req;
 +}
- 
- #define _POW10(exp) ((unsigned int)1e##exp)
- #define POW10(exp) _POW10(exp)
-@@ -7133,6 +7174,9 @@ static ssize_t cpu_uclamp_write(struct kernfs_open_file *of, char *buf,
- 	 */
- 	tg->uclamp_pct[clamp_id] = req.percent;
- 
-+	/* Update effective clamps to track the most restrictive value */
-+	cpu_util_update_eff(of_css(of));
 +
- 	rcu_read_unlock();
- 	mutex_unlock(&uclamp_mutex);
+ /*
+  * The effective clamp bucket index of a task depends on, by increasing
+  * priority:
+  * - the task specific clamp value, when explicitly requested from userspace
++ * - the task group effective clamp value, for tasks not either in the root
++ *   group or in an autogroup
+  * - the system default clamp value, defined by the sysadmin
+  */
+ static inline struct uclamp_se
+ uclamp_eff_get(struct task_struct *p, unsigned int clamp_id)
+ {
+-	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
++	struct uclamp_se uc_req = uclamp_tg_restrict(p, clamp_id);
+ 	struct uclamp_se uc_max = uclamp_default[clamp_id];
  
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index ae1be61fb279..5b343112a47b 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -397,6 +397,8 @@ struct task_group {
- 	unsigned int		uclamp_pct[UCLAMP_CNT];
- 	/* Clamp values requested for a task group */
- 	struct uclamp_se	uclamp_req[UCLAMP_CNT];
-+	/* Effective clamp values used for a task group */
-+	struct uclamp_se	uclamp[UCLAMP_CNT];
- #endif
- 
- };
+ 	/* System default restrictions always apply */
 -- 
 2.22.0
 
