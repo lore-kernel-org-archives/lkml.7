@@ -6,164 +6,92 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4BDC3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 01:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F061C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 01:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AE422D6D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 01:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7711021655
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 01:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbfHVBpF (ORCPT
+        id S1730674AbfHVBqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 21:45:05 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5183 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728406AbfHVBpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 21:45:05 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8E1A0A1C88A3041707B7;
-        Thu, 22 Aug 2019 09:45:02 +0800 (CST)
-Received: from [127.0.0.1] (10.133.215.182) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Thu, 22 Aug 2019
- 09:44:53 +0800
-Subject: Re: [RFC PATCH 3/3] perf report: add --spe options for arm-spe
-To:     James Clark <James.Clark@arm.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>,
-        "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>,
-        "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Kim Phillips <Kim.Phillips@arm.com>
-CC:     "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>,
-        "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>,
-        "liwei391@huawei.com" <liwei391@huawei.com>,
-        "huawei.libin@huawei.com" <huawei.libin@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jeremy Linton <Jeremy.Linton@arm.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        nd <nd@arm.com>
-References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
- <1564738813-10944-4-git-send-email-tanxiaojun@huawei.com>
- <8e8deead-6d59-9203-a01a-fe63362ebdf0@arm.com>
-From:   Tan Xiaojun <tanxiaojun@huawei.com>
-Message-ID: <184ef2f7-654c-4f24-952b-37cfa3681387@huawei.com>
-Date:   Thu, 22 Aug 2019 09:44:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 21 Aug 2019 21:46:46 -0400
+Received: from verein.lst.de ([213.95.11.211]:42627 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726785AbfHVBqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 21:46:45 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 79BEB68BFE; Thu, 22 Aug 2019 03:46:42 +0200 (CEST)
+Date:   Thu, 22 Aug 2019 03:46:42 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Andreas Schwab <schwab@linux-m68k.org>
+Subject: Re: [PATCH v3 1/3] RISC-V: Issue a local tlbflush if possible.
+Message-ID: <20190822014642.GA11922@lst.de>
+References: <20190822004644.25829-1-atish.patra@wdc.com> <20190822004644.25829-2-atish.patra@wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <8e8deead-6d59-9203-a01a-fe63362ebdf0@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.215.182]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822004644.25829-2-atish.patra@wdc.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/8/21 20:38, James Clark wrote:
-> Hi,
+On Wed, Aug 21, 2019 at 05:46:42PM -0700, Atish Patra wrote:
+> In RISC-V, tlb flush happens via SBI which is expensive. If the local
+> cpu is the only cpu in cpumask, there is no need to invoke a SBI call.
 > 
-> I also had a look at this and had a question about the --spe option.
-> It seems that whatever options I give it, the output is the same:
+> Just do a local flush and return.
 > 
-> 	perf report 
-> And
-> 	perf report --spe=t
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> ---
+>  arch/riscv/mm/tlbflush.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
-> Both give the same result:
-> 
-> 	# Samples: 4  of event 'llc-miss'
-> 	# Event count (approx.): 4
-> 	#
-> 	# Children      Self  Command  Shared Object      Symbol                    
-> 	# ........  ........  .......  .................  ..........................
-> 	#
-> 	...
-> 	# Samples: 0  of event 'tlb-miss'
-> 	# Event count (approx.): 0
-> 	#
-> 	# Children      Self  Command  Shared Object  Symbol
-> 	# ........  ........  .......  .............  ......
-> 	#
-> 
-> 	# Samples: 83  of event 'branch-miss'
-> 	# Event count (approx.): 83
-> 	#
-> 	# Children      Self  Command  Shared Object      Symbol                   
-> 	# ........  ........  .......  .................  .........................
-> 	#
-> 	...
-> 
-> I would have expected it to not include the branch and LLC sections for the second
-> command with --spe=t.
-> 
+> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+> index df93b26f1b9d..36430ee3bed9 100644
+> --- a/arch/riscv/mm/tlbflush.c
+> +++ b/arch/riscv/mm/tlbflush.c
+> @@ -2,6 +2,7 @@
+>  
+>  #include <linux/mm.h>
+>  #include <linux/smp.h>
+> +#include <linux/sched.h>
+>  #include <asm/sbi.h>
+>  
+>  void flush_tlb_all(void)
+> @@ -13,9 +14,23 @@ static void __sbi_tlb_flush_range(struct cpumask *cmask, unsigned long start,
+>  		unsigned long size)
+>  {
+>  	struct cpumask hmask;
+> +	unsigned int cpuid = get_cpu();
+>  
+> +	if (!cmask) {
+> +		riscv_cpuid_to_hartid_mask(cpu_online_mask, &hmask);
+> +		goto issue_sfence;
+> +	}
+> +
+> +	if (cpumask_test_cpu(cpuid, cmask) && cpumask_weight(cmask) == 1) {
+> +		local_flush_tlb_all();
+> +		goto done;
+> +	}
 
-Hi,
+I think a single core on a SMP kernel is a valid enough use case given
+how litte distros still have UP kernels.  So Maybe this shiuld rather be:
 
-Sorry, this should be a bug in my code.
+	if (!cmask)
+		cmask = cpu_online_mask;
 
-> And that leads me to another point. Does it make sense to have this option as a post
-> processing step? SPE already has support for filtering events at collection time with
-> the PMSFCR_EL1 register.
-> 
-> Should we try to make the interface more like PEBS, where you specify which events you
-> are interested in doing precise tracing on like this?
-> 
-> 	perf record -e branch-misses:pp
-> 
-> And then perf could use the modifier to configure SPE so that it only records branch
-> misses? The benefits of this would be keeping the user interface for precise tracing
-> similar between platforms.
-> 
-
-Good suggestion. And I need to spend some time thinking about how to implement it.
-
-Thank you for your reply.
-Xiaojun.
-
-> Thanks
-> James
-> 
-> On 02/08/2019 10:40, Tan Xiaojun wrote:
->> The previous patch added support in "perf report" for some arm-spe
->> events(llc-miss, tlb-miss, branch-miss). This patch adds their help
->> instructions.
->>
->> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
->> ---
->>  tools/perf/Documentation/perf-report.txt | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
->> index 987261d..d998d4b 100644
->> --- a/tools/perf/Documentation/perf-report.txt
->> +++ b/tools/perf/Documentation/perf-report.txt
->> @@ -445,6 +445,15 @@ include::itrace.txt[]
->>  
->>  	To disable decoding entirely, use --no-itrace.
->>  
->> +--spe::
->> +	Options for decoding arm-spe tracing data. The options are:
->> +
->> +		l	synthesize llc miss events
->> +		t	synthesize tlb miss events
->> +		b	synthesize branch miss events
->> +
->> +	The default is all events i.e. the same as --spe=ltb
->> +
->>  --full-source-path::
->>  	Show the full path for source files for srcline output.
->>  
->>
-
-
+	if (cpumask_test_cpu(cpuid, cmask) && cpumask_weight(cmask) == 1) {
+		local_flush_tlb_all();
+	} else {
+	 	riscv_cpuid_to_hartid_mask(cmask, &hmask);
+	  	sbi_remote_sfence_vma(hmask.bits, start, size);
+	}
