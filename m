@@ -2,73 +2,104 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C1EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A22C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCF2C21743
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566483329;
-	bh=X7qg/4sJ8kjLWq7LP64u/qzLlHOXJVQQQ2TJg2qBsVs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gOZPyvBvNB04NTe/sVQm3JUJ8skTYHUhTj9Ll56qF333QBiKKySsSx7WLcLfqaXZV
-	 +BWThcKk6y6ZYNMEYMzF7KhkCP0yK7p7zGrjWHVMZxHAr0UqMN8BrXKGfpL3UEfWSm
-	 T/2T7dqfTRbKQYVJWSnUH//FNLGLGuwLqmccWF7k=
+	by mail.kernel.org (Postfix) with ESMTP id 9E42821743
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387579AbfHVOP2 (ORCPT
+        id S2387669AbfHVOQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46588 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 10:16:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:46538 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfHVOP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:15:28 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2219B205ED;
-        Thu, 22 Aug 2019 14:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566483327;
-        bh=X7qg/4sJ8kjLWq7LP64u/qzLlHOXJVQQQ2TJg2qBsVs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PJGOwa0UYsGUqqdnFrhnHDalkdQk9ZGof1CN4khquhRqOTi9NGOAvkODvL2eiMhIM
-         gsAzo4im/3ATarP5GKLt6vdGqovwBQ6u2JdirOLeC9pi/d047SOlf3XRUJO0ioke3X
-         HkqzrQAnm9/1GzoN9Rycl02Sqjn/WCXlyjNGiWpE=
-Date:   Thu, 22 Aug 2019 16:15:25 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [patch V2 12/38] posix-cpu-timers: Remove pointless return value
- check
-Message-ID: <20190822141524.GP22020@lenoir>
-References: <20190821190847.665673890@linutronix.de>
- <20190821192920.339725769@linutronix.de>
+        id S1731614AbfHVOQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:16:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8ED5F337;
+        Thu, 22 Aug 2019 07:16:29 -0700 (PDT)
+Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 686233F706;
+        Thu, 22 Aug 2019 07:16:27 -0700 (PDT)
+Subject: Re: [PATCH v2 3/4] dt-bindings: iommu/arm,smmu: add compatible string
+ for Marvell
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Nadav Haklai <nadavh@marvell.com>,
+        Hanna Hawa <hannah@marvell.com>
+References: <20190711150242.25290-1-gregory.clement@bootlin.com>
+ <20190711150242.25290-4-gregory.clement@bootlin.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5208b371-c81a-23a0-0870-2810fce3c7fa@arm.com>
+Date:   Thu, 22 Aug 2019 15:16:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190821192920.339725769@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190711150242.25290-4-gregory.clement@bootlin.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 09:08:59PM +0200, Thomas Gleixner wrote:
-> set_process_cpu_timer() checks already whether the clock id is valid. No
-> point in checking the return value of the sample function. That allows to
-> simplify the sample function later.
+On 11/07/2019 16:02, Gregory CLEMENT wrote:
+> From: Hanna Hawa <hannah@marvell.com>
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Add specific compatible string for Marvell usage due errata of
+> accessing 64bits registers of ARM SMMU, in AP806.
+> 
+> AP806 SoC uses the generic ARM-MMU500, and there's no specific
+> implementation of Marvell, this compatible is used for errata only.
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Forgive me for repeating myself[1], but:
+
+"Given that, I think something more specific like:
+
+	"marvell,ap806-smmu", "arm,mmu-500";
+
+would be most appropriate. Otherwise, if some future Marvell SoC were to
+ever come out with a *different* MMU-500 integration problem, you'd
+already have painted yourself into a corner."
+
+Robin.
+
+[1] 
+https://lore.kernel.org/linux-arm-kernel/3ce1d67a-4e3c-e8d8-f7fc-79649f1def68@arm.com/
+
+> Signed-off-by: Hanna Hawa <hannah@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> ---
+>   Documentation/devicetree/bindings/iommu/arm,smmu.txt | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> index 3133f3ba7567..7ed58d51846e 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -16,6 +16,7 @@ conditions.
+>                           "arm,mmu-400"
+>                           "arm,mmu-401"
+>                           "arm,mmu-500"
+> +                        "marvell,mmu-500"
+>                           "cavium,smmu-v2"
+>                           "qcom,smmu-v2"
+>   
+> 
