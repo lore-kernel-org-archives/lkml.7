@@ -2,53 +2,51 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0077AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6261FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04B723402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2286623402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495818;
-	bh=3cjpLCQ8fn6p6DHotHg4R+SHQOC6BSFZW4EWspyAYNw=;
+	s=default; t=1566495822;
+	bh=Mh1/bHNMSZxjSXWuCew94BhzmXBwks+dNsCioYr3Aqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EIFtBVDqqZ/TleWkxCBhk+CFcYsAXNDuqzat6v7j02wC7z/mljoJa4d88vIfPp7FZ
-	 eZY/XdFHhDkj8Eb37XSMrtScN4mijC18dWRvHmsbHJ9H/mT1qduD7jGjoPhZTUGcTY
-	 ICZehJrmRMC+iVS5xW0JYBDZeVzdMStZ6Nguzqes=
+	b=oxnQ8AAqyVU7eYYqsTfT9ik30O77qQ1EvrujBfgSht0yy5XBmpTj1go7mLrurzRYf
+	 yYjSeEjkH3+55B0dmtF6vVvBitjb+QJYnGojdaHgzWm/2JM5k/cNe5vC2JFiZzkg1h
+	 egvwxijzE9llMV5+IJczuaOH+mG7WUWJmnE99Peo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403947AbfHVRXZ (ORCPT
+        id S2405383AbfHVRnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42856 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:43:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403897AbfHVRXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:19 -0400
+        id S2403952AbfHVRX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:27 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A24323405;
-        Thu, 22 Aug 2019 17:23:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B23D823402;
+        Thu, 22 Aug 2019 17:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494599;
-        bh=3cjpLCQ8fn6p6DHotHg4R+SHQOC6BSFZW4EWspyAYNw=;
+        s=default; t=1566494606;
+        bh=Mh1/bHNMSZxjSXWuCew94BhzmXBwks+dNsCioYr3Aqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eGp6yLhRfeVxOAqTGZvyg7M+kQNoqQK+b0LHnmxKEU7PC7tmzc7niXQewt0xWL92i
-         y3/uIlZ82oW+8fAj90fvqXYtbaWHMe3IPPsrbkJZLVg4Eo70BxSNfsiCdDuZVWp8VW
-         gAaryLPPbiJCwSJZ9dMiEMUWWX05IbB55Xpt+gV4=
+        b=p45DeVPgnsbK1OL3M7JfnGKVXjNHe1Utfs9CqAuyoYoaHSKc+fh6sCeg4STvr+lqO
+         FCNDEEN1DnSSqhcBGt+epB0ok4gHXOx+MwL3iikmCgCUgVWG0PRLnZxrqktTYQbcTJ
+         5paCWfm2dzIUSNoy1bzvAzz169dtICCgfF/v11+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 020/103] ALSA: compress: Dont allow paritial drain operations on capture streams
-Date:   Thu, 22 Aug 2019 10:18:08 -0700
-Message-Id: <20190822171729.672960573@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 003/103] sound: fix a memory leak bug
+Date:   Thu, 22 Aug 2019 10:17:51 -0700
+Message-Id: <20190822171728.674067039@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -61,48 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a70ab8a8645083f3700814e757f2940a88b7ef88 ]
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-Partial drain and next track are intended for gapless playback and
-don't really have an obvious interpretation for a capture stream, so
-makes sense to not allow those operations on capture streams.
+commit c7cd7c748a3250ca33509f9235efab9c803aca09 upstream.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
+In sound_insert_unit(), the controlling structure 's' is allocated through
+kmalloc(). Then it is added to the sound driver list by invoking
+__sound_insert_unit(). Later on, if __register_chrdev() fails, 's' is
+removed from the list through __sound_remove_unit(). If 'index' is not less
+than 0, -EBUSY is returned to indicate the error. However, 's' is not
+deallocated on this execution path, leading to a memory leak bug.
+
+To fix the above issue, free 's' before -EBUSY is returned.
+
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/core/compress_offload.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 1538fbc7562b8..b4f1536b17cb5 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -835,6 +835,10 @@ static int snd_compr_next_track(struct snd_compr_stream *stream)
- 	if (stream->runtime->state != SNDRV_PCM_STATE_RUNNING)
- 		return -EPERM;
- 
-+	/* next track doesn't have any meaning for capture streams */
-+	if (stream->direction == SND_COMPRESS_CAPTURE)
-+		return -EPERM;
-+
- 	/* you can signal next track if this is intended to be a gapless stream
- 	 * and current track metadata is set
- 	 */
-@@ -862,6 +866,10 @@ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
- 		break;
+---
+ sound/sound_core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/sound/sound_core.c
++++ b/sound/sound_core.c
+@@ -287,7 +287,8 @@ retry:
+ 				goto retry;
+ 			}
+ 			spin_unlock(&sound_loader_lock);
+-			return -EBUSY;
++			r = -EBUSY;
++			goto fail;
+ 		}
  	}
  
-+	/* partial drain doesn't have any meaning for capture streams */
-+	if (stream->direction == SND_COMPRESS_CAPTURE)
-+		return -EPERM;
-+
- 	/* stream can be drained only when next track has been signalled */
- 	if (stream->next_track == false)
- 		return -EPERM;
--- 
-2.20.1
-
 
 
