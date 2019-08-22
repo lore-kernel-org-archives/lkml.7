@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABE2C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26DFC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02FDB205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1EA8205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495922;
-	bh=c7ZAd2AV/yp4LCIViPLn6jGQ3zJo7OK6ViAB11Kblik=;
+	s=default; t=1566495924;
+	bh=/pDecIkCnISplXnioA/xEhrpBGiQSIbQdlks++4S2T4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ext6DH51zux0m19dXmSMNAPkfKjz66nXCllsbSR4wmHFfq700Xil9ohkaAKpFfGUm
-	 eBmmORA4bYj8Tr6mk9dFZfS6X+5uKVhP3N5fhFdmJg4CXstNimU8UxpInsTV4BaO5V
-	 BfQp8qMAzyDHTt+JHT9T58Jfq5FIWR3R6A1Snwcc=
+	b=Ge8nMXNA7ct+/sLinD3GQIMosWiftBrH7PG9rgUT4rwcR3m+aK0fuM1F3xpR1B4Qq
+	 o9Nx0HpQ/eVOihqQy7OW6IBj8HgGOsAMcDBT1Xpz7RIQ3+W4efYLZAeQVm7X7Oydd+
+	 kVy6gvuNDqi0d4OiXebsDgPfS5J6VuEAJSNyJwHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392940AbfHVRpV (ORCPT
+        id S2403834AbfHVRXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42434 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:23:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403836AbfHVRXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:08 -0400
+        id S2403795AbfHVRXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:03 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9777233FC;
-        Thu, 22 Aug 2019 17:23:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A55002341D;
+        Thu, 22 Aug 2019 17:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494588;
-        bh=c7ZAd2AV/yp4LCIViPLn6jGQ3zJo7OK6ViAB11Kblik=;
+        s=default; t=1566494582;
+        bh=/pDecIkCnISplXnioA/xEhrpBGiQSIbQdlks++4S2T4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PcNHF/ssluyDw1o2xlOdp6S7zawYSA5HT9UzFvl2rUeHdlmtAov7eU8tKxLyB7zMa
-         M7SJBk+AeMSW4g+GV4e7AC/TXwulXadC9Fpo05EEe3deBmlwPXPPUYzcGs7hhSjlh1
-         q1VK+eb9o1Z/nHttfq0UQ8qu9vc3+QAswaRnWBhY=
+        b=vuVAuvmJl30r75W02PlR4Rm4GZ4CvfbfQsfqf7B+2AxkO2Gr4f+WlQZ0mvQPybT6H
+         QcU1bwx46hIq7XcnTZIwvMFCrugMpybQobcep/irUCS6PSGgJ5AJgPFRDwGHOHKsEW
+         ZyL+4eTf7iuUWYmrqkG4y1z41LlFYZo2dmH1g2ps=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Hillf Danton <hdanton@sina.com>, Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.4 40/78] HID: hiddev: do cleanup in failure of opening a device
-Date:   Thu, 22 Aug 2019 10:18:44 -0700
-Message-Id: <20190822171833.201736423@linuxfoundation.org>
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 75/78] xen/netback: Reset nr_frags before freeing skb
+Date:   Thu, 22 Aug 2019 10:19:19 -0700
+Message-Id: <20190822171834.203954783@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -61,34 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hillf Danton <hdanton@sina.com>
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-commit 6d4472d7bec39917b54e4e80245784ea5d60ce49 upstream.
+[ Upstream commit 3a0233ddec554b886298de2428edb5c50a20e694 ]
 
-Undo what we did for opening before releasing the memory slice.
+At this point nr_frags has been incremented but the frag does not yet
+have a page assigned so freeing the skb results in a crash. Reset
+nr_frags before freeing the skb to prevent this.
 
-Reported-by: syzbot <syzbot+62a1e04fd3ec2abf099e@syzkaller.appspotmail.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Hillf Danton <hdanton@sina.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hid/usbhid/hiddev.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/xen-netback/netback.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -330,6 +330,10 @@ static int hiddev_open(struct inode *ino
- 	return 0;
- bail_unlock:
- 	mutex_unlock(&hiddev->existancelock);
-+
-+	spin_lock_irq(&list->hiddev->list_lock);
-+	list_del(&list->node);
-+	spin_unlock_irq(&list->hiddev->list_lock);
- bail:
- 	file->private_data = NULL;
- 	vfree(list);
+--- a/drivers/net/xen-netback/netback.c
++++ b/drivers/net/xen-netback/netback.c
+@@ -1421,6 +1421,7 @@ static void xenvif_tx_build_gops(struct
+ 			skb_shinfo(skb)->nr_frags = MAX_SKB_FRAGS;
+ 			nskb = xenvif_alloc_skb(0);
+ 			if (unlikely(nskb == NULL)) {
++				skb_shinfo(skb)->nr_frags = 0;
+ 				kfree_skb(skb);
+ 				xenvif_tx_err(queue, &txreq, idx);
+ 				if (net_ratelimit())
+@@ -1436,6 +1437,7 @@ static void xenvif_tx_build_gops(struct
+ 
+ 			if (xenvif_set_skb_gso(queue->vif, skb, gso)) {
+ 				/* Failure in xenvif_set_skb_gso is fatal. */
++				skb_shinfo(skb)->nr_frags = 0;
+ 				kfree_skb(skb);
+ 				kfree_skb(nskb);
+ 				break;
 
 
