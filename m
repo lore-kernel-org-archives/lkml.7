@@ -2,104 +2,92 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E580C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2EFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4AF23400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84B9923400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389920AbfHVQY4 (ORCPT
+        id S2389930AbfHVQZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:24:56 -0400
-Received: from mga11.intel.com ([192.55.52.93]:7457 "EHLO mga11.intel.com"
+        Thu, 22 Aug 2019 12:25:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:23414 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389888AbfHVQYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:24:50 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 09:24:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,417,1559545200"; 
-   d="scan'208";a="181437997"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga003.jf.intel.com with ESMTP; 22 Aug 2019 09:24:49 -0700
-Date:   Thu, 22 Aug 2019 09:24:49 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 04/10] KVM: Implement kvm_put_guest()
-Message-ID: <20190822162449.GF25467@linux.intel.com>
-References: <20190821153656.33429-1-steven.price@arm.com>
- <20190821153656.33429-5-steven.price@arm.com>
- <20190822152854.GE25467@linux.intel.com>
- <e2abc69b-74c2-64ef-e270-43d93513eaae@arm.com>
+        id S2389875AbfHVQZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 12:25:18 -0400
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 07645A707
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 16:25:18 +0000 (UTC)
+Received: by mail-qt1-f197.google.com with SMTP id e22so7078993qtp.9
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 09:25:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BobyCGhcbReGb3WBS4gHw8mqIof48hpNCYG3u+entU0=;
+        b=prYC7S/f8GC+5Bv1sL4vdsU8QohWSnp/rlRt4Tvy+Iul8rVrB5JdFz91XDdTbQOcT5
+         lA1qJYwljgkA8G3YageioDu+XiocrOhZGZIlBihK4P9tzxfNPwGeLICWvOA57/Np76x+
+         hQ2jCBj6AtYCafJciKywj+bhfWOdHoKJ/dNg4E3FrZSKFmM+YgMpiZzLIKtu6aejfxQj
+         avDgfKlf+wuagJFiNgMoUs6e/tkbubj79qs2P+HdAOjq+2cVTn4XZ68QevBqEJtHtxw1
+         gIZ6cFqwKEHu6R0riX7d7JVQE0vo1uwUqa/bIctYfPUSzytreA1gs1EzSudN7oZJdJQZ
+         FFcw==
+X-Gm-Message-State: APjAAAVoe2Ip6B1M2UChofvJdVUPHbN+ENeUVoEUiC+Q5nxHN/YzFofi
+        44aGTterprjHeyJqRjhzULQa5ELN3o+T/1B/t1YRQks9MuWYUZumDDRTP7WhDo6JqRwiuTp/rXG
+        0AVRYML9T/IqjaP5skG4dziMrmSHvxe0L5TkPVewd
+X-Received: by 2002:a37:9bce:: with SMTP id d197mr37776552qke.230.1566491117397;
+        Thu, 22 Aug 2019 09:25:17 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwCzxx9GIlrS4XEeCbX2mQfjnH5qofbbfKKPHcUlTryzHxO5TNoQ52Nj0sQTldgDLnPN/3HYP791B71A1K3g2k=
+X-Received: by 2002:a37:9bce:: with SMTP id d197mr37776528qke.230.1566491117241;
+ Thu, 22 Aug 2019 09:25:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e2abc69b-74c2-64ef-e270-43d93513eaae@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190812162326.14253-1-benjamin.tissoires@redhat.com>
+In-Reply-To: <20190812162326.14253-1-benjamin.tissoires@redhat.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Thu, 22 Aug 2019 18:25:05 +0200
+Message-ID: <CAO-hwJ+kujRCBw-A8HV7ppLbnD-nkOsqFd3_KgCD9UBR23oq2w@mail.gmail.com>
+Subject: Re: [PATCH 0/2] HID multitouch: small fixes
+To:     Matthias Fend <Matthias.Fend@wolfvision.net>,
+        Jiri Kosina <jikos@kernel.org>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 04:46:10PM +0100, Steven Price wrote:
-> On 22/08/2019 16:28, Sean Christopherson wrote:
-> > On Wed, Aug 21, 2019 at 04:36:50PM +0100, Steven Price wrote:
-> >> kvm_put_guest() is analogous to put_user() - it writes a single value to
-> >> the guest physical address. The implementation is built upon put_user()
-> >> and so it has the same single copy atomic properties.
-> > 
-> > What you mean by "single copy atomic"?  I.e. what guarantees does
-> > put_user() provide that __copy_to_user() does not?
-> 
-> Single-copy atomicity is defined by the Arm architecture[1] and I'm not
-> going to try to go into the full details here, so this is a summary.
-> 
-> For the sake of this feature what we care about is that the value
-> written/read cannot be "torn". In other words if there is a read (in
-> this case from another VCPU) that is racing with the write then the read
-> will either get the old value or the new value. It cannot return a
-> mixture. (This is of course assuming that the read is using a
-> single-copy atomic safe method).
+On Mon, Aug 12, 2019 at 6:23 PM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> First one should prevent us to add more quirks for Win8 devices
+> that have a trackstick.
+> Second one is a weird device that doesnt work properly in recent
+> kernels.
 
-Thanks for the explanation.  I assumed that's what you were referring to,
-but wanted to double check.
- 
-> __copy_to_user() is implemented as a memcpy() and as such cannot provide
-> single-copy atomicity in the general case (the buffer could easily be
-> bigger than the architecture can guarantee).
-> 
-> put_user() on the other hand is implemented (on arm64) as an explicit
-> store instruction and therefore is guaranteed by the architecture to be
-> single-copy atomic (i.e. another CPU cannot see a half-written value).
+Looks like there is not much traction for this series.
 
-I don't think kvm_put_guest() belongs in generic code, at least not with
-the current changelog explanation about it providing single-copy atomic
-semantics.  AFAICT, the single-copy thing is very much an arm64
-implementation detail, e.g. the vast majority of 32-bit architectures,
-including x86, do not provide any guarantees, and x86-64 generates more
-or less the same code for put_user() and __copy_to_user() for 8-byte and
-smaller accesses.
+The test suite is still passing, so I applied the series in for-5.4/multitouch
 
-As an alternative to kvm_put_guest() entirely, is it an option to change
-arm64's raw_copy_to_user() to redirect to __put_user() for sizes that are
-constant at compile time and can be handled by __put_user()?  That would
-allow using kvm_write_guest() to update stolen time, albeit with
-arguably an even bigger dependency on the uaccess implementation details.
+Cheers,
+Benjamin
+
+>
+> Cheers,
+> Benjamin
+>
+> Benjamin Tissoires (2):
+>   HID: multitouch: do not filter mice nodes
+>   HID: multitouch: add support for the Smart Tech panel
+>
+>  drivers/hid/hid-multitouch.c | 37 +++++++++++++++++++++++++++++-------
+>  1 file changed, 30 insertions(+), 7 deletions(-)
+>
+> --
+> 2.19.2
+>
