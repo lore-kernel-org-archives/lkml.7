@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BCEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A71AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4D4233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B771233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493939;
-	bh=ZOce+oesMiL1WMevho99Glb5NLQRvM5HKm/3BvCFFYE=;
+	s=default; t=1566493947;
+	bh=vc6ved7MhkKn9nkhraXLQzdIXfaVw920LLml0GtQ7R4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BwvnzFwfJYbDLNDRyRyZMJbTid/LnkIzcmxMtMjxiCYVte+T0CoAohwAp6KL32ghY
-	 p61GOOrPGUZYlPx+CWcB8IP1GrrLjRjuii9e/y5KBbt7C1Jxlp4TKjJ6jvs15o3BdY
-	 NFQ6Bl6fCxFsYHLvUHPYafV63Li8irHiuBjmnfjU=
+	b=bFh6GZoRIEpaXJ4ZcfdOnnzxV/5wqOa0GfHWczeulkm7EJwSoUzmOaHKgitn8AmET
+	 Q07oUHLL4WPcb/QUS53BObBPfD9R79wxuCf0YQ0qK4iiPWdU6GtYw2hiWbIBB4aJmN
+	 ctU36z8rXzSIHxNucR6/91ZCsfUgAQgq+byJeWu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390988AbfHVRMS (ORCPT
+        id S2390999AbfHVRMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:12:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59370 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:12:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390675AbfHVRJJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:09 -0400
+        id S1728605AbfHVRJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:08 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEEE1233FD;
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AEC32341B;
         Thu, 22 Aug 2019 17:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493748;
-        bh=ZOce+oesMiL1WMevho99Glb5NLQRvM5HKm/3BvCFFYE=;
+        s=default; t=1566493747;
+        bh=vc6ved7MhkKn9nkhraXLQzdIXfaVw920LLml0GtQ7R4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MxCQTh/G8KpHWTBrIpkdw1nDdBJYZjzfjZKsWM3RhYHDXAYpTW2357lft9WM8dX1m
-         6JnWEQ1XfsrPIm4xOxOi54LeVUnszHrWGx6SqI6SyzpVGCol3/FwTSY92JQSWjt3W/
-         Wa6Z/fRB3eNRX8m6r40azSekknzTffxwyRIWQc0I=
+        b=KGqcY5+ierglh1qaP1g4Zy7zpxsxu3jkJS97Vh4n52G6RTU0ErZ49ys9k4u1ljV9L
+         Dho13NJW50Z9Qckmlf1NGMxuWMSvbzxN1jZi0CUf0pdhnlv9W8DVB7+u1AkY7TSuL2
+         d2byJf0tU6mcAU3wUwONVVt2oHNgEdXQRrsbT0sw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rogan Dawes <rogan@dawes.za.net>, Johan Hovold <johan@kernel.org>,
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+45a53506b65321c1fe91@syzkaller.appspotmail.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 099/135] USB: serial: option: add D-Link DWM-222 device ID
-Date:   Thu, 22 Aug 2019 13:07:35 -0400
-Message-Id: <20190822170811.13303-100-sashal@kernel.org>
+Subject: [PATCH 5.2 098/135] USB: CDC: fix sanity checks in CDC union parser
+Date:   Thu, 22 Aug 2019 13:07:34 -0400
+Message-Id: <20190822170811.13303-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -64,40 +65,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rogan Dawes <rogan@dawes.za.net>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 552573e42aab5f75aff9bab855a9677979d9a7d5 upstream.
+commit 54364278fb3cabdea51d6398b07c87415065b3fc upstream.
 
-Add device id for D-Link DWM-222 A2.
+A few checks checked for the size of the pointer to a structure
+instead of the structure itself. Copy & paste issue presumably.
 
-MI_00 D-Link HS-USB Diagnostics
-MI_01 D-Link HS-USB Modem
-MI_02 D-Link HS-USB AT Port
-MI_03 D-Link HS-USB NMEA
-MI_04 D-Link HS-USB WWAN Adapter (qmi_wwan)
-MI_05 USB Mass Storage Device
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Rogan Dawes <rogan@dawes.za.net>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: e4c6fb7794982 ("usbnet: move the CDC parser into USB core")
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot+45a53506b65321c1fe91@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20190813093541.18889-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/serial/option.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/core/message.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
-index c1582fbd11503..c52bd824442b9 100644
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1952,6 +1952,8 @@ static const struct usb_device_id option_ids[] = {
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2001, 0x7e35, 0xff),			/* D-Link DWM-222 */
- 	  .driver_info = RSVD(4) },
-+	{ USB_DEVICE_INTERFACE_CLASS(0x2001, 0x7e3d, 0xff),			/* D-Link DWM-222 A2 */
-+	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
+diff --git a/drivers/usb/core/message.c b/drivers/usb/core/message.c
+index e844bb7b5676a..5adf489428aad 100644
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -2218,14 +2218,14 @@ int cdc_parse_cdc_header(struct usb_cdc_parsed_header *hdr,
+ 				(struct usb_cdc_dmm_desc *)buffer;
+ 			break;
+ 		case USB_CDC_MDLM_TYPE:
+-			if (elength < sizeof(struct usb_cdc_mdlm_desc *))
++			if (elength < sizeof(struct usb_cdc_mdlm_desc))
+ 				goto next_desc;
+ 			if (desc)
+ 				return -EINVAL;
+ 			desc = (struct usb_cdc_mdlm_desc *)buffer;
+ 			break;
+ 		case USB_CDC_MDLM_DETAIL_TYPE:
+-			if (elength < sizeof(struct usb_cdc_mdlm_detail_desc *))
++			if (elength < sizeof(struct usb_cdc_mdlm_detail_desc))
+ 				goto next_desc;
+ 			if (detail)
+ 				return -EINVAL;
 -- 
 2.20.1
 
