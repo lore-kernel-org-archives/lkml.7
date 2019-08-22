@@ -2,194 +2,128 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D65C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575D1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E531233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566473326;
-	bh=aBkIxbh8H3Md/T5wqzLj1FFJMdZskQl8pfMvLAQCue8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fSRakY2YZXmJ/3b36DtzgJUKosZHWKyLYB40ccuYONckDa7TP0uPDpKMqJeGA+Bhm
-	 vMKhDyDk7z31jnoqRikzpgs1gT9flvwbNXVJXCrrrmMifhuXJpb0va8aByU+Cbpl5L
-	 Rk9Fkg8lnymHvYYukBRzQ205toDy0qADW9802xCA=
+	by mail.kernel.org (Postfix) with ESMTP id 344CD2339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388175AbfHVL2o (ORCPT
+        id S2388190AbfHVLc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:28:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50766 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 07:32:56 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34662 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726844AbfHVL2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:28:44 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC96F206DD;
-        Thu, 22 Aug 2019 11:28:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566473323;
-        bh=aBkIxbh8H3Md/T5wqzLj1FFJMdZskQl8pfMvLAQCue8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cRqKwnFB3bV6vcqeK1ELh9lo1EZIXzFUSvjWaooDsaBrAF6sZVylgUg+B+9AUI0HK
-         LZs/kPtu6YgpNmp0nV0mH/J+jRGEqw1Y0uypY9rP1OvK/xTDzVppBV4oBQ7FT0uZ+x
-         hJWF8o5esN6BksMzW4J0W0RDz5436nqzasB9fZAA=
-Date:   Thu, 22 Aug 2019 12:28:36 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Yong Wu <yong.wu@mediatek.com>, youlin.pei@mediatek.com,
-        devicetree@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        cui.zhang@mediatek.com, srv_heupstream@mediatek.com,
-        chao.hao@mediatek.com, Joerg Roedel <joro@8bytes.org>,
-        linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        ming-fan.chen@mediatek.com, anan.sun@mediatek.com,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support
- PA[33:32] for MediaTek
-Message-ID: <20190822112836.efodtwu3souq3uwa@willie-the-truck>
-References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
- <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
- <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
- <1566464186.11621.7.camel@mhfsdcap03>
- <10d5122d-3375-161b-9356-2ddfc1c835bd@arm.com>
- <20190822101749.3kwzd5lb7zinsord@willie-the-truck>
- <e6652176-763d-5298-9e10-8c1fbe1b3c0d@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6652176-763d-5298-9e10-8c1fbe1b3c0d@arm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        id S1731777AbfHVLc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 07:32:56 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0B6251A02CA;
+        Thu, 22 Aug 2019 13:32:54 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2BE101A0229;
+        Thu, 22 Aug 2019 13:32:44 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1B545402A2;
+        Thu, 22 Aug 2019 19:32:32 +0800 (SGT)
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
+        lorenzo.pieralisi@arm.co, arnd@arndb.de,
+        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, andrew.murray@arm.com
+Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCH v2 02/10] PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
+Date:   Thu, 22 Aug 2019 19:22:34 +0800
+Message-Id: <20190822112242.16309-2-xiaowei.bao@nxp.com>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 11:57:11AM +0100, Robin Murphy wrote:
-> On 2019-08-22 11:17 am, Will Deacon wrote:
-> > On Thu, Aug 22, 2019 at 11:08:58AM +0100, Robin Murphy wrote:
-> > > On 2019-08-22 9:56 am, Yong Wu wrote:
-> > > > On Wed, 2019-08-21 at 16:24 +0100, Will Deacon wrote:
-> > > > > On Wed, Aug 21, 2019 at 09:53:12PM +0800, Yong Wu wrote:
-> > > > > > MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
-> > > > > > the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
-> > > > > > respectively. Meanwhile the iova still is 32bits.
-> > > > > > 
-> > > > > > Regarding whether the pagetable address could be over 4GB, the mt8183
-> > > > > > support it while the previous mt8173 don't, thus keep it as is.
-> > > > > > 
-> > > > > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > > > > > ---
-> > > > > >    drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
-> > > > > >    include/linux/io-pgtable.h         |  7 +++----
-> > > > > >    2 files changed, 28 insertions(+), 11 deletions(-)
-> > > > > 
-> > > > > [...]
-> > > > > 
-> > > > > > @@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
-> > > > > >    {
-> > > > > >    	struct arm_v7s_io_pgtable *data;
-> > > > > > -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
-> > > > > > +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
-> > > > > > +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
-> > > > > > +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
-> > > > > 
-> > > > > Please can you instead change arm_v7s_alloc_pgtable() so that it allows an
-> > > > > ias of up to 34 when the IO_PGTABLE_QUIRK_ARM_MTK_EXT is set?
-> > > > 
-> > > > Here I only simply skip the oas checking for our case. then which way do
-> > > > your prefer?  something like you commented before:?
-> > > > 
-> > > > 
-> > > > 	if (cfg->ias > ARM_V7S_ADDR_BITS)
-> > > > 		return NULL;
-> > > > 
-> > > > 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
-> > > > 		if (!IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
-> > > > 			cfg->oas = min(cfg->oas, ARM_V7S_ADDR_BITS);
-> > > > 		else if (cfg->oas > 34)
-> > > > 			return NULL;
-> > > > 	} else if (cfg->oas > ARM_V7S_ADDR_BITS) {
-> > > > 		return NULL;
-> > > > 	}
-> > > 
-> > > All it should take is something like:
-> > > 
-> > > 	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)
-> > > 		max_oas = 34;
-> > > 	else
-> > > 		max_oas = 32;
-> > > 	if (cfg->oas > max_oas)
-> > > 		return NULL;
-> > > 
-> > > or even just:
-> > > 
-> > > 	if (cfg->oas > 32 ||
-> > > 	    (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT && cfg->oas > 34))
-> > > 		return NULL;
-> > > 
-> > > (and if we prefer the latter style, perhaps we could introduce some kind of
-> > > "is_mtk_4gb()" helper to save on verbosity)
-> > 
-> > I wondered the same thing, but another place we'd want the check is in
-> > iopte_to_paddr() which probably needs the PHYS_ADDR_T check to avoid GCC
-> > warnings, although I didn't try it.
-> 
-> I'm pretty sure I confirmed that "paddr |= BIT_ULL(32)" doesn't warn when
-> phys_addt_t is 32-bit - it's well-defined unsigned integer truncation after
-> all, and if GCC starts warning about all the valid no-op code it optimises
-> away then it's going to run up against IS_ENABLED() first and foremost ;)
+Add the doorbell mode of MSI-X in EP mode.
 
-You're quite right, although we live in a world where GCC shouts at us about
-missing comments in switch statements so I think my worry was justified!
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+---
+v2:
+ - Remove the macro of no used.
 
-> > So if we did:
-> > 
-> > static bool cfg_mtk_ext_enabled(struct io_pgtable_cfg *cfg)
-> > {
-> > 	return IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT) &&
-> > 	       cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT;
-> > }
-> > 
-> > Then I suppose we could do this in _alloc():
-> > 
-> > 	if (cfg->oas > cfg_mtk_ext_enabled(cfg) ? 34 : ARM_V7S_ADDR_BITS)
-> > 		return NULL;
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 14 ++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h    | 12 ++++++++++++
+ 2 files changed, 26 insertions(+)
 
-^^ Apparantly, I left the bracketting here as an exercise to the reader.
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 3e2b740..b8388f8 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -480,6 +480,20 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	return 0;
+ }
+ 
++int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
++				       u16 interrupt_num)
++{
++	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
++	u32 msg_data;
++
++	msg_data = (func_no << PCIE_MSIX_DOORBELL_PF_SHIFT) |
++		   (interrupt_num - 1);
++
++	dw_pcie_writel_dbi(pci, PCIE_MSIX_DOORBELL, msg_data);
++
++	return 0;
++}
++
+ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			      u16 interrupt_num)
+ {
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index a0fdbf7..895a9ef 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -88,6 +88,9 @@
+ #define PCIE_MISC_CONTROL_1_OFF		0x8BC
+ #define PCIE_DBI_RO_WR_EN		BIT(0)
+ 
++#define PCIE_MSIX_DOORBELL		0x948
++#define PCIE_MSIX_DOORBELL_PF_SHIFT	24
++
+ /*
+  * iATU Unroll-specific register definitions
+  * From 4.80 core version the address translation will be made by unroll
+@@ -400,6 +403,8 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			     u8 interrupt_num);
+ int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 			     u16 interrupt_num);
++int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep, u8 func_no,
++				       u16 interrupt_num);
+ void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar);
+ #else
+ static inline void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
+@@ -432,6 +437,13 @@ static inline int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 	return 0;
+ }
+ 
++static inline int dw_pcie_ep_raise_msix_irq_doorbell(struct dw_pcie_ep *ep,
++						     u8 func_no,
++						     u16 interrupt_num)
++{
++	return 0;
++}
++
+ static inline void dw_pcie_ep_reset_bar(struct dw_pcie *pci, enum pci_barno bar)
+ {
+ }
+-- 
+2.9.5
 
-> > 
-> > and then this in iopte_to_paddr():
-> > 
-> > 	[...]
-> > 
-> > 	paddr = pte & mask;
-> > 	if (!cfg_mtk_ext_enabled(cfg))
-> > 		return paddr;
-> > 
-> > 	if (pte & ARM_V7S_ATTR_MTK_PA_BIT32)
-> > 		paddr |= ...
-> > 
-> > 	[...]
-> > 
-> > What do you reckon?
-> 
-> Yeah, that's the general shape of things I was picturing - I'm not that
-> fussed about the PHYS_ADDR_T_64BIT thing, especially if it's wrapped up in
-> just one place, so if you do want to keep it as belt-and-braces I'll just
-> consider it a slight code size optimisation for 32-bit builds.
-
-Ok, great. Yong Wu -- are you ok respinning with the above + missing
-brackets?
-
-Will
