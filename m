@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FDBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73933C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD7132341A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A34623400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494827;
-	bh=fgkm7WAJnjMm0e9zjgQqZSf3/wt/5O1q3IEJNndBPfE=;
+	s=default; t=1566494831;
+	bh=kFGKgC0gvPqD7KF3DhCZfPMKpv8ou032LeWM4nQGtDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OvrrcYi6isxAHwE8FU0UHE2NkHoULY6gYCyaQKUVYIwCE5VBp2pMI61vTxM91sW0o
-	 HmrZKlh4DHFmXejtTUBD3pD7nY4wuD/zymuOdEUZwnqxeZqc+6463667wae3+BvcXU
-	 dWzSKZOOfpFZ6thR57M4H5GqisplxfmPxY2EM/lY=
+	b=nq8/IEEZ5gBgS5WjzYo7gbUgTHjoQ17CXwXj6cofZ929SFALTSsnngfK226tjLjkv
+	 vOvW901Gn40jbz0RRivIBhRgT+vJeVz/xhfrSdO1FFNNRjm7T5aXQhCOIw30slWCPM
+	 wJ62bd56bWkY7GC0bZlCV8o6wNvRZhPAi62TWIuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391954AbfHVR1G (ORCPT
+        id S2391965AbfHVR1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:27:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:27:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404488AbfHVRZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:45 -0400
+        id S2391871AbfHVRZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:44 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E44FC2341E;
-        Thu, 22 Aug 2019 17:25:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 642CF2341A;
+        Thu, 22 Aug 2019 17:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494745;
-        bh=fgkm7WAJnjMm0e9zjgQqZSf3/wt/5O1q3IEJNndBPfE=;
+        s=default; t=1566494743;
+        bh=kFGKgC0gvPqD7KF3DhCZfPMKpv8ou032LeWM4nQGtDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tmbg3ZNHqawmIogiU6UY04D3j3H4A/az1J79zbySAq5jtuVj/koeb32izdOyQYHHJ
-         GWEfAFVJMMQEitjdSwSDXKvgEyY9Uo34X83YoAHj2xvIh6Mrg59zQJF92VKKZ7sN9Q
-         HGs7q25DfOLw2QQVF1kswFVBAwrfFzziLeGUIjrw=
+        b=wDeDtjl8MGecr05hziyKXw8dHPNb3s4BYmtEkosxJVmykzd0IbkXrMOc75rSsBkKX
+         wTm7y5FHE2hawyHt79Jlz3EG0blEGADt/P4wHdCsbNx1b+g0g5JPpWHPNfFShcPl0u
+         pGSwspDszLA0JOt6wVwmmmwvbBkzGSyWrKNRqPbY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
-        Chunming Zhou <david1.zhou@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Bader Ali - Saleh <bader.alisaleh@microsemi.com>,
+        Scott Teel <scott.teel@microsemi.com>,
+        Scott Benesh <scott.benesh@microsemi.com>,
+        Kevin Barnett <kevin.barnett@microsemi.com>,
+        Don Brace <don.brace@microsemi.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 39/85] drm/amdgpu: fix a potential information leaking bug
-Date:   Thu, 22 Aug 2019 10:19:12 -0700
-Message-Id: <20190822171733.010185705@linuxfoundation.org>
+Subject: [PATCH 4.19 37/85] scsi: hpsa: correct scsi command status issue after reset
+Date:   Thu, 22 Aug 2019 10:19:10 -0700
+Message-Id: <20190822171732.932719199@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -62,43 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 929e571c04c285861e0bb049a396a2bdaea63282 ]
+[ Upstream commit eeebce1862970653cdf5c01e98bc669edd8f529a ]
 
-Coccinelle reports a path that the array "data" is never initialized.
-The path skips the checks in the conditional branches when either
-of callback functions, read_wave_vgprs and read_wave_sgprs, is not
-registered. Later, the uninitialized "data" array is read
-in the while-loop below and passed to put_user().
-
-Fix the path by allocating the array with kcalloc().
-
-The patch is simplier than adding a fall-back branch that explicitly
-calls memset(data, 0, ...). Also it does not need the multiplication
-1024*sizeof(*data) as the size parameter for memset() though there is
-no risk of integer overflow.
-
-Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
-Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Bader Ali - Saleh <bader.alisaleh@microsemi.com>
+Reviewed-by: Scott Teel <scott.teel@microsemi.com>
+Reviewed-by: Scott Benesh <scott.benesh@microsemi.com>
+Reviewed-by: Kevin Barnett <kevin.barnett@microsemi.com>
+Signed-off-by: Don Brace <don.brace@microsemi.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/hpsa.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-index f5fb93795a69a..65cecfdd9b454 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-@@ -707,7 +707,7 @@ static ssize_t amdgpu_debugfs_gpr_read(struct file *f, char __user *buf,
- 	thread = (*pos & GENMASK_ULL(59, 52)) >> 52;
- 	bank = (*pos & GENMASK_ULL(61, 60)) >> 60;
+diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+index c43eccdea65d2..f570b8c5d857c 100644
+--- a/drivers/scsi/hpsa.c
++++ b/drivers/scsi/hpsa.c
+@@ -2320,6 +2320,8 @@ static int handle_ioaccel_mode2_error(struct ctlr_info *h,
+ 	case IOACCEL2_SERV_RESPONSE_COMPLETE:
+ 		switch (c2->error_data.status) {
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_GOOD:
++			if (cmd)
++				cmd->result = 0;
+ 			break;
+ 		case IOACCEL2_STATUS_SR_TASK_COMP_CHK_COND:
+ 			cmd->result |= SAM_STAT_CHECK_CONDITION;
+@@ -2479,8 +2481,10 @@ static void process_ioaccel2_completion(struct ctlr_info *h,
  
--	data = kmalloc_array(1024, sizeof(*data), GFP_KERNEL);
-+	data = kcalloc(1024, sizeof(*data), GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
+ 	/* check for good status */
+ 	if (likely(c2->error_data.serv_response == 0 &&
+-			c2->error_data.status == 0))
++			c2->error_data.status == 0)) {
++		cmd->result = 0;
+ 		return hpsa_cmd_free_and_done(h, c, cmd);
++	}
  
+ 	/*
+ 	 * Any RAID offload error results in retry which will use
+@@ -5617,6 +5621,12 @@ static int hpsa_scsi_queue_command(struct Scsi_Host *sh, struct scsi_cmnd *cmd)
+ 	}
+ 	c = cmd_tagged_alloc(h, cmd);
+ 
++	/*
++	 * This is necessary because the SML doesn't zero out this field during
++	 * error recovery.
++	 */
++	cmd->result = 0;
++
+ 	/*
+ 	 * Call alternate submit routine for I/O accelerated commands.
+ 	 * Retries always go down the normal I/O path.
 -- 
 2.20.1
 
