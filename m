@@ -2,55 +2,56 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B89C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA83C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AF420870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9637120870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495691;
-	bh=p0O9ZmMrU+N0e9HKSmidKwAo4BQzKzXIxJ/Ie0hOM/M=;
+	s=default; t=1566495693;
+	bh=lP9m1NorUH5z/y3KWy07mtIG+q/fbsq/E5dtd35zv0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fxfBQhEHR4Z6zE1M4D2Sqtb4NtHmheTg53KjwSv8iXjACKdwaLSHC0mizDxoxls+L
-	 6YgiEvoatzv3ugktopWsanT1fevj/lIKhZykOXQj4S8Xa1xS8+8qua/bPTIDMdrCHs
-	 yMFgsH40rT2ILOWiz6f31/EhltC3Bi0ZcfJuMoVw=
+	b=KI4lIkz7vhzuuqsl5UHPJvco/LHfjftOWt1tdxc/2bNS9dfTzjxTGMwYjL2E4sPfP
+	 FVYiPIVE4aftoBcCjthd1UlAX0IH/9bCO2mw9S+ZcXBaxrQUpauNlMoXevj7VcODyw
+	 yrK8aGU2CU+PTGanGfKA/e7tPGSyKVxtxmtOthkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391769AbfHVRX6 (ORCPT
+        id S2392383AbfHVRlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43778 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:41:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403959AbfHVRXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:38 -0400
+        id S2391762AbfHVRX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:58 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38CDB23405;
-        Thu, 22 Aug 2019 17:23:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E7A621743;
+        Thu, 22 Aug 2019 17:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494616;
-        bh=p0O9ZmMrU+N0e9HKSmidKwAo4BQzKzXIxJ/Ie0hOM/M=;
+        s=default; t=1566494637;
+        bh=lP9m1NorUH5z/y3KWy07mtIG+q/fbsq/E5dtd35zv0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gT/5X3VBZ5Y/5S1k0ASBHRo/d7tnV8ZnqpFeB9jVVXKiKcD/8sXFXIBdy4A9JKTRK
-         RrbVUyQtuK9RB2PHie6PJAo2UBYUh0U+ETyjrDFch3QFBTrxMQoOUD8nFGD9TsJTK8
-         6t6otHlRby3co9Lz4mpKxpMP5qKfD1Jr+RvCcm+I=
+        b=sLkzJyb05u55xwBhUtGh+JLqGH/XQpCQ0HV+cs4dO48ASv5CoJLNTSTletxwdvfQ/
+         OD9yi2clKuoMSTcByJT1PWqPOV7DYcABjjuiH55+E2QrQVALEk0/yvyA6J7ajPlvQ5
+         BmuabPb6IZWJzJhDi9hauZyDbyD1AoLlRbj/btuY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>,
-        Qian Cai <cai@lca.pw>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 044/103] mm/memcontrol.c: fix use after free in mem_cgroup_iter()
-Date:   Thu, 22 Aug 2019 10:18:32 -0700
-Message-Id: <20190822171730.588097810@linuxfoundation.org>
+        stable@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 070/103] perf header: Fix divide by zero error if f_header.attr_size==0
+Date:   Thu, 22 Aug 2019 10:18:58 -0700
+Message-Id: <20190822171731.710829593@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -63,226 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miles Chen <miles.chen@mediatek.com>
+[ Upstream commit 7622236ceb167aa3857395f9bdaf871442aa467e ]
 
-commit 54a83d6bcbf8f4700013766b974bf9190d40b689 upstream.
+So I have been having lots of trouble with hand-crafted perf.data files
+causing segfaults and the like, so I have started fuzzing the perf tool.
 
-This patch is sent to report an use after free in mem_cgroup_iter()
-after merging commit be2657752e9e ("mm: memcg: fix use after free in
-mem_cgroup_iter()").
+First issue found:
 
-I work with android kernel tree (4.9 & 4.14), and commit be2657752e9e
-("mm: memcg: fix use after free in mem_cgroup_iter()") has been merged
-to the trees.  However, I can still observe use after free issues
-addressed in the commit be2657752e9e.  (on low-end devices, a few times
-this month)
+If f_header.attr_size is 0 in the perf.data file, then perf will crash
+with a divide-by-zero error.
 
-backtrace:
-        css_tryget <- crash here
-        mem_cgroup_iter
-        shrink_node
-        shrink_zones
-        do_try_to_free_pages
-        try_to_free_pages
-        __perform_reclaim
-        __alloc_pages_direct_reclaim
-        __alloc_pages_slowpath
-        __alloc_pages_nodemask
+Committer note:
 
-To debug, I poisoned mem_cgroup before freeing it:
+Added a pr_err() to tell the user why the command failed.
 
-  static void __mem_cgroup_free(struct mem_cgroup *memcg)
-        for_each_node(node)
-        free_mem_cgroup_per_node_info(memcg, node);
-        free_percpu(memcg->stat);
-  +     /* poison memcg before freeing it */
-  +     memset(memcg, 0x78, sizeof(struct mem_cgroup));
-        kfree(memcg);
-  }
-
-The coredump shows the position=0xdbbc2a00 is freed.
-
-  (gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
-  $13 = {position = 0xdbbc2a00, generation = 0x2efd}
-
-  0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
-  0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
-  0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
-  0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
-  0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
-  0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
-  0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
-  0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
-  0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
-  0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
-  0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
-  0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
-  0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
-  0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
-  0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
-  0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
-  0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
-
-In the reclaim path, try_to_free_pages() does not setup
-sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
-shrink_node().
-
-In mem_cgroup_iter(), root is set to root_mem_cgroup because
-sc->target_mem_cgroup is NULL.  It is possible to assign a memcg to
-root_mem_cgroup.nodeinfo.iter in mem_cgroup_iter().
-
-        try_to_free_pages
-        	struct scan_control sc = {...}, target_mem_cgroup is 0x0;
-        do_try_to_free_pages
-        shrink_zones
-        shrink_node
-        	 mem_cgroup *root = sc->target_mem_cgroup;
-        	 memcg = mem_cgroup_iter(root, NULL, &reclaim);
-        mem_cgroup_iter()
-        	if (!root)
-        		root = root_mem_cgroup;
-        	...
-
-        	css = css_next_descendant_pre(css, &root->css);
-        	memcg = mem_cgroup_from_css(css);
-        	cmpxchg(&iter->position, pos, memcg);
-
-My device uses memcg non-hierarchical mode.  When we release a memcg:
-invalidate_reclaim_iterators() reaches only dead_memcg and its parents.
-If non-hierarchical mode is used, invalidate_reclaim_iterators() never
-reaches root_mem_cgroup.
-
-  static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-  {
-        struct mem_cgroup *memcg = dead_memcg;
-
-        for (; memcg; memcg = parent_mem_cgroup(memcg)
-        ...
-  }
-
-So the use after free scenario looks like:
-
-  CPU1						CPU2
-
-  try_to_free_pages
-  do_try_to_free_pages
-  shrink_zones
-  shrink_node
-  mem_cgroup_iter()
-      if (!root)
-      	root = root_mem_cgroup;
-      ...
-      css = css_next_descendant_pre(css, &root->css);
-      memcg = mem_cgroup_from_css(css);
-      cmpxchg(&iter->position, pos, memcg);
-
-        				invalidate_reclaim_iterators(memcg);
-        				...
-        				__mem_cgroup_free()
-        					kfree(memcg);
-
-  try_to_free_pages
-  do_try_to_free_pages
-  shrink_zones
-  shrink_node
-  mem_cgroup_iter()
-      if (!root)
-      	root = root_mem_cgroup;
-      ...
-      mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
-      iter = &mz->iter[reclaim->priority];
-      pos = READ_ONCE(iter->position);
-      css_tryget(&pos->css) <- use after free
-
-To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter
-in invalidate_reclaim_iterators().
-
-[cai@lca.pw: fix -Wparentheses compilation warning]
-  Link: http://lkml.kernel.org/r/1564580753-17531-1-git-send-email-cai@lca.pw
-Link: http://lkml.kernel.org/r/20190730015729.4406-1-miles.chen@mediatek.com
-Fixes: 5ac8fb31ad2e ("mm: memcontrol: convert reclaim iterator to simple css refcounting")
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
+Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907231100440.14532@macbook-air
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memcontrol.c |   39 +++++++++++++++++++++++++++++----------
- 1 file changed, 29 insertions(+), 10 deletions(-)
+ tools/perf/util/header.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -887,26 +887,45 @@ void mem_cgroup_iter_break(struct mem_cg
- 		css_put(&prev->css);
- }
- 
--static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-+static void __invalidate_reclaim_iterators(struct mem_cgroup *from,
-+					struct mem_cgroup *dead_memcg)
- {
--	struct mem_cgroup *memcg = dead_memcg;
- 	struct mem_cgroup_reclaim_iter *iter;
- 	struct mem_cgroup_per_node *mz;
- 	int nid;
- 	int i;
- 
--	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
--		for_each_node(nid) {
--			mz = mem_cgroup_nodeinfo(memcg, nid);
--			for (i = 0; i <= DEF_PRIORITY; i++) {
--				iter = &mz->iter[i];
--				cmpxchg(&iter->position,
--					dead_memcg, NULL);
--			}
-+	for_each_node(nid) {
-+		mz = mem_cgroup_nodeinfo(from, nid);
-+		for (i = 0; i <= DEF_PRIORITY; i++) {
-+			iter = &mz->iter[i];
-+			cmpxchg(&iter->position,
-+				dead_memcg, NULL);
- 		}
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 283148104ffbe..693dcd4ea6a38 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2854,6 +2854,13 @@ int perf_session__read_header(struct perf_session *session)
+ 			   file->path);
  	}
- }
  
-+static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
-+{
-+	struct mem_cgroup *memcg = dead_memcg;
-+	struct mem_cgroup *last;
++	if (f_header.attr_size == 0) {
++		pr_err("ERROR: The %s file's attr size field is 0 which is unexpected.\n"
++		       "Was the 'perf record' command properly terminated?\n",
++		       file->path);
++		return -EINVAL;
++	}
 +
-+	do {
-+		__invalidate_reclaim_iterators(memcg, dead_memcg);
-+		last = memcg;
-+	} while ((memcg = parent_mem_cgroup(memcg)));
-+
-+	/*
-+	 * When cgruop1 non-hierarchy mode is used,
-+	 * parent_mem_cgroup() does not walk all the way up to the
-+	 * cgroup root (root_mem_cgroup). So we have to handle
-+	 * dead_memcg from cgroup root separately.
-+	 */
-+	if (last != root_mem_cgroup)
-+		__invalidate_reclaim_iterators(root_mem_cgroup,
-+						dead_memcg);
-+}
-+
- /*
-  * Iteration constructs for visiting all cgroups (under a tree).  If
-  * loops are exited prematurely (break), mem_cgroup_iter_break() must
+ 	nr_attrs = f_header.attrs.size / f_header.attr_size;
+ 	lseek(fd, f_header.attrs.offset, SEEK_SET);
+ 
+-- 
+2.20.1
+
 
 
