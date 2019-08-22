@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4323CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45654C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1693A20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AA6320856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495951;
-	bh=d4aXzbNgr0rYiq6xmLABKv62VPP5r1AMuZX8nIKaVVs=;
+	s=default; t=1566495959;
+	bh=4gWfYNzBnOxEGicvWI82+pjLANlhKX0clIolvnuZ+Ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dJAAwRJmrfPZbIl1rVQ4a3OhvU9Rj/geSy3fVppnZww0xavN2i4z4gRIg0bt/ACk6
-	 WO5Iwkl2x6o4nGnlBX9AcCyHrT7x8bB+MQAndeNwW3JEaC5yIRgUFeJpG1r5IjGb1c
-	 itVFdc0UIrZv44b6OWfCaXFFrWsCFEhHn+Nep3Is=
+	b=T9MNqHOtU2qGKm03jVjeOQKPVydj+eW+ugCYDVhqCq2Jd3QeoOn7b2pRW3H4b+MIp
+	 F34F5lO7dsUhhC3QjHdXlv07uLRMS4LE2fV09Xw0kfVY8p+Wt9eKS3/grVjXA6hrXD
+	 lHc7c1x7wn5K9iu/CJgTWSUz+0keZfoazdE8Bsik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393026AbfHVRpt (ORCPT
+        id S2393037AbfHVRp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:45:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42206 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:45:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731760AbfHVRXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:02 -0400
+        id S2391694AbfHVRW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:59 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2886923405;
-        Thu, 22 Aug 2019 17:23:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D198223406;
+        Thu, 22 Aug 2019 17:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494581;
-        bh=d4aXzbNgr0rYiq6xmLABKv62VPP5r1AMuZX8nIKaVVs=;
+        s=default; t=1566494579;
+        bh=4gWfYNzBnOxEGicvWI82+pjLANlhKX0clIolvnuZ+Ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8DkKAiGIz8oTT9rXLLBQsQ/CApUIv6O3xdDKf/7dHtehuFfVxG5gNwYnYPrqlfwB
-         w20ecfOIPoKoaPBrIm3EoCYS1y5f+gKbMnylbqMubWXtHtOhgY7be+ZNUn5IYzMLCh
-         1B69vehjSh9xcQbiigYGE5+wpDX5h0xVEYkRsZ28=
+        b=ZPMM0ZP1SxNI1SoBSrYbuWqObmOP4H0NTjNtM64FMmrcSRwVUwMKMzI+/vX7VPjO4
+         7+IZLBUowgq5+5Z93IKMeDd5H67V/0+RwicpJAKkPBb8Uqsd8GIwQ0NHt5tVJ/qBtL
+         1yGf10bxG/9IeHL4CVol0/TsfJiGjn83mi1eTkpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.4 73/78] x86/boot: Disable the address-of-packed-member compiler warning
-Date:   Thu, 22 Aug 2019 10:19:17 -0700
-Message-Id: <20190822171834.147513311@linuxfoundation.org>
+        stable@vger.kernel.org, Tuba Yavuz <tuba@ece.ufl.edu>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 35/78] USB: gadget: f_midi: fixing a possible double-free in f_midi
+Date:   Thu, 22 Aug 2019 10:18:39 -0700
+Message-Id: <20190822171833.060423953@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -64,52 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Yavuz, Tuba <tuba@ece.ufl.edu>
 
-commit 20c6c189045539d29f4854d92b7ea9c329e1edfc upstream.
+commit 7fafcfdf6377b18b2a726ea554d6e593ba44349f upstream.
 
-The clang warning 'address-of-packed-member' is disabled for the general
-kernel code, also disable it for the x86 boot code.
+It looks like there is a possibility of a double-free vulnerability on an
+error path of the f_midi_set_alt function in the f_midi driver. If the
+path is feasible then free_ep_req gets called twice:
 
-This suppresses a bunch of warnings like this when building with clang:
+         req->complete = f_midi_complete;
+         err = usb_ep_queue(midi->out_ep, req, GFP_ATOMIC);
+            => ...
+             usb_gadget_giveback_request
+               =>
+                 f_midi_complete (CALLBACK)
+                   (inside f_midi_complete, for various cases of status)
+                   free_ep_req(ep, req); // first kfree
+         if (err) {
+                 ERROR(midi, "%s: couldn't enqueue request: %d\n",
+                             midi->out_ep->name, err);
+                 free_ep_req(midi->out_ep, req); // second kfree
+                 return err;
+         }
 
-./arch/x86/include/asm/processor.h:535:30: warning: taking address of
-  packed member 'sp0' of class or structure 'x86_hw_tss' may result in an
-  unaligned pointer value [-Waddress-of-packed-member]
-    return this_cpu_read_stable(cpu_tss.x86_tss.sp0);
-                                ^~~~~~~~~~~~~~~~~~~
-./arch/x86/include/asm/percpu.h:391:59: note: expanded from macro
-  'this_cpu_read_stable'
-    #define this_cpu_read_stable(var)       percpu_stable_op("mov", var)
-                                                                    ^~~
-./arch/x86/include/asm/percpu.h:228:16: note: expanded from macro
-  'percpu_stable_op'
-    : "p" (&(var)));
-             ^~~
+The double-free possibility was introduced with commit ad0d1a058eac
+("usb: gadget: f_midi: fix leak on failed to enqueue out requests").
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20170725215053.135586-1-mka@chromium.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Found by MOXCAFE tool.
+
+Signed-off-by: Tuba Yavuz <tuba@ece.ufl.edu>
+Fixes: ad0d1a058eac ("usb: gadget: f_midi: fix leak on failed to enqueue out requests")
+Acked-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: stable <stable@vger.kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/boot/compressed/Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/function/f_midi.c |    3 ++-
+ drivers/usb/gadget/u_f.h             |    2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -30,6 +30,7 @@ KBUILD_CFLAGS += $(cflags-y)
- KBUILD_CFLAGS += -mno-mmx -mno-sse
- KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
- KBUILD_CFLAGS += $(call cc-option,-fno-stack-protector)
-+KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
+--- a/drivers/usb/gadget/function/f_midi.c
++++ b/drivers/usb/gadget/function/f_midi.c
+@@ -366,7 +366,8 @@ static int f_midi_set_alt(struct usb_fun
+ 		if (err) {
+ 			ERROR(midi, "%s: couldn't enqueue request: %d\n",
+ 				    midi->out_ep->name, err);
+-			free_ep_req(midi->out_ep, req);
++			if (req->buf != NULL)
++				free_ep_req(midi->out_ep, req);
+ 			return err;
+ 		}
+ 	}
+--- a/drivers/usb/gadget/u_f.h
++++ b/drivers/usb/gadget/u_f.h
+@@ -65,7 +65,9 @@ struct usb_request *alloc_ep_req(struct
+ /* Frees a usb_request previously allocated by alloc_ep_req() */
+ static inline void free_ep_req(struct usb_ep *ep, struct usb_request *req)
+ {
++	WARN_ON(req->buf == NULL);
+ 	kfree(req->buf);
++	req->buf = NULL;
+ 	usb_ep_free_request(ep, req);
+ }
  
- KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
- GCOV_PROFILE := n
 
 
