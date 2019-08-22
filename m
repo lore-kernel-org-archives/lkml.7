@@ -2,107 +2,110 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE39C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC18C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22937233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B58A4233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:25:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="WrFYMZ73"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="idQ8iW2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387979AbfHVOYc (ORCPT
+        id S2388014AbfHVOZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:24:32 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:60606 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387945AbfHVOYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:24:31 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id 13D5142ED0;
-        Thu, 22 Aug 2019 14:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:references:in-reply-to:date:date:from
-        :from:subject:subject:message-id:received:received:received; s=
-        mta-01; t=1566483869; x=1568298270; bh=1bYRqwEu9883JdGs0AKW2xnM1
-        tOirxhg2R2RAn574Yw=; b=WrFYMZ73tDcLaxuzNV0YP82ZaIl/Pp8Edk3uPxpMK
-        2ELuiFrr+5kF4vHxMbil5kIVphU9p12SI+Orutc0p05tPpvMSIcSo8OVVvFg3lWf
-        ZkErBrZrmQRBminqZyhRsaMlBhrLgDK7zshIKKLd3fkL+v6WWQftTyWtM8wWmBq6
-        ls=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Pu7N4TeU8Is4; Thu, 22 Aug 2019 17:24:29 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 876BC412D3;
-        Thu, 22 Aug 2019 17:24:28 +0300 (MSK)
-Received: from localhost.localdomain (172.17.15.69) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Thu, 22 Aug 2019 17:24:28 +0300
-Message-ID: <550d98a41f8c36effb8147201d6c5fdc762994ea.camel@yadro.com>
-Subject: Re: [PATCH 3/3] watchdog/aspeed: add support for dual boot
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        <linux-watchdog@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        "Alexander Amelkin" <a.amelkin@yadro.com>
-Date:   Thu, 22 Aug 2019 17:24:27 +0300
-In-Reply-To: <20190822135528.GB8144@roeck-us.net>
-References: <1f2cd155057e5ab0cdb20a9a11614bbb09bb49ad.camel@yadro.com>
-         <20190821163220.GA11547@roeck-us.net>
-         <a022c0590f0fbf22cc8476b5ef3f1c22746429ac.camel@yadro.com>
-         <20190822135528.GB8144@roeck-us.net>
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 22 Aug 2019 10:25:00 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40264 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728042AbfHVOZA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:25:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c3so5618648wrd.7
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 07:24:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9OVx3jQWP4kZ5xJyqef16dDp2+r5/pkxkhk8LNAWmX4=;
+        b=idQ8iW2xtN9Z7AliSk77ovUIB903UmaYQgKv3ApPk4O3q0V27W7ZDIobQ4+dlnAMiH
+         cHbKdpngCnKxltSls1Y7TZXrbhU1iazWGtK96aKaaXSSWHc67X3E6Xl9RjMIylZOCkpO
+         SHe2quUdPXW2RYKDJTf1SnjXzxANBS3R++T+aaNHCdOGH1KIkoSSS0FP+rfQu0/1Vf4g
+         codkCiEWII91vRMM1SLUswJkkI//E4JAuruZMlk0uxgkqrSR9peFGZV98FGd5ScnoGz4
+         BAj9fMJ0xoNrRvwOEIs2jB2bw5eEYGkRFzgU3Y5GC3cwdcSiRYRNTQwAy2QlVCsuh/bB
+         uf1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9OVx3jQWP4kZ5xJyqef16dDp2+r5/pkxkhk8LNAWmX4=;
+        b=HLsinj6R+awJOj/awPslST5TvJwMNGilV7z0GvvnhtK+gAXPjtZsXdLw5BsCLo0+A/
+         Ry44QoZb78f0qmlEAws6+ZQz6YSiutlO5IVjwT3XYby/NYseiUXm8hjPtJOamWWXnFe8
+         lDNkSPUn0fp/jJcZZy/ZwoollmgYGrlu4ulqEeV5KfkQnjhgRP8uZWVHWfwmgPfqpwqb
+         PUV4VlsN6Fu3EM/PDElRNqFd/G29YvCRufF/nYSHHXD6Vs+bW0rTqLWYUR9OdFh9PTaR
+         cmIRIbS0MBZVeTLVVD2qdbx6jYd9JPpOzwzgdJkU8PD5axWbm0pzHYksPx6O8c8yRLDX
+         6+zg==
+X-Gm-Message-State: APjAAAXnZAZ+Ka4quAW67za8wfVoFMnOV0SEcI7w1aTcnO3+HMIVX+Xq
+        5oQHE0Wud4uz2RElPjagbbiVTg==
+X-Google-Smtp-Source: APXvYqx3a41MFNhYZEgCdkzdje7C0zBjdhT4MO5uJCc4++EvcwS9Uz/v1rJGzSeEpyFmCrumGT1VbQ==
+X-Received: by 2002:adf:f281:: with SMTP id k1mr47694586wro.154.1566483898729;
+        Thu, 22 Aug 2019 07:24:58 -0700 (PDT)
+Received: from bender.baylibre.local (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id d17sm25806547wrm.52.2019.08.22.07.24.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 07:24:58 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com, jbrunet@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] arm64: meson-sm1: add support for DVFS
+Date:   Thu, 22 Aug 2019 16:24:49 +0200
+Message-Id: <20190822142455.12506-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.17.15.69]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-22 at 06:55 -0700, Guenter Roeck wrote:
-> On Thu, Aug 22, 2019 at 12:15:20PM +0300, Ivan Mikhaylov wrote:
-> > On Wed, 2019-08-21 at 09:32 -0700, Guenter Roeck wrote:
-> > > > +	writel(WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION,
-> > > > +			wdt->base + WDT_CLEAR_TIMEOUT_STATUS);
-> > > > +	wdt->wdd.bootstatus |= WDIOF_EXTERN1;
-> > > 
-> > > The variable reflects the _boot status_. It should not change after
-> > > booting.
-> > 
-> > Okay, then perhaps may we set 'status' handler for watchdog device and
-> > check 
-> > 'status' file? Right now 'bootstatus' and 'status' are same because there is
-> > no
-> > handler for 'status'.
-> > 
-> 
-> You would still have to redefine one of the status bits to mean something
-> driver specific. You would also still have two different flags to read
-> and control cs0 - to read the status, you would read an ioctl (or the
-> status sysfs attribute), to write it you would write into access_cs0.
-> 
-> I guess I must be missing something. What is the problem with using
-> access_cs0 for both ?
-> 
-> Guenter
-> 
+Following DVFS support for the Amlogic G12A and G12B SoCs, this serie
+enables DVFS on the SM1 SoC for the SEI610 board.
 
-There is no problem, I'll do that way, thanks!
+The SM1 Clock structure is slightly different because of the Cortex-A55
+core used, having the capability for each core of a same cluster to run
+at a different frequency thanks to the newly used DynamIQ Shared Unit.
+
+This is why SM1 has a CPU clock tree for each core and for DynamIQ Shared Unit,
+with a bypass mux to use the CPU0 instead of the dedicated trees.
+
+The DSU uses a new GP1 PLL as default clock, thus GP1 is added as read-only.
+
+The SM1 OPPs has been taken from the Amlogic Vendor tree, and unlike
+G12A only a single version of the SoC is available.
+
+Dependencies:
+- patch 6 is based on the "arm64: meson: add support for SM1 Power Domains" serie,
+	but is not a strong dependency, it will work without
+
+Neil Armstrong (6):
+  dt-bindings: clk: meson: add sm1 periph clock controller bindings
+  clk: meson: g12a: add support for SM1 GP1 PLL
+  clk: meson: g12a: add support for SM1 DynamIQ Shared Unit clock
+  clk: meson: g12a: add support for SM1 CPU 1, 2 & 3 clocks
+  clk: meson: g12a: expose SM1 CPU 1, 2 & 3 clocks
+  arm64: dts: meson-sm1-sei610: enable DVFS
+
+ .../bindings/clock/amlogic,gxbb-clkc.txt      |   1 +
+ .../boot/dts/amlogic/meson-sm1-sei610.dts     |  59 +-
+ arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |  69 +++
+ drivers/clk/meson/g12a.c                      | 544 ++++++++++++++++++
+ drivers/clk/meson/g12a.h                      |  26 +-
+ include/dt-bindings/clock/g12a-clkc.h         |   3 +
+ 6 files changed, 697 insertions(+), 5 deletions(-)
+
+-- 
+2.22.0
 
