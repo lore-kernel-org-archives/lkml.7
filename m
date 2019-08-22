@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 832E4C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC18C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 574112341E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F01E23427
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493759;
-	bh=BceQIvYA6h6G5G9kleh1h72iqWj3mord1EgIKK2cbS4=;
+	s=default; t=1566493766;
+	bh=iiHpQG4H/gYs9ZpuGOv5Qyo2mnP/gHrFNQJ+ePLCwvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yGVmfYmhzDY6Gio3YEUWvSn0cKjT2ukIRQOlMuohjylAqPhI+3Qb/PvamLw8vLaff
-	 T4DnS63AkE6HhKFKGpUyWxSpSsrvGSeOB7ULLnkCia212qtJOKVRfZZVSvgh+p7V32
-	 /UYnHIn2llolfSVrANJFhCBEMp2nAibsHZMHNL4M=
+	b=tvFRtgt/4PNZNpwp5giBe4r3v+yArkYc5sIx3MmTr/H0mIPrQXOCi4vjPsa0TVd7D
+	 1ra7c9Hw2seT7DTh7iP/MXPTWIJRpMrsd0Q2ONOZ2/eQRwNO2S9yQpjAKFA0Oum09v
+	 WqndPsl3w6aAa9HIylLYZFuWKaJGV4N6jMKqONmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390724AbfHVRJS (ORCPT
+        id S2388978AbfHVRJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59282 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390662AbfHVRJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:06 -0400
+        id S2390691AbfHVRJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:12 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0262F233FD;
-        Thu, 22 Aug 2019 17:09:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6F2923407;
+        Thu, 22 Aug 2019 17:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493746;
-        bh=BceQIvYA6h6G5G9kleh1h72iqWj3mord1EgIKK2cbS4=;
+        s=default; t=1566493751;
+        bh=iiHpQG4H/gYs9ZpuGOv5Qyo2mnP/gHrFNQJ+ePLCwvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ien4CO5oIek2jrmauRld0Z72feE0zfOcP+CCXE8S1y2fsfjAsEQd6y6zwVrknDr1g
-         tB7T0ZE/W3y0Sqd4d9gyVfWOXW6sHohIbgcOtsIdeR6vnehNIuiHu4SkDlgDXnLdhR
-         3YAwGoXal/YwcPn1X6Ax8X3CRUmjc9hwgR4N9qTk=
+        b=QcmfXojBtUNwEmDqM3VoN/y9FQJTaI8UNaQmLL2cwOJqkvHQRCvzedwz5Ep8H2ZU3
+         1MlziILPShMTLGibaC95Ipd1DSnmMtTOYlhYTgcgxemblWRvNgbWmvsA/jCo0d2WSV
+         Vm1xH18TghgBRmeTmxHlATg61H+YaA679ggdIzvs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com,
+Cc:     Dirk Morris <dmorris@metaloft.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 095/135] USB: core: Fix races in character device registration and deregistraion
-Date:   Thu, 22 Aug 2019 13:07:31 -0400
-Message-Id: <20190822170811.13303-96-sashal@kernel.org>
+Subject: [PATCH 5.2 104/135] netfilter: conntrack: Use consistent ct id hash calculation
+Date:   Thu, 22 Aug 2019 13:07:40 -0400
+Message-Id: <20190822170811.13303-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,91 +66,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Dirk Morris <dmorris@metaloft.com>
 
-commit 303911cfc5b95d33687d9046133ff184cf5043ff upstream.
+commit 656c8e9cc1badbc18eefe6ba01d33ebbcae61b9a upstream.
 
-The syzbot fuzzer has found two (!) races in the USB character device
-registration and deregistration routines.  This patch fixes the races.
+Change ct id hash calculation to only use invariants.
 
-The first race results from the fact that usb_deregister_dev() sets
-usb_minors[intf->minor] to NULL before calling device_destroy() on the
-class device.  This leaves a window during which another thread can
-allocate the same minor number but will encounter a duplicate name
-error when it tries to register its own class device.  A typical error
-message in the system log would look like:
+Currently the ct id hash calculation is based on some fields that can
+change in the lifetime on a conntrack entry in some corner cases. The
+current hash uses the whole tuple which contains an hlist pointer which
+will change when the conntrack is placed on the dying list resulting in
+a ct id change.
 
-    sysfs: cannot create duplicate filename '/class/usbmisc/ldusb0'
+This patch also removes the reply-side tuple and extension pointer from
+the hash calculation so that the ct id will will not change from
+initialization until confirmation.
 
-The patch fixes this race by destroying the class device first.
-
-The second race is in usb_register_dev().  When that routine runs, it
-first allocates a minor number, then drops minor_rwsem, and then
-creates the class device.  If the device creation fails, the minor
-number is deallocated and the whole routine returns an error.  But
-during the time while minor_rwsem was dropped, there is a window in
-which the minor number is allocated and so another thread can
-successfully open the device file.  Typically this results in
-use-after-free errors or invalid accesses when the other thread closes
-its open file reference, because the kernel then tries to release
-resources that were already deallocated when usb_register_dev()
-failed.  The patch fixes this race by keeping minor_rwsem locked
-throughout the entire routine.
-
-Reported-and-tested-by: syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1908121607590.1659-100000@iolanthe.rowland.org
+Fixes: 3c79107631db1f7 ("netfilter: ctnetlink: don't use conntrack/expect object addresses as id")
+Signed-off-by: Dirk Morris <dmorris@metaloft.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/core/file.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ net/netfilter/nf_conntrack_core.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/usb/core/file.c b/drivers/usb/core/file.c
-index 65de6f73b6725..558890ada0e5b 100644
---- a/drivers/usb/core/file.c
-+++ b/drivers/usb/core/file.c
-@@ -193,9 +193,10 @@ int usb_register_dev(struct usb_interface *intf,
- 		intf->minor = minor;
- 		break;
- 	}
--	up_write(&minor_rwsem);
--	if (intf->minor < 0)
-+	if (intf->minor < 0) {
-+		up_write(&minor_rwsem);
- 		return -EXFULL;
-+	}
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index f4f9b8344a32d..e343a030ec262 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -453,13 +453,12 @@ EXPORT_SYMBOL_GPL(nf_ct_invert_tuple);
+  * table location, we assume id gets exposed to userspace.
+  *
+  * Following nf_conn items do not change throughout lifetime
+- * of the nf_conn after it has been committed to main hash table:
++ * of the nf_conn:
+  *
+  * 1. nf_conn address
+- * 2. nf_conn->ext address
+- * 3. nf_conn->master address (normally NULL)
+- * 4. tuple
+- * 5. the associated net namespace
++ * 2. nf_conn->master address (normally NULL)
++ * 3. the associated net namespace
++ * 4. the original direction tuple
+  */
+ u32 nf_ct_get_id(const struct nf_conn *ct)
+ {
+@@ -469,9 +468,10 @@ u32 nf_ct_get_id(const struct nf_conn *ct)
+ 	net_get_random_once(&ct_id_seed, sizeof(ct_id_seed));
  
- 	/* create a usb class device for this usb interface */
- 	snprintf(name, sizeof(name), class_driver->name, minor - minor_base);
-@@ -203,12 +204,11 @@ int usb_register_dev(struct usb_interface *intf,
- 				      MKDEV(USB_MAJOR, minor), class_driver,
- 				      "%s", kbasename(name));
- 	if (IS_ERR(intf->usb_dev)) {
--		down_write(&minor_rwsem);
- 		usb_minors[minor] = NULL;
- 		intf->minor = -1;
--		up_write(&minor_rwsem);
- 		retval = PTR_ERR(intf->usb_dev);
- 	}
-+	up_write(&minor_rwsem);
- 	return retval;
- }
- EXPORT_SYMBOL_GPL(usb_register_dev);
-@@ -234,12 +234,12 @@ void usb_deregister_dev(struct usb_interface *intf,
- 		return;
- 
- 	dev_dbg(&intf->dev, "removing %d minor\n", intf->minor);
-+	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
- 
- 	down_write(&minor_rwsem);
- 	usb_minors[intf->minor] = NULL;
- 	up_write(&minor_rwsem);
- 
--	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
- 	intf->usb_dev = NULL;
- 	intf->minor = -1;
- 	destroy_usb_class();
+ 	a = (unsigned long)ct;
+-	b = (unsigned long)ct->master ^ net_hash_mix(nf_ct_net(ct));
+-	c = (unsigned long)ct->ext;
+-	d = (unsigned long)siphash(&ct->tuplehash, sizeof(ct->tuplehash),
++	b = (unsigned long)ct->master;
++	c = (unsigned long)nf_ct_net(ct);
++	d = (unsigned long)siphash(&ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
++				   sizeof(ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple),
+ 				   &ct_id_seed);
+ #ifdef CONFIG_64BIT
+ 	return siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &ct_id_seed);
 -- 
 2.20.1
 
