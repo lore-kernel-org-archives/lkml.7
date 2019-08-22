@@ -2,59 +2,61 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970CEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2583C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692512089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6AD12089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494124;
-	bh=s6L8OP4RVDz/IuSN61W9whRCpF375hdigkwWMzjI6no=;
+	s=default; t=1566494128;
+	bh=6KmNy8LA/cBC3wHjvcAPBp9JdhJEwUpiyOkeAMi/9Bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PEa3wpzQO5VwhnbToRGxR6sm6VrC7sJKDy3OsmbdntNwi5eojmtJmjvTsbDRnitDP
-	 zcQIkGh0Eh0uVsnnCyj8m99CVwoIRffxiMCigZcHN/P3E/zU7vn+yWcRvcFXCNYAAF
-	 uJX0MiV0EmN2mnBdV+IjtnZOE9KhvM8hWeFOnlpg=
+	b=DRNI2DCqb/uib9HDuI+RHNanCxuxqVp2pp1G4kmSf7ROuZgPlGyNhrxqrKCeREW2y
+	 NsFHgdDpzI4xO9H6RH7fJAt4tbGww14p+FbQ2XFD4QfkjMQJwzrkQnS1/x4p8ARr1C
+	 Z540bR1BQH6EcwXpdCA/Rdj+nVRfpGdqSEu7BeKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390486AbfHVRIo (ORCPT
+        id S1729641AbfHVRP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58464 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:15:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390450AbfHVRIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:41 -0400
+        id S2390470AbfHVRIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:43 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC88123429;
-        Thu, 22 Aug 2019 17:08:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01F082342F;
+        Thu, 22 Aug 2019 17:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493721;
-        bh=s6L8OP4RVDz/IuSN61W9whRCpF375hdigkwWMzjI6no=;
+        s=default; t=1566493722;
+        bh=6KmNy8LA/cBC3wHjvcAPBp9JdhJEwUpiyOkeAMi/9Bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WE2AHv5X4zU4oBsSYG6JlHOWuTZHT0QP5DP5s9mMVyGaxVG3xkwG/E9Y8IgPULjj0
-         cgJIy4MA5dTxGRUC86F6ep0ImSbZ41Ea34gMLhyz1knyyZ5QsDWI4XSZZlz3/xUJVU
-         et0gRl9kUZxZ/lWQZagtdgx/rVmSKw8DsTCvAcgA=
+        b=EM8T3X2ubgp2mvOasHUfeZuvddoJepmXAPFLULPoKbD7fM8CjxAxn3lwlLgeMVik2
+         ve/tmRPlqEac398U96HTixZV0WRP//S+GuJf9NxfG3sncyM0FC0xe6DG8YH6O+x3Ch
+         0/LQz61qW8CRB5dHCBUAHC8OfHNjfJFu2EJqTd6k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= 
-        <lclaudio@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Drayton <mbd@fb.com>, Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 050/135] tools perf beauty: Fix usbdevfs_ioctl table generator to handle _IOC()
-Date:   Thu, 22 Aug 2019 13:06:46 -0400
-Message-Id: <20190822170811.13303-51-sashal@kernel.org>
+Subject: [PATCH 5.2 052/135] perf header: Fix use of unitialized value warning
+Date:   Thu, 22 Aug 2019 13:06:48 -0400
+Message-Id: <20190822170811.13303-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.2.y
@@ -69,48 +71,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Numfor Mbiziwo-Tiapo <nums@google.com>
 
-[ Upstream commit 7ee526152db7a75d7b8713346dac76ffc3662b29 ]
+[ Upstream commit 20f9781f491360e7459c589705a2e4b1f136bee9 ]
 
-In addition to _IOW() and _IOR(), to handle this case:
+When building our local version of perf with MSAN (Memory Sanitizer) and
+running the perf record command, MSAN throws a use of uninitialized
+value warning in "tools/perf/util/util.c:333:6".
 
-  #define USBDEVFS_CONNINFO_EX(len)  _IOC(_IOC_READ, 'U', 32, len)
+This warning stems from the "buf" variable being passed into "write".
+It originated as the variable "ev" with the type union perf_event*
+defined in the "perf_event__synthesize_attr" function in
+"tools/perf/util/header.c".
 
-That will happen in the next sync of this header file.
+In the "perf_event__synthesize_attr" function they allocate space with a malloc
+call using ev, then go on to only assign some of the member variables before
+passing "ev" on as a parameter to the "process" function therefore "ev"
+contains uninitialized memory. Changing the malloc call to zalloc to initialize
+all the members of "ev" which gets rid of the warning.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+To reproduce this warning, build perf by running:
+make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
+ -fsanitize-memory-track-origins"
+
+(Additionally, llvm might have to be installed and clang might have to
+be specified as the compiler - export CC=/usr/bin/clang)
+
+then running:
+tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
+ -i - --stdio
+
+Please see the cover letter for why false positive warnings may be
+generated.
+
+Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Drayton <mbd@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-3br5e4t64e4lp0goo84che3s@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190724234500.253358-2-nums@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/trace/beauty/usbdevfs_ioctl.sh | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/util/header.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/trace/beauty/usbdevfs_ioctl.sh b/tools/perf/trace/beauty/usbdevfs_ioctl.sh
-index 930b80f422e83..aa597ae537470 100755
---- a/tools/perf/trace/beauty/usbdevfs_ioctl.sh
-+++ b/tools/perf/trace/beauty/usbdevfs_ioctl.sh
-@@ -3,10 +3,13 @@
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index cab9ed6acf35a..abe9af8679678 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3565,7 +3565,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
+ 	size += sizeof(struct perf_event_header);
+ 	size += ids * sizeof(u64);
  
- [ $# -eq 1 ] && header_dir=$1 || header_dir=tools/include/uapi/linux/
+-	ev = malloc(size);
++	ev = zalloc(size);
  
-+# also as:
-+# #define USBDEVFS_CONNINFO_EX(len)  _IOC(_IOC_READ, 'U', 32, len)
-+
- printf "static const char *usbdevfs_ioctl_cmds[] = {\n"
--regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)[[:space:]]+_IO[WR]{0,2}\([[:space:]]*'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
--egrep $regex ${header_dir}/usbdevice_fs.h | egrep -v 'USBDEVFS_\w+32[[:space:]]' | \
--	sed -r "s/$regex/\2 \1/g"	| \
-+regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)(\(\w+\))?[[:space:]]+_IO[CWR]{0,2}\([[:space:]]*(_IOC_\w+,[[:space:]]*)?'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
-+egrep "$regex" ${header_dir}/usbdevice_fs.h | egrep -v 'USBDEVFS_\w+32[[:space:]]' | \
-+	sed -r "s/$regex/\4 \1/g"	| \
- 	sort | xargs printf "\t[%s] = \"%s\",\n"
- printf "};\n\n"
- printf "#if 0\n"
+ 	if (ev == NULL)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
