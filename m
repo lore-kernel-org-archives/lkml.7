@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB14C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370FFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B73620856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DA3720856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495853;
-	bh=uxZkgyh2XRlpGrbfErOZ3RRf3skFrk/YeROxyq9d8A0=;
+	s=default; t=1566495859;
+	bh=z851h45O7JFYDbYorJHDPsmBa98oYdmzXl0lcIKxDjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rCoj6wdJURzw7ErzehGr56JtfRIbc/MpHyZA59yUToIMVe/rzb43KHLa1zvaEQmFb
-	 aQU9V3Ty6qDWjCWsRAtSpnBDhECcckM32+rw/Ui50cShCdJfFraJGfYpnYGagW1cni
-	 5rA5j0HnJk+Szneg9R/TjN8VhsAJoqk2KzhpLoxg=
+	b=GkJGknC3VffwSO9oEIFpdBUSVTH/AsV9uTOfyoRsG+hRoIIxlyD3kznr6tzWBfDsv
+	 MJJmWPJdhTpl8x9Rxn+rSiwGu+o38XRm6+q/eMGhtOfAhHemHoKsfJk6/OCJpfETh5
+	 UVoHi+KvpxRlmJ3limShJZl3YOq6KHt0RTdh27Fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392750AbfHVRoL (ORCPT
+        id S2403919AbfHVRXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43218 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:23:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403937AbfHVRXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:24 -0400
+        id S2403896AbfHVRXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:18 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8E3023402;
-        Thu, 22 Aug 2019 17:23:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FA7823406;
+        Thu, 22 Aug 2019 17:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494603;
-        bh=uxZkgyh2XRlpGrbfErOZ3RRf3skFrk/YeROxyq9d8A0=;
+        s=default; t=1566494597;
+        bh=z851h45O7JFYDbYorJHDPsmBa98oYdmzXl0lcIKxDjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l4bPDoiFULV0lRcgW9vqNzJaR60Oqbn1Zx/571f+bUBQ8MR/uhPzAh248e0ZDfG1V
-         AbW8po0RzIQN4pNi8bNNiSaZF/omn2Dxa1fJca6FqZIC/hxx4kchYLenRhMDQpG9lb
-         M3wirE8eokAiG3lS5RuEQAqOd49ygToLDfyjmZ8Y=
+        b=VsGwPGyVzMnbqMoo0wF2GZkwMoxqOUkcD6CWqQnbiwMmmGgOy5sL5+B1cngD4SCqI
+         u/GEgSOedMSxu7zC10KHVNsG722wTtjD+FOIgw6AnI7TaYxpZwtRyo79HqI0ZG1Qgq
+         qiHD8al9zYrss1bbtRT103fSbpTWxBxDUkDMop2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junxiao Bi <junxiao.bi@oracle.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 026/103] scsi: megaraid_sas: fix panic on loading firmware crashdump
-Date:   Thu, 22 Aug 2019 10:18:14 -0700
-Message-Id: <20190822171729.910717938@linuxfoundation.org>
+Subject: [PATCH 4.9 019/103] ALSA: compress: Prevent bypasses of set_params
+Date:   Thu, 22 Aug 2019 10:18:07 -0700
+Message-Id: <20190822171729.629383029@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -61,41 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b5f307ef3cb5022bfe3c8ca5b8f2114d5bf6c29 ]
+[ Upstream commit 26c3f1542f5064310ad26794c09321780d00c57d ]
 
-While loading fw crashdump in function fw_crash_buffer_show(), left bytes
-in one dma chunk was not checked, if copying size over it, overflow access
-will cause kernel panic.
+Currently, whilst in SNDRV_PCM_STATE_OPEN it is possible to call
+snd_compr_stop, snd_compr_drain and snd_compr_partial_drain, which
+allow a transition to SNDRV_PCM_STATE_SETUP. The stream should
+only be able to move to the setup state once it has received a
+SNDRV_COMPRESS_SET_PARAMS ioctl. Fix this issue by not allowing
+those ioctls whilst in the open state.
 
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/core/compress_offload.c | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 5b1c37e3913cd..d90693b2767fd 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -2847,6 +2847,7 @@ megasas_fw_crash_buffer_show(struct device *cdev,
- 	u32 size;
- 	unsigned long buff_addr;
- 	unsigned long dmachunk = CRASH_DMA_BUF_SIZE;
-+	unsigned long chunk_left_bytes;
- 	unsigned long src_addr;
- 	unsigned long flags;
- 	u32 buff_offset;
-@@ -2872,6 +2873,8 @@ megasas_fw_crash_buffer_show(struct device *cdev,
- 	}
+diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
+index cf1317546b0ff..1538fbc7562b8 100644
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -712,9 +712,15 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
+ {
+ 	int retval;
  
- 	size = (instance->fw_crash_buffer_size * dmachunk) - buff_offset;
-+	chunk_left_bytes = dmachunk - (buff_offset % dmachunk);
-+	size = (size > chunk_left_bytes) ? chunk_left_bytes : size;
- 	size = (size >= PAGE_SIZE) ? (PAGE_SIZE - 1) : size;
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
+ 		return -EPERM;
++	default:
++		break;
++	}
++
+ 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
+ 	if (!retval) {
+ 		snd_compr_drain_notify(stream);
+@@ -802,9 +808,14 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
+ {
+ 	int retval;
  
- 	src_addr = (unsigned long)instance->crash_buf[buff_offset / dmachunk] +
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
+ 		return -EPERM;
++	default:
++		break;
++	}
+ 
+ 	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_DRAIN);
+ 	if (retval) {
+@@ -841,9 +852,16 @@ static int snd_compr_next_track(struct snd_compr_stream *stream)
+ static int snd_compr_partial_drain(struct snd_compr_stream *stream)
+ {
+ 	int retval;
+-	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
+-			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
++
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_OPEN:
++	case SNDRV_PCM_STATE_SETUP:
++	case SNDRV_PCM_STATE_PREPARED:
+ 		return -EPERM;
++	default:
++		break;
++	}
++
+ 	/* stream can be drained only when next track has been signalled */
+ 	if (stream->next_track == false)
+ 		return -EPERM;
 -- 
 2.20.1
 
