@@ -2,204 +2,164 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37054C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6049FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0958E233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:48:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s3o84YpM"
+	by mail.kernel.org (Postfix) with ESMTP id 3D432233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732055AbfHVOsa (ORCPT
+        id S1732658AbfHVOt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:48:30 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44644 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731445AbfHVOs3 (ORCPT
+        Thu, 22 Aug 2019 10:49:58 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:52250 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1731445AbfHVOt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:48:29 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i18so3796299pgl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 07:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=E31Jc5nNGW6JtDz/k02T3W8n/cBkPDZl66UgVwKgjhA=;
-        b=s3o84YpM+R4a2pGAeRamIRqxiWEaXcN/hCMtMu/sVfFVNqSkZqmXblJvpMlIJ7yE0b
-         QlyRCjyn3csSkl0L7S2dpdqsbUBYMHzi7vou9+8AsenLq9UTQ+nbmu3MlK3T43G5xQZ6
-         WtCJw+RtVutoBfB/f2CyARt3ednz3VpQySULPFEkOManrAEDkbcQmj7JoHT9Fz4Jr6K9
-         ppM4PLJz1YrDotOJmd27uw0BN4wjnoWWtGRl3wQLrLJSb8loOsVhvQcNO39JtHaHpXTz
-         D0Te68kdNXZUpgzwpX1Vx5guYi8UlA1/5RY4P19IIb+qGIfsuHqd+l/ZxMvkkyeTLp8X
-         TWpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E31Jc5nNGW6JtDz/k02T3W8n/cBkPDZl66UgVwKgjhA=;
-        b=qEF9TEI2h7shrDbYuLILLIwEYy0Nvum5iMzWCxHxNy7YXV18u+TPCYmcVhlTPq8VMt
-         hDoxDbAcjqAPki70bDbGyXJTWrI/IJ8GQuYmO6So/27ki38nxVJB2e7LhIR2ROXJIrWZ
-         ekVfA7nPUCSZJrLhjYtlTg3PJKzfWO8ZZUQqeMjRnqXQk6Pm3jkFoQYt6Z2/W7uH/TdP
-         sYuigGD0K6bLcbcHPc8N/zS/52dkCkRIip02mWma7WyekwxdAaiIhdKy8ewoHhttqwyT
-         cr0J+QY1leK2ChbDqOox83v/W6oYzZndDFGEi6N4g08zD6jPs6DzCtOS56yTsfoWFS05
-         8ybA==
-X-Gm-Message-State: APjAAAVBlDDhrhubrug7PYvveWs3DAufO+s7V/jL/OgYesToecLbR5CZ
-        D9KloC04M+8+ZgI/08ugISJb0Q==
-X-Google-Smtp-Source: APXvYqx8q3sv18VRmRxDYCuD2RRBmlTna3o11Hv5adGkG1Vu96QwL0EgtBrOHs4SaofLyEO90Hl/6w==
-X-Received: by 2002:a17:90a:1d0:: with SMTP id 16mr38515pjd.98.1566485308373;
-        Thu, 22 Aug 2019 07:48:28 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c199sm34370650pfb.28.2019.08.22.07.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 07:48:27 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 07:50:14 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     agross@kernel.org, robdclark@gmail.com, sean@poorly.run,
-        robh+dt@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
-        mark.rutland@arm.com, jonathan@marek.ca,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org, jcrouse@codeaurora.org
-Subject: Re: [PATCH v6 4/7] firmware: qcom: scm: add support to restore
- secure config to qcm_scm-32
-Message-ID: <20190822145014.GO26807@tuxbook-pro>
-References: <20190822143703.13030-1-masneyb@onstation.org>
- <20190822143703.13030-5-masneyb@onstation.org>
+        Thu, 22 Aug 2019 10:49:58 -0400
+Received: (qmail 1325 invoked by uid 2102); 22 Aug 2019 10:49:57 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 22 Aug 2019 10:49:57 -0400
+Date:   Thu, 22 Aug 2019 10:49:57 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+cc:     Oliver Neukum <oneukum@suse.com>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH] HID: quirks: Disable runtime suspend on Microsoft Corp.
+ Basic Optical Mouse v2.0
+In-Reply-To: <D6E31CB0-BC2B-4B52-AF18-4BE990D3FDA5@canonical.com>
+Message-ID: <Pine.LNX.4.44L0.1908221043080.1311-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190822143703.13030-5-masneyb@onstation.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 22 Aug 07:37 PDT 2019, Brian Masney wrote:
+On Thu, 22 Aug 2019, Kai-Heng Feng wrote:
 
-> From: Rob Clark <robdclark@gmail.com>
+> at 18:38, Oliver Neukum <oneukum@suse.com> wrote:
 > 
-> Add support to restore the secure configuration for qcm_scm-32.c. This
-> is needed by the On Chip MEMory (OCMEM) that is present on some
-> Snapdragon devices.
+> > Am Donnerstag, den 22.08.2019, 18:04 +0800 schrieb Kai-Heng Feng:
+> >> Hi Oliver,
+> >>
+> >> at 17:45, Oliver Neukum <oneukum@suse.com> wrote:
+> >>
+> >>> Am Donnerstag, den 22.08.2019, 17:17 +0800 schrieb Kai-Heng Feng:
+> >>>> The optical sensor of the mouse gets turned off when it's runtime
+> >>>> suspended, so moving the mouse can't wake the mouse up, despite that
+> >>>> USB remote wakeup is successfully set.
+> >>>>
+> >>>> Introduce a new quirk to prevent the mouse from getting runtime
+> >>>> suspended.
+> >>>
+> >>> Hi,
+> >>>
+> >>> I am afraid this is a bad approach in principle. The device
+> >>> behaves according to spec.
+> >>
+> >> Can you please point out which spec it is? Is it USB 2.0 spec?
+> >
+> > Well, sort of. The USB spec merely states how to enter and exit
+> > a suspended state and that device state must not be lost.
+> > It does not tell you what a suspended device must be able to do.
 > 
-> Signed-off-by: Rob Clark <robdclark@gmail.com>
-> [masneyb@onstation.org: ported to latest kernel; set ctx_bank_num to
->  spare parameter.]
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> But shouldn’t remote wakeup signaling wakes the device up and let it exit  
+> suspend state?
+> Or it’s okay to let the device be suspended when remote wakeup is needed  
+> but broken?
+> 
+> >
+> >>> And it behaves like most hardware.
+> >>
+> >> So seems like most hardware are broken.
+> >> Maybe a more appropriate solution is to disable RPM for all USB mice.
+> >
+> > That is a decision a distro certainly can make. However, the kernel
+> > does not, by default, call usb_enable_autosuspend() for HID devices
+> > for this very reason. It is enabled by default only for hubs,
+> > BT dongles and UVC cameras (and some minor devices)
+> >
+> > In other words, if on your system it is on, you need to look
+> > at udev, not the kernel.
+> 
+> So if a device is broken when “power/control” is flipped by user, we should  
+> deal it at userspace? That doesn’t sound right to me.
+> 
+> >
+> >>> If you do not want runtime PM for such devices, do not switch
+> >>> it on.
+> >>
+> >> A device should work regardless of runtime PM status.
+> >
+> > Well, no. Runtime PM is a trade off. You lose something if you use
+> > it. If it worked just as well as full power, you would never use
+> > full power, would you?
+> 
+> I am not asking the suspended state to work as full power, but to prevent a  
+> device enters suspend state because of broken remote wakeup.
+> 
+> >
+> > Whether the loss of functionality or performance is worth the energy
+> > savings is a policy decision. Hence it belongs into udev.
+> > Ideally the kernel would tell user space what will work in a
+> > suspended state. Unfortunately HID does not provide support for that.
+> 
+> I really don’t think “loss of functionally” belongs to policy decision. But  
+> that’s just my opinion.
+> 
+> >
+> > This is a deficiency of user space. The kernel has an ioctl()
+> > to let user space tell it, whether a device is fully needed.
+> > X does not use them.
+> 
+> Ok, I’ll take a look at other device drivers that use it.
+> 
+> >
+> >>> The refcounting needs to be done correctly.
+> >>
+> >> Will do.
+> >
+> > Well, I am afraid your patch breaks it and if you do not break
+> > it, the patch is reduced to nothing.
+> 
+> Maybe just calling usb_autopm_put_interface() in usbhid_close() to balance  
+> the refcount?
+> 
+> >
+> >>> This patch does something that udev should do and in a
+> >>> questionable manner.
+> >>
+> >> IMO if the device doesn’t support runtime suspend, then it needs to be
+> >> disabled in kernel but not workaround in userspace.
+> >
+> > You switch it on from user space. Of course the kernel default
+> > must be safe, as you said. It already is.
+> 
+> I’d also like to hear maintainers' opinion on this issue.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+I agree with Oliver.  There is no formal requirement on what actions
+should cause a mouse to generate a remote wakeup request.  Some mice
+will do it when they are moved and some mice won't.
 
-> ---
-> Changes since v5:
-> - None
-> 
-> Changes since v4:
-> - None
-> 
-> Changes since v3:
-> - None
-> 
-> Changes since v2:
-> - None
-> 
-> Changes since v1:
-> - Use existing __qcom_scm_restore_sec_cfg() function stub in
->   qcom_scm-32.c that was unimplemented
-> - Set the cfg.ctx_bank_num to the spare function parameter. It was
->   previously set to the device_id.
-> 
->  drivers/firmware/qcom_scm-32.c | 17 ++++++++++++++++-
->  drivers/firmware/qcom_scm.c    | 13 +++++++++++++
->  include/linux/qcom_scm.h       | 11 +++++++++++
->  3 files changed, 40 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-> index 4c2514e5e249..5d90b7f5ab5a 100644
-> --- a/drivers/firmware/qcom_scm-32.c
-> +++ b/drivers/firmware/qcom_scm-32.c
-> @@ -617,7 +617,22 @@ int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
->  int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id,
->  			       u32 spare)
->  {
-> -	return -ENODEV;
-> +	struct msm_scm_sec_cfg {
-> +		__le32 id;
-> +		__le32 ctx_bank_num;
-> +	} cfg;
-> +	int ret, scm_ret = 0;
-> +
-> +	cfg.id = cpu_to_le32(device_id);
-> +	cfg.ctx_bank_num = cpu_to_le32(spare);
-> +
-> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP, QCOM_SCM_RESTORE_SEC_CFG,
-> +			    &cfg, sizeof(cfg), &scm_ret, sizeof(scm_ret));
-> +
-> +	if (ret || scm_ret)
-> +		return ret ? ret : -EINVAL;
-> +
-> +	return 0;
->  }
->  
->  int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 7e285ff3961d..27c1d98a34e6 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -367,6 +367,19 @@ static const struct reset_control_ops qcom_scm_pas_reset_ops = {
->  	.deassert = qcom_scm_pas_reset_deassert,
->  };
->  
-> +/**
-> + * qcom_scm_restore_sec_cfg_available() - Check if secure environment
-> + * supports restore security config interface.
-> + *
-> + * Return true if restore-cfg interface is supported, false if not.
-> + */
-> +bool qcom_scm_restore_sec_cfg_available(void)
-> +{
-> +	return __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_MP,
-> +					    QCOM_SCM_RESTORE_SEC_CFG);
-> +}
-> +EXPORT_SYMBOL(qcom_scm_restore_sec_cfg_available);
-> +
->  int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare)
->  {
->  	return __qcom_scm_restore_sec_cfg(__scm->dev, device_id, spare);
-> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
-> index b49b734d662c..04382e1798e4 100644
-> --- a/include/linux/qcom_scm.h
-> +++ b/include/linux/qcom_scm.h
-> @@ -34,6 +34,16 @@ enum qcom_scm_ocmem_client {
->  	QCOM_SCM_OCMEM_DEBUG_ID,
->  };
->  
-> +enum qcom_scm_sec_dev_id {
-> +	QCOM_SCM_MDSS_DEV_ID    = 1,
-> +	QCOM_SCM_OCMEM_DEV_ID   = 5,
-> +	QCOM_SCM_PCIE0_DEV_ID   = 11,
-> +	QCOM_SCM_PCIE1_DEV_ID   = 12,
-> +	QCOM_SCM_GFX_DEV_ID     = 18,
-> +	QCOM_SCM_UFS_DEV_ID     = 19,
-> +	QCOM_SCM_ICE_DEV_ID     = 20,
-> +};
-> +
->  #define QCOM_SCM_VMID_HLOS       0x3
->  #define QCOM_SCM_VMID_MSS_MSA    0xF
->  #define QCOM_SCM_VMID_WLAN       0x18
-> @@ -70,6 +80,7 @@ extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
->  extern void qcom_scm_cpu_power_down(u32 flags);
->  extern u32 qcom_scm_get_version(void);
->  extern int qcom_scm_set_remote_state(u32 state, u32 id);
-> +extern bool qcom_scm_restore_sec_cfg_available(void);
->  extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
->  extern int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size);
->  extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
-> -- 
-> 2.21.0
-> 
+If you don't like the way a particular mouse behaves then you should
+not allow it to go into runtime suspend.  By default, the kernel
+prevents _all_ USB mice from being runtime suspended; the only way a
+mouse can be suspended is if some userspace program tells the kernel to
+allow it.
+
+It might be a udev script which does this, or a powertop setting, or
+something else.  Regardless, what the kernel does is correct.  
+Furthermore, the kernel has to accomodate users who don't mind pressing
+a mouse button to wake up their mice.  For their sake, the kernel
+should not forbid a mouse from ever going into runtime suspend merely
+because it won't generate a wakeup request when it is moved.
+
+Alan Stern
+
