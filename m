@@ -2,125 +2,133 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD4FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E71C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0BED22CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:08:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="kOumEtyM"
+	by mail.kernel.org (Postfix) with ESMTP id EBB96233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388301AbfHVMIV (ORCPT
+        id S2388355AbfHVMIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:08:21 -0400
-Received: from mout01.posteo.de ([185.67.36.65]:50721 "EHLO mout01.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731326AbfHVMIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:08:21 -0400
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout01.posteo.de (Postfix) with ESMTPS id 17F5E160060
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 14:08:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-        t=1566475698; bh=Sg1Anz4zYb3hs4rsAoh/K0xqi2SEWfUCRmkWAkmoWZ0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kOumEtyMQj/qTbFn8/Q1Wx/CnIekoYFiqpZEeLvU0SVwVIZKY+3NxUfaCYNIpXTXD
-         sI+O6i8ztyTA1kuw4TShJbssnTUJ5Pti17/zFgAXep3rAwQdFKa41pUqo7CTITkN9q
-         Q/DfKPhlP2lyohiq41WRnDnDIC7pTlTZT5arn8RnfoyNx4XyEABuZmdqdHm2AMPdqF
-         KjEgiRgVLTtmpj90y/krooDNLsbEJAd6CKZgxPRo48FXRCDQbfq8gKAJFCOcEezsSL
-         wKZHydtX0yCnF3XFv/mKYipjdFxMfvAUIg2Q89npET4wdRyUTzS7e7y9Ijg/8cGc5Q
-         qmAakkuC2ecXQ==
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 46Djwc07lbz6tmG;
-        Thu, 22 Aug 2019 14:08:16 +0200 (CEST)
+        Thu, 22 Aug 2019 08:08:38 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:41880 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731326AbfHVMIh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:08:37 -0400
+Received: from dread.disaster.area (pa49-195-190-67.pa.nsw.optusnet.com.au [49.195.190.67])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 0F95943D5BA;
+        Thu, 22 Aug 2019 22:08:33 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1i0lsD-0001HS-PS; Thu, 22 Aug 2019 22:07:25 +1000
+Date:   Thu, 22 Aug 2019 22:07:25 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-xfs@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, penguin-kernel@I-love.SAKURA.ne.jp
+Subject: Re: [PATCH 2/3] xfs: add kmem_alloc_io()
+Message-ID: <20190822120725.GA1119@dread.disaster.area>
+References: <20190821083820.11725-1-david@fromorbit.com>
+ <20190821083820.11725-3-david@fromorbit.com>
+ <20190821232440.GB24904@infradead.org>
+ <20190822003131.GR1119@dread.disaster.area>
+ <20190822075948.GA31346@infradead.org>
+ <20190822085130.GI2349@hirez.programming.kicks-ass.net>
+ <20190822091057.GK2386@hirez.programming.kicks-ass.net>
+ <20190822101441.GY1119@dread.disaster.area>
+ <ddcdc274-be61-6e40-5a14-a4faa954f090@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 22 Aug 2019 14:08:14 +0200
-From:   Martin Kepplinger <martink@posteo.de>
-To:     Dixit Parmar <dixitparmar19@gmail.com>
-Cc:     dmitry.torokhov@gmail.com, rydberg@bitmath.org,
-        kuninori.morimoto.gx@renesas.com, robh@kernel.org,
-        matthias.fend@wolfvision.net, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] driver:st1633: fixed multitouch incorrect coordinates
-In-Reply-To: <1566209314-21767-1-git-send-email-dixitparmar19@gmail.com>
-References: <1566209314-21767-1-git-send-email-dixitparmar19@gmail.com>
-Message-ID: <8cfedf751fc87f5f1c660cfda69d36ce@posteo.de>
-X-Sender: martink@posteo.de
-User-Agent: Posteo Webmail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ddcdc274-be61-6e40-5a14-a4faa954f090@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=TR82T6zjGmBjdfWdGgpkDw==:117 a=TR82T6zjGmBjdfWdGgpkDw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=FmdZ9Uzk2mMA:10
+        a=7-415B0cAAAA:8 a=V1zUpsxUg0v6GzAxzzcA:9 a=am8H9Ncsn3_kpSb4:21
+        a=ErFzJFp84WSt4wtB:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 19.08.2019 12:08 schrieb Dixit Parmar:
-> From: Dixit Parmar <dixitparmar19@gmail.com>
+On Thu, Aug 22, 2019 at 01:14:30PM +0200, Vlastimil Babka wrote:
+> On 8/22/19 12:14 PM, Dave Chinner wrote:
+> > On Thu, Aug 22, 2019 at 11:10:57AM +0200, Peter Zijlstra wrote:
+> >> 
+> >> Ah, current_gfp_context() already seems to transfer PF_MEMALLOC_NOFS
+> >> into the GFP flags.
+> >> 
+> >> So are we sure it is broken and needs mending?
+> > 
+> > Well, that's what we are trying to work out. The problem is that we
+> > have code that takes locks and does allocations that is called both
+> > above and below the reclaim "lock" context. Once it's been seen
+> > below the reclaim lock context, calling it with GFP_KERNEL context
+> > above the reclaim lock context throws a deadlock warning.
+> > 
+> > The only way around that was to mark these allocation sites as
+> > GFP_NOFS so lockdep is never allowed to see that recursion through
+> > reclaim occur. Even though it isn't a deadlock vector.
+> > 
+> > What we're looking at is whether PF_MEMALLOC_NOFS changes this - I
+> > don't think it does solve this problem. i.e. if we define the
+> > allocation as GFP_KERNEL and then use PF_MEMALLOC_NOFS where reclaim
+> > is not allowed, we still have GFP_KERNEL allocations in code above
+> > reclaim that has also been seen below relcaim. And so we'll get
+> > false positive warnings again.
 > 
-> For Sitronix st1633 multi-touch controller driver the co-ordinates 
-> reported
-> for multiple fingers were wrong.
-> 
-> So the below mentioned bug was filed,
-> Bugzilla Bug ID: 204561
-> 
-> While reading co-ordinates from specified I2C registers, the X & Y
-> co-ordinates should be read from proper I2C address for particular 
-> finger as
-> specified in chip specific datasheet.
-> 
-> for single touch this logic is working fine. However, for multi-touch
-> scenario the logic of reading data from data buffer has issues.
-> 
-> This patch fixes the reading logic from data buffer.
-> 
-> Previous logic:
-> * Offset of X & Y Lower byte coordinate is increased by i no. only(by 1 
-> Byte)
->   for each finger.
-> 
-> New logic:
-> * The logic of reading X & Y Lower Byte coordinate needs to be 
-> increased
->   by i+y for each time/finger.
-> 
-> Signed-off-by: Dixit Parmar <dixitparmar19@gmail.com>
-> ---
->  drivers/input/touchscreen/st1232.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/st1232.c
-> b/drivers/input/touchscreen/st1232.c
-> index 3492339..1139714 100644
-> --- a/drivers/input/touchscreen/st1232.c
-> +++ b/drivers/input/touchscreen/st1232.c
-> @@ -81,8 +81,10 @@ static int st1232_ts_read_data(struct st1232_ts_data 
-> *ts)
->  	for (i = 0, y = 0; i < ts->chip_info->max_fingers; i++, y += 3) {
->  		finger[i].is_valid = buf[i + y] >> 7;
->  		if (finger[i].is_valid) {
-> -			finger[i].x = ((buf[i + y] & 0x0070) << 4) | buf[i + 1];
-> -			finger[i].y = ((buf[i + y] & 0x0007) << 8) | buf[i + 2];
-> +			finger[i].x = ((buf[i + y] & 0x0070) << 4) |
-> +					buf[i + y + 1];
-> +			finger[i].y = ((buf[i + y] & 0x0007) << 8) |
-> +					buf[i + y + 2];
+> If I understand both you and the code directly, the code sites won't call
+> __fs_reclaim_acquire when called with current->flags including PF_MEMALLOC_NOFS.
+> So that would mean they "won't be seen below the reclaim" and all would be fine,
+> right?
 
-Seems like you're right. It's simply +1 (for x) and +2 (for y) from the 
-high-byte locations.
-Not sure how that went wrong.
+No, the problem is this (using kmalloc as a general term for
+allocation, whether it be kmalloc, kmem_cache_alloc, alloc_page, etc)
 
-Thank you,
+   some random kernel code
+    kmalloc(GFP_KERNEL)
+     reclaim
+     PF_MEMALLOC
+     shrink_slab
+      xfs_inode_shrink
+       XFS_ILOCK
+        xfs_buf_allocate_memory()
+         kmalloc(GFP_KERNEL)
 
-Reviewed-by: Martin Kepplinger <martink@posteo.de>
+And so locks on inodes in reclaim are seen below reclaim. Then
+somewhere else we have:
 
+   some high level read-only xfs code like readdir
+    XFS_ILOCK
+     xfs_buf_allocate_memory()
+      kmalloc(GFP_KERNEL)
+       reclaim
 
-> 
->  			/* st1232 includes a z-axis / touch strength */
->  			if (ts->chip_info->have_z)
+And this one throws false positive lockdep warnings because we
+called into reclaim with XFS_ILOCK held and GFP_KERNEL alloc
+context. So the only solution we had at the tiem to shut it up was:
 
+   some high level read-only xfs code like readdir
+    XFS_ILOCK
+     xfs_buf_allocate_memory()
+      kmalloc(GFP_NOFS)
+
+So that lockdep sees it's not going to recurse into reclaim and
+doesn't throw a warning...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
