@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A47C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7F4C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F823233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61060233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495115;
-	bh=bL68iMJ3TJ2Mww0F06M3ZjctDATG3hXQLAa3FyGMF9g=;
+	s=default; t=1566495122;
+	bh=x4GW7c2JlwLxPGm5e4bIPxoPtdr/wRUzPZBqG+t2Xhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vxd63l7zbroPgNnUVzJ6w3M8ZAI7G3k7in8U6fJh2G5iJ23QSr4hxg/NNRlPfKxUU
-	 YIRmLLiDc0vpsyuI2VAVY8mkCGKaJrLzjsryfAGDE2Wc2RkZj79efp54Sd9l2MUJhF
-	 Xg3nyKozB9JglUqHXBf0Zgjor5dr+vUSkLP/utAk=
+	b=RtNO6SmlGn3b/VRBM5k2KKkXHUJrMTgrf04dPGt7Cola9GQJ4C37tNfw9ORfZeLRV
+	 q6TrOM/qib/wAUDfsAsipCvKPuhyZgCdqrF3PXYtEuIlOa6PCKminaO2wUoMTv8/Q2
+	 MQOHCXtJHMgSBm0TXykK7vIC6wvJ3SVmh7GS1Tbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392271AbfHVRbt (ORCPT
+        id S2404623AbfHVRcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50260 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:32:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391875AbfHVRZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:50 -0400
+        id S2404497AbfHVRZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:48 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3966E2064A;
-        Thu, 22 Aug 2019 17:25:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AB10206DD;
+        Thu, 22 Aug 2019 17:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494749;
-        bh=bL68iMJ3TJ2Mww0F06M3ZjctDATG3hXQLAa3FyGMF9g=;
+        s=default; t=1566494747;
+        bh=x4GW7c2JlwLxPGm5e4bIPxoPtdr/wRUzPZBqG+t2Xhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0bQDj0mwtHPNpYfAEUcCWJuEUBY2BCouRcC2GswkXqMfbygQqENiax5mATduyvIiI
-         77zFtOuoBjuUDTw3IudiJ2evthPmZC4fwqMsa5aazkXMQ7dVKst0ZIWfUKCEhtaGjr
-         Mr5D45KEumRzTglZLN8M618N7w32cL99f2A9TPd8=
+        b=NXa0lUmo79f5DaV2Dlr3AKYzvKLpUGRWzd4XFfLvqtWFnOw4ZWuqVf0dJPwovwv8X
+         9oxHE2IMpJoBP7OZcoAxDr3Srtg0/YEjoSg0mNZLDjyg/nhzxrfPU0Hzc+lOSH6Sba
+         eCLiHI0lIwYyFxTGKVWZ7an1zVgfOy6vHzJBFtkc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Smythies <dsmythies@telus.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 09/85] cpufreq: schedutil: Dont skip freq update when limits change
-Date:   Thu, 22 Aug 2019 10:18:42 -0700
-Message-Id: <20190822171731.403911636@linuxfoundation.org>
+        stable@vger.kernel.org, Miles Chen <miles.chen@mediatek.com>,
+        Qian Cai <cai@lca.pw>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 06/85] mm/memcontrol.c: fix use after free in mem_cgroup_iter()
+Date:   Thu, 22 Aug 2019 10:18:39 -0700
+Message-Id: <20190822171731.298944742@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -60,92 +63,225 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Miles Chen <miles.chen@mediatek.com>
 
-commit 600f5badb78c316146d062cfd7af4a2cfb655baa upstream.
+commit 54a83d6bcbf8f4700013766b974bf9190d40b689 upstream.
 
-To avoid reducing the frequency of a CPU prematurely, we skip reducing
-the frequency if the CPU had been busy recently.
+This patch is sent to report an use after free in mem_cgroup_iter()
+after merging commit be2657752e9e ("mm: memcg: fix use after free in
+mem_cgroup_iter()").
 
-This should not be done when the limits of the policy are changed, for
-example due to thermal throttling. We should always get the frequency
-within the new limits as soon as possible.
+I work with android kernel tree (4.9 & 4.14), and commit be2657752e9e
+("mm: memcg: fix use after free in mem_cgroup_iter()") has been merged
+to the trees.  However, I can still observe use after free issues
+addressed in the commit be2657752e9e.  (on low-end devices, a few times
+this month)
 
-Trying to fix this by using only one flag, i.e. need_freq_update, can
-lead to a race condition where the flag gets cleared without forcing us
-to change the frequency at least once. And so this patch introduces
-another flag to avoid that race condition.
+backtrace:
+        css_tryget <- crash here
+        mem_cgroup_iter
+        shrink_node
+        shrink_zones
+        do_try_to_free_pages
+        try_to_free_pages
+        __perform_reclaim
+        __alloc_pages_direct_reclaim
+        __alloc_pages_slowpath
+        __alloc_pages_nodemask
 
-Fixes: ecd288429126 ("cpufreq: schedutil: Don't set next_freq to UINT_MAX")
-Cc: v4.18+ <stable@vger.kernel.org> # v4.18+
-Reported-by: Doug Smythies <dsmythies@telus.net>
-Tested-by: Doug Smythies <dsmythies@telus.net>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+To debug, I poisoned mem_cgroup before freeing it:
+
+  static void __mem_cgroup_free(struct mem_cgroup *memcg)
+        for_each_node(node)
+        free_mem_cgroup_per_node_info(memcg, node);
+        free_percpu(memcg->stat);
+  +     /* poison memcg before freeing it */
+  +     memset(memcg, 0x78, sizeof(struct mem_cgroup));
+        kfree(memcg);
+  }
+
+The coredump shows the position=0xdbbc2a00 is freed.
+
+  (gdb) p/x ((struct mem_cgroup_per_node *)0xe5009e00)->iter[8]
+  $13 = {position = 0xdbbc2a00, generation = 0x2efd}
+
+  0xdbbc2a00:     0xdbbc2e00      0x00000000      0xdbbc2800      0x00000100
+  0xdbbc2a10:     0x00000200      0x78787878      0x00026218      0x00000000
+  0xdbbc2a20:     0xdcad6000      0x00000001      0x78787800      0x00000000
+  0xdbbc2a30:     0x78780000      0x00000000      0x0068fb84      0x78787878
+  0xdbbc2a40:     0x78787878      0x78787878      0x78787878      0xe3fa5cc0
+  0xdbbc2a50:     0x78787878      0x78787878      0x00000000      0x00000000
+  0xdbbc2a60:     0x00000000      0x00000000      0x00000000      0x00000000
+  0xdbbc2a70:     0x00000000      0x00000000      0x00000000      0x00000000
+  0xdbbc2a80:     0x00000000      0x00000000      0x00000000      0x00000000
+  0xdbbc2a90:     0x00000001      0x00000000      0x00000000      0x00100000
+  0xdbbc2aa0:     0x00000001      0xdbbc2ac8      0x00000000      0x00000000
+  0xdbbc2ab0:     0x00000000      0x00000000      0x00000000      0x00000000
+  0xdbbc2ac0:     0x00000000      0x00000000      0xe5b02618      0x00001000
+  0xdbbc2ad0:     0x00000000      0x78787878      0x78787878      0x78787878
+  0xdbbc2ae0:     0x78787878      0x78787878      0x78787878      0x78787878
+  0xdbbc2af0:     0x78787878      0x78787878      0x78787878      0x78787878
+  0xdbbc2b00:     0x78787878      0x78787878      0x78787878      0x78787878
+  0xdbbc2b10:     0x78787878      0x78787878      0x78787878      0x78787878
+  0xdbbc2b20:     0x78787878      0x78787878      0x78787878      0x78787878
+  0xdbbc2b30:     0x78787878      0x78787878      0x78787878      0x78787878
+  0xdbbc2b40:     0x78787878      0x78787878      0x78787878      0x78787878
+  0xdbbc2b50:     0x78787878      0x78787878      0x78787878      0x78787878
+  0xdbbc2b60:     0x78787878      0x78787878      0x78787878      0x78787878
+  0xdbbc2b70:     0x78787878      0x78787878      0x78787878      0x78787878
+  0xdbbc2b80:     0x78787878      0x78787878      0x00000000      0x78787878
+  0xdbbc2b90:     0x78787878      0x78787878      0x78787878      0x78787878
+  0xdbbc2ba0:     0x78787878      0x78787878      0x78787878      0x78787878
+
+In the reclaim path, try_to_free_pages() does not setup
+sc.target_mem_cgroup and sc is passed to do_try_to_free_pages(), ...,
+shrink_node().
+
+In mem_cgroup_iter(), root is set to root_mem_cgroup because
+sc->target_mem_cgroup is NULL.  It is possible to assign a memcg to
+root_mem_cgroup.nodeinfo.iter in mem_cgroup_iter().
+
+        try_to_free_pages
+        	struct scan_control sc = {...}, target_mem_cgroup is 0x0;
+        do_try_to_free_pages
+        shrink_zones
+        shrink_node
+        	 mem_cgroup *root = sc->target_mem_cgroup;
+        	 memcg = mem_cgroup_iter(root, NULL, &reclaim);
+        mem_cgroup_iter()
+        	if (!root)
+        		root = root_mem_cgroup;
+        	...
+
+        	css = css_next_descendant_pre(css, &root->css);
+        	memcg = mem_cgroup_from_css(css);
+        	cmpxchg(&iter->position, pos, memcg);
+
+My device uses memcg non-hierarchical mode.  When we release a memcg:
+invalidate_reclaim_iterators() reaches only dead_memcg and its parents.
+If non-hierarchical mode is used, invalidate_reclaim_iterators() never
+reaches root_mem_cgroup.
+
+  static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
+  {
+        struct mem_cgroup *memcg = dead_memcg;
+
+        for (; memcg; memcg = parent_mem_cgroup(memcg)
+        ...
+  }
+
+So the use after free scenario looks like:
+
+  CPU1						CPU2
+
+  try_to_free_pages
+  do_try_to_free_pages
+  shrink_zones
+  shrink_node
+  mem_cgroup_iter()
+      if (!root)
+      	root = root_mem_cgroup;
+      ...
+      css = css_next_descendant_pre(css, &root->css);
+      memcg = mem_cgroup_from_css(css);
+      cmpxchg(&iter->position, pos, memcg);
+
+        				invalidate_reclaim_iterators(memcg);
+        				...
+        				__mem_cgroup_free()
+        					kfree(memcg);
+
+  try_to_free_pages
+  do_try_to_free_pages
+  shrink_zones
+  shrink_node
+  mem_cgroup_iter()
+      if (!root)
+      	root = root_mem_cgroup;
+      ...
+      mz = mem_cgroup_nodeinfo(root, reclaim->pgdat->node_id);
+      iter = &mz->iter[reclaim->priority];
+      pos = READ_ONCE(iter->position);
+      css_tryget(&pos->css) <- use after free
+
+To avoid this, we should also invalidate root_mem_cgroup.nodeinfo.iter
+in invalidate_reclaim_iterators().
+
+[cai@lca.pw: fix -Wparentheses compilation warning]
+  Link: http://lkml.kernel.org/r/1564580753-17531-1-git-send-email-cai@lca.pw
+Link: http://lkml.kernel.org/r/20190730015729.4406-1-miles.chen@mediatek.com
+Fixes: 5ac8fb31ad2e ("mm: memcontrol: convert reclaim iterator to simple css refcounting")
+Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/cpufreq_schedutil.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ mm/memcontrol.c |   39 +++++++++++++++++++++++++++++----------
+ 1 file changed, 29 insertions(+), 10 deletions(-)
 
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -40,6 +40,7 @@ struct sugov_policy {
- 	struct task_struct	*thread;
- 	bool			work_in_progress;
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1037,26 +1037,45 @@ void mem_cgroup_iter_break(struct mem_cg
+ 		css_put(&prev->css);
+ }
  
-+	bool			limits_changed;
- 	bool			need_freq_update;
- };
- 
-@@ -90,8 +91,11 @@ static bool sugov_should_update_freq(str
- 	    !cpufreq_this_cpu_can_update(sg_policy->policy))
- 		return false;
- 
--	if (unlikely(sg_policy->need_freq_update))
-+	if (unlikely(sg_policy->limits_changed)) {
-+		sg_policy->limits_changed = false;
-+		sg_policy->need_freq_update = true;
- 		return true;
-+	}
- 
- 	delta_ns = time - sg_policy->last_freq_update_time;
- 
-@@ -405,7 +409,7 @@ static inline bool sugov_cpu_is_busy(str
- static inline void ignore_dl_rate_limit(struct sugov_cpu *sg_cpu, struct sugov_policy *sg_policy)
+-static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
++static void __invalidate_reclaim_iterators(struct mem_cgroup *from,
++					struct mem_cgroup *dead_memcg)
  {
- 	if (cpu_bw_dl(cpu_rq(sg_cpu->cpu)) > sg_cpu->bw_dl)
--		sg_policy->need_freq_update = true;
-+		sg_policy->limits_changed = true;
- }
+-	struct mem_cgroup *memcg = dead_memcg;
+ 	struct mem_cgroup_reclaim_iter *iter;
+ 	struct mem_cgroup_per_node *mz;
+ 	int nid;
+ 	int i;
  
- static void sugov_update_single(struct update_util_data *hook, u64 time,
-@@ -425,7 +429,8 @@ static void sugov_update_single(struct u
- 	if (!sugov_should_update_freq(sg_policy, time))
- 		return;
- 
--	busy = sugov_cpu_is_busy(sg_cpu);
-+	/* Limits may have changed, don't skip frequency update */
-+	busy = !sg_policy->need_freq_update && sugov_cpu_is_busy(sg_cpu);
- 
- 	util = sugov_get_util(sg_cpu);
- 	max = sg_cpu->max;
-@@ -798,6 +803,7 @@ static int sugov_start(struct cpufreq_po
- 	sg_policy->last_freq_update_time	= 0;
- 	sg_policy->next_freq			= 0;
- 	sg_policy->work_in_progress		= false;
-+	sg_policy->limits_changed		= false;
- 	sg_policy->need_freq_update		= false;
- 	sg_policy->cached_raw_freq		= 0;
- 
-@@ -849,7 +855,7 @@ static void sugov_limits(struct cpufreq_
- 		mutex_unlock(&sg_policy->work_lock);
+-	for (; memcg; memcg = parent_mem_cgroup(memcg)) {
+-		for_each_node(nid) {
+-			mz = mem_cgroup_nodeinfo(memcg, nid);
+-			for (i = 0; i <= DEF_PRIORITY; i++) {
+-				iter = &mz->iter[i];
+-				cmpxchg(&iter->position,
+-					dead_memcg, NULL);
+-			}
++	for_each_node(nid) {
++		mz = mem_cgroup_nodeinfo(from, nid);
++		for (i = 0; i <= DEF_PRIORITY; i++) {
++			iter = &mz->iter[i];
++			cmpxchg(&iter->position,
++				dead_memcg, NULL);
+ 		}
  	}
- 
--	sg_policy->need_freq_update = true;
-+	sg_policy->limits_changed = true;
  }
  
- static struct cpufreq_governor schedutil_gov = {
++static void invalidate_reclaim_iterators(struct mem_cgroup *dead_memcg)
++{
++	struct mem_cgroup *memcg = dead_memcg;
++	struct mem_cgroup *last;
++
++	do {
++		__invalidate_reclaim_iterators(memcg, dead_memcg);
++		last = memcg;
++	} while ((memcg = parent_mem_cgroup(memcg)));
++
++	/*
++	 * When cgruop1 non-hierarchy mode is used,
++	 * parent_mem_cgroup() does not walk all the way up to the
++	 * cgroup root (root_mem_cgroup). So we have to handle
++	 * dead_memcg from cgroup root separately.
++	 */
++	if (last != root_mem_cgroup)
++		__invalidate_reclaim_iterators(root_mem_cgroup,
++						dead_memcg);
++}
++
+ /**
+  * mem_cgroup_scan_tasks - iterate over tasks of a memory cgroup hierarchy
+  * @memcg: hierarchy root
 
 
