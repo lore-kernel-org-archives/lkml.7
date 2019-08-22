@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69108C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90F3C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3544F233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908362089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493881;
-	bh=LNHX7SHIryIqbQUTuokVV2rHRG1ianQMIAGYYVkHNKI=;
+	s=default; t=1566493882;
+	bh=fJ3azQZ1DCnkjLnuIEYjspKZxSeuc1mE32jQfEX269s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CvCn6bZTXnD7tVJY6It0yJ2WjmcfW6T+RK9F7/YB3CViepG100mw6SjYaAiVtahFo
-	 q0rRJe4cX1imeoNrEqJTnSbgl5LWznILmPcAw57yz4vpTS7rqJDP2xtFM+oXGd5Fqz
-	 nKmhhaQaZAEQIsh8AW6G+QkuqSCIm155W+eJPPpM=
+	b=j2Ge8Ky1wjMlrRvHVnqb/AaJzvWGLhaz5NlO/93VcG1Ck31tnkCS35TyFvUW+01rW
+	 gjLdD/wukPdbaXJQcFnNhnXNVPN+GkyZvivPY+lYbQgX/My8tLik3WOpHVPEgKz46V
+	 0Tn+SVQarQRbcXAncyrUciFa480yQiMk2HMDsWPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389177AbfHVRK6 (ORCPT
+        id S2390860AbfHVRKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59670 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:10:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390725AbfHVRJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:19 -0400
+        id S2390730AbfHVRJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:20 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D742C2342C;
-        Thu, 22 Aug 2019 17:09:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 074F2233FC;
+        Thu, 22 Aug 2019 17:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493758;
-        bh=LNHX7SHIryIqbQUTuokVV2rHRG1ianQMIAGYYVkHNKI=;
+        s=default; t=1566493759;
+        bh=fJ3azQZ1DCnkjLnuIEYjspKZxSeuc1mE32jQfEX269s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f0x5Oo10XdPqgwNl81c4mSZgJowgKbLrGCXWH4snWWqdKWhRWsesjmCNL5HbHFHsO
-         Z5F9T/04/Hkvg7pSXP/6pufGTxZW3J+MetAOzV0nn4UHOMgODN7FqTIamy9HMjOClG
-         AyeWoiS0NdHJoHofsDffsia6rQ6kppNMrmGVqEks=
+        b=bsrZzXn3UKpgojFf5/bob3yQcTq5Go20xNVcf5d/ECG4tMzUFJ6iPJWq+yDkXxCpZ
+         KBdgI10zMh2kZ8Eotf9VDXFhL+QpFKBzn11rkIFRHYnZY28+AMkKSWgDh3VkoOUP/t
+         aVBhN1/2CAP0u6uZwWRhxJbp/mqbXQv6W2yxkGQQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huy Nguyen <huyn@mellanox.com>, Parav Pandit <parav@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+Cc:     Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 118/135] net/mlx5e: Only support tx/rx pause setting for port owner
-Date:   Thu, 22 Aug 2019 13:07:54 -0400
-Message-Id: <20190822170811.13303-119-sashal@kernel.org>
+Subject: [PATCH 5.2 120/135] bnxt_en: Improve RX doorbell sequence.
+Date:   Thu, 22 Aug 2019 13:07:56 -0400
+Message-Id: <20190822170811.13303-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,36 +65,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huy Nguyen <huyn@mellanox.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 466df6eb4a9e813b3cfc674363316450c57a89c5 ]
+[ Upstream commit e8f267b063208372f7a329c6d5288d58944d873c ]
 
-Only support changing tx/rx pause frame setting if the net device
-is the vport group manager.
+When both RX buffers and RX aggregation buffers have to be
+replenished at the end of NAPI, post the RX aggregation buffers first
+before RX buffers.  Otherwise, we may run into a situation where
+there are only RX buffers without RX aggregation buffers for a split
+second.  This will cause the hardware to abort the RX packet and
+report buffer errors, which will cause unnecessary cleanup by the
+driver.
 
-Fixes: 3c2d18ef22df ("net/mlx5e: Support ethtool get/set_pauseparam")
-Signed-off-by: Huy Nguyen <huyn@mellanox.com>
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Ringing the Aggregation ring doorbell first before the RX ring doorbell
+will prevent some of these buffer errors.  Use the same sequence during
+ring initialization as well.
+
+Fixes: 697197e5a173 ("bnxt_en: Re-structure doorbells.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-index f637d81f08bcb..22d5101769651 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c
-@@ -1317,6 +1317,9 @@ int mlx5e_ethtool_set_pauseparam(struct mlx5e_priv *priv,
- 	struct mlx5_core_dev *mdev = priv->mdev;
- 	int err;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index d9eaafa93970b..36fe4f161cf1c 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -2015,9 +2015,9 @@ static void __bnxt_poll_work_done(struct bnxt *bp, struct bnxt_napi *bnapi)
+ 	if (bnapi->events & BNXT_RX_EVENT) {
+ 		struct bnxt_rx_ring_info *rxr = bnapi->rx_ring;
  
-+	if (!MLX5_CAP_GEN(mdev, vport_group_manager))
-+		return -EOPNOTSUPP;
-+
- 	if (pauseparam->autoneg)
- 		return -EINVAL;
+-		bnxt_db_write(bp, &rxr->rx_db, rxr->rx_prod);
+ 		if (bnapi->events & BNXT_AGG_EVENT)
+ 			bnxt_db_write(bp, &rxr->rx_agg_db, rxr->rx_agg_prod);
++		bnxt_db_write(bp, &rxr->rx_db, rxr->rx_prod);
+ 	}
+ 	bnapi->events = 0;
+ }
+@@ -5011,6 +5011,7 @@ static void bnxt_set_db(struct bnxt *bp, struct bnxt_db_info *db, u32 ring_type,
  
+ static int bnxt_hwrm_ring_alloc(struct bnxt *bp)
+ {
++	bool agg_rings = !!(bp->flags & BNXT_FLAG_AGG_RINGS);
+ 	int i, rc = 0;
+ 	u32 type;
+ 
+@@ -5086,7 +5087,9 @@ static int bnxt_hwrm_ring_alloc(struct bnxt *bp)
+ 		if (rc)
+ 			goto err_out;
+ 		bnxt_set_db(bp, &rxr->rx_db, type, map_idx, ring->fw_ring_id);
+-		bnxt_db_write(bp, &rxr->rx_db, rxr->rx_prod);
++		/* If we have agg rings, post agg buffers first. */
++		if (!agg_rings)
++			bnxt_db_write(bp, &rxr->rx_db, rxr->rx_prod);
+ 		bp->grp_info[map_idx].rx_fw_ring_id = ring->fw_ring_id;
+ 		if (bp->flags & BNXT_FLAG_CHIP_P5) {
+ 			struct bnxt_cp_ring_info *cpr = &bnapi->cp_ring;
+@@ -5105,7 +5108,7 @@ static int bnxt_hwrm_ring_alloc(struct bnxt *bp)
+ 		}
+ 	}
+ 
+-	if (bp->flags & BNXT_FLAG_AGG_RINGS) {
++	if (agg_rings) {
+ 		type = HWRM_RING_ALLOC_AGG;
+ 		for (i = 0; i < bp->rx_nr_rings; i++) {
+ 			struct bnxt_rx_ring_info *rxr = &bp->rx_ring[i];
+@@ -5121,6 +5124,7 @@ static int bnxt_hwrm_ring_alloc(struct bnxt *bp)
+ 			bnxt_set_db(bp, &rxr->rx_agg_db, type, map_idx,
+ 				    ring->fw_ring_id);
+ 			bnxt_db_write(bp, &rxr->rx_agg_db, rxr->rx_agg_prod);
++			bnxt_db_write(bp, &rxr->rx_db, rxr->rx_prod);
+ 			bp->grp_info[grp_idx].agg_fw_ring_id = ring->fw_ring_id;
+ 		}
+ 	}
 -- 
 2.20.1
 
