@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E68FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B91C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1423A23400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0B723402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566496154;
-	bh=c2aGwSnqIaoyFvTTMzz/8AWODC8ihLJ526QwK1gtMRQ=;
+	s=default; t=1566496157;
+	bh=9u2CoFWIChXQB7BT8n5JYZmcQmil3bWK6/eJ7jJASD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qrd0O7jgQuqmRY61CCwAdwTrWZ/wsJzUerUSjgeAdw0bvnKDRpO4EvEQgm2V7KxYl
-	 EjiWwctgb11jf+g4E3GDFF69hePuMTH2grH1n8xzBoHFCtRvAX6tSLQ0mGUOnWdysR
-	 dSHW2ZjJ4G0IGWqijkArwVx3eQ6kGtcnyYdL0qc8=
+	b=wAZnWO/n8h1SqptRArJOONHArzQ2ld+/6VJTFgkqAS4/OWQrQX/Yb1JxoVmENFpPY
+	 vZpktObh6gPph+Q5fA82mEmdTaMCaWNVv4Oow7PWTvtm2NeetQni/6qVuusOdk8B5o
+	 /YbCtvABulaiGoqNwgPz+6z6Xyl4bjBicJEqCaes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403966AbfHVRtN (ORCPT
+        id S1731739AbfHVRWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:49:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:22:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389818AbfHVRWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:17 -0400
+        id S1730997AbfHVRWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:14 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0EE523400;
-        Thu, 22 Aug 2019 17:22:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44C96233FD;
+        Thu, 22 Aug 2019 17:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494537;
-        bh=c2aGwSnqIaoyFvTTMzz/8AWODC8ihLJ526QwK1gtMRQ=;
+        s=default; t=1566494533;
+        bh=9u2CoFWIChXQB7BT8n5JYZmcQmil3bWK6/eJ7jJASD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iQwVQ86IW0JfQBKuajV0Tm5ZOn0atZ359lBDIPYZW9MhROrTOKSJhxKpgzMSgixPh
-         M+4QKLB0AZHwdwXT3eQOa7hTX+rfaOrAIjNytIDhA4r2ddyJQIQS9wdIZINRkIVUKI
-         8glCi7GnCxGZG2NB7JANhbhNf3DdRdGgoC42GFCI=
+        b=mI+sDNUOvIqDHD9o60nKk/RKgbHq2WG6lpuIPEP/CVz6uCMAggCvM/XJ3Ya/m2Ryq
+         BeA5BZEw25TInwx2bRVFu7gk8gTtqiogMuhRN2FQV4cewjRmzUS3kv/hluPOrLR7R1
+         qsp7AL8QCpBEdf2GEZYvHpfh9oL6W7iMEvVBnq0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 16/78] ALSA: compress: Prevent bypasses of set_params
-Date:   Thu, 22 Aug 2019 10:18:20 -0700
-Message-Id: <20190822171832.514498053@linuxfoundation.org>
+Subject: [PATCH 4.4 11/78] mac80211: dont warn about CW params when not using them
+Date:   Thu, 22 Aug 2019 10:18:15 -0700
+Message-Id: <20190822171832.370119925@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -61,81 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 26c3f1542f5064310ad26794c09321780d00c57d ]
+[ Upstream commit d2b3fe42bc629c2d4002f652b3abdfb2e72991c7 ]
 
-Currently, whilst in SNDRV_PCM_STATE_OPEN it is possible to call
-snd_compr_stop, snd_compr_drain and snd_compr_partial_drain, which
-allow a transition to SNDRV_PCM_STATE_SETUP. The stream should
-only be able to move to the setup state once it has received a
-SNDRV_COMPRESS_SET_PARAMS ioctl. Fix this issue by not allowing
-those ioctls whilst in the open state.
+ieee80211_set_wmm_default() normally sets up the initial CW min/max for
+each queue, except that it skips doing this if the driver doesn't
+support ->conf_tx. We still end up calling drv_conf_tx() in some cases
+(e.g., ieee80211_reconfig()), which also still won't do anything
+useful...except it complains here about the invalid CW parameters.
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Let's just skip the WARN if we weren't going to do anything useful with
+the parameters.
+
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Link: https://lore.kernel.org/r/20190718015712.197499-1-briannorris@chromium.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/compress_offload.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+ net/mac80211/driver-ops.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 16269e7ff3904..d0a21a5867673 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -688,9 +688,15 @@ static int snd_compr_stop(struct snd_compr_stream *stream)
- {
- 	int retval;
+diff --git a/net/mac80211/driver-ops.c b/net/mac80211/driver-ops.c
+index c258f1041d330..df2e4e3112177 100644
+--- a/net/mac80211/driver-ops.c
++++ b/net/mac80211/driver-ops.c
+@@ -169,11 +169,16 @@ int drv_conf_tx(struct ieee80211_local *local,
+ 	if (!check_sdata_in_driver(sdata))
+ 		return -EIO;
  
--	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
--			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_PREPARED:
- 		return -EPERM;
-+	default:
-+		break;
-+	}
-+
- 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_STOP);
- 	if (!retval) {
- 		snd_compr_drain_notify(stream);
-@@ -739,9 +745,14 @@ static int snd_compr_drain(struct snd_compr_stream *stream)
- {
- 	int retval;
- 
--	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
--			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_PREPARED:
- 		return -EPERM;
-+	default:
-+		break;
+-	if (WARN_ONCE(params->cw_min == 0 ||
+-		      params->cw_min > params->cw_max,
+-		      "%s: invalid CW_min/CW_max: %d/%d\n",
+-		      sdata->name, params->cw_min, params->cw_max))
++	if (params->cw_min == 0 || params->cw_min > params->cw_max) {
++		/*
++		 * If we can't configure hardware anyway, don't warn. We may
++		 * never have initialized the CW parameters.
++		 */
++		WARN_ONCE(local->ops->conf_tx,
++			  "%s: invalid CW_min/CW_max: %d/%d\n",
++			  sdata->name, params->cw_min, params->cw_max);
+ 		return -EINVAL;
 +	}
  
- 	retval = stream->ops->trigger(stream, SND_COMPR_TRIGGER_DRAIN);
- 	if (retval) {
-@@ -778,9 +789,16 @@ static int snd_compr_next_track(struct snd_compr_stream *stream)
- static int snd_compr_partial_drain(struct snd_compr_stream *stream)
- {
- 	int retval;
--	if (stream->runtime->state == SNDRV_PCM_STATE_PREPARED ||
--			stream->runtime->state == SNDRV_PCM_STATE_SETUP)
-+
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_OPEN:
-+	case SNDRV_PCM_STATE_SETUP:
-+	case SNDRV_PCM_STATE_PREPARED:
- 		return -EPERM;
-+	default:
-+		break;
-+	}
-+
- 	/* stream can be drained only when next track has been signalled */
- 	if (stream->next_track == false)
- 		return -EPERM;
+ 	trace_drv_conf_tx(local, sdata, ac, params);
+ 	if (local->ops->conf_tx)
 -- 
 2.20.1
 
