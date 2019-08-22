@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE74DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35040C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEDFC2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074DB2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493990;
-	bh=FsU2bOnczHjVUYUWGONuiGSha5N7bJ30nzPRVEw0Mus=;
+	s=default; t=1566493995;
+	bh=IB6SHesi+A+4IuSaCxBprlGHXn7PaDRVN21talzL+Qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yy06+R2McSLWZ4xanxGxdVgoamBkHNRA/qCHmeD97qNVEczdgXBEC9IjJQMLJeNR4
-	 DoBv6+QgY9mSIY2pk71vMASIqOsdORIo2eevqVpFFgh6KYPImKxv5hxKQ88xj65T1X
-	 Z6EAbL2ZE8Xl9OpUDGKa1V+WyRCfRH2ixT1+xo8E=
+	b=eWGEnG72uOa+CPrNqw9k+f2KhuSnFLH4z9cIwdAgptQXxMMkk4bVwjIlJuERG5ZtV
+	 jWSz9qy+RFhKo/NpBGUsJfMpbtk9tFrdJmGhV58Qal2Ca5enuieIUrL7OLa/YSFZ6t
+	 BLhX2Qs6NpqchUU3Y+P44bfCKMFWeEOTUPfKLDUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390636AbfHVRJD (ORCPT
+        id S2390222AbfHVRNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59014 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:13:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390595AbfHVRI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:58 -0400
+        id S2390627AbfHVRJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:03 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B4072341F;
-        Thu, 22 Aug 2019 17:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAD68233FE;
+        Thu, 22 Aug 2019 17:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493737;
-        bh=FsU2bOnczHjVUYUWGONuiGSha5N7bJ30nzPRVEw0Mus=;
+        s=default; t=1566493742;
+        bh=IB6SHesi+A+4IuSaCxBprlGHXn7PaDRVN21talzL+Qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZP/5ZzAdA3dthsuN4ZKScbBZDZviH6BKES6BIrA/0vQCmHXki8zj3V4+Y3qd4NT/9
-         iGVug55v3jwDmMEh5XM5aCjPWfwdjqYD/qKO8TBAPtWdBycVT8RC2KXRIWjWFTAgkw
-         XufVzKCkXxj3nI1X8bX3jNnhCYnvp2I1EnXw7u6M=
+        b=ffmopOcHlgfcPDsnTBPpB83XfseXIC4F5Fvyoxn3OqSVDGyZgGLKxNrcgn6V9pUhR
+         eOyS72J2qGl2aZm8GdfSzZS0v//cN5538Jz07YNdiL7zKkk15lEph8N5bNhqvxP0M5
+         OM0qO52PYWCuDPEjZykCSU9WtC1HJIsDIjEpr/ik=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 080/135] RDMA/mlx5: Release locks during notifier unregister
-Date:   Thu, 22 Aug 2019 13:07:16 -0400
-Message-Id: <20190822170811.13303-81-sashal@kernel.org>
+Subject: [PATCH 5.2 088/135] page flags: prioritize kasan bits over last-cpuid
+Date:   Thu, 22 Aug 2019 13:07:24 -0400
+Message-Id: <20190822170811.13303-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,109 +72,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 23eaf3b5c1a755e3193480c76fb29414be648688 ]
+[ Upstream commit ee38d94a0ad89890b770f6c876263cf9fcbfde84 ]
 
-The below kernel panic was observed when created bond mode LACP
-with GRE tunnel on top. The reason to it was not released spinlock
-during mlx5 notify unregsiter sequence.
+ARM64 randdconfig builds regularly run into a build error, especially
+when NUMA_BALANCING and SPARSEMEM are enabled but not SPARSEMEM_VMEMMAP:
 
-[  234.562007] BUG: scheduling while atomic: sh/10900/0x00000002
-[  234.563005] Preemption disabled at:
-[  234.566864] ------------[ cut here ]------------
-[  234.567120] DEBUG_LOCKS_WARN_ON(val > preempt_count())
-[  234.567139] WARNING: CPU: 16 PID: 10900 at kernel/sched/core.c:3203 preempt_count_sub+0xca/0x170
-[  234.569550] CPU: 16 PID: 10900 Comm: sh Tainted: G        W 5.2.0-rc1-for-linust-dbg-2019-05-25_04-57-33-60 #1
-[  234.569886] Hardware name: Dell Inc. PowerEdge R720/0X3D66, BIOS 2.6.1 02/12/2018
-[  234.570183] RIP: 0010:preempt_count_sub+0xca/0x170
-[  234.570404] Code: 03 38
-d0 7c 08 84 d2 0f 85 b0 00 00 00 8b 15 dd 02 03 04 85 d2 75 ba 48 c7 c6
-00 e1 88 83 48 c7 c7 40 e1 88 83 e8 76 11 f7 ff <0f> 0b 5b c3 65 8b 05
-d3 1f d8 7e 84 c0 75 82 e8 62 c3 c3 00 85 c0
-[  234.570911] RSP: 0018:ffff888b94477b08 EFLAGS: 00010286
-[  234.571133] RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
-[  234.571391] RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000246
-[  234.571648] RBP: ffff888ba5560000 R08: fffffbfff08962d5 R09: fffffbfff08962d5
-[  234.571902] R10: 0000000000000001 R11: fffffbfff08962d4 R12: ffff888bac6e9548
-[  234.572157] R13: ffff888babfaf728 R14: ffff888bac6e9568 R15: ffff888babfaf750
-[  234.572412] FS: 00007fcafa59b740(0000) GS:ffff888bed200000(0000) knlGS:0000000000000000
-[  234.572686] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  234.572914] CR2: 00007f984f16b140 CR3: 0000000b2bf0a001 CR4: 00000000001606e0
-[  234.573172] Call Trace:
-[  234.573336] _raw_spin_unlock+0x2e/0x50
-[  234.573542] mlx5_ib_unbind_slave_port+0x1bc/0x690 [mlx5_ib]
-[  234.573793] mlx5_ib_cleanup_multiport_master+0x1d3/0x660 [mlx5_ib]
-[  234.574039] mlx5_ib_stage_init_cleanup+0x4c/0x360 [mlx5_ib]
-[  234.574271]  ? kfree+0xf5/0x2f0
-[  234.574465] __mlx5_ib_remove+0x61/0xd0 [mlx5_ib]
-[  234.574688]  ? __mlx5_ib_remove+0xd0/0xd0 [mlx5_ib]
-[  234.574951] mlx5_remove_device+0x234/0x300 [mlx5_core]
-[  234.575224] mlx5_unregister_device+0x4d/0x1e0 [mlx5_core]
-[  234.575493] remove_one+0x4f/0x160 [mlx5_core]
-[  234.575704] pci_device_remove+0xef/0x2a0
-[  234.581407]  ? pcibios_free_irq+0x10/0x10
-[  234.587143]  ? up_read+0xc1/0x260
-[  234.592785] device_release_driver_internal+0x1ab/0x430
-[  234.598442] unbind_store+0x152/0x200
-[  234.604064]  ? sysfs_kf_write+0x3b/0x180
-[  234.609441]  ? sysfs_file_ops+0x160/0x160
-[  234.615021] kernfs_fop_write+0x277/0x440
-[  234.620288]  ? __sb_start_write+0x1ef/0x2c0
-[  234.625512] vfs_write+0x15e/0x460
-[  234.630786] ksys_write+0x156/0x1e0
-[  234.635988]  ? __ia32_sys_read+0xb0/0xb0
-[  234.641120]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-[  234.646163] do_syscall_64+0x95/0x470
-[  234.651106] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  234.656004] RIP: 0033:0x7fcaf9c9cfd0
-[  234.660686] Code: 73 01
-c3 48 8b 0d c0 6e 2d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00
-83 3d cd cf 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73
-31 c3 48 83 ec 08 e8 ee cb 01 00 48 89 04 24
-[  234.670128] RSP: 002b:00007ffd3b01ddd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-[  234.674811] RAX: ffffffffffffffda RBX: 000000000000000d RCX: 00007fcaf9c9cfd0
-[  234.679387] RDX: 000000000000000d RSI: 00007fcafa5c1000 RDI: 0000000000000001
-[  234.683848] RBP: 00007fcafa5c1000 R08: 000000000000000a R09: 00007fcafa59b740
-[  234.688167] R10: 00007ffd3b01d8e0 R11: 0000000000000246 R12: 00007fcaf9f75400
-[  234.692386] R13: 000000000000000d R14: 0000000000000001 R15: 0000000000000000
-[  234.696495] irq event stamp: 153067
-[  234.700525] hardirqs last enabled at (153067): [<ffffffff83258c39>] _raw_spin_unlock_irqrestore+0x59/0x70
-[  234.704665] hardirqs last disabled at (153066): [<ffffffff83259382>] _raw_spin_lock_irqsave+0x22/0x90
-[  234.708722] softirqs last enabled at (153058): [<ffffffff836006c5>] __do_softirq+0x6c5/0xb4e
-[  234.712673] softirqs last disabled at (153051): [<ffffffff81227c1d>] irq_exit+0x17d/0x1d0
-[  234.716601] ---[ end trace 5dbf096843ee9ce6 ]---
+  #error "KASAN: not enough bits in page flags for tag"
 
-Fixes: df097a278c75 ("IB/mlx5: Use the new mlx5 core notifier API")
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20190731083852.584-1-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+The last-cpuid bits are already contitional on the available space, so
+the result of the calculation is a bit random on whether they were
+already left out or not.
+
+Adding the kasan tag bits before last-cpuid makes it much more likely to
+end up with a successful build here, and should be reliable for
+randconfig at least, as long as that does not randomize NR_CPUS or
+NODES_SHIFT but uses the defaults.
+
+In order for the modified check to not trigger in the x86 vdso32 code
+where all constants are wrong (building with -m32), enclose all the
+definitions with an #ifdef.
+
+[arnd@arndb.de: build fix]
+  Link: http://lkml.kernel.org/r/CAK8P3a3Mno1SWTcuAOT0Wa9VS15pdU6EfnkxLbDpyS55yO04+g@mail.gmail.com
+Link: http://lkml.kernel.org/r/20190722115520.3743282-1-arnd@arndb.de
+Link: https://lore.kernel.org/lkml/20190618095347.3850490-1-arnd@arndb.de/
+Fixes: 2813b9c02962 ("kasan, mm, arm64: tag non slab memory allocated via pagealloc")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/main.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/mips/vdso/vdso.h             |  1 +
+ include/linux/page-flags-layout.h | 18 +++++++++++-------
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index a6713a3b6c803..9ab276a8bc81a 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -5687,13 +5687,12 @@ static void mlx5_ib_unbind_slave_port(struct mlx5_ib_dev *ibdev,
- 		return;
- 	}
+diff --git a/arch/mips/vdso/vdso.h b/arch/mips/vdso/vdso.h
+index 14b1931be69c3..b65b169778e31 100644
+--- a/arch/mips/vdso/vdso.h
++++ b/arch/mips/vdso/vdso.h
+@@ -9,6 +9,7 @@
+ #if _MIPS_SIM != _MIPS_SIM_ABI64 && defined(CONFIG_64BIT)
  
--	if (mpi->mdev_events.notifier_call)
--		mlx5_notifier_unregister(mpi->mdev, &mpi->mdev_events);
--	mpi->mdev_events.notifier_call = NULL;
--
- 	mpi->ibdev = NULL;
+ /* Building 32-bit VDSO for the 64-bit kernel. Fake a 32-bit Kconfig. */
++#define BUILD_VDSO32_64
+ #undef CONFIG_64BIT
+ #define CONFIG_32BIT 1
+ #ifndef __ASSEMBLY__
+diff --git a/include/linux/page-flags-layout.h b/include/linux/page-flags-layout.h
+index 1dda31825ec4a..71283739ffd23 100644
+--- a/include/linux/page-flags-layout.h
++++ b/include/linux/page-flags-layout.h
+@@ -32,6 +32,7 @@
  
- 	spin_unlock(&port->mp.mpi_lock);
-+	if (mpi->mdev_events.notifier_call)
-+		mlx5_notifier_unregister(mpi->mdev, &mpi->mdev_events);
-+	mpi->mdev_events.notifier_call = NULL;
- 	mlx5_remove_netdev_notifier(ibdev, port_num);
- 	spin_lock(&port->mp.mpi_lock);
+ #endif /* CONFIG_SPARSEMEM */
  
++#ifndef BUILD_VDSO32_64
+ /*
+  * page->flags layout:
+  *
+@@ -76,20 +77,22 @@
+ #define LAST_CPUPID_SHIFT 0
+ #endif
+ 
+-#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT <= BITS_PER_LONG - NR_PAGEFLAGS
++#ifdef CONFIG_KASAN_SW_TAGS
++#define KASAN_TAG_WIDTH 8
++#else
++#define KASAN_TAG_WIDTH 0
++#endif
++
++#if SECTIONS_WIDTH+ZONES_WIDTH+NODES_SHIFT+LAST_CPUPID_SHIFT+KASAN_TAG_WIDTH \
++	<= BITS_PER_LONG - NR_PAGEFLAGS
+ #define LAST_CPUPID_WIDTH LAST_CPUPID_SHIFT
+ #else
+ #define LAST_CPUPID_WIDTH 0
+ #endif
+ 
+-#ifdef CONFIG_KASAN_SW_TAGS
+-#define KASAN_TAG_WIDTH 8
+ #if SECTIONS_WIDTH+NODES_WIDTH+ZONES_WIDTH+LAST_CPUPID_WIDTH+KASAN_TAG_WIDTH \
+ 	> BITS_PER_LONG - NR_PAGEFLAGS
+-#error "KASAN: not enough bits in page flags for tag"
+-#endif
+-#else
+-#define KASAN_TAG_WIDTH 0
++#error "Not enough bits in page flags"
+ #endif
+ 
+ /*
+@@ -104,4 +107,5 @@
+ #define LAST_CPUPID_NOT_IN_PAGE_FLAGS
+ #endif
+ 
++#endif
+ #endif /* _LINUX_PAGE_FLAGS_LAYOUT */
 -- 
 2.20.1
 
