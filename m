@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FDBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299B8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEC752089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23DC2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494116;
-	bh=tX3+3B/kq+FNOebC/0HT2A+XLEXbQHn4wNEEh5n8x30=;
+	s=default; t=1566494121;
+	bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X/s09Z4Gw64ht47e+k2N2Cf4uyGTh0BAYiwjGfGVJpBTHaYxUTa2g5lgwWDXP4II2
-	 OIMJsTVCHibwBUTBkeB/ChScPKyj8TZXUj38/u11XMqdHKgjFEFZNsggoGzr8f8cSO
-	 YQtMIEWhCE3sbqOScoQ5czstqKJpKQPu3/4dXbmw=
+	b=VF2QdfQK62mo0ZcHEMJ+n+Tbo/WcLrh6RP5p91+bqfXSzRkaBugMV7a/8djRONz3J
+	 FcGkeCtPla8zEkErOMvtAf9PHa+YqrdN7QrbjpgRCKJKwOcDCciMS2egPArRe1W0IU
+	 OknmiFxGuKDt4/v6xH7EUfgSdcdsAHp6qG/w7SYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389395AbfHVRPQ (ORCPT
+        id S2391161AbfHVRPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:15:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58642 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:15:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390481AbfHVRIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:46 -0400
+        id S2390484AbfHVRIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:45 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D986F2341C;
-        Thu, 22 Aug 2019 17:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D5E4233FD;
+        Thu, 22 Aug 2019 17:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493726;
-        bh=tX3+3B/kq+FNOebC/0HT2A+XLEXbQHn4wNEEh5n8x30=;
+        s=default; t=1566493724;
+        bh=Jk5erRwdW6Xn1aFjjqOIfAEDX4aSw+GfypMFT+zJTA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A/5ubAmzsTxlTxnR4UqU9i9J2vvuE283Wg1lQge+3p0bGfrRByeIgW3sEZaxe7Pih
-         RKbDupVHYm0RGky9EHQxvpMFtiPyFrcohg4exPZCaS5tz5W0W+yLm6ghcfxQFKcPGD
-         amkKZ9P5J6N1YTG7Ihijmer0mRMMZjLsZcnUvQwE=
+        b=eqfI3tlSvV0cFtXj2kdrq/AavTyoZIXzObJK7zWBhQN/oLZWac2e9p1FqsLpNbTKQ
+         Utdpo2OTPJk0g5ITeb+Jv5r9Op2NmU8tSxbbMa3gOwld7D5zhdkm372zyyC41e/Mr4
+         fQ+Jl5SemSRaq9vwlSfiw5gQY0y8S0KpowdYZtwU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 058/135] drm/bridge: tc358764: Fix build error
-Date:   Thu, 22 Aug 2019 13:06:54 -0400
-Message-Id: <20190822170811.13303-59-sashal@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 055/135] libata: zpodd: Fix small read overflow in zpodd_get_mech_type()
+Date:   Thu, 22 Aug 2019 13:06:51 -0400
+Message-Id: <20190822170811.13303-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,49 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit e1ae72a21e5f0d1846e26e3f5963930664702071 ]
+[ Upstream commit 71d6c505b4d9e6f76586350450e785e3d452b346 ]
 
-If CONFIG_DRM_TOSHIBA_TC358764=y but CONFIG_DRM_KMS_HELPER=m,
-building fails:
+Jeffrin reported a KASAN issue:
 
-drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x228): undefined reference to `drm_atomic_helper_connector_reset'
-drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x240): undefined reference to `drm_helper_probe_single_connector_modes'
-drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x268): undefined reference to `drm_atomic_helper_connector_duplicate_state'
-drivers/gpu/drm/bridge/tc358764.o:(.rodata+0x270): undefined reference to `drm_atomic_helper_connector_destroy_state'
+  BUG: KASAN: global-out-of-bounds in ata_exec_internal_sg+0x50f/0xc70
+  Read of size 16 at addr ffffffff91f41f80 by task scsi_eh_1/149
+  ...
+  The buggy address belongs to the variable:
+    cdb.48319+0x0/0x40
 
-Like TC358767, select DRM_KMS_HELPER to fix this, and
-change to select DRM_PANEL to avoid recursive dependency.
+Much like commit 18c9a99bce2a ("libata: zpodd: small read overflow in
+eject_tray()"), this fixes a cdb[] buffer length, this time in
+zpodd_get_mech_type():
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: f38b7cca6d0e ("drm/bridge: tc358764: Add DSI to LVDS bridge driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190729090520.25968-1-yuehaibing@huawei.com
+We read from the cdb[] buffer in ata_exec_internal_sg(). It has to be
+ATAPI_CDB_LEN (16) bytes long, but this buffer is only 12 bytes.
+
+Reported-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Fixes: afe759511808c ("libata: identify and init ZPODD devices")
+Link: https://lore.kernel.org/lkml/201907181423.E808958@keescook/
+Tested-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/ata/libata-zpodd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index cc62603b87c59..e4e22bbae2a7c 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -117,9 +117,10 @@ config DRM_THINE_THC63LVD1024
- 
- config DRM_TOSHIBA_TC358764
- 	tristate "TC358764 DSI/LVDS bridge"
--	depends on DRM && DRM_PANEL
- 	depends on OF
- 	select DRM_MIPI_DSI
-+	select DRM_KMS_HELPER
-+	select DRM_PANEL
- 	help
- 	  Toshiba TC358764 DSI/LVDS bridge driver.
- 
+diff --git a/drivers/ata/libata-zpodd.c b/drivers/ata/libata-zpodd.c
+index 173e6f2dd9af0..eefda51f97d35 100644
+--- a/drivers/ata/libata-zpodd.c
++++ b/drivers/ata/libata-zpodd.c
+@@ -56,7 +56,7 @@ static enum odd_mech_type zpodd_get_mech_type(struct ata_device *dev)
+ 	unsigned int ret;
+ 	struct rm_feature_desc *desc;
+ 	struct ata_taskfile tf;
+-	static const char cdb[] = {  GPCMD_GET_CONFIGURATION,
++	static const char cdb[ATAPI_CDB_LEN] = {  GPCMD_GET_CONFIGURATION,
+ 			2,      /* only 1 feature descriptor requested */
+ 			0, 3,   /* 3, removable medium feature */
+ 			0, 0, 0,/* reserved */
 -- 
 2.20.1
 
