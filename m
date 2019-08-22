@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D71DC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B1D2C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA0523426
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB3523400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493713;
-	bh=GvmlOiJYasZWqbCgBV4k6R+68bLpFOF01+lWBu11hSI=;
+	s=default; t=1566493717;
+	bh=QbEZQBkyRzh5gb4inivLOKwAYp/yyLAyxOPGsojb4jc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WTg1D2nf0YAOb5ogAlOMrGFinp7yi2RHyBCWH133f5xx0UOllQVnSEBNPpo3a1MNh
-	 bPFTpfU906fpzg+lootJyqB05xVpoHJkKAGI2cV1JHbgoiew9Pc4nTgVF394NQ/r7e
-	 VqdeUoIL93tkiVFcqqXBmeNabniRqoUGhmREKVTg=
+	b=ls96f2aTe8WLcU1ZEttVEkO4LkoxVyABwmgxwlUM/hlATtKKpkOT9PgFUtgpPeaxE
+	 T+xW8UAByakqFl3hZCXSlu5mBrSSHP1H0cvHkabf9cl5ZZqb39tgZCvDue7+hBnpA0
+	 QtHz/h3CaaPXEwlJTXaa8xSx6MBvTALVTBaWcWuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390377AbfHVRIc (ORCPT
+        id S2390405AbfHVRIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58074 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390335AbfHVRI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:28 -0400
+        id S2390363AbfHVRIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:31 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C947923426;
-        Thu, 22 Aug 2019 17:08:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7474E2341D;
+        Thu, 22 Aug 2019 17:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493706;
-        bh=GvmlOiJYasZWqbCgBV4k6R+68bLpFOF01+lWBu11hSI=;
+        s=default; t=1566493710;
+        bh=QbEZQBkyRzh5gb4inivLOKwAYp/yyLAyxOPGsojb4jc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nl7AJqiCKUG79pec+UY4CISVqMMkIkFGc4fhvFAw4V2zkHY8jbnDFVdDTMhpk+Q1M
-         1YxGxV0pn6jWqsGuYZdap0S+UrnpfJ/JeZxoQMJhDBcP6kTFCfN9ijn0O6YR+G2zsN
-         Nb2tL8V+/i1a90kZ8oKyNUlFQzXoE23oX2Ion+co=
+        b=G1AXiv8wrraoMVBaL5m7m6s3rWZc7TC1C+CzEpAuuUutFJ9KlQISs0pvJvSANBkaB
+         oyEViYyh5/2mcrhUufOM5aGqoTZpMvlX7gYrYptxlBQlm1LdPURjVlfjpxWNf6Wobc
+         I0xjX/OiEAO15AsYnu/r8/gVPRZR5BofkiOlTor0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Takashi Iwai <tiwai@suse.de>,
+Cc:     Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 021/135] ALSA: hda - Fix a memory leak bug
-Date:   Thu, 22 Aug 2019 13:06:17 -0400
-Message-Id: <20190822170811.13303-22-sashal@kernel.org>
+Subject: [PATCH 5.2 030/135] bpf: fix access to skb_shared_info->gso_segs
+Date:   Thu, 22 Aug 2019 13:06:26 -0400
+Message-Id: <20190822170811.13303-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -64,38 +66,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Eric Dumazet <edumazet@google.com>
 
-commit cfef67f016e4c00a2f423256fc678a6967a9fc09 upstream.
+commit 06a22d897d82f12776d44dbf0850f5895469cb2a upstream.
 
-In snd_hda_parse_generic_codec(), 'spec' is allocated through kzalloc().
-Then, the pin widgets in 'codec' are parsed. However, if the parsing
-process fails, 'spec' is not deallocated, leading to a memory leak.
+It is possible we reach bpf_convert_ctx_access() with
+si->dst_reg == si->src_reg
 
-To fix the above issue, free 'spec' before returning the error.
+Therefore, we need to load BPF_REG_AX before eventually
+mangling si->src_reg.
 
-Fixes: 352f7f914ebb ("ALSA: hda - Merge Realtek parser code to generic parser")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+syzbot generated this x86 code :
+   3:   55                      push   %rbp
+   4:   48 89 e5                mov    %rsp,%rbp
+   7:   48 81 ec 00 00 00 00    sub    $0x0,%rsp // Might be avoided ?
+   e:   53                      push   %rbx
+   f:   41 55                   push   %r13
+  11:   41 56                   push   %r14
+  13:   41 57                   push   %r15
+  15:   6a 00                   pushq  $0x0
+  17:   31 c0                   xor    %eax,%eax
+  19:   48 8b bf c0 00 00 00    mov    0xc0(%rdi),%rdi
+  20:   44 8b 97 bc 00 00 00    mov    0xbc(%rdi),%r10d
+  27:   4c 01 d7                add    %r10,%rdi
+  2a:   48 0f b7 7f 06          movzwq 0x6(%rdi),%rdi // Crash
+  2f:   5b                      pop    %rbx
+  30:   41 5f                   pop    %r15
+  32:   41 5e                   pop    %r14
+  34:   41 5d                   pop    %r13
+  36:   5b                      pop    %rbx
+  37:   c9                      leaveq
+  38:   c3                      retq
+
+Fixes: d9ff286a0f59 ("bpf: allow BPF programs access skb_shared_info->gso_segs field")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/pci/hda/hda_generic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/filter.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
-index 485edaba0037e..8f2beb1f3ae48 100644
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -6100,7 +6100,7 @@ static int snd_hda_parse_generic_codec(struct hda_codec *codec)
- 
- 	err = snd_hda_parse_pin_defcfg(codec, &spec->autocfg, NULL, 0);
- 	if (err < 0)
--		return err;
-+		goto error;
- 
- 	err = snd_hda_gen_parse_auto_config(codec, &spec->autocfg);
- 	if (err < 0)
+diff --git a/net/core/filter.c b/net/core/filter.c
+index f681fb772940c..534c310bb0893 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -7325,12 +7325,12 @@ static u32 bpf_convert_ctx_access(enum bpf_access_type type,
+ 	case offsetof(struct __sk_buff, gso_segs):
+ 		/* si->dst_reg = skb_shinfo(SKB); */
+ #ifdef NET_SKBUFF_DATA_USES_OFFSET
+-		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct sk_buff, head),
+-				      si->dst_reg, si->src_reg,
+-				      offsetof(struct sk_buff, head));
+ 		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct sk_buff, end),
+ 				      BPF_REG_AX, si->src_reg,
+ 				      offsetof(struct sk_buff, end));
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct sk_buff, head),
++				      si->dst_reg, si->src_reg,
++				      offsetof(struct sk_buff, head));
+ 		*insn++ = BPF_ALU64_REG(BPF_ADD, si->dst_reg, BPF_REG_AX);
+ #else
+ 		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(struct sk_buff, end),
 -- 
 2.20.1
 
