@@ -2,184 +2,208 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF075C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2EDC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC0821743
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:16:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=towerbridgetechnology.onmicrosoft.com header.i=@towerbridgetechnology.onmicrosoft.com header.b="QkdieT4N"
+	by mail.kernel.org (Postfix) with ESMTP id 8ADDF21743
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388437AbfHVQQ2 (ORCPT
+        id S2389793AbfHVQTO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:16:28 -0400
-Received: from mail-eopbgr780110.outbound.protection.outlook.com ([40.107.78.110]:23904
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729718AbfHVQQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:16:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fab3S1PzyILLDiWDe+EQfH77iDI6vTcKRXK0skFKdGKPInE8MBYk0E9pQqb7SLgptHfzMzVD8TRabD7BlYT7ohOlu9imWbhqQBom2vXz3c0a4jK4EJutqGLBVCy0V92xM+wdmtiNfBwMHb56SpwBXUWgpO+JXiGYcWYw1oPg98rfr3HPiTSlt7/Wur17VSlithyzlKPtgR7eiRo2GfpklP0gsgJLvBahBMiUMfN4WR+RPOg5ME9TTI2ECgdXGxyHA0sBVeOlPf2Dt6rPqePMATH7qs/WAj+IslpxaM5QvZBVzzLjTbhT0ch7Q9gqS+ADG3OY4Tgf3j8Lmlg5YmRhyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PiUaNT0SQiVWpzTI51umm7v8/bNwxVaNF/brOJ21vfI=;
- b=GpVzoprWjMwyUtCeE0yKJvCBqt0BlmfioLcSAbrCgfiiNXct8ifJs/pWhCL4mG/auJjDFg4hVHQ9E07Y0iE5EOGratZQfpmPNSZoHUNdEdEgheFs8KUAU5VhvMj4eE23UBkz8jBS8ioyNd8acxNwjvEraElYRzO3GXBM7cIk8oQsvFY8xT3GWIFYUNHZRgkMCYkHV+Ii3MAXjzXuOfIWqadRRnjYSkETb5Pp1tyUTE/JRRVUAxs4lWebEl4cxX2Hezt706pBGyFHZw4gpjhUX3Xk3BSBa1fa0hH0gUKcP/zjN8aFc95MU/9xJUt+7s5LNCp9ZRIBxGT2QF9jCJinFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bayhubtech.com; dmarc=pass action=none
- header.from=bayhubtech.com; dkim=pass header.d=bayhubtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=towerbridgetechnology.onmicrosoft.com;
- s=selector2-towerbridgetechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PiUaNT0SQiVWpzTI51umm7v8/bNwxVaNF/brOJ21vfI=;
- b=QkdieT4Nz+4JEkTqGuH0G8pu3KTQ1Valg4A76ZMTboSDTO/MmJkPUWB9XgQTDsc/SlOi2ldVZ0/Yn3crld4Pj4w79vcZURsL+Bs3qq1yavQFNGRYdRyaQbMqwk0Qu17Ey4DIEsp5yzQaNxTnFgxhAkghfV2cMsTNH6prQkOm/Uc=
-Received: from MWHPR16MB1455.namprd16.prod.outlook.com (10.175.5.21) by
- MWHPR16MB1871.namprd16.prod.outlook.com (10.172.61.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Thu, 22 Aug 2019 16:16:18 +0000
-Received: from MWHPR16MB1455.namprd16.prod.outlook.com
- ([fe80::48f4:c6d9:3a8:e7dd]) by MWHPR16MB1455.namprd16.prod.outlook.com
- ([fe80::48f4:c6d9:3a8:e7dd%4]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
- 16:16:18 +0000
-From:   "Shirley Her (SC)" <shirley.her@bayhubtech.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-CC:     "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
-        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
-        "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
-        "Max Huang (SC)" <max.huang@bayhubtech.com>
-Subject: RE: [PATCH V8 1/3] mmc: sdhci-pci-o2micro: Change O2 Host PLL and DLL
- register name
-Thread-Topic: [PATCH V8 1/3] mmc: sdhci-pci-o2micro: Change O2 Host PLL and
- DLL register name
-Thread-Index: AQHVWE+hFDk0c1SojEGAt3evjZxCYqcG2GuAgAB/0iA=
-Date:   Thu, 22 Aug 2019 16:16:18 +0000
-Message-ID: <MWHPR16MB14555AB570D340E138FDAB1E8BA50@MWHPR16MB1455.namprd16.prod.outlook.com>
-References: <1566412708-6130-1-git-send-email-shirley.her@bayhubtech.com>
- <CAPDyKFoyvT-nvU+rng7y=MitzuPfd3HdJ+SZNm4tPhkb-ER=nA@mail.gmail.com>
-In-Reply-To: <CAPDyKFoyvT-nvU+rng7y=MitzuPfd3HdJ+SZNm4tPhkb-ER=nA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shirley.her@bayhubtech.com; 
-x-originating-ip: [209.36.105.162]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 27447d58-9493-4c07-6dd4-08d7271c1085
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(2017052603328)(7193020);SRVR:MWHPR16MB1871;
-x-ms-traffictypediagnostic: MWHPR16MB1871:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR16MB1871CE2807B5622DF6308A108BA50@MWHPR16MB1871.namprd16.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01371B902F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(39840400004)(346002)(396003)(376002)(199004)(189003)(13464003)(40764003)(26005)(76116006)(74316002)(66946007)(305945005)(7736002)(508600001)(8936002)(71200400001)(6116002)(81156014)(8676002)(66066001)(81166006)(66446008)(66476007)(316002)(14454004)(64756008)(54906003)(6916009)(229853002)(3846002)(71190400001)(6436002)(5660300002)(66556008)(55016002)(9686003)(52536014)(486006)(186003)(6246003)(14444005)(256004)(86362001)(33656002)(107886003)(476003)(99286004)(446003)(11346002)(2906002)(7696005)(53936002)(76176011)(6506007)(102836004)(4326008)(25786009)(53546011);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR16MB1871;H:MWHPR16MB1455.namprd16.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: bayhubtech.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: QqyKMbvUGy3PNiCN0hjWrAPEJHD36zzT9ivXXtwJJJCRmM+//uRQ3x6M22eZMyVZKKspCP2t8IukWjBABk0/4W7IwWH8mMjMnzutyL2QcOoO59Nzc/ncIs+r+CwiUofou/SHEQWhI2mvLLH3d2wLJtejwjGdhZCzsaSieMG5FzjjJ5vImaindpHi/fhC7opiwyxT0HAnJ5Lb9QHZ9nbeHCXgupJvxBE0cKkKZ525dEqAtl97FeWaaUEcOLEZS4fGLD08P0SD8cUWE7U6xDBU4XeUzFr6hzXUbOr1kfcqbRbPap0o+yyIRz9dm4u6g3PcjC6h05GtYb2iqMoqZOObJccdeeklm/JkNdrRlZoZnK/GiPacQvQ6LDt2vBVUx8eGaGZGIYzrw7WdVdxPmaWaIfTAIrwATK1GKsRHj5dxs4A=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 22 Aug 2019 12:19:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53120 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729718AbfHVQTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 12:19:14 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 37C9A3C93;
+        Thu, 22 Aug 2019 16:19:13 +0000 (UTC)
+Received: from [10.18.17.163] (dhcp-17-163.bos.redhat.com [10.18.17.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 782085D784;
+        Thu, 22 Aug 2019 16:18:57 +0000 (UTC)
+Subject: Re: [virtio-dev] [PATCH v6 4/6] mm: Introduce Reported pages
+To:     Alexander Duyck <alexander.duyck@gmail.com>, kvm@vger.kernel.org,
+        mst@redhat.com, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org,
+        virtio-dev@lists.oasis-open.org, osalvador@suse.de
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
+References: <20190821145806.20926.22448.stgit@localhost.localdomain>
+ <20190821145950.20926.83684.stgit@localhost.localdomain>
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nitesh@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFl4pQoBEADT/nXR2JOfsCjDgYmE2qonSGjkM1g8S6p9UWD+bf7YEAYYYzZsLtbilFTe
+ z4nL4AV6VJmC7dBIlTi3Mj2eymD/2dkKP6UXlliWkq67feVg1KG+4UIp89lFW7v5Y8Muw3Fm
+ uQbFvxyhN8n3tmhRe+ScWsndSBDxYOZgkbCSIfNPdZrHcnOLfA7xMJZeRCjqUpwhIjxQdFA7
+ n0s0KZ2cHIsemtBM8b2WXSQG9CjqAJHVkDhrBWKThDRF7k80oiJdEQlTEiVhaEDURXq+2XmG
+ jpCnvRQDb28EJSsQlNEAzwzHMeplddfB0vCg9fRk/kOBMDBtGsTvNT9OYUZD+7jaf0gvBvBB
+ lbKmmMMX7uJB+ejY7bnw6ePNrVPErWyfHzR5WYrIFUtgoR3LigKnw5apzc7UIV9G8uiIcZEn
+ C+QJCK43jgnkPcSmwVPztcrkbC84g1K5v2Dxh9amXKLBA1/i+CAY8JWMTepsFohIFMXNLj+B
+ RJoOcR4HGYXZ6CAJa3Glu3mCmYqHTOKwezJTAvmsCLd3W7WxOGF8BbBjVaPjcZfavOvkin0u
+ DaFvhAmrzN6lL0msY17JCZo046z8oAqkyvEflFbC0S1R/POzehKrzQ1RFRD3/YzzlhmIowkM
+ BpTqNBeHEzQAlIhQuyu1ugmQtfsYYq6FPmWMRfFPes/4JUU/PQARAQABtCVOaXRlc2ggTmFy
+ YXlhbiBMYWwgPG5pbGFsQHJlZGhhdC5jb20+iQI9BBMBCAAnBQJZeKUKAhsjBQkJZgGABQsJ
+ CAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEKOGQNwGMqM56lEP/A2KMs/pu0URcVk/kqVwcBhU
+ SnvB8DP3lDWDnmVrAkFEOnPX7GTbactQ41wF/xwjwmEmTzLrMRZpkqz2y9mV0hWHjqoXbOCS
+ 6RwK3ri5e2ThIPoGxFLt6TrMHgCRwm8YuOSJ97o+uohCTN8pmQ86KMUrDNwMqRkeTRW9wWIQ
+ EdDqW44VwelnyPwcmWHBNNb1Kd8j3xKlHtnS45vc6WuoKxYRBTQOwI/5uFpDZtZ1a5kq9Ak/
+ MOPDDZpd84rqd+IvgMw5z4a5QlkvOTpScD21G3gjmtTEtyfahltyDK/5i8IaQC3YiXJCrqxE
+ r7/4JMZeOYiKpE9iZMtS90t4wBgbVTqAGH1nE/ifZVAUcCtycD0f3egX9CHe45Ad4fsF3edQ
+ ESa5tZAogiA4Hc/yQpnnf43a3aQ67XPOJXxS0Qptzu4vfF9h7kTKYWSrVesOU3QKYbjEAf95
+ NewF9FhAlYqYrwIwnuAZ8TdXVDYt7Z3z506//sf6zoRwYIDA8RDqFGRuPMXUsoUnf/KKPrtR
+ ceLcSUP/JCNiYbf1/QtW8S6Ca/4qJFXQHp0knqJPGmwuFHsarSdpvZQ9qpxD3FnuPyo64S2N
+ Dfq8TAeifNp2pAmPY2PAHQ3nOmKgMG8Gn5QiORvMUGzSz8Lo31LW58NdBKbh6bci5+t/HE0H
+ pnyVf5xhNC/FuQINBFl4pQoBEACr+MgxWHUP76oNNYjRiNDhaIVtnPRqxiZ9v4H5FPxJy9UD
+ Bqr54rifr1E+K+yYNPt/Po43vVL2cAyfyI/LVLlhiY4yH6T1n+Di/hSkkviCaf13gczuvgz4
+ KVYLwojU8+naJUsiCJw01MjO3pg9GQ+47HgsnRjCdNmmHiUQqksMIfd8k3reO9SUNlEmDDNB
+ XuSzkHjE5y/R/6p8uXaVpiKPfHoULjNRWaFc3d2JGmxJpBdpYnajoz61m7XJlgwl/B5Ql/6B
+ dHGaX3VHxOZsfRfugwYF9CkrPbyO5PK7yJ5vaiWre7aQ9bmCtXAomvF1q3/qRwZp77k6i9R3
+ tWfXjZDOQokw0u6d6DYJ0Vkfcwheg2i/Mf/epQl7Pf846G3PgSnyVK6cRwerBl5a68w7xqVU
+ 4KgAh0DePjtDcbcXsKRT9D63cfyfrNE+ea4i0SVik6+N4nAj1HbzWHTk2KIxTsJXypibOKFX
+ 2VykltxutR1sUfZBYMkfU4PogE7NjVEU7KtuCOSAkYzIWrZNEQrxYkxHLJsWruhSYNRsqVBy
+ KvY6JAsq/i5yhVd5JKKU8wIOgSwC9P6mXYRgwPyfg15GZpnw+Fpey4bCDkT5fMOaCcS+vSU1
+ UaFmC4Ogzpe2BW2DOaPU5Ik99zUFNn6cRmOOXArrryjFlLT5oSOe4IposgWzdwARAQABiQIl
+ BBgBCAAPBQJZeKUKAhsMBQkJZgGAAAoJEKOGQNwGMqM5ELoP/jj9d9gF1Al4+9bngUlYohYu
+ 0sxyZo9IZ7Yb7cHuJzOMqfgoP4tydP4QCuyd9Q2OHHL5AL4VFNb8SvqAxxYSPuDJTI3JZwI7
+ d8JTPKwpulMSUaJE8ZH9n8A/+sdC3CAD4QafVBcCcbFe1jifHmQRdDrvHV9Es14QVAOTZhnJ
+ vweENyHEIxkpLsyUUDuVypIo6y/Cws+EBCWt27BJi9GH/EOTB0wb+2ghCs/i3h8a+bi+bS7L
+ FCCm/AxIqxRurh2UySn0P/2+2eZvneJ1/uTgfxnjeSlwQJ1BWzMAdAHQO1/lnbyZgEZEtUZJ
+ x9d9ASekTtJjBMKJXAw7GbB2dAA/QmbA+Q+Xuamzm/1imigz6L6sOt2n/X/SSc33w8RJUyor
+ SvAIoG/zU2Y76pKTgbpQqMDmkmNYFMLcAukpvC4ki3Sf086TdMgkjqtnpTkEElMSFJC8npXv
+ 3QnGGOIfFug/qs8z03DLPBz9VYS26jiiN7QIJVpeeEdN/LKnaz5LO+h5kNAyj44qdF2T2AiF
+ HxnZnxO5JNP5uISQH3FjxxGxJkdJ8jKzZV7aT37sC+Rp0o3KNc+GXTR+GSVq87Xfuhx0LRST
+ NK9ZhT0+qkiN7npFLtNtbzwqaqceq3XhafmCiw8xrtzCnlB/C4SiBr/93Ip4kihXJ0EuHSLn
+ VujM7c/b4pps
+Organization: Red Hat Inc,
+Message-ID: <91355107-ed73-fce5-7051-3a746b526163@redhat.com>
+Date:   Thu, 22 Aug 2019 12:18:56 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: bayhubtech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27447d58-9493-4c07-6dd4-08d7271c1085
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 16:16:18.4102
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0a7aae2b-8f2e-44df-ba2f-42de7f93c642
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 89yLRioQ5HApRnnq/VACrt107wxESJQqiMvBpgJVT2Pp4NKYW8zybo7LTa5XPWVdh1rRu1lEEbSYRfIq112ueSWzMH6n91KQK+qmApe7laM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR16MB1871
+In-Reply-To: <20190821145950.20926.83684.stgit@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 22 Aug 2019 16:19:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-U29ycnkgYWJvdXQgdGhlIGNvbmZ1c2lvbiBhbmQgdGhleSBhcmUgdGhlIHNhbWUsIHBsZWFzZSBy
-ZXZpZXcgdGhlIDJuZCBvbmUuIE9uZSBvZiB0aGUgZW1haWwgYWRkcmVzcyBpcyB3cm9uZyB3aGVu
-IEkgc2VuZCB0aGUgMXN0IG9uZS4NCg0KVGhhbmtzIGZvciB5b3VyIGhlbHAsDQpTaGlybGV5DQoN
-Ci0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBVbGYgSGFuc3NvbiBbbWFpbHRvOnVs
-Zi5oYW5zc29uQGxpbmFyby5vcmddIA0KU2VudDogVGh1cnNkYXksIEF1Z3VzdCAyMiwgMjAxOSAx
-OjM1IEFNDQpUbzogU2hpcmxleSBIZXIgKFNDKSA8c2hpcmxleS5oZXJAYmF5aHVidGVjaC5jb20+
-DQpDYzogYWRyaWFuLmh1bnRlckBpbnRlbC5jb207IGxpbnV4LW1tY0B2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IENoZXZyb24gTGkgKFdIKSA8Y2hldnJvbi5s
-aUBiYXlodWJ0ZWNoLmNvbT47IFNoYXBlciBMaXUgKFdIKSA8c2hhcGVyLmxpdUBiYXlodWJ0ZWNo
-LmNvbT47IExvdWlzIEx1IChUUCkgPGxvdWlzLmx1QGJheWh1YnRlY2guY29tPjsgTWF4IEh1YW5n
-IChTQykgPG1heC5odWFuZ0BiYXlodWJ0ZWNoLmNvbT4NClN1YmplY3Q6IFJlOiBbUEFUQ0ggVjgg
-MS8zXSBtbWM6IHNkaGNpLXBjaS1vMm1pY3JvOiBDaGFuZ2UgTzIgSG9zdCBQTEwgYW5kIERMTCBy
-ZWdpc3RlciBuYW1lDQoNCk9uIFdlZCwgMjEgQXVnIDIwMTkgYXQgMjA6MzgsIFNoaXJsZXkgSGVy
-IChTQykgPHNoaXJsZXkuaGVyQGJheWh1YnRlY2guY29tPiB3cm90ZToNCj4NCj4gQ2hhbmdlIE8y
-IEhvc3QgUExMIGFuZCBETEwgcmVnaXN0ZXIgbmFtZQ0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBTaGly
-bGV5IEhlciA8c2hpcmxleS5oZXJAYmF5aHVidGVjaC5jb20+DQoNCkl0IHNlZW1zIGxpa2UgeW91
-IG1hbmFnZWQgdG8gcG9zdCB0aGUgdmVyc2lvbiA4LCB0d28gdGltZXMuIElzIHRoZXJlIGFueSBk
-aWZmZXJlbmNlPyBXaGljaCBvbmUgc2hvdWxkIHdlIHJldmlldz8NCg0KS2luZCByZWdhcmRzDQpV
-ZmZlDQoNCj4gLS0tDQo+IGNoYW5nZSBpbiBWODoNCj4gIDEuIGZpeCBwYXRjaCBmb3JtYXQgZXJy
-b3INCj4NCj4gY2hhbmdlIGluIFY3Og0KPiAgMS4gY2hhbmdlIHN1YmplY3QNCj4NCj4gY2hhbmdl
-IGluIFY2Og0KPiAgMS4gY2hhbmdlIHN1YmplY3QgYW5kIGNvbW1pdCBtZXNzYWdlIHRvIG1hdGNo
-IHRoZSBwYXRjaCAgMi4gY2hhbmdlIA0KPiByZWdpc3RlciBuYW1lIE8yX1BMTF9XRFRfQ09OVFJP
-TDEgdG8gTzJfUExMX0RMTF9XRFRfQ09OVFJPTDENCj4NCj4gY2hhbmdlIGluIFY1Og0KPiAgMS4g
-c3BsaXQgMiBwYXRjaGVzIGludG8gMyBwYXRjaGVzDQo+ICAyLiBtYWtlIGRsbF9hZGp1c3RfY291
-bnQgc3RhcnQgZnJvbSAwICAzLiBmaXggcmV0IG92ZXJ3cml0dGVuIGlzc3VlICANCj4gNC4gdXNl
-IGJyZWFrIGluc3RlYWQgb2YgZ290bw0KPg0KPiBjaGFuZ2UgaW4gVjQ6DQo+ICAxLiBhZGQgYSBi
-dWcgZml4IGZvciBWMw0KPg0KPiBjaGFuZ2UgaW4gVjM6DQo+ICAxLiBhZGQgbW9yZSBleHBsYW5h
-dGlvbiBpbiBkbGxfcmVjb3ZlcnkgYW5kIGV4ZWN1dGVfdHVuaW5nIGZ1bmN0aW9uICANCj4gMi4g
-bW92ZSBkbGxfYWRqdXN0X2NvdW50IHRvIE8yX2hvc3Qgc3RydWN0ICAzLiBmaXggc29tZSBjb2Rp
-bmcgc3R5bGUgDQo+IGVycm9yICA0LiByZW5hbWluZyBPMl9QTExfV0RUX0NPTlRST0wxIFRPIE8y
-X1BMTF9ETExfV0RUX0NPTlRST0wxDQo+DQo+IGNoYW5nZSBpbiBWMjoNCj4gIDEuIHVzZSB1c2xl
-ZXBfcmFuZ2UgaW5zdGVhZCBvZiB1ZGVsYXkgIDIuIG1vdmUgZGxsX2FkanVzdF9jb3VudCB0byAN
-Cj4gc2RoY2ktcGNpLW8ybWljcm8uYw0KPg0KPiBjaGFnbmUgaW4gVjE6DQo+ICAxLiBhZGQgZXJy
-b3IgcmVjb3ZlcnkgZnVuY3Rpb24gdG8gcmVsb2NrIERMTCB3aXRoIGNvcnJlY3QgcGhhc2UgIDIu
-IA0KPiByZXR1bmluZyBIUzIwMCBhZnRlciBETEwgbG9ja2VkDQo+IC0tLQ0KPiAgZHJpdmVycy9t
-bWMvaG9zdC9zZGhjaS1wY2ktbzJtaWNyby5jIHwgMTYgKysrKysrKystLS0tLS0tLQ0KPiAgMSBm
-aWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4NCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktcGNpLW8ybWljcm8uYyANCj4gYi9kcml2ZXJz
-L21tYy9ob3N0L3NkaGNpLXBjaS1vMm1pY3JvLmMNCj4gaW5kZXggOWRjNDU0OC4uYjNhMzNkOSAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1wY2ktbzJtaWNyby5jDQo+ICsr
-KyBiL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktcGNpLW8ybWljcm8uYw0KPiBAQCAtNTEsNyArNTEs
-NyBAQA0KPiAgI2RlZmluZSBPMl9TRF9WRU5ET1JfU0VUVElORzIgIDB4MUM4DQo+ICAjZGVmaW5l
-IE8yX1NEX0hXX1RVTklOR19ESVNBQkxFICAgICAgICBCSVQoNCkNCj4NCj4gLSNkZWZpbmUgTzJf
-UExMX1dEVF9DT05UUk9MMSAgICAweDFDQw0KPiArI2RlZmluZSBPMl9QTExfRExMX1dEVF9DT05U
-Uk9MMSAgICAgICAgMHgxQ0MNCj4gICNkZWZpbmUgIE8yX1BMTF9GT1JDRV9BQ1RJVkUgICBCSVQo
-MTgpDQo+ICAjZGVmaW5lICBPMl9QTExfTE9DS19TVEFUVVMgICAgQklUKDE0KQ0KPiAgI2RlZmlu
-ZSAgTzJfUExMX1NPRlRfUkVTRVQgICAgIEJJVCgxMikNCj4gQEAgLTMxNiwyMyArMzE2LDIzIEBA
-IHN0YXRpYyB2b2lkIHNkaGNpX28yX2VuYWJsZV9pbnRlcm5hbF9jbG9jayhzdHJ1Y3Qgc2RoY2lf
-aG9zdCAqaG9zdCkNCj4gICAgICAgICB1MzIgc2NyYXRjaDMyOw0KPg0KPiAgICAgICAgIC8qIFBM
-TCBzb2Z0d2FyZSByZXNldCAqLw0KPiAtICAgICAgIHNjcmF0Y2gzMiA9IHNkaGNpX3JlYWRsKGhv
-c3QsIE8yX1BMTF9XRFRfQ09OVFJPTDEpOw0KPiArICAgICAgIHNjcmF0Y2gzMiA9IHNkaGNpX3Jl
-YWRsKGhvc3QsIE8yX1BMTF9ETExfV0RUX0NPTlRST0wxKTsNCj4gICAgICAgICBzY3JhdGNoMzIg
-fD0gTzJfUExMX1NPRlRfUkVTRVQ7DQo+IC0gICAgICAgc2RoY2lfd3JpdGVsKGhvc3QsIHNjcmF0
-Y2gzMiwgTzJfUExMX1dEVF9DT05UUk9MMSk7DQo+ICsgICAgICAgc2RoY2lfd3JpdGVsKGhvc3Qs
-IHNjcmF0Y2gzMiwgTzJfUExMX0RMTF9XRFRfQ09OVFJPTDEpOw0KPiAgICAgICAgIHVkZWxheSgx
-KTsNCj4gICAgICAgICBzY3JhdGNoMzIgJj0gfihPMl9QTExfU09GVF9SRVNFVCk7DQo+IC0gICAg
-ICAgc2RoY2lfd3JpdGVsKGhvc3QsIHNjcmF0Y2gzMiwgTzJfUExMX1dEVF9DT05UUk9MMSk7DQo+
-ICsgICAgICAgc2RoY2lfd3JpdGVsKGhvc3QsIHNjcmF0Y2gzMiwgTzJfUExMX0RMTF9XRFRfQ09O
-VFJPTDEpOw0KPg0KPiAgICAgICAgIC8qIFBMTCBmb3JjZSBhY3RpdmUgKi8NCj4gICAgICAgICBz
-Y3JhdGNoMzIgfD0gTzJfUExMX0ZPUkNFX0FDVElWRTsNCj4gLSAgICAgICBzZGhjaV93cml0ZWwo
-aG9zdCwgc2NyYXRjaDMyLCBPMl9QTExfV0RUX0NPTlRST0wxKTsNCj4gKyAgICAgICBzZGhjaV93
-cml0ZWwoaG9zdCwgc2NyYXRjaDMyLCBPMl9QTExfRExMX1dEVF9DT05UUk9MMSk7DQo+DQo+ICAg
-ICAgICAgLyogV2FpdCBtYXggMjAgbXMgKi8NCj4gICAgICAgICB0aW1lb3V0ID0ga3RpbWVfYWRk
-X21zKGt0aW1lX2dldCgpLCAyMCk7DQo+ICAgICAgICAgd2hpbGUgKDEpIHsNCj4gICAgICAgICAg
-ICAgICAgIGJvb2wgdGltZWRvdXQgPSBrdGltZV9hZnRlcihrdGltZV9nZXQoKSwgdGltZW91dCk7
-DQo+DQo+IC0gICAgICAgICAgICAgICBzY3JhdGNoID0gc2RoY2lfcmVhZHcoaG9zdCwgTzJfUExM
-X1dEVF9DT05UUk9MMSk7DQo+ICsgICAgICAgICAgICAgICBzY3JhdGNoID0gc2RoY2lfcmVhZHco
-aG9zdCwgTzJfUExMX0RMTF9XRFRfQ09OVFJPTDEpOw0KPiAgICAgICAgICAgICAgICAgaWYgKHNj
-cmF0Y2ggJiBPMl9QTExfTE9DS19TVEFUVVMpDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGJy
-ZWFrOw0KPiAgICAgICAgICAgICAgICAgaWYgKHRpbWVkb3V0KSB7DQo+IEBAIC0zNTAsOSArMzUw
-LDkgQEAgc3RhdGljIHZvaWQgc2RoY2lfbzJfZW5hYmxlX2ludGVybmFsX2Nsb2NrKHN0cnVjdCAN
-Cj4gc2RoY2lfaG9zdCAqaG9zdCkNCj4NCj4gIG91dDoNCj4gICAgICAgICAvKiBDYW5jZWwgUExM
-IGZvcmNlIGFjdGl2ZSAqLw0KPiAtICAgICAgIHNjcmF0Y2gzMiA9IHNkaGNpX3JlYWRsKGhvc3Qs
-IE8yX1BMTF9XRFRfQ09OVFJPTDEpOw0KPiArICAgICAgIHNjcmF0Y2gzMiA9IHNkaGNpX3JlYWRs
-KGhvc3QsIE8yX1BMTF9ETExfV0RUX0NPTlRST0wxKTsNCj4gICAgICAgICBzY3JhdGNoMzIgJj0g
-fk8yX1BMTF9GT1JDRV9BQ1RJVkU7DQo+IC0gICAgICAgc2RoY2lfd3JpdGVsKGhvc3QsIHNjcmF0
-Y2gzMiwgTzJfUExMX1dEVF9DT05UUk9MMSk7DQo+ICsgICAgICAgc2RoY2lfd3JpdGVsKGhvc3Qs
-IHNjcmF0Y2gzMiwgTzJfUExMX0RMTF9XRFRfQ09OVFJPTDEpOw0KPiAgfQ0KPg0KPiAgc3RhdGlj
-IGludCBzZGhjaV9vMl9nZXRfY2Qoc3RydWN0IG1tY19ob3N0ICptbWMpDQo+IC0tDQo+IDIuNy40
-DQo+DQo=
+
+On 8/21/19 10:59 AM, Alexander Duyck wrote:
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>
+> In order to pave the way for free page reporting in virtualized
+> environments we will need a way to get pages out of the free lists and
+> identify those pages after they have been returned. To accomplish this,
+> this patch adds the concept of a Reported Buddy, which is essentially
+> meant to just be the Uptodate flag used in conjunction with the Buddy
+> page type.
+>
+> It adds a set of pointers we shall call "boundary" which represents the
+> upper boundary between the unreported and reported pages. The general idea
+> is that in order for a page to cross from one side of the boundary to the
+> other it will need to go through the reporting process. Ultimately a
+> free_list has been fully processed when the boundary has been moved from
+> the tail all they way up to occupying the first entry in the list.
+>
+> Doing this we should be able to make certain that we keep the reported
+> pages as one contiguous block in each free list. This will allow us to
+> efficiently manipulate the free lists whenever we need to go in and start
+> sending reports to the hypervisor that there are new pages that have been
+> freed and are no longer in use.
+>
+> An added advantage to this approach is that we should be reducing the
+> overall memory footprint of the guest as it will be more likely to recycle
+> warm pages versus trying to allocate the reported pages that were likely
+> evicted from the guest memory.
+>
+> Since we will only be reporting one zone at a time we keep the boundary
+> limited to being defined for just the zone we are currently reporting pages
+> from. Doing this we can keep the number of additional pointers needed quite
+> small. To flag that the boundaries are in place we use a single bit
+> in the zone to indicate that reporting and the boundaries are active.
+>
+> The determination of when to start reporting is based on the tracking of
+> the number of free pages in a given area versus the number of reported
+> pages in that area. We keep track of the number of reported pages per
+> free_area in a separate zone specific area. We do this to avoid modifying
+> the free_area structure as this can lead to false sharing for the highest
+> order with the zone lock which leads to a noticeable performance
+> degradation.
+[...]
+> +
+> +/* request page reporting on this zone */
+> +void __page_reporting_request(struct zone *zone)
+> +{
+> +	struct page_reporting_dev_info *phdev;
+> +
+> +	rcu_read_lock();
+> +
+> +	/*
+> +	 * We use RCU to protect the ph_dev_info pointer. In almost all
+> +	 * cases this should be present, however in the unlikely case of
+> +	 * a shutdown this will be NULL and we should exit.
+> +	 */
+> +	phdev = rcu_dereference(ph_dev_info);
+> +	if (unlikely(!phdev))
+> +		return;
+> +
+
+Just a minor comment here.
+Although this is unlikely to trigger still I think you should release the
+rcu_read_lock before returning.
+
+> +	/*
+> +	 * We can use separate test and set operations here as there
+> +	 * is nothing else that can set or clear this bit while we are
+> +	 * holding the zone lock. The advantage to doing it this way is
+> +	 * that we don't have to dirty the cacheline unless we are
+> +	 * changing the value.
+> +	 */
+> +	__set_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags);
+> +
+> +	/*
+> +	 * Delay the start of work to allow a sizable queue to
+> +	 * build. For now we are limiting this to running no more
+> +	 * than 10 times per second.
+> +	 */
+> +	if (!atomic_fetch_inc(&phdev->refcnt))
+> +		schedule_delayed_work(&phdev->work, HZ / 10);
+> +
+> +	rcu_read_unlock();
+> +}
+> +
+[...]
+> +	}
+> +
+> +	/* enable page reporting notification */
+> +	static_branch_enable(&page_reporting_notify_enabled);
+> +err_out:
+> +	mutex_unlock(&page_reporting_mutex);
+> +
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(page_reporting_startup);
+>
+>
+> ---------------------------------------------------------------------
+> To unsubscribe, e-mail: virtio-dev-unsubscribe@lists.oasis-open.org
+> For additional commands, e-mail: virtio-dev-help@lists.oasis-open.org
+>
+-- 
+Thanks
+Nitesh
+
