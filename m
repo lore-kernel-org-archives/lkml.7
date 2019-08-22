@@ -2,486 +2,164 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BFBC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5067C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B41222CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FDE322CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SRFi5P2N"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bOTTPu1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbfHVFCn (ORCPT
+        id S1731264AbfHVFFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 01:02:43 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33496 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbfHVFCm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 01:02:42 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n190so2787673pgn.0;
-        Wed, 21 Aug 2019 22:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=G2YwCsG49ayjEsfaaTfZWksO9ojMqS2MFaqkKcrZSO4=;
-        b=SRFi5P2NOcEPpmh3gv0H7a6qYusKyqO+o+e/y8U0ZVKyy/ymbT2J1QXRscnuYNeVSP
-         wfSiHaJsIgnPx04q9XcHHDuQlJZsDuwiyiQVFKMtjQmWz+2qo5IIMQ6fqcWADVSTR+mH
-         Q2e8qoGQAhDcOpco7fTUvoEteO1jhipWYq4ar3Vye+Ld+GOdgedkDEAMEGNL7wN81t4Q
-         Y4AbBg7vCHRZtvOhuEe2nCzvOlYbihj9pWQ7aYffxT2r3mQx/4mYDsXFkbDXaKWF9Q+u
-         mPBo6zBV/UJngPPBUA3ZuSOJj3DlokDR/b3bf/oxvQNoJPe9onKjZC7uqNkuztKO65Ga
-         RnzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=G2YwCsG49ayjEsfaaTfZWksO9ojMqS2MFaqkKcrZSO4=;
-        b=JpiTvH8E8RK2mX+h1aEqKFxcmX7Hb52C2ErU5adSUVT1AtQ0MXffOpg1Py+9ZKgeOq
-         1Px0LVbuN58OpZE7rzbUWUPApVVNfxaMjxq/5wssoob/lRHshh7TDtvaRFAmuNaAraGL
-         eYBUvNAAu5Z3US2XM/AUixFUpJAOuKKUyKyVxScoHQ3jl4Nod/TmNhx028CouKl8HNWx
-         usjMo55NV1nn70zkz2Q2yglgAsU9JkNSQwFlc1y1m6wR9mLWrSMr9YyTB+OVEHsthPeW
-         NJljcu4+iJhw23tD0W3B6/KbixmafA+g3zJLAmCiLVHMK3vn0rWCpCV3xqDAtjuu9nmX
-         YHsg==
-X-Gm-Message-State: APjAAAWt25XyRGPWRHS5IjZQbZcQRPh2uQkY1N5zwxLmb/Xcv9tggWMT
-        RXAN12FbVH5Lu9/ibCf4TOo=
-X-Google-Smtp-Source: APXvYqylwS76fFFNKVMNqsFFQIUDfM9JN8RuhINp6htDvT03HL1BOrss1q7POwvQWI3qLcmpnXF93A==
-X-Received: by 2002:a63:6106:: with SMTP id v6mr31564529pgb.36.1566450160714;
-        Wed, 21 Aug 2019 22:02:40 -0700 (PDT)
-Received: from wafer.ozlabs.ibm.com ([122.99.82.10])
-        by smtp.googlemail.com with ESMTPSA id j11sm1921312pjb.11.2019.08.21.22.02.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Aug 2019 22:02:39 -0700 (PDT)
-Message-ID: <eda9210b56ab220519642d272079eeca60a18265.camel@gmail.com>
-Subject: Re: [PATCH v2 1/4] powerpc/powernv: Add OPAL API interface to
- access secure variable
-From:   Oliver O'Halloran <oohall@gmail.com>
-To:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>
-Date:   Thu, 22 Aug 2019 15:02:32 +1000
-In-Reply-To: <1566400103-18201-2-git-send-email-nayna@linux.ibm.com>
-References: <1566400103-18201-1-git-send-email-nayna@linux.ibm.com>
-         <1566400103-18201-2-git-send-email-nayna@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Thu, 22 Aug 2019 01:05:17 -0400
+Received: from mail-eopbgr690126.outbound.protection.outlook.com ([40.107.69.126]:17030
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731213AbfHVFFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 01:05:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U6ExtydRpZj2tyEN57/jbhF6tlGu4rNOtd9CLMRFuiH16oi3t+X25SbGSyyQZtP3JPIXoo4ake+wur5a2/KBq2RUwJIx0DiX8LEaud/wRHJc5T3m5J+1RD07V4/54VmuqyX3XMYOqWcqTrEOInY9lLgEvh+D9Eqt/yGpoMRd2W2oP9dApaNaw20JK+48qYkxwPePS2rq/qeaWEAuMrY9yGeLgYk3S4HFt+6lp4tbi9EWbY7FY34raoLe6tKFJgUYcaa2gDC4X2W41mo/30/Q/d+R1D8l3p2IrZWuhwyzhjQvGD7Z6QuJhef3TnTckDM3MBHuNqalAUvLYc1GZail8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KVCTIn/vIAL8X0AnqhNTUetCFjIrt8CHNu1YYIjhKRI=;
+ b=B885Jcsu9LgpjQLW0d9UjaYPnP52Zm6N35iJ4rNx5DOMIk292a+n0G97ydCaszDmGPEWjzqz/3/ZfEQAhBujosXwN76bCUzDDuBByp+JE47O3MgpKDrrtVPwqno+mac25iY7VTQ/GX6O/+JoS1MnJd3UNTYyzEMjr6u/WFuS2lIuxUyI2oJ6ilGDPe0d1i3O61uKnqCKyj9tDuW9Qp0c7DltQvjva30ev4RuwdUrPop348mWIJZ1F3RGKMtTdA0qdbXelZzkH5EPhgEzuHnT0CmkIvHBDpj4KqSlIuk5RI8iFVqY4I2qRT/8Xqxk9ixszv8Rduz2PUFLNspoVEnObA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KVCTIn/vIAL8X0AnqhNTUetCFjIrt8CHNu1YYIjhKRI=;
+ b=bOTTPu1GI10sfwpIVSgZyHg/ZeXHrN95tQdWon6q4NMS9/qDOuIkxVE3M0v0la/HBanoKoTnK84E3mvp3hKx+y++6yKiQaDePjBcp0/nd58WXH2lCn8l2eufd08mDeDDM8W5zZm4+QLxAjMEuaLyFEI79HU9LGsoed67Zp9pppk=
+Received: from MN2PR21MB1248.namprd21.prod.outlook.com (20.179.20.225) by
+ MN2PR21MB1247.namprd21.prod.outlook.com (20.179.20.224) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.7; Thu, 22 Aug 2019 05:05:10 +0000
+Received: from MN2PR21MB1248.namprd21.prod.outlook.com
+ ([fe80::147a:ea1f:326d:832e]) by MN2PR21MB1248.namprd21.prod.outlook.com
+ ([fe80::147a:ea1f:326d:832e%3]) with mapi id 15.20.2199.011; Thu, 22 Aug 2019
+ 05:05:10 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     "sashal@kernel.org" <sashal@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "saeedm@mellanox.com" <saeedm@mellanox.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "eranbe@mellanox.com" <eranbe@mellanox.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next,v4, 0/6] Add software backchannel and mlx5e HV VHCA
+ stats
+Thread-Topic: [PATCH net-next,v4, 0/6] Add software backchannel and mlx5e HV
+ VHCA stats
+Thread-Index: AQHVWKcsgqAQEbW8Yk2+H637twGJJA==
+Date:   Thu, 22 Aug 2019 05:05:10 +0000
+Message-ID: <1566450236-36757-1-git-send-email-haiyangz@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR14CA0039.namprd14.prod.outlook.com
+ (2603:10b6:300:12b::25) To MN2PR21MB1248.namprd21.prod.outlook.com
+ (2603:10b6:208:3b::33)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=lkmlhyz@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 2
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eebbeca8-2afb-4ac5-79c5-08d726be4e97
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600158)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR21MB1247;
+x-ms-traffictypediagnostic: MN2PR21MB1247:|MN2PR21MB1247:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR21MB12474F0051FF36F61DA3BCCBACA50@MN2PR21MB1247.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 01371B902F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(376002)(346002)(396003)(39860400002)(136003)(189003)(199004)(2501003)(66556008)(54906003)(7416002)(6506007)(53936002)(6512007)(2906002)(4326008)(10290500003)(22452003)(316002)(6436002)(110136005)(66066001)(6486002)(25786009)(386003)(10090500001)(7846003)(6392003)(2616005)(4720700003)(14454004)(52116002)(476003)(26005)(305945005)(102836004)(7736002)(14444005)(186003)(478600001)(486006)(2201001)(71200400001)(71190400001)(99286004)(36756003)(81166006)(81156014)(6116002)(3846002)(66446008)(50226002)(8936002)(66476007)(8676002)(64756008)(66946007)(5660300002)(256004)(42413003)(921003)(32563001)(142933001)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR21MB1247;H:MN2PR21MB1248.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: diwGDaA3iswgRt0yHuT/wQMxobfqobwagq+czpaTyI+l4KRWFUWZFTPBWceBiEY/kxK3j3LNSaN0lJmA2fyhs5XOtz1Pg9dUbYVKJXhnjkNurcT6z0jYqb51R8W14fs9NdjR+qK2Rbw7kgOdeVJJKz6e6vwZvvh1ZEpbM1P/TeS328lFnt+Ambtd3TmYogV8fghgjzPqy027VAyhWoArKXfml7H5mLutqqLu2jo1ynp9ZekUk2GQe5LMeAYtwOZ06VPeMS2QYBSSKdegyV/YzwDcyLpJEAluCy+LpNgro9G9P+hA10fFJgSbHtLWta0jeDQlizKK7bh61jSxV9BcCtASv5MDtPnIV7kjU2IkjYHskU5v57dskFrlb+YS23NgQkRrZej/17xR/KWuAELKDQf/0ewYCI0+LGmtlU4OHWs=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eebbeca8-2afb-4ac5-79c5-08d726be4e97
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 05:05:10.6272
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iQYNmiIharqE+Flj95Dhq7A/zObRduURA67TNQ+yBbA4o98lXdNhud2vvHil1q/e3UByXHHY6Qld6DPPPmGxrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR21MB1247
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-21 at 11:08 -0400, Nayna Jain wrote:
-> The X.509 certificates trusted by the platform and required to secure boot
-> the OS kernel are wrapped in secure variables, which are controlled by
-> OPAL.
-> 
-> This patch adds firmware/kernel interface to read and write OPAL secure
-> variables based on the unique key.
-> 
-> This support can be enabled using CONFIG_OPAL_SECVAR.
-> 
-> Signed-off-by: Claudio Carvalho <cclaudio@linux.ibm.com>
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/opal-api.h          |   5 +-
->  arch/powerpc/include/asm/opal.h              |   6 ++
->  arch/powerpc/include/asm/secvar.h            |  55 ++++++++++
->  arch/powerpc/kernel/Makefile                 |   2 +-
->  arch/powerpc/kernel/secvar-ops.c             |  25 +++++
->  arch/powerpc/platforms/powernv/Kconfig       |   6 ++
->  arch/powerpc/platforms/powernv/Makefile      |   1 +
->  arch/powerpc/platforms/powernv/opal-call.c   |   3 +
->  arch/powerpc/platforms/powernv/opal-secvar.c | 102 +++++++++++++++++++
->  arch/powerpc/platforms/powernv/opal.c        |   5 +
->  10 files changed, 208 insertions(+), 2 deletions(-)
->  create mode 100644 arch/powerpc/include/asm/secvar.h
->  create mode 100644 arch/powerpc/kernel/secvar-ops.c
->  create mode 100644 arch/powerpc/platforms/powernv/opal-secvar.c
-> 
-> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-> index 383242eb0dea..b238b4f26c5b 100644
-> --- a/arch/powerpc/include/asm/opal-api.h
-> +++ b/arch/powerpc/include/asm/opal-api.h
-> @@ -208,7 +208,10 @@
->  #define OPAL_HANDLE_HMI2			166
->  #define	OPAL_NX_COPROC_INIT			167
->  #define OPAL_XIVE_GET_VP_STATE			170
-> -#define OPAL_LAST				170
-> +#define OPAL_SECVAR_GET                         173
-> +#define OPAL_SECVAR_GET_NEXT                    174
-> +#define OPAL_SECVAR_ENQUEUE_UPDATE              175
-> +#define OPAL_LAST                               175
->  
->  #define QUIESCE_HOLD			1 /* Spin all calls at entry */
->  #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-> index 57bd029c715e..247adec2375f 100644
-> --- a/arch/powerpc/include/asm/opal.h
-> +++ b/arch/powerpc/include/asm/opal.h
-> @@ -388,6 +388,12 @@ void opal_powercap_init(void);
->  void opal_psr_init(void);
->  void opal_sensor_groups_init(void);
+This patch set adds paravirtual backchannel in software in pci_hyperv,
+which is required by the mlx5e driver HV VHCA stats agent.
 
-Put these with the rest of the OPAL API wrapper prototypes
-(i.e. just after opal_nx_coproc_init()) rather than with the
-internal functions.
- 
-> > +extern int opal_secvar_get(uint64_t k_key, uint64_t k_key_len,
-> +			   uint64_t k_data, uint64_t k_data_size);
-> +extern int opal_secvar_get_next(uint64_t k_key, uint64_t k_key_len,
-> +				uint64_t k_key_size);
-> +extern int opal_secvar_enqueue_update(uint64_t k_key, uint64_t k_key_len,
-> +				      uint64_t k_data, uint64_t k_data_size);
+The stats agent is responsible on running a periodic rx/tx packets/bytes
+stats update.
 
-Everything in asm/opal.h is intended for consumption by the kernel, so
-use a useful kernel type (or annotation) rather than blank uint64_t for
-the parameters that are actually pointers. You should also ditch the k_
-prefix since it doesn't make much sense having it inside the kernel.
+Dexuan Cui (1):
+  PCI: hv: Add a paravirtual backchannel in software
 
-As a general comment, don't use extern on function prototypes. They're
-extern by default and, more importantly, it's contrary to the normal
-kernel style.
+Eran Ben Elisha (4):
+  net/mlx5: Add wrappers for HyperV PCIe operations
+  net/mlx5: Add HV VHCA infrastructure
+  net/mlx5: Add HV VHCA control agent
+  net/mlx5e: Add mlx5e HV VHCA stats agent
 
->  #endif /* __ASSEMBLY__ */
->  
->  #endif /* _ASM_POWERPC_OPAL_H */
-> diff --git a/arch/powerpc/include/asm/secvar.h b/arch/powerpc/include/asm/secvar.h
-> new file mode 100644
-> index 000000000000..645654456265
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/secvar.h
-> @@ -0,0 +1,55 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * PowerPC secure variable operations.
-> + *
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Nayna Jain <nayna@linux.ibm.com>
-> + *
-> + */
-> +#ifndef SECVAR_OPS_H
-> +#define SECVAR_OPS_H
-> +
-> +#include<linux/types.h>
-> +#include<linux/errno.h>
-missing space
+Haiyang Zhang (1):
+  PCI: hv: Add a Hyper-V PCI interface driver for software backchannel
+    interface
 
-> +
-> +struct secvar_operations {
-> +	int (*get_variable)(const char *key, unsigned long key_len, u8 *data,
-> +			    unsigned long *data_size);
-> +	int (*get_next_variable)(const char *key, unsigned long *key_len,
-> +				 unsigned long keysize);
-> +	int (*set_variable)(const char *key, unsigned long key_len, u8 *data,
-> +			    unsigned long data_size);
-> +};
+ MAINTAINERS                                        |   1 +
+ drivers/net/ethernet/mellanox/mlx5/core/Makefile   |   2 +
+ drivers/net/ethernet/mellanox/mlx5/core/en.h       |  13 +
+ .../ethernet/mellanox/mlx5/core/en/hv_vhca_stats.c | 162 +++++++++
+ .../ethernet/mellanox/mlx5/core/en/hv_vhca_stats.h |  25 ++
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |   3 +
+ drivers/net/ethernet/mellanox/mlx5/core/lib/hv.c   |  64 ++++
+ drivers/net/ethernet/mellanox/mlx5/core/lib/hv.h   |  22 ++
+ .../net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c  | 371 +++++++++++++++++=
+++++
+ .../net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h  | 104 ++++++
+ drivers/net/ethernet/mellanox/mlx5/core/main.c     |   7 +
+ drivers/pci/Kconfig                                |   1 +
+ drivers/pci/controller/Kconfig                     |   7 +
+ drivers/pci/controller/Makefile                    |   1 +
+ drivers/pci/controller/pci-hyperv-intf.c           |  67 ++++
+ drivers/pci/controller/pci-hyperv.c                | 308 +++++++++++++++++
+ include/linux/hyperv.h                             |  29 ++
+ include/linux/mlx5/driver.h                        |   2 +
+ 18 files changed, 1189 insertions(+)
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stat=
+s.c
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/hv_vhca_stat=
+s.h
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv.c
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv.h
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.c
+ create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv_vhca.h
+ create mode 100644 drivers/pci/controller/pci-hyperv-intf.c
 
-
-Calling them requires writing code like:
-
-	secvar_ops->get_variable(blah);
-
-Why not shorten it to:
-	secvar_ops->get(blah);
-
-
-> +#ifdef CONFIG_PPC_SECURE_BOOT
-> +
-> +extern void set_secvar_ops(struct secvar_operations *ops);
-> +extern struct secvar_operations *get_secvar_ops(void);
-> +
-> +#else
-> +
-> +static inline void set_secvar_ops(struct secvar_operations *ops)
-> +{
-> +}
-> +
-> +static inline struct secvar_operations *get_secvar_ops(void)
-> +{
-> +	return NULL;
-> +}
-> +
-> +#endif
-> +#ifdef CONFIG_OPAL_SECVAR
-> +
-> +extern int secvar_init(void);
-> +
-> +#else
-> +
-> +static inline int secvar_init(void)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +#endif
-
-The init function is always going to be platform specific so having an
-opal-specific secvar_init() in a generic header doesn't make much sense
-to me.
-
-> +
-> +#endif
-> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-> index 520b1c814197..9041563f1c74 100644
-> --- a/arch/powerpc/kernel/Makefile
-> +++ b/arch/powerpc/kernel/Makefile
-> @@ -157,7 +157,7 @@ endif
->  obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
->  obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
->  
-> -obj-$(CONFIG_PPC_SECURE_BOOT)	+= secboot.o ima_arch.o
-> +obj-$(CONFIG_PPC_SECURE_BOOT)	+= secboot.o ima_arch.o secvar-ops.o
->  
->  # Disable GCOV, KCOV & sanitizers in odd or sensitive code
->  GCOV_PROFILE_prom_init.o := n
-> diff --git a/arch/powerpc/kernel/secvar-ops.c b/arch/powerpc/kernel/secvar-ops.c
-> new file mode 100644
-> index 000000000000..198222499848
-> --- /dev/null
-> +++ b/arch/powerpc/kernel/secvar-ops.c
-> @@ -0,0 +1,25 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Nayna Jain <nayna@linux.ibm.com>
-> + *
-> + * secvar-ops.c
-> + *      - initialize secvar operations for PowerPC Secureboot
-> + */
-> +
-
-> +#include<stddef.h>
-> +#include<asm/secvar.h>
-missing space
-
-> +
-> +static struct secvar_operations *secvars_ops;
-should be const
-
-> +
-> +void set_secvar_ops(struct secvar_operations *ops)
-> +{
-> +	if (!ops)
-> +		secvars_ops = NULL;
-> +	secvars_ops = ops;
-> +}
-> +
-> +struct secvar_operations *get_secvar_ops(void)
-> +{
-> +	return secvars_ops;
-> +}
-
-Is this really any better than just making the ops pointer global?
-
-> diff --git a/arch/powerpc/platforms/powernv/Kconfig b/arch/powerpc/platforms/powernv/Kconfig
-> index 850eee860cf2..65b060539b5c 100644
-> --- a/arch/powerpc/platforms/powernv/Kconfig
-> +++ b/arch/powerpc/platforms/powernv/Kconfig
-> @@ -47,3 +47,9 @@ config PPC_VAS
->  	  VAS adapters are found in POWER9 based systems.
->  
->  	  If unsure, say N.
-> +
-> +config OPAL_SECVAR
-> +	bool "OPAL Secure Variables"
-> +	depends on PPC_POWERNV
-> +	help
-> +	  This enables the kernel to access OPAL secure variables.
-> diff --git a/arch/powerpc/platforms/powernv/Makefile b/arch/powerpc/platforms/powernv/Makefile
-> index da2e99efbd04..6651c742e530 100644
-> --- a/arch/powerpc/platforms/powernv/Makefile
-> +++ b/arch/powerpc/platforms/powernv/Makefile
-> @@ -16,3 +16,4 @@ obj-$(CONFIG_PERF_EVENTS) += opal-imc.o
->  obj-$(CONFIG_PPC_MEMTRACE)	+= memtrace.o
->  obj-$(CONFIG_PPC_VAS)	+= vas.o vas-window.o vas-debug.o
->  obj-$(CONFIG_OCXL_BASE)	+= ocxl.o
-> +obj-$(CONFIG_OPAL_SECVAR) += opal-secvar.o
-> diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-> index 29ca523c1c79..93106e867924 100644
-> --- a/arch/powerpc/platforms/powernv/opal-call.c
-> +++ b/arch/powerpc/platforms/powernv/opal-call.c
-> @@ -287,3 +287,6 @@ OPAL_CALL(opal_pci_set_pbcq_tunnel_bar,		OPAL_PCI_SET_PBCQ_TUNNEL_BAR);
->  OPAL_CALL(opal_sensor_read_u64,			OPAL_SENSOR_READ_U64);
->  OPAL_CALL(opal_sensor_group_enable,		OPAL_SENSOR_GROUP_ENABLE);
->  OPAL_CALL(opal_nx_coproc_init,			OPAL_NX_COPROC_INIT);
-> +OPAL_CALL(opal_secvar_get,                     OPAL_SECVAR_GET);
-> +OPAL_CALL(opal_secvar_get_next,                 OPAL_SECVAR_GET_NEXT);
-> +OPAL_CALL(opal_secvar_enqueue_update,           OPAL_SECVAR_ENQUEUE_UPDATE);
-> diff --git a/arch/powerpc/platforms/powernv/opal-secvar.c b/arch/powerpc/platforms/powernv/opal-secvar.c
-> new file mode 100644
-> index 000000000000..b0f97cea7675
-> --- /dev/null
-> +++ b/arch/powerpc/platforms/powernv/opal-secvar.c
-> @@ -0,0 +1,102 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PowerNV code for secure variables
-> + *
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Claudio Carvalho <cclaudio@linux.ibm.com>
-> + *
-> + * APIs to access secure variables managed by OPAL.
-> + *
-> + */
-> +
-> +#define pr_fmt(fmt) "secvar: "fmt
-> +
-> +#include <linux/types.h>
-> +#include <asm/opal.h>
-> +#include <asm/secvar.h>
-> +
-> +static bool is_opal_secvar_supported(void)
-> +{
-> +	static bool opal_secvar_supported;
-> +	static bool initialized;
-> +
-> +	if (initialized)
-> +		return opal_secvar_supported;
-> +
-> +	if (!opal_check_token(OPAL_SECVAR_GET)
-> +			|| !opal_check_token(OPAL_SECVAR_GET_NEXT)
-> +			|| !opal_check_token(OPAL_SECVAR_ENQUEUE_UPDATE)) {
-
-> +		pr_err("OPAL doesn't support secure variables\n");
-
-This should only print an error if OPAL has advertised support for
-secure variables through the DT, but doesn't support the OPAL
-calls. Otherwise we'll get a spurious error message on any system
-running currently released firmware.
-
-> +		opal_secvar_supported = false;
-> +	} else {
-> +		opal_secvar_supported = true;
-> +	}
-> +
-> +	initialized = true;
-> +
-> +	return opal_secvar_supported;
-> +}
-> +
-> +static int opal_get_variable(const char *key, unsigned long ksize,
-> +			     u8 *data, unsigned long *dsize)
-> +{
-> +	int rc;
-> +
-> +	if (!is_opal_secvar_supported())
-> +		return OPAL_UNSUPPORTED;
-
-This should be -ENXIO or -ENOSUPP. OPAL_UNSUPPORTED is an OPAL return
-code, not a kernel one. That said, if the firmware doesn't support
-secure variables we should never be calling this function anyway since
-the ops pointer is never set.
-
-> +
-> +	if (dsize)
-> +		*dsize = cpu_to_be64(*dsize);
-> +
-> +	rc = opal_secvar_get(__pa(key), ksize,
-> +			__pa(data), __pa(dsize));
-> +
-> +	if (dsize)
-> +		*dsize = be64_to_cpu(*dsize);
-> +
-> +	return rc;
-> +}
-> +
-> +static int opal_get_next_variable(const char *key, unsigned long *keylen,
-> +				  unsigned long keysize)
-> +{
-> +	int rc;
-> +
-> +	if (!is_opal_secvar_supported())
-> +		return OPAL_UNSUPPORTED;
-> +
-> +	if (keylen)
-> +		*keylen = cpu_to_be64(*keylen);
-> +
-> +	rc = opal_secvar_get_next(__pa(key), __pa(keylen), keysize);
-> +
-> +	if (keylen)
-> +		*keylen = be64_to_cpu(*keylen);
-> +
-> +	return rc;
-> +}
-> +
-> +static int opal_set_variable(const char *key, unsigned long ksize, u8 *data,
-> +			     unsigned long dsize)
-> +{
-> +	int rc;
-> +
-> +	if (!is_opal_secvar_supported())
-> +		return OPAL_UNSUPPORTED;
-> +
-> +	rc = opal_secvar_enqueue_update(__pa(key), ksize, __pa(data), dsize);
-> +
-> +	return rc;
-> +}
-> +
-
-> +static struct secvar_operations secvar_ops = {
-> +	.get_variable = opal_get_variable,
-> +	.get_next_variable = opal_get_next_variable,
-> +	.set_variable = opal_set_variable,
-> +};
-
-should be const
-
-> +int secvar_init(void)
-> +{
-> +	set_secvar_ops(&secvar_ops);
-> +	return 0;
-> +}
-
-Rename this to opal_secvar_init() and put the prototype in
-arch/powerpc/platforms/powernv/powernv.h
-
-> diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
-> index aba443be7daa..ffe6f1cf0830 100644
-> --- a/arch/powerpc/platforms/powernv/opal.c
-> +++ b/arch/powerpc/platforms/powernv/opal.c
-> @@ -32,6 +32,8 @@
->  #include <asm/mce.h>
->  #include <asm/imc-pmu.h>
->  #include <asm/bug.h>
-> +#include <asm/secvar.h>
-> +#include <asm/secboot.h>
->  
->  #include "powernv.h"
->  
-> @@ -988,6 +990,9 @@ static int __init opal_init(void)
->  	/* Initialise OPAL Power control interface */
->  	opal_power_control_init();
->  
-> +	if (is_powerpc_secvar_supported())
-> +		secvar_init();
-> +
-
-The usual pattern here is to have the init function check for support
-internally.
-
-Also, is_powerpc_secvar_supported() doesn't appear to be defined
-anywhere. Is that supposed to be is_opal_secvar_supported()? Or is this
-series supposed to be applied on top of another series?
-
->  	return 0;
->  }
->  machine_subsys_initcall(powernv, opal_init);
+--=20
+1.8.3.1
 
