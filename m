@@ -2,51 +2,52 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB39C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF3CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 931C3233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C21233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493787;
-	bh=EfyA2qFNkpeNh1Z+aPLWgh7ySTdRly8BB4OcTMGyg54=;
+	s=default; t=1566493790;
+	bh=cOf2rfe+VaUpMf0L+tSUMtZaVfkMnbr8iBkimBfYzD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zi2xNBCg31siYdg4db3kxJgF89doUQzgPaoLLKvzulEDEItOar1yx2KYHW7Ztd8aw
-	 nRGyN6ngfpJHh+NfJ6+ggofM3pXuK3Q5kHdh+moefCg71YE8mtiIWzpNAU1IcIPvp3
-	 HY2BjIgHWDgSmDEix2EaTtFy1fdZuSnYmLpfXUmo=
+	b=AanPK+4Rv4XZZE+HFdUbwLLq7nHvncN796WhEH7+Cx6wPHGGWaa5N29oUN86OK3pL
+	 6UGTPxhc/WoOZw3NJm8y9F3ztAzds/D+Q8x+9WXwTzPj4Iv1WhtcC1i0DjdbjyE69r
+	 WukdvRzKCUzTVcTGJaEittcMEa+4L4T/ec8DWsK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390820AbfHVRJp (ORCPT
+        id S2390825AbfHVRJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390751AbfHVRJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:24 -0400
+        id S2390767AbfHVRJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:25 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 899EF23404;
-        Thu, 22 Aug 2019 17:09:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C81FB2341E;
+        Thu, 22 Aug 2019 17:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493762;
-        bh=EfyA2qFNkpeNh1Z+aPLWgh7ySTdRly8BB4OcTMGyg54=;
+        s=default; t=1566493765;
+        bh=cOf2rfe+VaUpMf0L+tSUMtZaVfkMnbr8iBkimBfYzD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vpskTVaEwPgDRQw3CtV6d5doMGw81cYC4ENoTEHb+DCs6PU391oWwMnTIocEJP7Cr
-         mwnRmuYWJqUsbFbmHzHXuYPUYdEye0OInQrxq8GmH63qWyFfUkfuAnAGtju5MZHrIa
-         MlXaJfSbAVcn38JMf3FIwb3ee1APDkubv76VqpZo=
+        b=1P8Hu9rYQ9BrOMuu6n5k1NJnNNdiVCNkNMI7KRHkK3FhUNcfT9TqDslHWnpaiu33n
+         Di3DRnDRvm1AMDVMrNYxY5N+yhS8sH+Ig0j0pGklMtOT5ISG9PD9KHLZwHtodAvlKf
+         JXE6NHsaKQqqMzMWztJs8ydPOb0uLGgvFr0tfAXM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 127/135] netdevsim: Restore per-network namespace accounting for fib entries
-Date:   Thu, 22 Aug 2019 13:08:03 -0400
-Message-Id: <20190822170811.13303-128-sashal@kernel.org>
+Subject: [PATCH 5.2 131/135] net/mlx5e: Use flow keys dissector to parse packets for ARFS
+Date:   Thu, 22 Aug 2019 13:08:07 -0400
+Message-Id: <20190822170811.13303-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,451 +66,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit 59c84b9fcf42c99a945d5fdc49220d854e539690 ]
+[ Upstream commit 405b93eb764367a670e729da18e54dc42db32620 ]
 
-Prior to the commit in the fixes tag, the resource controller in netdevsim
-tracked fib entries and rules per network namespace. Restore that behavior.
+The current ARFS code relies on certain fields to be set in the SKB
+(e.g. transport_header) and extracts IP addresses and ports by custom
+code that parses the packet. The necessary SKB fields, however, are not
+always set at that point, which leads to an out-of-bounds access. Use
+skb_flow_dissect_flow_keys() to get the necessary information reliably,
+fix the out-of-bounds access and reuse the code.
 
-Fixes: 5fc494225c1e ("netdevsim: create devlink instance per netdevsim instance")
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 18c908e477dc ("net/mlx5e: Add accelerated RFS support")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/netdevsim/dev.c       |  63 ++++++++----------
- drivers/net/netdevsim/fib.c       | 102 ++++++++++++++++++------------
- drivers/net/netdevsim/netdev.c    |   9 ++-
- drivers/net/netdevsim/netdevsim.h |  10 ++-
- 4 files changed, 98 insertions(+), 86 deletions(-)
+ .../net/ethernet/mellanox/mlx5/core/en_arfs.c | 97 +++++++------------
+ 1 file changed, 34 insertions(+), 63 deletions(-)
 
-diff --git a/drivers/net/netdevsim/dev.c b/drivers/net/netdevsim/dev.c
-index b509b941d5cab..6825254eb8822 100644
---- a/drivers/net/netdevsim/dev.c
-+++ b/drivers/net/netdevsim/dev.c
-@@ -71,46 +71,47 @@ static void nsim_dev_port_debugfs_exit(struct nsim_dev_port *nsim_dev_port)
- 	debugfs_remove_recursive(nsim_dev_port->ddir);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
+index 8657e0f26995b..2c75b2752f58d 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
+@@ -437,12 +437,6 @@ arfs_hash_bucket(struct arfs_table *arfs_t, __be16 src_port,
+ 	return &arfs_t->rules_hash[bucket_idx];
  }
  
-+static struct net *nsim_devlink_net(struct devlink *devlink)
-+{
-+	return &init_net;
-+}
-+
- static u64 nsim_dev_ipv4_fib_resource_occ_get(void *priv)
- {
--	struct nsim_dev *nsim_dev = priv;
-+	struct net *net = priv;
- 
--	return nsim_fib_get_val(nsim_dev->fib_data,
--				NSIM_RESOURCE_IPV4_FIB, false);
-+	return nsim_fib_get_val(net, NSIM_RESOURCE_IPV4_FIB, false);
- }
- 
- static u64 nsim_dev_ipv4_fib_rules_res_occ_get(void *priv)
- {
--	struct nsim_dev *nsim_dev = priv;
-+	struct net *net = priv;
- 
--	return nsim_fib_get_val(nsim_dev->fib_data,
--				NSIM_RESOURCE_IPV4_FIB_RULES, false);
-+	return nsim_fib_get_val(net, NSIM_RESOURCE_IPV4_FIB_RULES, false);
- }
- 
- static u64 nsim_dev_ipv6_fib_resource_occ_get(void *priv)
- {
--	struct nsim_dev *nsim_dev = priv;
-+	struct net *net = priv;
- 
--	return nsim_fib_get_val(nsim_dev->fib_data,
--				NSIM_RESOURCE_IPV6_FIB, false);
-+	return nsim_fib_get_val(net, NSIM_RESOURCE_IPV6_FIB, false);
- }
- 
- static u64 nsim_dev_ipv6_fib_rules_res_occ_get(void *priv)
- {
--	struct nsim_dev *nsim_dev = priv;
-+	struct net *net = priv;
- 
--	return nsim_fib_get_val(nsim_dev->fib_data,
--				NSIM_RESOURCE_IPV6_FIB_RULES, false);
-+	return nsim_fib_get_val(net, NSIM_RESOURCE_IPV6_FIB_RULES, false);
- }
- 
- static int nsim_dev_resources_register(struct devlink *devlink)
- {
--	struct nsim_dev *nsim_dev = devlink_priv(devlink);
- 	struct devlink_resource_size_params params = {
- 		.size_max = (u64)-1,
- 		.size_granularity = 1,
- 		.unit = DEVLINK_RESOURCE_UNIT_ENTRY
- 	};
-+	struct net *net = nsim_devlink_net(devlink);
- 	int err;
- 	u64 n;
- 
-@@ -124,8 +125,7 @@ static int nsim_dev_resources_register(struct devlink *devlink)
- 		goto out;
- 	}
- 
--	n = nsim_fib_get_val(nsim_dev->fib_data,
--			     NSIM_RESOURCE_IPV4_FIB, true);
-+	n = nsim_fib_get_val(net, NSIM_RESOURCE_IPV4_FIB, true);
- 	err = devlink_resource_register(devlink, "fib", n,
- 					NSIM_RESOURCE_IPV4_FIB,
- 					NSIM_RESOURCE_IPV4, &params);
-@@ -134,8 +134,7 @@ static int nsim_dev_resources_register(struct devlink *devlink)
- 		return err;
- 	}
- 
--	n = nsim_fib_get_val(nsim_dev->fib_data,
--			     NSIM_RESOURCE_IPV4_FIB_RULES, true);
-+	n = nsim_fib_get_val(net, NSIM_RESOURCE_IPV4_FIB_RULES, true);
- 	err = devlink_resource_register(devlink, "fib-rules", n,
- 					NSIM_RESOURCE_IPV4_FIB_RULES,
- 					NSIM_RESOURCE_IPV4, &params);
-@@ -154,8 +153,7 @@ static int nsim_dev_resources_register(struct devlink *devlink)
- 		goto out;
- 	}
- 
--	n = nsim_fib_get_val(nsim_dev->fib_data,
--			     NSIM_RESOURCE_IPV6_FIB, true);
-+	n = nsim_fib_get_val(net, NSIM_RESOURCE_IPV6_FIB, true);
- 	err = devlink_resource_register(devlink, "fib", n,
- 					NSIM_RESOURCE_IPV6_FIB,
- 					NSIM_RESOURCE_IPV6, &params);
-@@ -164,8 +162,7 @@ static int nsim_dev_resources_register(struct devlink *devlink)
- 		return err;
- 	}
- 
--	n = nsim_fib_get_val(nsim_dev->fib_data,
--			     NSIM_RESOURCE_IPV6_FIB_RULES, true);
-+	n = nsim_fib_get_val(net, NSIM_RESOURCE_IPV6_FIB_RULES, true);
- 	err = devlink_resource_register(devlink, "fib-rules", n,
- 					NSIM_RESOURCE_IPV6_FIB_RULES,
- 					NSIM_RESOURCE_IPV6, &params);
-@@ -177,19 +174,19 @@ static int nsim_dev_resources_register(struct devlink *devlink)
- 	devlink_resource_occ_get_register(devlink,
- 					  NSIM_RESOURCE_IPV4_FIB,
- 					  nsim_dev_ipv4_fib_resource_occ_get,
--					  nsim_dev);
-+					  net);
- 	devlink_resource_occ_get_register(devlink,
- 					  NSIM_RESOURCE_IPV4_FIB_RULES,
- 					  nsim_dev_ipv4_fib_rules_res_occ_get,
--					  nsim_dev);
-+					  net);
- 	devlink_resource_occ_get_register(devlink,
- 					  NSIM_RESOURCE_IPV6_FIB,
- 					  nsim_dev_ipv6_fib_resource_occ_get,
--					  nsim_dev);
-+					  net);
- 	devlink_resource_occ_get_register(devlink,
- 					  NSIM_RESOURCE_IPV6_FIB_RULES,
- 					  nsim_dev_ipv6_fib_rules_res_occ_get,
--					  nsim_dev);
-+					  net);
- out:
- 	return err;
- }
-@@ -197,11 +194,11 @@ static int nsim_dev_resources_register(struct devlink *devlink)
- static int nsim_dev_reload(struct devlink *devlink,
- 			   struct netlink_ext_ack *extack)
- {
--	struct nsim_dev *nsim_dev = devlink_priv(devlink);
- 	enum nsim_resource_id res_ids[] = {
- 		NSIM_RESOURCE_IPV4_FIB, NSIM_RESOURCE_IPV4_FIB_RULES,
- 		NSIM_RESOURCE_IPV6_FIB, NSIM_RESOURCE_IPV6_FIB_RULES
- 	};
-+	struct net *net = nsim_devlink_net(devlink);
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(res_ids); ++i) {
-@@ -210,8 +207,7 @@ static int nsim_dev_reload(struct devlink *devlink,
- 
- 		err = devlink_resource_size_get(devlink, res_ids[i], &val);
- 		if (!err) {
--			err = nsim_fib_set_max(nsim_dev->fib_data,
--					       res_ids[i], val, extack);
-+			err = nsim_fib_set_max(net, res_ids[i], val, extack);
- 			if (err)
- 				return err;
- 		}
-@@ -241,15 +237,9 @@ nsim_dev_create(struct nsim_bus_dev *nsim_bus_dev, unsigned int port_count)
- 	INIT_LIST_HEAD(&nsim_dev->port_list);
- 	mutex_init(&nsim_dev->port_list_lock);
- 
--	nsim_dev->fib_data = nsim_fib_create();
--	if (IS_ERR(nsim_dev->fib_data)) {
--		err = PTR_ERR(nsim_dev->fib_data);
--		goto err_devlink_free;
--	}
--
- 	err = nsim_dev_resources_register(devlink);
- 	if (err)
--		goto err_fib_destroy;
-+		goto err_devlink_free;
- 
- 	err = devlink_register(devlink, &nsim_bus_dev->dev);
- 	if (err)
-@@ -271,8 +261,6 @@ nsim_dev_create(struct nsim_bus_dev *nsim_bus_dev, unsigned int port_count)
- 	devlink_unregister(devlink);
- err_resources_unregister:
- 	devlink_resources_unregister(devlink, NULL);
--err_fib_destroy:
--	nsim_fib_destroy(nsim_dev->fib_data);
- err_devlink_free:
- 	devlink_free(devlink);
- 	return ERR_PTR(err);
-@@ -286,7 +274,6 @@ static void nsim_dev_destroy(struct nsim_dev *nsim_dev)
- 	nsim_dev_debugfs_exit(nsim_dev);
- 	devlink_unregister(devlink);
- 	devlink_resources_unregister(devlink, NULL);
--	nsim_fib_destroy(nsim_dev->fib_data);
- 	mutex_destroy(&nsim_dev->port_list_lock);
- 	devlink_free(devlink);
- }
-diff --git a/drivers/net/netdevsim/fib.c b/drivers/net/netdevsim/fib.c
-index 8c57ba7477726..f61d094746c06 100644
---- a/drivers/net/netdevsim/fib.c
-+++ b/drivers/net/netdevsim/fib.c
-@@ -18,6 +18,7 @@
- #include <net/ip_fib.h>
- #include <net/ip6_fib.h>
- #include <net/fib_rules.h>
-+#include <net/netns/generic.h>
- 
- #include "netdevsim.h"
- 
-@@ -32,14 +33,15 @@ struct nsim_per_fib_data {
- };
- 
- struct nsim_fib_data {
--	struct notifier_block fib_nb;
- 	struct nsim_per_fib_data ipv4;
- 	struct nsim_per_fib_data ipv6;
- };
- 
--u64 nsim_fib_get_val(struct nsim_fib_data *fib_data,
--		     enum nsim_resource_id res_id, bool max)
-+static unsigned int nsim_fib_net_id;
-+
-+u64 nsim_fib_get_val(struct net *net, enum nsim_resource_id res_id, bool max)
- {
-+	struct nsim_fib_data *fib_data = net_generic(net, nsim_fib_net_id);
- 	struct nsim_fib_entry *entry;
- 
- 	switch (res_id) {
-@@ -62,10 +64,10 @@ u64 nsim_fib_get_val(struct nsim_fib_data *fib_data,
- 	return max ? entry->max : entry->num;
- }
- 
--int nsim_fib_set_max(struct nsim_fib_data *fib_data,
--		     enum nsim_resource_id res_id, u64 val,
-+int nsim_fib_set_max(struct net *net, enum nsim_resource_id res_id, u64 val,
- 		     struct netlink_ext_ack *extack)
- {
-+	struct nsim_fib_data *fib_data = net_generic(net, nsim_fib_net_id);
- 	struct nsim_fib_entry *entry;
- 	int err = 0;
- 
-@@ -118,9 +120,9 @@ static int nsim_fib_rule_account(struct nsim_fib_entry *entry, bool add,
- 	return err;
- }
- 
--static int nsim_fib_rule_event(struct nsim_fib_data *data,
--			       struct fib_notifier_info *info, bool add)
-+static int nsim_fib_rule_event(struct fib_notifier_info *info, bool add)
- {
-+	struct nsim_fib_data *data = net_generic(info->net, nsim_fib_net_id);
- 	struct netlink_ext_ack *extack = info->extack;
- 	int err = 0;
- 
-@@ -155,9 +157,9 @@ static int nsim_fib_account(struct nsim_fib_entry *entry, bool add,
- 	return err;
- }
- 
--static int nsim_fib_event(struct nsim_fib_data *data,
--			  struct fib_notifier_info *info, bool add)
-+static int nsim_fib_event(struct fib_notifier_info *info, bool add)
- {
-+	struct nsim_fib_data *data = net_generic(info->net, nsim_fib_net_id);
- 	struct netlink_ext_ack *extack = info->extack;
- 	int err = 0;
- 
-@@ -176,22 +178,18 @@ static int nsim_fib_event(struct nsim_fib_data *data,
- static int nsim_fib_event_nb(struct notifier_block *nb, unsigned long event,
- 			     void *ptr)
- {
--	struct nsim_fib_data *data = container_of(nb, struct nsim_fib_data,
--						  fib_nb);
- 	struct fib_notifier_info *info = ptr;
- 	int err = 0;
- 
- 	switch (event) {
- 	case FIB_EVENT_RULE_ADD: /* fall through */
- 	case FIB_EVENT_RULE_DEL:
--		err = nsim_fib_rule_event(data, info,
--					  event == FIB_EVENT_RULE_ADD);
-+		err = nsim_fib_rule_event(info, event == FIB_EVENT_RULE_ADD);
- 		break;
- 
- 	case FIB_EVENT_ENTRY_ADD:  /* fall through */
- 	case FIB_EVENT_ENTRY_DEL:
--		err = nsim_fib_event(data, info,
--				     event == FIB_EVENT_ENTRY_ADD);
-+		err = nsim_fib_event(info, event == FIB_EVENT_ENTRY_ADD);
- 		break;
- 	}
- 
-@@ -201,23 +199,30 @@ static int nsim_fib_event_nb(struct notifier_block *nb, unsigned long event,
- /* inconsistent dump, trying again */
- static void nsim_fib_dump_inconsistent(struct notifier_block *nb)
- {
--	struct nsim_fib_data *data = container_of(nb, struct nsim_fib_data,
--						  fib_nb);
-+	struct nsim_fib_data *data;
-+	struct net *net;
-+
-+	rcu_read_lock();
-+	for_each_net_rcu(net) {
-+		data = net_generic(net, nsim_fib_net_id);
-+
-+		data->ipv4.fib.num = 0ULL;
-+		data->ipv4.rules.num = 0ULL;
- 
--	data->ipv4.fib.num = 0ULL;
--	data->ipv4.rules.num = 0ULL;
--	data->ipv6.fib.num = 0ULL;
--	data->ipv6.rules.num = 0ULL;
-+		data->ipv6.fib.num = 0ULL;
-+		data->ipv6.rules.num = 0ULL;
-+	}
-+	rcu_read_unlock();
- }
- 
--struct nsim_fib_data *nsim_fib_create(void)
+-static u8 arfs_get_ip_proto(const struct sk_buff *skb)
 -{
--	struct nsim_fib_data *data;
--	int err;
-+static struct notifier_block nsim_fib_nb = {
-+	.notifier_call = nsim_fib_event_nb,
-+};
- 
--	data = kzalloc(sizeof(*data), GFP_KERNEL);
--	if (!data)
--		return ERR_PTR(-ENOMEM);
-+/* Initialize per network namespace state */
-+static int __net_init nsim_fib_netns_init(struct net *net)
-+{
-+	struct nsim_fib_data *data = net_generic(net, nsim_fib_net_id);
- 
- 	data->ipv4.fib.max = (u64)-1;
- 	data->ipv4.rules.max = (u64)-1;
-@@ -225,22 +230,37 @@ struct nsim_fib_data *nsim_fib_create(void)
- 	data->ipv6.fib.max = (u64)-1;
- 	data->ipv6.rules.max = (u64)-1;
- 
--	data->fib_nb.notifier_call = nsim_fib_event_nb;
--	err = register_fib_notifier(&data->fib_nb, nsim_fib_dump_inconsistent);
--	if (err) {
--		pr_err("Failed to register fib notifier\n");
--		goto err_out;
--	}
-+	return 0;
-+}
- 
--	return data;
-+static struct pernet_operations nsim_fib_net_ops = {
-+	.init = nsim_fib_netns_init,
-+	.id   = &nsim_fib_net_id,
-+	.size = sizeof(struct nsim_fib_data),
-+};
- 
--err_out:
--	kfree(data);
--	return ERR_PTR(err);
-+void nsim_fib_exit(void)
-+{
-+	unregister_pernet_subsys(&nsim_fib_net_ops);
-+	unregister_fib_notifier(&nsim_fib_nb);
- }
- 
--void nsim_fib_destroy(struct nsim_fib_data *data)
-+int nsim_fib_init(void)
+-	return (skb->protocol == htons(ETH_P_IP)) ?
+-		ip_hdr(skb)->protocol : ipv6_hdr(skb)->nexthdr;
+-}
+-
+ static struct arfs_table *arfs_get_table(struct mlx5e_arfs_tables *arfs,
+ 					 u8 ip_proto, __be16 etype)
  {
--	unregister_fib_notifier(&data->fib_nb);
--	kfree(data);
-+	int err;
-+
-+	err = register_pernet_subsys(&nsim_fib_net_ops);
-+	if (err < 0) {
-+		pr_err("Failed to register pernet subsystem\n");
-+		goto err_out;
-+	}
-+
-+	err = register_fib_notifier(&nsim_fib_nb, nsim_fib_dump_inconsistent);
-+	if (err < 0) {
-+		pr_err("Failed to register fib notifier\n");
-+		goto err_out;
-+	}
-+
-+err_out:
-+	return err;
+@@ -602,31 +596,9 @@ static void arfs_handle_work(struct work_struct *work)
+ 	arfs_may_expire_flow(priv);
  }
-diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-index e5c8aa08e1cd4..533a182eefcaf 100644
---- a/drivers/net/netdevsim/netdev.c
-+++ b/drivers/net/netdevsim/netdev.c
-@@ -370,12 +370,18 @@ static int __init nsim_module_init(void)
- 	if (err)
- 		goto err_dev_exit;
  
--	err = rtnl_link_register(&nsim_link_ops);
-+	err = nsim_fib_init();
- 	if (err)
- 		goto err_bus_exit;
- 
-+	err = rtnl_link_register(&nsim_link_ops);
-+	if (err)
-+		goto err_fib_exit;
-+
- 	return 0;
- 
-+err_fib_exit:
-+	nsim_fib_exit();
- err_bus_exit:
- 	nsim_bus_exit();
- err_dev_exit:
-@@ -386,6 +392,7 @@ static int __init nsim_module_init(void)
- static void __exit nsim_module_exit(void)
+-/* return L4 destination port from ip4/6 packets */
+-static __be16 arfs_get_dst_port(const struct sk_buff *skb)
+-{
+-	char *transport_header;
+-
+-	transport_header = skb_transport_header(skb);
+-	if (arfs_get_ip_proto(skb) == IPPROTO_TCP)
+-		return ((struct tcphdr *)transport_header)->dest;
+-	return ((struct udphdr *)transport_header)->dest;
+-}
+-
+-/* return L4 source port from ip4/6 packets */
+-static __be16 arfs_get_src_port(const struct sk_buff *skb)
+-{
+-	char *transport_header;
+-
+-	transport_header = skb_transport_header(skb);
+-	if (arfs_get_ip_proto(skb) == IPPROTO_TCP)
+-		return ((struct tcphdr *)transport_header)->source;
+-	return ((struct udphdr *)transport_header)->source;
+-}
+-
+ static struct arfs_rule *arfs_alloc_rule(struct mlx5e_priv *priv,
+ 					 struct arfs_table *arfs_t,
+-					 const struct sk_buff *skb,
++					 const struct flow_keys *fk,
+ 					 u16 rxq, u32 flow_id)
  {
- 	rtnl_link_unregister(&nsim_link_ops);
-+	nsim_fib_exit();
- 	nsim_bus_exit();
- 	nsim_dev_exit();
+ 	struct arfs_rule *rule;
+@@ -641,19 +613,19 @@ static struct arfs_rule *arfs_alloc_rule(struct mlx5e_priv *priv,
+ 	INIT_WORK(&rule->arfs_work, arfs_handle_work);
+ 
+ 	tuple = &rule->tuple;
+-	tuple->etype = skb->protocol;
++	tuple->etype = fk->basic.n_proto;
++	tuple->ip_proto = fk->basic.ip_proto;
+ 	if (tuple->etype == htons(ETH_P_IP)) {
+-		tuple->src_ipv4 = ip_hdr(skb)->saddr;
+-		tuple->dst_ipv4 = ip_hdr(skb)->daddr;
++		tuple->src_ipv4 = fk->addrs.v4addrs.src;
++		tuple->dst_ipv4 = fk->addrs.v4addrs.dst;
+ 	} else {
+-		memcpy(&tuple->src_ipv6, &ipv6_hdr(skb)->saddr,
++		memcpy(&tuple->src_ipv6, &fk->addrs.v6addrs.src,
+ 		       sizeof(struct in6_addr));
+-		memcpy(&tuple->dst_ipv6, &ipv6_hdr(skb)->daddr,
++		memcpy(&tuple->dst_ipv6, &fk->addrs.v6addrs.dst,
+ 		       sizeof(struct in6_addr));
+ 	}
+-	tuple->ip_proto = arfs_get_ip_proto(skb);
+-	tuple->src_port = arfs_get_src_port(skb);
+-	tuple->dst_port = arfs_get_dst_port(skb);
++	tuple->src_port = fk->ports.src;
++	tuple->dst_port = fk->ports.dst;
+ 
+ 	rule->flow_id = flow_id;
+ 	rule->filter_id = priv->fs.arfs.last_filter_id++ % RPS_NO_FILTER;
+@@ -664,37 +636,33 @@ static struct arfs_rule *arfs_alloc_rule(struct mlx5e_priv *priv,
+ 	return rule;
  }
-diff --git a/drivers/net/netdevsim/netdevsim.h b/drivers/net/netdevsim/netdevsim.h
-index 3f398797c2bc7..f9253fe68c31f 100644
---- a/drivers/net/netdevsim/netdevsim.h
-+++ b/drivers/net/netdevsim/netdevsim.h
-@@ -168,12 +168,10 @@ int nsim_dev_port_add(struct nsim_bus_dev *nsim_bus_dev,
- int nsim_dev_port_del(struct nsim_bus_dev *nsim_bus_dev,
- 		      unsigned int port_index);
  
--struct nsim_fib_data *nsim_fib_create(void);
--void nsim_fib_destroy(struct nsim_fib_data *fib_data);
--u64 nsim_fib_get_val(struct nsim_fib_data *fib_data,
--		     enum nsim_resource_id res_id, bool max);
--int nsim_fib_set_max(struct nsim_fib_data *fib_data,
--		     enum nsim_resource_id res_id, u64 val,
-+int nsim_fib_init(void);
-+void nsim_fib_exit(void);
-+u64 nsim_fib_get_val(struct net *net, enum nsim_resource_id res_id, bool max);
-+int nsim_fib_set_max(struct net *net, enum nsim_resource_id res_id, u64 val,
- 		     struct netlink_ext_ack *extack);
+-static bool arfs_cmp_ips(struct arfs_tuple *tuple,
+-			 const struct sk_buff *skb)
++static bool arfs_cmp(const struct arfs_tuple *tuple, const struct flow_keys *fk)
+ {
+-	if (tuple->etype == htons(ETH_P_IP) &&
+-	    tuple->src_ipv4 == ip_hdr(skb)->saddr &&
+-	    tuple->dst_ipv4 == ip_hdr(skb)->daddr)
+-		return true;
+-	if (tuple->etype == htons(ETH_P_IPV6) &&
+-	    (!memcmp(&tuple->src_ipv6, &ipv6_hdr(skb)->saddr,
+-		     sizeof(struct in6_addr))) &&
+-	    (!memcmp(&tuple->dst_ipv6, &ipv6_hdr(skb)->daddr,
+-		     sizeof(struct in6_addr))))
+-		return true;
++	if (tuple->src_port != fk->ports.src || tuple->dst_port != fk->ports.dst)
++		return false;
++	if (tuple->etype != fk->basic.n_proto)
++		return false;
++	if (tuple->etype == htons(ETH_P_IP))
++		return tuple->src_ipv4 == fk->addrs.v4addrs.src &&
++		       tuple->dst_ipv4 == fk->addrs.v4addrs.dst;
++	if (tuple->etype == htons(ETH_P_IPV6))
++		return !memcmp(&tuple->src_ipv6, &fk->addrs.v6addrs.src,
++			       sizeof(struct in6_addr)) &&
++		       !memcmp(&tuple->dst_ipv6, &fk->addrs.v6addrs.dst,
++			       sizeof(struct in6_addr));
+ 	return false;
+ }
  
- #if IS_ENABLED(CONFIG_XFRM_OFFLOAD)
+ static struct arfs_rule *arfs_find_rule(struct arfs_table *arfs_t,
+-					const struct sk_buff *skb)
++					const struct flow_keys *fk)
+ {
+ 	struct arfs_rule *arfs_rule;
+ 	struct hlist_head *head;
+-	__be16 src_port = arfs_get_src_port(skb);
+-	__be16 dst_port = arfs_get_dst_port(skb);
+ 
+-	head = arfs_hash_bucket(arfs_t, src_port, dst_port);
++	head = arfs_hash_bucket(arfs_t, fk->ports.src, fk->ports.dst);
+ 	hlist_for_each_entry(arfs_rule, head, hlist) {
+-		if (arfs_rule->tuple.src_port == src_port &&
+-		    arfs_rule->tuple.dst_port == dst_port &&
+-		    arfs_cmp_ips(&arfs_rule->tuple, skb)) {
++		if (arfs_cmp(&arfs_rule->tuple, fk))
+ 			return arfs_rule;
+-		}
+ 	}
+ 
+ 	return NULL;
+@@ -707,20 +675,24 @@ int mlx5e_rx_flow_steer(struct net_device *dev, const struct sk_buff *skb,
+ 	struct mlx5e_arfs_tables *arfs = &priv->fs.arfs;
+ 	struct arfs_table *arfs_t;
+ 	struct arfs_rule *arfs_rule;
++	struct flow_keys fk;
++
++	if (!skb_flow_dissect_flow_keys(skb, &fk, 0))
++		return -EPROTONOSUPPORT;
+ 
+-	if (skb->protocol != htons(ETH_P_IP) &&
+-	    skb->protocol != htons(ETH_P_IPV6))
++	if (fk.basic.n_proto != htons(ETH_P_IP) &&
++	    fk.basic.n_proto != htons(ETH_P_IPV6))
+ 		return -EPROTONOSUPPORT;
+ 
+ 	if (skb->encapsulation)
+ 		return -EPROTONOSUPPORT;
+ 
+-	arfs_t = arfs_get_table(arfs, arfs_get_ip_proto(skb), skb->protocol);
++	arfs_t = arfs_get_table(arfs, fk.basic.ip_proto, fk.basic.n_proto);
+ 	if (!arfs_t)
+ 		return -EPROTONOSUPPORT;
+ 
+ 	spin_lock_bh(&arfs->arfs_lock);
+-	arfs_rule = arfs_find_rule(arfs_t, skb);
++	arfs_rule = arfs_find_rule(arfs_t, &fk);
+ 	if (arfs_rule) {
+ 		if (arfs_rule->rxq == rxq_index) {
+ 			spin_unlock_bh(&arfs->arfs_lock);
+@@ -728,8 +700,7 @@ int mlx5e_rx_flow_steer(struct net_device *dev, const struct sk_buff *skb,
+ 		}
+ 		arfs_rule->rxq = rxq_index;
+ 	} else {
+-		arfs_rule = arfs_alloc_rule(priv, arfs_t, skb,
+-					    rxq_index, flow_id);
++		arfs_rule = arfs_alloc_rule(priv, arfs_t, &fk, rxq_index, flow_id);
+ 		if (!arfs_rule) {
+ 			spin_unlock_bh(&arfs->arfs_lock);
+ 			return -ENOMEM;
 -- 
 2.20.1
 
