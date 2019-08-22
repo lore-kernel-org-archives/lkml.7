@@ -2,131 +2,112 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC29EC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92778C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A27823401
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:10:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566508231;
-	bh=8lmA4y+c41NSfIWmIwk3izt7RyEIzi1EgDtTezS9EJU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Tp0PUsBqyBeyR/PKJu3o9uY9klayln2sXM2fCbBlaPiw9Jm40Tu2YkGCMBOmu5Zk5
-	 IgeDjFlEQknzv9yJNrVwlbZ6Zr61ZsvqDzec2nDELHCiGSwIl7mP6J2R7py/FAuhZP
-	 Doxx4TTJBpMKEOzuL7Rz2fwoOrQmnGRW51Be3kic=
+	by mail.kernel.org (Postfix) with ESMTP id 41F00233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732931AbfHVVKa (ORCPT
+        id S2387696AbfHVVKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:10:30 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41139 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730991AbfHVVKa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:10:30 -0400
-Received: by mail-oi1-f195.google.com with SMTP id g7so5463557oia.8;
-        Thu, 22 Aug 2019 14:10:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=722k5ddNheSppDzrG90q8EFQ8uGNK424zDmyHBRv/xk=;
-        b=sQ2/Kgp64yj3UAzuBYxwngzdEsHH68xa0fs511sEE7FtajN+DcF1jQOnBWTeCAwwop
-         pGu30/wuYeVTLFG5Fy/hP3qmpKk/s/cL28i5K2pxyFhNOCHMFSUhv6v4JomnSyG87xE1
-         J0VY5ivLVW5m5dIn5Tyy5HSF85sLplKjOokZM0KygO5aR+qV1eEX4SAyLVXR/4cPVfBk
-         d/Sftdg/wypUFxiCcFUAot2RcoAhuGC96MxT1COkz0WT7F52AUEZUKcQA79xPHXI2Dn9
-         CVijj2x673H//O8eNn0wuPu0IuWBmWiS0XNmePGTHnl2rZLPozQANXUREqck2Eio086G
-         eE2Q==
-X-Gm-Message-State: APjAAAVxoKcx6P0vbNKiGYizjfPYfTh3eRMFJMchzbeQvR+Hhi1S5FUE
-        /FujHt6ThG5kcPV9GYrhUerSjSeUuXjmO/+kmoA=
-X-Google-Smtp-Source: APXvYqzipBbFAy30yqllDRxVg2wDXWGv50k8XyQth34p3InV0dg8l5sHIhCCRt/28NsM9VDdy0aBudPzL12G7mXE8DE=
-X-Received: by 2002:aca:4dd8:: with SMTP id a207mr756501oib.115.1566508228550;
- Thu, 22 Aug 2019 14:10:28 -0700 (PDT)
+        Thu, 22 Aug 2019 17:10:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:52502 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730991AbfHVVKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 17:10:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D63B337;
+        Thu, 22 Aug 2019 14:10:47 -0700 (PDT)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3B9583F706;
+        Thu, 22 Aug 2019 14:10:46 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: Add missing unthrottle_cfs_rq()
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     bsegall@google.com
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, liangyan.peng@linux.alibaba.com,
+        shanpeic@linux.alibaba.com, xlpang@linux.alibaba.com,
+        pjt@google.com, stable@vger.kernel.org
+References: <0004fb54-cdee-2197-1cbf-6e2111d39ed9@arm.com>
+ <20190820105420.7547-1-valentin.schneider@arm.com>
+ <xm26lfvlhw93.fsf@bsegall-linux.svl.corp.google.com>
+ <20382abf-4741-7792-d830-34603409361e@arm.com>
+Message-ID: <0df3e0e2-b5cc-d689-7776-c7a31ad244dc@arm.com>
+Date:   Thu, 22 Aug 2019 22:10:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190822200551.129039-1-helgaas@kernel.org> <20190822200551.129039-4-helgaas@kernel.org>
-In-Reply-To: <20190822200551.129039-4-helgaas@kernel.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 22 Aug 2019 23:10:17 +0200
-Message-ID: <CAJZ5v0joSqE5hwHGEPoVG0xDb_wnhS8EjnYZe+EuukBgDpzwQg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] PCI / PM: Return error when changing power state from D3cold
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linux PCI <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20382abf-4741-7792-d830-34603409361e@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 10:06 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> From: Bjorn Helgaas <bhelgaas@google.com>
->
-> pci_raw_set_power_state() uses the Power Management capability to change a
-> device's power state.  The capability is in config space, which is
-> accessible in D0, D1, D2, and D3hot, but not in D3cold.
->
-> If we call pci_raw_set_power_state() on a device that's in D3cold, config
-> reads fail and return ~0 data, which we erroneously interpreted as "the
-> device is in D3hot", leading to messages like this:
->
->   pcieport 0000:03:00.0: Refused to change power state, currently in D3
->
-> The PCI_PM_CTRL has several RsvdP fields, so ~0 is never a valid register
-> value.  Notice if we get that data, print a more informative message, and
-> return an error.
->
-> Changing the power state of a device from D3cold must be done by a platform
-> power management method or some other non-config space mechanism.
->
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On 22/08/2019 21:40, Valentin Schneider wrote:
+> On 22/08/2019 19:48, bsegall@google.com wrote:
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Re we shouldn't get account_cfs_rq_runtime() called on throttled cfs_rq's,
+with this:
+---
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 171eef3f08f9..1acb88024cad 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4385,6 +4385,11 @@ static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq)
+ 	return rq_clock_task(rq_of(cfs_rq)) - cfs_rq->throttled_clock_task_time;
+ }
+ 
++static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
++{
++	return cfs_bandwidth_used() && cfs_rq->throttled;
++}
++
+ /* returns 0 on failure to allocate runtime */
+ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ {
+@@ -4411,6 +4416,8 @@ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ 
+ 	cfs_rq->runtime_remaining += amount;
+ 
++	WARN_ON(cfs_rq_throttled(cfs_rq) && cfs_rq->runtime_remaining > 0);
++
+ 	return cfs_rq->runtime_remaining > 0;
+ }
+ 
+@@ -4436,12 +4443,9 @@ void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
+ 	if (!cfs_bandwidth_used() || !cfs_rq->runtime_enabled)
+ 		return;
+ 
+-	__account_cfs_rq_runtime(cfs_rq, delta_exec);
+-}
++	WARN_ON(cfs_rq_throttled(cfs_rq));
+ 
+-static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
+-{
+-	return cfs_bandwidth_used() && cfs_rq->throttled;
++	__account_cfs_rq_runtime(cfs_rq, delta_exec);
+ }
+ 
+ /* check whether cfs_rq, or any parent, is throttled */
+---
 
-> ---
->  drivers/pci/pci.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 5f0a3145c3f2..41112af189a8 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -853,6 +853,12 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
->                 return -EIO;
->
->         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> +       if (pmcsr == (u16) PCI_ERROR_RESPONSE) {
-> +               pci_err(dev, "can't access config space to change power state from %s to %s\n",
-> +                       pci_power_name(dev->current_state),
-> +                       pci_power_name(state));
-> +               return -EIO;
-> +       }
->
->         /*
->          * If we're (effectively) in D3, force entire word to 0.
-> @@ -893,8 +899,9 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
->         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->         dev->current_state = (pmcsr & PCI_PM_CTRL_STATE_MASK);
->         if (dev->current_state != state && printk_ratelimit())
-> -               pci_info(dev, "refused to change power state (currently %s)\n",
-> -                        pci_power_name(dev->current_state));
-> +               pci_info(dev, "refused to change power state from %s to %s\n",
-> +                        pci_power_name(dev->current_state),
-> +                        pci_power_name(state));
->
->         /*
->          * According to section 5.4.1 of the "PCI BUS POWER MANAGEMENT
-> --
-> 2.23.0.187.g17f5b7556c-goog
->
+I get this:
+
+[  204.798643] Call Trace:
+[  204.798645]  put_prev_entity+0x8d/0x100
+[  204.798647]  put_prev_task_fair+0x22/0x40
+[  204.798648]  pick_next_task_idle+0x36/0x50
+[  204.798650]  __schedule+0x61d/0x6c0
+[  204.798651]  schedule+0x2d/0x90
+[  204.798653]  exit_to_usermode_loop+0x61/0x100
+[  204.798654]  prepare_exit_to_usermode+0x91/0xa0
+[  204.798656]  retint_user+0x8/0x8
+
+(this is a hit on the account_cfs_rq_runtime() WARN_ON)
