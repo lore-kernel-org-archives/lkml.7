@@ -2,212 +2,102 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01096C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A191C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCF9720856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6879120870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495499;
-	bh=1RdMJqxneLcxedqNQefzh8Rya2X6L0fY5oAISMkgdPY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=clYyMSUgF8TGikyPQeMqvkKyLQ2ZQLzMYXqbtFbxDPYTmWVq98T9ffZMdeUWSRk7L
-	 ++PiSMzPzmgSS/lenvcjfN71LLZTbxjYROoOnMZSNehMPALNHj9cOMcmc3LW61cAtU
-	 Qo3OTuD3JL5TCtJhwBcB1NMz3yUbxiHtWf4JmlnE=
+	s=default; t=1566495505;
+	bh=ndrEd7/0nAPg5IGK3CZvJhfhdbCZ9U2faBcBoDVLAbo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LP4iOs0MnAYBkcTx2L6IfOG8ZKVZFErzH7DQ1ghPgqhOsTW4uS8fJGANREBABMWVk
+	 4gtlSudEk7ZsR5msR9zUfAf/4Y0k+BknX9EIxalCM5OsWPrTSP4aWhCJduVvFjUn3n
+	 QIRhTyYWfxFRWfLTyAu3qqJhU9n3MxH4BZTCXxb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404950AbfHVRiS (ORCPT
+        id S2404196AbfHVRY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:38:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34614 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:24:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392985AbfHVRiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:38:16 -0400
+        id S2404035AbfHVRYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:03 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA63620856;
-        Thu, 22 Aug 2019 17:38:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D4CB23400;
+        Thu, 22 Aug 2019 17:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566495495;
-        bh=1RdMJqxneLcxedqNQefzh8Rya2X6L0fY5oAISMkgdPY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UK+kYTQMVztH4W3mAUZjJ6Kjzmyf8+T37Y+rX1b6xgR3OljbmcU8sKi4O3CD9FBwb
-         7w4wDl9KlCf6EiTsNr5cw9Zf1hYzs/UViPb/SyU9kkoyD1laLE1JKekqQem8eam1+T
-         kUkpFprQo01LKQHU9Klek5erL00Q980eaPftiDHY=
-Date:   Thu, 22 Aug 2019 20:38:13 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     "sashal@kernel.org" <sashal@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "eranbe@mellanox.com" <eranbe@mellanox.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next,v4, 3/6] net/mlx5: Add wrappers for HyperV PCIe
- operations
-Message-ID: <20190822173813.GM29433@mtr-leonro.mtl.com>
-References: <1566450236-36757-1-git-send-email-haiyangz@microsoft.com>
- <1566450236-36757-4-git-send-email-haiyangz@microsoft.com>
+        s=default; t=1566494642;
+        bh=ndrEd7/0nAPg5IGK3CZvJhfhdbCZ9U2faBcBoDVLAbo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jrskGparkg6X351NS5+zstPwgLjUo4XzTv1erOWVV+5UrTjNt0on7gLNxpBtTWgrc
+         StsbYV4/rbkiRaQ+YSM76YqEo+7HyTkp/ckjekutVIYq8Eox8+8phQEFr2nlvih6dx
+         0dPgtoNCr5geYedwbFliJUE+pt6ee218QwJ2/yIM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Qian Cai <cai@lca.pw>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 076/103] arm64/efi: fix variable si set but not used
+Date:   Thu, 22 Aug 2019 10:19:04 -0700
+Message-Id: <20190822171732.020029545@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
+References: <20190822171728.445189830@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566450236-36757-4-git-send-email-haiyangz@microsoft.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 05:05:47AM +0000, Haiyang Zhang wrote:
-> From: Eran Ben Elisha <eranbe@mellanox.com>
->
-> Add wrapper functions for HyperV PCIe read / write /
-> block_invalidate_register operations.  This will be used as an
-> infrastructure in the downstream patch for software communication.
->
-> This will be enabled by default if CONFIG_PCI_HYPERV_INTERFACE is set.
->
-> Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-> Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/Makefile |  1 +
->  drivers/net/ethernet/mellanox/mlx5/core/lib/hv.c | 64 ++++++++++++++++++++++++
->  drivers/net/ethernet/mellanox/mlx5/core/lib/hv.h | 22 ++++++++
->  3 files changed, 87 insertions(+)
->  create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv.c
->  create mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/hv.h
->
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/Makefile b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-> index bcf3655..fd32a5b 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/Makefile
-> @@ -45,6 +45,7 @@ mlx5_core-$(CONFIG_MLX5_ESWITCH)   += eswitch.o eswitch_offloads.o eswitch_offlo
->  mlx5_core-$(CONFIG_MLX5_MPFS)      += lib/mpfs.o
->  mlx5_core-$(CONFIG_VXLAN)          += lib/vxlan.o
->  mlx5_core-$(CONFIG_PTP_1588_CLOCK) += lib/clock.o
-> +mlx5_core-$(CONFIG_PCI_HYPERV_INTERFACE) += lib/hv.o
->
->  #
->  # Ipoib netdev
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv.c b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv.c
-> new file mode 100644
-> index 0000000..cf08d02
-> --- /dev/null
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv.c
-> @@ -0,0 +1,64 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
-> +// Copyright (c) 2018 Mellanox Technologies
-> +
-> +#include <linux/hyperv.h>
-> +#include "mlx5_core.h"
-> +#include "lib/hv.h"
-> +
-> +static int mlx5_hv_config_common(struct mlx5_core_dev *dev, void *buf, int len,
-> +				 int offset, bool read)
-> +{
-> +	int rc = -EOPNOTSUPP;
-> +	int bytes_returned;
-> +	int block_id;
-> +
-> +	if (offset % HV_CONFIG_BLOCK_SIZE_MAX || len % HV_CONFIG_BLOCK_SIZE_MAX)
-> +		return -EINVAL;
-> +
-> +	block_id = offset / HV_CONFIG_BLOCK_SIZE_MAX;
-> +
-> +	rc = read ?
-> +	     hyperv_read_cfg_blk(dev->pdev, buf,
-> +				 HV_CONFIG_BLOCK_SIZE_MAX, block_id,
-> +				 &bytes_returned) :
-> +	     hyperv_write_cfg_blk(dev->pdev, buf,
-> +				  HV_CONFIG_BLOCK_SIZE_MAX, block_id);
-> +
-> +	/* Make sure len bytes were read successfully  */
-> +	if (read)
-> +		rc |= !(len == bytes_returned);
+[ Upstream commit f1d4836201543e88ebe70237e67938168d5fab19 ]
 
-Unclear what do you want to achieve here, for read == true, "rc" will
-have result of hyperv_read_cfg_blk(), which can be an error too.
-It means that your "rc |= .." will give interesting results.
+GCC throws out this warning on arm64.
 
-> +
-> +	if (rc) {
-> +		mlx5_core_err(dev, "Failed to %s hv config, err = %d, len = %d, offset = %d\n",
-> +			      read ? "read" : "write", rc, len,
-> +			      offset);
-> +		return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int mlx5_hv_read_config(struct mlx5_core_dev *dev, void *buf, int len,
-> +			int offset)
-> +{
-> +	return mlx5_hv_config_common(dev, buf, len, offset, true);
-> +}
-> +
-> +int mlx5_hv_write_config(struct mlx5_core_dev *dev, void *buf, int len,
-> +			 int offset)
-> +{
-> +	return mlx5_hv_config_common(dev, buf, len, offset, false);
-> +}
-> +
-> +int mlx5_hv_register_invalidate(struct mlx5_core_dev *dev, void *context,
-> +				void (*block_invalidate)(void *context,
-> +							 u64 block_mask))
-> +{
-> +	return hyperv_reg_block_invalidate(dev->pdev, context,
-> +					   block_invalidate);
-> +}
-> +
-> +void mlx5_hv_unregister_invalidate(struct mlx5_core_dev *dev)
-> +{
-> +	hyperv_reg_block_invalidate(dev->pdev, NULL, NULL);
-> +}
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/hv.h b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv.h
-> new file mode 100644
-> index 0000000..f9a4557
-> --- /dev/null
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/hv.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
-> +/* Copyright (c) 2019 Mellanox Technologies. */
-> +
-> +#ifndef __LIB_HV_H__
-> +#define __LIB_HV_H__
-> +
-> +#if IS_ENABLED(CONFIG_PCI_HYPERV_INTERFACE)
+drivers/firmware/efi/libstub/arm-stub.c: In function 'efi_entry':
+drivers/firmware/efi/libstub/arm-stub.c:132:22: warning: variable 'si'
+set but not used [-Wunused-but-set-variable]
 
-The common way to write it if(IS_ENABLED(CONFIG_FOO)) inside the code
-and #ifdef CONFIG_FOO for header files.
+Fix it by making free_screen_info() a static inline function.
 
-> +
-> +#include <linux/hyperv.h>
-> +#include <linux/mlx5/driver.h>
-> +
-> +int mlx5_hv_read_config(struct mlx5_core_dev *dev, void *buf, int len,
-> +			int offset);
-> +int mlx5_hv_write_config(struct mlx5_core_dev *dev, void *buf, int len,
-> +			 int offset);
-> +int mlx5_hv_register_invalidate(struct mlx5_core_dev *dev, void *context,
-> +				void (*block_invalidate)(void *context,
-> +							 u64 block_mask));
-> +void mlx5_hv_unregister_invalidate(struct mlx5_core_dev *dev);
-> +#endif
-> +
-> +#endif /* __LIB_HV_H__ */
-> --
-> 1.8.3.1
->
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/include/asm/efi.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/include/asm/efi.h b/arch/arm64/include/asm/efi.h
+index 65615820155e6..65db124a44bff 100644
+--- a/arch/arm64/include/asm/efi.h
++++ b/arch/arm64/include/asm/efi.h
+@@ -52,7 +52,11 @@ int efi_set_mapping_permissions(struct mm_struct *mm, efi_memory_desc_t *md);
+ #define efi_is_64bit()			(true)
+ 
+ #define alloc_screen_info(x...)		&screen_info
+-#define free_screen_info(x...)
++
++static inline void free_screen_info(efi_system_table_t *sys_table_arg,
++				    struct screen_info *si)
++{
++}
+ 
+ /* redeclare as 'hidden' so the compiler will generate relative references */
+ extern struct screen_info screen_info __attribute__((__visibility__("hidden")));
+-- 
+2.20.1
+
+
+
