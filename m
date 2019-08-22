@@ -2,251 +2,101 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83449C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D91C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC0B21743
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8812173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:43:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BgB5KJgR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aY/DH6D/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391015AbfHVSki (ORCPT
+        id S2391021AbfHVSn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 14:40:38 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34230 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390954AbfHVSk1 (ORCPT
+        Thu, 22 Aug 2019 14:43:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45998 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731043AbfHVSn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 14:40:27 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b24so4550516pfp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 11:40:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=IA8z/5AqtCHFT32SY+cIXSmPc0kaoD29PlyZ57NhalY=;
-        b=BgB5KJgRI2OAMFO3lQmNArPftpDtD+nVUiJaoL/PL/14HemQ//f8oXX5mmTLwZrVeM
-         UpdaOWdFUaGyxjitCmu4G6tGH22q5Ilv8GjvfFNAiukCsGLnKENYAmgPzQfNG76hKWON
-         znl1GkmY7IAARq4+4slXfINLE8Of4Aji/+3EU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=IA8z/5AqtCHFT32SY+cIXSmPc0kaoD29PlyZ57NhalY=;
-        b=O9LxkzLfHhOsKKAwmR1cJRr+IJUm+Dc/i0L5/ymXf37fNaQwC1o1z6vVNb250bhmE3
-         IZYzVRwqRbZd/51KM9WXYHE/CUfC7gdsWx9Rk5vg6tYONq8BKLOwAfglA8UrIEXEPuDm
-         FDMqE7wd8P4ENfDujB8pxA9BLtipMT3zRjCaIC7PIyiGk9Dv7xy/YTx3zv28/nR0TMjy
-         epNbjhKDKG1hpIcFVkPaAj/Y2RAS62nc4V52i1E4aSxNmAz8XA2lI+KDzzFCugUi8tLY
-         uG0BJe1uQ+YllRYfeGR3ddpk15lb2F5Y04hkSCUhs3SAx1SK5wCeiVUokAPm5xI/1hw6
-         SNZg==
-X-Gm-Message-State: APjAAAVO1WGFYzmHx7jD9X6vvN/o3OoyNWhuY9FVuQQeid7+UoPyt24V
-        rTqavA081B0mn4OMvaQOmQdULw==
-X-Google-Smtp-Source: APXvYqzSMdvmuGNbJy/sI3mS9i6KFKJnX0SBbijQnHdu2yhzqHbRk47dNRYki3R7ggqlt+YvXbkscQ==
-X-Received: by 2002:a17:90a:86c2:: with SMTP id y2mr1144374pjv.46.1566499226035;
-        Thu, 22 Aug 2019 11:40:26 -0700 (PDT)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id z19sm51056pgv.35.2019.08.22.11.40.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 11:40:25 -0700 (PDT)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v2 2/2] selftests: firmware: Add request_firmware_into_buf tests
-Date:   Thu, 22 Aug 2019 11:40:05 -0700
-Message-Id: <20190822184005.901-3-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190822184005.901-1-scott.branden@broadcom.com>
-References: <20190822184005.901-1-scott.branden@broadcom.com>
+        Thu, 22 Aug 2019 14:43:27 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7MId72g124437;
+        Thu, 22 Aug 2019 18:43:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=Vpx+W7UbbHH5sLaI9b3JSk4ZB4LncSYUvj43Ltqr3cY=;
+ b=aY/DH6D/ujKy7PmIKfzBF5a2gbkeeR/YDcp+CT5ZzKAwA1jOCG3lOdy+fn2SHeZoxrx7
+ bdZYIiHYm3sHn6z165G4RsMQ6YdaG0quIR2G+7YymoaX5hp7CXgafA2hlrzz4Z2PpElg
+ uBr/rpctHpwQgH+98RhiQ/6DqHAXKpXCBGN4srv7uLGqCtGsfD4qL20SiO6fVXs9alFp
+ 7jRToX5EuKk8oKxvXHJOMu95uTzjwzbl19Z9ep4OiQ/qqmGh8B4VEpRlUOKnrBptQCRp
+ u2rlSnRFZhdqKysLrQcfh6pkkGPyqxcO0SrvMCpm+qTvAoRzs/ruJF1I/mKxBZF8wvbu QA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2uea7r7sv9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 18:43:10 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7MIgaN2081389;
+        Thu, 22 Aug 2019 18:43:10 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2uh2q6bw4g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 18:43:10 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7MIgoFZ010478;
+        Thu, 22 Aug 2019 18:42:50 GMT
+Received: from char.us.oracle.com (/10.152.32.25)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 22 Aug 2019 11:42:50 -0700
+Received: by char.us.oracle.com (Postfix, from userid 1000)
+        id D1B6C6A0141; Thu, 22 Aug 2019 14:44:40 -0400 (EDT)
+Date:   Thu, 22 Aug 2019 14:44:40 -0400
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        jmattson@redhat.com, ehabkost@redhat.com
+Subject: Re: [PATCH 2/3] KVM: x86: always expose VIRT_SSBD to guests
+Message-ID: <20190822184440.GA9964@char.us.oracle.com>
+References: <1566376002-17121-1-git-send-email-pbonzini@redhat.com>
+ <1566376002-17121-3-git-send-email-pbonzini@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566376002-17121-3-git-send-email-pbonzini@redhat.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=981
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908220163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908220162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add tests cases for checking request_firmware_into_buf api.
-API was introduced into kernel with no testing present previously.
+On Wed, Aug 21, 2019 at 10:26:41AM +0200, Paolo Bonzini wrote:
+> Even though it is preferrable to use SPEC_CTRL (represented by
+> X86_FEATURE_AMD_SSBD) instead of VIRT_SPEC, VIRT_SPEC is always
+> supported anyway because otherwise it would be impossible to
+> migrate from old to new CPUs.  Make this apparent in the
+> result of KVM_GET_SUPPORTED_CPUID as well.
+> 
+> While at it, reuse X86_FEATURE_* constants for the SVM leaf too.
+> 
+> However, we need to hide the bit on Intel processors, so move
+> the setting to svm_set_supported_cpuid.
+> 
+> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
----
- .../selftests/firmware/fw_filesystem.sh       | 57 ++++++++++++++++++-
- tools/testing/selftests/firmware/fw_lib.sh    | 11 ++++
- 2 files changed, 66 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/firmware/fw_filesystem.sh b/tools/testing/selftests/firmware/fw_filesystem.sh
-index f901076aa2ea..56894477c8bd 100755
---- a/tools/testing/selftests/firmware/fw_filesystem.sh
-+++ b/tools/testing/selftests/firmware/fw_filesystem.sh
-@@ -116,6 +116,16 @@ config_set_name()
- 	echo -n $1 >  $DIR/config_name
- }
- 
-+config_set_into_buf()
-+{
-+	echo 1 >  $DIR/config_into_buf
-+}
-+
-+config_unset_into_buf()
-+{
-+	echo 0 >  $DIR/config_into_buf
-+}
-+
- config_set_sync_direct()
- {
- 	echo 1 >  $DIR/config_sync_direct
-@@ -153,11 +163,14 @@ config_set_read_fw_idx()
- 
- read_firmwares()
- {
--	if [ "$1" = "xzonly" ]; then
--		fwfile="${FW}-orig"
-+	if [ "$(cat $DIR/config_into_buf)" == "1" ]; then
-+		fwfile="$FW_INTO_BUF"
- 	else
- 		fwfile="$FW"
- 	fi
-+	if [ "$1" = "xzonly" ]; then
-+		fwfile="${fwfile}-orig"
-+	fi
- 	for i in $(seq 0 3); do
- 		config_set_read_fw_idx $i
- 		# Verify the contents are what we expect.
-@@ -194,6 +207,18 @@ test_batched_request_firmware_nofile()
- 	echo "OK"
- }
- 
-+test_batched_request_firmware_into_buf_nofile()
-+{
-+	echo -n "Batched request_firmware_into_buf() nofile try #$1: "
-+	config_reset
-+	config_set_name nope-test-firmware.bin
-+	config_set_into_buf
-+	config_trigger_sync
-+	read_firmwares_expect_nofile
-+	release_all_firmware
-+	echo "OK"
-+}
-+
- test_batched_request_firmware_direct_nofile()
- {
- 	echo -n "Batched request_firmware_direct() nofile try #$1: "
-@@ -259,6 +284,18 @@ test_batched_request_firmware()
- 	echo "OK"
- }
- 
-+test_batched_request_firmware_into_buf()
-+{
-+	echo -n "Batched request_firmware_into_buf() $2 try #$1: "
-+	config_reset
-+	config_set_name $TEST_FIRMWARE_INTO_BUF_FILENAME
-+	config_set_into_buf
-+	config_trigger_sync
-+	read_firmwares $2
-+	release_all_firmware
-+	echo "OK"
-+}
-+
- test_batched_request_firmware_direct()
- {
- 	echo -n "Batched request_firmware_direct() $2 try #$1: "
-@@ -307,6 +344,10 @@ for i in $(seq 1 5); do
- 	test_batched_request_firmware $i normal
- done
- 
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf $i normal
-+done
-+
- for i in $(seq 1 5); do
- 	test_batched_request_firmware_direct $i normal
- done
-@@ -327,6 +368,10 @@ for i in $(seq 1 5); do
- 	test_batched_request_firmware_nofile $i
- done
- 
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf_nofile $i
-+done
-+
- for i in $(seq 1 5); do
- 	test_batched_request_firmware_direct_nofile $i
- done
-@@ -350,6 +395,10 @@ for i in $(seq 1 5); do
- 	test_batched_request_firmware $i both
- done
- 
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf $i both
-+done
-+
- for i in $(seq 1 5); do
- 	test_batched_request_firmware_direct $i both
- done
-@@ -370,6 +419,10 @@ for i in $(seq 1 5); do
- 	test_batched_request_firmware $i xzonly
- done
- 
-+for i in $(seq 1 5); do
-+	test_batched_request_firmware_into_buf $i xzonly
-+done
-+
- for i in $(seq 1 5); do
- 	test_batched_request_firmware_direct $i xzonly
- done
-diff --git a/tools/testing/selftests/firmware/fw_lib.sh b/tools/testing/selftests/firmware/fw_lib.sh
-index f236cc295450..b879305a766d 100755
---- a/tools/testing/selftests/firmware/fw_lib.sh
-+++ b/tools/testing/selftests/firmware/fw_lib.sh
-@@ -9,6 +9,12 @@ DIR=/sys/devices/virtual/misc/test_firmware
- PROC_CONFIG="/proc/config.gz"
- TEST_DIR=$(dirname $0)
- 
-+# We need to load a different file to test request_firmware_into_buf
-+# I believe the issue is firmware loaded cached vs. non-cached
-+# with same filename is bungled.
-+# To reproduce rename this to test-firmware.bin
-+TEST_FIRMWARE_INTO_BUF_FILENAME=test-firmware-into-buf.bin
-+
- # Kselftest framework requirement - SKIP code is 4.
- ksft_skip=4
- 
-@@ -108,6 +114,8 @@ setup_tmp_file()
- 	FWPATH=$(mktemp -d)
- 	FW="$FWPATH/test-firmware.bin"
- 	echo "ABCD0123" >"$FW"
-+	FW_INTO_BUF="$FWPATH/$TEST_FIRMWARE_INTO_BUF_FILENAME"
-+	echo "EFGH4567" >"$FW_INTO_BUF"
- 	NAME=$(basename "$FW")
- 	if [ "$TEST_REQS_FW_SET_CUSTOM_PATH" = "yes" ]; then
- 		echo -n "$FWPATH" >/sys/module/firmware_class/parameters/path
-@@ -175,6 +183,9 @@ test_finish()
- 	if [ -f $FW ]; then
- 		rm -f "$FW"
- 	fi
-+	if [ -f $FW_INTO_BUF ]; then
-+		rm -f "$FW_INTO_BUF"
-+	fi
- 	if [ -d $FWPATH ]; then
- 		rm -rf "$FWPATH"
- 	fi
--- 
-2.17.1
-
+Thank you!
