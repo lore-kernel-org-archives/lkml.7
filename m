@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88972C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E051EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0A423429
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBB723429
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493726;
-	bh=YWZMTuicYL37W61tyGEDFMuUQiDu4m6h46X35x3t5h4=;
+	s=default; t=1566493729;
+	bh=ZKAkj2PBDzbgmpcPQyxVaFn971P85QAkn1irCUYBn+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MdIB3K81ghZwWGEC5KRzV2G4xoJzuHIQ3BjA/ELAJrGHMOw8adC1GM3+JOmmKL4zR
-	 IgpM8R9nwgE140HAlEma7VCxCNsxXvBk20Dl5K7dQto7mlcDnOf8GdC5YcS0ANmgI+
-	 HkLednHFBEOeFQJs4jzsCh6m0aT7sWsd9/YkYBIo=
+	b=2Qx/zZ8BjhD20Rd3YHVickxbaJ8MbKjuuBlZor4YUnsDLfNj4pJOEaZ+6mT/CuMq2
+	 4xLOEuZcbti/E7kKEF2PAosOe6LtCYF42RmBwWFvsQsLE3ZIK7HSFJ4FwVfqVLedeJ
+	 X69MJcPVlYHKKxXcD/OdtD1vOk7QZzM4QA7Lc9Gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390498AbfHVRIp (ORCPT
+        id S2390525AbfHVRIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58566 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390481AbfHVRIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:44 -0400
+        id S2390499AbfHVRIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:46 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C8F523400;
-        Thu, 22 Aug 2019 17:08:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C72D23426;
+        Thu, 22 Aug 2019 17:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493723;
-        bh=YWZMTuicYL37W61tyGEDFMuUQiDu4m6h46X35x3t5h4=;
+        s=default; t=1566493725;
+        bh=ZKAkj2PBDzbgmpcPQyxVaFn971P85QAkn1irCUYBn+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VrSouZeYjrlALJn/lWm7u9YJz7Gv31wBgqp5KnQWFogyrg00hoN4hHEDXkivBUF9q
-         ZXyEhBKclMovlQuttrev8iB0jUEmOAPPfw2FaNDtVJhLYVl4RqaEUqCmcZ/iuJoOqE
-         XtuUtmx0mkeDeIh6ep+NhoyUZDwcbze7rZ5/gisk=
+        b=Z9XtDx2udrSsUooTPm60zQfDbCzA272c6hh+t6iWMiEc3DWcKJTR8wF+IpZLWwXWC
+         CfjLclt4+RicsHVlg1ShaF8tqJSCnlViaMzZCtlEBGbe9gAcqfo6twbKdt3Yodqxwf
+         zkakVROZ+qaExBgQ0cRuwgSkyKoxe97Rs08VARtI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yuki Tsunashima <ytsunashima@jp.adit-jv.com>,
-        Suresh Udipi <sudipi@jp.adit-jv.com>,
-        Adam Miartus <amiartus@de.adit-jv.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 054/135] ALSA: pcm: fix lost wakeup event scenarios in snd_pcm_drain
-Date:   Thu, 22 Aug 2019 13:06:50 -0400
-Message-Id: <20190822170811.13303-55-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 057/135] drm/bridge: lvds-encoder: Fix build error while CONFIG_DRM_KMS_HELPER=m
+Date:   Thu, 22 Aug 2019 13:06:53 -0400
+Message-Id: <20190822170811.13303-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,48 +65,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuki Tsunashima <ytsunashima@jp.adit-jv.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 37151a41df800493cfcbbef4f7208ffe04feb959 ]
+[ Upstream commit f4cc743a98136df3c3763050a0e8223b52d9a960 ]
 
-lost wakeup can occur after enabling irq, therefore put task
-into interruptible before enabling interrupts,
+If DRM_LVDS_ENCODER=y but CONFIG_DRM_KMS_HELPER=m,
+build fails:
 
-without this change, task can be put to sleep and snd_pcm_drain
-will delay
+drivers/gpu/drm/bridge/lvds-encoder.o: In function `lvds_encoder_probe':
+lvds-encoder.c:(.text+0x155): undefined reference to `devm_drm_panel_bridge_add'
 
-Fixes: f2b3614cefb6 ("ALSA: PCM - Don't check DMA time-out too shortly")
-Signed-off-by: Yuki Tsunashima <ytsunashima@jp.adit-jv.com>
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-[ported from 4.9]
-Signed-off-by: Adam Miartus <amiartus@de.adit-jv.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: dbb58bfd9ae6 ("drm/bridge: Fix lvds-encoder since the panel_bridge rework.")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190729071216.27488-1-yuehaibing@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/pcm_native.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index 12dd9b318db18..703857aab00fc 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -1873,6 +1873,7 @@ static int snd_pcm_drain(struct snd_pcm_substream *substream,
- 		if (!to_check)
- 			break; /* all drained */
- 		init_waitqueue_entry(&wait, current);
-+		set_current_state(TASK_INTERRUPTIBLE);
- 		add_wait_queue(&to_check->sleep, &wait);
- 		snd_pcm_stream_unlock_irq(substream);
- 		if (runtime->no_period_wakeup)
-@@ -1885,7 +1886,7 @@ static int snd_pcm_drain(struct snd_pcm_substream *substream,
- 			}
- 			tout = msecs_to_jiffies(tout * 1000);
- 		}
--		tout = schedule_timeout_interruptible(tout);
-+		tout = schedule_timeout(tout);
- 
- 		snd_pcm_stream_lock_irq(substream);
- 		group = snd_pcm_stream_group_ref(substream);
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index ee777469293a4..cc62603b87c59 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -48,6 +48,7 @@ config DRM_DUMB_VGA_DAC
+ config DRM_LVDS_ENCODER
+ 	tristate "Transparent parallel to LVDS encoder support"
+ 	depends on OF
++	select DRM_KMS_HELPER
+ 	select DRM_PANEL_BRIDGE
+ 	help
+ 	  Support for transparent parallel to LVDS encoders that don't require
 -- 
 2.20.1
 
