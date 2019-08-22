@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A14DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1FFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE32233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25CF72089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494093;
-	bh=5ZvQzk9R5TI5bGpVv5L8Rn41Krgjr3O3/iejLxZa8a0=;
+	s=default; t=1566494103;
+	bh=pLnDJTQhnpdXSEjLDUcXDftSa5atnaXw1zNrsUQeBwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qV9uTRLnolfvO5bEKAXG60/LTcLiEnZjxEA4f1sKTm3pqaIcLidAXF5twQai1wIcN
-	 IBG1iFGJzPlTnMIx7694dV0zA1/set/xrJsS5xamHCET0eVbpCX9wqhDYxq+ZCPb98
-	 M/efNC9nuojjBJ9ifyvHeP+zCk3fTwzxODbCj0/Y=
+	b=qbC9uLHBGXsW1uF7x1eyEVsiIiVtu8Z6PnrxXThKBx7KvXl9HcqTa13fQo7Q6txYi
+	 aos4uyKW6bvi+D51XaEprWtz3Zkm7Qp0T+c6YSnjgYXRD5e/KYFWbYA0Hd6EK483nj
+	 hJE7wSGX4SRymUMRmIXLyvP5pEHDIaWRQQ6ZF1J4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388968AbfHVROn (ORCPT
+        id S1731856AbfHVRPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:14:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58780 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:15:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390540AbfHVRIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:51 -0400
+        id S2390435AbfHVRIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:48 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3018D233FD;
-        Thu, 22 Aug 2019 17:08:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6DC323402;
+        Thu, 22 Aug 2019 17:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493730;
-        bh=5ZvQzk9R5TI5bGpVv5L8Rn41Krgjr3O3/iejLxZa8a0=;
+        s=default; t=1566493728;
+        bh=pLnDJTQhnpdXSEjLDUcXDftSa5atnaXw1zNrsUQeBwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u9LJUX1nOlZDzvvaLjWBLa7COjFlVHJWgsiswP37Se8O5M3NP0/7B3rydRqJojLli
-         RO1Z48p3xXn0+cjtsaGreIxDmkoKoTesph3BarCdT2AsoCTj/Tj2GZS/q+U1a5p6Oc
-         zfvTmoCmV2BsLpGNxKAi/NcvsIwUNBB11vzHRinA=
+        b=rO16ROMoIJOje1gMzA3iI7QYeYq5+0UBoYNkIdOwEy6XsPWVCJ9S2TbTE4ju8ZCFy
+         x817XzzChJ4pgmuaG7hT35cHH09v8iM7unl5OoP+AmHjEMF65ome2df9ajygnF8wYJ
+         vjoLNoKtf2ahBeb3wox1rJhp1DEfd9M5nVXfUR5A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
-        Chunming Zhou <david1.zhou@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 066/135] drm/amdgpu: fix a potential information leaking bug
-Date:   Thu, 22 Aug 2019 13:07:02 -0400
-Message-Id: <20190822170811.13303-67-sashal@kernel.org>
+Subject: [PATCH 5.2 061/135] scsi: qla2xxx: Fix possible fcport null-pointer dereferences
+Date:   Thu, 22 Aug 2019 13:06:57 -0400
+Message-Id: <20190822170811.13303-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.2.y
@@ -68,45 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 929e571c04c285861e0bb049a396a2bdaea63282 ]
+[ Upstream commit e82f04ec6ba91065fd33a6201ffd7cab840e1475 ]
 
-Coccinelle reports a path that the array "data" is never initialized.
-The path skips the checks in the conditional branches when either
-of callback functions, read_wave_vgprs and read_wave_sgprs, is not
-registered. Later, the uninitialized "data" array is read
-in the while-loop below and passed to put_user().
+In qla2x00_alloc_fcport(), fcport is assigned to NULL in the error
+handling code on line 4880:
+    fcport = NULL;
 
-Fix the path by allocating the array with kcalloc().
+Then fcport is used on lines 4883-4886:
+    INIT_WORK(&fcport->del_work, qla24xx_delete_sess_fn);
+	INIT_WORK(&fcport->reg_work, qla_register_fcport_fn);
+	INIT_LIST_HEAD(&fcport->gnl_entry);
+	INIT_LIST_HEAD(&fcport->list);
 
-The patch is simplier than adding a fall-back branch that explicitly
-calls memset(data, 0, ...). Also it does not need the multiplication
-1024*sizeof(*data) as the size parameter for memset() though there is
-no risk of integer overflow.
+Thus, possible null-pointer dereferences may occur.
 
-Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
-Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+To fix these bugs, qla2x00_alloc_fcport() directly returns NULL
+in the error handling code.
+
+These bugs are found by a static analysis tool STCheck written by us.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c | 2 +-
+ drivers/scsi/qla2xxx/qla_init.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-index 8930d66f22040..91bfb24f963e5 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-@@ -703,7 +703,7 @@ static ssize_t amdgpu_debugfs_gpr_read(struct file *f, char __user *buf,
- 	thread = (*pos & GENMASK_ULL(59, 52)) >> 52;
- 	bank = (*pos & GENMASK_ULL(61, 60)) >> 60;
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 54772d4c377f9..6a4c719497ca1 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -4877,7 +4877,7 @@ qla2x00_alloc_fcport(scsi_qla_host_t *vha, gfp_t flags)
+ 		ql_log(ql_log_warn, vha, 0xd049,
+ 		    "Failed to allocate ct_sns request.\n");
+ 		kfree(fcport);
+-		fcport = NULL;
++		return NULL;
+ 	}
  
--	data = kmalloc_array(1024, sizeof(*data), GFP_KERNEL);
-+	data = kcalloc(1024, sizeof(*data), GFP_KERNEL);
- 	if (!data)
- 		return -ENOMEM;
- 
+ 	INIT_WORK(&fcport->del_work, qla24xx_delete_sess_fn);
 -- 
 2.20.1
 
