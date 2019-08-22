@@ -2,186 +2,132 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC509C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AE6C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1DE6233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:29:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="SGase5XA"
+	by mail.kernel.org (Postfix) with ESMTP id 719FF233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733221AbfHVJ3J (ORCPT
+        id S1732109AbfHVJba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:29:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36888 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732231AbfHVJ3G (ORCPT
+        Thu, 22 Aug 2019 05:31:30 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44429 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729052AbfHVJba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:29:06 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z11so4726327wrt.4
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 02:29:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zvZLQm2eReId0SwTyMH9VzRmlkdF2ZdYygKx0uvmAk0=;
-        b=SGase5XAZFg+vTPEPlwvJlx1ym/QLLzp1ud2bXoCHajj5R7wkWDyAY3NQMyW+Fa8yk
-         5TCCIETKfD2hpQpyh+tifopk6nxKPmvbjcRFK1Q7HOAQ+XMIoCYUknmm3EkeolqTHsYm
-         XAE3JtkBJqI9/xyF2u/s0xTJHog+xjFhwlQXOcq63WrxnWnwQa4o79tGYuP2qbab4mpY
-         MubhtDyP2NTE032vF1BczpQQZSJyrKtJMU1BNyw6BjHvG5FaU42RbjCvzhaH9EzhrSHk
-         wkT+7neXomFGGvJMp9BtLhrT5LxpJ/FZKToD9fFKKkk3H9rvhMw06d5uDNaJUDrRpjEF
-         7gUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zvZLQm2eReId0SwTyMH9VzRmlkdF2ZdYygKx0uvmAk0=;
-        b=lRyEEJw3A5/27Pl1HOSJZUQv93qWlHO71AlF0ssFgrwQA1NzJbSSlsl/F4WdpIl5wZ
-         qy4i/K9MM9IaQFrYLzPw0pfyykwdOJpYjDXA/opc+bVIG1f4KrAbkcjQMwOPTxoO4fPt
-         CKmCOauIQX1u7e2aWX8Wxa8BjGHquL8ju9cxmVBAuGqDhwTliLPe50l/kRMjEvXjmzhm
-         Hi+fhDeCRfwm/Vksm+MoAbpRP+l0sYpTIuEfcIOKXVrYmLFcfyxuFEU2Oyaa9J0Vfb8Q
-         o/k0Xwmw1OqbKRjsBlSd5QibC3gLIk+Hxwf3lvACvgLZGtXM+5lRgmxi9NFEapxJBePR
-         PW+Q==
-X-Gm-Message-State: APjAAAW+q46b+OD4cX7mNCnw8663P1yl+DKBO9Dtv5W3sFtiGl2oaCeU
-        vLjZmZoM8MUXHrl00FvnNN6yKw==
-X-Google-Smtp-Source: APXvYqy3MiZfh5jTT4YN2SGl9rGBNzJSpnL2EizF5M0c7ozx13iyKmQrwYFgp8g2hjvLpKPNCjxyIA==
-X-Received: by 2002:adf:f641:: with SMTP id x1mr7145810wrp.179.1566466145132;
-        Thu, 22 Aug 2019 02:29:05 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id t19sm4383224wmi.29.2019.08.22.02.29.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 02:29:04 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 11:29:03 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kirti Wankhede <kwankhede@nvidia.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        cjia <cjia@nvidia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
-Message-ID: <20190822092903.GA2276@nanopsycho.orion>
-References: <AM0PR05MB4866148ABA3C4E48E73E95FCD1AD0@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <AM0PR05MB48668B6221E477A873688CDBD1AB0@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190820111904.75515f58@x1.home>
- <AM0PR05MB486686D3C311F3C61BE0997DD1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190820222051.7aeafb69@x1.home>
- <AM0PR05MB48664CDF05C3D02F9441440DD1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190820225722.237a57d2@x1.home>
- <AM0PR05MB4866AE8FC4AA3CC24B08B326D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
- <20190820232622.164962d3@x1.home>
- <AM0PR05MB4866437FAA63C447CACCD7E5D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM0PR05MB4866437FAA63C447CACCD7E5D1AA0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Thu, 22 Aug 2019 05:31:30 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i0jRC-00004x-Lo; Thu, 22 Aug 2019 11:31:22 +0200
+Message-ID: <1566466282.3653.5.camel@pengutronix.de>
+Subject: Re: [PATCH v2 3/3] media: imx214: Add new control with
+ V4L2_CID_UNIT_CELL_SIZE
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 22 Aug 2019 11:31:22 +0200
+In-Reply-To: <20190820094027.4144-3-ribalda@kernel.org>
+References: <20190820094027.4144-1-ribalda@kernel.org>
+         <20190820094027.4144-3-ribalda@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wed, Aug 21, 2019 at 08:23:17AM CEST, parav@mellanox.com wrote:
->
->
->> -----Original Message-----
->> From: Alex Williamson <alex.williamson@redhat.com>
->> Sent: Wednesday, August 21, 2019 10:56 AM
->> To: Parav Pandit <parav@mellanox.com>
->> Cc: Jiri Pirko <jiri@mellanox.com>; David S . Miller <davem@davemloft.net>;
->> Kirti Wankhede <kwankhede@nvidia.com>; Cornelia Huck
->> <cohuck@redhat.com>; kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
->> cjia <cjia@nvidia.com>; netdev@vger.kernel.org
->> Subject: Re: [PATCH v2 0/2] Simplify mtty driver and mdev core
->> 
->> > > > > Just an example of the alias, not proposing how it's set.  In
->> > > > > fact, proposing that the user does not set it, mdev-core
->> > > > > provides one
->> > > automatically.
->> > > > >
->> > > > > > > Since there seems to be some prefix overhead, as I ask about
->> > > > > > > above in how many characters we actually have to work with
->> > > > > > > in IFNAMESZ, maybe we start with 8 characters (matching your
->> > > > > > > "index" namespace) and expand as necessary for disambiguation.
->> > > > > > > If we can eliminate overhead in IFNAMESZ, let's start with 12.
->> > > > > > > Thanks,
->> > > > > > >
->> > > > > > If user is going to choose the alias, why does it have to be limited to
->> sha1?
->> > > > > > Or you just told it as an example?
->> > > > > >
->> > > > > > It can be an alpha-numeric string.
->> > > > >
->> > > > > No, I'm proposing a different solution where mdev-core creates
->> > > > > an alias based on an abbreviated sha1.  The user does not provide the
->> alias.
->> > > > >
->> > > > > > Instead of mdev imposing number of characters on the alias, it
->> > > > > > should be best
->> > > > > left to the user.
->> > > > > > Because in future if netdev improves on the naming scheme,
->> > > > > > mdev will be
->> > > > > limiting it, which is not right.
->> > > > > > So not restricting alias size seems right to me.
->> > > > > > User configuring mdev for networking devices in a given kernel
->> > > > > > knows what
->> > > > > user is doing.
->> > > > > > So user can choose alias name size as it finds suitable.
->> > > > >
->> > > > > That's not what I'm proposing, please read again.  Thanks,
->> > > >
->> > > > I understood your point. But mdev doesn't know how user is going
->> > > > to use
->> > > udev/systemd to name the netdev.
->> > > > So even if mdev chose to pick 12 characters, it could result in collision.
->> > > > Hence the proposal to provide the alias by the user, as user know
->> > > > the best
->> > > policy for its use case in the environment its using.
->> > > > So 12 character sha1 method will still work by user.
->> > >
->> > > Haven't you already provided examples where certain drivers or
->> > > subsystems have unique netdev prefixes?  If mdev provides a unique
->> > > alias within the subsystem, couldn't we simply define a netdev
->> > > prefix for the mdev subsystem and avoid all other collisions?  I'm
->> > > not in favor of the user providing both a uuid and an
->> > > alias/instance.  Thanks,
->> > >
->> > For a given prefix, say ens2f0, can two UUID->sha1 first 9 characters have
->> collision?
->> 
->> I think it would be a mistake to waste so many chars on a prefix, but 9
->> characters of sha1 likely wouldn't have a collision before we have 10s of
->> thousands of devices.  Thanks,
->> 
->> Alex
->
->Jiri, Dave,
->Are you ok with it for devlink/netdev part?
->Mdev core will create an alias from a UUID.
->
->This will be supplied during devlink port attr set such as,
->
->devlink_port_attrs_mdev_set(struct devlink_port *port, const char *mdev_alias);
->
->This alias is used to generate representor netdev's phys_port_name.
->This alias from the mdev device's sysfs will be used by the udev/systemd to generate predicable netdev's name.
->Example: enm<mdev_alias_first_12_chars>
+On Tue, 2019-08-20 at 11:40 +0200, Ricardo Ribalda Delgado wrote:
+> According to the product brief, the unit cell size is 1120 nanometers^2.
+> 
+> https://www.sony-semicon.co.jp/products_en/IS/sensor1/img/products/ProductBrief_IMX214_20150428.pdf
+> 
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+> ---
+>  drivers/media/i2c/imx214.c | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+> index 159a3a604f0e..cc0a013ba7da 100644
+> --- a/drivers/media/i2c/imx214.c
+> +++ b/drivers/media/i2c/imx214.c
+> @@ -47,6 +47,7 @@ struct imx214 {
+>  	struct v4l2_ctrl *pixel_rate;
+>  	struct v4l2_ctrl *link_freq;
+>  	struct v4l2_ctrl *exposure;
+> +	struct v4l2_ctrl *unit_size;
 
-What happens in unlikely case of 2 UUIDs collide?
+This is never used.
 
+Neither are pixel_rate and exposure, it appears. And link_freq is only
+used locally in imx214_probe to set the read-only flag.
 
->I took Ethernet mdev as an example.
->New prefix 'm' stands for mediated device.
->Remaining 12 characters are first 12 chars of the mdev alias.
+>  
+>  	struct regulator_bulk_data	supplies[IMX214_NUM_SUPPLIES];
+>  
+> @@ -941,6 +942,26 @@ static int __maybe_unused imx214_resume(struct device *dev)
+>  	return ret;
+>  }
+>  
+> +static void unit_size_init(const struct v4l2_ctrl *ctrl, u32 idx,
+> +		     union v4l2_ctrl_ptr ptr)
+> +{
+> +	ptr.p_area->width = 1120;
+> +	ptr.p_area->height = 1120;
+> +}
+> +
+> +static const struct v4l2_ctrl_type_ops unit_size_ops = {
+> +	.init = unit_size_init,
+> +};
+> +
+> +static struct v4l2_ctrl *new_unit_size_ctrl(struct v4l2_ctrl_handler *handler)
+> +{
+> +	static struct v4l2_ctrl_config ctrl = {
+> +		.id = V4L2_CID_UNIT_CELL_SIZE,
+> +		.type_ops = &unit_size_ops,
+> +	};
+> +
+> +	return v4l2_ctrl_new_custom(handler, &ctrl, NULL);
+> +}
+>  static int imx214_probe(struct i2c_client *client)
+>  {
+>  	struct device *dev = &client->dev;
+> @@ -1029,6 +1050,8 @@ static int imx214_probe(struct i2c_client *client)
+>  					     V4L2_CID_EXPOSURE,
+>  					     0, 3184, 1, 0x0c70);
+>  
+> +	imx214->unit_size = new_unit_size_ctrl(&imx214->ctrls);
+> +
+>  	ret = imx214->ctrls.error;
+>  	if (ret) {
+>  		dev_err(&client->dev, "%s control init failed (%d)\n",
 
-Does this resolve the identification of devlink port representor? I
-assume you want to use the same 12(or so) chars, don't you?
+This seems like a lot of parts to assemble in every sensor driver just
+to provide a constant area control. Should this be turned into a
+v4l2_ctrl_new_area helper that takes a const struct v4l2_area as an
+argument?
 
+	static const struct v4l2_area unit_cell_size = {
+		.width = 1120,
+		.height = 1120
+	};
+
+	v4l2_ctrl_new_area(&imx214->ctrls, V4L2_CID_UNIT_CELL_SIZE,
+			   &unit_cell_size);
+
+regards
+Philipp
