@@ -2,69 +2,95 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 876EEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754C3C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F071F233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA3923405
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:15:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGhish2A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390307AbfHVVPw (ORCPT
+        id S2390368AbfHVVPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 22 Aug 2019 17:15:52 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:51205 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390233AbfHVVPv (ORCPT
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46216 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390231AbfHVVPv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 17:15:51 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 3128960002;
-        Thu, 22 Aug 2019 21:15:48 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 23:15:47 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     megous@megous.com
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v2 1/3] dt-bindings: Add compatible for H6 RTC
-Message-ID: <20190822211547.GE27031@piout.net>
-References: <20190820151934.3860-1-megous@megous.com>
- <20190820151934.3860-2-megous@megous.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820151934.3860-2-megous@megous.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Received: by mail-wr1-f68.google.com with SMTP id z1so6684172wru.13;
+        Thu, 22 Aug 2019 14:15:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HPPqPWkNsX2zIZkcp2fxF4eaN/KGop5jbrLhh+yilBU=;
+        b=ZGhish2AOhYKSO7ScnFNPLsvysA/Gn9ttIusTALCvk7ny3jbb8EfBkkR+w8llK6YZj
+         kL0HpZ5ipo+5wACm4qkX0j80O33Od7ZHousGzPsOEbJZjp3ieq1IoEr3AYfAHNTAmFFs
+         1Zlm67Eh3IwuTy+QAOZbEZZPXpVwzUsyFWyHxSddQ+mK/VZQIM260DYBr5FFhcAJYl61
+         DmEYOpL6sDP8AXrHKnFqle+vDk+Hvr8F/Cz5R2jWqiuo1B2A0QJsIxEfuaR/x2JczJV/
+         FOJ0y8LdGb6SVBuKjs0kNse2v8/T+ApIHc86b4/ltRGPP51dMEdOvuW0qjjvIMgK+CO4
+         lFlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HPPqPWkNsX2zIZkcp2fxF4eaN/KGop5jbrLhh+yilBU=;
+        b=eT2TBIlOHtKKJuxARx//RYbM/L3DAJfiP4rNDe4eVDA1hBSRbBjVOAcF51IfpKDz62
+         NvOV1LARrn/Ju+0cRhRizSPzvXUL+5qUeG3pqLdyd0gTZ6Ifzlpze6mzygefsrAlhGqJ
+         uolUmMwrg1utms2U2DkN3mSqyHGDVKEY+HyORoZ3Y6sINtHx4ECGTBYDJmTcDlueV19X
+         rp2u8dLQmRMKSI3LdkL+5CikpLiOCAKVlpAN99Ul/3MbNKhl0YRI/v4F/ECKCKbx8TIh
+         20GMtMrY1ZM69Cb37Zgu4v/rYfuH6PlblTL1igCFaDo6UvE0b7+w/uz5EM9JYxUdgFUa
+         MB5g==
+X-Gm-Message-State: APjAAAVhlDr5JCl6v3k4BiNHQWBfPNEOGLWy73mrThqupLOENThUO4+y
+        wFqJqm9EnfWpoZsxOXU33qY=
+X-Google-Smtp-Source: APXvYqyzVg3G23tzkTO2cy5UNABw5Px3NfCU//hSFDMcjYN2qvJp+7frSCzrxUZQxnVZ1qkX+3DWqg==
+X-Received: by 2002:a5d:62c1:: with SMTP id o1mr935622wrv.293.1566508549118;
+        Thu, 22 Aug 2019 14:15:49 -0700 (PDT)
+Received: from localhost.localdomain ([86.126.25.232])
+        by smtp.gmail.com with ESMTPSA id g197sm578488wme.30.2019.08.22.14.15.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 14:15:48 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     broonie@kernel.org
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        Vladimir Oltean <olteanv@gmail.com>
+Subject: [PATCH v2 0/5] Poll mode for NXP DSPI driver
+Date:   Fri, 23 Aug 2019 00:15:09 +0300
+Message-Id: <20190822211514.19288-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/08/2019 17:19:32+0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
-> 
-> RTC on H6 is similar to the one on H5 SoC, but incompatible in small
-> details. See the driver for description of differences. For example
-> H6 RTC needs to enable the external low speed oscillator. Add new
-> compatible for this RTC.
-> 
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  .../bindings/rtc/allwinner,sun6i-a31-rtc.yaml       | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-Applied, thanks.
+This series makes the EOQ and TCFQ operating modes of spi-fsl-dspi work
+when no platform IRQ is defined in the DT.
+
+The NXP LS1021A-TSN board needs this setting for performance reasons,
+and I am adding the corresponding DTS patch to this series to avoid
+runtime errors that may occur if the DTS and the driver patches part
+ways and get included through separate trees.
+
+The series also contains a bug fix for the shared IRQ of the DSPI
+driver. I am going to respin a version of it as a separate patch for
+inclusion in stable trees, independent of this patchset.
+
+Vladimir Oltean (5):
+  spi: spi-fsl-dspi: Reduce indentation level in dspi_interrupt
+  spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours
+  spi: spi-fsl-dspi: Remove impossible to reach error check
+  spi: spi-fsl-dspi: Use poll mode in case the platform IRQ is missing
+  ARM: dts: ls1021a-tsn: Use the DSPI controller in poll mode
+
+ arch/arm/boot/dts/ls1021a-tsn.dts |   1 +
+ drivers/spi/spi-fsl-dspi.c        | 128 ++++++++++++++++++------------
+ 2 files changed, 78 insertions(+), 51 deletions(-)
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
+
