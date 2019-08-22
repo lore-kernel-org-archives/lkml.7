@@ -2,330 +2,1190 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417C2C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A8DC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 151CE233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089DB233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:04:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RieSvLNg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388319AbfHVMDD (ORCPT
+        id S2388340AbfHVMEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:03:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56096 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726844AbfHVMDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:03:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AFC64AE89;
-        Thu, 22 Aug 2019 12:02:59 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 14:02:54 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     "Singh, Brijesh" <brijesh.singh@amd.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 02/11] KVM: SVM: Add KVM_SEND_UPDATE_DATA command
-Message-ID: <20190822120254.GC11845@zn.tnic>
-References: <20190710201244.25195-1-brijesh.singh@amd.com>
- <20190710201244.25195-3-brijesh.singh@amd.com>
+        Thu, 22 Aug 2019 08:04:10 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43816 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388325AbfHVMEJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:04:09 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k3so3532072pgb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 05:04:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=rE4W0e6EByn7odok9CSQ4q/Z1mUN2HD+TK2tAk4YK3w=;
+        b=RieSvLNgmAAvwe+ZY3KmBJ/Fr7W+FW2I1ePTyYqrbu9Etr/8+CgmFwSvINgwS6P5j5
+         q5LlWaJmLtGBD2KBfP+sik3OjS4M5GysJJi8A5mZItpoSyKNeVKIjyDQU5npdCczp+0w
+         q+TPxm89c5nklP608PNsYMx8mWY4R5/FytvVAv5F9pYPw+PjNTY4eOjbMfB1xjtJZQJc
+         MiICqdls+p/4wTbZtTAksaBVyeO+EqnTzNE/ANM/MBZHrVOi4qY+RuLb7ezR/Gjc+ygw
+         Sh/UvJpCN/BL3Hb0PGebTy3flfsOG19Pz8vtvA05gYo7hN76Aoae6pYrUJRBhb1/oPqn
+         Ypxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=rE4W0e6EByn7odok9CSQ4q/Z1mUN2HD+TK2tAk4YK3w=;
+        b=Ii++kB/Ej1c7COhHXfyA8YUhL4XOk8OiDFZx5M/AY1MB/QNvQXTJZhuJi4J/P5nKFp
+         KXOzn7UmN2xk+dF9RkZXAhQ3TQpRKlwna0hvaFY51UPS10AHagWK1heY/tacMU2D+e2D
+         5abaqkw+dFeUwfMh1MMxWg0cQcNSm08sjvkfL8iNwRoUielDRiFVYORHHU2v6zUqnyc/
+         fGuiAUISV8cYa2+VbSQv1Sb6XAMRVMtuwKlHuY3wInU5YeSL3ifA3zwRmtxnwi9O07M7
+         YlRPvNag2vso//p/VvrJxTd3QlMYWnZWiKfub0X0NcPeqxKbnPUargl/pWgqh77QI5bR
+         nltA==
+X-Gm-Message-State: APjAAAW2dOpFe/9k78nBZC4zueqdTjhGkC+/pgYAbYU/DWAwV3xwmEE8
+        q/UHrNjjKvVmAlYmy7GB8Ej0+UG1zsHYxJrch+cE/Q==
+X-Google-Smtp-Source: APXvYqwY1VmBCJlwNW6irv03dAvrUZPdtOz/XiQq7zWYNPPv1fZC7SiS2nq5SSQDJUWzfQQm6qL+acbqpHOmNsdU9GE=
+X-Received: by 2002:a63:3006:: with SMTP id w6mr33760797pgw.440.1566475445420;
+ Thu, 22 Aug 2019 05:04:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190710201244.25195-3-brijesh.singh@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <00000000000071c72c0590776357@google.com> <20190822030549.GA6111@zzz.localdomain>
+In-Reply-To: <20190822030549.GA6111@zzz.localdomain>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 22 Aug 2019 14:03:53 +0200
+Message-ID: <CAAeHK+xFnPZEDQTH8Z867kiKA+nqmGbHy7qY-=6wKxu41BT5+g@mail.gmail.com>
+Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low in tipc_topsrv_exit_net
+To:     syzbot <syzbot+5f97459a05652f579f6c@syzkaller.appspotmail.com>,
+        "David S. Miller" <davem@davemloft.net>, jon.maloy@ericsson.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 08:13:01PM +0000, Singh, Brijesh wrote:
-> The command is used for encrypting the guest memory region using the encryption
-> context created with KVM_SEV_SEND_START.
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: "Radim Krčmář" <rkrcmar@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: x86@kernel.org
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> ---
->  .../virtual/kvm/amd-memory-encryption.rst     |  24 ++++
->  arch/x86/kvm/svm.c                            | 120 +++++++++++++++++-
->  include/uapi/linux/kvm.h                      |   9 ++
->  3 files changed, 149 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/virtual/kvm/amd-memory-encryption.rst b/Documentation/virtual/kvm/amd-memory-encryption.rst
-> index 0e9e1e9f9687..060ac2316d69 100644
-> --- a/Documentation/virtual/kvm/amd-memory-encryption.rst
-> +++ b/Documentation/virtual/kvm/amd-memory-encryption.rst
-> @@ -265,6 +265,30 @@ Returns: 0 on success, -negative on error
->                  __u32 session_len;
->          };
->  
-> +11. KVM_SEV_SEND_UPDATE_DATA
-> +----------------------------
-> +
-> +The KVM_SEV_SEND_UPDATE_DATA command can be used by the hypervisor to encrypt the
-> +outgoing guest memory region with the encryption context creating using
+On Thu, Aug 22, 2019 at 5:05 AM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> On Mon, Aug 19, 2019 at 05:22:07AM -0700, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    5181b473 net: phy: realtek: add NBase-T PHY auto-detection
+> > git tree:       net-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=156b731c600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d4cf1ffb87d590d7
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=5f97459a05652f579f6c
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+5f97459a05652f579f6c@syzkaller.appspotmail.com
+> >
+> > BUG: MAX_STACK_TRACE_ENTRIES too low!
+> > turning off the locking correctness validator.
+> > CPU: 0 PID: 2581 Comm: kworker/u4:4 Not tainted 5.3.0-rc3+ #132
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: netns cleanup_net
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+> >  save_trace kernel/locking/lockdep.c:473 [inline]
+> >  save_trace.isra.0.cold+0x14/0x19 kernel/locking/lockdep.c:458
+> >  mark_lock+0x3db/0x11e0 kernel/locking/lockdep.c:3583
+> >  mark_usage kernel/locking/lockdep.c:3517 [inline]
+> >  __lock_acquire+0x538/0x4c30 kernel/locking/lockdep.c:3834
+> >  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4412
+> >  flush_workqueue+0x126/0x14b0 kernel/workqueue.c:2774
+> >  drain_workqueue+0x1b4/0x470 kernel/workqueue.c:2939
+> >  destroy_workqueue+0x21/0x6c0 kernel/workqueue.c:4320
+> >  tipc_topsrv_work_stop net/tipc/topsrv.c:636 [inline]
+> >  tipc_topsrv_stop net/tipc/topsrv.c:694 [inline]
+> >  tipc_topsrv_exit_net+0x3fe/0x5d8 net/tipc/topsrv.c:706
+> >  ops_exit_list.isra.0+0xaa/0x150 net/core/net_namespace.c:172
+> >  cleanup_net+0x4e2/0xa70 net/core/net_namespace.c:594
+> >  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
+> >  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+> >  kthread+0x361/0x430 kernel/kthread.c:255
+> >  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > kobject: 'rx-0' (000000000e2c91cd): kobject_cleanup, parent 000000002003fefb
+> > kobject: 'rx-0' (000000000e2c91cd): auto cleanup 'remove' event
+> > kobject: 'rx-0' (000000000e2c91cd): kobject_uevent_env
+> > kobject: 'rx-0' (000000000e2c91cd): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000000e2c91cd): auto cleanup kobject_del
+> > kobject: 'rx-0' (000000000e2c91cd): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (0000000058b6f726): kobject_cleanup, parent 000000002003fefb
+> > kobject: 'tx-0' (0000000058b6f726): auto cleanup 'remove' event
+> > kobject: 'tx-0' (0000000058b6f726): kobject_uevent_env
+> > kobject: 'tx-0' (0000000058b6f726): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (0000000058b6f726): auto cleanup kobject_del
+> > kobject: 'tx-0' (0000000058b6f726): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000002003fefb): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000002003fefb): calling ktype release
+> > kobject: 'queues' (000000002003fefb): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6gre0' (0000000018a24d65): kobject_uevent_env
+> > kobject: 'ip6gre0' (0000000018a24d65): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000940b22b0): kobject_cleanup, parent 0000000005a1fc3a
+> > kobject: 'rx-0' (00000000940b22b0): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000940b22b0): kobject_uevent_env
+> > kobject: 'rx-0' (00000000940b22b0): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000940b22b0): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000940b22b0): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000278e85e2): kobject_cleanup, parent 0000000005a1fc3a
+> > kobject: 'tx-0' (00000000278e85e2): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000278e85e2): kobject_uevent_env
+> > kobject: 'tx-0' (00000000278e85e2): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000278e85e2): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000278e85e2): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (0000000005a1fc3a): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (0000000005a1fc3a): calling ktype release
+> > kobject: 'queues' (0000000005a1fc3a): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6gre0' (00000000c78b955b): kobject_uevent_env
+> > kobject: 'ip6gre0' (00000000c78b955b): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000000fa7c1d1): kobject_cleanup, parent 00000000d264d5b4
+> > kobject: 'rx-0' (000000000fa7c1d1): auto cleanup 'remove' event
+> > kobject: 'rx-0' (000000000fa7c1d1): kobject_uevent_env
+> > kobject: 'rx-0' (000000000fa7c1d1): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000000fa7c1d1): auto cleanup kobject_del
+> > kobject: 'rx-0' (000000000fa7c1d1): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (000000000f66c80c): kobject_cleanup, parent 00000000d264d5b4
+> > kobject: 'tx-0' (000000000f66c80c): auto cleanup 'remove' event
+> > kobject: 'tx-0' (000000000f66c80c): kobject_uevent_env
+> > kobject: 'tx-0' (000000000f66c80c): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (000000000f66c80c): auto cleanup kobject_del
+> > kobject: 'tx-0' (000000000f66c80c): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (00000000d264d5b4): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (00000000d264d5b4): calling ktype release
+> > kobject: 'queues' (00000000d264d5b4): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6gre0' (00000000ef80dc29): kobject_uevent_env
+> > kobject: 'ip6gre0' (00000000ef80dc29): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000f928d911): kobject_cleanup, parent 000000003c7c9951
+> > kobject: 'rx-0' (00000000f928d911): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000f928d911): kobject_uevent_env
+> > kobject: 'rx-0' (00000000f928d911): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000f928d911): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000f928d911): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (000000009bf7cc90): kobject_cleanup, parent 000000003c7c9951
+> > kobject: 'tx-0' (000000009bf7cc90): auto cleanup 'remove' event
+> > kobject: 'tx-0' (000000009bf7cc90): kobject_uevent_env
+> > kobject: 'tx-0' (000000009bf7cc90): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (000000009bf7cc90): auto cleanup kobject_del
+> > kobject: 'tx-0' (000000009bf7cc90): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000003c7c9951): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000003c7c9951): calling ktype release
+> > kobject: 'queues' (000000003c7c9951): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6gre0' (00000000acb4e121): kobject_uevent_env
+> > kobject: 'ip6gre0' (00000000acb4e121): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000045fca4e1): kobject_cleanup, parent 000000001c9d9e42
+> > kobject: 'rx-0' (0000000045fca4e1): auto cleanup 'remove' event
+> > kobject: 'rx-0' (0000000045fca4e1): kobject_uevent_env
+> > kobject: 'rx-0' (0000000045fca4e1): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000045fca4e1): auto cleanup kobject_del
+> > kobject: 'rx-0' (0000000045fca4e1): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000a309e805): kobject_cleanup, parent 000000001c9d9e42
+> > kobject: 'tx-0' (00000000a309e805): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000a309e805): kobject_uevent_env
+> > kobject: 'tx-0' (00000000a309e805): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000a309e805): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000a309e805): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000001c9d9e42): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000001c9d9e42): calling ktype release
+> > kobject: 'queues' (000000001c9d9e42): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6gre0' (0000000094fbf7bb): kobject_uevent_env
+> > kobject: 'ip6gre0' (0000000094fbf7bb): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000443242e0): kobject_cleanup, parent 000000009f9df3e8
+> > kobject: 'rx-0' (00000000443242e0): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000443242e0): kobject_uevent_env
+> > kobject: 'rx-0' (00000000443242e0): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000443242e0): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000443242e0): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (000000005588ef99): kobject_cleanup, parent 000000009f9df3e8
+> > kobject: 'tx-0' (000000005588ef99): auto cleanup 'remove' event
+> > kobject: 'tx-0' (000000005588ef99): kobject_uevent_env
+> > kobject: 'tx-0' (000000005588ef99): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (000000005588ef99): auto cleanup kobject_del
+> > kobject: 'tx-0' (000000005588ef99): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000009f9df3e8): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000009f9df3e8): calling ktype release
+> > kobject: 'queues' (000000009f9df3e8): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6gre0' (0000000060028093): kobject_uevent_env
+> > kobject: 'ip6gre0' (0000000060028093): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000002c2db56): kobject_cleanup, parent 000000000ee23264
+> > kobject: 'rx-0' (0000000002c2db56): auto cleanup 'remove' event
+> > kobject: 'rx-0' (0000000002c2db56): kobject_uevent_env
+> > kobject: 'rx-0' (0000000002c2db56): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000002c2db56): auto cleanup kobject_del
+> > kobject: 'rx-0' (0000000002c2db56): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000831daf90): kobject_cleanup, parent 000000000ee23264
+> > kobject: 'tx-0' (00000000831daf90): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000831daf90): kobject_uevent_env
+> > kobject: 'tx-0' (00000000831daf90): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000831daf90): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000831daf90): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000000ee23264): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000000ee23264): calling ktype release
+> > kobject: 'queues' (000000000ee23264): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6gre0' (00000000e217374d): kobject_uevent_env
+> > kobject: 'ip6gre0' (00000000e217374d): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000f8e7f44b): kobject_cleanup, parent 000000003daaa7c9
+> > kobject: 'rx-0' (00000000f8e7f44b): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000f8e7f44b): kobject_uevent_env
+> > kobject: 'rx-0' (00000000f8e7f44b): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000f8e7f44b): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000f8e7f44b): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (000000001277c9de): kobject_cleanup, parent 000000003daaa7c9
+> > kobject: 'tx-0' (000000001277c9de): auto cleanup 'remove' event
+> > kobject: 'tx-0' (000000001277c9de): kobject_uevent_env
+> > kobject: 'tx-0' (000000001277c9de): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (000000001277c9de): auto cleanup kobject_del
+> > kobject: 'tx-0' (000000001277c9de): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000003daaa7c9): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000003daaa7c9): calling ktype release
+> > kobject: 'queues' (000000003daaa7c9): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6gre0' (00000000597e3c0a): kobject_uevent_env
+> > kobject: 'ip6gre0' (00000000597e3c0a): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000eb376580): kobject_cleanup, parent 0000000054d719cb
+> > kobject: 'rx-0' (00000000eb376580): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000eb376580): kobject_uevent_env
+> > kobject: 'rx-0' (00000000eb376580): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000eb376580): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000eb376580): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (0000000040024191): kobject_cleanup, parent 0000000054d719cb
+> > kobject: 'tx-0' (0000000040024191): auto cleanup 'remove' event
+> > kobject: 'tx-0' (0000000040024191): kobject_uevent_env
+> > kobject: 'tx-0' (0000000040024191): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (0000000040024191): auto cleanup kobject_del
+> > kobject: 'tx-0' (0000000040024191): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (0000000054d719cb): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (0000000054d719cb): calling ktype release
+> > kobject: 'queues' (0000000054d719cb): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6gre0' (00000000995a4c19): kobject_uevent_env
+> > kobject: 'ip6gre0' (00000000995a4c19): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'ip6gre0' (0000000018a24d65): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6gre0' (0000000018a24d65): calling ktype release
+> > kobject: 'ip6gre0': free name
+> > kobject: 'ip6gre0' (00000000c78b955b): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6gre0' (00000000c78b955b): calling ktype release
+> > kobject: 'ip6gre0': free name
+> > kobject: 'ip6gre0' (00000000ef80dc29): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6gre0' (00000000ef80dc29): calling ktype release
+> > kobject: 'ip6gre0': free name
+> > kobject: 'ip6gre0' (00000000acb4e121): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6gre0' (00000000acb4e121): calling ktype release
+> > kobject: 'ip6gre0': free name
+> > kobject: 'ip6gre0' (0000000094fbf7bb): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6gre0' (0000000094fbf7bb): calling ktype release
+> > kobject: 'ip6gre0': free name
+> > kobject: 'ip6gre0' (0000000060028093): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6gre0' (0000000060028093): calling ktype release
+> > kobject: 'ip6gre0': free name
+> > kobject: 'ip6gre0' (00000000e217374d): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6gre0' (00000000e217374d): calling ktype release
+> > kobject: 'ip6gre0': free name
+> > kobject: 'ip6gre0' (00000000597e3c0a): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6gre0' (00000000597e3c0a): calling ktype release
+> > kobject: 'ip6gre0': free name
+> > kobject: 'ip6gre0' (00000000995a4c19): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6gre0' (00000000995a4c19): calling ktype release
+> > kobject: 'ip6gre0': free name
+> > kobject: 'rx-0' (00000000a530319b): kobject_cleanup, parent 0000000044c197cb
+> > kobject: 'rx-0' (00000000a530319b): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000a530319b): kobject_uevent_env
+> > kobject: 'rx-0' (00000000a530319b): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000a530319b): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000a530319b): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (0000000036817586): kobject_cleanup, parent 0000000044c197cb
+> > kobject: 'tx-0' (0000000036817586): auto cleanup 'remove' event
+> > kobject: 'tx-0' (0000000036817586): kobject_uevent_env
+> > kobject: 'tx-0' (0000000036817586): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (0000000036817586): auto cleanup kobject_del
+> > kobject: 'tx-0' (0000000036817586): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (0000000044c197cb): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (0000000044c197cb): calling ktype release
+> > kobject: 'queues' (0000000044c197cb): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6tnl0' (000000004d7cdca9): kobject_uevent_env
+> > kobject: 'ip6tnl0' (000000004d7cdca9): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000009ad0ffcd): kobject_cleanup, parent 000000006632a50a
+> > kobject: 'rx-0' (000000009ad0ffcd): auto cleanup 'remove' event
+> > kobject: 'rx-0' (000000009ad0ffcd): kobject_uevent_env
+> > kobject: 'rx-0' (000000009ad0ffcd): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000009ad0ffcd): auto cleanup kobject_del
+> > kobject: 'rx-0' (000000009ad0ffcd): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000cc8f7d89): kobject_cleanup, parent 000000006632a50a
+> > kobject: 'tx-0' (00000000cc8f7d89): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000cc8f7d89): kobject_uevent_env
+> > kobject: 'tx-0' (00000000cc8f7d89): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000cc8f7d89): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000cc8f7d89): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000006632a50a): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000006632a50a): calling ktype release
+> > kobject: 'queues' (000000006632a50a): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6tnl0' (00000000af12a50a): kobject_uevent_env
+> > kobject: 'ip6tnl0' (00000000af12a50a): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000000f3a002b): kobject_cleanup, parent 000000008e667009
+> > kobject: 'rx-0' (000000000f3a002b): auto cleanup 'remove' event
+> > kobject: 'rx-0' (000000000f3a002b): kobject_uevent_env
+> > kobject: 'rx-0' (000000000f3a002b): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000000f3a002b): auto cleanup kobject_del
+> > kobject: 'rx-0' (000000000f3a002b): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (000000003dd814d2): kobject_cleanup, parent 000000008e667009
+> > kobject: 'tx-0' (000000003dd814d2): auto cleanup 'remove' event
+> > kobject: 'tx-0' (000000003dd814d2): kobject_uevent_env
+> > kobject: 'tx-0' (000000003dd814d2): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (000000003dd814d2): auto cleanup kobject_del
+> > kobject: 'tx-0' (000000003dd814d2): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000008e667009): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000008e667009): calling ktype release
+> > kobject: 'queues' (000000008e667009): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6tnl0' (00000000ad24f481): kobject_uevent_env
+> > kobject: 'ip6tnl0' (00000000ad24f481): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000b57b4b94): kobject_cleanup, parent 00000000c8f88c97
+> > kobject: 'rx-0' (00000000b57b4b94): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000b57b4b94): kobject_uevent_env
+> > kobject: 'rx-0' (00000000b57b4b94): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000b57b4b94): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000b57b4b94): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000035a9b1c): kobject_cleanup, parent 00000000c8f88c97
+> > kobject: 'tx-0' (00000000035a9b1c): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000035a9b1c): kobject_uevent_env
+> > kobject: 'tx-0' (00000000035a9b1c): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000035a9b1c): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000035a9b1c): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (00000000c8f88c97): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (00000000c8f88c97): calling ktype release
+> > kobject: 'queues' (00000000c8f88c97): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6tnl0' (00000000e4871037): kobject_uevent_env
+> > kobject: 'ip6tnl0' (00000000e4871037): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000009e5eabee): kobject_cleanup, parent 000000000bef0c44
+> > kobject: 'rx-0' (000000009e5eabee): auto cleanup 'remove' event
+> > kobject: 'rx-0' (000000009e5eabee): kobject_uevent_env
+> > kobject: 'rx-0' (000000009e5eabee): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000009e5eabee): auto cleanup kobject_del
+> > kobject: 'rx-0' (000000009e5eabee): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000917837d7): kobject_cleanup, parent 000000000bef0c44
+> > kobject: 'tx-0' (00000000917837d7): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000917837d7): kobject_uevent_env
+> > kobject: 'tx-0' (00000000917837d7): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000917837d7): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000917837d7): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000000bef0c44): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000000bef0c44): calling ktype release
+> > kobject: 'queues' (000000000bef0c44): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6tnl0' (00000000a48d6ad0): kobject_uevent_env
+> > kobject: 'ip6tnl0' (00000000a48d6ad0): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000099277526): kobject_cleanup, parent 0000000085f382c3
+> > kobject: 'rx-0' (0000000099277526): auto cleanup 'remove' event
+> > kobject: 'rx-0' (0000000099277526): kobject_uevent_env
+> > kobject: 'rx-0' (0000000099277526): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000099277526): auto cleanup kobject_del
+> > kobject: 'rx-0' (0000000099277526): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000e28e65a5): kobject_cleanup, parent 0000000085f382c3
+> > kobject: 'tx-0' (00000000e28e65a5): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000e28e65a5): kobject_uevent_env
+> > kobject: 'tx-0' (00000000e28e65a5): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000e28e65a5): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000e28e65a5): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (0000000085f382c3): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (0000000085f382c3): calling ktype release
+> > kobject: 'queues' (0000000085f382c3): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6tnl0' (000000002480b06a): kobject_uevent_env
+> > kobject: 'ip6tnl0' (000000002480b06a): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000ad1f374e): kobject_cleanup, parent 000000004552107a
+> > kobject: 'rx-0' (00000000ad1f374e): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000ad1f374e): kobject_uevent_env
+> > kobject: 'rx-0' (00000000ad1f374e): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000ad1f374e): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000ad1f374e): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000a52c4930): kobject_cleanup, parent 000000004552107a
+> > kobject: 'tx-0' (00000000a52c4930): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000a52c4930): kobject_uevent_env
+> > kobject: 'tx-0' (00000000a52c4930): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000a52c4930): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000a52c4930): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000004552107a): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000004552107a): calling ktype release
+> > kobject: 'queues' (000000004552107a): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6tnl0' (00000000b5c75a98): kobject_uevent_env
+> > kobject: 'ip6tnl0' (00000000b5c75a98): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000069cf2cec): kobject_cleanup, parent 000000000effb6b7
+> > kobject: 'rx-0' (0000000069cf2cec): auto cleanup 'remove' event
+> > kobject: 'rx-0' (0000000069cf2cec): kobject_uevent_env
+> > kobject: 'rx-0' (0000000069cf2cec): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000069cf2cec): auto cleanup kobject_del
+> > kobject: 'rx-0' (0000000069cf2cec): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000f6dd67a1): kobject_cleanup, parent 000000000effb6b7
+> > kobject: 'tx-0' (00000000f6dd67a1): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000f6dd67a1): kobject_uevent_env
+> > kobject: 'tx-0' (00000000f6dd67a1): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000f6dd67a1): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000f6dd67a1): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000000effb6b7): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000000effb6b7): calling ktype release
+> > kobject: 'queues' (000000000effb6b7): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6tnl0' (0000000017bab338): kobject_uevent_env
+> > kobject: 'ip6tnl0' (0000000017bab338): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000005bed9a62): kobject_cleanup, parent 000000002a90c11d
+> > kobject: 'rx-0' (000000005bed9a62): auto cleanup 'remove' event
+> > kobject: 'rx-0' (000000005bed9a62): kobject_uevent_env
+> > kobject: 'rx-0' (000000005bed9a62): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000005bed9a62): auto cleanup kobject_del
+> > kobject: 'rx-0' (000000005bed9a62): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000148a89bb): kobject_cleanup, parent 000000002a90c11d
+> > kobject: 'tx-0' (00000000148a89bb): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000148a89bb): kobject_uevent_env
+> > kobject: 'tx-0' (00000000148a89bb): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000148a89bb): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000148a89bb): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000002a90c11d): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000002a90c11d): calling ktype release
+> > kobject: 'queues' (000000002a90c11d): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6tnl0' (000000007855542e): kobject_uevent_env
+> > kobject: 'ip6tnl0' (000000007855542e): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'ip6tnl0' (000000004d7cdca9): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6tnl0' (000000004d7cdca9): calling ktype release
+> > kobject: 'ip6tnl0': free name
+> > kobject: 'ip6tnl0' (00000000af12a50a): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6tnl0' (00000000af12a50a): calling ktype release
+> > kobject: 'ip6tnl0': free name
+> > kobject: 'ip6tnl0' (00000000ad24f481): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6tnl0' (00000000ad24f481): calling ktype release
+> > kobject: 'ip6tnl0': free name
+> > kobject: 'ip6tnl0' (00000000e4871037): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6tnl0' (00000000e4871037): calling ktype release
+> > kobject: 'ip6tnl0': free name
+> > kobject: 'ip6tnl0' (00000000a48d6ad0): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6tnl0' (00000000a48d6ad0): calling ktype release
+> > kobject: 'ip6tnl0': free name
+> > kobject: 'ip6tnl0' (000000002480b06a): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6tnl0' (000000002480b06a): calling ktype release
+> > kobject: 'ip6tnl0': free name
+> > kobject: 'ip6tnl0' (00000000b5c75a98): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6tnl0' (00000000b5c75a98): calling ktype release
+> > kobject: 'ip6tnl0': free name
+> > kobject: 'ip6tnl0' (0000000017bab338): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6tnl0' (0000000017bab338): calling ktype release
+> > kobject: 'ip6tnl0': free name
+> > kobject: 'ip6tnl0' (000000007855542e): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6tnl0' (000000007855542e): calling ktype release
+> > kobject: 'ip6tnl0': free name
+> > kobject: 'rx-0' (00000000faff8a75): kobject_cleanup, parent 000000003555e997
+> > kobject: 'rx-0' (00000000faff8a75): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000faff8a75): kobject_uevent_env
+> > kobject: 'rx-0' (00000000faff8a75): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000faff8a75): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000faff8a75): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (000000003377944b): kobject_cleanup, parent 000000003555e997
+> > kobject: 'tx-0' (000000003377944b): auto cleanup 'remove' event
+> > kobject: 'tx-0' (000000003377944b): kobject_uevent_env
+> > kobject: 'tx-0' (000000003377944b): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (000000003377944b): auto cleanup kobject_del
+> > kobject: 'tx-0' (000000003377944b): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000003555e997): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000003555e997): calling ktype release
+> > kobject: 'queues' (000000003555e997): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'sit0' (00000000ba6470e9): kobject_uevent_env
+> > kobject: 'sit0' (00000000ba6470e9): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000003577adaa): kobject_cleanup, parent 00000000c5fbab92
+> > kobject: 'rx-0' (000000003577adaa): auto cleanup 'remove' event
+> > kobject: 'rx-0' (000000003577adaa): kobject_uevent_env
+> > kobject: 'rx-0' (000000003577adaa): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000003577adaa): auto cleanup kobject_del
+> > kobject: 'rx-0' (000000003577adaa): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000f519527f): kobject_cleanup, parent 00000000c5fbab92
+> > kobject: 'tx-0' (00000000f519527f): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000f519527f): kobject_uevent_env
+> > kobject: 'tx-0' (00000000f519527f): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000f519527f): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000f519527f): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (00000000c5fbab92): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (00000000c5fbab92): calling ktype release
+> > kobject: 'queues' (00000000c5fbab92): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'sit0' (000000009f74c826): kobject_uevent_env
+> > kobject: 'sit0' (000000009f74c826): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000137dfc9e): kobject_cleanup, parent 00000000e8ee822b
+> > kobject: 'rx-0' (00000000137dfc9e): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000137dfc9e): kobject_uevent_env
+> > kobject: 'rx-0' (00000000137dfc9e): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000137dfc9e): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000137dfc9e): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000cf51e058): kobject_cleanup, parent 00000000e8ee822b
+> > kobject: 'tx-0' (00000000cf51e058): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000cf51e058): kobject_uevent_env
+> > kobject: 'tx-0' (00000000cf51e058): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000cf51e058): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000cf51e058): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (00000000e8ee822b): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (00000000e8ee822b): calling ktype release
+> > kobject: 'queues' (00000000e8ee822b): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'sit0' (0000000065e536c8): kobject_uevent_env
+> > kobject: 'sit0' (0000000065e536c8): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000265aa8c8): kobject_cleanup, parent 000000001c613bad
+> > kobject: 'rx-0' (00000000265aa8c8): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000265aa8c8): kobject_uevent_env
+> > kobject: 'rx-0' (00000000265aa8c8): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000265aa8c8): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000265aa8c8): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000669b1a88): kobject_cleanup, parent 000000001c613bad
+> > kobject: 'tx-0' (00000000669b1a88): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000669b1a88): kobject_uevent_env
+> > kobject: 'tx-0' (00000000669b1a88): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000669b1a88): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000669b1a88): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000001c613bad): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000001c613bad): calling ktype release
+> > kobject: 'queues' (000000001c613bad): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'sit0' (00000000b0b0bf77): kobject_uevent_env
+> > kobject: 'sit0' (00000000b0b0bf77): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000c08b3e35): kobject_cleanup, parent 000000004d964cab
+> > kobject: 'rx-0' (00000000c08b3e35): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000c08b3e35): kobject_uevent_env
+> > kobject: 'rx-0' (00000000c08b3e35): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000c08b3e35): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000c08b3e35): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (000000006bb20443): kobject_cleanup, parent 000000004d964cab
+> > kobject: 'tx-0' (000000006bb20443): auto cleanup 'remove' event
+> > kobject: 'tx-0' (000000006bb20443): kobject_uevent_env
+> > kobject: 'tx-0' (000000006bb20443): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (000000006bb20443): auto cleanup kobject_del
+> > kobject: 'tx-0' (000000006bb20443): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000004d964cab): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000004d964cab): calling ktype release
+> > kobject: 'queues' (000000004d964cab): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'sit0' (00000000e3a2a337): kobject_uevent_env
+> > kobject: 'sit0' (00000000e3a2a337): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000fcf6c2df): kobject_cleanup, parent 000000001f378765
+> > kobject: 'rx-0' (00000000fcf6c2df): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000fcf6c2df): kobject_uevent_env
+> > kobject: 'rx-0' (00000000fcf6c2df): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000fcf6c2df): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000fcf6c2df): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000306e361a): kobject_cleanup, parent 000000001f378765
+> > kobject: 'tx-0' (00000000306e361a): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000306e361a): kobject_uevent_env
+> > kobject: 'tx-0' (00000000306e361a): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000306e361a): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000306e361a): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000001f378765): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000001f378765): calling ktype release
+> > kobject: 'queues' (000000001f378765): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'sit0' (0000000058d12d0d): kobject_uevent_env
+> > kobject: 'sit0' (0000000058d12d0d): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000078d95bd): kobject_cleanup, parent 000000003596feb5
+> > kobject: 'rx-0' (00000000078d95bd): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000078d95bd): kobject_uevent_env
+> > kobject: 'rx-0' (00000000078d95bd): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000078d95bd): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000078d95bd): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (0000000037709752): kobject_cleanup, parent 000000003596feb5
+> > kobject: 'tx-0' (0000000037709752): auto cleanup 'remove' event
+> > kobject: 'tx-0' (0000000037709752): kobject_uevent_env
+> > kobject: 'tx-0' (0000000037709752): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (0000000037709752): auto cleanup kobject_del
+> > kobject: 'tx-0' (0000000037709752): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000003596feb5): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000003596feb5): calling ktype release
+> > kobject: 'queues' (000000003596feb5): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'sit0' (000000008276eda5): kobject_uevent_env
+> > kobject: 'sit0' (000000008276eda5): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000004d3b044b): kobject_cleanup, parent 000000006b53a9a0
+> > kobject: 'rx-0' (000000004d3b044b): auto cleanup 'remove' event
+> > kobject: 'rx-0' (000000004d3b044b): kobject_uevent_env
+> > kobject: 'rx-0' (000000004d3b044b): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000004d3b044b): auto cleanup kobject_del
+> > kobject: 'rx-0' (000000004d3b044b): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000273da9ae): kobject_cleanup, parent 000000006b53a9a0
+> > kobject: 'tx-0' (00000000273da9ae): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000273da9ae): kobject_uevent_env
+> > kobject: 'tx-0' (00000000273da9ae): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000273da9ae): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000273da9ae): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000006b53a9a0): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000006b53a9a0): calling ktype release
+> > kobject: 'queues' (000000006b53a9a0): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'sit0' (000000005ed040cc): kobject_uevent_env
+> > kobject: 'sit0' (000000005ed040cc): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000f150476e): kobject_cleanup, parent 00000000a0cff6dd
+> > kobject: 'rx-0' (00000000f150476e): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000f150476e): kobject_uevent_env
+> > kobject: 'rx-0' (00000000f150476e): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000f150476e): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000f150476e): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000c81ff56b): kobject_cleanup, parent 00000000a0cff6dd
+> > kobject: 'tx-0' (00000000c81ff56b): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000c81ff56b): kobject_uevent_env
+> > kobject: 'tx-0' (00000000c81ff56b): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000c81ff56b): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000c81ff56b): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (00000000a0cff6dd): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (00000000a0cff6dd): calling ktype release
+> > kobject: 'queues' (00000000a0cff6dd): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'sit0' (000000009ebda3df): kobject_uevent_env
+> > kobject: 'sit0' (000000009ebda3df): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'sit0' (00000000ba6470e9): kobject_cleanup, parent 000000009c061a32
+> > kobject: 'sit0' (00000000ba6470e9): calling ktype release
+> > kobject: 'sit0': free name
+> > kobject: 'sit0' (000000009f74c826): kobject_cleanup, parent 000000009c061a32
+> > kobject: 'sit0' (000000009f74c826): calling ktype release
+> > kobject: 'sit0': free name
+> > kobject: 'sit0' (0000000065e536c8): kobject_cleanup, parent 000000009c061a32
+> > kobject: 'sit0' (0000000065e536c8): calling ktype release
+> > kobject: 'sit0': free name
+> > kobject: 'sit0' (00000000b0b0bf77): kobject_cleanup, parent 000000009c061a32
+> > kobject: 'sit0' (00000000b0b0bf77): calling ktype release
+> > kobject: 'sit0': free name
+> > kobject: 'sit0' (00000000e3a2a337): kobject_cleanup, parent 000000009c061a32
+> > kobject: 'sit0' (00000000e3a2a337): calling ktype release
+> > kobject: 'sit0': free name
+> > kobject: 'sit0' (0000000058d12d0d): kobject_cleanup, parent 000000009c061a32
+> > kobject: 'sit0' (0000000058d12d0d): calling ktype release
+> > kobject: 'sit0': free name
+> > kobject: 'sit0' (000000008276eda5): kobject_cleanup, parent 000000009c061a32
+> > kobject: 'sit0' (000000008276eda5): calling ktype release
+> > kobject: 'sit0': free name
+> > kobject: 'sit0' (000000005ed040cc): kobject_cleanup, parent 000000009c061a32
+> > kobject: 'sit0' (000000005ed040cc): calling ktype release
+> > kobject: 'sit0': free name
+> > kobject: 'sit0' (000000009ebda3df): kobject_cleanup, parent 000000009c061a32
+> > kobject: 'sit0' (000000009ebda3df): calling ktype release
+> > kobject: 'sit0': free name
+> > kobject: 'rx-0' (00000000011781b4): kobject_cleanup, parent 0000000037662b61
+> > kobject: 'rx-0' (00000000011781b4): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000011781b4): kobject_uevent_env
+> > kobject: 'rx-0' (00000000011781b4): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000011781b4): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000011781b4): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (000000002bafd647): kobject_cleanup, parent 0000000037662b61
+> > kobject: 'tx-0' (000000002bafd647): auto cleanup 'remove' event
+> > kobject: 'tx-0' (000000002bafd647): kobject_uevent_env
+> > kobject: 'tx-0' (000000002bafd647): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (000000002bafd647): auto cleanup kobject_del
+> > kobject: 'tx-0' (000000002bafd647): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (0000000037662b61): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (0000000037662b61): calling ktype release
+> > kobject: 'queues' (0000000037662b61): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6_vti0' (000000000e5b1a5c): kobject_uevent_env
+> > kobject: 'ip6_vti0' (000000000e5b1a5c): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000068311350): kobject_cleanup, parent 00000000facffc2f
+> > kobject: 'rx-0' (0000000068311350): auto cleanup 'remove' event
+> > kobject: 'rx-0' (0000000068311350): kobject_uevent_env
+> > kobject: 'rx-0' (0000000068311350): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000068311350): auto cleanup kobject_del
+> > kobject: 'rx-0' (0000000068311350): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000d6e81326): kobject_cleanup, parent 00000000facffc2f
+> > kobject: 'tx-0' (00000000d6e81326): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000d6e81326): kobject_uevent_env
+> > kobject: 'tx-0' (00000000d6e81326): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000d6e81326): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000d6e81326): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (00000000facffc2f): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (00000000facffc2f): calling ktype release
+> > kobject: 'queues' (00000000facffc2f): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6_vti0' (0000000084bcfa3e): kobject_uevent_env
+> > kobject: 'ip6_vti0' (0000000084bcfa3e): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000ce1fbf9a): kobject_cleanup, parent 00000000faad76b9
+> > kobject: 'rx-0' (00000000ce1fbf9a): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000ce1fbf9a): kobject_uevent_env
+> > kobject: 'rx-0' (00000000ce1fbf9a): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000ce1fbf9a): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000ce1fbf9a): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (0000000054a9318d): kobject_cleanup, parent 00000000faad76b9
+> > kobject: 'tx-0' (0000000054a9318d): auto cleanup 'remove' event
+> > kobject: 'tx-0' (0000000054a9318d): kobject_uevent_env
+> > kobject: 'tx-0' (0000000054a9318d): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (0000000054a9318d): auto cleanup kobject_del
+> > kobject: 'tx-0' (0000000054a9318d): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (00000000faad76b9): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (00000000faad76b9): calling ktype release
+> > kobject: 'queues' (00000000faad76b9): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6_vti0' (00000000a17dcb7a): kobject_uevent_env
+> > kobject: 'ip6_vti0' (00000000a17dcb7a): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000e1ec0489): kobject_cleanup, parent 0000000032133323
+> > kobject: 'rx-0' (00000000e1ec0489): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000e1ec0489): kobject_uevent_env
+> > kobject: 'rx-0' (00000000e1ec0489): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000e1ec0489): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000e1ec0489): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000c69707b0): kobject_cleanup, parent 0000000032133323
+> > kobject: 'tx-0' (00000000c69707b0): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000c69707b0): kobject_uevent_env
+> > kobject: 'tx-0' (00000000c69707b0): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000c69707b0): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000c69707b0): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (0000000032133323): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (0000000032133323): calling ktype release
+> > kobject: 'queues' (0000000032133323): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6_vti0' (00000000f1a1ebea): kobject_uevent_env
+> > kobject: 'ip6_vti0' (00000000f1a1ebea): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000310059d9): kobject_cleanup, parent 000000002f7c701e
+> > kobject: 'rx-0' (00000000310059d9): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000310059d9): kobject_uevent_env
+> > kobject: 'rx-0' (00000000310059d9): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000310059d9): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000310059d9): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000463fbeb0): kobject_cleanup, parent 000000002f7c701e
+> > kobject: 'tx-0' (00000000463fbeb0): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000463fbeb0): kobject_uevent_env
+> > kobject: 'tx-0' (00000000463fbeb0): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000463fbeb0): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000463fbeb0): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000002f7c701e): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000002f7c701e): calling ktype release
+> > kobject: 'queues' (000000002f7c701e): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6_vti0' (00000000e99a1c16): kobject_uevent_env
+> > kobject: 'ip6_vti0' (00000000e99a1c16): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000fc3878f1): kobject_cleanup, parent 0000000039005ce6
+> > kobject: 'rx-0' (00000000fc3878f1): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000fc3878f1): kobject_uevent_env
+> > kobject: 'rx-0' (00000000fc3878f1): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000fc3878f1): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000fc3878f1): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (000000003da8a217): kobject_cleanup, parent 0000000039005ce6
+> > kobject: 'tx-0' (000000003da8a217): auto cleanup 'remove' event
+> > kobject: 'tx-0' (000000003da8a217): kobject_uevent_env
+> > kobject: 'tx-0' (000000003da8a217): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (000000003da8a217): auto cleanup kobject_del
+> > kobject: 'tx-0' (000000003da8a217): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (0000000039005ce6): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (0000000039005ce6): calling ktype release
+> > kobject: 'queues' (0000000039005ce6): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6_vti0' (000000003f213163): kobject_uevent_env
+> > kobject: 'ip6_vti0' (000000003f213163): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000066dc1b5f): kobject_cleanup, parent 00000000e169d802
+> > kobject: 'rx-0' (0000000066dc1b5f): auto cleanup 'remove' event
+> > kobject: 'rx-0' (0000000066dc1b5f): kobject_uevent_env
+> > kobject: 'rx-0' (0000000066dc1b5f): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (0000000066dc1b5f): auto cleanup kobject_del
+> > kobject: 'rx-0' (0000000066dc1b5f): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000b99448c7): kobject_cleanup, parent 00000000e169d802
+> > kobject: 'tx-0' (00000000b99448c7): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000b99448c7): kobject_uevent_env
+> > kobject: 'tx-0' (00000000b99448c7): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000b99448c7): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000b99448c7): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (00000000e169d802): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (00000000e169d802): calling ktype release
+> > kobject: 'queues' (00000000e169d802): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6_vti0' (000000003422603c): kobject_uevent_env
+> > kobject: 'ip6_vti0' (000000003422603c): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000b6464399): kobject_cleanup, parent 00000000785ed365
+> > kobject: 'rx-0' (00000000b6464399): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000b6464399): kobject_uevent_env
+> > kobject: 'rx-0' (00000000b6464399): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000b6464399): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000b6464399): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000c2beb7d2): kobject_cleanup, parent 00000000785ed365
+> > kobject: 'tx-0' (00000000c2beb7d2): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000c2beb7d2): kobject_uevent_env
+> > kobject: 'tx-0' (00000000c2beb7d2): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000c2beb7d2): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000c2beb7d2): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (00000000785ed365): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (00000000785ed365): calling ktype release
+> > kobject: 'queues' (00000000785ed365): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6_vti0' (0000000031ab464d): kobject_uevent_env
+> > kobject: 'ip6_vti0' (0000000031ab464d): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000a7d5a6f7): kobject_cleanup, parent 00000000ed628333
+> > kobject: 'rx-0' (00000000a7d5a6f7): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000a7d5a6f7): kobject_uevent_env
+> > kobject: 'rx-0' (00000000a7d5a6f7): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000a7d5a6f7): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000a7d5a6f7): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000564c497f): kobject_cleanup, parent 00000000ed628333
+> > kobject: 'tx-0' (00000000564c497f): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000564c497f): kobject_uevent_env
+> > kobject: 'tx-0' (00000000564c497f): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000564c497f): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000564c497f): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (00000000ed628333): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (00000000ed628333): calling ktype release
+> > kobject: 'queues' (00000000ed628333): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip6_vti0' (00000000fb053a2a): kobject_uevent_env
+> > kobject: 'ip6_vti0' (00000000fb053a2a): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'ip6_vti0' (000000000e5b1a5c): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6_vti0' (000000000e5b1a5c): calling ktype release
+> > kobject: 'ip6_vti0': free name
+> > kobject: 'ip6_vti0' (0000000084bcfa3e): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6_vti0' (0000000084bcfa3e): calling ktype release
+> > kobject: 'ip6_vti0': free name
+> > kobject: 'ip6_vti0' (00000000a17dcb7a): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6_vti0' (00000000a17dcb7a): calling ktype release
+> > kobject: 'ip6_vti0': free name
+> > kobject: 'ip6_vti0' (00000000f1a1ebea): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6_vti0' (00000000f1a1ebea): calling ktype release
+> > kobject: 'ip6_vti0': free name
+> > kobject: 'ip6_vti0' (00000000e99a1c16): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6_vti0' (00000000e99a1c16): calling ktype release
+> > kobject: 'ip6_vti0': free name
+> > kobject: 'ip6_vti0' (000000003f213163): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6_vti0' (000000003f213163): calling ktype release
+> > kobject: 'ip6_vti0': free name
+> > kobject: 'ip6_vti0' (000000003422603c): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6_vti0' (000000003422603c): calling ktype release
+> > kobject: 'ip6_vti0': free name
+> > kobject: 'ip6_vti0' (0000000031ab464d): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6_vti0' (0000000031ab464d): calling ktype release
+> > kobject: 'ip6_vti0': free name
+> > kobject: 'ip6_vti0' (00000000fb053a2a): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'ip6_vti0' (00000000fb053a2a): calling ktype release
+> > kobject: 'ip6_vti0': free name
+> > kobject: 'rx-0' (00000000c827514b): kobject_cleanup, parent 000000004e70d3ea
+> > kobject: 'rx-0' (00000000c827514b): auto cleanup 'remove' event
+> > kobject: 'rx-0' (00000000c827514b): kobject_uevent_env
+> > kobject: 'rx-0' (00000000c827514b): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (00000000c827514b): auto cleanup kobject_del
+> > kobject: 'rx-0' (00000000c827514b): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (00000000e9330ec4): kobject_cleanup, parent 000000004e70d3ea
+> > kobject: 'tx-0' (00000000e9330ec4): auto cleanup 'remove' event
+> > kobject: 'tx-0' (00000000e9330ec4): kobject_uevent_env
+> > kobject: 'tx-0' (00000000e9330ec4): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (00000000e9330ec4): auto cleanup kobject_del
+> > kobject: 'tx-0' (00000000e9330ec4): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (000000004e70d3ea): kobject_cleanup, parent
+> > 000000009c061a32
+> > kobject: 'queues' (000000004e70d3ea): calling ktype release
+> > kobject: 'queues' (000000004e70d3ea): kset_release
+> > kobject: 'queues': free name
+> > kobject: 'ip_vti0' (000000004ee7ad23): kobject_uevent_env
+> > kobject: 'ip_vti0' (000000004ee7ad23): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000004dda38d8): kobject_cleanup, parent 00000000025cb3fe
+> > kobject: 'rx-0' (000000004dda38d8): auto cleanup 'remove' event
+> > kobject: 'rx-0' (000000004dda38d8): kobject_uevent_env
+> > kobject: 'rx-0' (000000004dda38d8): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'rx-0' (000000004dda38d8): auto cleanup kobject_del
+> > kobject: 'rx-0' (000000004dda38d8): calling ktype release
+> > kobject: 'rx-0': free name
+> > kobject: 'tx-0' (0000000097fba38d): kobject_cleanup, parent 00000000025cb3fe
+> > kobject: 'tx-0' (0000000097fba38d): auto cleanup 'remove' event
+> > kobject: 'tx-0' (0000000097fba38d): kobject_uevent_env
+> > kobject: 'tx-0' (0000000097fba38d): kobject_uevent_env: uevent_suppress
+> > caused the event to drop!
+> > kobject: 'tx-0' (0000000097fba38d): auto cleanup kobject_del
+> > kobject: 'tx-0' (0000000097fba38d): calling ktype release
+> > kobject: 'tx-0': free name
+> > kobject: 'queues' (00000000025cb3fe): kobject_cleanup, parent
+> > 000000009c061a32
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> >
+> > --
+> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000071c72c0590776357%40google.com.
+>
+> Looks to be:
+>
+> #syz dup: BUG: MAX_STACK_TRACE_ENTRIES too low! (2)
+>
+> Original thread: https://lkml.kernel.org/lkml/0000000000005ff8b20585395280@google.com/T/#u
+>
+> The caller isn't really meaningful for "MAX_STACK_TRACE_ENTRIES too low" bugs,
+> so I think
+> https://github.com/google/syzkaller/pull/1332/commits/ccbd11f30158d198e84953b1bb5eaa33464d9311
+> should be reverted...
+>
+> - Eric
 
-s/creating/created/
-
-> +KVM_SEV_SEND_START.
-> +
-> +Parameters (in): struct kvm_sev_send_update_data
-> +
-> +Returns: 0 on success, -negative on error
-> +
-> +::
-> +
-> +        struct kvm_sev_launch_send_update_data {
-> +                __u64 hdr_uaddr;        /* userspace address containing the packet header */
-> +                __u32 hdr_len;
-> +
-> +                __u64 guest_uaddr;      /* the source memory region to be encrypted */
-> +                __u32 guest_len;
-> +
-> +                __u64 trans_uaddr;      /* the destition memory region  */
-
-s/destition/destination/
-
-> +                __u32 trans_len;
-
-Those addresses are all system physical addresses, according to the doc.
-Why do you call them "uaddr"?
-
-> +        };
-> +
->  References
->  ==========
->  
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 0b0937f53520..8e815a53c420 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -418,6 +418,7 @@ enum {
->  
->  static unsigned int max_sev_asid;
->  static unsigned int min_sev_asid;
-> +static unsigned long sev_me_mask;
->  static unsigned long *sev_asid_bitmap;
->  #define __sme_page_pa(x) __sme_set(page_to_pfn(x) << PAGE_SHIFT)
->  
-> @@ -1216,16 +1217,21 @@ static int avic_ga_log_notifier(u32 ga_tag)
->  static __init int sev_hardware_setup(void)
->  {
->  	struct sev_user_data_status *status;
-> +	int eax, ebx;
->  	int rc;
->  
-> -	/* Maximum number of encrypted guests supported simultaneously */
-> -	max_sev_asid = cpuid_ecx(0x8000001F);
-> +	/*
-> +	 * Query the memory encryption information.
-> +	 *  EBX:  Bit 0:5 Pagetable bit position used to indicate encryption (aka Cbit).
-> +	 *  ECX:  Maximum number of encrypted guests supported simultaneously.
-> +	 *  EDX:  Minimum ASID value that should be used for SEV guest.
-> +	 */
-> +	cpuid(0x8000001f, &eax, &ebx, &max_sev_asid, &min_sev_asid);
->  
->  	if (!max_sev_asid)
->  		return 1;
->  
-> -	/* Minimum ASID value that should be used for SEV guest */
-> -	min_sev_asid = cpuid_edx(0x8000001F);
-> +	sev_me_mask = 1UL << (ebx & 0x3f);
->  
->  	/* Initialize SEV ASID bitmap */
->  	sev_asid_bitmap = bitmap_zalloc(max_sev_asid, GFP_KERNEL);
-> @@ -7059,6 +7065,109 @@ static int sev_send_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
->  	return ret;
->  }
->  
-> +static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
-> +{
-> +	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-> +	struct sev_data_send_update_data *data;
-> +	struct kvm_sev_send_update_data params;
-> +	void *hdr = NULL, *trans_data = NULL;
-> +	struct page **guest_page = NULL;
-
-Ah, I see why you do init them to NULL - -Wmaybe-uninitialized. See below.
-
-> +	unsigned long n;
-> +	int ret, offset;
-> +
-> +	if (!sev_guest(kvm))
-> +		return -ENOTTY;
-> +
-> +	if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
-> +			sizeof(struct kvm_sev_send_update_data)))
-> +		return -EFAULT;
-> +
-> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	/* userspace wants to query either header or trans length */
-> +	if (!params.trans_len || !params.hdr_len)
-> +		goto cmd;
-> +
-> +	ret = -EINVAL;
-> +	if (!params.trans_uaddr || !params.guest_uaddr ||
-> +	    !params.guest_len || !params.hdr_uaddr)
-> +		goto e_free;
-> +
-> +	/* Check if we are crossing the page boundry */
-
-WARNING: 'boundry' may be misspelled - perhaps 'boundary'?
-
-So the fact that you have to init local variables to NULL means that gcc
-doesn't see the that kfree() can take a NULL.
-
-But also, you can restructure your labels in a way so that gcc sees them
-properly and doesn't issue the warning even without having to init those
-local variables.
-
-And also, you can cleanup that function and split out the header and
-trans length query functionality into a separate helper and this way
-make it a lot more readable. I gave it a try here and it looks more
-readable to me but this could be just me.
-
-I could've missed some case too... pasting the whole thing for easier
-review than as a diff:
-
-
----
-/* Userspace wants to query either header or trans length. */
-static int
-__sev_send_update_data_query_lengths(struct kvm *kvm, struct kvm_sev_cmd *argp,
-				     struct kvm_sev_send_update_data *params)
-{
-	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-	struct sev_data_send_update_data data;
-
-	memset(&data, 0, sizeof(data));
-
-	data.handle = sev->handle;
-	sev_issue_cmd(kvm, SEV_CMD_SEND_UPDATE_DATA, &data, &argp->error);
-
-	params->hdr_len   = data.hdr_len;
-	params->trans_len = data.trans_len;
-
-	if (copy_to_user((void __user *)(uintptr_t)argp->data, params,
-			 sizeof(struct kvm_sev_send_update_data)))
-		return -EFAULT;
-
-	return 0;
-}
-
-static int sev_send_update_data(struct kvm *kvm, struct kvm_sev_cmd *argp)
-{
-	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-	struct sev_data_send_update_data *data;
-	struct kvm_sev_send_update_data params;
-	struct page **guest_page;
-	void *hdr, *trans_data;
-	unsigned long n;
-	int ret, offset;
-
-	if (!sev_guest(kvm))
-		return -ENOTTY;
-
-	if (copy_from_user(&params,
-			   (void __user *)(uintptr_t)argp->data,
-			   sizeof(struct kvm_sev_send_update_data)))
-		return -EFAULT;
-
-	/* Userspace wants to query either header or trans length */
-	if (!params.trans_len || !params.hdr_len)
-		return __sev_send_update_data_query_lengths(kvm, argp, &params);
-
-	if (!params.trans_uaddr || !params.guest_uaddr ||
-	    !params.guest_len || !params.hdr_uaddr)
-		return -EINVAL;
-
-	/* Check if we are crossing the page boundary: */
-	offset = params.guest_uaddr & (PAGE_SIZE - 1);
-	if ((params.guest_len + offset > PAGE_SIZE))
-		return -EINVAL;
-
-	hdr = kmalloc(params.hdr_len, GFP_KERNEL);
-	if (!hdr)
-		return -ENOMEM;
-
-	ret = -ENOMEM;
-	trans_data = kmalloc(params.trans_len, GFP_KERNEL);
-	if (!trans_data)
-		goto free_hdr;
-
-	data = kzalloc(sizeof(*data), GFP_KERNEL);
-        if (!data)
-                goto free_trans;
-
-	/* Pin guest memory */
-	ret = -EFAULT;
-	guest_page = sev_pin_memory(kvm, params.guest_uaddr & PAGE_MASK, PAGE_SIZE, &n, 0);
-	if (!guest_page)
-		goto free_data;
-
-	/* The SEND_UPDATE_DATA command requires C-bit to be always set. */
-	data->guest_address	= (page_to_pfn(guest_page[0]) << PAGE_SHIFT) + offset;
-	data->guest_address     |= sev_me_mask;
-	data->guest_len		= params.guest_len;
-	data->hdr_address	= __psp_pa(hdr);
-	data->hdr_len		= params.hdr_len;
-	data->trans_address	= __psp_pa(trans_data);
-	data->trans_len		= params.trans_len;
-	data->handle		= sev->handle;
-
-	ret = sev_issue_cmd(kvm, SEV_CMD_SEND_UPDATE_DATA, data, &argp->error);
-	if (ret)
-		goto unpin_memory;
-
-	/* Copy transport buffer to user space. */
-	ret = copy_to_user((void __user *)(uintptr_t)params.trans_uaddr, trans_data, params.trans_len);
-	if (ret)
-		goto unpin_memory;
-
-	/* Copy packet header to userspace. */
-	ret = copy_to_user((void __user *)(uintptr_t)params.hdr_uaddr, hdr, params.hdr_len);
-
-unpin_memory:
-	sev_unpin_memory(kvm, guest_page, n);
-
-free_data:
-	kfree(data);
-
-free_trans:
-	kfree(trans_data);
-
-free_hdr:
-	kfree(hdr);
-
-	return ret;
-}
-
--- 
-Regards/Gruss,
-    Boris.
-
-SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah, HRB 21284 (AG Nürnberg)
+Hm, when I looked at the stack traces of the reports they all seemed
+to be coming from only a few particular origins. But looking at the
+code it seems there's a global array of stack trace entries that can
+only grow, so this can be triggered anywhere. I'll revert the change.
