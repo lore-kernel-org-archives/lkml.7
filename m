@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E871C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC42AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A50233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F256233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495018;
-	bh=rEuce7MorVCTzG9uSs4zdJ9r9FIRLf/x4SAQiswLbYM=;
+	s=default; t=1566495024;
+	bh=N6lk2Dva1mbQmwlfVWErDLSrThh4/WYcDppJ9sWjLaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xAVKNviVVfS/l6dPPnBCIbtb2EZBntBwQlmb7ppLNrA6DdKh3ET2JhSbxFRrST/Gf
-	 d/YdgpCQL/fCMjzDAOIBDz4Vxw25Au2/qpUO6TffqU6a0UD0vbzRdM8BFDZ0d+faJA
-	 aEhVCunQ3lCg5gJhHREWhQFbNUfZfsmbV2FwOAf0=
+	b=UcBg7Ix76AWWzvFFX+H2E5oRuqKpKHX/0AiFvOeIuX9PDKYkH7TIYMAAOF7u4iB0q
+	 NsZB5cOSGJPsbICPR3t/pJxTUlcnsZKNgS70ILkDw7XlahALT+toTHjWQhAxdzLYQa
+	 LdOPVab74drSuUxLY5mZcScQ4IZUqALZbLjk3t0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392127AbfHVRaR (ORCPT
+        id S2392136AbfHVRaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51394 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404655AbfHVR0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:26:12 -0400
+        id S2404636AbfHVR0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:26:10 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF7A3206DD;
-        Thu, 22 Aug 2019 17:26:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6788D206DD;
+        Thu, 22 Aug 2019 17:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494771;
-        bh=rEuce7MorVCTzG9uSs4zdJ9r9FIRLf/x4SAQiswLbYM=;
+        s=default; t=1566494769;
+        bh=N6lk2Dva1mbQmwlfVWErDLSrThh4/WYcDppJ9sWjLaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G3s178QyqOGvgw4w4sCzek+5kd2Papd+iCH3c+9/9C00VDCUHR9oisgA7onbZzQFx
-         aavL8ML6RG/5+AOh6pF5U0L373lOdKBfCShuFL4EMXUv/4T1LENZKheGwOqFcF+M8K
-         fuEutsQDuUwbaf9gGH2jWhu1lod2NjRPlUk4OYZ4=
+        b=KO8+ogqp2Qwj32n7F8cVYj6uvubn/X6VraIrXoQg+LroPqYhCfp+ac/a31P4Z8te4
+         XQ+OQwBGlK6Hdjc9sGVZOz6qrPLWZBhqPq7xM2PsrgrZisMsMcH3YFnord+2fO2b+1
+         d3ZJYR/+RiO7Z5L5FZnRt9lZK1HQr7CroFSQw1Qg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.19 76/85] net/mlx4_en: fix a memory leak bug
-Date:   Thu, 22 Aug 2019 10:19:49 -0700
-Message-Id: <20190822171734.411724415@linuxfoundation.org>
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Sudarsana Kalluru <skalluru@marvell.com>,
+        Shahed Shaikh <shshaikh@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 73/85] bnx2x: Fix VFs VLAN reconfiguration in reload.
+Date:   Thu, 22 Aug 2019 10:19:46 -0700
+Message-Id: <20190822171734.310138115@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -60,45 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit 48ec7014c56e5eb2fbf6f479896143622d834f3b ]
+[ Upstream commit 4a4d2d372fb9b9229327e2ed01d5d9572eddf4de ]
 
-In mlx4_en_config_rss_steer(), 'rss_map->indir_qp' is allocated through
-kzalloc(). After that, mlx4_qp_alloc() is invoked to configure RSS
-indirection. However, if mlx4_qp_alloc() fails, the allocated
-'rss_map->indir_qp' is not deallocated, leading to a memory leak bug.
+Commit 04f05230c5c13 ("bnx2x: Remove configured vlans as
+part of unload sequence."), introduced a regression in driver
+that as a part of VF's reload flow, VLANs created on the VF
+doesn't get re-configured in hardware as vlan metadata/info
+was not getting cleared for the VFs which causes vlan PING to stop.
 
-To fix the above issue, add the 'qp_alloc_err' label to free
-'rss_map->indir_qp'.
+This patch clears the vlan metadata/info so that VLANs gets
+re-configured back in the hardware in VF's reload flow and
+PING/traffic continues for VLANs created over the VFs.
 
-Fixes: 4931c6ef04b4 ("net/mlx4_en: Optimized single ring steering")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: 04f05230c5c13 ("bnx2x: Remove configured vlans as part of unload sequence.")
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Sudarsana Kalluru <skalluru@marvell.com>
+Signed-off-by: Shahed Shaikh <shshaikh@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/en_rx.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c  |    7 ++++---
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h  |    2 ++
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c |   17 ++++++++++++-----
+ 3 files changed, 18 insertions(+), 8 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-@@ -1190,7 +1190,7 @@ int mlx4_en_config_rss_steer(struct mlx4
- 	err = mlx4_qp_alloc(mdev->dev, priv->base_qpn, rss_map->indir_qp);
- 	if (err) {
- 		en_err(priv, "Failed to allocate RSS indirection QP\n");
--		goto rss_err;
-+		goto qp_alloc_err;
- 	}
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+@@ -3058,12 +3058,13 @@ int bnx2x_nic_unload(struct bnx2x *bp, i
+ 	/* if VF indicate to PF this function is going down (PF will delete sp
+ 	 * elements and clear initializations
+ 	 */
+-	if (IS_VF(bp))
++	if (IS_VF(bp)) {
++		bnx2x_clear_vlan_info(bp);
+ 		bnx2x_vfpf_close_vf(bp);
+-	else if (unload_mode != UNLOAD_RECOVERY)
++	} else if (unload_mode != UNLOAD_RECOVERY) {
+ 		/* if this is a normal/close unload need to clean up chip*/
+ 		bnx2x_chip_cleanup(bp, unload_mode, keep_link);
+-	else {
++	} else {
+ 		/* Send the UNLOAD_REQUEST to the MCP */
+ 		bnx2x_send_unload_req(bp, unload_mode);
  
- 	rss_map->indir_qp->event = mlx4_en_sqp_event;
-@@ -1244,6 +1244,7 @@ indir_err:
- 		       MLX4_QP_STATE_RST, NULL, 0, 0, rss_map->indir_qp);
- 	mlx4_qp_remove(mdev->dev, rss_map->indir_qp);
- 	mlx4_qp_free(mdev->dev, rss_map->indir_qp);
-+qp_alloc_err:
- 	kfree(rss_map->indir_qp);
- 	rss_map->indir_qp = NULL;
- rss_err:
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
+@@ -425,6 +425,8 @@ void bnx2x_set_reset_global(struct bnx2x
+ void bnx2x_disable_close_the_gate(struct bnx2x *bp);
+ int bnx2x_init_hw_func_cnic(struct bnx2x *bp);
+ 
++void bnx2x_clear_vlan_info(struct bnx2x *bp);
++
+ /**
+  * bnx2x_sp_event - handle ramrods completion.
+  *
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -8488,11 +8488,21 @@ int bnx2x_set_vlan_one(struct bnx2x *bp,
+ 	return rc;
+ }
+ 
++void bnx2x_clear_vlan_info(struct bnx2x *bp)
++{
++	struct bnx2x_vlan_entry *vlan;
++
++	/* Mark that hw forgot all entries */
++	list_for_each_entry(vlan, &bp->vlan_reg, link)
++		vlan->hw = false;
++
++	bp->vlan_cnt = 0;
++}
++
+ static int bnx2x_del_all_vlans(struct bnx2x *bp)
+ {
+ 	struct bnx2x_vlan_mac_obj *vlan_obj = &bp->sp_objs[0].vlan_obj;
+ 	unsigned long ramrod_flags = 0, vlan_flags = 0;
+-	struct bnx2x_vlan_entry *vlan;
+ 	int rc;
+ 
+ 	__set_bit(RAMROD_COMP_WAIT, &ramrod_flags);
+@@ -8501,10 +8511,7 @@ static int bnx2x_del_all_vlans(struct bn
+ 	if (rc)
+ 		return rc;
+ 
+-	/* Mark that hw forgot all entries */
+-	list_for_each_entry(vlan, &bp->vlan_reg, link)
+-		vlan->hw = false;
+-	bp->vlan_cnt = 0;
++	bnx2x_clear_vlan_info(bp);
+ 
+ 	return 0;
+ }
 
 
