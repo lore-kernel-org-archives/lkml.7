@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0E6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 04:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335F4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 04:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84512339E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 04:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F0722DA7
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 04:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EqviCUvK"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NmGd4YJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731019AbfHVEqa (ORCPT
+        id S1730989AbfHVEq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 00:46:30 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:29725 "EHLO
+        Thu, 22 Aug 2019 00:46:29 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:29723 "EHLO
         conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728870AbfHVEq3 (ORCPT
+        with ESMTP id S1728801AbfHVEq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 00:46:29 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x7M4kEYg001492;
-        Thu, 22 Aug 2019 13:46:15 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x7M4kEYg001492
+        by conuserg-07.nifty.com with ESMTP id x7M4kEYi001492;
+        Thu, 22 Aug 2019 13:46:17 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x7M4kEYi001492
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1566449176;
-        bh=6AT+dnC1KRtHZkgR5NDUwVJPbnoa90i0FGA/GZb8vBc=;
+        s=dec2015msa; t=1566449177;
+        bh=6gGU+zbwAmmeHsHvPATXUaYKglga5VDWoX8vHpWidI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqviCUvKXVV1ky5vWgW0oSU1yC+wfqhkaix6aM5c8DmuChMg7PZ1EVAJJWUXk59pG
-         N49BYLafCevpEnduIyJ1LCfEH6GsRWksHJ4UCPMaIc9eZ5HdSMxJbPC9+wf6lIhE76
-         DVLnqAiaI0CFFI9R9mW3MFU4qaZYMq6Ja/V/8lhV3RSlcx9r1LwAnTBBU6Msou7cq9
-         tshRgYYUfwTqXDjdUcWjpBL3inkCdyejGo13U83nsHXPUkmoKcZ18Bk2j6z2jJgBdU
-         KtfyC45YE3R0RjB1zGY65yrtZ/6RfgXfTRMCYt9Ndy9BrrU2vseMW3zimavi1AkBTC
-         3tWlmDwOyr/ng==
+        b=NmGd4YJx5J+5TUl1R1UL9Y/DVXvmYu6opIM6HB/+xW3Y9YWmkcmiSmX6V3g3QbFor
+         rnQgKCZrhbpzJQVuCxOx4WOGLuXxNulHev9cmczPQNy3KJ36dlbg6tesPpvtXHoQ38
+         VtjkmlSZATC6+5IgLPgTY21FzmFWg3876Bq8ITzXVX7hWsGue+Lvq+pfOAoOwfhBnP
+         TuTAcBAgG9pKrcJX2tUNV4lgTIqmxQ8iCFerL4aThscs8OpxK9x2sYWq38KI0Oe5/h
+         TJjo0yD3DzHuQNLpO592JNa4GucanHCTq4ofYosEF824drgC9O2Sesxs8pmSYIwYpL
+         la+UP+JL6ZnbQ==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -44,9 +44,9 @@ Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/6] kbuild: Inform user to pass ARCH= for make mrproper only when necessary
-Date:   Thu, 22 Aug 2019 13:46:09 +0900
-Message-Id: <20190822044613.5349-2-yamada.masahiro@socionext.com>
+Subject: [PATCH 4/6] kbuild: move the clean srctree check to the outputmakefile target
+Date:   Thu, 22 Aug 2019 13:46:11 +0900
+Message-Id: <20190822044613.5349-4-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190822044613.5349-1-yamada.masahiro@socionext.com>
 References: <20190822044613.5349-1-yamada.masahiro@socionext.com>
@@ -55,34 +55,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 3a475b2166fd ("kbuild: Inform user to pass ARCH= for make
-mrproper"), if you try out-of-tree build with an unclean source tree,
-it suggests to run 'make ARCH=<ARCH> mrproper'.
-
-This looks odd when you are not cross-compiling the kernel. Show the
-'ARCH=<ARCH>' part only when ARCH= was given from the command line.
-If ARCH is the default (native build) or came from the environment,
-it should simply suggest 'make mrproper' as before.
+With this commit, the error report is shown earlier, even before
+running kconfig.
 
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
 
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Makefile | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index a77102e4ee90..d9cbbc27d4ba 100644
+index 901fcb8fffbe..ca6851f5ebc9 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -1121,7 +1121,7 @@ ifdef building_out_of_srctree
- 	$(Q)if [ -f $(srctree)/.config -o \
- 		 -d $(srctree)/include/config -o \
- 		 -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
--		echo >&2 "  $(srctree) is not clean, please run 'make ARCH=$(ARCH) mrproper'"; \
-+		echo >&2 "  $(srctree) is not clean, please run 'make$(if $(findstring command line, $(origin ARCH)), ARCH=$(ARCH)) mrproper'"; \
- 		echo >&2 "  in the '$(srctree)' directory.";\
- 		/bin/false; \
- 	fi;
+@@ -522,6 +522,7 @@ scripts_basic:
+ 	$(Q)rm -f .tmp_quiet_recordmcount
+ 
+ PHONY += outputmakefile
++# Before starting out-of-tree build, make sure the source tree is clean.
+ # outputmakefile generates a Makefile in the output directory, if using a
+ # separate output directory. This allows convenient use of make in the
+ # output directory.
+@@ -529,6 +530,15 @@ PHONY += outputmakefile
+ # ignore whole output directory
+ outputmakefile:
+ ifdef building_out_of_srctree
++	$(Q)if [ -f $(srctree)/.config -o \
++		 -d $(srctree)/include/config -o \
++		 -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
++		echo >&2 "***"; \
++		echo >&2 "*** The source tree is not clean, please run 'make$(if $(findstring command line, $(origin ARCH)), ARCH=$(ARCH)) mrproper'"; \
++		echo >&2 "*** in $(abs_srctree)";\
++		echo >&2 "***"; \
++		false; \
++	fi
+ 	$(Q)ln -fsn $(srctree) source
+ 	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile $(srctree)
+ 	$(Q)test -e .gitignore || \
+@@ -1113,21 +1123,7 @@ scripts: scripts_basic scripts_dtc
+ 
+ PHONY += prepare archprepare prepare3
+ 
+-# prepare3 is used to check if we are building in a separate output directory,
+-# and if so do:
+-# 1) Check that make has not been executed in the kernel src $(srctree)
+ prepare3: include/config/kernel.release
+-ifdef building_out_of_srctree
+-	$(Q)if [ -f $(srctree)/.config -o \
+-		 -d $(srctree)/include/config -o \
+-		 -d $(srctree)/arch/$(SRCARCH)/include/generated ]; then \
+-		echo >&2 "***"; \
+-		echo >&2 "*** The source tree is not clean, please run 'make$(if $(findstring command line, $(origin ARCH)), ARCH=$(ARCH)) mrproper'"; \
+-		echo >&2 "*** in $(abs_srctree)";\
+-		echo >&2 "***"; \
+-		/bin/false; \
+-	fi;
+-endif
+ 
+ archprepare: archheaders archscripts scripts prepare3 outputmakefile \
+ 	asm-generic $(version_h) $(autoksyms_h) include/generated/utsrelease.h
 -- 
 2.17.1
 
