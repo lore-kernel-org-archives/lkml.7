@@ -2,87 +2,178 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD68C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 652B5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECEA8233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A9921726
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:08:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OldMupOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388850AbfHVNEi (ORCPT
+        id S2388869AbfHVNIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:04:38 -0400
-Received: from mga09.intel.com ([134.134.136.24]:48582 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731541AbfHVNEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:04:37 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 06:04:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,416,1559545200"; 
-   d="scan'208";a="378509664"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga005.fm.intel.com with ESMTP; 22 Aug 2019 06:04:32 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1i0mlR-0001dM-TB; Thu, 22 Aug 2019 16:04:29 +0300
-Date:   Thu, 22 Aug 2019 16:04:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, alan@linux.intel.com,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-Subject: Re: [PATCH v1 1/2] x86/rtc: Add option to skip using RTC
-Message-ID: <20190822130429.GN30120@smile.fi.intel.com>
-References: <cover.1566458029.git.rahul.tanwar@linux.intel.com>
- <becacc523508b295a52db9f1592e2868e3988e28.1566458029.git.rahul.tanwar@linux.intel.com>
- <20190822090208.GJ30120@smile.fi.intel.com>
- <25f6947d-7ba0-c23c-25aa-c4c4173da6b0@linux.intel.com>
+        Thu, 22 Aug 2019 09:08:10 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34956 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388852AbfHVNIK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 09:08:10 -0400
+Received: by mail-pl1-f195.google.com with SMTP id gn20so3456107plb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 06:08:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qohOIjLTZ3ihn9x3N6euNmP6rCWo+cb3m1PqDtwjGYs=;
+        b=OldMupOLYD08MOzZC+lN80ib1KDeoHXh4WMku2QC6LMKDS5DEHumBoH7/sUDFXUg4H
+         ZuEQnWpQP55CwBNNNAk4+PToDwiFJsBvfJLuziKA1wU4tgV7yXpphyBtVjsYeZLnrGbs
+         4LUT83JkOw2FFRJ8wX+3Vk2A05+DWXFxwub1Uu+EjBoJjIeMPVOW65CKqRJHMgIM9Qoj
+         NoAVVaKEtUr44B5SDHIoZV2yswoUhrIZ39L1N11XdmhIoVqGeTaxgUxLp3M8SY+Twb8Y
+         jmDo8f9recdvreTf3TWSYZfqhPasXnTtadaG+uaRNFH7tJ63dWn/cDHqacjOchWjdQPK
+         sXQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qohOIjLTZ3ihn9x3N6euNmP6rCWo+cb3m1PqDtwjGYs=;
+        b=BT1q9JUJtdCCmZ9E6tWUYH1uVjECPUoHnNhHfVDqyPLKAHn/9bZmxd07/Gqz6wx+Ui
+         hgqvsVGlma/Al89QDYqT8nssFqBs8jgPBchd1VIkd5ADOGiLpjMJMzW5yJ/6rReYt9GE
+         5/tXmuUFPLwAtA3egPHkNPUVu/TMdkz609TJ3EUG9zUs1sEkIQkeVgd1rFJlHlUpY4He
+         nCmjjJcjvTnD3O5pwhZ8hkOU9wpP3EB7v46Em9C2bGCTarWNh7HrBigApNCYeKZeUATt
+         Vg1tWfToYj3BV5kCNewiGAWGEDXMDX4QAK/mA3iZiEgSUeR5xM2zsMhLe1HCE427G+C6
+         J+aw==
+X-Gm-Message-State: APjAAAXNHGP/A2EBkhCYSs5dBXbGkNjvlcdeo1VPFAJ6yl2KBM7RhT80
+        JDe07Wj1fd+EijJHS5uRExsK/gIgFnSAx44RApJ7IA==
+X-Google-Smtp-Source: APXvYqzz8/twTxFslwlhiYdMrZakH/5uA7mpoWknVikw32YDRRyZ9rhcW3D4RTA5jZI3Xd6yXaWDGO3CjyGGBx9+Rho=
+X-Received: by 2002:a17:902:bb94:: with SMTP id m20mr38692301pls.336.1566479288588;
+ Thu, 22 Aug 2019 06:08:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25f6947d-7ba0-c23c-25aa-c4c4173da6b0@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <000000000000d9f094057a17b97b@google.com> <000000000000b439370586498dff@google.com>
+ <CAAeHK+zUHJswwHfVUCV0qTgvFVFZpT0hJqioLyYgbA0yQC0H8Q@mail.gmail.com> <CAAeHK+w+asSQ3axWymToQ+uzPfEAYS2QimVBL85GuJRBtxkjDA@mail.gmail.com>
+In-Reply-To: <CAAeHK+w+asSQ3axWymToQ+uzPfEAYS2QimVBL85GuJRBtxkjDA@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 22 Aug 2019 15:07:56 +0200
+Message-ID: <CAAeHK+y-2DZ1sWUE5bESrd=dUAaGrHXzR5+gFJFgiAaWo+D2dw@mail.gmail.com>
+Subject: Re: WARNING in rollback_registered_many (2)
+To:     syzbot <syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com>,
+        USB list <linux-usb@vger.kernel.org>
+Cc:     Larry Finger <Larry.Finger@lwfinger.net>, avagin@virtuozzo.com,
+        "David S. Miller" <davem@davemloft.net>,
+        devel@driverdev.osuosl.org,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Eric Dumazet <edumazet@google.com>,
+        florian.c.schilhabel@googlemail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        ktkhai@virtuozzo.com, LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, straube.linux@gmail.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        tyhicks@canonical.com, Matthew Wilcox <willy@infradead.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 05:26:33PM +0800, Tanwar, Rahul wrote:
-> On 22/8/2019 5:02 PM, Andy Shevchenko wrote:
-> > On Thu, Aug 22, 2019 at 03:44:03PM +0800, Rahul Tanwar wrote:
-> > > Use a newly introduced optional "status" property of "motorola,mc146818"
-> > > compatible DT node to determine if RTC is supported. Skip read/write from
-> > > RTC device only when this node is present and status is "disabled". In all
-> > > other cases, proceed as before.
-> > Can't we rather update ->get_wallclock() and ->set_wallclock() based on this?
-> 
-> 
-> get_wallclock() and set_wallclock() are function pointers of platform_ops
-> 
-> which are initialized to mach_get_cmos_time() and mach_set_rtc_mmss()
-> 
-> at init time. Since adding a new platform to override these functions is
-> 
-> discouraged, so the only way is to modify RTC get/set functions.
+On Wed, Aug 7, 2019 at 4:03 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> On Fri, Apr 12, 2019 at 1:32 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> >
+> > On Fri, Apr 12, 2019 at 1:29 AM syzbot
+> > <syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com> wrote:
+> > >
+> > > syzbot has found a reproducer for the following crash on:
+> > >
+> > > HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+> > > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=10d552b7200000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=40918e4d826fb2ff9b96
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a4c1af200000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=121b274b200000
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com
+> > >
+> > > usb 1-1: r8712u: MAC Address from efuse = 00:e0:4c:87:00:00
+> > > usb 1-1: r8712u: Loading firmware from "rtlwifi/rtl8712u.bin"
+> > > usb 1-1: USB disconnect, device number 2
+> > > usb 1-1: Direct firmware load for rtlwifi/rtl8712u.bin failed with error -2
+> > > usb 1-1: r8712u: Firmware request failed
+> > > WARNING: CPU: 0 PID: 575 at net/core/dev.c:8152
+> > > rollback_registered_many+0x1f3/0xe70 net/core/dev.c:8152
+> > > Kernel panic - not syncing: panic_on_warn set ...
+> > > CPU: 0 PID: 575 Comm: kworker/0:4 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > Google 01/01/2011
+> > > Workqueue: usb_hub_wq hub_event
+> > > Call Trace:
+> > >   __dump_stack lib/dump_stack.c:77 [inline]
+> > >   dump_stack+0xe8/0x16e lib/dump_stack.c:113
+> > >   panic+0x29d/0x5f2 kernel/panic.c:214
+> > >   __warn.cold+0x20/0x48 kernel/panic.c:571
+> > >   report_bug+0x262/0x2a0 lib/bug.c:186
+> > >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> > >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> > >   do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+> > >   do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+> > >   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+> > > RIP: 0010:rollback_registered_many+0x1f3/0xe70 net/core/dev.c:8152
+> > > Code: 05 00 00 31 ff 44 89 fe e8 5a 15 f3 f4 45 84 ff 0f 85 49 ff ff ff e8
+> > > 1c 14 f3 f4 0f 1f 44 00 00 e8 12 14 f3 f4 e8 0d 14 f3 f4 <0f> 0b 4c 89 e7
+> > > e8 33 72 f2 f6 31 ff 41 89 c4 89 c6 e8 27 15 f3 f4
+> > > RSP: 0018:ffff88809d087698 EFLAGS: 00010293
+> > > RAX: ffff88809d058000 RBX: ffff888096240000 RCX: ffffffff8c7eb146
+> > > RDX: 0000000000000000 RSI: ffffffff8c7eb163 RDI: 0000000000000001
+> > > RBP: ffff88809d0877c8 R08: ffff88809d058000 R09: fffffbfff2708111
+> > > R10: fffffbfff2708110 R11: ffffffff93840887 R12: ffff888096240070
+> > > R13: dffffc0000000000 R14: ffff88809d087758 R15: 0000000000000000
+> > >   rollback_registered+0xf7/0x1c0 net/core/dev.c:8228
+> > >   unregister_netdevice_queue net/core/dev.c:9275 [inline]
+> > >   unregister_netdevice_queue+0x1dc/0x2b0 net/core/dev.c:9268
+> > >   unregister_netdevice include/linux/netdevice.h:2655 [inline]
+> > >   unregister_netdev+0x1d/0x30 net/core/dev.c:9316
+> > >   r871xu_dev_remove+0xe7/0x223 drivers/staging/rtl8712/usb_intf.c:604
+> > >   usb_unbind_interface+0x1c9/0x980 drivers/usb/core/driver.c:423
+> > >   __device_release_driver drivers/base/dd.c:1082 [inline]
+> > >   device_release_driver_internal+0x436/0x4f0 drivers/base/dd.c:1113
+> > >   bus_remove_device+0x302/0x5c0 drivers/base/bus.c:556
+> > >   device_del+0x467/0xb90 drivers/base/core.c:2269
+> > >   usb_disable_device+0x242/0x790 drivers/usb/core/message.c:1235
+> > >   usb_disconnect+0x298/0x870 drivers/usb/core/hub.c:2197
+> > >   hub_port_connect drivers/usb/core/hub.c:4940 [inline]
+> > >   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+> > >   port_event drivers/usb/core/hub.c:5350 [inline]
+> > >   hub_event+0xcd2/0x3b00 drivers/usb/core/hub.c:5432
+> > >   process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+> > >   process_scheduled_works kernel/workqueue.c:2331 [inline]
+> > >   worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
+> > >   kthread+0x313/0x420 kernel/kthread.c:253
+> > >   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+> > > Kernel Offset: disabled
+> > > Rebooting in 86400 seconds..
+> > >
+> >
+> > +linux-usb mailing list
+>
+> This USB bug is the most frequently triggered one right now with over
+> 27k kernel crashes.
 
-Shouldn't it be platform agnostic code?
-So, my point is, instead of hacking two functions, perhaps better to avoid them
-at all.
+OK, this report is confusing. It was initially reported on the
+upstream instance a long time ago, but since then has stopped
+happening, as it was probably fixed. Then when we launched the USB
+fuzzing instance, it has started producing similarly named reports
+(with a different root cause though), and they were bucketed into this
+bug by syzkaller. I've improved parsing titles of such reports in
+syzkaller, so I'm invalidating this one, and syzbot should send a
+properly attributed USB report soon.
 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+#syz invalid
