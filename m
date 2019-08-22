@@ -2,335 +2,173 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB67C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50ED5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE51A2339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC5D205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:03:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+J0jw74"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392411AbfHVUCk (ORCPT
+        id S2392436AbfHVUDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:02:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36990 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732824AbfHVUCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:02:40 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4129B1E2036;
-        Thu, 22 Aug 2019 20:02:39 +0000 (UTC)
-Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E04F951C46;
-        Thu, 22 Aug 2019 20:02:37 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 15:02:35 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Raphael Gault <raphael.gault@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com,
-        julien.thierry.kdev@gmail.com, raph.gault+kdev@gmail.com
-Subject: Re: [RFC v4 05/18] objtool: special: Adapt special section handling
-Message-ID: <20190822200235.e3p37o3prmbkeude@treble>
-References: <20190816122403.14994-1-raphael.gault@arm.com>
- <20190816122403.14994-6-raphael.gault@arm.com>
+        Thu, 22 Aug 2019 16:03:14 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36264 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389415AbfHVUDN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 16:03:13 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j17so5434924lfp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 13:03:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8BL6cXi6kmquC//tEDRxbHmDzYl3D4X2KwrWFAtyUbo=;
+        b=L+J0jw74rzPlJ5rUcp3hfdUw72E0cFHz4B0Zt4j+ug0Lzq4mee1klH7LUfCS34fGcJ
+         4kbhybS3AaCCfkRLdSvd227te6vWk+BvFnsq7irW+bxuHY9dviaPhzUh22XtWCOI8F+f
+         +JVotM2uMONkC/ItZ2oBRxM0rT1VyDUWLff+g7QAcFd1ujFOogO/f14Cic/SYtZfSOZQ
+         6yo7I0mHZnv+FhroC3/xU3RoyQXnCFZd5D6CSL1LmuNKhCH3Ray7pXZ2Nk+r3sHiILVr
+         33X1ae9pS55Jk8JV3YllIyvkXcn319M5aR7zHjAYuHLJHNUku3h53U1UsOmKfmNhtR2v
+         nSfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8BL6cXi6kmquC//tEDRxbHmDzYl3D4X2KwrWFAtyUbo=;
+        b=exrz2KcndbLsymilrXsfMvi/qMW4nCCto3L5XBbk14EKslpCu4i+KnP9NDkYwXAArc
+         uTF4ukgmY7ONy4xV6Xp3Ka8DatOpDAkzjEr4ocBMMYB9zSdIk6snApxiSCJFFzdcJ+ai
+         flI7paDlhDGarBPnRsFBogd2hOhGJ8OWWAVdF2g/5JitApC88hhM6nnZvaUQXUs3gxBv
+         bt3Jz//MF8grT+ImE5aY0nXAj7+lZZrgLKSx4CggDkeQK9qidTI7vDNXV3wxduG06S5z
+         L1Iwu4BcaH7sIlNXvpRYwOc4o0ie5VJN0Ix3yqPf0g29g8vnUUWX0uxb40QwhAiWlJHD
+         23mg==
+X-Gm-Message-State: APjAAAUcaBo4WyDNJl485eKr3oZbmX+hu7DCh9HjITfAkhGHC/5BOuZS
+        Anm8alZMNQog8YqOxYeX67b6HPQobHDV3issin0=
+X-Google-Smtp-Source: APXvYqyC3WDdSPVZ6qNtk720WzSxZ4/fd0UnMq/iblygQ0tHGlxaCJ/2waC/QgLudzBysoCELVdNSGdMiH3o+xywLf0=
+X-Received: by 2002:ac2:4c12:: with SMTP id t18mr514885lfq.134.1566504190777;
+ Thu, 22 Aug 2019 13:03:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190816122403.14994-6-raphael.gault@arm.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Thu, 22 Aug 2019 20:02:39 +0000 (UTC)
+References: <20190729095155.GP22106@shao2-debian> <1c0bf22b-2c69-6b45-f700-ed832a3a5c17@suse.de>
+ <14fdaaed-51c8-b270-b46b-cba7b5c4ba52@suse.de> <20190805070200.GA91650@shbuild999.sh.intel.com>
+ <c0c3f387-dc93-3146-788c-23258b28a015@intel.com> <045a23ab-78f7-f363-4a2e-bf24a7a2f79e@suse.de>
+ <37ae41e4-455d-c18d-5c93-7df854abfef9@intel.com> <370747ca-4dc9-917b-096c-891dcc2aedf0@suse.de>
+ <c6e220fe-230c-265c-f2fc-b0948d1cb898@intel.com> <20190812072545.GA63191@shbuild999.sh.intel.com>
+ <20190813093616.GA65475@shbuild999.sh.intel.com> <64d41701-55a4-e526-17ae-8936de4bc1ef@suse.de>
+In-Reply-To: <64d41701-55a4-e526-17ae-8936de4bc1ef@suse.de>
+From:   Dave Airlie <airlied@gmail.com>
+Date:   Fri, 23 Aug 2019 06:02:58 +1000
+Message-ID: <CAPM=9twNdYZCbyByLqZPpcK+ifoeL0weXppqzLyZEOn7GPAV_Q@mail.gmail.com>
+Subject: Re: [LKP] [drm/mgag200] 90f479ae51: vm-scalability.median -18.8% regression
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     Feng Tang <feng.tang@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Rong Chen <rong.a.chen@intel.com>,
+        =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel@daenzer.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        ying.huang@intel.com, LKP <lkp@01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 01:23:50PM +0100, Raphael Gault wrote:
-> This patch abstracts the few architecture dependent tests that are
+On Fri, 23 Aug 2019 at 03:25, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>
+> Hi
+>
+> I was traveling and could reply earlier. Sorry for taking so long.
+>
+> Am 13.08.19 um 11:36 schrieb Feng Tang:
+> > Hi Thomas,
+> >
+> > On Mon, Aug 12, 2019 at 03:25:45PM +0800, Feng Tang wrote:
+> >> Hi Thomas,
+> >>
+> >> On Fri, Aug 09, 2019 at 04:12:29PM +0800, Rong Chen wrote:
+> >>> Hi,
+> >>>
+> >>>>> Actually we run the benchmark as a background process, do we need to
+> >>>>> disable the cursor and test again?
+> >>>> There's a worker thread that updates the display from the shadow buffer.
+> >>>> The blinking cursor periodically triggers the worker thread, but the
+> >>>> actual update is just the size of one character.
+> >>>>
+> >>>> The point of the test without output is to see if the regression comes
+> >>> >from the buffer update (i.e., the memcpy from shadow buffer to VRAM), or
+> >>> >from the worker thread. If the regression goes away after disabling the
+> >>>> blinking cursor, then the worker thread is the problem. If it already
+> >>>> goes away if there's simply no output from the test, the screen update
+> >>>> is the problem. On my machine I have to disable the blinking cursor, so
+> >>>> I think the worker causes the performance drop.
+> >>>
+> >>> We disabled redirecting stdout/stderr to /dev/kmsg,  and the regression is
+> >>> gone.
+> >>>
+> >>> commit:
+> >>>   f1f8555dfb9 drm/bochs: Use shadow buffer for bochs framebuffer console
+> >>>   90f479ae51a drm/mgag200: Replace struct mga_fbdev with generic framebuffer
+> >>> emulation
+> >>>
+> >>> f1f8555dfb9a70a2  90f479ae51afa45efab97afdde testcase/testparams/testbox
+> >>> ----------------  -------------------------- ---------------------------
+> >>>          %stddev      change         %stddev
+> >>>              \          |                \
+> >>>      43785                       44481
+> >>> vm-scalability/300s-8T-anon-cow-seq-hugetlb/lkp-knm01
+> >>>      43785                       44481        GEO-MEAN vm-scalability.median
+> >>
+> >> Till now, from Rong's tests:
+> >> 1. Disabling cursor blinking doesn't cure the regression.
+> >> 2. Disabling printint test results to console can workaround the
+> >> regression.
+> >>
+> >> Also if we set the perfer_shadown to 0, the regression is also
+> >> gone.
+> >
+> > We also did some further break down for the time consumed by the
+> > new code.
+> >
+> > The drm_fb_helper_dirty_work() calls sequentially
+> > 1. drm_client_buffer_vmap       (290 us)
+> > 2. drm_fb_helper_dirty_blit_real  (19240 us)
+> > 3. helper->fb->funcs->dirty()    ---> NULL for mgag200 driver
+> > 4. drm_client_buffer_vunmap       (215 us)
+> >
+>
+> It's somewhat different to what I observed, but maybe I just couldn't
+> reproduce the problem correctly.
+>
+> > The average run time is listed after the function names.
+> >
+> > From it, we can see drm_fb_helper_dirty_blit_real() takes too long
+> > time (about 20ms for each run). I guess this is the root cause
+> > of this regression, as the original code doesn't use this dirty worker.
+>
+> True, the original code uses a temporary buffer, but updates the display
+> immediately.
+>
+> My guess is that this could be a caching problem. The worker runs on a
+> different CPU, which doesn't have the shadow buffer in cache.
+>
+> > As said in last email, setting the prefer_shadow to 0 can avoid
+> > the regrssion. Could it be an option?
+>
+> Unfortunately not. Without the shadow buffer, the console's display
+> buffer permanently resides in video memory. It consumes significant
+> amount of that memory (say 8 MiB out of 16 MiB). That doesn't leave
+> enough room for anything else.
+>
+> The best option is to not print to the console.
 
-The patch description shouldn't talk about the patch specifically, but
-should rather describe what it does, in imperative language.
+Wait a second, I thought the driver did an eviction on modeset of the
+scanned out object, this was a deliberate design decision made when
+writing those drivers, has this been removed in favour of gem and
+generic code paths?
 
-> perform when handling special section and switch tables. It enables any
-
-"performed"
-
-> architecture to ignore a particular CPU feature or not to handle switch
-> tables.
-> 
-> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-> ---
->  tools/objtool/arch/arm64/Build                |  1 +
->  tools/objtool/arch/arm64/arch_special.c       | 22 +++++++++++++++
->  .../objtool/arch/arm64/include/arch_special.h | 10 +++++--
->  tools/objtool/arch/x86/Build                  |  1 +
->  tools/objtool/arch/x86/arch_special.c         | 28 +++++++++++++++++++
->  tools/objtool/arch/x86/include/arch_special.h |  9 ++++++
->  tools/objtool/check.c                         | 24 ++++++++++++++--
->  tools/objtool/special.c                       |  9 ++----
->  tools/objtool/special.h                       |  3 ++
->  9 files changed, 96 insertions(+), 11 deletions(-)
->  create mode 100644 tools/objtool/arch/arm64/arch_special.c
->  create mode 100644 tools/objtool/arch/x86/arch_special.c
-> 
-> diff --git a/tools/objtool/arch/arm64/Build b/tools/objtool/arch/arm64/Build
-> index bf7a32c2b9e9..3d09be745a84 100644
-> --- a/tools/objtool/arch/arm64/Build
-> +++ b/tools/objtool/arch/arm64/Build
-> @@ -1,3 +1,4 @@
-> +objtool-y += arch_special.o
->  objtool-y += decode.o
->  objtool-y += orc_dump.o
->  objtool-y += orc_gen.o
-> diff --git a/tools/objtool/arch/arm64/arch_special.c b/tools/objtool/arch/arm64/arch_special.c
-> new file mode 100644
-> index 000000000000..a21d28876317
-> --- /dev/null
-> +++ b/tools/objtool/arch/arm64/arch_special.c
-> @@ -0,0 +1,22 @@
-> +/*
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#include "../../special.h"
-> +#include "arch_special.h"
-> +
-> +void arch_force_alt_path(unsigned short feature,
-> +			 bool uaccess,
-> +			 struct special_alt *alt)
-> +{
-> +}
-
-Instead of these dedicated files with empty .c functions -- including
-the arm64 orc .c files -- I'd rather just have them be empty static
-inline functions in header files, like the kernel does.
-
-> diff --git a/tools/objtool/arch/arm64/include/arch_special.h b/tools/objtool/arch/arm64/include/arch_special.h
-> index 63da775d0581..185103be8a51 100644
-> --- a/tools/objtool/arch/arm64/include/arch_special.h
-> +++ b/tools/objtool/arch/arm64/include/arch_special.h
-> @@ -30,7 +30,13 @@
->  #define ALT_ORIG_LEN_OFFSET	10
->  #define ALT_NEW_LEN_OFFSET	11
->  
-> -#define X86_FEATURE_POPCNT (4 * 32 + 23)
-> -#define X86_FEATURE_SMAP   (9 * 32 + 20)
-> +static inline bool arch_should_ignore_feature(unsigned short feature)
-> +{
-> +	return false;
-> +}
->  
-> +static inline bool arch_support_switch_table(void)
-> +{
-> +	return false;
-> +}
->  #endif /* _ARM64_ARCH_SPECIAL_H */
-> diff --git a/tools/objtool/arch/x86/Build b/tools/objtool/arch/x86/Build
-> index 1f11b45999d0..63e167775bc8 100644
-> --- a/tools/objtool/arch/x86/Build
-> +++ b/tools/objtool/arch/x86/Build
-> @@ -1,3 +1,4 @@
-> +objtool-y += arch_special.o
->  objtool-y += decode.o
->  objtool-y += orc_dump.o
->  objtool-y += orc_gen.o
-> diff --git a/tools/objtool/arch/x86/arch_special.c b/tools/objtool/arch/x86/arch_special.c
-> new file mode 100644
-> index 000000000000..6583a1770bb2
-> --- /dev/null
-> +++ b/tools/objtool/arch/x86/arch_special.c
-
-The "arch_" is redundant, these files can just be named "special.c".
-
-> @@ -0,0 +1,28 @@
-> +/*
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +#include "../../special.h"
-> +#include "arch_special.h"
-> +
-> +void arch_force_alt_path(unsigned short feature,
-> +			 bool uaccess,
-> +			 struct special_alt *alt)
-> +{
-> +		if (feature == X86_FEATURE_SMAP) {
-> +			if (uaccess)
-> +				alt->skip_orig = true;
-> +			else
-> +				alt->skip_alt = true;
-> +		}
-> +}
-
-Bad indention.
-
-> diff --git a/tools/objtool/arch/x86/include/arch_special.h b/tools/objtool/arch/x86/include/arch_special.h
-> index 424ce47013e3..fce2b1193194 100644
-> --- a/tools/objtool/arch/x86/include/arch_special.h
-> +++ b/tools/objtool/arch/x86/include/arch_special.h
-> @@ -33,4 +33,13 @@
->  #define X86_FEATURE_POPCNT (4 * 32 + 23)
->  #define X86_FEATURE_SMAP   (9 * 32 + 20)
->  
-> +static inline bool arch_should_ignore_feature(unsigned short feature)
-> +{
-> +	return feature == X86_FEATURE_POPCNT;
-> +}
-> +
-> +static inline bool arch_support_switch_table(void)
-> +{
-> +	return true;
-> +}
->  #endif /* _X86_ARCH_SPECIAL_H */
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 30e147391dcb..4af6422d3428 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -729,7 +729,7 @@ static int handle_group_alt(struct objtool_file *file,
->  		last_orig_insn = insn;
->  	}
->  
-> -	if (next_insn_same_sec(file, last_orig_insn)) {
-> +	if (last_orig_insn && next_insn_same_sec(file, last_orig_insn)) {
-
-Even if the reason for the change is trivial, these types of changes
-(and the insn->visited change below) should each be in an earlier
-separate patch which explains the reasoning.  Putting each logical
-change in its own patch helps with review, and also future bisections,
-debugging and archaeology.
-
->  		fake_jump = malloc(sizeof(*fake_jump));
->  		if (!fake_jump) {
->  			WARN("malloc failed");
-> @@ -1061,6 +1061,26 @@ static struct rela *find_jump_table(struct objtool_file *file,
->  		table_rela = find_rela_by_dest(table_sec, table_offset);
->  		if (!table_rela)
->  			continue;
-> +		/*
-> +		 * If we are on arm64 architecture, we now that we
-
-"know"
-
-> +		 * are in presence of a switch table thanks to
-> +		 * the `br <Xn>` insn. but we can't retrieve it yet.
-> +		 * So we just ignore unreachable for this file.
-> +		 */
-> +		if (!arch_support_switch_table()) {
-> +			file->ignore_unreachables = true;
-> +			return NULL;
-> +		}
-
-All arches need to support switch tables, otherwise it's a major gap in
-functionality.
-
-I think you did it this way because the switch table support comes in a
-later patch, right?  If so, the patches should be reordered so that you
-don't need to add arch_support_switch_table() in the middle.
-
-> +
-> +		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
-> +		if (rodata_rela) {
-> +			/*
-> +			 * Use of RIP-relative switch jumps is quite rare, and
-> +			 * indicates a rare GCC quirk/bug which can leave dead
-> +			 * code behind.
-> +			 */
-> +			if (text_rela->type == R_X86_64_PC32)
-> +				file->ignore_unreachables = true;
->  
->  		/*
->  		 * Use of RIP-relative switch jumps is quite rare, and
-
-This repeats code which already exists right below it?
-
-> @@ -1864,7 +1884,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
->  	insn = first;
->  	sec = insn->sec;
->  
-> -	if (insn->alt_group && list_empty(&insn->alts)) {
-> +	if (!insn->visited && insn->alt_group && list_empty(&insn->alts)) {
->  		WARN_FUNC("don't know how to handle branch to middle of alternative instruction group",
->  			  sec, insn->offset);
->  		return 1;
-> diff --git a/tools/objtool/special.c b/tools/objtool/special.c
-> index b8ccee1b5382..7a0092d6e5b3 100644
-> --- a/tools/objtool/special.c
-> +++ b/tools/objtool/special.c
-> @@ -81,7 +81,7 @@ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
->  		 * feature path which is a "very very small percentage of
->  		 * machines".
->  		 */
-> -		if (feature == X86_FEATURE_POPCNT)
-> +		if (arch_should_ignore_feature(feature))
->  			alt->skip_orig = true;
->  
->  		/*
-> @@ -93,12 +93,7 @@ static int get_alt_entry(struct elf *elf, struct special_entry *entry,
->  		 * find paths that see the STAC but take the NOP instead of
->  		 * CLAC and the other way around.
->  		 */
-> -		if (feature == X86_FEATURE_SMAP) {
-> -			if (uaccess)
-> -				alt->skip_orig = true;
-> -			else
-> -				alt->skip_alt = true;
-> -		}
-> +		arch_force_alt_path(feature, uaccess, alt);
-
-Instead of arch_force_alt_path(), maybe it could be something like:
-
-		if (arch_is_uaccess_feature(alt))
-			if (uaccess)
-				alt->skip_orig = true;
-			else
-				alt->skip_alt = true;
-
-That helps keep the common bits common, and even better it makes the
-code clearer.
-
->  	}
->  
->  	orig_rela = find_rela_by_dest(sec, offset + entry->orig);
-> diff --git a/tools/objtool/special.h b/tools/objtool/special.h
-> index 35061530e46e..90626a7e41cf 100644
-> --- a/tools/objtool/special.h
-> +++ b/tools/objtool/special.h
-> @@ -27,5 +27,8 @@ struct special_alt {
->  };
->  
->  int special_get_alts(struct elf *elf, struct list_head *alts);
-> +void arch_force_alt_path(unsigned short feature,
-> +			 bool uaccess,
-> +			 struct special_alt *alt);
->  
->  #endif /* _SPECIAL_H */
-> -- 
-> 2.17.1
-> 
-
--- 
-Josh
+Dave.
