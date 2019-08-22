@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED6FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AE4C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A785623406
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BD02089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494063;
-	bh=BA+UGscKPxuHl3GcdkS7m3JOxOxCmTFTvrCrso1YyF4=;
+	s=default; t=1566494066;
+	bh=GTeKPiSpI0Ea9eCn2SaiWsSMjQ1GBjsNhDD41ADmNiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fquQ5ZqUBblhD39YpER0LcI0Y9c0I7D+7oXMHudd2A3czDrMeJ+cjO6WioW91b0dC
-	 qRhv+AeHl/LWMkYwL1XbZ1bEWmlDFvoWRkB8TpbhCwDZYQy2bO2vy3QGo6JcZfVeLx
-	 QvPF4EiLJBp1wlyAFJCAM7QPFEhIp13cnI8KyE6U=
+	b=i+nWnfvpoR82OObq4Gfs1rcbGM2Bv0WVZSpl8WDg4DMeTzVt0CaY8fuJsk482PNgA
+	 ZZzn0rDJqdmcOFi5vVVmD5nTfM054y/OiLqekIQtK7w2w13ooMPWwezXbTCYk6PQEz
+	 +aZS6b+hIqZPph05vAN2FH0OBVbzgRREtufS7sCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391104AbfHVROW (ORCPT
+        id S2391107AbfHVROZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:14:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58826 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390563AbfHVRIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390557AbfHVRIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 13:08:53 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D222F2341E;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F78123406;
         Thu, 22 Aug 2019 17:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493733;
-        bh=BA+UGscKPxuHl3GcdkS7m3JOxOxCmTFTvrCrso1YyF4=;
+        s=default; t=1566493732;
+        bh=GTeKPiSpI0Ea9eCn2SaiWsSMjQ1GBjsNhDD41ADmNiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eI083BEuzH/HCPTeMv4soiRT8+/F7h/ElhmtY7En4tZINdFQKmaL4p0A4q+bTsQHH
-         rxpchSveDhjeUSkiylIP9UqzxHPaVRMTvl3qrHnR+2sjFKbuz94XC0hMbBkLK4EPnN
-         9aEAlbEr2hA8T2RtUmDvliG+QUPDsaDIZGD4p4Fc=
+        b=MeIZ2fru3N8E4zfz/34+HclMc2GumerQo5p6PebaZIZ/NhTkQJGvhhrb61/5pR/O0
+         vIpByZJZXQBJEKgTck9pl53cMk/OWHIfHr2eLKBFxrdYBA3RGMvM/VhlmEi0+UpbrV
+         2Gsr95hAmV4AOfEfdqovo97we01TB3c/y9TQCQII=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Han <han_mao@c-sky.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
+Cc:     Qian Cai <cai@lca.pw>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 071/135] riscv: Fix perf record without libelf support
-Date:   Thu, 22 Aug 2019 13:07:07 -0400
-Message-Id: <20190822170811.13303-72-sashal@kernel.org>
+Subject: [PATCH 5.2 070/135] arm64/efi: fix variable 'si' set but not used
+Date:   Thu, 22 Aug 2019 13:07:06 -0400
+Message-Id: <20190822170811.13303-71-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -67,46 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Han <han_mao@c-sky.com>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit b399abe7c21e248dc6224cadc9a378a2beb10cfd ]
+[ Upstream commit f1d4836201543e88ebe70237e67938168d5fab19 ]
 
-This patch fix following perf record error by linking vdso.so with
-build id.
+GCC throws out this warning on arm64.
 
-perf.data      perf.data.old
-[ perf record: Woken up 1 times to write data ]
-free(): double free detected in tcache 2
-Aborted
+drivers/firmware/efi/libstub/arm-stub.c: In function 'efi_entry':
+drivers/firmware/efi/libstub/arm-stub.c:132:22: warning: variable 'si'
+set but not used [-Wunused-but-set-variable]
 
-perf record use filename__read_build_id(util/symbol-minimal.c) to get
-build id when libelf is not supported. When vdso.so is linked without
-build id, the section size of PT_NOTE will be zero, buf size will
-realloc to zero and cause memory corruption.
+Fix it by making free_screen_info() a static inline function.
 
-Signed-off-by: Mao Han <han_mao@c-sky.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/vdso/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/efi.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
-index f1d6ffe43e428..49a5852fd07dd 100644
---- a/arch/riscv/kernel/vdso/Makefile
-+++ b/arch/riscv/kernel/vdso/Makefile
-@@ -37,7 +37,7 @@ $(obj)/vdso.so.dbg: $(src)/vdso.lds $(obj-vdso) FORCE
- # these symbols in the kernel code rather than hand-coded addresses.
+diff --git a/arch/arm64/include/asm/efi.h b/arch/arm64/include/asm/efi.h
+index c9e9a6978e73e..d3cb42fd51ec2 100644
+--- a/arch/arm64/include/asm/efi.h
++++ b/arch/arm64/include/asm/efi.h
+@@ -105,7 +105,11 @@ static inline unsigned long efi_get_max_initrd_addr(unsigned long dram_base,
+ 	((protocol##_t *)instance)->f(instance, ##__VA_ARGS__)
  
- SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
--	-Wl,--hash-style=both
-+	-Wl,--build-id -Wl,--hash-style=both
- $(obj)/vdso-dummy.o: $(src)/vdso.lds $(obj)/rt_sigreturn.o FORCE
- 	$(call if_changed,vdsold)
+ #define alloc_screen_info(x...)		&screen_info
+-#define free_screen_info(x...)
++
++static inline void free_screen_info(efi_system_table_t *sys_table_arg,
++				    struct screen_info *si)
++{
++}
  
+ /* redeclare as 'hidden' so the compiler will generate relative references */
+ extern struct screen_info screen_info __attribute__((__visibility__("hidden")));
 -- 
 2.20.1
 
