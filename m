@@ -2,73 +2,53 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2EFC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12EF5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F20206DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D226B206DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494818;
-	bh=HZrj+XMtyosh2Tvu6fEBkovpHZXexMnaifEDww0LYbU=;
+	s=default; t=1566494820;
+	bh=t36UPhkS7v7+v2KG+YnUGO5OS8HNCdTGNZFAPBglJ6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CH1VqXn6ndH9Y3nJQxlH5lwl2vsR8SYD/bVzOHbMgaYbEukyTVxVhlOvSHGJM2q6u
-	 DEC5GaUH8BXF4zcJb71/LU6WArcy+lC/QXMiTInPyGc5ZFKu5RIMAhlIbWdpSDK/+I
-	 mu5N9cLzMcF3Y5REuAFyQ9sqcT7bkw9rW8SS+dbY=
+	b=KB2wBmzXOV0v70SRxKJWAolhrRQjICYjzWhEQ3JNoRmUFylbypbD+PZppqr5NC/z1
+	 a8FYm2ZjnWaxS7zlC296JLHW3Pv/rHGwv6TZVTLi7LUmmqmaFPxmA7rFzBEfLf9pTw
+	 p6Rx9v7/K2dZU77kSOFExWXkCtDAtQnJeIl1nGfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404785AbfHVR04 (ORCPT
+        id S2391939AbfHVR07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:26:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49594 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404462AbfHVRZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:38 -0400
+        id S2404482AbfHVRZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:43 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D57E23405;
-        Thu, 22 Aug 2019 17:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E89952341E;
+        Thu, 22 Aug 2019 17:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494737;
-        bh=HZrj+XMtyosh2Tvu6fEBkovpHZXexMnaifEDww0LYbU=;
+        s=default; t=1566494742;
+        bh=t36UPhkS7v7+v2KG+YnUGO5OS8HNCdTGNZFAPBglJ6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I31JabTZC5hlhI0Nj0OpW/6jJkq8cTDbq3OM4SBUH3sO7GEm/IcGQaCGv150S02Wt
-         kIWL4cazXudm6rWyr5ghNoTKSl4ivQdJdvVqSvyVkvU+aVa4Ts2lpgnVONYHgc2u8a
-         BGYV9D5Dx2O7QZCNoxQEaMtulldocM5QPyENlZJk=
+        b=zm4T8pjIxg6Wk+UlXI3h+ln179BQuTKR3R9VCFoeRHWxa8g9gYZAXgPthFpesa+l+
+         F7LZvZySwwiq3Tk7y96zXe5Y2XzaVRczLRFRQAuy4H6AZhcURCwIgV6yEEls0r30Dh
+         PmNkZt1GCI2p4NqQiFMrgzANwoRo8ApnklJhTy48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ralph Campbell <rcampbell@nvidia.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Christoph Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 03/85] mm/hmm: fix bad subpage pointer in try_to_unmap_one
-Date:   Thu, 22 Aug 2019 10:18:36 -0700
-Message-Id: <20190822171731.151653399@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 35/85] drm/bridge: lvds-encoder: Fix build error while CONFIG_DRM_KMS_HELPER=m
+Date:   Thu, 22 Aug 2019 10:19:08 -0700
+Message-Id: <20190822171732.863224842@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -81,78 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ralph Campbell <rcampbell@nvidia.com>
+[ Upstream commit f4cc743a98136df3c3763050a0e8223b52d9a960 ]
 
-commit 1de13ee59225dfc98d483f8cce7d83f97c0b31de upstream.
+If DRM_LVDS_ENCODER=y but CONFIG_DRM_KMS_HELPER=m,
+build fails:
 
-When migrating an anonymous private page to a ZONE_DEVICE private page,
-the source page->mapping and page->index fields are copied to the
-destination ZONE_DEVICE struct page and the page_mapcount() is
-increased.  This is so rmap_walk() can be used to unmap and migrate the
-page back to system memory.
+drivers/gpu/drm/bridge/lvds-encoder.o: In function `lvds_encoder_probe':
+lvds-encoder.c:(.text+0x155): undefined reference to `devm_drm_panel_bridge_add'
 
-However, try_to_unmap_one() computes the subpage pointer from a swap pte
-which computes an invalid page pointer and a kernel panic results such
-as:
-
-  BUG: unable to handle page fault for address: ffffea1fffffffc8
-
-Currently, only single pages can be migrated to device private memory so
-no subpage computation is needed and it can be set to "page".
-
-[rcampbell@nvidia.com: add comment]
-  Link: http://lkml.kernel.org/r/20190724232700.23327-4-rcampbell@nvidia.com
-Link: http://lkml.kernel.org/r/20190719192955.30462-4-rcampbell@nvidia.com
-Fixes: a5430dda8a3a1c ("mm/migrate: support un-addressable ZONE_DEVICE page in migration")
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: Logan Gunthorpe <logang@deltatee.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: dbb58bfd9ae6 ("drm/bridge: Fix lvds-encoder since the panel_bridge rework.")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190729071216.27488-1-yuehaibing@huawei.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/rmap.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/bridge/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1467,7 +1467,15 @@ static bool try_to_unmap_one(struct page
- 			/*
- 			 * No need to invalidate here it will synchronize on
- 			 * against the special swap migration pte.
-+			 *
-+			 * The assignment to subpage above was computed from a
-+			 * swap PTE which results in an invalid pointer.
-+			 * Since only PAGE_SIZE pages can currently be
-+			 * migrated, just set it to page. This will need to be
-+			 * changed when hugepage migrations to device private
-+			 * memory are supported.
- 			 */
-+			subpage = page;
- 			goto discard;
- 		}
- 
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index bf6cad6c9178b..7a3e5a8f6439b 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -46,6 +46,7 @@ config DRM_DUMB_VGA_DAC
+ config DRM_LVDS_ENCODER
+ 	tristate "Transparent parallel to LVDS encoder support"
+ 	depends on OF
++	select DRM_KMS_HELPER
+ 	select DRM_PANEL_BRIDGE
+ 	help
+ 	  Support for transparent parallel to LVDS encoders that don't require
+-- 
+2.20.1
+
 
 
