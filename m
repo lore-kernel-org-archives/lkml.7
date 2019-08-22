@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC30C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5703C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281D020856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5D020870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495733;
-	bh=irG79BRN+ND2MxZ1FUv7m4nPGmkpbWu7XaNgMHd+65E=;
+	s=default; t=1566495737;
+	bh=7MolTu/QaV4G78Ol8wsTvSGUS5eZKY0VigIqvUjN41o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Puas8BEejmjALiqpIb0x9WxwOJE/6JW2HDvZO0pNKrY84SHhsNESLTRBUPBaj8aBa
-	 X8BtuCipksp13Gx3YSGiQiUr9W5K/wHVbwb/WYc6xktAGst7cbuF7SP+Iw+/d1nMA0
-	 bqFtp/uJIpm/VkiQiw2X8sZOkm8FY6lwt/gaTa40=
+	b=vRGhvV0RKJimwh1AMhKZNj0/qHuuUSonHPFxvwAYRBQXi8pGHoM/EdbMu6qoMllwy
+	 UJ3N8j4zVJdMkCEHhSKsOJXfc+sqJZxEcAf85SQK+YKCehy90syQKmnB1sMmdsUGwS
+	 bYbr5rCXjC8YsxumWu7uXbP4zMPUZ/xTS+z6aw80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391721AbfHVRXv (ORCPT
+        id S2392626AbfHVRmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43688 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:42:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391563AbfHVRXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:34 -0400
+        id S2390427AbfHVRXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:50 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F36DD23426;
-        Thu, 22 Aug 2019 17:23:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C63BA2342A;
+        Thu, 22 Aug 2019 17:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494614;
-        bh=irG79BRN+ND2MxZ1FUv7m4nPGmkpbWu7XaNgMHd+65E=;
+        s=default; t=1566494629;
+        bh=7MolTu/QaV4G78Ol8wsTvSGUS5eZKY0VigIqvUjN41o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kfq5xbWLFZx3A29cVZUqmXgnFqTo+7nlOwau1UgH0t6CPA3i9ptLMGiCovnEXNb1Y
-         y7Q2JtSKlE++lbc4lMqiFnQiFLHor4rlOHTUVl662bTpP0eje2G+l54x0UUr2r8R0p
-         TZOreetXnGMh6a15zNRvV4tEgWKLpVB0YwuIXfVs=
+        b=nQbgD27CYT+Qe3xxQjeUKa6DtHEPKPfaI5QTarIxxNb3TlFpR++3YfiyBuXZHEJxs
+         rNyihPz7Greip9I9Y6oVO2QqEYIX4lFPQzdZ1Hz3rxf87JKcNlmMEAo8NTyxtOrXZN
+         Sfx/LpGG8f4WZpKfejYRH3KGHlubcWQryQI/7GtY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Liebler <stli@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.9 009/103] perf record: Fix module size on s390
-Date:   Thu, 22 Aug 2019 10:17:57 -0700
-Message-Id: <20190822171729.229084973@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 061/103] ALSA: hda - Let all conexant codec enter D3 when rebooting
+Date:   Thu, 22 Aug 2019 10:18:49 -0700
+Message-Id: <20190822171731.258616541@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -63,138 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 12a6d2940b5f02b4b9f71ce098e3bb02bc24a9ea upstream.
+commit 401714d9534aad8c24196b32600da683116bbe09 upstream.
 
-On s390 the modules loaded in memory have the text segment located after
-the GOT and Relocation table. This can be seen with this output:
+We have 3 new lenovo laptops which have conexant codec 0x14f11f86,
+these 3 laptops also have the noise issue when rebooting, after
+letting the codec enter D3 before rebooting or poweroff, the noise
+disappers.
 
-  [root@m35lp76 perf]# fgrep qeth /proc/modules
-  qeth 151552 1 qeth_l2, Live 0x000003ff800b2000
-  ...
-  [root@m35lp76 perf]# cat /sys/module/qeth/sections/.text
-  0x000003ff800b3990
-  [root@m35lp76 perf]#
+Instead of adding a new ID again in the reboot_notify(), let us make
+this function apply to all conexant codec. In theory make codec enter
+D3 before rebooting or poweroff is harmless, and I tested this change
+on a couple of other Lenovo laptops which have different conexant
+codecs, there is no side effect so far.
 
-There is an offset of 0x1990 bytes. The size of the qeth module is
-151552 bytes (0x25000 in hex).
-
-The location of the GOT/relocation table at the beginning of a module is
-unique to s390.
-
-commit 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
-adjusts the start address of a module in the map structures, but does
-not adjust the size of the modules. This leads to overlapping of module
-maps as this example shows:
-
-[root@m35lp76 perf] # ./perf report -D
-     0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x25000)
-          @ 0]:  x /lib/modules/.../qeth.ko.xz
-     0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x8000)
-          @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
-
-The module qeth.ko has an adjusted start address modified to b3990, but
-its size is unchanged and the module ends at 0x3ff800d8990.  This end
-address overlaps with the next modules start address of 0x3ff800d85a0.
-
-When the size of the leading GOT/Relocation table stored in the
-beginning of the text segment (0x1990 bytes) is subtracted from module
-qeth end address, there are no overlaps anymore:
-
-   0x3ff800d8990 - 0x1990 = 0x0x3ff800d7000
-
-which is the same as
-
-   0x3ff800b2000 + 0x25000 = 0x0x3ff800d7000.
-
-To fix this issue, also adjust the modules size in function
-arch__fix_module_text_start(). Add another function parameter named size
-and reduce the size of the module when the text segment start address is
-changed.
-
-Output after:
-     0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x23670)
-          @ 0]:  x /lib/modules/.../qeth.ko.xz
-     0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x7a60)
-          @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
-
-Reported-by: Stefan Liebler <stli@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
 Cc: stable@vger.kernel.org
-Fixes: 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
-Link: http://lkml.kernel.org/r/20190724122703.3996-1-tmricht@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/arch/s390/util/machine.c |   14 +++++++++++++-
- tools/perf/util/machine.c           |    3 ++-
- tools/perf/util/machine.h           |    2 +-
- 3 files changed, 16 insertions(+), 3 deletions(-)
+ sound/pci/hda/patch_conexant.c |    9 ---------
+ 1 file changed, 9 deletions(-)
 
---- a/tools/perf/arch/s390/util/machine.c
-+++ b/tools/perf/arch/s390/util/machine.c
-@@ -6,7 +6,7 @@
- #include "api/fs/fs.h"
- #include "debug.h"
- 
--int arch__fix_module_text_start(u64 *start, const char *name)
-+int arch__fix_module_text_start(u64 *start, u64 *size, const char *name)
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -204,15 +204,6 @@ static void cx_auto_reboot_notify(struct
  {
- 	u64 m_start = *start;
- 	char path[PATH_MAX];
-@@ -16,6 +16,18 @@ int arch__fix_module_text_start(u64 *sta
- 	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
- 		pr_debug2("Using module %s start:%#lx\n", path, m_start);
- 		*start = m_start;
-+	} else {
-+		/* Successful read of the modules segment text start address.
-+		 * Calculate difference between module start address
-+		 * in memory and module text segment start address.
-+		 * For example module load address is 0x3ff8011b000
-+		 * (from /proc/modules) and module text segment start
-+		 * address is 0x3ff8011b870 (from file above).
-+		 *
-+		 * Adjust the module size and subtract the GOT table
-+		 * size located at the beginning of the module.
-+		 */
-+		*size -= (*start - m_start);
- 	}
+ 	struct conexant_spec *spec = codec->spec;
  
- 	return 0;
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1074,6 +1074,7 @@ static int machine__set_modules_path(str
- 	return map_groups__set_modules_path_dir(&machine->kmaps, modules_path, 0);
- }
- int __weak arch__fix_module_text_start(u64 *start __maybe_unused,
-+				u64 *size __maybe_unused,
- 				const char *name __maybe_unused)
- {
- 	return 0;
-@@ -1085,7 +1086,7 @@ static int machine__create_module(void *
- 	struct machine *machine = arg;
- 	struct map *map;
- 
--	if (arch__fix_module_text_start(&start, name) < 0)
-+	if (arch__fix_module_text_start(&start, &size, name) < 0)
- 		return -1;
- 
- 	map = machine__findnew_module_map(machine, start, name);
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -205,7 +205,7 @@ struct symbol *machine__find_kernel_func
- 
- struct map *machine__findnew_module_map(struct machine *machine, u64 start,
- 					const char *filename);
--int arch__fix_module_text_start(u64 *start, const char *name);
-+int arch__fix_module_text_start(u64 *start, u64 *size, const char *name);
- 
- int __machine__load_kallsyms(struct machine *machine, const char *filename,
- 			     enum map_type type, bool no_kcore);
+-	switch (codec->core.vendor_id) {
+-	case 0x14f12008: /* CX8200 */
+-	case 0x14f150f2: /* CX20722 */
+-	case 0x14f150f4: /* CX20724 */
+-		break;
+-	default:
+-		return;
+-	}
+-
+ 	/* Turn the problematic codec into D3 to avoid spurious noises
+ 	   from the internal speaker during (and after) reboot */
+ 	cx_auto_turn_eapd(codec, spec->num_eapds, spec->eapds, false);
 
 
