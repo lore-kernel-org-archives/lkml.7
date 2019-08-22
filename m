@@ -6,65 +6,96 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFCFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4767C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9A12173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CBE1214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732817AbfHVI5G (ORCPT
+        id S1732827AbfHVI5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:57:06 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21206 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729109AbfHVI5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:57:06 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 01:57:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,416,1559545200"; 
-   d="scan'208";a="186492384"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Aug 2019 01:57:01 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1i0itv-0006Oy-4J; Thu, 22 Aug 2019 11:56:59 +0300
-Date:   Thu, 22 Aug 2019 11:56:59 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-rtc@vger.kernel.org,
-        devicetree@vger.kernel.org, alan@linux.intel.com,
-        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
-Subject: Re: [PATCH v1 2/2] dt-bindings: rtc: Add optional status property
-Message-ID: <20190822085659.GI30120@smile.fi.intel.com>
-References: <cover.1566458029.git.rahul.tanwar@linux.intel.com>
- <1b01287241d49638c43222d32f3ece5a38c95ddf.1566458029.git.rahul.tanwar@linux.intel.com>
+        Thu, 22 Aug 2019 04:57:45 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59411 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729109AbfHVI5p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 04:57:45 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i0iuc-0005yi-0z; Thu, 22 Aug 2019 10:57:42 +0200
+Date:   Thu, 22 Aug 2019 10:57:40 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Chris Clayton <chris2553@googlemail.com>
+cc:     LKML <linux-kernel@vger.kernel.org>, vincenzo.frascino@arm.com,
+        catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: Regression in 5.3-rc1 and later
+In-Reply-To: <faaa3843-09a6-1a21-3448-072eeed1ea00@googlemail.com>
+Message-ID: <alpine.DEB.2.21.1908221047250.1983@nanos.tec.linutronix.de>
+References: <faaa3843-09a6-1a21-3448-072eeed1ea00@googlemail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b01287241d49638c43222d32f3ece5a38c95ddf.1566458029.git.rahul.tanwar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 03:44:04PM +0800, Rahul Tanwar wrote:
-> Some products may not support MC146818 RTC CMOS device. Introduce a optional
-> 'status' standard property for RTC-CMOS to indicate if the MC146818 RTC device
-> is available (status="okay") or not (status="disabled")
+Chris,
 
-This needs to be converted to YAML
+On Thu, 22 Aug 2019, Chris Clayton wrote:
 
--- 
-With Best Regards,
-Andy Shevchenko
+Trimmed cc list
 
+> I've found a problem that isn't present in 5.2 series or 4.19 series
+> kernels, and seems to have arrived in 5.3-rc1. The problem is that if I
+> suspend (to ram) my laptop, on resume 14 minutes or more after
+> suspending, I have no networking functionality. If I resume the laptop
+> after 13 minutes or less, networking works fine. I haven't tried to get
+> finer grained timings between 13 and 14 minutes, but can do if it would
+> help.
+> 
+> ifconfig shows that wlan0 is still up and still has its assigned ip
+> address but, for instance, a ping of any other device on my network,
+> fails as does pinging, say, kernel.org. I've tried "downing" the network
+> with (/sbin/ifdown) and unloading the iwlmvm module and then reloading
+> the module and "upping" (/sbin/ifup) the network, but my network is still
+> unusable. I should add that the problem also manifests if I hibernate the
+> laptop, although my testing of this has been minimal. I can do more if
+> required.
 
+What happens if you restart the network manager and/or wpa_supplicant or
+whatever your distro uses for that.
+
+> As I say, the problem first appears in 5.3-rc1, so I've bisected between
+> 5.2.0 and 5.3-rc1 and that concluded with:
+
+Just for confirmation, it's still broken as of 5.3-rc5, right? We had fixes
+post rc1.
+
+>     x86/vdso: Switch to generic vDSO implementation
+ 
+> To confirm my bisection was correct, I did a git checkout of
+> 7ac8707479886c75f353bfb6a8273f423cfccb2. As expected, the kernel
+> exhibited the problem I've described. However, a kernel built at the
+> immediately preceding (parent?) commit
+> (bfe801ebe84f42b4666d3f0adde90f504d56e35b) has a working network after a
+> (>= 14minute) suspend/resume cycle.
+
+~14 minutes is odd. I can't come up with anything which rolls over, wraps
+or overflows at that point.
+
+Can you please provide the output of:
+
+  dmesg | grep -i TSC
+
+Thanks,
+
+	tglx
