@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAC3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D49C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741A02064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027982064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494848;
-	bh=seQynoquBhsfEosIOR5PXp3K4/WUQdH/99onwZUV/c0=;
+	s=default; t=1566494853;
+	bh=ylJF47912LDxRfTOsRpKFz5NrP+S0qsc2UViG8hfvSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0RClFlEvPWFhYjitPiboOj5UmGZeQYSOoT3t0KOjhwzTcJObuZmjHsCvRkVLxI1Fp
-	 ojY+QDQSrY+TQXaUKo6k8SAo+ESn0JhR23L0PvPfdEA3En8mH9c+THpXQrZB/elNmB
-	 6c/ILYhNY8M1uyuE3NhOBZS/uJINW4aKosErlNOE=
+	b=Qh1uRO9u4+qOytI0beijYlwn6wLI0lz2GLkNlEpH4Jp3VBmW2hUm52NcA+t2KGINi
+	 00HiTri/P8yL/zhogcBLJFhx8LFCCaqGONEjIvmXXLUi7dZ9GmH4X/8KlSPG+HqHOX
+	 dz4Spi0BAHYNO1qD0tnES79yKE+4wuoFzQNG5d8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392029AbfHVR11 (ORCPT
+        id S2392050AbfHVR1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50226 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:27:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404540AbfHVRZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:57 -0400
+        id S2404564AbfHVR0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:26:01 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 639E82341C;
-        Thu, 22 Aug 2019 17:25:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CEA22064A;
+        Thu, 22 Aug 2019 17:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494756;
-        bh=seQynoquBhsfEosIOR5PXp3K4/WUQdH/99onwZUV/c0=;
+        s=default; t=1566494760;
+        bh=ylJF47912LDxRfTOsRpKFz5NrP+S0qsc2UViG8hfvSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U1cuA3pCNB9Ym7IY05W+W4x3IrODtpSx9HYqi8XoDW8cgMtGyMfLGw57C2X3IJwq+
-         o9ESguAgHBZiKnA8Z6jrToEklMhOO/A2Ol9SeK+uuOry2I6PmS8rCyPNDcVIKZ3Qxx
-         CrdRhzOtXrr8bBCOpwxbOhxoNI2eHKb+y4oU+x8k=
+        b=Q7T5xA76wI3HvW1YB8hQQAvE7KIMFRhf/ePOaydLqqs5344IUqnpb1ey6I5mj/m9q
+         l/iFNsvGYrectLi4HgVvwCr+8EQHsmfnYTEGba96RJKrKuMYgRr9C4gl/lyzbRgVs2
+         TR7kYCqoxWjaqwv3lPyx4dEOJRlkXz0pCHVJzxWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.19 57/85] staging: comedi: dt3000: Fix rounding up of timer divisor
-Date:   Thu, 22 Aug 2019 10:19:30 -0700
-Message-Id: <20190822171733.691612184@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 61/85] usb: cdc-acm: make sure a refcount is taken early enough
+Date:   Thu, 22 Aug 2019 10:19:34 -0700
+Message-Id: <20190822171733.880332700@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -58,54 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 8e2a589a3fc36ce858d42e767c3bcd8fc62a512b upstream.
+commit c52873e5a1ef72f845526d9f6a50704433f9c625 upstream.
 
-`dt3k_ns_to_timer()` determines the prescaler and divisor to use to
-produce a desired timing period.  It is influenced by a rounding mode
-and can round the divisor up, down, or to the nearest value.  However,
-the code for rounding up currently does the same as rounding down!  Fix
-ir by using the `DIV_ROUND_UP()` macro to calculate the divisor when
-rounding up.
+destroy() will decrement the refcount on the interface, so that
+it needs to be taken so early that it never undercounts.
 
-Also, change the types of the `divider`, `base` and `prescale` variables
-from `int` to `unsigned int` to avoid mixing signed and unsigned types
-in the calculations.
-
-Also fix a typo in a nearby comment: "improvment" => "improvement".
-
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Fixes: 7fb57a019f94e ("USB: cdc-acm: Fix potential deadlock (lockdep warning)")
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190812120814.21188-1-abbotti@mev.co.uk
+Reported-and-tested-by: syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20190808142119.7998-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/dt3000.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/class/cdc-acm.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/staging/comedi/drivers/dt3000.c
-+++ b/drivers/staging/comedi/drivers/dt3000.c
-@@ -342,9 +342,9 @@ static irqreturn_t dt3k_interrupt(int ir
- static int dt3k_ns_to_timer(unsigned int timer_base, unsigned int *nanosec,
- 			    unsigned int flags)
- {
--	int divider, base, prescale;
-+	unsigned int divider, base, prescale;
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -1333,10 +1333,6 @@ made_compressed_probe:
+ 	tty_port_init(&acm->port);
+ 	acm->port.ops = &acm_port_ops;
  
--	/* This function needs improvment */
-+	/* This function needs improvement */
- 	/* Don't know if divider==0 works. */
+-	minor = acm_alloc_minor(acm);
+-	if (minor < 0)
+-		goto alloc_fail1;
+-
+ 	ctrlsize = usb_endpoint_maxp(epctrl);
+ 	readsize = usb_endpoint_maxp(epread) *
+ 				(quirks == SINGLE_RX_URB ? 1 : 2);
+@@ -1344,6 +1340,13 @@ made_compressed_probe:
+ 	acm->writesize = usb_endpoint_maxp(epwrite) * 20;
+ 	acm->control = control_interface;
+ 	acm->data = data_interface;
++
++	usb_get_intf(acm->control); /* undone in destruct() */
++
++	minor = acm_alloc_minor(acm);
++	if (minor < 0)
++		goto alloc_fail1;
++
+ 	acm->minor = minor;
+ 	acm->dev = usb_dev;
+ 	if (h.usb_cdc_acm_descriptor)
+@@ -1490,7 +1493,6 @@ skip_countries:
+ 	usb_driver_claim_interface(&acm_driver, data_interface, acm);
+ 	usb_set_intfdata(data_interface, acm);
  
- 	for (prescale = 0; prescale < 16; prescale++) {
-@@ -358,7 +358,7 @@ static int dt3k_ns_to_timer(unsigned int
- 			divider = (*nanosec) / base;
- 			break;
- 		case CMDF_ROUND_UP:
--			divider = (*nanosec) / base;
-+			divider = DIV_ROUND_UP(*nanosec, base);
- 			break;
- 		}
- 		if (divider < 65536) {
+-	usb_get_intf(control_interface);
+ 	tty_dev = tty_port_register_device(&acm->port, acm_tty_driver, minor,
+ 			&control_interface->dev);
+ 	if (IS_ERR(tty_dev)) {
 
 
