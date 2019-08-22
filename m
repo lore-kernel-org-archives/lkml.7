@@ -7,53 +7,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DD7C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B578DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8AE823405
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D44423400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494839;
-	bh=yDeMJbzq+TOjCwQOhDH0nlJsiz1Mfw7aQRUec/IWZzk=;
+	s=default; t=1566494843;
+	bh=HWnuTJMp8UOcJkkW5UdBW3XhI+Tz8ZBNjp501XRIP+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x7AlZEO2451JTm60kCiKoOddQAjadpQseghOuKFJXfYS2PhaIxnPKWh8Thy4W8947
-	 68fiNNCLy5bJ/PMYgsjYDHHHPMvIwZl12pufs8ntLSsuXPSpEgXPG+CjctU+wVlGMX
-	 ngBNKK+w16fJGavPn1DBqmUy/hyCFkhHPDJJiBkY=
+	b=c1wwzIk6qIGErZghWEWP96iExM47ufimq4GUbrWaIlG5zyfpi4ZABYuTBdwVZb3KT
+	 w81d+6G1S7mY768f/cpEAj5YH4V4I8QTFGWXg6RSbZxm2Z9UH37Mwf7TygmG47t+iC
+	 KZNbKEz+7HqpSOVDl615VQFhvXi5OuT5gbTHrWHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392000AbfHVR1S (ORCPT
+        id S2392010AbfHVR1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:27:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50226 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:27:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404513AbfHVRZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:53 -0400
+        id S2404524AbfHVRZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:54 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C7012341E;
-        Thu, 22 Aug 2019 17:25:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DCD22064A;
+        Thu, 22 Aug 2019 17:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494752;
-        bh=yDeMJbzq+TOjCwQOhDH0nlJsiz1Mfw7aQRUec/IWZzk=;
+        s=default; t=1566494753;
+        bh=HWnuTJMp8UOcJkkW5UdBW3XhI+Tz8ZBNjp501XRIP+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vd/LB7abIv0mrdl8mi0RPq112ehzxP2HnFIx89h+bcCHD/4GNxBbFTuL0wB0ISf+b
-         6DDvVmkFnO6Zs3fk+r2MuSdia4hlxucK8gunhKw8qah0+sv8OZLnTGByne4+3A+Di9
-         QP/v6BKmT7rPXCadRJxISmCGwHpkNxYJyiS3nqxE=
+        b=bL67+qpbVP6RTyux3KS6MFjPrjcA6styI2LpbQyrmkvB2KWdWB5TDwMP6wDMshgW4
+         c8xdvxnRMfJGIjOKnF/87e1qmq0muOwD32+EljAmhw5kJ64e0ixIvmbYu170Efc/1S
+         uHtdfgzpslgVB3b6/6W7Xv0N+iogRgIabpZykepk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Jakub Jelinek <jakub@redhat.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Bill Wendling <morbo@google.com>,
+        James Y Knight <jyknight@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 51/85] Revert "kmemleak: allow to coexist with fault injection"
-Date:   Thu, 22 Aug 2019 10:19:24 -0700
-Message-Id: <20190822171733.477513236@linuxfoundation.org>
+Subject: [PATCH 4.19 53/85] asm-generic: fix -Wtype-limits compiler warnings
+Date:   Thu, 22 Aug 2019 10:19:26 -0700
+Message-Id: <20190822171733.549787257@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -66,68 +69,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit df9576def004d2cd5beedc00cb6e8901427634b9 ]
+[ Upstream commit cbedfe11347fe418621bd188d58a206beb676218 ]
 
-When running ltp's oom test with kmemleak enabled, the below warning was
-triggerred since kernel detects __GFP_NOFAIL & ~__GFP_DIRECT_RECLAIM is
-passed in:
+Commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
+compilation warning because "rx_frag_size" is an "ushort" while
+PAGE_SHIFT here is 16.
 
-  WARNING: CPU: 105 PID: 2138 at mm/page_alloc.c:4608 __alloc_pages_nodemask+0x1c31/0x1d50
-  Modules linked in: loop dax_pmem dax_pmem_core ip_tables x_tables xfs virtio_net net_failover virtio_blk failover ata_generic virtio_pci virtio_ring virtio libata
-  CPU: 105 PID: 2138 Comm: oom01 Not tainted 5.2.0-next-20190710+ #7
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.10.2-0-g5f4c7b1-prebuilt.qemu-project.org 04/01/2014
-  RIP: 0010:__alloc_pages_nodemask+0x1c31/0x1d50
-  ...
-   kmemleak_alloc+0x4e/0xb0
-   kmem_cache_alloc+0x2a7/0x3e0
-   mempool_alloc_slab+0x2d/0x40
-   mempool_alloc+0x118/0x2b0
-   bio_alloc_bioset+0x19d/0x350
-   get_swap_bio+0x80/0x230
-   __swap_writepage+0x5ff/0xb20
+The commit changed the get_order() to be a multi-line macro where
+compilers insist to check all statements in the macro even when
+__builtin_constant_p(rx_frag_size) will return false as "rx_frag_size"
+is a module parameter.
 
-The mempool_alloc_slab() clears __GFP_DIRECT_RECLAIM, however kmemleak
-has __GFP_NOFAIL set all the time due to d9570ee3bd1d4f2 ("kmemleak:
-allow to coexist with fault injection").  But, it doesn't make any sense
-to have __GFP_NOFAIL and ~__GFP_DIRECT_RECLAIM specified at the same
-time.
+In file included from ./arch/powerpc/include/asm/page_64.h:107,
+                 from ./arch/powerpc/include/asm/page.h:242,
+                 from ./arch/powerpc/include/asm/mmu.h:132,
+                 from ./arch/powerpc/include/asm/lppaca.h:47,
+                 from ./arch/powerpc/include/asm/paca.h:17,
+                 from ./arch/powerpc/include/asm/current.h:13,
+                 from ./include/linux/thread_info.h:21,
+                 from ./arch/powerpc/include/asm/processor.h:39,
+                 from ./include/linux/prefetch.h:15,
+                 from drivers/net/ethernet/emulex/benet/be_main.c:14:
+drivers/net/ethernet/emulex/benet/be_main.c: In function 'be_rx_cqs_create':
+./include/asm-generic/getorder.h:54:9: warning: comparison is always
+true due to limited range of data type [-Wtype-limits]
+   (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
+         ^
+drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
+of macro 'get_order'
+  adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
+                                 ^~~~~~~~~
 
-According to the discussion on the mailing list, the commit should be
-reverted for short term solution.  Catalin Marinas would follow up with
-a better solution for longer term.
+Fix it by moving all of this multi-line macro into a proper function,
+and killing __get_order() off.
 
-The failure rate of kmemleak metadata allocation may increase in some
-circumstances, but this should be expected side effect.
-
-Link: http://lkml.kernel.org/r/1563299431-111710-1-git-send-email-yang.shi@linux.alibaba.com
-Fixes: d9570ee3bd1d4f2 ("kmemleak: allow to coexist with fault injection")
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Qian Cai <cai@lca.pw>
+[akpm@linux-foundation.org: remove __get_order() altogether]
+[cai@lca.pw: v2]
+  Link: http://lkml.kernel.org/r/1564000166-31428-1-git-send-email-cai@lca.pw
+Link: http://lkml.kernel.org/r/1563914986-26502-1-git-send-email-cai@lca.pw
+Fixes: d66acc39c7ce ("bitops: Optimise get_order()")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jakub Jelinek <jakub@redhat.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Bill Wendling <morbo@google.com>
+Cc: James Y Knight <jyknight@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/kmemleak.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/asm-generic/getorder.h | 50 ++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 30 deletions(-)
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 6c94b6865ac22..5eeabece0c178 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -126,7 +126,7 @@
- /* GFP bitmask for kmemleak internal allocations */
- #define gfp_kmemleak_mask(gfp)	(((gfp) & (GFP_KERNEL | GFP_ATOMIC)) | \
- 				 __GFP_NORETRY | __GFP_NOMEMALLOC | \
--				 __GFP_NOWARN | __GFP_NOFAIL)
-+				 __GFP_NOWARN)
+diff --git a/include/asm-generic/getorder.h b/include/asm-generic/getorder.h
+index c64bea7a52beb..e9f20b813a699 100644
+--- a/include/asm-generic/getorder.h
++++ b/include/asm-generic/getorder.h
+@@ -7,24 +7,6 @@
+ #include <linux/compiler.h>
+ #include <linux/log2.h>
  
- /* scanning area inside a memory block */
- struct kmemleak_scan_area {
+-/*
+- * Runtime evaluation of get_order()
+- */
+-static inline __attribute_const__
+-int __get_order(unsigned long size)
+-{
+-	int order;
+-
+-	size--;
+-	size >>= PAGE_SHIFT;
+-#if BITS_PER_LONG == 32
+-	order = fls(size);
+-#else
+-	order = fls64(size);
+-#endif
+-	return order;
+-}
+-
+ /**
+  * get_order - Determine the allocation order of a memory size
+  * @size: The size for which to get the order
+@@ -43,19 +25,27 @@ int __get_order(unsigned long size)
+  * to hold an object of the specified size.
+  *
+  * The result is undefined if the size is 0.
+- *
+- * This function may be used to initialise variables with compile time
+- * evaluations of constants.
+  */
+-#define get_order(n)						\
+-(								\
+-	__builtin_constant_p(n) ? (				\
+-		((n) == 0UL) ? BITS_PER_LONG - PAGE_SHIFT :	\
+-		(((n) < (1UL << PAGE_SHIFT)) ? 0 :		\
+-		 ilog2((n) - 1) - PAGE_SHIFT + 1)		\
+-	) :							\
+-	__get_order(n)						\
+-)
++static inline __attribute_const__ int get_order(unsigned long size)
++{
++	if (__builtin_constant_p(size)) {
++		if (!size)
++			return BITS_PER_LONG - PAGE_SHIFT;
++
++		if (size < (1UL << PAGE_SHIFT))
++			return 0;
++
++		return ilog2((size) - 1) - PAGE_SHIFT + 1;
++	}
++
++	size--;
++	size >>= PAGE_SHIFT;
++#if BITS_PER_LONG == 32
++	return fls(size);
++#else
++	return fls64(size);
++#endif
++}
+ 
+ #endif	/* __ASSEMBLY__ */
+ 
 -- 
 2.20.1
 
