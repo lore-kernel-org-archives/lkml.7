@@ -2,141 +2,66 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123C9C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E49C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B84C721655
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:40:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mamCn+a/"
+	by mail.kernel.org (Postfix) with ESMTP id 3CDDF21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394082AbfHVWkL (ORCPT
+        id S2394096AbfHVWmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 18:40:11 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45814 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389214AbfHVWkK (ORCPT
+        Thu, 22 Aug 2019 18:42:14 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49906 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389294AbfHVWmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 18:40:10 -0400
-Received: by mail-pg1-f194.google.com with SMTP id o13so4506774pgp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 15:40:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=A7V2Sg9nWGS4mEo8d+F5LP3wRASvDwa06t/k4Kfsn4c=;
-        b=mamCn+a/Uo68O9hwTP6tF/jIVLEPcdbYDfQyMfc4rAF+9SrmgMbgAFD/mNNx34KDpR
-         lhqWIT8vhcMYcDyZSMods1POj2vZhr3WE2mOrHID0TFjhRGJ+Mg/u72jLsVRohUdqpaT
-         FYFQNchICUoX7BJH1RIx/dy2j2hOztOUMGio+J5SYgoQpNXhwXE2xiCtte+c6kGjlK+6
-         kdMmtpWOKYPbHGnkZZgfIWN88HTOOpsFGxr4D0bEF+p/S5d4060GLU+3S/gFPkh1Z/hZ
-         WR1gwi0QAUOPgWH63Ks03+h9fZbVWRCGVwLPIQSB7eUuAgxW8RzjLkcoNZqGR1KxmKJD
-         7a7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=A7V2Sg9nWGS4mEo8d+F5LP3wRASvDwa06t/k4Kfsn4c=;
-        b=W7K4mInpMWbzqWrq3bQw9kZ7wCGwIugSmqgb3szJp8aLm2/8Ah6vX9OwG+Zw5hvsYJ
-         TIaydNrvCgWfxKWtBca9bqYCRSJmgTOqy6eCD99QihDqCjELKhv6qd8ZHMhCM61sgudk
-         OQGlJpPRfp6+UCzATyNLAW4ruXo+Z4Bbfbbk4OGQk3qHEMxOgjMC73rrNGpti3cDVo2V
-         Q+bH/ARHYhZ1yQd2z9Ax3cf1hE8BBZfJwqayGRxXsvwD189L32nSLx+ph+/FHIAQmor7
-         z9wT9jrJnB+uWEwyfPiIog9kvcHbk6ANMe2PVKX+FxGFJh/r1jVKT21+UmvyVimsNSa1
-         3iQw==
-X-Gm-Message-State: APjAAAW7Jb0svMyt9aiAsEvpjZCDxMzK6iY2mm/5Q3mFDRHVnPCyYr78
-        NG+mBxUARoN2+MZafK4ilBuy/A==
-X-Google-Smtp-Source: APXvYqxjTnO7ypHTwAHQ1H/iNIsZYjYQSlWvjpLw3u/pWZZ1QeYIz/eRYc0oq1GWblzmbv1EVhONHA==
-X-Received: by 2002:a17:90a:bf01:: with SMTP id c1mr2087251pjs.30.1566513609917;
-        Thu, 22 Aug 2019 15:40:09 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:89d4:68d1:fc04:721])
-        by smtp.gmail.com with ESMTPSA id o24sm465918pjq.8.2019.08.22.15.40.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 22 Aug 2019 15:40:09 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     "kernelci.org bot" <bot@kernelci.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, gtucker@collabora.com
-Subject: Re: [PATCH 4.4 00/78] 4.4.190-stable review
-In-Reply-To: <5d5f064c.1c69fb81.e96ef.73f5@mx.google.com>
-References: <20190822171832.012773482@linuxfoundation.org> <5d5f064c.1c69fb81.e96ef.73f5@mx.google.com>
-Date:   Thu, 22 Aug 2019 15:40:08 -0700
-Message-ID: <7himqo259z.fsf@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 22 Aug 2019 18:42:13 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9D9B7153409F5;
+        Thu, 22 Aug 2019 15:42:12 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 15:42:12 -0700 (PDT)
+Message-Id: <20190822.154212.249670304042273740.davem@davemloft.net>
+To:     narmstrong@baylibre.com
+Cc:     robh+dt@kernel.org, martin.blumenstingl@googlemail.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v4 0/2] dt-bindings: net: meson-dwmac: convert
+ to yaml
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190820075742.14857-1-narmstrong@baylibre.com>
+References: <20190820075742.14857-1-narmstrong@baylibre.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 22 Aug 2019 15:42:12 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"kernelci.org bot" <bot@kernelci.org> writes:
+From: Neil Armstrong <narmstrong@baylibre.com>
+Date: Tue, 20 Aug 2019 09:57:40 +0200
 
-> stable-rc/linux-4.4.y boot: 101 boots: 2 failed, 84 passed with 12 offline, 2 untried/unknown, 1 conflict (v4.4.189-79-gf18b2d12bf91)
+> This patchsets converts the Amlogic Meson DWMAC glue bindings over to
+> YAML schemas using the already converted dwmac bindings.
+> 
+> The first patch is needed because the Amlogic glue needs a supplementary
+> reg cell to access the DWMAC glue registers.
+> 
+> Changes since v3:
+> - Specified net-next target tree
+> 
+> Changes since v2:
+> - Added review tags
+> - Updated allwinner,sun7i-a20-gmac.yaml reg maxItems
 
-TL;DR;  All is well.
-
-> Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux-4.4.y/kernel/v4.4.189-79-gf18b2d12bf91/
-> Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y/kernel/v4.4.189-79-gf18b2d12bf91/
->
-> Tree: stable-rc
-> Branch: linux-4.4.y
-> Git Describe: v4.4.189-79-gf18b2d12bf91
-> Git Commit: f18b2d12bf9162bef0b051e6300b389a674f68e1
-> Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-> Tested: 47 unique boards, 19 SoC families, 14 builds out of 190
->
-> Boot Regressions Detected:
->
-> arm:
->
->     bcm2835_defconfig:
->         gcc-8:
->           bcm2835-rpi-b:
->               lab-baylibre-seattle: failing since 1 day (last pass: v4.4.189-75-g138891b71be5 - first fail: v4.4.189-80-gae3cc2f8a3ef)
->
->     multi_v7_defconfig:
->         gcc-8:
->           exynos5800-peach-pi:
->               lab-collabora: new failure (last pass: v4.4.189-80-gae3cc2f8a3ef)
->
->     qcom_defconfig:
->         gcc-8:
->           qcom-apq8064-cm-qs600:
->               lab-baylibre-seattle: failing since 7 days (last pass: v4.4.189 - first fail: v4.4.189-32-g35ba3146be27)
->           qcom-apq8064-ifc6410:
->               lab-baylibre-seattle: failing since 7 days (last pass: v4.4.189 - first fail: v4.4.189-32-g35ba3146be27)
->
->     sama5_defconfig:
->         gcc-8:
->           at91-sama5d4_xplained:
->               lab-baylibre-seattle: failing since 1 day (last pass: v4.4.189-75-g138891b71be5 - first fail: v4.4.189-80-gae3cc2f8a3ef)
-
-Hmm, something's terribly wrong with our regression checker as these did
-not fail at all in this boot run.  We'll check into this.
-
-> Boot Failures Detected:
->
-> arm64:
->     defconfig:
->         gcc-8:
->             qcom-qdf2400: 1 failed lab
-
-This one looks like the boot firmware is not even starting the kernel.
-The Linaro/LKFT lab folks will need to have a look.
-
-> arm:
->     multi_v7_defconfig:
->         gcc-8:
->             stih410-b2120: 1 failed lab
-
-This board should be blacklisted for v4.4, I just fixed that.
-
-Kevin
+Series applied, thanks.
