@@ -2,51 +2,58 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFD8C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFA7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF57A20870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8DA620870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495527;
-	bh=7Y1M18/AqFCRN9z+eM39Z9krN+UijCQpwgxQQok3FF8=;
+	s=default; t=1566495531;
+	bh=nMFYjPTxcPdrrFI4O258toqIKPFroB9lSfcn3O8O7Ck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mWxFR0jG/U41dabn5huWsUot6wlQcxWzl4KNwnNkMi6P062xRlWtUWhTbqk9izUUp
-	 6RWzTsf9CaJkQrb20rOBEEAYj10lJlSfY3Erteby6yJB47S57J3aj+lO+hRPVxwvgI
-	 fXyscuHCbewcQTJQnv+WLimJS9hfU3LXymtBggIM=
+	b=C4Tk63ExILgm5N+eT4f1DDj3G5mA2+w1U4FBLEqL/OwA6fFRYr9BEQxsgRS2S+wXb
+	 toj2Q5KhygjQOZpZZMGSzwGmu0dQgUP4ui1sXPZi7AX9nRqVaiSljm4vbQS0VuRouH
+	 /gE9bCIGZ7f37FlQ4UxrcNhh9jT0a8NEV0Riy+MU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392687AbfHVRir (ORCPT
+        id S2391543AbfHVRYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45872 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391551AbfHVRYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:24 -0400
+        id S2391767AbfHVRX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:59 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4867A23400;
-        Thu, 22 Aug 2019 17:24:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5E802341D;
+        Thu, 22 Aug 2019 17:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494663;
-        bh=7Y1M18/AqFCRN9z+eM39Z9krN+UijCQpwgxQQok3FF8=;
+        s=default; t=1566494638;
+        bh=nMFYjPTxcPdrrFI4O258toqIKPFroB9lSfcn3O8O7Ck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KHneuTl4daIAXxNaeCcdpz6IlZPf9XcwD3i2hHN42lxzVI7/KeL6XOjhAizkRzyp1
-         l6xKIebS6pDPqEKji8AtngwXCBs1aaMY2taxTqP0gV6LkSCvBuxAxu49Bz15rAYVq1
-         zzsHf9ePZdlLAcIaUOnzRYAbh1m33tNOd2FQs+Js=
+        b=NlU6iJfhTXQa7AcNopQZ7IDsxdRjyVyaKGcWFzl3sMCdzliNyQkbnlupFiE+V5ykP
+         kuef+6jt0la5ai5mD0mO1MRp34nOltj8E4KZ6P3DH7x35VnsUDlXMCkkkr2I0rfc6g
+         2At94ISnU33vLeLExx3wYlHEv7q/deC+TRvR+L/U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rogan Dawes <rogan@dawes.za.net>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 086/103] USB: serial: option: add D-Link DWM-222 device ID
-Date:   Thu, 22 Aug 2019 10:19:14 -0700
-Message-Id: <20190822171732.669900836@linuxfoundation.org>
+        stable@vger.kernel.org, Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Drayton <mbd@fb.com>, Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 071/103] perf header: Fix use of unitialized value warning
+Date:   Thu, 22 Aug 2019 10:18:59 -0700
+Message-Id: <20190822171731.763340998@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -59,38 +66,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rogan Dawes <rogan@dawes.za.net>
+[ Upstream commit 20f9781f491360e7459c589705a2e4b1f136bee9 ]
 
-commit 552573e42aab5f75aff9bab855a9677979d9a7d5 upstream.
+When building our local version of perf with MSAN (Memory Sanitizer) and
+running the perf record command, MSAN throws a use of uninitialized
+value warning in "tools/perf/util/util.c:333:6".
 
-Add device id for D-Link DWM-222 A2.
+This warning stems from the "buf" variable being passed into "write".
+It originated as the variable "ev" with the type union perf_event*
+defined in the "perf_event__synthesize_attr" function in
+"tools/perf/util/header.c".
 
-MI_00 D-Link HS-USB Diagnostics
-MI_01 D-Link HS-USB Modem
-MI_02 D-Link HS-USB AT Port
-MI_03 D-Link HS-USB NMEA
-MI_04 D-Link HS-USB WWAN Adapter (qmi_wwan)
-MI_05 USB Mass Storage Device
+In the "perf_event__synthesize_attr" function they allocate space with a malloc
+call using ev, then go on to only assign some of the member variables before
+passing "ev" on as a parameter to the "process" function therefore "ev"
+contains uninitialized memory. Changing the malloc call to zalloc to initialize
+all the members of "ev" which gets rid of the warning.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Rogan Dawes <rogan@dawes.za.net>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To reproduce this warning, build perf by running:
+make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
+ -fsanitize-memory-track-origins"
 
+(Additionally, llvm might have to be installed and clang might have to
+be specified as the compiler - export CC=/usr/bin/clang)
+
+then running:
+tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
+ -i - --stdio
+
+Please see the cover letter for why false positive warnings may be
+generated.
+
+Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Drayton <mbd@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190724234500.253358-2-nums@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/header.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1949,6 +1949,8 @@ static const struct usb_device_id option
- 	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2001, 0x7e35, 0xff),			/* D-Link DWM-222 */
- 	  .driver_info = RSVD(4) },
-+	{ USB_DEVICE_INTERFACE_CLASS(0x2001, 0x7e3d, 0xff),			/* D-Link DWM-222 A2 */
-+	  .driver_info = RSVD(4) },
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 693dcd4ea6a38..61e3c482935ad 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2943,7 +2943,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
+ 	size += sizeof(struct perf_event_header);
+ 	size += ids * sizeof(u64);
+ 
+-	ev = malloc(size);
++	ev = zalloc(size);
+ 
+ 	if (ev == NULL)
+ 		return -ENOMEM;
+-- 
+2.20.1
+
 
 
