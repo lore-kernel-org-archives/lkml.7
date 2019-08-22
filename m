@@ -2,127 +2,69 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF9AC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFCFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9FB214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9A12173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732808AbfHVI4m (ORCPT
+        id S1732817AbfHVI5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:56:42 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:17849 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731348AbfHVI4m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:56:42 -0400
-X-UUID: 12062e92b4164c44998da9081270e292-20190822
-X-UUID: 12062e92b4164c44998da9081270e292-20190822
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 515483021; Thu, 22 Aug 2019 16:56:30 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 22 Aug
- 2019 16:56:22 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 22 Aug 2019 16:56:21 +0800
-Message-ID: <1566464186.11621.7.camel@mhfsdcap03>
-Subject: Re: [PATCH v10 09/23] iommu/io-pgtable-arm-v7s: Extend to support
- PA[33:32] for MediaTek
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Will Deacon <will@kernel.org>
-CC:     <youlin.pei@mediatek.com>, <devicetree@vger.kernel.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        <cui.zhang@mediatek.com>, <srv_heupstream@mediatek.com>,
-        <chao.hao@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
-        <linux-kernel@vger.kernel.org>, Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
-        <iommu@lists.linux-foundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <ming-fan.chen@mediatek.com>, <anan.sun@mediatek.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Matthias Kaehlcke" <mka@chromium.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 22 Aug 2019 16:56:26 +0800
-In-Reply-To: <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
-References: <1566395606-7975-1-git-send-email-yong.wu@mediatek.com>
-         <1566395606-7975-10-git-send-email-yong.wu@mediatek.com>
-         <20190821152448.qmoqjh5zznfpdi6n@willie-the-truck>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 22 Aug 2019 04:57:06 -0400
+Received: from mga18.intel.com ([134.134.136.126]:21206 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729109AbfHVI5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 04:57:06 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 01:57:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,416,1559545200"; 
+   d="scan'208";a="186492384"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Aug 2019 01:57:01 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1i0itv-0006Oy-4J; Thu, 22 Aug 2019 11:56:59 +0300
+Date:   Thu, 22 Aug 2019 11:56:59 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        tony.luck@intel.com, x86@kernel.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-rtc@vger.kernel.org,
+        devicetree@vger.kernel.org, alan@linux.intel.com,
+        linux-kernel@vger.kernel.org, qi-ming.wu@intel.com,
+        cheol.yong.kim@intel.com, rahul.tanwar@intel.com
+Subject: Re: [PATCH v1 2/2] dt-bindings: rtc: Add optional status property
+Message-ID: <20190822085659.GI30120@smile.fi.intel.com>
+References: <cover.1566458029.git.rahul.tanwar@linux.intel.com>
+ <1b01287241d49638c43222d32f3ece5a38c95ddf.1566458029.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: A53204EC2B24E8ED10E65E7323376A240E74388A8016195038C20EBC411B98902000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1b01287241d49638c43222d32f3ece5a38c95ddf.1566458029.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-21 at 16:24 +0100, Will Deacon wrote:
-> On Wed, Aug 21, 2019 at 09:53:12PM +0800, Yong Wu wrote:
-> > MediaTek extend the arm v7s descriptor to support up to 34 bits PA where
-> > the bit32 and bit33 are encoded in the bit9 and bit4 of the PTE
-> > respectively. Meanwhile the iova still is 32bits.
-> > 
-> > Regarding whether the pagetable address could be over 4GB, the mt8183
-> > support it while the previous mt8173 don't, thus keep it as is.
-> > 
-> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > ---
-> >  drivers/iommu/io-pgtable-arm-v7s.c | 32 +++++++++++++++++++++++++-------
-> >  include/linux/io-pgtable.h         |  7 +++----
-> >  2 files changed, 28 insertions(+), 11 deletions(-)
-> 
-> [...]
-> 
-> > @@ -731,7 +747,9 @@ static struct io_pgtable *arm_v7s_alloc_pgtable(struct io_pgtable_cfg *cfg,
-> >  {
-> >  	struct arm_v7s_io_pgtable *data;
-> >  
-> > -	if (cfg->ias > ARM_V7S_ADDR_BITS || cfg->oas > ARM_V7S_ADDR_BITS)
-> > +	if (cfg->ias > ARM_V7S_ADDR_BITS ||
-> > +	    (cfg->oas > ARM_V7S_ADDR_BITS &&
-> > +	     !(cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT)))
-> 
-> Please can you instead change arm_v7s_alloc_pgtable() so that it allows an
-> ias of up to 34 when the IO_PGTABLE_QUIRK_ARM_MTK_EXT is set?
+On Thu, Aug 22, 2019 at 03:44:04PM +0800, Rahul Tanwar wrote:
+> Some products may not support MC146818 RTC CMOS device. Introduce a optional
+> 'status' standard property for RTC-CMOS to indicate if the MC146818 RTC device
+> is available (status="okay") or not (status="disabled")
 
-Here I only simply skip the oas checking for our case. then which way do
-your prefer?  something like you commented before:?
+This needs to be converted to YAML
 
-
-	if (cfg->ias > ARM_V7S_ADDR_BITS)
-		return NULL;
-
-	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_MTK_EXT) {
-		if (!IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))
-			cfg->oas = min(cfg->oas, ARM_V7S_ADDR_BITS);
-		else if (cfg->oas > 34)
-			return NULL;
-	} else if (cfg->oas > ARM_V7S_ADDR_BITS) {
-		return NULL;
-	}
-
-
-> 
-> With that change:
-> 
-> Acked-by: Will Deacon <will@kernel.org>
-> 
-> Will
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
