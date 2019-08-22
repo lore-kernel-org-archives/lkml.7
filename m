@@ -2,67 +2,87 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04211C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5103C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE212339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B512339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:36:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dMcZkQt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390831AbfHVVfI (ORCPT
+        id S2389752AbfHVVge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:35:08 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:49059 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732656AbfHVVfH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:35:07 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id CE5BBFF809;
-        Thu, 22 Aug 2019 21:35:05 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Shawn Guo <shawn.guo@linaro.org>
-Cc:     kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH] ARM: dts: pbab01: correct rtc vendor
-Date:   Thu, 22 Aug 2019 23:35:03 +0200
-Message-Id: <20190822213503.14726-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 22 Aug 2019 17:36:34 -0400
+Received: from ozlabs.org ([203.11.71.1]:53367 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730759AbfHVVge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 17:36:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46DyXG6wFFz9s3Z;
+        Fri, 23 Aug 2019 07:36:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1566509791;
+        bh=hsjC5tg0AUO4VczoJ0W3z6ZBbs1wLKV5JQGRElboUTs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dMcZkQt5aw0Pl3RhOslmSQPXEna+iVKEMf9UIoV+FQnELhYRSQgMxpLXWXJ/tTFV8
+         bzIuLxdf7/YrRw/h0M3uOT4d2P7pUamvcgx1wTzvtlDODGhoosg2X2zHuA8zBQ9oo4
+         ssUOZKjzPkqHNufY9NGTwiRgzYcR40jVRwWh6vsjY5LgunlgQUT/mrw+3YCiVvMq0+
+         1PODUpkeTJTXJO93JA2fFnFzu5mCjy+L/B6ZjzCOd8ifQeSX3XurPvhnDUjA+7ZlTS
+         qxhcg0yRwA+ZJMvbA9Vzw3p3+ZcBFtuJCJm9WarcbgFAkrZFyKTG2SE7QzzS+n5ylN
+         j7IPiBGL1aTOA==
+Date:   Fri, 23 Aug 2019 07:36:22 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the sunxi tree
+Message-ID: <20190823073545.647ec7d1@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/aTGv3uv8tSXDXzl4uI2kL1T";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rtc8564 is made by Epson but is similar to the NXP pcf8563. Use the
-correct vendor name.
+--Sig_/aTGv3uv8tSXDXzl4uI2kL1T
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi all,
 
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-index 82802f8ce7a0..d434868e870a 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-@@ -128,7 +128,7 @@
- 	};
- 
- 	rtc@51 {
--		compatible = "nxp,rtc8564";
-+		compatible = "epson,rtc8564";
- 		reg = <0x51>;
- 	};
- 
--- 
-2.21.0
+Commit
 
+  c60e09f77c83 ("ARM: dts: sun8i: a83t: Enable HDMI output on Cubietruck Pl=
+us")
+
+is missing a Signed-off-by from its committer.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/aTGv3uv8tSXDXzl4uI2kL1T
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1fCtYACgkQAVBC80lX
+0Gzdtgf/Rvr/o6VttShgxqR7ITjaIT9PuuPBDvrNx8VJgNAXf4UN4v0XzfAVxZpJ
+XpjAKzUpUuSZ4ZbPzihe9GxTt6SgDOH6Pu4XdQDFXE0lWA52fLs85tSUploy3bPH
+8PXGUfOwSHuChb6IW+UOwzQSuF6HEBcmbIVaooXUxqdpTFM/TJU33UxBbso7DIjW
+5Ib7w77LOCAqMOtyEXayJVyoBQ9+rWJuwFjugq2xylrxHlTQ7W62psoVKpBqRtOa
+E2zEZEQNHYUN5PAhvIGmTjSYfkkBJjUd03sdpmG1J07RE0onG7jCELoBmi86E3Eq
+r6sO0POK+e+BhvxrsniEjP04aJNYHw==
+=SSgb
+-----END PGP SIGNATURE-----
+
+--Sig_/aTGv3uv8tSXDXzl4uI2kL1T--
