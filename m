@@ -2,105 +2,179 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9B6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EC1C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0214921655
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H96MoQ+X"
+	by mail.kernel.org (Postfix) with ESMTP id 99B1321848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732926AbfHVJGJ (ORCPT
+        id S1732940AbfHVJG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:06:09 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:55022 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbfHVJGI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:06:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jQUmhm+crCMl7aYhsmY917C2u3wYSGbnGiCkrOsABG0=; b=H96MoQ+Xd3KhAeEuhp3KuJohI
-        7ynuQoFB+FMMXI0yuJcBPGyPNWoozF3fDKL9kl4B1XlMv3+6HktRE1qRLl7vo2y5kWQsZ1DyZye2c
-        D9kG9tcMcVvyCEkQ+xqenprcGbr2Gvn0PAaMxckZsZrBkOjWWIh522IzryqmQX0oBFf0K/llZ93O6
-        ZDU/ioNYP/VUNvq59utMpn18uDg7xZOFlRcstWcRz1zfQ9Ez0NQEKeBhW+jmRezsiZrZTxj3r+RT6
-        zHReVu6e3nCBZlm6teISKVXXZnYetDwGV4kJGAqQtH/SBfvLNvHDE5vEekVryI6QFRfDmLqGtuE0V
-        KC4nhDu6Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i0j2c-0000zc-VK; Thu, 22 Aug 2019 09:05:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 82957307145;
-        Thu, 22 Aug 2019 11:05:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8000620A21FDF; Thu, 22 Aug 2019 11:05:55 +0200 (CEST)
-Date:   Thu, 22 Aug 2019 11:05:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Yonghong Song <yhs@fb.com>, Daniel Xu <dxu@dxuuu.xyz>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 bpf-next 1/4] tracing/probe: Add
- PERF_EVENT_IOC_QUERY_PROBE ioctl
-Message-ID: <20190822090555.GJ2349@hirez.programming.kicks-ass.net>
-References: <20190820144503.GV2332@hirez.programming.kicks-ass.net>
- <BWENHQJIN885.216UOYEIWNGFU@dlxu-fedora-R90QNFJV>
- <20190821110856.GB2349@hirez.programming.kicks-ass.net>
- <62874df3-cae0-36a1-357f-b59484459e52@fb.com>
- <20190821183155.GE2349@hirez.programming.kicks-ass.net>
- <5ecdcd72-255d-26d1-baf3-dc64498753c2@fb.com>
- <20190822074737.GG2349@hirez.programming.kicks-ass.net>
- <E9CB8C05-8972-4454-9D19-FA2D0D94F32D@fb.com>
+        Thu, 22 Aug 2019 05:06:27 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3946 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732927AbfHVJG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:06:26 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 1F8C08038BA942CCAE6F;
+        Thu, 22 Aug 2019 17:06:23 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 22 Aug 2019 17:06:22 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 22 Aug 2019 17:06:21 +0800
+Date:   Thu, 22 Aug 2019 17:05:41 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Richard Weinberger <richard.weinberger@gmail.com>
+CC:     Gao Xiang <hsiangkao@aol.com>, Richard Weinberger <richard@nod.at>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: erofs: Question on unused fields in on-disk structs
+Message-ID: <20190822090541.GA193349@architecture4>
+References: <1323459733.69859.1566234633793.JavaMail.zimbra@nod.at>
+ <20190819204504.GB10075@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <CAFLxGvxr2UMeVa29M9pjLtWMFPz7w6udRV38CRxEF1moyA9_Rw@mail.gmail.com>
+ <20190821220251.GA3954@hsiangkao-HP-ZHAN-66-Pro-G1>
+ <CAFLxGvzLPgD22pVOV_jz1EvC-c7YU_2dEFbBt4q08bSkZ3U0Dg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <E9CB8C05-8972-4454-9D19-FA2D0D94F32D@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFLxGvzLPgD22pVOV_jz1EvC-c7YU_2dEFbBt4q08bSkZ3U0Dg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 07:54:16AM +0000, Song Liu wrote:
-> Hi Peter, 
-> 
-> > On Aug 22, 2019, at 12:47 AM, Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > On Wed, Aug 21, 2019 at 06:43:49PM +0000, Yonghong Song wrote:
-> >> On 8/21/19 11:31 AM, Peter Zijlstra wrote:
-> > 
-> >>> So extending PERF_RECORD_LOST doesn't work. But PERF_FORMAT_LOST might
-> >>> still work fine; but you get to implement it for all software events.
-> >> 
-> >> Could you give more specifics about PERF_FORMAT_LOST? Googling 
-> >> "PERF_FORMAT_LOST" only yields two emails which we are discussing here :-(
-> > 
-> > Look at what the other PERF_FORMAT_ flags do? Basically it is adding a
-> > field to the read(2) output.
-> 
-> Do we need to implement PERF_FORMAT_LOST for all software events? If user
-> space asks for PERF_FORMAT_LOST for events that do not support it, can we
-> just fail sys_perf_event_open()?
 
-It really shouldn't be hard; and I'm failing to see why kprobes are
-special.
+Hi Richard,
+
+On Thu, Aug 22, 2019 at 10:33:01AM +0200, Richard Weinberger wrote:
+> On Thu, Aug 22, 2019 at 12:03 AM Gao Xiang <hsiangkao@aol.com> wrote:
+> >
+> > Hi Richard,
+> >
+> > On Wed, Aug 21, 2019 at 11:37:30PM +0200, Richard Weinberger wrote:
+> > > Gao Xiang,
+> > >
+> > > On Mon, Aug 19, 2019 at 10:45 PM Gao Xiang via Linux-erofs
+> > > <linux-erofs@lists.ozlabs.org> wrote:
+> > > > > struct erofs_super_block has "checksum" and "features" fields,
+> > > > > but they are not used in the source.
+> > > > > What is the plan for these?
+> > > >
+> > > > Yes, both will be used laterly (features is used for compatible
+> > > > features, we already have some incompatible features in 5.3).
+> > >
+> > > Good. :-)
+> > > I suggest to check the fields being 0 right now.
+> > > Otherwise you are in danger that they get burned if an mkfs.erofs does not
+> > > initialize the fields.
+> >
+> > Sorry... I cannot get the point...
+> 
+> Sorry for being unclear, let me explain in more detail.
+
+Thank you!
+
+> 
+> > super block chksum could be a compatible feature right? which means
+> > new kernel can support it (maybe we can add a warning if such image
+> > doesn't have a chksum then when mounting) but old kernel doesn't
+> > care it.
+> 
+> Yes. But you need some why to indicate that the chksum field is now
+> valid and must be used.
+
+We can add a compat "feature" as my following saying...
+(If I missed something, please kindly point out...)
+
+> 
+> The features field can be used for that, but you don't use it right now.
+> I recommend to check it for being 0, 0 means then "no features".
+> If somebody creates in future a erofs with more features this code
+> can refuse to mount because it does not support these features.
+
+"requirements" field is for that, it means incompat features as the following code shown:
+ 69 static bool check_layout_compatibility(struct super_block *sb,
+ 70                                        struct erofs_super_block *layout)
+ 71 {
+ 72         const unsigned int requirements = le32_to_cpu(layout->requirements);
+ 73
+ 74         EROFS_SB(sb)->requirements = requirements;
+ 75
+ 76         /* check if current kernel meets all mandatory requirements */
+ 77         if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
+ 78                 errln("unidentified requirements %x, please upgrade kernel version",
+ 79                       requirements & ~EROFS_ALL_REQUIREMENTS);
+ 80                 return false;
+ 81         }
+ 82         return true;
+ 83 }
+
+if some "requirements" don't be recognized by the current kernel,
+it will refuse to mount but "features" not.
+
+> 
+> But be very sure that existing erofs filesystems actually have this field
+> set to 0 or something other which is always the same.
+> Otherwise you cannot use the field anymore because it could be anything.
+> A common bug is that the mkfs program keeps such unused fields
+> uninitialized and then it can be a more or less random value without
+> notice.
+
+Why? In my thought, the logic is that
+ - v4.3, "features" that kernel can handle is 0, so chksum is unused (DONTCARE field)
+   and chksum field could be anything, but the kernel doesn't care.
+
+ - later version, add an extra compat feature to "features" to indicate SB_CHKSUM
+    is now valid, such as EROFS_FEATURE_SB_CHKSUM (rather than requirements, it's
+    incompat), so the kernel can check the checksum like that:
+
+    if (feature & EROFS_FEATURE_SB_CHKSUM) {	/* chksum is set */
+        if (chk crc32c and no match) {
+             return -EFSBADCRC;
+	}
+        go ahead
+    } else {
+        /* still don't care chksum field but print the following warning to kmsg */
+        warnln("You are mounting a image without super_block chksum, please take care!!!!");
+
+        or maybe we can even refuse mount these images, except for some mount option
+        such as "force-mount".
+    }
+
+ That is also what F2FS did recently, refer the following commit
+   commit d440c52d3151("f2fs: support superblock checksum")
+
+> 
+> > Or maybe you mean these reserved fields? I have no idea all other
+> > filesystems check these fields to 0 or not... But I think it should
+> > be used with some other flag is set rather than directly use, right?
+> 
+> Basically you want a way to know when a field shall be used and when not.
+> Most filesystems have version/feature fields. Often multiple to denote different
+> levels of compatibility.
+
+On-disk inode has i_advise field, and super_block has
+"features" and "requirements" fields. we can use some of them
+or any combinations.
+
+Thanks,
+Gao Xiang
+
+> 
+> -- 
+> Thanks,
+> //richard
