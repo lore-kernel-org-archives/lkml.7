@@ -2,251 +2,93 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF1DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56459C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B39F2339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:06:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ONNztFHt"
+	by mail.kernel.org (Postfix) with ESMTP id 28FEA20870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731356AbfHVIGA (ORCPT
+        id S1731713AbfHVIH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:06:00 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:52990 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfHVIF6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:05:58 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190822080556euoutp014ecc6dd49a423e84a67054d011973547~9MB9YkpOW0285702857euoutp012
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:05:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190822080556euoutp014ecc6dd49a423e84a67054d011973547~9MB9YkpOW0285702857euoutp012
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566461156;
-        bh=4zxlvUFQ7kHa/ksIbQBsJoh28JPFEn+LcgjtZFtKCHY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ONNztFHtxctClNwYIDQtXTgHdMTa1iV/H7OkuxSEo9ECWjS0sJRD5zTuVXTBsC/Gu
-         tf302rQHiFWN+ORTsNAk3PE9naHdW6UWMLeTrQyhpGPYRafMgQ0LsLwy2KID+mkeTy
-         CkmPbpdgMP03hct31Hyr4wDwQQeKbCLUHIux/5wU=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190822080555eucas1p2cfd3d35e5146fdfbd8a2f18ec2b54549~9MB8nyJzw0411304113eucas1p2x;
-        Thu, 22 Aug 2019 08:05:55 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 1E.B2.04374.3EC4E5D5; Thu, 22
-        Aug 2019 09:05:55 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190822080554eucas1p2610b6e5b48679b6cc912eb5ced8b9502~9MB75AJy82378423784eucas1p2q;
-        Thu, 22 Aug 2019 08:05:54 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190822080554eusmtrp23e970cb4e30bb13756c118f3d7af5245~9MB7qzioP3146831468eusmtrp2Z;
-        Thu, 22 Aug 2019 08:05:54 +0000 (GMT)
-X-AuditID: cbfec7f5-4f7ff70000001116-8f-5d5e4ce3aaff
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 93.1A.04166.2EC4E5D5; Thu, 22
-        Aug 2019 09:05:54 +0100 (BST)
-Received: from [106.109.129.180] (unknown [106.109.129.180]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190822080553eusmtip2170b491e8fa5ca2ecbf729347cfc9810~9MB6yGR6m2361123611eusmtip24;
-        Thu, 22 Aug 2019 08:05:53 +0000 (GMT)
-Subject: Re: [Intel-wired-lan] [PATCH net] ixgbe: fix double clean of tx
- descriptors with xdp
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Netdev <netdev@vger.kernel.org>, William Tu <u9012063@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        bpf <bpf@vger.kernel.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Eelco Chaudron <echaudro@redhat.com>
-From:   Ilya Maximets <i.maximets@samsung.com>
-Message-ID: <54faa2f1-345d-b5b2-7e48-963876b62813@samsung.com>
-Date:   Thu, 22 Aug 2019 11:05:52 +0300
+        Thu, 22 Aug 2019 04:07:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50240 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725783AbfHVIH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 04:07:26 -0400
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 948B0356C9
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:07:26 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id i4so2816877wri.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:07:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pF3YGFREgBUzzvAMmFfzZCFDTbGTkVkyO/Xg4NkQLbg=;
+        b=ni+h5gvuCJh9z2Y0e5oHtDt6lxn21lFq12OPzNs7j7HVqeSEH4hkb+jxhF0kPHYi1T
+         MWY7lELVbiSCTEsJpXBAokVmSc7J8nEz8rb3Y5qDjYmH6Bo+6c/+OYQeFG2lOx7Dwda2
+         ADM3GQE6b3CGnnxGKOKg2KAmXwyFU88fX4EtnjTdAr6+RoYEz8pvkUbWsrFxAa3NSMjZ
+         TfK/Jlx03KmX1HxAmyQMCaHd2CPzG0lGNMF+Zi4joi5A/iF6XzEyypgMua/Lf+KY14zl
+         IW21KEN4jeR80nvyeby/2XlEJZ+74hS8j97ibDcQ1flMEp6gNm8HwH0QkvJ2Q0EO6dmc
+         0c1A==
+X-Gm-Message-State: APjAAAX0k5lUvEzvyfsG8fOHexbcZYmExnGg1wncj8g2AuZnqOeW97Qy
+        fqZE7lMC4O1Ni73DOIRs2XxhCfEnSBteO6sXhmuvCU8wQjzZptiDKpIPdHEp5OckzC4rLCywGjk
+        5x9roTLSviC321XXpm7fbixrK
+X-Received: by 2002:adf:a48f:: with SMTP id g15mr46940522wrb.172.1566461245223;
+        Thu, 22 Aug 2019 01:07:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyKS7i8/l2gsUy685qpa5gOwkc8jiCcEIrrT+YYNuieEQ8e2G096e6ngarBG7s2GxLQuCFHpA==
+X-Received: by 2002:adf:a48f:: with SMTP id g15mr46940485wrb.172.1566461244874;
+        Thu, 22 Aug 2019 01:07:24 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:21b9:ff1f:a96c:9fb3? ([2001:b07:6468:f312:21b9:ff1f:a96c:9fb3])
+        by smtp.gmail.com with ESMTPSA id k9sm20260132wrq.15.2019.08.22.01.07.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Aug 2019 01:07:24 -0700 (PDT)
+Subject: Re: [PATCH RESEND] i386/kvm: support guest access CORE cstate
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Eduardo Habkost <ehabkost@redhat.com>
+References: <1563154124-18579-1-git-send-email-wanpengli@tencent.com>
+ <ba3ae595-7f82-d17b-e8ed-6e86e9195ce5@redhat.com>
+ <CANRm+Cx1bEOXBx50K9gv08UWEGadKOCtCbAwVo0CFC-g1gS+Xg@mail.gmail.com>
+ <82a0eb75-5710-3b03-cf8e-a00b156ee275@redhat.com>
+ <CANRm+Cw4V9AT1FOAOiQ5OSYHYcka_CxxKLewsPfZ9+ykTy354w@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <d2c93756-708e-3f8c-d9f2-8b80c73928e7@redhat.com>
+Date:   Thu, 22 Aug 2019 10:07:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAJ+HfNjo0tpk2v_+85SuX7Jw797QwRA7uJBggPHtY=JznLC9Zg@mail.gmail.com>
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBKsWRmVeSWpSXmKPExsWy7djPc7qPfeJiDb7slLX4P/c2i8WXn7fZ
-        Lc5PO8Vm8adtA6PF5yPH2SwWL/zGbDHnfAuLxZ0rP9ksrrT/ZLf4f+s3q8WxFy1sFpd3zWGz
-        WHHoBLvFsQViFtcv8Tjwe2xZeZPJY+esu+wei/e8ZPLounGJ2WPTqk42j5PNpR7Tux8ye7zf
-        d5XNo2/LKkaPz5vkAriiuGxSUnMyy1KL9O0SuDLWvtQvaNeueNfwi6mB8aNSFyMnh4SAicSV
-        /susXYxcHEICKxglrjTPZIZwvjBKdL1+ApX5zCjx98oiZpiW7n1LmSASyxklTq37CVX1kVFi
-        zqktjCBVwgLxEnPurWYCsUUEsiW+X5zKBlLELPCDWWLn7JNsIAk2AR2JU6uPgDXwCthJHFu1
-        nx3EZhFQldgx/xHYOlGBCIlPDw6zQtQISpyc+YQFxOYUCJRY8KwXLM4sIC7R9GUllC0v0bx1
-        NtgTEgK9HBKPp91kgbjbRWLj+i9QPwhLvDq+hR3ClpH4v3M+E4RdL3G/5SUjRHMHo8T0Q/+g
-        EvYSW16fA2rgANqgKbF+lz6IKSHgKPG1VRPC5JO48VYQ4gQ+iUnbpjNDhHklOtqEIGaoSPw+
-        uBzqACmJm+8+s09gVJqF5LFZSJ6ZheSZWQhrFzCyrGIUTy0tzk1PLTbOSy3XK07MLS7NS9dL
-        zs/dxAhMf6f/Hf+6g3Hfn6RDjAIcjEo8vBN0Y2OFWBPLiitzDzFKcDArifBWzImKFeJNSays
-        Si3Kjy8qzUktPsQozcGiJM5bzfAgWkggPbEkNTs1tSC1CCbLxMEp1cC4VP7sveunlms4nwoy
-        XDlf/xS73LQv8z/pHO5bxfM5M3zehOY9JVesfWIkesPfuR+K2LqxWDFvyqN966YdqLnV2rld
-        kOmNaMGkOZW8/XuZzwk9Dw32YtC8fUTWpDXCRqDjlzvzjIC+wiXF1rF5LwwYTl7RVsyaoOyr
-        Xy5wTfb5jLgdcysfb+dXYinOSDTUYi4qTgQAk/YWrHsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNIsWRmVeSWpSXmKPExsVy+t/xe7qPfOJiDRovaVj8n3ubxeLLz9vs
-        FuennWKz+NO2gdHi85HjbBaLF35jtphzvoXF4s6Vn2wWV9p/slv8v/Wb1eLYixY2i8u75rBZ
-        rDh0gt3i2AIxi+uXeBz4PbasvMnksXPWXXaPxXteMnl03bjE7LFpVSebx8nmUo/p3Q+ZPd7v
-        u8rm0bdlFaPH501yAVxRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYp
-        qTmZZalF+nYJehlrX+oXtGtXvGv4xdTA+FGpi5GTQ0LARKJ731KmLkYuDiGBpYwSh65uYoNI
-        SEn8+HWBFcIWlvhzrQssLiTwnlFi9n0wW1ggXmLOvdVMILaIQLZE09GLbCCDmAV+MUscf7kT
-        aupUFomH+2+zg1SxCehInFp9hBHE5hWwkzi2aj9YnEVAVWLH/EfMILaoQITE4R2zoGoEJU7O
-        fMICYnMKBEoseNYLdhGzgLrEn3mXmCFscYmmLyuh4vISzVtnM09gFJqFpH0WkpZZSFpmIWlZ
-        wMiyilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzDitx37uXkH46WNwYcYBTgYlXh4J+jGxgqx
-        JpYVV+YeYpTgYFYS4a2YExUrxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnAZJRXEm9oamhu
-        YWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoExRprjYBR334HdH2Ma51lsXvDi
-        3cTVLlm5q4s5H0/2XHmuP0rw+qS6wzJCnLHi1xLOrjx9fklpwZNFDhpuN6dLdB99u2tmj9mv
-        QpmAtjwtzoPFFg9e3p+8cvECFeHnbvMXPti0aMlT49+/DtpWceQtP71xneGdy0k7Zus8tDo7
-        NSJ++Tk3gcv32ZVYijMSDbWYi4oTAc2jckYOAwAA
-X-CMS-MailID: 20190822080554eucas1p2610b6e5b48679b6cc912eb5ced8b9502
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce
-References: <CGME20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce@eucas1p1.samsung.com>
-        <20190820151611.10727-1-i.maximets@samsung.com>
-        <CAKgT0Udn0D0_f=SOH2wpBRWV_u4rb1Qe2h7gguXnRNzJ_VkRzg@mail.gmail.com>
-        <625791af-c656-1e42-b60e-b3a5cedcb4c4@samsung.com>
-        <CAKgT0Uc27+ucd=a_sgTmv5g7_+ZTg1zK4isYJ0H7YWQj3d=Ejg@mail.gmail.com>
-        <f7d0f7a5-e664-8b72-99c7-63275aff4c18@samsung.com>
-        <CAKgT0UcCKiM1Ys=vWxctprN7fzWcBCk-PCuKB-8=RThM=CqLSQ@mail.gmail.com>
-        <CAJ+HfNjo0tpk2v_+85SuX7Jw797QwRA7uJBggPHtY=JznLC9Zg@mail.gmail.com>
+In-Reply-To: <CANRm+Cw4V9AT1FOAOiQ5OSYHYcka_CxxKLewsPfZ9+ykTy354w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.08.2019 10:12, Björn Töpel wrote:
-> On Wed, 21 Aug 2019 at 18:57, Alexander Duyck <alexander.duyck@gmail.com> wrote:
+On 22/08/19 02:31, Wanpeng Li wrote:
+> On Wed, 21 Aug 2019 at 15:55, Paolo Bonzini <pbonzini@redhat.com> wrote:
 >>
->> On Wed, Aug 21, 2019 at 9:22 AM Ilya Maximets <i.maximets@samsung.com> wrote:
->>>
->>> On 21.08.2019 4:17, Alexander Duyck wrote:
->>>> On Tue, Aug 20, 2019 at 8:58 AM Ilya Maximets <i.maximets@samsung.com> wrote:
->>>>>
->>>>> On 20.08.2019 18:35, Alexander Duyck wrote:
->>>>>> On Tue, Aug 20, 2019 at 8:18 AM Ilya Maximets <i.maximets@samsung.com> wrote:
->>>>>>>
->>>>>>> Tx code doesn't clear the descriptor status after cleaning.
->>>>>>> So, if the budget is larger than number of used elems in a ring, some
->>>>>>> descriptors will be accounted twice and xsk_umem_complete_tx will move
->>>>>>> prod_tail far beyond the prod_head breaking the comletion queue ring.
->>>>>>>
->>>>>>> Fix that by limiting the number of descriptors to clean by the number
->>>>>>> of used descriptors in the tx ring.
->>>>>>>
->>>>>>> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
->>>>>>> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
->>>>>>
->>>>>> I'm not sure this is the best way to go. My preference would be to
->>>>>> have something in the ring that would prevent us from racing which I
->>>>>> don't think this really addresses. I am pretty sure this code is safe
->>>>>> on x86 but I would be worried about weak ordered systems such as
->>>>>> PowerPC.
->>>>>>
->>>>>> It might make sense to look at adding the eop_desc logic like we have
->>>>>> in the regular path with a proper barrier before we write it and after
->>>>>> we read it. So for example we could hold of on writing the bytecount
->>>>>> value until the end of an iteration and call smp_wmb before we write
->>>>>> it. Then on the cleanup we could read it and if it is non-zero we take
->>>>>> an smp_rmb before proceeding further to process the Tx descriptor and
->>>>>> clearing the value. Otherwise this code is going to just keep popping
->>>>>> up with issues.
->>>>>
->>>>> But, unlike regular case, xdp zero-copy xmit and clean for particular
->>>>> tx ring always happens in the same NAPI context and even on the same
->>>>> CPU core.
->>>>>
->>>>> I saw the 'eop_desc' manipulations in regular case and yes, we could
->>>>> use 'next_to_watch' field just as a flag of descriptor existence,
->>>>> but it seems unnecessarily complicated. Am I missing something?
->>>>>
->>>>
->>>> So is it always in the same NAPI context?. I forgot, I was thinking
->>>> that somehow the socket could possibly make use of XDP for transmit.
->>>
->>> AF_XDP socket only triggers tx interrupt on ndo_xsk_async_xmit() which
->>> is used in zero-copy mode. Real xmit happens inside
->>> ixgbe_poll()
->>>  -> ixgbe_clean_xdp_tx_irq()
->>>     -> ixgbe_xmit_zc()
->>>
->>> This should be not possible to bound another XDP socket to the same netdev
->>> queue.
->>>
->>> It also possible to xmit frames in xdp_ring while performing XDP_TX/REDIRECT
->>> actions. REDIRECT could happen from different netdev with different NAPI
->>> context, but this operation is bound to specific CPU core and each core has
->>> its own xdp_ring.
->>>
->>> However, I'm not an expert here.
->>> Björn, maybe you could comment on this?
->>>
->>>>
->>>> As far as the logic to use I would be good with just using a value you
->>>> are already setting such as the bytecount value. All that would need
->>>> to happen is to guarantee that the value is cleared in the Tx path. So
->>>> if you clear the bytecount in ixgbe_clean_xdp_tx_irq you could
->>>> theoretically just use that as well to flag that a descriptor has been
->>>> populated and is ready to be cleaned. Assuming the logic about this
->>>> all being in the same NAPI context anyway you wouldn't need to mess
->>>> with the barrier stuff I mentioned before.
->>>
->>> Checking the number of used descs, i.e. next_to_use - next_to_clean,
->>> makes iteration in this function logically equal to the iteration inside
->>> 'ixgbe_xsk_clean_tx_ring()'. Do you think we need to change the later
->>> function too to follow same 'bytecount' approach? I don't like having
->>> two different ways to determine number of used descriptors in the same file.
->>>
->>> Best regards, Ilya Maximets.
+>> On 20/08/19 09:16, Wanpeng Li wrote:
+>>> Kindly reminder, :)
 >>
->> As far as ixgbe_clean_xdp_tx_irq() vs ixgbe_xsk_clean_tx_ring(), I
->> would say that if you got rid of budget and framed things more like
->> how ixgbe_xsk_clean_tx_ring was framed with the ntc != ntu being
->> obvious I would prefer to see us go that route.
->>
->> Really there is no need for budget in ixgbe_clean_xdp_tx_irq() if you
->> are going to be working with a static ntu value since you will only
->> ever process one iteration through the ring anyway. It might make more
->> sense if you just went through and got rid of budget and i, and
->> instead used ntc and ntu like what was done in
->> ixgbe_xsk_clean_tx_ring().
->>
+>> It's already in my pull request from yesterday.
 > 
-> +1. I'd prefer this as well!
+> Do you mean this pull
+> https://www.mail-archive.com/qemu-devel@nongnu.org/msg638707.html ?
+> This patch is missing.
 
-Sounds good. I'll look in this direction.
-But I'm not completely sure about 'budget' elimination. Wouldn't it cause
-issues if we'll clean the whole ring at once? I mean maybe it'll be too long
-to hold the CPU core for this amount of work.
-We could re-work the code keeping the loop break on budget exhaustion.
-What do you think?
+Oops, you're right.  I must have removed it by mistake while bisecting a
+failure.  I've added it back now.
 
-> 
-> 
-> Cheers,
-> Björn
-> 
->> Thanks.
->>
->> - Alex
->> _______________________________________________
->> Intel-wired-lan mailing list
->> Intel-wired-lan@osuosl.org
->> https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
-> 
-> 
+Paolo
