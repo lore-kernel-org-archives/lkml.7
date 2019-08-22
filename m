@@ -2,108 +2,132 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82A2C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2816C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE739233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:27:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bpk27jgM"
+	by mail.kernel.org (Postfix) with ESMTP id AA3CD233A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387652AbfHVK13 (ORCPT
+        id S1732175AbfHVK2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 06:27:29 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46636 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfHVK12 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:27:28 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f9so4999429ljc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 03:27:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1sY/jJYsZ/Y8HplWdr+MRRPypzy+MY6MFI9cf4FZtZo=;
-        b=bpk27jgMbEtZBVqG1CXQ3WQkCcbGFhVLCR/qFQYW8++ezehtCiq2LgQ0huJWT56wHd
-         AcbSluVFZbuyT9vH9RCYjyLVGIODsmeBmIZ8NsIXc9Rc5iiU6gjxfOuBA9nuTDfyRjdb
-         55Phb2VI/m2KPNeD8bHWmHOy9aKKXBrP12BGnWg6wtYAWO6X1hiatoJzwTmryhSL9tPe
-         RgLYYQcGe85mfC7ZFIZVeKApZNtHPEBfgaT1TAPMuuZFMzX6vzilt5SF9PWrR5d+M2u2
-         IiOaIYVErWqtyJlSwf2QPoi35OsnqsiJCZ/+U2aCswFflOsil8XiwVRLc9/K8AmU9Wi3
-         l+rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1sY/jJYsZ/Y8HplWdr+MRRPypzy+MY6MFI9cf4FZtZo=;
-        b=m0hD6aChfYoM9VQqXyqK6sHKdHeWRgn7tLPSaBfC7qXkCpMm88cK34nRapIGLBVmYu
-         eg1bBhvcgMfxvF38mA6wWlD9Lz+vGk1vroTGkbtMn7Rvij8krFrsJHgDZXIGyqwX2eCN
-         8TqtiBhBmeribNhNKM8mIy0tD0G0Tek8raGijtqU5KDpAHbeHm0CPO8j5dLsLYmzxgQ0
-         YMN95I0QxuLhUpSbOdUPLGIgp0WkuxeYuDpQO2Fex28yARy01Mh1qOJTxOQ8rVWU05OW
-         IfCdIVLf/2vRTB6OzJWUI0n4whtBm/bBoBSQvmuBX/IQNTHOU/RtC6NDCudGw/vsK2HI
-         YoXA==
-X-Gm-Message-State: APjAAAWBIGgvMSatCR5uipxidaBAY91W3hk50S/czTLm4KoZmKi1832S
-        6JykMfq0vqIvGcXRQcWfpUb4OA==
-X-Google-Smtp-Source: APXvYqw9ELcfWAaOIRUHdmTqNqxavdwdByFmys1TchCBhziZhIJ8bAJRlc9uHWY43bt1oOR0dlb94g==
-X-Received: by 2002:a2e:a202:: with SMTP id h2mr21448448ljm.146.1566469645923;
-        Thu, 22 Aug 2019 03:27:25 -0700 (PDT)
-Received: from centauri (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
-        by smtp.gmail.com with ESMTPSA id q30sm4371622lfd.27.2019.08.22.03.27.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 03:27:25 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 12:27:23 +0200
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>, Ilia Lin <ilia.lin@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Viresh Kumar <vireshk@kernel.org>,
-        linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        Rob Herring <robh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 06/14] dt-bindings: cpufreq: qcom-nvmem: Support
- pstates provided by a power domain
-Message-ID: <20190822102723.GB8494@centauri>
-References: <20190725104144.22924-7-niklas.cassel@linaro.org>
- <20190819100957.17095-1-niklas.cassel@linaro.org>
- <5d5ae389.1c69fb81.cb730.3225@mx.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d5ae389.1c69fb81.cb730.3225@mx.google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Thu, 22 Aug 2019 06:28:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:40925 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732080AbfHVK2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 06:28:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 03:28:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,416,1559545200"; 
+   d="scan'208";a="330340900"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga004.jf.intel.com with ESMTP; 22 Aug 2019 03:28:45 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     kishon@ti.com, robh@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, peter.harliman.liem@intel.com,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v4 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+Date:   Thu, 22 Aug 2019 18:28:42 +0800
+Message-Id: <20190822102843.47964-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 10:59:36AM -0700, Stephen Boyd wrote:
-> Quoting Niklas Cassel (2019-08-19 03:09:57)
-> > +
-> > +soc {
-> > +....
-> > +       cprpd: cpr@b018000 {
-> 
-> Maybe node name should be 'avs' for the industry standard adaptive
-> voltage scaling acronym?
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-I see where this is coming from, but "git grep avs" gives a single result.
+Add a YAML schema to use the host controller driver with the
+eMMC PHY on Intel's Lightning Mountain SoC.
 
-Also, since the label is cprpd, it doesn't make sense to simply rename the
-node name, and I don't think that avspd would be a good name, since it is
-less correct.
+Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+---
+changes in v4:
+  - As per Rob's review: validate 5.2 and 5.3
+  - drop unrelated items.
 
-So if you don't insist, I would prefer to leave it as it is.
+changes in v3:
+  - resolve 'make dt_binding_check' warnings
 
-> 
-> 
-> > +               compatible = "qcom,qcs404-cpr", "qcom,cpr";
-> > +               reg = <0x0b018000 0x1000>;
-> > +               ....
-> > +               vdd-apc-supply = <&pms405_s3>;
-> > +               #power-domain-cells = <0>;
+changes in v2:
+  As per Rob Herring review comments, the following updates
+ - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+ - filename is the compatible string plus .yaml
+ - LGM: Lightning Mountain
+ - update maintainer
+ - add intel,syscon under property list
+ - keep one example instead of two
+---
+ .../bindings/phy/intel,lgm-emmc-phy.yaml           | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+new file mode 100644
+index 000000000000..16c27e817665
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
++
++maintainers:
++  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
++
++description: Binding for eMMC PHY
++
++properties:
++  compatible:
++    const: intel,lgm-emmc-phy
++
++  intel,syscon:
++    description: phandle to the emmc through syscon
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    maxItems: 1
++
++  "#phy-cells":
++    const: 0
++
++required:
++  - "#phy-cells"
++  - compatible
++  - intel,syscon
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    emmc_phy: emmc_phy {
++        compatible = "intel,lgm-emmc-phy";
++        intel,syscon = <&sysconf>;
++        clocks = <&emmc>;
++        clock-names = "emmcclk";
++        #phy-cells = <0>;
++    };
++
++...
+-- 
+2.11.0
+
