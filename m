@@ -4,46 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE48EC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC56AC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECC6233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98D68233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387472AbfHVJec (ORCPT
+        id S2387463AbfHVJeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:34:32 -0400
-Received: from shell.v3.sk ([90.176.6.54]:35956 "EHLO shell.v3.sk"
+        Thu, 22 Aug 2019 05:34:31 -0400
+Received: from shell.v3.sk ([90.176.6.54]:35953 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387446AbfHVJe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731541AbfHVJe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 05:34:28 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 40298D7556;
-        Thu, 22 Aug 2019 11:34:26 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id BF9C0D7563;
+        Thu, 22 Aug 2019 11:34:24 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id zsL6hMHcVi52; Thu, 22 Aug 2019 11:34:02 +0200 (CEST)
+        with ESMTP id ye-Fov3VnB4j; Thu, 22 Aug 2019 11:33:49 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id DE273D755E;
-        Thu, 22 Aug 2019 11:33:07 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id B3DE3D7556;
+        Thu, 22 Aug 2019 11:33:05 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id ihugTon7VsWS; Thu, 22 Aug 2019 11:33:05 +0200 (CEST)
+        with ESMTP id miP-xL8D7hA4; Thu, 22 Aug 2019 11:32:58 +0200 (CEST)
 Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 36A7B57D64;
-        Thu, 22 Aug 2019 11:31:45 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 9B051D756A;
+        Thu, 22 Aug 2019 11:26:51 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH] clk: remove extra ---help--- tags in Kconfig
-Date:   Thu, 22 Aug 2019 11:31:26 +0200
-Message-Id: <20190822093126.594013-1-lkundrak@v3.sk>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v2 16/20] ARM: mmp: add SMP support
+Date:   Thu, 22 Aug 2019 11:26:39 +0200
+Message-Id: <20190822092643.593488-17-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190822092643.593488-1-lkundrak@v3.sk>
+References: <20190822092643.593488-1-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,87 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes an extraneous "---help---" follows "help". That is probably a
-copy&paste error stemming from their inconsistent use. Remove those.
+Used to bring up the second core on MMP3.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- drivers/clk/Kconfig | 9 ---------
- 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 801fa1cd03217..c44247d0b83e8 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -116,7 +116,6 @@ config COMMON_CLK_SI514
- 	depends on OF
- 	select REGMAP_I2C
- 	help
--	---help---
- 	  This driver supports the Silicon Labs 514 programmable clock
- 	  generator.
+---
+Changes since v1:
+- Wrap SW_BRANCH_VIRT_ADDR with __pa_symbol()
+
+ arch/arm/mach-mmp/Makefile  |  3 +++
+ arch/arm/mach-mmp/platsmp.c | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
+ create mode 100644 arch/arm/mach-mmp/platsmp.c
+
+diff --git a/arch/arm/mach-mmp/Makefile b/arch/arm/mach-mmp/Makefile
+index 322c1c97dc900..7b3a7f979eece 100644
+--- a/arch/arm/mach-mmp/Makefile
++++ b/arch/arm/mach-mmp/Makefile
+@@ -22,6 +22,9 @@ ifeq ($(CONFIG_PM),y)
+ obj-$(CONFIG_CPU_PXA910)	+=3D pm-pxa910.o
+ obj-$(CONFIG_CPU_MMP2)		+=3D pm-mmp2.o
+ endif
++ifeq ($(CONFIG_SMP),y)
++obj-$(CONFIG_MACH_MMP3_DT)	+=3D platsmp.o
++endif
 =20
-@@ -125,7 +124,6 @@ config COMMON_CLK_SI544
- 	depends on I2C
- 	select REGMAP_I2C
- 	help
--	---help---
- 	  This driver supports the Silicon Labs 544 programmable clock
- 	  generator.
-=20
-@@ -135,7 +133,6 @@ config COMMON_CLK_SI570
- 	depends on OF
- 	select REGMAP_I2C
- 	help
--	---help---
- 	  This driver supports Silicon Labs 570/571/598/599 programmable
- 	  clock generators.
-=20
-@@ -153,7 +150,6 @@ config COMMON_CLK_CDCE925
- 	depends on OF
- 	select REGMAP_I2C
- 	help
--	---help---
- 	  This driver supports the TI CDCE913/925/937/949 programmable clock
- 	  synthesizer. Each chip has different number of PLLs and outputs.
- 	  For example, the CDCE925 contains two PLLs with spread-spectrum
-@@ -212,7 +208,6 @@ config COMMON_CLK_AXI_CLKGEN
- 	tristate "AXI clkgen driver"
- 	depends on ARCH_ZYNQ || MICROBLAZE || COMPILE_TEST
- 	help
--	---help---
- 	  Support for the Analog Devices axi-clkgen pcore clock generator for X=
-ilinx
- 	  FPGAs. It is commonly used in Analog Devices' reference designs.
-=20
-@@ -279,26 +274,22 @@ config COMMON_CLK_VC5
- 	depends on OF
- 	select REGMAP_I2C
- 	help
--	---help---
- 	  This driver supports the IDT VersaClock 5 and VersaClock 6
- 	  programmable clock generators.
-=20
- config COMMON_CLK_STM32MP157
- 	def_bool COMMON_CLK && MACH_STM32MP157
- 	help
--	---help---
- 	  Support for stm32mp157 SoC family clocks
-=20
- config COMMON_CLK_STM32F
- 	def_bool COMMON_CLK && (MACH_STM32F429 || MACH_STM32F469 || MACH_STM32F=
-746)
- 	help
--	---help---
- 	  Support for stm32f4 and stm32f7 SoC families clocks
-=20
- config COMMON_CLK_STM32H7
- 	def_bool COMMON_CLK && MACH_STM32H743
- 	help
--	---help---
- 	  Support for stm32h7 SoC family clocks
-=20
- config COMMON_CLK_BD718XX
+ # board support
+ obj-$(CONFIG_MACH_ASPENITE)	+=3D aspenite.o
+diff --git a/arch/arm/mach-mmp/platsmp.c b/arch/arm/mach-mmp/platsmp.c
+new file mode 100644
+index 0000000000000..98d5ef23623cb
+--- /dev/null
++++ b/arch/arm/mach-mmp/platsmp.c
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2019 Lubomir Rintel <lkundrak@v3.sk>
++ */
++#include <linux/io.h>
++#include <asm/smp_scu.h>
++#include <asm/smp.h>
++#include "addr-map.h"
++
++#define SW_BRANCH_VIRT_ADDR	CIU_REG(0x24)
++
++static int mmp3_boot_secondary(unsigned int cpu, struct task_struct *idl=
+e)
++{
++	/*
++	 * Apparently, the boot ROM on the second core spins on this
++	 * register becoming non-zero and then jumps to the address written
++	 * there. No IPIs involved.
++	 */
++	__raw_writel(virt_to_phys(secondary_startup),
++			__pa_symbol(SW_BRANCH_VIRT_ADDR));
++	return 0;
++}
++
++static void mmp3_smp_prepare_cpus(unsigned int max_cpus)
++{
++	scu_enable(SCU_VIRT_BASE);
++}
++
++static const struct smp_operations mmp3_smp_ops __initconst =3D {
++	.smp_prepare_cpus	=3D mmp3_smp_prepare_cpus,
++	.smp_boot_secondary	=3D mmp3_boot_secondary,
++};
++CPU_METHOD_OF_DECLARE(mmp3_smp, "marvell,mmp3-smp", &mmp3_smp_ops);
 --=20
 2.21.0
 
