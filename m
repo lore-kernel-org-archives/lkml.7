@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E631C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E45C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1A32233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1E5233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:09:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493781;
-	bh=qN5xMvra3JxVUtZYr+93qeFSSxlpJaZuuoRwvFoOs4Q=;
+	s=default; t=1566493785;
+	bh=dhFbCe2f3J1SbQVdDWTyUGWXn2ONzOFnM2sJD1VyaQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nRBINqeVsMR/lUpwLjfRPvi941Thw0lQNwJsuLU2pbFs0juaDAajYhumlHVyJDcgb
-	 8PNJm8BJYyZVjY07ZReGCxeiDSlkwvmrkfNxLyI5WCS4tSaIfpGliRIHbrD90lBSxZ
-	 7dKo7Sll/n50UPs3waa0pJPTMgW5hbgkSq7+Zc3I=
+	b=b6E1yHov7PbDT0b0239j11smBtfvQFsnEqop+37uuzRVYsF2MzksKp5mb0PQy/Nt9
+	 cPYtFHN56C747n4zJIOZFGb9QDwfzos0T/0/p33aQ4DPm/upVo4SC1AWWhnLgWGbrZ
+	 JmMuRlVNlaSAoksDYKYeur8PNJHJQiF4hceJY8bU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389020AbfHVRJj (ORCPT
+        id S2390810AbfHVRJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59656 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:09:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390738AbfHVRJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:21 -0400
+        id S2390749AbfHVRJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:23 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E97C323427;
-        Thu, 22 Aug 2019 17:09:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 259F5233FE;
+        Thu, 22 Aug 2019 17:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493761;
-        bh=qN5xMvra3JxVUtZYr+93qeFSSxlpJaZuuoRwvFoOs4Q=;
+        s=default; t=1566493762;
+        bh=dhFbCe2f3J1SbQVdDWTyUGWXn2ONzOFnM2sJD1VyaQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTdULU+4ya+3oAsxVkrBq3zgjnjjwCM3TXGXUk4Q+eR5857QHF1mdySyv3L6OF0Bd
-         6LrNXVlIHnvLrS3akD8mvdPaNLSlcEl6SC9tcmcKJ6L1X5ELwyxT+31MdFlDkcfHIJ
-         auSbMv/ePF03ELzGFMKvjST7pkV/QTlHVt7vM5f0=
+        b=2r5PVBmKUnGziYXNYJrABwYaX8P0IRx66iIuTJRDfdUbt5MhvCc0Ysc42JsbjPvmk
+         UhAke82gHf5CyPfnPVdusgt6p7DVJG7x4aSiBzhVNmlUkkNBjdzmAVwf6puvrcxgPs
+         qgk26xkNftFVSowGWC9txDdnQNeUWAQ//qjAfs8w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Somnath Kotur <somnath.kotur@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+Cc:     Roman Mashak <mrv@mojatatu.com>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 124/135] bnxt_en: Fix to include flow direction in L2 key
-Date:   Thu, 22 Aug 2019 13:08:00 -0400
-Message-Id: <20190822170811.13303-125-sashal@kernel.org>
+Subject: [PATCH 5.2 126/135] tc-testing: updated skbedit action tests with batch create/delete
+Date:   Thu, 22 Aug 2019 13:08:02 -0400
+Message-Id: <20190822170811.13303-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,80 +65,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Somnath Kotur <somnath.kotur@broadcom.com>
+From: Roman Mashak <mrv@mojatatu.com>
 
-[ Upstream commit 9bf46566e80fd94845527d01ebd888eb49313551 ]
+[ Upstream commit 7bc161846dcf4af0485f260930d17fdd892a4980 ]
 
-FW expects the driver to provide unique flow reference handles
-for Tx or Rx flows. When a Tx flow and an Rx flow end up sharing
-a reference handle, flow offload does not seem to work.
-This could happen in the case of 2 flows having their L2 fields
-wildcarded but in different direction.
-Fix to incorporate the flow direction as part of the L2 key
+Update TDC tests with cases varifying ability of TC to install or delete
+batches of skbedit actions.
 
-v2: Move the dir field to the end of the bnxt_tc_l2_key struct to
-fix the warning reported by kbuild test robot <lkp@intel.com>.
-There is existing code that initializes the structure using
-nested initializer and will warn with the new u8 field added to
-the beginning.  The structure also packs nicer when this new u8 is
-added to the end of the structure [MChan].
-
-Fixes: abd43a13525d ("bnxt_en: Support for 64-bit flow handle.")
-Signed-off-by: Somnath Kotur <somnath.kotur@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Roman Mashak <mrv@mojatatu.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c | 4 ++--
- drivers/net/ethernet/broadcom/bnxt/bnxt_tc.h | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ .../tc-testing/tc-tests/actions/skbedit.json  | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
-index a25ed190b5b2e..434470a6b9f3b 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c
-@@ -1236,7 +1236,7 @@ static int __bnxt_tc_del_flow(struct bnxt *bp,
- static void bnxt_tc_set_flow_dir(struct bnxt *bp, struct bnxt_tc_flow *flow,
- 				 u16 src_fid)
- {
--	flow->dir = (bp->pf.fw_fid == src_fid) ? BNXT_DIR_RX : BNXT_DIR_TX;
-+	flow->l2_key.dir = (bp->pf.fw_fid == src_fid) ? BNXT_DIR_RX : BNXT_DIR_TX;
- }
- 
- static void bnxt_tc_set_src_fid(struct bnxt *bp, struct bnxt_tc_flow *flow,
-@@ -1405,7 +1405,7 @@ static void bnxt_fill_cfa_stats_req(struct bnxt *bp,
- 		 * 2. 15th bit of flow_handle must specify the flow
- 		 *    direction (TX/RX).
- 		 */
--		if (flow_node->flow.dir == BNXT_DIR_RX)
-+		if (flow_node->flow.l2_key.dir == BNXT_DIR_RX)
- 			handle = CFA_FLOW_INFO_REQ_FLOW_HANDLE_DIR_RX |
- 				 CFA_FLOW_INFO_REQ_FLOW_HANDLE_MAX_MASK;
- 		else
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.h b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.h
-index 8a0968967bc5e..8b0f1510bdc48 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_tc.h
-@@ -23,6 +23,9 @@ struct bnxt_tc_l2_key {
- 	__be16		inner_vlan_tci;
- 	__be16		ether_type;
- 	u8		num_vlans;
-+	u8		dir;
-+#define BNXT_DIR_RX	1
-+#define BNXT_DIR_TX	0
- };
- 
- struct bnxt_tc_l3_key {
-@@ -98,9 +101,6 @@ struct bnxt_tc_flow {
- 
- 	/* flow applicable to pkts ingressing on this fid */
- 	u16				src_fid;
--	u8				dir;
--#define BNXT_DIR_RX	1
--#define BNXT_DIR_TX	0
- 	struct bnxt_tc_l2_key		l2_key;
- 	struct bnxt_tc_l2_key		l2_mask;
- 	struct bnxt_tc_l3_key		l3_key;
+diff --git a/tools/testing/selftests/tc-testing/tc-tests/actions/skbedit.json b/tools/testing/selftests/tc-testing/tc-tests/actions/skbedit.json
+index ecd96eda7f6a1..e11b7c1efda3e 100644
+--- a/tools/testing/selftests/tc-testing/tc-tests/actions/skbedit.json
++++ b/tools/testing/selftests/tc-testing/tc-tests/actions/skbedit.json
+@@ -509,5 +509,52 @@
+         "teardown": [
+             "$TC actions flush action skbedit"
+         ]
++    },
++    {
++        "id": "630c",
++        "name": "Add batch of 32 skbedit actions with all parameters and cookie",
++        "category": [
++            "actions",
++            "skbedit"
++        ],
++        "setup": [
++            [
++                "$TC actions flush action skbedit",
++                0,
++                1,
++                255
++            ]
++        ],
++        "cmdUnderTest": "bash -c \"for i in \\`seq 1 32\\`; do cmd=\\\"action skbedit queue_mapping 2 priority 10 mark 7/0xaabbccdd ptype host inheritdsfield index \\$i cookie aabbccddeeff112233445566778800a1 \\\"; args=\"\\$args\\$cmd\"; done && $TC actions add \\$args\"",
++        "expExitCode": "0",
++        "verifyCmd": "$TC actions list action skbedit",
++        "matchPattern": "^[ \t]+index [0-9]+ ref",
++        "matchCount": "32",
++        "teardown": [
++            "$TC actions flush action skbedit"
++        ]
++    },
++    {
++        "id": "706d",
++        "name": "Delete batch of 32 skbedit actions with all parameters",
++        "category": [
++            "actions",
++            "skbedit"
++        ],
++        "setup": [
++            [
++                "$TC actions flush action skbedit",
++                0,
++                1,
++                255
++            ],
++            "bash -c \"for i in \\`seq 1 32\\`; do cmd=\\\"action skbedit queue_mapping 2 priority 10 mark 7/0xaabbccdd ptype host inheritdsfield index \\$i \\\"; args=\\\"\\$args\\$cmd\\\"; done && $TC actions add \\$args\""
++        ],
++        "cmdUnderTest": "bash -c \"for i in \\`seq 1 32\\`; do cmd=\\\"action skbedit index \\$i \\\"; args=\"\\$args\\$cmd\"; done && $TC actions del \\$args\"",
++        "expExitCode": "0",
++        "verifyCmd": "$TC actions list action skbedit",
++        "matchPattern": "^[ \t]+index [0-9]+ ref",
++        "matchCount": "0",
++        "teardown": []
+     }
+ ]
 -- 
 2.20.1
 
