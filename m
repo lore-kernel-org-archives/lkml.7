@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF1BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AFFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D48233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E198D233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494308;
-	bh=5j8eSVDxtdl+CJ7xV2ee7Pj08LtadYXJ6WneXT9Kpf8=;
+	s=default; t=1566494385;
+	bh=RuOsYf5TN5Hw5cPbpR48OEF6lAqy3ny4adgENjVkcnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GQctQ6NkBi6rMV+ljpINuUZQs9ITvwk450GO/qH13AP4bsv55DDZjmbwRGL5E4rs6
-	 YlHFk8CxsEsjKYdTmPsCRjdZ2WqpFgoGNeTJO0qD1cyfTo2rmzxChEGDpQ1rZs7kBC
-	 Fy4HYXdSLAvD3bMZKkMtdtTb0y98cxOdw8EUoKaI=
+	b=z1Eh9oar35suwpN8/vyG/7VN5LFaFGdrNy8p1F21bKcsewXgOsnkZ7fpGzajrOqDr
+	 ni2BaY3gtWrHwdXDtq6Q+4zU8Ds+kYXGYeVaWPUVXATDj2mTbwg0ZjQAok86i4nhix
+	 pLS9tD9C+m5XKBMGROrNFBCeihm6PPhGt4JvQyjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387907AbfHVRS2 (ORCPT
+        id S2388325AbfHVRTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:18:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57584 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:19:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388846AbfHVRIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:15 -0400
+        id S2390298AbfHVRIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:24 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F72223402;
-        Thu, 22 Aug 2019 17:08:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A65823407;
+        Thu, 22 Aug 2019 17:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493694;
-        bh=5j8eSVDxtdl+CJ7xV2ee7Pj08LtadYXJ6WneXT9Kpf8=;
+        s=default; t=1566493703;
+        bh=RuOsYf5TN5Hw5cPbpR48OEF6lAqy3ny4adgENjVkcnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqynQSxKdSrnPndUog4JDQMHYth6RLSbR/k7qppL2GjEunhNgsk4SPCKZ+o8OTr+Y
-         aN9jUIA5/rAuxHVirzIFOzViOMiFR6SUq7IzZbjz9Hyzmf848fDj2dKBmDWjoScPpH
-         vFN1LhZjsyGURYdV0KIUlPJQzFMt2ISRrnSPpAzw=
+        b=1hW+KQy4i5J/W/IpXHN4VBtriUHVCdnEc97faN+aGMJK2tsFtZt8qYZnM8cQJddPg
+         zNt7i45Go6ZmqlHIxgSR7mTxZyHtpzCHg7nE4w+P9jWPBtA+U3D+fXYJck530yOBLT
+         n9RuAUYoUsqc0loY0AikrnKkkbTdSBP9yjcvilOw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     NeilBrown <neilb@suse.com>,
-        Sergei Turchanov <turchanov@farpost.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        James Morse <james.morse@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 003/135] seq_file: fix problem when seeking mid-record
-Date:   Thu, 22 Aug 2019 13:05:59 -0400
-Message-Id: <20190822170811.13303-4-sashal@kernel.org>
+Subject: [PATCH 5.2 016/135] arm64: ftrace: Ensure module ftrace trampoline is coherent with I-side
+Date:   Thu, 22 Aug 2019 13:06:12 -0400
+Message-Id: <20190822170811.13303-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -69,58 +67,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.com>
+From: Will Deacon <will@kernel.org>
 
-commit 6a2aeab59e97101b4001bac84388fc49a992f87e upstream.
+commit b6143d10d23ebb4a77af311e8b8b7f019d0163e6 upstream.
 
-If you use lseek or similar (e.g.  pread) to access a location in a
-seq_file file that is within a record, rather than at a record boundary,
-then the first read will return the remainder of the record, and the
-second read will return the whole of that same record (instead of the
-next record).  When seeking to a record boundary, the next record is
-correctly returned.
+The initial support for dynamic ftrace trampolines in modules made use
+of an indirect branch which loaded its target from the beginning of
+a special section (e71a4e1bebaf7 ("arm64: ftrace: add support for far
+branches to dynamic ftrace")). Since no instructions were being patched,
+no cache maintenance was needed. However, later in be0f272bfc83 ("arm64:
+ftrace: emit ftrace-mod.o contents through code") this code was reworked
+to output the trampoline instructions directly into the PLT entry but,
+unfortunately, the necessary cache maintenance was overlooked.
 
-This bug was introduced by a recent patch (identified below).  Before
-that patch, seq_read() would increment m->index when the last of the
-buffer was returned (m->count == 0).  After that patch, we rely on
-->next to increment m->index after filling the buffer - but there was
-one place where that didn't happen.
+Add a call to __flush_icache_range() after writing the new trampoline
+instructions but before patching in the branch to the trampoline.
 
-Link: https://lkml.kernel.org/lkml/877e7xl029.fsf@notabene.neil.brown.name/
-Fixes: 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
-Signed-off-by: NeilBrown <neilb@suse.com>
-Reported-by: Sergei Turchanov <turchanov@farpost.com>
-Tested-by: Sergei Turchanov <turchanov@farpost.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Markus Elfring <Markus.Elfring@web.de>
-Cc: <stable@vger.kernel.org>	[4.19+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: <stable@vger.kernel.org>
+Fixes: be0f272bfc83 ("arm64: ftrace: emit ftrace-mod.o contents through code")
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/seq_file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/ftrace.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/fs/seq_file.c b/fs/seq_file.c
-index abe27ec431766..225bf9239b329 100644
---- a/fs/seq_file.c
-+++ b/fs/seq_file.c
-@@ -119,6 +119,7 @@ static int traverse(struct seq_file *m, loff_t offset)
+diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+index 1285c7b2947fa..1717732579742 100644
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -73,7 +73,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ 
+ 	if (offset < -SZ_128M || offset >= SZ_128M) {
+ #ifdef CONFIG_ARM64_MODULE_PLTS
+-		struct plt_entry trampoline;
++		struct plt_entry trampoline, *dst;
+ 		struct module *mod;
+ 
+ 		/*
+@@ -106,23 +106,27 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ 		 * to check if the actual opcodes are in fact identical,
+ 		 * regardless of the offset in memory so use memcmp() instead.
+ 		 */
+-		trampoline = get_plt_entry(addr, mod->arch.ftrace_trampoline);
+-		if (memcmp(mod->arch.ftrace_trampoline, &trampoline,
+-			   sizeof(trampoline))) {
+-			if (plt_entry_is_initialized(mod->arch.ftrace_trampoline)) {
++		dst = mod->arch.ftrace_trampoline;
++		trampoline = get_plt_entry(addr, dst);
++		if (memcmp(dst, &trampoline, sizeof(trampoline))) {
++			if (plt_entry_is_initialized(dst)) {
+ 				pr_err("ftrace: far branches to multiple entry points unsupported inside a single module\n");
+ 				return -EINVAL;
+ 			}
+ 
+ 			/* point the trampoline to our ftrace entry point */
+ 			module_disable_ro(mod);
+-			*mod->arch.ftrace_trampoline = trampoline;
++			*dst = trampoline;
+ 			module_enable_ro(mod, true);
+ 
+-			/* update trampoline before patching in the branch */
+-			smp_wmb();
++			/*
++			 * Ensure updated trampoline is visible to instruction
++			 * fetch before we patch in the branch.
++			 */
++			__flush_icache_range((unsigned long)&dst[0],
++					     (unsigned long)&dst[1]);
  		}
- 		if (seq_has_overflowed(m))
- 			goto Eoverflow;
-+		p = m->op->next(m, p, &m->index);
- 		if (pos + m->count > offset) {
- 			m->from = offset - pos;
- 			m->count -= m->from;
-@@ -126,7 +127,6 @@ static int traverse(struct seq_file *m, loff_t offset)
- 		}
- 		pos += m->count;
- 		m->count = 0;
--		p = m->op->next(m, p, &m->index);
- 		if (pos == offset)
- 			break;
- 	}
+-		addr = (unsigned long)(void *)mod->arch.ftrace_trampoline;
++		addr = (unsigned long)dst;
+ #else /* CONFIG_ARM64_MODULE_PLTS */
+ 		return -EINVAL;
+ #endif /* CONFIG_ARM64_MODULE_PLTS */
 -- 
 2.20.1
 
