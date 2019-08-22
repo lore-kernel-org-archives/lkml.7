@@ -2,53 +2,53 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890E6C3A5A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF8BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62BD823402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4674623400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495827;
-	bh=poYIZVR/wuxG0oXbPda8JroUJbhfzJyGvP7pgTnQXcI=;
+	s=default; t=1566495831;
+	bh=JoL/hk8uL4jNEVsyss976KBKorebOwKO0xejjgDHb4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DQFf1SMiWu0Rbt3eNRRHNvW2SnbSVp9JvaHyw9glljSmULT7k7PJTN2XAAgTTYGCp
-	 Xb+rDq9Ue7EzLmGjJjMj5+UQWTyy6DU0xFFRQ6JWYVFjzjZ7prTskIDaYN+CKyXd6J
-	 b+KaFe1F345uv/gljoGnLYM1EOMW0tA2pOshPRQk=
+	b=ekqgvgPN4qqvQ7pTIxkI7ArNcaEK7Cwc8Gz4H/rEpaCO6dX1tV/VNyWRlxxFkf1Yo
+	 fZ/zodj0UvDO3Lj/JkPPYJoGTxQJ/6WMQKwbEN6KTE6A93NI1Y0csupIYt5SI0WbhZ
+	 hLjEU+zHwaCQcAOJeQeqWN9P/qLJ+BfUOTJQRL2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbfHVRnp (ORCPT
+        id S2388723AbfHVRnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:43:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43272 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:43:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403943AbfHVRX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:26 -0400
+        id S2403992AbfHVRXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:42 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A96A2341C;
-        Thu, 22 Aug 2019 17:23:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AF8923439;
+        Thu, 22 Aug 2019 17:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494604;
-        bh=poYIZVR/wuxG0oXbPda8JroUJbhfzJyGvP7pgTnQXcI=;
+        s=default; t=1566494621;
+        bh=JoL/hk8uL4jNEVsyss976KBKorebOwKO0xejjgDHb4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bZ6XnCh0teib07GVkAeYovs0nJEFZPRwvhzKqk6wxTU7bog7Y2+zGogwZgQeC2ygA
-         GqSoFBNNlgk6IEAmkSKb9HX6CK9zKdnJOps4uYGFPsDOKSyN4sGfFd6Zy+ekUb8Crn
-         ULesGWtm8fUHCK2bOxoDsNfvzVWHUpaQTN1BJTNQ=
+        b=sTWr0manMOj7ccljVi7sVp9D5yhJiZHCYcZNX3ORd78vzGJWcgUu/9ymhkv6EqFgx
+         e2ZMox87qD1b8R+sSXh9tF+GZMfh8mtl4EJ0wqC5X6sQN5J7JG4NR8jAqX3bB/2bwm
+         fKViMhvy0W+0VGqXmh0na19rCzXd+mf0MmnE/p6Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 027/103] scsi: ibmvfc: fix WARN_ON during event pool release
-Date:   Thu, 22 Aug 2019 10:18:15 -0700
-Message-Id: <20190822171729.946356796@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.9 051/103] vhost: introduce vhost_exceeds_weight()
+Date:   Thu, 22 Aug 2019 10:18:39 -0700
+Message-Id: <20190822171730.868050037@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -61,73 +61,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5578257ca0e21056821e6481bd534ba267b84e58 ]
+From: Jason Wang <jasowang@redhat.com>
 
-While removing an ibmvfc client adapter a WARN_ON like the following
-WARN_ON is seen in the kernel log:
+commit e82b9b0727ff6d665fff2d326162b460dded554d upstream.
 
-WARNING: CPU: 6 PID: 5421 at ./include/linux/dma-mapping.h:541
-ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-CPU: 6 PID: 5421 Comm: rmmod Tainted: G            E     4.17.0-rc1-next-20180419-autotest #1
-NIP:  d00000000290328c LR: d00000000290325c CTR: c00000000036ee20
-REGS: c000000288d1b7e0 TRAP: 0700   Tainted: G            E      (4.17.0-rc1-next-20180419-autotest)
-MSR:  800000010282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44008828  XER: 20000000
-CFAR: c00000000036e408 SOFTE: 1
-GPR00: d00000000290325c c000000288d1ba60 d000000002917900 c000000289d75448
-GPR04: 0000000000000071 c0000000ff870000 0000000018040000 0000000000000001
-GPR08: 0000000000000000 c00000000156e838 0000000000000001 d00000000290c640
-GPR12: c00000000036ee20 c00000001ec4dc00 0000000000000000 0000000000000000
-GPR16: 0000000000000000 0000000000000000 00000100276901e0 0000000010020598
-GPR20: 0000000010020550 0000000010020538 0000000010020578 00000000100205b0
-GPR24: 0000000000000000 0000000000000000 0000000010020590 5deadbeef0000100
-GPR28: 5deadbeef0000200 d000000002910b00 0000000000000071 c0000002822f87d8
-NIP [d00000000290328c] ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-LR [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc]
-Call Trace:
-[c000000288d1ba60] [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc] (unreliable)
-[c000000288d1baf0] [d000000002909390] ibmvfc_abort_task_set+0x7b0/0x8b0 [ibmvfc]
-[c000000288d1bb70] [c0000000000d8c68] vio_bus_remove+0x68/0x100
-[c000000288d1bbb0] [c0000000007da7c4] device_release_driver_internal+0x1f4/0x2d0
-[c000000288d1bc00] [c0000000007da95c] driver_detach+0x7c/0x100
-[c000000288d1bc40] [c0000000007d8af4] bus_remove_driver+0x84/0x140
-[c000000288d1bcb0] [c0000000007db6ac] driver_unregister+0x4c/0xa0
-[c000000288d1bd20] [c0000000000d6e7c] vio_unregister_driver+0x2c/0x50
-[c000000288d1bd50] [d00000000290ba0c] cleanup_module+0x24/0x15e0 [ibmvfc]
-[c000000288d1bd70] [c0000000001dadb0] sys_delete_module+0x220/0x2d0
-[c000000288d1be30] [c00000000000b284] system_call+0x58/0x6c
-Instruction dump:
-e8410018 e87f0068 809f0078 e8bf0080 e8df0088 2fa30000 419e008c e9230200
-2fa90000 419e0080 894d098a 794a07e0 <0b0a0000> e9290008 2fa90000 419e0028
+We used to have vhost_exceeds_weight() for vhost-net to:
 
-This is tripped as a result of irqs being disabled during the call to
-dma_free_coherent() by ibmvfc_free_event_pool(). At this point in the code path
-we have quiesced the adapter and its overly paranoid anyways to be holding the
-host lock.
+- prevent vhost kthread from hogging the cpu
+- balance the time spent between TX and RX
 
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This function could be useful for vsock and scsi as well. So move it
+to vhost.c. Device must specify a weight which counts the number of
+requests, or it can also specific a byte_weight which counts the
+number of bytes that has been processed.
+
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+[bwh: Backported to 4.9:
+ - In vhost_net, both Tx modes are handled in one loop in handle_tx()
+ - Adjust context]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/scsi/ibmvscsi/ibmvfc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vhost/net.c   |   18 +++++-------------
+ drivers/vhost/scsi.c  |    9 ++++++++-
+ drivers/vhost/vhost.c |   20 +++++++++++++++++++-
+ drivers/vhost/vhost.h |    6 +++++-
+ drivers/vhost/vsock.c |   12 +++++++++++-
+ 5 files changed, 48 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
-index 7e487c78279cb..54dea767dfde9 100644
---- a/drivers/scsi/ibmvscsi/ibmvfc.c
-+++ b/drivers/scsi/ibmvscsi/ibmvfc.c
-@@ -4883,8 +4883,8 @@ static int ibmvfc_remove(struct vio_dev *vdev)
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -357,12 +357,6 @@ static int vhost_net_tx_get_vq_desc(stru
+ 	return r;
+ }
  
- 	spin_lock_irqsave(vhost->host->host_lock, flags);
- 	ibmvfc_purge_requests(vhost, DID_ERROR);
--	ibmvfc_free_event_pool(vhost);
- 	spin_unlock_irqrestore(vhost->host->host_lock, flags);
-+	ibmvfc_free_event_pool(vhost);
+-static bool vhost_exceeds_weight(int pkts, int total_len)
+-{
+-	return total_len >= VHOST_NET_WEIGHT ||
+-	       pkts >= VHOST_NET_PKT_WEIGHT;
+-}
+-
+ /* Expects to be always run from workqueue - which acts as
+  * read-size critical section for our kind of RCU. */
+ static void handle_tx(struct vhost_net *net)
+@@ -487,10 +481,9 @@ static void handle_tx(struct vhost_net *
+ 			vhost_zerocopy_signal_used(net, vq);
+ 		total_len += len;
+ 		vhost_net_tx_packet(net);
+-		if (unlikely(vhost_exceeds_weight(++sent_pkts, total_len))) {
+-			vhost_poll_queue(&vq->poll);
++		if (unlikely(vhost_exceeds_weight(vq, ++sent_pkts,
++						  total_len)))
+ 			break;
+-		}
+ 	}
+ out:
+ 	mutex_unlock(&vq->mutex);
+@@ -768,10 +761,8 @@ static void handle_rx(struct vhost_net *
+ 			vhost_log_write(vq, vq_log, log, vhost_len,
+ 					vq->iov, in);
+ 		total_len += vhost_len;
+-		if (unlikely(vhost_exceeds_weight(++recv_pkts, total_len))) {
+-			vhost_poll_queue(&vq->poll);
++		if (unlikely(vhost_exceeds_weight(vq, ++recv_pkts, total_len)))
+ 			goto out;
+-		}
+ 	}
+ 	vhost_net_enable_vq(net, vq);
+ out:
+@@ -842,7 +833,8 @@ static int vhost_net_open(struct inode *
+ 		n->vqs[i].vhost_hlen = 0;
+ 		n->vqs[i].sock_hlen = 0;
+ 	}
+-	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX);
++	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
++		       VHOST_NET_WEIGHT, VHOST_NET_PKT_WEIGHT);
  
- 	ibmvfc_free_mem(vhost);
- 	spin_lock(&ibmvfc_driver_lock);
--- 
-2.20.1
-
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, POLLOUT, dev);
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, POLLIN, dev);
+--- a/drivers/vhost/scsi.c
++++ b/drivers/vhost/scsi.c
+@@ -58,6 +58,12 @@
+ #define VHOST_SCSI_PREALLOC_UPAGES 2048
+ #define VHOST_SCSI_PREALLOC_PROT_SGLS 512
+ 
++/* Max number of requests before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others with
++ * request.
++ */
++#define VHOST_SCSI_WEIGHT 256
++
+ struct vhost_scsi_inflight {
+ 	/* Wait for the flush operation to finish */
+ 	struct completion comp;
+@@ -1433,7 +1439,8 @@ static int vhost_scsi_open(struct inode
+ 		vqs[i] = &vs->vqs[i].vq;
+ 		vs->vqs[i].vq.handle_kick = vhost_scsi_handle_kick;
+ 	}
+-	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ);
++	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ,
++		       VHOST_SCSI_WEIGHT, 0);
+ 
+ 	vhost_scsi_init_inflight(vs, NULL);
+ 
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -393,8 +393,24 @@ static void vhost_dev_free_iovecs(struct
+ 		vhost_vq_free_iovecs(dev->vqs[i]);
+ }
+ 
++bool vhost_exceeds_weight(struct vhost_virtqueue *vq,
++			  int pkts, int total_len)
++{
++	struct vhost_dev *dev = vq->dev;
++
++	if ((dev->byte_weight && total_len >= dev->byte_weight) ||
++	    pkts >= dev->weight) {
++		vhost_poll_queue(&vq->poll);
++		return true;
++	}
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(vhost_exceeds_weight);
++
+ void vhost_dev_init(struct vhost_dev *dev,
+-		    struct vhost_virtqueue **vqs, int nvqs)
++		    struct vhost_virtqueue **vqs, int nvqs,
++		    int weight, int byte_weight)
+ {
+ 	struct vhost_virtqueue *vq;
+ 	int i;
+@@ -408,6 +424,8 @@ void vhost_dev_init(struct vhost_dev *de
+ 	dev->iotlb = NULL;
+ 	dev->mm = NULL;
+ 	dev->worker = NULL;
++	dev->weight = weight;
++	dev->byte_weight = byte_weight;
+ 	init_llist_head(&dev->work_list);
+ 	init_waitqueue_head(&dev->wait);
+ 	INIT_LIST_HEAD(&dev->read_list);
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -164,9 +164,13 @@ struct vhost_dev {
+ 	struct list_head read_list;
+ 	struct list_head pending_list;
+ 	wait_queue_head_t wait;
++	int weight;
++	int byte_weight;
+ };
+ 
+-void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs, int nvqs);
++bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
++void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs,
++		    int nvqs, int weight, int byte_weight);
+ long vhost_dev_set_owner(struct vhost_dev *dev);
+ bool vhost_dev_has_owner(struct vhost_dev *dev);
+ long vhost_dev_check_owner(struct vhost_dev *);
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -21,6 +21,14 @@
+ #include "vhost.h"
+ 
+ #define VHOST_VSOCK_DEFAULT_HOST_CID	2
++/* Max number of bytes transferred before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others. */
++#define VHOST_VSOCK_WEIGHT 0x80000
++/* Max number of packets transferred before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others with
++ * small pkts.
++ */
++#define VHOST_VSOCK_PKT_WEIGHT 256
+ 
+ enum {
+ 	VHOST_VSOCK_FEATURES = VHOST_FEATURES,
+@@ -529,7 +537,9 @@ static int vhost_vsock_dev_open(struct i
+ 	vsock->vqs[VSOCK_VQ_TX].handle_kick = vhost_vsock_handle_tx_kick;
+ 	vsock->vqs[VSOCK_VQ_RX].handle_kick = vhost_vsock_handle_rx_kick;
+ 
+-	vhost_dev_init(&vsock->dev, vqs, ARRAY_SIZE(vsock->vqs));
++	vhost_dev_init(&vsock->dev, vqs, ARRAY_SIZE(vsock->vqs),
++		       VHOST_VSOCK_PKT_WEIGHT,
++		       VHOST_VSOCK_WEIGHT);
+ 
+ 	file->private_data = vsock;
+ 	spin_lock_init(&vsock->send_pkt_list_lock);
 
 
