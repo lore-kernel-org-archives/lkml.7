@@ -2,204 +2,216 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26088C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02762C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F09B5233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493975;
-	bh=OH/rAetBAQwRVBiv9x4rHjv5FcgOgcVHMsUgQT8RD6g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dg1LUowb4cpqGJcojLVNeadQnAH0tvtW66ZELyBPqo3wh2EF/qjLsxUSYOmoAGm++
-	 Pi+KiKRVYWYxJPG7LLm6SaL9RAtWGGQv/71Fwq5MSnxnvW6lvHlQ72XaaUhJSLIanz
-	 Fdd7iaCdtyuZ3MGMQbVIITszCzsj+AmksMc6nUTI=
+	by mail.kernel.org (Postfix) with ESMTP id C0714233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TPbQ2XJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391079AbfHVRMs (ORCPT
+        id S2391015AbfHVRM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 22 Aug 2019 13:12:59 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:46402 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388521AbfHVRMs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 13:12:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59226 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390641AbfHVRJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:04 -0400
-Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB78723406;
-        Thu, 22 Aug 2019 17:09:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493743;
-        bh=OH/rAetBAQwRVBiv9x4rHjv5FcgOgcVHMsUgQT8RD6g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A0eFP+WquYQeMMJdHz79WY9kmaGtqWShl+u8BHOLC2I1W6huAFEHD8WKHQ78HGp1L
-         u3gcsHgKRf5NtQoxqiBFExPBWwwiX+1LuuuxwDJi3FgLIIK8iL+3RmLOSyol1G0k7n
-         lFzaHU/EPP7IYx/1c4BteJ89TN05oQcFMEEkS5kg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Jakub Jelinek <jakub@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Bill Wendling <morbo@google.com>,
-        James Y Knight <jyknight@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 089/135] asm-generic: fix -Wtype-limits compiler warnings
-Date:   Thu, 22 Aug 2019 13:07:25 -0400
-Message-Id: <20190822170811.13303-90-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
-References: <20190822170811.13303-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.2.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.2.10-rc1
-X-KernelTest-Deadline: 2019-08-24T17:07+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190822171246euoutp029f0af06a8e1618604c2ac7ccd61dc73c~9TfaN7uGl1897118971euoutp02h
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 17:12:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190822171246euoutp029f0af06a8e1618604c2ac7ccd61dc73c~9TfaN7uGl1897118971euoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566493966;
+        bh=UOkCLCh1WvbHpQZYwO8RvemaDSbUwqU6rhWFFCiDmsE=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=TPbQ2XJDJbuC8DG7na1TEViPhYVzfQuh1wa5MJXju7r1vw3m9zDcarWNF+fEC/s5Q
+         XGybKQ1hnE5G/RihIQMbEf2kJBZ5887IxVbVln6mET5jPT00RJ+wA6xaWDsVUIWUqS
+         sww8+vYYaQvbR1J72maXmf4HhoTMgt11UBMWvkQo=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190822171245eucas1p113b527ac20ca4f2ed2c842a3cf5cdfcc~9TfYuOA5y2704927049eucas1p1E;
+        Thu, 22 Aug 2019 17:12:45 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id CB.76.04374.C0DCE5D5; Thu, 22
+        Aug 2019 18:12:44 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190822171243eucas1p12213f2239d6c36be515dade41ed7470b~9TfXnJsX31493014930eucas1p1T;
+        Thu, 22 Aug 2019 17:12:43 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190822171243eusmtrp2d541b2dd599bc153d0eaa02062fc26b1~9TfXXgzaw1649316493eusmtrp2e;
+        Thu, 22 Aug 2019 17:12:43 +0000 (GMT)
+X-AuditID: cbfec7f5-4f7ff70000001116-28-5d5ecd0cfc62
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 84.F8.04117.B0DCE5D5; Thu, 22
+        Aug 2019 18:12:43 +0100 (BST)
+Received: from imaximets.rnd.samsung.ru (unknown [106.109.129.180]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190822171242eusmtip15aebbf240f5ddf60e37aa801dea65411~9TfWNfopd1319413194eusmtip1T;
+        Thu, 22 Aug 2019 17:12:42 +0000 (GMT)
+From:   Ilya Maximets <i.maximets@samsung.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        intel-wired-lan@lists.osuosl.org,
+        Eelco Chaudron <echaudro@redhat.com>,
+        William Tu <u9012063@gmail.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        Ilya Maximets <i.maximets@samsung.com>
+Subject: [PATCH net v3] ixgbe: fix double clean of tx descriptors with xdp
+Date:   Thu, 22 Aug 2019 20:12:37 +0300
+Message-Id: <20190822171237.20798-1-i.maximets@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSaUgUcRjG++/szoybq9N6/d3EYqkPiml28QelLM0GKYoIkUxr1PEoV2VH
+        LTPIUFbTsDRKMDUPwgtUdPFKzRbZ9SrTNM/Y/GDqRuWVKYrmOkrfnvd5f+/zfHlJTFoukpER
+        UbGsMoqJlONiYb12te+I6YfAgKOF7S5oM39ciJZWxwm0rqoBaLFDh6OSomUM5fWlCNHE4CqO
+        BlNXCbQ5tiZC2pkUHHXW6QH63JyHozJNJ4G0hdZoeMDUw5xWl48K6KbcrwRd0jIroNNHBjC6
+        tuIxTnclx9E5GZMY/bttCKcz1RWAXqy1vyK+LnYPYSMj4lmly+lb4nBDkV4QU21771OeVRJY
+        sEwHJiSkTsA1bbkoHYhJKVUGoEFr2BmWAFxe6RfwwyKA01PTwt2TKt1TjF+UAqjT9+H8sALg
+        29RXIiOFU06wu7IDGLUlJYPzjQ2EEcKoFiF83pm9HWVB+cClzPktiCSF1GFYXsAZpYRygxl1
+        TnzZAVhZ075dBqkqAmZlVW3jkPKCDS8v8YwFNOjUBK/t4GbTawGvH0J9yizgb9MAzNFs7CzO
+        QPWPj4QxB6McYHWzC2+fhaOppQI+3gyO/NxntLEtmV2fg/G2BKappDx9CK69L8V4LYOjvxYJ
+        HqGhwbBtS6kAmNP/AjwD9rn/qwoBqAA2bBynCGO541HsXWeOUXBxUWHOwdGKWrD1QD0buj+N
+        oG09SAMoEshNJZ3pgQFSERPPJSg0AJKY3FISn7VlSUKYhPusMvqmMi6S5TRgPymU20gS93zz
+        l1JhTCx7h2VjWOXuVkCayJLAqYXbA0NzAFkNqrr8VY7nned7E57YMTVTfh7dZq3VVFbBTIp5
+        67LbuXeunn9r3nz3Dg4d93XzuRZUXPogtiByTjp5o8S5p3v4wtCjfNPkXl+ZtTi0mFRcBmsn
+        D9LA08FTtWSbfWxocK+X+mKiHE0wNu6+V/VFZmOzqMdv4ou3XMiFM66OmJJj/gGOd8bIPAMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkkeLIzCtJLcpLzFFi42I5/e/4XV3us3GxBnePiVr8n3ubxeLLz9vs
+        Fn/aNjBafD5ynM1i8cJvzBZzzrewWNy58pPN4kr7T3aL/7d+s1oce9HCZnFi831Gi8u75rBZ
+        rDh0gt3i2AIxi+uXeBz4PbasvMnksXPWXXaPxXteMnl03bjE7LFpVSebx8nmUo/p3Q+ZPd7v
+        u8rm0bdlFaPH501yAVxRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYp
+        qTmZZalF+nYJehmvFt5nKlgvWXFhjmgD4yeRLkZODgkBE4l1x/uZuxi5OIQEljJKdHw+ywSR
+        kJL48esCK4QtLPHnWhcbRNE3Rombd2eygyTYBHQkTq0+wghiiwA1fNyxnR2kiFngBIvEzIkn
+        wSYJC3hJfOn7CFTEwcEioCqxcl4xiMkrYC3RvVkHYr68xOoNB5gnMPIsYGRYxSiSWlqcm55b
+        bKRXnJhbXJqXrpecn7uJERj824793LKDsetd8CFGAQ5GJR7eE11xsUKsiWXFlbmHGCU4mJVE
+        eMsmAoV4UxIrq1KL8uOLSnNSiw8xmgKtnsgsJZqcD4zMvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6B
+        gzFCAumJJanZqakFqUUwfUwcnFINjFrxOWs9fWbsXJCoKfp6mn6dx12lZY7z/8Qf+V9o6Z03
+        KyF2svNe5dQLW1PPTcu7+k+jOfH+G3WbopW3pi2/8J/ncnXo9q1LKkVMwy+fFruwUTL9+Mu4
+        U+cDtyamXPRv9vXQynlgPH+PgYXYeabodQcMuVl33pKuFXUTtlz7Jrgy+crLUvH3j5RYijMS
+        DbWYi4oTAU/1fI6UAgAA
+X-CMS-MailID: 20190822171243eucas1p12213f2239d6c36be515dade41ed7470b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190822171243eucas1p12213f2239d6c36be515dade41ed7470b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190822171243eucas1p12213f2239d6c36be515dade41ed7470b
+References: <CGME20190822171243eucas1p12213f2239d6c36be515dade41ed7470b@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+Tx code doesn't clear the descriptors' status after cleaning.
+So, if the budget is larger than number of used elems in a ring, some
+descriptors will be accounted twice and xsk_umem_complete_tx will move
+prod_tail far beyond the prod_head breaking the completion queue ring.
 
-[ Upstream commit cbedfe11347fe418621bd188d58a206beb676218 ]
+Fix that by limiting the number of descriptors to clean by the number
+of used descriptors in the tx ring.
 
-Commit d66acc39c7ce ("bitops: Optimise get_order()") introduced a
-compilation warning because "rx_frag_size" is an "ushort" while
-PAGE_SHIFT here is 16.
+'ixgbe_clean_xdp_tx_irq()' function refactored to look more like
+'ixgbe_xsk_clean_tx_ring()' since we're allowed to directly use
+'next_to_clean' and 'next_to_use' indexes.
 
-The commit changed the get_order() to be a multi-line macro where
-compilers insist to check all statements in the macro even when
-__builtin_constant_p(rx_frag_size) will return false as "rx_frag_size"
-is a module parameter.
-
-In file included from ./arch/powerpc/include/asm/page_64.h:107,
-                 from ./arch/powerpc/include/asm/page.h:242,
-                 from ./arch/powerpc/include/asm/mmu.h:132,
-                 from ./arch/powerpc/include/asm/lppaca.h:47,
-                 from ./arch/powerpc/include/asm/paca.h:17,
-                 from ./arch/powerpc/include/asm/current.h:13,
-                 from ./include/linux/thread_info.h:21,
-                 from ./arch/powerpc/include/asm/processor.h:39,
-                 from ./include/linux/prefetch.h:15,
-                 from drivers/net/ethernet/emulex/benet/be_main.c:14:
-drivers/net/ethernet/emulex/benet/be_main.c: In function 'be_rx_cqs_create':
-./include/asm-generic/getorder.h:54:9: warning: comparison is always
-true due to limited range of data type [-Wtype-limits]
-   (((n) < (1UL << PAGE_SHIFT)) ? 0 :  \
-         ^
-drivers/net/ethernet/emulex/benet/be_main.c:3138:33: note: in expansion
-of macro 'get_order'
-  adapter->big_page_size = (1 << get_order(rx_frag_size)) * PAGE_SIZE;
-                                 ^~~~~~~~~
-
-Fix it by moving all of this multi-line macro into a proper function,
-and killing __get_order() off.
-
-[akpm@linux-foundation.org: remove __get_order() altogether]
-[cai@lca.pw: v2]
-  Link: http://lkml.kernel.org/r/1564000166-31428-1-git-send-email-cai@lca.pw
-Link: http://lkml.kernel.org/r/1563914986-26502-1-git-send-email-cai@lca.pw
-Fixes: d66acc39c7ce ("bitops: Optimise get_order()")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Jakub Jelinek <jakub@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Bill Wendling <morbo@google.com>
-Cc: James Y Knight <jyknight@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
+Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
 ---
- include/asm-generic/getorder.h | 50 ++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 30 deletions(-)
 
-diff --git a/include/asm-generic/getorder.h b/include/asm-generic/getorder.h
-index c64bea7a52beb..e9f20b813a699 100644
---- a/include/asm-generic/getorder.h
-+++ b/include/asm-generic/getorder.h
-@@ -7,24 +7,6 @@
- #include <linux/compiler.h>
- #include <linux/log2.h>
+Version 3:
+  * Reverted some refactoring made for v2.
+  * Eliminated 'budget' for tx clean.
+  * prefetch returned.
+
+Version 2:
+  * 'ixgbe_clean_xdp_tx_irq()' refactored to look more like
+    'ixgbe_xsk_clean_tx_ring()'.
+
+ drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c | 29 ++++++++------------
+ 1 file changed, 11 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+index 6b609553329f..a3b6d8c89127 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+@@ -633,19 +633,17 @@ static void ixgbe_clean_xdp_tx_buffer(struct ixgbe_ring *tx_ring,
+ bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
+ 			    struct ixgbe_ring *tx_ring, int napi_budget)
+ {
++	u16 ntc = tx_ring->next_to_clean, ntu = tx_ring->next_to_use;
+ 	unsigned int total_packets = 0, total_bytes = 0;
+-	u32 i = tx_ring->next_to_clean, xsk_frames = 0;
+-	unsigned int budget = q_vector->tx.work_limit;
+ 	struct xdp_umem *umem = tx_ring->xsk_umem;
+ 	union ixgbe_adv_tx_desc *tx_desc;
+ 	struct ixgbe_tx_buffer *tx_bi;
+-	bool xmit_done;
++	u32 xsk_frames = 0;
  
--/*
-- * Runtime evaluation of get_order()
-- */
--static inline __attribute_const__
--int __get_order(unsigned long size)
--{
--	int order;
--
--	size--;
--	size >>= PAGE_SHIFT;
--#if BITS_PER_LONG == 32
--	order = fls(size);
--#else
--	order = fls64(size);
--#endif
--	return order;
--}
--
- /**
-  * get_order - Determine the allocation order of a memory size
-  * @size: The size for which to get the order
-@@ -43,19 +25,27 @@ int __get_order(unsigned long size)
-  * to hold an object of the specified size.
-  *
-  * The result is undefined if the size is 0.
-- *
-- * This function may be used to initialise variables with compile time
-- * evaluations of constants.
-  */
--#define get_order(n)						\
--(								\
--	__builtin_constant_p(n) ? (				\
--		((n) == 0UL) ? BITS_PER_LONG - PAGE_SHIFT :	\
--		(((n) < (1UL << PAGE_SHIFT)) ? 0 :		\
--		 ilog2((n) - 1) - PAGE_SHIFT + 1)		\
--	) :							\
--	__get_order(n)						\
--)
-+static inline __attribute_const__ int get_order(unsigned long size)
-+{
-+	if (__builtin_constant_p(size)) {
-+		if (!size)
-+			return BITS_PER_LONG - PAGE_SHIFT;
-+
-+		if (size < (1UL << PAGE_SHIFT))
-+			return 0;
-+
-+		return ilog2((size) - 1) - PAGE_SHIFT + 1;
+-	tx_bi = &tx_ring->tx_buffer_info[i];
+-	tx_desc = IXGBE_TX_DESC(tx_ring, i);
+-	i -= tx_ring->count;
++	tx_bi = &tx_ring->tx_buffer_info[ntc];
++	tx_desc = IXGBE_TX_DESC(tx_ring, ntc);
+ 
+-	do {
++	while (ntc != ntu) {
+ 		if (!(tx_desc->wb.status & cpu_to_le32(IXGBE_TXD_STAT_DD)))
+ 			break;
+ 
+@@ -661,22 +659,18 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
+ 
+ 		tx_bi++;
+ 		tx_desc++;
+-		i++;
+-		if (unlikely(!i)) {
+-			i -= tx_ring->count;
++		ntc++;
++		if (unlikely(ntc == tx_ring->count)) {
++			ntc = 0;
+ 			tx_bi = tx_ring->tx_buffer_info;
+ 			tx_desc = IXGBE_TX_DESC(tx_ring, 0);
+ 		}
+ 
+ 		/* issue prefetch for next Tx descriptor */
+ 		prefetch(tx_desc);
 +	}
-+
-+	size--;
-+	size >>= PAGE_SHIFT;
-+#if BITS_PER_LONG == 32
-+	return fls(size);
-+#else
-+	return fls64(size);
-+#endif
-+}
  
- #endif	/* __ASSEMBLY__ */
+-		/* update budget accounting */
+-		budget--;
+-	} while (likely(budget));
+-
+-	i += tx_ring->count;
+-	tx_ring->next_to_clean = i;
++	tx_ring->next_to_clean = ntc;
  
+ 	u64_stats_update_begin(&tx_ring->syncp);
+ 	tx_ring->stats.bytes += total_bytes;
+@@ -688,8 +682,7 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
+ 	if (xsk_frames)
+ 		xsk_umem_complete_tx(umem, xsk_frames);
+ 
+-	xmit_done = ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
+-	return budget > 0 && xmit_done;
++	return ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
+ }
+ 
+ int ixgbe_xsk_async_xmit(struct net_device *dev, u32 qid)
 -- 
-2.20.1
+2.17.1
 
