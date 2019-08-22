@@ -2,280 +2,121 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB5CC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E52C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A4E233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495124;
-	bh=BwTVcTTrqz+7D6NZcqiUlK5wEVnCl3CvoYa5456Y7z0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HyOZ4sKVaejtE0FY0vrpxysEANr+9Xu8v5HIzqF60hWQJoNfRmnFqY6y4Wupi16n7
-	 6jmB+W/iWxx8cU7uxDC1521Lg7Ce2UB9VFScIumZpWB65eokoqbYLIbXSiNEh6wLtS
-	 gorMaqmLdpqiVysC7BUhrJ5SW2MF6OOibngUhdtY=
+	by mail.kernel.org (Postfix) with ESMTP id DC1AF233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="UI+s7seU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404626AbfHVRcD (ORCPT
+        id S2404818AbfHVRcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:32:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404493AbfHVRZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:47 -0400
-Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AFF523427;
-        Thu, 22 Aug 2019 17:25:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494745;
-        bh=BwTVcTTrqz+7D6NZcqiUlK5wEVnCl3CvoYa5456Y7z0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c3TIGeG8b/D5Acl32pdRaLA597cwP0FLyQm6qEwXJcvKcu1ovPzb57xB7g9VucNuk
-         6Yvjn+NpE8BuLEm+EFEr7V3Q1gI4abcFHvvSH5sATbvYpjSlFxkNraGL7LxaaJ3+Bf
-         FDlb+7wPLBSb/hrplVStO8FEMsz/tApkKq/+XTOU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 04/85] mm: mempolicy: make the behavior consistent when MPOL_MF_MOVE* and MPOL_MF_STRICT were specified
-Date:   Thu, 22 Aug 2019 10:18:37 -0700
-Message-Id: <20190822171731.190101948@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
-References: <20190822171731.012687054@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 22 Aug 2019 13:32:05 -0400
+Received: from mx.aristanetworks.com ([162.210.129.12]:49691 "EHLO
+        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404615AbfHVRcB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:32:01 -0400
+Received: from smtp.aristanetworks.com (localhost [127.0.0.1])
+        by smtp.aristanetworks.com (Postfix) with ESMTP id 08B5142743A;
+        Thu, 22 Aug 2019 10:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+        s=Arista-A; t=1566495165;
+        bh=VS7LeuGqbPwIcHqY2XBp8+c2oKqQvPTyP/4ofEIs1qM=;
+        h=From:To:Cc:Subject:Date;
+        b=UI+s7seUH3h+J1ieyZ9ZWXCsGPQYgN6+OC21RjWYBBs1BZr9su6WVbTIujTSfgpJg
+         adXZoGyymThG9MtCLbc1Wqcw/JeysqLe/FEZ3VMta5nPxE9bn78rdC5kkk1Sq416YN
+         E9vDeXw5dh7j/2ykrqLMLsgf/rClu6jMK575OIbNSNZ92GgYPkwvViewd0AWxjmyWT
+         hTIOP2XKMCLwgCb2sVea0U0oYHCHX2htPSMu1rYH3gSmFv+t6kCcee6mh7bYVg3IqU
+         CZKWQGyHZqx6P1EtEA2knqeCCPvdzyuVrHeUClCWLOz+2u7C/Z3yklCeU37gB2EzBW
+         TcV5mb9VOP0Ng==
+Received: from egc101.sjc.aristanetworks.com (unknown [172.20.210.50])
+        by smtp.aristanetworks.com (Postfix) with ESMTP id EE3F342745B;
+        Thu, 22 Aug 2019 10:32:44 -0700 (PDT)
+From:   Edward Chron <echron@arista.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        David Rientjes <rientjes@google.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, colona@arista.com,
+        Edward Chron <echron@arista.com>
+Subject: [PATCH] mm/oom: Add oom_score_adj and pgtables to Killed process message
+Date:   Thu, 22 Aug 2019 10:31:57 -0700
+Message-Id: <20190822173157.1569-1-echron@arista.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+For an OOM event: print oom_score_adj value for the OOM Killed process to
+document what the oom score adjust value was at the time the process was
+OOM Killed. The adjustment value can be set by user code and it affects
+the resulting oom_score so it is used to influence kill process selection.
 
-commit d883544515aae54842c21730b880172e7894fde9 upstream.
+When eligible tasks are not printed (sysctl oom_dump_tasks = 0) printing
+this value is the only documentation of the value for the process being
+killed. Having this value on the Killed process message is useful to
+document if a miscconfiguration occurred or to confirm that the
+oom_score_adj configuration applies as expected.
 
-When both MPOL_MF_MOVE* and MPOL_MF_STRICT was specified, mbind() should
-try best to migrate misplaced pages, if some of the pages could not be
-migrated, then return -EIO.
+An example which illustates both misconfiguration and validation that
+the oom_score_adj was applied as expected is:
 
-There are three different sub-cases:
- 1. vma is not migratable
- 2. vma is migratable, but there are unmovable pages
- 3. vma is migratable, pages are movable, but migrate_pages() fails
+Aug 14 23:00:02 testserver kernel: Out of memory: Killed process 2692
+ (systemd-udevd) total-vm:1056800kB, anon-rss:1052760kB, file-rss:4kB,
+ shmem-rss:0kB pgtables:22kB oom_score_adj:1000
 
-If #1 happens, kernel would just abort immediately, then return -EIO,
-after a7f40cfe3b7a ("mm: mempolicy: make mbind() return -EIO when
-MPOL_MF_STRICT is specified").
+The systemd-udevd is a critical system application that should have
+an oom_score_adj of -1000. It was miconfigured to have a adjustment of
+1000 making it a highly favored OOM kill target process. The output
+documents both the misconfiguration and the fact that the process
+was correctly targeted by OOM due to the miconfiguration. This can
+be quite helpful for triage and problem determination.
 
-If #3 happens, kernel would set policy and migrate pages with
-best-effort, but won't rollback the migrated pages and reset the policy
-back.
+The addition of the pgtables_bytes shows page table usage by the
+process and is a useful measure of the memory size of the process.
 
-Before that commit, they behaves in the same way.  It'd better to keep
-their behavior consistent.  But, rolling back the migrated pages and
-resetting the policy back sounds not feasible, so just make #1 behave as
-same as #3.
-
-Userspace will know that not everything was successfully migrated (via
--EIO), and can take whatever steps it deems necessary - attempt
-rollback, determine which exact page(s) are violating the policy, etc.
-
-Make queue_pages_range() return 1 to indicate there are unmovable pages
-or vma is not migratable.
-
-The #2 is not handled correctly in the current kernel, the following
-patch will fix it.
-
-[yang.shi@linux.alibaba.com: fix review comments from Vlastimil]
-  Link: http://lkml.kernel.org/r/1563556862-54056-2-git-send-email-yang.shi@linux.alibaba.com
-Link: http://lkml.kernel.org/r/1561162809-59140-2-git-send-email-yang.shi@linux.alibaba.com
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Edward Chron <echron@arista.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: David Rientjes <rientjes@google.com>
 ---
- mm/mempolicy.c |   68 ++++++++++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 48 insertions(+), 20 deletions(-)
+ mm/oom_kill.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -429,11 +429,14 @@ static inline bool queue_pages_required(
- }
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index eda2e2a0bdc6..98cb3943e5a2 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -884,12 +884,12 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
+ 	 */
+ 	do_send_sig_info(SIGKILL, SEND_SIG_PRIV, victim, PIDTYPE_TGID);
+ 	mark_oom_victim(victim);
+-	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB\n",
+-		message, task_pid_nr(victim), victim->comm,
+-		K(victim->mm->total_vm),
+-		K(get_mm_counter(victim->mm, MM_ANONPAGES)),
+-		K(get_mm_counter(victim->mm, MM_FILEPAGES)),
+-		K(get_mm_counter(victim->mm, MM_SHMEMPAGES)));
++	pr_err("%s: Killed process %d (%s) total-vm:%lukB, anon-rss:%lukB, file-rss:%lukB, shmem-rss:%lukB pgtables:%lukB oom_score_adj:%hd\n",
++		message, task_pid_nr(victim), victim->comm, K(mm->total_vm),
++		K(get_mm_counter(mm, MM_ANONPAGES)),
++		K(get_mm_counter(mm, MM_FILEPAGES)),
++		K(get_mm_counter(mm, MM_SHMEMPAGES)),
++		mm_pgtables_bytes(mm), victim->signal->oom_score_adj);
+ 	task_unlock(victim);
  
- /*
-- * queue_pages_pmd() has three possible return values:
-- * 1 - pages are placed on the right node or queued successfully.
-- * 0 - THP was split.
-- * -EIO - is migration entry or MPOL_MF_STRICT was specified and an existing
-- *        page was already on a node that does not follow the policy.
-+ * queue_pages_pmd() has four possible return values:
-+ * 0 - pages are placed on the right node or queued successfully.
-+ * 1 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
-+ *     specified.
-+ * 2 - THP was split.
-+ * -EIO - is migration entry or only MPOL_MF_STRICT was specified and an
-+ *        existing page was already on a node that does not follow the
-+ *        policy.
-  */
- static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
- 				unsigned long end, struct mm_walk *walk)
-@@ -451,19 +454,17 @@ static int queue_pages_pmd(pmd_t *pmd, s
- 	if (is_huge_zero_page(page)) {
- 		spin_unlock(ptl);
- 		__split_huge_pmd(walk->vma, pmd, addr, false, NULL);
-+		ret = 2;
- 		goto out;
- 	}
--	if (!queue_pages_required(page, qp)) {
--		ret = 1;
-+	if (!queue_pages_required(page, qp))
- 		goto unlock;
--	}
- 
--	ret = 1;
- 	flags = qp->flags;
- 	/* go to thp migration */
- 	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
- 		if (!vma_migratable(walk->vma)) {
--			ret = -EIO;
-+			ret = 1;
- 			goto unlock;
- 		}
- 
-@@ -479,6 +480,13 @@ out:
- /*
-  * Scan through pages checking if pages follow certain conditions,
-  * and move them to the pagelist if they do.
-+ *
-+ * queue_pages_pte_range() has three possible return values:
-+ * 0 - pages are placed on the right node or queued successfully.
-+ * 1 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
-+ *     specified.
-+ * -EIO - only MPOL_MF_STRICT was specified and an existing page was already
-+ *        on a node that does not follow the policy.
-  */
- static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
- 			unsigned long end, struct mm_walk *walk)
-@@ -488,17 +496,17 @@ static int queue_pages_pte_range(pmd_t *
- 	struct queue_pages *qp = walk->private;
- 	unsigned long flags = qp->flags;
- 	int ret;
-+	bool has_unmovable = false;
- 	pte_t *pte;
- 	spinlock_t *ptl;
- 
- 	ptl = pmd_trans_huge_lock(pmd, vma);
- 	if (ptl) {
- 		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
--		if (ret > 0)
--			return 0;
--		else if (ret < 0)
-+		if (ret != 2)
- 			return ret;
- 	}
-+	/* THP was split, fall through to pte walk */
- 
- 	if (pmd_trans_unstable(pmd))
- 		return 0;
-@@ -519,14 +527,21 @@ static int queue_pages_pte_range(pmd_t *
- 		if (!queue_pages_required(page, qp))
- 			continue;
- 		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
--			if (!vma_migratable(vma))
-+			/* MPOL_MF_STRICT must be specified if we get here */
-+			if (!vma_migratable(vma)) {
-+				has_unmovable = true;
- 				break;
-+			}
- 			migrate_page_add(page, qp->pagelist, flags);
- 		} else
- 			break;
- 	}
- 	pte_unmap_unlock(pte - 1, ptl);
- 	cond_resched();
-+
-+	if (has_unmovable)
-+		return 1;
-+
- 	return addr != end ? -EIO : 0;
- }
- 
-@@ -639,7 +654,13 @@ static int queue_pages_test_walk(unsigne
-  *
-  * If pages found in a given range are on a set of nodes (determined by
-  * @nodes and @flags,) it's isolated and queued to the pagelist which is
-- * passed via @private.)
-+ * passed via @private.
-+ *
-+ * queue_pages_range() has three possible return values:
-+ * 1 - there is unmovable page, but MPOL_MF_MOVE* & MPOL_MF_STRICT were
-+ *     specified.
-+ * 0 - queue pages successfully or no misplaced page.
-+ * -EIO - there is misplaced page and only MPOL_MF_STRICT was specified.
-  */
- static int
- queue_pages_range(struct mm_struct *mm, unsigned long start, unsigned long end,
-@@ -1168,6 +1189,7 @@ static long do_mbind(unsigned long start
- 	struct mempolicy *new;
- 	unsigned long end;
- 	int err;
-+	int ret;
- 	LIST_HEAD(pagelist);
- 
- 	if (flags & ~(unsigned long)MPOL_MF_VALID)
-@@ -1229,10 +1251,15 @@ static long do_mbind(unsigned long start
- 	if (err)
- 		goto mpol_out;
- 
--	err = queue_pages_range(mm, start, end, nmask,
-+	ret = queue_pages_range(mm, start, end, nmask,
- 			  flags | MPOL_MF_INVERT, &pagelist);
--	if (!err)
--		err = mbind_range(mm, start, end, new);
-+
-+	if (ret < 0) {
-+		err = -EIO;
-+		goto up_out;
-+	}
-+
-+	err = mbind_range(mm, start, end, new);
- 
- 	if (!err) {
- 		int nr_failed = 0;
-@@ -1245,13 +1272,14 @@ static long do_mbind(unsigned long start
- 				putback_movable_pages(&pagelist);
- 		}
- 
--		if (nr_failed && (flags & MPOL_MF_STRICT))
-+		if ((ret > 0) || (nr_failed && (flags & MPOL_MF_STRICT)))
- 			err = -EIO;
- 	} else
- 		putback_movable_pages(&pagelist);
- 
-+up_out:
- 	up_write(&mm->mmap_sem);
-- mpol_out:
-+mpol_out:
- 	mpol_put(new);
- 	return err;
- }
-
+ 	/*
+-- 
+2.20.1
 
