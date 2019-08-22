@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC60C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0002FC3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 706D2233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76EB233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495210;
-	bh=Ug2fpKLtiZUKPS4J5IkahslTsQaZFMtcx6ut+UNQiTg=;
+	s=default; t=1566495213;
+	bh=vCnG6nfAkHenqBbOG37dUmz84sjUM/PCLY/Ncld4Su4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MPuwSrThBa3rErU8kEcSLF96EKWyGp69TJUnE5UeRrYTYh38madrjpWEE50O0gJ7g
-	 gA5U0cL8EtW9icaVsUtYEn3cl9mLu7fXd8JuPb7sxwCw1RnmbzU1FEq8ig9EXZsEcV
-	 ttJzaArT+kgP3Tg9g5GEZ5joQVI07+Nipuone0G8=
+	b=t2SNcdvaFZophWFfvWxGD8WtqViNO1clzS9arNmmFVNWaR9cwe0jTIK5GT26imOaJ
+	 d2k6Lfxa4dbvT4VBOkpZjKcRMlRAJ0YxAW13zzkD94Ld/Diq4SV5Xg3f6BLJ+G4y0U
+	 cTjRNx2xYcdh30WDG6NWhmVVJFHKA+SXWEvpqKI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392333AbfHVRd3 (ORCPT
+        id S2404422AbfHVRZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:33:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404423AbfHVRZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 13:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388119AbfHVRYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:47 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 617322064A;
-        Thu, 22 Aug 2019 17:25:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77EBF21743;
+        Thu, 22 Aug 2019 17:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494726;
-        bh=Ug2fpKLtiZUKPS4J5IkahslTsQaZFMtcx6ut+UNQiTg=;
+        s=default; t=1566494686;
+        bh=vCnG6nfAkHenqBbOG37dUmz84sjUM/PCLY/Ncld4Su4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=drPAA4Cg/jrfym9GeOj2KCYZWgtsXKlq0VPyBGzy4d1ZpTJiYtfetaLpxQ8JzLctW
-         9L0X2R1hXCqcFswlgiuRM39KJxusRa1rkVvKW8O4z6WkzAUHXCAi9Ckka4hO10QkWN
-         RsgeIl1oTZ389uJMWD2tKmNNOPjhyUovTs12/hO8=
+        b=gwPyqHt64CQbCCAr7qPXFNaurOGGy52UmqqV4aU0WZX/EM7IgUB8EtlN+AbP32GB6
+         xG64d1U7LA2/9cUS3qFtZwcy7zuODQ0pefT+U/OU+OnmZJtXfs+CYhCr9KY02n5Z56
+         PJlIHGrrJ8Kr+giNrDpS8Jpyv+sutRTT6xLEshxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 16/85] ALSA: hda - Add a generic reboot_notify
-Date:   Thu, 22 Aug 2019 10:18:49 -0700
-Message-Id: <20190822171731.827835566@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.14 06/71] bpf: restrict access to core bpf sysctls
+Date:   Thu, 22 Aug 2019 10:18:41 -0700
+Message-Id: <20190822171726.829659211@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
-References: <20190822171731.012687054@linuxfoundation.org>
+In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
+References: <20190822171726.131957995@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,114 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit 871b9066027702e6e6589da0e1edd3b7dede7205 upstream.
+commit 2e4a30983b0f9b19b59e38bbf7427d7fdd480d98 upstream.
 
-Make codec enter D3 before rebooting or poweroff can fix the noise
-issue on some laptops. And in theory it is harmless for all codecs
-to enter D3 before rebooting or poweroff, let us add a generic
-reboot_notify, then realtek and conexant drivers can call this
-function.
+Given BPF reaches far beyond just networking these days, it was
+never intended to allow setting and in some cases reading those
+knobs out of a user namespace root running without CAP_SYS_ADMIN,
+thus tighten such access.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Also the bpf_jit_enable = 2 debugging mode should only be allowed
+if kptr_restrict is not set since it otherwise can leak addresses
+to the kernel log. Dump a note to the kernel log that this is for
+debugging JITs only when enabled.
+
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+[bwh: Backported to 4.14: We don't have bpf_dump_raw_ok(), so drop the
+ condition based on it. This condition only made it a bit harder for a
+ privileged user to do something silly.]
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/pci/hda/hda_generic.c    |   19 +++++++++++++++++++
- sound/pci/hda/hda_generic.h    |    1 +
- sound/pci/hda/patch_conexant.c |    6 +-----
- sound/pci/hda/patch_realtek.c  |   11 +----------
- 4 files changed, 22 insertions(+), 15 deletions(-)
+ net/core/sysctl_net_core.c |   41 ++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 38 insertions(+), 3 deletions(-)
 
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -6033,6 +6033,24 @@ void snd_hda_gen_free(struct hda_codec *
+--- a/net/core/sysctl_net_core.c
++++ b/net/core/sysctl_net_core.c
+@@ -251,6 +251,41 @@ static int proc_do_rss_key(struct ctl_ta
+ 	return proc_dostring(&fake_table, write, buffer, lenp, ppos);
  }
- EXPORT_SYMBOL_GPL(snd_hda_gen_free);
  
-+/**
-+ * snd_hda_gen_reboot_notify - Make codec enter D3 before rebooting
-+ * @codec: the HDA codec
-+ *
-+ * This can be put as patch_ops reboot_notify function.
-+ */
-+void snd_hda_gen_reboot_notify(struct hda_codec *codec)
++#ifdef CONFIG_BPF_JIT
++static int proc_dointvec_minmax_bpf_enable(struct ctl_table *table, int write,
++					   void __user *buffer, size_t *lenp,
++					   loff_t *ppos)
 +{
-+	/* Make the codec enter D3 to avoid spurious noises from the internal
-+	 * speaker during (and after) reboot
-+	 */
-+	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
-+	snd_hda_codec_write(codec, codec->core.afg, 0,
-+			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
-+	msleep(10);
-+}
-+EXPORT_SYMBOL_GPL(snd_hda_gen_reboot_notify);
++	int ret, jit_enable = *(int *)table->data;
++	struct ctl_table tmp = *table;
 +
- #ifdef CONFIG_PM
- /**
-  * snd_hda_gen_check_power_status - check the loopback power save state
-@@ -6060,6 +6078,7 @@ static const struct hda_codec_ops generi
- 	.init = snd_hda_gen_init,
- 	.free = snd_hda_gen_free,
- 	.unsol_event = snd_hda_jack_unsol_event,
-+	.reboot_notify = snd_hda_gen_reboot_notify,
- #ifdef CONFIG_PM
- 	.check_power_status = snd_hda_gen_check_power_status,
- #endif
---- a/sound/pci/hda/hda_generic.h
-+++ b/sound/pci/hda/hda_generic.h
-@@ -336,6 +336,7 @@ int snd_hda_gen_parse_auto_config(struct
- 				  struct auto_pin_cfg *cfg);
- int snd_hda_gen_build_controls(struct hda_codec *codec);
- int snd_hda_gen_build_pcms(struct hda_codec *codec);
-+void snd_hda_gen_reboot_notify(struct hda_codec *codec);
- 
- /* standard jack event callbacks */
- void snd_hda_gen_hp_automute(struct hda_codec *codec,
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -188,11 +188,7 @@ static void cx_auto_reboot_notify(struct
- 	/* Turn the problematic codec into D3 to avoid spurious noises
- 	   from the internal speaker during (and after) reboot */
- 	cx_auto_turn_eapd(codec, spec->num_eapds, spec->eapds, false);
--
--	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
--	snd_hda_codec_write(codec, codec->core.afg, 0,
--			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
--	msleep(10);
-+	snd_hda_gen_reboot_notify(codec);
- }
- 
- static void cx_auto_free(struct hda_codec *codec)
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -868,15 +868,6 @@ static void alc_reboot_notify(struct hda
- 		alc_shutup(codec);
- }
- 
--/* power down codec to D3 at reboot/shutdown; set as reboot_notify ops */
--static void alc_d3_at_reboot(struct hda_codec *codec)
--{
--	snd_hda_codec_set_power_to_all(codec, codec->core.afg, AC_PWRST_D3);
--	snd_hda_codec_write(codec, codec->core.afg, 0,
--			    AC_VERB_SET_POWER_STATE, AC_PWRST_D3);
--	msleep(10);
--}
--
- #define alc_free	snd_hda_gen_free
- 
- #ifdef CONFIG_PM
-@@ -5111,7 +5102,7 @@ static void alc_fixup_tpt440_dock(struct
- 	struct alc_spec *spec = codec->spec;
- 
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
--		spec->reboot_notify = alc_d3_at_reboot; /* reduce noise */
-+		spec->reboot_notify = snd_hda_gen_reboot_notify; /* reduce noise */
- 		spec->parse_flags = HDA_PINCFG_NO_HP_FIXUP;
- 		codec->power_save_node = 0; /* avoid click noises */
- 		snd_hda_apply_pincfgs(codec, pincfgs);
++	if (write && !capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	tmp.data = &jit_enable;
++	ret = proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
++	if (write && !ret) {
++		*(int *)table->data = jit_enable;
++		if (jit_enable == 2)
++			pr_warn("bpf_jit_enable = 2 was set! NEVER use this in production, only for JIT debugging!\n");
++	}
++	return ret;
++}
++
++# ifdef CONFIG_HAVE_EBPF_JIT
++static int
++proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
++				    void __user *buffer, size_t *lenp,
++				    loff_t *ppos)
++{
++	if (!capable(CAP_SYS_ADMIN))
++		return -EPERM;
++
++	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
++}
++# endif
++#endif
++
+ static struct ctl_table net_core_table[] = {
+ #ifdef CONFIG_NET
+ 	{
+@@ -326,7 +361,7 @@ static struct ctl_table net_core_table[]
+ 		.data		= &bpf_jit_enable,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
++		.proc_handler	= proc_dointvec_minmax_bpf_enable,
+ # ifdef CONFIG_BPF_JIT_ALWAYS_ON
+ 		.extra1		= &one,
+ 		.extra2		= &one,
+@@ -341,7 +376,7 @@ static struct ctl_table net_core_table[]
+ 		.data		= &bpf_jit_harden,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0600,
+-		.proc_handler	= proc_dointvec_minmax,
++		.proc_handler	= proc_dointvec_minmax_bpf_restricted,
+ 		.extra1		= &zero,
+ 		.extra2		= &two,
+ 	},
+@@ -350,7 +385,7 @@ static struct ctl_table net_core_table[]
+ 		.data		= &bpf_jit_kallsyms,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0600,
+-		.proc_handler	= proc_dointvec_minmax,
++		.proc_handler	= proc_dointvec_minmax_bpf_restricted,
+ 		.extra1		= &zero,
+ 		.extra2		= &one,
+ 	},
 
 
