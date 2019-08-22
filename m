@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A460C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C7DCC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E71B233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA449233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495379;
-	bh=xdalsFCpUsXXAcYol/EVFJq/VSzCZrzFEhP55WIgID8=;
+	s=default; t=1566495383;
+	bh=MxJyfsSZgkkzFA7Lk53PTKYXmSwiZxXz0gaGazBiNJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U9RWyfiIlx98yv8mOTC/ox0pRtWeoZM0gfalDrPK7n9IFIEwoHjAt6sw9wRhxoRqw
-	 McbHw0pIrVFdykrBLcVo2Rh4o8dwJxeuiRQT6queizZEHfx+1XV7FJzQwxB3jNLDZA
-	 kwTOSm5LwThODL0jQgPT4E2WI+bV0KVFrdVrek+4=
+	b=oqBowmwpwGBvzW3XsMjUltp9+Yb5FkwINW5sX/rQD1CnX1RHCpIds+IyNQ+yyusFI
+	 qzOi0J+siNc1ftmJQEJFTOATdM2iO42bCB8eOfMy9VBpvTwuImc171bxySXygjziHv
+	 xnKr7e6xrivcuM0nM/ve7bW/usJdA6YcavRGrIyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392370AbfHVRgR (ORCPT
+        id S2392481AbfHVRgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:36:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47042 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:36:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391614AbfHVRYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:55 -0400
+        id S2391608AbfHVRYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:54 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6085B2341C;
-        Thu, 22 Aug 2019 17:24:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AFE02341B;
+        Thu, 22 Aug 2019 17:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494694;
-        bh=xdalsFCpUsXXAcYol/EVFJq/VSzCZrzFEhP55WIgID8=;
+        s=default; t=1566494693;
+        bh=MxJyfsSZgkkzFA7Lk53PTKYXmSwiZxXz0gaGazBiNJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=avYIz4j3JC4A4wlxQXCj0SSj9H3BGLr0kX2oxZkzGpFR1uREWH3j9G1ksNMprgbkW
-         wlNCCcKZnYEndxNx25yCeKX9FJ8qQ6FZXzSV0Ve4LTQIXIWuZ0em72bMkVmb7ve6Az
-         caGaX7W60k1HO/uFSIqFQfMu3HSW9m4lrCSNH/K8=
+        b=AP4YppCKNDLMVa6EJhxSWdTqbWsVZAz6AMpG/f8xd3LuGksRvlT19DxT6XIW/YKhl
+         3oMUeC1Tffa7qOYm0CWDVOyEurLuPUJ8YfXSVmLOHy6vuQ4rqfRQoJ7uy0JUzfrXA0
+         NyZQ9Z7jX/zcjB9cRarE5L1oYvwT53JAHMY6Fnmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 10/71] ALSA: hda - Apply workaround for another AMD chip 1022:1487
-Date:   Thu, 22 Aug 2019 10:18:45 -0700
-Message-Id: <20190822171727.288966710@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH 4.14 09/71] xtensa: add missing isync to the cpu_reset TLB code
+Date:   Thu, 22 Aug 2019 10:18:44 -0700
+Message-Id: <20190822171727.191206458@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
 References: <20190822171726.131957995@linuxfoundation.org>
@@ -58,34 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-commit de768ce45466f3009809719eb7b1f6f5277d9373 upstream.
+commit cd8869f4cb257f22b89495ca40f5281e58ba359c upstream.
 
-MSI MPG X570 board is with another AMD HD-audio controller (PCI ID
-1022:1487) and it requires the same workaround applied for X370, etc
-(PCI ID 1022:1457).
+ITLB entry modifications must be followed by the isync instruction
+before the new entries are possibly used. cpu_reset lacks one isync
+between ITLB way 6 initialization and jump to the identity mapping.
+Add missing isync to xtensa cpu_reset.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=195303
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_intel.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/xtensa/kernel/setup.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2577,6 +2577,9 @@ static const struct pci_device_id azx_id
- 	/* AMD, X370 & co */
- 	{ PCI_DEVICE(0x1022, 0x1457),
- 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_AMD_SB },
-+	/* AMD, X570 & co */
-+	{ PCI_DEVICE(0x1022, 0x1487),
-+	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_AMD_SB },
- 	/* AMD Stoney */
- 	{ PCI_DEVICE(0x1022, 0x157a),
- 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_SB |
+--- a/arch/xtensa/kernel/setup.c
++++ b/arch/xtensa/kernel/setup.c
+@@ -508,6 +508,7 @@ void cpu_reset(void)
+ 				      "add	%2, %2, %7\n\t"
+ 				      "addi	%0, %0, -1\n\t"
+ 				      "bnez	%0, 1b\n\t"
++				      "isync\n\t"
+ 				      /* Jump to identity mapping */
+ 				      "jx	%3\n"
+ 				      "2:\n\t"
 
 
