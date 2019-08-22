@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EB2C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A881EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28C2233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C782064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495136;
-	bh=U29n78LQGMWWz5d1OvpOm/x7cQq3lqqOPA5ASAaP7sc=;
+	s=default; t=1566495141;
+	bh=UrRX+YAvAnzmTTdaf0EAwx3YweqXDSSy+g35XFQF+ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ijlPE43MMS5ExPar8f0gOECnxP+kDF/8Z5SjDfos3N91UofVi6QyDI89Oe33cu18
-	 fb3IVLgkTXy1Y8fLvSbG9aUUaKQ7isa8dYc5/YblOniWrq5brEemXhaLR31pBYTBjz
-	 bo6u/vMonHnvGRl67KDhcNLTbbi3hL/y6iHmyMus=
+	b=rL8J9lBqHnPUx7nV3g0iKnoSYBmgyq9FUyqk9xcyYNeQ19xVqGhLu0D2m7vNQK9Pp
+	 oIdr4Uhe+tcIMMMQ0j3k8ou/1JLoDq9Rm0VS8HTshUNcQpXPJ1Fgnvn1G/rR6fSCJM
+	 UlEFt0JWrgr3FJqlaRMDyBb54UiyieqmnksY6b7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404510AbfHVRb6 (ORCPT
+        id S2404485AbfHVRZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:31:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49894 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404495AbfHVRZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:48 -0400
+        id S2391602AbfHVRYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:53 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54DEB2341A;
-        Thu, 22 Aug 2019 17:25:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 372CE23407;
+        Thu, 22 Aug 2019 17:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494746;
-        bh=U29n78LQGMWWz5d1OvpOm/x7cQq3lqqOPA5ASAaP7sc=;
+        s=default; t=1566494692;
+        bh=UrRX+YAvAnzmTTdaf0EAwx3YweqXDSSy+g35XFQF+ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1bwlp0m6HHYsDBq6DpAurCWLr60uL6/kqJLJQd9SIcvAQz68nRQsbVRMlls62x803
-         dXsPFQfcxDMJIQAsgNFsAk0CsP2KAN3twfE+Z7CNLXyvnKDhWG1dieuc4tlzgF1uBZ
-         KHpGEuPGLX5WACMhXgNnV+/JAb6dBdLeZ27e7l4U=
+        b=OcsVHLCuwrFvIN+raKTxrMuTt1OR/j+Ms92j937ajJq/nlg8DVHkOdNkfyj6qCAn2
+         XeyqJ+MkxZc2MCNP4I1yTPH+YE+y4GORDR0Vtvd4O4LvCjmzNXPgyjZavjnEXtZ0Vd
+         FKsEEvKqAi20mcARDx0LbF7hqU4eTXhzau0Qz7lQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 05/85] mm: mempolicy: handle vma with unmovable pages mapped correctly in mbind
-Date:   Thu, 22 Aug 2019 10:18:38 -0700
-Message-Id: <20190822171731.233581237@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>
+Subject: [PATCH 4.14 07/71] bpf: add bpf_jit_limit knob to restrict unpriv allocations
+Date:   Thu, 22 Aug 2019 10:18:42 -0700
+Message-Id: <20190822171726.904054988@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
-References: <20190822171731.012687054@linuxfoundation.org>
+In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
+References: <20190822171726.131957995@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,196 +64,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-commit a53190a4aaa36494f4d7209fd1fcc6f2ee08e0e0 upstream.
+commit ede95a63b5e84ddeea6b0c473b36ab8bfd8c6ce3 upstream.
 
-When running syzkaller internally, we ran into the below bug on 4.9.x
-kernel:
+Rick reported that the BPF JIT could potentially fill the entire module
+space with BPF programs from unprivileged users which would prevent later
+attempts to load normal kernel modules or privileged BPF programs, for
+example. If JIT was enabled but unsuccessful to generate the image, then
+before commit 290af86629b2 ("bpf: introduce BPF_JIT_ALWAYS_ON config")
+we would always fall back to the BPF interpreter. Nowadays in the case
+where the CONFIG_BPF_JIT_ALWAYS_ON could be set, then the load will abort
+with a failure since the BPF interpreter was compiled out.
 
-  kernel BUG at mm/huge_memory.c:2124!
-  invalid opcode: 0000 [#1] SMP KASAN
-  CPU: 0 PID: 1518 Comm: syz-executor107 Not tainted 4.9.168+ #2
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.5.1 01/01/2011
-  task: ffff880067b34900 task.stack: ffff880068998000
-  RIP: split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
-  Call Trace:
-    split_huge_page include/linux/huge_mm.h:100 [inline]
-    queue_pages_pte_range+0x7e1/0x1480 mm/mempolicy.c:538
-    walk_pmd_range mm/pagewalk.c:50 [inline]
-    walk_pud_range mm/pagewalk.c:90 [inline]
-    walk_pgd_range mm/pagewalk.c:116 [inline]
-    __walk_page_range+0x44a/0xdb0 mm/pagewalk.c:208
-    walk_page_range+0x154/0x370 mm/pagewalk.c:285
-    queue_pages_range+0x115/0x150 mm/mempolicy.c:694
-    do_mbind mm/mempolicy.c:1241 [inline]
-    SYSC_mbind+0x3c3/0x1030 mm/mempolicy.c:1370
-    SyS_mbind+0x46/0x60 mm/mempolicy.c:1352
-    do_syscall_64+0x1d2/0x600 arch/x86/entry/common.c:282
-    entry_SYSCALL_64_after_swapgs+0x5d/0xdb
-  Code: c7 80 1c 02 00 e8 26 0a 76 01 <0f> 0b 48 c7 c7 40 46 45 84 e8 4c
-  RIP  [<ffffffff81895d6b>] split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
-   RSP <ffff88006899f980>
+Add a global limit and enforce it for unprivileged users such that in case
+of BPF interpreter compiled out we fail once the limit has been reached
+or we fall back to BPF interpreter earlier w/o using module mem if latter
+was compiled in. In a next step, fair share among unprivileged users can
+be resolved in particular for the case where we would fail hard once limit
+is reached.
 
-with the below test:
-
-  uint64_t r[1] = {0xffffffffffffffff};
-
-  int main(void)
-  {
-        syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
-                                intptr_t res = 0;
-        res = syscall(__NR_socket, 0x11, 3, 0x300);
-        if (res != -1)
-                r[0] = res;
-        *(uint32_t*)0x20000040 = 0x10000;
-        *(uint32_t*)0x20000044 = 1;
-        *(uint32_t*)0x20000048 = 0xc520;
-        *(uint32_t*)0x2000004c = 1;
-        syscall(__NR_setsockopt, r[0], 0x107, 0xd, 0x20000040, 0x10);
-        syscall(__NR_mmap, 0x20fed000, 0x10000, 0, 0x8811, r[0], 0);
-        *(uint64_t*)0x20000340 = 2;
-        syscall(__NR_mbind, 0x20ff9000, 0x4000, 0x4002, 0x20000340, 0x45d4, 3);
-        return 0;
-  }
-
-Actually the test does:
-
-  mmap(0x20000000, 16777216, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x20000000
-  socket(AF_PACKET, SOCK_RAW, 768)        = 3
-  setsockopt(3, SOL_PACKET, PACKET_TX_RING, {block_size=65536, block_nr=1, frame_size=50464, frame_nr=1}, 16) = 0
-  mmap(0x20fed000, 65536, PROT_NONE, MAP_SHARED|MAP_FIXED|MAP_POPULATE|MAP_DENYWRITE, 3, 0) = 0x20fed000
-  mbind(..., MPOL_MF_STRICT|MPOL_MF_MOVE) = 0
-
-The setsockopt() would allocate compound pages (16 pages in this test)
-for packet tx ring, then the mmap() would call packet_mmap() to map the
-pages into the user address space specified by the mmap() call.
-
-When calling mbind(), it would scan the vma to queue the pages for
-migration to the new node.  It would split any huge page since 4.9
-doesn't support THP migration, however, the packet tx ring compound
-pages are not THP and even not movable.  So, the above bug is triggered.
-
-However, the later kernel is not hit by this issue due to commit
-d44d363f6578 ("mm: don't assume anonymous pages have SwapBacked flag"),
-which just removes the PageSwapBacked check for a different reason.
-
-But, there is a deeper issue.  According to the semantic of mbind(), it
-should return -EIO if MPOL_MF_MOVE or MPOL_MF_MOVE_ALL was specified and
-MPOL_MF_STRICT was also specified, but the kernel was unable to move all
-existing pages in the range.  The tx ring of the packet socket is
-definitely not movable, however, mbind() returns success for this case.
-
-Although the most socket file associates with non-movable pages, but XDP
-may have movable pages from gup.  So, it sounds not fine to just check
-the underlying file type of vma in vma_migratable().
-
-Change migrate_page_add() to check if the page is movable or not, if it
-is unmovable, just return -EIO.  But do not abort pte walk immediately,
-since there may be pages off LRU temporarily.  We should migrate other
-pages if MPOL_MF_MOVE* is specified.  Set has_unmovable flag if some
-paged could not be not moved, then return -EIO for mbind() eventually.
-
-With this change the above test would return -EIO as expected.
-
-[yang.shi@linux.alibaba.com: fix review comments from Vlastimil]
-  Link: http://lkml.kernel.org/r/1563556862-54056-3-git-send-email-yang.shi@linux.alibaba.com
-Link: http://lkml.kernel.org/r/1561162809-59140-3-git-send-email-yang.shi@linux.alibaba.com
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 290af86629b2 ("bpf: introduce BPF_JIT_ALWAYS_ON config")
+Fixes: 0a14842f5a3c ("net: filter: Just In Time compiler for x86-64")
+Co-Developed-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/mempolicy.c |   32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+ Documentation/sysctl/net.txt |    8 +++++++
+ include/linux/filter.h       |    1 
+ kernel/bpf/core.c            |   49 ++++++++++++++++++++++++++++++++++++++++---
+ net/core/sysctl_net_core.c   |   10 +++++++-
+ 4 files changed, 63 insertions(+), 5 deletions(-)
 
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -403,7 +403,7 @@ static const struct mempolicy_operations
- 	},
- };
+--- a/Documentation/sysctl/net.txt
++++ b/Documentation/sysctl/net.txt
+@@ -91,6 +91,14 @@ Values :
+ 	0 - disable JIT kallsyms export (default value)
+ 	1 - enable JIT kallsyms export for privileged users only
  
--static void migrate_page_add(struct page *page, struct list_head *pagelist,
-+static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 				unsigned long flags);
- 
- struct queue_pages {
-@@ -463,12 +463,11 @@ static int queue_pages_pmd(pmd_t *pmd, s
- 	flags = qp->flags;
- 	/* go to thp migration */
- 	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
--		if (!vma_migratable(walk->vma)) {
-+		if (!vma_migratable(walk->vma) ||
-+		    migrate_page_add(page, qp->pagelist, flags)) {
- 			ret = 1;
- 			goto unlock;
- 		}
--
--		migrate_page_add(page, qp->pagelist, flags);
- 	} else
- 		ret = -EIO;
- unlock:
-@@ -532,7 +531,14 @@ static int queue_pages_pte_range(pmd_t *
- 				has_unmovable = true;
- 				break;
- 			}
--			migrate_page_add(page, qp->pagelist, flags);
++bpf_jit_limit
++-------------
 +
-+			/*
-+			 * Do not abort immediately since there may be
-+			 * temporary off LRU pages in the range.  Still
-+			 * need migrate other LRU pages.
-+			 */
-+			if (migrate_page_add(page, qp->pagelist, flags))
-+				has_unmovable = true;
- 		} else
- 			break;
- 	}
-@@ -947,7 +953,7 @@ static long do_get_mempolicy(int *policy
- /*
-  * page migration, thp tail pages can be passed.
-  */
--static void migrate_page_add(struct page *page, struct list_head *pagelist,
-+static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 				unsigned long flags)
- {
- 	struct page *head = compound_head(page);
-@@ -960,8 +966,19 @@ static void migrate_page_add(struct page
- 			mod_node_page_state(page_pgdat(head),
- 				NR_ISOLATED_ANON + page_is_file_cache(head),
- 				hpage_nr_pages(head));
-+		} else if (flags & MPOL_MF_STRICT) {
-+			/*
-+			 * Non-movable page may reach here.  And, there may be
-+			 * temporary off LRU pages or non-LRU movable pages.
-+			 * Treat them as unmovable pages since they can't be
-+			 * isolated, so they can't be moved at the moment.  It
-+			 * should return -EIO for this case too.
-+			 */
-+			return -EIO;
- 		}
- 	}
++This enforces a global limit for memory allocations to the BPF JIT
++compiler in order to reject unprivileged JIT requests once it has
++been surpassed. bpf_jit_limit contains the value of the global limit
++in bytes.
++
+ dev_weight
+ --------------
+ 
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -729,6 +729,7 @@ struct sock *do_sk_redirect_map(struct s
+ extern int bpf_jit_enable;
+ extern int bpf_jit_harden;
+ extern int bpf_jit_kallsyms;
++extern int bpf_jit_limit;
+ 
+ typedef void (*bpf_jit_fill_hole_t)(void *area, unsigned int size);
+ 
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -290,10 +290,13 @@ struct bpf_prog *bpf_patch_insn_single(s
+ }
+ 
+ #ifdef CONFIG_BPF_JIT
++# define BPF_JIT_LIMIT_DEFAULT	(PAGE_SIZE * 40000)
++
+ /* All BPF JIT sysctl knobs here. */
+ int bpf_jit_enable   __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_ALWAYS_ON);
+ int bpf_jit_harden   __read_mostly;
+ int bpf_jit_kallsyms __read_mostly;
++int bpf_jit_limit    __read_mostly = BPF_JIT_LIMIT_DEFAULT;
+ 
+ static __always_inline void
+ bpf_get_prog_addr_region(const struct bpf_prog *prog,
+@@ -489,27 +492,64 @@ int bpf_get_kallsym(unsigned int symnum,
+ 	return ret;
+ }
+ 
++static atomic_long_t bpf_jit_current;
++
++#if defined(MODULES_VADDR)
++static int __init bpf_jit_charge_init(void)
++{
++	/* Only used as heuristic here to derive limit. */
++	bpf_jit_limit = min_t(u64, round_up((MODULES_END - MODULES_VADDR) >> 2,
++					    PAGE_SIZE), INT_MAX);
++	return 0;
++}
++pure_initcall(bpf_jit_charge_init);
++#endif
++
++static int bpf_jit_charge_modmem(u32 pages)
++{
++	if (atomic_long_add_return(pages, &bpf_jit_current) >
++	    (bpf_jit_limit >> PAGE_SHIFT)) {
++		if (!capable(CAP_SYS_ADMIN)) {
++			atomic_long_sub(pages, &bpf_jit_current);
++			return -EPERM;
++		}
++	}
 +
 +	return 0;
- }
- 
- /* page allocation callback for NUMA node migration */
-@@ -1164,9 +1181,10 @@ static struct page *new_page(struct page
- }
- #else
- 
--static void migrate_page_add(struct page *page, struct list_head *pagelist,
-+static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 				unsigned long flags)
++}
++
++static void bpf_jit_uncharge_modmem(u32 pages)
++{
++	atomic_long_sub(pages, &bpf_jit_current);
++}
++
+ struct bpf_binary_header *
+ bpf_jit_binary_alloc(unsigned int proglen, u8 **image_ptr,
+ 		     unsigned int alignment,
+ 		     bpf_jit_fill_hole_t bpf_fill_ill_insns)
  {
-+	return -EIO;
+ 	struct bpf_binary_header *hdr;
+-	unsigned int size, hole, start;
++	u32 size, hole, start, pages;
+ 
+ 	/* Most of BPF filters are really small, but if some of them
+ 	 * fill a page, allow at least 128 extra bytes to insert a
+ 	 * random section of illegal instructions.
+ 	 */
+ 	size = round_up(proglen + sizeof(*hdr) + 128, PAGE_SIZE);
++	pages = size / PAGE_SIZE;
++
++	if (bpf_jit_charge_modmem(pages))
++		return NULL;
+ 	hdr = module_alloc(size);
+-	if (hdr == NULL)
++	if (!hdr) {
++		bpf_jit_uncharge_modmem(pages);
+ 		return NULL;
++	}
+ 
+ 	/* Fill space with illegal/arch-dep instructions. */
+ 	bpf_fill_ill_insns(hdr, size);
+ 
+-	hdr->pages = size / PAGE_SIZE;
++	hdr->pages = pages;
+ 	hole = min_t(unsigned int, size - (proglen + sizeof(*hdr)),
+ 		     PAGE_SIZE - sizeof(*hdr));
+ 	start = (get_random_int() % hole) & ~(alignment - 1);
+@@ -522,7 +562,10 @@ bpf_jit_binary_alloc(unsigned int progle
+ 
+ void bpf_jit_binary_free(struct bpf_binary_header *hdr)
+ {
++	u32 pages = hdr->pages;
++
+ 	module_memfree(hdr);
++	bpf_jit_uncharge_modmem(pages);
  }
  
- int do_migrate_pages(struct mm_struct *mm, const nodemask_t *from,
+ /* This symbol is only overridden by archs that have different
+--- a/net/core/sysctl_net_core.c
++++ b/net/core/sysctl_net_core.c
+@@ -272,7 +272,6 @@ static int proc_dointvec_minmax_bpf_enab
+ 	return ret;
+ }
+ 
+-# ifdef CONFIG_HAVE_EBPF_JIT
+ static int
+ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
+ 				    void __user *buffer, size_t *lenp,
+@@ -283,7 +282,6 @@ proc_dointvec_minmax_bpf_restricted(stru
+ 
+ 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+ }
+-# endif
+ #endif
+ 
+ static struct ctl_table net_core_table[] = {
+@@ -390,6 +388,14 @@ static struct ctl_table net_core_table[]
+ 		.extra2		= &one,
+ 	},
+ # endif
++	{
++		.procname	= "bpf_jit_limit",
++		.data		= &bpf_jit_limit,
++		.maxlen		= sizeof(int),
++		.mode		= 0600,
++		.proc_handler	= proc_dointvec_minmax_bpf_restricted,
++		.extra1		= &one,
++	},
+ #endif
+ 	{
+ 		.procname	= "netdev_tstamp_prequeue",
 
 
