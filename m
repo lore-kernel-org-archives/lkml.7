@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3385C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C403C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B59E123402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044C723402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494175;
-	bh=8zooDDLk4SMfizKNkmpLcqjt64Lv2VSIABX6QBeAj3M=;
+	s=default; t=1566494178;
+	bh=eOG/9O+o+bwLlESBHf18XtsMhZvQveP+DSpLB/qDpY8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gYu/lgjtsx8jjTUMH9xe4BnTlJt6K7VWW7FpxDPl2g8LR55eTGeCsRvqLcGTWPCsq
-	 JmEx9zdrj4qNk1PjnJ46cl/uKRHMvYjhlqXH1ponRkJxug86bOfW9GVql+CrgNto4U
-	 Bm7h3apt+HCVPWdOtHWQsKn6ypESlRIRPOfyDWd4=
+	b=l/hRAJi/lBU/TOB7RLvu3MMF/NSL3tmslwhdBoNrV+L6swlV56vEp4TxtekVpFV9c
+	 1EZVCG+ksDSogvPm/jPnEyAiXCZYO9TLLKXpR+H3cWkT8F5p1wC2SYndFbaBDoiQoS
+	 FKE/Yrh5gyiNPMjlYEgDU7VNJwbQpVwo23ZUBW80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391206AbfHVRQJ (ORCPT
+        id S2390416AbfHVRIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:16:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57996 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390399AbfHVRIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 13:08:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58274 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390389AbfHVRIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:35 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E10C923407;
-        Thu, 22 Aug 2019 17:08:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E27C22341D;
+        Thu, 22 Aug 2019 17:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493716;
-        bh=8zooDDLk4SMfizKNkmpLcqjt64Lv2VSIABX6QBeAj3M=;
+        s=default; t=1566493714;
+        bh=eOG/9O+o+bwLlESBHf18XtsMhZvQveP+DSpLB/qDpY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=woe8abyCqlbH94lceEW8pl5b87zHl9iVmhXYC46noJzVUdpmAjdXNY1rWkox3FEKg
-         kX1qFgvNmUC1jGbfgmbNzw1NZaHePZ16VVPYky39Z+42W/6y9H07SwFlRiOGvZSR48
-         m4ynAv9vjirmJGLNFNrMYabRrSz046EUGFwyoMS0=
+        b=xXrghtNn00cNXOfzyR44VYE1acCtokqCNozInIR7wIHFzQoB5yATZrk2L+lR5J9FN
+         QtdYu+Cx0589WRmzFjm9yU5Nqg08EgNH0P0CLuHx6i4ZXFoFnV/qM1IN0KdfqMQaR5
+         HqxXgTVYVS0Z7Gt71MIqNsg8i4G627LmwJGlOASg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yao Lihua <Lihua.Yao@desay-svautomotive.com>,
-        Linh Phung <linh.phung.jy@renesas.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+Cc:     Xi Wang <wangxi11@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 041/135] clk: renesas: cpg-mssr: Fix reset control race condition
-Date:   Thu, 22 Aug 2019 13:06:37 -0400
-Message-Id: <20190822170811.13303-42-sashal@kernel.org>
+Subject: [PATCH 5.2 037/135] RDMA/hns: Fix sg offset non-zero issue
+Date:   Thu, 22 Aug 2019 13:06:33 -0400
+Message-Id: <20190822170811.13303-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -67,108 +64,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Xi Wang <wangxi11@huawei.com>
 
-[ Upstream commit e1f1ae8002e4b06addc52443fcd975bbf554ae92 ]
+[ Upstream commit 60c3becfd1a138fdcfe48f2a5ef41ef0078d481e ]
 
-The module reset code in the Renesas CPG/MSSR driver uses
-read-modify-write (RMW) operations to write to a Software Reset Register
-(SRCRn), and simple writes to write to a Software Reset Clearing
-Register (SRSTCLRn), as was mandated by the R-Car Gen2 and Gen3 Hardware
-User's Manuals.
+When run perftest in many times, the system will report a BUG as follows:
 
-However, this may cause a race condition when two devices are reset in
-parallel: if the reset for device A completes in the middle of the RMW
-operation for device B, device A may be reset again, causing subtle
-failures (e.g. i2c timeouts):
+   BUG: Bad rss-counter state mm:(____ptrval____) idx:0 val:-1
+   BUG: Bad rss-counter state mm:(____ptrval____) idx:1 val:1
 
-	thread A			thread B
-	--------			--------
+We tested with different kernel version and found it started from the the
+following commit:
 
-	val = SRCRn
-	val |= bit A
-	SRCRn = val
+commit d10bcf947a3e ("RDMA/umem: Combine contiguous PAGE_SIZE regions in
+SGEs")
 
-	delay
+In this commit, the sg->offset is always 0 when sg_set_page() is called in
+ib_umem_get() and the drivers are not allowed to change the sgl, otherwise
+it will get bad page descriptor when unfolding SGEs in __ib_umem_release()
+as sg_page_count() will get wrong result while sgl->offset is not 0.
 
-					val = SRCRn (bit A is set)
+However, there is a weird sgl usage in the current hns driver, the driver
+modified sg->offset after calling ib_umem_get(), which caused we iterate
+past the wrong number of pages in for_each_sg_page iterator.
 
-	SRSTCLRn = bit A
-	(bit A in SRCRn is cleared)
+This patch fixes it by correcting the non-standard sgl usage found in the
+hns_roce_db_map_user() function.
 
-					val |= bit B
-					SRCRn = val (bit A and B are set)
-
-This can be reproduced on e.g. Salvator-XS using:
-
-    $ while true; do i2cdump -f -y 4 0x6A b > /dev/null; done &
-    $ while true; do i2cdump -f -y 2 0x10 b > /dev/null; done &
-
-    i2c-rcar e6510000.i2c: error -110 : 40000002
-    i2c-rcar e66d8000.i2c: error -110 : 40000002
-
-According to the R-Car Gen3 Hardware Manual Errata for Rev.
-0.80 of Feb 28, 2018, reflected in Rev. 1.00 of the R-Car Gen3 Hardware
-User's Manual, writes to SRCRn do not require read-modify-write cycles.
-
-Note that the R-Car Gen2 Hardware User's Manual has not been updated
-yet, and still says a read-modify-write sequence is required.  According
-to the hardware team, the reset hardware block is the same on both R-Car
-Gen2 and Gen3, though.
-
-Hence fix the issue by replacing the read-modify-write operations on
-SRCRn by simple writes.
-
-Reported-by: Yao Lihua <Lihua.Yao@desay-svautomotive.com>
-Fixes: 6197aa65c4905532 ("clk: renesas: cpg-mssr: Add support for reset control")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Linh Phung <linh.phung.jy@renesas.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: d10bcf947a3e ("RDMA/umem: Combine contiguous PAGE_SIZE regions in SGEs")
+Fixes: 0425e3e6e0c7 ("RDMA/hns: Support flush cqe for hip08 in kernel space")
+Link: https://lore.kernel.org/r/1562808737-45723-1-git-send-email-oulijun@huawei.com
+Signed-off-by: Xi Wang <wangxi11@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/renesas-cpg-mssr.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_db.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-index 0201809bbd377..9dfa28d6fd9f9 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -576,17 +576,11 @@ static int cpg_mssr_reset(struct reset_controller_dev *rcdev,
- 	unsigned int reg = id / 32;
- 	unsigned int bit = id % 32;
- 	u32 bitmask = BIT(bit);
--	unsigned long flags;
--	u32 value;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_db.c b/drivers/infiniband/hw/hns/hns_roce_db.c
+index 0c6c1fe87705c..d60453e98db7c 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_db.c
++++ b/drivers/infiniband/hw/hns/hns_roce_db.c
+@@ -12,13 +12,15 @@ int hns_roce_db_map_user(struct hns_roce_ucontext *context,
+ 			 struct ib_udata *udata, unsigned long virt,
+ 			 struct hns_roce_db *db)
+ {
++	unsigned long page_addr = virt & PAGE_MASK;
+ 	struct hns_roce_user_db_page *page;
++	unsigned int offset;
+ 	int ret = 0;
  
- 	dev_dbg(priv->dev, "reset %u%02u\n", reg, bit);
+ 	mutex_lock(&context->page_mutex);
  
- 	/* Reset module */
--	spin_lock_irqsave(&priv->rmw_lock, flags);
--	value = readl(priv->base + SRCR(reg));
--	value |= bitmask;
--	writel(value, priv->base + SRCR(reg));
--	spin_unlock_irqrestore(&priv->rmw_lock, flags);
-+	writel(bitmask, priv->base + SRCR(reg));
+ 	list_for_each_entry(page, &context->page_list, list)
+-		if (page->user_virt == (virt & PAGE_MASK))
++		if (page->user_virt == page_addr)
+ 			goto found;
  
- 	/* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
- 	udelay(35);
-@@ -603,16 +597,10 @@ static int cpg_mssr_assert(struct reset_controller_dev *rcdev, unsigned long id)
- 	unsigned int reg = id / 32;
- 	unsigned int bit = id % 32;
- 	u32 bitmask = BIT(bit);
--	unsigned long flags;
--	u32 value;
+ 	page = kmalloc(sizeof(*page), GFP_KERNEL);
+@@ -28,8 +30,8 @@ int hns_roce_db_map_user(struct hns_roce_ucontext *context,
+ 	}
  
- 	dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
+ 	refcount_set(&page->refcount, 1);
+-	page->user_virt = (virt & PAGE_MASK);
+-	page->umem = ib_umem_get(udata, virt & PAGE_MASK, PAGE_SIZE, 0, 0);
++	page->user_virt = page_addr;
++	page->umem = ib_umem_get(udata, page_addr, PAGE_SIZE, 0, 0);
+ 	if (IS_ERR(page->umem)) {
+ 		ret = PTR_ERR(page->umem);
+ 		kfree(page);
+@@ -39,10 +41,9 @@ int hns_roce_db_map_user(struct hns_roce_ucontext *context,
+ 	list_add(&page->list, &context->page_list);
  
--	spin_lock_irqsave(&priv->rmw_lock, flags);
--	value = readl(priv->base + SRCR(reg));
--	value |= bitmask;
--	writel(value, priv->base + SRCR(reg));
--	spin_unlock_irqrestore(&priv->rmw_lock, flags);
-+	writel(bitmask, priv->base + SRCR(reg));
- 	return 0;
- }
+ found:
+-	db->dma = sg_dma_address(page->umem->sg_head.sgl) +
+-		  (virt & ~PAGE_MASK);
+-	page->umem->sg_head.sgl->offset = virt & ~PAGE_MASK;
+-	db->virt_addr = sg_virt(page->umem->sg_head.sgl);
++	offset = virt - page_addr;
++	db->dma = sg_dma_address(page->umem->sg_head.sgl) + offset;
++	db->virt_addr = sg_virt(page->umem->sg_head.sgl) + offset;
+ 	db->u.user_page = page;
+ 	refcount_inc(&page->refcount);
  
 -- 
 2.20.1
