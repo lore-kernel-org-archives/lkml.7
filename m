@@ -2,54 +2,55 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9ADC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F69C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14AC4235EE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 632FB23439
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494624;
-	bh=Z9vCoxmg1F0JBLGhQ5ys9J4j4m/T7XhF6spaclXJU8A=;
+	s=default; t=1566494626;
+	bh=mPUCzO947j9Op0fEErNbC2roWxOA7MLc7QwQzikbDu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ej2H6LgAJ25YE6EdG95AxJLAfcusxG8RngvJVDG4jZBchj57qmXyarc4u35jTds0
-	 4i7sDVN/Yt4lWIHVSzLj2mcyiQ//o/+CaOCE3VtjrhRs9ffQQ7IOo9PJT5EjXbEUAG
-	 Nid0vfEg9P5bJoADZicSEm5ZotPa7NITkk7xJF3Q=
+	b=i4f8d4QKOSxxGzX522H5y8N49T2icsGHRM+G0ZQVu/n1FXIykKzUdMm5ffGOU4OYZ
+	 gPj+Epe2YPihzDflfMy8FxX5HzIb7zz+HhsIS7Jc/TQh9MWKoS+RajmRiszkoX5eJY
+	 q+qWOBdvcZQsB4OVu8+RTELRLvu/wrUziA8aJI/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404000AbfHVRXn (ORCPT
+        id S2391481AbfHVRWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43482 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:22:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391485AbfHVRXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:30 -0400
+        id S2391411AbfHVRWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:44 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EDDF23402;
-        Thu, 22 Aug 2019 17:23:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 846D521743;
+        Thu, 22 Aug 2019 17:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494609;
-        bh=Z9vCoxmg1F0JBLGhQ5ys9J4j4m/T7XhF6spaclXJU8A=;
+        s=default; t=1566494563;
+        bh=mPUCzO947j9Op0fEErNbC2roWxOA7MLc7QwQzikbDu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CeHdrHBsBH9Gx6FzjYaYGXnO5DuZzzMtj6xrCWgqJynEv614wbL1QTP13g2GohoMT
-         WC/WYPbnr2Tc+esSorkPmoYi3EUy3Gw47sQnXzOlyKFe5kOLSk/VhR3eXlNM/MjhaU
-         egzoDxmaDiCXlLz268nEX9+2d5arf7tLuyCH3nF0=
+        b=AVR+s8okHbEeRmcmWZYmiPgoKg3+FSrqidkN8snZs0xwcS1/Qj3szZj0UBzBoOTr+
+         iSW4IKKdibLI9MfnC5oTBIEVnn1yL2URDpHVbVOo+XDNf0YpNtjfuiJ5vhfGPrrnFz
+         o0RWGNor39klRZGzP5jKMZsXvpIwRGh/4jiORExQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilles Buloz <Gilles.Buloz@kontron.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.9 033/103] hwmon: (nct7802) Fix wrong detection of in4 presence
-Date:   Thu, 22 Aug 2019 10:18:21 -0700
-Message-Id: <20190822171730.166122184@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 51/78] kbuild: modpost: handle KBUILD_EXTRA_SYMBOLS only for external modules
+Date:   Thu, 22 Aug 2019 10:18:55 -0700
+Message-Id: <20190822171833.519906633@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
-References: <20190822171728.445189830@linuxfoundation.org>
+In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
+References: <20190822171832.012773482@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,56 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+[ Upstream commit cb4819934a7f9b87876f11ed05b8624c0114551b ]
 
-commit 38ada2f406a9b81fb1249c5c9227fa657e7d5671 upstream.
+KBUILD_EXTRA_SYMBOLS makes sense only when building external modules.
+Moreover, the modpost sets 'external_module' if the -e option is given.
 
-The code to detect if in4 is present is wrong; if in4 is not present,
-the in4_input sysfs attribute is still present.
+I replaced $(patsubst %, -e %,...) with simpler $(addprefix -e,...)
+while I was here.
 
-In detail:
-
-- Ihen RTD3_MD=11 (VSEN3 present), everything is as expected (no bug).
-- If we have RTD3_MD!=11 (no VSEN3), we unexpectedly have a in4_input
-  file under /sys and the "sensors" command displays in4_input.
-  But as expected, we have no in4_min, in4_max, in4_alarm, in4_beep.
-
-Fix is_visible function to detect and report in4_input visibility
-as expected.
-
-Reported-by: Gilles Buloz <Gilles.Buloz@kontron.com>
-Cc: Gilles Buloz <Gilles.Buloz@kontron.com>
-Cc: stable@vger.kernel.org
-Fixes: 3434f37835804 ("hwmon: Driver for Nuvoton NCT7802Y")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/nct7802.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ scripts/Makefile.modpost | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hwmon/nct7802.c
-+++ b/drivers/hwmon/nct7802.c
-@@ -768,7 +768,7 @@ static struct attribute *nct7802_in_attr
- 	&sensor_dev_attr_in3_alarm.dev_attr.attr,
- 	&sensor_dev_attr_in3_beep.dev_attr.attr,
- 
--	&sensor_dev_attr_in4_input.dev_attr.attr,	/* 17 */
-+	&sensor_dev_attr_in4_input.dev_attr.attr,	/* 16 */
- 	&sensor_dev_attr_in4_min.dev_attr.attr,
- 	&sensor_dev_attr_in4_max.dev_attr.attr,
- 	&sensor_dev_attr_in4_alarm.dev_attr.attr,
-@@ -794,9 +794,9 @@ static umode_t nct7802_in_is_visible(str
- 
- 	if (index >= 6 && index < 11 && (reg & 0x03) != 0x03)	/* VSEN1 */
- 		return 0;
--	if (index >= 11 && index < 17 && (reg & 0x0c) != 0x0c)	/* VSEN2 */
-+	if (index >= 11 && index < 16 && (reg & 0x0c) != 0x0c)	/* VSEN2 */
- 		return 0;
--	if (index >= 17 && (reg & 0x30) != 0x30)		/* VSEN3 */
-+	if (index >= 16 && (reg & 0x30) != 0x30)		/* VSEN3 */
- 		return 0;
- 
- 	return attr->mode;
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index 1366a94b6c395..7718a64b1cd15 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -74,7 +74,7 @@ modpost = scripts/mod/modpost                    \
+  $(if $(CONFIG_MODULE_SRCVERSION_ALL),-a,)       \
+  $(if $(KBUILD_EXTMOD),-i,-o) $(kernelsymfile)   \
+  $(if $(KBUILD_EXTMOD),-I $(modulesymfile))      \
+- $(if $(KBUILD_EXTRA_SYMBOLS), $(patsubst %, -e %,$(KBUILD_EXTRA_SYMBOLS))) \
++ $(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS))) \
+  $(if $(KBUILD_EXTMOD),-o $(modulesymfile))      \
+  $(if $(CONFIG_DEBUG_SECTION_MISMATCH),,-S)      \
+  $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)  \
+-- 
+2.20.1
+
 
 
