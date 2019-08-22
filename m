@@ -2,74 +2,205 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A80ADC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 06:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6212BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 06:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8436F205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 06:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA44233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 06:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566455423;
+	bh=2DtatxVDW1nKwmkx3HMXXS8CVF6c+oRXWYzMKDp5Fn0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NqErrUAqroP20cUdKoWYQXvRnuet2UPqc0kQNj42I7yfQapdwzVTKx9pVHmV0cqSO
+	 8vx1n4EJwvx7N8N1gBy4P+bELMf/n3PzzUm97T9tg0r8SbRRGw6JAx3+0BjjNZ9kcq
+	 l7C4m+pkPZIuUWW30jTCMlkQEXgjkxTYhD+N69mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731703AbfHVG06 (ORCPT
+        id S1731720AbfHVGaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 02:26:58 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47390 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729284AbfHVG05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 02:26:57 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 28306DB23BC640D10BF3;
-        Thu, 22 Aug 2019 14:26:49 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 22 Aug 2019 14:26:42 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <nbd@openwrt.org>, <john@phrozen.org>, <sean.wang@mediatek.com>,
-        <nelson.chang@mediatek.com>, <davem@davemloft.net>,
-        <matthias.bgg@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH -next] net: mediatek: remove set but not used variable 'status'
-Date:   Thu, 22 Aug 2019 14:30:26 +0800
-Message-ID: <20190822063026.70044-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 22 Aug 2019 02:30:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731704AbfHVGaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 02:30:21 -0400
+Received: from zzz.localdomain (unknown [67.218.105.90])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3AFD205ED;
+        Thu, 22 Aug 2019 06:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566455420;
+        bh=2DtatxVDW1nKwmkx3HMXXS8CVF6c+oRXWYzMKDp5Fn0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pADeM8o+S9FavrrK1virg0c1+J17cKB/9RHK6QOEgjHnUcAX7K4SVgHhkz3sTh1it
+         vizzqYlJkeKKqx01xW5JKWUm2khks3UKw4w8pI4/U42pScG98m4XwclhTGN9T9s1Sy
+         sTvKgIRzs4Z71KddB7+jkjEKz6gkDo6t8rBH2BQE=
+Date:   Wed, 21 Aug 2019 23:30:18 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
+        jmorris@namei.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2] tomoyo: Don't check open/getattr permission on
+ sockets.
+Message-ID: <20190822063018.GK6111@zzz.localdomain>
+Mail-Followup-To: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
+        jmorris@namei.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
+        "David S. Miller" <davem@davemloft.net>
+References: <0000000000004f43fa058a97f4d3@google.com>
+ <201906060520.x565Kd8j017983@www262.sakura.ne.jp>
+ <1b5722cc-adbc-035d-5ca1-9aa56e70d312@I-love.SAKURA.ne.jp>
+ <a4ed1778-8b73-49d1-0ff0-59d9c6ac0af8@I-love.SAKURA.ne.jp>
+ <20190618204933.GE17978@ZenIV.linux.org.uk>
+ <8f874b03-b129-205f-5f05-125479701275@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f874b03-b129-205f-5f05-125479701275@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
-drivers/net/ethernet/mediatek/mtk_eth_soc.c: In function mtk_handle_irq:
-drivers/net/ethernet/mediatek/mtk_eth_soc.c:1951:6: warning: variable status set but not used [-Wunused-but-set-variable]
+Hi Tetsuo,
 
-It is not used since commit 296c9120752b ("net: ethernet: mediatek: Add MT7628/88 SoC support")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 2 --
- 1 file changed, 2 deletions(-)
+On Sat, Jun 22, 2019 at 01:45:30PM +0900, Tetsuo Handa wrote:
+> On 2019/06/19 5:49, Al Viro wrote:
+> > On Sun, Jun 16, 2019 at 03:49:00PM +0900, Tetsuo Handa wrote:
+> >> Hello, Al.
+> >>
+> >> Q1: Do you agree that we should fix TOMOYO side rather than SOCKET_I()->sk
+> >>     management.
+> > 
+> > You do realize that sockets are not unique in that respect, right?
+> > All kinds of interesting stuff can be accessed via /proc/*/fd/*, and
+> > it _can_ be closed under you.  So I'd suggest checking how your code
+> > copes with similar for pipes, FIFOs, epoll, etc., accessed that way...
+> 
+> I know all kinds of interesting stuff can be accessed via /proc/*/fd/*,
+> and it _can_ be closed under me.
+> 
+> Regarding sockets, I was accessing "struct socket" memory and
+> "struct sock" memory which are outside of "struct inode" memory.
+> 
+> But regarding other objects, I am accessing "struct dentry" memory,
+> "struct super_block" memory and "struct inode" memory. I'm expecting
+> that these memory can't be kfree()d as long as "struct path" holds
+> a reference. Is my expectation correct?
+> 
+> > 
+> > We are _not_ going to be checking that in fs/open.c - the stuff found
+> > via /proc/*/fd/* can have the associated file closed by the time
+> > we get to calling ->open() and we won't know that until said call.
+> 
+> OK. Then, fixing TOMOYO side is the correct way.
+> 
+> > 
+> >> Q2: Do you see any problem with using f->f_path.dentry->d_inode ?
+> >>     Do we need to use d_backing_inode() or d_inode() ?
+> > 
+> > Huh?  What's wrong with file_inode(f), in the first place?  And
+> > just when can that be NULL, while we are at it?
+> 
+> Oh, I was not aware of file_inode(). Thanks.
+> 
+> > 
+> >>>  static int tomoyo_inode_getattr(const struct path *path)
+> >>>  {
+> >>> +	/* It is not safe to call tomoyo_get_socket_name(). */
+> >>> +	if (path->dentry->d_inode && S_ISSOCK(path->dentry->d_inode->i_mode))
+> >>> +		return 0;
+> > 
+> > Can that be called for a negative?
+> > 
+> 
+> I check for NULL when I'm not sure it is guaranteed to hold a valid pointer.
+> You meant "we are sure that path->dentry->d_inode is valid", don't you?
+> 
+> By the way, "negative" associates with IS_ERR() range. I guess that
+> "NULL" is the better name...
+> 
+> Anyway, here is V2 patch.
+> 
+> From c63c4074300921d6d1c33c3b8dc9c84ebfededf5 Mon Sep 17 00:00:00 2001
+> From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Date: Sat, 22 Jun 2019 13:14:26 +0900
+> Subject: [PATCH v2] tomoyo: Don't check open/getattr permission on sockets.
+> 
+> syzbot is reporting that use of SOCKET_I()->sk from open() can result in
+> use after free problem [1], for socket's inode is still reachable via
+> /proc/pid/fd/n despite destruction of SOCKET_I()->sk already completed.
+> 
+> But there is no point with calling security_file_open() on sockets
+> because open("/proc/pid/fd/n", !O_PATH) on sockets fails with -ENXIO.
+> 
+> There is some point with calling security_inode_getattr() on sockets
+> because stat("/proc/pid/fd/n") and fstat(open("/proc/pid/fd/n", O_PATH))
+> are valid. If we want to access "struct sock"->sk_{family,type,protocol}
+> fields, we will need to use security_socket_post_create() hook and
+> security_inode_free() hook in order to remember these fields because
+> security_sk_free() hook is called before the inode is destructed. But
+> since information which can be protected by checking
+> security_inode_getattr() on sockets is trivial, let's not be bothered by
+> "struct inode"->i_security management.
+> 
+> There is point with calling security_file_ioctl() on sockets. Since
+> ioctl(open("/proc/pid/fd/n", O_PATH)) is invalid, security_file_ioctl()
+> on sockets should remain safe.
+> 
+> [1] https://syzkaller.appspot.com/bug?id=73d590010454403d55164cca23bd0565b1eb3b74
+> 
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Reported-by: syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>
+> ---
+>  security/tomoyo/tomoyo.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/security/tomoyo/tomoyo.c b/security/tomoyo/tomoyo.c
+> index 716c92e..8ea3f5d 100644
+> --- a/security/tomoyo/tomoyo.c
+> +++ b/security/tomoyo/tomoyo.c
+> @@ -126,6 +126,9 @@ static int tomoyo_bprm_check_security(struct linux_binprm *bprm)
+>   */
+>  static int tomoyo_inode_getattr(const struct path *path)
+>  {
+> +	/* It is not safe to call tomoyo_get_socket_name(). */
+> +	if (S_ISSOCK(d_inode(path->dentry)->i_mode))
+> +		return 0;
+>  	return tomoyo_path_perm(TOMOYO_TYPE_GETATTR, path, NULL);
+>  }
+>  
+> @@ -316,6 +319,9 @@ static int tomoyo_file_open(struct file *f)
+>  	/* Don't check read permission here if called from do_execve(). */
+>  	if (current->in_execve)
+>  		return 0;
+> +	/* Sockets can't be opened by open(). */
+> +	if (S_ISSOCK(file_inode(f)->i_mode))
+> +		return 0;
+>  	return tomoyo_check_open_permission(tomoyo_domain(), &f->f_path,
+>  					    f->f_flags);
+>  }
+> -- 
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 8ddbb8d..bb7d623 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -1948,9 +1948,7 @@ static irqreturn_t mtk_handle_irq_tx(int irq, void *_eth)
- static irqreturn_t mtk_handle_irq(int irq, void *_eth)
- {
- 	struct mtk_eth *eth = _eth;
--	u32 status;
- 
--	status = mtk_r32(eth, MTK_PDMA_INT_STATUS);
- 	if (mtk_r32(eth, MTK_PDMA_INT_MASK) & MTK_RX_DONE_INT) {
- 		if (mtk_r32(eth, MTK_PDMA_INT_STATUS) & MTK_RX_DONE_INT)
- 			mtk_handle_irq_rx(irq, _eth);
--- 
-2.7.4
+What happened to this patch?
 
+Also, isn't the same bug in other places too?:
+
+	- tomoyo_path_chmod()
+	- tomoyo_path_chown()
+	- smack_inode_getsecurity()
+	- smack_inode_setsecurity()
+
+- Eric
