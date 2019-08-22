@@ -2,141 +2,109 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3797DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6833AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08C9A233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4547C233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:28:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731690AbfHVP1Z (ORCPT
+        id S1732173AbfHVP2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:27:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39556 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725804AbfHVP1Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:27:25 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7MFM642094538;
-        Thu, 22 Aug 2019 11:27:08 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhw1bj694-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 22 Aug 2019 11:27:08 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7MFM5s9094473;
-        Thu, 22 Aug 2019 11:27:08 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhw1bj683-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 22 Aug 2019 11:27:08 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7MFQU7R004861;
-        Thu, 22 Aug 2019 15:27:06 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma04dal.us.ibm.com with ESMTP id 2ue977crpp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 22 Aug 2019 15:27:06 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7MFR5e736503854
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 22 Aug 2019 15:27:06 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CCC59B2064;
-        Thu, 22 Aug 2019 15:27:05 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B90DDB2067;
-        Thu, 22 Aug 2019 15:27:05 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 22 Aug 2019 15:27:05 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id A5EC616C0F61; Thu, 22 Aug 2019 08:27:06 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 08:27:06 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Scott Wood <swood@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH RT v2 1/3] rcu: Acquire RCU lock when disabling BHs
-Message-ID: <20190822152706.GB28441@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190821231906.4224-1-swood@redhat.com>
- <20190821231906.4224-2-swood@redhat.com>
- <20190821233358.GU28441@linux.ibm.com>
- <20190822133955.GA29841@google.com>
+        Thu, 22 Aug 2019 11:28:55 -0400
+Received: from mga06.intel.com ([134.134.136.31]:50937 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728964AbfHVP2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 11:28:55 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 08:28:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,417,1559545200"; 
+   d="scan'208";a="186601083"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Aug 2019 08:28:54 -0700
+Date:   Thu, 22 Aug 2019 08:28:54 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] KVM: Implement kvm_put_guest()
+Message-ID: <20190822152854.GE25467@linux.intel.com>
+References: <20190821153656.33429-1-steven.price@arm.com>
+ <20190821153656.33429-5-steven.price@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190822133955.GA29841@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908220151
+In-Reply-To: <20190821153656.33429-5-steven.price@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 09:39:55AM -0400, Joel Fernandes wrote:
-> On Wed, Aug 21, 2019 at 04:33:58PM -0700, Paul E. McKenney wrote:
-> > On Wed, Aug 21, 2019 at 06:19:04PM -0500, Scott Wood wrote:
-> > > A plain local_bh_disable() is documented as creating an RCU critical
-> > > section, and (at least) rcutorture expects this to be the case.  However,
-> > > in_softirq() doesn't block a grace period on PREEMPT_RT, since RCU checks
-> > > preempt_count() directly.  Even if RCU were changed to check
-> > > in_softirq(), that wouldn't allow blocked BH disablers to be boosted.
-> > > 
-> > > Fix this by calling rcu_read_lock() from local_bh_disable(), and update
-> > > rcu_read_lock_bh_held() accordingly.
-> > 
-> > Cool!  Some questions and comments below.
-> > 
-> > 							Thanx, Paul
-> > 
-> > > Signed-off-by: Scott Wood <swood@redhat.com>
-> > > ---
-> > > Another question is whether non-raw spinlocks are intended to create an
-> > > RCU read-side critical section due to implicit preempt disable.
-> > 
-> > Hmmm...  Did non-raw spinlocks act like rcu_read_lock_sched()
-> > and rcu_read_unlock_sched() pairs in -rt prior to the RCU flavor
-> > consolidation?  If not, I don't see why they should do so after that
-> > consolidation in -rt.
+On Wed, Aug 21, 2019 at 04:36:50PM +0100, Steven Price wrote:
+> kvm_put_guest() is analogous to put_user() - it writes a single value to
+> the guest physical address. The implementation is built upon put_user()
+> and so it has the same single copy atomic properties.
+
+What you mean by "single copy atomic"?  I.e. what guarantees does
+put_user() provide that __copy_to_user() does not?
+
 > 
-> May be I am missing something, but I didn't see the connection between
-> consolidation and this patch. AFAICS, this patch is so that
-> rcu_read_lock_bh_held() works at all on -rt. Did I badly miss something?
-
-I was interpreting Scott's question (which would be excluded from the
-git commit log) as relating to a possible follow-on patch.
-
-The question is "how special can non-raw spinlocks be in -rt?".  From what
-I can see, they have been treated as sleeplocks from an RCU viewpoint,
-so maybe that should continue to be the case.  It does deserve some
-thought because in mainline a non-raw spinlock really would block a
-post-consolidation RCU grace period, even in PREEMPT kernels.
-
-But then again, you cannot preempt a non-raw spinlock in mainline but
-you can in -rt, so extending that exception to RCU is not unreasonable.
-
-Either way, we do need to make a definite decision and document it.
-If I were forced to make a decision right now, I would follow the old
-behavior, so that only raw spinlocks were guaranteed to block RCU grace
-periods.  But I am not being forced, so let's actually discuss and make
-a conscious decision.  ;-)
-
-							Thanx, Paul
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>  include/linux/kvm_host.h | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index fcb46b3374c6..e154a1897e20 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -746,6 +746,30 @@ int kvm_write_guest_offset_cached(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+>  				  unsigned long len);
+>  int kvm_gfn_to_hva_cache_init(struct kvm *kvm, struct gfn_to_hva_cache *ghc,
+>  			      gpa_t gpa, unsigned long len);
+> +
+> +#define __kvm_put_guest(kvm, gfn, offset, value, type)			\
+> +({									\
+> +	unsigned long __addr = gfn_to_hva(kvm, gfn);			\
+> +	type __user *__uaddr = (type __user *)(__addr + offset);	\
+> +	int __ret = 0;							\
+> +									\
+> +	if (kvm_is_error_hva(__addr))					\
+> +		__ret = -EFAULT;					\
+> +	else								\
+> +		__ret = put_user(value, __uaddr);			\
+> +	if (!__ret)							\
+> +		mark_page_dirty(kvm, gfn);				\
+> +	__ret;								\
+> +})
+> +
+> +#define kvm_put_guest(kvm, gpa, value, type)				\
+> +({									\
+> +	gpa_t __gpa = gpa;						\
+> +	struct kvm *__kvm = kvm;					\
+> +	__kvm_put_guest(__kvm, __gpa >> PAGE_SHIFT,			\
+> +			offset_in_page(__gpa), (value), type);		\
+> +})
+> +
+>  int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
+>  int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
+>  struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
+> -- 
+> 2.20.1
+> 
