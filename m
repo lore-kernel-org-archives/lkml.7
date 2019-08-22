@@ -2,57 +2,56 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A484C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9ABC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174EA2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD9F2064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495069;
-	bh=hN55fN/KCNq+BK9c9A+6QcUBouxNTEpA5IX0XoYLa4I=;
+	s=default; t=1566495071;
+	bh=2gdbjHhkbWqhj+3DY8AUj7t5iK1XdHveNGKJAc0gszA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CHo3yEkP2LRH0DXF1ng9DyI+dpOil5FJlTioUQqItWPhfrcR/brgSd5a4D7/5qs38
-	 Palby/aOS7Jj/7pUGg9I4vH17Y62eluWFSC34G+EunMNTNhMMS1f9UArLLPHowCdjh
-	 VgTtqeZKuVNxWKEIcpaRhaPlSDYkO6h9nKwH4a0Q=
+	b=QNl5g5hdyjmHHf6UUG3CbWCcCEmUXQvl3HwGhgmYOpS/hLuVIeb3Lb2v/FXOuylTS
+	 Pgwr4S0nilirPzRPZAfJw6hMUIHOiWg74Q88TgjurUcVfmdPUNmqPILv7+f4wJyccH
+	 7CRzTnt+n6VPZnsYJzZ1Z17nKeri96kDSIF0qwpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404568AbfHVR0A (ORCPT
+        id S2392211AbfHVRbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:26:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47738 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:31:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391802AbfHVRZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:01 -0400
+        id S2404559AbfHVR0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:26:00 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE12E2341C;
-        Thu, 22 Aug 2019 17:25:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 561F823405;
+        Thu, 22 Aug 2019 17:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494701;
-        bh=hN55fN/KCNq+BK9c9A+6QcUBouxNTEpA5IX0XoYLa4I=;
+        s=default; t=1566494759;
+        bh=2gdbjHhkbWqhj+3DY8AUj7t5iK1XdHveNGKJAc0gszA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vpBUuWLpCwQ710QA5a+6+iz783KGR53jRVI6o5TFKj+Xk8WxmXD69PXPkZDCaxK+M
-         XyP6HWahHe8R+51cgdjBWabviJ9VNsYSXTc3VQT3XEz/vd2BmQ1ZlozSfZ1SP8gduG
-         CXvucGAnhFUXUopFgI7MrmA9CHTa8X59Bz+n1Yyg=
+        b=ydrlr69/5m2YFGqFR/q/TYUQbmUXoXKTqrJ6/t91jwu3jr+MJo4eu7pUR95JrnlZb
+         PwgWiAhf33ibUeboCGpXu02HgWjhGTI4m/fl13IUEG2ibIjOfU1HRY5rPUtVcfJmOx
+         AWi+iyfwljmLhPcWnjRMcj63mZljdA85d96ccyRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sandipan Das <sandipan@linux.ibm.com>,
-        Michael Roth <mdroth@linux.vnet.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 54/71] bpf: fix bpf_jit_limit knob for PAGE_SIZE >= 64K
-Date:   Thu, 22 Aug 2019 10:19:29 -0700
-Message-Id: <20190822171730.149607933@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: [PATCH 4.19 60/85] usb: gadget: udc: renesas_usb3: Fix sysfs interface of "role"
+Date:   Thu, 22 Aug 2019 10:19:33 -0700
+Message-Id: <20190822171733.818552029@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
-References: <20190822171726.131957995@linuxfoundation.org>
+In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
+References: <20190822171731.012687054@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,176 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fdadd04931c2d7cd294dc5b2b342863f94be53a3 ]
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Michael and Sandipan report:
+commit 5dac665cf403967bb79a7aeb8c182a621fe617ff upstream.
 
-  Commit ede95a63b5 introduced a bpf_jit_limit tuneable to limit BPF
-  JIT allocations. At compile time it defaults to PAGE_SIZE * 40000,
-  and is adjusted again at init time if MODULES_VADDR is defined.
+Since the role_store() uses strncmp(), it's possible to refer
+out-of-memory if the sysfs data size is smaller than strlen("host").
+This patch fixes it by using sysfs_streq() instead of strncmp().
 
-  For ppc64 kernels, MODULES_VADDR isn't defined, so we're stuck with
-  the compile-time default at boot-time, which is 0x9c400000 when
-  using 64K page size. This overflows the signed 32-bit bpf_jit_limit
-  value:
+Fixes: cc995c9ec118 ("usb: gadget: udc: renesas_usb3: add support for usb role swap")
+Cc: <stable@vger.kernel.org> # v4.12+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  root@ubuntu:/tmp# cat /proc/sys/net/core/bpf_jit_limit
-  -1673527296
-
-  and can cause various unexpected failures throughout the network
-  stack. In one case `strace dhclient eth0` reported:
-
-  setsockopt(5, SOL_SOCKET, SO_ATTACH_FILTER, {len=11, filter=0x105dd27f8},
-             16) = -1 ENOTSUPP (Unknown error 524)
-
-  and similar failures can be seen with tools like tcpdump. This doesn't
-  always reproduce however, and I'm not sure why. The more consistent
-  failure I've seen is an Ubuntu 18.04 KVM guest booted on a POWER9
-  host would time out on systemd/netplan configuring a virtio-net NIC
-  with no noticeable errors in the logs.
-
-Given this and also given that in near future some architectures like
-arm64 will have a custom area for BPF JIT image allocations we should
-get rid of the BPF_JIT_LIMIT_DEFAULT fallback / default entirely. For
-4.21, we have an overridable bpf_jit_alloc_exec(), bpf_jit_free_exec()
-so therefore add another overridable bpf_jit_alloc_exec_limit() helper
-function which returns the possible size of the memory area for deriving
-the default heuristic in bpf_jit_charge_init().
-
-Like bpf_jit_alloc_exec() and bpf_jit_free_exec(), the new
-bpf_jit_alloc_exec_limit() assumes that module_alloc() is the default
-JIT memory provider, and therefore in case archs implement their custom
-module_alloc() we use MODULES_{END,_VADDR} for limits and otherwise for
-vmalloc_exec() cases like on ppc64 we use VMALLOC_{END,_START}.
-
-Additionally, for archs supporting large page sizes, we should change
-the sysctl to be handled as long to not run into sysctl restrictions
-in future.
-
-Fixes: ede95a63b5e8 ("bpf: add bpf_jit_limit knob to restrict unpriv allocations")
-Reported-by: Sandipan Das <sandipan@linux.ibm.com>
-Reported-by: Michael Roth <mdroth@linux.vnet.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Tested-by: Michael Roth <mdroth@linux.vnet.ibm.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/filter.h     |  2 +-
- kernel/bpf/core.c          | 21 +++++++++++++++------
- net/core/sysctl_net_core.c | 20 +++++++++++++++++---
- 3 files changed, 33 insertions(+), 10 deletions(-)
+ drivers/usb/gadget/udc/renesas_usb3.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index b0b00cdff4333..5ca676d646529 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -729,7 +729,7 @@ struct sock *do_sk_redirect_map(struct sk_buff *skb);
- extern int bpf_jit_enable;
- extern int bpf_jit_harden;
- extern int bpf_jit_kallsyms;
--extern int bpf_jit_limit;
-+extern long bpf_jit_limit;
+--- a/drivers/usb/gadget/udc/renesas_usb3.c
++++ b/drivers/usb/gadget/udc/renesas_usb3.c
+@@ -19,6 +19,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/sizes.h>
+ #include <linux/slab.h>
++#include <linux/string.h>
+ #include <linux/sys_soc.h>
+ #include <linux/uaccess.h>
+ #include <linux/usb/ch9.h>
+@@ -2378,9 +2379,9 @@ static ssize_t role_store(struct device
+ 	if (usb3->forced_b_device)
+ 		return -EBUSY;
  
- typedef void (*bpf_jit_fill_hole_t)(void *area, unsigned int size);
- 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 2c40159038ef8..e7211b0fa27cf 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -290,13 +290,11 @@ struct bpf_prog *bpf_patch_insn_single(struct bpf_prog *prog, u32 off,
- }
- 
- #ifdef CONFIG_BPF_JIT
--# define BPF_JIT_LIMIT_DEFAULT	(PAGE_SIZE * 40000)
--
- /* All BPF JIT sysctl knobs here. */
- int bpf_jit_enable   __read_mostly = IS_BUILTIN(CONFIG_BPF_JIT_ALWAYS_ON);
- int bpf_jit_harden   __read_mostly;
- int bpf_jit_kallsyms __read_mostly;
--int bpf_jit_limit    __read_mostly = BPF_JIT_LIMIT_DEFAULT;
-+long bpf_jit_limit   __read_mostly;
- 
- static __always_inline void
- bpf_get_prog_addr_region(const struct bpf_prog *prog,
-@@ -494,16 +492,27 @@ int bpf_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
- 
- static atomic_long_t bpf_jit_current;
- 
-+/* Can be overridden by an arch's JIT compiler if it has a custom,
-+ * dedicated BPF backend memory area, or if neither of the two
-+ * below apply.
-+ */
-+u64 __weak bpf_jit_alloc_exec_limit(void)
-+{
- #if defined(MODULES_VADDR)
-+	return MODULES_END - MODULES_VADDR;
-+#else
-+	return VMALLOC_END - VMALLOC_START;
-+#endif
-+}
-+
- static int __init bpf_jit_charge_init(void)
- {
- 	/* Only used as heuristic here to derive limit. */
--	bpf_jit_limit = min_t(u64, round_up((MODULES_END - MODULES_VADDR) >> 2,
--					    PAGE_SIZE), INT_MAX);
-+	bpf_jit_limit = min_t(u64, round_up(bpf_jit_alloc_exec_limit() >> 2,
-+					    PAGE_SIZE), LONG_MAX);
- 	return 0;
- }
- pure_initcall(bpf_jit_charge_init);
--#endif
- 
- static int bpf_jit_charge_modmem(u32 pages)
- {
-diff --git a/net/core/sysctl_net_core.c b/net/core/sysctl_net_core.c
-index b10d839aeee79..144cd1acd7e3e 100644
---- a/net/core/sysctl_net_core.c
-+++ b/net/core/sysctl_net_core.c
-@@ -29,6 +29,8 @@ static int two __maybe_unused = 2;
- static int min_sndbuf = SOCK_MIN_SNDBUF;
- static int min_rcvbuf = SOCK_MIN_RCVBUF;
- static int max_skb_frags = MAX_SKB_FRAGS;
-+static long long_one __maybe_unused = 1;
-+static long long_max __maybe_unused = LONG_MAX;
- 
- static int net_msg_warn;	/* Unused, but still a sysctl */
- 
-@@ -282,6 +284,17 @@ proc_dointvec_minmax_bpf_restricted(struct ctl_table *table, int write,
- 
- 	return proc_dointvec_minmax(table, write, buffer, lenp, ppos);
- }
-+
-+static int
-+proc_dolongvec_minmax_bpf_restricted(struct ctl_table *table, int write,
-+				     void __user *buffer, size_t *lenp,
-+				     loff_t *ppos)
-+{
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
-+}
- #endif
- 
- static struct ctl_table net_core_table[] = {
-@@ -391,10 +404,11 @@ static struct ctl_table net_core_table[] = {
- 	{
- 		.procname	= "bpf_jit_limit",
- 		.data		= &bpf_jit_limit,
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(long),
- 		.mode		= 0600,
--		.proc_handler	= proc_dointvec_minmax_bpf_restricted,
--		.extra1		= &one,
-+		.proc_handler	= proc_dolongvec_minmax_bpf_restricted,
-+		.extra1		= &long_one,
-+		.extra2		= &long_max,
- 	},
- #endif
- 	{
--- 
-2.20.1
-
+-	if (!strncmp(buf, "host", strlen("host")))
++	if (sysfs_streq(buf, "host"))
+ 		new_mode_is_host = true;
+-	else if (!strncmp(buf, "peripheral", strlen("peripheral")))
++	else if (sysfs_streq(buf, "peripheral"))
+ 		new_mode_is_host = false;
+ 	else
+ 		return -EINVAL;
 
 
