@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4003C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92C1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79D4023402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C70B23406
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566507725;
-	bh=1MwG7RIv1THNr+WQTKVe5dsKMYphuScsrFdHJxj/3Kw=;
+	s=default; t=1566507733;
+	bh=2DrlLcTd1l3Twm/SjC+AGH+HYuDLsHGaxsl6OvmAqwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dpdI2/66cntrtJuO7BpKNAFCoVe0WfEZ4IiKAQqgfyePsGmEbQ1PpJ9B2EZx2yEAA
-	 +RVXoK+eSv/lC6IE1rcX+fvwmU7J3qskqypqB4QYg2rYHc0n6eTTAvhKcE0NX6EPiN
-	 FC8JSFFhnXr4Ly0TVCBpLQiToEcIwUt3kLDnV3jY=
+	b=l18flOHacxahdbrITGkV6V4r0ZNlfXH2xQZygYP/y6uXnJJ5Z2zRLbeL6ca5FVfgM
+	 S42TkQRx4SpKfmrJzOSuSHTDV4FVdG505C16w9IOzXWIfj0UyIsBtZ/bBWo71hZSuy
+	 9J74tEkBFnniijGDbb2hmnq6byZn+5txbllAq5Io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393436AbfHVVCE (ORCPT
+        id S2393459AbfHVVCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:02:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43072 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 17:02:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393410AbfHVVCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:02:01 -0400
+        id S2393445AbfHVVCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 17:02:09 -0400
 Received: from quaco.ghostprotocols.net (unknown [177.158.141.211])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 648822341C;
-        Thu, 22 Aug 2019 21:01:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ACBD23404;
+        Thu, 22 Aug 2019 21:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566507720;
-        bh=1MwG7RIv1THNr+WQTKVe5dsKMYphuScsrFdHJxj/3Kw=;
+        s=default; t=1566507728;
+        bh=2DrlLcTd1l3Twm/SjC+AGH+HYuDLsHGaxsl6OvmAqwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h6uumdBS24V8kxPsSLUZMM9DGNjzRQ1lQCrfGwxbkRGjQqYs+LvJmWoyqVgWcfDuR
-         RhLO1XgCJknMZBHtMEyE1WphX1+pbkECLq/hd/Vm5g5l7QSflyvjDTe7HuI/f5oBnm
-         nQPispl9L6r2z5lfhJzqZmcdL9hv0xssDqOLWxD0=
+        b=eUX3v2fSjwYOqSt7BNPeGwyufytL8bLdxZwPV+vdaa9S9RUTKHbLhsl9vozqNJ23v
+         rSjy8iLNk4DkUZjICUlM7L3UOv/OwGJf9yZNuktwRZRsX/Kw3Qw4/MpOYsBYH+woLu
+         du1h93g28OWHHUXJRCZrFXmyEK77NYYabTrC3koc=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 12/25] perf script: Add missing counts.h
-Date:   Thu, 22 Aug 2019 18:00:47 -0300
-Message-Id: <20190822210100.3461-13-acme@kernel.org>
+Subject: [PATCH 14/25] perf stat: Add missing counts.h
+Date:   Thu, 22 Aug 2019 18:00:49 -0300
+Message-Id: <20190822210100.3461-15-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190822210100.3461-1-acme@kernel.org>
 References: <20190822210100.3461-1-acme@kernel.org>
@@ -69,24 +69,37 @@ it from there.
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-q4shpvlxyjqz7val1hyrdak9@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-jwcbm9gv9llloe3he5qkdefs@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/stat-display.c | 1 +
+ tools/perf/util/stat.c         | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 1764efd16cd4..e957b870869b 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3,6 +3,7 @@
- 
- #include "perf.h"
- #include "util/cache.h"
-+#include "util/counts.h"
- #include "util/debug.h"
- #include <subcmd/exec-cmd.h>
- #include "util/header.h"
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 3df0e39ccd52..605a1fdbda7a 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -4,6 +4,7 @@
+ #include <linux/time64.h>
+ #include <math.h>
+ #include "color.h"
++#include "counts.h"
+ #include "evlist.h"
+ #include "evsel.h"
+ #include "stat.h"
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 2715112290cf..1e6a25abe00f 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -2,6 +2,7 @@
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <math.h>
++#include "counts.h"
+ #include "stat.h"
+ #include "evlist.h"
+ #include "evsel.h"
 -- 
 2.21.0
 
