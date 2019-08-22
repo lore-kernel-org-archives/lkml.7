@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C403C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE6FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 044C723402
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5F2233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494178;
-	bh=eOG/9O+o+bwLlESBHf18XtsMhZvQveP+DSpLB/qDpY8=;
+	s=default; t=1566494185;
+	bh=4GU5q7MsdvdvSTWnNddo6ZLGYrzNXvh0owCnGABhq1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l/hRAJi/lBU/TOB7RLvu3MMF/NSL3tmslwhdBoNrV+L6swlV56vEp4TxtekVpFV9c
-	 1EZVCG+ksDSogvPm/jPnEyAiXCZYO9TLLKXpR+H3cWkT8F5p1wC2SYndFbaBDoiQoS
-	 FKE/Yrh5gyiNPMjlYEgDU7VNJwbQpVwo23ZUBW80=
+	b=rHwBBgcp951c0cox4u5T+W8SRsDvqoNkt1Rvj5dy9xPQVu9O1eF322ExGOOzZsbWt
+	 JYgwrif+wYqvG8fIFNLITyKuJIPg8kYFvd6m+RVh+bt9/kSTJeN2stoHzlkylVz92P
+	 qh/vVYJh6bhsbApsPqXapiFFdU8+uvu9VxUy1gfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390416AbfHVRIh (ORCPT
+        id S1732445AbfHVRQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58274 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:16:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390389AbfHVRIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:35 -0400
+        id S2390393AbfHVRIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:36 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E27C22341D;
-        Thu, 22 Aug 2019 17:08:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 034D823404;
+        Thu, 22 Aug 2019 17:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493714;
-        bh=eOG/9O+o+bwLlESBHf18XtsMhZvQveP+DSpLB/qDpY8=;
+        s=default; t=1566493715;
+        bh=4GU5q7MsdvdvSTWnNddo6ZLGYrzNXvh0owCnGABhq1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xXrghtNn00cNXOfzyR44VYE1acCtokqCNozInIR7wIHFzQoB5yATZrk2L+lR5J9FN
-         QtdYu+Cx0589WRmzFjm9yU5Nqg08EgNH0P0CLuHx6i4ZXFoFnV/qM1IN0KdfqMQaR5
-         HqxXgTVYVS0Z7Gt71MIqNsg8i4G627LmwJGlOASg=
+        b=ioNjq05IH7RKY0MjEbreBgHRYzdH4tGBDXphaaKnkVcJvKqqIbcbvMHMWI7xNBfjK
+         S+ehqsKjan1XNG/x7e5veKowYE1WARQYDqvRiNPzYpB5lv1SfEo0askU3ODV54IuAk
+         rMIMu66wtJiL7QV/Ekdg5xpJ9cr379CqObhmEWxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xi Wang <wangxi11@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
+Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 037/135] RDMA/hns: Fix sg offset non-zero issue
-Date:   Thu, 22 Aug 2019 13:06:33 -0400
-Message-Id: <20190822170811.13303-38-sashal@kernel.org>
+Subject: [PATCH 5.2 039/135] clk: at91: generated: Truncate divisor to GENERATED_MAX_DIV + 1
+Date:   Thu, 22 Aug 2019 13:06:35 -0400
+Message-Id: <20190822170811.13303-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -64,89 +67,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xi Wang <wangxi11@huawei.com>
+From: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
 
-[ Upstream commit 60c3becfd1a138fdcfe48f2a5ef41ef0078d481e ]
+[ Upstream commit 1573eebeaa8055777eb753f9b4d1cbe653380c38 ]
 
-When run perftest in many times, the system will report a BUG as follows:
+In clk_generated_determine_rate(), if the divisor is greater than
+GENERATED_MAX_DIV + 1, then the wrong best_rate will be returned.
+If clk_generated_set_rate() will be called later with this wrong
+rate, it will return -EINVAL, so the generated clock won't change
+its value. Do no let the divisor be greater than GENERATED_MAX_DIV + 1.
 
-   BUG: Bad rss-counter state mm:(____ptrval____) idx:0 val:-1
-   BUG: Bad rss-counter state mm:(____ptrval____) idx:1 val:1
-
-We tested with different kernel version and found it started from the the
-following commit:
-
-commit d10bcf947a3e ("RDMA/umem: Combine contiguous PAGE_SIZE regions in
-SGEs")
-
-In this commit, the sg->offset is always 0 when sg_set_page() is called in
-ib_umem_get() and the drivers are not allowed to change the sgl, otherwise
-it will get bad page descriptor when unfolding SGEs in __ib_umem_release()
-as sg_page_count() will get wrong result while sgl->offset is not 0.
-
-However, there is a weird sgl usage in the current hns driver, the driver
-modified sg->offset after calling ib_umem_get(), which caused we iterate
-past the wrong number of pages in for_each_sg_page iterator.
-
-This patch fixes it by correcting the non-standard sgl usage found in the
-hns_roce_db_map_user() function.
-
-Fixes: d10bcf947a3e ("RDMA/umem: Combine contiguous PAGE_SIZE regions in SGEs")
-Fixes: 0425e3e6e0c7 ("RDMA/hns: Support flush cqe for hip08 in kernel space")
-Link: https://lore.kernel.org/r/1562808737-45723-1-git-send-email-oulijun@huawei.com
-Signed-off-by: Xi Wang <wangxi11@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 8c7aa6328947 ("clk: at91: clk-generated: remove useless divisor loop")
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_db.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/clk/at91/clk-generated.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_db.c b/drivers/infiniband/hw/hns/hns_roce_db.c
-index 0c6c1fe87705c..d60453e98db7c 100644
---- a/drivers/infiniband/hw/hns/hns_roce_db.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_db.c
-@@ -12,13 +12,15 @@ int hns_roce_db_map_user(struct hns_roce_ucontext *context,
- 			 struct ib_udata *udata, unsigned long virt,
- 			 struct hns_roce_db *db)
- {
-+	unsigned long page_addr = virt & PAGE_MASK;
- 	struct hns_roce_user_db_page *page;
-+	unsigned int offset;
- 	int ret = 0;
+diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
+index 44db83a6d01c2..44a46dcc0518b 100644
+--- a/drivers/clk/at91/clk-generated.c
++++ b/drivers/clk/at91/clk-generated.c
+@@ -141,6 +141,8 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
+ 			continue;
  
- 	mutex_lock(&context->page_mutex);
+ 		div = DIV_ROUND_CLOSEST(parent_rate, req->rate);
++		if (div > GENERATED_MAX_DIV + 1)
++			div = GENERATED_MAX_DIV + 1;
  
- 	list_for_each_entry(page, &context->page_list, list)
--		if (page->user_virt == (virt & PAGE_MASK))
-+		if (page->user_virt == page_addr)
- 			goto found;
- 
- 	page = kmalloc(sizeof(*page), GFP_KERNEL);
-@@ -28,8 +30,8 @@ int hns_roce_db_map_user(struct hns_roce_ucontext *context,
- 	}
- 
- 	refcount_set(&page->refcount, 1);
--	page->user_virt = (virt & PAGE_MASK);
--	page->umem = ib_umem_get(udata, virt & PAGE_MASK, PAGE_SIZE, 0, 0);
-+	page->user_virt = page_addr;
-+	page->umem = ib_umem_get(udata, page_addr, PAGE_SIZE, 0, 0);
- 	if (IS_ERR(page->umem)) {
- 		ret = PTR_ERR(page->umem);
- 		kfree(page);
-@@ -39,10 +41,9 @@ int hns_roce_db_map_user(struct hns_roce_ucontext *context,
- 	list_add(&page->list, &context->page_list);
- 
- found:
--	db->dma = sg_dma_address(page->umem->sg_head.sgl) +
--		  (virt & ~PAGE_MASK);
--	page->umem->sg_head.sgl->offset = virt & ~PAGE_MASK;
--	db->virt_addr = sg_virt(page->umem->sg_head.sgl);
-+	offset = virt - page_addr;
-+	db->dma = sg_dma_address(page->umem->sg_head.sgl) + offset;
-+	db->virt_addr = sg_virt(page->umem->sg_head.sgl) + offset;
- 	db->u.user_page = page;
- 	refcount_inc(&page->refcount);
- 
+ 		clk_generated_best_diff(req, parent, parent_rate, div,
+ 					&best_diff, &best_rate);
 -- 
 2.20.1
 
