@@ -2,93 +2,116 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7160CC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2FAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:30:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456102082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F2B2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:30:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcpWx0al"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388320AbfHVOaa (ORCPT
+        id S1733280AbfHVOaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:30:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:46912 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732789AbfHVOa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:30:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F453337;
-        Thu, 22 Aug 2019 07:30:29 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5672B3F706;
-        Thu, 22 Aug 2019 07:30:26 -0700 (PDT)
-Subject: Re: [PATCH v2 1/4] iommu/arm-smmu: Introduce wrapper for writeq/readq
-To:     Will Deacon <will@kernel.org>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Nadav Haklai <nadavh@marvell.com>,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal@bootlin.com>,
-        Hanna Hawa <hannah@marvell.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-References: <20190711150242.25290-1-gregory.clement@bootlin.com>
- <20190711150242.25290-2-gregory.clement@bootlin.com>
- <20190820120848.2m6gytilrpil4stu@willie-the-truck>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <4ef6512d-701f-4fe8-8173-5f659dab0d32@arm.com>
-Date:   Thu, 22 Aug 2019 15:30:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190820120848.2m6gytilrpil4stu@willie-the-truck>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Thu, 22 Aug 2019 10:30:35 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33262 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732789AbfHVOaf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:30:35 -0400
+Received: by mail-pl1-f193.google.com with SMTP id go14so3581696plb.0;
+        Thu, 22 Aug 2019 07:30:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=tDRFmgdNOn89BNEOePAuDKx2szX/hZIctu/3Yr6F4SY=;
+        b=GcpWx0alS4jSrHm66E2XU1peda1oBep0K+w9L2px9b14LBgA6xy/ISrhhtK8mg/w/4
+         TnFvf9R3krlEFyZKKwmrRU4OArQX0zpLujT73xRdF9X01F3Cd5zpDgPJxQrmV7DiR/4J
+         CoxdcK/1ItS1/h3ShD4cilXzjv+bV4Nqxqg9i4zmIfntX9EqBFFM3hqTCFxmjil19oKO
+         L51GUnnnMAIqdELQclX+fpHjdEmFZlf/9wsWhQqMab8go17GiyzYwqtG6aFDErp4b2VI
+         D1tQaHItI8JQiK35fs7BLtTxXxpz+UBcujtZihIsLRZH6i+Ri+NRjgwEb22bMgEEkmtH
+         EApA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tDRFmgdNOn89BNEOePAuDKx2szX/hZIctu/3Yr6F4SY=;
+        b=jpWiTad/eRvYU3L6aIAb8NwbYI8x/qbejtXIGJJSsrUyk7nx9SDe4ouxFoHQDOcVw1
+         44m9DuId2ZYTBCsc/2ln9HOqdPksiZzMpxJq9I5PESMOISggl+E1UGPIzaKoX+361Rzm
+         AYK4/JSWgof7CFrd44Y8lP6FF8WvXoowJza0XloY9w/ZbKWsfellbb+MICwRrd1TTG4d
+         Q5YGr8ufb2pfej4+oeK/ISF2JSLFXOfgaaGvEGnRjipCuEgWJNeB7Mi2ZhBeqRA2HtUh
+         cenJqqBW8Sd4cz3xNZxPC39mPtwHlmIpbBynx5hbaZMqi3QCVw2KnA5REUA7mGyP7+we
+         TQHg==
+X-Gm-Message-State: APjAAAWlLx8wluPJsw8QYf8dVhXC0oNcqeJ/vASyBuvhLt7ZuVQ2C/Ku
+        EQPPr0HW1J4lfDJ0pWx/szc=
+X-Google-Smtp-Source: APXvYqw3uqWAVTZJzp78Lvd64ZCkRs9PAqZfr8g9qiVxMHxM+hHWnzzYrq4pCpeuhee1evkxC8YUiQ==
+X-Received: by 2002:a17:902:8649:: with SMTP id y9mr36937329plt.252.1566484234243;
+        Thu, 22 Aug 2019 07:30:34 -0700 (PDT)
+Received: from localhost.corp.microsoft.com ([167.220.255.114])
+        by smtp.googlemail.com with ESMTPSA id r23sm32263161pfg.10.2019.08.22.07.30.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 22 Aug 2019 07:30:33 -0700 (PDT)
+From:   lantianyu1986@gmail.com
+X-Google-Original-From: Tianyu.Lan@microsoft.com
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        michael.h.kelley@microsoft.com
+Cc:     Tianyu Lan <Tianyu.Lan@microsoft.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vkuznets@redhat.com
+Subject: [PATCH V4 0/3] KVM/Hyper-V: Add Hyper-V direct tlb flush support
+Date:   Thu, 22 Aug 2019 22:30:18 +0800
+Message-Id: <20190822143021.7518-1-Tianyu.Lan@microsoft.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/08/2019 13:08, Will Deacon wrote:
-> Hi Gregory, Hanna,
-> 
-> On Thu, Jul 11, 2019 at 05:02:39PM +0200, Gregory CLEMENT wrote:
->> From: Hanna Hawa <hannah@marvell.com>
->>
->> This patch introduces the smmu_writeq_relaxed/smmu_readq_relaxed
->> helpers, as preparation to add specific Marvell work-around for
->> accessing 64 bits width registers of ARM SMMU.
->>
->> Signed-off-by: Hanna Hawa <hannah@marvell.com>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->> ---
->>   drivers/iommu/arm-smmu.c | 36 +++++++++++++++++++++++++++---------
->>   1 file changed, 27 insertions(+), 9 deletions(-)
-> 
-> Sorry for the delay in replying to this -- Robin's been reworking the driver
-> so that implementation quirks can be specified more cleanly. Please can you
-> take a look at:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/log/?h=for-joerg/arm-smmu/refactoring
-> 
-> and try to respin your patches on top of that?
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-Right, the arm_smmu_impl design was specifically anticipating this quirk 
-as well - it should just be a case of a cfg_probe hook to hide the 
-features which can't work, plus {read,write}_reg64 hooks to override any 
-remaining 64-bit accesses with the explicit hi_lo_* variants, munged 
-together (either statically or dynamically) with the standard MMU-500 hooks.
+This patchset is to add Hyper-V direct tlb support in KVM. Hyper-V
+in L0 can delegate L1 hypervisor to handle tlb flush request from
+L2 guest when direct tlb flush is enabled in L1.
 
-Robin.
+Patch 2 introduces new cap KVM_CAP_HYPERV_DIRECT_TLBFLUSH to enable
+feature from user space. User space should enable this feature only
+when Hyper-V hypervisor capability is exposed to guest and KVM profile
+is hided. There is a parameter conflict between KVM and Hyper-V hypercall.
+We hope L2 guest doesn't use KVM hypercall when the feature is
+enabled. Detail please see comment of new API "KVM_CAP_HYPERV_DIRECT_TLBFLUSH"
+
+Change since v3:
+       - Update changelog in each patches. 
+
+Change since v2:
+       - Move hv assist page(hv_pa_pg) from struct kvm  to struct kvm_hv.
+
+Change since v1:
+       - Fix offset issue in the patch 1.
+       - Update description of KVM KVM_CAP_HYPERV_DIRECT_TLBFLUSH.
+
+Tianyu Lan (2):
+  x86/Hyper-V: Fix definition of struct hv_vp_assist_page
+  KVM/Hyper-V: Add new KVM capability KVM_CAP_HYPERV_DIRECT_TLBFLUSH
+
+Vitaly Kuznetsov (1):
+  KVM/Hyper-V/VMX: Add direct tlb flush support
+
+ Documentation/virtual/kvm/api.txt  | 13 +++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h | 24 ++++++++++++++++++-----
+ arch/x86/include/asm/kvm_host.h    |  4 ++++
+ arch/x86/kvm/vmx/evmcs.h           |  2 ++
+ arch/x86/kvm/vmx/vmx.c             | 39 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/x86.c                 |  8 ++++++++
+ include/uapi/linux/kvm.h           |  1 +
+ 7 files changed, 86 insertions(+), 5 deletions(-)
+
+-- 
+2.14.5
+
