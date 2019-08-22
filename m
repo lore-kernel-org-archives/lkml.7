@@ -2,107 +2,139 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BBDC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F706C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A127233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:26:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566466012;
-	bh=RGSrS75/dAlh69//rvSZNs4nKX4vmwiqC91h7KEWT40=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=uKw/qpPy5bmkDsaN/dmDsrGUA6067booBECKlUr0XGele5vNZB556rL9l5MretJq5
-	 9GcO3z/NTRW5OpCPEhfrRk4P3/nl6M31/RfI+siHkVwBjXPslQbBPezPAoTP/izTyU
-	 v6eCmpCYS3iSVtImx+v3ivaijDzNkF9eULqaESm4=
+	by mail.kernel.org (Postfix) with ESMTP id 3F26F233FF
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733208AbfHVJ0v (ORCPT
+        id S1732112AbfHVJ1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:26:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57668 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731829AbfHVJ0q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:26:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SuSy3FwC9g7e9MP38jQoeaQqj9wgxK6akeFEVXSHI7g=; b=E6Ep03hTc/OMURZQI/pHby/R6
-        pxiJiDd67Z9IDPoYy40qNjMPWkiH676qsZMJ1ysetis3sCMaeQHsIIT4Iz9iwRFQCfcvWvjFP2tua
-        FXNvggeVhwnQ7sZXem0k3PddENIa2emGPjK3b014mZdMxMKWUNIzELPSSePytlJno4POwd+0FhXD3
-        hWLS3qoujLBIFyCujBMPvUork5w6KgS6LwET+F5WhlU59XvKB1KNDjj68V4ip8H8/VrkQbEb3Kvn4
-        IW3AmPqovk+4moN0HRkz82iRH21MK6v5US68H4Nr+r53XNKH1gckfvYugZFj+hZkNtkis/To2+EwK
-        6Zm3edLvg==;
-Received: from [177.133.63.56] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i0jMf-00037g-FT; Thu, 22 Aug 2019 09:26:41 +0000
-Date:   Thu, 22 Aug 2019 06:26:35 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Borislav Petkov <bp@alien8.de>, paul.walmsley@sifive.com,
-        palmer@sifive.com, linux-riscv@lists.infradead.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH] riscv: move sifive_l2_cache.c to drivers/soc
-Message-ID: <20190822062635.00f6e507@coco.lan>
-In-Reply-To: <20190819062619.GA20211@lst.de>
-References: <20190818082935.14869-1-hch@lst.de>
-        <20190819060904.GA4841@zn.tnic>
-        <20190819062619.GA20211@lst.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 22 Aug 2019 05:27:54 -0400
+Received: from shell.v3.sk ([90.176.6.54]:35655 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730111AbfHVJ1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:27:54 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id EE25C493E8;
+        Thu, 22 Aug 2019 11:27:47 +0200 (CEST)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id CZa7DHZpvi9T; Thu, 22 Aug 2019 11:27:26 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id E05C2D7570;
+        Thu, 22 Aug 2019 11:27:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 4-csVm1jD4TM; Thu, 22 Aug 2019 11:26:47 +0200 (CEST)
+Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id E9547D79C8;
+        Thu, 22 Aug 2019 11:26:46 +0200 (CEST)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v2 02/20] dt-bindings: arm: Convert Marvell MMP board/soc bindings to json-schema
+Date:   Thu, 22 Aug 2019 11:26:25 +0200
+Message-Id: <20190822092643.593488-3-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190822092643.593488-1-lkundrak@v3.sk>
+References: <20190822092643.593488-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 19 Aug 2019 08:26:19 +0200
-Christoph Hellwig <hch@lst.de> escreveu:
+Convert Marvell MMP SoC bindings to DT schema format using json-schema.
 
-> On Mon, Aug 19, 2019 at 08:09:04AM +0200, Borislav Petkov wrote:
-> > On Sun, Aug 18, 2019 at 10:29:35AM +0200, Christoph Hellwig wrote:  
-> > > The sifive_l2_cache.c is in no way related to RISC-V architecture
-> > > memory management.  It is a little stub driver working around the fact
-> > > that the EDAC maintainers prefer their drivers to be structured in a
-> > > certain way  
-> > 
-> > That changed recently so I guess we can do the per-IP block driver after
-> > all, if people would still prefer it.  
-> 
-> That would seem like the best idea.  But I don't really know this code
-> well enough myself, and I really need to get this code out of the
-> forced on RISC-V codebase as some SOCs I'm working with simply don't
-> have the memory for it..
-> 
-> So unless someone signs up to do a per-IP block edac drivers instead
-> very quickly I'd still like to see something like this go into 5.4
-> for now.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-I'm wandering if we should at least add an entry for this one at
-MAINTAINERS, pointing it to the EDAC mailing list. Something like:
+---
+Changes since v1:
+- Added this patch
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7dfe381c8b43..1c3bc5aa3af0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5906,6 +5906,7 @@ M:	Yash Shah <yash.shah@sifive.com>
- L:	linux-edac@vger.kernel.org
- S:	Supported
- F:	drivers/edac/sifive_edac.c
-+F:	drivers/soc/sifive/
- 
- EDAC-SKYLAKE
- M:	Tony Luck <tony.luck@intel.com>
+ .../devicetree/bindings/arm/mrvl/mrvl.txt     | 14 ---------
+ .../devicetree/bindings/arm/mrvl/mrvl.yaml    | 31 +++++++++++++++++++
+ 2 files changed, 31 insertions(+), 14 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
 
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Docume=
+ntation/devicetree/bindings/arm/mrvl/mrvl.txt
+deleted file mode 100644
+index 951687528efb0..0000000000000
+--- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
++++ /dev/null
+@@ -1,14 +0,0 @@
+-Marvell Platforms Device Tree Bindings
+-----------------------------------------------------
+-
+-PXA168 Aspenite Board
+-Required root node properties:
+-	- compatible =3D "mrvl,pxa168-aspenite", "mrvl,pxa168";
+-
+-PXA910 DKB Board
+-Required root node properties:
+-	- compatible =3D "mrvl,pxa910-dkb";
+-
+-MMP2 Brownstone Board
+-Required root node properties:
+-	- compatible =3D "mrvl,mmp2-brownstone", "mrvl,mmp2";
+diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml b/Docum=
+entation/devicetree/bindings/arm/mrvl/mrvl.yaml
+new file mode 100644
+index 0000000000000..dc9de506ac6e3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.yaml
+@@ -0,0 +1,31 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/mrvl/mrvl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Marvell Platforms Device Tree Bindings
++
++maintainers:
++  - Lubomir Rintel <lkundrak@v3.sk>
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++      - description: PXA168 Aspenite Board
++        items:
++          - enum:
++              - mrvl,pxa168-aspenite
++          - const: mrvl,pxa168
++      - description: PXA910 DKB Board
++        items:
++          - enum:
++              - mrvl,pxa910-dkb
++      - description: MMP2 Brownstone Board
++        items:
++          - enum:
++              - mrvl,mmp2-brownstone
++          - const: mrvl,mmp2
++...
+--=20
+2.21.0
 
-Thanks,
-Mauro
