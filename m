@@ -2,55 +2,53 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08493C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016B8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D13A320870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8D320870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:44:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495862;
-	bh=JDHqFHevzPXTDr1cUatLUjNYAVyZZOe6mz7YHiq1i1g=;
+	s=default; t=1566495873;
+	bh=mnf5COArq3hLz3KooqmSQrH21iA5dKmpOGBJor1o/xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GdNCJ1js1BjAQm3kdmo46NuT8etEoMlvdmKCd88ruC/rH0NwVLUG2sOvFsoLtyPnc
-	 9pub2oNRr8sJCXEFWPftr8pmRZrDN5lKYTxW7SNPpMJynjXCsBkUs7FyUsE4lmN7Xp
-	 AKthvY/H1SxNo/SUOGf+U887hNoX6fRmI0CcukTk=
+	b=AKM3ZcpUOJjtBCr8zC5tY/VpSMA77ybwnQFOvSe6xVsBC3HhyT95aJXdvYmLHwR5E
+	 OeI6is9fQO6ZSqjIw6y20b11kN4SfqXdr0tx58LsOkrtjezVslqBza7w0qANpAvZL8
+	 vzog69JIEDQ3fNnsvVJG5AJShhpxFxH/UZGlN9Sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392760AbfHVRoV (ORCPT
+        id S2391617AbfHVRoc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:44:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42856 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:44:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403912AbfHVRXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:21 -0400
+        id S2403886AbfHVRXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:16 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A01B1233FC;
-        Thu, 22 Aug 2019 17:23:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B65223402;
+        Thu, 22 Aug 2019 17:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494600;
-        bh=JDHqFHevzPXTDr1cUatLUjNYAVyZZOe6mz7YHiq1i1g=;
+        s=default; t=1566494595;
+        bh=mnf5COArq3hLz3KooqmSQrH21iA5dKmpOGBJor1o/xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPkeRy8QR8qceJmIAe3l7K437dlYRg7wtBpHxJX2nXIZmEb012GDuKyzQnTCOScvy
-         WnIwqjL6XNBYALpgrCNsoBqbqJWIOef520I4n1jIpBNM2OCnHmiHCGqcpsKGf4GTuf
-         gT53dnfkmYCQ49vnRcVaJ8hQrgfUSoGvWz6SnNaM=
+        b=FGoZvzqZBx+haVrtVYLRkqKQSleDOX3L26rh2RQ9AYzFcrXKZc5vW8+BtQmzG0UdZ
+         QpnWRI2/RWIABtjOmUseeYN+dKXrwYoNTTa46oHrHZuSb5fkHfVNKRNcpSZD2iy50s
+         XKTYAl2cGC55FvwVUCVDNQHNvnvZNIUFHz3F9Toc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 022/103] perf probe: Avoid calling freeing routine multiple times for same pointer
-Date:   Thu, 22 Aug 2019 10:18:10 -0700
-Message-Id: <20190822171729.750620526@linuxfoundation.org>
+Subject: [PATCH 4.9 016/103] cpufreq/pasemi: fix use-after-free in pas_cpufreq_cpu_init()
+Date:   Thu, 22 Aug 2019 10:18:04 -0700
+Message-Id: <20190822171729.503980454@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -63,47 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d95daf5accf4a72005daa13fbb1d1bd8709f2861 ]
+[ Upstream commit e0a12445d1cb186d875410d093a00d215bec6a89 ]
 
-When perf_add_probe_events() we call cleanup_perf_probe_events() for the
-pev pointer it receives, then, as part of handling this failure the main
-'perf probe' goes on and calls cleanup_params() and that will again call
-cleanup_perf_probe_events()for the same pointer, so just set nevents to
-zero when handling the failure of perf_add_probe_events() to avoid the
-double free.
+The cpu variable is still being used in the of_get_property() call
+after the of_node_put() call, which may result in use-after-free.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-x8qgma4g813z96dvtw9w219q@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: a9acc26b75f6 ("cpufreq/pasemi: fix possible object reference leak")
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-probe.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/cpufreq/pasemi-cpufreq.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 9a250c71840e9..2b420e7a92c0c 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -675,6 +675,16 @@ __cmd_probe(int argc, const char **argv, const char *prefix __maybe_unused)
+diff --git a/drivers/cpufreq/pasemi-cpufreq.c b/drivers/cpufreq/pasemi-cpufreq.c
+index 58c933f483004..991b6a3062c4f 100644
+--- a/drivers/cpufreq/pasemi-cpufreq.c
++++ b/drivers/cpufreq/pasemi-cpufreq.c
+@@ -145,10 +145,18 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	int err = -ENODEV;
  
- 		ret = perf_add_probe_events(params.events, params.nevents);
- 		if (ret < 0) {
+ 	cpu = of_get_cpu_node(policy->cpu, NULL);
++	if (!cpu)
++		goto out;
+ 
++	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+ 	of_node_put(cpu);
+-	if (!cpu)
++	if (!max_freqp) {
++		err = -EINVAL;
+ 		goto out;
++	}
 +
-+			/*
-+			 * When perf_add_probe_events() fails it calls
-+			 * cleanup_perf_probe_events(pevs, npevs), i.e.
-+			 * cleanup_perf_probe_events(params.events, params.nevents), which
-+			 * will call clear_perf_probe_event(), so set nevents to zero
-+			 * to avoid cleanup_params() to call clear_perf_probe_event() again
-+			 * on the same pevs.
-+			 */
-+			params.nevents = 0;
- 			pr_err_with_code("  Error: Failed to add events.", ret);
- 			return ret;
- 		}
++	/* we need the freq in kHz */
++	max_freq = *max_freqp / 1000;
+ 
+ 	dn = of_find_compatible_node(NULL, NULL, "1682m-sdc");
+ 	if (!dn)
+@@ -185,16 +193,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 	}
+ 
+ 	pr_debug("init cpufreq on CPU %d\n", policy->cpu);
+-
+-	max_freqp = of_get_property(cpu, "clock-frequency", NULL);
+-	if (!max_freqp) {
+-		err = -EINVAL;
+-		goto out_unmap_sdcpwr;
+-	}
+-
+-	/* we need the freq in kHz */
+-	max_freq = *max_freqp / 1000;
+-
+ 	pr_debug("max clock-frequency is at %u kHz\n", max_freq);
+ 	pr_debug("initializing frequency table\n");
+ 
+@@ -212,9 +210,6 @@ static int pas_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 
+ 	return cpufreq_generic_init(policy, pas_freqs, get_gizmo_latency());
+ 
+-out_unmap_sdcpwr:
+-	iounmap(sdcpwr_mapbase);
+-
+ out_unmap_sdcasr:
+ 	iounmap(sdcasr_mapbase);
+ out:
 -- 
 2.20.1
 
