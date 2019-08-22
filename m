@@ -2,273 +2,313 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF41C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6219FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 036B92339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C4152339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:54:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733145AbfHVLxc (ORCPT
+        id S1733182AbfHVLy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:53:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53730 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732223AbfHVLxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:53:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 47EEFAE84;
-        Thu, 22 Aug 2019 11:53:30 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 13:53:29 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: assign_desc() barriers: Re: [RFC PATCH v4 1/9] printk-rb: add a
- new printk ringbuffer implementation
-Message-ID: <20190822115329.oy5mw3nycwue6dkw@pathway.suse.cz>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190807222634.1723-2-john.ogness@linutronix.de>
- <20190820082253.ybys4fsakxxdvahx@pathway.suse.cz>
- <20190820141429.hkrnynmr5ou4lem2@pathway.suse.cz>
- <87v9urdq05.fsf@linutronix.de>
+        Thu, 22 Aug 2019 07:54:58 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:52181 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727894AbfHVLy5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 07:54:57 -0400
+X-Originating-IP: 86.250.200.211
+Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 5637720006;
+        Thu, 22 Aug 2019 11:54:53 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 13:54:53 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 02/11] media: uapi: h264: Rename pixel format
+Message-ID: <20190822115453.GA1627@aptenodytes>
+References: <20190816160132.7352-1-ezequiel@collabora.com>
+ <20190816160132.7352-3-ezequiel@collabora.com>
+ <20190819124110.GB32182@aptenodytes>
+ <e618bf01-3f82-ff06-1842-9d21a379d7ee@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
 Content-Disposition: inline
-In-Reply-To: <87v9urdq05.fsf@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <e618bf01-3f82-ff06-1842-9d21a379d7ee@xs4all.nl>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-08-21 07:52:26, John Ogness wrote:
-> On 2019-08-20, Petr Mladek <pmladek@suse.com> wrote:
-> >> > --- /dev/null
-> >> > +++ b/kernel/printk/ringbuffer.c
-> >> > +/**
-> >> > + * assign_desc() - Assign a descriptor to the caller.
-> >> > + *
-> >> > + * @e: The entry structure to store the assigned descriptor to.
-> >> > + *
-> >> > + * Find an available descriptor to assign to the caller. First it is checked
-> >> > + * if the tail descriptor from the committed list can be recycled. If not,
-> >> > + * perhaps a never-used descriptor is available. Otherwise, data blocks will
-> >> > + * be invalidated until the tail descriptor from the committed list can be
-> >> > + * recycled.
-> >> > + *
-> >> > + * Assigned descriptors are invalid until data has been reserved for them.
-> >> > + *
-> >> > + * Return: true if a descriptor was assigned, otherwise false.
-> >> > + *
-> >> > + * This will only fail if it was not possible to invalidate data blocks in
-> >> > + * order to recycle a descriptor. This can happen if a writer has reserved but
-> >> > + * not yet committed data and that reserved data is currently the oldest data.
-> >> > + */
-> >> > +static bool assign_desc(struct prb_reserved_entry *e)
-> >> > +{
-> >> > +	struct printk_ringbuffer *rb = e->rb;
-> >> > +	struct prb_desc *d;
-> >> > +	struct nl_node *n;
-> >> > +	unsigned long i;
-> >> > +
-> >> > +	for (;;) {
-> >> > +		/*
-> >> > +		 * jA:
-> >> > +		 *
-> >> > +		 * Try to recycle a descriptor on the committed list.
-> >> > +		 */
-> >> > +		n = numlist_pop(&rb->nl);
-> >> > +		if (n) {
-> >> > +			d = container_of(n, struct prb_desc, list);
-> >> > +			break;
-> >> > +		}
-> >> > +
-> >> > +		/* Fallback to static never-used descriptors. */
-> >> > +		if (atomic_read(&rb->desc_next_unused) < DESCS_COUNT(rb)) {
-> >> > +			i = atomic_fetch_inc(&rb->desc_next_unused);
-> >> > +			if (i < DESCS_COUNT(rb)) {
-> >> > +				d = &rb->descs[i];
-> >> > +				atomic_long_set(&d->id, i);
-> >> > +				break;
-> >> > +			}
-> >> > +		}
-> >> > +
-> >> > +		/*
-> >> > +		 * No descriptor available. Make one available for recycling
-> >> > +		 * by invalidating data (which some descriptor will be
-> >> > +		 * referencing).
-> >> > +		 */
-> >> > +		if (!dataring_pop(&rb->dr))
-> >> > +			return false;
-> >> > +	}
-> >> > +
-> >> > +	/*
-> >> > +	 * jB:
-> >> > +	 *
-> >> > +	 * Modify the descriptor ID so that users of the descriptor see that
-> >> > +	 * it has been recycled. A _release() is used so that prb_getdesc()
-> >> > +	 * callers can see all data ringbuffer updates after issuing a
-> >> > +	 * pairing smb_rmb(). See iA for details.
-> >> > +	 *
-> >> > +	 * Memory barrier involvement:
-> >> > +	 *
-> >> > +	 * If dB->iA reads from jB, then dI reads the same value as
-> >> > +	 * jA->cD->hA.
-> >> > +	 *
-> >> > +	 * Relies on:
-> >> > +	 *
-> >> > +	 * RELEASE from jA->cD->hA to jB
-> >> > +	 *    matching
-> >> > +	 * RMB between dB->iA and dI
-> >> > +	 */
-> >> > +	atomic_long_set_release(&d->id, atomic_long_read(&d->id) +
-> >> > +				DESCS_COUNT(rb));
-> >> 
-> >> atomic_long_set_release() might be a bit confusing here.
-> >> There is no related acquire.
-> 
-> As the comment states, this release is for prb_getdesc() users. The only
-> prb_getdesc() user is _dataring_pop().
-> (i.e. the descriptor's ID is not what _dataring_pop() was expecting),
-> then the tail must have moved and _dataring_pop() needs to see
-> that. Since there are no data dependencies between descriptor ID and
-> tail_pos, an explicit memory barrier is used. More on this below.
 
-OK, let me show how complicated and confusing this looks for me:
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  + The two related barriers are in different source files
-    and APIs:
+Hi,
 
-       + assign_desc() in ringbuffer.c; ringbuffer API
-       + _dataring_pop in dataring.c; dataring API
+On Mon 19 Aug 19, 17:53, Hans Verkuil wrote:
+> On 8/19/19 2:41 PM, Paul Kocialkowski wrote:
+> > Hi,
+> >=20
+> > On Fri 16 Aug 19, 13:01, Ezequiel Garcia wrote:
+> >> The V4L2_PIX_FMT_H264_SLICE_RAW name was originally suggested
+> >> because the pixel format would represent H264 slices without any
+> >> start code.
+> >>
+> >> However, as we will now introduce a start code menu control,
+> >> give the pixel format a more meaningful name, while it's
+> >> still early enough to do so.
+> >=20
+> > I definitely agree that SLICE_RAW is not the suffix we are looking for,=
+ but I'm
+> > not sure that _SLICE is self-describing given that we can operate either
+> > per-frame or per-slice, and _SLICE sort of implies the latter. Also, VP=
+8 uses
+> > _FRAME to clearly indicate that it operates per-frame.
+>=20
+> Well, VP8 doesn't support slices at all.
+>=20
+> >=20
+> > In addition, the _SLICE suffix is used by MPEG-2 in the stable API. Sin=
+ce we
+>=20
+> Regarding MPEG-2: while it has a concept of slices, it is my understanding
+> that you never process slices separately, but only full pictures. I may be
+> wrong here.
 
-  + Both the related barriers are around "id" manipulation.
-    But one is in dataring, other is in descriptors array.
-    One is about an old released "id". One is about a newly
-    assigned "id".
+I don't think that is the case since ffmpeg clearly implements decoding on a
+per-slice basis (mpeg_decode_slice).
 
-  + The release() barrier is called once for each assigned
-    descriptor. The acquire() barrier is called more times
-    or not at all depending on the amount of free space
-    in dataring.
+Information is also passed on a per-slice basis to VAAPI=20
+(vaapi_mpeg2_decode_slice) with a distinct data buffer and slice parameter
+buffer for each slice. Among other things, it contains the vertical and
+horizontal positions for the slice, which we can set in the hardware.
 
-  + prb_getdesc() is mentioned in the comment but the barrier
-    is in _dataring_pop()
+> > certainly want MPEG-2 to allow per-slice and per-frame decoding as well=
+ as
+> > H.264 and that the _SLICE format is specified to be the broken "concate=
+nated
+> > slices" that cedrus expects, we probably want to use another suffix. Th=
+is way,
+> > we could deprecated MPEG2_SLICE and introduce a new format for MPEG-2 t=
+hat would
+> > have consistent naming with the other mpeg formats.
+>=20
+> I actually think that H264_SLICE is a decent name.
+>=20
+> I'm less sure about MPEG2_SLICE since I am not sure if it means the same =
+as
+> a H264 slice.
 
-  + prb_getdesc() is called via dr->getdesc() callback and thus
-    not straightforward to check.
+The main problem I see is that we have already specified MPEG2_SLICE in a w=
+ay
+that is incompatible with the future improvments we want to bring to the AP=
+I:
+" The output buffer must contain the appropriate number of macroblocks to
+decode a full corresponding frame to the matching capture buffer."
 
-  + dr->getdesc() is called twice in _dataring_pop(); once
-    with _acquire() and once without.
+So I only see two possibilities: either we decide to change the specificati=
+on
+of the pixel format and we can keep using the _SLICE suffix, either we need=
+ to
+introduce a new pixel format with another suffix, which should also be refl=
+ected
+on other MPEG formats for consistency. Then we can deprecate MPEG2_SLICE and
+have drivers stop using it.
 
-  + _acquire() is hidden in
-    desc = dr->getdesc(smp_load_acquire(&db->id), dr->getdesc_arg)
+What do you think?
 
-  + The comment says that it is pairing with smb_rmb() but it
-    the code uses _acquire().
+Cheers,
 
-  + The comment says that the barrier is issued "so that callers can
-    see all data ringbuffer updates". It is not specific what
-    updates are meant (earlier or later).
+Paul
 
-    It can be guessed by the the type of the barrier. But it does
-    help with review (barrier matches what author wanted).
+> > One suggestion I had was to call it H264_PARSED (and apply this to MPEG=
+-2 and
+> > HEVC when similar controls to H.264 are set in place for them). I think=
+ Hans had
+> > another suggestion for the name but I don't recall what it was at this =
+point.
+>=20
+> I can't remember it either. In any case, I'm not that keen on _PARSED.
+>=20
+> I think for H264 and HEVC the _SLICE suffix is good enough.
+>=20
+> Regards,
+>=20
+> 	Hans
+>=20
+> >=20
+> > Either way, if this has to be some debate, we could perhaps take it off=
+ your
+> > series and stay with SLICE_RAW for now, as long as we do rename it befo=
+re making
+> > the API stable.
+> >=20
+> > What do you think?
+> >=20
+> > Cheers,
+> >=20
+> > Paul
+> >=20
+> >> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> >> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> >> ---
+> >> Changes in v7:
+> >> * None.
+> >> Changes in v6:
+> >> * None.
+> >> Changes in v5:
+> >> * None.
+> >> Changes in v4:
+> >> * New patch.
+> >> ---
+> >>  Documentation/media/uapi/v4l/pixfmt-compressed.rst | 4 ++--
+> >>  drivers/media/v4l2-core/v4l2-ioctl.c               | 2 +-
+> >>  drivers/staging/media/sunxi/cedrus/cedrus_dec.c    | 2 +-
+> >>  drivers/staging/media/sunxi/cedrus/cedrus_video.c  | 6 +++---
+> >>  include/media/h264-ctrls.h                         | 2 +-
+> >>  5 files changed, 8 insertions(+), 8 deletions(-)
+> >>
+> >> diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Docu=
+mentation/media/uapi/v4l/pixfmt-compressed.rst
+> >> index f52a7b67023d..9b65473a2288 100644
+> >> --- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+> >> +++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
+> >> @@ -52,9 +52,9 @@ Compressed Formats
+> >>        - ``V4L2_PIX_FMT_H264_MVC``
+> >>        - 'M264'
+> >>        - H264 MVC video elementary stream.
+> >> -    * .. _V4L2-PIX-FMT-H264-SLICE-RAW:
+> >> +    * .. _V4L2-PIX-FMT-H264-SLICE:
+> >> =20
+> >> -      - ``V4L2_PIX_FMT_H264_SLICE_RAW``
+> >> +      - ``V4L2_PIX_FMT_H264_SLICE``
+> >>        - 'S264'
+> >>        - H264 parsed slice data, without the start code and as
+> >>  	extracted from the H264 bitstream.  This format is adapted for
+> >> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2=
+-core/v4l2-ioctl.c
+> >> index bb5b4926538a..39f10621c91b 100644
+> >> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> >> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> >> @@ -1343,7 +1343,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc=
+ *fmt)
+> >>  		case V4L2_PIX_FMT_H264:		descr =3D "H.264"; break;
+> >>  		case V4L2_PIX_FMT_H264_NO_SC:	descr =3D "H.264 (No Start Codes)"; b=
+reak;
+> >>  		case V4L2_PIX_FMT_H264_MVC:	descr =3D "H.264 MVC"; break;
+> >> -		case V4L2_PIX_FMT_H264_SLICE_RAW:	descr =3D "H.264 Parsed Slice Dat=
+a"; break;
+> >> +		case V4L2_PIX_FMT_H264_SLICE:	descr =3D "H.264 Parsed Slice Data"; =
+break;
+> >>  		case V4L2_PIX_FMT_H263:		descr =3D "H.263"; break;
+> >>  		case V4L2_PIX_FMT_MPEG1:	descr =3D "MPEG-1 ES"; break;
+> >>  		case V4L2_PIX_FMT_MPEG2:	descr =3D "MPEG-2 ES"; break;
+> >> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers=
+/staging/media/sunxi/cedrus/cedrus_dec.c
+> >> index bdad87eb9d79..56ca4c9ad01c 100644
+> >> --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> >> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+> >> @@ -46,7 +46,7 @@ void cedrus_device_run(void *priv)
+> >>  			V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION);
+> >>  		break;
+> >> =20
+> >> -	case V4L2_PIX_FMT_H264_SLICE_RAW:
+> >> +	case V4L2_PIX_FMT_H264_SLICE:
+> >>  		run.h264.decode_params =3D cedrus_find_control_data(ctx,
+> >>  			V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS);
+> >>  		run.h264.pps =3D cedrus_find_control_data(ctx,
+> >> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drive=
+rs/staging/media/sunxi/cedrus/cedrus_video.c
+> >> index 681dfe3367a6..eeee3efd247b 100644
+> >> --- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> >> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+> >> @@ -38,7 +38,7 @@ static struct cedrus_format cedrus_formats[] =3D {
+> >>  		.directions	=3D CEDRUS_DECODE_SRC,
+> >>  	},
+> >>  	{
+> >> -		.pixelformat	=3D V4L2_PIX_FMT_H264_SLICE_RAW,
+> >> +		.pixelformat	=3D V4L2_PIX_FMT_H264_SLICE,
+> >>  		.directions	=3D CEDRUS_DECODE_SRC,
+> >>  	},
+> >>  	{
+> >> @@ -104,7 +104,7 @@ static void cedrus_prepare_format(struct v4l2_pix_=
+format *pix_fmt)
+> >> =20
+> >>  	switch (pix_fmt->pixelformat) {
+> >>  	case V4L2_PIX_FMT_MPEG2_SLICE:
+> >> -	case V4L2_PIX_FMT_H264_SLICE_RAW:
+> >> +	case V4L2_PIX_FMT_H264_SLICE:
+> >>  		/* Zero bytes per line for encoded source. */
+> >>  		bytesperline =3D 0;
+> >> =20
+> >> @@ -449,7 +449,7 @@ static int cedrus_start_streaming(struct vb2_queue=
+ *vq, unsigned int count)
+> >>  		ctx->current_codec =3D CEDRUS_CODEC_MPEG2;
+> >>  		break;
+> >> =20
+> >> -	case V4L2_PIX_FMT_H264_SLICE_RAW:
+> >> +	case V4L2_PIX_FMT_H264_SLICE:
+> >>  		ctx->current_codec =3D CEDRUS_CODEC_H264;
+> >>  		break;
+> >> =20
+> >> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> >> index e1404d78d6ff..6160a69c0143 100644
+> >> --- a/include/media/h264-ctrls.h
+> >> +++ b/include/media/h264-ctrls.h
+> >> @@ -14,7 +14,7 @@
+> >>  #include <linux/videodev2.h>
+> >> =20
+> >>  /* Our pixel format isn't stable at the moment */
+> >> -#define V4L2_PIX_FMT_H264_SLICE_RAW v4l2_fourcc('S', '2', '6', '4') /=
+* H264 parsed slices */
+> >> +#define V4L2_PIX_FMT_H264_SLICE v4l2_fourcc('S', '2', '6', '4') /* H2=
+64 parsed slices */
+> >> =20
+> >>  /*
+> >>   * This is put insanely high to avoid conflicting with controls that
+> >> --=20
+> >> 2.22.0
+> >>
+> >=20
+>=20
 
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
-What would have helped me to understand this barrier might
-be something like:
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	/*
-	 * Got descriptor and have exclusive write access.
-	 * Use _release() barrier before first modification
-	 * so that others could detect the new owner via
-	 * previous numlist and dataring head/tail updates.
-	 *
-	 * The related barrier is in _dataring_pop() when
-	 * acquiring db->id.
-	 */
+-----BEGIN PGP SIGNATURE-----
 
-It explains what the barrier is synchronizing and where is
-the counter part.
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl1egowACgkQ3cLmz3+f
+v9HUvwf/c1/t2Bh47jOv/AkazFk+B1K2PrLTIjCzloE2+ARtu+aA4ReG3ojr8W6K
+6/BNEPJsRPCXDKNgpRaZ5Z+CsQ2bA9ufcYK44c/XUnZQvWncOj4AZnfe5xSGzoF+
+vKAxGLRYgyuBL7clW9VTkH2ZFxC2L1cycQ2pappszgfisBzsKPBPuU+xB8ZAbKZr
+8TGSBSsXneH3DBUJ0o19efY0q91jNSNZFc6KQkDVXKDGsJPdEjKl7tIBjX4tFGd7
+kOgn93vIzkpXR7YXiBTMaVERsQq16LYCVZ4Tb6mrckHhNQo5oSPNdIchIsviLfic
+pJ9fJ2KPgUGKm8A+8twWoFcOAi3Ztg==
+=pbkP
+-----END PGP SIGNATURE-----
 
-But it still does not explain if the counter part is correct.
-I simply do not know. Barriers are usually symmetric but the
-only symmetric thing here is the name of the variable ("id").
-
-It might be correct after all. But it looks so non-standard
-and far from obvious at least for me. I hope that we could
-either make it more symmetric and better explain it.
-
-
-> > Sigh, I have to admit that I am not familiar with the _acquire(),
-> > _release(), and _relaxed() variants of the atomic operations.
-> >
-> > They probably make it easier to implement some locking API.
-> > I am not sure how to use it here. This code implements a complex
-> > interlock between several variables. I mean that several variables
-> > lock each other in a cycle, like a state machine? In each case,
-> > it is not a simple locking where we check state of a single
-> > variable.
-> 
-> Keep in mind that dataring and numlist were written independent of the
-> ringbuffer. They are structures with very specific purposes and their
-> own set of variables (and memory barriers to order _those_
-> variables). The high-level ringbuffer also has its own variables and
-> memory barriers. Sometimes there is overlap, which is implemented in the
-> callbacks (as is here), which is why the dataring callback getdesc() has
-> the implementation requirement that a following smp_rmb() by the caller
-> will guarantee seeing an updated dataring tail. But these overlaps are
-> the exception, not the rule.
-
-Sure. It is possible that this is the worst place. But there are definitely
-more of them:
-
-  + smp_rmb() in numlist_read() is related to smp_wmb() in prb_reserve()
-  + "node" callback in struct nl_node must do smp_wmb()
-  + full memory barrier is required before calling get_new_lpos()
-
-I think that I understand the overall algorithm in principle. But it
-is really hard to prove that all pieces play well together.
-
-I would like to discuss the overall design in a separate thread.
-I wanted to comment and understand some details first.
-
-It is clear that you put a lot of effort into it. Also it is great
-that you tried to formalize the barriers. But it is still very
-complicated.
-
-
-> I think trying to see "everything at once" with a top-down view is going
-> to seem too complex and hurt your brain. I think it would be easier to
-> verify the internal consistency of the individual dataring and numlist
-> structures first. Once you have faith in the integrity of those
-> structures, moving to the high-level ringbuffer is a much smaller
-> step.
-
-I try hard to understand the think from different angles. I started
-with numlist.c and there was quite some dependency on the rest.
-Then I started to check the overall algorithm and saw even more
-points that synchronized against more locations or synchronized
-against another structures.
-
-I do not know. I am going to stare more into it. It is possible
-that I will get on top of it in the end.
-
-I'll also try to apply the patch adding my approach. I wonder
-if it makes a difference.
-
-Best Regards,
-Petr
+--2oS5YaxWCcQjTEyO--
