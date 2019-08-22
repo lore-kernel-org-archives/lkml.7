@@ -2,152 +2,442 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5E7C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37352C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6B84206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:48:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="P1Y0ZkSh"
+	by mail.kernel.org (Postfix) with ESMTP id F165422CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387811AbfHVKsM (ORCPT
+        id S2387825AbfHVKsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 06:48:12 -0400
-Received: from mail-eopbgr150121.outbound.protection.outlook.com ([40.107.15.121]:33286
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        Thu, 22 Aug 2019 06:48:22 -0400
+Received: from bran.ispras.ru ([83.149.199.196]:30099 "EHLO smtp.ispras.ru"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732494AbfHVKsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:48:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mqnp9Z/eeJWIiQO2tp86Gcv8yCatLp6U/QCxd8YfXnAWOIkk+weDYdu2jgAaOkiVLIVMsX6Hr5+hZd/LzJxQBMZZ4VIeMpSY3H9s7ggwUbqh481FJIy4IuLeoWyuW8+CtDkgge3bGBH8r5eSyyHJnzQVBKVpaGDKLpx8/tbpGh8z97TsKS3WgIqgLeh/4/8ctQTb4or08de3zZ6R0kUZ/cUvJLPhTQJ7ngGbrM9djehIWF4IIKW45chE8O+rW8noH2VwHY7pkxLOal8bLgeeZKP+kw4OWksryXIFD6tK2Eh5vKroQF0+MZJF5GGwCtDKwyG4QltDjK072XGhtU0MbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XPvVUob0c0d1S+fmQT9H6gkk2lxFy0seicc/ClTLuso=;
- b=VzghZ9dXYBh6A4qcrSolMPBm6ocgVh2dfwN8BJgz+YLmlAYhvxfOl874D7yj3v16nm8eJ7sH0mvoT9hJg3CpmfPogSxLlvjUT0GkCWlGPs71sDIeKee2jUM4FMKHJDjJO64CSnZKlBbUHEW1x8G9VvO5s1ajblkLVSKg1oSdso+s4mq2cPCk8gGl53i/5C/Xgn2SLphudxLV7wphK9AcDxe50H57z9cv9aZWKt7D0tz1gqfqRxCBjaXkh51TBnmXpLeeQ8AmYiMA/R4dQYUXzzencMxcZVHm6N5KWrKued12ciukPTANTzH1tMPMzmE07mBZZCVbXSwW52yXZeJrsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XPvVUob0c0d1S+fmQT9H6gkk2lxFy0seicc/ClTLuso=;
- b=P1Y0ZkSh6Zq1R5QuDtdd48M1fg0zWldYl7qksRSJHozMl5o8KQ3bAge7CRtWQLXAEGFc2lYQM7loX23+fDE8kr/7isAeJu4E6gDsgM3QqDWuspBgf8N9wqErgV531+UnHVgEv5ofwdEemNWNhl0IXU3B8alg1Aj9x2vEuNNYPqQ=
-Received: from VI1PR08MB2782.eurprd08.prod.outlook.com (10.170.236.143) by
- VI1PR08MB2655.eurprd08.prod.outlook.com (10.175.245.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.18; Thu, 22 Aug 2019 10:48:08 +0000
-Received: from VI1PR08MB2782.eurprd08.prod.outlook.com
- ([fe80::2969:e370:fb70:71a]) by VI1PR08MB2782.eurprd08.prod.outlook.com
- ([fe80::2969:e370:fb70:71a%3]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
- 10:48:08 +0000
-From:   Jan Dakinevich <jan.dakinevich@virtuozzo.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Denis Lunev <den@virtuozzo.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>,
-        "jan.dakinevich@gmail.com" <jan.dakinevich@gmail.com>,
-        Jan Dakinevich <jan.dakinevich@virtuozzo.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Alexey Kuznetsov (C)" <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Johannes Berg <johannes.berg@intel.com>,
-        David Ahern <dsahern@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        John Hurley <john.hurley@netronome.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Eric Dumazet <edumazet@google.com>,
-        Li RongQing <lirongqing@baidu.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Patrick Talbert <ptalbert@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        id S1732494AbfHVKsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 06:48:21 -0400
+X-Greylist: delayed 378 seconds by postgrey-1.27 at vger.kernel.org; Thu, 22 Aug 2019 06:48:20 EDT
+Received: from myklebust.intra.ispras.ru (unknown [10.10.2.207])
+        by smtp.ispras.ru (Postfix) with ESMTP id 52A70201D0;
+        Thu, 22 Aug 2019 13:41:59 +0300 (MSK)
+From:   Anton Vasilyev <vasilyev@ispras.ru>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Anton Vasilyev <vasilyev@ispras.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>
-Subject: [PATCH 0/3] rework netlink skb allocation
-Thread-Topic: [PATCH 0/3] rework netlink skb allocation
-Thread-Index: AQHVWNcVBzufB0ixBkav/5yACjs/iw==
-Date:   Thu, 22 Aug 2019 10:48:08 +0000
-Message-ID: <1566470851-4694-1-git-send-email-jan.dakinevich@virtuozzo.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0202CA0033.eurprd02.prod.outlook.com
- (2603:10a6:3:e4::19) To VI1PR08MB2782.eurprd08.prod.outlook.com
- (2603:10a6:802:19::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jan.dakinevich@virtuozzo.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.1.4
-x-originating-ip: [185.231.240.5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f7f3b429-3346-40df-56a6-08d726ee37e1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR08MB2655;
-x-ms-traffictypediagnostic: VI1PR08MB2655:
-x-ld-processed: 0bc7f26d-0264-416e-a6fc-8352af79c58f,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR08MB26559CD07CE0CE988AFD5A318AA50@VI1PR08MB2655.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 01371B902F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(366004)(136003)(376002)(39840400004)(199004)(189003)(2616005)(99286004)(66476007)(66946007)(66556008)(5660300002)(476003)(64756008)(6116002)(66446008)(8936002)(3846002)(478600001)(6506007)(386003)(81166006)(7406005)(81156014)(44832011)(316002)(52116002)(8676002)(14444005)(305945005)(6486002)(256004)(5640700003)(86362001)(71200400001)(6512007)(102836004)(14454004)(7736002)(6436002)(186003)(7416002)(486006)(50226002)(66066001)(4744005)(2906002)(6916009)(36756003)(2501003)(53936002)(2351001)(71190400001)(25786009)(4326008)(54906003)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR08MB2655;H:VI1PR08MB2782.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: LDyzR3zFN40v8lkANxiMle0FU1hl5xtt/dMWarNJVdcXtLXRJPZ6EiWUYPzVU48A5mx3hMo9CynUm8hPv6ZpLT7VsDhQucQr5WnShWS8PY35ghia7ckPyx20TRVvOzSnIeN8Gw7usI0sX9Lg7a2EHzkzF6Qy3fk6Hbp2JByUnP4pf5QVWaf0yIa4xIAAGPH3X3vRQR4lqtjgtXw4066HMd5GzYbvHIxaem8emX1O4TYTWKT9a3c3EjsAN/1/Fb2NM5+nFOAWMFCZULoYzwxfDENDhWm0oTCNkYtfsdQbx7vvfVPCte++Gb3WKe8iMxoPzKGM5hhNiQqEZP3qAIwitslwkpqpxZ1/nS4vh/drbPyr6XgewT5Hy48Xu5BoE0RfSPHDa8ubaGUKbaSjpyCWx49IWN02ZACqy5WchTuRbLs=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Kees Cook <keescook@chromium.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        ldv-project@linuxtesting.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dw2102: Fix use after free
+Date:   Thu, 22 Aug 2019 13:41:47 +0300
+Message-Id: <20190822104147.4420-1-vasilyev@ispras.ru>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <fcae86f2137822d7658d2bbd4bd8dd35bfb319b0.camel@decadent.org.uk>
+References: 
 MIME-Version: 1.0
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7f3b429-3346-40df-56a6-08d726ee37e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 10:48:08.0649
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uwMgAaZ387mInRd+RVR4jj4ndd0WETZn+pffh7M+KPeghSXVZLfobfASlBhhG7O7YEvzblVWR+zrPSgTtTpUk48NnunB7eIeZeuuTxJuxMg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB2655
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, userspace is able to initiate costly high-order allocation in=20
-kernel sending large broadcast netlink message, which is considered=20
-undesirable. At the same time, unicast message are safe in this regard,=20
-because they uses vmalloc-ed memory.
+dvb_usb_device_init stores parts of properties at d->props
+and d->desc and uses it on dvb_usb_device_exit.
+Free of properties on module probe leads to use after free.
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204597
 
-This series introduces changes, that allow broadcast messages to be=20
-allocated with vmalloc() as well as unicast.
+The patch makes properties static instead of allocated on heap to prevent
+memleak and use after free.
+Also fixes s421_properties.devices initialization to have 2 element
+instead of 6 copied from p7500_properties.
 
-Jan Dakinevich (3):
-  skbuff: use kvfree() to deallocate head
-  netlink: always use vmapped memory for skb data
-  netlink: use generic skb_set_owner_r()
 
- include/linux/netlink.h   | 16 ----------------
- net/core/skbuff.c         |  2 +-
- net/ipv4/fib_frontend.c   |  2 +-
- net/netfilter/nfnetlink.c |  2 +-
- net/netlink/af_netlink.c  | 39 +++++++--------------------------------
- 5 files changed, 10 insertions(+), 51 deletions(-)
+Signed-off-by: Anton Vasilyev <vasilyev@ispras.ru>
+Fixes: 299c7007e936 ("media: dw2102: Fix memleak on sequence of probes")
+---
+ drivers/media/usb/dvb-usb/dw2102.c | 338 ++++++++++++++++++-----------
+ 1 file changed, 215 insertions(+), 123 deletions(-)
 
---=20
-2.1.4
+diff --git a/drivers/media/usb/dvb-usb/dw2102.c b/drivers/media/usb/dvb-usb/dw2102.c
+index b960abd00d48..7ea3aa0fee40 100644
+--- a/drivers/media/usb/dvb-usb/dw2102.c
++++ b/drivers/media/usb/dvb-usb/dw2102.c
+@@ -2098,46 +2098,153 @@ static struct dvb_usb_device_properties s6x0_properties = {
+ 	}
+ };
+ 
+-static const struct dvb_usb_device_description d1100 = {
+-	"Prof 1100 USB ",
+-	{&dw2102_table[PROF_1100], NULL},
+-	{NULL},
+-};
++static struct dvb_usb_device_properties p1100_properties = {
++	.caps = DVB_USB_IS_AN_I2C_ADAPTER,
++	.usb_ctrl = DEVICE_SPECIFIC,
++	.size_of_priv = sizeof(struct dw2102_state),
++	.firmware = P1100_FIRMWARE,
++	.no_reconnect = 1,
+ 
+-static const struct dvb_usb_device_description d660 = {
+-	"TeVii S660 USB",
+-	{&dw2102_table[TEVII_S660], NULL},
+-	{NULL},
+-};
++	.i2c_algo = &s6x0_i2c_algo,
++	.rc.core = {
++		.rc_interval = 150,
++		.rc_codes = RC_MAP_TBS_NEC,
++		.module_name = "dw2102",
++		.allowed_protos   = RC_PROTO_BIT_NEC,
++		.rc_query = prof_rc_query,
++	},
+ 
+-static const struct dvb_usb_device_description d480_1 = {
+-	"TeVii S480.1 USB",
+-	{&dw2102_table[TEVII_S480_1], NULL},
+-	{NULL},
++	.generic_bulk_ctrl_endpoint = 0x81,
++	.num_adapters = 1,
++	.download_firmware = dw2102_load_firmware,
++	.read_mac_address = s6x0_read_mac_address,
++	.adapter = {
++		{
++			.num_frontends = 1,
++			.fe = {{
++				.frontend_attach = stv0288_frontend_attach,
++				.stream = {
++					.type = USB_BULK,
++					.count = 8,
++					.endpoint = 0x82,
++					.u = {
++						.bulk = {
++							.buffersize = 4096,
++						}
++					}
++				},
++			} },
++		}
++	},
++	.num_device_descs = 1,
++	.devices = {
++		{"Prof 1100 USB ",
++			{&dw2102_table[PROF_1100], NULL},
++			{NULL},
++		},
++	}
+ };
+ 
+-static const struct dvb_usb_device_description d480_2 = {
+-	"TeVii S480.2 USB",
+-	{&dw2102_table[TEVII_S480_2], NULL},
+-	{NULL},
+-};
++static struct dvb_usb_device_properties s660_properties = {
++	.caps = DVB_USB_IS_AN_I2C_ADAPTER,
++	.usb_ctrl = DEVICE_SPECIFIC,
++	.size_of_priv = sizeof(struct dw2102_state),
++	.firmware = S660_FIRMWARE,
++	.no_reconnect = 1,
+ 
+-static const struct dvb_usb_device_description d7500 = {
+-	"Prof 7500 USB DVB-S2",
+-	{&dw2102_table[PROF_7500], NULL},
+-	{NULL},
+-};
++	.i2c_algo = &s6x0_i2c_algo,
++	.rc.core = {
++		.rc_interval = 150,
++		.rc_codes = RC_MAP_TEVII_NEC,
++		.module_name = "dw2102",
++		.allowed_protos   = RC_PROTO_BIT_NEC,
++		.rc_query = dw2102_rc_query,
++	},
+ 
+-static const struct dvb_usb_device_description d421 = {
+-	"TeVii S421 PCI",
+-	{&dw2102_table[TEVII_S421], NULL},
+-	{NULL},
++	.generic_bulk_ctrl_endpoint = 0x81,
++	.num_adapters = 1,
++	.download_firmware = dw2102_load_firmware,
++	.read_mac_address = s6x0_read_mac_address,
++	.adapter = {
++		{
++			.num_frontends = 1,
++			.fe = {{
++				.frontend_attach = ds3000_frontend_attach,
++				.stream = {
++					.type = USB_BULK,
++					.count = 8,
++					.endpoint = 0x82,
++					.u = {
++						.bulk = {
++							.buffersize = 4096,
++						}
++					}
++				},
++			} },
++		}
++	},
++	.num_device_descs = 3,
++	.devices = {
++		{"TeVii S660 USB",
++			{&dw2102_table[TEVII_S660], NULL},
++			{NULL},
++		},
++		{"TeVii S480.1 USB",
++			{&dw2102_table[TEVII_S480_1], NULL},
++			{NULL},
++		},
++		{"TeVii S480.2 USB",
++			{&dw2102_table[TEVII_S480_2], NULL},
++			{NULL},
++		},
++	}
+ };
+ 
+-static const struct dvb_usb_device_description d632 = {
+-	"TeVii S632 USB",
+-	{&dw2102_table[TEVII_S632], NULL},
+-	{NULL},
++static struct dvb_usb_device_properties p7500_properties = {
++	.caps = DVB_USB_IS_AN_I2C_ADAPTER,
++	.usb_ctrl = DEVICE_SPECIFIC,
++	.size_of_priv = sizeof(struct dw2102_state),
++	.firmware = P7500_FIRMWARE,
++	.no_reconnect = 1,
++
++	.i2c_algo = &s6x0_i2c_algo,
++	.rc.core = {
++		.rc_interval = 150,
++		.rc_codes = RC_MAP_TBS_NEC,
++		.module_name = "dw2102",
++		.allowed_protos   = RC_PROTO_BIT_NEC,
++		.rc_query = prof_rc_query,
++	},
++
++	.generic_bulk_ctrl_endpoint = 0x81,
++	.num_adapters = 1,
++	.download_firmware = dw2102_load_firmware,
++	.read_mac_address = s6x0_read_mac_address,
++	.adapter = {
++		{
++			.num_frontends = 1,
++			.fe = {{
++				.frontend_attach = prof_7500_frontend_attach,
++				.stream = {
++					.type = USB_BULK,
++					.count = 8,
++					.endpoint = 0x82,
++					.u = {
++						.bulk = {
++							.buffersize = 4096,
++						}
++					}
++				},
++			} },
++		}
++	},
++	.num_device_descs = 1,
++	.devices = {
++		{"Prof 7500 USB DVB-S2",
++			{&dw2102_table[PROF_7500], NULL},
++			{NULL},
++		},
++	}
+ };
+ 
+ static struct dvb_usb_device_properties su3000_properties = {
+@@ -2209,6 +2316,59 @@ static struct dvb_usb_device_properties su3000_properties = {
+ 	}
+ };
+ 
++static struct dvb_usb_device_properties s421_properties = {
++	.caps = DVB_USB_IS_AN_I2C_ADAPTER,
++	.usb_ctrl = DEVICE_SPECIFIC,
++	.size_of_priv = sizeof(struct dw2102_state),
++	.power_ctrl = su3000_power_ctrl,
++	.num_adapters = 1,
++	.identify_state	= su3000_identify_state,
++	.i2c_algo = &su3000_i2c_algo,
++
++	.rc.core = {
++		.rc_interval = 150,
++		.rc_codes = RC_MAP_SU3000,
++		.module_name = "dw2102",
++		.allowed_protos   = RC_PROTO_BIT_RC5,
++		.rc_query = su3000_rc_query,
++	},
++
++	.read_mac_address = su3000_read_mac_address,
++
++	.generic_bulk_ctrl_endpoint = 0x01,
++
++	.adapter = {
++		{
++		.num_frontends = 1,
++		.fe = {{
++			.streaming_ctrl   = su3000_streaming_ctrl,
++			.frontend_attach  = m88rs2000_frontend_attach,
++			.stream = {
++				.type = USB_BULK,
++				.count = 8,
++				.endpoint = 0x82,
++				.u = {
++					.bulk = {
++						.buffersize = 4096,
++					}
++				}
++			}
++		} },
++		}
++	},
++	.num_device_descs = 2,
++	.devices = {
++		{ "TeVii S421 PCI",
++			{ &dw2102_table[TEVII_S421], NULL },
++			{ NULL },
++		},
++		{ "TeVii S632 USB",
++			{ &dw2102_table[TEVII_S632], NULL },
++			{ NULL },
++		},
++	}
++};
++
+ static struct dvb_usb_device_properties t220_properties = {
+ 	.caps = DVB_USB_IS_AN_I2C_ADAPTER,
+ 	.usb_ctrl = DEVICE_SPECIFIC,
+@@ -2326,101 +2486,33 @@ static struct dvb_usb_device_properties tt_s2_4600_properties = {
+ static int dw2102_probe(struct usb_interface *intf,
+ 		const struct usb_device_id *id)
+ {
+-	int retval = -ENOMEM;
+-	struct dvb_usb_device_properties *p1100;
+-	struct dvb_usb_device_properties *s660;
+-	struct dvb_usb_device_properties *p7500;
+-	struct dvb_usb_device_properties *s421;
+-
+-	p1100 = kmemdup(&s6x0_properties,
+-			sizeof(struct dvb_usb_device_properties), GFP_KERNEL);
+-	if (!p1100)
+-		goto err0;
+-
+-	/* copy default structure */
+-	/* fill only different fields */
+-	p1100->firmware = P1100_FIRMWARE;
+-	p1100->devices[0] = d1100;
+-	p1100->rc.core.rc_query = prof_rc_query;
+-	p1100->rc.core.rc_codes = RC_MAP_TBS_NEC;
+-	p1100->adapter->fe[0].frontend_attach = stv0288_frontend_attach;
+-
+-	s660 = kmemdup(&s6x0_properties,
+-		       sizeof(struct dvb_usb_device_properties), GFP_KERNEL);
+-	if (!s660)
+-		goto err1;
+-
+-	s660->firmware = S660_FIRMWARE;
+-	s660->num_device_descs = 3;
+-	s660->devices[0] = d660;
+-	s660->devices[1] = d480_1;
+-	s660->devices[2] = d480_2;
+-	s660->adapter->fe[0].frontend_attach = ds3000_frontend_attach;
+-
+-	p7500 = kmemdup(&s6x0_properties,
+-			sizeof(struct dvb_usb_device_properties), GFP_KERNEL);
+-	if (!p7500)
+-		goto err2;
+-
+-	p7500->firmware = P7500_FIRMWARE;
+-	p7500->devices[0] = d7500;
+-	p7500->rc.core.rc_query = prof_rc_query;
+-	p7500->rc.core.rc_codes = RC_MAP_TBS_NEC;
+-	p7500->adapter->fe[0].frontend_attach = prof_7500_frontend_attach;
+-
+-
+-	s421 = kmemdup(&su3000_properties,
+-		       sizeof(struct dvb_usb_device_properties), GFP_KERNEL);
+-	if (!s421)
+-		goto err3;
+-
+-	s421->num_device_descs = 2;
+-	s421->devices[0] = d421;
+-	s421->devices[1] = d632;
+-	s421->adapter->fe[0].frontend_attach = m88rs2000_frontend_attach;
+-
+-	if (0 == dvb_usb_device_init(intf, &dw2102_properties,
+-			THIS_MODULE, NULL, adapter_nr) ||
+-	    0 == dvb_usb_device_init(intf, &dw2104_properties,
+-			THIS_MODULE, NULL, adapter_nr) ||
+-	    0 == dvb_usb_device_init(intf, &dw3101_properties,
+-			THIS_MODULE, NULL, adapter_nr) ||
+-	    0 == dvb_usb_device_init(intf, &s6x0_properties,
+-			THIS_MODULE, NULL, adapter_nr) ||
+-	    0 == dvb_usb_device_init(intf, p1100,
+-			THIS_MODULE, NULL, adapter_nr) ||
+-	    0 == dvb_usb_device_init(intf, s660,
+-			THIS_MODULE, NULL, adapter_nr) ||
+-	    0 == dvb_usb_device_init(intf, p7500,
+-			THIS_MODULE, NULL, adapter_nr) ||
+-	    0 == dvb_usb_device_init(intf, s421,
+-			THIS_MODULE, NULL, adapter_nr) ||
+-	    0 == dvb_usb_device_init(intf, &su3000_properties,
+-			 THIS_MODULE, NULL, adapter_nr) ||
+-	    0 == dvb_usb_device_init(intf, &t220_properties,
+-			 THIS_MODULE, NULL, adapter_nr) ||
+-	    0 == dvb_usb_device_init(intf, &tt_s2_4600_properties,
+-			 THIS_MODULE, NULL, adapter_nr)) {
+-
+-		/* clean up copied properties */
+-		kfree(s421);
+-		kfree(p7500);
+-		kfree(s660);
+-		kfree(p1100);
++	if (!(dvb_usb_device_init(intf, &dw2102_properties,
++			THIS_MODULE, NULL, adapter_nr) &&
++	    dvb_usb_device_init(intf, &dw2104_properties,
++			THIS_MODULE, NULL, adapter_nr) &&
++	    dvb_usb_device_init(intf, &dw3101_properties,
++			THIS_MODULE, NULL, adapter_nr) &&
++	    dvb_usb_device_init(intf, &s6x0_properties,
++			THIS_MODULE, NULL, adapter_nr) &&
++	    dvb_usb_device_init(intf, &p1100_properties,
++			THIS_MODULE, NULL, adapter_nr) &&
++	    dvb_usb_device_init(intf, &s660_properties,
++			THIS_MODULE, NULL, adapter_nr) &&
++	    dvb_usb_device_init(intf, &p7500_properties,
++			THIS_MODULE, NULL, adapter_nr) &&
++	    dvb_usb_device_init(intf, &s421_properties,
++			THIS_MODULE, NULL, adapter_nr) &&
++	    dvb_usb_device_init(intf, &su3000_properties,
++			 THIS_MODULE, NULL, adapter_nr) &&
++	    dvb_usb_device_init(intf, &t220_properties,
++			 THIS_MODULE, NULL, adapter_nr) &&
++	    dvb_usb_device_init(intf, &tt_s2_4600_properties,
++			 THIS_MODULE, NULL, adapter_nr))) {
+ 
+ 		return 0;
+ 	}
+ 
+-	retval = -ENODEV;
+-	kfree(s421);
+-err3:
+-	kfree(p7500);
+-err2:
+-	kfree(s660);
+-err1:
+-	kfree(p1100);
+-err0:
+-	return retval;
++	return -ENODEV;
+ }
+ 
+ static void dw2102_disconnect(struct usb_interface *intf)
+-- 
+2.23.0
 
