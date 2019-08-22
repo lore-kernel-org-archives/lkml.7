@@ -2,179 +2,192 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E809EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F91C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7A92082F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD6732082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y/3Bzjx6"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="E8GxFjID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390799AbfHVSs1 (ORCPT
+        id S2391086AbfHVStD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 14:48:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40477 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728671AbfHVSs1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 14:48:27 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w16so4544343pfn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 11:48:26 -0700 (PDT)
+        Thu, 22 Aug 2019 14:49:03 -0400
+Received: from mail-eopbgr690068.outbound.protection.outlook.com ([40.107.69.68]:53823
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390392AbfHVStA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 14:49:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TAzFtntfi62y+Jh2qOx5SFFawLVEDCDCdaEPKnomy/TWzz74TXAaOq1jqTigu8KMxUWmJgdtcn3KQUcHzdgH4HnXsrvhUuyGC4EJzTen5nVB5POGNLnyPuwJXMocOPrNxLcPNw1PS2di1XBLx//t3FTYhQwcPaGetnyc6dZQgWZ9qpJG3wW/w5NmDJKB6Jud09/kuQ8JUooStBej3WHKCw8YN4zdtCXUmKdu6ftm6S54yGawZ7HOx6Bf3EoS7G6aogX+5ES6PNxRNOhmWH7UjoDaObamISCkN8f58FvnxZGTobJ51zL82tYrG3U+S4lajzNgrbT2g0YT3EEj08ufug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e8tOYs/P0C1jrZrSMZd/iU96wMxYNdNq6HLU+AkCY90=;
+ b=LooodlnJS2bvSgmNrlMYUNsqyi6SwMBR+qMWmHOn0K3D7SzlNp4SM0m/zsP5eW027/PQbGU2pIwpjivRwzFE0oxNxL4xj3l3x9veaTuopdMjLHc7ua2TzWzhSxHEnoUh0jMl66tJKi1Qd+qRI2FQ5TfnJx9nFPgIbMJGEk2YsU1o7cphCNqsVkWSrh3HXLID59d17c0wOy/vok8Jj982m342a47vrfyE6+xpwz3SFipxdwPRhhAa++fDmfWzqT1oTUgMf5FuYJYkxv106ZntSb4hRXPfxK9uMQzVaYU69OmWH65KDJdb0mpUAFDj4DncXUr1QzAxdVmSsi+ndHni/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=knLIZp+zbOlNhuJ4IK30KG/S108pFq9/fsx7RaEndME=;
-        b=Y/3Bzjx68Z/0x/qyRf5TmSwdU/l3KYW+FJAfKio/i72CU6lYkPg+uQR+uvH3HPQHZF
-         yiwVw8oDBsgK1c59LZNoizarw0s5UBRbbNViBSwmovomkF1xVgU1E0hg+2WA1aN9VWB6
-         kNmBksdx8HzIQrWBw88JvqCZJONM/r4afd4OIvxtUpoW+EkqxiJ6F8cUQ2HoP6iX7AC0
-         t7B5khxe+/5zrEso8b4AW2JTHA4OUnLvbM7P2lcgep2yeh0PHWpEricbYlnxEvEQGrfs
-         4jA9sjkxwhsaJNLmMjA+6f+KbtwdwNlzS2EbBmAeGcx3ndmC0SCsLlvOvPQmB+64q2Dd
-         seQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version;
-        bh=knLIZp+zbOlNhuJ4IK30KG/S108pFq9/fsx7RaEndME=;
-        b=EBPTz+I9iTTBS+vbQ9tMHy9dhxlNprta6fCG56mo310xsrKFDGlgogm9B7Y1iEvmMc
-         QwqbpsJS/+ltGOK8lBidnyDYHaSjakkMEKDrnOXOpTNPlJNbKcZRvfpaNvNYmxgAqFKQ
-         42ejF4e3h29jYr9EaOWI9oMfHudQAR0GYntoLhx7VhOS3B9zj+FvdKO8yGAuQLmqTips
-         /ybWFHrRGlB7y8z9cTJibGYLadJ7LiTRQExE+x6FNv0zdL1sTsN1UweUaNY20xTE2qBX
-         7sqewWrnBH26kDdAznSnbhe6HVLyFG7aEeIbxuh1xfUuX1dxIrzgnYKZm3F7b4rGqYB0
-         F4pg==
-X-Gm-Message-State: APjAAAXEpTjF09JfKegnhs8P2aTgGzPFczKIUlIgozqNrQYIZYihVAfp
-        JHLyXPAKzeHN0BZ9XXw+9SjbFg==
-X-Google-Smtp-Source: APXvYqx9ItZpsQA3aP7c+m+ExOGac4lh9311IY90jGMZ4xk/1RTlPD477snAzdaXSWuU6Y7AlalpEA==
-X-Received: by 2002:a63:2148:: with SMTP id s8mr570768pgm.336.1566499706029;
-        Thu, 22 Aug 2019 11:48:26 -0700 (PDT)
-Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
-        by smtp.gmail.com with ESMTPSA id j10sm110010pfn.188.2019.08.22.11.48.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 11:48:25 -0700 (PDT)
-From:   bsegall@google.com
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        peterz@infradead.org, liangyan.peng@linux.alibaba.com,
-        shanpeic@linux.alibaba.com, xlpang@linux.alibaba.com,
-        pjt@google.com, stable@vger.kernel.org
-Subject: Re: [PATCH] sched/fair: Add missing unthrottle_cfs_rq()
-References: <0004fb54-cdee-2197-1cbf-6e2111d39ed9@arm.com>
-        <20190820105420.7547-1-valentin.schneider@arm.com>
-Date:   Thu, 22 Aug 2019 11:48:24 -0700
-In-Reply-To: <20190820105420.7547-1-valentin.schneider@arm.com> (Valentin
-        Schneider's message of "Tue, 20 Aug 2019 11:54:20 +0100")
-Message-ID: <xm26lfvlhw93.fsf@bsegall-linux.svl.corp.google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=e8tOYs/P0C1jrZrSMZd/iU96wMxYNdNq6HLU+AkCY90=;
+ b=E8GxFjID+5qqPObwUAS8ewJkQcXqzNCNAKZuzYS+08M/Of813//JAdcPKc9pTPSvcUpuf0O8Y+eMFMPBrxu4D+g9xomZ+bggzi1LySjuVwisK+LUji9jXjvMQoZhatU4p2kpilSy2EaRi57h0PiKJou9qQ/w1XunI6nAnl8RhEI=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2829.namprd12.prod.outlook.com (20.177.250.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.18; Thu, 22 Aug 2019 18:48:54 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d0b4:a849:c22b:3b53]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d0b4:a849:c22b:3b53%2]) with mapi id 15.20.2178.020; Thu, 22 Aug 2019
+ 18:48:53 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+CC:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>
+Subject: [RFC PATCH v2] EDAC/amd64: Check for memory before fully initializing
+ an instance
+Thread-Topic: [RFC PATCH v2] EDAC/amd64: Check for memory before fully
+ initializing an instance
+Thread-Index: AQHVWRo+xR0jdEvkBUStALn2kRVlFQ==
+Date:   Thu, 22 Aug 2019 18:48:53 +0000
+Message-ID: <20190822184843.187134-1-Yazen.Ghannam@amd.com>
+References: <20190821235938.118710-1-Yazen.Ghannam@amd.com>
+In-Reply-To: <20190821235938.118710-1-Yazen.Ghannam@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0701CA0044.namprd07.prod.outlook.com
+ (2603:10b6:803:2d::17) To SN6PR12MB2639.namprd12.prod.outlook.com
+ (2603:10b6:805:6f::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [165.204.78.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b0da1099-796a-4e82-ea83-08d727316152
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2829;
+x-ms-traffictypediagnostic: SN6PR12MB2829:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR12MB28299A1861B678662D6797DEF8A50@SN6PR12MB2829.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 01371B902F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(346002)(366004)(199004)(189003)(50226002)(2906002)(186003)(6116002)(36756003)(3846002)(8936002)(11346002)(478600001)(53936002)(14454004)(316002)(25786009)(26005)(6486002)(6506007)(7736002)(6916009)(102836004)(386003)(5640700003)(476003)(2616005)(486006)(446003)(6436002)(305945005)(6512007)(6306002)(81166006)(81156014)(8676002)(256004)(66446008)(14444005)(66556008)(64756008)(66476007)(66946007)(5660300002)(76176011)(54906003)(1076003)(2351001)(66066001)(52116002)(4326008)(86362001)(99286004)(2501003)(966005)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2829;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: YrKZt25+x7xEYbMo4bJNndD6l2VGk8ESUwXSyVVP7pdxQe9oJjxiPaPyVTNY2o+BxJxKjXOFhr/8oSQ/aTmt0yI7f7HrrfRD8Ku7QE5Cn1z6SpbPJGiDG1LQh2F5IPKuttYAJNhxr0iKaWSybDUTC5iGHmMNQl1oR21sPwA2/LwmOd6uXOOifLEnG3rgVaiNeR58rgaVQ8aghaIHaEc3WD2f9HsrEvLs0SqQV5i1qaKFVoT4FVFfUgpOUId+iEE9i1lWLvghE1+ilVo4TgPX6AcvX0/NZmfiyeFlDqxk++hw+YuQqo+1NR9XdBK6mlfTt2oFYBAwOdbkf6NjBXjQhBhlnpk18wXH7Gf9xQWdwJy3TZmUuVRzE/hDO20Fa64X1c48/yFVJLz5vNRGUn60AlifRgwrTIOam8B6XHJawCs=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0da1099-796a-4e82-ea83-08d727316152
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 18:48:53.8237
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: O9YflhWcgta46s3XZ0zCMOTiHyjMUJasm0kqQuCVst+adnAK7YLlhIzbhvOyYMnTvuY9zHDuP7xjD0qMauzJdQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2829
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Valentin Schneider <valentin.schneider@arm.com> writes:
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-> Turns out a cfs_rq->runtime_remaining can become positive in
-> assign_cfs_rq_runtime(), but this codepath has no call to
-> unthrottle_cfs_rq().
->
-> This can leave us in a situation where we have a throttled cfs_rq with
-> positive ->runtime_remaining, which breaks the math in
-> distribute_cfs_runtime(): this function expects a negative value so that
-> it may safely negate it into a positive value.
->
-> Add the missing unthrottle_cfs_rq(). While at it, add a WARN_ON where
-> we expect negative values, and pull in a comment from the mailing list
-> that didn't make it in [1].
->
-> [1]: https://lkml.kernel.org/r/BANLkTi=NmCxKX6EbDQcJYDJ5kKyG2N1ssw@mail.gmail.com
->
-> Cc: <stable@vger.kernel.org>
-> Fixes: ec12cb7f31e2 ("sched: Accumulate per-cfs_rq cpu usage and charge against bandwidth")
-> Reported-by: Liangyan <liangyan.peng@linux.alibaba.com>
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Return early before checking for ECC if the node does not have any
+populated memory.
 
-Having now seen the rest of the thread:
+Free any cached hardware data before returning. Also, return 0 in this
+case since this is not a failure. Other nodes may have memory and the
+module should attempt to load an instance for them.
 
-Could you send the repro, as it doesn't seem to have reached lkml, so
-that I can confirm my guess as to what's going on?
+Move printing of hardware information to after the instance is
+initialized, so that the information is only printed for nodes with
+memory.
 
-It seems most likely we throttle during one of the remove-change-adds in
-set_cpus_allowed and friends or during the put half of pick_next_task
-followed by idle balance to drop the lock. Then distribute races with a
-later assign_cfs_rq_runtime so that the account finds runtime in the
-cfs_b.
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+---
+Link:
+https://lkml.kernel.org/r/20190821235938.118710-11-Yazen.Ghannam@amd.com
 
-Re clock_task, it's only frozen for the purposes of pelt, not delta_exec
+v1->v2:
+* Moved hardware info printing to after instance is initialized.
+* Added message for when instance has no memory.
 
-The other possible way to fix this would be to skip assign if throttled,
-since the only time it could succeed is if we're racing with a
-distribute that will unthrottle use anyways.
+ drivers/edac/amd64_edac.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-The main advantage of that is the risk of screwy behavior due to unthrottling
-in the middle of pick_next/put_prev. The disadvantage is that we already
-have the lock, if it works we don't need an ipi to trigger a preempt,
-etc. (But I think one of the issues is that we may trigger the preempt
-on the previous task, not the next, and I'm not 100% sure that will
-carry over correctly)
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index c1cb0234f085..3f0fe6ed1fa3 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -2831,8 +2831,6 @@ static void read_mc_regs(struct amd64_pvt *pvt)
+ 	edac_dbg(1, "  DIMM type: %s\n", edac_mem_types[pvt->dram_type]);
+=20
+ 	determine_ecc_sym_sz(pvt);
+-
+-	dump_misc_regs(pvt);
+ }
+=20
+ /*
+@@ -3505,6 +3503,23 @@ static int init_one_instance(struct amd64_pvt *pvt,
+ 	return ret;
+ }
+=20
++static bool instance_has_memory(struct amd64_pvt *pvt)
++{
++	bool cs_enabled =3D false;
++	int num_channels =3D 2;
++	int cs =3D 0, dct =3D 0;
++
++	if (pvt->umc)
++		num_channels =3D num_umcs;
++
++	for (dct =3D 0; dct < num_channels; dct++) {
++		for_each_chip_select(cs, dct, pvt)
++			cs_enabled |=3D csrow_enabled(cs, dct, pvt);
++	}
++
++	return cs_enabled;
++}
++
+ static int probe_one_instance(unsigned int nid)
+ {
+ 	struct pci_dev *F3 =3D node_to_amd_nb(nid)->misc;
+@@ -3535,6 +3550,12 @@ static int probe_one_instance(unsigned int nid)
+ 	if (ret < 0)
+ 		goto err_enable;
+=20
++	ret =3D 0;
++	if (!instance_has_memory(pvt)) {
++		amd64_warn("Node %d: DRAM ECC disabled. No DIMMs detected.\n", nid);
++		goto err_enable;
++	}
++
+ 	if (!ecc_enabled(pvt)) {
+ 		ret =3D 0;
+=20
+@@ -3561,6 +3582,8 @@ static int probe_one_instance(unsigned int nid)
+ 		goto err_enable;
+ 	}
+=20
++	dump_misc_regs(pvt);
++
+ 	return ret;
+=20
+ err_enable:
+--=20
+2.17.1
 
-
-
-> ---
->  kernel/sched/fair.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 1054d2cf6aaa..219ff3f328e5 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4385,6 +4385,11 @@ static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq)
->  	return rq_clock_task(rq_of(cfs_rq)) - cfs_rq->throttled_clock_task_time;
->  }
->  
-> +static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
-> +{
-> +	return cfs_bandwidth_used() && cfs_rq->throttled;
-> +}
-> +
->  /* returns 0 on failure to allocate runtime */
->  static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
->  {
-> @@ -4411,6 +4416,9 @@ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
->  
->  	cfs_rq->runtime_remaining += amount;
->  
-> +	if (cfs_rq->runtime_remaining > 0 && cfs_rq_throttled(cfs_rq))
-> +		unthrottle_cfs_rq(cfs_rq);
-> +
->  	return cfs_rq->runtime_remaining > 0;
->  }
->  
-> @@ -4439,11 +4447,6 @@ void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
->  	__account_cfs_rq_runtime(cfs_rq, delta_exec);
->  }
->  
-> -static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
-> -{
-> -	return cfs_bandwidth_used() && cfs_rq->throttled;
-> -}
-> -
->  /* check whether cfs_rq, or any parent, is throttled */
->  static inline int throttled_hierarchy(struct cfs_rq *cfs_rq)
->  {
-> @@ -4628,6 +4631,10 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
->  		if (!cfs_rq_throttled(cfs_rq))
->  			goto next;
->  
-> +		/* By the above check, this should never be true */
-> +		WARN_ON(cfs_rq->runtime_remaining > 0);
-> +
-> +		/* Pick the minimum amount to return to a positive quota state */
->  		runtime = -cfs_rq->runtime_remaining + 1;
->  		if (runtime > remaining)
->  			runtime = remaining;
