@@ -2,113 +2,94 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3588CC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54EEC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0397421848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:51:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566460281;
-	bh=gLTtUwjy64ipJy2k/NTk5sFH5pVXBUlnIh6g4ASn+h8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CcVWKkaBDNZSWPZ8LZ/KPc2vkGeQeSP0vvpjt9b4sltDPqKkLjrygVd0OuBjLINLb
-	 wnyIdvZi+kMa8c2Rl/cL9LyNTTXy30tVEkilxf0QtKmj+4u57O5krjwTbvkPxf+Ves
-	 Q7gzwbwjTyVD5oUT/jMXRxTZo8Wxef+1mMtrbUlQ=
+	by mail.kernel.org (Postfix) with ESMTP id A11A0206BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 07:52:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="UsKrpxXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731436AbfHVHvU (ORCPT
+        id S1731709AbfHVHwO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 03:51:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbfHVHvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 03:51:19 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14431206BB;
-        Thu, 22 Aug 2019 07:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566460278;
-        bh=gLTtUwjy64ipJy2k/NTk5sFH5pVXBUlnIh6g4ASn+h8=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=Ky2LBlrT7dFKvo9bJZuLrmlUMzoL9mOIepdmpgN/5J0U2GQszKq8c812XWtyPgZAJ
-         VQvOcfVXrgKM1EtiW/FChHV8/AgFYBqM992VbtmAy8hGBAp/PrrbpQv1zWt7fcmGsP
-         tR3+UWfrdGzHxQLWk0LXQMb34AAoDtpVDawK0ge8=
-Date:   Thu, 22 Aug 2019 09:51:07 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-cc:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        linux-input@vger.kernel.org,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] HID: hidraw: Fix invalid read in hidraw_ioctl
-In-Reply-To: <Pine.LNX.4.44L0.1908211323030.1816-100000@iolanthe.rowland.org>
-Message-ID: <nycvar.YFH.7.76.1908220950470.27147@cbobk.fhfr.pm>
-References: <Pine.LNX.4.44L0.1908211323030.1816-100000@iolanthe.rowland.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Thu, 22 Aug 2019 03:52:14 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42552 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730037AbfHVHwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 03:52:14 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l14so4619279ljj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 00:52:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rCTePgG7RYdXOtsqMn/EGiKAq/u1kBDj9aPT9Dfgczw=;
+        b=UsKrpxXPuL+ZKlwuc+ITBE2tuLBFTuT+d1kgO/pLG86lqhfUTqbrbhF74QLrk18Pzb
+         aOSONgtap5+EOa0YnJJ0gx+bb3jdFQaJOFn7UB33gwPAQlJWy8VDqNOK6ZTbyqKmTSVM
+         pvhaBbl0n3KZ4qFLlOKtQ5UHKddxuxb/jsrZk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rCTePgG7RYdXOtsqMn/EGiKAq/u1kBDj9aPT9Dfgczw=;
+        b=l2RtoUtQwH+8Wa9whFkQZYBZXxLPKAPBCiB7cUvUg1LovP4F0HzeRO3ROE+YiV0mU8
+         KT8FuR75RBnNdTzTvNMsqitLVABvTwwWHUpk/urLuhhEF6Lwl4qJ/2rqOSZKIW9uCgVf
+         EMqx6Ag52HA8MXnA27PMxkeopAnu7XBbp5Dk5xV7EQd5cz4THKc40+KZgIhYkQlAvlPP
+         0k1RNNIeB2AhPnqvrc+Yg9rkbgd9pNgv2c4Qct8txc3XPGeircaMw0ykNAIfQ4kU2Z1Y
+         t/TVqnPdqV45MbltLu6xGJuOPUtbIL2PLl17XCQiu++DQ7UtnEhdntnr3UVyA/WwB8Fx
+         e5Zg==
+X-Gm-Message-State: APjAAAW4E6Bpcr1EdZPsRkv2ivqKN6YyYEha/2YPWF3VIqUAG9KWjoK1
+        llTG+PxXx9B3LGBaXl2C7PiGNA==
+X-Google-Smtp-Source: APXvYqxV31j+6lX+In5ijbALOUcTYMKfDsts8VM2xlJCyXRU+AgvcViEXDeB82pw2Jxiz7jc352mNA==
+X-Received: by 2002:a05:651c:104a:: with SMTP id x10mr20266511ljm.238.1566460332223;
+        Thu, 22 Aug 2019 00:52:12 -0700 (PDT)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id x13sm3699675ljm.7.2019.08.22.00.52.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 00:52:11 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mm/init-mm.c: use CPU_BITS_NONE to initialize .cpu_bitmap
+Date:   Thu, 22 Aug 2019 09:52:07 +0200
+Message-Id: <20190822075207.26400-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 21 Aug 2019, Alan Stern wrote:
+init_mm is sizeof(long) larger than it needs to be. Use the
+CPU_BITS_NONE macro meant for this, which will initialize just the
+indices 0...(BITS_TO_LONGS(NR_CPUS)-1) and hence make the array size
+actually BITS_TO_LONGS(NR_CPUS).
 
-> The syzbot fuzzer has reported a pair of problems in the
-> hidraw_ioctl() function: slab-out-of-bounds read and use-after-free
-> read.  An example of the first:
-> 
-> BUG: KASAN: slab-out-of-bounds in strlen+0x79/0x90 lib/string.c:525
-> Read of size 1 at addr ffff8881c8035f38 by task syz-executor.4/2833
-> 
-> CPU: 1 PID: 2833 Comm: syz-executor.4 Not tainted 5.3.0-rc2+ #1
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->   kasan_report+0xe/0x12 mm/kasan/common.c:612
->   strlen+0x79/0x90 lib/string.c:525
->   strlen include/linux/string.h:281 [inline]
->   hidraw_ioctl+0x245/0xae0 drivers/hid/hidraw.c:446
->   vfs_ioctl fs/ioctl.c:46 [inline]
->   file_ioctl fs/ioctl.c:509 [inline]
->   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
->   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
->   __do_sys_ioctl fs/ioctl.c:720 [inline]
->   __se_sys_ioctl fs/ioctl.c:718 [inline]
->   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
->   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x459829
-> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f7a68f6dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459829
-> RDX: 0000000000000000 RSI: 0000000080404805 RDI: 0000000000000004
-> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f7a68f6e6d4
-> R13: 00000000004c21de R14: 00000000004d5620 R15: 00000000ffffffff
-> 
-> The two problems have the same cause: hidraw_ioctl() fails to test
-> whether the device has been removed.  This patch adds the missing test.
-> 
-> Reported-and-tested-by: syzbot+5a6c4ec678a0c6ee84ba@syzkaller.appspotmail.com
-> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+ mm/init-mm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks a lot Alan for chasing this; I've applied the patch.
-
+diff --git a/mm/init-mm.c b/mm/init-mm.c
+index a787a319211e..fb1e15028ef0 100644
+--- a/mm/init-mm.c
++++ b/mm/init-mm.c
+@@ -35,6 +35,6 @@ struct mm_struct init_mm = {
+ 	.arg_lock	=  __SPIN_LOCK_UNLOCKED(init_mm.arg_lock),
+ 	.mmlist		= LIST_HEAD_INIT(init_mm.mmlist),
+ 	.user_ns	= &init_user_ns,
+-	.cpu_bitmap	= { [BITS_TO_LONGS(NR_CPUS)] = 0},
++	.cpu_bitmap	= CPU_BITS_NONE,
+ 	INIT_MM_CONTEXT(init_mm)
+ };
 -- 
-Jiri Kosina
-SUSE Labs
+2.20.1
 
