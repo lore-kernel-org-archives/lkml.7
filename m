@@ -2,288 +2,179 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820D9C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DD0C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E0A4233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7C523402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FZc1smLq"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JyL+sIxw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389970AbfHVQaV (ORCPT
+        id S2389975AbfHVQam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:30:21 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:57207 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389939AbfHVQaU (ORCPT
+        Thu, 22 Aug 2019 12:30:42 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:26625 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389939AbfHVQal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:30:20 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190822163018euoutp01ed42e5fcd2841474401062c11559ef11~9S6U6LFOX1950419504euoutp01W
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 16:30:18 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190822163018euoutp01ed42e5fcd2841474401062c11559ef11~9S6U6LFOX1950419504euoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1566491418;
-        bh=hOUF6Gzqf4+SSBY2i+OpEO1X4NBxnMXVxjifcFB2spM=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=FZc1smLqzb3zZa27YKCvH9TrAOzk3JBf+6VsRV9Edal7LQi5dQd86hVxMbYYIvJaO
-         7CpBhaZqUQ6A+mmnPLHFXnLL3Mn+Xvsq3sbpvRGYtAHhiL2jn3zFTEguV4Hc8yE3Z4
-         pKdFxxjM792eRFkGJbxaJTtoKS4S2bBsWMjtXNnM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190822163017eucas1p274647b13d0f228bb3e37a4e455ef2831~9S6T1giVj2067120671eucas1p2I;
-        Thu, 22 Aug 2019 16:30:17 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id B8.06.04469.813CE5D5; Thu, 22
-        Aug 2019 17:30:16 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190822163016eucas1p126fb54c2234bdd541cfb0b4e41bb5684~9S6S0N6Mk2136721367eucas1p1X;
-        Thu, 22 Aug 2019 16:30:16 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190822163015eusmtrp2776678612bd907e910c8d3db09280d07~9S6SkeoJu2926429264eusmtrp2G;
-        Thu, 22 Aug 2019 16:30:15 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-f2-5d5ec3185b42
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7A.E6.04166.713CE5D5; Thu, 22
-        Aug 2019 17:30:15 +0100 (BST)
-Received: from [106.109.129.180] (unknown [106.109.129.180]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190822163014eusmtip2e6ae918716aa14a03338431c59d73b6d~9S6Rpbg-J2946029460eusmtip2S;
-        Thu, 22 Aug 2019 16:30:14 +0000 (GMT)
-Subject: Re: [PATCH net] ixgbe: fix double clean of tx descriptors with xdp
-To:     William Tu <u9012063@gmail.com>
-Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
-        Eelco Chaudron <echaudro@redhat.com>
-From:   Ilya Maximets <i.maximets@samsung.com>
-Message-ID: <5bcebb64-2bd8-902e-eebe-3a94f317b074@samsung.com>
-Date:   Thu, 22 Aug 2019 19:30:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <CALDO+SaRNMvmXrQqOtNiRsOkgfOQAW4EA2yVgmeoGQto2zvfMQ@mail.gmail.com>
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3fOzs6Gs7dp+WBhtW4Y5qWszofQgqhD90AoFK2lp01y0zZd
-        WR+yvM80NWG4FI0IaxXF8l4pzctmUpJprSxUMMrsullhieY8Sn77Pc//+T/v/4GXJmQfhL50
-        vCaZ02oUCXJKQta2jz1bBy0x0cF/xjcyk+V9JDM61idixrPuIcbVaqOYa1d/EUxZVwbJvO0Z
-        o5ie7DERM/nmr5Bp/5hBMfb7/Yh50VhGMTesdhHTXrmIedXtsXU+W33ztYBtML0TsdceDgtY
-        g6ObYC3mXIrtSE9hjXmDBPutqZdiC6rNiHVZ/A5IIiVb4riEeD2nDQo7KlHVlTiESTWbTjfd
-        clJp6E6AAYlpwKFQWpopMCAJLcM3ENRkDQr5YhRBgdVO8IULQafNRc5aftQ3zwhVCOoqe2f8
-        PxB8ru+amqJpL7wb2toIt8EbrwDj8+/IPUNgCwnm0a/TmygcAE9utSI3S3EYlH9yIbeXxKvg
-        Q164u70QHwbnQIuQH1kAHaVD01YxPgh9uZcpNxPYBy6M3hTyvBTSa65MhwNcREP59RLEp94O
-        hRYHwbMXfLJVi3heApMNFQKez0F/xjDizTkIjNaJGSEcqkeeidzhCOwPdxuD3Ah4G/zM9OfR
-        ExxfFvARPKG41kjwbSnkZMn4HSvh7+OqmQC+8PqrS1SI5KY5h5nmHGOac4zp/7OViDQjHy5F
-        p1ZyuhANdypQp1DrUjTKwNhEtQVNfb/OCZuzHv3sPmZFmEZyD6ndEBMtEyr0ulS1FQFNyL2l
-        +qKpljROkXqG0yYe0aYkcDorWkyTch/p2XkDUTKsVCRzJzguidPOqgJa7JuGBA82P61cHyEK
-        zYiJxfdWqxqVcZqWveObvYI1HlnGPRtGyopH9nd9Pl6YFH2gYJ9X63C2IbXiN5dU1Uc1R5zL
-        3Sk2ePbm73ipXx6xMflwy6qFjuiLJy892pWgRJHgOC/3N99WxTS/zI+KP+R96O4ZPBGq0i9a
-        Fuu3xrkiSqjuH3ovJ3UqRchaQqtT/ANYMhJFegMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRmVeSWpSXmKPExsVy+t/xe7rih+NiDc5NMLD4P/c2i8WXn7fZ
-        Lf60bWC0+HzkOJvF4oXfmC3mnG9hsbhz5SebxZX2n+wW/2/9ZrU49qKFzeLE5vuMFpd3zWGz
-        WHHoBLvFsQViFtcv8Tjwe2xZeZPJY+esu+wei/e8ZPLounGJ2WPTqk42j5PNpR7Tux8ye7zf
-        d5XNo2/LKkaPz5vkArii9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxS
-        UnMyy1KL9O0S9DK2T7nBWrDVrGLf6k9sDYxrdboYOTkkBEwkPu7Yz9zFyMUhJLCUUeL1rw5W
-        iISUxI9fF6BsYYk/17rYIIreM0r0HL3F3sXIwSEs4C1x9CgzSI2IgLLE9IsfGEFqmAW2sEhs
-        3raCCSQhJDCRVeLwr1wQm01AR+LU6iOMIDavgJ3E3FefGUHmsAioSjzvtgcJiwpESBzeMQuq
-        RFDi5MwnLCA2p0CgxO3OyWwgNrOAusSfeZeYIWxxiaYvK1khbHmJ5q2zmScwCs1C0j4LScss
-        JC2zkLQsYGRZxSiSWlqcm55bbKhXnJhbXJqXrpecn7uJERjv24793LyD8dLG4EOMAhyMSjy8
-        J7riYoVYE8uKK3MPMUpwMCuJ8JZNBArxpiRWVqUW5ccXleakFh9iNAX6bSKzlGhyPjAV5ZXE
-        G5oamltYGpobmxubWSiJ83YIHIwREkhPLEnNTk0tSC2C6WPi4JRqYGxP6Zzh+r7CeG7FGy8/
-        HtNJ/F43BRZ2RWzYuuXZ0ZY193/feX86UO8w91bBw2KpHJNSN8fdDBD7xu9VcI3rY20os3Wi
-        mNG3junbLdNLY6Yder4x29dbZrJ92+Ge47s2LeJb8jC13/UX23eHMIEyr5M1E565OnyQ4NzC
-        3PTWel0l0/87IiUp3UosxRmJhlrMRcWJAKyumBoNAwAA
-X-CMS-MailID: 20190822163016eucas1p126fb54c2234bdd541cfb0b4e41bb5684
-X-Msg-Generator: CA
+        Thu, 22 Aug 2019 12:30:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1566491439; x=1598027439;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=KkV09y4B5mkQruE6IbrnT1eGI+VPuKeLj/rJNcIegm0=;
+  b=JyL+sIxw2Ou59y95gkhjxSnsrZGFbos0da1tiK0HJCawM1LTp3bBz1Rp
+   RWkCG2nQcTyK0NAxxweZjot70odCr6PipvoMo8aKfU1pI7nYwlwkBQ19V
+   Pfp4SIBJefJtNTpywSLzCCIZHqpSYqHE57ujTBLzUxwGYJ12gaebq0PQJ
+   s=;
+X-IronPort-AV: E=Sophos;i="5.64,417,1559520000"; 
+   d="scan'208";a="822736964"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1e-27fb8269.us-east-1.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 22 Aug 2019 16:30:33 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-27fb8269.us-east-1.amazon.com (Postfix) with ESMTPS id D0D8DA276C;
+        Thu, 22 Aug 2019 16:30:32 +0000 (UTC)
+Received: from EX13D13UWA003.ant.amazon.com (10.43.160.181) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 22 Aug 2019 16:30:10 +0000
+Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
+ EX13D13UWA003.ant.amazon.com (10.43.160.181) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 22 Aug 2019 16:30:09 +0000
+Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
+ EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
+ Thu, 22 Aug 2019 16:30:09 +0000
+From:   "Chocron, Jonathan" <jonnyc@amazon.com>
+To:     "andrew.murray@arm.com" <andrew.murray@arm.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>
+Subject: Re: [PATCH v4 7/7] PCI: dwc: Add validation that PCIe core is set to
+ correct mode
+Thread-Topic: [PATCH v4 7/7] PCI: dwc: Add validation that PCIe core is set to
+ correct mode
+Thread-Index: AQHVWDfYfXzAIUBUVEGXGWtVpGVRnqcHBMEAgABYiAA=
+Date:   Thu, 22 Aug 2019 16:30:09 +0000
+Message-ID: <f8fca74c8d252f000d60c52ead3fc41ed5d50b6d.camel@amazon.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+         <20190821154745.31834-3-jonnyc@amazon.com>
+         <20190822111315.GN23903@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20190822111315.GN23903@e119886-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.137]
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce
-References: <CGME20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce@eucas1p1.samsung.com>
-        <20190820151611.10727-1-i.maximets@samsung.com>
-        <CAKgT0Udn0D0_f=SOH2wpBRWV_u4rb1Qe2h7gguXnRNzJ_VkRzg@mail.gmail.com>
-        <625791af-c656-1e42-b60e-b3a5cedcb4c4@samsung.com>
-        <CAKgT0Uc27+ucd=a_sgTmv5g7_+ZTg1zK4isYJ0H7YWQj3d=Ejg@mail.gmail.com>
-        <f7d0f7a5-e664-8b72-99c7-63275aff4c18@samsung.com>
-        <CAKgT0UcCKiM1Ys=vWxctprN7fzWcBCk-PCuKB-8=RThM=CqLSQ@mail.gmail.com>
-        <CALDO+SZCbxEEwCS6MyHk-Cp_LJ33N=QFqwZ8uRm0e-PBRgxRYw@mail.gmail.com>
-        <cbf7c51b-9ce7-6ef6-32c4-981258d4af4c@samsung.com>
-        <CALDO+SaRNMvmXrQqOtNiRsOkgfOQAW4EA2yVgmeoGQto2zvfMQ@mail.gmail.com>
+Content-ID: <28A81580BA6B964C814E165BCC9FC5A6@amazon.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22.08.2019 19:07, William Tu wrote:
-> On Thu, Aug 22, 2019 at 1:17 AM Ilya Maximets <i.maximets@samsung.com> wrote:
->>
->> On 22.08.2019 0:38, William Tu wrote:
->>> On Wed, Aug 21, 2019 at 9:57 AM Alexander Duyck
->>> <alexander.duyck@gmail.com> wrote:
->>>>
->>>> On Wed, Aug 21, 2019 at 9:22 AM Ilya Maximets <i.maximets@samsung.com> wrote:
->>>>>
->>>>> On 21.08.2019 4:17, Alexander Duyck wrote:
->>>>>> On Tue, Aug 20, 2019 at 8:58 AM Ilya Maximets <i.maximets@samsung.com> wrote:
->>>>>>>
->>>>>>> On 20.08.2019 18:35, Alexander Duyck wrote:
->>>>>>>> On Tue, Aug 20, 2019 at 8:18 AM Ilya Maximets <i.maximets@samsung.com> wrote:
->>>>>>>>>
->>>>>>>>> Tx code doesn't clear the descriptor status after cleaning.
->>>>>>>>> So, if the budget is larger than number of used elems in a ring, some
->>>>>>>>> descriptors will be accounted twice and xsk_umem_complete_tx will move
->>>>>>>>> prod_tail far beyond the prod_head breaking the comletion queue ring.
->>>>>>>>>
->>>>>>>>> Fix that by limiting the number of descriptors to clean by the number
->>>>>>>>> of used descriptors in the tx ring.
->>>>>>>>>
->>>>>>>>> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
->>>>>>>>> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
->>>>>>>>
->>>>>>>> I'm not sure this is the best way to go. My preference would be to
->>>>>>>> have something in the ring that would prevent us from racing which I
->>>>>>>> don't think this really addresses. I am pretty sure this code is safe
->>>>>>>> on x86 but I would be worried about weak ordered systems such as
->>>>>>>> PowerPC.
->>>>>>>>
->>>>>>>> It might make sense to look at adding the eop_desc logic like we have
->>>>>>>> in the regular path with a proper barrier before we write it and after
->>>>>>>> we read it. So for example we could hold of on writing the bytecount
->>>>>>>> value until the end of an iteration and call smp_wmb before we write
->>>>>>>> it. Then on the cleanup we could read it and if it is non-zero we take
->>>>>>>> an smp_rmb before proceeding further to process the Tx descriptor and
->>>>>>>> clearing the value. Otherwise this code is going to just keep popping
->>>>>>>> up with issues.
->>>>>>>
->>>>>>> But, unlike regular case, xdp zero-copy xmit and clean for particular
->>>>>>> tx ring always happens in the same NAPI context and even on the same
->>>>>>> CPU core.
->>>>>>>
->>>>>>> I saw the 'eop_desc' manipulations in regular case and yes, we could
->>>>>>> use 'next_to_watch' field just as a flag of descriptor existence,
->>>>>>> but it seems unnecessarily complicated. Am I missing something?
->>>>>>>
->>>>>>
->>>>>> So is it always in the same NAPI context?. I forgot, I was thinking
->>>>>> that somehow the socket could possibly make use of XDP for transmit.
->>>>>
->>>>> AF_XDP socket only triggers tx interrupt on ndo_xsk_async_xmit() which
->>>>> is used in zero-copy mode. Real xmit happens inside
->>>>> ixgbe_poll()
->>>>>  -> ixgbe_clean_xdp_tx_irq()
->>>>>     -> ixgbe_xmit_zc()
->>>>>
->>>>> This should be not possible to bound another XDP socket to the same netdev
->>>>> queue.
->>>>>
->>>>> It also possible to xmit frames in xdp_ring while performing XDP_TX/REDIRECT
->>>>> actions. REDIRECT could happen from different netdev with different NAPI
->>>>> context, but this operation is bound to specific CPU core and each core has
->>>>> its own xdp_ring.
->>>>>
->>>>> However, I'm not an expert here.
->>>>> Björn, maybe you could comment on this?
->>>>>
->>>>>>
->>>>>> As far as the logic to use I would be good with just using a value you
->>>>>> are already setting such as the bytecount value. All that would need
->>>>>> to happen is to guarantee that the value is cleared in the Tx path. So
->>>>>> if you clear the bytecount in ixgbe_clean_xdp_tx_irq you could
->>>>>> theoretically just use that as well to flag that a descriptor has been
->>>>>> populated and is ready to be cleaned. Assuming the logic about this
->>>>>> all being in the same NAPI context anyway you wouldn't need to mess
->>>>>> with the barrier stuff I mentioned before.
->>>>>
->>>>> Checking the number of used descs, i.e. next_to_use - next_to_clean,
->>>>> makes iteration in this function logically equal to the iteration inside
->>>>> 'ixgbe_xsk_clean_tx_ring()'. Do you think we need to change the later
->>>>> function too to follow same 'bytecount' approach? I don't like having
->>>>> two different ways to determine number of used descriptors in the same file.
->>>>>
->>>>> Best regards, Ilya Maximets.
->>>>
->>>> As far as ixgbe_clean_xdp_tx_irq() vs ixgbe_xsk_clean_tx_ring(), I
->>>> would say that if you got rid of budget and framed things more like
->>>> how ixgbe_xsk_clean_tx_ring was framed with the ntc != ntu being
->>>> obvious I would prefer to see us go that route.
->>>>
->>>> Really there is no need for budget in ixgbe_clean_xdp_tx_irq() if you
->>>> are going to be working with a static ntu value since you will only
->>>> ever process one iteration through the ring anyway. It might make more
->>>> sense if you just went through and got rid of budget and i, and
->>>> instead used ntc and ntu like what was done in
->>>> ixgbe_xsk_clean_tx_ring().
->>>>
->>>> Thanks.
->>>>
->>>> - Alex
->>>
->>> Not familiar with the driver details.
->>> I tested this patch and the issue mentioned in OVS mailing list.
->>> https://www.mail-archive.com/ovs-dev@openvswitch.org/msg35362.html
->>> and indeed the problem goes away.
->>
->> Good. Thanks for testing!
->>
->>> But I saw a huge performance drop,
->>> my AF_XDP tx performance drops from >9Mpps to <5Mpps.
->>
->> I didn't expect so big performance difference with this change.
->> What is your test scenario?
-> 
-> I was using OVS with dual port NIC, setting one OpenFlow rule
-> in_port=eth2 actions=output:eth3
-> and eth2 for rx and measure eth3 tx
-> 'sar -n DEV 1'  shows pretty huge drop on eth3 tx.
-
-'sar' just parses net procfs to obtain interface stats, but interface stats
-are not correct due to this bug (same packets accounted several times).
-
-> 
->> Is it possible that you're accounting same
->> packet several times due to broken completion queue?
-> 
-> That's possible.
-> Let me double check on your v2 patch.
-> 
-> @Eelco: do you also see some performance difference?
-> 
-> Regards,
-> William
-> 
->>
->> Looking at samples/bpf/xdpsock_user.c:complete_tx_only(), it accounts
->> sent packets (tx_npkts) by accumulating results of xsk_ring_cons__peek()
->> for completion queue, so it's not a trusted source of pps information.
->>
->> Best regards, Ilya Maximets.
->>
->>>
->>> Tested using kernel 5.3.0-rc3+
->>> 03:00.0 Ethernet controller: Intel Corporation Ethernet Controller
->>> 10-Gigabit X540-AT2 (rev 01)
->>> Subsystem: Intel Corporation Ethernet 10G 2P X540-t Adapter
->>> Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr-
->>> Stepping- SERR- FastB2B- DisINTx+
->>>
->>> Regards,
->>> William
-> 
-> 
+T24gVGh1LCAyMDE5LTA4LTIyIGF0IDEyOjEzICswMTAwLCBBbmRyZXcgTXVycmF5IHdyb3RlOg0K
+PiBPbiBXZWQsIEF1ZyAyMSwgMjAxOSBhdCAwNjo0Nzo0NVBNICswMzAwLCBKb25hdGhhbiBDaG9j
+cm9uIHdyb3RlOg0KPiA+IFNvbWUgUENJZSBjb250cm9sbGVycyBjYW4gYmUgc2V0IHRvIGVpdGhl
+ciBIb3N0IG9yIEVQIGFjY29yZGluZyB0bw0KPiA+IHNvbWUNCj4gPiBlYXJseSBib290IEZXLiBU
+byBtYWtlIHN1cmUgdGhlcmUgaXMgbm8gZGlzY3JlcGFuY3kgKGUuZy4gRlcNCj4gPiBjb25maWd1
+cmVkDQo+ID4gdGhlIHBvcnQgdG8gRVAgbW9kZSB3aGlsZSB0aGUgRFQgc3BlY2lmaWVzIGl0IGFz
+IGEgaG9zdCBicmlkZ2Ugb3INCj4gPiB2aWNlDQo+ID4gdmVyc2EpLCBhIGNoZWNrIGhhcyBiZWVu
+IGFkZGVkIGZvciBlYWNoIG1vZGUuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogSm9uYXRoYW4g
+Q2hvY3JvbiA8am9ubnljQGFtYXpvbi5jb20+DQo+ID4gQWNrZWQtYnk6IEd1c3Rhdm8gUGltZW50
+ZWwgPGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJz
+L3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtZXAuYyAgIHwgOCArKysrKysrKw0K
+PiA+ICBkcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jIHwg
+OCArKysrKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKykNCj4gPiAN
+Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253
+YXJlLWVwLmMNCj4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2Fy
+ZS1lcC5jDQo+ID4gaW5kZXggMmJmNWEzNWMwNTcwLi4wMGU1OWExMzRiOTMgMTAwNjQ0DQo+ID4g
+LS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWVwLmMNCj4g
+PiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtZXAuYw0K
+PiA+IEBAIC01MzEsNiArNTMxLDcgQEAgaW50IGR3X3BjaWVfZXBfaW5pdChzdHJ1Y3QgZHdfcGNp
+ZV9lcCAqZXApDQo+ID4gIAlpbnQgcmV0Ow0KPiA+ICAJdTMyIHJlZzsNCj4gPiAgCXZvaWQgKmFk
+ZHI7DQo+ID4gKwl1OCBoZHJfdHlwZTsNCj4gPiAgCXVuc2lnbmVkIGludCBuYmFyczsNCj4gPiAg
+CXVuc2lnbmVkIGludCBvZmZzZXQ7DQo+ID4gIAlzdHJ1Y3QgcGNpX2VwYyAqZXBjOw0KPiA+IEBA
+IC01NDMsNiArNTQ0LDEzIEBAIGludCBkd19wY2llX2VwX2luaXQoc3RydWN0IGR3X3BjaWVfZXAg
+KmVwKQ0KPiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiA+ICAJfQ0KPiA+ICANCj4gPiArCWhkcl90
+eXBlID0gZHdfcGNpZV9yZWFkYl9kYmkocGNpLCBQQ0lfSEVBREVSX1RZUEUpOw0KPiA+ICsJaWYg
+KGhkcl90eXBlICE9IFBDSV9IRUFERVJfVFlQRV9OT1JNQUwpIHsNCj4gPiArCQlkZXZfZXJyKHBj
+aS0+ZGV2LCAiUENJZSBjb250cm9sbGVyIGlzIG5vdCBzZXQgdG8gRVANCj4gPiBtb2RlIChoZHJf
+dHlwZToweCV4KSFcbiIsDQo+ID4gKwkJCWhkcl90eXBlKTsNCj4gPiArCQlyZXR1cm4gLUVJTzsN
+Cj4gPiArCX0NCj4gPiArDQo+ID4gIAlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgIm51
+bS1pYi13aW5kb3dzIiwgJmVwLQ0KPiA+ID5udW1faWJfd2luZG93cyk7DQo+ID4gIAlpZiAocmV0
+IDwgMCkgew0KPiA+ICAJCWRldl9lcnIoZGV2LCAiVW5hYmxlIHRvIHJlYWQgKm51bS1pYi13aW5k
+b3dzKg0KPiA+IHByb3BlcnR5XG4iKTsNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYw0KPiA+IGIvZHJpdmVycy9wY2kvY29u
+dHJvbGxlci9kd2MvcGNpZS1kZXNpZ253YXJlLWhvc3QuYw0KPiA+IGluZGV4IGY5MzI1MmQwZGE1
+Yi4uZDJjYTc0OGU0Yzg1IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
+ZHdjL3BjaWUtZGVzaWdud2FyZS1ob3N0LmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9s
+bGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtaG9zdC5jDQo+ID4gQEAgLTMyMyw2ICszMjMsNyBAQCBp
+bnQgZHdfcGNpZV9ob3N0X2luaXQoc3RydWN0IHBjaWVfcG9ydCAqcHApDQo+ID4gIAlzdHJ1Y3Qg
+cGNpX2J1cyAqY2hpbGQ7DQo+ID4gIAlzdHJ1Y3QgcGNpX2hvc3RfYnJpZGdlICpicmlkZ2U7DQo+
+ID4gIAlzdHJ1Y3QgcmVzb3VyY2UgKmNmZ19yZXM7DQo+ID4gKwl1OCBoZHJfdHlwZTsNCj4gPiAg
+CWludCByZXQ7DQo+ID4gIA0KPiA+ICAJcmF3X3NwaW5fbG9ja19pbml0KCZwY2ktPnBwLmxvY2sp
+Ow0KPiA+IEBAIC0zOTYsNiArMzk3LDEzIEBAIGludCBkd19wY2llX2hvc3RfaW5pdChzdHJ1Y3Qg
+cGNpZV9wb3J0ICpwcCkNCj4gPiAgCQl9DQo+ID4gIAl9DQo+ID4gIA0KPiA+ICsJaGRyX3R5cGUg
+PSBkd19wY2llX3JlYWRiX2RiaShwY2ksIFBDSV9IRUFERVJfVFlQRSk7DQo+IA0KPiBEbyB3ZSBr
+bm93IGlmIGl0J3MgYWx3YXlzIHNhZmUgdG8gcmVhZCB0aGVzZSByZWdpc3RlcnMgYXQgdGhpcyBw
+b2ludA0KPiBpbiB0aW1lPw0KPiANCj4gTGF0ZXIgaW4gZHdfcGNpZV9ob3N0X2luaXQgd2UgY2Fs
+bCBwcC0+b3BzLT5ob3N0X2luaXQgLSBsb29raW5nIGF0DQo+IHRoZQ0KPiBpbXBsZW1lbnRhdGlv
+bnMgb2YgLmhvc3RfaW5pdCBJIGNhbiBzZWU6DQo+IA0KPiAgLSByZXNldHMgYmVpbmcgcGVyZm9y
+bWVkIChxY29tX2VwX3Jlc2V0X2Fzc2VydCwNCj4gICAgYXJ0cGVjNl9wY2llX2Fzc2VydF9jb3Jl
+X3Jlc2V0LCBpbXg2X3BjaWVfYXNzZXJ0X2NvcmVfcmVzZXQpDQo+ICAtIGNoYW5nZXMgdG8gY29u
+ZmlnIHNwYWNlIHJlZ2lzdGVycyAoa3NfcGNpZV9pbml0X2lkLA0KPiBkd19wY2llX3NldHVwX3Jj
+KQ0KPiAgICBpbmNsdWRpbmcgc2V0dGluZyBQQ0lfQ0xBU1NfREVWSUNFDQo+ICAtIGFuZCBjbG9j
+a3MgYmVpbmcgZW5hYmxlZCAocWNvbV9wY2llX2luaXRfMV8wXzApDQo+IA0KR29vZCBwb2ludCEg
+VGhpcyBpbmRlZWQgbWlnaHQgYnJlYWsgaG9zdCBkcml2ZXJzIHdoaWNoIGFjdHVhbGx5IHNldHVw
+DQp0aGUgcmMgaW4gdGhlIGtlcm5lbCwgYW5kIGRvbid0IGRlcGVuZCBvbiBlYXJseSBib290IEZX
+LiBTbyB0aGUNCnZhbGlkYXRpb24gc2hvdWxkIHByb2JhYmx5IGJlIG1vdmVkIHRvIGFmdGVyIHBw
+LT5vcHMtPmhvc3RfaW5pdCgpIChhbmQNCnNpbWlsYXJseSBhZnRlciBlcC0+b3BzLT5lcF9pbml0
+KCkgZm9yIHRoZSBlcCBkcml2ZXIpLCByaWdodD8NCg0KPiBJJ20gbm90IHN1cmUgaWYgeW91ciBj
+aGFuZ2VzIHdvdWxkIGNhdXNlIGFueXRoaW5nIHRvIGJyZWFrIGZvciB0aGVzZQ0KPiBvdGhlcg0K
+PiBjb250cm9sbGVycyAob3IgZnV0dXJlIGNvbnRyb2xsZXJzKSBhcyBJIGNvdWxkbid0IHNlZSBh
+bnkgb3RoZXIgcmVhZHMNCj4gdG8gdGhlDQo+IGNvbmZpZy4NCj4gDQo+IEdpdmVuIHRoYXQgd2Ug
+YXJlIHJlYWRpbmcgY29uZmlnIHNwYWNlIHNob3VsZCBkd19wY2llX3JkX293bl9jb25mIGJlDQo+
+IHVzZWQ/DQoNClRoZSBjb25maWcgc3BhY2Ugb2YgdGhlIERXIGNvcmUgaXMgbG9jYXRlZCBhdCB0
+aGUgYmVnaW5uaW5nIG9mIHRoZSBEQkkNCnJlZ3NwYWNlLiBGdXJ0aGVybW9yZSwgdGhpcyB3b3Vs
+ZCBicmVhayB0aGUgInN5bW1ldHJ5IiBiZXR3ZWVuIHRoZSBob3N0DQphbmQgZXAgdmFsaWRhdGlv
+bnMgKHNpbmNlIHRoZSBlcCBoYXMgbm8gbm90aW9uIG9mIHJlYWRpbmcgZnJvbSBjb25maWcNCnNw
+YWNlIG5vciBhIC5yZWFkIGNhbGxiYWNrIGluIHN0cnVjdCBkd19wY2llX2VwX29wcykuIEkgYWdy
+ZWUgdGhhdA0KdGhlcmUgaXMgc29tZSBzb3J0IG9mIG92ZXJsYXAgYmV0d2VlbiB0aGUgZHdfcGNp
+ZV9yZWFkey93cml0ZX1fZGJpDQpkd19wY2llX3Jkey93cn1fb3duX2NvbmYgQVBJcywgd2hlbiBh
+Y2Nlc3NpbmcgdGhlIGhvc3QgbW9kZSBjb25maWcNCnNwYWNlLCBidXQgSSBhc3N1bWUgdGhhdCBh
+bnkgaG9zdCBkcml2ZXIgd2hpY2ggc3VwcGxpZXMgYSBjYWxsYmFjayBmb3INCi5yZF9vd25fY29u
+ZigpIG11c3Qgc3VwcGx5IGFuIGVxdWl2YWxlbnQgLnJlYWRfZGJpKCkgb25lIGFzIHdlbGwuDQoN
+Cj4gKEZvciBleGFtcGxlIGtpcmluX3BjaWVfcmRfb3duX2NvbmYgZG9lcyBzb21ldGhpbmcgc3Bl
+Y2lhbCkuDQo+IA0KVGhleSBzcGVjaWZpY2FsbHkgZGVmaW5lIGFuIGVxdWl2YWxlbnQga2lyaW5f
+cGNpZV9yZWFkX2RiaSgpLg0KDQo+IFRoYW5rcywNCj4gDQo+IEFuZHJldyBNdXJyYXkNCj4gDQo+
+ID4gKwlpZiAoaGRyX3R5cGUgIT0gUENJX0hFQURFUl9UWVBFX0JSSURHRSkgew0KPiA+ICsJCWRl
+dl9lcnIocGNpLT5kZXYsICJQQ0llIGNvbnRyb2xsZXIgaXMgbm90IHNldCB0byBicmlkZ2UNCj4g
+PiB0eXBlIChoZHJfdHlwZTogMHgleCkhXG4iLA0KPiA+ICsJCQloZHJfdHlwZSk7DQo+ID4gKwkJ
+cmV0dXJuIC1FSU87DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICAJcHAtPm1lbV9iYXNlID0gcHAtPm1l
+bS0+c3RhcnQ7DQo+ID4gIA0KPiA+ICAJaWYgKCFwcC0+dmFfY2ZnMF9iYXNlKSB7DQo+ID4gLS0g
+DQo+ID4gMi4xNy4xDQo+ID4gDQo=
