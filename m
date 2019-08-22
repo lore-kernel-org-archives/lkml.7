@@ -2,163 +2,261 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B7CC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C9FC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857B52377B
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDFC52377B
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:17:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="bx8iD3gE"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CEVkgJpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732192AbfHVIRR (ORCPT
+        id S1732211AbfHVIR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:17:17 -0400
-Received: from mail-eopbgr820054.outbound.protection.outlook.com ([40.107.82.54]:2204
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725804AbfHVIRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:17:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GU1fxeXKRcukIjdfG8V7SIYAKkSyjJt0RzPNAoj6LVgrF/jD8brptXWfmTHq7vnekx0DxWaPNVSVCDJxsHhqcqdZpFf/kKI15BLH8k1bIiwAChnMgOFesn6M1uRQiHmrgYbGUwKN0Qb95In5rXbM3sDVGrunAGacBWJPeEoP7yF6OI1knEY8pMkM5kXoWt8HQMpz7vZhLpDO/ofFjwgzWmbTPAjHWxrLR8Wlju6QvpRIcnv6trRwQE1qlfj/I/Dq5YMXYR4B3pW/G9bLe0MT3VIBgn7mE1x4uu5nK+3g9ROVLm3eDfujaOfFOEremeWmmg28YpB9r6dUL0Ymxsq4pQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MfXCyjZHM4oNkU/N2dd28vsbexJy9uPRGziLvpWNfbQ=;
- b=NcMRM+739thrczMF9Ag0ex6+v8PjMTA/yOc9lHmBcOzlEAKq6yb+bTICBt8BlmduL7OLkMmYtievqxsyQE3xFFcDuabhL2718emidN9ovEIhi7YBZZ5mWimf5FL3RwcqrD6CtNTHsxGFaB0Wg9Z2qPmloJte5I2NbHbNzakgDingTRWw4xN/mUWbILm7UDE1oJ9qL1DAJXFo0UDv/pC72h/3RwF/2+cISauNhyxHHgjcVrd5DSLE4EU9by+3dRmbykmz5SMMsuWIP/Z94ReUhlhtMHuVlxBEMyKBAVLv1KOi6VodvBVR9lYb58CXgxEPL3VKv3DpqIwrHLPPWtSB7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=oracle.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MfXCyjZHM4oNkU/N2dd28vsbexJy9uPRGziLvpWNfbQ=;
- b=bx8iD3gEFpfNVU7kBy7/gNmTjpsR71yhDNrqYhY8ir4IJfVvXvafJeBMpnsxzEMNbQA3xbRzG38FM9wJ9mg+zqmAQ78lbqMRAgfJjWh1p7jciYeQhbxiYUtDIQyr37fbmStomMuLRtu52YhjSgTC0mSmPTTmQaxK7GxQfKVQgg0=
-Received: from SN4PR0201CA0068.namprd02.prod.outlook.com
- (2603:10b6:803:20::30) by SN6PR02MB4047.namprd02.prod.outlook.com
- (2603:10b6:805:2c::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2178.16; Thu, 22 Aug
- 2019 08:17:13 +0000
-Received: from CY1NAM02FT063.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::202) by SN4PR0201CA0068.outlook.office365.com
- (2603:10b6:803:20::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2199.15 via Frontend
- Transport; Thu, 22 Aug 2019 08:17:13 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT063.mail.protection.outlook.com (10.152.75.161) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2178.16
- via Frontend Transport; Thu, 22 Aug 2019 08:17:12 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1i0iHQ-0004o3-65; Thu, 22 Aug 2019 01:17:12 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1i0iHL-0003m0-2z; Thu, 22 Aug 2019 01:17:07 -0700
-Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x7M8H1h7018241;
-        Thu, 22 Aug 2019 01:17:01 -0700
-Received: from [172.30.17.116]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1i0iHF-0003iv-2L; Thu, 22 Aug 2019 01:17:01 -0700
-Subject: Re: [PATCH 2/4] misc: xilinx_sdfec: Return -EFAULT if
- copy_from_user() fails
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190821070702.GB26957@mwanda>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <35a942ef-d8e9-0b81-932f-93ef9e552d50@xilinx.com>
-Date:   Thu, 22 Aug 2019 10:16:54 +0200
+        Thu, 22 Aug 2019 04:17:27 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:57345 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732195AbfHVIRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 04:17:23 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190822081721euoutp01d3ae6b2770d929de97609ed8f4308693~9ML7UnMv01077810778euoutp01i
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:17:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190822081721euoutp01d3ae6b2770d929de97609ed8f4308693~9ML7UnMv01077810778euoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566461841;
+        bh=eH3VAAcLRYwEU2jjSTk2TX56nvxFUZ0pGc8FxPpOx10=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=CEVkgJpqlmitBpoTgBdgpD1urSxXxgP1RWEgMET7Se53rVn9lWqKjUe4VOuZORI8p
+         Df2leGzW26YMGIT/RYMpA5xO0Ca1PubjbS97oGoEcKcxlp6+5inMRm1AbCM3ie0B6a
+         kfgcIElLShRfWRV4yXDrPk1YCN+szwKok24WbEUs=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190822081720eucas1p29ee1e2d981cc9fa43bf41c748e1d8f2e~9ML6khgqf2927229272eucas1p2M;
+        Thu, 22 Aug 2019 08:17:20 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 53.84.04374.09F4E5D5; Thu, 22
+        Aug 2019 09:17:20 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190822081719eucas1p13b7b5abe25b1838b38e77002a5daa5c3~9ML52Wn7g2311423114eucas1p1H;
+        Thu, 22 Aug 2019 08:17:19 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190822081719eusmtrp118abc76009661efb2087d6ca197b26bf~9ML5nhRmO2148421484eusmtrp1n;
+        Thu, 22 Aug 2019 08:17:19 +0000 (GMT)
+X-AuditID: cbfec7f5-4ddff70000001116-cb-5d5e4f90955c
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id FE.1D.04117.F8F4E5D5; Thu, 22
+        Aug 2019 09:17:19 +0100 (BST)
+Received: from [106.109.129.180] (unknown [106.109.129.180]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190822081718eusmtip28624971d74a2604a01884c8f1e9f78b1~9ML4wwYRV2944029440eusmtip2S;
+        Thu, 22 Aug 2019 08:17:18 +0000 (GMT)
+Subject: Re: [PATCH net] ixgbe: fix double clean of tx descriptors with xdp
+To:     William Tu <u9012063@gmail.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Eelco Chaudron <echaudro@redhat.com>
+From:   Ilya Maximets <i.maximets@samsung.com>
+Message-ID: <cbf7c51b-9ce7-6ef6-32c4-981258d4af4c@samsung.com>
+Date:   Thu, 22 Aug 2019 11:17:18 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190821070702.GB26957@mwanda>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(136003)(376002)(39860400002)(2980300002)(199004)(189003)(81156014)(2486003)(52146003)(23676004)(9786002)(8936002)(81166006)(8676002)(26005)(426003)(31686004)(50466002)(2906002)(54906003)(229853002)(106002)(58126008)(110136005)(126002)(70206006)(186003)(70586007)(44832011)(336012)(446003)(316002)(486006)(2616005)(11346002)(476003)(36756003)(478600001)(4326008)(5660300002)(6246003)(36386004)(305945005)(6666004)(356004)(76176011)(230700001)(65806001)(65956001)(47776003)(6636002)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB4047;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 814c1017-1084-42da-1022-08d726d922ed
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(4709080)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:SN6PR02MB4047;
-X-MS-TrafficTypeDiagnostic: SN6PR02MB4047:
-X-Microsoft-Antispam-PRVS: <SN6PR02MB40471C6A504503FFEAA45C33C6A50@SN6PR02MB4047.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 01371B902F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: PFbyg4j5KccK2Fkn/vxpnksn9DtMpAdpsnGmzS7DAOx3Rhr9TQJbi4VT2T69mJ69FRJVvIA6/AcUl6Chuu5g/7D6SrEYD85wkb6KvaLMNHN3K2xyGeu61yJzl6doQe2pbFEapcFj69hhrYmJLuRjmueMesjbfFWdCY6CQMUGLKRRrYFlW29j8uRehQlO1plVUk3w8Xqv4W2XQsHpjEvDiNKlg9OZGzKD7mc8whejWLAQ1Kiw8KQ4/GO8vDzGsfSkLmS+WBuKMXhn84wt9ikhJTqGRZYGYW9jnPxL7E7fAbo7A/DP4X1Jrk0z9+yuDiRIdF5WSaPWoPsMmSWqQVf0JJDXdRp5+msg8BCevViTey/VMr3qiQpFwdYLHxuxPqKfFtHeKRTO7sAbZeYITZPosxCsr5LEOJCl8eVI54QJyRU=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2019 08:17:12.8137
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 814c1017-1084-42da-1022-08d726d922ed
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4047
+In-Reply-To: <CALDO+SZCbxEEwCS6MyHk-Cp_LJ33N=QFqwZ8uRm0e-PBRgxRYw@mail.gmail.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGvZ3pzLRSGUqVE0RJGjVCFNwexsQ9mEz0wS0RRFCrjAWlVTqC
+        ghsKoqJRcINWlJJqWHyAsEWQkFjKrjUCCopEVFDBoMEipJaIDgORt++e/57/nD85FKbskXpT
+        UfpjnEGviVYTcry8zmlfnLZlT/iS69U+zNi9TpwZcnaSzGhKEWIctnqCseQMY0zWi2Scedfm
+        JJi2i06SGXvrkjJ1X5MJpqHkPWJaK7MIJs/aQDJ15llMe4vbOne2NP+NhK0wdZGspapPwqZ2
+        tGBsccFlgm1MimUzrnzA2B/Vrwj2WmkBYh3Fc7fKQ+WrIrjoqDjOELhmnzzym+MTOmoOPPHk
+        dSuZiMoWpCIZBfQKaOqxkKlITinpPAQD5jZMfAwhGCl0TigOBMaXZnKypaLWiUQhF0FO9v2J
+        lkEEH2tt0lREUZ70ZqitxYQGFb0dMqu6CIExOgmHF+kHBSboRdD0yIaE7wp6DZS4fIUyTs+H
+        4Zyu8Vkz6RD42V0jFVhBe0CjsQcXWEZvg/SMdly09ILzQ/lSkX0hqewuJu55m4KmjtOCPdBB
+        YCo6JZY9ob++dCKKDzTfvIqLfBbeJ/eNxwL6EoIM6x+JKKyF0m92UvDBaD8orAwULdfDrwt+
+        Is6AjgEPcYEZcKM8AxPLCriUohQ95oHrae7EXt7w5ruDTENq05RYpilRTFOimP6PNSO8AHlx
+        sbxOy/HL9dzxAF6j42P12oADR3TF6N/tNf+p//UYVY/utyKaQmo3Rdri8HClVBPHx+usCChM
+        rVKcyAoNVyoiNPEJnOHIXkNsNMdb0WwKV3spTk7r3q2ktZpj3GGOO8oZJlUJJfNORDKVpe/V
+        1Wm/5476uId1uYcFRcr1xhB70EjCzpWFp5d8WWZ7Wkhl5htbZTWfr4xoY1a32PyDn/n1Fm3s
+        39S38GfbLonqgXvV82WGXsvw52bJliJ59qhR1zzdlu77cPBOWvoh14amxLjAmM1+t2rmrPTu
+        PXM5mq8Ptq+N6+YPn9uxqV+N85Gapf6Ygdf8BZdSLFR3AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNIsWRmVeSWpSXmKPExsVy+t/xe7r9/nGxBot2aln8n3ubxeLLz9vs
+        Fn/aNjBafD5ynM1i8cJvzBZzzrewWNy58pPN4kr7T3aL/7d+s1oce9HCZnFi831Gi8u75rBZ
+        rDh0gt3i2AIxi+uXeBz4PbasvMnksXPWXXaPxXteMnl03bjE7LFpVSebx8nmUo/p3Q+ZPd7v
+        u8rm0bdlFaPH501yAVxRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYp
+        qTmZZalF+nYJehmvPz9mLFigX7H72mX2Bsatal2MnBwSAiYSO4/+ZOxi5OIQEljKKNH+cB0b
+        REJK4sevC6wQtrDEn2tdbBBF7xklDp36DdTBwSEs4C1x9CgzSI2IQJBEx5ZLrCA1zAKtLBKz
+        FhxggWiYyiLR+nASO0gVm4COxKnVR8CaeQXsJDb/lgcJswioSnxbeBesRFQgQuLwjlmMIDav
+        gKDEyZlPWEBsToFAiYnTr4PZzALqEn/mXWKGsMUlmr6sZIWw5SWat85mnsAoNAtJ+ywkLbOQ
+        tMxC0rKAkWUVo0hqaXFuem6xkV5xYm5xaV66XnJ+7iZGYMRvO/Zzyw7GrnfBhxgFOBiVeHgn
+        6MbGCrEmlhVX5h5ilOBgVhLhrZgTFSvEm5JYWZValB9fVJqTWnyI0RTouYnMUqLJ+cBklFcS
+        b2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgVFmR45g/nuFvO4W5kcs
+        Zy4tXnL79LzTt019ligbLD5ZzH5AoiBN4VDoVP1nZ91Et8ziS/ZI3CG9Oahh06sXnHd25vMm
+        hWjpTpihIBPza/qHDQH7tT5fWGH2Wbvh5sJvPF9P6C3aXHvQy/f3t7X/jBd8/ZcibTy9K/jc
+        bP6lRy+3d8atjO0/Nc1ZiaU4I9FQi7moOBEAWMOQ/A4DAAA=
+X-CMS-MailID: 20190822081719eucas1p13b7b5abe25b1838b38e77002a5daa5c3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce
+References: <CGME20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce@eucas1p1.samsung.com>
+        <20190820151611.10727-1-i.maximets@samsung.com>
+        <CAKgT0Udn0D0_f=SOH2wpBRWV_u4rb1Qe2h7gguXnRNzJ_VkRzg@mail.gmail.com>
+        <625791af-c656-1e42-b60e-b3a5cedcb4c4@samsung.com>
+        <CAKgT0Uc27+ucd=a_sgTmv5g7_+ZTg1zK4isYJ0H7YWQj3d=Ejg@mail.gmail.com>
+        <f7d0f7a5-e664-8b72-99c7-63275aff4c18@samsung.com>
+        <CAKgT0UcCKiM1Ys=vWxctprN7fzWcBCk-PCuKB-8=RThM=CqLSQ@mail.gmail.com>
+        <CALDO+SZCbxEEwCS6MyHk-Cp_LJ33N=QFqwZ8uRm0e-PBRgxRYw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21. 08. 19 9:07, Dan Carpenter wrote:
-> The copy_from_user() funciton returns the number of bytes remaining to
-
-typo here.
-
-> be copied but we want to return -EFAULT to the user.
+On 22.08.2019 0:38, William Tu wrote:
+> On Wed, Aug 21, 2019 at 9:57 AM Alexander Duyck
+> <alexander.duyck@gmail.com> wrote:
+>>
+>> On Wed, Aug 21, 2019 at 9:22 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+>>>
+>>> On 21.08.2019 4:17, Alexander Duyck wrote:
+>>>> On Tue, Aug 20, 2019 at 8:58 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+>>>>>
+>>>>> On 20.08.2019 18:35, Alexander Duyck wrote:
+>>>>>> On Tue, Aug 20, 2019 at 8:18 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+>>>>>>>
+>>>>>>> Tx code doesn't clear the descriptor status after cleaning.
+>>>>>>> So, if the budget is larger than number of used elems in a ring, some
+>>>>>>> descriptors will be accounted twice and xsk_umem_complete_tx will move
+>>>>>>> prod_tail far beyond the prod_head breaking the comletion queue ring.
+>>>>>>>
+>>>>>>> Fix that by limiting the number of descriptors to clean by the number
+>>>>>>> of used descriptors in the tx ring.
+>>>>>>>
+>>>>>>> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
+>>>>>>> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+>>>>>>
+>>>>>> I'm not sure this is the best way to go. My preference would be to
+>>>>>> have something in the ring that would prevent us from racing which I
+>>>>>> don't think this really addresses. I am pretty sure this code is safe
+>>>>>> on x86 but I would be worried about weak ordered systems such as
+>>>>>> PowerPC.
+>>>>>>
+>>>>>> It might make sense to look at adding the eop_desc logic like we have
+>>>>>> in the regular path with a proper barrier before we write it and after
+>>>>>> we read it. So for example we could hold of on writing the bytecount
+>>>>>> value until the end of an iteration and call smp_wmb before we write
+>>>>>> it. Then on the cleanup we could read it and if it is non-zero we take
+>>>>>> an smp_rmb before proceeding further to process the Tx descriptor and
+>>>>>> clearing the value. Otherwise this code is going to just keep popping
+>>>>>> up with issues.
+>>>>>
+>>>>> But, unlike regular case, xdp zero-copy xmit and clean for particular
+>>>>> tx ring always happens in the same NAPI context and even on the same
+>>>>> CPU core.
+>>>>>
+>>>>> I saw the 'eop_desc' manipulations in regular case and yes, we could
+>>>>> use 'next_to_watch' field just as a flag of descriptor existence,
+>>>>> but it seems unnecessarily complicated. Am I missing something?
+>>>>>
+>>>>
+>>>> So is it always in the same NAPI context?. I forgot, I was thinking
+>>>> that somehow the socket could possibly make use of XDP for transmit.
+>>>
+>>> AF_XDP socket only triggers tx interrupt on ndo_xsk_async_xmit() which
+>>> is used in zero-copy mode. Real xmit happens inside
+>>> ixgbe_poll()
+>>>  -> ixgbe_clean_xdp_tx_irq()
+>>>     -> ixgbe_xmit_zc()
+>>>
+>>> This should be not possible to bound another XDP socket to the same netdev
+>>> queue.
+>>>
+>>> It also possible to xmit frames in xdp_ring while performing XDP_TX/REDIRECT
+>>> actions. REDIRECT could happen from different netdev with different NAPI
+>>> context, but this operation is bound to specific CPU core and each core has
+>>> its own xdp_ring.
+>>>
+>>> However, I'm not an expert here.
+>>> Björn, maybe you could comment on this?
+>>>
+>>>>
+>>>> As far as the logic to use I would be good with just using a value you
+>>>> are already setting such as the bytecount value. All that would need
+>>>> to happen is to guarantee that the value is cleared in the Tx path. So
+>>>> if you clear the bytecount in ixgbe_clean_xdp_tx_irq you could
+>>>> theoretically just use that as well to flag that a descriptor has been
+>>>> populated and is ready to be cleaned. Assuming the logic about this
+>>>> all being in the same NAPI context anyway you wouldn't need to mess
+>>>> with the barrier stuff I mentioned before.
+>>>
+>>> Checking the number of used descs, i.e. next_to_use - next_to_clean,
+>>> makes iteration in this function logically equal to the iteration inside
+>>> 'ixgbe_xsk_clean_tx_ring()'. Do you think we need to change the later
+>>> function too to follow same 'bytecount' approach? I don't like having
+>>> two different ways to determine number of used descriptors in the same file.
+>>>
+>>> Best regards, Ilya Maximets.
+>>
+>> As far as ixgbe_clean_xdp_tx_irq() vs ixgbe_xsk_clean_tx_ring(), I
+>> would say that if you got rid of budget and framed things more like
+>> how ixgbe_xsk_clean_tx_ring was framed with the ntc != ntu being
+>> obvious I would prefer to see us go that route.
+>>
+>> Really there is no need for budget in ixgbe_clean_xdp_tx_irq() if you
+>> are going to be working with a static ntu value since you will only
+>> ever process one iteration through the ring anyway. It might make more
+>> sense if you just went through and got rid of budget and i, and
+>> instead used ntc and ntu like what was done in
+>> ixgbe_xsk_clean_tx_ring().
+>>
+>> Thanks.
+>>
+>> - Alex
 > 
-> Fixes: 20ec628e8007 ("misc: xilinx_sdfec: Add ability to configure LDPC")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/misc/xilinx_sdfec.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-> index dc1b8b412712..813b82c59360 100644
-> --- a/drivers/misc/xilinx_sdfec.c
-> +++ b/drivers/misc/xilinx_sdfec.c
-> @@ -651,9 +651,10 @@ static int xsdfec_add_ldpc(struct xsdfec_dev *xsdfec, void __user *arg)
->  	if (!ldpc)
->  		return -ENOMEM;
->  
-> -	ret = copy_from_user(ldpc, arg, sizeof(*ldpc));
-> -	if (ret)
-> +	if (copy_from_user(ldpc, arg, sizeof(*ldpc))) {
-> +		ret = -EFAULT;
->  		goto err_out;
-> +	}
->  
->  	if (xsdfec->config.code == XSDFEC_TURBO_CODE) {
->  		ret = -EIO;
-> 
+> Not familiar with the driver details.
+> I tested this patch and the issue mentioned in OVS mailing list.
+> https://www.mail-archive.com/ovs-dev@openvswitch.org/msg35362.html
+> and indeed the problem goes away.
 
-When typo fixed feel free to add my
-Reviewed-by: Michal Simek <michal.simek@xilinx.com>
+Good. Thanks for testing!
 
-Thanks,
-Michal
+> But I saw a huge performance drop,
+> my AF_XDP tx performance drops from >9Mpps to <5Mpps.
+
+I didn't expect so big performance difference with this change.
+What is your test scenario? Is it possible that you're accounting same
+packet several times due to broken completion queue?
+
+Looking at samples/bpf/xdpsock_user.c:complete_tx_only(), it accounts
+sent packets (tx_npkts) by accumulating results of xsk_ring_cons__peek()
+for completion queue, so it's not a trusted source of pps information.
+
+Best regards, Ilya Maximets.
+
+> 
+> Tested using kernel 5.3.0-rc3+
+> 03:00.0 Ethernet controller: Intel Corporation Ethernet Controller
+> 10-Gigabit X540-AT2 (rev 01)
+> Subsystem: Intel Corporation Ethernet 10G 2P X540-t Adapter
+> Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr-
+> Stepping- SERR- FastB2B- DisINTx+
+> 
+> Regards,
+> William
