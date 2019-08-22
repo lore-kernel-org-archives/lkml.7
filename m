@@ -2,128 +2,71 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6468AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFE0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38CA3233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0E6233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566484908;
+	bh=xbTF8AseRu01mR/EJfz3wstTj03rAj+32ynAtGi6ytQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pu7pHo86Wmslft9ftwy+XHi5UbdeZQgidKGdV+rvS6SiRt22emI/Mtf/C/33JD6C7
+	 Xcm9mxxBojXz6OpTzKAtsFsr9V+Y97Kf2aJSvBrguqK6mg4qRgFeAZyjh+0z5lS9cl
+	 ubrLf1mouUQN58zCfqN5oCvQ8VIhxiBMfF+THuZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388551AbfHVOjm (ORCPT
+        id S1731487AbfHVOlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:39:42 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36166 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731487AbfHVOjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:39:41 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AD8466A9E1BC676579BA;
-        Thu, 22 Aug 2019 22:39:37 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 22 Aug 2019
- 22:39:28 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <matthias.bgg@gmail.com>,
-        <yuehaibing@huawei.com>, <pihsun@chromium.org>,
-        <swboyd@chromium.org>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH -next] ASoC: mediatek: mt2701: Fix -Wunused-const-variable warnings
-Date:   Thu, 22 Aug 2019 22:37:47 +0800
-Message-ID: <20190822143747.20944-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 22 Aug 2019 10:41:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57240 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729659AbfHVOlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:41:47 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6FE7233A1;
+        Thu, 22 Aug 2019 14:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566484906;
+        bh=xbTF8AseRu01mR/EJfz3wstTj03rAj+32ynAtGi6ytQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HrYUTaHAc5uY99i0UbHQP96oyVsZ4v2UeRGZw+LFJwAvyEML0OT4YU2iosLEsWwzp
+         AyYMZspul2AXS3ZOQngqo8H414ASKbM4qJ0d8UwmGmjh8UeYCRbwpr8JY7Egzad0k2
+         spguzpf5p1q+yZ6cMWVRmd0cGcB/iZRqqKySqb4s=
+Date:   Thu, 22 Aug 2019 16:41:44 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 14/38] posix-cpu-timers: Get rid of pointer indirection
+Message-ID: <20190822144143.GR22020@lenoir>
+References: <20190821190847.665673890@linutronix.de>
+ <20190821192920.535079278@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821192920.535079278@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sound/soc/mediatek/mt2701/mt2701-afe-common.h:66:27: warning:
- mt2701_afe_backup_list defined but not used [-Wunused-const-variable=]
+On Wed, Aug 21, 2019 at 09:09:01PM +0200, Thomas Gleixner wrote:
+> Now that the sample functions have no return value anymore, the result can
+> simply be returned instead of using pointer indirection.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-mt2701_afe_backup_list is only used in mt2701-afe-pcm.c,
-so just move the definition over there.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/soc/mediatek/mt2701/mt2701-afe-common.h | 21 ---------------------
- sound/soc/mediatek/mt2701/mt2701-afe-pcm.c    | 21 +++++++++++++++++++++
- 2 files changed, 21 insertions(+), 21 deletions(-)
-
-diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-common.h b/sound/soc/mediatek/mt2701/mt2701-afe-common.h
-index d44faba..32bef5e 100644
---- a/sound/soc/mediatek/mt2701/mt2701-afe-common.h
-+++ b/sound/soc/mediatek/mt2701/mt2701-afe-common.h
-@@ -63,27 +63,6 @@ enum audio_base_clock {
- 	MT2701_BASE_CLK_NUM,
- };
- 
--static const unsigned int mt2701_afe_backup_list[] = {
--	AUDIO_TOP_CON0,
--	AUDIO_TOP_CON4,
--	AUDIO_TOP_CON5,
--	ASYS_TOP_CON,
--	AFE_CONN0,
--	AFE_CONN1,
--	AFE_CONN2,
--	AFE_CONN3,
--	AFE_CONN15,
--	AFE_CONN16,
--	AFE_CONN17,
--	AFE_CONN18,
--	AFE_CONN19,
--	AFE_CONN20,
--	AFE_CONN21,
--	AFE_CONN22,
--	AFE_DAC_CON0,
--	AFE_MEMIF_PBUF_SIZE,
--};
--
- struct mt2701_i2s_data {
- 	int i2s_ctrl_reg;
- 	int i2s_asrc_fs_shift;
-diff --git a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-index d7f5def..76502ba 100644
---- a/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-+++ b/sound/soc/mediatek/mt2701/mt2701-afe-pcm.c
-@@ -60,6 +60,27 @@ static const struct mt2701_afe_rate mt2701_afe_i2s_rates[] = {
- 	{ .rate = 352800, .regvalue = 24 },
- };
- 
-+static const unsigned int mt2701_afe_backup_list[] = {
-+	AUDIO_TOP_CON0,
-+	AUDIO_TOP_CON4,
-+	AUDIO_TOP_CON5,
-+	ASYS_TOP_CON,
-+	AFE_CONN0,
-+	AFE_CONN1,
-+	AFE_CONN2,
-+	AFE_CONN3,
-+	AFE_CONN15,
-+	AFE_CONN16,
-+	AFE_CONN17,
-+	AFE_CONN18,
-+	AFE_CONN19,
-+	AFE_CONN20,
-+	AFE_CONN21,
-+	AFE_CONN22,
-+	AFE_DAC_CON0,
-+	AFE_MEMIF_PBUF_SIZE,
-+};
-+
- static int mt2701_dai_num_to_i2s(struct mtk_base_afe *afe, int num)
- {
- 	struct mt2701_afe_private *afe_priv = afe->platform_priv;
--- 
-2.7.4
-
-
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
