@@ -2,170 +2,113 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8866C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FC1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA6F3233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F5023401
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:43:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="oNnxhTlu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389212AbfHVNld (ORCPT
+        id S2389230AbfHVNnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:41:33 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:48885 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387649AbfHVNld (ORCPT
+        Thu, 22 Aug 2019 09:43:51 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46661 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731907AbfHVNnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:41:33 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R671e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Ta8JkQz_1566481288;
-Received: from bn0418deMacBook-Pro.local(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0Ta8JkQz_1566481288)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 22 Aug 2019 21:41:29 +0800
-Subject: Re: [PATCH v3 3/3] vfio_pci: make use of update_irq_devid and
- optimize irq ops
-To:     "Liu, Jiang" <gerry@linux.alibaba.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, alex.williamson@redhat.com,
-        linux-kernel@vger.kernel.org, tao.ma@linux.alibaba.com,
-        nanhai.zou@linux.alibaba.com, linyunsheng@huawei.com
-References: <cover.1565857737.git.luoben@linux.alibaba.com>
- <f8838cf037055351d677e628f169cb21c6a76f02.1565857737.git.luoben@linux.alibaba.com>
- <alpine.DEB.2.21.1908151833010.1908@nanos.tec.linutronix.de>
- <7a3606ad-8fa6-45d5-b5a4-ee3f07893a25@linux.alibaba.com>
- <FA3946E3-BAC5-4C3B-9409-83C5C64FB96F@linux.alibaba.com>
-From:   luoben <luoben@linux.alibaba.com>
-Message-ID: <fc7ce2e7-dd5d-d78d-9064-93225d14139f@linux.alibaba.com>
-Date:   Thu, 22 Aug 2019 21:41:28 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <FA3946E3-BAC5-4C3B-9409-83C5C64FB96F@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Thu, 22 Aug 2019 09:43:51 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j15so7641937qtl.13
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 06:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xO/6xaE9MGMH+or7wVjBVvh58YMNnJ0aqS9HSIkNkks=;
+        b=oNnxhTlud9r17BML3hLv41CDghUmIHxG6Dr5Or92qHO0oo/B3fxPwmrWP+yKrj4u5U
+         qfvTUktfZS52ymoXXvVoVly0/xWPgppGYuL4g853pbWJjGZfJ+M7hpi5KCAQlBZCRXRP
+         vNzSjcceWRq/72eVCC3Z3HTBRH91ad2L3rnS6kXxYaJM9humiuVqxK1GDyq1a8Amj1wQ
+         cPnz2AKCSiiouK+OOmvq+E6SQnjipcDnRjMcQVkAfcitT+JVxIwbSdvH5GDMp+tUs/LM
+         6KALkRvjJoS2teN7jW8eNjFnuoqKVpAyrXHj70QlHB14c0GrcOT/hP6zyOEmFNRMmzDL
+         +IPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xO/6xaE9MGMH+or7wVjBVvh58YMNnJ0aqS9HSIkNkks=;
+        b=kjc1Vy4Fuk27w0aJx3h9Lecm95CmbOJOUIRHRkZ1/Ge13+0QD+avX8X51GLS5Q2inD
+         w+WohaKjEMPXjRbeD/+uAx/UOz7+I+gpL2UAxDzMTeWEyuJUjqV6p7SwFD9FBKCluCgy
+         xLF6+cSOVye+IEOvvvc0MbSASPp+9xuMKfWsT4qZEkOHQQDyUuFDlM89oGbbKaAT+CdR
+         hkdB/CqVC5P247q9AnGH7xiCobiUqhKNwlrH0+H4M/t4ufLeUaAhYctlyt1IQlfot8zH
+         sLCD6f4cCJ2PY6xf1S+1fcWel2Kq0uFUUJ8JTSFfxueyJRr3qO6mPZPhbV5M1xPHi+at
+         UDNQ==
+X-Gm-Message-State: APjAAAVYGlP7iRMOZD/FrdWxE/vgZnxWPVeEed5+oDlVsSaNlJw1Of1I
+        yUi8yVAeo9+7+yfLaUgZpxoYwg==
+X-Google-Smtp-Source: APXvYqxs3n27LO8gcTZ+sUMUSO3JT9qplLf76Jvr1umXaqLwRRpuIxjdmMYFz0gjtmAhd48/ri6H8g==
+X-Received: by 2002:ac8:51c4:: with SMTP id d4mr33744945qtn.176.1566481430289;
+        Thu, 22 Aug 2019 06:43:50 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id j6sm14466100qtl.85.2019.08.22.06.43.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 22 Aug 2019 06:43:49 -0700 (PDT)
+Message-ID: <1566481427.5576.5.camel@lca.pw>
+Subject: Re: [PATCH] x86/kaslr: remove useless code in mem_avoid_memmap
+From:   Qian Cai <cai@lca.pw>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 22 Aug 2019 09:43:47 -0400
+In-Reply-To: <20190822132628.GA3887@MiWiFi-R3L-srv>
+References: <1566477146-32484-1-git-send-email-cai@lca.pw>
+         <20190822132628.GA3887@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2019-08-22 at 21:26 +0800, Baoquan He wrote:
+> On 08/22/19 at 08:32am, Qian Cai wrote:
+> > MAX_MEMMAP_REGIONS is a macro that equal to 4. "i" is static local
+> > variable that default to 0. The comparison "i >= MAX_MEMMAP_REGIONS"
+> > will always be false.
+> 
+> Seems not true. mem_avoid_memmap() could be invoked many times if
+> multiple memmap= added. It will carry the value accumulated from
+> the past.
 
-在 2019/8/20 下午11:27, Liu, Jiang 写道:
->
->> On Aug 20, 2019, at 11:24 PM, luoben <luoben@linux.alibaba.com> wrote:
->>
->>
->>
->> 在 2019/8/16 上午12:45, Thomas Gleixner 写道:
->>> On Thu, 15 Aug 2019, Ben Luo wrote:
->>>
->>>>   	if (vdev->ctx[vector].trigger) {
->>>> -		free_irq(irq, vdev->ctx[vector].trigger);
->>>> -		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
->>>> -		kfree(vdev->ctx[vector].name);
->>>> -		eventfd_ctx_put(vdev->ctx[vector].trigger);
->>>> -		vdev->ctx[vector].trigger = NULL;
->>>> +		if (vdev->ctx[vector].trigger == trigger) {
->>>> +			irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
->>>>
->>> What's the point of unregistering the producer, just to register it again below?
->> Whether producer token changed or not, irq_bypass_register_producer() is a way (seems the
->>
->> only way) to update IRTE by VFIO for posted interrupt.
->>
->> When posted interrupt is in use, the target IRTE will be used by IOMMU directly to find the
->>
->> target CPU for an interrupt posted to VM, since hypervisor is bypassed.
->>
->> irq_bypass_register_producer() will modify IRTE based on the information retrieved from KVM,
->>
->>
->> 0xffffffff8150a920 : modify_irte+0x0/0x180 [kernel]
->> 0xffffffff8150ab94 : intel_ir_set_vcpu_affinity+0xf4/0x150 [kernel]
->> 0xffffffff81125f3c : irq_set_vcpu_affinity+0x5c/0xa0 [kernel]
->> 0xffffffffa0550818 : vmx_update_pi_irte+0x178/0x290 [kvm_intel]    // get pi_desc etc. from KVM
->> 0xffffffffa052b789 : kvm_arch_irq_bypass_add_producer+0x39/0x50 [kvm_intel] (inexact)
->> 0xffffffffa024a50b : __connect+0x7b/0xa0 [kvm] (inexact)
->> 0xffffffffa024a6a8 : irq_bypass_register_producer+0x108/0x140 [kvm] (inexact)
->> 0xffffffffa0338386 : vfio_msi_set_vector_signal+0x1b6/0x2c0 [vfio_pci] (inexact)
->>>> +		} else if (trigger) {
->>>> +			ret = update_irq_devid(irq,
->>>> +					vdev->ctx[vector].trigger, trigger);
->>>> +			if (unlikely(ret)) {
->>>> +				dev_info(&pdev->dev,
->>>> +					 "update_irq_devid %d (token %p) fails: %d\n",
->>>>
->>> s/fails/failed/
->>>
->>>
->>>> +					 irq, vdev->ctx[vector].trigger, ret);
->>>> +				eventfd_ctx_put(trigger);
->>>> +				return ret;
->>>> +			}
->>>>
->>> This lacks any form of comment why this is correct. dev_id is updated and
->>> the producer with the old token is still registered.
->>>
->> ok, I will add comment like below:
->>
->> For KVM-VFIO case, once producer and consumer connected successfully, interrupt from passthrough
->>
->> device will be directly delivered to VM instead of triggering interrupt process in HOST. If producer and
->>
->> consumer are disconnected, this interrupt process will fall back to remap mode, the handler vfio_msihandler()
->>
->> registered in corresponding irqaction will use the dev_id to find the right way to deliver the interrupt to VM.
->>
->> So, it is safe to update dev_id before unregistration of irq-bypass producer, i.e. switch back from posted
->>
->> mode to remap mode, since only in remap mode the 'dev_id' will be used by interrupt handler. To producer
->>
->> and consumer, dev_id is only a token for pairing them togather.
->>>> +			irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
->>>>
->>> Now it's unregistered.
->>>
->>>
->>>> +			eventfd_ctx_put(vdev->ctx[vector].trigger);
->>>> +			vdev->ctx[vector].producer.token = trigger;
->>>>
->>> The token is updated and then it's newly registered below.
->>>
->>>
->>>> +			vdev->ctx[vector].trigger = trigger;
->>>> -	vdev->ctx[vector].producer.token = trigger;
->>>> -	vdev->ctx[vector].producer.irq = irq;
->>>> +	/* always update irte for posted mode */
->>>>   	ret = irq_bypass_register_producer(&vdev->ctx[vector].producer);
->>>>   	if (unlikely(ret))
->>>>   		dev_info(&pdev->dev,
->>>>   		"irq bypass producer (token %p) registration fails: %d\n",
->>>>   		vdev->ctx[vector].producer.token, ret);
->>>>
->>> I know this code already existed, but again this looks inconsistent. If the
->>> registration fails then a subsequent update will try to unregister a not
->>> registered producer. Does not make any sense to me.
->>>
->> irq_bypass_register_producer() also fails on duplicated registration, so maybe an unconditional try to
->>
->> unregistration is a easy way to keep consistent.
->>
->> Maybe it's better to change these function names to irq_bypass_try_register_producer() and
->>
->> irq_bypass_try_unregister_producer()  :)
->>
->>
-> Hi Ben,
-> 	The point is that we shouldn’t blindly try to register again  if we fails to unregister a posted interrupt producer. By this way, the fast path (posted interrupt) may get disabled, but it’s safer than blindly ignoring the failure of ungistration.
-> Thanks,
-> Gerry
+Ah, I am still a newbie in C after all those years. Sorry for the noise.
 
-This may need another patchset to enhance the irq_bypass 
-register/unregister functions first, at least to return some error code 
-when irq_bypass_try_unregister_producer() fails. I would like to have a 
-try later.
-
-Thanks,
-
-     Ben
-
+> 
+> > 
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > ---
+> >  arch/x86/boot/compressed/kaslr.c | 3 ---
+> >  1 file changed, 3 deletions(-)
+> > 
+> > diff --git a/arch/x86/boot/compressed/kaslr.c
+> > b/arch/x86/boot/compressed/kaslr.c
+> > index 2e53c056ba20..a4a5a88edb94 100644
+> > --- a/arch/x86/boot/compressed/kaslr.c
+> > +++ b/arch/x86/boot/compressed/kaslr.c
+> > @@ -176,9 +176,6 @@ static void mem_avoid_memmap(char *str)
+> >  {
+> >  	static int i;
+> >  
+> > -	if (i >= MAX_MEMMAP_REGIONS)
+> > -		return;
+> > -
+> >  	while (str && (i < MAX_MEMMAP_REGIONS)) {
+> >  		int rc;
+> >  		unsigned long long start, size;
+> > -- 
+> > 1.8.3.1
+> > 
