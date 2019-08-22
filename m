@@ -2,73 +2,94 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75502C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F42C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A08214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FFE2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388441AbfHVMUj (ORCPT
+        id S2388450AbfHVMWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:20:39 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34283 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728952AbfHVMUi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:20:38 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i0m4x-00083J-2M; Thu, 22 Aug 2019 12:20:35 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] mac80211: minstrel_ht: fix infinite loop because supported is not being shifted
-Date:   Thu, 22 Aug 2019 13:20:34 +0100
-Message-Id: <20190822122034.28664-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 22 Aug 2019 08:22:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34212 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728952AbfHVMWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:22:02 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 87F277E421;
+        Thu, 22 Aug 2019 12:22:02 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 821B460BF3;
+        Thu, 22 Aug 2019 12:21:59 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 14:21:57 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Alexander Graf <graf@amazon.com>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 10/20] RISC-V: KVM: Handle MMIO exits for VCPU
+Message-ID: <20190822122157.qy3e4rhxthfustn2@kamzik.brq.redhat.com>
+References: <20190822084131.114764-1-anup.patel@wdc.com>
+ <20190822084131.114764-11-anup.patel@wdc.com>
+ <13cf8e10-3f54-a50a-0796-ecb2da4577d2@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13cf8e10-3f54-a50a-0796-ecb2da4577d2@amazon.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 22 Aug 2019 12:22:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Thu, Aug 22, 2019 at 02:10:48PM +0200, Alexander Graf wrote:
+> On 22.08.19 10:44, Anup Patel wrote:
+...
+> > +static int emulate_load(struct kvm_vcpu *vcpu, struct kvm_run *run,
+> > +			unsigned long fault_addr)
+...
+> > +	/* Exit to userspace for MMIO emulation */
+> > +	vcpu->stat.mmio_exit_user++;
+> > +	run->exit_reason = KVM_EXIT_MMIO;
+> > +	run->mmio.is_write = false;
+> > +	run->mmio.phys_addr = fault_addr;
+> > +	run->mmio.len = len;
+> > +
+> > +	/* Move to next instruction */
+> > +	vcpu->arch.guest_context.sepc += INSN_LEN(insn);
+> 
+> Doesn't that make more sense on the reentry path? What if you want to inject
+> an MCE on access to unmapped addresses from user space?
+>
 
-Currently the for-loop will spin forever if variable supported is
-non-zero because supported is never changed.  Fix this by adding in
-the missing right shift of supported.
+I agree. See commit 0d640732dbeb for arm's justification for moving
+the instruction skip. But also see
 
-Addresses-Coverity: ("Infinite loop")
-Fixes: 48cb39522a9d ("mac80211: minstrel_ht: improve rate probing for devices with static fallback")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- net/mac80211/rc80211_minstrel_ht.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://patchwork.kernel.org/patch/11109063/
 
-diff --git a/net/mac80211/rc80211_minstrel_ht.c b/net/mac80211/rc80211_minstrel_ht.c
-index a01168514840..0ef2633349b5 100644
---- a/net/mac80211/rc80211_minstrel_ht.c
-+++ b/net/mac80211/rc80211_minstrel_ht.c
-@@ -634,7 +634,7 @@ minstrel_ht_rate_sample_switch(struct minstrel_priv *mp,
- 		u16 supported = mi->supported[g_idx];
- 
- 		supported >>= mi->max_tp_rate[0] % MCS_GROUP_RATES;
--		for (i = 0; supported; i++) {
-+		for (i = 0; supported; supported >>= 1, i++) {
- 			if (!(supported & 1))
- 				continue;
- 
--- 
-2.20.1
+for a needed fix to avoid skipping the instructions multiple times.
+It looks like riscv's KVM_RUN ioctl would be vulnerable to that as
+well.
 
+Thanks,
+drew
