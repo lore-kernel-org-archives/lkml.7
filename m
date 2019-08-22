@@ -2,95 +2,100 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754C3C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C77C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA3923405
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB00B20673
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:15:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZGhish2A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4W8X20h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390368AbfHVVPw (ORCPT
+        id S2390841AbfHVVPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:15:52 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46216 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390231AbfHVVPv (ORCPT
+        Thu, 22 Aug 2019 17:15:55 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38468 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390238AbfHVVPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:15:51 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z1so6684172wru.13;
-        Thu, 22 Aug 2019 14:15:49 -0700 (PDT)
+        Thu, 22 Aug 2019 17:15:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m125so7097310wmm.3;
+        Thu, 22 Aug 2019 14:15:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=HPPqPWkNsX2zIZkcp2fxF4eaN/KGop5jbrLhh+yilBU=;
-        b=ZGhish2AOhYKSO7ScnFNPLsvysA/Gn9ttIusTALCvk7ny3jbb8EfBkkR+w8llK6YZj
-         kL0HpZ5ipo+5wACm4qkX0j80O33Od7ZHousGzPsOEbJZjp3ieq1IoEr3AYfAHNTAmFFs
-         1Zlm67Eh3IwuTy+QAOZbEZZPXpVwzUsyFWyHxSddQ+mK/VZQIM260DYBr5FFhcAJYl61
-         DmEYOpL6sDP8AXrHKnFqle+vDk+Hvr8F/Cz5R2jWqiuo1B2A0QJsIxEfuaR/x2JczJV/
-         FOJ0y8LdGb6SVBuKjs0kNse2v8/T+ApIHc86b4/ltRGPP51dMEdOvuW0qjjvIMgK+CO4
-         lFlw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=EtIN/Xlr6Ip9YVPKEGipzkLuuYaoLg7P8nPJxnIh64A=;
+        b=Z4W8X20hXdRXquz+6aomxEmdr1Nw6M30y/29B8Sk9nBVqCiMWQQA0jVA8B00CjXMEh
+         HJOB0pxT3z/GPheiZy4Ne1BHS0t5pNAZ3AU1XZ+/UQ5Tx+25X2nDLoeSe9SOfaXBiUZT
+         xtzmzLT0ZjJ+f+U6Cgd9WoOUO1D0lBQl0mGGPblPD6D5/C/5JgTrao1vlkrspMU9871K
+         ovuwE2RHRte1AeeXmVHtSTcfqGxGsUtyU/ngLnDFzP6kkZtVRy/igk9DSK2nRj6Bupe2
+         S7M783ui3HgnAOPNMj5FMxxAC8Ec3zLUFimt/kh0OC66m4gN9H0YrPjeHkvZ+TEWHgAZ
+         WvSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HPPqPWkNsX2zIZkcp2fxF4eaN/KGop5jbrLhh+yilBU=;
-        b=eT2TBIlOHtKKJuxARx//RYbM/L3DAJfiP4rNDe4eVDA1hBSRbBjVOAcF51IfpKDz62
-         NvOV1LARrn/Ju+0cRhRizSPzvXUL+5qUeG3pqLdyd0gTZ6Ifzlpze6mzygefsrAlhGqJ
-         uolUmMwrg1utms2U2DkN3mSqyHGDVKEY+HyORoZ3Y6sINtHx4ECGTBYDJmTcDlueV19X
-         rp2u8dLQmRMKSI3LdkL+5CikpLiOCAKVlpAN99Ul/3MbNKhl0YRI/v4F/ECKCKbx8TIh
-         20GMtMrY1ZM69Cb37Zgu4v/rYfuH6PlblTL1igCFaDo6UvE0b7+w/uz5EM9JYxUdgFUa
-         MB5g==
-X-Gm-Message-State: APjAAAVhlDr5JCl6v3k4BiNHQWBfPNEOGLWy73mrThqupLOENThUO4+y
-        wFqJqm9EnfWpoZsxOXU33qY=
-X-Google-Smtp-Source: APXvYqyzVg3G23tzkTO2cy5UNABw5Px3NfCU//hSFDMcjYN2qvJp+7frSCzrxUZQxnVZ1qkX+3DWqg==
-X-Received: by 2002:a5d:62c1:: with SMTP id o1mr935622wrv.293.1566508549118;
-        Thu, 22 Aug 2019 14:15:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=EtIN/Xlr6Ip9YVPKEGipzkLuuYaoLg7P8nPJxnIh64A=;
+        b=hGzUz6UeeHJEXCHV+d0Q1ptAHTlLip/7vExdVK+IGF/WeCPqAZ9nuS6Mluhfq0U4iZ
+         zyKzVLJW5wfwn1oaJT8IeZ7AS4cgmMk3WfG65Xz1/39Fnq+XzuGwe/FMvDC60Yag5fGs
+         T/9i21ddgaFmBmemKJZGFrvgvqJy7R/dNXBv1rw4gxvqPGRwMRdVLOQzWTvJDbQWLqHj
+         9OJdcvq0kiwi96+/SGcyxC7xNIwybcsirA5BL3a1qlfjaN4yWD1jOQN5RneGVWj9ipSx
+         ZkEUST+Rw2K0RUl3XmFgqpai174bGktTGO1HlfHbI9HxjQYyzbI+RmKarOXjefuZp6Ze
+         LJNQ==
+X-Gm-Message-State: APjAAAXX+0IUe+sP1xcQPRuBY8+89bQ9Gdt/3fakH1WUqO7hNcUGHW1K
+        J5M8EoLtOXDHPgMBx1IlUaA=
+X-Google-Smtp-Source: APXvYqxLvVfwOSGwbc+tlhQaL4v3QM6AsGH84AkN9rdgEJ+l+bCU8PWZD6UvKDbZssKyf/GeYJr0Pw==
+X-Received: by 2002:a1c:1f41:: with SMTP id f62mr1096637wmf.176.1566508550977;
+        Thu, 22 Aug 2019 14:15:50 -0700 (PDT)
 Received: from localhost.localdomain ([86.126.25.232])
-        by smtp.gmail.com with ESMTPSA id g197sm578488wme.30.2019.08.22.14.15.47
+        by smtp.gmail.com with ESMTPSA id g197sm578488wme.30.2019.08.22.14.15.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 14:15:48 -0700 (PDT)
+        Thu, 22 Aug 2019 14:15:50 -0700 (PDT)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     broonie@kernel.org
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, netdev@vger.kernel.org,
         Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH v2 0/5] Poll mode for NXP DSPI driver
-Date:   Fri, 23 Aug 2019 00:15:09 +0300
-Message-Id: <20190822211514.19288-1-olteanv@gmail.com>
+Subject: [PATCH v2 2/5] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours
+Date:   Fri, 23 Aug 2019 00:15:11 +0300
+Message-Id: <20190822211514.19288-3-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190822211514.19288-1-olteanv@gmail.com>
+References: <20190822211514.19288-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series makes the EOQ and TCFQ operating modes of spi-fsl-dspi work
-when no platform IRQ is defined in the DT.
+The DSPI interrupt can be shared between two controllers at least on the
+LX2160A. In that case, the driver for one controller might misbehave and
+consume the other's interrupt. Fix this by actually checking if any of
+the bits in the status register have been asserted.
 
-The NXP LS1021A-TSN board needs this setting for performance reasons,
-and I am adding the corresponding DTS patch to this series to avoid
-runtime errors that may occur if the DTS and the driver patches part
-ways and get included through separate trees.
+Fixes: 13aed2392741 ("spi: spi-fsl-dspi: use IRQF_SHARED mode to request IRQ")
+Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+---
+ drivers/spi/spi-fsl-dspi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The series also contains a bug fix for the shared IRQ of the DSPI
-driver. I am going to respin a version of it as a separate patch for
-inclusion in stable trees, independent of this patchset.
-
-Vladimir Oltean (5):
-  spi: spi-fsl-dspi: Reduce indentation level in dspi_interrupt
-  spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours
-  spi: spi-fsl-dspi: Remove impossible to reach error check
-  spi: spi-fsl-dspi: Use poll mode in case the platform IRQ is missing
-  ARM: dts: ls1021a-tsn: Use the DSPI controller in poll mode
-
- arch/arm/boot/dts/ls1021a-tsn.dts |   1 +
- drivers/spi/spi-fsl-dspi.c        | 128 ++++++++++++++++++------------
- 2 files changed, 78 insertions(+), 51 deletions(-)
-
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index c90db7db4121..6ef2279a3699 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -659,7 +659,7 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
+ 	regmap_write(dspi->regmap, SPI_SR, spi_sr);
+ 
+ 	if (!(spi_sr & (SPI_SR_EOQF | SPI_SR_TCFQF)))
+-		return IRQ_HANDLED;
++		return IRQ_NONE;
+ 
+ 	/* Get transfer counter (in number of SPI transfers). It was
+ 	 * reset to 0 when transfer(s) were started.
 -- 
 2.17.1
 
