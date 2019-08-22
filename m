@@ -2,118 +2,164 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2A7C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FDBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CB023400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="L8WPD7dT"
+	by mail.kernel.org (Postfix) with ESMTP id BFBF823401
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389596AbfHVPtR (ORCPT
+        id S2389611AbfHVPtr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:49:17 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38560 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726387AbfHVPtR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:49:17 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r12so8610882edo.5
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:49:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DJ/eC3LGuOL6//+DGNThc9YJfZBuiT1PO54o1KGcu30=;
-        b=L8WPD7dTrU3n/Wq91GZgxnLyJoEfJzls7dAI7jRFPS2OQUmzaI3fJOHoWKcsrFZaVP
-         RvSdHC7FZ1z0sOk8IdvvB29K2NqNten9KEG0gvLCmSqtQFfFJ5uMgD4v43b36IcAv9bX
-         KTtYiU4ADpMXlaL5IafhA5DT+coI1u60NzoVzh5Rw8mz0K07RDv2bxZ/AeulQBVIFehw
-         kEYLsFZGGD1vqAftG2zGF3XUbDDqHOCP29WxaNddvB8HHtjCJm1SU7vcdk5mJlPG0h9V
-         x9uHHr9bupiR3K6DrnD2mLXjtMpcO3ASDogaK2ABY0czTEVx4Z8FVuvhwL6Xr5eg/0q4
-         gRHw==
+        Thu, 22 Aug 2019 11:49:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39400 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729069AbfHVPtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 11:49:47 -0400
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 958A0C08EC04
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 15:49:46 +0000 (UTC)
+Received: by mail-qk1-f198.google.com with SMTP id m198so6202288qke.22
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:49:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DJ/eC3LGuOL6//+DGNThc9YJfZBuiT1PO54o1KGcu30=;
-        b=ZU5PMRhGYBoyBYIVZvUWgNMM9Uh6dPxtYEtmb9K5EmdJQ6mKDkzFd7riayFsNt1fu/
-         YQ9UcWK3ktuavCcCI7ypf6Ck+up4ldIh7grAKddN2JMP16bVPQG5jEkME7GLlzsCjuvZ
-         808cYwTHqXzcsTzO7XEaEj/c9a2wVMy56NCaCXTATtO8PFtKlnk+kgnYWwnPgUSXukod
-         2NIgSG2zCKZ7yyOjuecLzMjqR3UBk4217fj946xymq26AT3SmETKI7pQIHZd8CYH6arS
-         FIJRNdtRQk2EhmNKvcw1FETpmtYM/1+L6kLI6Ry0py2IgE8UkbFrZn1+q01UoACXLtlV
-         DphA==
-X-Gm-Message-State: APjAAAU5ly7Llqh9OlQPS+VEEB0cItYrxdvVVfo7Xs1CNY6r9lOGzCrV
-        ZjAj+TEWvFRBbq+4UkEvZFsh2g==
-X-Google-Smtp-Source: APXvYqzD5H/EuYEoQQqsHvjG6zA2nUnP7NlXkdSM5hi9Tt50tWsVXfctor7rYt6YdvlbkGgeWIoYpQ==
-X-Received: by 2002:a05:6402:50a:: with SMTP id m10mr21388362edv.173.1566488955883;
-        Thu, 22 Aug 2019 08:49:15 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id p20sm3710384eja.59.2019.08.22.08.49.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 08:49:15 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 7225D100853; Thu, 22 Aug 2019 18:49:14 +0300 (+03)
-Date:   Thu, 22 Aug 2019 18:49:14 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Michal Hocko <mhocko@kernel.org>, kirill.shutemov@linux.intel.com,
-        Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
-        rientjes@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
-Message-ID: <20190822154914.gb5clks2tzziobfx@box>
-References: <1566410125-66011-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190822080434.GF12785@dhcp22.suse.cz>
- <ee048bbf-3563-d695-ea58-5f1504aee35c@suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pskUH55ezZZYsmq8KUNRt7ni5u96u5d8lg/XOqXA4+M=;
+        b=K/9c8rb9zGEKNaACXyFuv1whcBnLqqlYKT4A6TqPtqQ+uIvvBhZOApse1OTx88EYJQ
+         Sml0L887YA12ilVdsTd9V5ppul9zdTJSwFaQ02aNdqJzzbKjoo1EFyNuGn17I4b7C712
+         dN9blmGVDIWQ4C9Nn8YpaBp87bJFFDrZCLSWiTCsOwY3jXGQmRrn7Xyqknam7wG6uGGi
+         19eqcpTNB8vvEzpVBFb2HjkvlpwDqE18/dKOzNqWWJiIVqHzsleNIEW8KsBpP3r2kHK5
+         EUygpmsq8O67QZJ6yUcrL0cwOdj55kGX1OmgSkl66au4EqhH23Z0aAQcPqCDJjQKKVzj
+         Pj3Q==
+X-Gm-Message-State: APjAAAXMNGP0M/5i2pDu+gpeHHgPHIIMTxZkztaDw9MUupi3BlW9S9RW
+        XYHh2v1h5EHb7dEf1o5nxxuGlWpGBvTnzd9NUF7+2dZt+nDglg15fb8CyPwmO1TBJBx1/GTGgTs
+        l9hsshB1cc7qEc4ieFxQvRZl+x3gSYNoCYF6kPk7r
+X-Received: by 2002:ac8:4910:: with SMTP id e16mr266355qtq.260.1566488985935;
+        Thu, 22 Aug 2019 08:49:45 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyDNL9hS7kz+2UHvZzCqEyaX9aCTR8za8u3UmrYTh3Cn122EQGqfKTcIr5o5tLp6aHPhmOEO5LlwvF9Y89t/9k=
+X-Received: by 2002:ac8:4910:: with SMTP id e16mr266332qtq.260.1566488985726;
+ Thu, 22 Aug 2019 08:49:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee048bbf-3563-d695-ea58-5f1504aee35c@suse.cz>
-User-Agent: NeoMutt/20180716
+References: <20190812162740.15898-1-benjamin.tissoires@redhat.com>
+ <20190812162740.15898-3-benjamin.tissoires@redhat.com> <CANRwn3QQcGVGx2KjoU0sG70gSjzwjDKUuL_8q-oYFHRYrn4qGQ@mail.gmail.com>
+In-Reply-To: <CANRwn3QQcGVGx2KjoU0sG70gSjzwjDKUuL_8q-oYFHRYrn4qGQ@mail.gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Thu, 22 Aug 2019 17:49:34 +0200
+Message-ID: <CAO-hwJLyHYmBKiEvcWebr5tyic9tnm1tydgqt8CimxsEaPWrYw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] HID: wacom: do not call hid_set_drvdata(hdev, NULL)
+To:     Jason Gerecke <killertofu@gmail.com>
+Cc:     =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Ping Cheng <pinglinux@gmail.com>,
+        Jason Gerecke <jason.gerecke@wacom.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Linux Input <linux-input@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 02:56:56PM +0200, Vlastimil Babka wrote:
-> >> @@ -2816,11 +2821,14 @@ void free_transhuge_page(struct page *page)
-> >>  		ds_queue->split_queue_len--;
-> >>  		list_del(page_deferred_list(page));
-> >>  	}
-> >> +	__mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
-> >> +			      -page[2].nr_freeable);
-> >> +	page[2].nr_freeable = 0;
-> 
-> Wouldn't it be safer to fully tie the nr_freeable use to adding the page to the
-> deffered list? So here the code would be in the if (!list_empty()) { } part above.
-> 
-> >>  	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
-> >>  	free_compound_page(page);
-> >>  }
-> >>  
-> >> -void deferred_split_huge_page(struct page *page)
-> >> +void deferred_split_huge_page(struct page *page, unsigned int nr)
-> >>  {
-> >>  	struct deferred_split *ds_queue = get_deferred_split_queue(page);
-> >>  #ifdef CONFIG_MEMCG
-> >> @@ -2844,6 +2852,9 @@ void deferred_split_huge_page(struct page *page)
-> >>  		return;
-> >>  
-> >>  	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
-> >> +	page[2].nr_freeable += nr;
-> >> +	__mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
-> >> +			      nr);
-> 
-> Same here, only do this when adding to the list, below? Or we might perhaps
-> account base pages multiple times?
+On Sat, Aug 17, 2019 at 12:04 AM Jason Gerecke <killertofu@gmail.com> wrote:
+>
+> On Mon, Aug 12, 2019 at 9:29 AM Benjamin Tissoires
+> <benjamin.tissoires@redhat.com> wrote:
+> >
+> > This is a common pattern in the HID drivers to reset the drvdata.
+> > However, this is actually already handled by driver core, so there
+> > is no need to do it manually.
+> >
+> > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>
+> Acked-by: Jason Gerecke <jason.gerecke@wacom.com>
 
-No, it cannot be under list_empty() check. Consider the case when a THP
-got unmapped 4k a time. You need to put it on the list once, but account
-it every time.
+Thanks
 
--- 
- Kirill A. Shutemov
+Applied to for-5.4/wacom
+
+Cheers,
+Benjamin
+
+>
+> Jason
+> ---
+> Now instead of four in the eights place /
+> you’ve got three, ‘Cause you added one  /
+> (That is to say, eight) to the two,     /
+> But you can’t take seven from three,    /
+> So you look at the sixty-fours....
+>
+>
+> > ---
+> >  drivers/hid/wacom_sys.c | 18 +++++-------------
+> >  1 file changed, 5 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/hid/wacom_sys.c b/drivers/hid/wacom_sys.c
+> > index 53bddb50aeba..69ccfdd51a6f 100644
+> > --- a/drivers/hid/wacom_sys.c
+> > +++ b/drivers/hid/wacom_sys.c
+> > @@ -2718,14 +2718,12 @@ static int wacom_probe(struct hid_device *hdev,
+> >         wacom_wac->features = *((struct wacom_features *)id->driver_data);
+> >         features = &wacom_wac->features;
+> >
+> > -       if (features->check_for_hid_type && features->hid_type != hdev->type) {
+> > -               error = -ENODEV;
+> > -               goto fail;
+> > -       }
+> > +       if (features->check_for_hid_type && features->hid_type != hdev->type)
+> > +               return -ENODEV;
+> >
+> >         error = kfifo_alloc(&wacom_wac->pen_fifo, WACOM_PKGLEN_MAX, GFP_KERNEL);
+> >         if (error)
+> > -               goto fail;
+> > +               return error;
+> >
+> >         wacom_wac->hid_data.inputmode = -1;
+> >         wacom_wac->mode_report = -1;
+> > @@ -2743,12 +2741,12 @@ static int wacom_probe(struct hid_device *hdev,
+> >         error = hid_parse(hdev);
+> >         if (error) {
+> >                 hid_err(hdev, "parse failed\n");
+> > -               goto fail;
+> > +               return error;
+> >         }
+> >
+> >         error = wacom_parse_and_register(wacom, false);
+> >         if (error)
+> > -               goto fail;
+> > +               return error;
+> >
+> >         if (hdev->bus == BUS_BLUETOOTH) {
+> >                 error = device_create_file(&hdev->dev, &dev_attr_speed);
+> > @@ -2759,10 +2757,6 @@ static int wacom_probe(struct hid_device *hdev,
+> >         }
+> >
+> >         return 0;
+> > -
+> > -fail:
+> > -       hid_set_drvdata(hdev, NULL);
+> > -       return error;
+> >  }
+> >
+> >  static void wacom_remove(struct hid_device *hdev)
+> > @@ -2791,8 +2785,6 @@ static void wacom_remove(struct hid_device *hdev)
+> >                 wacom_release_resources(wacom);
+> >
+> >         kfifo_free(&wacom_wac->pen_fifo);
+> > -
+> > -       hid_set_drvdata(hdev, NULL);
+> >  }
+> >
+> >  #ifdef CONFIG_PM
+> > --
+> > 2.19.2
+> >
