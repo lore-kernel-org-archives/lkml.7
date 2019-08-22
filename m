@@ -2,53 +2,52 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB496C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845F0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8532341B
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D0382341B
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494545;
-	bh=FBhKzA1AleMbcz3S8j0PttuU8+2cgq4kBoa7CHYBSWM=;
+	s=default; t=1566494547;
+	bh=Qxmb6vn3g3QEs2Y31wCulIpv1Hya/mij5H+crVxaM88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NLFzdMVtcksA6zIwjDcOJ9zBq0U1T/mgbdIMVnxVMNO7Qv8zQUjaaoePlHpLDJVWa
-	 dxaxDJ3KXGS1Hnb5LZSTWcIW4qYr/OXrhGDCbcH19bP4hSp9zoUkz96HrTV+tHcXrA
-	 EQCwpWIFJ44vNpCL6rlyUGybzwld/3SircvYTPOw=
+	b=X9Q5GxMQQ6jBpv9jxVXE04VNtNgvZlpvFA4TEGOWXh2vDMuJe5cdvOFCV1ePEfOT6
+	 7kiyRcMmoyccBVoD7nDIi8qoTFY9kowAl1Mwhe73cFUKEoYf8Wf4JWK+Nh2uyle7fb
+	 KGG/aXpcOmR+bZLKafYg7JYOEiTHQppZQ+33lGUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390295AbfHVRWY (ORCPT
+        id S2391307AbfHVRW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:22:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40362 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390004AbfHVRWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:22 -0400
+        id S2390086AbfHVRWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:24 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51A2B233FD;
-        Thu, 22 Aug 2019 17:22:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8815D23400;
+        Thu, 22 Aug 2019 17:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494541;
-        bh=FBhKzA1AleMbcz3S8j0PttuU8+2cgq4kBoa7CHYBSWM=;
+        s=default; t=1566494543;
+        bh=Qxmb6vn3g3QEs2Y31wCulIpv1Hya/mij5H+crVxaM88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2XsjW0s5cBJlXI/6lLld8yxc4Vl+wELWyZhFewrxwLTAV+z0gs55TzmkMDmfWfAjR
-         UIVuyYPd8eIQcwa9s6VK0DTF8OT8CALygSMfCVWLf5lYnRwjTQWiOXyUexl7AjY73E
-         azpdUz6Z0FpzyOSxwV7gIJCr4qRXnSXMqjNRseyU=
+        b=sjLbz9wTxNUVQPH4Z86eUWQ/k4JUU7WkvfadNanE5tktece7lJ+aMfP11rhTFmvmL
+         TrcRiitOJ4VtweJhWegj6/1VxYbJzurU4YZsmBofk66dASBA689rwDasa1D0VOdfN8
+         tvGkAEjjVrzkP8nKG671kvqTEzR6JtnfZv+yh1lQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 21/78] scsi: ibmvfc: fix WARN_ON during event pool release
-Date:   Thu, 22 Aug 2019 10:18:25 -0700
-Message-Id: <20190822171832.658091043@linuxfoundation.org>
+        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
+        syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.4 24/78] can: peak_usb: pcan_usb_pro: Fix info-leaks to USB devices
+Date:   Thu, 22 Aug 2019 10:18:28 -0700
+Message-Id: <20190822171832.743353746@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -61,73 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5578257ca0e21056821e6481bd534ba267b84e58 ]
+From: Tomas Bortoli <tomasbortoli@gmail.com>
 
-While removing an ibmvfc client adapter a WARN_ON like the following
-WARN_ON is seen in the kernel log:
+commit ead16e53c2f0ed946d82d4037c630e2f60f4ab69 upstream.
 
-WARNING: CPU: 6 PID: 5421 at ./include/linux/dma-mapping.h:541
-ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-CPU: 6 PID: 5421 Comm: rmmod Tainted: G            E     4.17.0-rc1-next-20180419-autotest #1
-NIP:  d00000000290328c LR: d00000000290325c CTR: c00000000036ee20
-REGS: c000000288d1b7e0 TRAP: 0700   Tainted: G            E      (4.17.0-rc1-next-20180419-autotest)
-MSR:  800000010282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44008828  XER: 20000000
-CFAR: c00000000036e408 SOFTE: 1
-GPR00: d00000000290325c c000000288d1ba60 d000000002917900 c000000289d75448
-GPR04: 0000000000000071 c0000000ff870000 0000000018040000 0000000000000001
-GPR08: 0000000000000000 c00000000156e838 0000000000000001 d00000000290c640
-GPR12: c00000000036ee20 c00000001ec4dc00 0000000000000000 0000000000000000
-GPR16: 0000000000000000 0000000000000000 00000100276901e0 0000000010020598
-GPR20: 0000000010020550 0000000010020538 0000000010020578 00000000100205b0
-GPR24: 0000000000000000 0000000000000000 0000000010020590 5deadbeef0000100
-GPR28: 5deadbeef0000200 d000000002910b00 0000000000000071 c0000002822f87d8
-NIP [d00000000290328c] ibmvfc_free_event_pool+0x12c/0x1f0 [ibmvfc]
-LR [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc]
-Call Trace:
-[c000000288d1ba60] [d00000000290325c] ibmvfc_free_event_pool+0xfc/0x1f0 [ibmvfc] (unreliable)
-[c000000288d1baf0] [d000000002909390] ibmvfc_abort_task_set+0x7b0/0x8b0 [ibmvfc]
-[c000000288d1bb70] [c0000000000d8c68] vio_bus_remove+0x68/0x100
-[c000000288d1bbb0] [c0000000007da7c4] device_release_driver_internal+0x1f4/0x2d0
-[c000000288d1bc00] [c0000000007da95c] driver_detach+0x7c/0x100
-[c000000288d1bc40] [c0000000007d8af4] bus_remove_driver+0x84/0x140
-[c000000288d1bcb0] [c0000000007db6ac] driver_unregister+0x4c/0xa0
-[c000000288d1bd20] [c0000000000d6e7c] vio_unregister_driver+0x2c/0x50
-[c000000288d1bd50] [d00000000290ba0c] cleanup_module+0x24/0x15e0 [ibmvfc]
-[c000000288d1bd70] [c0000000001dadb0] sys_delete_module+0x220/0x2d0
-[c000000288d1be30] [c00000000000b284] system_call+0x58/0x6c
-Instruction dump:
-e8410018 e87f0068 809f0078 e8bf0080 e8df0088 2fa30000 419e008c e9230200
-2fa90000 419e0080 894d098a 794a07e0 <0b0a0000> e9290008 2fa90000 419e0028
+Uninitialized Kernel memory can leak to USB devices.
 
-This is tripped as a result of irqs being disabled during the call to
-dma_free_coherent() by ibmvfc_free_event_pool(). At this point in the code path
-we have quiesced the adapter and its overly paranoid anyways to be holding the
-host lock.
+Fix by using kzalloc() instead of kmalloc() on the affected buffers.
 
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com
+Fixes: f14e22435a27 ("net: can: peak_usb: Do not do dma on the stack")
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/ibmvscsi/ibmvfc.c | 2 +-
+ drivers/net/can/usb/peak_usb/pcan_usb_pro.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvfc.c b/drivers/scsi/ibmvscsi/ibmvfc.c
-index 1f9f9e5af2072..0526a47e30a3f 100644
---- a/drivers/scsi/ibmvscsi/ibmvfc.c
-+++ b/drivers/scsi/ibmvscsi/ibmvfc.c
-@@ -4869,8 +4869,8 @@ static int ibmvfc_remove(struct vio_dev *vdev)
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
+@@ -500,7 +500,7 @@ static int pcan_usb_pro_drv_loaded(struc
+ 	u8 *buffer;
+ 	int err;
  
- 	spin_lock_irqsave(vhost->host->host_lock, flags);
- 	ibmvfc_purge_requests(vhost, DID_ERROR);
--	ibmvfc_free_event_pool(vhost);
- 	spin_unlock_irqrestore(vhost->host->host_lock, flags);
-+	ibmvfc_free_event_pool(vhost);
+-	buffer = kmalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
++	buffer = kzalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
+ 	if (!buffer)
+ 		return -ENOMEM;
  
- 	ibmvfc_free_mem(vhost);
- 	spin_lock(&ibmvfc_driver_lock);
--- 
-2.20.1
-
 
 
