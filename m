@@ -2,112 +2,134 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34364C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4F9C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD74321744
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E72832339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:10:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="ZI42VLIf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="J+4MXTXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393850AbfHVWJy (ORCPT
+        id S2390586AbfHVWKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 18:09:54 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45299 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390311AbfHVWJy (ORCPT
+        Thu, 22 Aug 2019 18:10:46 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:41426 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390232AbfHVWKq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 18:09:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q12so6772718wrj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 15:09:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=M+oIdnD3jm/q0FEoEMnIGzoD27Ik3dMH4NYQUO8iSBo=;
-        b=ZI42VLIf3XR0ok5i+0x5WISOnHyGwIZxT87RAf5JOkT72TxGxOM5SLOZYlrOMK2Lz0
-         /pMXLKJ9Bp6o+JdDPyTNehpyrMiXLKq/THe45t1S8Y9iG0NX2rg/tiUPjo6oBHCdZUgS
-         H9MYSXYdU+sMDcOmye0Qxn0PQG2F3X8yS+ekQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M+oIdnD3jm/q0FEoEMnIGzoD27Ik3dMH4NYQUO8iSBo=;
-        b=niHCT8aBUBDC4UDbDUaojGezmmIe6kS5UbkMyUBLD5rEueQKZX5BNzUBk+AV2CBG9A
-         cwuGV8kjYx4gUHkqBRI5mkY9HzlReykd1Ms6c3jfWUW0rWYcGw53xIJdWaHm7eANkcm3
-         +BOBErcK/tErKMb3RdMWZf+kwGI9QRcALChVKK04zyDLSL0pzS8mt/MPD6uyPKpRHdCf
-         dnailchxeNzMioz15kd7bRR8mM5nYHDuSqzBriVAUCJqYjcg8K5E+hv7kPHEsho/w8Ly
-         CUiQ07FPweM8IyljFsvx0R5vq/8XY0lYl5onZpYHgp/KGatnX5FrsTXhS9d7KEVis3rh
-         19oQ==
-X-Gm-Message-State: APjAAAWT6GjSjSioNsyQrofy04mSzOgoWxQaxUsYlSihr1y+3v+IX62T
-        qwr+XZkkqZPzhajZweba5U7sVA==
-X-Google-Smtp-Source: APXvYqwhFYLuDgxoml+DLuSpfZTqsK4iafwdRNx6hqMwddGuTcDHWBVBaZxAq1227fwR/ulvrWIyEw==
-X-Received: by 2002:adf:e504:: with SMTP id j4mr1064839wrm.222.1566511792353;
-        Thu, 22 Aug 2019 15:09:52 -0700 (PDT)
-Received: from [192.168.0.107] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
-        by smtp.gmail.com with ESMTPSA id c11sm590230wrs.86.2019.08.22.15.09.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Aug 2019 15:09:51 -0700 (PDT)
-Subject: Re: [PATCH 0/3] Add NETIF_F_HW_BRIDGE feature
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        roopa@cumulusnetworks.com, davem@davemloft.net,
-        UNGLinuxDriver@microchip.com, alexandre.belloni@bootlin.com,
-        allan.nielsen@microchip.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bridge@lists.linux-foundation.org
-References: <1566500850-6247-1-git-send-email-horatiu.vultur@microchip.com>
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Message-ID: <1e16da88-08c5-abd5-0a3e-b8e6c3db134a@cumulusnetworks.com>
-Date:   Fri, 23 Aug 2019 01:09:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 18:10:46 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7MM3w4H119755;
+        Thu, 22 Aug 2019 22:10:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=kdQSfdcoBBmXRsKBaEBdADzGlfbRY2+yF9PElnHHdXI=;
+ b=J+4MXTXA0z4xtlZc2SDM3R3MYJ/j6QQgsUneQ9g6E2ABUIXTkE8NuMMpM+mAaB8oohNL
+ wRC9VES2lZJcoHx0B1b2lbR/F0n52rCBn24PcMc+7k/3bM7KaPWw6JoAhvmrFnknheY2
+ 9Kn2ao8+pkKUtOjQURt6Imk2yGjR8F6N8E52bB+0LO1arG63RLgHcvcXSHPKjX42tNnn
+ tCvK08XH3TlqJXPu58P5EcSx2ybPg5gXnBmDxWXBPRZR6i3mFSBJwz83ID4siEEXXXeu
+ afP971Ym9kXHwAVqNRHFQ8QLtK3efzBfV18FTjX8t1VtoJ8GBfUZgTw919EGiTf8EC5u Sw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2ue9hq0s2r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 22:10:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7MM3gcp099962;
+        Thu, 22 Aug 2019 22:10:34 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2uhuseyupd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 22:10:34 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7MMAVZB004472;
+        Thu, 22 Aug 2019 22:10:32 GMT
+Received: from [192.168.1.219] (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 22 Aug 2019 15:10:31 -0700
+Subject: Re: [PATCH v2] padata: validate cpumask without removed CPU during
+ offline
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190809192857.26585-2-daniel.m.jordan@oracle.com>
+ <20190809210603.20900-1-daniel.m.jordan@oracle.com>
+ <20190822035005.GA32551@gondor.apana.org.au>
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+Message-ID: <6a15a323-7e61-79b5-d3db-3c8717f50196@oracle.com>
+Date:   Thu, 22 Aug 2019 18:10:30 -0400
 MIME-Version: 1.0
-In-Reply-To: <1566500850-6247-1-git-send-email-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190822035005.GA32551@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908220194
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9357 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908220194
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/08/2019 22:07, Horatiu Vultur wrote:
-> Current implementation of the SW bridge is setting the interfaces in
-> promisc mode when they are added to bridge if learning of the frames is
-> enabled.
-> In case of Ocelot which has HW capabilities to switch frames, it is not
-> needed to set the ports in promisc mode because the HW already capable of
-> doing that. Therefore add NETIF_F_HW_BRIDGE feature to indicate that the
-> HW has bridge capabilities. Therefore the SW bridge doesn't need to set
-> the ports in promisc mode to do the switching.
-> This optimization takes places only if all the interfaces that are part
-> of the bridge have this flag and have the same network driver.
+On 8/21/19 11:50 PM, Herbert Xu wrote:
+> On Fri, Aug 09, 2019 at 05:06:03PM -0400, Daniel Jordan wrote:
+>> diff --git a/kernel/padata.c b/kernel/padata.c
+>> index d056276a96ce..01460ea1d160 100644
+>> --- a/kernel/padata.c
+>> +++ b/kernel/padata.c
+>> @@ -702,10 +702,7 @@ static int __padata_remove_cpu(struct padata_instance *pinst, int cpu)
+>>   	struct parallel_data *pd = NULL;
+>>   
+>>   	if (cpumask_test_cpu(cpu, cpu_online_mask)) {
+>> -
+>> -		if (!padata_validate_cpumask(pinst, pinst->cpumask.pcpu) ||
+>> -		    !padata_validate_cpumask(pinst, pinst->cpumask.cbcpu))
+>> -			__padata_stop(pinst);
+>> +		__padata_stop(pinst);
+>>   
+>>   		pd = padata_alloc_pd(pinst, pinst->cpumask.pcpu,
+>>   				     pinst->cpumask.cbcpu);
+>> @@ -716,6 +713,9 @@ static int __padata_remove_cpu(struct padata_instance *pinst, int cpu)
+>>   
+>>   		cpumask_clear_cpu(cpu, pd->cpumask.cbcpu);
+>>   		cpumask_clear_cpu(cpu, pd->cpumask.pcpu);
+>> +		if (padata_validate_cpumask(pinst, pd->cpumask.pcpu) &&
+>> +		    padata_validate_cpumask(pinst, pd->cpumask.cbcpu))
+>> +			__padata_start(pinst);
+>>   	}
 > 
-> If the bridge interfaces is added in promisc mode then also the ports part
-> of the bridge are set in promisc mode.
+> I looked back at the original code and in fact the original
+> assumption is to call this after cpu_online_mask has been modified.
 > 
-> Horatiu Vultur (3):
->   net: Add HW_BRIDGE offload feature
->   net: mscc: Use NETIF_F_HW_BRIDGE
->   net: mscc: Implement promisc mode.
-> 
->  drivers/net/ethernet/mscc/ocelot.c | 26 ++++++++++++++++++++++++--
->  include/linux/netdev_features.h    |  3 +++
->  net/bridge/br_if.c                 | 29 ++++++++++++++++++++++++++++-
->  net/core/ethtool.c                 |  1 +
->  4 files changed, 56 insertions(+), 3 deletions(-)
-> 
+> So I suspect we need to change the state at which this is called
+> by CPU hotplug.
 
-IMO the name is misleading.
-Why do the devices have to be from the same driver ? This is too specific targeting some
-devices. The bridge should not care what's the port device, it should be the other way
-around, so adding device-specific code to the bridge is not ok. Isn't there a solution
-where you can use NETDEV_JOIN and handle it all from your driver ?
-Would all HW-learned entries be hidden from user-space in this case ?
+Yes the state idea is good, it's cleaner to have the CPU out of the online mask ahead of time.
 
+I think we'll need two states.  We want a CPU being offlined to already be removed from the online cpumask so and'ing the user-supplied and online masks reflects conditions after the hotplug operation is finished.  For the same reason we want a CPU being onlined to already be in the online mask, and we can use the existing hotplug state for that, though we'd need a new padata-specific state for the offline case.
 
+> IOW the commit that broke this is 30e92153b4e6.
 
+I don't think 30e92153b4e6 is the one since the commit before that only allows __padata_remove_cpu to do its work if @cpu is in the online mask, so the call happens before cpu_online_mask has been modified.  Same story for the very first padata commit, so it seems like that should actually be Fixes.
+
+> This would also allow us to get rid of the two cpumask_clear_cpu
+> calls on pd->cpumask which is just bogus as you should only ever
+> modify the pd->cpumask prior to the padata_repalce call (because
+> the readers are not serialised with respect to this).
+
+Yeah, makes sense.
+
+Daniel
