@@ -2,102 +2,194 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F43C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AD1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8047233A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CA3233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389376AbfHVOmp (ORCPT
+        id S2389424AbfHVOmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:42:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:47324 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389365AbfHVOmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:42:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C5CD1570;
-        Thu, 22 Aug 2019 07:42:42 -0700 (PDT)
-Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.120])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB64C3F706;
-        Thu, 22 Aug 2019 07:42:40 -0700 (PDT)
-From:   Raphael Gault <raphael.gault@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, acme@kernel.org, mark.rutland@arm.com,
-        raph.gault+kdev@gmail.com, Raphael Gault <raphael.gault@arm.com>
-Subject: [PATCH v4 7/7] Documentation: arm64: Document PMU counters access from userspace
-Date:   Thu, 22 Aug 2019 15:42:20 +0100
-Message-Id: <20190822144220.27860-8-raphael.gault@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190822144220.27860-1-raphael.gault@arm.com>
-References: <20190822144220.27860-1-raphael.gault@arm.com>
+        Thu, 22 Aug 2019 10:42:49 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:34995 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389367AbfHVOmo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:42:44 -0400
+X-Originating-IP: 86.250.200.211
+Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 0208C60003;
+        Thu, 22 Aug 2019 14:42:40 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 16:42:40 +0200
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 02/11] media: uapi: h264: Rename pixel format
+Message-ID: <20190822144240.GA1618@aptenodytes>
+References: <20190816160132.7352-1-ezequiel@collabora.com>
+ <20190816160132.7352-3-ezequiel@collabora.com>
+ <20190819124110.GB32182@aptenodytes>
+ <e618bf01-3f82-ff06-1842-9d21a379d7ee@xs4all.nl>
+ <20190822115453.GA1627@aptenodytes>
+ <5a6432ce-6d90-9efa-9ae8-400b5ca1d653@xs4all.nl>
+ <5ad0899e81ef8f22545bcb6b01833c493ce2bdc9.camel@collabora.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Content-Disposition: inline
+In-Reply-To: <5ad0899e81ef8f22545bcb6b01833c493ce2bdc9.camel@collabora.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a documentation file to describe the access to the pmu hardware
-counters from userspace
 
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
----
- .../arm64/pmu_counter_user_access.txt         | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/arm64/pmu_counter_user_access.txt
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/arm64/pmu_counter_user_access.txt b/Documentation/arm64/pmu_counter_user_access.txt
-new file mode 100644
-index 000000000000..6788b1107381
---- /dev/null
-+++ b/Documentation/arm64/pmu_counter_user_access.txt
-@@ -0,0 +1,42 @@
-+Access to PMU hardware counter from userspace
-+=============================================
-+
-+Overview
-+--------
-+The perf user-space tool relies on the PMU to monitor events. It offers an
-+abstraction layer over the hardware counters since the underlying
-+implementation is cpu-dependent.
-+Arm64 allows userspace tools to have access to the registers storing the
-+hardware counters' values directly.
-+
-+This targets specifically self-monitoring tasks in order to reduce the overhead
-+by directly accessing the registers without having to go through the kernel.
-+
-+How-to
-+------
-+The focus is set on the armv8 pmuv3 which makes sure that the access to the pmu
-+registers is enable and that the userspace have access to the relevent
-+information in order to use them.
-+
-+In order to have access to the hardware counter it is necessary to open the event
-+using the perf tool interface: the sys_perf_event_open syscall returns a fd which
-+can subsequently be used with the mmap syscall in order to retrieve a page of memory
-+containing information about the event.
-+The PMU driver uses this page to expose to the user the hardware counter's
-+index. Using this index enables the user to access the PMU registers using the
-+`mrs` instruction.
-+
-+Have a look `at tools/perf/arch/arm64/tests/user-events.c` for an example. It can be
-+run using the perf tool to check that the access to the registers works
-+correctly from userspace:
-+
-+./perf test -v
-+
-+About chained events
-+--------------------
-+When the user requests for an event to be counted on 64 bits, two hardware
-+counters are used and need to be combined to retrieve the correct value:
-+
-+val = read_counter(idx);
-+if ((event.attr.config1 & 0x1))
-+	val = (val << 32) | read_counter(idx - 1);
--- 
-2.17.1
+Hi,
 
+On Thu 22 Aug 19, 11:38, Ezequiel Garcia wrote:
+> On Thu, 2019-08-22 at 15:47 +0200, Hans Verkuil wrote:
+> > On 8/22/19 1:54 PM, Paul Kocialkowski wrote:
+> > > Hi,
+> > >=20
+> > > On Mon 19 Aug 19, 17:53, Hans Verkuil wrote:
+> > > > On 8/19/19 2:41 PM, Paul Kocialkowski wrote:
+> > > > > Hi,
+> > > > >=20
+> > > > > On Fri 16 Aug 19, 13:01, Ezequiel Garcia wrote:
+> > > > > > The V4L2_PIX_FMT_H264_SLICE_RAW name was originally suggested
+> > > > > > because the pixel format would represent H264 slices without any
+> > > > > > start code.
+> > > > > >=20
+> > > > > > However, as we will now introduce a start code menu control,
+> > > > > > give the pixel format a more meaningful name, while it's
+> > > > > > still early enough to do so.
+> > > > >=20
+> > > > > I definitely agree that SLICE_RAW is not the suffix we are lookin=
+g for, but I'm
+> > > > > not sure that _SLICE is self-describing given that we can operate=
+ either
+> > > > > per-frame or per-slice, and _SLICE sort of implies the latter. Al=
+so, VP8 uses
+> > > > > _FRAME to clearly indicate that it operates per-frame.
+> > > >=20
+> > > > Well, VP8 doesn't support slices at all.
+> > > >=20
+> > > > > In addition, the _SLICE suffix is used by MPEG-2 in the stable AP=
+I. Since we
+> > > >=20
+> > > > Regarding MPEG-2: while it has a concept of slices, it is my unders=
+tanding
+> > > > that you never process slices separately, but only full pictures. I=
+ may be
+> > > > wrong here.
+> > >=20
+> > > I don't think that is the case since ffmpeg clearly implements decodi=
+ng on a
+> > > per-slice basis (mpeg_decode_slice).
+> > >=20
+> > > Information is also passed on a per-slice basis to VAAPI=20
+> > > (vaapi_mpeg2_decode_slice) with a distinct data buffer and slice para=
+meter
+> > > buffer for each slice. Among other things, it contains the vertical a=
+nd
+> > > horizontal positions for the slice, which we can set in the hardware.
+> > >=20
+> > > > > certainly want MPEG-2 to allow per-slice and per-frame decoding a=
+s well as
+> > > > > H.264 and that the _SLICE format is specified to be the broken "c=
+oncatenated
+> > > > > slices" that cedrus expects, we probably want to use another suff=
+ix. This way,
+> > > > > we could deprecated MPEG2_SLICE and introduce a new format for MP=
+EG-2 that would
+> > > > > have consistent naming with the other mpeg formats.
+> > > >=20
+> > > > I actually think that H264_SLICE is a decent name.
+> > > >=20
+> > > > I'm less sure about MPEG2_SLICE since I am not sure if it means the=
+ same as
+> > > > a H264 slice.
+> > >=20
+> > > The main problem I see is that we have already specified MPEG2_SLICE =
+in a way
+> > > that is incompatible with the future improvments we want to bring to =
+the API:
+> > > " The output buffer must contain the appropriate number of macroblock=
+s to
+> > > decode a full corresponding frame to the matching capture buffer."
+> > >=20
+> > > So I only see two possibilities: either we decide to change the speci=
+fication
+> > > of the pixel format and we can keep using the _SLICE suffix, either w=
+e need to
+> > > introduce a new pixel format with another suffix, which should also b=
+e reflected
+> > > on other MPEG formats for consistency. Then we can deprecate MPEG2_SL=
+ICE and
+> > > have drivers stop using it.
+> > >=20
+> > > What do you think?
+> >=20
+> > I'd change the specification of the pixel format. So MPEG2_SLICE now su=
+pports
+> > multiple slices if the hardware supports it as well.
+> >=20
+> > We would need an MPEG2_DECODING_MODE control as well, that currently wo=
+uld
+> > read FRAME based only.
+> >=20
+>=20
+> That's exactly what I was about to suggest.
+
+Sounds perfect then!
+
+I have started looking at the start-code situation to see if it shares
+similarities with H.264, but did not go far enough to reach any conclusion
+on that aspect.
+
+Cheers,
+
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl1eqeAACgkQ3cLmz3+f
+v9EUVQf+J1FHQy9KETtrc0FuHLl83ZvjI8dmqaowj10YOKGx/Hu25lw1yudeG1HF
++ErY6z3RKxFeYf3N61X4WSgjPI+r+s5AFzjYgss3MBtZ9TON88te8YClR7XBXhy/
+CboiD37r1VMc4nWCXDAVbP+eEky0bD1V15EwOKLPrdW/4bYRcBVcNZaWX/3Tcg/h
+isFrhTDzYwrCFGKfjb/pmFwXcTUspT4eYFUj0wgteHInWeQ6/t+StlnD8R22Wa0m
+KszJXNoLeXAskjRAzjFzLOaPxRzviW2GOYBQJhT1p6+Yulwe0CR082Ptq8iyX1LB
+tz42nt26InblIDf8QlCBPrZkVIIdbA==
+=bwBa
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
