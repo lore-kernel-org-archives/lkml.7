@@ -2,147 +2,70 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CD0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33168C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFC8233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01A83233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:06:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566489995;
+	bh=UEdjBKrSYmEI14ilij+iWsNrKB9A0BXhCRFWj0jWRCM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MiyI+X6+3JJt3+BNQ5wPJ33NDbmUKwcfbPq0pl4GVevXxkHMKX4S2GNPjpc0fd8re
+	 +9sPcBwYmLITWKLZ/A2i2fOjBLkxU6vwSaZdJ8gtQ4/WYUqUyqtsF+LeSQX4LYYVcl
+	 +I8BECmNBrVDAwpTquBwQwEgLFYL/ggQILnVV7cA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389726AbfHVQG2 (ORCPT
+        id S2389738AbfHVQGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:06:28 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:52434 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731346AbfHVQG2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:06:28 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7MG3r9U010677
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 22 Aug 2019 12:03:55 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id CF95A42049E; Thu, 22 Aug 2019 12:03:52 -0400 (EDT)
-Date:   Thu, 22 Aug 2019 12:03:52 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wei Li <liwei391@huawei.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Waiman Long <longman@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
+        Thu, 22 Aug 2019 12:06:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389728AbfHVQGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 12:06:33 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3786E206B7;
+        Thu, 22 Aug 2019 16:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566489992;
+        bh=UEdjBKrSYmEI14ilij+iWsNrKB9A0BXhCRFWj0jWRCM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oSEo4L/m1JUdRK0HmY8458BZbdGqlVWokmPb51x99hjUSvGGzhxvdXWpAU9dqB2I1
+         nmOI0R6SP0Sw+dccb3AhuDlsQqLkzxEIb4pXMi5tn/1/J2QLauWXVYQksPKtDpAl6K
+         rWHQLjgIhK54MsUcuybsnf3SWYSVGy7t/TQ9rZjY=
+Date:   Thu, 22 Aug 2019 18:06:30 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Grzegorz Halat <ghalat@redhat.com>,
-        Len Brown <len.brown@intel.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Yury Norov <ynorov@marvell.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 2/3] fdt: add support for rng-seed
-Message-ID: <20190822160352.GA17783@mit.edu>
-Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <maz@kernel.org>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wei Li <liwei391@huawei.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>, Waiman Long <longman@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Armijn Hemel <armijn@tjaldur.nl>,
-        Grzegorz Halat <ghalat@redhat.com>, Len Brown <len.brown@intel.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Yury Norov <ynorov@marvell.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
-        Mukesh Ojha <mojha@codeaurora.org>, linux-kernel@vger.kernel.org
-References: <20190822071522.143986-1-hsinyi@chromium.org>
- <20190822071522.143986-3-hsinyi@chromium.org>
+        John Stultz <john.stultz@linaro.org>,
+        Anna-Maria Behnsen <anna-maria@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [patch V2 18/38] sched: Move struct task_cputime to types.h
+Message-ID: <20190822160629.GA8025@lenoir>
+References: <20190821190847.665673890@linutronix.de>
+ <20190821192920.909530418@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190822071522.143986-3-hsinyi@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190821192920.909530418@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 03:15:22PM +0800, Hsin-Yi Wang wrote:
-> Introducing a chosen node, rng-seed, which is an entropy that can be
-> passed to kernel called very early to increase initial device
-> randomness. Bootloader should provide this entropy and the value is
-> read from /chosen/rng-seed in DT.
+On Wed, Aug 21, 2019 at 09:09:05PM +0200, Thomas Gleixner wrote:
+> For upcoming posix-timer changes to avoid include recursion hell.
 > 
-> Obtain of_fdt_crc32 for CRC check after early_init_dt_scan_nodes(),
-> since early_init_dt_scan_chosen() would modify fdt to erase rng-seed.
-> 
-> Add a new interface add_bootloader_randomness() for rng-seed use case.
-> Depends on whether the seed is trustworthy, rng seed would be passed to
-> add_hwgenerator_randomness(). Otherwise it would be passed to
-> add_device_randomness(). Decision is controlled by kernel config
-> RANDOM_TRUST_BOOTLOADER.
-> 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-For the changes to drivers/char/random.c:
-
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
