@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E6BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496ABC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E7842064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1432064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495032;
-	bh=Q94eA7juBZ1wPh7HFqVy/uB0bkDoo3w9xL16ej9JAEU=;
+	s=default; t=1566495039;
+	bh=fWkTaLmnBl7IcJbp8y4mJqpFp40ijLFvTMt4xn0IRPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YAu8Hjbmc3ynMkCsm11gOz9FKJBYJi+7bjBW4n4x/FWnfn7cEfbfH1KMHULk1o2RY
-	 e3jvWdbMQPSqDx8Jjs6DAU94ZUCw69fmjk60nLlo+BJVEgrgfSj8d+9b1T+P0puyyj
-	 Mlrwb3RI4rHBs+yTbfd6cZM/ZTGSbDFzsmA6VXJ4=
+	b=i6BOXtQoobr5bp5K1nnLC51fXXUHPcesU1ymXApveV8Ra6cICGjrefqk+cvo7OUwa
+	 CakfH1gdTtYhsADwOnq2Cook5FcNORM3aJt4PELu/aEg7X8tWmXsArJSTqkybPoq/L
+	 HwXubr/lZYGjwy/GFFsHq8RtT/woRHiqm4fA8TE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392146AbfHVRab (ORCPT
+        id S2392156AbfHVRai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:30:31 -0400
+        Thu, 22 Aug 2019 13:30:38 -0400
 Received: from mail.kernel.org ([198.145.29.99]:51006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404626AbfHVR0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:26:09 -0400
+        id S2404615AbfHVR0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:26:08 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2EF32064A;
-        Thu, 22 Aug 2019 17:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26C8123429;
+        Thu, 22 Aug 2019 17:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494768;
-        bh=Q94eA7juBZ1wPh7HFqVy/uB0bkDoo3w9xL16ej9JAEU=;
+        s=default; t=1566494767;
+        bh=fWkTaLmnBl7IcJbp8y4mJqpFp40ijLFvTMt4xn0IRPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CMcmtFtTTwc5M1PVig+ZmrMn08f0quu6Bpls345uqw/br1cq5TNVBTL40Kb2AB1I0
-         WhJmMKj7hytQ9Z9fZbRmkfRwv6pApnAf+YW/mU+yJZPPLzjnf54Ka+DPxW6gJjF8Pz
-         7ed1sayjyNjV3uiibx2QGjzylSypzxwzOPNJtdB0=
+        b=0XLOf2k9O4ZNx05gbUeuXd/QWTIdTbTQlRlYXXreaQDvR7a5DUmQ2grK5JnU6ws+1
+         jtx6v4VDGlo5js3HvvvKTY3zXhSaFQnSXU4FIyCUB1SozNeonIl6eEz4qsmDkMZgvW
+         uz+ohpl7KqvTQaF0EqL6fU+mNdcONrMTETLn2qnc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.19 72/85] iommu/amd: Move iommu_init_pci() to .init section
-Date:   Thu, 22 Aug 2019 10:19:45 -0700
-Message-Id: <20190822171734.281810393@linuxfoundation.org>
+        stable@vger.kernel.org, Dirk Morris <dmorris@metaloft.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.19 70/85] netfilter: conntrack: Use consistent ct id hash calculation
+Date:   Thu, 22 Aug 2019 10:19:43 -0700
+Message-Id: <20190822171734.212525148@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -58,30 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Dirk Morris <dmorris@metaloft.com>
 
-commit 24d2c521749d8547765b555b7a85cca179bb2275 upstream.
+commit 656c8e9cc1badbc18eefe6ba01d33ebbcae61b9a upstream.
 
-The function is only called from another __init function, so
-it should be moved to .init too.
+Change ct id hash calculation to only use invariants.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Currently the ct id hash calculation is based on some fields that can
+change in the lifetime on a conntrack entry in some corner cases. The
+current hash uses the whole tuple which contains an hlist pointer which
+will change when the conntrack is placed on the dying list resulting in
+a ct id change.
+
+This patch also removes the reply-side tuple and extension pointer from
+the hash calculation so that the ct id will will not change from
+initialization until confirmation.
+
+Fixes: 3c79107631db1f7 ("netfilter: ctnetlink: don't use conntrack/expect object addresses as id")
+Signed-off-by: Dirk Morris <dmorris@metaloft.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/amd_iommu_init.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nf_conntrack_core.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -1710,7 +1710,7 @@ static const struct attribute_group *amd
- 	NULL,
- };
- 
--static int iommu_init_pci(struct amd_iommu *iommu)
-+static int __init iommu_init_pci(struct amd_iommu *iommu)
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -431,13 +431,12 @@ EXPORT_SYMBOL_GPL(nf_ct_invert_tuple);
+  * table location, we assume id gets exposed to userspace.
+  *
+  * Following nf_conn items do not change throughout lifetime
+- * of the nf_conn after it has been committed to main hash table:
++ * of the nf_conn:
+  *
+  * 1. nf_conn address
+- * 2. nf_conn->ext address
+- * 3. nf_conn->master address (normally NULL)
+- * 4. tuple
+- * 5. the associated net namespace
++ * 2. nf_conn->master address (normally NULL)
++ * 3. the associated net namespace
++ * 4. the original direction tuple
+  */
+ u32 nf_ct_get_id(const struct nf_conn *ct)
  {
- 	int cap_ptr = iommu->cap_ptr;
- 	u32 range, misc, low, high;
+@@ -447,9 +446,10 @@ u32 nf_ct_get_id(const struct nf_conn *c
+ 	net_get_random_once(&ct_id_seed, sizeof(ct_id_seed));
+ 
+ 	a = (unsigned long)ct;
+-	b = (unsigned long)ct->master ^ net_hash_mix(nf_ct_net(ct));
+-	c = (unsigned long)ct->ext;
+-	d = (unsigned long)siphash(&ct->tuplehash, sizeof(ct->tuplehash),
++	b = (unsigned long)ct->master;
++	c = (unsigned long)nf_ct_net(ct);
++	d = (unsigned long)siphash(&ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
++				   sizeof(ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple),
+ 				   &ct_id_seed);
+ #ifdef CONFIG_64BIT
+ 	return siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &ct_id_seed);
 
 
