@@ -2,112 +2,100 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D04C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768B8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF54D23404
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:42:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566477775;
-	bh=u1d+yxJsT1RUvhBvbQpkk+Lf5Hdd3NIZBjhPGRaoLq0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0xrYCP72G5i4CiP/k3+adHLUBwdfGHvRGQImbHYXlWG7FmllAoIkbKa6wsRwnkQs1
-	 tNvaJfy/QqQbshl5xSUKLiEl4IkUUVI5MBlCa+XCFbmzmD8E8isDJRBY66fytQmY6G
-	 9vzs34b+UFDd0zNUyymnbR4YcexwXUUxop81PSz0=
+	by mail.kernel.org (Postfix) with ESMTP id 4994B21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:44:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PR+brW4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387928AbfHVMmz (ORCPT
+        id S2387866AbfHVMoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:42:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731964AbfHVMmy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:42:54 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FB8E23400;
-        Thu, 22 Aug 2019 12:42:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566477774;
-        bh=u1d+yxJsT1RUvhBvbQpkk+Lf5Hdd3NIZBjhPGRaoLq0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=edR3/F8kHjufAIzXmL5EPLQL9s+FkyXsTgFLD3pGhyRokP1bjNEbtCpYRTsZQWFxU
-         hhpHuv5/XDfytUXLzvVwVR2im285sPfm3Nmu0StCVp6XXQrXbuEoGXtcgLHeoikLEN
-         o6Gey1aefucRSEdl8XNh3eBlPk+tmGJn6uhnA4Kk=
-Received: by mail-qt1-f182.google.com with SMTP id l9so7440883qtu.6;
-        Thu, 22 Aug 2019 05:42:54 -0700 (PDT)
-X-Gm-Message-State: APjAAAUy99qFIC7z+vEZfsWu5VrH2RuAhoJZaFBCQFCiI51pn9K28vpF
-        RITe/li0VM89eKwxlVct7mGk7C/I8Y4ujfzF3g==
-X-Google-Smtp-Source: APXvYqxC0xb53h6O4RvVMfpbGb5MhrE12k/FG4k5FZrxkO1CLd25XOg+b1pujVZE4NJPmG2GhguxmB+9CL3m/MBOJiI=
-X-Received: by 2002:ac8:386f:: with SMTP id r44mr37134933qtb.300.1566477773293;
- Thu, 22 Aug 2019 05:42:53 -0700 (PDT)
+        Thu, 22 Aug 2019 08:44:05 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38352 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727553AbfHVMoF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:44:05 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7MChPGb134044;
+        Thu, 22 Aug 2019 12:43:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=ZYokRlnvCmLtc9vK3EkGdQ38OM+1djb8iV/zhcd0nFE=;
+ b=PR+brW4lxpOr/O6zGzhkbPeL5HPrgqNFedOwlgbaVB/O3yTR6P/ngCY5HMTxuYBLf5gh
+ Yj1wHGwQb2UjI1wBhhJ/Lxo1g8ezVc3Ne5MhcZwwGx97h6tQktPRd5NKXApBqsDqP8Sg
+ brPz1uFfM5uiICOfJ2GfW6ANwC0tAbr/LeYObzSdXAFQ8g16p9GPs46ImpIdYohUgG/l
+ HlMO3yI+zDFRcl+Xi/C7oOgJtYoJvoYVzheLL1dvDmsTZlMrF+CkMHGC4lYHcLwqbD5L
+ R9k5Ab1YY8AHakuuscZsv03D1CpJQIZ1R+9vsbK97ywzCtaGyZFlw2YHXjupKc8WJLIE eQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2ue90twe6e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 12:43:56 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7MChiGt189847;
+        Thu, 22 Aug 2019 12:43:56 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2uh2q5y7u4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 12:43:55 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7MCgvSr006308;
+        Thu, 22 Aug 2019 12:42:57 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 22 Aug 2019 05:42:55 -0700
+Date:   Thu, 22 Aug 2019 15:42:49 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Martin Tomes <tomesm@gmail.com>
+Cc:     isdn@linux-pingi.de, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] Staging: isdn/gigaset : Fix bare unsigned warnings and
+ trailing lines errors
+Message-ID: <20190822124249.GI4451@kadam>
+References: <1566401259-16921-1-git-send-email-tomesm@gmail.com>
 MIME-Version: 1.0
-References: <20190809093158.7969-1-lkundrak@v3.sk> <20190809093158.7969-3-lkundrak@v3.sk>
- <20190821210349.GA29732@bogus> <c859d12167d18c21dda13b30c2dd3256f407d1d9.camel@v3.sk>
-In-Reply-To: <c859d12167d18c21dda13b30c2dd3256f407d1d9.camel@v3.sk>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 22 Aug 2019 07:42:42 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+BVUX3MMjsjK+hhjgDzdiqoo8dwEMD_98OrkGMOQf8GA@mail.gmail.com>
-Message-ID: <CAL_Jsq+BVUX3MMjsjK+hhjgDzdiqoo8dwEMD_98OrkGMOQf8GA@mail.gmail.com>
-Subject: Re: [PATCH 02/19] dt-bindings: arm: mrvl: Document MMP3 compatible string
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566401259-16921-1-git-send-email-tomesm@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=950
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908220137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908220137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 3:12 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> On Wed, 2019-08-21 at 16:03 -0500, Rob Herring wrote:
-> > On Fri, Aug 09, 2019 at 11:31:41AM +0200, Lubomir Rintel wrote:
-> > > Marvel MMP3 is a successor to MMP2, containing similar peripherals with two
-> > > PJ4B cores.
-> > >
-> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/mrvl/mrvl.txt | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> > > index 951687528efb0..66e1e1414245b 100644
-> > > --- a/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/mrvl/mrvl.txt
-> > > @@ -12,3 +12,7 @@ Required root node properties:
-> > >  MMP2 Brownstone Board
-> > >  Required root node properties:
-> > >     - compatible = "mrvl,mmp2-brownstone", "mrvl,mmp2";
-> > > +
-> > > +MMP3 SoC
-> > > +Required root node properties:
-> > > +   - compatible = "marvell,mmp3";
-> >
-> > Please convert this file to DT schema before adding new SoCs.
->
-> Is this something that should generally be done for all new or changed
-> DT bindings?
+Hi Martin,
 
-Preferred, but not quite yet required everywhere. It depends on the
-maintainer/subsystem still. But for board level bindings, you'll
-notice most of them are converted. Marvell, Broadcom, and TI are the
-main ones left.
+These drivers are ancient and going to be deleted soon.  We're not
+accepting cleanups for them at this point.
 
-Rob
+On Wed, Aug 21, 2019 at 03:27:39PM +0000, Martin Tomes wrote:
+> There are many bare use of unsigned warnings and trailing statements should be on next line errors from checkpatch.pl script.
+> Change the code by adding 'unsigned int'. Move 'break' statement of 'switch' command to next line.
+
+For future reference, this should be split up so each patch fixes
+one kind of style issue.  And the commit message lines of text are too
+long.  The limit is 75 characters for commit messages (like an email).
+
+regards,
+dan carpenter
+
