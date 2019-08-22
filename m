@@ -2,134 +2,233 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD91C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AD1C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60AB022CF7
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096DA22CF7
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:38:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTSUneOs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JT7F6QMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729212AbfHVChk (ORCPT
+        id S1729829AbfHVCi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 22:37:40 -0400
-Received: from mail-wm1-f51.google.com ([209.85.128.51]:35511 "EHLO
-        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727038AbfHVChk (ORCPT
+        Wed, 21 Aug 2019 22:38:26 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40124 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbfHVCi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 22:37:40 -0400
-Received: by mail-wm1-f51.google.com with SMTP id l2so4124916wmg.0;
-        Wed, 21 Aug 2019 19:37:38 -0700 (PDT)
+        Wed, 21 Aug 2019 22:38:26 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c34so4061559otb.7;
+        Wed, 21 Aug 2019 19:38:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FnJXlWkYTImrZ648hhe3Q+F34mtsiF3thL6otpcC1pg=;
-        b=ZTSUneOsoNDwJqBUVGQ6y9p4QAVbDXIEigOZHHNRzQV9YZnmv/Ap2WPnFoeiaigESJ
-         Io/dRVe538Au1IGYFxmVwAjEpNpX+04la9qaHRAlVK3TL9tArl2Ah20M/2n3TqgrqRNq
-         FCHEu7ZyQEdL/zQkG+ZhdVoUmVQsQGyRS3yvwCjh9kmTDGzaZrHX78+wsFuWTvZ2/3UV
-         ihouujRlDyZ/HOcJLhj2Ckp0YAUCQFiRecSoqZ+uHjamfSO9/UmPp9dQH+s9FlCLpZgX
-         cncAl6xgVZUo4AWg5bjaRdyzGC5s36x1F4G+aOPzyLyEJebMd2HNMThGZNCMzuEPtQ/O
-         wD3Q==
+         :cc:content-transfer-encoding;
+        bh=XoRcSwd9u1dvFquimROqhIpVJNTmoeWa7AHYkdDfXy8=;
+        b=JT7F6QMxVN4B3wtJqxMSO5zxKG4hr3gpdGpQPuelpj4Tfy2rbnznaohv1N2plicN2F
+         kQvp/q21vBlXRr9iMKiFRSdk2quEmy0kDA/51vNu6xcyt+zvn7sLdbiZP5rfcuPhJzQB
+         TRb5hevivFa+GDuWRJNguiMZn/bnwD1EkhMk3LHzsPV941XhuXsIgDz7Rn4l9+ZYWxer
+         3cQ/1Mcx5fE+s58uUuvl3rA0dov7v4ymQ629cDOlMq1IXJlp9fDeV9k07PjGY42zm6a0
+         /M7xMmpWHHhci+8jNgpxxFdbKiP8607OrdkHGG4QDmLbZEJbCgU+nS+e07+YCaE6GWl0
+         nEwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FnJXlWkYTImrZ648hhe3Q+F34mtsiF3thL6otpcC1pg=;
-        b=EJbpoy5K+D6RL1HsBi3jz68VJJwId3o6SxPkEruhPXIjBd9Rd9eqJwwlTjm+I3SLp5
-         IL+D1dL/HRv3z8q2+gg/5150u61Xi1aXGLunseCsVl+V9UpmnoQq3yjgTq/EGx0aFmZ5
-         roKvNgImoIUvWGysJmMUFmyk6VuENVHCAJfasx+a4j/kdKg8+fex9eAENftFIaWeCz3h
-         ob9iAP4jCUOZq9o/lVHCwFH/SeYqoEjlEIObZUq4wG8l8ydrFM5u+FqAD+W9ZSMisRpn
-         z4WaDqcWF2jvH/kg72bvBu2ROSdkKxfCOX8QygBNGiOfAoVPjIlbn4N8uMTYXyZlOuy6
-         PE5w==
-X-Gm-Message-State: APjAAAUBDj3saDucpGnRItTs0WV24A0+96yTAAQaxz0Und/S9+bteB03
-        c7cBYPwn8nD5wY/56azdslqVnRgzeR9zQfAP1qnoHw==
-X-Google-Smtp-Source: APXvYqzLSen9+2Ns3bu+kBmfqQDECPwm5ebLUwETew2hhJHQ3IVaaPRqtbUBq/phve0FdPRxGU4Ya23E6UtBJf+eykI=
-X-Received: by 2002:a1c:1d42:: with SMTP id d63mr3018156wmd.34.1566441458066;
- Wed, 21 Aug 2019 19:37:38 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XoRcSwd9u1dvFquimROqhIpVJNTmoeWa7AHYkdDfXy8=;
+        b=m5acmdQpd2+OeCb9ZvbmlhRiOsc5T8Db96sIZjBMQL7A4GE+DkoyFIqUessFHVZvk3
+         bED7GZs+ptLT7suqQksOZTi5AOh7fmaArjGat+Z5iK2F95kUNGK4gNnAeWSd4NlVk9B8
+         WpuOJpPPWGKD1dJ1SFG55nYPubqZdtOIlk/ULax8AeSClcAB8I0qCDI9+7sGBOVn4Y/y
+         7jgXi92tEBseKL9+/A60zLN7DUfDL9+/8FfceNfFdzKBMTjgpSGwzf9xJJnWj0qZ/Lvj
+         zeboQSmc32ZzbuzyC75AVU3YADqCq/H+1OL6BkLFsuVcRPQ+JjcKAhOGXn/684bRQER7
+         UPJw==
+X-Gm-Message-State: APjAAAW7/YdGpi23CQpbdAo+xzOx62O9RirxcC12h/iMdvi/w2Vgv0fH
+        ozUX2a3rKH8Ymfp40PTGQg5yKICm/9AEreBIbZ01cw==
+X-Google-Smtp-Source: APXvYqxDQSUlQ52MVbQ8uykZaNN2BmBN9SLuEeFvIjqAZXBe0MUJdoP4ZeBSj8C5v6TeF0g0L/+zkj4eEbFWcP6TgbI=
+X-Received: by 2002:a05:6830:144b:: with SMTP id w11mr29690192otp.185.1566441504963;
+ Wed, 21 Aug 2019 19:38:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190627075350.86800-1-yuehaibing@huawei.com>
-In-Reply-To: <20190627075350.86800-1-yuehaibing@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 21 Aug 2019 22:37:26 -0400
-Message-ID: <CADnq5_PE3r+4ZrUmc7o0_ah4wZpBi5jhR-yBHA_F+9gzX7Os5Q@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amdgpu: remove set but not used variable 'psp_enabled'
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Wentland, Harry" <harry.wentland@amd.com>,
-        tiancyin <tianci.yin@amd.com>, Tao Zhou <tao.zhou1@amd.com>,
-        Leo Liu <leo.liu@amd.com>, Huang Rui <ray.huang@amd.com>,
-        Jack Xiao <Jack.Xiao@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Kenneth Feng <kenneth.feng@amd.com>,
-        kernel-janitors@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <1565841817-25982-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <1565841817-25982-1-git-send-email-wanpengli@tencent.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 22 Aug 2019 10:37:51 +0800
+Message-ID: <CANRm+Cy1kUz_pMGGhvBYmk4EZ07nk5ocBVqigUKoU8-W=tM0RA@mail.gmail.com>
+Subject: Re: [PATCH v2] KVM: LAPIC: Periodically revaluate to get conservative lapic_timer_advance_ns
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  thanks!
-
-Alex
-
-On Thu, Jun 27, 2019 at 10:29 AM YueHaibing <yuehaibing@huawei.com> wrote:
+ping,
+On Thu, 15 Aug 2019 at 12:03, Wanpeng Li <kernellwp@gmail.com> wrote:
 >
-> Fixes gcc '-Wunused-but-set-variable' warning:
+> From: Wanpeng Li <wanpengli@tencent.com>
 >
-> drivers/gpu/drm/amd/amdgpu/nv.c: In function 'nv_common_early_init':
-> drivers/gpu/drm/amd/amdgpu/nv.c:471:7: warning:
->  variable 'psp_enabled' set but not used [-Wunused-but-set-variable]
+> Even if for realtime CPUs, cache line bounces, frequency scaling, presenc=
+e
+> of higher-priority RT tasks, etc can still cause different response. Thes=
+e
+> interferences should be considered and periodically revaluate whether
+> or not the lapic_timer_advance_ns value is the best, do nothing if it is,
+> otherwise recaluate again. Set lapic_timer_advance_ns to the minimal
+> conservative value from all the estimated values.
 >
-> It's not used since inroduction in
-> commit c6b6a42175f5 ("drm/amdgpu: add navi10 common ip block (v3)")
+> Testing on Skylake server, cat vcpu*/lapic_timer_advance_ns, before patch=
+:
+> 1628
+> 4161
+> 4321
+> 3236
+> ...
 >
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Testing on Skylake server, cat vcpu*/lapic_timer_advance_ns, after patch:
+> 1553
+> 1499
+> 1509
+> 1489
+> ...
+>
+> Testing on Haswell desktop, cat vcpu*/lapic_timer_advance_ns, before patc=
+h:
+> 4617
+> 3641
+> 4102
+> 4577
+> ...
+> Testing on Haswell desktop, cat vcpu*/lapic_timer_advance_ns, after patch=
+:
+> 2775
+> 2892
+> 2764
+> 2775
+> ...
+>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 > ---
->  drivers/gpu/drm/amd/amdgpu/nv.c | 5 -----
->  1 file changed, 5 deletions(-)
+>  arch/x86/kvm/lapic.c | 34 ++++++++++++++++++++++++++++------
+>  arch/x86/kvm/lapic.h |  2 ++
+>  2 files changed, 30 insertions(+), 6 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
-> index af20ffb55c54..8b9fa3db8daa 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/nv.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/nv.c
-> @@ -468,7 +468,6 @@ static const struct amdgpu_asic_funcs nv_asic_funcs =
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index df5cd07..8487d9c 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -69,6 +69,7 @@
+>  #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
+>  /* step-by-step approximation to mitigate fluctuation */
+>  #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
+> +#define LAPIC_TIMER_ADVANCE_RECALC_PERIOD (600 * HZ)
 >
->  static int nv_common_early_init(void *handle)
+>  static inline int apic_test_vector(int vec, void *bitmap)
 >  {
-> -       bool psp_enabled = false;
->         struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+> @@ -1480,10 +1481,21 @@ static inline void __wait_lapic_expire(struct kvm=
+_vcpu *vcpu, u64 guest_cycles)
+>  static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+>                                               s64 advance_expire_delta)
+>  {
+> -       struct kvm_lapic *apic =3D vcpu->arch.apic;
+> -       u32 timer_advance_ns =3D apic->lapic_timer.timer_advance_ns;
+> +       struct kvm_timer *ktimer =3D &vcpu->arch.apic->lapic_timer;
+> +       u32 timer_advance_ns =3D ktimer->timer_advance_ns;
+>         u64 ns;
 >
->         adev->smc_rreg = NULL;
-> @@ -485,10 +484,6 @@ static int nv_common_early_init(void *handle)
+> +       /* periodic revaluate */
+> +       if (unlikely(ktimer->timer_advance_adjust_done)) {
+> +               ktimer->recalc_timer_advance_ns =3D jiffies +
+> +                       LAPIC_TIMER_ADVANCE_RECALC_PERIOD;
+> +               if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_ADJUS=
+T_DONE) {
+> +                       timer_advance_ns =3D LAPIC_TIMER_ADVANCE_ADJUST_I=
+NIT;
+> +                       ktimer->timer_advance_adjust_done =3D false;
+> +               } else
+> +                       return;
+> +       }
+> +
+>         /* too early */
+>         if (advance_expire_delta < 0) {
+>                 ns =3D -advance_expire_delta * 1000000ULL;
+> @@ -1499,12 +1511,18 @@ static inline void adjust_lapic_timer_advance(str=
+uct kvm_vcpu *vcpu,
+>         }
 >
->         adev->asic_funcs = &nv_asic_funcs;
+>         if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+> -               apic->lapic_timer.timer_advance_adjust_done =3D true;
+> +               ktimer->timer_advance_adjust_done =3D true;
+>         if (unlikely(timer_advance_ns > 5000)) {
+>                 timer_advance_ns =3D LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+> -               apic->lapic_timer.timer_advance_adjust_done =3D false;
+> +               ktimer->timer_advance_adjust_done =3D false;
+> +       }
+> +       ktimer->timer_advance_ns =3D timer_advance_ns;
+> +
+> +       if (ktimer->timer_advance_adjust_done) {
+> +               if (ktimer->min_timer_advance_ns > timer_advance_ns)
+> +                       ktimer->min_timer_advance_ns =3D timer_advance_ns=
+;
+> +               ktimer->timer_advance_ns =3D ktimer->min_timer_advance_ns=
+;
+>         }
+> -       apic->lapic_timer.timer_advance_ns =3D timer_advance_ns;
+>  }
 >
-> -       if (amdgpu_device_ip_get_ip_block(adev, AMD_IP_BLOCK_TYPE_PSP) &&
-> -           (amdgpu_ip_block_mask & (1 << AMD_IP_BLOCK_TYPE_PSP)))
-> -               psp_enabled = true;
-> -
->         adev->rev_id = nv_get_rev_id(adev);
->         adev->external_rev_id = 0xff;
->         switch (adev->asic_type) {
+>  static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+> @@ -1523,7 +1541,8 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu=
+ *vcpu)
+>         if (guest_tsc < tsc_deadline)
+>                 __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+>
+> -       if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
+> +       if (unlikely(!apic->lapic_timer.timer_advance_adjust_done) ||
+> +               time_before(apic->lapic_timer.recalc_timer_advance_ns, ji=
+ffies))
+>                 adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advanc=
+e_expire_delta);
+>  }
+>
+> @@ -2301,9 +2320,12 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int ti=
+mer_advance_ns)
+>         if (timer_advance_ns =3D=3D -1) {
+>                 apic->lapic_timer.timer_advance_ns =3D LAPIC_TIMER_ADVANC=
+E_ADJUST_INIT;
+>                 apic->lapic_timer.timer_advance_adjust_done =3D false;
+> +               apic->lapic_timer.recalc_timer_advance_ns =3D jiffies;
+> +               apic->lapic_timer.min_timer_advance_ns =3D UINT_MAX;
+>         } else {
+>                 apic->lapic_timer.timer_advance_ns =3D timer_advance_ns;
+>                 apic->lapic_timer.timer_advance_adjust_done =3D true;
+> +               apic->lapic_timer.recalc_timer_advance_ns =3D MAX_JIFFY_O=
+FFSET;
+>         }
 >
 >
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index 50053d2..56a05eb 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -31,6 +31,8 @@ struct kvm_timer {
+>         u32 timer_mode_mask;
+>         u64 tscdeadline;
+>         u64 expired_tscdeadline;
+> +       unsigned long recalc_timer_advance_ns;
+> +       u32 min_timer_advance_ns;
+>         u32 timer_advance_ns;
+>         s64 advance_expire_delta;
+>         atomic_t pending;                       /* accumulated triggered =
+timers */
+> --
+> 2.7.4
 >
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
