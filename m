@@ -2,85 +2,88 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBD1C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DCEC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D39921726
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A52F21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:30:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iyDcrcA+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732969AbfHVO3t (ORCPT
+        id S1733208AbfHVO37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:29:49 -0400
-Received: from mga17.intel.com ([192.55.52.151]:30737 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732001AbfHVO3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:29:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 07:29:49 -0700
-X-IronPort-AV: E=Sophos;i="5.64,417,1559545200"; 
-   d="scan'208";a="178873789"
-Received: from jkrzyszt-desk.igk.intel.com ([172.22.244.17])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 22 Aug 2019 07:29:47 -0700
-From:   Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org,
-        =?UTF-8?q?Micha=C5=82=20Wajdeczko?= <michal.wajdeczko@intel.com>,
-        Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-Subject: [RFC PATCH] iommu/vt-d: Fix IOMMU field not populated on device hot re-plug
-Date:   Thu, 22 Aug 2019 16:29:22 +0200
-Message-Id: <20190822142922.31526-1-janusz.krzysztofik@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 22 Aug 2019 10:29:59 -0400
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:37498 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732974AbfHVO36 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:29:58 -0400
+Received: by mail-wr1-f42.google.com with SMTP id z11so5657890wrt.4;
+        Thu, 22 Aug 2019 07:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=tLNXP86xJdI97QkQX4COi/mM+VMKt9pcSlHlaNIVz3o=;
+        b=iyDcrcA+H5zHrvrLuvsD0FGyWdEnoRBnP5IbVJbAX47byUeQcv8lHU84Xm5VT5nGYG
+         S2FtpHG9cc3I2vlacEXtugl8kiRwpnCL2UvkqcWshkSUztVfYMywxMfmv8wlWPJkEQ1c
+         lg1A+MIWM75RofPFS0CELUC4f0lhWgxu9tdBm43G6o2QGw/ViERIKzaORmguy7iEPRfF
+         ZPN24ZzULsp2RNdtWZKHMujvyksYfzpeN/PSL699h/tNMh2/OFcLT63+WEM1fr/lF/NT
+         EkJjPsY8DEnEe1sMTWpKKLtwlfUO2yFZv0KwscFI1z7+/NAVcMO1F+nNxKWmloP6J3cH
+         rbOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=tLNXP86xJdI97QkQX4COi/mM+VMKt9pcSlHlaNIVz3o=;
+        b=AqWCL2n8syRaX0u8ig/50gquOCyiEe89meLl/E6aMlvhfWAPkZ23CdqhHyXSXriSfM
+         1OJ2SdP+RXX8LTJ2OG1OQe2gZcMc8o1TZ+bhsbyNS+T3CeURRXJqPB/CvXWurgNH9PUk
+         aPR7rRGRbjLt0kN0UjZ4yAZBlrimn8yvJ4GbqrcOsAKEKWvk23tXzSorE5/WBlChVrad
+         WPT7R7IbZG7oGqgcLB4nVRACjO+AZ7SOLQckKcbNSe6XjodDzH5c/hnprCGHb4YGh79e
+         lj7oqaeW2VhPqnpT5mGywPAoP9Bk9TaaITFax+5CJfXKx3ThpgOJwPShbqR1yOtkwt33
+         3f2A==
+X-Gm-Message-State: APjAAAX6/shEE8jWi3+XE3VsBFK+LDuJLqNoluTY5OCH1GYEfVjIGtER
+        Xdh8OvS9C8wZyMRX/lfJcRzB9NBs3Ii4wPx7w+M=
+X-Google-Smtp-Source: APXvYqxzEvl4Wcc2eUsw9vwyB9jMPZsmg4spjFSLqSHbNLUQD5btzjrokrfIgE3/duKUgktNGPkNfh/tXryV41xqJu4=
+X-Received: by 2002:a05:6000:12c3:: with SMTP id l3mr47095595wrx.100.1566484196685;
+ Thu, 22 Aug 2019 07:29:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1323459733.69859.1566234633793.JavaMail.zimbra@nod.at>
+ <20190819204504.GB10075@hsiangkao-HP-ZHAN-66-Pro-G1> <CAFLxGvxr2UMeVa29M9pjLtWMFPz7w6udRV38CRxEF1moyA9_Rw@mail.gmail.com>
+ <20190821220251.GA3954@hsiangkao-HP-ZHAN-66-Pro-G1> <CAFLxGvzLPgD22pVOV_jz1EvC-c7YU_2dEFbBt4q08bSkZ3U0Dg@mail.gmail.com>
+ <20190822142142.GB2730@mit.edu>
+In-Reply-To: <20190822142142.GB2730@mit.edu>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Thu, 22 Aug 2019 16:29:44 +0200
+Message-ID: <CAFLxGvzGEBH2Z+Bpv68OMeLR1JH0pe6bHn6P-sBG+epLTXbR6w@mail.gmail.com>
+Subject: Re: erofs: Question on unused fields in on-disk structs
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Richard Weinberger <richard.weinberger@gmail.com>,
+        Gao Xiang <hsiangkao@aol.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a perfectly working i915 device is hot unplugged (via sysfs) and
-hot re-plugged again, its dev->archdata.iommu field is not populated
-again with an IOMMU pointer.  As a result, the device probe fails on
-DMA mapping error during scratch page setup.
+On Thu, Aug 22, 2019 at 4:21 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> It might make life easier for other kernel developers if "features"
+> was named "compat_features" and "requirements" were named
+> "incompat_features", just because of the long-standing use of that in
+> ext2, ext3, ext4, ocfs2, etc.  But that naming scheme really is a
+> legacy of ext2 and its descendents, and there's no real reason why it
+> has to be that way on other file systems.
 
-It looks like that happens because devices are not detached from their
-MMUIO bus before they are removed on device unplug.  Then, when an
-already registered device/IOMMU association is identified by the
-reinstantiated device's bus and function IDs on IOMMU bus re-attach
-attempt, the device's archdata is not populated with IOMMU information
-and the bad happens.
+Yes, the naming confused me a little. :-)
 
-I'm not sure if this is a proper fix but it works for me so at least it
-confirms correctness of my analysis results, I believe.  So far I
-haven't been able to identify a good place where the possibly missing
-IOMMU bus detach on device unplug operation could be added.
-
-Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
----
- drivers/iommu/intel-iommu.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 12d094d08c0a..7cdcd0595408 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2477,6 +2477,9 @@ static struct dmar_domain *dmar_insert_one_dev_info(struct intel_iommu *iommu,
- 		if (info2) {
- 			found      = info2->domain;
- 			info2->dev = dev;
-+
-+			if (dev && !dev->archdata.iommu)
-+				dev->archdata.iommu = info2;
- 		}
- 	}
- 
 -- 
-2.21.0
-
+Thanks,
+//richard
