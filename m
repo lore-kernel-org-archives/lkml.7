@@ -2,52 +2,53 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA3DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293A5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 364A12064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2952233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495246;
-	bh=8y6LThwS1iDw3wBEKn53hyWVhA31tU2OGD4DW8G0fX4=;
+	s=default; t=1566495249;
+	bh=fVOfMDhv67/fWY9m59BiAVg7e25aNXujUHQmhfjO+cM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xLKVhFlOWoqdIl2QR23zpoBoNZqxq2OKGt89NT3vwXehm9hW+9NWTAPLAU0TO1i2x
-	 Gt4+4jIFCfYK3vFu2M9sRHnSXrT7PopL0k7MeY4aaPxireKnT/YmEb8nYEncVfosFz
-	 e4EnkaAm8o2VagYEsLlC576VJLx7wq/AKFOO9nVM=
+	b=DbCzy8JHpOWD+jRl1eg1eormy8Q27cWQU0zyY0FP38yY+haMQBmLvhCd9CUxGk7h7
+	 wcluUrLNsb8pP3ZHUM13aEBZkn3huxXJDyNQkXxcHF08AKjdQp2MRBDB0IVFMiQS/T
+	 3AaJ++8I2bXRIvLG2Oy4rr+Wivlm+9scV5peAOzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392654AbfHVReF (ORCPT
+        id S2392692AbfHVReH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:34:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49470 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:34:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404450AbfHVRZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:36 -0400
+        id S2391857AbfHVRZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:33 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3978C2341E;
-        Thu, 22 Aug 2019 17:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 108FA23400;
+        Thu, 22 Aug 2019 17:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494735;
-        bh=8y6LThwS1iDw3wBEKn53hyWVhA31tU2OGD4DW8G0fX4=;
+        s=default; t=1566494733;
+        bh=fVOfMDhv67/fWY9m59BiAVg7e25aNXujUHQmhfjO+cM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QTWLhetXD3/t3Bcwmf3YVzmOY7LZsc3twNT91e6WgufTu8OIoba9Phyz42+8TxTBU
-         ywf29F1UKTzCY1pCOBqo7+OQdTwAgSvpaisRF1rgs1ovBdVJMkqHSe5v+HwSRVaLQ8
-         fQtpDH6clemLAhGrdebIW6MsbmEFAiU0ZWEyIKB0=
+        b=fvUK+2bBRwmeA8dRa0FQQln1nwjtMRv86lFAlq84hwUsuFJYZ3Vpal9vBycOxcw1j
+         col3jfibPBykD1PLa3LtsDPcfv5R7JGTLVyApml05swUBmDT7qGaHk1kPSknTJWfo6
+         91h+3UVPtREv13cnT6QiYUHxUZmjpH8TkycUP36s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/85] clk: sprd: Select REGMAP_MMIO to avoid compile errors
-Date:   Thu, 22 Aug 2019 10:19:00 -0700
-Message-Id: <20190822171732.337800878@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+276ddebab3382bbf72db@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.19 24/85] netfilter: ebtables: also count base chain policies
+Date:   Thu, 22 Aug 2019 10:18:57 -0700
+Message-Id: <20190822171732.213000750@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -60,32 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c9a67cbb5189e966c70451562b2ca4c3876ab546 ]
+From: Florian Westphal <fw@strlen.de>
 
-Make REGMAP_MMIO selected to avoid undefined reference to regmap symbols.
+commit 3b48300d5cc7c7bed63fddb006c4046549ed4aec upstream.
 
-Fixes: d41f59fd92f2 ("clk: sprd: Add common infrastructure")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ebtables doesn't include the base chain policies in the rule count,
+so we need to add them manually when we call into the x_tables core
+to allocate space for the comapt offset table.
+
+This lead syzbot to trigger:
+WARNING: CPU: 1 PID: 9012 at net/netfilter/x_tables.c:649
+xt_compat_add_offset.cold+0x11/0x36 net/netfilter/x_tables.c:649
+
+Reported-by: syzbot+276ddebab3382bbf72db@syzkaller.appspotmail.com
+Fixes: 2035f3ff8eaa ("netfilter: ebtables: compat: un-break 32bit setsockopt when no rules are present")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/clk/sprd/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ net/bridge/netfilter/ebtables.c |   28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/clk/sprd/Kconfig b/drivers/clk/sprd/Kconfig
-index 87892471eb96c..bad8099832d48 100644
---- a/drivers/clk/sprd/Kconfig
-+++ b/drivers/clk/sprd/Kconfig
-@@ -2,6 +2,7 @@ config SPRD_COMMON_CLK
- 	tristate "Clock support for Spreadtrum SoCs"
- 	depends on ARCH_SPRD || COMPILE_TEST
- 	default ARCH_SPRD
-+	select REGMAP_MMIO
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -1779,20 +1779,28 @@ static int compat_calc_entry(const struc
+ 	return 0;
+ }
  
- if SPRD_COMMON_CLK
++static int ebt_compat_init_offsets(unsigned int number)
++{
++	if (number > INT_MAX)
++		return -EINVAL;
++
++	/* also count the base chain policies */
++	number += NF_BR_NUMHOOKS;
++
++	return xt_compat_init_offsets(NFPROTO_BRIDGE, number);
++}
  
--- 
-2.20.1
-
+ static int compat_table_info(const struct ebt_table_info *info,
+ 			     struct compat_ebt_replace *newinfo)
+ {
+ 	unsigned int size = info->entries_size;
+ 	const void *entries = info->entries;
++	int ret;
+ 
+ 	newinfo->entries_size = size;
+-	if (info->nentries) {
+-		int ret = xt_compat_init_offsets(NFPROTO_BRIDGE,
+-						 info->nentries);
+-		if (ret)
+-			return ret;
+-	}
++	ret = ebt_compat_init_offsets(info->nentries);
++	if (ret)
++		return ret;
+ 
+ 	return EBT_ENTRY_ITERATE(entries, size, compat_calc_entry, info,
+ 							entries, newinfo);
+@@ -2241,11 +2249,9 @@ static int compat_do_replace(struct net
+ 
+ 	xt_compat_lock(NFPROTO_BRIDGE);
+ 
+-	if (tmp.nentries) {
+-		ret = xt_compat_init_offsets(NFPROTO_BRIDGE, tmp.nentries);
+-		if (ret < 0)
+-			goto out_unlock;
+-	}
++	ret = ebt_compat_init_offsets(tmp.nentries);
++	if (ret < 0)
++		goto out_unlock;
+ 
+ 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
+ 	if (ret < 0)
 
 
