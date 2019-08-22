@@ -2,55 +2,53 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26318C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C228C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2AE2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DD92064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494940;
-	bh=XyTgGdc5NkJvhOS+g7j8/YRQbNieEGcd94XNJp3A8AQ=;
+	s=default; t=1566494944;
+	bh=Hx/oTr1LiKPxSvknHAXUYWhatBWqSa8VofgNXmS2oX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KqIRK1wpebnswVZOpHh1Nq+tQd33FcLmQofGcR5futOQ4sncYLOr+P/F3+T6WSsRP
-	 1XH0plZVhk2c0/CrsERCY5R5tWqneeWCfxneCoDqnrqBqAu/paRosV+XWHRAv1yimu
-	 77RJdGJx5kJ1yNXclUu9UmKLxp+zn7NpTzkRGjGg=
+	b=YqetpSyZtExxbD+e4LIbx1YSf0k3AYhfV5jzlqFUFPqoWBsOoooLu8WSA45cgkZzs
+	 4VhZGMQbzkNRzDcEYFT1nztx6Qc0F5TULMtKbw6SoREpLL0JET1ehK9Ltww5zntMbj
+	 mC3heixR3GWC4UZRhnEnxNEZpf8lvb/TMyNk9pEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391931AbfHVR0x (ORCPT
+        id S2404754AbfHVR0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:26:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:26:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404455AbfHVRZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:37 -0400
+        id S2391853AbfHVRZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:33 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5D9F2064A;
-        Thu, 22 Aug 2019 17:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5160D23427;
+        Thu, 22 Aug 2019 17:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494736;
-        bh=XyTgGdc5NkJvhOS+g7j8/YRQbNieEGcd94XNJp3A8AQ=;
+        s=default; t=1566494732;
+        bh=Hx/oTr1LiKPxSvknHAXUYWhatBWqSa8VofgNXmS2oX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GWznrDZvhZdO+YPF+b0oW90AUoOshr+6rG7Pcg0X8Ef1t80t60+t2nm5FXmpwhDqQ
-         BBf1NEucUKM78ZfQWdwrxETFlrpEVWuudaAkaMQVFddLBqwNaKOyFNDtGovOUDOdyV
-         eyyhArPGpUbFFKWFpl5DMKyJoOd3Cr33FxGmRAAY=
+        b=ZdzL05H5w+1oCU9fnbltB1oULIlHxMDAPvrXxGLpoDgCpmhDSfgfWjKHwIFlU6PrS
+         HxR/cD6RFKvYMsPzEhhpdL+eOWy3ttXGivFUAExxeMkGhEtsifXhC5uboRbAFpf1FH
+         Q2BV9uqibBDEqkx8643jOLxfr3wVlwMEnsIVOnuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yao Lihua <Lihua.Yao@desay-svautomotive.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linh Phung <linh.phung.jy@renesas.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 28/85] clk: renesas: cpg-mssr: Fix reset control race condition
-Date:   Thu, 22 Aug 2019 10:19:01 -0700
-Message-Id: <20190822171732.539895663@linuxfoundation.org>
+        syzbot+3499a83b2d062ae409d4@syzkaller.appspotmail.com,
+        Denis Kirjanov <kda@linux-powerpc.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 23/85] net: usb: pegasus: fix improper read if get_registers() fail
+Date:   Thu, 22 Aug 2019 10:18:56 -0700
+Message-Id: <20190822171732.175012031@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -63,109 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e1f1ae8002e4b06addc52443fcd975bbf554ae92 ]
+From: Denis Kirjanov <kda@linux-powerpc.org>
 
-The module reset code in the Renesas CPG/MSSR driver uses
-read-modify-write (RMW) operations to write to a Software Reset Register
-(SRCRn), and simple writes to write to a Software Reset Clearing
-Register (SRSTCLRn), as was mandated by the R-Car Gen2 and Gen3 Hardware
-User's Manuals.
+commit 224c04973db1125fcebefffd86115f99f50f8277 upstream.
 
-However, this may cause a race condition when two devices are reset in
-parallel: if the reset for device A completes in the middle of the RMW
-operation for device B, device A may be reset again, causing subtle
-failures (e.g. i2c timeouts):
+get_registers() may fail with -ENOMEM and in this
+case we can read a garbage from the status variable tmp.
 
-	thread A			thread B
-	--------			--------
+Reported-by: syzbot+3499a83b2d062ae409d4@syzkaller.appspotmail.com
+Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-	val = SRCRn
-	val |= bit A
-	SRCRn = val
-
-	delay
-
-					val = SRCRn (bit A is set)
-
-	SRSTCLRn = bit A
-	(bit A in SRCRn is cleared)
-
-					val |= bit B
-					SRCRn = val (bit A and B are set)
-
-This can be reproduced on e.g. Salvator-XS using:
-
-    $ while true; do i2cdump -f -y 4 0x6A b > /dev/null; done &
-    $ while true; do i2cdump -f -y 2 0x10 b > /dev/null; done &
-
-    i2c-rcar e6510000.i2c: error -110 : 40000002
-    i2c-rcar e66d8000.i2c: error -110 : 40000002
-
-According to the R-Car Gen3 Hardware Manual Errata for Rev.
-0.80 of Feb 28, 2018, reflected in Rev. 1.00 of the R-Car Gen3 Hardware
-User's Manual, writes to SRCRn do not require read-modify-write cycles.
-
-Note that the R-Car Gen2 Hardware User's Manual has not been updated
-yet, and still says a read-modify-write sequence is required.  According
-to the hardware team, the reset hardware block is the same on both R-Car
-Gen2 and Gen3, though.
-
-Hence fix the issue by replacing the read-modify-write operations on
-SRCRn by simple writes.
-
-Reported-by: Yao Lihua <Lihua.Yao@desay-svautomotive.com>
-Fixes: 6197aa65c4905532 ("clk: renesas: cpg-mssr: Add support for reset control")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Linh Phung <linh.phung.jy@renesas.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/renesas-cpg-mssr.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+ drivers/net/usb/pegasus.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-index f4b013e9352d9..24485bee9b49e 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -535,17 +535,11 @@ static int cpg_mssr_reset(struct reset_controller_dev *rcdev,
- 	unsigned int reg = id / 32;
- 	unsigned int bit = id % 32;
- 	u32 bitmask = BIT(bit);
--	unsigned long flags;
--	u32 value;
+--- a/drivers/net/usb/pegasus.c
++++ b/drivers/net/usb/pegasus.c
+@@ -285,7 +285,7 @@ static void mdio_write(struct net_device
+ static int read_eprom_word(pegasus_t *pegasus, __u8 index, __u16 *retdata)
+ {
+ 	int i;
+-	__u8 tmp;
++	__u8 tmp = 0;
+ 	__le16 retdatai;
+ 	int ret;
  
- 	dev_dbg(priv->dev, "reset %u%02u\n", reg, bit);
- 
- 	/* Reset module */
--	spin_lock_irqsave(&priv->rmw_lock, flags);
--	value = readl(priv->base + SRCR(reg));
--	value |= bitmask;
--	writel(value, priv->base + SRCR(reg));
--	spin_unlock_irqrestore(&priv->rmw_lock, flags);
-+	writel(bitmask, priv->base + SRCR(reg));
- 
- 	/* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
- 	udelay(35);
-@@ -562,16 +556,10 @@ static int cpg_mssr_assert(struct reset_controller_dev *rcdev, unsigned long id)
- 	unsigned int reg = id / 32;
- 	unsigned int bit = id % 32;
- 	u32 bitmask = BIT(bit);
--	unsigned long flags;
--	u32 value;
- 
- 	dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
- 
--	spin_lock_irqsave(&priv->rmw_lock, flags);
--	value = readl(priv->base + SRCR(reg));
--	value |= bitmask;
--	writel(value, priv->base + SRCR(reg));
--	spin_unlock_irqrestore(&priv->rmw_lock, flags);
-+	writel(bitmask, priv->base + SRCR(reg));
- 	return 0;
- }
- 
--- 
-2.20.1
-
 
 
