@@ -3,95 +3,226 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C8CC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4219C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A083323400
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE8C12339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 11:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732942AbfHVLr5 (ORCPT
+        id S1733016AbfHVLsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 07:47:57 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:29466 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727310AbfHVLr5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 07:47:57 -0400
-X-UUID: b1ba783c964143cabbdbb3840f5fdad6-20190822
-X-UUID: b1ba783c964143cabbdbb3840f5fdad6-20190822
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <ran.bi@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 790826270; Thu, 22 Aug 2019 19:47:52 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs01n2.mediatek.inc
- (172.21.101.79) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 22 Aug
- 2019 19:47:46 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 22 Aug 2019 19:47:44 +0800
-Message-ID: <1566474469.12318.7.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 2/4] rtc: Add support for the MediaTek MT2712 RTC
-From:   Ran Bi <ran.bi@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        <linux-rtc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, YT Shen <yt.shen@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        "Flora Fu" <flora.fu@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>
-Date:   Thu, 22 Aug 2019 19:47:49 +0800
-In-Reply-To: <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
-References: <20190801110122.26834-1-ran.bi@mediatek.com>
-         <20190801110122.26834-3-ran.bi@mediatek.com>
-         <c4e8b041-4a35-578e-07a3-2ebc99848ee2@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 22 Aug 2019 07:48:43 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5193 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732607AbfHVLsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 07:48:42 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E3D4ACC6F3D6B9BD062D;
+        Thu, 22 Aug 2019 19:48:39 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 22 Aug 2019
+ 19:48:38 +0800
+Date:   Thu, 22 Aug 2019 12:48:25 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Steven Price <steven.price@arm.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <kvm@vger.kernel.org>,
+        Radim =?utf-8?Q?Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Will Deacon <will@kernel.org>, <kvmarm@lists.cs.columbia.edu>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 07/10] KVM: arm64: Provide a PV_TIME device to user
+ space
+Message-ID: <20190822124825.000009f1@huawei.com>
+In-Reply-To: <87bc2a01-8cf5-5161-45f8-00384775cf3a@arm.com>
+References: <20190821153656.33429-1-steven.price@arm.com>
+        <20190821153656.33429-8-steven.price@arm.com>
+        <20190822115722.00005aa7@huawei.com>
+        <87bc2a01-8cf5-5161-45f8-00384775cf3a@arm.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 07BEDA87CE6DE420B3D64B7B18F56819C1B1580EC0478AB37A2E93247614A2FB2000:8
-X-MTK:  N
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-22 at 11:12 +0200, Matthias Brugger wrote:
-> 
-> On 01/08/2019 13:01, Ran Bi wrote:
-> > This add support for the MediaTek MT2712 RTC. It was SoC based RTC, but
-> > had different architecture compared with MT7622 RTC.
-> > 
-> > Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> > ---
-> >  drivers/rtc/Kconfig      |  10 +
-> >  drivers/rtc/Makefile     |   1 +
-> >  drivers/rtc/rtc-mt2712.c | 444 +++++++++++++++++++++++++++++++++++++++
-> 
-> Can't we just adjust rtc-mt7622.c (and rename it) to unify the source for both
-> devices. What is the difference that we need to write a driver of our own?
-> 
-> Regards,
-> Matthias
+On Thu, 22 Aug 2019 12:11:55 +0100
+Steven Price <steven.price@arm.com> wrote:
 
-We cannot merge rtc-mt7622.c and rtc-mt2712.c together. These two rtc
-hardwares have totally different design. Registers naming, registers
-offset and operating method are different.
+> On 22/08/2019 11:57, Jonathan Cameron wrote:
+> > On Wed, 21 Aug 2019 16:36:53 +0100
+> > Steven Price <steven.price@arm.com> wrote:
+> >   
+> >> Allow user space to inform the KVM host where in the physical memory
+> >> map the paravirtualized time structures should be located.
+> >>
+> >> A device is created which provides the base address of an array of
+> >> Stolen Time (ST) structures, one for each VCPU. There must be (64 *
+> >> total number of VCPUs) bytes of memory available at this location.
+> >>
+> >> The address is given in terms of the physical address visible to
+> >> the guest and must be page aligned. The guest will discover the address
+> >> via a hypercall.
+> >>
+> >> Signed-off-by: Steven Price <steven.price@arm.com>  
+> > 
+> > Hi Steven,
+> > 
+> > One general question inline.  I'm not particularly familiar with this area
+> > of the kernel, so maybe I'm missing something obvious, but having
+> > .destroy free the kvm_device which wasn't created in .create seems
+> > 'unusual'. 
+> > 
+> > Otherwise, FWIW looks good to me.
+> > 
+> > Jonathan
+> >   
+> [...]
+> >> +static void kvm_arm_pvtime_destroy(struct kvm_device *dev)
+> >> +{
+> >> +	struct kvm_arch_pvtime *pvtime = &dev->kvm->arch.pvtime;
+> >> +
+> >> +	pvtime->st_base = GPA_INVALID;
+> >> +	kfree(dev);  
+> > 
+> > Nothing to do with your patch as such... All users do the same.
+> > 
+> > This seems miss balanced. Why do we need to free the device by hand
+> > when we didn't create it in the create function?  I appreciate
+> > the comments say this is needed, but as far as I can see every
+> > single callback does kfree(dev) at the end which seems an
+> > odd thing to do.  
+> 
+> Yes I think this is odd too - indeed when I initially wrote this I
+> missed off the kfree() call and had to track down the memory leak.
+> 
+> When I looked into potentially tiding this up I found some other
+> oddities, e.g. "kvm-xive" (arch/powerpc/kvm/book3s_xive.c) doesn't have
+> a destroy callback. But I can't see anything in the common code which
+> deals with that case. So I decided to just "go with the flow" at the
+> moment, since I don't understand how some of these existing devices work
+> (perhaps they are already broken?).
+
+It has a release however and kvm_device_release also removes the
+device from the list that would then be cleared by kvm_destroy_devices.
+
+kvm_device_release is a release callback for the file operations so it
+'might' be called in all paths.
+
+Fun though, in kvm_ioctl_create_device the error handling for
+the anon_inode_getfd calls ops->destroy without checking it exists.
+Boom.
+
+Possibly never happens in reality but looks like a bug to me.
+
+Jonathan
+
+
+> 
+> Steve
+> 
+> >> +}
+> >> +
+> >> +static int kvm_arm_pvtime_set_attr(struct kvm_device *dev,
+> >> +				   struct kvm_device_attr *attr)
+> >> +{
+> >> +	struct kvm *kvm = dev->kvm;
+> >> +	struct kvm_arch_pvtime *pvtime = &kvm->arch.pvtime;
+> >> +	u64 __user *user = (u64 __user *)attr->addr;
+> >> +	struct kvm_dev_arm_st_region region;
+> >> +
+> >> +	switch (attr->group) {
+> >> +	case KVM_DEV_ARM_PV_TIME_REGION:
+> >> +		if (copy_from_user(&region, user, sizeof(region)))
+> >> +			return -EFAULT;
+> >> +		if (region.gpa & ~PAGE_MASK)
+> >> +			return -EINVAL;
+> >> +		if (region.size & ~PAGE_MASK)
+> >> +			return -EINVAL;
+> >> +		switch (attr->attr) {
+> >> +		case KVM_DEV_ARM_PV_TIME_ST:
+> >> +			if (pvtime->st_base != GPA_INVALID)
+> >> +				return -EEXIST;
+> >> +			pvtime->st_base = region.gpa;
+> >> +			pvtime->st_size = region.size;
+> >> +			return 0;
+> >> +		}
+> >> +		break;
+> >> +	}
+> >> +	return -ENXIO;
+> >> +}
+> >> +
+> >> +static int kvm_arm_pvtime_get_attr(struct kvm_device *dev,
+> >> +				   struct kvm_device_attr *attr)
+> >> +{
+> >> +	struct kvm_arch_pvtime *pvtime = &dev->kvm->arch.pvtime;
+> >> +	u64 __user *user = (u64 __user *)attr->addr;
+> >> +	struct kvm_dev_arm_st_region region;
+> >> +
+> >> +	switch (attr->group) {
+> >> +	case KVM_DEV_ARM_PV_TIME_REGION:
+> >> +		switch (attr->attr) {
+> >> +		case KVM_DEV_ARM_PV_TIME_ST:
+> >> +			region.gpa = pvtime->st_base;
+> >> +			region.size = pvtime->st_size;
+> >> +			if (copy_to_user(user, &region, sizeof(region)))
+> >> +				return -EFAULT;
+> >> +			return 0;
+> >> +		}
+> >> +		break;
+> >> +	}
+> >> +	return -ENXIO;
+> >> +}
+> >> +
+> >> +static int kvm_arm_pvtime_has_attr(struct kvm_device *dev,
+> >> +				   struct kvm_device_attr *attr)
+> >> +{
+> >> +	switch (attr->group) {
+> >> +	case KVM_DEV_ARM_PV_TIME_REGION:
+> >> +		switch (attr->attr) {
+> >> +		case KVM_DEV_ARM_PV_TIME_ST:
+> >> +			return 0;
+> >> +		}
+> >> +		break;
+> >> +	}
+> >> +	return -ENXIO;
+> >> +}
+> >> +
+> >> +static const struct kvm_device_ops pvtime_ops = {
+> >> +	"Arm PV time",
+> >> +	.create = kvm_arm_pvtime_create,
+> >> +	.destroy = kvm_arm_pvtime_destroy,
+> >> +	.set_attr = kvm_arm_pvtime_set_attr,
+> >> +	.get_attr = kvm_arm_pvtime_get_attr,
+> >> +	.has_attr = kvm_arm_pvtime_has_attr
+> >> +};
+> >> +
+> >> +void kvm_pvtime_init(void)
+> >> +{
+> >> +	kvm_register_device_ops(&pvtime_ops, KVM_DEV_TYPE_ARM_PV_TIME);
+> >> +}  
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> >   
+> 
 
 
