@@ -2,172 +2,148 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0171C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDF0C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F942339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA31621848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:49:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="B25NW301";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="oqihD66m"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="NKZs40b0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732746AbfHVIr2 (ORCPT
+        id S1731457AbfHVItf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:47:28 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:29210 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731445AbfHVIr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:47:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1566463655; x=1597999655;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=6G2IsMynDh+YQIkbczt4bosiWzdTouYXFhpuhjSQH3U=;
-  b=B25NW301Gcn7zaW8rt/5T04ar1x2VfkE9mcTDQdDx0V/L0QjFq41kh2/
-   skDLBvrtZpivpdo2HelF5JZ5SmbcPHVgWbZaXn0GqytFue18uBKSBzoxH
-   xvB9KjxLmpmmsAlBVxolAJz56+ESXuvs2zOwIOvyDMAwJm69TdEfb00sK
-   E+FK47fc2NLDnI+LrkAfHqBCuR5pGb4wpnKYwUDj9yJ01Hl/OWUfpRg9B
-   zLnDn0lca0k0afqhHGPaeuM7Qz0N5Njgu8uKsl/EDkyW8kz2chQ+lh74k
-   bIxVQHMs/DT7V1swJahNseh0UHXuJ5Tig99E4JSi0XWTmZg6x2Ms3ItJU
-   Q==;
-IronPort-SDR: W4lz9SiA8bjKY4kDHWQoUFBwiUl0NYgK8BvrCZvp87C9XidLBz2y/k1BtZruEtrunhDMl9X6ua
- 1brfAKGXmd4+OJy8IAlfKKtmszR3n5ZYO/Tao1vA0MWQug6Jbudlkg/AoxTXS30Wc25sO2JynU
- CQwURx4RQWCbjeaR6DVnidUGTUWhLkIY4v3EFZrSsWkUANAoJsvNO5qoTPDdBiDXH3iLqua44h
- ByaQa1PSSRDctxBewzYsW7G7rhXoZXKeehxFm6xcZNUOgSSrlFH4i3rfBBRaW9FlVRsDL1SFPx
- gyM=
-X-IronPort-AV: E=Sophos;i="5.64,416,1559491200"; 
-   d="scan'208";a="216835061"
-Received: from mail-co1nam05lp2051.outbound.protection.outlook.com (HELO NAM05-CO1-obe.outbound.protection.outlook.com) ([104.47.48.51])
-  by ob1.hgst.iphmx.com with ESMTP; 22 Aug 2019 16:47:32 +0800
+        Thu, 22 Aug 2019 04:49:35 -0400
+Received: from mail-eopbgr700086.outbound.protection.outlook.com ([40.107.70.86]:27489
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725857AbfHVItf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 04:49:35 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XrVwrl+et9Q9N/apbLv37eckNPu9sC1D1OZYqAPPETJrmRe+xfH4gpEt5CEx/xFvZ7QHgVXWzDwtUIi/6jbskanRyCLS7diYvwH9h+3fG6GXGq2P2EY1X6y9nHc///hnq56/ERHDPWSP5XwlHmvUM+bIf4TFHInLBa7mY0InY/+C6CSwYOSvwmCgwW/5R4gaXRzFsNO1vwgAmMPLnJYwnb3DFgAvXCOvSSkofzEoOQyd52xc9aFmSnUkJT0Oj3yXH7OxywPj6JIdyCsK9QtbcQ5RQzG4JsA6GLl2aWd/9wsp/WtTsNuRGhPlJExp6zYt+jRiuIthMgP2xTkKrDWuRA==
+ b=SDxToYdmuCVjotsBUw+BWDuOIiBc27pXQZOZRUtRgfDlLs3DDxg0WMHEqYDkFuZa5RAH7cbhirAC/G8wY7cufY9XUIuEl+SAg2/blNOOpgwEOg6U5Cy5i1qn5tKRf/4mBkTic7/lGbDoxiE0yDbi2AQuUX7/BeXnPPilux+y8obO78O14q7Zqwkzr26+YKab/WhXwpo+1M71Puug2qvSdTIEEzBFh9DpHLJxaO5K6R13V788St6ehwTwHVKTxrTQ9/8d82vHScDwT7h8oFS/V5JsSuWSZoa3B7hjfejRebdplTxlAcLWST0jRCo95m4FhTeJARbPq26JwBdaw8ETpQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TJ47Al2sguiccdFuJbcScKvpXNHQJnmNEbsSCCQNdmA=;
- b=XEeddTXjZS+mIN/8Ai8rbrcOXcJ066nbDVfIMJ5hglSfT8bPBt0M7t56VrOHYIVznTaAYi58scvgImbmWXPzb7KyQIFU3SNWeOl9Z91mPW1/FshxqTm25b7CXs4eglCyHGTu612Rhb9N8m7olVvFTltE0KeN3moW0FjQhkRoiRRFYnmig1wnAVTseoePDw0Fqb3kQkBHWBbHMfjyEq5yig1I9kMxT0O4SPP0zWX645in4deZOhxWqB1AQuB+52lypg4bUw3x2WJI1XftYXSCsuXTEABjUISmIchPlwmsZkixhWbOHH/gYElJS8e40BA2Q7LvPYDuNxtdqTMXNYUDdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+ bh=uRIVbmD87mP7lywA6ZM2ve2/SJYR+gHsTHLAgIqJLEc=;
+ b=BQUa60gUZL4+QgoNq3bSs3/doInzgWCd0bVtv0Q0P3/VVdk9vv8JpDZb5iI8fmV9I9RnX0zM1d+Yb/aaq77B7eHLFnLTi5I2eY/6OxIWQf+nplW5QX0ZkE4xPqFrShU63wEJmqAjO2g37Dgwu1DX9Pu01DDIoDGcrtD2F6yEAC1ptlQSnKM9Fex6itiCgYWRgOmn0ZuDljupmOJtm822yU5aa2idBRrDlYSEwSpantB/ZKB3WVutd/ogKeF5UH17CEz/gBnXhXIzwuIe78yRW/kT85hYql4+NH35nEiViO0Pe5E0QkcHUn3gOucDq9nltrn7jn9wiz0+TBFh77gc2A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=oracle.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TJ47Al2sguiccdFuJbcScKvpXNHQJnmNEbsSCCQNdmA=;
- b=oqihD66mxMkcYDcbtfTlm4KSga/PW9lzwQGFXyrTbTb8yq023mNXxbRf+9rh2dp9AYlHPLYm3RY7NejOJqo0DuXLyued8FlMYTUCZknkfDGo8e1Uqsxzr0f+hWF9z1gRas2PegCkXnn/GGkK6nZgkgwHcLFzl6KC3Q/CoE2+Rfg=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB6047.namprd04.prod.outlook.com (20.178.247.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Thu, 22 Aug 2019 08:47:24 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a815:e61a:b4aa:60c8]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::a815:e61a:b4aa:60c8%7]) with mapi id 15.20.2178.018; Thu, 22 Aug 2019
- 08:47:24 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v5 20/20] RISC-V: KVM: Add MAINTAINERS entry
-Thread-Topic: [PATCH v5 20/20] RISC-V: KVM: Add MAINTAINERS entry
-Thread-Index: AQHVWMY3sd9SKYDt3EmrxUiDagKXmw==
-Date:   Thu, 22 Aug 2019 08:47:23 +0000
-Message-ID: <20190822084131.114764-21-anup.patel@wdc.com>
-References: <20190822084131.114764-1-anup.patel@wdc.com>
-In-Reply-To: <20190822084131.114764-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MA1PR01CA0118.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:1::34) To MN2PR04MB6061.namprd04.prod.outlook.com
- (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [199.255.44.175]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e5d80ecd-ce06-415b-dff1-08d726dd59b8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR04MB6047;
-x-ms-traffictypediagnostic: MN2PR04MB6047:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB6047FBA6AB9EB7CD677BF2BA8DA50@MN2PR04MB6047.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2201;
-x-forefront-prvs: 01371B902F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(346002)(39860400002)(376002)(396003)(199004)(189003)(2616005)(6506007)(11346002)(54906003)(446003)(3846002)(6116002)(36756003)(476003)(26005)(7416002)(44832011)(316002)(66446008)(186003)(66066001)(66556008)(66946007)(66476007)(64756008)(110136005)(486006)(14454004)(71200400001)(6436002)(52116002)(478600001)(76176011)(102836004)(86362001)(1076003)(305945005)(256004)(5660300002)(7736002)(14444005)(386003)(6512007)(8936002)(4326008)(53936002)(81166006)(50226002)(8676002)(81156014)(99286004)(25786009)(6486002)(4744005)(71190400001)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6047;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YK5Ed6Pbi8qkgRNH0sG04R5FFapK4JU3SThOks/8R8Tpm0LvSWFfyvEqMjb81HdHpKl6i8KeQESD02o+9zz9h1gJqU6q3LYgw2o4Je7chgz3DH7hwscuQS+CvbhMXW/TD2GSq4TTvMYCDZ1Hfjcn+cnb4RNfO+HAzT4p9ufy/ZfkvbkkL92lhXGJs0qfR5JVFpY+QP5o1DstrJgp9EVw98JOt1+oq3oVQT7EcmJmfAOxW2z7mdxJJfVs/bXNFW/owdAJSNO3K6Q5rz/5NGb61EH+GJmDyck+Ah8RAIYcM9WmQmLWSAm86H0E0pMfUbrcWiJ8cnrfE0/smyQoHPDg7fUndkOrZ44ejpuYN/Aom+0jxCdKPK3dYuSfKazzV2+bQR0SxR5cGc/ZDqEx3qP3tV1i/Bl5f0Tzp2UGiMhy9jo=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+ bh=uRIVbmD87mP7lywA6ZM2ve2/SJYR+gHsTHLAgIqJLEc=;
+ b=NKZs40b0iyQr/KaYgl79uprz9kU6N7g7ekJvR6MahOspi/sChfJR0T8w39FsHTDF8Xn6iK2vFK8WQzNzcXC8gsOgKcZGqmy/IaOiTPZof66usIKr2FE8fnq8qBVLIILMNDkPy06+5XLKJfJbC67WCXAPo2kAqwRo2YnqJHos3qg=
+Received: from MWHPR0201CA0046.namprd02.prod.outlook.com
+ (2603:10b6:301:73::23) by BN7PR02MB4034.namprd02.prod.outlook.com
+ (2603:10b6:406:fe::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2178.16; Thu, 22 Aug
+ 2019 08:49:19 +0000
+Received: from SN1NAM02FT011.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::201) by MWHPR0201CA0046.outlook.office365.com
+ (2603:10b6:301:73::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2199.14 via Frontend
+ Transport; Thu, 22 Aug 2019 08:49:19 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; oracle.com; dkim=none (message not signed)
+ header.d=none;oracle.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT011.mail.protection.outlook.com (10.152.72.82) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2199.13
+ via Frontend Transport; Thu, 22 Aug 2019 08:49:18 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1i0imU-0005Iz-9f; Thu, 22 Aug 2019 01:49:18 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1i0imP-0005wS-6Q; Thu, 22 Aug 2019 01:49:13 -0700
+Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x7M8n7bc027385;
+        Thu, 22 Aug 2019 01:49:07 -0700
+Received: from [172.30.17.116]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1i0imJ-0005q3-Ek; Thu, 22 Aug 2019 01:49:07 -0700
+Subject: Re: [PATCH 1/4] misc: xilinx_sdfec: Fix a couple small information
+ leaks
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20190821070606.GA26957@mwanda>
+ <58e9a151-3d92-c730-eea6-5cfde90934a4@xilinx.com>
+ <20190822082831.GH3964@kadam>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <3877ba50-8c3b-bc88-95d3-3aeb3e09fcf1@xilinx.com>
+Date:   Thu, 22 Aug 2019 10:49:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5d80ecd-ce06-415b-dff1-08d726dd59b8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2019 08:47:24.0195
+In-Reply-To: <20190822082831.GH3964@kadam>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(2980300002)(199004)(189003)(9786002)(4744005)(486006)(476003)(126002)(50466002)(70206006)(70586007)(44832011)(6246003)(31696002)(446003)(336012)(426003)(11346002)(2616005)(305945005)(8676002)(81156014)(81166006)(26005)(5660300002)(8936002)(186003)(110136005)(478600001)(356004)(6666004)(2906002)(4326008)(36386004)(316002)(229853002)(58126008)(54906003)(31686004)(106002)(47776003)(230700001)(14444005)(65956001)(76176011)(23676004)(65806001)(52146003)(2486003)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB4034;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 69648e9e-2c2c-4e77-51f8-08d726dd9ec6
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(4709080)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:BN7PR02MB4034;
+X-MS-TrafficTypeDiagnostic: BN7PR02MB4034:
+X-Microsoft-Antispam-PRVS: <BN7PR02MB4034DFBA6D81505FAC474B23C6A50@BN7PR02MB4034.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-Forefront-PRVS: 01371B902F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: DsRzjuNo/se7hjdVoaDL3MXAJ6Fy4SM8y85AT+wetVM9CZS+bQpDIbrwKRUmYCdm+Mh05KQGS4S6bglBfx5Z4j55cqdLTbQVHvjQSXF4BWvf5/vUjZBrJf2D4KzmAEEsmPiscxYgF+MYsJCklne/aAG7Y7cs9uoEPcXTP+3xA6X+v4OD+1x3p3E9hVJsmhveU/sbFFFa26RRGHMpTMEoPT5hk5mVq3HMHn07EZPz5ghVpxh+MFZo4BV1+ln5U0EuESvlIPYqAP3I8c2I4KZCc5LOZVfRT4Xw+ybMp8bdnrfRHPo8ziibofoST+CvgxHCZI/kIhDVIm3Txe641cttp8FUM4O7oqbH0AVbbuE53Mu2KM67a1cmvHz72eAvYlA3WRWRKlPXau48OGqIL3OzhMXhSvOUBJETzmqtDaiq/Fo=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2019 08:49:18.6897
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zr55QcZ1EvABTH8h+n4O4Ud3ik3Q0NAPu9P1gSHgiYjlRqi7F6X5H7yrH2lhn3qiBo11wAh7wRcSz5z1QX0lOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6047
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69648e9e-2c2c-4e77-51f8-08d726dd9ec6
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB4034
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add myself as maintainer for KVM RISC-V as Atish as designated reviewer.
+On 22. 08. 19 10:28, Dan Carpenter wrote:
+> On Thu, Aug 22, 2019 at 10:14:12AM +0200, Michal Simek wrote:
+>> Hi Dan,
+>>
+>> On 21. 08. 19 9:06, Dan Carpenter wrote:
+>>> These structs have holes in them so we end up disclosing a few bytes of
+>>> uninitialized stack data.
+>>>
+>>> drivers/misc/xilinx_sdfec.c:305 xsdfec_get_status() warn: check that 'status' doesn't leak information (struct has a hole after 'activity')
+>>> drivers/misc/xilinx_sdfec.c:449 xsdfec_get_turbo() warn: check that 'turbo_params' doesn't leak information (struct has a hole after 'scale')
+>>
+>> Who is generating these warnings? Is this any new GCC or different tool?
+>> I see that 3byte padding but never seen these warnings.
+> 
+> This is a Smatch check.
 
-For time being, we use my GitHub repo as KVM RISC-V gitrepo. We will
-update this once we have common KVM RISC-V gitrepo under kernel.org.
+ok. It looks like I need to update it to latest version. My version is
+not showing these.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 43604d6ab96c..85c4e273fc72 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8877,6 +8877,16 @@ F:	arch/powerpc/include/asm/kvm*
- F:	arch/powerpc/kvm/
- F:	arch/powerpc/kernel/kvm*
-=20
-+KERNEL VIRTUAL MACHINE FOR RISC-V (KVM/riscv)
-+M:	Anup Patel <anup.patel@wdc.com>
-+R:	Atish Patra <atish.patra@wdc.com>
-+L:	kvm@vger.kernel.org
-+T:	git git://github.com/avpatel/linux.git
-+S:	Maintained
-+F:	arch/riscv/include/uapi/asm/kvm*
-+F:	arch/riscv/include/asm/kvm*
-+F:	arch/riscv/kvm/
-+
- KERNEL VIRTUAL MACHINE for s390 (KVM/s390)
- M:	Christian Borntraeger <borntraeger@de.ibm.com>
- M:	Janosch Frank <frankja@linux.ibm.com>
---=20
-2.17.1
-
+Anyway thanks for patches,
+Michal
