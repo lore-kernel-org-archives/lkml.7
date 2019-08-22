@@ -2,83 +2,42 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D195C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136CBC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605FD2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:56:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R8OJYPLb"
+	by mail.kernel.org (Postfix) with ESMTP id E4EB8233FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388777AbfHVM4J (ORCPT
+        id S2388786AbfHVM5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:56:09 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37330 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387779AbfHVM4J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:56:09 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d16so5674891wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 05:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rpeKMI/tE6EFW9ANRr1XQ8WE1RGHTA5DL7LclXp1bOU=;
-        b=R8OJYPLbiX6PDGAA9Foc4n9BE7hvuMj/LM+laL12+iN3ynxmIPecnk/ZitUnc4yJf3
-         x3yeNl4JORj5UUgHXKdgISraJTxl7BWjt7qbqq56euafptc6q109RcFVVow+/WV/JGBb
-         vl35AkKxY6R67atF/v4/srrrPrl+H8+oRxfw5grLYXqeGWq467d8+zPk5VMoOzjrwvT8
-         doeHMm1kiNrQ0RhCgFTuTbPYwJUOnxnxUCgWv5xoA6lpt74ZG+CYavhEg/iUSqPPcKqE
-         vkNtC6asp5ZSmnB9oh+ftJS977O0MXa1MXoCVMt/sv/xu5t3l7D4zcIJfpGPZXBsJntW
-         IeKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rpeKMI/tE6EFW9ANRr1XQ8WE1RGHTA5DL7LclXp1bOU=;
-        b=NxfEsvFBDbWowi80LewjaLz8e8E6uTHhoSDRhh+tvF0Zlq1D3PmvNSRZSs8Ccx9kNu
-         vyybYwqgp28p83g6GMqgOqHK07WL4dTWsAoIFqrkXvvC3inQrC5zEY1GFedK/h78YYKb
-         SGjU6DyNseXzcbyrfQnIa2Rh4/vE50Z2zOE7U27W5GByEd4dnf+0LXjG77KZ1xrej1Q5
-         cDqzGM/1NpJnbTsKAIUaKOPJfJgLkcDJ819l9MJosYu3J7qNSDO15JZr+JN5qAFimO2w
-         fQPkTK3jJDPnwiUAzu77POdmbcJx4WKwaGfHkqYmoBWF18Q77cf2/t6an6BsGu/D4TRL
-         K9gw==
-X-Gm-Message-State: APjAAAWGGeBFOmprb/PiLNNR5L7GpV1NOxdKHdigys5D8CEr3IP6x9cg
-        fSIpHihNv+5yt+8wfRy3KH8mrtKXAt4=
-X-Google-Smtp-Source: APXvYqyO6aZlnWxHGBHK5szK1yStlylHBnKn6CHrS70h7pgw6i72AhORzAUhgOXoWe69T5EmcC2/uw==
-X-Received: by 2002:a1c:a481:: with SMTP id n123mr5795028wme.123.1566478567074;
-        Thu, 22 Aug 2019 05:56:07 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id t19sm5419487wmi.29.2019.08.22.05.56.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 05:56:06 -0700 (PDT)
-Subject: Re: [PATCH v3 1/4] dt-bindings: soundwire: add slave bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Vinod <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190809133407.25918-1-srinivas.kandagatla@linaro.org>
- <20190809133407.25918-2-srinivas.kandagatla@linaro.org>
- <20190821214436.GA13936@bogus>
- <0272eafd-0aa5-f695-64e4-f6ad7157a3a6@linaro.org>
- <CAL_JsqJJCJB9obR_Jn3hmn4gq+RQjY-8M+xkdYA185Uaw0MHcw@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <90b9fa33-3a49-c414-4352-66e26673a05d@linaro.org>
-Date:   Thu, 22 Aug 2019 13:56:05 +0100
+        Thu, 22 Aug 2019 08:57:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46090 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388104AbfHVM5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 08:57:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C9C4CADBB;
+        Thu, 22 Aug 2019 12:56:58 +0000 (UTC)
+Subject: Re: [v2 PATCH -mm] mm: account deferred split THPs into MemAvailable
+To:     Michal Hocko <mhocko@kernel.org>, kirill.shutemov@linux.intel.com,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     hannes@cmpxchg.org, rientjes@google.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1566410125-66011-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190822080434.GF12785@dhcp22.suse.cz>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <ee048bbf-3563-d695-ea58-5f1504aee35c@suse.cz>
+Date:   Thu, 22 Aug 2019 14:56:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJJCJB9obR_Jn3hmn4gq+RQjY-8M+xkdYA185Uaw0MHcw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190822080434.GF12785@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,64 +45,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 22/08/2019 13:36, Rob Herring wrote:
->>>> +soundwire@c2d0000 {
->>>> +    compatible = "qcom,soundwire-v1.5.0"
->>>> +    reg = <0x0c2d0000 0x2000>;
->>>> +
->>>> +    spkr_left:wsa8810-left{
->>>> +            compatible = "sdw0110217201000";
->>>> +            ...
->>>> +    };
->>>> +
->>>> +    spkr_right:wsa8810-right{
->>>> +            compatible = "sdw0120217201000";
->>> The normal way to distinguish instances is with 'reg'. So I think you
->>> need 'reg' with Instance ID moved there at least. Just guessing, but
->>> perhaps Link ID, too? And for 2 different classes of device is that
->>> enough?
->> In previous bindings (https://lists.gt.net/linux/kernel/3403276  ) we
->> did have instance-id as different property, however Pierre had some good
->> suggestion to make it align with _ADR encoding as per MIPI DisCo spec.
->>
->> Do you still think that we should split the instance id to reg property?
-> Assuming you could have more than 1 of the same device on the bus,
-> then you need some way to distinguish them and the way that's done for
-> DT is unit-address/reg. And compatible strings should be constant for
-> each instance.
-That is a good point!
-Okay that makes more sense keep compatible string constant.
-Class ID would be constant for given functionality that the driver will 
-provide.
-
-So we will end up with some thing like this:
-
-soundwire@c2d0000 {
-	compatible = "qcom,soundwire-v1.5.0"
-	reg = <0x0c2d0000 0x2000>;	
-         #address-cells = <1>;
-         #size-cells = <0>;
-
-	spkr_left:skpr@1{
-		compatible = "sdw10217201000";
-		reg = <0x1>
-		sdw-link-id = <0>;
-		...
-	};
-
-	spkr_right:spkr@2{
-		compatible = "sdw10217201000";
-		reg = <0x2>
-		sdw-link-id = <0>;
-	};
-};
-
-I will spin this in next version!
-
-Thanks,
-srini
-
+On 8/22/19 10:04 AM, Michal Hocko wrote:
+> On Thu 22-08-19 01:55:25, Yang Shi wrote:
+>> Available memory is one of the most important metrics for memory
+>> pressure.
 > 
-> Rob
+> I would disagree with this statement. It is a rough estimate that tells
+> how much memory you can allocate before going into a more expensive
+> reclaim (mostly swapping). Allocating that amount still might result in
+> direct reclaim induced stalls. I do realize that this is simple metric
+> that is attractive to use and works in many cases though.
+> 
+>> Currently, the deferred split THPs are not accounted into
+>> available memory, but they are reclaimable actually, like reclaimable
+>> slabs.
+>> 
+>> And, they seems very common with the common workloads when THP is
+>> enabled.  A simple run with MariaDB test of mmtest with THP enabled as
+>> always shows it could generate over fifteen thousand deferred split THPs
+>> (accumulated around 30G in one hour run, 75% of 40G memory for my VM).
+>> It looks worth accounting in MemAvailable.
+> 
+> OK, this makes sense. But your above numbers are really worrying.
+> Accumulating such a large amount of pages that are likely not going to
+> be used is really bad. They are essentially blocking any higher order
+> allocations and also push the system towards more memory pressure.
+> 
+> IIUC deferred splitting is mostly a workaround for nasty locking issues
+> during splitting, right? This is not really an optimization to cache
+> THPs for reuse or something like that. What is the reason this is not
+> done from a worker context? At least THPs which would be freed
+> completely sound like a good candidate for kworker tear down, no?
+
+Agreed that it's a good question. For Kirill :) Maybe with kworker approach we
+also wouldn't need the cgroup awareness?
+
+>> Record the number of freeable normal pages of deferred split THPs into
+>> the second tail page, and account it into KReclaimable.  Although THP
+>> allocations are not exactly "kernel allocations", once they are unmapped,
+>> they are in fact kernel-only.  KReclaimable has been accounted into
+>> MemAvailable.
+> 
+> This sounds reasonable to me.
+>  
+>> When the deferred split THPs get split due to memory pressure or freed,
+>> just decrease by the recorded number.
+>> 
+>> With this change when running program which populates 1G address space
+>> then madvise(MADV_DONTNEED) 511 pages for every THP, /proc/meminfo would
+>> show the deferred split THPs are accounted properly.
+>> 
+>> Populated by before calling madvise(MADV_DONTNEED):
+>> MemAvailable:   43531960 kB
+>> AnonPages:       1096660 kB
+>> KReclaimable:      26156 kB
+>> AnonHugePages:   1056768 kB
+>> 
+>> After calling madvise(MADV_DONTNEED):
+>> MemAvailable:   44411164 kB
+>> AnonPages:         50140 kB
+>> KReclaimable:    1070640 kB
+>> AnonHugePages:     10240 kB
+>> 
+>> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: David Rientjes <rientjes@google.com>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+
+Thanks, looks like it wasn't too difficult with the 2nd tail page use :)
+
+...
+
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -524,6 +524,7 @@ void prep_transhuge_page(struct page *page)
+>>  
+>>  	INIT_LIST_HEAD(page_deferred_list(page));
+>>  	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
+>> +	page[2].nr_freeable = 0;
+>>  }
+>>  
+>>  static unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
+>> @@ -2766,6 +2767,10 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+>>  		if (!list_empty(page_deferred_list(head))) {
+>>  			ds_queue->split_queue_len--;
+>>  			list_del(page_deferred_list(head));
+>> +			__mod_node_page_state(page_pgdat(page),
+>> +					NR_KERNEL_MISC_RECLAIMABLE,
+>> +					-head[2].nr_freeable);
+>> +			head[2].nr_freeable = 0;
+>>  		}
+>>  		if (mapping)
+>>  			__dec_node_page_state(page, NR_SHMEM_THPS);
+>> @@ -2816,11 +2821,14 @@ void free_transhuge_page(struct page *page)
+>>  		ds_queue->split_queue_len--;
+>>  		list_del(page_deferred_list(page));
+>>  	}
+>> +	__mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
+>> +			      -page[2].nr_freeable);
+>> +	page[2].nr_freeable = 0;
+
+Wouldn't it be safer to fully tie the nr_freeable use to adding the page to the
+deffered list? So here the code would be in the if (!list_empty()) { } part above.
+
+>>  	spin_unlock_irqrestore(&ds_queue->split_queue_lock, flags);
+>>  	free_compound_page(page);
+>>  }
+>>  
+>> -void deferred_split_huge_page(struct page *page)
+>> +void deferred_split_huge_page(struct page *page, unsigned int nr)
+>>  {
+>>  	struct deferred_split *ds_queue = get_deferred_split_queue(page);
+>>  #ifdef CONFIG_MEMCG
+>> @@ -2844,6 +2852,9 @@ void deferred_split_huge_page(struct page *page)
+>>  		return;
+>>  
+>>  	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
+>> +	page[2].nr_freeable += nr;
+>> +	__mod_node_page_state(page_pgdat(page), NR_KERNEL_MISC_RECLAIMABLE,
+>> +			      nr);
+
+Same here, only do this when adding to the list, below? Or we might perhaps
+account base pages multiple times?
+
+>>  	if (list_empty(page_deferred_list(page))) {
+>>  		count_vm_event(THP_DEFERRED_SPLIT_PAGE);
+>>  		list_add_tail(page_deferred_list(page), &ds_queue->split_queue);
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index e5dfe2a..6008fab 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -1286,7 +1286,7 @@ static void page_remove_anon_compound_rmap(struct page *page)
+>>  
+>>  	if (nr) {
+>>  		__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, -nr);
+>> -		deferred_split_huge_page(page);
+>> +		deferred_split_huge_page(page, nr);
+>>  	}
+>>  }
+>>  
+>> @@ -1320,7 +1320,7 @@ void page_remove_rmap(struct page *page, bool compound)
+>>  		clear_page_mlock(page);
+>>  
+>>  	if (PageTransCompound(page))
+>> -		deferred_split_huge_page(compound_head(page));
+>> +		deferred_split_huge_page(compound_head(page), 1);
+>>  
+>>  	/*
+>>  	 * It would be tidy to reset the PageAnon mapping here,
+>> -- 
+>> 1.8.3.1
+> 
+
