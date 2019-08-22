@@ -2,245 +2,99 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F847C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D158C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2FD20856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pedrovanzella.com header.i=@pedrovanzella.com header.b="LR1heJJ6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W357AqkZ"
+	by mail.kernel.org (Postfix) with ESMTP id 35C8020856
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392983AbfHVUTF (ORCPT
+        id S2393024AbfHVUTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:19:05 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:43823 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391015AbfHVUTB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:19:01 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0901C21785;
-        Thu, 22 Aug 2019 16:19:01 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 22 Aug 2019 16:19:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        pedrovanzella.com; h=from:to:cc:subject:date:message-id
-        :in-reply-to:references:mime-version:content-transfer-encoding;
-         s=fm3; bh=qkfXD75N/WbVbWSZPQ2M/eiRK0PmPJET2OhfHsAzWVk=; b=LR1he
-        JJ6T/Op3zCVqhd06cp44GaLC3CkMYAjYhF0GU5zk+TYynbbsnGEVV6vpozitbCOl
-        q9hXchBqzJ0OEqiNENSLKsVLpaQQ7dNPt2bzI2IGgxGIZDVl0joZ5Q2lw7zYBYCh
-        d8nruZ+OSdYZSr31VqSI2H6EbOPqjLmPpTH5Uxf/bFZgSwkDCAbZYhxJpnFtITkm
-        JwlSdLI0ymczggty4DnJ6CZry3Rv5PKjIp2G5+7JwWusu7sDa2YpwbqtyYQYSWp2
-        BwBCvVEpL45waHEt0/3Sk86TRdP5cfOvHxNweKKOdxa/BmdMMtFOo01xNwJN8ofc
-        GI90GMbvGQI0X24Dw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=qkfXD75N/WbVbWSZPQ2M/eiRK0PmPJET2OhfHsAzWVk=; b=W357AqkZ
-        MvZnz89PYjnZQFIEf20jYNb954c4aJOseJYbGX3Xcubk2l/RyAit3nhjddDG9M1W
-        c2xLjcTnQKGj+HJzYe7I+5CnAXxcSv5Yy0UyDWgfOL0oHYBChNaUJmfbWutYyxd3
-        Nbgrd8+Wgo/eLPhiUDWFFytq3sjGSsJGor/3NpAMUrlPPAfg030TqiOltT3XwiQd
-        f7dCP9R4imNPxwqKJwK6riLl1iLwxPv3X2zIvy3O9PmuCKpSCsCEpkiKRIruKgTj
-        VJzAh2/vfWtihXX+8lHOcci06ZZkThzeI8vozKwTPfEdTYITMir7NwvA5uqMdrYX
-        M3vtanV/PHPOQg==
-X-ME-Sender: <xms:tPheXWcO-UslDQfX9f46PlZdigIcu8mZ2XDouUoSuAkYUr9mtiS7GA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegiedguddtgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomheprfgvughr
-    ohcugggrnhiivghllhgruceophgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomh
-    eqnecukfhppedujeegrdekkedrledrudegleenucfrrghrrghmpehmrghilhhfrhhomhep
-    phgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomhenucevlhhushhtvghrufhiii
-    gvpedt
-X-ME-Proxy: <xmx:tPheXbq9OLQ1b33ugLFQ0thD4nnUMepLC82IyZuGbGftp-PsRS6QIA>
-    <xmx:tPheXWMKBzopmYV4PkADIPVX0FiYwl2FurUEfngcNWTKPqE6SJi48w>
-    <xmx:tPheXRGNOs5uS58vyJ4x8LhgUpuhjmSO9AY23NerVJceUwAfXeKIjA>
-    <xmx:tPheXTGC6kuHtnLGhyeosQiHgc0qL7y9l7q9hU2BMXRs-6bElllwag>
-Received: from localhost (toroon020aw-lp130-07-174-88-9-149.dsl.bell.ca [174.88.9.149])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 85F5F80059;
-        Thu, 22 Aug 2019 16:19:00 -0400 (EDT)
-From:   Pedro Vanzella <pedro@pedrovanzella.com>
-To:     linux-input@vger.kernel.org
-Cc:     lains@archlinux.org, Pedro Vanzella <pedro@pedrovanzella.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/4] hid-logitech-hidpp: add function to query battery voltage
-Date:   Thu, 22 Aug 2019 16:18:46 -0400
-Message-Id: <20190822201849.28924-3-pedro@pedrovanzella.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190822201849.28924-1-pedro@pedrovanzella.com>
-References: <20190822201849.28924-1-pedro@pedrovanzella.com>
+        Thu, 22 Aug 2019 16:19:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35632 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391015AbfHVUTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 16:19:06 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BB6BB10576D9;
+        Thu, 22 Aug 2019 20:19:06 +0000 (UTC)
+Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C40425D713;
+        Thu, 22 Aug 2019 20:19:05 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 15:19:03 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Raphael Gault <raphael.gault@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com,
+        julien.thierry.kdev@gmail.com, raph.gault+kdev@gmail.com
+Subject: Re: [RFC v4 16/18] arm64: crypto: Add exceptions for crypto object
+ to prevent stack analysis
+Message-ID: <20190822201903.srbxynoabrarnlyw@treble>
+References: <20190816122403.14994-1-raphael.gault@arm.com>
+ <20190816122403.14994-17-raphael.gault@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190816122403.14994-17-raphael.gault@arm.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Thu, 22 Aug 2019 20:19:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the device is brought up, if it's one of the devices we know
-supports battery voltage checking, figure out the feature index
-and get the battery voltage and status.
+On Fri, Aug 16, 2019 at 01:24:01PM +0100, Raphael Gault wrote:
+> Some crypto modules contain `.word` of data in the .text section.
+> Since objtool can't make the distinction between data and incorrect
+> instruction, it gives a warning about the instruction beeing unknown
+> and stops the analysis of the object file.
+> 
+> The exception can be removed if the data are moved to another section
+> or if objtool is tweaked to handle this particular case.
+> 
+> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
 
-If everything went correctly, record the fact that we're capable
-of querying battery voltage.
+If the data can be moved to .rodata then I think that would be a much
+better solution.
 
-Signed-off-by: Pedro Vanzella <pedro@pedrovanzella.com>
----
- drivers/hid/hid-logitech-hidpp.c | 95 ++++++++++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
+> ---
+>  arch/arm64/crypto/Makefile | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/crypto/Makefile b/arch/arm64/crypto/Makefile
+> index 0435f2a0610e..e2a25919ebaa 100644
+> --- a/arch/arm64/crypto/Makefile
+> +++ b/arch/arm64/crypto/Makefile
+> @@ -43,9 +43,11 @@ aes-neon-blk-y := aes-glue-neon.o aes-neon.o
+>  
+>  obj-$(CONFIG_CRYPTO_SHA256_ARM64) += sha256-arm64.o
+>  sha256-arm64-y := sha256-glue.o sha256-core.o
+> +OBJECT_FILES_NON_STANDARD_sha256-core.o := y
+>  
+>  obj-$(CONFIG_CRYPTO_SHA512_ARM64) += sha512-arm64.o
+>  sha512-arm64-y := sha512-glue.o sha512-core.o
+> +OBJECT_FILES_NON_STANDARD_sha512-core.o := y
+>  
+>  obj-$(CONFIG_CRYPTO_CHACHA20_NEON) += chacha-neon.o
+>  chacha-neon-y := chacha-neon-core.o chacha-neon-glue.o
+> @@ -58,6 +60,7 @@ aes-arm64-y := aes-cipher-core.o aes-cipher-glue.o
+>  
+>  obj-$(CONFIG_CRYPTO_AES_ARM64_BS) += aes-neon-bs.o
+>  aes-neon-bs-y := aes-neonbs-core.o aes-neonbs-glue.o
+> +OBJECT_FILES_NON_STANDARD_aes-neonbs-core.o := y
+>  
+>  CFLAGS_aes-glue-ce.o	:= -DUSE_V8_CRYPTO_EXTENSIONS
+>  
+> -- 
+> 2.17.1
+> 
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 402ddba93adc..e1ddc9cdcc8b 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -88,6 +88,7 @@ MODULE_PARM_DESC(disable_tap_to_click,
- #define HIDPP_CAPABILITY_HIDPP20_BATTERY	BIT(1)
- #define HIDPP_CAPABILITY_BATTERY_MILEAGE	BIT(2)
- #define HIDPP_CAPABILITY_BATTERY_LEVEL_STATUS	BIT(3)
-+#define HIDPP_CAPABILITY_BATTERY_VOLTAGE	BIT(4)
- 
- /*
-  * There are two hidpp protocols in use, the first version hidpp10 is known
-@@ -136,12 +137,14 @@ struct hidpp_report {
- struct hidpp_battery {
- 	u8 feature_index;
- 	u8 solar_feature_index;
-+	u8 voltage_feature_index;
- 	struct power_supply_desc desc;
- 	struct power_supply *ps;
- 	char name[64];
- 	int status;
- 	int capacity;
- 	int level;
-+	int voltage; /* in millivolts */
- 	bool online;
- };
- 
-@@ -1220,6 +1223,93 @@ static int hidpp20_battery_event(struct hidpp_device *hidpp,
- 	return 0;
- }
- 
-+/* -------------------------------------------------------------------------- */
-+/* 0x1001: Battery voltage                                                    */
-+/* -------------------------------------------------------------------------- */
-+
-+#define HIDPP_PAGE_BATTERY_VOLTAGE 0x1001
-+
-+#define CMD_BATTERY_VOLTAGE_GET_BATTERY_VOLTAGE 0x00
-+
-+static int hidpp20_battery_map_status_voltage(u8 data[3], int *voltage)
-+{
-+	int status;
-+
-+	switch (data[2]) {
-+	case 0x00: /* discharging */
-+		status = POWER_SUPPLY_STATUS_DISCHARGING;
-+		break;
-+	case 0x10: /* wireless charging */
-+	case 0x80: /* charging */
-+		status = POWER_SUPPLY_STATUS_CHARGING;
-+		break;
-+	case 0x81: /* fully charged */
-+		status = POWER_SUPPLY_STATUS_FULL;
-+		break;
-+	default:
-+		status = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+	}
-+
-+	*voltage = (data[0] << 8) + data[1];
-+
-+	return status;
-+}
-+
-+static int hidpp20_battery_get_battery_voltage(struct hidpp_device *hidpp,
-+					       u8 feature_index,
-+					       int *status, int *voltage)
-+{
-+	struct hidpp_report response;
-+	int ret;
-+	u8 *params = (u8 *)response.fap.params;
-+
-+	ret = hidpp_send_fap_command_sync(hidpp, feature_index,
-+					  CMD_BATTERY_VOLTAGE_GET_BATTERY_VOLTAGE,
-+					  NULL, 0, &response);
-+
-+	if (ret > 0) {
-+		hid_err(hidpp->hid_dev, "%s: received protocol error 0x%02x\n",
-+			__func__, ret);
-+		return -EPROTO;
-+	}
-+	if (ret)
-+		return ret;
-+
-+	hidpp->capabilities |= HIDPP_CAPABILITY_BATTERY_VOLTAGE;
-+
-+	*status = hidpp20_battery_map_status_voltage(params, voltage);
-+
-+	return 0;
-+}
-+
-+static int hidpp20_query_battery_voltage_info(struct hidpp_device *hidpp)
-+{
-+	u8 feature_type;
-+	int ret;
-+	int status, voltage;
-+
-+	if (hidpp->battery.voltage_feature_index == 0xff) {
-+		ret = hidpp_root_get_feature(hidpp, HIDPP_PAGE_BATTERY_VOLTAGE,
-+					     &hidpp->battery.voltage_feature_index,
-+					     &feature_type);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = hidpp20_battery_get_battery_voltage(hidpp,
-+						  hidpp->battery.voltage_feature_index,
-+						  &status, &voltage);
-+
-+	if (ret)
-+		return ret;
-+
-+	hidpp->battery.status = status;
-+	hidpp->battery.voltage = voltage;
-+	hidpp->battery.online = status != POWER_SUPPLY_STATUS_NOT_CHARGING;
-+
-+	return 0;
-+}
-+
- static enum power_supply_property hidpp_battery_props[] = {
- 	POWER_SUPPLY_PROP_ONLINE,
- 	POWER_SUPPLY_PROP_STATUS,
-@@ -3205,10 +3295,13 @@ static int hidpp_initialize_battery(struct hidpp_device *hidpp)
- 
- 	hidpp->battery.feature_index = 0xff;
- 	hidpp->battery.solar_feature_index = 0xff;
-+	hidpp->battery.voltage_feature_index = 0xff;
- 
- 	if (hidpp->protocol_major >= 2) {
- 		if (hidpp->quirks & HIDPP_QUIRK_CLASS_K750)
- 			ret = hidpp_solar_request_battery_event(hidpp);
-+		else if (hidpp->quirks & HIDPP_QUIRK_BATTERY_VOLTAGE_X1001)
-+			ret = hidpp20_query_battery_voltage_info(hidpp);
- 		else
- 			ret = hidpp20_query_battery_info(hidpp);
- 
-@@ -3409,6 +3502,8 @@ static void hidpp_connect_event(struct hidpp_device *hidpp)
- 			hidpp10_query_battery_status(hidpp);
- 	} else if (hidpp->capabilities & HIDPP_CAPABILITY_HIDPP20_BATTERY) {
- 		hidpp20_query_battery_info(hidpp);
-+		if (hidpp->capabilities & HIDPP_CAPABILITY_BATTERY_VOLTAGE)
-+			hidpp20_query_battery_voltage_info(hidpp);
- 	}
- 	if (hidpp->battery.ps)
- 		power_supply_changed(hidpp->battery.ps);
 -- 
-2.23.0
-
+Josh
