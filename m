@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD0BC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4418CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C30233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C40C23400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495262;
-	bh=9DPX3KSIliTFiRsyLG+ikS6pltUNT9tRg+QaBVPlITA=;
+	s=default; t=1566495265;
+	bh=j1+sFMf/J8TyA8Rsg6L005Lt4RSXA3g0HiKRnJquEuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yby8o7TOZinQi3xjW/3pi7lag/5M2DnSZZAaIqWvaItl8G6hzOC9KLPEE+1PWhi/G
-	 6RLl+OCIV9ffoRam2Q6mip1aXl0ABFPAVuBwxK3ro2TrTWyZx2e3W1LCL+0fjUxlUn
-	 tmstzWObhP9RMq0L3H0rbVqMihUaazbds57YEwco=
+	b=t3lNnujo89lnhIraWIg1JKoI0rOQi0JjoK/HW6VVIBbyF8U+RqvsssI/gw23CqvPq
+	 Qx62wvrmuLfUUaFFQhzJFDG5RalBS7PrEhmAK7Hx2nPmP5sQpZbMl5eIRwtX/nSMAQ
+	 kSDDEkOrtKd/PKs11l1jdO+lP/c/B22NBe5YlR3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392767AbfHVReV (ORCPT
+        id S2392728AbfHVReT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:34:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48392 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:34:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404400AbfHVRZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:23 -0400
+        id S2404406AbfHVRZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:24 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EE4E206DD;
-        Thu, 22 Aug 2019 17:25:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6314A23405;
+        Thu, 22 Aug 2019 17:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494722;
-        bh=9DPX3KSIliTFiRsyLG+ikS6pltUNT9tRg+QaBVPlITA=;
+        s=default; t=1566494723;
+        bh=j1+sFMf/J8TyA8Rsg6L005Lt4RSXA3g0HiKRnJquEuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CP9m+jxqi+bHuCdxR3Ck0YIu+xr3eatQb4ivJbFPN0sp01ehGgvQrHJCxdxSmEC9d
-         7zbkXohyBshjkw2ECq/p4d++USGUTkYY8pPIy/uegkw+GNHzGUcfPY6j9TO8l9Ux+v
-         y1RL+E523h7YwxomkISHMEpPJeiuhYZc2lUoguY0=
+        b=hAkwsPTQEnX6skA64wB8C9D6ltuHBe11BWS+m3Bxo71fbi4vW7c3uyUAm5WUZpGCF
+         NadFllX2miF1fT0tB3zRV7GtMUKwZRNgD+Llb0o54lOq9f3AXyDslkOCobi9j5XIeN
+         +1jdKSf8wumef91Sov3sQDoN+6dbq1Z7PchnCtJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 11/85] ALSA: hda/realtek - Add quirk for HP Envy x360
-Date:   Thu, 22 Aug 2019 10:18:44 -0700
-Message-Id: <20190822171731.561759150@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 12/85] ALSA: usb-audio: Fix a stack buffer overflow bug in check_input_term
+Date:   Thu, 22 Aug 2019 10:18:45 -0700
+Message-Id: <20190822171731.612188700@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -58,31 +60,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Hui Peng <benquike@gmail.com>
 
-commit 190d03814eb3b49d4f87ff38fef26d36f3568a60 upstream.
+commit 19bce474c45be69a284ecee660aa12d8f1e88f18 upstream.
 
-HP Envy x360 (AMD Ryzen-based model) with 103c:8497 needs the same
-quirk like HP Spectre x360 for enabling the mute LED over Mic3 pin.
+`check_input_term` recursively calls itself with input from
+device side (e.g., uac_input_terminal_descriptor.bCSourceID)
+as argument (id). In `check_input_term`, if `check_input_term`
+is called with the same `id` argument as the caller, it triggers
+endless recursive call, resulting kernel space stack overflow.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204373
+This patch fixes the bug by adding a bitmap to `struct mixer_build`
+to keep track of the checked ids and stop the execution if some id
+has been checked (similar to how parse_audio_unit handles unitid
+argument).
+
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Signed-off-by: Hui Peng <benquike@gmail.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/usb/mixer.c |   35 +++++++++++++++++++++++++++--------
+ 1 file changed, 27 insertions(+), 8 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6851,6 +6851,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x103c, 0x82bf, "HP G3 mini", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x103c, 0x82c0, "HP G3 mini premium", ALC221_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
-+	SND_PCI_QUIRK(0x103c, 0x8497, "HP Envy x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
- 	SND_PCI_QUIRK(0x1043, 0x106d, "Asus K53BE", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -83,6 +83,7 @@ struct mixer_build {
+ 	unsigned char *buffer;
+ 	unsigned int buflen;
+ 	DECLARE_BITMAP(unitbitmap, MAX_ID_ELEMS);
++	DECLARE_BITMAP(termbitmap, MAX_ID_ELEMS);
+ 	struct usb_audio_term oterm;
+ 	const struct usbmix_name_map *map;
+ 	const struct usbmix_selector_map *selector_map;
+@@ -788,16 +789,25 @@ static int uac_mixer_unit_get_channels(s
+  * parse the source unit recursively until it reaches to a terminal
+  * or a branched unit.
+  */
+-static int check_input_term(struct mixer_build *state, int id,
++static int __check_input_term(struct mixer_build *state, int id,
+ 			    struct usb_audio_term *term)
+ {
+ 	int protocol = state->mixer->protocol;
+ 	int err;
+ 	void *p1;
++	unsigned char *hdr;
+ 
+ 	memset(term, 0, sizeof(*term));
+-	while ((p1 = find_audio_control_unit(state, id)) != NULL) {
+-		unsigned char *hdr = p1;
++	for (;;) {
++		/* a loop in the terminal chain? */
++		if (test_and_set_bit(id, state->termbitmap))
++			return -EINVAL;
++
++		p1 = find_audio_control_unit(state, id);
++		if (!p1)
++			break;
++
++		hdr = p1;
+ 		term->id = id;
+ 
+ 		if (protocol == UAC_VERSION_1 || protocol == UAC_VERSION_2) {
+@@ -815,7 +825,7 @@ static int check_input_term(struct mixer
+ 
+ 					/* call recursively to verify that the
+ 					 * referenced clock entity is valid */
+-					err = check_input_term(state, d->bCSourceID, term);
++					err = __check_input_term(state, d->bCSourceID, term);
+ 					if (err < 0)
+ 						return err;
+ 
+@@ -849,7 +859,7 @@ static int check_input_term(struct mixer
+ 			case UAC2_CLOCK_SELECTOR: {
+ 				struct uac_selector_unit_descriptor *d = p1;
+ 				/* call recursively to retrieve the channel info */
+-				err = check_input_term(state, d->baSourceID[0], term);
++				err = __check_input_term(state, d->baSourceID[0], term);
+ 				if (err < 0)
+ 					return err;
+ 				term->type = UAC3_SELECTOR_UNIT << 16; /* virtual type */
+@@ -912,7 +922,7 @@ static int check_input_term(struct mixer
+ 
+ 				/* call recursively to verify that the
+ 				 * referenced clock entity is valid */
+-				err = check_input_term(state, d->bCSourceID, term);
++				err = __check_input_term(state, d->bCSourceID, term);
+ 				if (err < 0)
+ 					return err;
+ 
+@@ -963,7 +973,7 @@ static int check_input_term(struct mixer
+ 			case UAC3_CLOCK_SELECTOR: {
+ 				struct uac_selector_unit_descriptor *d = p1;
+ 				/* call recursively to retrieve the channel info */
+-				err = check_input_term(state, d->baSourceID[0], term);
++				err = __check_input_term(state, d->baSourceID[0], term);
+ 				if (err < 0)
+ 					return err;
+ 				term->type = UAC3_SELECTOR_UNIT << 16; /* virtual type */
+@@ -979,7 +989,7 @@ static int check_input_term(struct mixer
+ 					return -EINVAL;
+ 
+ 				/* call recursively to retrieve the channel info */
+-				err = check_input_term(state, d->baSourceID[0], term);
++				err = __check_input_term(state, d->baSourceID[0], term);
+ 				if (err < 0)
+ 					return err;
+ 
+@@ -997,6 +1007,15 @@ static int check_input_term(struct mixer
+ 	return -ENODEV;
+ }
+ 
++
++static int check_input_term(struct mixer_build *state, int id,
++			    struct usb_audio_term *term)
++{
++	memset(term, 0, sizeof(*term));
++	memset(state->termbitmap, 0, sizeof(state->termbitmap));
++	return __check_input_term(state, id, term);
++}
++
+ /*
+  * Feature Unit
+  */
 
 
