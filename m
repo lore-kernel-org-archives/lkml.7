@@ -2,116 +2,81 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8858AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 01:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B68EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 01:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63ACF2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 01:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B2922CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 01:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566437110;
+	bh=fAmchYbKEVyEzsyvePBupZlerJN00M59W8q92U6VFWE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sZY8tspWtK9uhdOuWZhYOfcgLOdMxODiMml8OmfAD8CYURwrJ9S1zV1SDs2X3qj62
+	 hl4Bubu5yAAkjEllN3Z6I8lLUp5lEphzz813JIWpWuS0cQMQE02IHilIDAhY7qysGG
+	 QpG/EkaD9d92cB7vBWh+B+GLtIhy1DIFjxVfotqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbfHVBWK (ORCPT
+        id S1730554AbfHVBZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 21:22:10 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:51888 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727316AbfHVBWK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 21:22:10 -0400
-X-UUID: 2740e10b36dc499fa5282ce2d54ec53c-20190822
-X-UUID: 2740e10b36dc499fa5282ce2d54ec53c-20190822
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0707 with TLS)
-        with ESMTP id 1416285409; Thu, 22 Aug 2019 09:22:02 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 22 Aug 2019 09:22:02 +0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 22 Aug 2019 09:21:58 +0800
-Message-ID: <1566436922.27117.0.camel@mtksdccf07>
-Subject: Re: [PATCH v4] kasan: add memory corruption identification for
- software tag-based mode
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-CC:     Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
-        <linux-mm@kvack.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Thu, 22 Aug 2019 09:22:02 +0800
-In-Reply-To: <3318f9d7-a760-3cc8-b700-f06108ae745f@virtuozzo.com>
-References: <20190806054340.16305-1-walter-zh.wu@mediatek.com>
-         <1566279478.9993.21.camel@mtksdccf07>
-         <3318f9d7-a760-3cc8-b700-f06108ae745f@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 21 Aug 2019 21:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727316AbfHVBZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 21:25:09 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAEF82070B;
+        Thu, 22 Aug 2019 01:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566437108;
+        bh=fAmchYbKEVyEzsyvePBupZlerJN00M59W8q92U6VFWE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JLwdMo+hkWLZOEkgdKA7JoF8CUwv8bb3SEouBLk6DfZo3p8jwE/B/YUmbd73PqoP+
+         pY043x+Frcc6EJOugkUGrR78tacGWuftGkakWA8i4+mYeMXkiiuW6eVbkNLH1We1iR
+         zmiIgwJwszIRadhGE56IP6mnlCmzfKY7o3pfKh90=
+Date:   Wed, 21 Aug 2019 18:25:07 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Denis Efremov <efremov@ispras.ru>
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>, Jan Kara <jack@suse.cz>,
+        Matthew Wilcox <matthew@wil.cx>, linux-kernel@vger.kernel.org,
+        dm-devel@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-media@vger.kernel.org, Erdem Tumurov <erdemus@gmail.com>,
+        Vladimir Shelekhov <vshel@iis.nsk.su>
+Subject: Re: [PATCH] lib/memweight.c: optimize by inlining bitmap_weight()
+Message-Id: <20190821182507.b0dea16f57360cf0ac40deb6@linux-foundation.org>
+In-Reply-To: <20190821074200.2203-1-efremov@ispras.ru>
+References: <20190821074200.2203-1-efremov@ispras.ru>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-MIME-Version: 1.0
-X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-08-21 at 20:52 +0300, Andrey Ryabinin wrote:
-> 
-> On 8/20/19 8:37 AM, Walter Wu wrote:
-> > On Tue, 2019-08-06 at 13:43 +0800, Walter Wu wrote:
-> >> This patch adds memory corruption identification at bug report for
-> >> software tag-based mode, the report show whether it is "use-after-free"
-> >> or "out-of-bound" error instead of "invalid-access" error. This will make
-> >> it easier for programmers to see the memory corruption problem.
-> >>
-> >> We extend the slab to store five old free pointer tag and free backtrace,
-> >> we can check if the tagged address is in the slab record and make a
-> >> good guess if the object is more like "use-after-free" or "out-of-bound".
-> >> therefore every slab memory corruption can be identified whether it's
-> >> "use-after-free" or "out-of-bound".
-> >>
-> >> ====== Changes
-> >> Change since v1:
-> >> - add feature option CONFIG_KASAN_SW_TAGS_IDENTIFY.
-> >> - change QUARANTINE_FRACTION to reduce quarantine size.
-> >> - change the qlist order in order to find the newest object in quarantine
-> >> - reduce the number of calling kmalloc() from 2 to 1 time.
-> >> - remove global variable to use argument to pass it.
-> >> - correct the amount of qobject cache->size into the byes of qlist_head.
-> >> - only use kasan_cache_shrink() to shink memory.
-> >>
-> >> Change since v2:
-> >> - remove the shinking memory function kasan_cache_shrink()
-> >> - modify the description of the CONFIG_KASAN_SW_TAGS_IDENTIFY
-> >> - optimize the quarantine_find_object() and qobject_free()
-> >> - fix the duplicating function name 3 times in the header.
-> >> - modify the function name set_track() to kasan_set_track()
-> >>
-> >> Change since v3:
-> >> - change tag-based quarantine to extend slab to identify memory corruption
-> > 
-> > Hi,Andrey,
-> > 
-> > Would you review the patch,please?
-> 
-> 
-> I didn't notice anything fundamentally wrong, but I find there are some
-> questionable implementation choices that makes code look weirder than necessary
-> and harder to understand. So I ended up with cleaning it up, see the diff bellow.
-> I'll send v5 with that diff folded.
-> 
+On Wed, 21 Aug 2019 10:42:00 +0300 Denis Efremov <efremov@ispras.ru> wrote:
 
-Thanks your review and suggestion.
+> This patch inlines bitmap_weight() call.
 
-Walter
+It is better to say the patch "open codes" the bitmap_weight() call.
+
+> Thus, removing the BUG_ON,
+
+Why is that OK to do?
+
+I expect all the code size improvements are from doing this?
+
+> and 'longs to bits -> bits to longs' conversion by directly calling
+> hweight_long().
+> 
+> ./scripts/bloat-o-meter lib/memweight.o.old lib/memweight.o.new
+> add/remove: 0/0 grow/shrink: 0/1 up/down: 0/-10 (-10)
+> Function                                     old     new   delta
+> memweight                                    162     152     -10
+> 
 
