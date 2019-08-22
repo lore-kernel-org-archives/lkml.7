@@ -2,218 +2,191 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDDDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B570CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6152133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566486426;
-	bh=SzxEX/Yygf8Gw0Ena/p30+bCZknRpYIAXRFPYnzeCkc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=INL1qw3eGYtz2PLjHTPFLKeu9Fp746PjjwBTwcDb6YB/V7iB4KNYOOFxtJRKBqD/S
-	 osYUTMszAQQJSMMIvwCSI478Oh9Si3wal6A7f5/DsbNmpxdXyCXUUN3JP4t7tKZGe9
-	 dKLUw4pN0seMGg1qdkj1vtEMNWxggY0n9/Vm+jnY=
+	by mail.kernel.org (Postfix) with ESMTP id 8B33F2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389388AbfHVPHE (ORCPT
+        id S2389427AbfHVPH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:07:04 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39284 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387481AbfHVPHE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:07:04 -0400
-Received: by mail-pg1-f196.google.com with SMTP id u17so3834820pgi.6
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:07:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DwlPQdW0JeEtIGvgq8R1ceN0wd/Kz610hNpWCu5gwlA=;
-        b=n5npKcw1CAfs4aZP6U3NE9l44x+40qfx6dkAC6yrp74rM/NuvYK0m6OfEfiDV8ViGv
-         MRYGnpEFomYkUIBrOrVIGoIR9w7VBKiE9N618vd/LAiyHCI9s68ruMZOYXkoJMvmiMUp
-         FNrOkSTRvDM2s7KmhGyjAvPGBjpz1fkA77oRZscbQrXeolIAoYYWoHFnrtFFRan8NES/
-         lmOBJzFpbN89wiCH+Tvd4YrfUuy+xoBgL4rE25OOSHZH3tRkrlJdhfgtO7nKh4V4I1Kj
-         xLaYy1A5fPeeC7G3/7eeUamGdfQm6X74e3Z5Qh+fvChWmZNfXwZbuuEJusrLz9VGa+Rx
-         Q8cA==
-X-Gm-Message-State: APjAAAX4jOlv3kxIg68omYer5AWzy0lsDVDMYkxsWtx78bwPqQna49X6
-        rvVbDpMg5WqYZhixOr1KHxmnm0PHlmU=
-X-Google-Smtp-Source: APXvYqxJedFbXqQsR91ygwGRNG5VFsHWjFMw+ey7bYeczu1U3+7RN2or2CgkfKGJex4aCcngRkgHTA==
-X-Received: by 2002:aa7:95b8:: with SMTP id a24mr41746708pfk.103.1566486423362;
-        Thu, 22 Aug 2019 08:07:03 -0700 (PDT)
-Received: from localhost ([2601:647:5b80:29f7:1bdd:d748:9a4e:8083])
-        by smtp.gmail.com with ESMTPSA id 71sm3357841pfw.157.2019.08.22.08.07.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 08:07:02 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 08:07:01 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     gregkh@linuxfoundation.org, mdf@kernel.org,
-        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-doc@vger.kernel.org,
-        atull@kernel.org
-Subject: Re: [PATCH v5 3/9] fpga: dfl: afu: convert platform_driver to use
- dev_groups
-Message-ID: <20190822150701.GB22556@archbox>
-References: <1565578204-13969-1-git-send-email-hao.wu@intel.com>
- <1565578204-13969-4-git-send-email-hao.wu@intel.com>
+        Thu, 22 Aug 2019 11:07:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:47826 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387481AbfHVPH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 11:07:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC521337;
+        Thu, 22 Aug 2019 08:07:55 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A7F93F718;
+        Thu, 22 Aug 2019 08:07:55 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 16:07:53 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     "Chocron, Jonathan" <jonnyc@amazon.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "Hanoch, Uri" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "Wasserstrom, Barak" <barakw@amazon.com>,
+        "Saidi, Ali" <alisaidi@amazon.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Subject: Re: [PATCH v4 3/7] PCI/VPD: Add VPD release quirk for Amazon's
+ Annapurna Labs Root Port
+Message-ID: <20190822150752.GQ23903@e119886-lin.cambridge.arm.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+ <20190821153545.17635-4-jonnyc@amazon.com>
+ <20190822114146.GP23903@e119886-lin.cambridge.arm.com>
+ <5a2c0097471e933d6f6a3964ac9fba9520994991.camel@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1565578204-13969-4-git-send-email-hao.wu@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <5a2c0097471e933d6f6a3964ac9fba9520994991.camel@amazon.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hao,
+On Thu, Aug 22, 2019 at 02:36:24PM +0000, Chocron, Jonathan wrote:
+> On Thu, 2019-08-22 at 12:41 +0100, Andrew Murray wrote:
+> > On Wed, Aug 21, 2019 at 06:35:43PM +0300, Jonathan Chocron wrote:
+> > > The Amazon Annapurna Labs PCIe Root Port exposes the VPD
+> > > capability,
+> > > but there is no actual support for it.
+> > > 
+> > > The reason for not using the already existing quirk_blacklist_vpd()
+> > > is that, although this fails pci_vpd_read/write, the 'vpd' sysfs
+> > > entry still exists. When running lspci -vv, for example, this
+> > > results in the following error:
+> > > 
+> > > pcilib: sysfs_read_vpd: read failed: Input/output error
+> > 
+> > Oh that's not nice. It's probably triggered by the -EIO in
+> > pci_vpd_read.
+> > A quick search online seems to show that other people have
+> > experienced
+> > this too - though from as far as I can tell this just gives you a
+> > warning and pcilib will continnue to give other output?
+> > 
+> Correct.
+> 
+> > I guess every vpd blacklist'd driver will have the same issue. And
+> > for
+> > this reason I don't think that this patch is the right solution - as
+> > otherwise all the other blacklisted drivers could follow your lead.
+> > 
+> I think that going forward, they should follow my lead, I just didn't
+> want to possibly break any assumptions other vendors' tools might have
+> regarding the existence/non-existence of the vpd sysfs entry.
+> 
+> > I don't think you need to fix this specifically for the AL driver and
+> > so
+> > I'd suggest that you can probably drop this patch. (Ideally pciutils
+> > could be updated to not warn for this specific use-case).
+> > 
+> I don't think that solution should be implemented in pcituils. It
+> rightfully warns when it fails to read from the vpd sysfs file - it
+> first 'open's the file which succeeds, and then fails when trying to
+> 'read' from it.
 
-On Mon, Aug 12, 2019 at 10:49:58AM +0800, Wu Hao wrote:
-> This patch takes advantage of driver core which helps to create
-> and remove sysfs attribute files, so there is no need to register
-> sysfs entries manually in dfl-afu platform river code.
-Same nit: s/river/driver
+Indeed - this is correct.
+
+> I don't think that it should specifically "mask" out
+> -EIO, since it shouldn't have to "know" that the underlying reason is a
+
+You're probably right - I guess the kernel should document somewhere
+(ABI/testing/sysfs-bus-pci?) what the kernel does when such a quirk exists,
+then userspace can conform. For example if -EIO cannot be returned any
+other way then it would be OK for pciutils to mask it out - but its
+ambigious at the moment.
+
+> VPD quirk (or more precisely vpd->len == 0). Furthermore, it is
+> possible that this error code would be returned for some other reason
+> (not sure if currently this occurs).
 > 
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-Acked-by: Moritz Fischer <mdf@kernel.org>
-> ---
->  drivers/fpga/dfl-afu-main.c | 69 +++++++++++++++++++++++----------------------
->  1 file changed, 36 insertions(+), 33 deletions(-)
+> I think that if the device doesn't properly support vpd, the kernel
+> shouldn't expose the "empty" sysfs file in the first place.
 > 
-> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
-> index e50c45e..e955149 100644
-> --- a/drivers/fpga/dfl-afu-main.c
-> +++ b/drivers/fpga/dfl-afu-main.c
-> @@ -282,24 +282,17 @@ static int port_get_id(struct platform_device *pdev)
->  	&dev_attr_power_state.attr,
->  	NULL,
->  };
-> -ATTRIBUTE_GROUPS(port_hdr);
-> +
-> +static const struct attribute_group port_hdr_group = {
-> +	.attrs = port_hdr_attrs,
-> +};
->  
->  static int port_hdr_init(struct platform_device *pdev,
->  			 struct dfl_feature *feature)
->  {
-> -	dev_dbg(&pdev->dev, "PORT HDR Init.\n");
-> -
->  	port_reset(pdev);
->  
-> -	return device_add_groups(&pdev->dev, port_hdr_groups);
-> -}
-> -
-> -static void port_hdr_uinit(struct platform_device *pdev,
-> -			   struct dfl_feature *feature)
-> -{
-> -	dev_dbg(&pdev->dev, "PORT HDR UInit.\n");
-> -
-> -	device_remove_groups(&pdev->dev, port_hdr_groups);
-> +	return 0;
->  }
->  
->  static long
-> @@ -330,7 +323,6 @@ static void port_hdr_uinit(struct platform_device *pdev,
->  
->  static const struct dfl_feature_ops port_hdr_ops = {
->  	.init = port_hdr_init,
-> -	.uinit = port_hdr_uinit,
->  	.ioctl = port_hdr_ioctl,
->  };
->  
-> @@ -361,32 +353,37 @@ static void port_hdr_uinit(struct platform_device *pdev,
->  	&dev_attr_afu_id.attr,
->  	NULL
->  };
-> -ATTRIBUTE_GROUPS(port_afu);
->  
-> -static int port_afu_init(struct platform_device *pdev,
-> -			 struct dfl_feature *feature)
-> +static umode_t port_afu_attrs_visible(struct kobject *kobj,
-> +				      struct attribute *attr, int n)
->  {
-> -	struct resource *res = &pdev->resource[feature->resource_index];
-> -	int ret;
-> -
-> -	dev_dbg(&pdev->dev, "PORT AFU Init.\n");
-> +	struct device *dev = kobj_to_dev(kobj);
->  
-> -	ret = afu_mmio_region_add(dev_get_platdata(&pdev->dev),
-> -				  DFL_PORT_REGION_INDEX_AFU, resource_size(res),
-> -				  res->start, DFL_PORT_REGION_READ |
-> -				  DFL_PORT_REGION_WRITE | DFL_PORT_REGION_MMAP);
-> -	if (ret)
-> -		return ret;
-> +	/*
-> +	 * sysfs entries are visible only if related private feature is
-> +	 * enumerated.
-> +	 */
-> +	if (!dfl_get_feature_by_id(dev, PORT_FEATURE_ID_AFU))
-> +		return 0;
->  
-> -	return device_add_groups(&pdev->dev, port_afu_groups);
-> +	return attr->mode;
->  }
->  
-> -static void port_afu_uinit(struct platform_device *pdev,
-> -			   struct dfl_feature *feature)
-> +static const struct attribute_group port_afu_group = {
-> +	.attrs      = port_afu_attrs,
-> +	.is_visible = port_afu_attrs_visible,
-> +};
-> +
-> +static int port_afu_init(struct platform_device *pdev,
-> +			 struct dfl_feature *feature)
->  {
-> -	dev_dbg(&pdev->dev, "PORT AFU UInit.\n");
-Thanks.
-> +	struct resource *res = &pdev->resource[feature->resource_index];
->  
-> -	device_remove_groups(&pdev->dev, port_afu_groups);
-> +	return afu_mmio_region_add(dev_get_platdata(&pdev->dev),
-> +				   DFL_PORT_REGION_INDEX_AFU,
-> +				   resource_size(res), res->start,
-> +				   DFL_PORT_REGION_MMAP | DFL_PORT_REGION_READ |
-> +				   DFL_PORT_REGION_WRITE);
->  }
->  
->  static const struct dfl_feature_id port_afu_id_table[] = {
-> @@ -396,7 +393,6 @@ static void port_afu_uinit(struct platform_device *pdev,
->  
->  static const struct dfl_feature_ops port_afu_ops = {
->  	.init = port_afu_init,
-> -	.uinit = port_afu_uinit,
->  };
->  
->  static struct dfl_feature_driver port_feature_drvs[] = {
-> @@ -748,9 +744,16 @@ static int afu_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct attribute_group *afu_dev_groups[] = {
-> +	&port_hdr_group,
-> +	&port_afu_group,
-> +	NULL
-> +};
-> +
->  static struct platform_driver afu_driver = {
->  	.driver	= {
-> -		.name    = DFL_FPGA_FEATURE_DEV_PORT,
-> +		.name	    = DFL_FPGA_FEATURE_DEV_PORT,
-> +		.dev_groups = afu_dev_groups,
->  	},
->  	.probe   = afu_probe,
->  	.remove  = afu_remove,
-> -- 
-> 1.8.3.1
-> 
+> In the long run, quirk_blacklist_vpd() should probably be modified to
+> do what our quirk does or something similar (and then the al quirk can
+> be removed). What do you think?
+
+When I first saw your quirk, I did wonder why quirk_blacklist_vpd doesn't
+do what your quirk does. Perhaps there isn't a reason. It was first
+introduced in 2016:
+
+7c20078a8197 ("PCI: Prevent VPD access for buggy devices")
+
+Some may argue that actually because your hardware has a VPD capability
+it should have the sysfs file - but the capability doesn't work and so
+the sysfs file should return an error.
+
+I'd be keen to change quirk_blacklist_vpd - Babu, Bjorn any objections?
 
 Thanks,
-Moritz
+
+Andrew Murray
+
+> 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > 
+> > > This quirk removes the sysfs entry, which avoids the error print.
+> > > 
+> > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> > > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > > ---
+> > >  drivers/pci/vpd.c | 16 ++++++++++++++++
+> > >  1 file changed, 16 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> > > index 4963c2e2bd4c..c23a8ec08db9 100644
+> > > --- a/drivers/pci/vpd.c
+> > > +++ b/drivers/pci/vpd.c
+> > > @@ -644,4 +644,20 @@ static void quirk_chelsio_extend_vpd(struct
+> > > pci_dev *dev)
+> > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+> > >  			quirk_chelsio_extend_vpd);
+> > >  
+> > > +static void quirk_al_vpd_release(struct pci_dev *dev)
+> > > +{
+> > > +	if (dev->vpd) {
+> > > +		pci_vpd_release(dev);
+> > > +		dev->vpd = NULL;
+> > > +		pci_warn(dev, FW_BUG "Releasing VPD capability (No
+> > > support for VPD read/write transactions)\n");
+> > > +	}
+> > > +}
+> > > +
+> > > +/*
+> > > + * The 0031 device id is reused for other non Root Port device
+> > > types,
+> > > + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI
+> > > class.
+> > > + */
+> > > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS,
+> > > 0x0031,
+> > > +			      PCI_CLASS_BRIDGE_PCI, 8,
+> > > quirk_al_vpd_release);
+> > > +
+> > >  #endif
+> > > -- 
+> > > 2.17.1
+> > > 
