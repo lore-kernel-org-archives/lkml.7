@@ -2,108 +2,179 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C92C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4F7C3A5A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C7321744
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0121C2339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:09:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Eqp/T0lJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kpr3QTAH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393820AbfHVWJS (ORCPT
+        id S2393843AbfHVWJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 18:09:18 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46570 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393808AbfHVWJS (ORCPT
+        Thu, 22 Aug 2019 18:09:23 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42852 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393823AbfHVWJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 18:09:18 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m3so4453457pgv.13
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 15:09:18 -0700 (PDT)
+        Thu, 22 Aug 2019 18:09:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id i30so4890163pfk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 15:09:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=uYgPzTJBSidHw5rofgv1d7XIJLrP8BBx5dx0dnIxLaU=;
-        b=Eqp/T0lJX6voDeerzbLZz2z62udbQ8JbYtCoxl8fpZ/fehQ1JxGVv2NF6u/4UU6IML
-         jGNNZ8XgkZucbJhi8OK9rSR4FaCOTDhu66iVkp5EVfES9nFIA/ojfqTtmpkgH6+F33a4
-         pEKfXcRnXzxYICeBAr5B7Bnz2LMQvQpmm5kpSRPZEQw05r8SZqaAbw0CpWWXvj+vBNkk
-         P/iLorr+Oxh8THpeNuUwDahCrWTELDopP3a1jdJkYixY2QtkY0W8ttI4/RvmErfhtAaX
-         B7aeQIa0StrASQKuVIBt+Z/035I1APcYvmcrZrUonofpIOeIpgNpRF5OzRESz/6QaRKk
-         qyCg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=9zuadHq2oNAonLqdCJokcmV7Tuo9vqcylSnraeruuq0=;
+        b=Kpr3QTAHjS54FLrMAqnHEX87rbU/GpTGSZqfU8qQ9hxl6HzXlLA48Sn/M1KycdVeI6
+         KJRdjA8uLj5Gi1uS7vdpyPz0Kw9s1VUmnULZVRTHyjf0pfqL2Q/HetGUczthXAWr9gZq
+         s1rMj910XwiYgUUXbDCNTFrw2b0Liwi6uFyax9ibgDqxQlUb5bBcCgGo9WqHF+EfOCNY
+         Vok1YRSY4m/O8w9HyFPA55mudsdKVOJFDk3y1ocvXxKDld3J51o+zwkHeZgyppoSnnTy
+         v6GFTLNHweKRTDvOhjQKi7B1IGcuhfgiQZ4xVj04Sg0wI1ODfvlqViynwPxYi36lvVNM
+         jYbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uYgPzTJBSidHw5rofgv1d7XIJLrP8BBx5dx0dnIxLaU=;
-        b=PYPEzKWQvUCTLDos1AfEPPZg3njgUpK7snr09YFeAbiCDVJLLvf2WoKChWhm7i0zJ4
-         DPv8caY66VcKlFOotgj7xaFWqhv35/KOxqT7kz1Y6a4b6jsGJ7tRpEqsyGFvIZbJTKIo
-         AeI87QqLVxpR6Ihpaf1JDiuj0mJECnxTubMiKjwOedXUWNLST4TgiFohuniM5/SU1A32
-         wPJ6rpiI/rEArmGntHrQrl/EsvoHZfUCpO1e84CcWNIIKLa5RUigyAVJO0NVGQpuYURt
-         6AU4a5gYySyMVw3PxV+v+TbggUf3G2PQFCaxcywOHhe+dyPNi8VLxNos940ZkTOY35r0
-         mxPw==
-X-Gm-Message-State: APjAAAUX4MvV+5W5g257oM6F8sP/4ZcPxcMQKVsf1butzfwv0SiB3tKs
-        8pTbEW3RnKVSAbRSLiHkRbYfug==
-X-Google-Smtp-Source: APXvYqznJGjtkxMx+LPgYTr2KV51e6oE+5OZSSDWV6Sob4CnwVBizgP0XyiDvzhwRVVxEkrDYljWFA==
-X-Received: by 2002:aa7:934f:: with SMTP id 15mr1555731pfn.22.1566511757674;
-        Thu, 22 Aug 2019 15:09:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=9zuadHq2oNAonLqdCJokcmV7Tuo9vqcylSnraeruuq0=;
+        b=sgxKUmsIL5OINBPr4qfh+PdvjonYih3W0GDgAr1SnTtZWiFpAvy5vzHiMbfvGxTGWT
+         m7KQpOg2rokPbInLvjdwecLrvYj7aPxqpNfwWXJspSFDoWIxVhDyGHdQguOI9UYLE9tr
+         cLNvJO++Ke2MEdQKZJ8pDoPkwOjbH4+hLwJ7wLHuiqsnKzGuWPN+ASt7tPCrkOeodTwT
+         ys3L06hEAhY8mfjay3bAnD65fJbeQxDIDIg2b2IEqnfkk8MkPhHz+gWTiiA+1te7wBN2
+         CDVohFWX4EESxi3s1uU1wOsBZpTKYcwCHVzkCEoDyGUPoB6G5WH+0r6vzLphd8gDrjr9
+         as1A==
+X-Gm-Message-State: APjAAAVY2MrJXNnwt3+F/hHDT9/Ydogern/lgr+6qjgaAMk+8wgwNnDq
+        n8Zg9ej8EpAKpTEk3hbJi/d1xg==
+X-Google-Smtp-Source: APXvYqy84OkTLajF4+tdro/zEbqpNFakHDW+gSLGmhAWrFYvZI20iFVQypOHf0JtT/vxegZCjr1sfw==
+X-Received: by 2002:a63:607:: with SMTP id 7mr1204487pgg.240.1566511759764;
+        Thu, 22 Aug 2019 15:09:19 -0700 (PDT)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id s7sm377432pfb.138.2019.08.22.15.09.16
+        by smtp.gmail.com with ESMTPSA id s7sm377432pfb.138.2019.08.22.15.09.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 15:09:17 -0700 (PDT)
+        Thu, 22 Aug 2019 15:09:19 -0700 (PDT)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     yabinc@google.com, suzuki.poulose@arm.com, leo.yan@linaro.org
 Cc:     mike.leach@arm.com, alexander.shishkin@linux.intel.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] coresight: Add barrier packet when moving offset forward
-Date:   Thu, 22 Aug 2019 16:09:13 -0600
-Message-Id: <20190822220915.8876-1-mathieu.poirier@linaro.org>
+Subject: [PATCH 2/2] coresight: tmc-etr: Add barrier packet when moving offset forward
+Date:   Thu, 22 Aug 2019 16:09:15 -0600
+Message-Id: <20190822220915.8876-3-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190822220915.8876-1-mathieu.poirier@linaro.org>
+References: <20190822220915.8876-1-mathieu.poirier@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yabin,
+This patch adds barrier packets in the trace stream when the offset in the
+data buffer needs to be moved forward.  Otherwise the decoder isn't aware
+of the break in the stream and can't synchronise itself with the trace
+data.
 
-When doing more tests on your patch that adjust the offset to fit the  
-available space in the perf ring buffer[1], I noticed the decoder wasn't
-able to decode the traces that had been collected.  The issue was observed
-in CPU wide scenarios but I also suspect they would have showed up in
-per-thread mode given the right conditions.
-
-I traced the problem to the moving forward of the offset in the trace
-buffer.  Doing so skips over the barrier packets originally inserted in
-function tmc_sync_etr_buf(), which in turn prevents the decoder from
-properly synchronising with the trace packets.
-
-I fixed the condition by inserting barrier packets once the offset has been
-moved forward, making sure that alignment rules are respected.
-
-I'd be grateful if you could review and test my changes to make sure things
-still work on your side.
-
-Applies cleanly on the coresight next branch.
-
-Best regards,
-Mathieu 
-
-[1]. https://lkml.org/lkml/2019/8/14/1336
-
-
-Mathieu Poirier (2):
-  coresight: tmc: Make memory width mask computation into a function
-  coresight: tmc-etr: Add barrier packet when moving offset forward
-
- .../hwtracing/coresight/coresight-tmc-etf.c   | 23 +---------
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
  .../hwtracing/coresight/coresight-tmc-etr.c   | 43 ++++++++++++++-----
- drivers/hwtracing/coresight/coresight-tmc.c   | 28 ++++++++++++
- drivers/hwtracing/coresight/coresight-tmc.h   |  1 +
- 4 files changed, 64 insertions(+), 31 deletions(-)
+ 1 file changed, 33 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index 4f000a03152e..0e4cd6ec5f28 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -946,10 +946,6 @@ static void tmc_sync_etr_buf(struct tmc_drvdata *drvdata)
+ 	WARN_ON(!etr_buf->ops || !etr_buf->ops->sync);
+ 
+ 	etr_buf->ops->sync(etr_buf, rrp, rwp);
+-
+-	/* Insert barrier packets at the beginning, if there was an overflow */
+-	if (etr_buf->full)
+-		tmc_etr_buf_insert_barrier_packet(etr_buf, etr_buf->offset);
+ }
+ 
+ static void __tmc_etr_enable_hw(struct tmc_drvdata *drvdata)
+@@ -1415,10 +1411,11 @@ static void tmc_free_etr_buffer(void *config)
+  * buffer to the perf ring buffer.
+  */
+ static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf,
++				     unsigned long src_offset,
+ 				     unsigned long to_copy)
+ {
+ 	long bytes;
+-	long pg_idx, pg_offset, src_offset;
++	long pg_idx, pg_offset;
+ 	unsigned long head = etr_perf->head;
+ 	char **dst_pages, *src_buf;
+ 	struct etr_buf *etr_buf = etr_perf->etr_buf;
+@@ -1427,7 +1424,6 @@ static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf,
+ 	pg_idx = head >> PAGE_SHIFT;
+ 	pg_offset = head & (PAGE_SIZE - 1);
+ 	dst_pages = (char **)etr_perf->pages;
+-	src_offset = etr_buf->offset + etr_buf->len - to_copy;
+ 
+ 	while (to_copy > 0) {
+ 		/*
+@@ -1475,7 +1471,7 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 		      void *config)
+ {
+ 	bool lost = false;
+-	unsigned long flags, size = 0;
++	unsigned long flags, offset, size = 0;
+ 	struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 	struct etr_perf_buffer *etr_perf = config;
+ 	struct etr_buf *etr_buf = etr_perf->etr_buf;
+@@ -1503,11 +1499,39 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
+ 
+ 	size = etr_buf->len;
++	offset = etr_buf->offset;
++	lost |= etr_buf->full;
++
++	/*
++	 * The ETR buffer may be bigger than the space available in the
++	 * perf ring buffer (handle->size).  If so advance the offset so that we
++	 * get the latest trace data.  In snapshot mode none of that matters
++	 * since we are expected to clobber stale data in favour of the latest
++	 * traces.
++	 */
+ 	if (!etr_perf->snapshot && size > handle->size) {
+-		size = handle->size;
++		u32 mask = tmc_get_memwidth_mask(drvdata);
++
++		/*
++		 * Make sure the new size is aligned in accordance with the
++		 * requirement explained in function tmc_get_memwidth_mask().
++		 */
++		size = handle->size & mask;
++		offset = etr_buf->offset + etr_buf->len - size;
++
++		if (offset >= etr_buf->size)
++			offset -= etr_buf->size;
+ 		lost = true;
+ 	}
+-	tmc_etr_sync_perf_buffer(etr_perf, size);
++
++	/*
++	 * Insert barrier packets at the beginning, if there was an overflow
++	 * or if the offset had to be brought forward.
++	 */
++	if (lost)
++		tmc_etr_buf_insert_barrier_packet(etr_buf, offset);
++
++	tmc_etr_sync_perf_buffer(etr_perf, offset, size);
+ 
+ 	/*
+ 	 * In snapshot mode we simply increment the head by the number of byte
+@@ -1518,7 +1542,6 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 	if (etr_perf->snapshot)
+ 		handle->head += size;
+ 
+-	lost |= etr_buf->full;
+ out:
+ 	/*
+ 	 * Don't set the TRUNCATED flag in snapshot mode because 1) the
 -- 
 2.17.1
 
