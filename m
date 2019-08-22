@@ -2,106 +2,95 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB24C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39932C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3D321848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0430D2082F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389216AbfHVOfQ (ORCPT
+        id S2389238AbfHVOfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:35:16 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3973 "EHLO huawei.com"
+        Thu, 22 Aug 2019 10:35:23 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37042 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726693AbfHVOfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:35:16 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 8DCA9D90A3DC820CA5CD;
-        Thu, 22 Aug 2019 22:35:12 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 22 Aug 2019 22:35:12 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Thu, 22 Aug 2019 22:35:11 +0800
-Date:   Thu, 22 Aug 2019 22:34:32 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-CC:     Richard Weinberger <richard.weinberger@gmail.com>,
-        Gao Xiang <hsiangkao@aol.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: erofs: Question on unused fields in on-disk structs
-Message-ID: <20190822143432.GB195034@architecture4>
-References: <1323459733.69859.1566234633793.JavaMail.zimbra@nod.at>
- <20190819204504.GB10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAFLxGvxr2UMeVa29M9pjLtWMFPz7w6udRV38CRxEF1moyA9_Rw@mail.gmail.com>
- <20190821220251.GA3954@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAFLxGvzLPgD22pVOV_jz1EvC-c7YU_2dEFbBt4q08bSkZ3U0Dg@mail.gmail.com>
- <20190822142142.GB2730@mit.edu>
+        id S1725886AbfHVOfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:35:22 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 615BD2BC513CB4D2D3BC;
+        Thu, 22 Aug 2019 22:34:43 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 22 Aug 2019
+ 22:34:38 +0800
+Subject: Re: [PATCH -next] ASoC: sun4i-i2s: Use PTR_ERR_OR_ZERO in
+ sun4i_i2s_init_regmap_fields()
+To:     Maxime Ripard <mripard@kernel.org>
+References: <20190822065252.74028-1-yuehaibing@huawei.com>
+ <20190822141826.is6nizjpdgvhd7ra@flea>
+CC:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Chen-Yu Tsai <wens@csie.org>,
+        Marcus Cooper <codekipper@gmail.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <5b15becf-b79b-ae5d-91e2-6521ded50946@huawei.com>
+Date:   Thu, 22 Aug 2019 22:34:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190822142142.GB2730@mit.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme709-chm.china.huawei.com (10.1.199.105) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
+In-Reply-To: <20190822141826.is6nizjpdgvhd7ra@flea>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
-
-On Thu, Aug 22, 2019 at 10:21:42AM -0400, Theodore Y. Ts'o wrote:
-> On Thu, Aug 22, 2019 at 10:33:01AM +0200, Richard Weinberger wrote:
-> > > super block chksum could be a compatible feature right? which means
-> > > new kernel can support it (maybe we can add a warning if such image
-> > > doesn't have a chksum then when mounting) but old kernel doesn't
-> > > care it.
-> > 
-> > Yes. But you need some why to indicate that the chksum field is now
-> > valid and must be used.
-> > 
-> > The features field can be used for that, but you don't use it right now.
-> > I recommend to check it for being 0, 0 means then "no features".
-> > If somebody creates in future a erofs with more features this code
-> > can refuse to mount because it does not support these features.
+On 2019/8/22 22:18, Maxime Ripard wrote:
+> Hi,
 > 
-> The whole point of "compat" features is that the kernel can go ahead
-> and mount the file system even if there is some new "compat" feature
-> which it doesn't understand.  So the fact that right now erofs doesn't
-> have any "compat" features means it's not surprising, and perfectly
-> OK, if it's not referenced by the kernel.
+> On Thu, Aug 22, 2019 at 06:52:52AM +0000, YueHaibing wrote:
+>> Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  sound/soc/sunxi/sun4i-i2s.c | 5 +----
+>>  1 file changed, 1 insertion(+), 4 deletions(-)
+>>
+>> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+>> index 9e691baee1e8..2071c54265f3 100644
+>> --- a/sound/soc/sunxi/sun4i-i2s.c
+>> +++ b/sound/soc/sunxi/sun4i-i2s.c
+>> @@ -1095,10 +1095,7 @@ static int sun4i_i2s_init_regmap_fields(struct device *dev,
+>>  	i2s->field_fmt_sr =
+>>  			devm_regmap_field_alloc(dev, i2s->regmap,
+>>  						i2s->variant->field_fmt_sr);
+>> -	if (IS_ERR(i2s->field_fmt_sr))
+>> -		return PTR_ERR(i2s->field_fmt_sr);
+>> -
+>> -	return 0;
+>> +	return PTR_ERR_OR_ZERO(i2s->field_fmt_sr);
 > 
-> For ext4, we have some more complex feature bitmasks, "compat",
-> "ro_compat" (OK to mount read-only if there are features you don't
-> understand) and "incompat" (if there are any bits you don't
-> understand, fail the mount).  But since erofs is a read-only file
-> system, things are much simpler.
-> 
-> It might make life easier for other kernel developers if "features"
-> was named "compat_features" and "requirements" were named
-> "incompat_features", just because of the long-standing use of that in
-> ext2, ext3, ext4, ocfs2, etc.  But that naming scheme really is a
-> legacy of ext2 and its descendents, and there's no real reason why it
-> has to be that way on other file systems.
+> I'm not really convinced that this more readable or more maintainable
+> though. Is there a reason for this other than we can do it?
 
-Thanks for your detailed explanation, thanks a lot!
-
-Thanks,
-Gao Xiang
+No special reason, just suggested by scripts/coccinelle/api/ptr_ret.cocci
 
 > 
-> Cheers,
+> Maxie
 > 
-> 						- Ted
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+> 
+
