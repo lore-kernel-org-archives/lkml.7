@@ -5,56 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F75C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD3DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0EFE2339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8D92339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sr9LjJuS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JYYseZMP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389531AbfHVUAi (ORCPT
+        id S2391053AbfHVUAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:00:38 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:49091 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733297AbfHVUAg (ORCPT
+        Thu, 22 Aug 2019 16:00:42 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:53932 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389549AbfHVUAl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:00:36 -0400
-Received: by mail-vk1-f201.google.com with SMTP id l3so2754565vkb.15
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 13:00:35 -0700 (PDT)
+        Thu, 22 Aug 2019 16:00:41 -0400
+Received: by mail-pl1-f201.google.com with SMTP id y22so4243277plr.20
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 13:00:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=q2xEM4ZZIH60IhHUp/Tsrc3BwYRYS3HENwO9UK8ZY8A=;
-        b=sr9LjJuS+htHRlolM9YkWocHcNmySO3oWOJUlCW5vIRDBoMd6wQCLTBGuwEuqsC2Ur
-         Wma8aSSiAtzW0x3pzUQrZAkO2xN5hc6iK2purEAarL8Pn57u85rUGnZ4Z5Kb5c6wmko8
-         osjWvJYlNjDc82qCar5zR3/Yiffmj2juupyRjK82d70b2Vtm5UKfkHcqRuxyUwoL08nl
-         yMNbpjqkol5SNc04oi+ZOGu7nXeE9PZd/JN5LU+cmK/4JYzpGnfGv8H3JvOEfXDlFveS
-         l96DKLspK6+yW+KbyQCD+rP6J3xGnoD3UDJzgmrdUG2SbU8ICA3jNFDo6aBuqAtGrAVo
-         OBPw==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=hVGwk6YhjI455Ut1v3y6cxlNJxNjb6ZkPTuggdcePUs=;
+        b=JYYseZMPlM5r1PVnnewPA9qXVNjOEjiBT5JavOaz5iOKpvPti+BzosvwyA1hobwO/O
+         w9LDFjs+b4zvgKL4URYTM7g3/yJqpdb75LKM1xpEfXjoY1Xg8Rbv0yP8clb5B5Lf0drd
+         Q7xnT5p4+v2P3wBOVqhkeWqS3qbhRCPQUEbXfqrIhwIm83mlGIiC1AyHxS8145DgeGuZ
+         ppn9gM21p4S2MX0ZE8ifWvgbLsB6JmPrpr3WYQeX4MZA1zvfw0Jvpmrmz2BDxRqUfyYb
+         vY0RPenIjucOwQJMh8uqYtuSGszsLyBFcBMtTvlJRK82LomjEjV+0bJV7pg0YfSbyKIC
+         Yaig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=q2xEM4ZZIH60IhHUp/Tsrc3BwYRYS3HENwO9UK8ZY8A=;
-        b=L+F+dKgdyr1Bho6VAXTjaZ66XeuXdKFpHSo2GMapAK/yH07FEWVc7qnf2UsrJvSRCt
-         O8Um5udK44NOvpoOc3wQmQv5TG3jWKcQDBu32EN9Q3/gZ0DMAj4K6m0kk2FQX3iFw+kI
-         fCC2a/Xx6aI7EM2y4xx1MmB3IjdwcmQqRl7Uw3ZDyTDvkMEhWKA2SO8uXt1pjEAcFKeO
-         53LUER5+jLFTEhWaEdOAghP5zUF1+GOYtjLcFyxEFwthQzJa9ySqKhsnNOVSa2kQwiLk
-         GZVgzqzoiDMHOWFzlHOBR3eE8/eYr4lRqZ/IOtWj8kUymCTMcu7Y+ORq2Qn5F+3KCvZh
-         E8Ug==
-X-Gm-Message-State: APjAAAUn3s6w72IXeupd0cp5WS6B7K+UPav0RGtVGl0c1XMi0uY4PtvC
-        MNlClGl/TKoVaWx/C2IwZlGQfE5UCd0=
-X-Google-Smtp-Source: APXvYqwgnS+IPiPPbFOL3AM9ADOjTTbzmen8VHt2C1prErTvsrLAN7pIppKf4R1EZoMqfkOXMdHZEamKoYo=
-X-Received: by 2002:a67:fb90:: with SMTP id n16mr560113vsr.7.1566504034917;
- Thu, 22 Aug 2019 13:00:34 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 13:00:28 -0700
-Message-Id: <20190822200030.141272-1-khazhy@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=hVGwk6YhjI455Ut1v3y6cxlNJxNjb6ZkPTuggdcePUs=;
+        b=MH7c3c4qnFxn0eurCaCAbhULdd75YH1D3a/K39+98Sxm2zZOyqMk3LxE6B4TczmxYg
+         f3sFVJpVPcUsdis/O6r75R5A+quEd442VynpViQ7Hb+MKDrgjeOxLY+uSZ3WsQMaUnZa
+         yKLb0zlJZpWOnyMaVr/FftWuezxzA3KS6hNt8/GFPN5AtitmqSFRlzw68QAp1KnIDxst
+         7ZKCxsrL++KMzizLmPEUXA2iXWtrj2xbj6bI2pKFjO1wt1zIHEuQsYywtlszlr8p+jql
+         dKsMZcjYeRomaFrKF02SPkK2Z9q4minFIhXwicL/OhzbyfjmBcZnxHsi56B5HH57WJt6
+         9ANA==
+X-Gm-Message-State: APjAAAVHuHf3kUH4KBVzZwZyS+nluc0zhD0Oslp29epePlRf8dcuCpgF
+        n+vAxYXj61edln52rkGT9yM4cXs8Gv0=
+X-Google-Smtp-Source: APXvYqyt7na1QkfBgKdb+30wpsC1mwNBkmXqnLJjgl7dGFiw5WlLWG1hwqPw3fp+52MZwqCdr5Tf1gUluwY=
+X-Received: by 2002:a63:f13:: with SMTP id e19mr837076pgl.132.1566504039792;
+ Thu, 22 Aug 2019 13:00:39 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 13:00:30 -0700
+In-Reply-To: <20190822200030.141272-1-khazhy@google.com>
+Message-Id: <20190822200030.141272-3-khazhy@google.com>
 Mime-Version: 1.0
+References: <20190822200030.141272-1-khazhy@google.com>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v2 1/3] fuse: on 64-bit store time in d_fsdata directly
+Subject: [PATCH v2 3/3] fuse: kmemcg account fs data
 From:   Khazhismel Kumykov <khazhy@google.com>
 To:     miklos@szeredi.hu
 Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -65,78 +69,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implements the optimization noted in f75fdf22b0a8 ("fuse: don't use
-->d_time"), as the additional memory can be significant. (In particular,
-on SLAB configurations this 8-byte alloc becomes 32 bytes). Per-dentry,
-this can consume significant memory.
+account per-file, dentry, and inode data
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+accounts the per-file reserved request, adding new
+fuse_request_alloc_account()
+
+blockdev/superblock and temporary per-request data was left alone, as
+this usually isn't accounted
+
 Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
 ---
- fs/fuse/dir.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ fs/fuse/dir.c   | 3 ++-
+ fs/fuse/file.c  | 4 ++--
+ fs/fuse/inode.c | 3 ++-
+ 3 files changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index dd0f64f7bc06..f9c59a296568 100644
+index f9c59a296568..2013e1222de7 100644
 --- a/fs/fuse/dir.c
 +++ b/fs/fuse/dir.c
-@@ -24,6 +24,18 @@ static void fuse_advise_use_readdirplus(struct inode *dir)
- 	set_bit(FUSE_I_ADVISE_RDPLUS, &fi->state);
- }
- 
-+#if BITS_PER_LONG >= 64
-+static inline void fuse_dentry_settime(struct dentry *entry, u64 time)
-+{
-+	entry->d_fsdata = (void *) time;
-+}
-+
-+static inline u64 fuse_dentry_time(struct dentry *entry)
-+{
-+	return (u64)entry->d_fsdata;
-+}
-+
-+#else
- union fuse_dentry {
- 	u64 time;
- 	struct rcu_head rcu;
-@@ -38,6 +50,7 @@ static inline u64 fuse_dentry_time(struct dentry *entry)
- {
- 	return ((union fuse_dentry *) entry->d_fsdata)->time;
- }
-+#endif
- 
- /*
-  * FUSE caches dentries and attributes with separate timeout.  The
-@@ -242,6 +255,7 @@ static int fuse_dentry_revalidate(struct dentry *entry, unsigned int flags)
- 	goto out;
- }
- 
-+#if BITS_PER_LONG < 64
+@@ -258,7 +258,8 @@ static int fuse_dentry_revalidate(struct dentry *entry, unsigned int flags)
+ #if BITS_PER_LONG < 64
  static int fuse_dentry_init(struct dentry *dentry)
  {
- 	dentry->d_fsdata = kzalloc(sizeof(union fuse_dentry), GFP_KERNEL);
-@@ -254,16 +268,21 @@ static void fuse_dentry_release(struct dentry *dentry)
+-	dentry->d_fsdata = kzalloc(sizeof(union fuse_dentry), GFP_KERNEL);
++	dentry->d_fsdata = kzalloc(sizeof(union fuse_dentry),
++				   GFP_KERNEL_ACCOUNT | __GFP_RECLAIMABLE);
  
- 	kfree_rcu(fd, rcu);
+ 	return dentry->d_fsdata ? 0 : -ENOMEM;
  }
-+#endif
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 572d8347ebcb..ae8c8016bb8e 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -45,12 +45,12 @@ struct fuse_file *fuse_file_alloc(struct fuse_conn *fc)
+ {
+ 	struct fuse_file *ff;
  
- const struct dentry_operations fuse_dentry_operations = {
- 	.d_revalidate	= fuse_dentry_revalidate,
-+#if BITS_PER_LONG < 64
- 	.d_init		= fuse_dentry_init,
- 	.d_release	= fuse_dentry_release,
-+#endif
- };
+-	ff = kzalloc(sizeof(struct fuse_file), GFP_KERNEL);
++	ff = kzalloc(sizeof(struct fuse_file), GFP_KERNEL_ACCOUNT);
+ 	if (unlikely(!ff))
+ 		return NULL;
  
- const struct dentry_operations fuse_root_dentry_operations = {
-+#if BITS_PER_LONG < 64
- 	.d_init		= fuse_dentry_init,
- 	.d_release	= fuse_dentry_release,
-+#endif
- };
+ 	ff->fc = fc;
+-	ff->reserved_req = fuse_request_alloc(0, GFP_KERNEL);
++	ff->reserved_req = fuse_request_alloc(0, GFP_KERNEL_ACCOUNT);
+ 	if (unlikely(!ff->reserved_req)) {
+ 		kfree(ff);
+ 		return NULL;
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 5afd1872b8b1..ad92e93eaddd 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -76,7 +76,8 @@ struct fuse_mount_data {
  
- int fuse_valid_type(int m)
+ struct fuse_forget_link *fuse_alloc_forget(void)
+ {
+-	return kzalloc(sizeof(struct fuse_forget_link), GFP_KERNEL);
++	return kzalloc(sizeof(struct fuse_forget_link),
++		       GFP_KERNEL_ACCOUNT | __GFP_RECLAIMABLE);
+ }
+ 
+ static struct inode *fuse_alloc_inode(struct super_block *sb)
 -- 
 2.23.0.187.g17f5b7556c-goog
 
