@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F89FC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA3DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481652064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364A12064A
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495244;
-	bh=PlMqAN8+epMELBmyC4iK2dJFZedqwDoHhpGBl5HPV+g=;
+	s=default; t=1566495246;
+	bh=8y6LThwS1iDw3wBEKn53hyWVhA31tU2OGD4DW8G0fX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=liBR/3TTpbJkMpXs4QZQIe3eAUcILbuJkO61SujIvJi48bIE1/sgbHrc0jBE3eKJe
-	 MfkCrLsFsbOAjczGQHU5iBfoUc58PXE/SrCpilJxPKD8FldwulbbhivLDGcYjBKsee
-	 5SpMfTjxeEaMy2C2m3bKtacGobBqnoYJg9Ah4h/c=
+	b=xLKVhFlOWoqdIl2QR23zpoBoNZqxq2OKGt89NT3vwXehm9hW+9NWTAPLAU0TO1i2x
+	 Gt4+4jIFCfYK3vFu2M9sRHnSXrT7PopL0k7MeY4aaPxireKnT/YmEb8nYEncVfosFz
+	 e4EnkaAm8o2VagYEsLlC576VJLx7wq/AKFOO9nVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392605AbfHVReD (ORCPT
+        id S2392654AbfHVReF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:34:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49442 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:34:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404447AbfHVRZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:35 -0400
+        id S2404450AbfHVRZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:36 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 835D623405;
-        Thu, 22 Aug 2019 17:25:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3978C2341E;
+        Thu, 22 Aug 2019 17:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494734;
-        bh=PlMqAN8+epMELBmyC4iK2dJFZedqwDoHhpGBl5HPV+g=;
+        s=default; t=1566494735;
+        bh=8y6LThwS1iDw3wBEKn53hyWVhA31tU2OGD4DW8G0fX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sAN5A1Y1ro5MSMCsJ72SQL/QopuLRFbqqtuk4lamyyAAZGY3BSYjIPTqMggz1RIOA
-         1dPD0HICI8ja5WsgkPtyDq+KllQJYircaC5rwagwe5mnqQb2C/0ulr/naUCfMRilX/
-         9AXovNWjw5X8MEJWNJpaWo8G+kYt/sVZdGwLhglk=
+        b=QTWLhetXD3/t3Bcwmf3YVzmOY7LZsc3twNT91e6WgufTu8OIoba9Phyz42+8TxTBU
+         ywf29F1UKTzCY1pCOBqo7+OQdTwAgSvpaisRF1rgs1ovBdVJMkqHSe5v+HwSRVaLQ8
+         fQtpDH6clemLAhGrdebIW6MsbmEFAiU0ZWEyIKB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        stable@vger.kernel.org, Chunyan Zhang <chunyan.zhang@unisoc.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 26/85] clk: at91: generated: Truncate divisor to GENERATED_MAX_DIV + 1
-Date:   Thu, 22 Aug 2019 10:18:59 -0700
-Message-Id: <20190822171732.289391871@linuxfoundation.org>
+Subject: [PATCH 4.19 27/85] clk: sprd: Select REGMAP_MMIO to avoid compile errors
+Date:   Thu, 22 Aug 2019 10:19:00 -0700
+Message-Id: <20190822171732.337800878@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
 References: <20190822171731.012687054@linuxfoundation.org>
@@ -63,37 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1573eebeaa8055777eb753f9b4d1cbe653380c38 ]
+[ Upstream commit c9a67cbb5189e966c70451562b2ca4c3876ab546 ]
 
-In clk_generated_determine_rate(), if the divisor is greater than
-GENERATED_MAX_DIV + 1, then the wrong best_rate will be returned.
-If clk_generated_set_rate() will be called later with this wrong
-rate, it will return -EINVAL, so the generated clock won't change
-its value. Do no let the divisor be greater than GENERATED_MAX_DIV + 1.
+Make REGMAP_MMIO selected to avoid undefined reference to regmap symbols.
 
-Fixes: 8c7aa6328947 ("clk: at91: clk-generated: remove useless divisor loop")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Fixes: d41f59fd92f2 ("clk: sprd: Add common infrastructure")
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/at91/clk-generated.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/sprd/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
-index 33481368740e7..113152425a95d 100644
---- a/drivers/clk/at91/clk-generated.c
-+++ b/drivers/clk/at91/clk-generated.c
-@@ -153,6 +153,8 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
- 			continue;
+diff --git a/drivers/clk/sprd/Kconfig b/drivers/clk/sprd/Kconfig
+index 87892471eb96c..bad8099832d48 100644
+--- a/drivers/clk/sprd/Kconfig
++++ b/drivers/clk/sprd/Kconfig
+@@ -2,6 +2,7 @@ config SPRD_COMMON_CLK
+ 	tristate "Clock support for Spreadtrum SoCs"
+ 	depends on ARCH_SPRD || COMPILE_TEST
+ 	default ARCH_SPRD
++	select REGMAP_MMIO
  
- 		div = DIV_ROUND_CLOSEST(parent_rate, req->rate);
-+		if (div > GENERATED_MAX_DIV + 1)
-+			div = GENERATED_MAX_DIV + 1;
+ if SPRD_COMMON_CLK
  
- 		clk_generated_best_diff(req, parent, parent_rate, div,
- 					&best_diff, &best_rate);
 -- 
 2.20.1
 
