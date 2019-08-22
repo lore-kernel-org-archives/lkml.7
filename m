@@ -2,145 +2,178 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D919BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFDEC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAA1214DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9358F214DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:59:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rws6jNKs"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="tPW6HApc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732840AbfHVI61 (ORCPT
+        id S1732850AbfHVI7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:58:27 -0400
-Received: from mail-wm1-f46.google.com ([209.85.128.46]:39558 "EHLO
-        mail-wm1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731987AbfHVI61 (ORCPT
+        Thu, 22 Aug 2019 04:59:37 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35890 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731589AbfHVI7h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:58:27 -0400
-Received: by mail-wm1-f46.google.com with SMTP id i63so4911341wmg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:58:25 -0700 (PDT)
+        Thu, 22 Aug 2019 04:59:37 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g67so4925126wme.1;
+        Thu, 22 Aug 2019 01:59:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=HwcMDsi2XQejCpwJcqSON0QYDIy6of9C4lFX3vq5Vd8=;
-        b=rws6jNKsi1M8Rkg+o1TcSh47k+MBIMlZ2PG9GVoXpHOHN3MDWajZ42qf2bwZzNxViW
-         DAkPKntHOYRZpDPuvQBKP7zUv/xa/jRR6w1y4bYMxRKUh79SEfgnY5pr5iHYPMjsgAXC
-         tHtspKL5+LLP11iVlGZn7uqXQIsYg61EWdpwaohwUKU3vfXKzvl5DkkrMzXQtl+wnfPB
-         JStOH5mMiyjBhPn0AYgSLb0WOsyjKgkMJnEmj3SR0AeYOSficjQrUV73JMO1ziA+o0Jb
-         fVTYxfpb0LpU0FytZ+oQndnyNIff/g8nsrg8CJDfgs0FuxT66v2GorScxqX5dSepeJNF
-         /zXQ==
+        d=googlemail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=78pqoKdZXETPoori3ZQpBSltw/MaYZw9G9/iPYn/5yQ=;
+        b=tPW6HApcTAbryhZrul4iHHpQIDvMYRmfipQqusn4ebDcMj9/21GYO/D03NLABNOjGV
+         Q3uJFw/Zh2aAhwcEawzVdAQgLlYVDLpKQsyLixKzkxswz3iGm2/w4v6+GZGun77YTzzI
+         8ONvPSJKhyWd5yVtBFRxLz0EdUCRC1dc1PxsNL28Az2RvDKyIqtkZJrAREr+xkAHYJuv
+         UJ1cktZtlC3QvM81I9MGfOTXDojQcsDKpJN2Td62Xkb3No9wWW8JFnVsGbv+kIK0q8Mm
+         hKQDbUk5OiuYh6EYeT9/DSre7ddsMmcbK2VNQus/86S5HpcEURvSdxFjNJyDYqDHUHNq
+         awIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=HwcMDsi2XQejCpwJcqSON0QYDIy6of9C4lFX3vq5Vd8=;
-        b=NiL+mq2G4bdAwKeC4Q70QkvwT/MnywRGKIgJ0WRl+0uDQhAygML5GNducBWNhDt9YQ
-         x0WhN0ChQSDun+LcSoUkKrEFCbMrkpCqo2wjgoogtkLb5WYxFWL27hkdiZ5q50NjRY/7
-         rg4hLd03SHDRQWEcQ8guuJ9w/N47v/4NuODPBdDqKvI7NmWSbu+RSFLajsuJ4Tv1lwtR
-         bYj/Gf3IchhVZbJ4rQ3M5n+zaBw0k/C+5d1QF7u68pHBnR4yB6H0Vw/Qj5374U+EekJS
-         oLQSq7ZHxty3SSI/F0kVwYtj7dWxInbvrCzEkz+WD48Z/9iBOracahXY7hI/6NWeu3Dw
-         JZ+Q==
-X-Gm-Message-State: APjAAAXEoj8oY79KwzzkkHV5/CcGiTbJpSVW71C4nlDBIQEEbRYuTbqo
-        F/6cmYGXWMiCtFSFKLpyI7TTbQ==
-X-Google-Smtp-Source: APXvYqzgkuUd3Clm72tSW8GGQTeQfG2PdkhGXmhwJPw5o1ZGmT8q4h5wuwHYjYXTZwrWLB1jLkoBHg==
-X-Received: by 2002:a1c:cc09:: with SMTP id h9mr4860686wmb.32.1566464305103;
-        Thu, 22 Aug 2019 01:58:25 -0700 (PDT)
-Received: from [192.168.0.100] (146-241-115-105.dyn.eolo.it. [146.241.115.105])
-        by smtp.gmail.com with ESMTPSA id t198sm6286486wmt.39.2019.08.22.01.58.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 01:58:24 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
- porportional controller
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20190820151903.GH2263813@devbig004.ftw2.facebook.com>
-Date:   Thu, 22 Aug 2019 10:58:22 +0200
-Cc:     Jens Axboe <axboe@kernel.dk>, newella@fb.com, clm@fb.com,
-        Josef Bacik <josef@toxicpanda.com>, dennisz@fb.com,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>, kernel-team@fb.com,
-        cgroups@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        bpf@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9EB760CE-0028-4766-AE9D-6E90028D8579@linaro.org>
-References: <20190614015620.1587672-1-tj@kernel.org>
- <20190614175642.GA657710@devbig004.ftw2.facebook.com>
- <5A63F937-F7B5-4D09-9DB4-C73D6F571D50@linaro.org>
- <B5E431F7-549D-4FC4-A098-D074DF9586A1@linaro.org>
- <20190820151903.GH2263813@devbig004.ftw2.facebook.com>
-To:     Tejun Heo <tj@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.8)
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=78pqoKdZXETPoori3ZQpBSltw/MaYZw9G9/iPYn/5yQ=;
+        b=FtsJC4w0aEOH7ZaI5ofg5QHR+bEwssO4isH/qvQkJXh9rv9Mh4gPJg9KGniSMsex5T
+         k9u2P+/OCZAP+37WFZtkOxA+bsCQHjjEQZC/8kR59h1EYlNTpMp8KTs7gPceMHTKJxDD
+         yItKF9NSHbAyPse5v2KYdciMAOhvMbPvXjAWAgEQpxwYym3bzaPMR1N8bfcVeB9te+92
+         R2lG9nZuZ0uZrJjigSt7UGZbpm03KptdwqV6OuhuKuc+IEm7/j2f6THYRANn9I7C1pJt
+         EYFoxcsRTY4SVPPBzb4Uzz0pPjpratHnXlg9n9mpRApAzNDAc4fjTvrA7IxiGKxD5qGR
+         dsMg==
+X-Gm-Message-State: APjAAAXGrI8SpXLyOr34AQFL2L1K55jNsdlF9fXK49+F3aJRaCaU/kZ6
+        mZZftB1cXHf+HaVry3OIGzS7CnIi
+X-Google-Smtp-Source: APXvYqy4vbmtbFxWtcXZ//1P+EpEu1o8c/AonZwD5bNCE6zHAwGgwQmEw3lyBdYqJ94BkdCf1m6RyQ==
+X-Received: by 2002:a7b:c5c2:: with SMTP id n2mr5238102wmk.9.1566464374780;
+        Thu, 22 Aug 2019 01:59:34 -0700 (PDT)
+Received: from [192.168.1.20] (host109-153-59-46.range109-153.btcentralplus.com. [109.153.59.46])
+        by smtp.googlemail.com with ESMTPSA id 91sm76101053wrp.3.2019.08.22.01.59.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Aug 2019 01:59:34 -0700 (PDT)
+From:   Chris Clayton <chris2553@googlemail.com>
+Subject: Re: PROBLEM: 5.3.0-rc* causes iwlwifi failure
+To:     Stuart Little <achirvasub@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>
+References: <fd102579-d83d-b86d-e165-8168c74a4bac@googlemail.com>
+ <20190818105530.GA1247@chirva-void>
+Message-ID: <5e3ed328-7eea-f112-45d7-4ddee04c4b77@googlemail.com>
+Date:   Thu, 22 Aug 2019 09:59:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190818105530.GA1247@chirva-void>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks, Stuart.
 
+On 18/08/2019 11:55, Stuart Little wrote:
+> On Sun, Aug 18, 2019 at 09:17:59AM +0100, Chris Clayton wrote:
+>>
+>>
+>> On 17/08/2019 22:44, Stuart Little wrote:
+>>> After some private coaching from Serge Belyshev on git-revert I can confirm that reverting that commit atop the current tree resolves the issue (the wifi card scans for and finds networks just fine, no dmesg errors reported, etc.).
+>>>
+>>
+>> I've reported the "Microcode SW error detected" issue too, but, wrongly, only to LKML. I'll point that thread to this
+>> one. I've also been experiencing my network stopping working after suspend resume, but haven't got round to reporting
+>> that yet.
+>>
+>> What was the git magic that you acquired to revert the patch, please?
+>>
 
-> Il giorno 20 ago 2019, alle ore 17:19, Tejun Heo <tj@kernel.org> ha =
-scritto:
->=20
-> Hello, Paolo.
->=20
-> On Tue, Aug 20, 2019 at 05:04:25PM +0200, Paolo Valente wrote:
->> and makes one fio instance generate I/O for each group.  The =
-bandwidth
->> reported above is that reported by the fio instance emulating the
->> target client.
->>=20
->> Am I missing something?
->=20
-> If you didn't configure QoS targets, the controller is using device
-> qdepth saturation as the sole guidance in determining whether the
-> device needs throttling.  Please try configuring the target latencies.
-> The bandwidth you see for single stream of rand ios should have direct
-> correlation with how the latency targets are configured.  The head
-> letter for the patchset has some examples.
->=20
+By following the advice below, I reverted 4fd445a2c855bbcab81fbe06d110e78dbd974a5b and using the resultant kernel I
+haven't seen the "Microcode SW error detected" again. I am, however, still experiencing the problem of my network not
+working after resume from suspend. I've reported it to LKML, so it can be followed there should anyone need/want to.
 
-Ok, I tried with the parameters reported for a SATA SSD:
-
-rpct=3D95.00 rlat=3D10000 wpct=3D95.00 wlat=3D20000 min=3D50.00 =
-max=3D400.00
-
-and with a simpler configuration [1]: one target doing random reads
-and only four interferers doing sequential reads, with all the
-processes (groups) having the same weight.
-
-But there seemed to be little or no control on I/O, because the target
-got only 1.84 MB/s, against 1.15 MB/s without any control.
-
-So I tried with rlat=3D1000 and rlat=3D100.
-
-Control did improve, with same results for both values of rlat.  The
-problem is that these results still seem rather bad, both in terms of
-throughput guaranteed to the target and in terms of total throughput.
-Here are results compared with BFQ (throughputs measured in MB/s):
-
-                           io.weight            BFQ
-target's throughput        3.415                6.224       =20
-total throughput           159.14               321.375
-
-Am I doing something else wrong?
-
-Thanks,
-Paolo
-
-[1] sudo ./bandwidth-latency.sh -t randread -s none -b weight -n 4
-
-> Thanks.
->=20
-> --=20
-> tejun
-
+> 
+> $ git revert <offending commit>
+> 
+> This will fail as noted, but will place in a revert mode where you can fix the errors.
+> 
+> $ git status
+> 
+> will show (it did in my case, for the latest Linux tree at the time I did this) a modified file
+> 
+> drivers/net/wireless/intel/iwlwifi/mvm/fw.c
+> 
+> to be committed without issue and a conflicted file
+> 
+> drivers/net/wireless/intel/iwlwifi/mvm/nvm.c
+> 
+> whose conflicts you have to first resolve.
+> 
+> I then opened that conflicted file in a text editor and simply removed everything between the lines
+> 
+> <<<<<<< HEAD
+> 
+> and 
+> 
+>>>>>>>> parent of 4fd445a2c855... iwlwifi: mvm: Add log information about SAR status
+> 
+> (inclusive). This resolved the conflict, whereupon
+> 
+> $ git revert --continue
+> 
+> and
+> 
+> $ git commit -a
+> 
+> will finish the reversion. 
+> 
+>>> On Sat, Aug 17, 2019 at 11:59:59AM +0300, Serge Belyshev wrote:
+>>>>
+>>>>> I am on an Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz running Linux
+>>>>> x86_64 (Slackware), with a custom-compiled 5.3.0-rc4 (.config
+>>>>> attached).
+>>>>>
+>>>>> I am using the Intel wifi adapter on this machine:
+>>>>>
+>>>>> 02:00.0 Network controller: Intel Corporation Device 24fb (rev 10)
+>>>>>
+>>>>> with the iwlwifi driver. I am attaching the output to 'lspci -vv -s
+>>>>> 02:00.0' as the file device-info.
+>>>>>
+>>>>> All 5.3.0-rc* versions I have tried (including rc4) cause multiple
+>>>>> dmesg iwlwifi-related errors (dmesg attached). Examples:
+>>>>>
+>>>>> iwlwifi 0000:02:00.0: Failed to get geographic profile info -5
+>>>>> iwlwifi 0000:02:00.0: Microcode SW error detected.  Restarting 0x82000000
+>>>>> iwlwifi 0000:02:00.0: 0x00000038 | BAD_COMMAND
+>>>>>
+>>>>
+>>>> I have my logs filled with similar garbage throughout 5.3-rc*. Also
+>>>> since 5.3-rcsomething not only it WARNS in dmesg about firmware failure,
+>>>> but completely stops working after suspend/resume cycle.
+>>>>
+>>>> It looks like that:
+>>>>
+>>>> commit 4fd445a2c855bbcab81fbe06d110e78dbd974a5b
+>>>> Author: Haim Dreyfuss <haim.dreyfuss@intel.com>
+>>>> Date:   Thu May 2 11:45:02 2019 +0300
+>>>>
+>>>>     iwlwifi: mvm: Add log information about SAR status
+>>>>     
+>>>>     Inform users when SAR status is changing.
+>>>>     
+>>>>     Signed-off-by: Haim Dreyfuss <haim.dreyfuss@intel.com>
+>>>>     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+>>>>
+>>>>
+>>>> is the culprit. (manually) reverting it on top of 5.3-rc4 makes
+>>>> everything work again.
+>>>
