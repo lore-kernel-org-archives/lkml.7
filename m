@@ -4,58 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EAEC41514
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D71DC41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290322341D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FA0523426
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:08:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493704;
-	bh=6o1NOPLZe31bDQ/tQaqmdQYyapJSNNIVBkL+DSK1RA8=;
+	s=default; t=1566493713;
+	bh=GvmlOiJYasZWqbCgBV4k6R+68bLpFOF01+lWBu11hSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixryg3/LkBFDrlwoGtwLFSyg6AXEnp3HJeWk2/XLSKAWRJ3Yjoq8IAoMqUeuCWh7m
-	 Enu4wTBTVDSJxv9VwcGxIeg8tNLPrVwSF0JOJGU02p9c4+SVIKWpQWAkvKBB+28hUF
-	 dr8O9VmiFbCnYn3A90MGbhP54uaoNZZjSYGryq7Y=
+	b=WTg1D2nf0YAOb5ogAlOMrGFinp7yi2RHyBCWH133f5xx0UOllQVnSEBNPpo3a1MNh
+	 bPFTpfU906fpzg+lootJyqB05xVpoHJkKAGI2cV1JHbgoiew9Pc4nTgVF394NQ/r7e
+	 VqdeUoIL93tkiVFcqqXBmeNabniRqoUGhmREKVTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390294AbfHVRIX (ORCPT
+        id S2390377AbfHVRIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57774 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390262AbfHVRIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:19 -0400
+        id S2390335AbfHVRI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:28 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EE0E2341B;
-        Thu, 22 Aug 2019 17:08:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C947923426;
+        Thu, 22 Aug 2019 17:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493699;
-        bh=6o1NOPLZe31bDQ/tQaqmdQYyapJSNNIVBkL+DSK1RA8=;
+        s=default; t=1566493706;
+        bh=GvmlOiJYasZWqbCgBV4k6R+68bLpFOF01+lWBu11hSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WnwzNUkT/ko0dm6ATD/gmOj5DRVU7Fu/02KHiQKzTjnqarHJy1jTmXeFgGiq8DMdg
-         DhGpy6BwyYHwtQLud1Q+HZHYCGYMONOu97MhATfxwUjum2/XIgoR0UD2VtPK1Znq3B
-         JBlBcSFgZiVulLpICoHn2R9Yywb5opzkc0gBTZ/M=
+        b=Nl7AJqiCKUG79pec+UY4CISVqMMkIkFGc4fhvFAw4V2zkHY8jbnDFVdDTMhpk+Q1M
+         1YxGxV0pn6jWqsGuYZdap0S+UrnpfJ/JeZxoQMJhDBcP6kTFCfN9ijn0O6YR+G2zsN
+         Nb2tL8V+/i1a90kZ8oKyNUlFQzXoE23oX2Ion+co=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Henry Burns <henryburns@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Vitaly Vul <vitaly.vul@sony.com>,
-        Vitaly Wool <vitalywool@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Henry Burns <henrywolfeburns@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>, Takashi Iwai <tiwai@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 008/135] mm/z3fold.c: fix z3fold_destroy_pool() race condition
-Date:   Thu, 22 Aug 2019 13:06:04 -0400
-Message-Id: <20190822170811.13303-9-sashal@kernel.org>
+Subject: [PATCH 5.2 021/135] ALSA: hda - Fix a memory leak bug
+Date:   Thu, 22 Aug 2019 13:06:17 -0400
+Message-Id: <20190822170811.13303-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -74,64 +64,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Burns <henryburns@google.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-commit b997052bc3ac444a0bceab1093aff7ae71ed419e upstream.
+commit cfef67f016e4c00a2f423256fc678a6967a9fc09 upstream.
 
-The constraint from the zpool use of z3fold_destroy_pool() is there are
-no outstanding handles to memory (so no active allocations), but it is
-possible for there to be outstanding work on either of the two wqs in
-the pool.
+In snd_hda_parse_generic_codec(), 'spec' is allocated through kzalloc().
+Then, the pin widgets in 'codec' are parsed. However, if the parsing
+process fails, 'spec' is not deallocated, leading to a memory leak.
 
-Calling z3fold_deregister_migration() before the workqueues are drained
-means that there can be allocated pages referencing a freed inode,
-causing any thread in compaction to be able to trip over the bad pointer
-in PageMovable().
+To fix the above issue, free 'spec' before returning the error.
 
-Link: http://lkml.kernel.org/r/20190726224810.79660-2-henryburns@google.com
-Fixes: 1f862989b04a ("mm/z3fold.c: support page migration")
-Signed-off-by: Henry Burns <henryburns@google.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Jonathan Adams <jwadams@google.com>
-Cc: Vitaly Vul <vitaly.vul@sony.com>
-Cc: Vitaly Wool <vitalywool@gmail.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Henry Burns <henrywolfeburns@gmail.com>
+Fixes: 352f7f914ebb ("ALSA: hda - Merge Realtek parser code to generic parser")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/z3fold.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_generic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index d06d7f9560028..c4debbe683eba 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -819,16 +819,19 @@ static struct z3fold_pool *z3fold_create_pool(const char *name, gfp_t gfp,
- static void z3fold_destroy_pool(struct z3fold_pool *pool)
- {
- 	kmem_cache_destroy(pool->c_handle);
--	z3fold_unregister_migration(pool);
+diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
+index 485edaba0037e..8f2beb1f3ae48 100644
+--- a/sound/pci/hda/hda_generic.c
++++ b/sound/pci/hda/hda_generic.c
+@@ -6100,7 +6100,7 @@ static int snd_hda_parse_generic_codec(struct hda_codec *codec)
  
- 	/*
- 	 * We need to destroy pool->compact_wq before pool->release_wq,
- 	 * as any pending work on pool->compact_wq will call
- 	 * queue_work(pool->release_wq, &pool->work).
-+	 *
-+	 * There are still outstanding pages until both workqueues are drained,
-+	 * so we cannot unregister migration until then.
- 	 */
+ 	err = snd_hda_parse_pin_defcfg(codec, &spec->autocfg, NULL, 0);
+ 	if (err < 0)
+-		return err;
++		goto error;
  
- 	destroy_workqueue(pool->compact_wq);
- 	destroy_workqueue(pool->release_wq);
-+	z3fold_unregister_migration(pool);
- 	kfree(pool);
- }
- 
+ 	err = snd_hda_gen_parse_auto_config(codec, &spec->autocfg);
+ 	if (err < 0)
 -- 
 2.20.1
 
