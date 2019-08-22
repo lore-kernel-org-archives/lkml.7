@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A26C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DA1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2946820870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422F7233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495902;
-	bh=g7i6WLTZ5rxEErYhZhpqbhfqKOn6PGX5ztul/t3P0PU=;
+	s=default; t=1566495908;
+	bh=YLrwVatPL9+gX9zHsjW8OKCQyEPKpL14pEZk8waVw5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/8C6eHNuMuagUh3OD7DLF2fDmaAVq7NvXpsCG9ZrsqGrdzE1s0qAcoH5/RcjcU7U
-	 OQZ9U5u4jIRfDcq8b6LwqGKRltB9Oky6S99ctj7yQRS5Kzq+lXgCps4Vw1F2VPXvI2
-	 fkftrO4ETsFS3t5Pv+Oc1SCh55jTS/CsDc2t/D7M=
+	b=A5ebHmAVb7GBiF0ks6jjOd89g6L3s1gVWjvMDmUnyMLHZ3nW0PXbD+8A+sNHDGQJ4
+	 ikWHvueEy/1TXGxQC+5r6o0Es1XRqyX5qhOqoIibbXkoF4v7ydABVCrbsPfsvFAH9j
+	 +rVRhi1wU4hqHacJLpanW8LZbADgw33jYLT4n7xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392893AbfHVRpB (ORCPT
+        id S2392905AbfHVRpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:45:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42482 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:45:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403863AbfHVRXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:12 -0400
+        id S2403826AbfHVRXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:11 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8472B23405;
-        Thu, 22 Aug 2019 17:23:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25D5C23407;
+        Thu, 22 Aug 2019 17:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494591;
-        bh=g7i6WLTZ5rxEErYhZhpqbhfqKOn6PGX5ztul/t3P0PU=;
+        s=default; t=1566494590;
+        bh=YLrwVatPL9+gX9zHsjW8OKCQyEPKpL14pEZk8waVw5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xOtcFiSPu6AIJhZZsRqlB+zoH4AI9tbiGk3RDkgin678qO5LxfOPMvJPn/BNVtuu1
-         dvGmzxq8UoBomUtXXxbZRx8DZDNm9wYCQfiQl8837kVv8sEqEGsEpnJq1IjMFCWXWG
-         VNRrK3XfV9xh0NEsRIsbsYvlGZCxTFJ5uNBG+w1s=
+        b=UhEqwaxF4V96I/z4Vc3aH174YxrYcp47HatTiWMXM/ZOMN8YU4b/ayv39t8c8aK4s
+         gjb3qZM9zGz0l0T8kObep7B1urzlvBGwNB0yq2RmAuvNv2wT43ph9arEuyYCduKBUI
+         rCcW44gEsVYMWFKozROL9XNbNeTaySmDdx14k4M0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Stephane Grosjean <s.grosjean@peak-system.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.9 011/103] can: peak_usb: fix potential double kfree_skb()
-Date:   Thu, 22 Aug 2019 10:17:59 -0700
-Message-Id: <20190822171729.313350455@linuxfoundation.org>
+        stable@vger.kernel.org, Gavin Li <git@thegavinli.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH 4.9 001/103] usb: usbfs: fix double-free of usb memory upon submiturb error
+Date:   Thu, 22 Aug 2019 10:17:49 -0700
+Message-Id: <20190822171728.499909862@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,48 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephane Grosjean <s.grosjean@peak-system.com>
+From: Gavin Li <git@thegavinli.com>
 
-commit fee6a8923ae0d318a7f7950c6c6c28a96cea099b upstream.
+commit c43f28dfdc4654e738aa6d3fd08a105b2bee758d upstream.
 
-When closing the CAN device while tx skbs are inflight, echo skb could
-be released twice. By calling close_candev() before unlinking all
-pending tx urbs, then the internal echo_skb[] array is fully and
-correctly cleared before the USB write callback and, therefore,
-can_get_echo_skb() are called, for each aborted URB.
+Upon an error within proc_do_submiturb(), dec_usb_memory_use_count()
+gets called once by the error handling tail and again by free_async().
+Remove the first call.
 
-Fixes: bb4785551f64 ("can: usb: PEAK-System Technik USB adapters driver core")
-Signed-off-by: Stephane Grosjean <s.grosjean@peak-system.com>
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Gavin Li <git@thegavinli.com>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190804235044.22327-1-gavinli@thegavinli.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/peak_usb/pcan_usb_core.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/core/devio.c |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-@@ -592,16 +592,16 @@ static int peak_usb_ndo_stop(struct net_
- 	dev->state &= ~PCAN_USB_STATE_STARTED;
- 	netif_stop_queue(netdev);
+--- a/drivers/usb/core/devio.c
++++ b/drivers/usb/core/devio.c
+@@ -1810,8 +1810,6 @@ static int proc_do_submiturb(struct usb_
+ 	return 0;
  
-+	close_candev(netdev);
-+
-+	dev->can.state = CAN_STATE_STOPPED;
-+
- 	/* unlink all pending urbs and free used memory */
- 	peak_usb_unlink_all_urbs(dev);
- 
- 	if (dev->adapter->dev_stop)
- 		dev->adapter->dev_stop(dev);
- 
--	close_candev(netdev);
--
--	dev->can.state = CAN_STATE_STOPPED;
--
- 	/* can set bus off now */
- 	if (dev->adapter->dev_set_bus) {
- 		int err = dev->adapter->dev_set_bus(dev, 0);
+  error:
+-	if (as && as->usbm)
+-		dec_usb_memory_use_count(as->usbm, &as->usbm->urb_use_count);
+ 	kfree(isopkt);
+ 	kfree(dr);
+ 	if (as)
 
 
