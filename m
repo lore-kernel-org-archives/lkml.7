@@ -2,209 +2,288 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2626C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820D9C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9064E233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0A4233FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:30:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uwC223b9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FZc1smLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389953AbfHVQaO (ORCPT
+        id S2389970AbfHVQaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:30:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40328 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389939AbfHVQaN (ORCPT
+        Thu, 22 Aug 2019 12:30:21 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:57207 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389939AbfHVQaU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:30:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c3so6013347wrd.7
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 09:30:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=K+mOx0lYqD6ocklkpSaGRwmKmSPyTCbL4pINdnHHHgs=;
-        b=uwC223b9YBE+s6I+Q969S0WnnbC7HMjX99bxpVm5u0z6YeploaaywvumGsA5E2h4Zp
-         iFEhakxCkohR8wwJIjlq37R4n3YTS55Txybs0rODpcov6zeO/Oepg6J8Y6M6p4W7TFI2
-         yNk8JkFZBnGdi7QxUaJFp5Bi+YPAnHvLk8m3KjM9iD+pnlJtyINC+OHOOK5a7H+8dzBp
-         MsnCVg+Y4h90s5CqnBi5G2ZJJReNVHD7+rz0juY7fgHq/ITDq7EXxsB1F2vtNqpIn4aO
-         1U50NU1pzwGYZgGda4WGKXVGxMtrkeK47357m+uZ3mgVs8VwgdkyC/Hb+pATyk8Jtdkx
-         4y2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K+mOx0lYqD6ocklkpSaGRwmKmSPyTCbL4pINdnHHHgs=;
-        b=murMxtuzhum2xOF9xiz+0boWODUhydT/WN+Bm8vP+gEhPnGKLzhuUk3BBfU0g6jocA
-         3qGfn1wo+9KoajiN9Kg/9ZZ/P9excW17d47S/qdE+aXiFL58TiRBHqKahMkgSs2Ibg1u
-         BjOopvcLHI0WpSgOIqseZBm0WqCJfbhk1LTvK0uAHJK8qbgHXKp6kvnO4LoY0U9f2710
-         3HtCRihIR21hWlJ7Nu6Gygkow4stHJsM6EIR5xxQmuJWIWoDOiIW7Tj1LClWBpaEeClR
-         HUAayQHlvM6U/sWKhKBM8Hjp64/JJoHH0pj3bYYhLIJUwJvu9KnokCXl72kVToNL5Nge
-         CRog==
-X-Gm-Message-State: APjAAAVEkiULqqyoZlTT/oWq6bhGDNNiMfU92B6EFgHTql/uEEcO0sA4
-        F/uulEI80cqjYt2FgkjQ3Xc=
-X-Google-Smtp-Source: APXvYqyZw6pEh9lK6SgHYRMwyVB+kdGlXlDoeVipFIgsisWJHKxnMbyQZhsgUlZH2BGfWkmNu4MAqQ==
-X-Received: by 2002:adf:eb8c:: with SMTP id t12mr5680295wrn.84.1566491411300;
-        Thu, 22 Aug 2019 09:30:11 -0700 (PDT)
-Received: from [192.168.1.67] (host81-157-241-155.range81-157.btcentralplus.com. [81.157.241.155])
-        by smtp.gmail.com with ESMTPSA id v12sm49438wrr.87.2019.08.22.09.30.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 09:30:10 -0700 (PDT)
-Subject: Re: [RFC v4 01/18] objtool: Add abstraction for computation of
- symbols offsets
-To:     Raphael Gault <raphael.gault@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jpoimboe@redhat.com
-Cc:     peterz@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com,
-        raph.gault+kdev@gmail.com
-References: <20190816122403.14994-1-raphael.gault@arm.com>
- <20190816122403.14994-2-raphael.gault@arm.com>
-From:   Julien <julien.thierry.kdev@gmail.com>
-Message-ID: <7bdc1178-e916-7d21-eb54-bea27fcadc17@gmail.com>
-Date:   Thu, 22 Aug 2019 17:30:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Thu, 22 Aug 2019 12:30:20 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190822163018euoutp01ed42e5fcd2841474401062c11559ef11~9S6U6LFOX1950419504euoutp01W
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 16:30:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190822163018euoutp01ed42e5fcd2841474401062c11559ef11~9S6U6LFOX1950419504euoutp01W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1566491418;
+        bh=hOUF6Gzqf4+SSBY2i+OpEO1X4NBxnMXVxjifcFB2spM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=FZc1smLqzb3zZa27YKCvH9TrAOzk3JBf+6VsRV9Edal7LQi5dQd86hVxMbYYIvJaO
+         7CpBhaZqUQ6A+mmnPLHFXnLL3Mn+Xvsq3sbpvRGYtAHhiL2jn3zFTEguV4Hc8yE3Z4
+         pKdFxxjM792eRFkGJbxaJTtoKS4S2bBsWMjtXNnM=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190822163017eucas1p274647b13d0f228bb3e37a4e455ef2831~9S6T1giVj2067120671eucas1p2I;
+        Thu, 22 Aug 2019 16:30:17 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id B8.06.04469.813CE5D5; Thu, 22
+        Aug 2019 17:30:16 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190822163016eucas1p126fb54c2234bdd541cfb0b4e41bb5684~9S6S0N6Mk2136721367eucas1p1X;
+        Thu, 22 Aug 2019 16:30:16 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190822163015eusmtrp2776678612bd907e910c8d3db09280d07~9S6SkeoJu2926429264eusmtrp2G;
+        Thu, 22 Aug 2019 16:30:15 +0000 (GMT)
+X-AuditID: cbfec7f2-54fff70000001175-f2-5d5ec3185b42
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 7A.E6.04166.713CE5D5; Thu, 22
+        Aug 2019 17:30:15 +0100 (BST)
+Received: from [106.109.129.180] (unknown [106.109.129.180]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190822163014eusmtip2e6ae918716aa14a03338431c59d73b6d~9S6Rpbg-J2946029460eusmtip2S;
+        Thu, 22 Aug 2019 16:30:14 +0000 (GMT)
+Subject: Re: [PATCH net] ixgbe: fix double clean of tx descriptors with xdp
+To:     William Tu <u9012063@gmail.com>
+Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
+        Eelco Chaudron <echaudro@redhat.com>
+From:   Ilya Maximets <i.maximets@samsung.com>
+Message-ID: <5bcebb64-2bd8-902e-eebe-3a94f317b074@samsung.com>
+Date:   Thu, 22 Aug 2019 19:30:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190816122403.14994-2-raphael.gault@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <CALDO+SaRNMvmXrQqOtNiRsOkgfOQAW4EA2yVgmeoGQto2zvfMQ@mail.gmail.com>
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3fOzs6Gs7dp+WBhtW4Y5qWszofQgqhD90AoFK2lp01y0zZd
+        WR+yvM80NWG4FI0IaxXF8l4pzctmUpJprSxUMMrsullhieY8Sn77Pc//+T/v/4GXJmQfhL50
+        vCaZ02oUCXJKQta2jz1bBy0x0cF/xjcyk+V9JDM61idixrPuIcbVaqOYa1d/EUxZVwbJvO0Z
+        o5ie7DERM/nmr5Bp/5hBMfb7/Yh50VhGMTesdhHTXrmIedXtsXU+W33ztYBtML0TsdceDgtY
+        g6ObYC3mXIrtSE9hjXmDBPutqZdiC6rNiHVZ/A5IIiVb4riEeD2nDQo7KlHVlTiESTWbTjfd
+        clJp6E6AAYlpwKFQWpopMCAJLcM3ENRkDQr5YhRBgdVO8IULQafNRc5aftQ3zwhVCOoqe2f8
+        PxB8ru+amqJpL7wb2toIt8EbrwDj8+/IPUNgCwnm0a/TmygcAE9utSI3S3EYlH9yIbeXxKvg
+        Q164u70QHwbnQIuQH1kAHaVD01YxPgh9uZcpNxPYBy6M3hTyvBTSa65MhwNcREP59RLEp94O
+        hRYHwbMXfLJVi3heApMNFQKez0F/xjDizTkIjNaJGSEcqkeeidzhCOwPdxuD3Ah4G/zM9OfR
+        ExxfFvARPKG41kjwbSnkZMn4HSvh7+OqmQC+8PqrS1SI5KY5h5nmHGOac4zp/7OViDQjHy5F
+        p1ZyuhANdypQp1DrUjTKwNhEtQVNfb/OCZuzHv3sPmZFmEZyD6ndEBMtEyr0ulS1FQFNyL2l
+        +qKpljROkXqG0yYe0aYkcDorWkyTch/p2XkDUTKsVCRzJzguidPOqgJa7JuGBA82P61cHyEK
+        zYiJxfdWqxqVcZqWveObvYI1HlnGPRtGyopH9nd9Pl6YFH2gYJ9X63C2IbXiN5dU1Uc1R5zL
+        3Sk2ePbm73ipXx6xMflwy6qFjuiLJy892pWgRJHgOC/3N99WxTS/zI+KP+R96O4ZPBGq0i9a
+        Fuu3xrkiSqjuH3ovJ3UqRchaQqtT/ANYMhJFegMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRmVeSWpSXmKPExsVy+t/xe7rih+NiDc5NMLD4P/c2i8WXn7fZ
+        Lf60bWC0+HzkOJvF4oXfmC3mnG9hsbhz5SebxZX2n+wW/2/9ZrU49qKFzeLE5vuMFpd3zWGz
+        WHHoBLvFsQViFtcv8Tjwe2xZeZPJY+esu+wei/e8ZPLounGJ2WPTqk42j5PNpR7Tux8ye7zf
+        d5XNo2/LKkaPz5vkArii9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxS
+        UnMyy1KL9O0S9DK2T7nBWrDVrGLf6k9sDYxrdboYOTkkBEwkPu7Yz9zFyMUhJLCUUeL1rw5W
+        iISUxI9fF6BsYYk/17rYIIreM0r0HL3F3sXIwSEs4C1x9CgzSI2IgLLE9IsfGEFqmAW2sEhs
+        3raCCSQhJDCRVeLwr1wQm01AR+LU6iOMIDavgJ3E3FefGUHmsAioSjzvtgcJiwpESBzeMQuq
+        RFDi5MwnLCA2p0CgxO3OyWwgNrOAusSfeZeYIWxxiaYvK1khbHmJ5q2zmScwCs1C0j4LScss
+        JC2zkLQsYGRZxSiSWlqcm55bbKhXnJhbXJqXrpecn7uJERjv24793LyD8dLG4EOMAhyMSjy8
+        J7riYoVYE8uKK3MPMUpwMCuJ8JZNBArxpiRWVqUW5ccXleakFh9iNAX6bSKzlGhyPjAV5ZXE
+        G5oamltYGpobmxubWSiJ83YIHIwREkhPLEnNTk0tSC2C6WPi4JRqYGxP6Zzh+r7CeG7FGy8/
+        HtNJ/F43BRZ2RWzYuuXZ0ZY193/feX86UO8w91bBw2KpHJNSN8fdDBD7xu9VcI3rY20os3Wi
+        mNG3junbLdNLY6Yder4x29dbZrJ92+Ge47s2LeJb8jC13/UX23eHMIEyr5M1E565OnyQ4NzC
+        3PTWel0l0/87IiUp3UosxRmJhlrMRcWJAKyumBoNAwAA
+X-CMS-MailID: 20190822163016eucas1p126fb54c2234bdd541cfb0b4e41bb5684
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce
+References: <CGME20190820151644eucas1p179d6d1da42bb6be0aad8f58ac46624ce@eucas1p1.samsung.com>
+        <20190820151611.10727-1-i.maximets@samsung.com>
+        <CAKgT0Udn0D0_f=SOH2wpBRWV_u4rb1Qe2h7gguXnRNzJ_VkRzg@mail.gmail.com>
+        <625791af-c656-1e42-b60e-b3a5cedcb4c4@samsung.com>
+        <CAKgT0Uc27+ucd=a_sgTmv5g7_+ZTg1zK4isYJ0H7YWQj3d=Ejg@mail.gmail.com>
+        <f7d0f7a5-e664-8b72-99c7-63275aff4c18@samsung.com>
+        <CAKgT0UcCKiM1Ys=vWxctprN7fzWcBCk-PCuKB-8=RThM=CqLSQ@mail.gmail.com>
+        <CALDO+SZCbxEEwCS6MyHk-Cp_LJ33N=QFqwZ8uRm0e-PBRgxRYw@mail.gmail.com>
+        <cbf7c51b-9ce7-6ef6-32c4-981258d4af4c@samsung.com>
+        <CALDO+SaRNMvmXrQqOtNiRsOkgfOQAW4EA2yVgmeoGQto2zvfMQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Raphaël,
-
-On 16/08/19 13:23, Raphael Gault wrote:
-> The jump destination and relocation offset used previously are only
-> reliable on x86_64 architecture. We abstract these computations by calling
-> arch-dependent implementations.
+On 22.08.2019 19:07, William Tu wrote:
+> On Thu, Aug 22, 2019 at 1:17 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+>>
+>> On 22.08.2019 0:38, William Tu wrote:
+>>> On Wed, Aug 21, 2019 at 9:57 AM Alexander Duyck
+>>> <alexander.duyck@gmail.com> wrote:
+>>>>
+>>>> On Wed, Aug 21, 2019 at 9:22 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+>>>>>
+>>>>> On 21.08.2019 4:17, Alexander Duyck wrote:
+>>>>>> On Tue, Aug 20, 2019 at 8:58 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+>>>>>>>
+>>>>>>> On 20.08.2019 18:35, Alexander Duyck wrote:
+>>>>>>>> On Tue, Aug 20, 2019 at 8:18 AM Ilya Maximets <i.maximets@samsung.com> wrote:
+>>>>>>>>>
+>>>>>>>>> Tx code doesn't clear the descriptor status after cleaning.
+>>>>>>>>> So, if the budget is larger than number of used elems in a ring, some
+>>>>>>>>> descriptors will be accounted twice and xsk_umem_complete_tx will move
+>>>>>>>>> prod_tail far beyond the prod_head breaking the comletion queue ring.
+>>>>>>>>>
+>>>>>>>>> Fix that by limiting the number of descriptors to clean by the number
+>>>>>>>>> of used descriptors in the tx ring.
+>>>>>>>>>
+>>>>>>>>> Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
+>>>>>>>>> Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+>>>>>>>>
+>>>>>>>> I'm not sure this is the best way to go. My preference would be to
+>>>>>>>> have something in the ring that would prevent us from racing which I
+>>>>>>>> don't think this really addresses. I am pretty sure this code is safe
+>>>>>>>> on x86 but I would be worried about weak ordered systems such as
+>>>>>>>> PowerPC.
+>>>>>>>>
+>>>>>>>> It might make sense to look at adding the eop_desc logic like we have
+>>>>>>>> in the regular path with a proper barrier before we write it and after
+>>>>>>>> we read it. So for example we could hold of on writing the bytecount
+>>>>>>>> value until the end of an iteration and call smp_wmb before we write
+>>>>>>>> it. Then on the cleanup we could read it and if it is non-zero we take
+>>>>>>>> an smp_rmb before proceeding further to process the Tx descriptor and
+>>>>>>>> clearing the value. Otherwise this code is going to just keep popping
+>>>>>>>> up with issues.
+>>>>>>>
+>>>>>>> But, unlike regular case, xdp zero-copy xmit and clean for particular
+>>>>>>> tx ring always happens in the same NAPI context and even on the same
+>>>>>>> CPU core.
+>>>>>>>
+>>>>>>> I saw the 'eop_desc' manipulations in regular case and yes, we could
+>>>>>>> use 'next_to_watch' field just as a flag of descriptor existence,
+>>>>>>> but it seems unnecessarily complicated. Am I missing something?
+>>>>>>>
+>>>>>>
+>>>>>> So is it always in the same NAPI context?. I forgot, I was thinking
+>>>>>> that somehow the socket could possibly make use of XDP for transmit.
+>>>>>
+>>>>> AF_XDP socket only triggers tx interrupt on ndo_xsk_async_xmit() which
+>>>>> is used in zero-copy mode. Real xmit happens inside
+>>>>> ixgbe_poll()
+>>>>>  -> ixgbe_clean_xdp_tx_irq()
+>>>>>     -> ixgbe_xmit_zc()
+>>>>>
+>>>>> This should be not possible to bound another XDP socket to the same netdev
+>>>>> queue.
+>>>>>
+>>>>> It also possible to xmit frames in xdp_ring while performing XDP_TX/REDIRECT
+>>>>> actions. REDIRECT could happen from different netdev with different NAPI
+>>>>> context, but this operation is bound to specific CPU core and each core has
+>>>>> its own xdp_ring.
+>>>>>
+>>>>> However, I'm not an expert here.
+>>>>> Björn, maybe you could comment on this?
+>>>>>
+>>>>>>
+>>>>>> As far as the logic to use I would be good with just using a value you
+>>>>>> are already setting such as the bytecount value. All that would need
+>>>>>> to happen is to guarantee that the value is cleared in the Tx path. So
+>>>>>> if you clear the bytecount in ixgbe_clean_xdp_tx_irq you could
+>>>>>> theoretically just use that as well to flag that a descriptor has been
+>>>>>> populated and is ready to be cleaned. Assuming the logic about this
+>>>>>> all being in the same NAPI context anyway you wouldn't need to mess
+>>>>>> with the barrier stuff I mentioned before.
+>>>>>
+>>>>> Checking the number of used descs, i.e. next_to_use - next_to_clean,
+>>>>> makes iteration in this function logically equal to the iteration inside
+>>>>> 'ixgbe_xsk_clean_tx_ring()'. Do you think we need to change the later
+>>>>> function too to follow same 'bytecount' approach? I don't like having
+>>>>> two different ways to determine number of used descriptors in the same file.
+>>>>>
+>>>>> Best regards, Ilya Maximets.
+>>>>
+>>>> As far as ixgbe_clean_xdp_tx_irq() vs ixgbe_xsk_clean_tx_ring(), I
+>>>> would say that if you got rid of budget and framed things more like
+>>>> how ixgbe_xsk_clean_tx_ring was framed with the ntc != ntu being
+>>>> obvious I would prefer to see us go that route.
+>>>>
+>>>> Really there is no need for budget in ixgbe_clean_xdp_tx_irq() if you
+>>>> are going to be working with a static ntu value since you will only
+>>>> ever process one iteration through the ring anyway. It might make more
+>>>> sense if you just went through and got rid of budget and i, and
+>>>> instead used ntc and ntu like what was done in
+>>>> ixgbe_xsk_clean_tx_ring().
+>>>>
+>>>> Thanks.
+>>>>
+>>>> - Alex
+>>>
+>>> Not familiar with the driver details.
+>>> I tested this patch and the issue mentioned in OVS mailing list.
+>>> https://www.mail-archive.com/ovs-dev@openvswitch.org/msg35362.html
+>>> and indeed the problem goes away.
+>>
+>> Good. Thanks for testing!
+>>
+>>> But I saw a huge performance drop,
+>>> my AF_XDP tx performance drops from >9Mpps to <5Mpps.
+>>
+>> I didn't expect so big performance difference with this change.
+>> What is your test scenario?
 > 
-> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-> ---
->   tools/objtool/arch.h            |  6 ++++++
->   tools/objtool/arch/x86/decode.c | 11 +++++++++++
->   tools/objtool/check.c           | 15 ++++++++++-----
->   3 files changed, 27 insertions(+), 5 deletions(-)
+> I was using OVS with dual port NIC, setting one OpenFlow rule
+> in_port=eth2 actions=output:eth3
+> and eth2 for rx and measure eth3 tx
+> 'sar -n DEV 1'  shows pretty huge drop on eth3 tx.
+
+'sar' just parses net procfs to obtain interface stats, but interface stats
+are not correct due to this bug (same packets accounted several times).
+
 > 
-> diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
-> index ced3765c4f44..a9a50a25ca66 100644
-> --- a/tools/objtool/arch.h
-> +++ b/tools/objtool/arch.h
-> @@ -66,6 +66,8 @@ struct stack_op {
->   	struct op_src src;
->   };
->   
-> +struct instruction;
-> +
->   void arch_initial_func_cfi_state(struct cfi_state *state);
->   
->   int arch_decode_instruction(struct elf *elf, struct section *sec,
-> @@ -75,4 +77,8 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
->   
->   bool arch_callee_saved_reg(unsigned char reg);
->   
-> +unsigned long arch_jump_destination(struct instruction *insn);
-> +
-> +unsigned long arch_dest_rela_offset(int addend);
-> +
->   #endif /* _ARCH_H */
-> diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-> index 0567c47a91b1..fa33b3465722 100644
-> --- a/tools/objtool/arch/x86/decode.c
-> +++ b/tools/objtool/arch/x86/decode.c
-> @@ -11,6 +11,7 @@
->   #include "lib/inat.c"
->   #include "lib/insn.c"
->   
-> +#include "../../check.h"
->   #include "../../elf.h"
->   #include "../../arch.h"
->   #include "../../warn.h"
-> @@ -66,6 +67,11 @@ bool arch_callee_saved_reg(unsigned char reg)
->   	}
->   }
->   
-> +unsigned long arch_dest_rela_offset(int addend)
-> +{
-> +	return addend + 4;
-> +}
-> +
->   int arch_decode_instruction(struct elf *elf, struct section *sec,
->   			    unsigned long offset, unsigned int maxlen,
->   			    unsigned int *len, enum insn_type *type,
-> @@ -497,3 +503,8 @@ void arch_initial_func_cfi_state(struct cfi_state *state)
->   	state->regs[16].base = CFI_CFA;
->   	state->regs[16].offset = -8;
->   }
-> +
-> +unsigned long arch_jump_destination(struct instruction *insn)
-> +{
-> +	return insn->offset + insn->len + insn->immediate;
-> +}
-> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-> index 176f2f084060..479fab46b656 100644
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -563,7 +563,7 @@ static int add_jump_destinations(struct objtool_file *file)
->   					       insn->len);
->   		if (!rela) {
->   			dest_sec = insn->sec;
-> -			dest_off = insn->offset + insn->len + insn->immediate;
-> +			dest_off = arch_jump_destination(insn);
->   		} else if (rela->sym->type == STT_SECTION) {
->   			dest_sec = rela->sym->sec;
->   			dest_off = rela->addend + 4;
-> @@ -659,7 +659,7 @@ static int add_call_destinations(struct objtool_file *file)
->   		rela = find_rela_by_dest_range(insn->sec, insn->offset,
->   					       insn->len);
->   		if (!rela) {
-> -			dest_off = insn->offset + insn->len + insn->immediate;
-> +			dest_off = arch_jump_destination(insn);
->   			insn->call_dest = find_symbol_by_offset(insn->sec,
->   								dest_off);
->   
-> @@ -672,14 +672,19 @@ static int add_call_destinations(struct objtool_file *file)
->   			}
->   
->   		} else if (rela->sym->type == STT_SECTION) {
-> +			/*
-> +			 * the original x86_64 code adds 4 to the rela->addend
-> +			 * which is not needed on arm64 architecture.
-> +			 */
-
-I'm not sure this is worth mentioning in generic code. You might include 
-it in the commit message to justify the change.
-
-> +			dest_off = arch_dest_rela_offset(rela->addend);
->   			insn->call_dest = find_symbol_by_offset(rela->sym->sec,
-> -								rela->addend+4);
-> +								dest_off);
->   			if (!insn->call_dest ||
->   			    insn->call_dest->type != STT_FUNC) {
-> -				WARN_FUNC("can't find call dest symbol at %s+0x%x",
-> +				WARN_FUNC("can't find call dest symbol at %s+0x%lx",
->   					  insn->sec, insn->offset,
->   					  rela->sym->sec->name,
-> -					  rela->addend + 4);
-> +					  dest_off);
->   				return -1;
->   			}
->   		} else
+>> Is it possible that you're accounting same
+>> packet several times due to broken completion queue?
 > 
-
-Otherwise, the change looks good to me.
-
-Thanks,
-
--- 
-Julien Thierry
+> That's possible.
+> Let me double check on your v2 patch.
+> 
+> @Eelco: do you also see some performance difference?
+> 
+> Regards,
+> William
+> 
+>>
+>> Looking at samples/bpf/xdpsock_user.c:complete_tx_only(), it accounts
+>> sent packets (tx_npkts) by accumulating results of xsk_ring_cons__peek()
+>> for completion queue, so it's not a trusted source of pps information.
+>>
+>> Best regards, Ilya Maximets.
+>>
+>>>
+>>> Tested using kernel 5.3.0-rc3+
+>>> 03:00.0 Ethernet controller: Intel Corporation Ethernet Controller
+>>> 10-Gigabit X540-AT2 (rev 01)
+>>> Subsystem: Intel Corporation Ethernet 10G 2P X540-t Adapter
+>>> Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr-
+>>> Stepping- SERR- FastB2B- DisINTx+
+>>>
+>>> Regards,
+>>> William
+> 
+> 
