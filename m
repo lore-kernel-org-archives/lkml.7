@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F8DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE19C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5BF5233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 554E9233FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493918;
-	bh=ugLRNjODFh7NeHT6ZUhx8WzYAdA9XRdwr1KBbcJHyaw=;
+	s=default; t=1566493920;
+	bh=oWRieHLty+Rj5FWIVKIVjH/MKr+0xARdLxI9ID2S5yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nG9JBjsny3cIOg0J/+WRWEANCz1HpbINYNLjIcTzjYkKEYmU5HEjqgPJ7WFKk3FWm
-	 XNRp11exG4+hBwSYwlbKfTEAaWeW34hf6EIqDjp5YL/FQ2Epvz1Xqz7boToU4W56/P
-	 ZgpHASKBWb4+sCH+X4BO2fq7swyY5SGoxXCTEB8I=
+	b=Px1YkVyqye9OJB+QQu4OXWcxt7j+5iyTv6pg7C5EEoz5FLB7++8cENhmmiFTUvmfX
+	 WR5en5fMuDa0r9F1rdPOc8Vsna7nY41oXTe/Ek5GmQze1CpY5jl2ekN9AnJtsY9PC9
+	 VhasHRVUA3BhCoc6v9hG5dQb/n235re5gbuoMUY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387568AbfHVRL4 (ORCPT
+        id S2390946AbfHVRLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:11:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59460 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:11:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390702AbfHVRJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:13 -0400
+        id S1730641AbfHVRJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:14 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1979233FC;
-        Thu, 22 Aug 2019 17:09:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEF5623404;
+        Thu, 22 Aug 2019 17:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493753;
-        bh=ugLRNjODFh7NeHT6ZUhx8WzYAdA9XRdwr1KBbcJHyaw=;
+        s=default; t=1566493754;
+        bh=oWRieHLty+Rj5FWIVKIVjH/MKr+0xARdLxI9ID2S5yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zoke+pYDUIgaJFrilzCkfHyZfxEixYhtmVrpKn8BM6uix6GzLI96qpEQa7amAZRVp
-         +cMYrXZ4TCRaH0/qfcPJJXYF+dZkiv2ib2ASozv4kYbtabZAw0OrlvVD1ff+5PEImn
-         aw8JLjc8iRobP0nZet8msKKE0BOlvHbHTizegKZI=
+        b=XTM+73UOl/MexJOUpssWSdUxxG1einAMRXSoUTgiiOwHt2NtdQHMj8U0R86SYNZE6
+         OeSuxD+BlBhSQmQAtt+mkk9PRHlbHwdplJtiylKH4pUe8c3upmqNCT2gNq77OfaeTs
+         G0XlXz3RcDsbyVxfMvNVKI7EggYmpObp40bHMJGM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 108/135] bonding: Add vlan tx offload to hw_enc_features
-Date:   Thu, 22 Aug 2019 13:07:44 -0400
-Message-Id: <20190822170811.13303-109-sashal@kernel.org>
+Subject: [PATCH 5.2 110/135] net/mlx4_en: fix a memory leak bug
+Date:   Thu, 22 Aug 2019 13:07:46 -0400
+Message-Id: <20190822170811.13303-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,63 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit d595b03de2cb0bdf9bcdf35ff27840cc3a37158f ]
+[ Upstream commit 48ec7014c56e5eb2fbf6f479896143622d834f3b ]
 
-As commit 30d8177e8ac7 ("bonding: Always enable vlan tx offload")
-said, we should always enable bonding's vlan tx offload, pass the
-vlan packets to the slave devices with vlan tci, let them to handle
-vlan implementation.
+In mlx4_en_config_rss_steer(), 'rss_map->indir_qp' is allocated through
+kzalloc(). After that, mlx4_qp_alloc() is invoked to configure RSS
+indirection. However, if mlx4_qp_alloc() fails, the allocated
+'rss_map->indir_qp' is not deallocated, leading to a memory leak bug.
 
-Now if encapsulation protocols like VXLAN is used, skb->encapsulation
-may be set, then the packet is passed to vlan device which based on
-bonding device. However in netif_skb_features(), the check of
-hw_enc_features:
+To fix the above issue, add the 'qp_alloc_err' label to free
+'rss_map->indir_qp'.
 
-	 if (skb->encapsulation)
-                 features &= dev->hw_enc_features;
-
-clears NETIF_F_HW_VLAN_CTAG_TX/NETIF_F_HW_VLAN_STAG_TX. This results
-in same issue in commit 30d8177e8ac7 like this:
-
-vlan_dev_hard_start_xmit
-  -->dev_queue_xmit
-    -->validate_xmit_skb
-      -->netif_skb_features //NETIF_F_HW_VLAN_CTAG_TX is cleared
-      -->validate_xmit_vlan
-        -->__vlan_hwaccel_push_inside //skb->tci is cleared
-...
- --> bond_start_xmit
-   --> bond_xmit_hash //BOND_XMIT_POLICY_ENCAP34
-     --> __skb_flow_dissect // nhoff point to IP header
-        -->  case htons(ETH_P_8021Q)
-             // skb_vlan_tag_present is false, so
-             vlan = __skb_header_pointer(skb, nhoff, sizeof(_vlan),
-             //vlan point to ip header wrongly
-
-Fixes: b2a103e6d0af ("bonding: convert to ndo_fix_features")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4931c6ef04b4 ("net/mlx4_en: Optimized single ring steering")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/mellanox/mlx4/en_rx.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index b0aab3a0a1bfa..f183cadd14e3d 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -1113,6 +1113,8 @@ static void bond_compute_features(struct bonding *bond)
- done:
- 	bond_dev->vlan_features = vlan_features;
- 	bond_dev->hw_enc_features = enc_features | NETIF_F_GSO_ENCAP_ALL |
-+				    NETIF_F_HW_VLAN_CTAG_TX |
-+				    NETIF_F_HW_VLAN_STAG_TX |
- 				    NETIF_F_GSO_UDP_L4;
- 	bond_dev->gso_max_segs = gso_max_segs;
- 	netif_set_gso_max_size(bond_dev, gso_max_size);
+diff --git a/drivers/net/ethernet/mellanox/mlx4/en_rx.c b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
+index 6c01314e87b09..db3552f2d0877 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
+@@ -1187,7 +1187,7 @@ int mlx4_en_config_rss_steer(struct mlx4_en_priv *priv)
+ 	err = mlx4_qp_alloc(mdev->dev, priv->base_qpn, rss_map->indir_qp);
+ 	if (err) {
+ 		en_err(priv, "Failed to allocate RSS indirection QP\n");
+-		goto rss_err;
++		goto qp_alloc_err;
+ 	}
+ 
+ 	rss_map->indir_qp->event = mlx4_en_sqp_event;
+@@ -1241,6 +1241,7 @@ int mlx4_en_config_rss_steer(struct mlx4_en_priv *priv)
+ 		       MLX4_QP_STATE_RST, NULL, 0, 0, rss_map->indir_qp);
+ 	mlx4_qp_remove(mdev->dev, rss_map->indir_qp);
+ 	mlx4_qp_free(mdev->dev, rss_map->indir_qp);
++qp_alloc_err:
+ 	kfree(rss_map->indir_qp);
+ 	rss_map->indir_qp = NULL;
+ rss_err:
 -- 
 2.20.1
 
