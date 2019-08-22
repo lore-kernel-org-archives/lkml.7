@@ -2,87 +2,203 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5103C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71768C41514
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B512339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A09123404
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dMcZkQt5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="grizZo5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389752AbfHVVge (ORCPT
+        id S2393036AbfHVVmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:36:34 -0400
-Received: from ozlabs.org ([203.11.71.1]:53367 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730759AbfHVVge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:36:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46DyXG6wFFz9s3Z;
-        Fri, 23 Aug 2019 07:36:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566509791;
-        bh=hsjC5tg0AUO4VczoJ0W3z6ZBbs1wLKV5JQGRElboUTs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dMcZkQt5aw0Pl3RhOslmSQPXEna+iVKEMf9UIoV+FQnELhYRSQgMxpLXWXJ/tTFV8
-         bzIuLxdf7/YrRw/h0M3uOT4d2P7pUamvcgx1wTzvtlDODGhoosg2X2zHuA8zBQ9oo4
-         ssUOZKjzPkqHNufY9NGTwiRgzYcR40jVRwWh6vsjY5LgunlgQUT/mrw+3YCiVvMq0+
-         1PODUpkeTJTXJO93JA2fFnFzu5mCjy+L/B6ZjzCOd8ifQeSX3XurPvhnDUjA+7ZlTS
-         qxhcg0yRwA+ZJMvbA9Vzw3p3+ZcBFtuJCJm9WarcbgFAkrZFyKTG2SE7QzzS+n5ylN
-         j7IPiBGL1aTOA==
-Date:   Fri, 23 Aug 2019 07:36:22 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the sunxi tree
-Message-ID: <20190823073545.647ec7d1@canb.auug.org.au>
+        Thu, 22 Aug 2019 17:42:18 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:35623 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391202AbfHVVmS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 17:42:18 -0400
+Received: by mail-yw1-f68.google.com with SMTP id g19so3027929ywe.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 14:42:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3a8FQUWtnJl6Iq1aVRQEs3dAOt9/WevgkB8EWfGCUcE=;
+        b=grizZo5oI+1N6WWP6+PJp924bXFGLnRU6WYtg/VskEj5bdsxPg2Cuv/vIK8llLGBBN
+         e/dFzbrE5kcuz0gMted4Ly4AcihzI7l9gzQKrSMkrukJoDzLAEVSkyj8iRkYUzG+AFBi
+         s/xHtZxRSDMgiDggFdBt+KTK0S74r52OLTNbIAYMdBwcRdRWnXVoWTf41FVM1gLbKAPj
+         0J0vZtbozG7ulxZD8X8gcfkmi2pY7BVWAIIdT95KHmrw7Aitc2aWpm/h7XH9XRBA/QPT
+         VaROpVzmvt91ubqSHQww93vy0jwuKMk2eXKBztsYODpAz+MTJxkWQ4umDoLSp4s/UB7O
+         xWBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3a8FQUWtnJl6Iq1aVRQEs3dAOt9/WevgkB8EWfGCUcE=;
+        b=IdxzrapzxYFb2NIG2ge5jVGms+x166/ojukRxnqPlgSv8Kp+dWWWo9g+8JLjooZO5a
+         T7+PwM8z2SpI+PCOdC2xxqp31kv1/QsyuUFiLdBVRsAgDJvQFA6FmzBZ2ELD7v88Xlhk
+         Kq8PocRjyHfGRWuUnpLpRVrmBHRWZe+0FFEEmw4KVr76HKc063/A3VWg5iUOY3A7B467
+         UgfBnrsYCZpKXV8jSrkfBCSgfHLE0H3+6uy2ISKH78q9TMOwOg2g9rvuyXtkONnYT8I1
+         NjoxIJFIXQQ9CZC19vLw42Xq65xOS5HLJR/vp9Q5DUpgZ1nWjGx2YTTpibzt35+yNE1D
+         nCPg==
+X-Gm-Message-State: APjAAAUu8/zDwjhbiqd8ZyBQqvS9vQ/Z3k7ySgfroJ+C+oySHcNqb1em
+        rO+ytRIDGKgT1Lpn0VGTI6Uh/twBlRKVM9TyMymZKNixQyU=
+X-Google-Smtp-Source: APXvYqzOWWP600qdObq6QCAm813NyIM4jRTnQcgARF2erYpjecwaSvWVA8y9igIls+9CLcT9GZwM6biJ96cxBiSCNIg=
+X-Received: by 2002:a0d:cb42:: with SMTP id n63mr1180557ywd.205.1566510136417;
+ Thu, 22 Aug 2019 14:42:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/aTGv3uv8tSXDXzl4uI2kL1T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190822200030.141272-1-khazhy@google.com> <20190822200030.141272-2-khazhy@google.com>
+In-Reply-To: <20190822200030.141272-2-khazhy@google.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Thu, 22 Aug 2019 14:42:05 -0700
+Message-ID: <CALvZod6DB5PfGuGcks2Xr7PTrDwdUFnkgwsfBvAxYds5EX2wRA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] fuse: pass gfp flags to fuse_request_alloc
+To:     Khazhismel Kumykov <khazhy@google.com>
+Cc:     miklos@szeredi.hu, linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/aTGv3uv8tSXDXzl4uI2kL1T
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Aug 22, 2019 at 1:00 PM Khazhismel Kumykov <khazhy@google.com> wrote:
+>
+> Instead of having a helper per flag
+>
+> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
 
-Hi all,
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-Commit
-
-  c60e09f77c83 ("ARM: dts: sun8i: a83t: Enable HDMI output on Cubietruck Pl=
-us")
-
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/aTGv3uv8tSXDXzl4uI2kL1T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1fCtYACgkQAVBC80lX
-0Gzdtgf/Rvr/o6VttShgxqR7ITjaIT9PuuPBDvrNx8VJgNAXf4UN4v0XzfAVxZpJ
-XpjAKzUpUuSZ4ZbPzihe9GxTt6SgDOH6Pu4XdQDFXE0lWA52fLs85tSUploy3bPH
-8PXGUfOwSHuChb6IW+UOwzQSuF6HEBcmbIVaooXUxqdpTFM/TJU33UxBbso7DIjW
-5Ib7w77LOCAqMOtyEXayJVyoBQ9+rWJuwFjugq2xylrxHlTQ7W62psoVKpBqRtOa
-E2zEZEQNHYUN5PAhvIGmTjSYfkkBJjUd03sdpmG1J07RE0onG7jCELoBmi86E3Eq
-r6sO0POK+e+BhvxrsniEjP04aJNYHw==
-=SSgb
------END PGP SIGNATURE-----
-
---Sig_/aTGv3uv8tSXDXzl4uI2kL1T--
+> ---
+>  fs/fuse/dev.c    | 16 +++-------------
+>  fs/fuse/file.c   |  6 +++---
+>  fs/fuse/fuse_i.h |  4 +---
+>  fs/fuse/inode.c  |  4 ++--
+>  4 files changed, 9 insertions(+), 21 deletions(-)
+>
+> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+> index ea8237513dfa..c957620ce7ba 100644
+> --- a/fs/fuse/dev.c
+> +++ b/fs/fuse/dev.c
+> @@ -66,7 +66,7 @@ static struct page **fuse_req_pages_alloc(unsigned int npages, gfp_t flags,
+>         return pages;
+>  }
+>
+> -static struct fuse_req *__fuse_request_alloc(unsigned npages, gfp_t flags)
+> +struct fuse_req *fuse_request_alloc(unsigned int npages, gfp_t flags)
+>  {
+>         struct fuse_req *req = kmem_cache_zalloc(fuse_req_cachep, flags);
+>         if (req) {
+> @@ -90,18 +90,8 @@ static struct fuse_req *__fuse_request_alloc(unsigned npages, gfp_t flags)
+>         }
+>         return req;
+>  }
+> -
+> -struct fuse_req *fuse_request_alloc(unsigned npages)
+> -{
+> -       return __fuse_request_alloc(npages, GFP_KERNEL);
+> -}
+>  EXPORT_SYMBOL_GPL(fuse_request_alloc);
+>
+> -struct fuse_req *fuse_request_alloc_nofs(unsigned npages)
+> -{
+> -       return __fuse_request_alloc(npages, GFP_NOFS);
+> -}
+> -
+>  static void fuse_req_pages_free(struct fuse_req *req)
+>  {
+>         if (req->pages != req->inline_pages)
+> @@ -201,7 +191,7 @@ static struct fuse_req *__fuse_get_req(struct fuse_conn *fc, unsigned npages,
+>         if (fc->conn_error)
+>                 goto out;
+>
+> -       req = fuse_request_alloc(npages);
+> +       req = fuse_request_alloc(npages, GFP_KERNEL);
+>         err = -ENOMEM;
+>         if (!req) {
+>                 if (for_background)
+> @@ -310,7 +300,7 @@ struct fuse_req *fuse_get_req_nofail_nopages(struct fuse_conn *fc,
+>         wait_event(fc->blocked_waitq, fc->initialized);
+>         /* Matches smp_wmb() in fuse_set_initialized() */
+>         smp_rmb();
+> -       req = fuse_request_alloc(0);
+> +       req = fuse_request_alloc(0, GFP_KERNEL);
+>         if (!req)
+>                 req = get_reserved_req(fc, file);
+>
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index 5ae2828beb00..572d8347ebcb 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -50,7 +50,7 @@ struct fuse_file *fuse_file_alloc(struct fuse_conn *fc)
+>                 return NULL;
+>
+>         ff->fc = fc;
+> -       ff->reserved_req = fuse_request_alloc(0);
+> +       ff->reserved_req = fuse_request_alloc(0, GFP_KERNEL);
+>         if (unlikely(!ff->reserved_req)) {
+>                 kfree(ff);
+>                 return NULL;
+> @@ -1703,7 +1703,7 @@ static int fuse_writepage_locked(struct page *page)
+>
+>         set_page_writeback(page);
+>
+> -       req = fuse_request_alloc_nofs(1);
+> +       req = fuse_request_alloc(1, GFP_NOFS);
+>         if (!req)
+>                 goto err;
+>
+> @@ -1923,7 +1923,7 @@ static int fuse_writepages_fill(struct page *page,
+>                 struct fuse_inode *fi = get_fuse_inode(inode);
+>
+>                 err = -ENOMEM;
+> -               req = fuse_request_alloc_nofs(FUSE_REQ_INLINE_PAGES);
+> +               req = fuse_request_alloc(FUSE_REQ_INLINE_PAGES, GFP_NOFS);
+>                 if (!req) {
+>                         __free_page(tmp_page);
+>                         goto out_unlock;
+> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> index 24dbca777775..8080a51096e9 100644
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -902,9 +902,7 @@ void __exit fuse_ctl_cleanup(void);
+>  /**
+>   * Allocate a request
+>   */
+> -struct fuse_req *fuse_request_alloc(unsigned npages);
+> -
+> -struct fuse_req *fuse_request_alloc_nofs(unsigned npages);
+> +struct fuse_req *fuse_request_alloc(unsigned int npages, gfp_t flags);
+>
+>  bool fuse_req_realloc_pages(struct fuse_conn *fc, struct fuse_req *req,
+>                             gfp_t flags);
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index 4bb885b0f032..5afd1872b8b1 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -1177,13 +1177,13 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
+>         /* Root dentry doesn't have .d_revalidate */
+>         sb->s_d_op = &fuse_dentry_operations;
+>
+> -       init_req = fuse_request_alloc(0);
+> +       init_req = fuse_request_alloc(0, GFP_KERNEL);
+>         if (!init_req)
+>                 goto err_put_root;
+>         __set_bit(FR_BACKGROUND, &init_req->flags);
+>
+>         if (is_bdev) {
+> -               fc->destroy_req = fuse_request_alloc(0);
+> +               fc->destroy_req = fuse_request_alloc(0, GFP_KERNEL);
+>                 if (!fc->destroy_req)
+>                         goto err_free_init_req;
+>         }
+> --
+> 2.23.0.187.g17f5b7556c-goog
+>
