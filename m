@@ -2,120 +2,191 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD67AC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C518EC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A069A21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:53:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566471208;
-	bh=MMLQr7JSx5SsoXIo0mG7WnY9nJFzHjYEQB4fT8kj/38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Wh0C3/PgzkoBziwB7GgogJe5cdNhmM4viAI6CIseTP10qyszE9Te5qOWPFYt/IfNl
-	 p3rajvkT7t/N2t6xzn26YkFN34l5jqc5nfb/6uYizorp1mM4Wrtkg6tyVD0WbFg0Xd
-	 HTUlqfmWDyJzqc/dostzyTfZ/s/YPulGkuGGuDzQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9632F21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:54:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="ACG99ANs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387909AbfHVKx1 (ORCPT
+        id S2387917AbfHVKyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 06:53:27 -0400
-Received: from mail-wm1-f97.google.com ([209.85.128.97]:54456 "EHLO
-        mail-wm1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732595AbfHVKx0 (ORCPT
+        Thu, 22 Aug 2019 06:54:15 -0400
+Received: from mx-rz-3.rrze.uni-erlangen.de ([131.188.11.22]:52875 "EHLO
+        mx-rz-3.rrze.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731964AbfHVKyO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:53:26 -0400
-Received: by mail-wm1-f97.google.com with SMTP id p74so5140713wme.4
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 03:53:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VCTHzgx28DS8kDSwqE8s4qzfBppKuuGKJAfrjTj6g0M=;
-        b=sNcfjNVTOhE1MCqfpOXoSjWt/gheE7SkzksxTjLAi8DorfVGhtIhgIV5qQd7urZUHV
-         PzYt9ejzutDeWU3XrLS37gDnqmfpr2eB/608T5Tvn8vSWkLeIq280wCkIdjIMlZ3Trap
-         ebucJWJGv4E942xI6ncAKncU5qheg6RyqOshWXkW2KBV5Th5QuIvzCEraiUel6jZrN4p
-         WFG2PtMYoHZRdZfQV3os4y55+KdmQ3+nb+XJWaHU70tx9J+6Z3kFgFBNSLHKstMYXVOK
-         sNm5Kb46z9ano2Og7gvmktgS+Lrw4OJwlV0idVZWznizhmehulmg+S7oiaynevVDpr23
-         0sYQ==
-X-Gm-Message-State: APjAAAUUczICedaN0GprUpRmCv8wFB1MBxq4QfoyijpPshtj5Tv73oKw
-        FpfcSA+a/cjyVSOqmWg9jDkbOstecq0Fqc6WAwzbibFgXF42cV4VV7lvTvh5El9B6g==
-X-Google-Smtp-Source: APXvYqzn6IeKLGMdshW7rZXERaLcomrQtLfiJCz/AJBBbt5lUZMP5qyiqUaAV4NVlfvhHjYhQV+dRMiRbyFd
-X-Received: by 2002:a1c:6a0b:: with SMTP id f11mr5119257wmc.87.1566471204690;
-        Thu, 22 Aug 2019 03:53:24 -0700 (PDT)
-Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
-        by smtp-relay.gmail.com with ESMTPS id b135sm29173wmg.32.2019.08.22.03.53.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 03:53:24 -0700 (PDT)
-X-Relaying-Domain: sirena.org.uk
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i0kia-0004i3-8e; Thu, 22 Aug 2019 10:53:24 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D39D22742A5E; Thu, 22 Aug 2019 11:53:22 +0100 (BST)
-Date:   Thu, 22 Aug 2019 11:53:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Takashi Iwai <tiwai@suse.de>, spapothi@codeaurora.org,
-        bgoswami@codeaurora.org, plai@codeaurora.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com
-Subject: Re: [PATCH v2 3/4] ASoC: qdsp6: q6afe-dai: Update max rate for slim
- and tdm dais
-Message-ID: <20190822105322.GA4630@sirena.co.uk>
-References: <20190822095653.7200-1-srinivas.kandagatla@linaro.org>
- <20190822095653.7200-4-srinivas.kandagatla@linaro.org>
- <s5h7e75v7en.wl-tiwai@suse.de>
- <923f1d65-d908-c64c-3109-0da1938d3824@linaro.org>
+        Thu, 22 Aug 2019 06:54:14 -0400
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx-rz-3.rrze.uni-erlangen.de (Postfix) with ESMTPS id 46DhH82Zbrz1yLF;
+        Thu, 22 Aug 2019 12:54:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2013;
+        t=1566471252; bh=+EKzIqc2mh/WhokNQXrdejfhIJXVgnQbt937LPkohsc=;
+        h=Subject:To:References:From:Date:In-Reply-To:From:To:CC:Subject;
+        b=ACG99ANsUZ9frOWDbWMLGF/aIfJ9VrUT0tpkmy8Nn7x2Fcj26Yh9HlyUs6hr2c6Vg
+         tYOCtaMQs9gbMKLtvoXfwqEzMKX8dteM+/6xANzdvPHHNmBO25BCqp+t0vMcd7nKyg
+         d0A6CGmH9aajxEbZ8BVm69C50We3xtlriKfWg0yHrJw0Ov44GJVGWaAeDCmwljPoY/
+         czg/vLuJDEM5MXnznuBa/zdrT+7hGkhvsvF+6VkNYBw+Vy05M3djqx8u/yWhqzEG2e
+         dc4BBYlk+xaWxJJDgVpVxLe6JWMfSJSvVrZGVoXJlw9eCC+psBCPS/WvYS/mqbNei1
+         gSE9CWQvobH0g==
+X-Virus-Scanned: amavisd-new at boeck2.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 87.190.42.42
+Received: from [10.0.0.25] (unknown [87.190.42.42])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: U2FsdGVkX1/4aPYtrEMaX/srkMa7rgnSls7X7ieXjzw=)
+        by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 46DhH54BZDz1y69;
+        Thu, 22 Aug 2019 12:54:09 +0200 (CEST)
+Subject: Re: Status of Subsystems
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com
+References: <2529f953-305f-414b-5969-d03bf20892c4@fau.de>
+ <20190820131422.2navbg22etf7krxn@pali>
+ <3cf18665-7669-a33c-a718-e0917fa6d1b9@fau.de>
+ <20190820171550.GE10232@mit.edu>
+ <57a7ae11-282f-8b93-355c-4bc839f76b23@metux.net>
+From:   Sebastian Duda <sebastian.duda@fau.de>
+Message-ID: <f0022b73-6199-cff2-fe78-0818062ef5be@fau.de>
+Date:   Thu, 22 Aug 2019 12:54:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
-Content-Disposition: inline
-In-Reply-To: <923f1d65-d908-c64c-3109-0da1938d3824@linaro.org>
-X-Cookie: You dialed 5483.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <57a7ae11-282f-8b93-355c-4bc839f76b23@metux.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---T4sUOijqQbZv57TR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+below is a list of files explicitly mentioned twice (or more) in the 
+MAINTAINERS file.
 
-On Thu, Aug 22, 2019 at 11:45:48AM +0100, Srinivas Kandagatla wrote:
-> On 22/08/2019 11:09, Takashi Iwai wrote:
+Kind regards
+Sebastian
 
-> > This will support a lot more than advertised, e.g. it contains 64000Hz
-> > or 22050Hz.  Is this supposed?  If yes, mention it clearly in the
-> > changelog, too.
+On 21.08.19 14:10, Enrico Weigelt, metux IT consult wrote:
+> On 20.08.19 19:15, Theodore Y. Ts'o wrote:
+> 
+> Hi,
+> 
+>> There are some files which have no official
+>> owner, and there are also some files which may be modified by more
+>> than one subsystem.
+> 
+> hmm, wouldn't it be better to alway have explicit maintainers ?
+> 
+> I recall some discussion few weeks ago on some of my patches, where it
+> turned out that amm acts as fallback for a lot of code that doesn't have
+> a maintainer.
+> 
+> @Sebastian: maybe you could also create reports for quickly identifying
+> those cases.
+> 
+>> We certainly don't talk about "inheritance" when we talk about
+>> maintainers and sub-maintainers. 
+> 
+> What's the exact definition of the term "sub-maintainer" ?
+> 
+> Somebody who's maintaining some defined part of something bigger
+> (eg. a driver within some subsystem, some platform within some
+> arch, etc) or kinda deputee maintainer ?
+> 
+>> Furthermore, the relationships,
+>> processes, and workflows between a particular maintainer and their
+>> submaintainers can be unique to a particular maintainer.
+> 
+> Can we somehow find some (semi-formal) description for those
+> relationships and workflows, so it's easier to learn about them
+> when some is new to some particular area ?
+> 
+> (I'd volounteer maintaining such documentation, if the individual
+> maintainers feed me the necessary information ;-)).
+> 
+> 
+> --mtx
+> 
 
-> Some of the rates inbetween are not in the DSP supported rate list for TDM.
-
-> DSP should return error if we try to set any unsupported rate!
-
-The goal with the capabilities is that we should never get as far as
-trying to actually set an unsupported rate, we should figure out earlier
-on that it won't work and never even try.
-
---T4sUOijqQbZv57TR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1edB0ACgkQJNaLcl1U
-h9CyZQf+NkxJ3s3y4A36V4wjspMiCTbPJ1AjcV6Gd6tv7I1R+qKTpJkPTC9Z9rMb
-7iMb065hO/nn885r+VvMF66Qihouou4XieX8RMUxUvjAA6v4+napihPwiZOGFIW6
-c5rUCzCzZFK4jXD71dMOhOlIJENcKgXdgBQG+9fIfDAPNLHp/4RCWEc9PUDJ5f6w
-UW6/aGyZlXypfQxEpsw9maZoYV3VZhCp+uJ1++P7Ps6gjqU6RrcPGRnGm7ZQ+iWk
-YKkLmgj3q1FxfNYzxEmXCRNg7mwW9jvGmO85/DD0YtUpl2T0TMOBuzyzkaqqtYj4
-IXCrbdaghj8kBw2QyXbzZ7I13DNbag==
-=Dx3p
------END PGP SIGNATURE-----
-
---T4sUOijqQbZv57TR--
+Documentation/security/keys/trusted-encrypted.rst
+drivers/power/supply/bq27xxx_battery.c
+tools/power/acpi/
+include/linux/lockd/
+net/sunrpc/
+drivers/i2c/busses/i2c-qcom-geni.c
+drivers/block/virtio_blk.c
+Documentation/devicetree/bindings/mfd/atmel-usart.txt
+Documentation/i2c/busses/i2c-ali1563
+include/linux/hippidevice.h
+Documentation/PCI/pci-error-recovery.rst
+include/linux/vga*
+fs/nfs_common/
+include/linux/pm.h
+drivers/crypto/virtio/
+include/linux/mlx5/
+drivers/media/tuners/tda8290.*
+drivers/crypto/nx/Kconfig
+arch/x86/include/asm/pvclock-abi.h
+drivers/scsi/53c700*
+fs/lockd/
+drivers/staging/iio/
+drivers/i2c/busses/i2c-omap.c
+Documentation/admin-guide/ras.rst
+include/acpi/
+drivers/staging/greybus/spi.c
+drivers/base/power/
+include/uapi/linux/media.h
+include/uapi/linux/cciss*.h
+include/linux/suspend.h
+include/uapi/linux/uvcvideo.h
+include/trace/events/xdp.h
+drivers/staging/greybus/spilib.c
+include/linux/cfag12864b.h
+Documentation/devicetree/bindings/arm/renesas.yaml
+include/linux/soc/renesas/
+Documentation/scsi/NinjaSCSI.txt
+include/linux/sunrpc/
+drivers/crypto/nx/Makefile
+drivers/gpu/vga/
+include/linux/platform_data/i2c-omap.h
+drivers/power/supply/bq27xxx_battery_i2c.c
+drivers/mtd/nand/raw/ingenic/
+drivers/i2c/busses/i2c-ali1563.c
+drivers/soc/renesas/
+include/uapi/linux/sunrpc/
+drivers/md/Makefile
+include/linux/power/bq27xxx_battery.h
+include/linux/dmaengine.h
+drivers/gpio/gpio-intel-mid.c
+drivers/dma/
+include/uapi/linux/ivtv*
+kernel/power/
+drivers/gpio/gpio-ich.c
+drivers/net/ethernet/ibm/ibmvnic.*
+include/linux/netdevice.h
+include/linux/mlx4/
+drivers/net/ethernet/ibm/ibmveth.*
+drivers/media/platform/mtk-vpu/
+drivers/dma/dma-jz4780.c
+include/uapi/linux/meye.h
+include/uapi/linux/netdevice.h
+arch/arm/plat-omap/
+include/linux/freezer.h
+include/linux/cciss*.h
+Documentation/gpu/
+drivers/md/Kconfig
+include/linux/cpu_cooling.h
+include/linux/pwm_backlight.h
+arch/mips/include/asm/mach-loongson64/
