@@ -2,55 +2,52 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CC7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC95C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA41C233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7339123405
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566496088;
-	bh=SjlbYIDq9G0CebwODxm4/BZhdOniFDbdZN/Rfjxiv8M=;
+	s=default; t=1566496091;
+	bh=X42x0xK8Yv7JFdRdm38qmeC5UC56ygSVuWr4FXYQzcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R7J9iuhOSu/YQj30JaxMSwP+MPjcFaOKQRGHYBWu+L7nllDP0RbeSfp0Uoa5XnfvJ
-	 UKQTjFYcTa2geMr7bgDG6OWj/eo3PSYjXZepwy0s6pu701fSHyqWnra2klWLSqfAnR
-	 SRdrA1x0fH6/xozp27aWIEoOQm8bISGUNCl2tqrU=
+	b=Zj8IZw7tsX8f6hFawX+61JUUG27T9IFTSVSE3U2lT3b2/ocGjYSmNzlCuNahMj5vt
+	 CPt4dQxmn6TXWBsx+9txNM2CqrOqQeMQprAbsAoP35utJxN/5AQsLzxeGmqGxnKhO4
+	 VjsV3zwui0V7uYZDxw1eGWLvFrCfVN0D0tOre93g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393426AbfHVRsH (ORCPT
+        id S2391349AbfHVRWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:48:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40818 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:22:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391356AbfHVRWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:33 -0400
+        id S2391306AbfHVRW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:26 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4479D21743;
-        Thu, 22 Aug 2019 17:22:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B05612341C;
+        Thu, 22 Aug 2019 17:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494553;
-        bh=SjlbYIDq9G0CebwODxm4/BZhdOniFDbdZN/Rfjxiv8M=;
+        s=default; t=1566494545;
+        bh=X42x0xK8Yv7JFdRdm38qmeC5UC56ygSVuWr4FXYQzcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DTYtSXrDNOPrjp+4mrzJRvm5mEzxa83kEmqkHhXLutDSfe/B0/WcSrGMbqyj+FRDR
-         PeutdcLra9eyPPUOlJYaoIwO0GqVGzx7Gc0XgEj/taCcKKlis6vUoVpSwDNegZtDTW
-         r+Jm6CBApZYar5ma9n7KxCrDlxnSZW0FqHDBbVyI=
+        b=yHwnYsLnnvAqIDxnAmiuf5XlA3xyE0Hkxs5FI2zJvPon2V7HgigsErUHQwVgBBKVx
+         NTZX8xLu9jc5lQTrMG3EzqxbWqbYfsT6uA+nU9b+TzLsnBv213mCQfvbheikvowkEx
+         f/b0Q0FVnwDYB3ocDZZ43cN2vuq5cy3gltZf6xhY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thomas Jarosch <thomas.jarosch@intra2net.com>,
-        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 09/78] netfilter: nfnetlink: avoid deadlock due to synchronous request_module
-Date:   Thu, 22 Aug 2019 10:18:13 -0700
-Message-Id: <20190822171832.313288206@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 27/78] ALSA: firewire: fix a memory leak bug
+Date:   Thu, 22 Aug 2019 10:18:31 -0700
+Message-Id: <20190822171832.829168990@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -63,74 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1b0890cd60829bd51455dc5ad689ed58c4408227 ]
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-Thomas and Juliana report a deadlock when running:
+commit 1be3c1fae6c1e1f5bb982b255d2034034454527a upstream.
 
-(rmmod nf_conntrack_netlink/xfrm_user)
+In iso_packets_buffer_init(), 'b->packets' is allocated through
+kmalloc_array(). Then, the aligned packet size is checked. If it is
+larger than PAGE_SIZE, -EINVAL will be returned to indicate the error.
+However, the allocated 'b->packets' is not deallocated on this path,
+leading to a memory leak.
 
-  conntrack -e NEW -E &
-  modprobe -v xfrm_user
+To fix the above issue, free 'b->packets' before returning the error code.
 
-They provided following analysis:
+Fixes: 31ef9134eb52 ("ALSA: add LaCie FireWire Speakers/Griffin FireWave Surround driver")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Cc: <stable@vger.kernel.org> # v2.6.39+
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-conntrack -e NEW -E
-    netlink_bind()
-        netlink_lock_table() -> increases "nl_table_users"
-            nfnetlink_bind()
-            # does not unlock the table as it's locked by netlink_bind()
-                __request_module()
-                    call_usermodehelper_exec()
-
-This triggers "modprobe nf_conntrack_netlink" from kernel, netlink_bind()
-won't return until modprobe process is done.
-
-"modprobe xfrm_user":
-    xfrm_user_init()
-        register_pernet_subsys()
-            -> grab pernet_ops_rwsem
-                ..
-                netlink_table_grab()
-                    calls schedule() as "nl_table_users" is non-zero
-
-so modprobe is blocked because netlink_bind() increased
-nl_table_users while also holding pernet_ops_rwsem.
-
-"modprobe nf_conntrack_netlink" runs and inits nf_conntrack_netlink:
-    ctnetlink_init()
-        register_pernet_subsys()
-            -> blocks on "pernet_ops_rwsem" thanks to xfrm_user module
-
-both modprobe processes wait on one another -- neither can make
-progress.
-
-Switch netlink_bind() to "nowait" modprobe -- this releases the netlink
-table lock, which then allows both modprobe instances to complete.
-
-Reported-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
-Reported-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nfnetlink.c | 2 +-
+ sound/firewire/packets-buffer.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nfnetlink.c b/net/netfilter/nfnetlink.c
-index 9adedba78eeac..044559c10e98e 100644
---- a/net/netfilter/nfnetlink.c
-+++ b/net/netfilter/nfnetlink.c
-@@ -495,7 +495,7 @@ static int nfnetlink_bind(struct net *net, int group)
- 	ss = nfnetlink_get_subsys(type << 8);
- 	rcu_read_unlock();
- 	if (!ss)
--		request_module("nfnetlink-subsys-%d", type);
-+		request_module_nowait("nfnetlink-subsys-%d", type);
- 	return 0;
- }
- #endif
--- 
-2.20.1
-
+--- a/sound/firewire/packets-buffer.c
++++ b/sound/firewire/packets-buffer.c
+@@ -37,7 +37,7 @@ int iso_packets_buffer_init(struct iso_p
+ 	packets_per_page = PAGE_SIZE / packet_size;
+ 	if (WARN_ON(!packets_per_page)) {
+ 		err = -EINVAL;
+-		goto error;
++		goto err_packets;
+ 	}
+ 	pages = DIV_ROUND_UP(count, packets_per_page);
+ 
 
 
