@@ -2,145 +2,136 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A614AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F7EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A66B233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493898;
-	bh=mmOI3UQiGw9Sq09GgmSULel99EFNPGDXPy1epgZjWfE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UbISQM1wltuAwYL1bwADMavKRniG6U7U7M/hJjPjaG2F2xCx85UceN9lmYIKHoogH
-	 Luljb1vKE/IZ6QYk6NjOddp0FL6IFL2WOMf8813lBuYvc7U8baJ9y062IABLBuqzBw
-	 7xa5lUI1mB0TlsNkd9+tQiL6KBm5bZkTi6lV2MMQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1FDB2233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IRjN9WlJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390928AbfHVRLg (ORCPT
+        id S1731791AbfHVRLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:11:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59460 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390700AbfHVRJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:15 -0400
-Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 572D42341E;
-        Thu, 22 Aug 2019 17:09:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493754;
-        bh=mmOI3UQiGw9Sq09GgmSULel99EFNPGDXPy1epgZjWfE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S7JpAhAtr7gVQAZ9zK3aftPR0Hgwhplf1lN0MvwOoQQHF5KH0TR8rW30ytOKBhKWl
-         zfNSHrz9VjrI4w1QNn6gqgpVUgd+EuE6mKyYR2x/b/azcgH2yD4KARoNJERgssLxHL
-         tDYfvmsDN2vfjhNLgZwvFFpsKqY8nEJ5w3zPWieM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 111/135] net/packet: fix race in tpacket_snd()
-Date:   Thu, 22 Aug 2019 13:07:47 -0400
-Message-Id: <20190822170811.13303-112-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
-References: <20190822170811.13303-1-sashal@kernel.org>
+        Thu, 22 Aug 2019 13:11:40 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33024 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390913AbfHVRLd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:11:33 -0400
+Received: by mail-qk1-f195.google.com with SMTP id w18so5830910qki.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 10:11:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gb0fma4SYZkehZAw45Gi4L0bDfo73oujKKHVTeGoQIs=;
+        b=IRjN9WlJI2NizOqoywAu1t0dasUD2HvfgwBoOa9osPpEM5aXa+yGTdPiN1TiJrsWvG
+         iGjVHWvYW4UX16sIaTg+QfTcU+Oxhzhu02LywcI0apxLSb/bD5M1LZTIeFjzJMXcOwgK
+         dj7JFd0ME9QR+iHMqXDTZSGYSBjOVWgr70YI0CNC1cWiUeIlaKextW4Y/iu34MlJrPjr
+         XdjfXiZI0uu3CLQkaowXHBF/i4hZdcwaTXJt8OrNJC2Fziu5qs8SrWDAzAjhzuq5XaxE
+         xpot9/k1xGzYE0Kjkw6JFcnJ84oyZeq2BwLFoxI2SYVYFfubezEbJKTgvUSfoxkWcuC+
+         maZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gb0fma4SYZkehZAw45Gi4L0bDfo73oujKKHVTeGoQIs=;
+        b=f6ZF/shjO2/UaFTRgusFNClGrD/xMdKqyoByfrwlTG1vBa+ID2H8i86BvlxI7FiWuo
+         bbP2meX4DOwngEi/4DgQ80ZkFtONiNSF+cOJypCgJEfHc3SbWhe3krJF/d3F4KIpdGw8
+         edzCtdDJIotaf8gj+L3eG6yDelPK6iNqIVLQAxCYpSj3VOtauB6aTybIVvKgEQ53ymjW
+         f7++ktx7Z3cD3RnpgDQcSIjsBDHL+6p/2ay0VFGBpM62MYJA4lt+C4dQQcKti66VuWa5
+         IzL695A3Bj4BBcCH0Ov+CSdqwTRot3oD5udlveskj7RjXDRIKX/50RU2v9gcjFVvtCs4
+         NThQ==
+X-Gm-Message-State: APjAAAVWoxHC5bwXEbh0p7hX9LJlg1jr/sZyhqfrf2U9ZxxCdZcg8U4w
+        vt77ZenDuqtN4o7mY/kh6/3eAlWRta3vVcmAgzasrg==
+X-Google-Smtp-Source: APXvYqxPEdStgyeuCloUwnL5iefdzeiMR6CC0TYoeSyeF/2xzpm7U2SOTQQPmVIJS4sKZHVEsEOYn5XL1N6tDYT1pig=
+X-Received: by 2002:a37:c40d:: with SMTP id d13mr21876qki.8.1566493892003;
+ Thu, 22 Aug 2019 10:11:32 -0700 (PDT)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.2.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.2.10-rc1
-X-KernelTest-Deadline: 2019-08-24T17:07+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190820222403.GB8120@kroah.com> <201908220959.x7M9xP8r011133@www262.sakura.ne.jp>
+ <20190822133538.GA16793@kroah.com> <e8d3ce30-8c61-048e-2606-f8a4e8f08d87@i-love.sakura.ne.jp>
+ <20190822164249.GA12551@kroah.com>
+In-Reply-To: <20190822164249.GA12551@kroah.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 22 Aug 2019 10:11:20 -0700
+Message-ID: <CACT4Y+Z0yCAwie83Oqd7XBNgQjWtEkuEg5WJCd6rW-ZMWqosxg@mail.gmail.com>
+Subject: Re: [PATCH] /dev/mem: Bail out upon SIGKILL when reading memory.
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>,
+        Eric Biggers <ebiggers@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+On Thu, Aug 22, 2019 at 9:42 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Aug 22, 2019 at 11:00:59PM +0900, Tetsuo Handa wrote:
+> > On 2019/08/22 22:35, Greg Kroah-Hartman wrote:
+> > > On Thu, Aug 22, 2019 at 06:59:25PM +0900, Tetsuo Handa wrote:
+> > >> Tetsuo Handa wrote:
+> > >>> Greg Kroah-Hartman wrote:
+> > >>>> Oh, nice!  This shouldn't break anything that is assuming that the read
+> > >>>> will complete before a signal is delivered, right?
+> > >>>>
+> > >>>> I know userspace handling of "short" reads is almost always not there...
+> > >>>
+> > >>> Since this check will give up upon SIGKILL, userspace won't be able to see
+> > >>> the return value from read(). Thus, returning 0 upon SIGKILL will be safe. ;-)
+> > >>> Maybe we also want to add cond_resched()...
+> > >>>
+> > >>> By the way, do we want similar check on write_mem() side?
+> > >>> If aborting "write to /dev/mem" upon SIGKILL (results in partial write) is
+> > >>> unexpected, we might want to ignore SIGKILL for write_mem() case.
+> > >>> But copying data from killed threads (especially when killed by OOM killer
+> > >>> and userspace memory is reclaimed by OOM reaper before write_mem() returns)
+> > >>> would be after all unexpected. Then, it might be preferable to check SIGKILL
+> > >>> on write_mem() side...
+> > >>>
+> > >>
+> > >> Ha, ha. syzbot reported the same problem using write_mem().
+> > >> https://syzkaller.appspot.com/text?tag=CrashLog&x=1018055a600000
+> > >> We want fatal_signal_pending() check on both sides.
+> > >
+> > > Ok, want to send a patch for that?
+> >
+> > Yes. But before sending a patch, I'm trying to dump values using debug printk().
+> >
+> > >
+> > > And does anything use /dev/mem anymore?  I think X stopped using it a
+> > > long time ago.
+> > >
+> > >> By the way, write_mem() worries me whether there is possibility of replacing
+> > >> kernel code/data with user-defined memory data supplied from userspace.
+> > >> If write_mem() were by chance replaced with code that does
+> > >>
+> > >>    while (1);
+> > >>
+> > >> we won't be able to return from write_mem() even if we added fatal_signal_pending() check.
+> > >> Ditto for replacing local variables with unexpected values...
+> > >
+> > > I'm sorry, I don't really understand what you mean here, but I haven't
+> > > had my morning coffee...  Any hints as to an example?
+> >
+> > Probably similar idea: "lockdown: Restrict /dev/{mem,kmem,port} when the kernel is locked down"
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/char/mem.c?h=next-20190822&id=9b9d8dda1ed72e9bd560ab0ca93d322a9440510e
+> >
+> > Then, syzbot might want to blacklist writing to /dev/mem .
+>
+> syzbot should probably blacklist that now, you can do a lot of bad
+> things writing to that device node :(
 
-[ Upstream commit 32d3182cd2cd29b2e7e04df7b0db350fbe11289f ]
-
-packet_sendmsg() checks tx_ring.pg_vec to decide
-if it must call tpacket_snd().
-
-Problem is that the check is lockless, meaning another thread
-can issue a concurrent setsockopt(PACKET_TX_RING ) to flip
-tx_ring.pg_vec back to NULL.
-
-Given that tpacket_snd() grabs pg_vec_lock mutex, we can
-perform the check again to solve the race.
-
-syzbot reported :
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 11429 Comm: syz-executor394 Not tainted 5.3.0-rc4+ #101
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:packet_lookup_frame+0x8d/0x270 net/packet/af_packet.c:474
-Code: c1 ee 03 f7 73 0c 80 3c 0e 00 0f 85 cb 01 00 00 48 8b 0b 89 c0 4c 8d 24 c1 48 b8 00 00 00 00 00 fc ff df 4c 89 e1 48 c1 e9 03 <80> 3c 01 00 0f 85 94 01 00 00 48 8d 7b 10 4d 8b 3c 24 48 b8 00 00
-RSP: 0018:ffff88809f82f7b8 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff8880a45c7030 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 1ffff110148b8e06 RDI: ffff8880a45c703c
-RBP: ffff88809f82f7e8 R08: ffff888087aea200 R09: fffffbfff134ae50
-R10: fffffbfff134ae4f R11: ffffffff89a5727f R12: 0000000000000000
-R13: 0000000000000001 R14: ffff8880a45c6ac0 R15: 0000000000000000
-FS:  00007fa04716f700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa04716edb8 CR3: 0000000091eb4000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- packet_current_frame net/packet/af_packet.c:487 [inline]
- tpacket_snd net/packet/af_packet.c:2667 [inline]
- packet_sendmsg+0x590/0x6250 net/packet/af_packet.c:2975
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
- __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
- do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 69e3c75f4d54 ("net: TX_RING and packet mmap")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/packet/af_packet.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-index 5f78df0805732..bad144dfabc56 100644
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2607,6 +2607,13 @@ static int tpacket_snd(struct packet_sock *po, struct msghdr *msg)
- 
- 	mutex_lock(&po->pg_vec_lock);
- 
-+	/* packet_sendmsg() check on tx_ring.pg_vec was lockless,
-+	 * we need to confirm it under protection of pg_vec_lock.
-+	 */
-+	if (unlikely(!po->tx_ring.pg_vec)) {
-+		err = -EBUSY;
-+		goto out;
-+	}
- 	if (likely(saddr == NULL)) {
- 		dev	= packet_cached_dev_get(po);
- 		proto	= po->num;
--- 
-2.20.1
-
+Agree. It wasn't supposed to reach it, but it figured out how to mount
+devfs and then open "./mem"  bypassing all checks. Fortunately there
+is a config to disable /dev/mem, so we are going to turn it off.
