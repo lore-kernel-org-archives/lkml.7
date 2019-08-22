@@ -2,160 +2,139 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F565C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4614EC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD15233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153D0233A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566490283;
+	bh=zOMLxHs2VWka/qFMYIuywdwW7/bJZ8chpRACeFjJll8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XO2JgRLk1rk9slkiMA6PSSIzjGs2MbpzNfFgW4iRw8OO42y4A0Sx2ykj+bRMD9uIJ
+	 Ahw36sqJWONxi3On3MAPiEoyd3ugHscgrgjwk6lnw6pqdofMAamXRDTEowuzeqkNUO
+	 Jfelna5cN48YZ8UNTA0qevdUTvELQQA+gX4ug770=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389794AbfHVQKQ (ORCPT
+        id S2389833AbfHVQLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:10:16 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:47824 "EHLO ale.deltatee.com"
+        Thu, 22 Aug 2019 12:11:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726610AbfHVQKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:10:16 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1i0pfC-00079F-EJ; Thu, 22 Aug 2019 10:10:15 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1i0pfC-0001RD-8T; Thu, 22 Aug 2019 10:10:14 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 22 Aug 2019 10:10:11 -0600
-Message-Id: <20190822161013.5481-2-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190822161013.5481-1-logang@deltatee.com>
-References: <20190822161013.5481-1-logang@deltatee.com>
+        id S1732895AbfHVQLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 12:11:21 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E72B0233FD;
+        Thu, 22 Aug 2019 16:11:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566490281;
+        bh=zOMLxHs2VWka/qFMYIuywdwW7/bJZ8chpRACeFjJll8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Gx4N0gs5HtgNNNI/UK3B/3JnCYAtGMrYh/avF9aHXY/GFEJZDbLYFPe7BcU+uefo6
+         1z2B/Cbb3Iwz6+HSYwszt9a4aVUn1gi1UUcz0vNkCCM/RQqTD4+ZHTyVumsknbyAib
+         dqf8F5Co7o3Nq/0oOfMLaWbluVThrfcPlqT0P8nc=
+Received: by mail-qt1-f169.google.com with SMTP id t12so8330749qtp.9;
+        Thu, 22 Aug 2019 09:11:20 -0700 (PDT)
+X-Gm-Message-State: APjAAAWsWUSAwK7W0Ym9mRCjVl7HPxKlNKqLSt+sGM/1oioVRnZQK9bB
+        oi4l2PHNhfwdyLuFviOfDaabbUG7iPw9zhsfBA==
+X-Google-Smtp-Source: APXvYqy6FBlK1ClzTIESpRbzxj+d3ls/cIRjhDZi4Cfkk62DRf1Upbl2njPgECs0QSQz5nK0p9oVjHnL75jmEGJ+Cvc=
+X-Received: by 2002:ad4:4050:: with SMTP id r16mr122097qvp.200.1566490280005;
+ Thu, 22 Aug 2019 09:11:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v2 1/3] PCI: Clean up resource_alignment parameter to not require static buffer
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20190809133407.25918-1-srinivas.kandagatla@linaro.org>
+ <20190809133407.25918-2-srinivas.kandagatla@linaro.org> <20190821214436.GA13936@bogus>
+ <0272eafd-0aa5-f695-64e4-f6ad7157a3a6@linaro.org> <CAL_JsqJJCJB9obR_Jn3hmn4gq+RQjY-8M+xkdYA185Uaw0MHcw@mail.gmail.com>
+ <90b9fa33-3a49-c414-4352-66e26673a05d@linaro.org>
+In-Reply-To: <90b9fa33-3a49-c414-4352-66e26673a05d@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 22 Aug 2019 11:11:08 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLuH5=PLSVvyd=5oOECfcV3mgf8b842Y4ppJKG_NHds-g@mail.gmail.com>
+Message-ID: <CAL_JsqLuH5=PLSVvyd=5oOECfcV3mgf8b842Y4ppJKG_NHds-g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: soundwire: add slave bindings
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Vinod <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clean up the 'resource_alignment' parameter code to use kstrdup
-in the initcall routine instead of a static buffer that wastes memory
-regardless of whether the feature is used.  This allows us to drop
-'COMMAND_LINE_SIZE' bytes (typically 256-4096 depending on architecture)
-of static data.
+On Thu, Aug 22, 2019 at 7:56 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+>
+>
+> On 22/08/2019 13:36, Rob Herring wrote:
+> >>>> +soundwire@c2d0000 {
+> >>>> +    compatible = "qcom,soundwire-v1.5.0"
+> >>>> +    reg = <0x0c2d0000 0x2000>;
+> >>>> +
+> >>>> +    spkr_left:wsa8810-left{
+> >>>> +            compatible = "sdw0110217201000";
+> >>>> +            ...
+> >>>> +    };
+> >>>> +
+> >>>> +    spkr_right:wsa8810-right{
+> >>>> +            compatible = "sdw0120217201000";
+> >>> The normal way to distinguish instances is with 'reg'. So I think you
+> >>> need 'reg' with Instance ID moved there at least. Just guessing, but
+> >>> perhaps Link ID, too? And for 2 different classes of device is that
+> >>> enough?
+> >> In previous bindings (https://lists.gt.net/linux/kernel/3403276  ) we
+> >> did have instance-id as different property, however Pierre had some good
+> >> suggestion to make it align with _ADR encoding as per MIPI DisCo spec.
+> >>
+> >> Do you still think that we should split the instance id to reg property?
+> > Assuming you could have more than 1 of the same device on the bus,
+> > then you need some way to distinguish them and the way that's done for
+> > DT is unit-address/reg. And compatible strings should be constant for
+> > each instance.
+> That is a good point!
+> Okay that makes more sense keep compatible string constant.
+> Class ID would be constant for given functionality that the driver will
+> provide.
+>
+> So we will end up with some thing like this:
+>
+> soundwire@c2d0000 {
+>         compatible = "qcom,soundwire-v1.5.0"
+>         reg = <0x0c2d0000 0x2000>;
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+>
+>         spkr_left:skpr@1{
+>                 compatible = "sdw10217201000";
+>                 reg = <0x1>
+>                 sdw-link-id = <0>;
 
-This is similar to what has been done for the 'disable_acs_redir'
-parameter.
+Not really sure what Link ID is, but maybe it should be part of reg
+too if it is part of how you address a device.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/pci.c | 41 +++++++++++++++++++++++------------------
- 1 file changed, 23 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 1b27b5af3d55..489fff757833 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5923,8 +5923,7 @@ resource_size_t __weak pcibios_default_alignment(void)
- 	return 0;
- }
- 
--#define RESOURCE_ALIGNMENT_PARAM_SIZE COMMAND_LINE_SIZE
--static char resource_alignment_param[RESOURCE_ALIGNMENT_PARAM_SIZE] = {0};
-+static char *resource_alignment_param;
- static DEFINE_SPINLOCK(resource_alignment_lock);
- 
- /**
-@@ -5945,7 +5944,7 @@ static resource_size_t pci_specified_resource_alignment(struct pci_dev *dev,
- 
- 	spin_lock(&resource_alignment_lock);
- 	p = resource_alignment_param;
--	if (!*p && !align)
-+	if (!p || !*p)
- 		goto out;
- 	if (pci_has_flag(PCI_PROBE_ONLY)) {
- 		align = 0;
-@@ -6111,21 +6110,25 @@ void pci_reassigndev_resource_alignment(struct pci_dev *dev)
- 
- static ssize_t pci_set_resource_alignment_param(const char *buf, size_t count)
- {
--	if (count > RESOURCE_ALIGNMENT_PARAM_SIZE - 1)
--		count = RESOURCE_ALIGNMENT_PARAM_SIZE - 1;
- 	spin_lock(&resource_alignment_lock);
--	strncpy(resource_alignment_param, buf, count);
--	resource_alignment_param[count] = '\0';
-+
-+	kfree(resource_alignment_param);
-+	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
-+
- 	spin_unlock(&resource_alignment_lock);
--	return count;
-+
-+	return resource_alignment_param ? count : -ENOMEM;
- }
- 
- static ssize_t pci_get_resource_alignment_param(char *buf, size_t size)
- {
--	size_t count;
-+	size_t count = 0;
-+
- 	spin_lock(&resource_alignment_lock);
--	count = snprintf(buf, size, "%s", resource_alignment_param);
-+	if (resource_alignment_param)
-+		count = snprintf(buf, size, "%s", resource_alignment_param);
- 	spin_unlock(&resource_alignment_lock);
-+
- 	return count;
- }
- 
-@@ -6266,8 +6269,7 @@ static int __init pci_setup(char *str)
- 			} else if (!strncmp(str, "cbmemsize=", 10)) {
- 				pci_cardbus_mem_size = memparse(str + 10, &str);
- 			} else if (!strncmp(str, "resource_alignment=", 19)) {
--				pci_set_resource_alignment_param(str + 19,
--							strlen(str + 19));
-+				resource_alignment_param = str + 19;
- 			} else if (!strncmp(str, "ecrc=", 5)) {
- 				pcie_ecrc_get_policy(str + 5);
- 			} else if (!strncmp(str, "hpiosize=", 9)) {
-@@ -6302,15 +6304,18 @@ static int __init pci_setup(char *str)
- early_param("pci", pci_setup);
- 
- /*
-- * 'disable_acs_redir_param' is initialized in pci_setup(), above, to point
-- * to data in the __initdata section which will be freed after the init
-- * sequence is complete. We can't allocate memory in pci_setup() because some
-- * architectures do not have any memory allocation service available during
-- * an early_param() call. So we allocate memory and copy the variable here
-- * before the init section is freed.
-+ * 'resource_alignment_param' and 'disable_acs_redir_param' are initialized
-+ * in pci_setup(), above, to point to data in the __initdata section which
-+ * will be freed after the init sequence is complete. We can't allocate memory
-+ * in pci_setup() because some architectures do not have any memory allocation
-+ * service available during an early_param() call. So we allocate memory and
-+ * copy the variable here before the init section is freed.
-+ *
-  */
- static int __init pci_realloc_setup_params(void)
- {
-+	resource_alignment_param = kstrdup(resource_alignment_param,
-+					   GFP_KERNEL);
- 	disable_acs_redir_param = kstrdup(disable_acs_redir_param, GFP_KERNEL);
- 
- 	return 0;
--- 
-2.20.1
-
+>                 ...
+>         };
+>
+>         spkr_right:spkr@2{
+>                 compatible = "sdw10217201000";
+>                 reg = <0x2>
+>                 sdw-link-id = <0>;
+>         };
+> };
+>
+> I will spin this in next version!
+>
+> Thanks,
+> srini
+>
+> >
+> > Rob
