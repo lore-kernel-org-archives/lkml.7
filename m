@@ -2,193 +2,259 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1DFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 080A0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B862921743
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C641421743
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0tA+7nA"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AqnGzCDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733275AbfHVOKm (ORCPT
+        id S2387504AbfHVOMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:10:42 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38848 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733177AbfHVOKm (ORCPT
+        Thu, 22 Aug 2019 10:12:40 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:15285 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732331AbfHVOMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:10:42 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w11so3077466plp.5;
-        Thu, 22 Aug 2019 07:10:41 -0700 (PDT)
+        Thu, 22 Aug 2019 10:12:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GnvU3JQHw+wR90RQOXRqRxk4bWPRr/n+YnICw4YFpyY=;
-        b=S0tA+7nA9U2zwH8rFTNYMVfPx3zxD1MYd7Ufa47H6S8V/d7lofEFnszCH+dkPaOpP/
-         ELuG+oAr9pwaPPtkKyCYGRyyREKZvkI3QnH8m+YTVVmcCK8X5DbUK/oKc7CJifsglBs6
-         cOfsW/MuZoM4VHilJQlY3Nb4TqQOrCkLxYdixDkLvYuSZ3j0WFmXXlL6GmqdebyBGPND
-         0fsLMuOFli4DtBFQduySIQePoF3aghSQcfSeOSQ8QTiYmBqEsMAbt7jhhZI7ltakmCl/
-         6Uet50q712p6wAhe3CrEQbiLDIcxiDMFMNQMhHTj9tlhan/IkNYPoZd2gdO89suWT+ni
-         El+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GnvU3JQHw+wR90RQOXRqRxk4bWPRr/n+YnICw4YFpyY=;
-        b=S6DtyDCziwMOVbqeAGh7sEiriDRAFUUR0pK+xOtRHlBX0Th6Y5DTpJJq1l8yYe3RG4
-         VSkSl95gnKBNrz8rw0YATK/RToDZcpflnHyesxYHJnp/WtHdiKWRGNls6u8+5GnSXs4f
-         odN9RJmp3raO/WUxqrygS9sUZIDjh+j1M50y9D58AXUd45Ey5QkDTTEI2ewbszDX5PU5
-         AiBRWVfF8OSgaUCwXvO1n9Mqlf69yfGjxRHwNT6O1UCiVfE4HJWI54M6b6W59W9J+vrO
-         IA1aGCsqW0Xcj9ylXMwEOp0SiOYvobgokPX9F0Y2p5D11PZyJ+vJcsUfuWTU2vDN8pbh
-         6jGQ==
-X-Gm-Message-State: APjAAAWgWDJ6KREc2eJZtIUKqtrlSPPei+GorkYhuVutMwXqxaX8xPlg
-        IaTEIJyQhG2cyUazKyIHvRWi2dsRFuY=
-X-Google-Smtp-Source: APXvYqwCOD8NfosHehfRRT3Hee8HHgnTaaHtuG2G5EKa6aCEP7NvElSyZeeS6CUkQhbP/rL4JkD99g==
-X-Received: by 2002:a17:902:4381:: with SMTP id j1mr37835715pld.4.1566483041130;
-        Thu, 22 Aug 2019 07:10:41 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d128sm22544247pfa.42.2019.08.22.07.10.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 22 Aug 2019 07:10:40 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 07:10:39 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>
-Subject: Re: [RFC PATCH] hwmon: (iio_hwmon) Enable power exporting from IIO
-Message-ID: <20190822141039.GD8144@roeck-us.net>
-References: <71aec0191e0e5f32cc760f95844d8ee215b48c7f.1565616579.git.michal.simek@xilinx.com>
- <906edfa3-9e7d-e8cc-29e3-e428b79ed0c2@roeck-us.net>
- <2bbbc5e9-7f11-1522-b827-0c0614bb9b69@xilinx.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1566483158; x=1598019158;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=8ioN/JPy48toyNhc9jaRO5V8hI5LIKQUVL1VCL1aBl8=;
+  b=AqnGzCDU3WVeuBlI8CdISQJO34yeO5jl/LGO6hkfQRvrtTBQ2AMzmjQ9
+   MdqtTin1BVN0R4WCI/QSARnhUctzkgtHmVxFp7LRj+cyD7l2zTo1XolmX
+   HSOnjqkMUufuVV5nEAEcZfE87SNfokjFAENGrz/R61g7SrgHtnh+gHbQ5
+   g=;
+X-IronPort-AV: E=Sophos;i="5.64,416,1559520000"; 
+   d="scan'208";a="696479885"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 22 Aug 2019 14:12:33 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id A7360A26E4;
+        Thu, 22 Aug 2019 14:12:28 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 22 Aug 2019 14:12:27 +0000
+Received: from 38f9d3867b82.ant.amazon.com (10.43.161.67) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 22 Aug 2019 14:12:24 +0000
+Subject: Re: [PATCH v5 08/20] RISC-V: KVM: Implement
+ KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls
+To:     Anup Patel <anup@brainfault.org>
+CC:     Anup Patel <Anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190822084131.114764-1-anup.patel@wdc.com>
+ <20190822084131.114764-9-anup.patel@wdc.com>
+ <d306ffaf-c9ac-4a9f-4382-95001487364d@amazon.com>
+ <CAAhSdy0t7P1a_eYmLo9sSYTCbumCqqWcvuv4yJXGCBQOXvw5TQ@mail.gmail.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <2871ee6a-ae7c-6937-e8ef-38a8c318638a@amazon.com>
+Date:   Thu, 22 Aug 2019 16:12:21 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2bbbc5e9-7f11-1522-b827-0c0614bb9b69@xilinx.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAAhSdy0t7P1a_eYmLo9sSYTCbumCqqWcvuv4yJXGCBQOXvw5TQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.161.67]
+X-ClientProxiedBy: EX13D24UWB002.ant.amazon.com (10.43.161.159) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 03:43:39PM +0200, Michal Simek wrote:
-> On 20. 08. 19 17:39, Guenter Roeck wrote:
-> > On 8/12/19 6:29 AM, Michal Simek wrote:
-> >> There is no reason why power channel shouldn't be exported as is done for
-> >> voltage, current, temperature and humidity.
-> >>
-> >> Power channel is available on iio ina226 driver.
-> >>
-> >> Tested on Xilinx ZCU102 board.
-> >>
-> >> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> >> ---
-> >>
-> >> But I don't think values are properly converted. Voltage1 is fine but the
-> >> rest is IMHO wrong. But this patch should enable power channel to be
-> >> shown
-> >> which looks good.
-> >>
-> > 
-> > No idea what is going on there. I don't really know what "scaled" units
-> > the iio subsystem reports. power is supposed to be reported to user space
-> > in micro-Watt. Is that what the scaled value from iio reports ?
-> 
-> I have take a look at it again.
-> 
-> root@zynqmp-debian:~/libiio/examples# sensors ina226_u76-*
-> ina226_u76-isa-0000
-> Adapter: ISA adapter
-> in1:          +0.01 V
-> in2:          +0.85 V
-> power1:        1.16 mW
-> curr1:        +1.60 A
-> 
-> from iio_monitor
-> voltage0          0.007 V
-> voltage1          0.848 V
-> power2            1.150 W
-> current3          1.361 A
-> 
-> from iio_info
->  IIO context has 18 devices:
-> 	iio:device0: ps_pmbus (buffer capable)
-> 		9 channels found:
-> 			voltage0:  (input, index: 0, format: le:U16/16>>0)
-> 			3 channel-specific attributes found:
-> 				attr  0: integration_time value: 0.001100
-> 				attr  1: raw value: 3152
-> 				attr  2: scale value: 0.002500000
-> 			voltage1:  (input, index: 1, format: le:U16/16>>0)
-> 			3 channel-specific attributes found:
-> 				attr  0: integration_time value: 0.001100
-> 				attr  1: raw value: 678
-> 				attr  2: scale value: 1.250000000
-> 			power2:  (input, index: 2, format: le:U16/16>>0)
-> 			2 channel-specific attributes found:
-> 				attr  0: raw value: 106
-> 				attr  1: scale value: 12.500000000
-> 			current3:  (input, index: 3, format: le:U16/16>>0)
-> 			2 channel-specific attributes found:
-> 				attr  0: raw value: 3152
-> 				attr  1: scale value: 0.500000000
-> 
-> 
-> And if you look at power2 (in iio_info) then you see that calculation is
-> returning mili-Watts not micro-Watts.
-> 
-> And looking at it back it is also said there.
-> 
-> What:           /sys/bus/iio/devices/iio:deviceX/in_powerY_raw
-> KernelVersion:  4.5
-> Contact:        linux-iio@vger.kernel.org
-> Description:
->                 Raw (unscaled no bias removal etc.) power measurement from
->                 channel Y. The number must always be specified and
->                 unique to allow association with event codes. Units after
->                 application of scale and offset are milliwatts.
-> 
-> That means for power channel value needs to be multiply by 1000.
-> 
-> Are you OK with this solution?
-> 
-Yes, looks good.
 
-Thanks,
-Guenter
 
-> diff --git a/drivers/hwmon/iio_hwmon.c b/drivers/hwmon/iio_hwmon.c
-> index aedb95fa24e3..7ea105bd195b 100644
-> --- a/drivers/hwmon/iio_hwmon.c
-> +++ b/drivers/hwmon/iio_hwmon.c
-> @@ -44,12 +44,20 @@ static ssize_t iio_hwmon_read_val(struct device *dev,
->         int ret;
->         struct sensor_device_attribute *sattr = to_sensor_dev_attr(attr);
->         struct iio_hwmon_state *state = dev_get_drvdata(dev);
-> +       struct iio_channel *chan = &state->channels[sattr->index];
-> +       enum iio_chan_type type;
+On 22.08.19 16:00, Anup Patel wrote:
+> On Thu, Aug 22, 2019 at 5:31 PM Alexander Graf <graf@amazon.com> wrote:
+>>
+>> On 22.08.19 10:44, Anup Patel wrote:
+>>> For KVM RISC-V, we use KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls to access
+>>> VCPU config and registers from user-space.
+>>>
+>>> We have three types of VCPU registers:
+>>> 1. CONFIG - these are VCPU config and capabilities
+>>> 2. CORE   - these are VCPU general purpose registers
+>>> 3. CSR    - these are VCPU control and status registers
+>>>
+>>> The CONFIG registers available to user-space are ISA and TIMEBASE. Out
+>>> of these, TIMEBASE is a read-only register which inform user-space about
+>>> VCPU timer base frequency. The ISA register is a read and write register
+>>> where user-space can only write the desired VCPU ISA capabilities before
+>>> running the VCPU.
+>>>
+>>> The CORE registers available to user-space are PC, RA, SP, GP, TP, A0-A7,
+>>> T0-T6, S0-S11 and MODE. Most of these are RISC-V general registers except
+>>> PC and MODE. The PC register represents program counter whereas the MODE
+>>> register represent VCPU privilege mode (i.e. S/U-mode).
+>>>
+>>> The CSRs available to user-space are SSTATUS, SIE, STVEC, SSCRATCH, SEPC,
+>>> SCAUSE, STVAL, SIP, and SATP. All of these are read/write registers.
+>>>
+>>> In future, more VCPU register types will be added (such as FP) for the
+>>> KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls.
+>>>
+>>> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+>>> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+>>> Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+>>> ---
+>>>    arch/riscv/include/uapi/asm/kvm.h |  40 ++++-
+>>>    arch/riscv/kvm/vcpu.c             | 235 +++++++++++++++++++++++++++++-
+>>>    2 files changed, 272 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
+>>> index 6dbc056d58ba..024f220eb17e 100644
+>>> --- a/arch/riscv/include/uapi/asm/kvm.h
+>>> +++ b/arch/riscv/include/uapi/asm/kvm.h
+>>> @@ -23,8 +23,15 @@
+>>>
+>>>    /* for KVM_GET_REGS and KVM_SET_REGS */
+>>>    struct kvm_regs {
+>>> +     /* out (KVM_GET_REGS) / in (KVM_SET_REGS) */
+>>> +     struct user_regs_struct regs;
+>>> +     unsigned long mode;
+>>
+>> Is there any particular reason you're reusing kvm_regs and don't invent
+>> your own struct? kvm_regs is explicitly meant for the get_regs and
+>> set_regs ioctls.
 > 
-> -       ret = iio_read_channel_processed(&state->channels[sattr->index],
-> -                                       &result);
-> +       ret = iio_read_channel_processed(chan, &result);
->         if (ret < 0)
->                 return ret;
+> We are implementing only ONE_REG interface so most of these
+> structs are unused hence we tried to reuse these struct instead
+> of introducing new structs. (Similar to KVM ARM64)
 > 
-> +       ret = iio_get_channel_type(chan, &type);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       if (type == IIO_POWER)
-> +               result *= 1000;
-> +
->         return sprintf(buf, "%d\n", result);
->  }
+>>
+>>>    };
+>>>
+>>> +/* Possible privilege modes for kvm_regs */
+>>> +#define KVM_RISCV_MODE_S     1
+>>> +#define KVM_RISCV_MODE_U     0
+>>> +
+>>>    /* for KVM_GET_FPU and KVM_SET_FPU */
+>>>    struct kvm_fpu {
+>>>    };
+>>> @@ -41,10 +48,41 @@ struct kvm_guest_debug_arch {
+>>>    struct kvm_sync_regs {
+>>>    };
+>>>
+>>> -/* dummy definition */
+>>> +/* for KVM_GET_SREGS and KVM_SET_SREGS */
+>>>    struct kvm_sregs {
+>>> +     unsigned long sstatus;
+>>> +     unsigned long sie;
+>>> +     unsigned long stvec;
+>>> +     unsigned long sscratch;
+>>> +     unsigned long sepc;
+>>> +     unsigned long scause;
+>>> +     unsigned long stval;
+>>> +     unsigned long sip;
+>>> +     unsigned long satp;
+>>
+>> Same comment here.
 > 
+> Same as above, we are trying to use unused struct.
 > 
-> Thanks,
-> Michal
+>>
+>>>    };
+>>>
+>>> +#define KVM_REG_SIZE(id)             \
+>>> +     (1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
+>>> +
+>>> +/* If you need to interpret the index values, here is the key: */
+>>> +#define KVM_REG_RISCV_TYPE_MASK              0x00000000FF000000
+>>> +#define KVM_REG_RISCV_TYPE_SHIFT     24
+>>> +
+>>> +/* Config registers are mapped as type 1 */
+>>> +#define KVM_REG_RISCV_CONFIG         (0x01 << KVM_REG_RISCV_TYPE_SHIFT)
+>>> +#define KVM_REG_RISCV_CONFIG_ISA     0x0
+>>> +#define KVM_REG_RISCV_CONFIG_TIMEBASE        0x1
+>>> +
+>>> +/* Core registers are mapped as type 2 */
+>>> +#define KVM_REG_RISCV_CORE           (0x02 << KVM_REG_RISCV_TYPE_SHIFT)
+>>> +#define KVM_REG_RISCV_CORE_REG(name) \
+>>> +             (offsetof(struct kvm_regs, name) / sizeof(unsigned long))
+>>
+>> I see, you're trying to implicitly use the struct offsets as index.
+>>
+>> I'm not a really big fan of it, but I can't pinpoint exactly why just
+>> yet. It just seems too magical (read: potentially breaking down the
+>> road) for me.
+>>
+>>> +
+>>> +/* Control and status registers are mapped as type 3 */
+>>> +#define KVM_REG_RISCV_CSR            (0x03 << KVM_REG_RISCV_TYPE_SHIFT)
+>>> +#define KVM_REG_RISCV_CSR_REG(name)  \
+>>> +             (offsetof(struct kvm_sregs, name) / sizeof(unsigned long))
+>>> +
+>>>    #endif
+>>>
+>>>    #endif /* __LINUX_KVM_RISCV_H */
+>>> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+>>> index 7f59e85c6af8..9396a83c0611 100644
+>>> --- a/arch/riscv/kvm/vcpu.c
+>>> +++ b/arch/riscv/kvm/vcpu.c
+>>> @@ -164,6 +164,215 @@ vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
+>>>        return VM_FAULT_SIGBUS;
+>>>    }
+>>>
+>>> +static int kvm_riscv_vcpu_get_reg_config(struct kvm_vcpu *vcpu,
+>>> +                                      const struct kvm_one_reg *reg)
+>>> +{
+>>> +     unsigned long __user *uaddr =
+>>> +                     (unsigned long __user *)(unsigned long)reg->addr;
+>>> +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
+>>> +                                         KVM_REG_SIZE_MASK |
+>>> +                                         KVM_REG_RISCV_CONFIG);
+>>> +     unsigned long reg_val;
+>>> +
+>>> +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
+>>> +             return -EINVAL;
+>>> +
+>>> +     switch (reg_num) {
+>>> +     case KVM_REG_RISCV_CONFIG_ISA:
+>>> +             reg_val = vcpu->arch.isa;
+>>> +             break;
+>>> +     case KVM_REG_RISCV_CONFIG_TIMEBASE:
+>>> +             reg_val = riscv_timebase;
+>>
+>> What does this reflect? The current guest time hopefully not? An offset?
+>> Related to what?
+> 
+> riscv_timebase is the frequency in HZ of the system timer.
+> 
+> The name "timebase" is not appropriate but we have been
+> carrying it since quite some time now.
+
+What do you mean by "some time"? So far I only see a kernel internal 
+variable named after it. That's dramatically different from something 
+exposed via uapi.
+
+Just name it tbfreq.
+
+So if this is the frequency, where is the offset? You will need it on 
+save/restore. If you're saying that's out of scope for now, that's fine 
+with me too :).
+
+
+Alex
