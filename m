@@ -2,179 +2,191 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EC1C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E96BC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B1321848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A2EF21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:06:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732940AbfHVJG1 (ORCPT
+        id S1732951AbfHVJGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:06:27 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:3946 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732927AbfHVJG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:06:26 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 1F8C08038BA942CCAE6F;
-        Thu, 22 Aug 2019 17:06:23 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 22 Aug 2019 17:06:22 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Thu, 22 Aug 2019 17:06:21 +0800
-Date:   Thu, 22 Aug 2019 17:05:41 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-CC:     Gao Xiang <hsiangkao@aol.com>, Richard Weinberger <richard@nod.at>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: erofs: Question on unused fields in on-disk structs
-Message-ID: <20190822090541.GA193349@architecture4>
-References: <1323459733.69859.1566234633793.JavaMail.zimbra@nod.at>
- <20190819204504.GB10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAFLxGvxr2UMeVa29M9pjLtWMFPz7w6udRV38CRxEF1moyA9_Rw@mail.gmail.com>
- <20190821220251.GA3954@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAFLxGvzLPgD22pVOV_jz1EvC-c7YU_2dEFbBt4q08bSkZ3U0Dg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAFLxGvzLPgD22pVOV_jz1EvC-c7YU_2dEFbBt4q08bSkZ3U0Dg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+        Thu, 22 Aug 2019 05:06:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44888 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732927AbfHVJGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:06:52 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 80D073082141;
+        Thu, 22 Aug 2019 09:06:51 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-60.ams2.redhat.com [10.36.116.60])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BF8945D9D3;
+        Thu, 22 Aug 2019 09:06:47 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 640299AF5; Thu, 22 Aug 2019 11:06:46 +0200 (CEST)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Airlie <airlied@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
+        linux-kernel@vger.kernel.org (open list),
+        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
+        BOCHS VIRTUAL GPU),
+        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
+        GPU)
+Subject: [PATCH 2/3] drm: drop resource_id parameter from drm_fb_helper_remove_conflicting_pci_framebuffers
+Date:   Thu, 22 Aug 2019 11:06:44 +0200
+Message-Id: <20190822090645.25410-3-kraxel@redhat.com>
+In-Reply-To: <20190822090645.25410-1-kraxel@redhat.com>
+References: <20190822090645.25410-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 22 Aug 2019 09:06:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Not needed any more for remove_conflicting_pci_framebuffers calls.
 
-Hi Richard,
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ include/drm/drm_fb_helper.h             | 4 +---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 2 +-
+ drivers/gpu/drm/bochs/bochs_drv.c       | 2 +-
+ drivers/gpu/drm/cirrus/cirrus.c         | 2 +-
+ drivers/gpu/drm/mgag200/mgag200_drv.c   | 2 +-
+ drivers/gpu/drm/qxl/qxl_drv.c           | 2 +-
+ drivers/gpu/drm/radeon/radeon_drv.c     | 2 +-
+ drivers/gpu/drm/virtio/virtgpu_drv.c    | 1 -
+ 8 files changed, 7 insertions(+), 10 deletions(-)
 
-On Thu, Aug 22, 2019 at 10:33:01AM +0200, Richard Weinberger wrote:
-> On Thu, Aug 22, 2019 at 12:03 AM Gao Xiang <hsiangkao@aol.com> wrote:
-> >
-> > Hi Richard,
-> >
-> > On Wed, Aug 21, 2019 at 11:37:30PM +0200, Richard Weinberger wrote:
-> > > Gao Xiang,
-> > >
-> > > On Mon, Aug 19, 2019 at 10:45 PM Gao Xiang via Linux-erofs
-> > > <linux-erofs@lists.ozlabs.org> wrote:
-> > > > > struct erofs_super_block has "checksum" and "features" fields,
-> > > > > but they are not used in the source.
-> > > > > What is the plan for these?
-> > > >
-> > > > Yes, both will be used laterly (features is used for compatible
-> > > > features, we already have some incompatible features in 5.3).
-> > >
-> > > Good. :-)
-> > > I suggest to check the fields being 0 right now.
-> > > Otherwise you are in danger that they get burned if an mkfs.erofs does not
-> > > initialize the fields.
-> >
-> > Sorry... I cannot get the point...
-> 
-> Sorry for being unclear, let me explain in more detail.
+diff --git a/include/drm/drm_fb_helper.h b/include/drm/drm_fb_helper.h
+index 5a5f4b1d8241..8dcc012ccbc8 100644
+--- a/include/drm/drm_fb_helper.h
++++ b/include/drm/drm_fb_helper.h
+@@ -539,18 +539,16 @@ drm_fb_helper_remove_conflicting_framebuffers(struct apertures_struct *a,
+ /**
+  * drm_fb_helper_remove_conflicting_pci_framebuffers - remove firmware-configured framebuffers for PCI devices
+  * @pdev: PCI device
+- * @resource_id: index of PCI BAR configuring framebuffer memory
+  * @name: requesting driver name
+  *
+  * This function removes framebuffer devices (eg. initialized by firmware)
+- * using memory range configured for @pdev's BAR @resource_id.
++ * using memory range configured for any of @pdev's memory bars.
+  *
+  * The function assumes that PCI device with shadowed ROM drives a primary
+  * display and so kicks out vga16fb.
+  */
+ static inline int
+ drm_fb_helper_remove_conflicting_pci_framebuffers(struct pci_dev *pdev,
+-						  int resource_id,
+ 						  const char *name)
+ {
+ 	int ret = 0;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index 98df55534a6d..6b96a5738e57 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -1031,7 +1031,7 @@ static int amdgpu_pci_probe(struct pci_dev *pdev,
+ 	}
+ 
+ 	/* Get rid of things like offb */
+-	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, 0, "amdgpudrmfb");
++	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, "amdgpudrmfb");
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/gpu/drm/bochs/bochs_drv.c b/drivers/gpu/drm/bochs/bochs_drv.c
+index 770e1625d05e..3b9b0d9bbc14 100644
+--- a/drivers/gpu/drm/bochs/bochs_drv.c
++++ b/drivers/gpu/drm/bochs/bochs_drv.c
+@@ -114,7 +114,7 @@ static int bochs_pci_probe(struct pci_dev *pdev,
+ 		return -ENOMEM;
+ 	}
+ 
+-	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, 0, "bochsdrmfb");
++	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, "bochsdrmfb");
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/gpu/drm/cirrus/cirrus.c b/drivers/gpu/drm/cirrus/cirrus.c
+index 36a69aec8a4b..89d9e6fdeb8c 100644
+--- a/drivers/gpu/drm/cirrus/cirrus.c
++++ b/drivers/gpu/drm/cirrus/cirrus.c
+@@ -532,7 +532,7 @@ static int cirrus_pci_probe(struct pci_dev *pdev,
+ 	struct cirrus_device *cirrus;
+ 	int ret;
+ 
+-	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, 0, "cirrusdrmfb");
++	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, "cirrusdrmfb");
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.c b/drivers/gpu/drm/mgag200/mgag200_drv.c
+index afd9119b6cf1..4f9df3b93598 100644
+--- a/drivers/gpu/drm/mgag200/mgag200_drv.c
++++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
+@@ -46,7 +46,7 @@ MODULE_DEVICE_TABLE(pci, pciidlist);
+ 
+ static int mga_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+-	drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, 0, "mgag200drmfb");
++	drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, "mgag200drmfb");
+ 
+ 	return drm_get_pci_dev(pdev, ent, &driver);
+ }
+diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
+index c1802e01d9f6..2b726a51a302 100644
+--- a/drivers/gpu/drm/qxl/qxl_drv.c
++++ b/drivers/gpu/drm/qxl/qxl_drv.c
+@@ -83,7 +83,7 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	if (ret)
+ 		goto free_dev;
+ 
+-	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, 0, "qxl");
++	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, "qxl");
+ 	if (ret)
+ 		goto disable_pci;
+ 
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index a4a78dfdef37..624aa580d418 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -329,7 +329,7 @@ static int radeon_pci_probe(struct pci_dev *pdev,
+ 		return -EPROBE_DEFER;
+ 
+ 	/* Get rid of things like offb */
+-	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, 0, "radeondrmfb");
++	ret = drm_fb_helper_remove_conflicting_pci_framebuffers(pdev, "radeondrmfb");
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+index 0fc32fa0b3c0..3d24181636e1 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_drv.c
++++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+@@ -56,7 +56,6 @@ static int virtio_gpu_pci_quirk(struct drm_device *dev, struct virtio_device *vd
+ 	dev->pdev = pdev;
+ 	if (vga)
+ 		drm_fb_helper_remove_conflicting_pci_framebuffers(pdev,
+-								  0,
+ 								  "virtiodrmfb");
+ 
+ 	/*
+-- 
+2.18.1
 
-Thank you!
-
-> 
-> > super block chksum could be a compatible feature right? which means
-> > new kernel can support it (maybe we can add a warning if such image
-> > doesn't have a chksum then when mounting) but old kernel doesn't
-> > care it.
-> 
-> Yes. But you need some why to indicate that the chksum field is now
-> valid and must be used.
-
-We can add a compat "feature" as my following saying...
-(If I missed something, please kindly point out...)
-
-> 
-> The features field can be used for that, but you don't use it right now.
-> I recommend to check it for being 0, 0 means then "no features".
-> If somebody creates in future a erofs with more features this code
-> can refuse to mount because it does not support these features.
-
-"requirements" field is for that, it means incompat features as the following code shown:
- 69 static bool check_layout_compatibility(struct super_block *sb,
- 70                                        struct erofs_super_block *layout)
- 71 {
- 72         const unsigned int requirements = le32_to_cpu(layout->requirements);
- 73
- 74         EROFS_SB(sb)->requirements = requirements;
- 75
- 76         /* check if current kernel meets all mandatory requirements */
- 77         if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
- 78                 errln("unidentified requirements %x, please upgrade kernel version",
- 79                       requirements & ~EROFS_ALL_REQUIREMENTS);
- 80                 return false;
- 81         }
- 82         return true;
- 83 }
-
-if some "requirements" don't be recognized by the current kernel,
-it will refuse to mount but "features" not.
-
-> 
-> But be very sure that existing erofs filesystems actually have this field
-> set to 0 or something other which is always the same.
-> Otherwise you cannot use the field anymore because it could be anything.
-> A common bug is that the mkfs program keeps such unused fields
-> uninitialized and then it can be a more or less random value without
-> notice.
-
-Why? In my thought, the logic is that
- - v4.3, "features" that kernel can handle is 0, so chksum is unused (DONTCARE field)
-   and chksum field could be anything, but the kernel doesn't care.
-
- - later version, add an extra compat feature to "features" to indicate SB_CHKSUM
-    is now valid, such as EROFS_FEATURE_SB_CHKSUM (rather than requirements, it's
-    incompat), so the kernel can check the checksum like that:
-
-    if (feature & EROFS_FEATURE_SB_CHKSUM) {	/* chksum is set */
-        if (chk crc32c and no match) {
-             return -EFSBADCRC;
-	}
-        go ahead
-    } else {
-        /* still don't care chksum field but print the following warning to kmsg */
-        warnln("You are mounting a image without super_block chksum, please take care!!!!");
-
-        or maybe we can even refuse mount these images, except for some mount option
-        such as "force-mount".
-    }
-
- That is also what F2FS did recently, refer the following commit
-   commit d440c52d3151("f2fs: support superblock checksum")
-
-> 
-> > Or maybe you mean these reserved fields? I have no idea all other
-> > filesystems check these fields to 0 or not... But I think it should
-> > be used with some other flag is set rather than directly use, right?
-> 
-> Basically you want a way to know when a field shall be used and when not.
-> Most filesystems have version/feature fields. Often multiple to denote different
-> levels of compatibility.
-
-On-disk inode has i_advise field, and super_block has
-"features" and "requirements" fields. we can use some of them
-or any combinations.
-
-Thanks,
-Gao Xiang
-
-> 
-> -- 
-> Thanks,
-> //richard
