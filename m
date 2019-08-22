@@ -2,121 +2,104 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0EEC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873A7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988AD21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A3321848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731434AbfHVFxC (ORCPT
+        id S1731451AbfHVFxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 01:53:02 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:18443 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731379AbfHVFxC (ORCPT
+        Thu, 22 Aug 2019 01:53:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40084 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729854AbfHVFxl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 01:53:02 -0400
-IronPort-SDR: Rz/vsKz/ZrCwjli1wyH8FQkneU0NPS8mLn5x8RbAx625ZpfvcoM9XkZJBr45q9X5F6RemBp6wV
- juh9wupgc8dV5wxXD/uui0ChjT7IVWIqO/hCKW2/XBK4AxLAZIic/0saDMNmPSlavjZvRRVqzh
- sBPRfI0tmzrms7PDsAuZKhDP+n9wWsUUcUMScfa5W/fUG+wFbNlYcnpB/zkCe1b8fb7ZDNU2hn
- SRgqY0LuuwqJnnQ8Z/rKb5Wd/NuTq0t0bBsXs0QWXXBsmFXYoznpuhun7FLErreJHSCe7rRAUB
- +Oc=
-X-IronPort-AV: E=Sophos;i="5.64,415,1559548800"; 
-   d="scan'208";a="40663374"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 21 Aug 2019 21:53:01 -0800
-IronPort-SDR: O8JRi/Ew6E4tPqjpwTRnG377DfKmvYUuUS4skw+4Ce9z5P/4q5k8t5ZpaW6q4+kYLQwKYYlw8/
- v0D0yPPIvXgUh4O2s3y6hZlzR2JLLKgHmYUvw9Z3QFv6vDHGAujdFQzedvp0f4VPofyZMufQOp
- nFpivY9vOX9HAb37zTzjC+29heVpwI8YzynO3mVzQsaeBXQSuJes/hJAg6iIIWrdxzxhKBGhlP
- k+waTjLK53o+LGXWF46DdJFBMZuE1G1CtlbPKi0y6drqd3g5S9ZzwiCUBKri4u//JG4eB0zA8Z
- U2w=
-Subject: Re: [PATCH v1 06/63] Input: atmel_mxt_ts - output status from T42
- Touch Suppression
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     <nick@shmanahar.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <george_davis@mentor.com>
-References: <20190816083130.18250-1-jiada_wang@mentor.com>
- <20190816083130.18250-2-jiada_wang@mentor.com>
- <20190816173426.GM121898@dtor-ws>
-From:   Jiada Wang <jiada_wang@mentor.com>
-Message-ID: <07f3ff0d-5076-2b36-ece4-5fce8ceada8f@mentor.com>
-Date:   Thu, 22 Aug 2019 14:52:57 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190816173426.GM121898@dtor-ws>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Thu, 22 Aug 2019 01:53:41 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7M5qM56089297;
+        Thu, 22 Aug 2019 01:53:28 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhm1cabje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 01:53:27 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7M5o1kO030793;
+        Thu, 22 Aug 2019 05:53:26 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04wdc.us.ibm.com with ESMTP id 2ufye0eneq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 05:53:26 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7M5rOeZ50921898
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 05:53:24 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C09EBE04F;
+        Thu, 22 Aug 2019 05:53:24 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 523A9BE053;
+        Thu, 22 Aug 2019 05:53:22 +0000 (GMT)
+Received: from [9.124.31.100] (unknown [9.124.31.100])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 22 Aug 2019 05:53:21 +0000 (GMT)
+Message-ID: <1566453201.526.9.camel@abdul.in.ibm.com>
+Subject: [linux-next][PPC][bisected c7d8b7][gcc 6.4.1] build error at
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:1471
+From:   Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-next <linux-next@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, jgg@mellanox.com,
+        rcampbell <rcampbell@nvidia.com>
+Date:   Thu, 22 Aug 2019 11:23:21 +0530
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=514 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908220062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Greeting's
 
-On 2019/08/17 2:34, Dmitry Torokhov wrote:
-> On Fri, Aug 16, 2019 at 05:30:33PM +0900, Jiada Wang wrote:
->> From: Nick Dyer <nick.dyer@itdev.co.uk>
->>
->> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
->> Acked-by: Benson Leung <bleung@chromium.org>
->> Acked-by: Yufeng Shen <miletus@chromium.org>
->> (cherry picked from ndyer/linux/for-upstream commit ab95b5a309999d2c098daaa9f88d9fcfae7eb516)
->> Signed-off-by: George G. Davis <george_davis@mentor.com>
->> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
->> ---
->>   drivers/input/touchscreen/atmel_mxt_ts.c | 25 ++++++++++++++++++++++++
->>   1 file changed, 25 insertions(+)
->>
->> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
->> index a75c35c6f9f9..9226ec528adf 100644
->> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
->> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
->> @@ -155,6 +155,9 @@ struct t37_debug {
->>   #define MXT_RESET_VALUE		0x01
->>   #define MXT_BACKUP_VALUE	0x55
->>   
->> +/* Define for MXT_PROCI_TOUCHSUPPRESSION_T42 */
->> +#define MXT_T42_MSG_TCHSUP	BIT(0)
->> +
->>   /* T100 Multiple Touch Touchscreen */
->>   #define MXT_T100_CTRL		0
->>   #define MXT_T100_CFG1		1
->> @@ -323,6 +326,8 @@ struct mxt_data {
->>   	u8 T9_reportid_max;
->>   	u16 T18_address;
->>   	u8 T19_reportid;
->> +	u8 T42_reportid_min;
->> +	u8 T42_reportid_max;
->>   	u16 T44_address;
->>   	u8 T48_reportid;
->>   	u8 T100_reportid_min;
->> @@ -978,6 +983,17 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
->>   	data->update_input = true;
->>   }
->>   
->> +static void mxt_proc_t42_messages(struct mxt_data *data, u8 *msg)
->> +{
->> +	struct device *dev = &data->client->dev;
->> +	u8 status = msg[1];
->> +
->> +	if (status & MXT_T42_MSG_TCHSUP)
->> +		dev_info(dev, "T42 suppress\n");
->> +	else
->> +		dev_info(dev, "T42 normal\n");
-> 
-> dev_dbg(). There is no need to flood the logs with this. I'd assume this
-> is for assisting in bringup. Should there be some more generic way of
-> monitoring the status?
-> 
-will replace with dev_dbg() in v2 patchset
+Today's linux-next kernel 5.3.0-rc5-next-20190820 failed to build on my
+powerpc machine
 
-thanks,
-Jiada
+Build errors:
+drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c: In function amdgpu_exit:
+drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c:1471:2: error: implicit
+declaration of function mmu_notifier_synchronize
+[-Werror=implicit-function-declaration]
+  mmu_notifier_synchronize();
+  ^~~~~~~~~~~~~~~~~~~~~~~~ 
+cc1: some warnings being treated as errors
+make[4]: *** [drivers/gpu/drm/amd/amdgpu/amdgpu_drv.o] Error 1
+make[3]: *** [drivers/gpu/drm/amd/amdgpu] Error 2
+
+It was introduced with commit c7d8b7 (hmm: use mmu_notifier_get/put for
+'struct hmm')
+
+error disappears when commit is reverted.
+
+-- 
+Regard's
+
+Abdul Haleem
+IBM Linux Technology Centre
+
+
+
