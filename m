@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71248C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1898DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BD2233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D3B2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494161;
-	bh=fc+CB2Ssrn59WPr6z/hOAw7WWXrO2WuzYj3CQEMvPIU=;
+	s=default; t=1566494163;
+	bh=7PacgezBhWgl49FGiKUsGiEA921Ao2dsp7XTPPO661U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cmeNylOhgFFzr4TDENMj4T7JdUZN/wSQiJnW7bT8ZNc9UtGHAD9cLJTmBhQ0mpAd7
-	 SwUGZcZAlV+mMetyMu+i/2VOKu34JfIxJFzUp+2WAGobzfYXLUavSw9pw1Wy1XJxph
-	 TNLJLJ7twlF3kbgSdyQw+Yv7iBhANQg+A06pYoxM=
+	b=MDLmqYFAFOBuf+MFmF7YH3Uu6tlMYoRUjIDt6MzL2AkZrk8v9/1i+WcQdsN1Mx5sv
+	 NRrKAK4I6SFLcJAOnwgj8ta49xWOatfcEjagKv3MaGT1emcUXchK83f4u8fgBpiNEi
+	 Z3Dr4CGOtIJWZA/XJsrtU0COx8d/Y1WUdvRs+tNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391194AbfHVRP7 (ORCPT
+        id S2391202AbfHVRQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:15:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58274 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390417AbfHVRIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:37 -0400
+        id S2390429AbfHVRIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:39 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D767723405;
-        Thu, 22 Aug 2019 17:08:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A30823402;
+        Thu, 22 Aug 2019 17:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493717;
-        bh=fc+CB2Ssrn59WPr6z/hOAw7WWXrO2WuzYj3CQEMvPIU=;
+        s=default; t=1566493719;
+        bh=7PacgezBhWgl49FGiKUsGiEA921Ao2dsp7XTPPO661U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fdg2oED7s9ErkhuGLE8mj/5sue9BAuNrtGIBKpc946feHbvhoBJDavsvc3bzvKQmm
-         c1xsvfDOlaUxkGlsZkbujwcvXpRBX+e0pIrZSo6YPGi2oUa3wORPH9bFlrc8wgwubB
-         Fchdz9iDBoUpXuee6c4nybkIOY5gwwiAL4oAO/Nw=
+        b=VpH9QfAaeq2dPs+EFjRNMN7x2y/PKOL7niCWlhC17ubWWrOfFTV2lkpIfTrCNbl2i
+         xYEVCfJkWRCtRCQUxJGg8AtE41tog3bHeuNpd5l4JGKFUhzKJUa3htfAU+a6wAYkia
+         2rndjLzgeWdfwT5LqZt85jN+4S8/B6NqOWJyB4to=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.de>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 043/135] platform/x86: pcengines-apuv2: Fix softdep statement
-Date:   Thu, 22 Aug 2019 13:06:39 -0400
-Message-Id: <20190822170811.13303-44-sashal@kernel.org>
+Cc:     Nianyao Tang <tangnianyao@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 047/135] irqchip/gic-v3-its: Free unused vpt_page when alloc vpe table fail
+Date:   Thu, 22 Aug 2019 13:06:43 -0400
+Message-Id: <20190822170811.13303-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -68,36 +68,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean Delvare <jdelvare@suse.de>
+From: Nianyao Tang <tangnianyao@huawei.com>
 
-[ Upstream commit edbfe83def34153a05439ecb3352ae0bb65024de ]
+[ Upstream commit 34f8eb92ca053cbba2887bb7e4dbf2b2cd6eb733 ]
 
-Only first MODULE_SOFTDEP statement is handled per module.
-Multiple dependencies must be expressed in a single statement.
+In its_vpe_init, when its_alloc_vpe_table fails, we should free
+vpt_page allocated just before, instead of vpe->vpt_page.
+Let's fix it.
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Cc: "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Andy Shevchenko <andy@infradead.org>
-[andy: massaged commit message]
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/pcengines-apuv2.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-index c1ca931e1fab8..7a8cbfb5d2135 100644
---- a/drivers/platform/x86/pcengines-apuv2.c
-+++ b/drivers/platform/x86/pcengines-apuv2.c
-@@ -255,6 +255,4 @@ MODULE_DESCRIPTION("PC Engines APUv2/APUv3 board GPIO/LED/keys driver");
- MODULE_LICENSE("GPL");
- MODULE_DEVICE_TABLE(dmi, apu_gpio_dmi_table);
- MODULE_ALIAS("platform:pcengines-apuv2");
--MODULE_SOFTDEP("pre: platform:" AMD_FCH_GPIO_DRIVER_NAME);
--MODULE_SOFTDEP("pre: platform:leds-gpio");
--MODULE_SOFTDEP("pre: platform:gpio_keys_polled");
-+MODULE_SOFTDEP("pre: platform:" AMD_FCH_GPIO_DRIVER_NAME " platform:leds-gpio platform:gpio_keys_polled");
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 35500801dc2b5..20e5482d91b94 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3010,7 +3010,7 @@ static int its_vpe_init(struct its_vpe *vpe)
+ 
+ 	if (!its_alloc_vpe_table(vpe_id)) {
+ 		its_vpe_id_free(vpe_id);
+-		its_free_pending_table(vpe->vpt_page);
++		its_free_pending_table(vpt_page);
+ 		return -ENOMEM;
+ 	}
+ 
 -- 
 2.20.1
 
