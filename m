@@ -2,121 +2,95 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A22C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05087C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A3A233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tdqx+nY5"
+	by mail.kernel.org (Postfix) with ESMTP id CE1C123401
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 23:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566516185;
+	bh=SSwCNTMur/081Fa89ShN1PC9iyHoJEAT2lJPl/mFI/c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=X4IajnTgNc5gGPZ4tspvKxpd0A14jB76lWHw+uwon1JXoAJyepCVMIUMy0AmmRItl
+	 Z7Ep5SW/15muFI45CjSY/0A31ZAd6+LgMX440j7GsvD7VPQgw75AivK8xxQ5M2Jph8
+	 dllPOB7qJwRcg0DhgaNX+Sug44Oz78f8L+nizAbo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405646AbfHVXWK (ORCPT
+        id S2394344AbfHVXXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 19:22:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40442 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405566AbfHVXWJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 19:22:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c5so7125870wmb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 16:22:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zF3228PSgFDX4+jpWV9QqCljjDfY8nNiEPlbqDNQz0w=;
-        b=Tdqx+nY5BXAlwTXe0GWrKcRQaazJmXZatIi4Xj71Qw4rLfBkNVFmsRL/Jjh8DQioRw
-         PPwpF4MPgrwWSRtjEKMNsWStttnUaB/nORqQQ1ItvVdRVtCBscIdkZUuoZJRDWWwtGGq
-         Cir6CjnuI8uwL31aHvvvfMvyGhaKdpuhyFIwPEeAOJ1UDcn7Fppq8A7XTssI/By4yzRj
-         c4tWnGzef6QBmcVcwHjUuyFULJLyt8G6cxFCF/palC6Q0Rd6v/02ZH4sgCx21HMnZqXg
-         BX0QmTnG+lyyboFpV2D9CUjA6iUGKsNtqI6MKs2M9dFeEdOE/I64u8z7cNy+ZPvDCxkp
-         CyOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zF3228PSgFDX4+jpWV9QqCljjDfY8nNiEPlbqDNQz0w=;
-        b=BuLMZZ6QM445qrvuir15A6D/B9X3SPfk6knm2MVg0/1C69/YrflgnxpnK+pLOYmtnp
-         V6Y/oO6/MAr8TqUhBQB5MM4E4VYJNROjrto03NGDQrwtQlv3A5xcCjN272ot+tmpuFli
-         hs2mKxXNu8MpsA7gAMMFZmF76q1JykQTCi3EViFiWJa9IvrEqXjp2w6b09LwDJk6CgzJ
-         qdfTLrjgV9kr7qOsn6Gz0sP9vY58qUtsULqYafoJGzlGGgSkarBvBWasSZ0dNjoezSul
-         lYALAHW2xphFPSm2tfNIoP4qtG2sbijglM7pagblWIIgq7lNUh+IZ17dXrpKItBVL0Hw
-         BdRQ==
-X-Gm-Message-State: APjAAAXaU9OBa9AH//DgV3DQoycX1O7SxFmLxmgNFw+FegopqAC0Wp8F
-        PfJ7ynqv7Ad+686oFMwJRKc4g59A2Ni9EP1IkwZXQA==
-X-Google-Smtp-Source: APXvYqz9j/IRq7uGfGi/34Bzb0LGEdXxhRf0hi2YM6OUKfjViGpQbt/lhqFSLCIhW4pSe4EuTca+uGtVpoME01JF7jY=
-X-Received: by 2002:a7b:c745:: with SMTP id w5mr1319189wmk.21.1566516127285;
- Thu, 22 Aug 2019 16:22:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <1566357985-97781-1-git-send-email-joseph.qi@linux.alibaba.com>
- <20190822152107.adc0d4cd374fcc3eb8e148a9@linux-foundation.org>
- <CAJuCfpHULB5wQWf0Uxo=zSoyOAUmVFanrTZ0fo0-cfGc1o9hNQ@mail.gmail.com> <20190822161738.02297ead0abd424c44fb33b9@linux-foundation.org>
-In-Reply-To: <20190822161738.02297ead0abd424c44fb33b9@linux-foundation.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Thu, 22 Aug 2019 16:21:56 -0700
-Message-ID: <CAJuCfpHq0hTsuyfZ8z3sDWzOERgnPUT2oWMdtyh=t2HjQJPOng@mail.gmail.com>
-Subject: Re: [PATCH v3] psi: get poll_work to run when calling poll syscall
- next time
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jason Xing <kerneljasonxing@linux.alibaba.com>,
-        Caspar Zhang <caspar@linux.alibaba.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 22 Aug 2019 19:23:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41442 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391061AbfHVXXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 19:23:03 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 629EA205ED;
+        Thu, 22 Aug 2019 23:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1566516182;
+        bh=SSwCNTMur/081Fa89ShN1PC9iyHoJEAT2lJPl/mFI/c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fN7pTYAWAY6uFIgSUWEb45q3M+mQkLeoWqX/mCfeuskBzOAv6Ybrj4x02GR2iv10W
+         AA0Nzh7hRjMILRQgp1wsk8ONqdtZwWgZdUj9ToNXXYVBKbAuaT2nfAAth7w0gFdDpF
+         dsORVNJq0PzaEJ5nODlx0Va6QvwJJY8lWPfYhB5c=
+Date:   Thu, 22 Aug 2019 16:23:02 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Henry Burns <henryburns@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        HenryBurns <henrywolfeburns@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2 v2] mm/zsmalloc.c: Fix race condition in
+ zs_destroy_pool
+Message-Id: <20190822162302.6fdda379ada876e46a14a51e@linux-foundation.org>
+In-Reply-To: <20190820025939.GD500@jagdpanzerIV>
+References: <20190809181751.219326-1-henryburns@google.com>
+        <20190809181751.219326-2-henryburns@google.com>
+        <20190820025939.GD500@jagdpanzerIV>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 4:17 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Thu, 22 Aug 2019 16:11:15 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
->
-> > On Thu, Aug 22, 2019 at 3:21 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > >
-> > > On Wed, 21 Aug 2019 11:26:25 +0800 Joseph Qi <joseph.qi@linux.alibaba.com> wrote:
-> > >
-> > > > Only when calling the poll syscall the first time can user
-> > > > receive POLLPRI correctly. After that, user always fails to
-> > > > acquire the event signal.
-> > > >
-> > > > Reproduce case:
-> > > > 1. Get the monitor code in Documentation/accounting/psi.txt
-> > > > 2. Run it, and wait for the event triggered.
-> > > > 3. Kill and restart the process.
-> > > >
-> > > > The question is why we can end up with poll_scheduled = 1 but the work
-> > > > not running (which would reset it to 0). And the answer is because the
-> > > > scheduling side sees group->poll_kworker under RCU protection and then
-> > > > schedules it, but here we cancel the work and destroy the worker. The
-> > > > cancel needs to pair with resetting the poll_scheduled flag.
-> > >
-> > > Should this be backported into -stable kernels?
-> >
-> > Adding GregKH and stable@vger.kernel.org
-> >
-> > I was able to cleanly apply this patch to stable master and
-> > linux-5.2.y branches (these are the only branches that have psi
-> > triggers).
-> > Greg, Andrew got this patch into -mm tree. Please advise on how we
-> > should proceed to land it in stable 5.2.y and master.
->
-> That isn't the point - we know how to merge patches ;)
->
-> What I'm asking is whether it is desirable that -stable kernels have
-> this patch.  It certainly sounds like it from the changelog, so I'm
-> wondering if the omission of cc:stable was intentional?
+On Tue, 20 Aug 2019 11:59:39 +0900 Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
 
-Sorry for my misunderstanding. I believe cc:stable omission was
-unintentional. It's a fix for a bug which exists in stable branches I
-mentioned above.
-Thanks!
+> On (08/09/19 11:17), Henry Burns wrote:
+> > In zs_destroy_pool() we call flush_work(&pool->free_work). However, we
+> > have no guarantee that migration isn't happening in the background
+> > at that time.
+> > 
+> > Since migration can't directly free pages, it relies on free_work
+> > being scheduled to free the pages.  But there's nothing preventing an
+> > in-progress migrate from queuing the work *after*
+> > zs_unregister_migration() has called flush_work().  Which would mean
+> > pages still pointing at the inode when we free it.
+> > 
+> > Since we know at destroy time all objects should be free, no new
+> > migrations can come in (since zs_page_isolate() fails for fully-free
+> > zspages).  This means it is sufficient to track a "# isolated zspages"
+> > count by class, and have the destroy logic ensure all such pages have
+> > drained before proceeding.  Keeping that state under the class
+> > spinlock keeps the logic straightforward.
+> > 
+> > Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
+> > Signed-off-by: Henry Burns <henryburns@google.com>
+> 
+> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> 
+
+Thanks.  So we have a couple of races which result in memory leaks?  Do
+we feel this is serious enough to justify a -stable backport of the
+fixes?
+
