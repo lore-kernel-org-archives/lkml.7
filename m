@@ -2,58 +2,57 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3B1C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0051C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFBD233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB61B233FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494534;
-	bh=4HEmr50nV+JdKeTKkivXpmrx6+cnqQ1AJCpc1pzNJLw=;
+	s=default; t=1566494537;
+	bh=6kceLm+Vm1IIrrKk6SnuBmYtgdA8OWCP96uy53Jt3L4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kgb1OyGFPyYm+Ezoe0OUUfWItNAswctEzxDHBpsHMDEM0AX3yDawIrGz9hdzTCwal
-	 MV4wGUJGxPT1FQ82qFrIP0BCrz01zese+TgdPAi3nuSRvxvp+Gij/yqWCcytVkHBZm
-	 QO1Rkn77rb1F8veNWEBXQrOUL4c3a2495Vb1me80=
+	b=0cky+VqELtnczuV6vSrSgGfV8Rh+6aNroQlD595c9bsRlIN+gj6MM3AIh3iyK2+I0
+	 BKV/L/AvuzwZEXCNvk3ImkftRmq/zx0lKsOtuA2y/WO/bKcFs74+fsRNd4I6qNpEKX
+	 3AfJttauOHq0FGFTVd18/HPGx9qX2kU3dE91njuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389695AbfHVRWN (ORCPT
+        id S2389874AbfHVRWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39922 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:22:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730997AbfHVRWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:13 -0400
+        id S2389818AbfHVRWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:15 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7D9B21743;
-        Thu, 22 Aug 2019 17:22:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85E23233FC;
+        Thu, 22 Aug 2019 17:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494531;
-        bh=4HEmr50nV+JdKeTKkivXpmrx6+cnqQ1AJCpc1pzNJLw=;
+        s=default; t=1566494535;
+        bh=6kceLm+Vm1IIrrKk6SnuBmYtgdA8OWCP96uy53Jt3L4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zi1GyzBeSfm/XZ3oGIDTM+8aYz1zfXLQYDIhyVHQdXVjE4P1tIZT77giHB47oEn4c
-         rEQ1lbVILZ6z3QotTxZIc2kXdQVfi3NsZRQlMj7JKksnm7Pjz0Le9TYzyVAANHo543
-         Ln8bP4tw+zW8j8PUOXeptlWhUZMfPJm8Cksn2T7o=
+        b=KBqztiBgVJ1jsM7TjWnw6tMiOPiE/fIPQBaFoUKL7GVu3PE7fs6HDQrzfEgenX/+1
+         gOOOLIoAf4GcCvvZCWdgjvfHHyNtxxp+JvMSUIuw0vLr00uuKDfSpBk5UF5lFbMeXl
+         aouAYWHCXq+N1EKVmSeID/yhu2f3Jftz//OdiQXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.4 01/78] usb: iowarrior: fix deadlock on disconnect
-Date:   Thu, 22 Aug 2019 10:18:05 -0700
-Message-Id: <20190822171832.078518051@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 14/78] s390/qdio: add sanity checks to the fast-requeue path
+Date:   Thu, 22 Aug 2019 10:18:18 -0700
+Message-Id: <20190822171832.454261809@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,50 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+[ Upstream commit a6ec414a4dd529eeac5c3ea51c661daba3397108 ]
 
-commit c468a8aa790e0dfe0a7f8a39db282d39c2c00b46 upstream.
+If the device driver were to send out a full queue's worth of SBALs,
+current code would end up discovering the last of those SBALs as PRIMED
+and erroneously skip the SIGA-w. This immediately stalls the queue.
 
-We have to drop the mutex before we close() upon disconnect()
-as close() needs the lock. This is safe to do by dropping the
-mutex as intfdata is already set to NULL, so open() will fail.
+Add a check to not attempt fast-requeue in this case. While at it also
+make sure that the state of the previous SBAL was successfully extracted
+before inspecting it.
 
-Fixes: 03f36e885fc26 ("USB: open disconnect race in iowarrior")
-Reported-by: syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20190808092728.23417-1-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/iowarrior.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/s390/cio/qdio_main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/misc/iowarrior.c
-+++ b/drivers/usb/misc/iowarrior.c
-@@ -898,19 +898,20 @@ static void iowarrior_disconnect(struct
- 	dev = usb_get_intfdata(interface);
- 	mutex_lock(&iowarrior_open_disc_lock);
- 	usb_set_intfdata(interface, NULL);
-+	/* prevent device read, write and ioctl */
-+	dev->present = 0;
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index 8d7fc3b6ca63f..adf322a86a01b 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -1576,13 +1576,13 @@ static int handle_outbound(struct qdio_q *q, unsigned int callflags,
+ 		rc = qdio_kick_outbound_q(q, phys_aob);
+ 	} else if (need_siga_sync(q)) {
+ 		rc = qdio_siga_sync_q(q);
++	} else if (count < QDIO_MAX_BUFFERS_PER_Q &&
++		   get_buf_state(q, prev_buf(bufnr), &state, 0) > 0 &&
++		   state == SLSB_CU_OUTPUT_PRIMED) {
++		/* The previous buffer is not processed yet, tack on. */
++		qperf_inc(q, fast_requeue);
+ 	} else {
+-		/* try to fast requeue buffers */
+-		get_buf_state(q, prev_buf(bufnr), &state, 0);
+-		if (state != SLSB_CU_OUTPUT_PRIMED)
+-			rc = qdio_kick_outbound_q(q, 0);
+-		else
+-			qperf_inc(q, fast_requeue);
++		rc = qdio_kick_outbound_q(q, 0);
+ 	}
  
- 	minor = dev->minor;
-+	mutex_unlock(&iowarrior_open_disc_lock);
-+	/* give back our minor - this will call close() locks need to be dropped at this point*/
- 
--	/* give back our minor */
- 	usb_deregister_dev(interface, &iowarrior_class);
- 
- 	mutex_lock(&dev->mutex);
- 
- 	/* prevent device read, write and ioctl */
--	dev->present = 0;
- 
- 	mutex_unlock(&dev->mutex);
--	mutex_unlock(&iowarrior_open_disc_lock);
- 
- 	if (dev->opened) {
- 		/* There is a process that holds a filedescriptor to the device ,
+ 	/* in case of SIGA errors we must process the error immediately */
+-- 
+2.20.1
+
 
 
