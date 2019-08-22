@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520A5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0637CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADFC233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C39DF233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494225;
-	bh=QK85sgzqt77uYmmnnf7QigCZMyphAJAAnG+jNPOGMkc=;
+	s=default; t=1566494227;
+	bh=krS5At2NkPTefABXFbMtagk0hgAUZuzvX1TBT4tBZLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lMeierbc+kHSqjfQRbhec0/yYhUlTbbc2oG1lc8nfECL1dmxqOR8vdnrThqq3jxHh
-	 3NXuw+aj669X5vr06rkQ9m23o/z7HrR4MCIGlreNOfZ9ltT0n+L6U1kf8EHeURV1jp
-	 FvRn6wb8ZyINtIGBvGrOWuYU+C63M4w5hlddjAYE=
+	b=PChS4sYb4H57T1arTK8h5GrWCHhxOyMpVs57kAsL4OHDI4aV/MgabmD5Nlw2/Dr5B
+	 bLH0FuhVvFR93OO4STaDL3MY+zAiIuc4z7of3DpQ/9zYiAhA0KOkmS0fQ5SMYkXoyR
+	 6N5Ed+e4Ygy3fDs2rRwJKiDzYjPflfdXPTA4lJrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391266AbfHVRRE (ORCPT
+        id S2391274AbfHVRRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:17:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58160 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:17:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390361AbfHVRIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:31 -0400
+        id S2390357AbfHVRIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:30 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF112233FC;
+        by mail.kernel.org (Postfix) with ESMTPSA id 71CA32341B;
         Thu, 22 Aug 2019 17:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493710;
-        bh=QK85sgzqt77uYmmnnf7QigCZMyphAJAAnG+jNPOGMkc=;
+        s=default; t=1566493709;
+        bh=krS5At2NkPTefABXFbMtagk0hgAUZuzvX1TBT4tBZLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tLGwZooTSQlgq0/7idiw3RmLNppNVuORuRjyD692JACW9lrUs5A0KpltkZ3iM2Q3b
-         hnVsCyC8DvQGM5rP0v15hktCTc0F+IFPXo4zmW0SYvTw34AMNyEBaTc3h/au7DPPgR
-         oZbYhoY7F5QrO3zN/NUAINEkwOezi742zpf06GUU=
+        b=BO0bVKiK4Fwy+UDKmIhmKL0W6PniSIHdfLC9E5YX3Aaogw84Wpgm2kagH6wP9gszI
+         OkQfGF/fHd/Y0TP8A8DxxI6AsRUaSWDddoJnhhOls+nSzwcee/7amF8WASGNy/9+hr
+         wJDuJW/4+1QbDFjjTvYXki+NDr2vVNgDp79jAVnE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+3499a83b2d062ae409d4@syzkaller.appspotmail.com,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 029/135] net: usb: pegasus: fix improper read if get_registers() fail
-Date:   Thu, 22 Aug 2019 13:06:25 -0400
-Message-Id: <20190822170811.13303-30-sashal@kernel.org>
+Subject: [PATCH 5.2 028/135] Input: iforce - add sanity checks
+Date:   Thu, 22 Aug 2019 13:06:24 -0400
+Message-Id: <20190822170811.13303-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,34 +66,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Kirjanov <kda@linux-powerpc.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 224c04973db1125fcebefffd86115f99f50f8277 upstream.
+commit 849f5ae3a513c550cad741c68dd3d7eb2bcc2a2c upstream.
 
-get_registers() may fail with -ENOMEM and in this
-case we can read a garbage from the status variable tmp.
+The endpoint type should also be checked before a device
+is accepted.
 
-Reported-by: syzbot+3499a83b2d062ae409d4@syzkaller.appspotmail.com
-Signed-off-by: Denis Kirjanov <kda@linux-powerpc.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/pegasus.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/joystick/iforce/iforce-usb.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/usb/pegasus.c b/drivers/net/usb/pegasus.c
-index 6d25dea5ad4b2..f7d117d80cfbb 100644
---- a/drivers/net/usb/pegasus.c
-+++ b/drivers/net/usb/pegasus.c
-@@ -282,7 +282,7 @@ static void mdio_write(struct net_device *dev, int phy_id, int loc, int val)
- static int read_eprom_word(pegasus_t *pegasus, __u8 index, __u16 *retdata)
- {
- 	int i;
--	__u8 tmp;
-+	__u8 tmp = 0;
- 	__le16 retdatai;
- 	int ret;
+diff --git a/drivers/input/joystick/iforce/iforce-usb.c b/drivers/input/joystick/iforce/iforce-usb.c
+index f1569ae8381bc..a0a686f56ac4f 100644
+--- a/drivers/input/joystick/iforce/iforce-usb.c
++++ b/drivers/input/joystick/iforce/iforce-usb.c
+@@ -129,7 +129,12 @@ static int iforce_usb_probe(struct usb_interface *intf,
+ 		return -ENODEV;
  
+ 	epirq = &interface->endpoint[0].desc;
++	if (!usb_endpoint_is_int_in(epirq))
++		return -ENODEV;
++
+ 	epout = &interface->endpoint[1].desc;
++	if (!usb_endpoint_is_int_out(epout))
++		return -ENODEV;
+ 
+ 	if (!(iforce = kzalloc(sizeof(struct iforce) + 32, GFP_KERNEL)))
+ 		goto fail;
 -- 
 2.20.1
 
