@@ -2,58 +2,53 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF965C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C24C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76B720856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4027423400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566496032;
-	bh=eRi135xqg5cAdxKSzrpkWfbDgI3AVSQeoWbwquYOEXQ=;
+	s=default; t=1566496040;
+	bh=8YuwYjJzQhn4cLB3olIy40BOVZ1hEpJxinnUGLJp2HQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v5uFAoqgYf6TiJUyJzhlhyE2eLoRj70v9u2XrMtG1VhcjqzWX3NBwtamg90rz9s2X
-	 +RelIJtk+YAwdIoXLOh+S22bODjuTy++W1ktWMEwfAc5w9u5PSKooVsX/8jWKQH5zg
-	 or/3FuecgiehUzzpIrZre3Q+ToqYw3TJA5qc5wc0=
+	b=JWufNf81Rx0oAYFJeM0Ce7BnY4sZsQmaxFJvN14Fxwkz/0PzN4nShE9+Dv1WDQ0Hn
+	 4SOYoXLUcJcT5ATr7+77Oyg8mQLGpnPDN3sdHfOyD9IWjLBi4zv7cf8bSduPJzOAkb
+	 Nrzzn9hMvd935C8LV4MK6yP8hDSe5yJfcmyuHIsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393171AbfHVRrL (ORCPT
+        id S2393180AbfHVRrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:47:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41148 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:47:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391421AbfHVRWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:40 -0400
+        id S2391398AbfHVRWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:37 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D09F32341D;
-        Thu, 22 Aug 2019 17:22:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29FA821743;
+        Thu, 22 Aug 2019 17:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494560;
-        bh=eRi135xqg5cAdxKSzrpkWfbDgI3AVSQeoWbwquYOEXQ=;
+        s=default; t=1566494556;
+        bh=8YuwYjJzQhn4cLB3olIy40BOVZ1hEpJxinnUGLJp2HQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TnzpbIcwXvXL0aJnFr/xcvdC1JP9xs7zhToOccm/bt/GQ8gWi4I8Sw5AcS1voWmP1
-         HRvL0z97FiRU+mjRUW5mHoyPyFmvusukACYSQ2cuETgE9qlzn5Hg3h0FYA67tHLjKb
-         WLw19zi2bsDi51B6cQGDFqaUk+RvfDYUVcphZBOw=
+        b=C1E+AQJ0k2IyYr1tCs7wnqeH997bF5HjENWAgOPVB8KuDbJP6wkL+k/fzeiIAjW8o
+         2H5ri93DWiAIN2KjfeQ/ztnXOokHEFrO+KmaGmnWpvqcKeRoidXMlPPZBfu3Y1w9+4
+         diohf2HjbeB9Pgd4cXGczblwIpegFImpWQcppmjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Numfor Mbiziwo-Tiapo <nums@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Drayton <mbd@fb.com>, Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 47/78] perf header: Fix use of unitialized value warning
-Date:   Thu, 22 Aug 2019 10:18:51 -0700
-Message-Id: <20190822171833.401778819@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.4 42/78] Input: iforce - add sanity checks
+Date:   Thu, 22 Aug 2019 10:18:46 -0700
+Message-Id: <20190822171833.259340360@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -66,68 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 20f9781f491360e7459c589705a2e4b1f136bee9 ]
+From: Oliver Neukum <oneukum@suse.com>
 
-When building our local version of perf with MSAN (Memory Sanitizer) and
-running the perf record command, MSAN throws a use of uninitialized
-value warning in "tools/perf/util/util.c:333:6".
+commit 849f5ae3a513c550cad741c68dd3d7eb2bcc2a2c upstream.
 
-This warning stems from the "buf" variable being passed into "write".
-It originated as the variable "ev" with the type union perf_event*
-defined in the "perf_event__synthesize_attr" function in
-"tools/perf/util/header.c".
+The endpoint type should also be checked before a device
+is accepted.
 
-In the "perf_event__synthesize_attr" function they allocate space with a malloc
-call using ev, then go on to only assign some of the member variables before
-passing "ev" on as a parameter to the "process" function therefore "ev"
-contains uninitialized memory. Changing the malloc call to zalloc to initialize
-all the members of "ev" which gets rid of the warning.
+Reported-by: syzbot+5efc10c005014d061a74@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-To reproduce this warning, build perf by running:
-make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
- -fsanitize-memory-track-origins"
-
-(Additionally, llvm might have to be installed and clang might have to
-be specified as the compiler - export CC=/usr/bin/clang)
-
-then running:
-tools/perf/perf record -o - ls / | tools/perf/perf --no-pager annotate\
- -i - --stdio
-
-Please see the cover letter for why false positive warnings may be
-generated.
-
-Signed-off-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Drayton <mbd@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190724234500.253358-2-nums@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/joystick/iforce/iforce-usb.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 0102dd46fb6da..bcb8e85a40f90 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2680,7 +2680,7 @@ int perf_event__synthesize_attr(struct perf_tool *tool,
- 	size += sizeof(struct perf_event_header);
- 	size += ids * sizeof(u64);
+--- a/drivers/input/joystick/iforce/iforce-usb.c
++++ b/drivers/input/joystick/iforce/iforce-usb.c
+@@ -145,7 +145,12 @@ static int iforce_usb_probe(struct usb_i
+ 		return -ENODEV;
  
--	ev = malloc(size);
-+	ev = zalloc(size);
+ 	epirq = &interface->endpoint[0].desc;
++	if (!usb_endpoint_is_int_in(epirq))
++		return -ENODEV;
++
+ 	epout = &interface->endpoint[1].desc;
++	if (!usb_endpoint_is_int_out(epout))
++		return -ENODEV;
  
- 	if (ev == NULL)
- 		return -ENOMEM;
--- 
-2.20.1
-
+ 	if (!(iforce = kzalloc(sizeof(struct iforce) + 32, GFP_KERNEL)))
+ 		goto fail;
 
 
