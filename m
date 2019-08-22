@@ -2,101 +2,104 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DA3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BB0C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17EE2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E0623405
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493875;
-	bh=Eu5zYHsgZr/DzgkYZtrV8Xf3yPbZrB6F/5Aa3SVutiA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UZXsLGOzwwhmaTFuEP7ZeVdtEtm8dQoTKEfK0TzT3bBXR+xmwnP1Vf+IP+zBA70Az
-	 SbBDPw2jXE6VXrSzGOMdTm3ewUuoWQMT8DvGyhbeN+AB1vzDTXO4JITrPhr1HFAF6x
-	 arh7L58VEq6TFpDMpNnYDZB4HOfgkMT1KOL2bC98=
+	s=default; t=1566493878;
+	bh=ag69XH0HK/mqy35v/SJsvTO77r9YWwBqbkrfQzcvab4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ToFyU6oOUdK3KnBDyic6mnets94OGPEoLxLQs28nICvcS1EIt0/Yb9KnagH2dHNFK
+	 Kmdn4CBubymeLKuMkJLM1upJT3Qrxeegl40T/j5VM62lTxWiX1n5Aai2pzOPrDd/9k
+	 b+L5SHzMumaecDh2+AvD/dZELZP8x2uySvo3TVl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390903AbfHVRLN (ORCPT
+        id S2390874AbfHVRLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:11:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32896 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:11:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389135AbfHVRLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:11:09 -0400
-Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2390723AbfHVRJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:18 -0400
+Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 821062089E;
-        Thu, 22 Aug 2019 17:11:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 740DE2342B;
+        Thu, 22 Aug 2019 17:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493868;
-        bh=Eu5zYHsgZr/DzgkYZtrV8Xf3yPbZrB6F/5Aa3SVutiA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YgpviCCuEYOqne1wsEWgd6l+Gzkw+5xYBwggmYQtDll2PjCPqB1qmScWDXN1P/B5K
-         B/RNg/icssWR6AjcDPdeqSlGGxWCAS2rl4YBtOQnalt5AVfZm3e4ze3if6d5gFRY2x
-         +KvCpV/lo8jNDpZObQ1PLinLdtTKiva/GCEIEsL4=
-Date:   Thu, 22 Aug 2019 10:11:08 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        Gavin Li <git@thegavinli.com>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Geoff Levand <geoff@infradead.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Bin Liu <b-liu@ti.com>, linux-arm-kernel@lists.infradead.org,
-        linux-usb@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-m68k@lists.linux-m68k.org, iommu@lists.linux-foundation.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: next take at setting up a dma mask by default for platform
- devices v2
-Message-ID: <20190822171108.GA17471@kroah.com>
-References: <20190816062435.881-1-hch@lst.de>
+        s=default; t=1566493757;
+        bh=ag69XH0HK/mqy35v/SJsvTO77r9YWwBqbkrfQzcvab4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mdeHmwPkTYJKek4WVF05jdvm9TSfJCqPCkHEC2X9kv4HbjxIApAxCKgc6bJZ6X5Tn
+         Yu87OVFITmzlIFq/igrwhtMdTv/TX5Ww5+8pIAqCCDGDHsxMXQSrNlgXulV3xWFIL5
+         vgbW1CzWRuRhTciF+NtEDg3iZNJGMufy1G2ywLQY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ross Lagerwall <ross.lagerwall@citrix.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.2 117/135] xen/netback: Reset nr_frags before freeing skb
+Date:   Thu, 22 Aug 2019 13:07:53 -0400
+Message-Id: <20190822170811.13303-118-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
+References: <20190822170811.13303-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816062435.881-1-hch@lst.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.2.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.2.10-rc1
+X-KernelTest-Deadline: 2019-08-24T17:07+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 08:24:29AM +0200, Christoph Hellwig wrote:
-> Hi all,
-> 
-> this is another attempt to make sure the dma_mask pointer is always
-> initialized for platform devices.  Not doing so lead to lots of
-> boilerplate code, and makes platform devices different from all our
-> major busses like PCI where we always set up a dma_mask.  In the long
-> run this should also help to eventually make dma_mask a scalar value
-> instead of a pointer and remove even more cruft.
-> 
-> The bigger blocker for this last time was the fact that the usb
-> subsystem uses the presence or lack of a dma_mask to check if the core
-> should do dma mapping for the driver, which is highly unusual.  So we
-> fix this first.  Note that this has some overlap with the pending
-> desire to use the proper dma_mmap_coherent helper for mapping usb
-> buffers.  The first two patches have already been queued up by Greg
-> and are only included for completeness.
+From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-Note to everyone.  The first two patches in this series is already in
-5.3-rc5.
+[ Upstream commit 3a0233ddec554b886298de2428edb5c50a20e694 ]
 
-I've applied the rest of the series to my usb-next branch (with the 6th
-patch landing there later today.)  They are scheduled to be merge to
-Linus in 5.4-rc1.
+At this point nr_frags has been incremented but the frag does not yet
+have a page assigned so freeing the skb results in a crash. Reset
+nr_frags before freeing the skb to prevent this.
 
-Christoph, thanks so much for these cleanups.
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/xen-netback/netback.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-greg k-h
+diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
+index 1d9940d4e8c7d..c9262ffeefe4c 100644
+--- a/drivers/net/xen-netback/netback.c
++++ b/drivers/net/xen-netback/netback.c
+@@ -925,6 +925,7 @@ static void xenvif_tx_build_gops(struct xenvif_queue *queue,
+ 			skb_shinfo(skb)->nr_frags = MAX_SKB_FRAGS;
+ 			nskb = xenvif_alloc_skb(0);
+ 			if (unlikely(nskb == NULL)) {
++				skb_shinfo(skb)->nr_frags = 0;
+ 				kfree_skb(skb);
+ 				xenvif_tx_err(queue, &txreq, extra_count, idx);
+ 				if (net_ratelimit())
+@@ -940,6 +941,7 @@ static void xenvif_tx_build_gops(struct xenvif_queue *queue,
+ 
+ 			if (xenvif_set_skb_gso(queue->vif, skb, gso)) {
+ 				/* Failure in xenvif_set_skb_gso is fatal. */
++				skb_shinfo(skb)->nr_frags = 0;
+ 				kfree_skb(skb);
+ 				kfree_skb(nskb);
+ 				break;
+-- 
+2.20.1
+
