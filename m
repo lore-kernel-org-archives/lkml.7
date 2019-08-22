@@ -2,169 +2,267 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D773C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1C1C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0091123401
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BBBB23401
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 16:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="SubWR7TI"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="T7nuMemB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390070AbfHVQeN (ORCPT
+        id S2390060AbfHVQeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 12:34:13 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:37707 "EHLO pegase1.c-s.fr"
+        Thu, 22 Aug 2019 12:34:12 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:46152 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390042AbfHVQeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 12:34:11 -0400
+        id S2390015AbfHVQeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 12:34:06 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46DqqM6Lmxz9v0dC;
-        Thu, 22 Aug 2019 18:34:07 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 46DqqH5mBLz9v0d7;
+        Thu, 22 Aug 2019 18:34:03 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=SubWR7TI; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=T7nuMemB; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id dEgUR9WrCzhv; Thu, 22 Aug 2019 18:34:07 +0200 (CEST)
+        with ESMTP id DPcvu3eMaO36; Thu, 22 Aug 2019 18:34:03 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46DqqM5JbVz9v0d3;
-        Thu, 22 Aug 2019 18:34:07 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46DqqH4f5xz9v0d3;
+        Thu, 22 Aug 2019 18:34:03 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566491647; bh=gGn5zKI12MfYcvKD0vSwYEdB1ZM6vfMWNiGVdpDB/J8=;
+        t=1566491643; bh=s75YtRg6h2KH9yN4v0cq8ImarWY1XZ4JshoevZs3UUQ=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=SubWR7TIqg/PzZuoIcAHNxsxbfyY7qX3fbg2Ldg40vBeC6GUS0N6BdYLy2w6m7Qmi
-         uQEnN+GtMM+PZwh3K8KpDLxYXk8QLMgaXnBu3ohz8i/PwCp0oqp5KbVE6QPrbaPw6/
-         HwcEwZwwmoRQbHpE9mqxFG5+o7Zauncw5mUpFAig=
+        b=T7nuMemBJyIKTnKLHiI9FME/ylJhO5Pob3umzc7r3RvzcxU4tux1q94uwRDT5+RZw
+         SPYfNYpf63yues2FGg31htdqQooKLNqyObTMCQDTIZ40N37FkIM/H/VjHJkTPXZxWt
+         ApSsClEhLVjoo5tQKx5uKPIysGcpVAQKn/hqX1pA=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 719E58B84C;
-        Thu, 22 Aug 2019 18:34:09 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5BD428B84C;
+        Thu, 22 Aug 2019 18:34:05 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Ga2Ka04W_XTm; Thu, 22 Aug 2019 18:34:09 +0200 (CEST)
+        with ESMTP id ZxDSEUTP_DKX; Thu, 22 Aug 2019 18:34:05 +0200 (CEST)
 Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3C6A48B81D;
-        Thu, 22 Aug 2019 18:34:09 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1A0A48B81D;
+        Thu, 22 Aug 2019 18:34:05 +0200 (CEST)
 Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 0D8AC6B730; Thu, 22 Aug 2019 16:34:09 +0000 (UTC)
-Message-Id: <bef2a06c39c313a2c8b2ac76e802954228ddddfb.1566491310.git.christophe.leroy@c-s.fr>
+        id E68146B730; Thu, 22 Aug 2019 16:34:04 +0000 (UTC)
+Message-Id: <194fb7bc973ef2ce43016c97dd32f2b2dcbae4e7.1566491310.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1566491310.git.christophe.leroy@c-s.fr>
 References: <cover.1566491310.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 8/8] powerpc/vdso32: miscellaneous optimisations
+Subject: [PATCH v2 4/8] powerpc/vdso32: inline __get_datapage()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 22 Aug 2019 16:34:09 +0000 (UTC)
+Date:   Thu, 22 Aug 2019 16:34:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Various optimisations by inverting branches and removing
-redundant instructions.
+__get_datapage() is only a few instructions to retrieve the
+address of the page where the kernel stores data to the VDSO.
+
+By inlining this function into its users, a bl/blr pair and
+a mflr/mtlr pair is avoided, plus a few reg moves.
+
+The improvement is noticeable (about 55 nsec/call on an 8xx)
+
+vdsotest before the patch:
+gettimeofday:    vdso: 731 nsec/call
+clock-gettime-realtime-coarse:    vdso: 668 nsec/call
+clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
+
+vdsotest after the patch:
+gettimeofday:    vdso: 677 nsec/call
+clock-gettime-realtime-coarse:    vdso: 613 nsec/call
+clock-gettime-monotonic-coarse:    vdso: 690 nsec/call
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/kernel/vdso32/datapage.S     |  3 +--
- arch/powerpc/kernel/vdso32/getcpu.S       |  6 +++---
- arch/powerpc/kernel/vdso32/gettimeofday.S | 18 +++++++++---------
- 3 files changed, 13 insertions(+), 14 deletions(-)
+ arch/powerpc/kernel/vdso32/cacheflush.S   | 10 +++++-----
+ arch/powerpc/kernel/vdso32/datapage.S     | 29 ++++-------------------------
+ arch/powerpc/kernel/vdso32/datapage.h     | 11 +++++++++++
+ arch/powerpc/kernel/vdso32/gettimeofday.S | 13 ++++++-------
+ 4 files changed, 26 insertions(+), 37 deletions(-)
+ create mode 100644 arch/powerpc/kernel/vdso32/datapage.h
 
-diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
-index d480d2d4a3fe..436b88c455d1 100644
---- a/arch/powerpc/kernel/vdso32/datapage.S
-+++ b/arch/powerpc/kernel/vdso32/datapage.S
-@@ -31,11 +31,10 @@ V_FUNCTION_BEGIN(__kernel_get_syscall_map)
+diff --git a/arch/powerpc/kernel/vdso32/cacheflush.S b/arch/powerpc/kernel/vdso32/cacheflush.S
+index 7f882e7b9f43..e9453837e4ee 100644
+--- a/arch/powerpc/kernel/vdso32/cacheflush.S
++++ b/arch/powerpc/kernel/vdso32/cacheflush.S
+@@ -10,6 +10,8 @@
+ #include <asm/vdso.h>
+ #include <asm/asm-offsets.h>
+ 
++#include "datapage.h"
++
+ 	.text
+ 
+ /*
+@@ -24,14 +26,12 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
    .cfi_startproc
  	mflr	r12
    .cfi_register lr,r12
--	mr	r4,r3
-+	mr.	r4,r3
- 	get_datapage	r3, r0
+-	mr	r11,r3
+-	bl	__get_datapage@local
++	get_datapage	r10, r0
  	mtlr	r12
- 	addi	r3,r3,CFG_SYSCALL_MAP32
--	cmpli	cr0,r4,0
- 	beqlr
- 	li	r0,NR_syscalls
- 	stw	r0,0(r4)
-diff --git a/arch/powerpc/kernel/vdso32/getcpu.S b/arch/powerpc/kernel/vdso32/getcpu.S
-index bde226ad904d..ac1faa8a2bfd 100644
---- a/arch/powerpc/kernel/vdso32/getcpu.S
-+++ b/arch/powerpc/kernel/vdso32/getcpu.S
-@@ -31,10 +31,10 @@ V_FUNCTION_BEGIN(__kernel_getcpu)
- 	rlwinm  r7,r5,16,31-15,31-0
- 	beq	cr0,1f
- 	stw	r6,0(r3)
--1:	beq	cr1,2f
--	stw	r7,0(r4)
--2:	crclr	cr0*4+so
-+1:	crclr	cr0*4+so
- 	li	r3,0			/* always success */
-+	beqlr	cr1
-+	stw	r7,0(r4)
- 	blr
-   .cfi_endproc
- V_FUNCTION_END(__kernel_getcpu)
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index c65f41c612f7..47aa44ab8bbb 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -35,10 +35,9 @@ V_FUNCTION_BEGIN(__kernel_gettimeofday)
+-	mr	r10,r3
+ 
+ 	lwz	r7,CFG_DCACHE_BLOCKSZ(r10)
+ 	addi	r5,r7,-1
+-	andc	r6,r11,r5		/* round low to line bdy */
++	andc	r6,r3,r5		/* round low to line bdy */
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
+@@ -48,7 +48,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
+ 
+ 	lwz	r7,CFG_ICACHE_BLOCKSZ(r10)
+ 	addi	r5,r7,-1
+-	andc	r6,r11,r5		/* round low to line bdy */
++	andc	r6,r3,r5		/* round low to line bdy */
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5
+ 	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
+diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
+index 6984125b9fc0..d480d2d4a3fe 100644
+--- a/arch/powerpc/kernel/vdso32/datapage.S
++++ b/arch/powerpc/kernel/vdso32/datapage.S
+@@ -11,34 +11,13 @@
+ #include <asm/unistd.h>
+ #include <asm/vdso.h>
+ 
++#include "datapage.h"
++
+ 	.text
+ 	.global	__kernel_datapage_offset;
+ __kernel_datapage_offset:
+ 	.long	0
+ 
+-V_FUNCTION_BEGIN(__get_datapage)
+-  .cfi_startproc
+-	/* We don't want that exposed or overridable as we want other objects
+-	 * to be able to bl directly to here
+-	 */
+-	.protected __get_datapage
+-	.hidden __get_datapage
+-
+-	mflr	r0
+-  .cfi_register lr,r0
+-
+-	bcl	20,31,data_page_branch
+-data_page_branch:
+-	mflr	r3
+-	mtlr	r0
+-	addi	r3, r3, __kernel_datapage_offset-data_page_branch
+-	lwz	r0,0(r3)
+-  .cfi_restore lr
+-	add	r3,r0,r3
+-	blr
+-  .cfi_endproc
+-V_FUNCTION_END(__get_datapage)
+-
+ /*
+  * void *__kernel_get_syscall_map(unsigned int *syscall_count) ;
+  *
+@@ -53,7 +32,7 @@ V_FUNCTION_BEGIN(__kernel_get_syscall_map)
  	mflr	r12
    .cfi_register lr,r12
- 
--	mr	r10,r3			/* r10 saves tv */
-+	mr.	r10,r3			/* r10 saves tv */
- 	mr	r11,r4			/* r11 saves tz */
- 	get_datapage	r9, r0
--	cmplwi	r10,0			/* check if tv is NULL */
- 	beq	3f
- 	LOAD_REG_IMMEDIATE(r7, 1000000)	/* load up USEC_PER_SEC */
- 	bl	__do_get_tspec@local	/* get sec/usec from tb & kernel */
-@@ -46,15 +45,16 @@ V_FUNCTION_BEGIN(__kernel_gettimeofday)
- 	stw	r4,TVAL32_TV_USEC(r10)
- 
- 3:	cmplwi	r11,0			/* check if tz is NULL */
--	beq	1f
-+	mtlr	r12
-+	crclr	cr0*4+so
-+	li	r3,0
-+	beqlr
+ 	mr	r4,r3
+-	bl	__get_datapage@local
++	get_datapage	r3, r0
+ 	mtlr	r12
+ 	addi	r3,r3,CFG_SYSCALL_MAP32
+ 	cmpli	cr0,r4,0
+@@ -74,7 +53,7 @@ V_FUNCTION_BEGIN(__kernel_get_tbfreq)
+   .cfi_startproc
+ 	mflr	r12
+   .cfi_register lr,r12
+-	bl	__get_datapage@local
++	get_datapage	r3, r0
+ 	lwz	r4,(CFG_TB_TICKS_PER_SEC + 4)(r3)
+ 	lwz	r3,CFG_TB_TICKS_PER_SEC(r3)
+ 	mtlr	r12
+diff --git a/arch/powerpc/kernel/vdso32/datapage.h b/arch/powerpc/kernel/vdso32/datapage.h
+new file mode 100644
+index 000000000000..74f4f57c2da8
+--- /dev/null
++++ b/arch/powerpc/kernel/vdso32/datapage.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
 +
- 	lwz	r4,CFG_TZ_MINUTEWEST(r9)/* fill tz */
- 	lwz	r5,CFG_TZ_DSTTIME(r9)
- 	stw	r4,TZONE_TZ_MINWEST(r11)
- 	stw	r5,TZONE_TZ_DSTTIME(r11)
++.macro get_datapage ptr, tmp
++	bcl	20,31,.+4
++	mflr	\ptr
++	addi	\ptr, \ptr, __kernel_datapage_offset - (.-4)
++	lwz	\tmp, 0(\ptr)
++	add	\ptr, \tmp, \ptr
++.endm
++
++
+diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+index 355b537d327a..3e55cba19f44 100644
+--- a/arch/powerpc/kernel/vdso32/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+@@ -12,6 +12,8 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
  
--1:	mtlr	r12
--	crclr	cr0*4+so
--	li	r3,0
- 	blr
-   .cfi_endproc
- V_FUNCTION_END(__kernel_gettimeofday)
-@@ -248,10 +248,10 @@ V_FUNCTION_BEGIN(__kernel_time)
++#include "datapage.h"
++
+ /* Offset for the low 32-bit part of a field of long type */
+ #ifdef CONFIG_PPC64
+ #define LOPART	4
+@@ -35,8 +37,7 @@ V_FUNCTION_BEGIN(__kernel_gettimeofday)
+ 
+ 	mr	r10,r3			/* r10 saves tv */
+ 	mr	r11,r4			/* r11 saves tz */
+-	bl	__get_datapage@local	/* get data page */
+-	mr	r9, r3			/* datapage ptr in r9 */
++	get_datapage	r9, r0
+ 	cmplwi	r10,0			/* check if tv is NULL */
+ 	beq	3f
+ 	lis	r7,1000000@ha		/* load up USEC_PER_SEC */
+@@ -82,8 +83,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	mflr	r12			/* r12 saves lr */
+   .cfi_register lr,r12
+ 	mr	r11,r4			/* r11 saves tp */
+-	bl	__get_datapage@local	/* get data page */
+-	mr	r9,r3			/* datapage ptr in r9 */
++	get_datapage	r9, r0
+ 	lis	r7,NSEC_PER_SEC@h	/* want nanoseconds */
+ 	ori	r7,r7,NSEC_PER_SEC@l
+ 	beq	cr5, .Lcoarse_clocks
+@@ -208,7 +208,7 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
+ 
+ 	mflr	r12
+   .cfi_register lr,r12
+-	bl	__get_datapage@local	/* get data page */
++	get_datapage	r3, r0
+ 	lwz	r5, CLOCK_HRTIMER_RES(r3)
+ 	mtlr	r12
+ 	li	r3,0
+@@ -242,8 +242,7 @@ V_FUNCTION_BEGIN(__kernel_time)
+   .cfi_register lr,r12
+ 
+ 	mr	r11,r3			/* r11 holds t */
+-	bl	__get_datapage@local
+-	mr	r9, r3			/* datapage ptr in r9 */
++	get_datapage	r9, r0
+ 
  	lwz	r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
  
- 	cmplwi	r11,0			/* check if t is NULL */
--	beq	2f
--	stw	r3,0(r11)		/* store result at *t */
--2:	mtlr	r12
-+	mtlr	r12
- 	crclr	cr0*4+so
-+	beqlr
-+	stw	r3,0(r11)		/* store result at *t */
- 	blr
-   .cfi_endproc
- V_FUNCTION_END(__kernel_time)
 -- 
 2.13.3
 
