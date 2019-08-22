@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCB2C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3E7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1F120870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E8D233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566496132;
-	bh=m5NZwnBFJYJ2c4JlcSy4JuljsJe7navc+ij5rqPDI6U=;
+	s=default; t=1566496140;
+	bh=zQr/OS7hgJPdZdMVbsb05k6WtMaWvYev5JYNHwhQ6PA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=epqA5mhG8cgW+KVOMmPqNHBkd26UVmytmmlHlsPneYnNnrpoa0ShqrmGqAPuzSJnD
-	 rGyHTR+P1mshalgI47pT0tWMmyc5+8bRN23kpWW5sIluQpvYneDac1b6dekOA1i+/9
-	 3VkShmZ7YEOjnXoXqlkOHvOPuuesKKav7f+atwBA=
+	b=LnJLElPz7F7+i9xO8+upSe3xjK/20ho5cHHQergbRka6INV0FP3eAAlZozdHM1b9P
+	 INTrL5KByM87ZJbh4EuYnf8mHFdRZ7Nz6cVTQerFw3REpNz1yzbHbjq5uMxmGoQyVV
+	 jHtZfwXYX/daygdNO4vbPYwrKFOFnPBhsb2A+oXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393307AbfHVRsv (ORCPT
+        id S2393337AbfHVRs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:48:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40332 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:48:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389988AbfHVRWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:21 -0400
+        id S2389867AbfHVRWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:19 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C2EF23400;
-        Thu, 22 Aug 2019 17:22:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EDB6233FE;
+        Thu, 22 Aug 2019 17:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494540;
-        bh=m5NZwnBFJYJ2c4JlcSy4JuljsJe7navc+ij5rqPDI6U=;
+        s=default; t=1566494539;
+        bh=zQr/OS7hgJPdZdMVbsb05k6WtMaWvYev5JYNHwhQ6PA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fUN9WvuJmtMepgCENBgotxhU8QkP60L1X1O5FqxHt/shmxpIEM4+dzVHXYV620fJv
-         lMZaGTgbScGysSwoFHjyz/XHhiSniPSqqOVNEwdYIEt3117Zd2I+s/2PefBkB5amcQ
-         k5GXRcXoX0dQQh6NvTvfQIlcZw8eYOm3ny59pNuE=
+        b=lCgOGHm9D/H6iwwznwJ27MGNHMDY3VzkHcF4p1dM2njWAPqEQW3Nn8bgzU6byOQAR
+         QrahYNVyEpKLc76+/eCVSZ9pcWVzddnTCj307Q4GDFire7Vhxq6mbQ+xf6IDRY0cG5
+         pxgsYrkxj3VzgvvRTvzliUSME9ut0FVRlt6mwn0U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junxiao Bi <junxiao.bi@oracle.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 20/78] scsi: megaraid_sas: fix panic on loading firmware crashdump
-Date:   Thu, 22 Aug 2019 10:18:24 -0700
-Message-Id: <20190822171832.629738393@linuxfoundation.org>
+Subject: [PATCH 4.4 19/78] ARM: davinci: fix sleep.S build error on ARMv4
+Date:   Thu, 22 Aug 2019 10:18:23 -0700
+Message-Id: <20190822171832.601635831@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -61,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b5f307ef3cb5022bfe3c8ca5b8f2114d5bf6c29 ]
+[ Upstream commit d64b212ea960db4276a1d8372bd98cb861dfcbb0 ]
 
-While loading fw crashdump in function fw_crash_buffer_show(), left bytes
-in one dma chunk was not checked, if copying size over it, overflow access
-will cause kernel panic.
+When building a multiplatform kernel that includes armv4 support,
+the default target CPU does not support the blx instruction,
+which leads to a build failure:
 
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+arch/arm/mach-davinci/sleep.S: Assembler messages:
+arch/arm/mach-davinci/sleep.S:56: Error: selected processor does not support `blx ip' in ARM mode
+
+Add a .arch statement in the sources to make this file build.
+
+Link: https://lore.kernel.org/r/20190722145211.1154785-1-arnd@arndb.de
+Acked-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/mach-davinci/sleep.S | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 2422094f1f15c..5e0bac8de6381 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -2752,6 +2752,7 @@ megasas_fw_crash_buffer_show(struct device *cdev,
- 	u32 size;
- 	unsigned long buff_addr;
- 	unsigned long dmachunk = CRASH_DMA_BUF_SIZE;
-+	unsigned long chunk_left_bytes;
- 	unsigned long src_addr;
- 	unsigned long flags;
- 	u32 buff_offset;
-@@ -2777,6 +2778,8 @@ megasas_fw_crash_buffer_show(struct device *cdev,
- 	}
+diff --git a/arch/arm/mach-davinci/sleep.S b/arch/arm/mach-davinci/sleep.S
+index a5336a5e27395..459d081caf79b 100644
+--- a/arch/arm/mach-davinci/sleep.S
++++ b/arch/arm/mach-davinci/sleep.S
+@@ -37,6 +37,7 @@
+ #define DEEPSLEEP_SLEEPENABLE_BIT	BIT(31)
  
- 	size = (instance->fw_crash_buffer_size * dmachunk) - buff_offset;
-+	chunk_left_bytes = dmachunk - (buff_offset % dmachunk);
-+	size = (size > chunk_left_bytes) ? chunk_left_bytes : size;
- 	size = (size >= PAGE_SIZE) ? (PAGE_SIZE - 1) : size;
- 
- 	src_addr = (unsigned long)instance->crash_buf[buff_offset / dmachunk] +
+ 	.text
++	.arch	armv5te
+ /*
+  * Move DaVinci into deep sleep state
+  *
 -- 
 2.20.1
 
