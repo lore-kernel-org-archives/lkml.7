@@ -2,413 +2,204 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B1CC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24505C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A412C2341C
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:06:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="aA9ctZLv"
+	by mail.kernel.org (Postfix) with ESMTP id ECE33233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:06:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732627AbfHVOGO (ORCPT
+        id S1732816AbfHVOG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:06:14 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36157 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732559AbfHVOGN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:06:13 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g67so5935716wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 07:06:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UhoJNwk+jD3IPeIWcY04TZ0CQ+4XcqjycjVm4Ee5JqM=;
-        b=aA9ctZLv1KSZzykJqRoxgVFGFR8QZAa8YQnkcKF4MiB5Q0ftjEMtJHhJeTe6IZhRpU
-         GgFZBDuAguqnMKN8CWXPkt+Z+WaDCV/k1cLdewkTeAHjD5BbQCBMayQ8IVXj1Ha34mCM
-         Z7Fa1cdNMMLBSZ7iKjM83NRrNiclr5Oj+hzM9kRdyVNXjLcW95IQmQn9HuPdMvseke0B
-         fupSB091l/7cRMYwfZ6zYJMBZ9WXx2GWgnN9utyXYlLm0v2if0jLIq2nId3u73L26VwB
-         KueBieSDp1TTJeNZIXgmjN1QyDzvcTa4XktsLQgNtneT3LrYWqi39m88TVOvoUPo0h3O
-         T98g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UhoJNwk+jD3IPeIWcY04TZ0CQ+4XcqjycjVm4Ee5JqM=;
-        b=b4rWquz23Ase8fEr8Fapr15L8FJUHG99PfrJZk+QE+G8lW3efx1y9sDFqJbFbyVgrh
-         BNeS+HsuZ+uZU3XmreIdiUXCDfZb3oYkBGyQvqsVuLWWlI831pdGYibuN9UY0mynUl8B
-         uJXbqkFeOJg3CrdNIsa7KK6BAMlPPJPebBKfapQeGaLubhRTjlAqhq35+nVv81jc+qhR
-         Mx6tMxDd1sIbckaxw+dN4VJWBUjpiNZzn2BSnw3C1bJIkYuI3QLer+ixIg38HL2rKs+S
-         2/O8xdqUOjejvYqBB6wQ97FKiWIO5bX7MjQ035oALnOTNcpklfy7ruOb3DxgVk0f4Fkt
-         Zhcg==
-X-Gm-Message-State: APjAAAXCqFif3r0uW0hkIpVKKJcqBLImZ0YjHdqhuGDoO7YpKZh9HdhX
-        2bHOt/paph/xS5WvJB5rwC2NApose9INsL05+/NoQA==
-X-Google-Smtp-Source: APXvYqyrQnFiJb8lAHnaPDWf5G+Ck0+0M5Z1aUnQf8yzsNtKJP+DsVOzfNGS84Yq2DYEOOGkZTCgtv8cYLwXU7yyMyY=
-X-Received: by 2002:a7b:c933:: with SMTP id h19mr6380815wml.177.1566482769663;
- Thu, 22 Aug 2019 07:06:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190822084131.114764-1-anup.patel@wdc.com> <20190822084131.114764-9-anup.patel@wdc.com>
- <d306ffaf-c9ac-4a9f-4382-95001487364d@amazon.com>
-In-Reply-To: <d306ffaf-c9ac-4a9f-4382-95001487364d@amazon.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 22 Aug 2019 19:35:58 +0530
-Message-ID: <CAAhSdy1zKY44BGjp0FQrnPpmMFr2AuS9osumCr8BmjF5TPX=gw@mail.gmail.com>
-Subject: Re: [PATCH v5 08/20] RISC-V: KVM: Implement KVM_GET_ONE_REG/KVM_SET_ONE_REG
- ioctls
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Thu, 22 Aug 2019 10:06:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43766 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732658AbfHVOG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:06:27 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AB216AC47;
+        Thu, 22 Aug 2019 14:06:25 +0000 (UTC)
+Message-ID: <1566482782.8347.51.camel@suse.com>
+Subject: Re: WARNING in rollback_registered_many (2)
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        syzbot <syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com>,
+        USB list <linux-usb@vger.kernel.org>
+Cc:     Kai Heng Feng <kai.heng.feng@canonical.com>, tyhicks@canonical.com,
+        "David S. Miller" <davem@davemloft.net>,
+        devel@driverdev.osuosl.org, straube.linux@gmail.com,
+        Eric Dumazet <edumazet@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        florian.c.schilhabel@googlemail.com,
+        Matthew Wilcox <willy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, avagin@virtuozzo.com,
+        ktkhai@virtuozzo.com, "Eric W . Biederman" <ebiederm@xmission.com>
+Date:   Thu, 22 Aug 2019 16:06:22 +0200
+In-Reply-To: <CAAeHK+w+asSQ3axWymToQ+uzPfEAYS2QimVBL85GuJRBtxkjDA@mail.gmail.com>
+References: <000000000000d9f094057a17b97b@google.com>
+         <000000000000b439370586498dff@google.com>
+         <CAAeHK+zUHJswwHfVUCV0qTgvFVFZpT0hJqioLyYgbA0yQC0H8Q@mail.gmail.com>
+         <CAAeHK+w+asSQ3axWymToQ+uzPfEAYS2QimVBL85GuJRBtxkjDA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 5:31 PM Alexander Graf <graf@amazon.com> wrote:
->
-> On 22.08.19 10:44, Anup Patel wrote:
-> > For KVM RISC-V, we use KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls to access
-> > VCPU config and registers from user-space.
-> >
-> > We have three types of VCPU registers:
-> > 1. CONFIG - these are VCPU config and capabilities
-> > 2. CORE   - these are VCPU general purpose registers
-> > 3. CSR    - these are VCPU control and status registers
-> >
-> > The CONFIG registers available to user-space are ISA and TIMEBASE. Out
-> > of these, TIMEBASE is a read-only register which inform user-space about
-> > VCPU timer base frequency. The ISA register is a read and write register
-> > where user-space can only write the desired VCPU ISA capabilities before
-> > running the VCPU.
-> >
-> > The CORE registers available to user-space are PC, RA, SP, GP, TP, A0-A7,
-> > T0-T6, S0-S11 and MODE. Most of these are RISC-V general registers except
-> > PC and MODE. The PC register represents program counter whereas the MODE
-> > register represent VCPU privilege mode (i.e. S/U-mode).
-> >
-> > The CSRs available to user-space are SSTATUS, SIE, STVEC, SSCRATCH, SEPC,
-> > SCAUSE, STVAL, SIP, and SATP. All of these are read/write registers.
-> >
-> > In future, more VCPU register types will be added (such as FP) for the
-> > KVM_GET_ONE_REG/KVM_SET_ONE_REG ioctls.
-> >
-> > Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> > Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-> > ---
-> >   arch/riscv/include/uapi/asm/kvm.h |  40 ++++-
-> >   arch/riscv/kvm/vcpu.c             | 235 +++++++++++++++++++++++++++++-
-> >   2 files changed, 272 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-> > index 6dbc056d58ba..024f220eb17e 100644
-> > --- a/arch/riscv/include/uapi/asm/kvm.h
-> > +++ b/arch/riscv/include/uapi/asm/kvm.h
-> > @@ -23,8 +23,15 @@
-> >
-> >   /* for KVM_GET_REGS and KVM_SET_REGS */
-> >   struct kvm_regs {
-> > +     /* out (KVM_GET_REGS) / in (KVM_SET_REGS) */
-> > +     struct user_regs_struct regs;
-> > +     unsigned long mode;
->
-> Is there any particular reason you're reusing kvm_regs and don't invent
-> your own struct? kvm_regs is explicitly meant for the get_regs and
-> set_regs ioctls.
->
-> >   };
-> >
-> > +/* Possible privilege modes for kvm_regs */
-> > +#define KVM_RISCV_MODE_S     1
-> > +#define KVM_RISCV_MODE_U     0
-> > +
-> >   /* for KVM_GET_FPU and KVM_SET_FPU */
-> >   struct kvm_fpu {
-> >   };
-> > @@ -41,10 +48,41 @@ struct kvm_guest_debug_arch {
-> >   struct kvm_sync_regs {
-> >   };
-> >
-> > -/* dummy definition */
-> > +/* for KVM_GET_SREGS and KVM_SET_SREGS */
-> >   struct kvm_sregs {
-> > +     unsigned long sstatus;
-> > +     unsigned long sie;
-> > +     unsigned long stvec;
-> > +     unsigned long sscratch;
-> > +     unsigned long sepc;
-> > +     unsigned long scause;
-> > +     unsigned long stval;
-> > +     unsigned long sip;
-> > +     unsigned long satp;
->
-> Same comment here.
->
-> >   };
-> >
-> > +#define KVM_REG_SIZE(id)             \
-> > +     (1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
-> > +
-> > +/* If you need to interpret the index values, here is the key: */
-> > +#define KVM_REG_RISCV_TYPE_MASK              0x00000000FF000000
-> > +#define KVM_REG_RISCV_TYPE_SHIFT     24
-> > +
-> > +/* Config registers are mapped as type 1 */
-> > +#define KVM_REG_RISCV_CONFIG         (0x01 << KVM_REG_RISCV_TYPE_SHIFT)
-> > +#define KVM_REG_RISCV_CONFIG_ISA     0x0
-> > +#define KVM_REG_RISCV_CONFIG_TIMEBASE        0x1
-> > +
-> > +/* Core registers are mapped as type 2 */
-> > +#define KVM_REG_RISCV_CORE           (0x02 << KVM_REG_RISCV_TYPE_SHIFT)
-> > +#define KVM_REG_RISCV_CORE_REG(name) \
-> > +             (offsetof(struct kvm_regs, name) / sizeof(unsigned long))
->
-> I see, you're trying to implicitly use the struct offsets as index.
->
-> I'm not a really big fan of it, but I can't pinpoint exactly why just
-> yet. It just seems too magical (read: potentially breaking down the
-> road) for me.
->
-> > +
-> > +/* Control and status registers are mapped as type 3 */
-> > +#define KVM_REG_RISCV_CSR            (0x03 << KVM_REG_RISCV_TYPE_SHIFT)
-> > +#define KVM_REG_RISCV_CSR_REG(name)  \
-> > +             (offsetof(struct kvm_sregs, name) / sizeof(unsigned long))
-> > +
-> >   #endif
-> >
-> >   #endif /* __LINUX_KVM_RISCV_H */
-> > diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> > index 7f59e85c6af8..9396a83c0611 100644
-> > --- a/arch/riscv/kvm/vcpu.c
-> > +++ b/arch/riscv/kvm/vcpu.c
-> > @@ -164,6 +164,215 @@ vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
-> >       return VM_FAULT_SIGBUS;
-> >   }
-> >
-> > +static int kvm_riscv_vcpu_get_reg_config(struct kvm_vcpu *vcpu,
-> > +                                      const struct kvm_one_reg *reg)
-> > +{
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CONFIG);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     switch (reg_num) {
-> > +     case KVM_REG_RISCV_CONFIG_ISA:
-> > +             reg_val = vcpu->arch.isa;
-> > +             break;
-> > +     case KVM_REG_RISCV_CONFIG_TIMEBASE:
-> > +             reg_val = riscv_timebase;
->
-> What does this reflect? The current guest time hopefully not? An offset?
-> Related to what?
->
-> All ONE_REG registers should be documented in
-> Documentation/virtual/kvm/api.txt. Please add them there.
->
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     };
-> > +
-> > +     if (copy_to_user(uaddr, &reg_val, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int kvm_riscv_vcpu_set_reg_config(struct kvm_vcpu *vcpu,
-> > +                                      const struct kvm_one_reg *reg)
-> > +{
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CONFIG);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     if (copy_from_user(&reg_val, uaddr, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     switch (reg_num) {
-> > +     case KVM_REG_RISCV_CONFIG_ISA:
-> > +             if (!vcpu->arch.ran_atleast_once) {
-> > +                     vcpu->arch.isa = reg_val;
-> > +                     vcpu->arch.isa &= riscv_isa_extension_base(NULL);
-> > +                     vcpu->arch.isa &= KVM_RISCV_ISA_ALLOWED;
->
-> This register definitely needs proper documentation too ;). You may want
-> to reconsider to put a few of the helper bits from patch 02/20 into
-> uapi, so that user space can directly use them.
->
-> > +             } else {
-> > +                     return -ENOTSUPP;
-> > +             }
-> > +             break;
-> > +     case KVM_REG_RISCV_CONFIG_TIMEBASE:
-> > +             return -ENOTSUPP;
-> > +     default:
-> > +             return -EINVAL;
-> > +     };
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int kvm_riscv_vcpu_get_reg_core(struct kvm_vcpu *vcpu,
-> > +                                    const struct kvm_one_reg *reg)
-> > +{
-> > +     struct kvm_cpu_context *cntx = &vcpu->arch.guest_context;
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CORE);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     if (reg_num == KVM_REG_RISCV_CORE_REG(regs.pc))
-> > +             reg_val = cntx->sepc;
-> > +     else if (KVM_REG_RISCV_CORE_REG(regs.pc) < reg_num &&
-> > +              reg_num <= KVM_REG_RISCV_CORE_REG(regs.t6))
-> > +             reg_val = ((unsigned long *)cntx)[reg_num];
-> > +     else if (reg_num == KVM_REG_RISCV_CORE_REG(mode))
-> > +             reg_val = (cntx->sstatus & SR_SPP) ?
-> > +                             KVM_RISCV_MODE_S : KVM_RISCV_MODE_U;
-> > +     else
-> > +             return -EINVAL;
-> > +
-> > +     if (copy_to_user(uaddr, &reg_val, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int kvm_riscv_vcpu_set_reg_core(struct kvm_vcpu *vcpu,
-> > +                                    const struct kvm_one_reg *reg)
-> > +{
-> > +     struct kvm_cpu_context *cntx = &vcpu->arch.guest_context;
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CORE);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     if (copy_from_user(&reg_val, uaddr, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     if (reg_num == KVM_REG_RISCV_CORE_REG(regs.pc))
-> > +             cntx->sepc = reg_val;
-> > +     else if (KVM_REG_RISCV_CORE_REG(regs.pc) < reg_num &&
-> > +              reg_num <= KVM_REG_RISCV_CORE_REG(regs.t6))
-> > +             ((unsigned long *)cntx)[reg_num] = reg_val;
-> > +     else if (reg_num == KVM_REG_RISCV_CORE_REG(mode)) {
-> > +             if (reg_val == KVM_RISCV_MODE_S)
-> > +                     cntx->sstatus |= SR_SPP;
-> > +             else
-> > +                     cntx->sstatus &= ~SR_SPP;
-> > +     } else
-> > +             return -EINVAL;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int kvm_riscv_vcpu_get_reg_csr(struct kvm_vcpu *vcpu,
-> > +                                   const struct kvm_one_reg *reg)
-> > +{
-> > +     struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CSR);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +     if (reg_num >= sizeof(struct kvm_sregs) / sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     if (reg_num == KVM_REG_RISCV_CSR_REG(sip))
-> > +             kvm_riscv_vcpu_flush_interrupts(vcpu);
-> > +
-> > +     reg_val = ((unsigned long *)csr)[reg_num];
-> > +
-> > +     if (copy_to_user(uaddr, &reg_val, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int kvm_riscv_vcpu_set_reg_csr(struct kvm_vcpu *vcpu,
-> > +                                   const struct kvm_one_reg *reg)
-> > +{
-> > +     struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
-> > +     unsigned long __user *uaddr =
-> > +                     (unsigned long __user *)(unsigned long)reg->addr;
-> > +     unsigned long reg_num = reg->id & ~(KVM_REG_ARCH_MASK |
-> > +                                         KVM_REG_SIZE_MASK |
-> > +                                         KVM_REG_RISCV_CSR);
-> > +     unsigned long reg_val;
-> > +
-> > +     if (KVM_REG_SIZE(reg->id) != sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +     if (reg_num >= sizeof(struct kvm_sregs) / sizeof(unsigned long))
-> > +             return -EINVAL;
-> > +
-> > +     if (copy_from_user(&reg_val, uaddr, KVM_REG_SIZE(reg->id)))
-> > +             return -EFAULT;
-> > +
-> > +     ((unsigned long *)csr)[reg_num] = reg_val;
-> > +
-> > +     if (reg_num == KVM_REG_RISCV_CSR_REG(sip))
-> > +             WRITE_ONCE(vcpu->arch.irqs_pending_mask, 0);
->
-> Why does writing SIP clear all pending interrupts?
+Am Mittwoch, den 07.08.2019, 16:03 +0200 schrieb Andrey Konovalov:
 
-irqs_pending_mask represents bits changes in irqs_pending.
+I may offer a preliminary analysis.
 
-Once the SIP CSR is updated by user-space, the changes to
-irqs_pending are no longer valid so we clear irqs_pending_mask.
+	Regards
+		Oliver
 
-If we don't clear irqs_pending_mask then value programmed by
-user-space can get overwritten if there were interrupts after
-we saved SIP CSR and before we restored it.
+> On Fri, Apr 12, 2019 at 1:32 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> > 
+> > On Fri, Apr 12, 2019 at 1:29 AM syzbot
+> > <syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com> wrote:
+> > > 
+> > > syzbot has found a reproducer for the following crash on:
+> > > 
+> > > HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+> > > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=10d552b7200000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=40918e4d826fb2ff9b96
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17a4c1af200000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=121b274b200000
+> > > 
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+40918e4d826fb2ff9b96@syzkaller.appspotmail.com
+> > > 
+> > > usb 1-1: r8712u: MAC Address from efuse = 00:e0:4c:87:00:00
+> > > usb 1-1: r8712u: Loading firmware from "rtlwifi/rtl8712u.bin"
+> > > usb 1-1: USB disconnect, device number 2
 
-Regards,
-Anup
+Disconnect will run which leads to
 
->
->
-> Alex
+static void r871xu_dev_remove(struct usb_interface *pusb_intf)
+{
+        struct net_device *pnetdev = usb_get_intfdata(pusb_intf);
+        struct usb_device *udev = interface_to_usbdev(pusb_intf);
+
+        if (pnetdev) {
+
+^^^ This is supposed to save us
+
+                struct _adapter *padapter = netdev_priv(pnetdev);
+
+                usb_set_intfdata(pusb_intf, NULL);
+                release_firmware(padapter->fw);
+                /* never exit with a firmware callback pending */
+                wait_for_completion(&padapter->rtl8712_fw_ready);
+                if (drvpriv.drv_registered)
+                        padapter->surprise_removed = true;
+                unregister_netdev(pnetdev); /* will call netdev_close() */
+
+So we will call unregister_netdev()
+
+
+> > > usb 1-1: Direct firmware load for rtlwifi/rtl8712u.bin failed with error -2
+> > > usb 1-1: r8712u: Firmware request failed
+
+So we ran into the error handling of:
+
+
+static void rtl871x_load_fw_cb(const struct firmware *firmware, void *context)
+{
+        struct _adapter *adapter = context;
+
+
+        complete(&adapter->rtl8712_fw_ready);
+        if (!firmware) {
+                struct usb_device *udev = adapter->dvobjpriv.pusbdev;
+                struct usb_interface *usb_intf = adapter->pusb_intf;
+
+
+                dev_err(&udev->dev, "r8712u: Firmware request failed\n");
+                usb_put_dev(udev);
+                usb_set_intfdata(usb_intf, NULL);
+
+^^^ This is supposed to save us from deregistering an unregistered device
+	but it comes too late. We have already called complete.
+
+                return;
+        }
+        adapter->fw = firmware;
+        /* firmware available - start netdev */
+        register_netdev(adapter->pnetdev);
+
+register_netdev() is not called.
+> > > Kernel panic - not syncing: panic_on_warn set ...
+> > > CPU: 0 PID: 575 Comm: kworker/0:4 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > Google 01/01/2011
+> > > Workqueue: usb_hub_wq hub_event
+> > > Call Trace:
+> > >   __dump_stack lib/dump_stack.c:77 [inline]
+> > >   dump_stack+0xe8/0x16e lib/dump_stack.c:113
+> > >   panic+0x29d/0x5f2 kernel/panic.c:214
+> > >   __warn.cold+0x20/0x48 kernel/panic.c:571
+> > >   report_bug+0x262/0x2a0 lib/bug.c:186
+> > >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> > >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> > >   do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+> > >   do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+> > >   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+
+This kills us.
+
+> > > RIP: 0010:rollback_registered_many+0x1f3/0xe70 net/core/dev.c:8152
+> > > Code: 05 00 00 31 ff 44 89 fe e8 5a 15 f3 f4 45 84 ff 0f 85 49 ff ff ff e8
+> > > 1c 14 f3 f4 0f 1f 44 00 00 e8 12 14 f3 f4 e8 0d 14 f3 f4 <0f> 0b 4c 89 e7
+> > > e8 33 72 f2 f6 31 ff 41 89 c4 89 c6 e8 27 15 f3 f4
+> > > RSP: 0018:ffff88809d087698 EFLAGS: 00010293
+> > > RAX: ffff88809d058000 RBX: ffff888096240000 RCX: ffffffff8c7eb146
+> > > RDX: 0000000000000000 RSI: ffffffff8c7eb163 RDI: 0000000000000001
+> > > RBP: ffff88809d0877c8 R08: ffff88809d058000 R09: fffffbfff2708111
+> > > R10: fffffbfff2708110 R11: ffffffff93840887 R12: ffff888096240070
+> > > R13: dffffc0000000000 R14: ffff88809d087758 R15: 0000000000000000
+> > >   rollback_registered+0xf7/0x1c0 net/core/dev.c:8228
+> > >   unregister_netdevice_queue net/core/dev.c:9275 [inline]
+> > >   unregister_netdevice_queue+0x1dc/0x2b0 net/core/dev.c:9268
+> > >   unregister_netdevice include/linux/netdevice.h:2655 [inline]
+> > >   unregister_netdev+0x1d/0x30 net/core/dev.c:9316
+> > >   r871xu_dev_remove+0xe7/0x223 drivers/staging/rtl8712/usb_intf.c:604
+
+We end up here:
+
+static void rollback_registered_many(struct list_head *head)
+{
+        struct net_device *dev, *tmp;
+        LIST_HEAD(close_head);
+
+
+        BUG_ON(dev_boot_phase);
+        ASSERT_RTNL();
+
+
+        list_for_each_entry_safe(dev, tmp, head, unreg_list) {
+                /* Some devices call without registering
+                 * for initialization unwind. Remove those
+                 * devices and proceed with the remaining.
+                 */
+                if (dev->reg_state == NETREG_UNINITIALIZED) {
+                        pr_debug("unregister_netdevice: device %s/%p never was registered\n",
+                                 dev->name, dev);
+
+
+                        WARN_ON(1);
+
+
