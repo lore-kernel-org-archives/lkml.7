@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FECFC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E39D3C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 054A7233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B333920870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495794;
-	bh=JZ6Sf3a+pIFF1SIbjHDeFrhCvQM0pZiPYq1z2S42460=;
+	s=default; t=1566495800;
+	bh=l0WcdKM9midXBSgbS0kuvCLb/a3DAIBaazN2F+3+060=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EPlJXYC88V9qveFoLGPM6Gek/3hYxUzbDjLAavsePruIL7OhXTqGL4E27VLz6oKY6
-	 dKvtny1uVNZks+xiXlM78gO0qYXTsPIv7cboOgu5H39qWAPP8LGGPLRN4DfYj04bS6
-	 jX5EF/yNl4t+9W1tN6sLpex7vL6Ky8/e/3vJ6WCs=
+	b=0MxMuQj/oisOPGHN3LQHKh0r3BfJ4BzTsSLnatllI9akRk2Kspd0MgVZFf6TReAYK
+	 yEAe5OQm0DyPLYXXYVVnhplYP0KsMON0xk97wwT9zXSB5jT5KApHQBf0hyMxys+wni
+	 S8khhcdCdqHYYxAV6v1KeckRxZyyjYrsmQYnSizc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405472AbfHVRnI (ORCPT
+        id S2405250AbfHVRnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:43:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43580 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:43:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391504AbfHVRXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:33 -0400
+        id S2391477AbfHVRX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:29 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF5062341A;
-        Thu, 22 Aug 2019 17:23:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0D8623407;
+        Thu, 22 Aug 2019 17:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494611;
-        bh=JZ6Sf3a+pIFF1SIbjHDeFrhCvQM0pZiPYq1z2S42460=;
+        s=default; t=1566494609;
+        bh=l0WcdKM9midXBSgbS0kuvCLb/a3DAIBaazN2F+3+060=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kHfsy0GvaRnJpJsJ6jnp7PmJZn9tYyf/zgRvj9bNwZoGb1TI1ilmSfRC+Rbh5RhlL
-         9woUkH+0H9cwR16ubPznSfw6kpezKcUi6KZ9Dp2gV3yaCZ095TDWxvk9Pc9NkUDCbI
-         rBFDaZ8TZdAoKTEP+faSB2KNjKUCPwP2QmMvEPgc=
+        b=IxCCCLeMgCyE2n0e/qJIVkFGa8pOmx8pq6MOQ+IiiLiYfmbGul5ru/aQtamm7XPSr
+         cSWEg9yLMrQWOeI8LmZo/D2cNmr0IFSVO9MhuZIan1hx9Z8hdCYOoiTcrToBTnA1hn
+         xmeximZn2RBca3+OKAPD2I3GToUHiLFgygVbVAFU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH 4.9 006/103] mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()
-Date:   Thu, 22 Aug 2019 10:17:54 -0700
-Message-Id: <20190822171728.887859917@linuxfoundation.org>
+        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
+        syzbot+513e4d0985298538bf9b@syzkaller.appspotmail.com,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.9 032/103] can: peak_usb: pcan_usb_fd: Fix info-leaks to USB devices
+Date:   Thu, 22 Aug 2019 10:18:20 -0700
+Message-Id: <20190822171730.137376675@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -60,58 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tomas Bortoli <tomasbortoli@gmail.com>
 
-commit 3f8fd02b1bf1d7ba964485a56f2f4b53ae88c167 upstream.
+commit 30a8beeb3042f49d0537b7050fd21b490166a3d9 upstream.
 
-On x86-32 with PTI enabled, parts of the kernel page-tables are not shared
-between processes. This can cause mappings in the vmalloc/ioremap area to
-persist in some page-tables after the region is unmapped and released.
+Uninitialized Kernel memory can leak to USB devices.
 
-When the region is re-used the processes with the old mappings do not fault
-in the new mappings but still access the old ones.
+Fix by using kzalloc() instead of kmalloc() on the affected buffers.
 
-This causes undefined behavior, in reality often data corruption, kernel
-oopses and panics and even spontaneous reboots.
-
-Fix this problem by activly syncing unmaps in the vmalloc/ioremap area to
-all page-tables in the system before the regions can be re-used.
-
-Fixes: 5d72b4fba40ef ('x86, mm: support huge I/O mapping capability I/F')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lkml.kernel.org/r/20190719184652.11391-4-joro@8bytes.org
+Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
+Reported-by: syzbot+513e4d0985298538bf9b@syzkaller.appspotmail.com
+Fixes: 0a25e1f4f185 ("can: peak_usb: add support for PEAK new CANFD USB adapters")
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmalloc.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/can/usb/peak_usb/pcan_usb_fd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1708,6 +1708,12 @@ void *__vmalloc_node_range(unsigned long
- 		return NULL;
+--- a/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
++++ b/drivers/net/can/usb/peak_usb/pcan_usb_fd.c
+@@ -851,7 +851,7 @@ static int pcan_usb_fd_init(struct peak_
+ 			goto err_out;
  
- 	/*
-+	 * First make sure the mappings are removed from all page-tables
-+	 * before they are freed.
-+	 */
-+	vmalloc_sync_all();
-+
-+	/*
- 	 * In this function, newly allocated vm_struct has VM_UNINITIALIZED
- 	 * flag. It means that vm_struct is not fully initialized.
- 	 * Now, it is fully initialized, so remove this flag here.
-@@ -2243,6 +2249,9 @@ EXPORT_SYMBOL(remap_vmalloc_range);
- /*
-  * Implement a stub for vmalloc_sync_all() if the architecture chose not to
-  * have one.
-+ *
-+ * The purpose of this function is to make sure the vmalloc area
-+ * mappings are identical in all page-tables in the system.
-  */
- void __weak vmalloc_sync_all(void)
- {
+ 		/* allocate command buffer once for all for the interface */
+-		pdev->cmd_buffer_addr = kmalloc(PCAN_UFD_CMD_BUFFER_SIZE,
++		pdev->cmd_buffer_addr = kzalloc(PCAN_UFD_CMD_BUFFER_SIZE,
+ 						GFP_KERNEL);
+ 		if (!pdev->cmd_buffer_addr)
+ 			goto err_out_1;
 
 
