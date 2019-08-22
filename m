@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98932C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C672C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8642089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09FFF2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566493840;
-	bh=pEYPkZqlavPya5XXQTmozjCedN/vAJk5AiBNMwSLs/I=;
+	s=default; t=1566493845;
+	bh=eGhOCkG3h8+cooPbmp5urxtxkVCRzGEQPvOlqq6G53E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NlXn1RaUgStC5ncuC4rto6iXpNpc5UNwMBjOQZQCQqMWG/LBEJH3v91O51/Df7jFz
-	 peHfoLwMdp/OVCQcpGlxUpEbzXMkb/VCr4WPZo4fISZVOGfdgRi0PB1WOX/wv90rzJ
-	 I6rkeZ3qdJtz655ssJ1jVwyys+pdbxPqTVQhUwYk=
+	b=tyxNhUVn3U4mB9/JD+7fuWQN9uDcw7rEtTjMb5rluUK/D73tosUhXNsQuu1w9ULEa
+	 LybCBXzGgIjfOV70ujYgPr/yLy03nlBTY+wpI10Gq0h7tEmwiGaYP8IdRR7AQXbyew
+	 4znb0yXTxUHtxgaFUiM1SRfz+csONNpSJDZE+US4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390755AbfHVRJX (ORCPT
+        id S2389094AbfHVRKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:09:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59506 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:10:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390697AbfHVRJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:09:12 -0400
+        id S2390743AbfHVRJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:09:22 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8362E2342F;
-        Thu, 22 Aug 2019 17:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82795233FC;
+        Thu, 22 Aug 2019 17:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493751;
-        bh=pEYPkZqlavPya5XXQTmozjCedN/vAJk5AiBNMwSLs/I=;
+        s=default; t=1566493761;
+        bh=eGhOCkG3h8+cooPbmp5urxtxkVCRzGEQPvOlqq6G53E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p8FKBQrAAJSGYpuOeOm58xjWjHekDZVTLrO8CnuYgBtbUo5fvGpgmoPqA7k8WuMUl
-         cOJRefd4TncSj5Q3E7Vaj81/Kn/rZDjG2DwLZB7SiO/P/9pqfboiLSMWr9LISiXndn
-         HuZZiX5B6WuHqgHRzrRb58/srR4TKQzPwCnvOmrY=
+        b=lnw5Zmze7jfCSpwBpuxuXwB++ZHpODW/O5vG4pIsIIDEofEO9PIi3/fmWnouH2gwn
+         FOQ8q7rum4ie5ccsInT45GkE3xmuINEcPPGjiFS4+x5IOKjuZsCLnsmObPIQwrJhQa
+         ZfwK3QPaTj1eSJrVenxjnNk/2cle65OeznCqC4oQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hui Wang <hui.wang@canonical.com>,
+Cc:     Roman Mashak <mrv@mojatatu.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 106/135] Input: psmouse - fix build error of multiple definition
-Date:   Thu, 22 Aug 2019 13:07:42 -0400
-Message-Id: <20190822170811.13303-107-sashal@kernel.org>
+Subject: [PATCH 5.2 125/135] net sched: update skbedit action for batched events operations
+Date:   Thu, 22 Aug 2019 13:08:01 -0400
+Message-Id: <20190822170811.13303-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -66,41 +65,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Roman Mashak <mrv@mojatatu.com>
 
-commit 49e6979e7e92cf496105b5636f1df0ac17c159c0 upstream.
+[ Upstream commit e1fea322fc6d4075254ca9c5f2afdace0281da2a ]
 
-trackpoint_detect() should be static inline while
-CONFIG_MOUSE_PS2_TRACKPOINT is not set, otherwise, we build fails:
+Add get_fill_size() routine used to calculate the action size
+when building a batch of events.
 
-drivers/input/mouse/alps.o: In function `trackpoint_detect':
-alps.c:(.text+0x8e00): multiple definition of `trackpoint_detect'
-drivers/input/mouse/psmouse-base.o:psmouse-base.c:(.text+0x1b50): first defined here
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 55e3d9224b60 ("Input: psmouse - allow disabing certain protocol extensions")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hui Wang <hui.wang@canonical.com>
+Fixes: ca9b0e27e ("pkt_action: add new action skbedit")
+Signed-off-by: Roman Mashak <mrv@mojatatu.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/input/mouse/trackpoint.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sched/act_skbedit.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/input/mouse/trackpoint.h b/drivers/input/mouse/trackpoint.h
-index 0afffe8d824fa..77110f3ec21da 100644
---- a/drivers/input/mouse/trackpoint.h
-+++ b/drivers/input/mouse/trackpoint.h
-@@ -158,7 +158,8 @@ struct trackpoint_data {
- #ifdef CONFIG_MOUSE_PS2_TRACKPOINT
- int trackpoint_detect(struct psmouse *psmouse, bool set_properties);
- #else
--inline int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
-+static inline int trackpoint_detect(struct psmouse *psmouse,
-+				    bool set_properties)
- {
- 	return -ENOSYS;
+diff --git a/net/sched/act_skbedit.c b/net/sched/act_skbedit.c
+index b100870f02a6d..37dced00b63d1 100644
+--- a/net/sched/act_skbedit.c
++++ b/net/sched/act_skbedit.c
+@@ -307,6 +307,17 @@ static int tcf_skbedit_search(struct net *net, struct tc_action **a, u32 index)
+ 	return tcf_idr_search(tn, a, index);
  }
+ 
++static size_t tcf_skbedit_get_fill_size(const struct tc_action *act)
++{
++	return nla_total_size(sizeof(struct tc_skbedit))
++		+ nla_total_size(sizeof(u32)) /* TCA_SKBEDIT_PRIORITY */
++		+ nla_total_size(sizeof(u16)) /* TCA_SKBEDIT_QUEUE_MAPPING */
++		+ nla_total_size(sizeof(u32)) /* TCA_SKBEDIT_MARK */
++		+ nla_total_size(sizeof(u16)) /* TCA_SKBEDIT_PTYPE */
++		+ nla_total_size(sizeof(u32)) /* TCA_SKBEDIT_MASK */
++		+ nla_total_size_64bit(sizeof(u64)); /* TCA_SKBEDIT_FLAGS */
++}
++
+ static struct tc_action_ops act_skbedit_ops = {
+ 	.kind		=	"skbedit",
+ 	.id		=	TCA_ID_SKBEDIT,
+@@ -316,6 +327,7 @@ static struct tc_action_ops act_skbedit_ops = {
+ 	.init		=	tcf_skbedit_init,
+ 	.cleanup	=	tcf_skbedit_cleanup,
+ 	.walk		=	tcf_skbedit_walker,
++	.get_fill_size	=	tcf_skbedit_get_fill_size,
+ 	.lookup		=	tcf_skbedit_search,
+ 	.size		=	sizeof(struct tcf_skbedit),
+ };
 -- 
 2.20.1
 
