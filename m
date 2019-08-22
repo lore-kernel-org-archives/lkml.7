@@ -4,54 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FEAC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89323C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0092089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6073523400
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494241;
-	bh=NC7ztbCd7aVI48pb50ZBHxNerlptjjT/MMMS582ur3I=;
+	s=default; t=1566494244;
+	bh=0LTmTNwpvJLRBvXUOxICpyUtLuayTAWdXmzMpq08Kmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bu/kVYRJQ29x+MHALhixfpVZQ/Gc/9FaWok5jPpjVkr9QdaFs9fTup7h/mjC9zZKX
-	 epyJ7ryrbst5AbLywOGhqgTffK4jP9wIdW1q2UsTQcREsMvAlX5CKXm39zMZi1zgy2
-	 zrHcfVcaQIzQWdjz7ceZ3E1epTQc/US5/rdArZKY=
+	b=rU3EE9DyBp6Z+pirqBZPn9zhbNHngRYvm4pPpHuerlfQDvJsSAq5oN7NvKZNnKLNY
+	 ukwqa4BAs8aRfzdasqSUiKhykI3sW68XP7hF8DXUe6oysUFhkt+ZTyV2M+I9GwJMvn
+	 zNPBWjfYjUeXo24YMoPCVpDqfVDz1f7RjgLnkO+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387745AbfHVRRQ (ORCPT
+        id S2390347AbfHVRI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390350AbfHVRI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:29 -0400
+        id S2390293AbfHVRIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:24 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA2D823405;
-        Thu, 22 Aug 2019 17:08:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D2123426;
+        Thu, 22 Aug 2019 17:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493709;
-        bh=NC7ztbCd7aVI48pb50ZBHxNerlptjjT/MMMS582ur3I=;
+        s=default; t=1566493702;
+        bh=0LTmTNwpvJLRBvXUOxICpyUtLuayTAWdXmzMpq08Kmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=de1DPJS1kaxByP25xauYMsMFJNQPdz5PrZ3JVbFAx31xfY/Wkla7c8m7ssxU6LgBP
-         uFfU8gKtq0AS8BP7jvzZPagPLBJIAQrhjLIXXpqBMD0ENB+RWGfjN85Ak2iBmyfvY9
-         khOKNLi5ghonq1JZN50QPaklW9657GWPeOxHjnCQ=
+        b=z8gfdprQfxpC0d1dVvYYlw6E/656L6jlUXkKhCCspBxSI8JOb2Yj/VHe5g+FSOn+4
+         OnayP2hAhcJZRpP6omKmsxW2TP54kxX4KJDLC9MFrlMKEO3rpW7nrq4WzA5diwN/JT
+         E+pVr3BhnPrcb68h6qGRxLwgfY+BozoOM0IrtQmo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Cc:     Lyude Paul <lyude@redhat.com>, Bohdan Milar <bmilar@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        David Airlie <airlied@redhat.com>,
+        Jerry Zuo <Jerry.Zuo@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Juston Li <juston.li@intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Karol Herbst <karolherbst@gmail.com>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 027/135] Input: kbtab - sanity check for endpoint type
-Date:   Thu, 22 Aug 2019 13:06:23 -0400
-Message-Id: <20190822170811.13303-28-sashal@kernel.org>
+Subject: [PATCH 5.2 014/135] drm/nouveau: Only recalculate PBN/VCPI on mode/connector changes
+Date:   Thu, 22 Aug 2019 13:06:10 -0400
+Message-Id: <20190822170811.13303-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.2.y
@@ -66,45 +74,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Lyude Paul <lyude@redhat.com>
 
-commit c88090dfc84254fa149174eb3e6a8458de1912c4 upstream.
+commit db1231ddc04682f60d56ff42447f13099c6c4a4c upstream.
 
-The driver should check whether the endpoint it uses has the correct
-type.
+I -thought- I had fixed this entirely, but it looks like that I didn't
+test this thoroughly enough as we apparently still make one big mistake
+with nv50_msto_atomic_check() - we don't handle the following scenario:
 
-Reported-by: syzbot+c7df50363aaff50aa363@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+* CRTC #1 has n VCPI allocated to it, is attached to connector DP-4
+  which is attached to encoder #1. enabled=y active=n
+* CRTC #1 is changed from DP-4 to DP-5, causing:
+  * DP-4 crtc=#1→NULL (VCPI n→0)
+  * DP-5 crtc=NULL→#1
+  * CRTC #1 steals encoder #1 back from DP-4 and gives it to DP-5
+  * CRTC #1 maintains the same mode as before, just with a different
+    connector
+* mode_changed=n connectors_changed=y
+  (we _SHOULD_ do VCPI 0→n here, but don't)
+
+Once the above scenario is repeated once, we'll attempt freeing VCPI
+from the connector that we didn't allocate due to the connectors
+changing, but the mode staying the same. Sigh.
+
+Since nv50_msto_atomic_check() has broken a few times now, let's rethink
+things a bit to be more careful: limit both VCPI/PBN allocations to
+mode_changed || connectors_changed, since neither VCPI or PBN should
+ever need to change outside of routing and mode changes.
+
+Changes since v1:
+* Fix accidental reversal of clock and bpp arguments in
+  drm_dp_calc_pbn_mode() - William Lewis
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reported-by: Bohdan Milar <bmilar@redhat.com>
+Tested-by: Bohdan Milar <bmilar@redhat.com>
+Fixes: 232c9eec417a ("drm/nouveau: Use atomic VCPI helpers for MST")
+References: 412e85b60531 ("drm/nouveau: Only release VCPI slots on mode changes")
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Ben Skeggs <bskeggs@redhat.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: David Airlie <airlied@redhat.com>
+Cc: Jerry Zuo <Jerry.Zuo@amd.com>
+Cc: Harry Wentland <harry.wentland@amd.com>
+Cc: Juston Li <juston.li@intel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Karol Herbst <karolherbst@gmail.com>
+Cc: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: <stable@vger.kernel.org> # v5.1+
+Acked-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190809005307.18391-1-lyude@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/input/tablet/kbtab.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/input/tablet/kbtab.c b/drivers/input/tablet/kbtab.c
-index 04b85571f41e3..aa577898e952b 100644
---- a/drivers/input/tablet/kbtab.c
-+++ b/drivers/input/tablet/kbtab.c
-@@ -117,6 +117,10 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
- 	if (intf->cur_altsetting->desc.bNumEndpoints < 1)
- 		return -ENODEV;
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index 847b7866137dd..bdaf5ffd25045 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -766,16 +766,20 @@ nv50_msto_atomic_check(struct drm_encoder *encoder,
+ 	struct nv50_head_atom *asyh = nv50_head_atom(crtc_state);
+ 	int slots;
  
-+	endpoint = &intf->cur_altsetting->endpoint[0].desc;
-+	if (!usb_endpoint_is_int_in(endpoint))
-+		return -ENODEV;
+-	/* When restoring duplicated states, we need to make sure that the
+-	 * bw remains the same and avoid recalculating it, as the connector's
+-	 * bpc may have changed after the state was duplicated
+-	 */
+-	if (!state->duplicated)
+-		asyh->dp.pbn =
+-			drm_dp_calc_pbn_mode(crtc_state->adjusted_mode.clock,
+-					     connector->display_info.bpc * 3);
++	if (crtc_state->mode_changed || crtc_state->connectors_changed) {
++		/*
++		 * When restoring duplicated states, we need to make sure that
++		 * the bw remains the same and avoid recalculating it, as the
++		 * connector's bpc may have changed after the state was
++		 * duplicated
++		 */
++		if (!state->duplicated) {
++			const int bpp = connector->display_info.bpc * 3;
++			const int clock = crtc_state->adjusted_mode.clock;
 +
- 	kbtab = kzalloc(sizeof(struct kbtab), GFP_KERNEL);
- 	input_dev = input_allocate_device();
- 	if (!kbtab || !input_dev)
-@@ -155,8 +159,6 @@ static int kbtab_probe(struct usb_interface *intf, const struct usb_device_id *i
- 	input_set_abs_params(input_dev, ABS_Y, 0, 0x1750, 4, 0);
- 	input_set_abs_params(input_dev, ABS_PRESSURE, 0, 0xff, 0, 0);
++			asyh->dp.pbn = drm_dp_calc_pbn_mode(clock, bpp);
++		}
  
--	endpoint = &intf->cur_altsetting->endpoint[0].desc;
--
- 	usb_fill_int_urb(kbtab->irq, dev,
- 			 usb_rcvintpipe(dev, endpoint->bEndpointAddress),
- 			 kbtab->data, 8,
+-	if (crtc_state->mode_changed) {
+ 		slots = drm_dp_atomic_find_vcpi_slots(state, &mstm->mgr,
+ 						      mstc->port,
+ 						      asyh->dp.pbn);
 -- 
 2.20.1
 
