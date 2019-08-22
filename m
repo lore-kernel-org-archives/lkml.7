@@ -2,141 +2,165 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34C6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63030C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E7D233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:51:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="E7/haOOo"
+	by mail.kernel.org (Postfix) with ESMTP id 3CF2821848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388054AbfHVOva (ORCPT
+        id S2388608AbfHVOxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:51:30 -0400
-Received: from mout.web.de ([212.227.17.11]:44711 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387623AbfHVOv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:51:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1566485451;
-        bh=JJNw3yyI7LFjcQxSQaC2Dwh7+VMWL/aMrXs3yzs678I=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=E7/haOOojqJvt1y4CL5P/hXb2VGbhWXgdhuUd5fVONeM4kdaJOyqhlk/XGXhwEd72
-         7unQMKQT1yKllSd/lFZ3wVbTb6dBBt++sDGAPirwitITIT/IVqKDiF3mm2crMka4nQ
-         wGYeuDw3h/0gbAMNOADSM+usRzATNBJygTPyQg3g=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.181.43]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MQNma-1hok7z0Yiy-00Tj7H; Thu, 22
- Aug 2019 16:50:51 +0200
-To:     kernel-janitors@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Kees Cook <keescook@chromium.org>,
-        Li Rongqing <lirongqing@baidu.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH 0/2] ipc/mqueue: Adjustments for do_mq_notify()
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Message-ID: <6e9378d1-3b9b-e138-53f6-bc5683ac8b8c@web.de>
-Date:   Thu, 22 Aug 2019 16:50:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 22 Aug 2019 10:53:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:48346 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388086AbfHVOxG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 10:53:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id 67so6616734iob.15
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 07:53:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=kfIi0OSou2Ekw5QLTdZ8VtZ0z3hqSfowleVJYnTSHhc=;
+        b=CFo9uIm8qQt6dfTAgTIATN+fPqQoIPz+/2oYTL+JBzfZc7SYW8iz6reu8S7ENXNh0Y
+         i3elrkUf6mEkvKQix+xYAUHWcx41jDFIdhNzRLZ+yE5eqatFCVkpDyTqzgfR8tj/yKvp
+         q1aqMycqDE0n3RmEPOf0iNyHBq4biW0/i+OdnbIgUQc6Oj20KynqTlx8Di7MfSUCjX1X
+         pBZKSr440zfPajSI7CVWJCMDqGrcaYZfUS0q4UaFm6O/FyeoJYwms9U1Y+63t7aUACIl
+         74RAYXrdiDbk9n0Yi4lE2Xw4konBVJYdf8M94mny85N7EUsTJsPIDqzaOy9ViQFiOwNp
+         IJgw==
+X-Gm-Message-State: APjAAAUSZ8bGeH7sN9mYceER1dzGNEd5U968dbDTfCMUmUSODgSaQM6K
+        Gip9u6KG1b3IlbYNAs5/a2l9y3iQ3XMdyV/W06QYBy7AkXJz
+X-Google-Smtp-Source: APXvYqw2pBMggwRHNC0lzjydaezprM8qkJSaYzg9R1+X41uK1S/e6CKOqbuqpYhbin1Rq+t39efQ14ItyMp4karQSg0YBWmMHNMl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UwA56m5d+nLxmCo7FtThSiUfdaO/tIYKyDa57OHKmeP6Dg1psQb
- vCS2J31SUG7ODvZjYXk2JGxx6j4qfpsVd0TGURoUO/r8+/sB49pw+9ed/fNKS7RUX1tOwTv
- VXbfOAdbSXYBbkl5PdZmtNWs7UgMW2hhteMJO8ERloF86Ce4/eMqV0XaBIP6elE8RyhYysB
- NGXI5svLEny1G3EMtp19A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ehrkp7VIAwM=:HELClc4fwit5GT3smweJuo
- w4x1v8YuBelolUOGcZZadJONNhcvFhZ13vl/V8ucI5rh5wOmdlhEG766g65s4LV9dVoTc/Q+f
- 0PTRVadQDj5U7/wftSi+p2iVKlCbBcby2kO9wchr1L075L843/CtEHXwgJ5UtkgQ0uIuZ1x9y
- ub9cT6kynBx4t0LjVLrOlL462vzxlTlF3QzaB/GpsJcUE6T5RChekTuc80onrl8BueEEyHyIQ
- NfudW+pfvzNrIaJRvsWShYqpIJB6dm+xHSswmxdUXIeE1rkXxr1wGWMcvaXoyFEpbupixpsQk
- wnxFEf1E7PmRLHG0wmn6uAcoySennGRbmliVUPDFfFvKsnaNnIdm1/yAo2sMaeJT8uM0H/+2e
- L8uqrTrMkF5EkIJNrPhYyL8ZsSmQAZxr8XNwqNLLoj+BCgQOhn8igqeYvn+a9AsBHPcNmNbGk
- csVrxkEpSI7d8YwQyWiz6eEJcHYhd4hyWU3iZYH6HxkgTtFAPf/avx7/yZQE1pXaYmd3bb/X5
- OW8t5kpMRIxSjwNc/9mmG19qhebabMix1WwS9LkZNqIZpSQKerauQW2R5geR4JJGfQQaKWQZ4
- EY2FiDeUumAIhpC1WPRXXqXsPzb4+nvo/boacpXBOmTALw/mauz+eotrzkFcjUGdBRJTtaJSf
- HuPo6RuDu1Js/743InAOSwECmUzsvRPT/1xWiAXb/r2hmGsEb97H4E/RVms6uG9Nf+lpkrNfH
- MQcoq8i9FneceOG25AJdsjvDl6f1ydhM0DLS6fHCJ5sgqzF9lOGmXGMyq98KsMLuuuO34VXJ7
- P+0JvOgBbr89vWZmupoGZMdR4hUgSENMPYJxs/UhBc9FheBQZJ8w7M8lUhX//daek8WSZfAhA
- YzyVFZkN5H0CPMgLv/TJ+N5AknXTCxPYorRO9Lz2mYgzZVQz5m1pzqBB+f8iFS1/DKr766PxO
- i3yNUneXWXeZtvAZlXY9soH8NNUHpZkKxuhFaoTqVV3PIDNidsXctoNuiSsuKslnnjZ2F73Ac
- cNEZoPgYWJJTnIE9wh5qqYWARVdVBsCzanWiGqbIfRwKOBs3uaLVDkLYavx4ZFTmSTNhzz0T0
- 7h9wKuDx3oN7aCTqqQ4+hDSnr3lnk92OvvY5HeKStRWvjQ1EAZenqghu2gfKZ4SkH7fHgIaJJ
- Wjsja9x3YfF0Zefq2Ngr1TRnPM/VZ0EDmKKVmGzOM5KQR4XA==
+X-Received: by 2002:a5e:8e09:: with SMTP id a9mr69752ion.238.1566485585548;
+ Thu, 22 Aug 2019 07:53:05 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 07:53:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000df5c7f0590b5d85d@google.com>
+Subject: general protection fault in sctp_inq_pop
+From:   syzbot <syzbot+4a0643a653ac375612d1@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, marcelo.leitner@gmail.com,
+        netdev@vger.kernel.org, nhorman@tuxdriver.com,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Thu, 22 Aug 2019 16:38:49 +0200
-Subject: [PATCH 0/2] ipc/mqueue: Adjustments for do_mq_notify()
+Hello,
 
-A few update suggestions were taken into account
-from static source code analysis.
+syzbot found the following crash on:
 
-Markus Elfring (2):
-  Delete an unnecessary check before the macro call =E2=80=9Cdev_kfree_skb=
-=E2=80=9D
-  Improve exception handling in do_mq_notify()
+HEAD commit:    20e79a0a net: hns: add phy_attached_info() to the hns driver
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10d6dfba600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ce5e88233f2f83b0
+dashboard link: https://syzkaller.appspot.com/bug?extid=4a0643a653ac375612d1
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
- ipc/mqueue.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+Unfortunately, I don't have any reproducer for this crash yet.
 
-=2D-
-2.23.0
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4a0643a653ac375612d1@syzkaller.appspotmail.com
 
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 15509 Comm: syz-executor.1 Not tainted 5.3.0-rc3+ #139
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:sctp_inq_pop+0x294/0xd80 net/sctp/inqueue.c:201
+Code: 89 f9 48 c1 e9 03 80 3c 01 00 0f 85 e3 08 00 00 49 8d 7d 02 4d 89 6c  
+24 60 48 b8 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <0f> b6 0c 01 48  
+89 f8 83 e0 07 83 c0 01 38 c8 7c 08 84 c9 0f 85 4b
+RSP: 0018:ffff888097d9ee40 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8880968405d8 RCX: 0000000000000001
+RDX: 0000000000005803 RSI: ffffffff86b236aa RDI: 000000000000000a
+RBP: ffff888097d9ee90 R08: ffff88808fd44240 R09: fffffbfff14a914f
+R10: fffffbfff14a914e R11: ffffffff8a548a77 R12: ffff888096840580
+R13: 0000000000000008 R14: 0000000000000000 R15: ffff888097d9f478
+FS:  00007f59f27b8700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f40b77fd000 CR3: 0000000063e8e000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  sctp_endpoint_bh_rcv+0x184/0x8d0 net/sctp/endpointola.c:385
+  sctp_inq_push+0x1e4/0x280 net/sctp/inqueue.c:80
+  sctp_rcv+0x2807/0x3590 net/sctp/input.c:256
+  sctp6_rcv+0x17/0x30 net/sctp/ipv6.c:1049
+  ip6_protocol_deliver_rcu+0x2fe/0x1660 net/ipv6/ip6_input.c:397
+  ip6_input_finish+0x84/0x170 net/ipv6/ip6_input.c:438
+  NF_HOOK include/linux/netfilter.h:305 [inline]
+  NF_HOOK include/linux/netfilter.h:299 [inline]
+  ip6_input+0xe4/0x3f0 net/ipv6/ip6_input.c:447
+  dst_input include/net/dst.h:442 [inline]
+  ip6_sublist_rcv_finish+0x98/0x1e0 net/ipv6/ip6_input.c:84
+  ip6_list_rcv_finish net/ipv6/ip6_input.c:118 [inline]
+  ip6_sublist_rcv+0x80c/0xcf0 net/ipv6/ip6_input.c:282
+  ipv6_list_rcv+0x373/0x4b0 net/ipv6/ip6_input.c:316
+  __netif_receive_skb_list_ptype net/core/dev.c:5049 [inline]
+  __netif_receive_skb_list_core+0x1a2/0x9d0 net/core/dev.c:5087
+  __netif_receive_skb_list net/core/dev.c:5149 [inline]
+  netif_receive_skb_list_internal+0x7eb/0xe60 net/core/dev.c:5244
+  gro_normal_list.part.0+0x1e/0xb0 net/core/dev.c:5757
+  gro_normal_list net/core/dev.c:5755 [inline]
+  gro_normal_one net/core/dev.c:5769 [inline]
+  napi_frags_finish net/core/dev.c:5782 [inline]
+  napi_gro_frags+0xa6a/0xea0 net/core/dev.c:5855
+  tun_get_user+0x2e98/0x3fa0 drivers/net/tun.c:1974
+  tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2020
+  call_write_iter include/linux/fs.h:1870 [inline]
+  do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
+  do_iter_write fs/read_write.c:970 [inline]
+  do_iter_write+0x184/0x610 fs/read_write.c:951
+  vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
+  do_writev+0x15b/0x330 fs/read_write.c:1058
+  __do_sys_writev fs/read_write.c:1131 [inline]
+  __se_sys_writev fs/read_write.c:1128 [inline]
+  __x64_sys_writev+0x75/0xb0 fs/read_write.c:1128
+  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4596e1
+Code: 75 14 b8 14 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 34 b9 fb ff c3 48  
+83 ec 08 e8 fa 2c 00 00 48 89 04 24 b8 14 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 43 2d 00 00 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007f59f27b7ba0 EFLAGS: 00000293 ORIG_RAX: 0000000000000014
+RAX: ffffffffffffffda RBX: 000000000000010c RCX: 00000000004596e1
+RDX: 0000000000000001 RSI: 00007f59f27b7c00 RDI: 00000000000000f0
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007f59f27b86d4
+R13: 00000000004c8783 R14: 00000000004df5a0 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace 4d09ea96a0c7705b ]---
+RIP: 0010:sctp_inq_pop+0x294/0xd80 net/sctp/inqueue.c:201
+Code: 89 f9 48 c1 e9 03 80 3c 01 00 0f 85 e3 08 00 00 49 8d 7d 02 4d 89 6c  
+24 60 48 b8 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <0f> b6 0c 01 48  
+89 f8 83 e0 07 83 c0 01 38 c8 7c 08 84 c9 0f 85 4b
+RSP: 0018:ffff888097d9ee40 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8880968405d8 RCX: 0000000000000001
+RDX: 0000000000005803 RSI: ffffffff86b236aa RDI: 000000000000000a
+RBP: ffff888097d9ee90 R08: ffff88808fd44240 R09: fffffbfff14a914f
+R10: fffffbfff14a914e R11: ffffffff8a548a77 R12: ffff888096840580
+R13: 0000000000000008 R14: 0000000000000000 R15: ffff888097d9f478
+FS:  00007f59f27b8700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f40b77fd000 CR3: 0000000063e8e000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
