@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845F0C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8FFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0382341B
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7C8233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494547;
-	bh=Qxmb6vn3g3QEs2Y31wCulIpv1Hya/mij5H+crVxaM88=;
+	s=default; t=1566494551;
+	bh=Z9vCoxmg1F0JBLGhQ5ys9J4j4m/T7XhF6spaclXJU8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X9Q5GxMQQ6jBpv9jxVXE04VNtNgvZlpvFA4TEGOWXh2vDMuJe5cdvOFCV1ePEfOT6
-	 7kiyRcMmoyccBVoD7nDIi8qoTFY9kowAl1Mwhe73cFUKEoYf8Wf4JWK+Nh2uyle7fb
-	 KGG/aXpcOmR+bZLKafYg7JYOEiTHQppZQ+33lGUA=
+	b=ScqbvJmO44CM0xQJna+B3BQykfT18ZUoiOJm5/HeU28xao+Uev0/PcbPQoOpzHS2a
+	 hE4dvEeG8quXNoMtMeKPCSdN1MMavmNFVgTq3gHy1kWbcfaeuNicAMyWVoLRLW3RNQ
+	 8EO2nTu0brhHrBV3VVsYp5zYR2AS0qganktTjD0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391307AbfHVRW0 (ORCPT
+        id S2391336AbfHVRWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:22:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40490 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:22:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390086AbfHVRWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:22:24 -0400
+        id S2391300AbfHVRW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:22:26 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8815D23400;
-        Thu, 22 Aug 2019 17:22:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0443423405;
+        Thu, 22 Aug 2019 17:22:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494543;
-        bh=Qxmb6vn3g3QEs2Y31wCulIpv1Hya/mij5H+crVxaM88=;
+        s=default; t=1566494545;
+        bh=Z9vCoxmg1F0JBLGhQ5ys9J4j4m/T7XhF6spaclXJU8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sjLbz9wTxNUVQPH4Z86eUWQ/k4JUU7WkvfadNanE5tktece7lJ+aMfP11rhTFmvmL
-         TrcRiitOJ4VtweJhWegj6/1VxYbJzurU4YZsmBofk66dASBA689rwDasa1D0VOdfN8
-         tvGkAEjjVrzkP8nKG671kvqTEzR6JtnfZv+yh1lQ=
+        b=salJL7muNwtBCZTe9aXy2P1lDoRMIuPwm+7G/6M1Ci2dk5s+JfSKC1aY/oLB/wE9G
+         ryPX7HiCUO9VxYe5CM9+jclCl1+4Pi2H01WLOwiI7LErqqy2cPwCiGcTgvJJx6KvUe
+         8Irit3EUQtMJC+2gB9VymUH+RR305N2TcnSm7p8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Bortoli <tomasbortoli@gmail.com>,
-        syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.4 24/78] can: peak_usb: pcan_usb_pro: Fix info-leaks to USB devices
-Date:   Thu, 22 Aug 2019 10:18:28 -0700
-Message-Id: <20190822171832.743353746@linuxfoundation.org>
+        stable@vger.kernel.org, Gilles Buloz <Gilles.Buloz@kontron.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 26/78] hwmon: (nct7802) Fix wrong detection of in4 presence
+Date:   Thu, 22 Aug 2019 10:18:30 -0700
+Message-Id: <20190822171832.801503128@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -60,35 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Bortoli <tomasbortoli@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-commit ead16e53c2f0ed946d82d4037c630e2f60f4ab69 upstream.
+commit 38ada2f406a9b81fb1249c5c9227fa657e7d5671 upstream.
 
-Uninitialized Kernel memory can leak to USB devices.
+The code to detect if in4 is present is wrong; if in4 is not present,
+the in4_input sysfs attribute is still present.
 
-Fix by using kzalloc() instead of kmalloc() on the affected buffers.
+In detail:
 
-Signed-off-by: Tomas Bortoli <tomasbortoli@gmail.com>
-Reported-by: syzbot+d6a5a1a3657b596ef132@syzkaller.appspotmail.com
-Fixes: f14e22435a27 ("net: can: peak_usb: Do not do dma on the stack")
-Cc: linux-stable <stable@vger.kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+- Ihen RTD3_MD=11 (VSEN3 present), everything is as expected (no bug).
+- If we have RTD3_MD!=11 (no VSEN3), we unexpectedly have a in4_input
+  file under /sys and the "sensors" command displays in4_input.
+  But as expected, we have no in4_min, in4_max, in4_alarm, in4_beep.
+
+Fix is_visible function to detect and report in4_input visibility
+as expected.
+
+Reported-by: Gilles Buloz <Gilles.Buloz@kontron.com>
+Cc: Gilles Buloz <Gilles.Buloz@kontron.com>
+Cc: stable@vger.kernel.org
+Fixes: 3434f37835804 ("hwmon: Driver for Nuvoton NCT7802Y")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/peak_usb/pcan_usb_pro.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/nct7802.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_pro.c
-@@ -500,7 +500,7 @@ static int pcan_usb_pro_drv_loaded(struc
- 	u8 *buffer;
- 	int err;
+--- a/drivers/hwmon/nct7802.c
++++ b/drivers/hwmon/nct7802.c
+@@ -768,7 +768,7 @@ static struct attribute *nct7802_in_attr
+ 	&sensor_dev_attr_in3_alarm.dev_attr.attr,
+ 	&sensor_dev_attr_in3_beep.dev_attr.attr,
  
--	buffer = kmalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
-+	buffer = kzalloc(PCAN_USBPRO_FCT_DRVLD_REQ_LEN, GFP_KERNEL);
- 	if (!buffer)
- 		return -ENOMEM;
+-	&sensor_dev_attr_in4_input.dev_attr.attr,	/* 17 */
++	&sensor_dev_attr_in4_input.dev_attr.attr,	/* 16 */
+ 	&sensor_dev_attr_in4_min.dev_attr.attr,
+ 	&sensor_dev_attr_in4_max.dev_attr.attr,
+ 	&sensor_dev_attr_in4_alarm.dev_attr.attr,
+@@ -794,9 +794,9 @@ static umode_t nct7802_in_is_visible(str
  
+ 	if (index >= 6 && index < 11 && (reg & 0x03) != 0x03)	/* VSEN1 */
+ 		return 0;
+-	if (index >= 11 && index < 17 && (reg & 0x0c) != 0x0c)	/* VSEN2 */
++	if (index >= 11 && index < 16 && (reg & 0x0c) != 0x0c)	/* VSEN2 */
+ 		return 0;
+-	if (index >= 17 && (reg & 0x30) != 0x30)		/* VSEN3 */
++	if (index >= 16 && (reg & 0x30) != 0x30)		/* VSEN3 */
+ 		return 0;
+ 
+ 	return attr->mode;
 
 
