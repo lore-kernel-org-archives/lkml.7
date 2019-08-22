@@ -2,103 +2,185 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92F4C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E498C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7725520870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B917233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 21:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YBCdtmNu"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z6HymoiN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393568AbfHVVZD (ORCPT
+        id S2390039AbfHVV3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 17:25:03 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37765 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390775AbfHVVZB (ORCPT
+        Thu, 22 Aug 2019 17:29:19 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39080 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730242AbfHVV3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 17:25:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id z11so6730680wrt.4;
-        Thu, 22 Aug 2019 14:24:59 -0700 (PDT)
+        Thu, 22 Aug 2019 17:29:18 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i63so7130877wmg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 14:29:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=OEsmb3YYUM/UceoBs6jItgKL8PKPLrTMhWm1PQG7Dps=;
-        b=YBCdtmNu1zpehJ3oO3X3RDjFGx8UCQ9ORJTfqEQyZyGNPy9CdYH1xSyZZgBtWQpO78
-         k8RKFNQPBgsU7H8GE8gHEb6WYaujZyCQBGFCcv5SIKT7gZr58/mkSXzdT2eG9cUpiOJg
-         mfcOUbzyjMoPWqT7xbCQwpqIljRJhRPVfCbPHBP0cXe39gScrOY0BgLZnPEFFBWHr94V
-         eBg52T6W6Tt0wQ78PJQ96d72KDwynu2I2VwcLpjBKFxug9aQWE/DnL0qmUL92xgEjOGZ
-         M4I8yJPb7zyF82H0r/SvATluZNJbHquvoK5Fux3P7GhmhNcaOEV5cLTH/etcoLOwtkcY
-         tOzQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=abk/fHiB5arccADE4hjcjXei5qBzPz06VPd+ovt4c7U=;
+        b=Z6HymoiNrfDvmuXKNP47F4pXs/IWLPsbv3bDkBxbvnmiXGGp3+NJYUXU+nVZiHjHOL
+         X7/cjTWNhStOdDrdJ5DNaQOkv4BW2KQn7obTPnlh8spVWZ1f0LPI91drZ0pYASqkXbVA
+         LpIq9ZpDBEE2/YWQyjz2D+41CI9dY2XomHR5dDHtOIyMGTAlSqCQ+UAX+mG8Rf2yiiBb
+         OgZK2iAivQHaezJSk7B+8RuMpkhpHjCyESvZktm7IoRZZ2bm66BaBOGbms6eTtqchhot
+         aF7ZJbKW+1KiGpeIjIZ6ryxdZbWqxi5rU9etq9NILB5Dk3JUsEAiylDM1sSNGJwnK7fB
+         ixcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=OEsmb3YYUM/UceoBs6jItgKL8PKPLrTMhWm1PQG7Dps=;
-        b=S7I/bTrGvLTKC2gsumN7QebZougEfesBRM25/b/BIkxEMvcD9j6+XTOciPa/FtoPyf
-         aqxZSmzvPHCFHO+eebssO65xXF6i6zm/3zYjIy5hkVKAYju1xRly98Gxz8GZLZWjyzgs
-         iLwA5W+NzZp3eleihS7zjuT0/setAGvSu2W3t0YlYvcppCXsrBkU0Qs7JJN4U/SFEOCS
-         01bvHTdTOGsi2n+AXqD9jffISX2IGNqf0xXqM97JgxaltmunTDAVXBc4ERj3nQmYoz4Y
-         oendRrJLBh9j/8JG/xGG1FWp+5s0i6JsMkpRUf7EM3V9c+chsFILIfvJoyzXSYAuRfH0
-         Kzig==
-X-Gm-Message-State: APjAAAUcfsoISiGa/DYASRKFL8GkZyCVw2rh7O0gXZOfxznp0xEwaDXF
-        LDXN4zJz4hoiavxIp+VcjQcxuWwz
-X-Google-Smtp-Source: APXvYqxgwZedlUxMAhUXie3ccIVgjuCbvTQTaqxtanBCp4io6Z+/e7yJy5HT9q3EkYTRWFjdqNSPbA==
-X-Received: by 2002:a5d:63c8:: with SMTP id c8mr1061504wrw.21.1566509099026;
-        Thu, 22 Aug 2019 14:24:59 -0700 (PDT)
-Received: from localhost.localdomain ([86.126.25.232])
-        by smtp.gmail.com with ESMTPSA id 7sm463135wmj.46.2019.08.22.14.24.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 14:24:58 -0700 (PDT)
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     broonie@kernel.org
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vladimir Oltean <olteanv@gmail.com>
-Subject: [PATCH 1/1] spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours
-Date:   Fri, 23 Aug 2019 00:24:50 +0300
-Message-Id: <20190822212450.21420-2-olteanv@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190822212450.21420-1-olteanv@gmail.com>
-References: <20190822212450.21420-1-olteanv@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=abk/fHiB5arccADE4hjcjXei5qBzPz06VPd+ovt4c7U=;
+        b=hskJMOw6Q8Zntf/cjKsim+rEKOPGoY7yj9jV+RXEUBEoycvPG7CTEWrYlteKOpWWT1
+         p4niDhJPN19BcIBstajiaFpv2K9eTxvUx4Kz7GE76wB3SHnVeuKrUxNSRkooJn4KzYLh
+         qtLtYOvHHrE/9d319oHp4q0HCVJaJI0yz8YIYdOC5I1DNvpqxffRobiqzgWsS1nf+LQM
+         xv9JdprONjN50Z8wFdOKZkr+gudlUC96BtuCU+J/31zoz6f4YneKaXGMls18IFpzn3iC
+         01rV7MkG/9WdMcSxwqwS6XCkjk8O5xlkeNWanN0VIo8nhm2mTNXTI7J8i9WI4syLCCrz
+         CMhA==
+X-Gm-Message-State: APjAAAUvnFIqCnFE+i1JRoZ1vhO6E78+gKwBEWgixuBDVar3QlGfQPrE
+        iiB8bifAaoDN+t3ErQ+uYxiKwSDtUNNJTSt2+5xBgg==
+X-Google-Smtp-Source: APXvYqzTDaHrpYtZDyX5sO5xcuQItXl5PGCNVrqcUG85MZXFaE7uhViXyMROxlaIUnmTW8OOeZFpBft1GRNqgY7OGbI=
+X-Received: by 2002:a1c:c5c4:: with SMTP id v187mr1152547wmf.30.1566509355910;
+ Thu, 22 Aug 2019 14:29:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190724234500.253358-1-nums@google.com> <20190807203812.GA20129@kernel.org>
+In-Reply-To: <20190807203812.GA20129@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 22 Aug 2019 14:29:03 -0700
+Message-ID: <CAP-5=fURDxS6DSjc34MNOgqb_UX4YKHT5uHHtzi0X9qVQ8ZqcQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Perf uninitialized value fixes
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Numfor Mbiziwo-Tiapo <nums@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>, mbd@fb.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DSPI interrupt can be shared between two controllers at least on the
-LX2160A. In that case, the driver for one controller might misbehave and
-consume the other's interrupt. Fix this by actually checking if any of
-the bits in the status register have been asserted.
+On Wed, Aug 7, 2019 at 1:38 PM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Wed, Jul 24, 2019 at 04:44:57PM -0700, Numfor Mbiziwo-Tiapo escreveu:
+> > These patches are all warnings that the MSAN (Memory Sanitizer) build
+> > of perf has caught.
+> >
+> > To build perf with MSAN enabled run:
+> > make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-fsanitize=memory\
+> >  -fsanitize-memory-track-origins"
+> >
+> > (The -fsanitizer-memory-track-origins makes the bugs clearer but
+> > isn't strictly necessary.)
+> >
+> > (Additionally, llvm might have to be installed and clang might have to
+> > be specified as the compiler - export CC=/usr/bin/clang).
+> >
+> > The patches "Fix util.c use of uninitialized value warning" and "Fix
+> > annotate.c use of uninitialized value error" build on top of each other
+> > (the changes in Fix util.c use of uninitialized value warning must be
+> > made first).
+> >
+> > When running the commands provided in the repro instructions, MSAN will
+> > generate false positive uninitialized memory errors. This is happening
+> > because libc is not MSAN-instrumented. Finding a way to build libc with
+> > MSAN will get rid of these false positives and allow the real warnings
+> > mentioned in the patches to be shown.
+>
+> So this is because I'm not running a glibc linked with MSAN? Do you have
+> any pointer to help building glibc with MSAN? I want to do that inside a
+> container so that I can use these sanitizers, thanks,
+>
+> [root@quaco ~]# perf record -o - ls / | perf --no-pager annotate -i -  --stdio
+> ==29732==WARNING: MemorySanitizer: use-of-uninitialized-value
+> ==29733==WARNING: MemorySanitizer: use-of-uninitialized-value
+>     #0 0xcc136d in add_path /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:130:6
+>     #1 0xcc075e in setup_path /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:146:2
+>     #2 0x71298d in main /home/acme/git/perf/tools/perf/perf.c:512:2
+>     #0 0xcc136d in add_path /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:130:6
+>     #1 0xcc075e in setup_path /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:146:2
+>     #2 0x71298d in main /home/acme/git/perf/tools/perf/perf.c:512:2
+>     #3 0x7f45b9e29f32 in __libc_start_main (/lib64/libc.so.6+0x23f32)
+>     #4 0x447dcd in _start (/home/acme/bin/perf+0x447dcd)
+>
+>   Uninitialized value was created by a heap allocation
+>     #3 0x7fd6433cff32 in __libc_start_main (/lib64/libc.so.6+0x23f32)
+>     #4 0x447dcd in _start (/home/acme/bin/perf+0x447dcd)
+>
+>   Uninitialized value was created by a heap allocation
+>     #0 0x4507d2 in malloc /home/acme/git/llvm/projects/compiler-rt/lib/msan/msan_interceptors.cc:916:3
+>     #1 0x7f45b9e7fc47 in __vasprintf_internal (/lib64/libc.so.6+0x79c47)
+>
+> SUMMARY: MemorySanitizer: use-of-uninitialized-value /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:130:6 in add_path
+> Exiting
+>     #0 0x4507d2 in malloc /home/acme/git/llvm/projects/compiler-rt/lib/msan/msan_interceptors.cc:916:3
+>     #1 0x7fd643425c47 in __vasprintf_internal (/lib64/libc.so.6+0x79c47)
+>
+> SUMMARY: MemorySanitizer: use-of-uninitialized-value /home/acme/git/perf/tools/lib/subcmd/exec-cmd.c:130:6 in add_path
+> Exiting
+> [root@quaco ~]#
+>
+> > Numfor Mbiziwo-Tiapo (3):
+> >   Fix util.c use of uninitialized value warning
+> >   Fix annotate.c use of uninitialized value error
+> >   Fix sched-messaging.c use of uninitialized value errors
+> >
+> >  tools/perf/bench/sched-messaging.c |  3 ++-
+> >  tools/perf/util/annotate.c         | 15 +++++++++++----
+> >  tools/perf/util/header.c           |  2 +-
+> >  3 files changed, 14 insertions(+), 6 deletions(-)
 
-Fixes: 13aed2392741 ("spi: spi-fsl-dspi: use IRQF_SHARED mode to request IRQ")
-Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
----
- drivers/spi/spi-fsl-dspi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Thanks Arnaldo! Debugging the issue it isn't down glibc, there are
+interceptors in the sanitizers for asprintf to recognize it as a
+source of memory allocation. The problem is the sanitizers don't
+support _FORTIFY_SOURCE [1] and this is causing the false positives.
+The following patch works to resolve the false-positive issue for me:
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 5e10dc5c93a5..6c2a30f9d85b 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -874,9 +874,11 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
- 					trans_mode);
- 			}
- 		}
+-----
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -20,7 +20,13 @@ MAKEFLAGS += --no-print-directory
+LIBFILE = $(OUTPUT)libsubcmd.a
+
+CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
+-CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE
+-D_FORTIFY_SOURCE=2 -fPIC
++CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
 +
-+		return IRQ_HANDLED;
- 	}
- 
--	return IRQ_HANDLED;
-+	return IRQ_NONE;
- }
- 
- static const struct of_device_id fsl_dspi_dt_ids[] = {
--- 
-2.17.1
++ifeq ($(DEBUG),0)
++  ifeq ($(feature-fortify-source), 1)
++    CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
++  endif
++endif
 
+ifeq ($(CC_NO_CLANG), 0)
+  CFLAGS += -O3
+-----
+
+Thanks,
+Ian
+
+[1] https://github.com/google/sanitizers/wiki/AddressSanitizer#faq
+
+> > --
+> > 2.22.0.657.g960e92d24f-goog
+>
+> --
+>
+> - Arnaldo
