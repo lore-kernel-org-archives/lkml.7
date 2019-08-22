@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8A7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1E5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEC62089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7120B2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494005;
-	bh=RJ/mBnQ9yApPExC7G9QkBrupCdlJeI8/8KL7fi+0rj8=;
+	s=default; t=1566494012;
+	bh=vflVOD8EJIT9+3S/Swb39tn2qxmGSfyQdQ1zzz8gUfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e4hQ8L5qfm7c0LAzMAMQ5MDp2CsqIQpeCCosRYoO+CR0TRomblga75MCwg+YmYTu/
-	 P+yeJIV43rvpT7x+l7fw8RodC+8FtBT3RSoS4z0ibgZ8kAuuH+xUvm9rHoC0OAOHkP
-	 wUbcACHCWM2HhUC6y4F8uZXCV3uKAwOQ3h0rs3Y4=
+	b=EcNTuUuE/PTxLF6sT2hPFNRsaEP+NKZ795XJ7nUWOwt+j9YcO7LkoAr1CjvO1AMF/
+	 8Y7gpFV4Axn98GJS05WI1BDMaPxfp6AtqhAheSCDTCgGcpXQ8R3RCdhK8il4yCrT43
+	 Zh0cqEmDdM6qjJ+nwtSNMIKaYtGALcl/OUCXHY4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391041AbfHVRNY (ORCPT
+        id S2391064AbfHVRNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:13:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59014 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:13:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390616AbfHVRJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390608AbfHVRJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 22 Aug 2019 13:09:01 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65D9A233FD;
-        Thu, 22 Aug 2019 17:09:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65AE923406;
+        Thu, 22 Aug 2019 17:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493740;
-        bh=RJ/mBnQ9yApPExC7G9QkBrupCdlJeI8/8KL7fi+0rj8=;
+        s=default; t=1566493739;
+        bh=vflVOD8EJIT9+3S/Swb39tn2qxmGSfyQdQ1zzz8gUfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aaX7hgwypGx6NKIpLue6tpsQbxyIFt73LNjR9H3vrf4d7rvXZGkZRrg6x5zH+39s7
-         WHr6UezxoS3ewRDkBCCNbUzTS88QEpbqXhs2YBNIAL8CesS0RXpKt8oYPNpCTWhUkD
-         NJcZqv1LhPCSCkHNXuppb86sTF1YE8Jy+D7//N9Q=
+        b=y6sA4NQUm5UPbjtjngZqGUMfl2wrjFJ/rpnXPVm+ZS3KhvUVpKe4XvsxuZxCdk336
+         NOWxCcS19VvXvKBK/gMBePJNqC6qbg4iPym/70NvthRFKR0wmILgx7LUa2V8tLHcS8
+         X/vsYbW5Z8h5e3N7r8Wt/UQZP0RDLM/yq0JCfEMw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 086/135] Revert "kmemleak: allow to coexist with fault injection"
-Date:   Thu, 22 Aug 2019 13:07:22 -0400
-Message-Id: <20190822170811.13303-87-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 084/135] arm64: kprobes: Recover pstate.D in single-step exception handler
+Date:   Thu, 22 Aug 2019 13:07:20 -0400
+Message-Id: <20190822170811.13303-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -71,70 +66,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit df9576def004d2cd5beedc00cb6e8901427634b9 ]
+[ Upstream commit b3980e48528c4d2a9e70b145a5bba328b73a0f93 ]
 
-When running ltp's oom test with kmemleak enabled, the below warning was
-triggerred since kernel detects __GFP_NOFAIL & ~__GFP_DIRECT_RECLAIM is
-passed in:
+kprobes manipulates the interrupted PSTATE for single step, and
+doesn't restore it. Thus, if we put a kprobe where the pstate.D
+(debug) masked, the mask will be cleared after the kprobe hits.
 
-  WARNING: CPU: 105 PID: 2138 at mm/page_alloc.c:4608 __alloc_pages_nodemask+0x1c31/0x1d50
-  Modules linked in: loop dax_pmem dax_pmem_core ip_tables x_tables xfs virtio_net net_failover virtio_blk failover ata_generic virtio_pci virtio_ring virtio libata
-  CPU: 105 PID: 2138 Comm: oom01 Not tainted 5.2.0-next-20190710+ #7
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.10.2-0-g5f4c7b1-prebuilt.qemu-project.org 04/01/2014
-  RIP: 0010:__alloc_pages_nodemask+0x1c31/0x1d50
-  ...
-   kmemleak_alloc+0x4e/0xb0
-   kmem_cache_alloc+0x2a7/0x3e0
-   mempool_alloc_slab+0x2d/0x40
-   mempool_alloc+0x118/0x2b0
-   bio_alloc_bioset+0x19d/0x350
-   get_swap_bio+0x80/0x230
-   __swap_writepage+0x5ff/0xb20
+Moreover, in the most complicated case, this can lead a kernel
+crash with below message when a nested kprobe hits.
 
-The mempool_alloc_slab() clears __GFP_DIRECT_RECLAIM, however kmemleak
-has __GFP_NOFAIL set all the time due to d9570ee3bd1d4f2 ("kmemleak:
-allow to coexist with fault injection").  But, it doesn't make any sense
-to have __GFP_NOFAIL and ~__GFP_DIRECT_RECLAIM specified at the same
-time.
+[  152.118921] Unexpected kernel single-step exception at EL1
 
-According to the discussion on the mailing list, the commit should be
-reverted for short term solution.  Catalin Marinas would follow up with
-a better solution for longer term.
+When the 1st kprobe hits, do_debug_exception() will be called.
+At this point, debug exception (= pstate.D) must be masked (=1).
+But if another kprobes hits before single-step of the first kprobe
+(e.g. inside user pre_handler), it unmask the debug exception
+(pstate.D = 0) and return.
+Then, when the 1st kprobe setting up single-step, it saves current
+DAIF, mask DAIF, enable single-step, and restore DAIF.
+However, since "D" flag in DAIF is cleared by the 2nd kprobe, the
+single-step exception happens soon after restoring DAIF.
 
-The failure rate of kmemleak metadata allocation may increase in some
-circumstances, but this should be expected side effect.
+This has been introduced by commit 7419333fa15e ("arm64: kprobe:
+Always clear pstate.D in breakpoint exception handler")
 
-Link: http://lkml.kernel.org/r/1563299431-111710-1-git-send-email-yang.shi@linux.alibaba.com
-Fixes: d9570ee3bd1d4f2 ("kmemleak: allow to coexist with fault injection")
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Qian Cai <cai@lca.pw>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+To solve this issue, this stores all DAIF bits and restore it
+after single stepping.
+
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: 7419333fa15e ("arm64: kprobe: Always clear pstate.D in breakpoint exception handler")
+Reviewed-by: James Morse <james.morse@arm.com>
+Tested-by: James Morse <james.morse@arm.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/kmemleak.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/daifflags.h |  2 ++
+ arch/arm64/kernel/probes/kprobes.c | 40 +++++-------------------------
+ 2 files changed, 8 insertions(+), 34 deletions(-)
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 3e147ea831826..3afb01bce736a 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -114,7 +114,7 @@
- /* GFP bitmask for kmemleak internal allocations */
- #define gfp_kmemleak_mask(gfp)	(((gfp) & (GFP_KERNEL | GFP_ATOMIC)) | \
- 				 __GFP_NORETRY | __GFP_NOMEMALLOC | \
--				 __GFP_NOWARN | __GFP_NOFAIL)
-+				 __GFP_NOWARN)
+diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
+index ae7e605085d71..9c0e0178ea291 100644
+--- a/arch/arm64/include/asm/daifflags.h
++++ b/arch/arm64/include/asm/daifflags.h
+@@ -13,6 +13,8 @@
+ #define DAIF_PROCCTX		0
+ #define DAIF_PROCCTX_NOIRQ	PSR_I_BIT
+ #define DAIF_ERRCTX		(PSR_I_BIT | PSR_A_BIT)
++#define DAIF_MASK		(PSR_D_BIT | PSR_A_BIT | PSR_I_BIT | PSR_F_BIT)
++
  
- /* scanning area inside a memory block */
- struct kmemleak_scan_area {
+ /* mask/save/unmask/restore all exceptions, including interrupts. */
+ static inline void local_daif_mask(void)
+diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+index 88ce502c8e6f1..624f2501f3f87 100644
+--- a/arch/arm64/kernel/probes/kprobes.c
++++ b/arch/arm64/kernel/probes/kprobes.c
+@@ -21,6 +21,7 @@
+ #include <asm/ptrace.h>
+ #include <asm/cacheflush.h>
+ #include <asm/debug-monitors.h>
++#include <asm/daifflags.h>
+ #include <asm/system_misc.h>
+ #include <asm/insn.h>
+ #include <linux/uaccess.h>
+@@ -165,33 +166,6 @@ static void __kprobes set_current_kprobe(struct kprobe *p)
+ 	__this_cpu_write(current_kprobe, p);
+ }
+ 
+-/*
+- * When PSTATE.D is set (masked), then software step exceptions can not be
+- * generated.
+- * SPSR's D bit shows the value of PSTATE.D immediately before the
+- * exception was taken. PSTATE.D is set while entering into any exception
+- * mode, however software clears it for any normal (none-debug-exception)
+- * mode in the exception entry. Therefore, when we are entering into kprobe
+- * breakpoint handler from any normal mode then SPSR.D bit is already
+- * cleared, however it is set when we are entering from any debug exception
+- * mode.
+- * Since we always need to generate single step exception after a kprobe
+- * breakpoint exception therefore we need to clear it unconditionally, when
+- * we become sure that the current breakpoint exception is for kprobe.
+- */
+-static void __kprobes
+-spsr_set_debug_flag(struct pt_regs *regs, int mask)
+-{
+-	unsigned long spsr = regs->pstate;
+-
+-	if (mask)
+-		spsr |= PSR_D_BIT;
+-	else
+-		spsr &= ~PSR_D_BIT;
+-
+-	regs->pstate = spsr;
+-}
+-
+ /*
+  * Interrupts need to be disabled before single-step mode is set, and not
+  * reenabled until after single-step mode ends.
+@@ -203,17 +177,17 @@ spsr_set_debug_flag(struct pt_regs *regs, int mask)
+ static void __kprobes kprobes_save_local_irqflag(struct kprobe_ctlblk *kcb,
+ 						struct pt_regs *regs)
+ {
+-	kcb->saved_irqflag = regs->pstate;
++	kcb->saved_irqflag = regs->pstate & DAIF_MASK;
+ 	regs->pstate |= PSR_I_BIT;
++	/* Unmask PSTATE.D for enabling software step exceptions. */
++	regs->pstate &= ~PSR_D_BIT;
+ }
+ 
+ static void __kprobes kprobes_restore_local_irqflag(struct kprobe_ctlblk *kcb,
+ 						struct pt_regs *regs)
+ {
+-	if (kcb->saved_irqflag & PSR_I_BIT)
+-		regs->pstate |= PSR_I_BIT;
+-	else
+-		regs->pstate &= ~PSR_I_BIT;
++	regs->pstate &= ~DAIF_MASK;
++	regs->pstate |= kcb->saved_irqflag;
+ }
+ 
+ static void __kprobes
+@@ -250,8 +224,6 @@ static void __kprobes setup_singlestep(struct kprobe *p,
+ 
+ 		set_ss_context(kcb, slot);	/* mark pending ss */
+ 
+-		spsr_set_debug_flag(regs, 0);
+-
+ 		/* IRQs and single stepping do not mix well. */
+ 		kprobes_save_local_irqflag(kcb, regs);
+ 		kernel_enable_single_step(regs);
 -- 
 2.20.1
 
