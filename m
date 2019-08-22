@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D849C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D95C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4904C216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F5E216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 02:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbfHVCSN (ORCPT
+        id S1730919AbfHVCSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 21 Aug 2019 22:18:13 -0400
-Received: from shelob.surriel.com ([96.67.55.147]:34170 "EHLO
+Received: from shelob.surriel.com ([96.67.55.147]:34124 "EHLO
         shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730881AbfHVCSM (ORCPT
+        with ESMTP id S1730877AbfHVCSM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 21 Aug 2019 22:18:12 -0400
 Received: from imladris.surriel.com ([96.67.55.152])
         by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
         (Exim 4.92)
         (envelope-from <riel@shelob.surriel.com>)
-        id 1i0cfX-0001S6-AQ; Wed, 21 Aug 2019 22:17:43 -0400
+        id 1i0cfX-0001S6-7u; Wed, 21 Aug 2019 22:17:43 -0400
 From:   Rik van Riel <riel@surriel.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-team@fb.com, pjt@google.com, dietmar.eggemann@arm.com,
         peterz@infradead.org, mingo@redhat.com, morten.rasmussen@arm.com,
         tglx@linutronix.de, mgorman@techsingularity.net,
         vincent.guittot@linaro.org, Rik van Riel <riel@surriel.com>
-Subject: [PATCH 08/15] sched,fair: simplify timeslice length code
-Date:   Wed, 21 Aug 2019 22:17:33 -0400
-Message-Id: <20190822021740.15554-9-riel@surriel.com>
+Subject: [PATCH 06/15] sched,cfs: use explicit cfs_rq of parent se helper
+Date:   Wed, 21 Aug 2019 22:17:31 -0400
+Message-Id: <20190822021740.15554-7-riel@surriel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822021740.15554-1-riel@surriel.com>
 References: <20190822021740.15554-1-riel@surriel.com>
@@ -44,65 +44,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The idea behind __sched_period makes sense, but the results do not always.
+Use an explicit "cfs_rq of parent sched_entity" helper in a few
+strategic places, where cfs_rq_of(se) may no longer point at the
+right runqueue once we flatten the hierarchical cgroup runqueues.
 
-When a CPU has one high priority task and a large number of low priority
-tasks, __sched_period will return a value larger than sysctl_sched_latency,
-and the one high priority task may end up getting a timeslice all for itself
-that is also much larger than sysctl_sched_latency.
-
-The low priority tasks will have their time slices rounded up to
-sysctl_sched_min_granularity, resulting in an even larger scheduling
-latency than targeted by __sched_period.
-
-Simplify the code by simply ripping out __sched_period and always taking
-fractions of sysctl_sched_latency.
-
-If a high priority task ends up getting a "too small" time slice compared
-to low priority tasks, the vruntime scaling ensures that it will simply
-get scheduled more frequently than low priority tasks.
+No functional change.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
 ---
- kernel/sched/fair.c | 18 +-----------------
- 1 file changed, 1 insertion(+), 17 deletions(-)
+ kernel/sched/fair.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 8f8c85c6da9b..74ee22c59d13 100644
+index 04b216234265..31a26737a873 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -691,22 +691,6 @@ static inline u64 calc_delta_fair(u64 delta, struct sched_entity *se)
- 	return delta;
+@@ -276,6 +276,15 @@ static inline struct cfs_rq *group_cfs_rq(struct sched_entity *grp)
+ 	return grp->my_q;
  }
  
--/*
-- * The idea is to set a period in which each task runs once.
-- *
-- * When there are too many tasks (sched_nr_latency) we have to stretch
-- * this period because otherwise the slices get too small.
-- *
-- * p = (nr <= nl) ? l : l*nr/nl
-- */
--static u64 __sched_period(unsigned long nr_running)
--{
--	if (unlikely(nr_running > sched_nr_latency))
--		return nr_running * sysctl_sched_min_granularity;
--	else
--		return sysctl_sched_latency;
--}
--
- /*
-  * We calculate the wall-time slice from the period by taking a part
-  * proportional to the weight.
-@@ -715,7 +699,7 @@ static u64 __sched_period(unsigned long nr_running)
-  */
- static u64 sched_slice(struct cfs_rq *cfs_rq, struct sched_entity *se)
++/* runqueue owned by the parent entity; the root cfs_rq for a top level se */
++static inline struct cfs_rq *group_cfs_rq_of_parent(struct sched_entity *se)
++{
++	if (se->parent)
++		return group_cfs_rq(se->parent);
++
++	return cfs_rq_of(se);
++}
++
+ static inline bool list_add_leaf_cfs_rq(struct cfs_rq *cfs_rq)
  {
--	u64 slice = __sched_period(cfs_rq->nr_running + !se->on_rq);
-+	u64 slice = sysctl_sched_latency;
+ 	struct rq *rq = rq_of(cfs_rq);
+@@ -3319,7 +3328,7 @@ static inline int propagate_entity_load_avg(struct sched_entity *se)
+ 
+ 	gcfs_rq->propagate = 0;
+ 
+-	cfs_rq = cfs_rq_of(se);
++	cfs_rq = group_cfs_rq_of_parent(se);
+ 
+ 	add_tg_cfs_propagate(cfs_rq, gcfs_rq->prop_runnable_sum);
+ 
+@@ -7796,7 +7805,7 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+ 
+ 	WRITE_ONCE(cfs_rq->h_load_next, NULL);
+ 	for_each_sched_entity(se) {
+-		cfs_rq = cfs_rq_of(se);
++		cfs_rq = group_cfs_rq_of_parent(se);
+ 		WRITE_ONCE(cfs_rq->h_load_next, se);
+ 		if (cfs_rq->last_h_load_update == now)
+ 			break;
+@@ -7819,7 +7828,7 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+ 
+ static unsigned long task_se_h_load(struct sched_entity *se)
+ {
+-	struct cfs_rq *cfs_rq = cfs_rq_of(se);
++	struct cfs_rq *cfs_rq = group_cfs_rq_of_parent(se);
+ 
+ 	update_cfs_rq_h_load(cfs_rq);
+ 	return div64_ul(se->avg.load_avg * cfs_rq->h_load,
+@@ -10166,7 +10175,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+ 	struct sched_entity *se = &curr->se;
  
  	for_each_sched_entity(se) {
- 		struct load_weight *load;
+-		cfs_rq = cfs_rq_of(se);
++		cfs_rq = group_cfs_rq_of_parent(se);
+ 		entity_tick(cfs_rq, se, queued);
+ 	}
+ 
 -- 
 2.20.1
 
