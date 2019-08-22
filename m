@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A13C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC94C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F56823429
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA6D21743
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494587;
-	bh=lAGBnw63tEB2nUUD852MKzE+i4vbkiq+jwyHBSgvvp8=;
+	s=default; t=1566494590;
+	bh=jzjytNtnrJ/2ODtaSdZNF8+JKdKysEd0k3SIvqd6KEI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ti9Kc/A0F0rpnzG1JM1WVOTRXAOwMkq8gmrQYn9/V23YI+o+ntZaJ4n2Kx96dEy4u
-	 G+vLoASeh0RaPd9Eu+Ozzgo6MLXuH9GiOLt41YIm+J+FWKHiMUoldAjg62XeC+axbn
-	 5InCQ2x38xI/HABveXy9e1zWz0FqsYa21tb4Im+k=
+	b=m5QzOPf6kZ+jXkcnRDOu6MMMhvSrawccxtpoYJHww1JXiksaBmtt4f1W9w+X8SZX7
+	 lmqLPR4ghkOBsI0chkn7SOdg6cD6sZxtEHd8BpQd7skL6UWoMB6D83e6d8/k52LjPM
+	 bHk97/ae2e0pqvAlRN9ynbiIEIzzkCLM7WgsiMGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403819AbfHVRXF (ORCPT
+        id S2403846AbfHVRXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42168 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:23:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403785AbfHVRXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:02 -0400
+        id S2403785AbfHVRXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:06 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D999C21743;
-        Thu, 22 Aug 2019 17:23:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A644121743;
+        Thu, 22 Aug 2019 17:23:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494582;
-        bh=lAGBnw63tEB2nUUD852MKzE+i4vbkiq+jwyHBSgvvp8=;
+        s=default; t=1566494585;
+        bh=jzjytNtnrJ/2ODtaSdZNF8+JKdKysEd0k3SIvqd6KEI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I9zE7qa0Y3mtS70J3bjvsonf62W/ScfjQ7X3vzXeVVneqpWoRtPxA1/e0un4VGucL
-         /h7hRUfmg6FOqTmTl6iqrOP0BDzxDfFKnR59p6hfvTzAvbZFHM4SkHU9pGiEMAzaMz
-         JTB1bAIPumzuKPi8MAj70L0vazl7tbiGgmm5fMrg=
+        b=Z4NWQF88pqx/v1Sp6UhNXhyYJFKMDs1+rGEkWnhJcRtNitP/zPvahd6LUA88wVNl9
+         vk7ju4Bo8QevaY39AYLBKCxrYHyvzPJKqrQ/dLdxcYhMKH9M5YQzrCPIP7qG97coB0
+         NIZSTwO/QE6kgWe7FceIZ+Us7eGp5NRgovVeWP8g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 74/78] net/packet: fix race in tpacket_snd()
-Date:   Thu, 22 Aug 2019 10:19:18 -0700
-Message-Id: <20190822171834.175405184@linuxfoundation.org>
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 37/78] ALSA: hda - Fix a memory leak bug
+Date:   Thu, 22 Aug 2019 10:18:41 -0700
+Message-Id: <20190822171833.116637676@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -60,78 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 32d3182cd2cd29b2e7e04df7b0db350fbe11289f ]
+commit cfef67f016e4c00a2f423256fc678a6967a9fc09 upstream.
 
-packet_sendmsg() checks tx_ring.pg_vec to decide
-if it must call tpacket_snd().
+In snd_hda_parse_generic_codec(), 'spec' is allocated through kzalloc().
+Then, the pin widgets in 'codec' are parsed. However, if the parsing
+process fails, 'spec' is not deallocated, leading to a memory leak.
 
-Problem is that the check is lockless, meaning another thread
-can issue a concurrent setsockopt(PACKET_TX_RING ) to flip
-tx_ring.pg_vec back to NULL.
+To fix the above issue, free 'spec' before returning the error.
 
-Given that tpacket_snd() grabs pg_vec_lock mutex, we can
-perform the check again to solve the race.
-
-syzbot reported :
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 11429 Comm: syz-executor394 Not tainted 5.3.0-rc4+ #101
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:packet_lookup_frame+0x8d/0x270 net/packet/af_packet.c:474
-Code: c1 ee 03 f7 73 0c 80 3c 0e 00 0f 85 cb 01 00 00 48 8b 0b 89 c0 4c 8d 24 c1 48 b8 00 00 00 00 00 fc ff df 4c 89 e1 48 c1 e9 03 <80> 3c 01 00 0f 85 94 01 00 00 48 8d 7b 10 4d 8b 3c 24 48 b8 00 00
-RSP: 0018:ffff88809f82f7b8 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff8880a45c7030 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 1ffff110148b8e06 RDI: ffff8880a45c703c
-RBP: ffff88809f82f7e8 R08: ffff888087aea200 R09: fffffbfff134ae50
-R10: fffffbfff134ae4f R11: ffffffff89a5727f R12: 0000000000000000
-R13: 0000000000000001 R14: ffff8880a45c6ac0 R15: 0000000000000000
-FS:  00007fa04716f700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa04716edb8 CR3: 0000000091eb4000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- packet_current_frame net/packet/af_packet.c:487 [inline]
- tpacket_snd net/packet/af_packet.c:2667 [inline]
- packet_sendmsg+0x590/0x6250 net/packet/af_packet.c:2975
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
- __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
- do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 69e3c75f4d54 ("net: TX_RING and packet mmap")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 352f7f914ebb ("ALSA: hda - Merge Realtek parser code to generic parser")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/packet/af_packet.c |    7 +++++++
- 1 file changed, 7 insertions(+)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2498,6 +2498,13 @@ static int tpacket_snd(struct packet_soc
+---
+ sound/pci/hda/hda_generic.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/sound/pci/hda/hda_generic.c
++++ b/sound/pci/hda/hda_generic.c
+@@ -5917,7 +5917,7 @@ static int snd_hda_parse_generic_codec(s
  
- 	mutex_lock(&po->pg_vec_lock);
+ 	err = snd_hda_parse_pin_defcfg(codec, &spec->autocfg, NULL, 0);
+ 	if (err < 0)
+-		return err;
++		goto error;
  
-+	/* packet_sendmsg() check on tx_ring.pg_vec was lockless,
-+	 * we need to confirm it under protection of pg_vec_lock.
-+	 */
-+	if (unlikely(!po->tx_ring.pg_vec)) {
-+		err = -EBUSY;
-+		goto out;
-+	}
- 	if (likely(saddr == NULL)) {
- 		dev	= packet_cached_dev_get(po);
- 		proto	= po->num;
+ 	err = snd_hda_gen_parse_auto_config(codec, &spec->autocfg);
+ 	if (err < 0)
 
 
