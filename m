@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B308C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C97FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D51C320856
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C132341B
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495722;
-	bh=yUms7LCpMB2h6rh8uNMEOI4uJr3EyveDp/HxqP1xdLA=;
+	s=default; t=1566495725;
+	bh=WRLxgu5pjGZz8vXoOs3/zQIOrHQH6Ij/EdXN46H2njE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TtCE91QxySRWQJAZ1fdbbhRMvp6mdefOXd5Hk/Iye5Yy8zzjnrBpxy2AhOdI/hSqF
-	 T83i7DKmZLOlFfI7g2cv1Y2L4bn8rv4bo9Z0ZTfkgEs+ydCP4ZDt8/UEPxhpugq939
-	 yEsFyAYU2JrYF5PGPmrlCGeUtDfxXImglzm/T4MQ=
+	b=JPg3o9iOr1y52dpAFoq8EaFXC65OFJhwcpAJGRuzPe1Dyz1XxD1g/zJiGveF1QN5i
+	 RVdS7p4SAgBtZrEOvca5cadusxpZWIqEfi2KTQh+ImZRRUu2OlL8vcX4K/cdZseURu
+	 /2ogqoU51EU5U5sSfsXSIUoNqbGfZhoeuoWdz8Gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391734AbfHVRXw (ORCPT
+        id S2405174AbfHVRmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43660 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:42:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391497AbfHVRXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:34 -0400
+        id S2391726AbfHVRXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:53 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C56423427;
-        Thu, 22 Aug 2019 17:23:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 048E821743;
+        Thu, 22 Aug 2019 17:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494613;
-        bh=yUms7LCpMB2h6rh8uNMEOI4uJr3EyveDp/HxqP1xdLA=;
+        s=default; t=1566494632;
+        bh=WRLxgu5pjGZz8vXoOs3/zQIOrHQH6Ij/EdXN46H2njE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jg6m1I8wngGmJCIlJhLIiUEiu6X9eNYFXBcpBmRs1HhVoR6eEjdt/IQlGikgY/DfP
-         5aujXbjMeZGjx00hidliRZGa8kUrSPp0CV3UFRtLVAcJUkUcJll/1gdquGQFkXTW9M
-         GrGEBe7QCaG7PSlkMr92IRQwuwh0mY4WS01AmqeI=
+        b=1cFhF/4CRYYQw7HqEBSJpeDcOJuqVEWfxCpmc+G0ty4XW69V5ZzfXd8RTGz4EEH1V
+         uc6cjj1+kU1lJoqqm9PSIfycsmL5UbWpzXu2vFZN6ePtRtDoyxaS5mlxtfiTFYrf5t
+         jsTNQcv3tC8IQgcZvuVH9jwMfSxUzTFOZdQsdGO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.9 008/103] perf db-export: Fix thread__exec_comm()
-Date:   Thu, 22 Aug 2019 10:17:56 -0700
-Message-Id: <20190822171729.186721986@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 4.9 037/103] SMB3: Fix deadlock in validate negotiate hits reconnect
+Date:   Thu, 22 Aug 2019 10:18:25 -0700
+Message-Id: <20190822171730.314854913@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -60,136 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit 3de7ae0b2a1d86dbb23d0cb135150534fdb2e836 upstream.
+commit e99c63e4d86d3a94818693147b469fa70de6f945 upstream.
 
-Threads synthesized from /proc have comms with a start time of zero, and
-not marked as "exec". Currently, there can be 2 such comms. The first is
-created by processing a synthesized fork event and is set to the
-parent's comm string, and the second by processing a synthesized comm
-event set to the thread's current comm string.
+Currently we skip SMB2_TREE_CONNECT command when checking during
+reconnect because Tree Connect happens when establishing
+an SMB session. For SMB 3.0 protocol version the code also calls
+validate negotiate which results in SMB2_IOCL command being sent
+over the wire. This may deadlock on trying to acquire a mutex when
+checking for reconnect. Fix this by skipping SMB2_IOCL command
+when doing the reconnect check.
 
-In the absence of an "exec" comm, thread__exec_comm() picks the last
-(oldest) comm, which, in the case above, is the parent's comm string.
-For a main thread, that is very probably wrong. Use the second-to-last
-in that case.
-
-This affects only db-export because it is the only user of
-thread__exec_comm().
-
-Example:
-
-  $ sudo perf record -a -o pt-a-sleep-1 -e intel_pt//u -- sleep 1
-  $ sudo chown ahunter pt-a-sleep-1
-
-Before:
-
-  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1.db branches calls
-  $ sqlite3 -header -column pt-a-sleep-1.db 'select * from comm_threads_view'
-  comm_id     command     thread_id   pid         tid
-  ----------  ----------  ----------  ----------  ----------
-  1           swapper     1           0           0
-  2           rcu_sched   2           10          10
-  3           kthreadd    3           78          78
-  5           sudo        4           15180       15180
-  5           sudo        5           15180       15182
-  7           kworker/4:  6           10335       10335
-  8           kthreadd    7           55          55
-  10          systemd     8           865         865
-  10          systemd     9           865         875
-  13          perf        10          15181       15181
-  15          sleep       10          15181       15181
-  16          kworker/3:  11          14179       14179
-  17          kthreadd    12          29376       29376
-  19          systemd     13          746         746
-  21          systemd     14          401         401
-  23          systemd     15          879         879
-  23          systemd     16          879         945
-  25          kthreadd    17          556         556
-  27          kworker/u1  18          14136       14136
-  28          kworker/u1  19          15021       15021
-  29          kthreadd    20          509         509
-  31          systemd     21          836         836
-  31          systemd     22          836         967
-  33          systemd     23          1148        1148
-  33          systemd     24          1148        1163
-  35          kworker/2:  25          17988       17988
-  36          kworker/0:  26          13478       13478
-
-After:
-
-  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1b.db branches calls
-  $ sqlite3 -header -column pt-a-sleep-1b.db 'select * from comm_threads_view'
-  comm_id     command     thread_id   pid         tid
-  ----------  ----------  ----------  ----------  ----------
-  1           swapper     1           0           0
-  2           rcu_sched   2           10          10
-  3           kswapd0     3           78          78
-  4           perf        4           15180       15180
-  4           perf        5           15180       15182
-  6           kworker/4:  6           10335       10335
-  7           kcompactd0  7           55          55
-  8           accounts-d  8           865         865
-  8           accounts-d  9           865         875
-  10          perf        10          15181       15181
-  12          sleep       10          15181       15181
-  13          kworker/3:  11          14179       14179
-  14          kworker/1:  12          29376       29376
-  15          haveged     13          746         746
-  16          systemd-jo  14          401         401
-  17          NetworkMan  15          879         879
-  17          NetworkMan  16          879         945
-  19          irq/131-iw  17          556         556
-  20          kworker/u1  18          14136       14136
-  21          kworker/u1  19          15021       15021
-  22          kworker/u1  20          509         509
-  23          thermald    21          836         836
-  23          thermald    22          836         967
-  25          unity-sett  23          1148        1148
-  25          unity-sett  24          1148        1163
-  27          kworker/2:  25          17988       17988
-  28          kworker/0:  26          13478       13478
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 65de51f93ebf ("perf tools: Identify which comms are from exec")
-Link: http://lkml.kernel.org/r/20190808064823.14846-1-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/thread.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ fs/cifs/smb2pdu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -114,14 +114,24 @@ struct comm *thread__comm(const struct t
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -168,7 +168,7 @@ smb2_reconnect(__le16 smb2_command, stru
+ 	if (tcon == NULL)
+ 		return 0;
  
- struct comm *thread__exec_comm(const struct thread *thread)
- {
--	struct comm *comm, *last = NULL;
-+	struct comm *comm, *last = NULL, *second_last = NULL;
+-	if (smb2_command == SMB2_TREE_CONNECT)
++	if (smb2_command == SMB2_TREE_CONNECT || smb2_command == SMB2_IOCTL)
+ 		return 0;
  
- 	list_for_each_entry(comm, &thread->comm_list, list) {
- 		if (comm->exec)
- 			return comm;
-+		second_last = last;
- 		last = comm;
- 	}
- 
-+	/*
-+	 * 'last' with no start time might be the parent's comm of a synthesized
-+	 * thread (created by processing a synthesized fork event). For a main
-+	 * thread, that is very probably wrong. Prefer a later comm to avoid
-+	 * that case.
-+	 */
-+	if (second_last && !last->start && thread->pid_ == thread->tid)
-+		return second_last;
-+
- 	return last;
- }
- 
+ 	if (tcon->tidStatus == CifsExiting) {
 
 
