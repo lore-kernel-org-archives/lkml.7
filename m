@@ -2,95 +2,141 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 037A0C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BD7C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D663121743
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7107233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 14:22:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="gWLIlzbA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387912AbfHVOWE (ORCPT
+        id S2387935AbfHVOWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 10:22:04 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:49646 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728042AbfHVOWE (ORCPT
+        Thu, 22 Aug 2019 10:22:31 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39987 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728042AbfHVOWb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 10:22:04 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x7MELgVm006640
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 22 Aug 2019 10:21:43 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 7F9C942049E; Thu, 22 Aug 2019 10:21:42 -0400 (EDT)
-Date:   Thu, 22 Aug 2019 10:21:42 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-Cc:     Gao Xiang <hsiangkao@aol.com>, Richard Weinberger <richard@nod.at>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: erofs: Question on unused fields in on-disk structs
-Message-ID: <20190822142142.GB2730@mit.edu>
-Mail-Followup-To: "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Richard Weinberger <richard.weinberger@gmail.com>,
-        Gao Xiang <hsiangkao@aol.com>, Richard Weinberger <richard@nod.at>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <1323459733.69859.1566234633793.JavaMail.zimbra@nod.at>
- <20190819204504.GB10075@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAFLxGvxr2UMeVa29M9pjLtWMFPz7w6udRV38CRxEF1moyA9_Rw@mail.gmail.com>
- <20190821220251.GA3954@hsiangkao-HP-ZHAN-66-Pro-G1>
- <CAFLxGvzLPgD22pVOV_jz1EvC-c7YU_2dEFbBt4q08bSkZ3U0Dg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFLxGvzLPgD22pVOV_jz1EvC-c7YU_2dEFbBt4q08bSkZ3U0Dg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 22 Aug 2019 10:22:31 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c3so5610062wrd.7
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 07:22:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=+mwmP9tg3D4dT7KFGOvdOxw6YjGLDOz5cAx1Z+/l1vQ=;
+        b=gWLIlzbAoSxhpFC72cJ5WgbnT/VqHZwIpIsg827wY5wOD1XzKbXiCvjMIHEm87pf8w
+         vdfYS9S64pSR1HqoND/qIy3rlt7ELQgoEJ6M4S6v4za91ZZ/pQ2Y4I17NNjL0zXNWDj9
+         GB8vsdRhvAVkHOBG8WWM5NtJ7yf6ESf6PTvTmAsr43kdo0Y5nTa42Ad927hn09299Ni7
+         R3XYXrc+71C4zT6GxXnZ499whGMgQLqAXe+LXTfh1oSKJqSj7e+GbTsMvVd7HvfnFlyl
+         QWAsFQESwvw+dy+wgY/loF+qTtKt5WfIFOk22hhHtTt0830AFTOa8VL933wM2nWPXReV
+         ZGFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=+mwmP9tg3D4dT7KFGOvdOxw6YjGLDOz5cAx1Z+/l1vQ=;
+        b=eag8ml5Fluvt/YGIOytxNoJVUnnkBPueem1/DDe1w+pt9kEKHkcSm5Pnvn9natFMNb
+         AVmCnNNhXs/CGVzvxsIDr8rg7OT3/OmOeKE+1PIVS503Obbp7dI5zMZZ1Vii9B0GsIip
+         Vh5hTMoGDN3U74y2/sippms2SYfNz/OZkLaWE07Vzccg2MfcI2PmnQyZ3Ypu0HFTfe9m
+         0EOpe1xGyEkHgZ+ilqw/LsyDwYWtd4btDZsP72f005zdP/7HB3Ht05DywWCQMiBiGAmj
+         WdBroCPghWiwL15jAWAqh/erM3truEGzn6nBhjH4ZVOVLpV68xBrNOE9y7vS2GYFD45I
+         16dA==
+X-Gm-Message-State: APjAAAWOFaVfPhE82cbCAk/ynusKE4++JNy3bK7XetYhJmdmZgsB4NDl
+        wCTRnhdaSHF09AB3msg8heLR8t7jKJHAHw==
+X-Google-Smtp-Source: APXvYqyMqaFQZOwo/SknAfaMLjB4jOG0PQF2oNl88JSyz1bpSqFDxXhKOaA22n1opcTTkyL+leJ54g==
+X-Received: by 2002:a5d:634c:: with SMTP id b12mr46085446wrw.127.1566483749234;
+        Thu, 22 Aug 2019 07:22:29 -0700 (PDT)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id r123sm6660731wme.7.2019.08.22.07.22.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 22 Aug 2019 07:22:28 -0700 (PDT)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org
+Subject: [PATCH v1] hwmon: (iio_hwmon) Enable power exporting from IIO
+Date:   Thu, 22 Aug 2019 16:22:24 +0200
+Message-Id: <db71f5ae87e4521a2856a1be5544de0b6cede575.1566483741.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 10:33:01AM +0200, Richard Weinberger wrote:
-> > super block chksum could be a compatible feature right? which means
-> > new kernel can support it (maybe we can add a warning if such image
-> > doesn't have a chksum then when mounting) but old kernel doesn't
-> > care it.
-> 
-> Yes. But you need some why to indicate that the chksum field is now
-> valid and must be used.
-> 
-> The features field can be used for that, but you don't use it right now.
-> I recommend to check it for being 0, 0 means then "no features".
-> If somebody creates in future a erofs with more features this code
-> can refuse to mount because it does not support these features.
+There is no reason why power channel shouldn't be exported as is done for
+voltage, current, temperature and humidity.
 
-The whole point of "compat" features is that the kernel can go ahead
-and mount the file system even if there is some new "compat" feature
-which it doesn't understand.  So the fact that right now erofs doesn't
-have any "compat" features means it's not surprising, and perfectly
-OK, if it's not referenced by the kernel.
+Power channel is available on iio ina226 driver.
 
-For ext4, we have some more complex feature bitmasks, "compat",
-"ro_compat" (OK to mount read-only if there are features you don't
-understand) and "incompat" (if there are any bits you don't
-understand, fail the mount).  But since erofs is a read-only file
-system, things are much simpler.
+Sysfs IIO documentation for power attribute added by commit 7c6d5c7ee883
+("iio: Documentation: Add missing documentation for power attribute")
+is declaring that value is in mili-Watts but hwmon interface is expecting
+value in micro-Watts that's why there is a need for mili-Watts to
+micro-Watts conversion.
 
-It might make life easier for other kernel developers if "features"
-was named "compat_features" and "requirements" were named
-"incompat_features", just because of the long-standing use of that in
-ext2, ext3, ext4, ocfs2, etc.  But that naming scheme really is a
-legacy of ext2 and its descendents, and there's no real reason why it
-has to be that way on other file systems.
+Tested on Xilinx ZCU102 board.
 
-Cheers,
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-						- Ted
+Changes in v1:
+- from RFC - fix power conversion mili-Watts to micro-Watts
+
+ drivers/hwmon/iio_hwmon.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hwmon/iio_hwmon.c b/drivers/hwmon/iio_hwmon.c
+index f1c2d5faedf0..b85a125dd86f 100644
+--- a/drivers/hwmon/iio_hwmon.c
++++ b/drivers/hwmon/iio_hwmon.c
+@@ -44,12 +44,20 @@ static ssize_t iio_hwmon_read_val(struct device *dev,
+ 	int ret;
+ 	struct sensor_device_attribute *sattr = to_sensor_dev_attr(attr);
+ 	struct iio_hwmon_state *state = dev_get_drvdata(dev);
++	struct iio_channel *chan = &state->channels[sattr->index];
++	enum iio_chan_type type;
++
++	ret = iio_read_channel_processed(chan, &result);
++	if (ret < 0)
++		return ret;
+ 
+-	ret = iio_read_channel_processed(&state->channels[sattr->index],
+-					&result);
++	ret = iio_get_channel_type(chan, &type);
+ 	if (ret < 0)
+ 		return ret;
+ 
++	if (type == IIO_POWER)
++		result *= 1000; /* mili-Watts to micro-Watts conversion */
++
+ 	return sprintf(buf, "%d\n", result);
+ }
+ 
+@@ -59,7 +67,7 @@ static int iio_hwmon_probe(struct platform_device *pdev)
+ 	struct iio_hwmon_state *st;
+ 	struct sensor_device_attribute *a;
+ 	int ret, i;
+-	int in_i = 1, temp_i = 1, curr_i = 1, humidity_i = 1;
++	int in_i = 1, temp_i = 1, curr_i = 1, humidity_i = 1, power_i = 1;
+ 	enum iio_chan_type type;
+ 	struct iio_channel *channels;
+ 	struct device *hwmon_dev;
+@@ -114,6 +122,10 @@ static int iio_hwmon_probe(struct platform_device *pdev)
+ 			n = curr_i++;
+ 			prefix = "curr";
+ 			break;
++		case IIO_POWER:
++			n = power_i++;
++			prefix = "power";
++			break;
+ 		case IIO_HUMIDITYRELATIVE:
+ 			n = humidity_i++;
+ 			prefix = "humidity";
+-- 
+2.17.1
+
