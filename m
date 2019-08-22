@@ -2,112 +2,81 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5065DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A279BC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A3723401
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:56:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566514575;
-	bh=CENPwtb2FY1x/UJEAS1RnlydKDfarsP46dEap4EfKK8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RfENvb+iQwmTpoNJJG1j6ZN77nnOwQQ+Eia6OTprAcOYYnCXPmyokLGUDhMLdIIwf
-	 Gv3DLLRRW6FlHA1AnfWTz9StRPb4L9cklv9+zKALhVddAt5PWw7bgP+llTzFl5PG9S
-	 MsyK3+iZTSYdca3Vpg5IXx8awwwZYI5PA3tlXM6I=
+	by mail.kernel.org (Postfix) with ESMTP id 5A31D21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 22:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405357AbfHVW4O (ORCPT
+        id S2405459AbfHVW5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 18:56:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390930AbfHVW4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 18:56:13 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1273921848;
-        Thu, 22 Aug 2019 22:56:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566514572;
-        bh=CENPwtb2FY1x/UJEAS1RnlydKDfarsP46dEap4EfKK8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uXnOkuDBPN0Vpc9K0gTry3P7952XuXMFABVO0/8pqvs6iaSTt7mTjlxNTZuRDw2Nj
-         LbKY5hJtrADuRv5FnmwmFbtf2hQg+9kGYONiHe/ZN3eX6llljPu9zs+PyDpf40xLHq
-         4bOQRinE0EOA7OammwpLPInlQ+PqQCBetTfk6bjM=
-Date:   Thu, 22 Aug 2019 15:56:11 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     20190819234111.9019-8-keescook@chromium.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Feng Tang <feng.tang@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        YueHaibing <yuehaibing@huawei.com>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception
- handler
-Message-Id: <20190822155611.a1a6e26db99ba0876ba9c8bd@linux-foundation.org>
-In-Reply-To: <201908200943.601DD59DCE@keescook>
-References: <201908200943.601DD59DCE@keescook>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 22 Aug 2019 18:57:44 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:50114 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405430AbfHVW5n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 18:57:43 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A12AB153952E3;
+        Thu, 22 Aug 2019 15:57:42 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 15:57:42 -0700 (PDT)
+Message-Id: <20190822.155742.2103304070969355809.davem@davemloft.net>
+To:     liudongxu3@huawei.com
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: Add the same IP detection for duplicate address.
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190821032000.10540-1-liudongxu3@huawei.com>
+References: <20190821032000.10540-1-liudongxu3@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 22 Aug 2019 15:57:42 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 20 Aug 2019 09:47:55 -0700 Kees Cook <keescook@chromium.org> wrote:
+From: Dongxu Liu <liudongxu3@huawei.com>
+Date: Wed, 21 Aug 2019 11:20:00 +0800
 
-> Reply-To: 20190819234111.9019-8-keescook@chromium.org
-
-Really?
-
-> Subject: [PATCH v2 7/7] bug: Move WARN_ON() "cut here" into exception handler
-
-It's strange to receive a standalone [7/7] patch.
-
-> Date:   Tue, 20 Aug 2019 09:47:55 -0700
-> Sender: linux-kernel-owner@vger.kernel.org
+> The network sends an ARP REQUEST packet to determine
+> whether there is a host with the same IP.
+> Windows and some other hosts may send the source IP
+> address instead of 0.
+> When IN_DEV_ORCONF(in_dev, DROP_GRATUITOUS_ARP) is enable,
+> the REQUEST will be dropped.
+> When IN_DEV_ORCONF(in_dev, DROP_GRATUITOUS_ARP) is disable,
+> The case should be added to the IP conflict handling process.
 > 
-> The original clean up of "cut here" missed the WARN_ON() case (that
-> does not have a printk message), which was fixed recently by adding
-> an explicit printk of "cut here". This had the downside of adding a
-> printk() to every WARN_ON() caller, which reduces the utility of using
-> an instruction exception to streamline the resulting code. By making
-> this a new BUGFLAG, all of these can be removed and "cut here" can be
-> handled by the exception handler.
-> 
-> This was very pronounced on PowerPC, but the effect can be seen on
-> x86 as well. The resulting text size of a defconfig build shows some
-> small savings from this patch:
-> 
->    text    data     bss     dec     hex filename
-> 19691167        5134320 1646664 26472151        193eed7 vmlinux.before
-> 19676362        5134260 1663048 26473670        193f4c6 vmlinux.after
-> 
-> This change also opens the door for creating something like BUG_MSG(),
-> where a custom printk() before issuing BUG(), without confusing the "cut
-> here" line.
+> Signed-off-by: Dongxu Liu <liudongxu3@huawei.com>
 
-I can't get this to apply to anything, so I guess that [1/7]-[6/7]
-mattered ;)
+Even documents like RFC 5227 talk about there being a zero source
+protocol address here (read the last two paragraphis of section
+1.2. "relationship to 826"):
 
-> Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Fixes: Fixes: 6b15f678fb7d ("include/asm-generic/bug.h: fix "cut here" for WARN_ON for __WARN_TAINT architectures")
+====================
+An ARP Probe with an all-zero 'sender IP address' may ostensibly be
+merely asking an innocent question ("Is anyone using this
+address?"), but an intelligent implementation that knows how IPv4
+Address Conflict Detection works should be able to recognize this
+question as the precursor to claiming the address.
+====================
 
-I'm seeing double.
+I do not understand why we have to add a special case for an
+implementation that has decided, after so many decades of our existing
+behavior, to put something of than zero in the source protocol
+address.
 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+I'm not applying this, I do not see a legitimate justification for
+this change at all.
 
+Sorry.
