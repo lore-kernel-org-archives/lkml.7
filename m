@@ -7,93 +7,74 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A00C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E07AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF70C233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E64E233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 12:14:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e+s77JT2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Joha3CS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388397AbfHVMNu (ORCPT
+        id S2388432AbfHVMOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 08:13:50 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:42104 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388386AbfHVMNk (ORCPT
+        Thu, 22 Aug 2019 08:14:00 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:42113 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388392AbfHVMNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 08:13:40 -0400
-Received: by mail-vs1-f67.google.com with SMTP id b187so3660673vsc.9
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 05:13:39 -0700 (PDT)
+        Thu, 22 Aug 2019 08:13:53 -0400
+Received: by mail-vs1-f66.google.com with SMTP id b187so3661023vsc.9
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 05:13:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4Ly6KX3kvL/W0ycoaNLTVk5Ihkvoe8Wnu3biVwC7K5k=;
-        b=e+s77JT2cpzLx6Bok8gRYEyL3sIJy4MY0tlRRujMgKNbw6Z8D3adtcuYtllumK+DjH
-         LrHgjsL1mpImPi9hm6KbpBAAchu2bX0CfUzY6uYJjTeSuNqn6Wcgz2KcEnwVw6Pe/JpD
-         oKBN8X226wmaOyQuFVPK5p8PY+SwbN9m5mTaOL+YUCPd9ztzxrq/fneELEak3mkQUbRD
-         MYNbzBNBfg0IIdZfwMJqM9/zCu0TyPnJ89zkl32BKEuddVAN7XgJLendjEh+3sU1emMB
-         Q9iajclIOnQww/YNvGzunL8wkFKWjd3INZO0vdCfiVEOCPZMpO7URRy4oOPu0Mi57523
-         ZeVg==
+        bh=E6/IjtBPVj0Oz4iJYzEDbuqonF1ZiM27DpCa69vmHwc=;
+        b=Joha3CS+69v3l15rP/aCLwahlRT79HSR53vcRKRD19ch/SeKqLtDd14wSG9/aPbfRd
+         l9rvapek5GoET3eH7i+sCraqajqS0AOAb/FrIkoTuWuqRXn+serk9ID311WqWdd8Bk6x
+         tDXnI12KtaeMX/1o5YVOEHferPVRaYlZiyjR3iT3NmG+oV9d0BcbGbSKl2T2/JcVNOAa
+         ahUcQjDD47ueJ6dTeLrwVNbO2Cb5Ch5uLv4yntlMu6llx6RUNFlnmnzvZ7J46SIsjn6Q
+         y7Ar31OGKqMSh3EABmGu6BAYK29iqImtdlriR64YSTPXyfwqjiWdixjl6vTr5eJZ5/6v
+         furQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4Ly6KX3kvL/W0ycoaNLTVk5Ihkvoe8Wnu3biVwC7K5k=;
-        b=AtOoc7TZXVJpCwKxFH1qwcvhcPyfmdxkazvAvEDBbceIkFBMagMlJdIE8qxpOm4hFi
-         7f4bYRvm1Z7wb2QK8N6PO7gfRb5g3kMSM3wfsvQiNYSAn1LTfBtj1g2+0rWXy+ySLnTY
-         hyaeAGZbmOFBGm4bin+bopbO417ObV5ni5nd2VMNY2DEHZ0vuBCrIy/pJwadotQLe6GT
-         wPAq0WXoWwNlKYB8Vf3bmnGkbM7ghtMHvNGndrBUrMvyg+IrSBosm2dB5hQhcZhsTxld
-         RcZzPta59UxPfba6MdffWAkjpqnPXbJKShZ3uXnxMeS0HDGX6418Yffm4sGMJ5jI3xpj
-         c0Fg==
-X-Gm-Message-State: APjAAAVBmgkDnurJFVFydAc8ArSIFra4ygmMAVPydlVJHxbW2unWYV8H
-        P1P9FE5v0wBnaHZMX6RcWtytsQR10AQ5282+q18sWQ==
-X-Google-Smtp-Source: APXvYqytHCOMHR5M9lts8SdpAxk1X76n5u7WLvfmxOXVJUEBRHaXV9qwemPTTdfSZATLeZEry7/4cv0gzsDJKxqcftg=
-X-Received: by 2002:a67:61c7:: with SMTP id v190mr24652042vsb.165.1566476019397;
- Thu, 22 Aug 2019 05:13:39 -0700 (PDT)
+        bh=E6/IjtBPVj0Oz4iJYzEDbuqonF1ZiM27DpCa69vmHwc=;
+        b=D3zLY/UUm/jrLEMmMJRwn0X+aa15V57HlhDmX3tYVkj0vCDd7LfdAhramV6nYQ93gI
+         RKh7fvShKdFb7Yq4an0CQZrPN1Ysxtcc5qCskPB51iRMthkz//JezTroxxl4YbG5Cj6q
+         LR5QqEhA5QTp+CqKGxVSZT+rXLgqtMlJBfBUovsPwX/2XEYltuVfP1vj3WlxCNh7jjRf
+         HmwVn4FB77uP3olHICQSHPqDcJgxpJjQMw9uXWLc7nBgn3l2uUKqEg7MLsG2aE1Gxz3g
+         Q/9ilZHS5BgyQccMD7WWTNMdSM5UO0sDDgl+/EkmV5uYv4q5c6xMAk0LoBsWSHThU8xf
+         r4Hw==
+X-Gm-Message-State: APjAAAUbKKxketBkdH+OsKNyxH8o6diqu7VubzE9XT65ZxXKPGBoJfYT
+        Gx8DMvwIxxbyo5Ch+R3lo/rfhxG154UY5Djpi6UmeQ==
+X-Google-Smtp-Source: APXvYqyhQ/ujxJj+dVFADP98FB6B+BRSrIpjyWbp9YXdhDJfkng0dqPjtRh6NyZiqzTkyemUxcsWScmqEbs0yEb9oAY=
+X-Received: by 2002:a67:347:: with SMTP id 68mr18766574vsd.35.1566476031413;
+ Thu, 22 Aug 2019 05:13:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190814072649.8237-1-yinbo.zhu@nxp.com> <20190814072649.8237-4-yinbo.zhu@nxp.com>
-In-Reply-To: <20190814072649.8237-4-yinbo.zhu@nxp.com>
+References: <20190810121608.24145-1-paul@crapouillou.net> <20190810121608.24145-2-paul@crapouillou.net>
+In-Reply-To: <20190810121608.24145-2-paul@crapouillou.net>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 22 Aug 2019 14:13:03 +0200
-Message-ID: <CAPDyKFpwGGPAShEoXPK8Ksg5FPEVrbD3-HfeTSMACPsDC_V5FA@mail.gmail.com>
-Subject: Re: [PATCH v1 4/4] mmc: sdhci-of-esdhc: add erratum A011334 support
- in ls1028a 1.0 SoC
-To:     Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Li Yang <leoyang.li@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Amit Jain <amit.jain_1@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Rajesh Bhagat <rajesh.bhagat@nxp.com>,
-        Ashish Kumar <Ashish.Kumar@nxp.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Thu, 22 Aug 2019 14:13:15 +0200
+Message-ID: <CAPDyKFqMmCcsJi9r9j24wW9gOPsYr+t5TrryqpJ3=EH0ANwi9A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mmc: jz4740: Drop dependency on arch header
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Jiafei Pan <jiafei.pan@nxp.com>,
-        Alison Wang <alison.wang@nxp.com>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Catalin Horghidan <catalin.horghidan@nxp.com>,
-        Rajat Srivastava <rajat.srivastava@nxp.com>,
-        linuxppc-dev@lists.ozlabs.org
+        od@zcrc.me
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 09:24, Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
+On Sat, 10 Aug 2019 at 14:16, Paul Cercueil <paul@crapouillou.net> wrote:
 >
-> This patch is to add erratum A011334 support in ls1028a 1.0 SoC
+> We don't need to set the 'slave_id' anymore - that field is never read
+> by the DMA driver.
 >
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
 Applied for next, thanks!
 
@@ -102,21 +83,34 @@ Uffe
 
 
 > ---
->  drivers/mmc/host/sdhci-of-esdhc.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/mmc/host/jz4740_mmc.c | 4 ----
+>  1 file changed, 4 deletions(-)
 >
-> diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-> index b16f7d440f78..eb2b290447fc 100644
-> --- a/drivers/mmc/host/sdhci-of-esdhc.c
-> +++ b/drivers/mmc/host/sdhci-of-esdhc.c
-> @@ -1006,6 +1006,7 @@ static struct soc_device_attribute soc_incorrect_hostver[] = {
->  static struct soc_device_attribute soc_fixup_sdhc_clkdivs[] = {
->         { .family = "QorIQ LX2160A", .revision = "1.0", },
->         { .family = "QorIQ LX2160A", .revision = "2.0", },
-> +       { .family = "QorIQ LS1028A", .revision = "1.0", },
->         { },
->  };
+> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
+> index 59f81e8afcce..7ff2034d739a 100644
+> --- a/drivers/mmc/host/jz4740_mmc.c
+> +++ b/drivers/mmc/host/jz4740_mmc.c
+> @@ -25,8 +25,6 @@
 >
+>  #include <asm/cacheflush.h>
+>
+> -#include <asm/mach-jz4740/dma.h>
+> -
+>  #define JZ_REG_MMC_STRPCL      0x00
+>  #define JZ_REG_MMC_STATUS      0x04
+>  #define JZ_REG_MMC_CLKRT       0x08
+> @@ -292,11 +290,9 @@ static int jz4740_mmc_start_dma_transfer(struct jz4740_mmc_host *host,
+>         if (data->flags & MMC_DATA_WRITE) {
+>                 conf.direction = DMA_MEM_TO_DEV;
+>                 conf.dst_addr = host->mem_res->start + JZ_REG_MMC_TXFIFO;
+> -               conf.slave_id = JZ4740_DMA_TYPE_MMC_TRANSMIT;
+>         } else {
+>                 conf.direction = DMA_DEV_TO_MEM;
+>                 conf.src_addr = host->mem_res->start + JZ_REG_MMC_RXFIFO;
+> -               conf.slave_id = JZ4740_DMA_TYPE_MMC_RECEIVE;
+>         }
+>
+>         sg_count = jz4740_mmc_prepare_dma_data(host, data, COOKIE_MAPPED);
 > --
-> 2.17.1
+> 2.21.0.593.g511ec345e18
 >
