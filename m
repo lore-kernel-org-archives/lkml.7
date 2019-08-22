@@ -4,37 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D738C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AB2C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1814233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A75233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733246AbfHVJde (ORCPT
+        id S1733259AbfHVJdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:33:34 -0400
-Received: from shell.v3.sk ([90.176.6.54]:35758 "EHLO shell.v3.sk"
+        Thu, 22 Aug 2019 05:33:43 -0400
+Received: from shell.v3.sk ([90.176.6.54]:35782 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733216AbfHVJdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:33:31 -0400
+        id S1733245AbfHVJdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:33:35 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 8C53ED7562;
-        Thu, 22 Aug 2019 11:33:27 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id B0FC3D7576;
+        Thu, 22 Aug 2019 11:33:33 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id cszP_4J_skTE; Thu, 22 Aug 2019 11:33:07 +0200 (CEST)
+        with ESMTP id N7gI5GyWg9Ho; Thu, 22 Aug 2019 11:33:08 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 0FB58D7574;
-        Thu, 22 Aug 2019 11:27:26 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id 84DB7D7557;
+        Thu, 22 Aug 2019 11:32:57 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id UvxyHw--d7gz; Thu, 22 Aug 2019 11:26:48 +0200 (CEST)
+        with ESMTP id qf4lwqAmDpNg; Thu, 22 Aug 2019 11:27:45 +0200 (CEST)
 Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 865E3D7559;
-        Thu, 22 Aug 2019 11:26:47 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 48200D7566;
+        Thu, 22 Aug 2019 11:26:50 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Olof Johansson <olof@lixom.net>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -48,9 +49,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 04/20] dt-bindings: mrvl,intc: Add a MMP3 interrupt controller
-Date:   Thu, 22 Aug 2019 11:26:27 +0200
-Message-Id: <20190822092643.593488-5-lkundrak@v3.sk>
+Subject: [PATCH v2 12/20] ARM: mmp: map the PGU as well
+Date:   Thu, 22 Aug 2019 11:26:35 +0200
+Message-Id: <20190822092643.593488-13-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190822092643.593488-1-lkundrak@v3.sk>
 References: <20190822092643.593488-1-lkundrak@v3.sk>
@@ -61,57 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to MMP2 one, but has an extra range for the other core. The
-muxes stay the same.
+The MMP2 and later includes a system control unit in this area. We'll nee=
+d
+that to initialize the secondary core on MMP3.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
 ---
-Changes since v1:
-- Reformat the compatible property documentation to higlight the valid
-  combinations
-- Drop an unneeded mmp3-intc example
+ arch/arm/mach-mmp/addr-map.h |  7 +++++++
+ arch/arm/mach-mmp/common.c   | 15 +++++++++++++++
+ arch/arm/mach-mmp/common.h   |  1 +
+ arch/arm/mach-mmp/mmp2-dt.c  |  2 +-
+ 4 files changed, 24 insertions(+), 1 deletion(-)
 
- .../bindings/interrupt-controller/mrvl,intc.txt    | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,=
-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,in=
-tc.txt
-index 608fee15a4cfc..a0ed02725a9d7 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.tx=
-t
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.tx=
-t
-@@ -1,13 +1,17 @@
- * Marvell MMP Interrupt controller
+diff --git a/arch/arm/mach-mmp/addr-map.h b/arch/arm/mach-mmp/addr-map.h
+index 25edf6a92276e..3dc2f0b0ecba5 100644
+--- a/arch/arm/mach-mmp/addr-map.h
++++ b/arch/arm/mach-mmp/addr-map.h
+@@ -20,6 +20,10 @@
+ #define AXI_VIRT_BASE		IOMEM(0xfe200000)
+ #define AXI_PHYS_SIZE		0x00200000
 =20
- Required properties:
--- compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
--  "mrvl,mmp2-mux-intc"
-+- compatible : Should be
-+               "mrvl,mmp-intc" on Marvel MMP,
-+               "mrvl,mmp2-intc" along with "mrvl,mmp2-mux-intc" on MMP2 =
-or
-+               "marvell,mmp3-intc" with "mrvl,mmp2-mux-intc" on MMP3
- - reg : Address and length of the register set of the interrupt controll=
-er.
-   If the interrupt controller is intc, address and length means the rang=
-e
--  of the whole interrupt controller. If the interrupt controller is mux-=
-intc,
--  address and length means one register. Since address of mux-intc is in=
- the
--  range of intc. mux-intc is secondary interrupt controller.
-+  of the whole interrupt controller. The "marvell,mmp3-intc" controller
-+  also has a secondary range for the second CPU core.  If the interrupt
-+  controller is mux-intc, address and length means one register. Since
-+  address of mux-intc is in the range of intc. mux-intc is secondary
-+  interrupt controller.
- - reg-names : Name of the register set of the interrupt controller. It's
-   only required in mux-intc interrupt controller.
- - interrupts : Should be the port interrupt shared by mux interrupts. It=
-'s
++#define PGU_PHYS_BASE		0xe0000000
++#define PGU_VIRT_BASE		IOMEM(0xfe400000)
++#define PGU_PHYS_SIZE		0x00100000
++
+ /* Static Memory Controller - Chip Select 0 and 1 */
+ #define SMC_CS0_PHYS_BASE	0x80000000
+ #define SMC_CS0_PHYS_SIZE	0x10000000
+@@ -38,4 +42,7 @@
+ #define CIU_VIRT_BASE		(AXI_VIRT_BASE + 0x82c00)
+ #define CIU_REG(x)		(CIU_VIRT_BASE + (x))
+=20
++#define SCU_VIRT_BASE		(PGU_VIRT_BASE)
++#define SCU_REG(x)		(SCU_VIRT_BASE + (x))
++
+ #endif /* __ASM_MACH_ADDR_MAP_H */
+diff --git a/arch/arm/mach-mmp/common.c b/arch/arm/mach-mmp/common.c
+index 6684abc7708bd..2ee08c78e8bc9 100644
+--- a/arch/arm/mach-mmp/common.c
++++ b/arch/arm/mach-mmp/common.c
+@@ -36,6 +36,15 @@ static struct map_desc standard_io_desc[] __initdata =3D=
+ {
+ 	},
+ };
+=20
++static struct map_desc mmp2_io_desc[] __initdata =3D {
++	{
++		.pfn		=3D __phys_to_pfn(PGU_PHYS_BASE),
++		.virtual	=3D (unsigned long)PGU_VIRT_BASE,
++		.length		=3D PGU_PHYS_SIZE,
++		.type		=3D MT_DEVICE,
++	},
++};
++
+ void __init mmp_map_io(void)
+ {
+ 	iotable_init(standard_io_desc, ARRAY_SIZE(standard_io_desc));
+@@ -44,6 +53,12 @@ void __init mmp_map_io(void)
+ 	mmp_chip_id =3D __raw_readl(MMP_CHIPID);
+ }
+=20
++void __init mmp2_map_io(void)
++{
++	mmp_map_io();
++	iotable_init(mmp2_io_desc, ARRAY_SIZE(mmp2_io_desc));
++}
++
+ void mmp_restart(enum reboot_mode mode, const char *cmd)
+ {
+ 	soft_restart(0);
+diff --git a/arch/arm/mach-mmp/common.h b/arch/arm/mach-mmp/common.h
+index 483b8b6d3005a..ed56b3f15b45e 100644
+--- a/arch/arm/mach-mmp/common.h
++++ b/arch/arm/mach-mmp/common.h
+@@ -5,4 +5,5 @@
+ extern void mmp_timer_init(int irq, unsigned long rate);
+=20
+ extern void __init mmp_map_io(void);
++extern void __init mmp2_map_io(void);
+ extern void mmp_restart(enum reboot_mode, const char *);
+diff --git a/arch/arm/mach-mmp/mmp2-dt.c b/arch/arm/mach-mmp/mmp2-dt.c
+index 305a9daba6d68..8eec881191f4b 100644
+--- a/arch/arm/mach-mmp/mmp2-dt.c
++++ b/arch/arm/mach-mmp/mmp2-dt.c
+@@ -33,7 +33,7 @@ static const char *const mmp2_dt_board_compat[] __initc=
+onst =3D {
+ };
+=20
+ DT_MACHINE_START(MMP2_DT, "Marvell MMP2 (Device Tree Support)")
+-	.map_io		=3D mmp_map_io,
++	.map_io		=3D mmp2_map_io,
+ 	.init_time	=3D mmp_init_time,
+ 	.dt_compat	=3D mmp2_dt_board_compat,
+ MACHINE_END
 --=20
 2.21.0
 
