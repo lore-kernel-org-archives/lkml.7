@@ -2,265 +2,120 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335AFC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD67AC3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B3A206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A069A21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 10:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566471208;
+	bh=MMLQr7JSx5SsoXIo0mG7WnY9nJFzHjYEQB4fT8kj/38=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Wh0C3/PgzkoBziwB7GgogJe5cdNhmM4viAI6CIseTP10qyszE9Te5qOWPFYt/IfNl
+	 p3rajvkT7t/N2t6xzn26YkFN34l5jqc5nfb/6uYizorp1mM4Wrtkg6tyVD0WbFg0Xd
+	 HTUlqfmWDyJzqc/dostzyTfZ/s/YPulGkuGGuDzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387904AbfHVKtj (ORCPT
+        id S2387909AbfHVKx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 06:49:39 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:35112 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732378AbfHVKtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 06:49:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 9B2CFFB03;
-        Thu, 22 Aug 2019 12:49:36 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IjpzZFxuq1Vk; Thu, 22 Aug 2019 12:49:34 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 80E444014F; Thu, 22 Aug 2019 12:49:34 +0200 (CEST)
-Date:   Thu, 22 Aug 2019 12:49:34 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: display/bridge: Add binding for NWL
- mipi dsi host controller
-Message-ID: <20190822104934.GB28060@bogon.m.sigxcpu.org>
-References: <cover.1565367567.git.agx@sigxcpu.org>
- <9c906bb6592424acdb1a67447a482e010a113b49.1565367567.git.agx@sigxcpu.org>
- <20190821181518.GB26759@pendragon.ideasonboard.com>
+        Thu, 22 Aug 2019 06:53:27 -0400
+Received: from mail-wm1-f97.google.com ([209.85.128.97]:54456 "EHLO
+        mail-wm1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732595AbfHVKx0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 06:53:26 -0400
+Received: by mail-wm1-f97.google.com with SMTP id p74so5140713wme.4
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 03:53:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VCTHzgx28DS8kDSwqE8s4qzfBppKuuGKJAfrjTj6g0M=;
+        b=sNcfjNVTOhE1MCqfpOXoSjWt/gheE7SkzksxTjLAi8DorfVGhtIhgIV5qQd7urZUHV
+         PzYt9ejzutDeWU3XrLS37gDnqmfpr2eB/608T5Tvn8vSWkLeIq280wCkIdjIMlZ3Trap
+         ebucJWJGv4E942xI6ncAKncU5qheg6RyqOshWXkW2KBV5Th5QuIvzCEraiUel6jZrN4p
+         WFG2PtMYoHZRdZfQV3os4y55+KdmQ3+nb+XJWaHU70tx9J+6Z3kFgFBNSLHKstMYXVOK
+         sNm5Kb46z9ano2Og7gvmktgS+Lrw4OJwlV0idVZWznizhmehulmg+S7oiaynevVDpr23
+         0sYQ==
+X-Gm-Message-State: APjAAAUUczICedaN0GprUpRmCv8wFB1MBxq4QfoyijpPshtj5Tv73oKw
+        FpfcSA+a/cjyVSOqmWg9jDkbOstecq0Fqc6WAwzbibFgXF42cV4VV7lvTvh5El9B6g==
+X-Google-Smtp-Source: APXvYqzn6IeKLGMdshW7rZXERaLcomrQtLfiJCz/AJBBbt5lUZMP5qyiqUaAV4NVlfvhHjYhQV+dRMiRbyFd
+X-Received: by 2002:a1c:6a0b:: with SMTP id f11mr5119257wmc.87.1566471204690;
+        Thu, 22 Aug 2019 03:53:24 -0700 (PDT)
+Received: from heliosphere.sirena.org.uk (heliosphere.sirena.org.uk. [2a01:7e01::f03c:91ff:fed4:a3b6])
+        by smtp-relay.gmail.com with ESMTPS id b135sm29173wmg.32.2019.08.22.03.53.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 03:53:24 -0700 (PDT)
+X-Relaying-Domain: sirena.org.uk
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i0kia-0004i3-8e; Thu, 22 Aug 2019 10:53:24 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id D39D22742A5E; Thu, 22 Aug 2019 11:53:22 +0100 (BST)
+Date:   Thu, 22 Aug 2019 11:53:22 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, spapothi@codeaurora.org,
+        bgoswami@codeaurora.org, plai@codeaurora.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com
+Subject: Re: [PATCH v2 3/4] ASoC: qdsp6: q6afe-dai: Update max rate for slim
+ and tdm dais
+Message-ID: <20190822105322.GA4630@sirena.co.uk>
+References: <20190822095653.7200-1-srinivas.kandagatla@linaro.org>
+ <20190822095653.7200-4-srinivas.kandagatla@linaro.org>
+ <s5h7e75v7en.wl-tiwai@suse.de>
+ <923f1d65-d908-c64c-3109-0da1938d3824@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190821181518.GB26759@pendragon.ideasonboard.com>
+In-Reply-To: <923f1d65-d908-c64c-3109-0da1938d3824@linaro.org>
+X-Cookie: You dialed 5483.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
-thanks for having a look!
 
-On Wed, Aug 21, 2019 at 09:15:18PM +0300, Laurent Pinchart wrote:
-> Hi Guido,
-> 
-> Thank you for the patch.
-> 
-> On Fri, Aug 09, 2019 at 06:24:22PM +0200, Guido Günther wrote:
-> > The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
-> > 
-> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> > ---
-> >  .../bindings/display/bridge/nwl-dsi.yaml      | 155 ++++++++++++++++++
-> >  1 file changed, 155 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > new file mode 100644
-> > index 000000000000..5ed8bc4a4d18
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
-> > @@ -0,0 +1,155 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/bridge/imx-nwl-dsi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Northwest Logic MIPI-DSI on imx SoCs
-> > +
-> > +maintainers:
-> > +  - Guido Gúnther <agx@sigxcpu.org>
-> > +  - Robert Chiras <robert.chiras@nxp.com>
-> > +
-> > +description: |
-> > +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
-> > +  the SOCs NWL MIPI-DSI host controller.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +        - const: fsl,imx8mq-nwl-dsi
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    items:
-> > +      - description: DSI core clock
-> > +      - description: RX_ESC clock (used in escape mode)
-> > +      - description: TX_ESC clock (used in escape mode)
-> > +      - description: PHY_REF clock
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: core
-> > +      - const: rx_esc
-> > +      - const: tx_esc
-> > +      - const: phy_ref
-> > +
-> > +  phys:
-> > +    maxItems: 1
-> > +    description:
-> > +      A phandle to the phy module representing the DPHY
-> > +
-> > +  phy-names:
-> > +    items:
-> > +      - const: dphy
-> > +
-> > +  power-domains:
-> > +    maxItems: 1
-> > +    description:
-> > +      A phandle to the power domain
-> > +
-> > +  resets:
-> > +    maxItems: 4
-> > +    description:
-> > +      A phandle to the reset controller
-> > +
-> > +  reset-names:
-> > +    items:
-> > +      - const: byte
-> > +      - const: dpi
-> > +      - const: esc
-> > +      - const: pclk
-> > +
-> > +  mux-sel:
-> > +    maxItems: 1
-> > +    description:
-> > +      A phandle to the MUX register set
-> 
-> Did you mean the MUX syscon ? A phandle to a register set sounds a bit
-> strange.
+--T4sUOijqQbZv57TR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That one is gone in v3 in favour of mux-controls.
+On Thu, Aug 22, 2019 at 11:45:48AM +0100, Srinivas Kandagatla wrote:
+> On 22/08/2019 11:09, Takashi Iwai wrote:
 
-> 
-> > +
-> > +  port:
-> > +    type: object
-> > +    description:
-> > +      A input put or output port node.
-> 
-> s/input put/input/
+> > This will support a lot more than advertised, e.g. it contains 64000Hz
+> > or 22050Hz.  Is this supposed?  If yes, mention it clearly in the
+> > changelog, too.
 
-Thanks! I've shuffled this around in v3 and added some more detail.
-Cheers,
- -- Guido
+> Some of the rates inbetween are not in the DSP supported rate list for TDM.
 
-> 
-> > +
-> > +  ports:
-> > +    type: object
-> > +    description:
-> > +      A node containing DSI input & output port nodes with endpoint
-> > +      definitions as documented in
-> > +      Documentation/devicetree/bindings/graph.txt.
-> > +
-> > +patternProperties:
-> > +  "^panel@[0-9]+$": true
-> > +
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - fsl,imx8mq-nwl-dsi
-> > +    then:
-> > +      required:
-> > +        - resets
-> > +        - reset-names
-> > +        - mux-sel
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - clock-names
-> > +  - phys
-> > +  - phy-names
-> > +
-> > +examples:
-> > + - |
-> > +
-> > +   mipi_dsi: mipi_dsi@30a00000 {
-> > +              #address-cells = <1>;
-> > +              #size-cells = <0>;
-> > +              compatible = "fsl,imx8mq-nwl-dsi";
-> > +              reg = <0x30A00000 0x300>;
-> > +              clocks = <&clk 163>, <&clk 244>, <&clk 245>, <&clk 164>;
-> > +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
-> > +              interrupts = <0 34 4>;
-> > +              power-domains = <&pgc_mipi>;
-> > +              resets = <&src 0>, <&src 1>, <&src 2>, <&src 3>;
-> > +              reset-names = "byte", "dpi", "esc", "pclk";
-> > +              mux-sel = <&iomuxc_gpr>;
-> > +              phys = <&dphy>;
-> > +              phy-names = "dphy";
-> > +
-> > +              panel@0 {
-> > +                      compatible = "...";
-> > +                      port@0 {
-> > +                           panel_in: endpoint {
-> > +                                     remote-endpoint = <&mipi_dsi_out>;
-> > +                           };
-> > +                      };
-> > +              };
-> > +
-> > +              ports {
-> > +                    #address-cells = <1>;
-> > +                    #size-cells = <0>;
-> > +
-> > +                    port@0 {
-> > +                           reg = <0>;
-> > +                           mipi_dsi_in: endpoint {
-> > +                                        remote-endpoint = <&lcdif_mipi_dsi>;
-> > +                           };
-> > +                    };
-> > +                    port@1 {
-> > +                           reg = <1>;
-> > +                           mipi_dsi_out: endpoint {
-> > +                                         remote-endpoint = <&panel_in>;
-> > +                           };
-> > +                    };
-> > +              };
-> > +      };
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
+> DSP should return error if we try to set any unsupported rate!
+
+The goal with the capabilities is that we should never get as far as
+trying to actually set an unsupported rate, we should figure out earlier
+on that it won't work and never even try.
+
+--T4sUOijqQbZv57TR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1edB0ACgkQJNaLcl1U
+h9CyZQf+NkxJ3s3y4A36V4wjspMiCTbPJ1AjcV6Gd6tv7I1R+qKTpJkPTC9Z9rMb
+7iMb065hO/nn885r+VvMF66Qihouou4XieX8RMUxUvjAA6v4+napihPwiZOGFIW6
+c5rUCzCzZFK4jXD71dMOhOlIJENcKgXdgBQG+9fIfDAPNLHp/4RCWEc9PUDJ5f6w
+UW6/aGyZlXypfQxEpsw9maZoYV3VZhCp+uJ1++P7Ps6gjqU6RrcPGRnGm7ZQ+iWk
+YKkLmgj3q1FxfNYzxEmXCRNg7mwW9jvGmO85/DD0YtUpl2T0TMOBuzyzkaqqtYj4
+IXCrbdaghj8kBw2QyXbzZ7I13DNbag==
+=Dx3p
+-----END PGP SIGNATURE-----
+
+--T4sUOijqQbZv57TR--
