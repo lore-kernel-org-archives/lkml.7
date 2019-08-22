@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496C7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A235C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C97D233FC
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25265233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392208AbfHVTpU (ORCPT
+        id S2392253AbfHVTp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 15:45:20 -0400
-Received: from mailoutvs4.siol.net ([185.57.226.195]:56104 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2392134AbfHVTpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 15:45:18 -0400
+        Thu, 22 Aug 2019 15:45:26 -0400
+Received: from mailoutvs34.siol.net ([185.57.226.225]:56183 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2392210AbfHVTpY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 15:45:24 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id AD1685249F0;
-        Thu, 22 Aug 2019 21:45:14 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTP id ED4575249F6;
+        Thu, 22 Aug 2019 21:45:21 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
 Received: from mail.siol.net ([127.0.0.1])
         by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id FoNyg35v9do7; Thu, 22 Aug 2019 21:45:14 +0200 (CEST)
+        with ESMTP id DGqiOdmioE3P; Thu, 22 Aug 2019 21:45:21 +0200 (CEST)
 Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 39C155249EB;
-        Thu, 22 Aug 2019 21:45:14 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPS id 9FFBB5249EB;
+        Thu, 22 Aug 2019 21:45:21 +0200 (CEST)
 Received: from localhost.localdomain (cpe-86-58-59-25.static.triera.net [86.58.59.25])
         (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id B87B25249F0;
-        Thu, 22 Aug 2019 21:45:11 +0200 (CEST)
+        by mail.siol.net (Postfix) with ESMTPSA id 3B5BF5249F6;
+        Thu, 22 Aug 2019 21:45:19 +0200 (CEST)
 From:   Jernej Skrabec <jernej.skrabec@siol.net>
 To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
         paul.kocialkowski@bootlin.com, mripard@kernel.org
@@ -44,9 +44,9 @@ Cc:     pawel@osciak.com, m.szyprowski@samsung.com,
         linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-arm-kernel@lists.infradead.org, ezequiel@collabora.com,
         jonas@kwiboo.se
-Subject: [PATCH 2/8] videodev2.h: add V4L2_DEC_CMD_FLUSH
-Date:   Thu, 22 Aug 2019 21:44:54 +0200
-Message-Id: <20190822194500.2071-3-jernej.skrabec@siol.net>
+Subject: [PATCH 5/8] media: cedrus: Detect first slice of a frame
+Date:   Thu, 22 Aug 2019 21:44:57 +0200
+Message-Id: <20190822194500.2071-6-jernej.skrabec@siol.net>
 X-Mailer: git-send-email 2.22.1
 In-Reply-To: <20190822194500.2071-1-jernej.skrabec@siol.net>
 References: <20190822194500.2071-1-jernej.skrabec@siol.net>
@@ -57,70 +57,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+When codec supports multiple slices in one frame, VPU has to know when
+first slice of each frame is being processed, presumably to correctly
+clear/set data in auxiliary buffers.
 
-Add this new V4L2_DEC_CMD_FLUSH decoder command and document it.
+Add first_slice field to cedrus_run structure and set it according to
+timestamps of capture and output buffers. If timestamps are different,
+it's first slice and viceversa.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst | 11 ++++++++++-
- Documentation/media/videodev2.h.rst.exceptions      |  1 +
- include/uapi/linux/videodev2.h                      |  1 +
- 3 files changed, 12 insertions(+), 1 deletion(-)
+ drivers/staging/media/sunxi/cedrus/cedrus.h     | 1 +
+ drivers/staging/media/sunxi/cedrus/cedrus_dec.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst b/Docume=
-ntation/media/uapi/v4l/vidioc-decoder-cmd.rst
-index 57f0066f4cff..0bffef6058f7 100644
---- a/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
-+++ b/Documentation/media/uapi/v4l/vidioc-decoder-cmd.rst
-@@ -208,7 +208,16 @@ introduced in Linux 3.3. They are, however, mandator=
-y for stateful mem2mem decod
- 	been started yet, the driver will return an ``EPERM`` error code. When
- 	the decoder is already running, this command does nothing. No
- 	flags are defined for this command.
--
-+    * - ``V4L2_DEC_CMD_FLUSH``
-+      - 4
-+      - Flush any held capture buffers. Only valid for stateless decoder=
-s,
-+        and only if ``V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF`` was s=
-et.
-+	This command is typically used when the application reached the
-+	end of the stream and the last output buffer had the
-+	``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag set. This would prevent
-+	dequeueing the last capture buffer containing the last decoded frame.
-+	So this command can be used to explicitly flush that last decoded
-+	frame.
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/stagin=
+g/media/sunxi/cedrus/cedrus.h
+index 2f017a651848..32cb38e541c6 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.h
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+@@ -70,6 +70,7 @@ struct cedrus_mpeg2_run {
+ struct cedrus_run {
+ 	struct vb2_v4l2_buffer	*src;
+ 	struct vb2_v4l2_buffer	*dst;
++	bool first_slice;
 =20
- Return Value
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentati=
-on/media/videodev2.h.rst.exceptions
-index adeb6b7a15cb..a79028e4d929 100644
---- a/Documentation/media/videodev2.h.rst.exceptions
-+++ b/Documentation/media/videodev2.h.rst.exceptions
-@@ -434,6 +434,7 @@ replace define V4L2_DEC_CMD_START decoder-cmds
- replace define V4L2_DEC_CMD_STOP decoder-cmds
- replace define V4L2_DEC_CMD_PAUSE decoder-cmds
- replace define V4L2_DEC_CMD_RESUME decoder-cmds
-+replace define V4L2_DEC_CMD_FLUSH decoder-cmds
+ 	union {
+ 		struct cedrus_h264_run	h264;
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c b/drivers/st=
+aging/media/sunxi/cedrus/cedrus_dec.c
+index 56ca4c9ad01c..d7b54accfe83 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
+@@ -31,6 +31,8 @@ void cedrus_device_run(void *priv)
 =20
- replace define V4L2_DEC_CMD_START_MUTE_AUDIO decoder-cmds
- replace define V4L2_DEC_CMD_PAUSE_TO_BLACK decoder-cmds
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev=
-2.h
-index 4fa9f543742d..91a79e16089c 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -1978,6 +1978,7 @@ struct v4l2_encoder_cmd {
- #define V4L2_DEC_CMD_STOP        (1)
- #define V4L2_DEC_CMD_PAUSE       (2)
- #define V4L2_DEC_CMD_RESUME      (3)
-+#define V4L2_DEC_CMD_FLUSH       (4)
+ 	run.src =3D v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+ 	run.dst =3D v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
++	run.first_slice =3D
++		run.src->vb2_buf.timestamp !=3D run.dst->vb2_buf.timestamp;
 =20
- /* Flags for V4L2_DEC_CMD_START */
- #define V4L2_DEC_CMD_START_MUTE_AUDIO	(1 << 0)
+ 	/* Apply request(s) controls if needed. */
+ 	src_req =3D run.src->vb2_buf.req_obj.req;
 --=20
 2.22.1
 
