@@ -2,142 +2,96 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE18C3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04482C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA332339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D251521848
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:17:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733101AbfHVJPx (ORCPT
+        id S1733106AbfHVJRy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:15:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60520 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728080AbfHVJPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:15:52 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0078881DEB
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 09:15:52 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id a17so2919905wrw.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 02:15:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=20y8QC7R6t0IGb5Wrdbux5c0c2oCVqxmDr+q12FCKEs=;
-        b=ZKdAB2SdZdgJlb/HYi9ZvdJXoYLnX8SszzlIEcOl3ug0vDtm3gi+0y/lB4JCs9rJW+
-         ocZJwMrL3sUqNPDyqV7TIrIogGntiti3e/FMl1p264s70haoHbFZuRvtGcMYaSpl7EsG
-         8RcBEXh1FvXsY/Gj0LXOc0/t9p4xW1IumCioKkW3meoidut3gV9XwUrFVipgdik5ER7f
-         EXrpd0IXHNi6P+oscIoDTB4jocmxVlye1lEc0DSGYt89CViySJNHiJZrWpO0ymZ3fZUE
-         nd5f06n91GGYY35DjEvX6Lh4ydPu95WPTRKrsjK4Jk1YNIa9n6p1WNxhxW5QEFoFaxbp
-         hcSA==
-X-Gm-Message-State: APjAAAUUpG4otU8RlufYRpzi+gOZ9xMzeQFbP/U+EvaGDa5upXZsCD8t
-        p1oHahhJb3ctPzihR6ofaMKrShgI9zjD2WG8Q1yTSX4tzlEts+H5cE+COVCJo+ewr+m+uLWlLk9
-        Tu0JS0JnIwhHEJFNRY4Px2PLy
-X-Received: by 2002:adf:e710:: with SMTP id c16mr2290129wrm.292.1566465350615;
-        Thu, 22 Aug 2019 02:15:50 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwumlNcw/ZaeykOzM5ZvW/kCRWj/R7ioHse/WHT5NLNMpD8iDBx8WLTrtd1YQliRUUYxN5lNw==
-X-Received: by 2002:adf:e710:: with SMTP id c16mr2290089wrm.292.1566465350391;
-        Thu, 22 Aug 2019 02:15:50 -0700 (PDT)
-Received: from steredhat (host80-221-dynamic.18-79-r.retail.telecomitalia.it. [79.18.221.80])
-        by smtp.gmail.com with ESMTPSA id l9sm2678299wmi.29.2019.08.22.02.15.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 02:15:49 -0700 (PDT)
-Date:   Thu, 22 Aug 2019 11:15:46 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Stefan Hajnoczi <stefanha@redhat.com>
-Cc:     netdev@vger.kernel.org, kvm@vger.kernel.org,
-        Dexuan Cui <decui@microsoft.com>,
-        virtualization@lists.linux-foundation.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 11/11] vsock_test: wait for the remote to close the
- connection
-Message-ID: <20190822091546.qcns2kot6tzju7yv@steredhat>
-References: <20190801152541.245833-1-sgarzare@redhat.com>
- <20190801152541.245833-12-sgarzare@redhat.com>
- <20190820082828.GA9855@stefanha-x1.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820082828.GA9855@stefanha-x1.localdomain>
-User-Agent: NeoMutt/20180716
+        Thu, 22 Aug 2019 05:17:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57412 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727910AbfHVJRx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:17:53 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1i0jE4-0002cq-JO; Thu, 22 Aug 2019 09:17:49 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     jikos@kernel.org, benjamin.tissoires@redhat.com
+Cc:     linux-input@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] HID: quirks: Disable runtime suspend on Microsoft Corp. Basic Optical Mouse v2.0
+Date:   Thu, 22 Aug 2019 17:17:44 +0800
+Message-Id: <20190822091744.3451-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 20, 2019 at 09:28:28AM +0100, Stefan Hajnoczi wrote:
-> On Thu, Aug 01, 2019 at 05:25:41PM +0200, Stefano Garzarella wrote:
-> > +/* Wait for the remote to close the connection */
-> > +void vsock_wait_remote_close(int fd)
-> > +{
-> > +	struct epoll_event ev;
-> > +	int epollfd, nfds;
-> > +
-> > +	epollfd = epoll_create1(0);
-> > +	if (epollfd == -1) {
-> > +		perror("epoll_create1");
-> > +		exit(EXIT_FAILURE);
-> > +	}
-> > +
-> > +	ev.events = EPOLLRDHUP | EPOLLHUP;
-> > +	ev.data.fd = fd;
-> > +	if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1) {
-> > +		perror("epoll_ctl");
-> > +		exit(EXIT_FAILURE);
-> > +	}
-> > +
-> > +	nfds = epoll_wait(epollfd, &ev, 1, TIMEOUT * 1000);
-> > +	if (nfds == -1) {
-> > +		perror("epoll_wait");
-> > +		exit(EXIT_FAILURE);
-> > +	}
-> > +
-> > +	if (nfds == 0) {
-> > +		fprintf(stderr, "epoll_wait timed out\n");
-> > +		exit(EXIT_FAILURE);
-> > +	}
-> > +
-> > +	assert(nfds == 1);
-> > +	assert(ev.events & (EPOLLRDHUP | EPOLLHUP));
-> > +	assert(ev.data.fd == fd);
-> > +
-> > +	close(epollfd);
-> > +}
-> 
-> Please use timeout_begin()/timeout_end() so that the test cannot hang.
-> 
+The optical sensor of the mouse gets turned off when it's runtime
+suspended, so moving the mouse can't wake the mouse up, despite that
+USB remote wakeup is successfully set.
 
-I used the TIMEOUT macro in the epoll_wait() to avoid the hang.
-Do you think is better to use the timeout_begin()/timeout_end()?
-In this case, should I remove the timeout in the epoll_wait()?
+Introduce a new quirk to prevent the mouse from getting runtime
+suspended.
 
-> > diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-> > index 64adf45501ca..a664675bec5a 100644
-> > --- a/tools/testing/vsock/vsock_test.c
-> > +++ b/tools/testing/vsock/vsock_test.c
-> > @@ -84,6 +84,11 @@ static void test_stream_client_close_server(const struct test_opts *opts)
-> >  
-> >  	control_expectln("CLOSED");
-> >  
-> > +	/* Wait for the remote to close the connection, before check
-> > +	 * -EPIPE error on send.
-> > +	 */
-> > +	vsock_wait_remote_close(fd);
-> 
-> Is control_expectln("CLOSED") still necessary now that we're waiting for
-> the poll event?  The control message was an attempt to wait until the
-> other side closed the socket.
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/hid/hid-quirks.c      | 2 +-
+ drivers/hid/usbhid/hid-core.c | 3 ++-
+ include/linux/hid.h           | 1 +
+ 3 files changed, 4 insertions(+), 2 deletions(-)
 
-Right, I'll remove it in the v3
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 166f41f3173b..40574f856a93 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -108,7 +108,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_MOUSE_C05A), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_MOUSE_C06A), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_MCS, USB_DEVICE_ID_MCS_GAMEPADBLOCK), HID_QUIRK_MULTI_INPUT },
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_MS_PIXART_MOUSE), HID_QUIRK_ALWAYS_POLL },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_MS_PIXART_MOUSE), HID_QUIRK_NO_RUNTIME_PM },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_MS_POWER_COVER), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_MS_SURFACE_PRO_2), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_MS_TOUCH_COVER_2), HID_QUIRK_NO_INIT_REPORTS },
+diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
+index c7bc9db5b192..08a6b4f5cfb2 100644
+--- a/drivers/hid/usbhid/hid-core.c
++++ b/drivers/hid/usbhid/hid-core.c
+@@ -713,7 +713,8 @@ static int usbhid_open(struct hid_device *hid)
+ 		}
+ 	}
+ 
+-	usb_autopm_put_interface(usbhid->intf);
++	if (!(hid->quirks & HID_QUIRK_NO_RUNTIME_PM))
++		usb_autopm_put_interface(usbhid->intf);
+ 
+ 	/*
+ 	 * In case events are generated while nobody was listening,
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index d770ab1a0479..bec413226146 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -342,6 +342,7 @@ struct hid_item {
+ /* BIT(9) reserved for backward compatibility, was NO_INIT_INPUT_REPORTS */
+ #define HID_QUIRK_ALWAYS_POLL			BIT(10)
+ #define HID_QUIRK_INPUT_PER_APP			BIT(11)
++#define HID_QUIRK_NO_RUNTIME_PM			BIT(12)
+ #define HID_QUIRK_SKIP_OUTPUT_REPORTS		BIT(16)
+ #define HID_QUIRK_SKIP_OUTPUT_REPORT_ID		BIT(17)
+ #define HID_QUIRK_NO_OUTPUT_REPORTS_ON_INTR_EP	BIT(18)
+-- 
+2.17.1
 
-Thanks,
-Stefano
