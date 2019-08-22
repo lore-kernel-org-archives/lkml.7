@@ -2,95 +2,140 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D30E5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B377AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A437A21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9070C21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:14:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732150AbfHVNKm convert rfc822-to-8bit (ORCPT
+        id S1732031AbfHVNOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:10:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58836 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729122AbfHVNKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:10:42 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 22 Aug 2019 09:14:19 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:46797 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727685AbfHVNOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 09:14:19 -0400
+Received: from theinternet.molgen.mpg.de (theinternet.molgen.mpg.de [141.14.31.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 00F3C36955;
-        Thu, 22 Aug 2019 13:10:42 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A98DB5D772;
-        Thu, 22 Aug 2019 13:10:40 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, marc.dionne@auristor.com,
-        yuehaibing@huawei.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] afs: Fixes
+        (Authenticated sender: buczek)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id E8B0F201A3C3E;
+        Thu, 22 Aug 2019 15:14:16 +0200 (CEST)
+Subject: Re: Brocken/incomplete `/proc/vmcore`
+To:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>
+Cc:     kexec@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1d18de74-76e3-823c-7480-fad1d6012026@molgen.mpg.de>
+From:   Donald Buczek <buczek@molgen.mpg.de>
+Message-ID: <5431590a-e0fa-afac-2f38-8c3b60853d0d@molgen.mpg.de>
+Date:   Thu, 22 Aug 2019 15:14:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <32267.1566479439.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Thu, 22 Aug 2019 14:10:39 +0100
-Message-ID: <32268.1566479439@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 22 Aug 2019 13:10:42 +0000 (UTC)
+In-Reply-To: <1d18de74-76e3-823c-7480-fad1d6012026@molgen.mpg.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Dear Paul,
 
-Here are three fixes for afs:
+On 8/15/19 1:36 PM, Paul Menzel wrote:
+> Dear Linux folks,
+> 
+> 
+> Using Linux 4.19.57 (configuration attached), crashing the system, and
+> starting it using the same Linux kernel as crash kernel, the available
+> `/proc/vmcore` seems to be incomplete.
+> 
+> Running GDB commands, working with `/proc/kcore`, do not work with
+> `/proc/vmcore`, and the addresses are not there.
+> 
+> In the running system, iterating through the tasks works.
+> 
+> ```
+> macro define offsetof(type, member) ((size_t)(&((type *)0)->member))
+> macro define container_of(ptr,type,member)  ((type *)((size_t)ptr-offsetof(type,member)))
+> ```
+> 
+> ### /proc/kcore ###
+> 
+> ```
+> Core was generated by `BOOT_IMAGE=/boot/bzImage-4.19.57.mx64.286 root=LABEL=root ro crashkernel=512M c'.
+> #0  0x0000000000000000 in irq_stack_union ()
+> (gdb) source gdb-macros.txt
+> (gdb) set $t=&init_task
+> (gdb) print $t->tasks
+> $1 = {next = 0xffff889ffbb0f080, prev = 0xffff88bff9b09300}
+> (gdb) print $t->pid
+> $2 = 0
+> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
+> (gdb) print $t->tasks
+> $3 = {next = 0xffff889ffbb0e340, prev = 0xffffffff82411a80 <init_task+768>}
+> (gdb) print $t->pid
+> $4 = 1
+> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
+> (gdb) print $t->tasks
+> $5 = {next = 0xffff889ffbb530c0, prev = 0xffff889ffbb0f080}
+> (gdb) print $t->pid
+> $6 = 2
+> ```
+> 
+> ### /proc/vmcore ###
+> 
+> After the crash by SysRQ trigger, values in `/proc/vmcore` are incorrect.
+> 
+> ```
+> (gdb) set $t=&init_task
+> (gdb) print $t->tasks
+> $1 = {next = 0xffff889ffbb0f080, prev = 0xffff88bff9b09300}
+> (gdb) print $t->pid
+> $2 = 0
+> (gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
+> (gdb) print $t->tasks
+> $3 = {next = 0x0 <irq_stack_union>, prev = 0x0 <irq_stack_union>}
+> (gdb) print $t->pid
+> $4 = 0
+> ```
+> 
+> We can reproduce this in a virtual machine and on a big server.
 
- (1) Fix a cell record leak due to the default error not being cleared.
+It is the same bug as the one described in my mail "/proc/vmcore and wrong PAGE_OFFSET". The task list can be walked if addresses are corrected by 0x0000008000000000:
 
- (2) Fix an oops in tracepoint due to a pointer that may contain an error.
+(gdb) set $t=&init_task
+(gdb) print $t->pid
+$1 = 0
+(gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
+(gdb) set $t=(struct task_struct *)( (char *)$t - 0x0000008000000000)
+(gdb) print $t->pid
+$2 = 1
+(gdb) set $t=container_of($t->tasks->next,struct task_struct,tasks)
+(gdb) set $t=(struct task_struct *)( (char *)$t - 0x0000008000000000)
+(gdb) print $t->pid
+$3 = 2
 
- (3) Fix the ACL storage op for YFS where the wrong op definition is being
-     used.  By luck, this only actually affects the information appearing
-     in traces.
+The debugger has wrongly mapped the physical memory at virtual 0xffff880000000000 instead of at 0xffff888000000000, because the vmcore file says so for yet unknown reasons.
 
-David
----
-The following changes since commit d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
+Donald
 
-  Linux 5.3-rc5 (2019-08-18 14:31:08 -0700)
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
 
-are available in the Git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-fixes-20190822
-
-for you to fetch changes up to 7533be858f5b9a036b9f91556a3ed70786abca8e:
-
-  afs: use correct afs_call_type in yfs_fs_store_opaque_acl2 (2019-08-22 13:33:27 +0100)
-
-----------------------------------------------------------------
-AFS fixes
-
-----------------------------------------------------------------
-David Howells (1):
-      afs: Fix leak in afs_lookup_cell_rcu()
-
-Marc Dionne (1):
-      afs: Fix possible oops in afs_lookup trace event
-
-YueHaibing (1):
-      afs: use correct afs_call_type in yfs_fs_store_opaque_acl2
-
- fs/afs/cell.c      | 4 ++++
- fs/afs/dir.c       | 3 ++-
- fs/afs/yfsclient.c | 2 +-
- 3 files changed, 7 insertions(+), 2 deletions(-)
+-- 
+Donald Buczek
+buczek@molgen.mpg.de
+Tel: +49 30 8413 1433
