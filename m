@@ -2,40 +2,39 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60FFC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC739C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7010233FF
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EDF233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 09:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733286AbfHVJdw (ORCPT
+        id S1733309AbfHVJd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 05:33:52 -0400
-Received: from shell.v3.sk ([90.176.6.54]:35817 "EHLO shell.v3.sk"
+        Thu, 22 Aug 2019 05:33:57 -0400
+Received: from shell.v3.sk ([90.176.6.54]:35843 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733261AbfHVJdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 05:33:50 -0400
+        id S1733284AbfHVJdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 05:33:54 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id DE820D7562;
-        Thu, 22 Aug 2019 11:33:46 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id E1B59D755A;
+        Thu, 22 Aug 2019 11:33:50 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ChwZ04mvNs-n; Thu, 22 Aug 2019 11:33:20 +0200 (CEST)
+        with ESMTP id LqdrDrATp3VP; Thu, 22 Aug 2019 11:33:21 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 239B0D7570;
+        by zimbra.v3.sk (Postfix) with ESMTP id BE2A9D7360;
         Thu, 22 Aug 2019 11:32:58 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 5GDqGikVRw22; Thu, 22 Aug 2019 11:27:28 +0200 (CEST)
+        with ESMTP id ORVKNwk84bqK; Thu, 22 Aug 2019 11:27:49 +0200 (CEST)
 Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 866AFD755E;
-        Thu, 22 Aug 2019 11:26:48 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTPSA id A0F65D7567;
+        Thu, 22 Aug 2019 11:26:50 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Olof Johansson <olof@lixom.net>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -49,9 +48,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v2 07/20] irqchip/mmp: add missing chained_irq_{enter,exit}()
-Date:   Thu, 22 Aug 2019 11:26:30 +0200
-Message-Id: <20190822092643.593488-8-lkundrak@v3.sk>
+Subject: [PATCH v2 13/20] ARM: mmp: DT: convert timer driver to use TIMER_OF_DECLARE
+Date:   Thu, 22 Aug 2019 11:26:36 +0200
+Message-Id: <20190822092643.593488-14-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190822092643.593488-1-lkundrak@v3.sk>
 References: <20190822092643.593488-1-lkundrak@v3.sk>
@@ -62,64 +61,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lack of chained_irq_exit() leaves the muxed interrupt masked on MMP3.
-For reasons unknown this is not a problem on MMP2.
+This makes things just a tiny bit simpler.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-
 ---
-Changes since v1:
-- Use irq_desc_get_chip() instead of irq_get_chip()
+ arch/arm/mach-mmp/mmp-dt.c  |  5 ++---
+ arch/arm/mach-mmp/mmp2-dt.c |  5 ++---
+ arch/arm/mach-mmp/time.c    | 38 +++++++++++--------------------------
+ 3 files changed, 15 insertions(+), 33 deletions(-)
 
- drivers/irqchip/irq-mmp.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/irqchip/irq-mmp.c b/drivers/irqchip/irq-mmp.c
-index e41e47ab71d3b..126ffdbffdddf 100644
---- a/drivers/irqchip/irq-mmp.c
-+++ b/drivers/irqchip/irq-mmp.c
-@@ -13,6 +13,7 @@
- #include <linux/init.h>
- #include <linux/irq.h>
+diff --git a/arch/arm/mach-mmp/mmp-dt.c b/arch/arm/mach-mmp/mmp-dt.c
+index 35559792d5cca..91214996acecc 100644
+--- a/arch/arm/mach-mmp/mmp-dt.c
++++ b/arch/arm/mach-mmp/mmp-dt.c
+@@ -9,14 +9,13 @@
  #include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
-@@ -132,11 +133,14 @@ struct irq_chip icu_irq_chip =3D {
- static void icu_mux_irq_demux(struct irq_desc *desc)
- {
- 	unsigned int irq =3D irq_desc_get_irq(desc);
-+	struct irq_chip *chip =3D irq_desc_get_chip(desc);
- 	struct irq_domain *domain;
- 	struct icu_chip_data *data;
- 	int i;
- 	unsigned long mask, status, n;
+ #include <linux/of_platform.h>
+ #include <linux/clk-provider.h>
++#include <linux/clocksource.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/time.h>
+ #include <asm/hardware/cache-tauros2.h>
 =20
-+	chained_irq_enter(chip, desc);
-+
- 	for (i =3D 1; i < max_icu_nr; i++) {
- 		if (irq =3D=3D icu_data[i].cascade_irq) {
- 			domain =3D icu_data[i].domain;
-@@ -146,7 +150,7 @@ static void icu_mux_irq_demux(struct irq_desc *desc)
- 	}
- 	if (i >=3D max_icu_nr) {
- 		pr_err("Spurious irq %d in MMP INTC\n", irq);
--		return;
-+		goto out;
- 	}
+ #include "common.h"
 =20
- 	mask =3D readl_relaxed(data->reg_mask);
-@@ -158,6 +162,9 @@ static void icu_mux_irq_demux(struct irq_desc *desc)
- 			generic_handle_irq(icu_data[i].virq_base + n);
- 		}
- 	}
-+
-+out:
-+	chained_irq_exit(chip, desc);
+-extern void __init mmp_dt_init_timer(void);
+-
+ static const char *const pxa168_dt_board_compat[] __initconst =3D {
+ 	"mrvl,pxa168-aspenite",
+ 	NULL,
+@@ -32,8 +31,8 @@ static void __init mmp_init_time(void)
+ #ifdef CONFIG_CACHE_TAUROS2
+ 	tauros2_init(0);
+ #endif
+-	mmp_dt_init_timer();
+ 	of_clk_init(NULL);
++	timer_probe();
  }
 =20
- static int mmp_irq_domain_map(struct irq_domain *d, unsigned int irq,
+ DT_MACHINE_START(PXA168_DT, "Marvell PXA168 (Device Tree Support)")
+diff --git a/arch/arm/mach-mmp/mmp2-dt.c b/arch/arm/mach-mmp/mmp2-dt.c
+index 8eec881191f4b..510c762ddc484 100644
+--- a/arch/arm/mach-mmp/mmp2-dt.c
++++ b/arch/arm/mach-mmp/mmp2-dt.c
+@@ -10,21 +10,20 @@
+ #include <linux/irqchip.h>
+ #include <linux/of_platform.h>
+ #include <linux/clk-provider.h>
++#include <linux/clocksource.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/time.h>
+ #include <asm/hardware/cache-tauros2.h>
+=20
+ #include "common.h"
+=20
+-extern void __init mmp_dt_init_timer(void);
+-
+ static void __init mmp_init_time(void)
+ {
+ #ifdef CONFIG_CACHE_TAUROS2
+ 	tauros2_init(0);
+ #endif
+ 	of_clk_init(NULL);
+-	mmp_dt_init_timer();
++	timer_probe();
+ }
+=20
+ static const char *const mmp2_dt_board_compat[] __initconst =3D {
+diff --git a/arch/arm/mach-mmp/time.c b/arch/arm/mach-mmp/time.c
+index 483df32583be6..3f6fd0be00512 100644
+--- a/arch/arm/mach-mmp/time.c
++++ b/arch/arm/mach-mmp/time.c
+@@ -195,30 +195,17 @@ void __init mmp_timer_init(int irq, unsigned long r=
+ate)
+ 	clockevents_config_and_register(&ckevt, rate, MIN_DELTA, MAX_DELTA);
+ }
+=20
+-#ifdef CONFIG_OF
+-static const struct of_device_id mmp_timer_dt_ids[] =3D {
+-	{ .compatible =3D "mrvl,mmp-timer", },
+-	{}
+-};
+-
+-void __init mmp_dt_init_timer(void)
++static int __init mmp_dt_init_timer(struct device_node *np)
+ {
+-	struct device_node *np;
+ 	struct clk *clk;
+ 	int irq, ret;
+ 	unsigned long rate;
+=20
+-	np =3D of_find_matching_node(NULL, mmp_timer_dt_ids);
+-	if (!np) {
+-		ret =3D -ENODEV;
+-		goto out;
+-	}
+-
+ 	clk =3D of_clk_get(np, 0);
+ 	if (!IS_ERR(clk)) {
+ 		ret =3D clk_prepare_enable(clk);
+ 		if (ret)
+-			goto out;
++			return ret;
+ 		rate =3D clk_get_rate(clk) / 2;
+ 	} else if (cpu_is_pj4()) {
+ 		rate =3D 6500000;
+@@ -227,18 +214,15 @@ void __init mmp_dt_init_timer(void)
+ 	}
+=20
+ 	irq =3D irq_of_parse_and_map(np, 0);
+-	if (!irq) {
+-		ret =3D -EINVAL;
+-		goto out;
+-	}
++	if (!irq)
++		return -EINVAL;
++
+ 	mmp_timer_base =3D of_iomap(np, 0);
+-	if (!mmp_timer_base) {
+-		ret =3D -ENOMEM;
+-		goto out;
+-	}
++	if (!mmp_timer_base)
++		return -ENOMEM;
++
+ 	mmp_timer_init(irq, rate);
+-	return;
+-out:
+-	pr_err("Failed to get timer from device tree with error:%d\n", ret);
++	return 0;
+ }
+-#endif
++
++TIMER_OF_DECLARE(mmp_timer, "mrvl,mmp-timer", mmp_dt_init_timer);
 --=20
 2.21.0
 
