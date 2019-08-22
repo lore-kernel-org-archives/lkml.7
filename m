@@ -2,168 +2,245 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6562DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF6AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE38233A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34597233A0
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 13:40:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vcFXE6Fv"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="gUzki5iQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389184AbfHVNjF (ORCPT
+        id S2389164AbfHVNj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 09:39:05 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:39164 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389173AbfHVNjD (ORCPT
+        Thu, 22 Aug 2019 09:39:59 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44308 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387619AbfHVNj6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 09:39:03 -0400
-Received: by mail-ua1-f66.google.com with SMTP id k7so1997967uao.6
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 06:39:02 -0700 (PDT)
+        Thu, 22 Aug 2019 09:39:58 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c81so3980484pfc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 06:39:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FeL+2QSM5K1YLKKF/js9TmuXZpGlOsVDG+4zs7enb+s=;
-        b=vcFXE6FvKpiU/zrPeYmswemc9N4V2PgJ6+b3JrTcb/leP+MyngmDkrXMX6fNCC6dqn
-         5U5DxhJ0+6trsoUFiL1UHaJoAtvD3avRnS5Jjn0hIWhxZH5BNh+UbEx7r03YoAl794Jw
-         HR5w6Fc5AQ9DT3i4m4j2/UueQP7AxJY/ZOBZgowVNQz1pcUgPIDl6VPhzseEWNH2yhVL
-         sFvrbBxAIf0ixOmb1AbOZTeD4bKcIaPo7/IS32eixFYAFFMtH0FSJExgG3ZVVpz5HtpK
-         wpmlq/Au0mkNCg+tpVy6s1iBWLieOP1LhX0U0hAfS+Vy8qt+5L2lehHVNPiimzJsKJTU
-         YaRA==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=laipNW3j2EKDk6tHY1/Qg9ASE0QU4QNK68diornVwyk=;
+        b=gUzki5iQcgN9eKgKbYbwEB8ujk1xhGm5CJx3myOWdpRsvNssZS86hS00mL8Obyavbp
+         TyHWu6O9657sPIiVnBEi9oMpybv3KDtXr/w+a9NDBmTE4VSzFaiY5Alt8iMP2PBlpKez
+         6Hfr02E55lUb3udv2MO4mXWh3olSeuYL4hHPU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FeL+2QSM5K1YLKKF/js9TmuXZpGlOsVDG+4zs7enb+s=;
-        b=eswtkjh3VMOnH91ClKfIIFyUd8wauT7Zab3IKno74SOnmNi7sr6XXrkVVLj4E6HoPC
-         S9Q1ILLuB5XOwlkqssG/zd9OzP+Y/VIVqw+R3SjoHZZ3Ewe3uGsmLebHEFbKx3KonEIX
-         LW3pamcYGzlZwOKxCz0OXesjCB0w7NZodDhH/Z/yWZPhZbJTjUpJ9Yq6PkQzqw/sn+jC
-         8iGHHtROP31Knp9f+RU6k+sm/KITx9clGHXLW/UBNWVjCDOvtRKRK6u3ZfaGkCJS9WOr
-         l4iIgTzL+whdjY3/4djpT64mMBn91+F1Gi7gWTHxHXOUNkEHZvbK0HjTCM4P2bskMZW6
-         9pdA==
-X-Gm-Message-State: APjAAAVCM6fWAvIhZOcdenkoqkOYbJpxljFab2bIZFa3FatUJYfikbkb
-        D2J1GsqKVLaG320eYqCEAC4vN9uZcS6420tJPqM1uA==
-X-Google-Smtp-Source: APXvYqyNGgp4CW1Vx1Kr/v3sCAPsdONPj1D+yM9NJraECZoktBBfmsmh2N05UsLj8cJbC+xyyKQktBrLSJpWnqXuTU4=
-X-Received: by 2002:ab0:15e9:: with SMTP id j38mr5992611uae.19.1566481142313;
- Thu, 22 Aug 2019 06:39:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=laipNW3j2EKDk6tHY1/Qg9ASE0QU4QNK68diornVwyk=;
+        b=EC2+3DiE3Q9zz3csudgoS4klrpMtpDg6geui7R9UKHFkBZ9m5eSVIcXEAnuHHULaIE
+         n0hNsK/O7UQIFOyQ+BCsksAbjjAgUoFPbkoK4sdWNQ57in/Fcxu96EjV2+d681ggaxvm
+         hrfq2wFfE/NmunJeHXGA1f6h/YtzxtmlA1tyO83o8Y1YoEPcmin3IGetSsPf/wPilXvH
+         a2xh/k2404EOdjhuB4wX014yjQ2kreDBkx/Y4ZzJsP4O7QKLLrH4d1rYgLF5HCLss2c4
+         4ocEj0Vb20muPqKr3K0E8vBSEVyPm1+T1rmZpj6JDdcq1lTCPCMBaecQvh4UY6D7T7ad
+         fXbg==
+X-Gm-Message-State: APjAAAVFmMOoP3Z0STg+3tL8zsrYopHD53R4Esd8Rb6UD2LFENd5CJVU
+        lJIb2bs1vNXVArUePojmV4l7jQ==
+X-Google-Smtp-Source: APXvYqz0A3D27GjS3wXlB2R997d/+71Javbq9sAagNY3kGdGFnFrwr7sCE/uOmcn9Ws5ftJYwGWJiA==
+X-Received: by 2002:a17:90a:342d:: with SMTP id o42mr5663380pjb.27.1566481197680;
+        Thu, 22 Aug 2019 06:39:57 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id n185sm24733438pga.16.2019.08.22.06.39.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Aug 2019 06:39:56 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 09:39:55 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Scott Wood <swood@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v2 1/3] rcu: Acquire RCU lock when disabling BHs
+Message-ID: <20190822133955.GA29841@google.com>
+References: <20190821231906.4224-1-swood@redhat.com>
+ <20190821231906.4224-2-swood@redhat.com>
+ <20190821233358.GU28441@linux.ibm.com>
 MIME-Version: 1.0
-References: <1561958991-21935-1-git-send-email-manish.narani@xilinx.com>
- <1561958991-21935-2-git-send-email-manish.narani@xilinx.com>
- <20190722215404.GA28292@bogus> <MN2PR02MB602907616249FF19C1A737D8C1C70@MN2PR02MB6029.namprd02.prod.outlook.com>
- <CAPDyKFostBKYipTkCsDbggsrux7w8BPqARx7fwRsL1XqEEX2NQ@mail.gmail.com> <MN2PR02MB60299EB8B83C4EA68A0F2B33C1A80@MN2PR02MB6029.namprd02.prod.outlook.com>
-In-Reply-To: <MN2PR02MB60299EB8B83C4EA68A0F2B33C1A80@MN2PR02MB6029.namprd02.prod.outlook.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 22 Aug 2019 15:38:26 +0200
-Message-ID: <CAPDyKFqdLE7d9uz_KcpO0CihM+QsFyKbNsoDMoNLT2Qy_TmNdw@mail.gmail.com>
-Subject: Re: [PATCH v2 01/11] dt-bindings: mmc: arasan: Update documentation
- for SD Card Clock
-To:     Manish Narani <MNARANI@xilinx.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        Michal Simek <michals@xilinx.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "christoph.muellner@theobroma-systems.com" 
-        <christoph.muellner@theobroma-systems.com>,
-        "philipp.tomsich@theobroma-systems.com" 
-        <philipp.tomsich@theobroma-systems.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "ayaka@soulik.info" <ayaka@soulik.info>,
-        "kernel@esmil.dk" <kernel@esmil.dk>,
-        "tony.xie@rock-chips.com" <tony.xie@rock-chips.com>,
-        Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>,
-        Nava kishore Manne <navam@xilinx.com>,
-        "mdf@kernel.org" <mdf@kernel.org>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190821233358.GU28441@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[...]
+On Wed, Aug 21, 2019 at 04:33:58PM -0700, Paul E. McKenney wrote:
+> On Wed, Aug 21, 2019 at 06:19:04PM -0500, Scott Wood wrote:
+> > A plain local_bh_disable() is documented as creating an RCU critical
+> > section, and (at least) rcutorture expects this to be the case.  However,
+> > in_softirq() doesn't block a grace period on PREEMPT_RT, since RCU checks
+> > preempt_count() directly.  Even if RCU were changed to check
+> > in_softirq(), that wouldn't allow blocked BH disablers to be boosted.
+> > 
+> > Fix this by calling rcu_read_lock() from local_bh_disable(), and update
+> > rcu_read_lock_bh_held() accordingly.
+> 
+> Cool!  Some questions and comments below.
+> 
+> 							Thanx, Paul
+> 
+> > Signed-off-by: Scott Wood <swood@redhat.com>
+> > ---
+> > Another question is whether non-raw spinlocks are intended to create an
+> > RCU read-side critical section due to implicit preempt disable.
+> 
+> Hmmm...  Did non-raw spinlocks act like rcu_read_lock_sched()
+> and rcu_read_unlock_sched() pairs in -rt prior to the RCU flavor
+> consolidation?  If not, I don't see why they should do so after that
+> consolidation in -rt.
 
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 15
-> > ++++++++++-
-> > > > ----
-> > > > >  1 file changed, 10 insertions(+), 5 deletions(-)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > > > b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > > > > index 1edbb04..15c6397 100644
-> > > > > --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > > > > +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > > > > @@ -23,6 +23,10 @@ Required Properties:
-> > > > >    - reg: From mmc bindings: Register location and length.
-> > > > >    - clocks: From clock bindings: Handles to clock inputs.
-> > > > >    - clock-names: From clock bindings: Tuple including "clk_xin" and
-> > "clk_ahb"
-> > > > > +            Apart from these two there is one more optional clock which
-> > > > > +            is "clk_sdcard". This clock represents output clock from
-> > > > > +            controller and card. This must be specified when #clock-cells
-> > > > > +            is specified.
-> > > > >    - interrupts: Interrupt specifier
-> > > > >
-> > > > >  Required Properties for "arasan,sdhci-5.1":
-> > > > > @@ -36,9 +40,10 @@ Optional Properties:
-> > > > >    - clock-output-names: If specified, this will be the name of the card
-> > clock
-> > > > >      which will be exposed by this device.  Required if #clock-cells is
-> > > > >      specified.
-> > > > > -  - #clock-cells: If specified this should be the value <0>.  With this
-> > property
-> > > > > -    in place we will export a clock representing the Card Clock.  This clock
-> > > > > -    is expected to be consumed by our PHY.  You must also specify
-> > > > > +  - #clock-cells: If specified this should be the value <0>. With this
-> > > > > +    property in place we will export one clock representing the Card
-> > > > > +    Clock. This clock is expected to be consumed by our PHY. You must
-> > also
-> > > > > +    specify
-> > > >
-> > > > specify what?
-> > > I think this line was already there, I missed to correct it, Will update in v3.
-> > >
-> > > >
-> > > > The 3rd clock input I assume? This statement means any existing users
-> > > > with 2 clock inputs and #clock-cells are in error now. Is that correct?
-> > > Yes, this is correct. So far there was only one vendor using '#clock-cells'
-> > which is Rockchip. I have sent DT patch (02/11) for that also.
-> > > Here this is needed as earlier implementation isn't correct as suggested by
-> > Uffe. (https://lkml.org/lkml/2019/6/20/486) .
-> >
-> > I am not sure how big of a problem the backwards compatible thingy
-> > with DT is, in general we must not break it. What do you say Manish?
->
-> Though I agree with Uffe on this, there is no other way from my understanding. Please suggest.
->
-> >
-> > As a workaround, would it be possible to use
-> > of_clk_get_from_provider() somehow to address the compatibility issue?
->
-> For this to be used we have to parse 'clkspec' from the DT node and pass the same as an argument to this function. In this case also the DT node needs to be updated, which is same as we have done in this series.
+May be I am missing something, but I didn't see the connection between
+consolidation and this patch. AFAICS, this patch is so that
+rcu_read_lock_bh_held() works at all on -rt. Did I badly miss something?
 
-Alright. I guess breaking DTBs for Rockchip platforms isn't
-acceptable, especially if those are already widely deployed, which I
-have no idea of....
+> >                                                                  If they
+> > are, then we'd need to add rcu_read_lock() there as well since RT doesn't
+> > disable preemption (and rcutorture should explicitly test with a
+> > spinlock).  If not, the documentation should make that clear.
+> 
+> True enough!
+> 
+> >  include/linux/rcupdate.h |  4 ++++
+> >  kernel/rcu/update.c      |  4 ++++
+> >  kernel/softirq.c         | 12 +++++++++---
+> >  3 files changed, 17 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> > index 388ace315f32..d6e357378732 100644
+> > --- a/include/linux/rcupdate.h
+> > +++ b/include/linux/rcupdate.h
+> > @@ -615,10 +615,12 @@ static inline void rcu_read_unlock(void)
+> >  static inline void rcu_read_lock_bh(void)
+> >  {
+> >  	local_bh_disable();
+> > +#ifndef CONFIG_PREEMPT_RT_FULL
+> >  	__acquire(RCU_BH);
+> >  	rcu_lock_acquire(&rcu_bh_lock_map);
+> >  	RCU_LOCKDEP_WARN(!rcu_is_watching(),
+> >  			 "rcu_read_lock_bh() used illegally while idle");
+> > +#endif
+> 
+> Any chance of this using "if (!IS_ENABLED(CONFIG_PREEMPT_RT_FULL))"?
+> We should be OK providing a do-nothing __maybe_unused rcu_bh_lock_map
+> for lockdep-enabled -rt kernels, right?
 
-And having support for both options in the driver seems not a great
-option either, so it looks like you need to convert back into the old
-v1 approach. Huh, sorry.
+Since this function is small, I prefer if -rt defines their own
+rcu_read_lock_bh() which just does the local_bh_disable(). That would be way
+cleaner IMO. IIRC, -rt does similar things for spinlocks, but it has been
+sometime since I look at the -rt patchset.
 
-Kind regards
-Uffe
+> >  }
+> >  
+> >  /*
+> > @@ -628,10 +630,12 @@ static inline void rcu_read_lock_bh(void)
+> >   */
+> >  static inline void rcu_read_unlock_bh(void)
+> >  {
+> > +#ifndef CONFIG_PREEMPT_RT_FULL
+> >  	RCU_LOCKDEP_WARN(!rcu_is_watching(),
+> >  			 "rcu_read_unlock_bh() used illegally while idle");
+> >  	rcu_lock_release(&rcu_bh_lock_map);
+> >  	__release(RCU_BH);
+> > +#endif
+> 
+> Ditto.
+> 
+> >  	local_bh_enable();
+> >  }
+> >  
+> > diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+> > index 016c66a98292..a9cdf3d562bc 100644
+> > --- a/kernel/rcu/update.c
+> > +++ b/kernel/rcu/update.c
+> > @@ -296,7 +296,11 @@ int rcu_read_lock_bh_held(void)
+> >  		return 0;
+> >  	if (!rcu_lockdep_current_cpu_online())
+> >  		return 0;
+> > +#ifdef CONFIG_PREEMPT_RT_FULL
+> > +	return lock_is_held(&rcu_lock_map) || irqs_disabled();
+> > +#else
+> >  	return in_softirq() || irqs_disabled();
+> > +#endif
+> 
+> And globally.
+
+And could be untangled a bit as well:
+
+if (irqs_disabled())
+	return 1;
+
+if (IS_ENABLED(CONFIG_PREEMPT_RT_FULL))
+	return lock_is_held(&rcu_lock_map);
+
+return in_softirq();
+
+> >  }
+> >  EXPORT_SYMBOL_GPL(rcu_read_lock_bh_held);
+> >  
+> > diff --git a/kernel/softirq.c b/kernel/softirq.c
+> > index d16d080a74f7..6080c9328df1 100644
+> > --- a/kernel/softirq.c
+> > +++ b/kernel/softirq.c
+> > @@ -115,8 +115,10 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
+> >  	long soft_cnt;
+> >  
+> >  	WARN_ON_ONCE(in_irq());
+> > -	if (!in_atomic())
+> > +	if (!in_atomic()) {
+> >  		local_lock(bh_lock);
+> > +		rcu_read_lock();
+> > +	}
+> >  	soft_cnt = this_cpu_inc_return(softirq_counter);
+> >  	WARN_ON_ONCE(soft_cnt == 0);
+> >  	current->softirq_count += SOFTIRQ_DISABLE_OFFSET;
+> > @@ -151,8 +153,10 @@ void _local_bh_enable(void)
+> >  #endif
+> >  
+> >  	current->softirq_count -= SOFTIRQ_DISABLE_OFFSET;
+> > -	if (!in_atomic())
+> > +	if (!in_atomic()) {
+> > +		rcu_read_unlock();
+> >  		local_unlock(bh_lock);
+> > +	}
+> >  }
+> >  
+> >  void _local_bh_enable_rt(void)
+> > @@ -185,8 +189,10 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
+> >  	WARN_ON_ONCE(count < 0);
+> >  	local_irq_enable();
+> >  
+> > -	if (!in_atomic())
+> > +	if (!in_atomic()) {
+> > +		rcu_read_unlock();
+> >  		local_unlock(bh_lock);
+> > +	}
+> 
+> The return from in_atomic() is guaranteed to be the same at
+> local_bh_enable() time as was at the call to the corresponding
+> local_bh_disable()?
+> 
+> I could have sworn that I ran afoul of this last year.  Might these
+> added rcu_read_lock() and rcu_read_unlock() calls need to check for
+> CONFIG_PREEMPT_RT_FULL?
+
+Great point! I think they should be guarded but will let Scott answer that
+one.
+
+thanks,
+
+ - Joel
+
