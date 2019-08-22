@@ -2,80 +2,82 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E849C3A5A0
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98A6C3A59D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219F621848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 719AE2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:59:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="KNbcBnXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbfHVDvx (ORCPT
+        id S1730918AbfHVD7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 23:51:53 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:58314 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730602AbfHVDvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 23:51:52 -0400
-Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
-        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1i0e8V-0001hd-SS; Thu, 22 Aug 2019 13:51:44 +1000
-Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1i0e8V-00007a-KQ; Thu, 22 Aug 2019 13:51:43 +1000
-Date:   Thu, 22 Aug 2019 13:51:43 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/2] padata: initialize usable masks to reflect offlined
- CPU
-Message-ID: <20190822035143.GB32551@gondor.apana.org.au>
-References: <20190809210603.20900-1-daniel.m.jordan@oracle.com>
- <20190812210200.13653-1-daniel.m.jordan@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190812210200.13653-1-daniel.m.jordan@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Wed, 21 Aug 2019 23:59:30 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:42565 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730619AbfHVD7a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 21 Aug 2019 23:59:30 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x7M3xDnH020640;
+        Thu, 22 Aug 2019 12:59:13 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x7M3xDnH020640
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1566446353;
+        bh=aEYcYcoE7Rpp9tsonHqvZxtsKPFLqVgtydGUUsVUt4g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=KNbcBnXH2H5EshNX6ck9sAUV1WSCcaf5uAV6QsuP9NobedY1bNJR4CVznPeKKSodO
+         tPsXtQvhuqt3PdUVqrDEXnirM+f0/BU6enprFbZwQ2jvzuu2riGHBYgxz+Y0U9AYxX
+         eTfD+OEX7VCzVZnPY5XvEOfd3kWYzOcPTB8bUR/K1b0iEzQSDiHbqYCZKQ7vZgS1/I
+         HtCXqZl3cH+Rwsl63aQJMUIzMAhvr+NZwjiBf8YQrsBHV2zTS8w7L6JOtcDXH/m7a0
+         H1ArUTgqr51bHXmLgILf6lZDxW574CEr6lCub8KHcH/iAxPqgjGjkQGqGXMjgMBHvm
+         pblSo2BY2gCUA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: get rid of $(realpath ...) from scripts/mkmakefile
+Date:   Thu, 22 Aug 2019 12:59:11 +0900
+Message-Id: <20190822035911.23478-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 12, 2019 at 05:02:00PM -0400, Daniel Jordan wrote:
-> __padata_remove_cpu clears the offlined CPU from the usable masks after
-> padata_alloc_pd has initialized pd->cpu, which means pd->cpu could be
-> initialized to this CPU, causing padata to wait indefinitely for the
-> next job in padata_get_next.
-> 
-> Make the usable masks reflect the offline CPU when they're established
-> in padata_setup_cpumasks so pd->cpu is initialized properly.
-> 
-> Fixes: 6fc4dbcf0276 ("padata: Replace delayed timer with immediate workqueue in padata_reorder")
-> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-> Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> Cc: Steffen Klassert <steffen.klassert@secunet.com>
-> Cc: linux-crypto@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-> 
-> Hi, one more edge case.  All combinations of CPUs among
-> parallel_cpumask, serial_cpumask, and CPU hotplug have now been tested
-> in a 4-CPU VM, and an 8-CPU VM has run with random combinations of these
-> settings for over an hour.
-> 
->  kernel/padata.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
+Both relative path and absolute path have pros and cons. For example,
+we can move the source and objtree around together by using the
+relative path to the source tree.
 
-If we modify patch 2/2 by calling this after cpu_online_mask
-has been updated then this problem should go away because we
-can then remove the cpumask_clear_cpu calls.
+Do not force the absolute path to the source tree. If you prefer the
+absolute path, you can specify KBUILD_ABS_SRCTREE=1.
 
-Cheers,
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ scripts/mkmakefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/mkmakefile b/scripts/mkmakefile
+index 4d0faebb1719..1cb174751429 100755
+--- a/scripts/mkmakefile
++++ b/scripts/mkmakefile
+@@ -12,6 +12,6 @@ if [ "${quiet}" != "silent_" ]; then
+ fi
+ 
+ cat << EOF > Makefile
+-# Automatically generated by $(realpath $0): don't edit
+-include $(realpath $1/Makefile)
++# Automatically generated by $0: don't edit
++include $1/Makefile
+ EOF
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.17.1
+
