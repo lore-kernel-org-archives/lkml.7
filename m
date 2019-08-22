@@ -2,76 +2,82 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AAEC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD027C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76DA7233A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A26C223401
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=pedrovanzella.com header.i=@pedrovanzella.com header.b="qXK47UOG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UAJJBaxX"
+	dkim=pass (2048-bit key) header.d=pedrovanzella.com header.i=@pedrovanzella.com header.b="4e8V43r8";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="h76D8Cxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392539AbfHVUTB (ORCPT
+        id S2392956AbfHVUTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:19:01 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:58675 "EHLO
+        Thu, 22 Aug 2019 16:19:03 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41161 "EHLO
         out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387441AbfHVUTA (ORCPT
+        by vger.kernel.org with ESMTP id S2388389AbfHVUTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:19:00 -0400
+        Thu, 22 Aug 2019 16:19:01 -0400
 Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id A24AC210DC;
-        Thu, 22 Aug 2019 16:18:59 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 22 Aug 2019 16:18:59 -0400
+        by mailout.nyi.internal (Postfix) with ESMTP id 74EA621731;
+        Thu, 22 Aug 2019 16:19:00 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Thu, 22 Aug 2019 16:19:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         pedrovanzella.com; h=from:to:cc:subject:date:message-id
-        :mime-version:content-transfer-encoding; s=fm3; bh=v74Gs0E9r7y8M
-        aL4VW5da3joTsP2Xv4qSIdJw1utIeU=; b=qXK47UOGPJvozyGgKHsuJfWCy48Uv
-        BMaB6keWW/2v2wdRNM3Nrm+pQrPjboeSvSZdBrcLbBTqQvDoyNAhcAh7uTSTIIIk
-        jLIBnxFlRJyUtFwm0AJB8J3fyF9ouM4jS+z/QuDsgdgilzIjjhqE+Az+qwE/1QJW
-        BTFbuFuaFZ+gbjRBgupg1zPoZ3LWM99fXcyHmu+eZ3fRICCpYoRw1N7RQ+sT3/bX
-        FcQchaBnQVWykt09x/iFR5VFJiuPzKcqC5uJJc8SIx0Y5aZ6OF4RAIFFBXVMKZkf
-        rVgIC0ZBCF0KJVH4LHqcyqlBCb3I5j475PKlojVSu1EHckDdUSHFrEwMQ==
+        :in-reply-to:references:mime-version:content-transfer-encoding;
+         s=fm3; bh=4c/lgLrm3F1n9YEmiMR6OTt64iylYrDgHb9+YtfNw1E=; b=4e8V4
+        3r8ASOsXBF5O+3zQlbspZ9VW6EYKXlYm8NKto2VRtHRVhKXcGg390t0vukjJQRZk
+        YzFtz5mXJzoVInMEnJnwFEdqLmLWmIC5tF5dYSzKsWI9NNvQ5abpUwYSIu35JitF
+        +C9ZhfY49gOlzr7dHwxhOxGTjg4B2DymlbbuGyvYrqvsCTjXFlsFW4KvNeA/WSOD
+        KYln6znTkJGoMigsSuQ0X1LT0nPgeQbn2MeyK3ARd1zbwtmzMDAZJ9D1eZU+mN+Y
+        2atz0iZ+WSvYH4S39Du0djmNlV05CCrLzuFCS2K6NniUwUE2RAmODWCKgthGx2pP
+        5EhfmdoJUYh3IBqUg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=v74Gs0E9r7y8MaL4V
-        W5da3joTsP2Xv4qSIdJw1utIeU=; b=UAJJBaxXu1yn3dGeSRSVhdClRybAdZxHz
-        Yjv7HQgP4Zfl90WSVu6Wv1nUYiHivo43yUI/voty/C4cRULvf3lcZV6hauKvwd4t
-        YXzp/4iKqUcsCL6/vSbJK2ccFL0a01RmGt5DkGmnitBnjYW0P598BdlJIF56p7sI
-        4dTVLQ1kP3D3k70Sha3F2rN9waf4rhvQBjuIfP4dgYMYTKS1z350SZkaX7HUEbMz
-        LbMmblEqnHWrX3WA1o2D1y7bshPpnpd2YekIQtueGP8y2jy87NOPxnI92pwEkvlS
-        CzHDh+4Lk+EQLblkHfCs7/QwH5dz6rALYUy3v42UtS9jHYQQyIfzw==
-X-ME-Sender: <xms:s_heXSTSDR2qZMgTFCQGazbmhpvXyV9hZ5YdlEUwca3cuS1Ctcgg4A>
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; bh=4c/lgLrm3F1n9YEmiMR6OTt64iylYrDgHb9+YtfNw1E=; b=h76D8Cxf
+        cjRYlUVHunWd4EbFsOsR7eZNe8kalymLglb6xv3wPGb0+IhxagfZeCIEz5rEJhZK
+        7nppRXiq+nYrQ/y4zRdJag2vNDHlRoyHAr9fbIMizh9PIcqR25laTPQOgjWHFvzW
+        mY37kXTZYRA8zJZJHUuoPy2G0uv1GX+JqphKzrrNgE0ZwoPhWfQVTdF5dKJWLxtv
+        VPv96ra4HkYG45DE52d1QmVR20gfoJzsfTqg82umgj+y2BzWgzdP1jrh0evHIqTC
+        PxSSffP766ZkYSIXFeaZvDWg/Ydt3eZgk8ozTYgpNbtHqip8YZ6HZ5Iu2ZZAzVeG
+        TCNLnZe/TjWcMQ==
+X-ME-Sender: <xms:s_heXWWSGalQHqGFEHPAbXvkI_-8Kg1CdXU8T8u6XP5M_xDsPikfyw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudegiedguddtgecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
     necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomheprfgvughrohcu
-    gggrnhiivghllhgruceophgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomheqne
-    cukfhppedujeegrdekkedrledrudegleenucfrrghrrghmpehmrghilhhfrhhomhepphgv
-    ughrohesphgvughrohhvrghniigvlhhlrgdrtghomhenucevlhhushhtvghrufhiiigvpe
-    dt
-X-ME-Proxy: <xmx:s_heXT3aI-bMzub36CU9w25Pz6uzh8P4zYVZ3VgkS5PQES1kmCvS8A>
-    <xmx:s_heXVx0MeBlQgB6GWWW_l6YXrndrfNlGnKv3yo61SqAqy5VbhhuYA>
-    <xmx:s_heXe9Au-Z_b7Qg2PV3IQnx_wDBWkQoo-ye70m9fz_QOO58bZlhug>
-    <xmx:s_heXdbsnXwOelpjkJiDdjhOfSk9w5BPURvpGSo0-b1RHdpetcjYaA>
+    enucfjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomheprfgvughr
+    ohcugggrnhiivghllhgruceophgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomh
+    eqnecukfhppedujeegrdekkedrledrudegleenucfrrghrrghmpehmrghilhhfrhhomhep
+    phgvughrohesphgvughrohhvrghniigvlhhlrgdrtghomhenucevlhhushhtvghrufhiii
+    gvpedt
+X-ME-Proxy: <xmx:tPheXQH2c_5q-tjR4mbyw2dNSpe6ii08D6f3wS2Ghs8k03QcxxQNiA>
+    <xmx:tPheXdCXFsv5SeEQ06NdnLB7aI-ezofDrxno0N0uQ3ZGKmoKWRDUmw>
+    <xmx:tPheXSzROuDoaZjpSiw7VSJEP_ZvefrprpxLamo5NvF-e6iWw5_SyA>
+    <xmx:tPheXQs-gLyuVHOT3JkAFVSf3r3W4b7aNgl6WOfmCH55N8ZDvpJ9wA>
 Received: from localhost (toroon020aw-lp130-07-174-88-9-149.dsl.bell.ca [174.88.9.149])
-        by mail.messagingengine.com (Postfix) with ESMTPA id BF3B78005A;
-        Thu, 22 Aug 2019 16:18:58 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id CBECED6005B;
+        Thu, 22 Aug 2019 16:18:59 -0400 (EDT)
 From:   Pedro Vanzella <pedro@pedrovanzella.com>
 To:     linux-input@vger.kernel.org
-Cc:     lains@archlinux.org, Jiri Kosina <jikos@kernel.org>,
+Cc:     lains@archlinux.org, Pedro Vanzella <pedro@pedrovanzella.com>,
+        Jiri Kosina <jikos@kernel.org>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: [Resubmit] Read battery voltage from Logitech Gaming mice
-Date:   Thu, 22 Aug 2019 16:18:44 -0400
-Message-Id: <20190822201849.28924-1-pedro@pedrovanzella.com>
+Subject: [PATCH v3 1/4] hid-logitech-hidpp: add quirk to handle battery voltage
+Date:   Thu, 22 Aug 2019 16:18:45 -0400
+Message-Id: <20190822201849.28924-2-pedro@pedrovanzella.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190822201849.28924-1-pedro@pedrovanzella.com>
+References: <20190822201849.28924-1-pedro@pedrovanzella.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,17 +85,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resumitting this after having rebased it against the latest changes.
+This quirk allows us to pick which devices support the 0x1001 hidpp
+feature to read the battery voltage.
 
-The gaming line of Logitech devices doesn't use the old hidpp20
-feature for battery level reporting. Instead, they report the 
-current voltage of the battery, in millivolts.
+Signed-off-by: Pedro Vanzella <pedro@pedrovanzella.com>
+---
+ drivers/hid/hid-logitech-hidpp.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-This patch set handles this case by adding a quirk to the 
-devices we know to have this new feature, in both wired 
-and wireless mode.
-
-This version of the patch set is better split, as well as adding the
-quirk to make sure we don't needlessly probe every device connected.
-
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 0179f7ed77e5..402ddba93adc 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -59,7 +59,8 @@ MODULE_PARM_DESC(disable_tap_to_click,
+ #define HIDPP_QUIRK_CLASS_G920			BIT(3)
+ #define HIDPP_QUIRK_CLASS_K750			BIT(4)
+ 
+-/* bits 2..20 are reserved for classes */
++/* bits 2..1f are reserved for classes */
++#define HIDPP_QUIRK_BATTERY_VOLTAGE_X1001	BIT(20)
+ /* #define HIDPP_QUIRK_CONNECT_EVENTS		BIT(21) disabled */
+ #define HIDPP_QUIRK_WTP_PHYSICAL_BUTTONS	BIT(22)
+ #define HIDPP_QUIRK_NO_HIDINPUT			BIT(23)
+@@ -3732,6 +3733,13 @@ static const struct hid_device_id hidpp_devices[] = {
+ 	  LDJ_DEVICE(0xb30b),
+ 	  .driver_data = HIDPP_QUIRK_HIDPP_CONSUMER_VENDOR_KEYS },
+ 
++	{ /* Logitech G403 Gaming Mouse over Lightspeed */
++	  LDJ_DEVICE(0x405d),
++	  .driver_data = HIDPP_QUIRK_BATTERY_VOLTAGE_X1001 },
++	{ /* Logitech G900 Gaming Mouse over Lightspeed */
++	  LDJ_DEVICE(0x4053),
++	  .driver_data = HIDPP_QUIRK_BATTERY_VOLTAGE_X1001 },
++
+ 	{ LDJ_DEVICE(HID_ANY_ID) },
+ 
+ 	{ /* Keyboard LX501 (Y-RR53) */
+@@ -3750,13 +3758,15 @@ static const struct hid_device_id hidpp_devices[] = {
+ 	{ L27MHZ_DEVICE(HID_ANY_ID) },
+ 
+ 	{ /* Logitech G403 Wireless Gaming Mouse over USB */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC082) },
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC082),
++	  .driver_data = HIDPP_QUIRK_BATTERY_VOLTAGE_X1001 },
+ 	{ /* Logitech G703 Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC087) },
+ 	{ /* Logitech G703 Hero Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC090) },
+ 	{ /* Logitech G900 Gaming Mouse over USB */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC081) },
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC081),
++	  .driver_data = HIDPP_QUIRK_BATTERY_VOLTAGE_X1001 },
+ 	{ /* Logitech G903 Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC086) },
+ 	{ /* Logitech G903 Hero Gaming Mouse over USB */
+-- 
+2.23.0
 
