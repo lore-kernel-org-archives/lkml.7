@@ -2,89 +2,100 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A215C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAEAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7076A21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABCB233A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 05:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731468AbfHVFz3 (ORCPT
+        id S1731484AbfHVFzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 01:55:29 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:58364 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729690AbfHVFz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 01:55:29 -0400
-Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
-        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1i0g4A-0002vT-4S; Thu, 22 Aug 2019 15:55:22 +1000
-Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1i0g47-000117-Op; Thu, 22 Aug 2019 15:55:19 +1000
-Date:   Thu, 22 Aug 2019 15:55:19 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
-        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
-        Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH] random: Support freezable kthreads in
- add_hwgenerator_randomness()
-Message-ID: <20190822055519.GB3860@gondor.apana.org.au>
-References: <20190819150245.176587-1-swboyd@chromium.org>
+        Thu, 22 Aug 2019 01:55:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42850 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731469AbfHVFzk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 01:55:40 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7M5qgk2020448
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:55:39 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uhjbs54yf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 01:55:38 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 22 Aug 2019 06:55:37 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 22 Aug 2019 06:55:34 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7M5tXsJ59572322
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 05:55:33 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51B48A405C;
+        Thu, 22 Aug 2019 05:55:33 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A1DFEA405F;
+        Thu, 22 Aug 2019 05:55:32 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.59])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 22 Aug 2019 05:55:32 +0000 (GMT)
+Date:   Thu, 22 Aug 2019 08:55:31 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: consolidate pgtable_cache_init() and pgd_cache_init()
+References: <1566400018-15607-1-git-send-email-rppt@linux.ibm.com>
+ <1655e1c9-ad2c-fc31-c517-e3f55995c6b1@free.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190819150245.176587-1-swboyd@chromium.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <1655e1c9-ad2c-fc31-c517-e3f55995c6b1@free.fr>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19082205-0008-0000-0000-0000030BB29C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082205-0009-0000-0000-00004A29DFC5
+Message-Id: <20190822055530.GA18872@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=781 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908220062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 08:02:45AM -0700, Stephen Boyd wrote:
-> The kthread calling this function is freezable after commit 03a3bb7ae631
-> ("hwrng: core - Freeze khwrng thread during suspend") is applied.
-> Unfortunately, this function uses wait_event_interruptible() but doesn't
-> check for the kthread being woken up by the fake freezer signal. When a
-> user suspends the system, this kthread will wake up and if it fails the
-> entropy size check it will immediately go back to sleep and not go into
-> the freezer. Eventually, suspend will fail because the task never froze
-> and a warning message like this may appear:
+On Wed, Aug 21, 2019 at 06:17:12PM +0200, Marc Gonzalez wrote:
+> On 21/08/2019 17:06, Mike Rapoport wrote:
 > 
->  PM: suspend entry (deep)
->  Filesystems sync: 0.000 seconds
->  Freezing user space processes ... (elapsed 0.001 seconds) done.
->  OOM killer disabled.
->  Freezing remaining freezable tasks ...
->  Freezing of tasks failed after 20.003 seconds (1 tasks refusing to freeze, wq_busy=0):
->  hwrng           R  running task        0   289      2 0x00000020
->  [<c08c64c4>] (__schedule) from [<c08c6a10>] (schedule+0x3c/0xc0)
->  [<c08c6a10>] (schedule) from [<c05dbd8c>] (add_hwgenerator_randomness+0xb0/0x100)
->  [<c05dbd8c>] (add_hwgenerator_randomness) from [<bf1803c8>] (hwrng_fillfn+0xc0/0x14c [rng_core])
->  [<bf1803c8>] (hwrng_fillfn [rng_core]) from [<c015abec>] (kthread+0x134/0x148)
->  [<c015abec>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> > Both pgtable_cache_init() and pgd_cache_init() are used to initialize kmem
+> > cache for page table allocations on several architectures that do not use
+> > PAGE_SIZE tables for one or more levels of the page table hierarchy.
+> > 
+> > Most architectures do not implement these functions and use __week default
 > 
-> Check for a freezer signal here and skip adding any randomness if the
-> task wakes up because it was frozen. This should make the kthread freeze
-> properly and suspend work again.
-> 
-> Fixes: 03a3bb7ae631 ("hwrng: core - Freeze khwrng thread during suspend")
-> Reported-by: Keerthy <j-keerthy@ti.com>
-> Tested-by: Keerthy <j-keerthy@ti.com>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> 
-> Probably needs to go via Herbert who routed the patch this is fixing.
-> 
->  drivers/char/random.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+> s/week/weak  ?
 
-Patch applied.  Thanks.
+Sure, thanks!
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Sincerely yours,
+Mike.
+
