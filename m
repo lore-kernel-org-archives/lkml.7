@@ -2,176 +2,128 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01926C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7110FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06C2206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5345D233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 19:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404028AbfHVTSF (ORCPT
+        id S2404081AbfHVTVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 15:18:05 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:52417 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403983AbfHVTSC (ORCPT
+        Thu, 22 Aug 2019 15:21:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59344 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731916AbfHVTVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 15:18:02 -0400
-X-Originating-IP: 87.18.63.98
-Received: from uno.localdomain (unknown [87.18.63.98])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 52EAEC0007;
-        Thu, 22 Aug 2019 19:17:56 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 21:19:25 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 19/19] drm: rcar-du: kms: Update CMM in atomic commit
- tail
-Message-ID: <20190822191925.dnbdihnt3ole2nqx@uno.localdomain>
-References: <20190706140746.29132-1-jacopo+renesas@jmondi.org>
- <20190706140746.29132-20-jacopo+renesas@jmondi.org>
- <20190820184215.GM10820@pendragon.ideasonboard.com>
+        Thu, 22 Aug 2019 15:21:45 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7MJF9XY045451;
+        Thu, 22 Aug 2019 15:21:34 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhxpk62g8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 15:21:34 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7MJG2vA050160;
+        Thu, 22 Aug 2019 15:21:33 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhxpk62f8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 15:21:33 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7MJFtQa019589;
+        Thu, 22 Aug 2019 19:21:32 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma04wdc.us.ibm.com with ESMTP id 2ufye0k76t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 19:21:32 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7MJLVUb48234924
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 19:21:32 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E1598B2065;
+        Thu, 22 Aug 2019 19:21:31 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C084DB2064;
+        Thu, 22 Aug 2019 19:21:31 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 22 Aug 2019 19:21:31 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id EBA5816C3888; Thu, 22 Aug 2019 12:21:32 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 12:21:32 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, parri.andrea@gmail.com,
+        byungchul.park@lge.com, peterz@infradead.org, mojha@codeaurora.org,
+        ice_yangxiao@163.com, efremov@linux.com, edumazet@google.com
+Subject: Re: [GIT PULL rcu/next + tools/memory-model] RCU and LKMM commits
+ for 5.4
+Message-ID: <20190822192132.GJ28441@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
+References: <20190822151811.GA8894@linux.ibm.com>
+ <20190822185429.GA110910@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3qbfvdcd762hsr7u"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190820184215.GM10820@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190822185429.GA110910@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908220165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 22, 2019 at 08:54:29PM +0200, Ingo Molnar wrote:
 
---3qbfvdcd762hsr7u
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+[ . . . ]
 
-Hi Laurent,
+> Pulled into tip:core/rcu, thanks a lot Paul!
 
-On Tue, Aug 20, 2019 at 09:42:15PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> Thank you for the patch.
->
-> On Sat, Jul 06, 2019 at 04:07:46PM +0200, Jacopo Mondi wrote:
-> > Update CMM settings at in the atomic commit tail helper method.
-> >
-> > The CMM is updated with new gamma values provided to the driver
-> > in the GAMMA_LUT blob property.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 35 +++++++++++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > index b79cda2f5531..f9aece78ca5f 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > @@ -21,6 +21,7 @@
-> >  #include <linux/of_platform.h>
-> >  #include <linux/wait.h>
-> >
-> > +#include "rcar_cmm.h"
-> >  #include "rcar_du_crtc.h"
-> >  #include "rcar_du_drv.h"
-> >  #include "rcar_du_encoder.h"
-> > @@ -287,6 +288,37 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
-> >   * Atomic Check and Update
-> >   */
-> >
-> > +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
-> > +					     struct drm_crtc_state *old_state)
-> > +{
-> > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> > +	struct rcar_cmm_config cmm_config = {};
-> > +
-> > +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
-> > +		return;
-> > +
-> > +	if (!crtc->state->gamma_lut) {
-> > +		cmm_config.lut.enable = false;
-> > +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> > +
-> > +		return;
-> > +	}
-> > +
-> > +	cmm_config.lut.enable = true;
-> > +	cmm_config.lut.table = (struct drm_color_lut *)
-> > +			       crtc->state->gamma_lut->data;
-> > +
-> > +	/* Set LUT table size to 0 if entries should not be updated. */
-> > +	if (!old_state->gamma_lut ||
-> > +	    old_state->gamma_lut->base.id != crtc->state->gamma_lut->base.id)
-> > +		cmm_config.lut.size = crtc->state->gamma_lut->length
-> > +				    / sizeof(cmm_config.lut.table[0]);
-> > +	else
-> > +		cmm_config.lut.size = 0;
-> > +
-> > +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> > +}
-> > +
-> >  static int rcar_du_atomic_check(struct drm_device *dev,
-> >  				struct drm_atomic_state *state)
-> >  {
-> > @@ -329,6 +361,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
-> >  			rcdu->dpad1_source = rcrtc->index;
-> >  	}
-> >
-> > +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
-> > +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
-> > +
->
-> I think this looks good overall, but I wonder if we couldn't simplify
-> the CMM driver suspend/resume and LUT caching due to config while not
-> enabled by handling it on the DU side. I have a rework on the commit
-> tail handler in progress, I'll think how this could be done. For now I
-> think you can leave it as is.
->
+Thank you!
 
-Does this mean I have your R-b tag ? :)
+> The merge commit is a bit non-standard:
+> 
+>   07f038a408fb: Merge LKMM and RCU commits
+> 
+> but clear enough IMHO. Usually we try to keep this format:
+> 
+>   6c06b66e957c: Merge branch 'X' into Y
+> 
+> even for internal merge commits.
 
-Thanks
-  j
+Please accept my apologies!  How about as shown below?  If this works
+for you, I will rebase my development commits on top this merge commit
+in order to make sure I don't revert back to my old format for next
+merge window.
 
-> >  	/* Apply the atomic update. */
-> >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
-> >  	drm_atomic_helper_commit_planes(dev, old_state,
->
-> --
-> Regards,
->
-> Laurent Pinchart
+Ah, speaking of reminding me...  There is likely to be one more small RCU
+commit requested by the RISC-V guys.  If testing and review goes well,
+I will send you a pull request for it by the middle of next week.
 
---3qbfvdcd762hsr7u
-Content-Type: application/pgp-signature; name="signature.asc"
+							Thanx, Paul
 
------BEGIN PGP SIGNATURE-----
+------------------------------------------------------------------------
 
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1e6r0ACgkQcjQGjxah
-VjwIoBAAnnFT2D1f5giY7bIuwi3DtCaXzY6/kEPbXXSqxroLRiNDRATdQXBA+HVr
-Z212k0ILVX4BkLQcksmd6ZXdac9TxS2y6/ejFF6474NE8LJ5TpkDQzSzgSMb1Y0F
-LrJOEw7xVImUIDt5Lo7tpFoyT3KdMRgYbpGYFDVRvhxGsApsmDz8KIA/QTrw+PTB
-P74B9kKM5V0FxMbSaTJotxiyqY5J1mQtwCNGdX2ud8rZc1AC1uhKVOxtYLTLPiIp
-PIOTWPimzIpVmFN7GLQDfObLARsrN6kfnqk3SZheOJCA7AG1YGoW8nza7iX/cWkl
-Dn+Tvs955Czre7c+z1HOAo/bc6Ch3Ejux7sMtkF1b26Pgvrb3u5GSiByf+4nnfk1
-uGox2IFORT0pfKHDnqDfQwVYD3vWrOBa6fZvsv1+rk/WldQrinYeDf9HPNG1KH+J
-AJBrEbKMmvjJvQNWNOGGdyuHngQtfMPNFQ980olWNhAj5Rgl44dnY0/kIgOXuEN+
-St996VyO46itGP7zygleeEtmWIFryzbDymhBTUaahhL0WUyUutNauZ6KZ7iwNQzY
-FVZzaq8ZtjRifFiwy8F924rJd+VdNwjDHaY8lmEmr18m3EWoL73sva3qn/AZ57cV
-CWzAE/kTGqiyxfMRSnIM5bU4GXMdpg5sBnWzHoftuLI/i5xjTLw=
-=IuZt
------END PGP SIGNATURE-----
+commit 864866f469d90bb7044a7e47b0168a2c143de4d4
+Merge: cfcdef5e3046 6738ff85c3ee
+Author: Paul E. McKenney <paulmck@linux.ibm.com>
+Date:   Thu Aug 22 12:09:20 2019 -0700
 
---3qbfvdcd762hsr7u--
+    Merge branch 'lkmm.2019.08.09a' into HEAD
+    
+    lkmm.2019.08.09a: Linux-kernel memory-model updates.
+
