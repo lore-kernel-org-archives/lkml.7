@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E45C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5724DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328092089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA732089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494133;
-	bh=9ci3Ug3FGCxgxpgteG3x+RIRrG59YRYacjNFOQOS1IQ=;
+	s=default; t=1566494139;
+	bh=sz3DWKeYsysDBtyRq4WhvVf/U3OY+yB8ZuYeKLkRamM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqETlvZIUqLB0uWnJ0wijJqduM7Qbm4jLePtyER+utFAkwIZ1tHKlg/lc56sqzRFs
-	 tr6IQWj5WlqlHGGN5THu/298FjW9pDzymh9nHer8A/rZ0CelxcOoaZsRImMGBYFE1P
-	 elU69/kJu7Yk12rMnmYRKqa4uFVOmMPmoBbNN3Fk=
+	b=wQFc7v7bAkonGv6aUJs2DwcQ3vAdH2v6OQWVGm92wutCqmKvYWYNfw6M5Y/XhW+TL
+	 QEIwGgyp96Lkkhgd1y8pqVo8t5CppqZ3elvtaW8CwTcImMf8ZD5Lf45bD2qod8uFi5
+	 DLOpsfcXd/j7+beeAYt8y2YaZZV9hWxgdmLTSIds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391176AbfHVRPb (ORCPT
+        id S2391185AbfHVRPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:15:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58464 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390473AbfHVRIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:43 -0400
+        id S2390459AbfHVRIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:42 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7EB523429;
-        Thu, 22 Aug 2019 17:08:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EBED233FC;
+        Thu, 22 Aug 2019 17:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493723;
-        bh=9ci3Ug3FGCxgxpgteG3x+RIRrG59YRYacjNFOQOS1IQ=;
+        s=default; t=1566493721;
+        bh=sz3DWKeYsysDBtyRq4WhvVf/U3OY+yB8ZuYeKLkRamM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vSdQaFVxsfbROkn9cGx31uMAuu75FEAJELMUKgAl9yZL6CkVZ3MyzCHnqO4G5QhYt
-         ECJa6vvcJKDfxtxf0Rkd9g6XBmY6HBxXQWraiSxOZ9MqnCKQouZkO5g8T8YQQVsRcZ
-         ETmzKAZEklOZcJB1exIXVOCFDRqqWUZBmtSrhl30=
+        b=mZ+m2DiVsCJD46FRxkSs8wBjHr4IzoOH7QgvLcE9N89YgfHL8/StCbvBnTGsGO42D
+         08FKA0k1/DTqU6UJAczH+c7tn77luJ1jNK8gC1Uz7cUI+Cc+XDXrKUcBbzZnvgSPn0
+         RoVFt7k9VMgUEUYlHwykVvu0x5HSbrIs8GyIg8co=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
-        Doug Ledford <dledford@redhat.com>,
+Cc:     Vince Weaver <vincent.weaver@maine.edu>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 053/135] RDMA/qedr: Fix the hca_type and hca_rev returned in device attributes
-Date:   Thu, 22 Aug 2019 13:06:49 -0400
-Message-Id: <20190822170811.13303-54-sashal@kernel.org>
+Subject: [PATCH 5.2 051/135] perf header: Fix divide by zero error if f_header.attr_size==0
+Date:   Thu, 22 Aug 2019 13:06:47 -0400
+Message-Id: <20190822170811.13303-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -65,49 +69,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: Vince Weaver <vincent.weaver@maine.edu>
 
-[ Upstream commit 15fe6a8dcc3b48358c28e17b485fc837f9605ec4 ]
+[ Upstream commit 7622236ceb167aa3857395f9bdaf871442aa467e ]
 
-There was a place holder for hca_type and vendor was returned
-in hca_rev. Fix the hca_rev to return the hw revision and fix
-the hca_type to return an informative string representing the
-hca.
+So I have been having lots of trouble with hand-crafted perf.data files
+causing segfaults and the like, so I have started fuzzing the perf tool.
 
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Link: https://lore.kernel.org/r/20190728111338.21930-1-michal.kalderon@marvell.com
-Signed-off-by: Doug Ledford <dledford@redhat.com>
+First issue found:
+
+If f_header.attr_size is 0 in the perf.data file, then perf will crash
+with a divide-by-zero error.
+
+Committer note:
+
+Added a pr_err() to tell the user why the command failed.
+
+Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907231100440.14532@macbook-air
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/qedr/main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tools/perf/util/header.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/infiniband/hw/qedr/main.c b/drivers/infiniband/hw/qedr/main.c
-index 083c2c00a8e91..dfdd1e16de7f5 100644
---- a/drivers/infiniband/hw/qedr/main.c
-+++ b/drivers/infiniband/hw/qedr/main.c
-@@ -125,14 +125,20 @@ static ssize_t hw_rev_show(struct device *device, struct device_attribute *attr,
- 	struct qedr_dev *dev =
- 		rdma_device_to_drv_device(device, struct qedr_dev, ibdev);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index e84b70be3fc11..cab9ed6acf35a 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3478,6 +3478,13 @@ int perf_session__read_header(struct perf_session *session)
+ 			   data->file.path);
+ 	}
  
--	return scnprintf(buf, PAGE_SIZE, "0x%x\n", dev->pdev->vendor);
-+	return scnprintf(buf, PAGE_SIZE, "0x%x\n", dev->attr.hw_ver);
- }
- static DEVICE_ATTR_RO(hw_rev);
- 
- static ssize_t hca_type_show(struct device *device,
- 			     struct device_attribute *attr, char *buf)
- {
--	return scnprintf(buf, PAGE_SIZE, "%s\n", "HCA_TYPE_TO_SET");
-+	struct qedr_dev *dev =
-+		rdma_device_to_drv_device(device, struct qedr_dev, ibdev);
++	if (f_header.attr_size == 0) {
++		pr_err("ERROR: The %s file's attr size field is 0 which is unexpected.\n"
++		       "Was the 'perf record' command properly terminated?\n",
++		       data->file.path);
++		return -EINVAL;
++	}
 +
-+	return scnprintf(buf, PAGE_SIZE, "FastLinQ QL%x %s\n",
-+			 dev->pdev->device,
-+			 rdma_protocol_iwarp(&dev->ibdev, 1) ?
-+			 "iWARP" : "RoCE");
- }
- static DEVICE_ATTR_RO(hca_type);
+ 	nr_attrs = f_header.attrs.size / f_header.attr_size;
+ 	lseek(fd, f_header.attrs.offset, SEEK_SET);
  
 -- 
 2.20.1
