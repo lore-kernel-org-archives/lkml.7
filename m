@@ -2,104 +2,141 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4EC9C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F75C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8372339F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0EFE2339F
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 20:00:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sr9LjJuS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733287AbfHVUAb (ORCPT
+        id S2389531AbfHVUAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 16:00:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59026 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731648AbfHVUAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 16:00:31 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EB92E3175283;
-        Thu, 22 Aug 2019 20:00:30 +0000 (UTC)
-Received: from treble (ovpn-121-55.rdu2.redhat.com [10.10.121.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D43B419C5B;
-        Thu, 22 Aug 2019 20:00:29 +0000 (UTC)
-Date:   Thu, 22 Aug 2019 15:00:27 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Raphael Gault <raphael.gault@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com,
-        julien.thierry.kdev@gmail.com, raph.gault+kdev@gmail.com
-Subject: Re: [RFC v4 03/18] objtool: Move registers and control flow to
- arch-dependent code
-Message-ID: <20190822200027.e4oidncgyj5oq7to@treble>
-References: <20190816122403.14994-1-raphael.gault@arm.com>
- <20190816122403.14994-4-raphael.gault@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190816122403.14994-4-raphael.gault@arm.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 22 Aug 2019 20:00:31 +0000 (UTC)
+        Thu, 22 Aug 2019 16:00:38 -0400
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:49091 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733297AbfHVUAg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 16:00:36 -0400
+Received: by mail-vk1-f201.google.com with SMTP id l3so2754565vkb.15
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 13:00:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=q2xEM4ZZIH60IhHUp/Tsrc3BwYRYS3HENwO9UK8ZY8A=;
+        b=sr9LjJuS+htHRlolM9YkWocHcNmySO3oWOJUlCW5vIRDBoMd6wQCLTBGuwEuqsC2Ur
+         Wma8aSSiAtzW0x3pzUQrZAkO2xN5hc6iK2purEAarL8Pn57u85rUGnZ4Z5Kb5c6wmko8
+         osjWvJYlNjDc82qCar5zR3/Yiffmj2juupyRjK82d70b2Vtm5UKfkHcqRuxyUwoL08nl
+         yMNbpjqkol5SNc04oi+ZOGu7nXeE9PZd/JN5LU+cmK/4JYzpGnfGv8H3JvOEfXDlFveS
+         l96DKLspK6+yW+KbyQCD+rP6J3xGnoD3UDJzgmrdUG2SbU8ICA3jNFDo6aBuqAtGrAVo
+         OBPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=q2xEM4ZZIH60IhHUp/Tsrc3BwYRYS3HENwO9UK8ZY8A=;
+        b=L+F+dKgdyr1Bho6VAXTjaZ66XeuXdKFpHSo2GMapAK/yH07FEWVc7qnf2UsrJvSRCt
+         O8Um5udK44NOvpoOc3wQmQv5TG3jWKcQDBu32EN9Q3/gZ0DMAj4K6m0kk2FQX3iFw+kI
+         fCC2a/Xx6aI7EM2y4xx1MmB3IjdwcmQqRl7Uw3ZDyTDvkMEhWKA2SO8uXt1pjEAcFKeO
+         53LUER5+jLFTEhWaEdOAghP5zUF1+GOYtjLcFyxEFwthQzJa9ySqKhsnNOVSa2kQwiLk
+         GZVgzqzoiDMHOWFzlHOBR3eE8/eYr4lRqZ/IOtWj8kUymCTMcu7Y+ORq2Qn5F+3KCvZh
+         E8Ug==
+X-Gm-Message-State: APjAAAUn3s6w72IXeupd0cp5WS6B7K+UPav0RGtVGl0c1XMi0uY4PtvC
+        MNlClGl/TKoVaWx/C2IwZlGQfE5UCd0=
+X-Google-Smtp-Source: APXvYqwgnS+IPiPPbFOL3AM9ADOjTTbzmen8VHt2C1prErTvsrLAN7pIppKf4R1EZoMqfkOXMdHZEamKoYo=
+X-Received: by 2002:a67:fb90:: with SMTP id n16mr560113vsr.7.1566504034917;
+ Thu, 22 Aug 2019 13:00:34 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 13:00:28 -0700
+Message-Id: <20190822200030.141272-1-khazhy@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+Subject: [PATCH v2 1/3] fuse: on 64-bit store time in d_fsdata directly
+From:   Khazhismel Kumykov <khazhy@google.com>
+To:     miklos@szeredi.hu
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shakeelb@google.com, Khazhismel Kumykov <khazhy@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 01:23:48PM +0100, Raphael Gault wrote:
-> The control flow information and register macro definitions were based on
-> the x86_64 architecture but should be abstract so that each architecture
-> can define the correct values for the registers, especially the registers
-> related to the stack frame (Frame Pointer, Stack Pointer and possibly
-> Return Address).
-> 
-> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-> ---
->  tools/objtool/arch/x86/include/arch_special.h | 36 +++++++++++++++++++
->  tools/objtool/{ => arch/x86/include}/cfi.h    |  0
->  tools/objtool/check.h                         |  1 +
->  tools/objtool/special.c                       | 19 +---------
->  4 files changed, 38 insertions(+), 18 deletions(-)
->  create mode 100644 tools/objtool/arch/x86/include/arch_special.h
->  rename tools/objtool/{ => arch/x86/include}/cfi.h (100%)
-> 
-> diff --git a/tools/objtool/arch/x86/include/arch_special.h b/tools/objtool/arch/x86/include/arch_special.h
-> new file mode 100644
-> index 000000000000..424ce47013e3
-> --- /dev/null
-> +++ b/tools/objtool/arch/x86/include/arch_special.h
+Implements the optimization noted in f75fdf22b0a8 ("fuse: don't use
+->d_time"), as the additional memory can be significant. (In particular,
+on SLAB configurations this 8-byte alloc becomes 32 bytes). Per-dentry,
+this can consume significant memory.
 
-The arch in the filename is redundant.  It would be a bit nicer if it
-were named "special.h" but I guess that would conflict with the non-arch
-special.h, unless we put non-arch headers and arch headers in separate
-namespaces somehow.  Maybe it's ok for now unless anybody has a better
-idea.
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+---
+ fs/fuse/dir.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-> @@ -0,0 +1,36 @@
-> +/*
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version 2
-> + * of the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-
-Instead of the above can you use the SPDX identifier?
-
-/* SPDX-License-Identifier: GPL-2.0-or-later */
-
-And the same comment for the other headers in the patch set.
-
+diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+index dd0f64f7bc06..f9c59a296568 100644
+--- a/fs/fuse/dir.c
++++ b/fs/fuse/dir.c
+@@ -24,6 +24,18 @@ static void fuse_advise_use_readdirplus(struct inode *dir)
+ 	set_bit(FUSE_I_ADVISE_RDPLUS, &fi->state);
+ }
+ 
++#if BITS_PER_LONG >= 64
++static inline void fuse_dentry_settime(struct dentry *entry, u64 time)
++{
++	entry->d_fsdata = (void *) time;
++}
++
++static inline u64 fuse_dentry_time(struct dentry *entry)
++{
++	return (u64)entry->d_fsdata;
++}
++
++#else
+ union fuse_dentry {
+ 	u64 time;
+ 	struct rcu_head rcu;
+@@ -38,6 +50,7 @@ static inline u64 fuse_dentry_time(struct dentry *entry)
+ {
+ 	return ((union fuse_dentry *) entry->d_fsdata)->time;
+ }
++#endif
+ 
+ /*
+  * FUSE caches dentries and attributes with separate timeout.  The
+@@ -242,6 +255,7 @@ static int fuse_dentry_revalidate(struct dentry *entry, unsigned int flags)
+ 	goto out;
+ }
+ 
++#if BITS_PER_LONG < 64
+ static int fuse_dentry_init(struct dentry *dentry)
+ {
+ 	dentry->d_fsdata = kzalloc(sizeof(union fuse_dentry), GFP_KERNEL);
+@@ -254,16 +268,21 @@ static void fuse_dentry_release(struct dentry *dentry)
+ 
+ 	kfree_rcu(fd, rcu);
+ }
++#endif
+ 
+ const struct dentry_operations fuse_dentry_operations = {
+ 	.d_revalidate	= fuse_dentry_revalidate,
++#if BITS_PER_LONG < 64
+ 	.d_init		= fuse_dentry_init,
+ 	.d_release	= fuse_dentry_release,
++#endif
+ };
+ 
+ const struct dentry_operations fuse_root_dentry_operations = {
++#if BITS_PER_LONG < 64
+ 	.d_init		= fuse_dentry_init,
+ 	.d_release	= fuse_dentry_release,
++#endif
+ };
+ 
+ int fuse_valid_type(int m)
 -- 
-Josh
+2.23.0.187.g17f5b7556c-goog
+
