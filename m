@@ -2,156 +2,106 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656FCC3A59D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09912C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29EA12342E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDEFD2342E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 08:29:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="RUtygxMJ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dU9mhAA/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732359AbfHVI1k (ORCPT
+        id S1732362AbfHVI3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 04:27:40 -0400
-Received: from mail-eopbgr720071.outbound.protection.outlook.com ([40.107.72.71]:55632
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732346AbfHVI1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 04:27:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EXfTr132TZ0D0FdInuWws2a4RIiQ3Pq5vkDD5um7MeT4+knvRm9wRbZIIAp07AeiOmIn1q+zBxy+EmA9U7poTagkwaAALiWH28lL7WXrujJjpwiqPcblb2WKPnEfbPJEfJOP7k9efuuoB67sM8WxIv6AvqA0IBAsP4hNDEdClySa9s3wSEC3kjNNBRsYdV1Z7y4G3bQ6x0xfpEt7BFEbJjCpzZEtY+OjWG80BtpZhL7ulrZfEc3n5Aj83JicT8VSmt9OK77svAkl14Jd1RzpBCfaT9tyvENxm2M7xoXNy35i8DZl6TFMlp56ijIlLaRiHrBs4tdP52SPRMZTHG5hJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fcOgSEHbhWyj1ZoJs6Im8xbZNuXWELSDYSvabHCDzLg=;
- b=oa3GJwXNjJ3PIi84JHU63jCH1wPKN4736UYyox2QQGZb+5dnbpYoFotmLGj30tU9PVmnNK6Ky4KIQ+EFZCfVcYZhvAg8pzwmKDQWj1PzCxTfU50d258ONIOd0Wp8iZDUtUUtc9isSQrRtRG0CKH3wSJy1823QRQN14OXUrLjz1N2dZSZOAnWM4EIn5HgRTvZgykXEtMGQarNUOjR4poPaNihB+6Ug/0wLkS2FGbAKvSznOXWzFZP4d24PpnfYSQsbiL9QQsZ8jzHpQfKdDcA+VZ2vKs3Bn0f4T33OuLUwypcAFaTXhcB7cUi/Z3yqNRXhGeCDHt0TsBEXP2K35pg2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=oracle.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fcOgSEHbhWyj1ZoJs6Im8xbZNuXWELSDYSvabHCDzLg=;
- b=RUtygxMJvb0MJ3FDIovpq5SiHjUScioWzHzmDDrS1NweAUnOtTN7MAgs0M9GOOlLteGvdyYOZZVgrH4qA9jsuvk1S4oKd9R+WM0mWIshhTnoygS8S8is0t1WfNHlfW843gjt9K61KLw6Ub2FfY1OgLtuXdZuhgv9fb5E9tQ6+4A=
-Received: from BL0PR02CA0070.namprd02.prod.outlook.com (52.132.27.47) by
- DM6PR02MB5306.namprd02.prod.outlook.com (20.176.116.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Thu, 22 Aug 2019 08:27:35 +0000
-Received: from BL2NAM02FT021.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::206) by BL0PR02CA0070.outlook.office365.com
- (2603:10b6:207:3d::47) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2178.18 via Frontend
- Transport; Thu, 22 Aug 2019 08:27:35 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT021.mail.protection.outlook.com (10.152.77.158) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2199.13
- via Frontend Transport; Thu, 22 Aug 2019 08:27:34 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1i0iRS-0004yQ-8j; Thu, 22 Aug 2019 01:27:34 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1i0iRN-0006lk-5Q; Thu, 22 Aug 2019 01:27:29 -0700
-Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x7M8RNBS020312;
-        Thu, 22 Aug 2019 01:27:23 -0700
-Received: from [172.30.17.116]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1i0iRG-0006hj-Ol; Thu, 22 Aug 2019 01:27:22 -0700
-Subject: Re: [PATCH 4/4] misc: xilinx_sdfec: Prevent integer overflow in
- xsdfec_table_write()
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thu, 22 Aug 2019 04:29:12 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56386 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731051AbfHVI3L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 04:29:11 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7M8T2Ge082986;
+        Thu, 22 Aug 2019 08:29:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=ESxl8CBY1GOljdugvc2JxeIFo2luM3a4IAGiMVGl4Xo=;
+ b=dU9mhAA/VbEAqBez6N08RYpOTLCHYvwhusgL/cLHEkuZLx1YT7eS3hc+Hx4PIgwcqGK2
+ xd+b4h8D3sJg15xC1qElgD2boCaPPMYgdSm3+oI2cuhWwvbSkjgFnStTfk2UEHqtUA7e
+ u6LnKxQrobXBuI/LyWIC6wViCLbUwuf2/mWZXDg5G4oG9BXmpNqQwnrc9Lavlc5vvPLv
+ IykmyK/Xxks9l34fZ/ur8oj6lTL8z3M8mGmHcwc4St4aVwL7R1fY8JfmCQb915C7IhRG
+ pDrA1fCDA0zUThwpYkeALqAQzs7sxeqqWtT0W7O9JcWRWBIvhfnz7jY/bYLlpVuNxciK IA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2ue90tuv3t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 08:29:02 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7M8Sul5103153;
+        Thu, 22 Aug 2019 08:29:01 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2uh2q5ma4g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 08:29:01 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x7M8Sceb029421;
+        Thu, 22 Aug 2019 08:28:38 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 22 Aug 2019 01:28:38 -0700
+Date:   Thu, 22 Aug 2019 11:28:31 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Simek <michal.simek@xilinx.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         kernel-janitors@vger.kernel.org
-References: <20190821071122.GD26957@mwanda>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <ef4d7882-db4a-589a-2aa5-2e329e80fa45@xilinx.com>
-Date:   Thu, 22 Aug 2019 10:27:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: [PATCH 1/4] misc: xilinx_sdfec: Fix a couple small information
+ leaks
+Message-ID: <20190822082831.GH3964@kadam>
+References: <20190821070606.GA26957@mwanda>
+ <58e9a151-3d92-c730-eea6-5cfde90934a4@xilinx.com>
 MIME-Version: 1.0
-In-Reply-To: <20190821071122.GD26957@mwanda>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(39860400002)(346002)(2980300002)(199004)(189003)(36756003)(50466002)(478600001)(36386004)(76176011)(126002)(426003)(486006)(44832011)(476003)(2616005)(11346002)(336012)(26005)(186003)(446003)(31686004)(23676004)(2486003)(52146003)(9786002)(8936002)(81166006)(81156014)(6246003)(8676002)(6636002)(229853002)(356004)(6666004)(31696002)(4326008)(14444005)(5660300002)(47776003)(65806001)(65956001)(58126008)(2906002)(54906003)(106002)(316002)(70586007)(230700001)(110136005)(70206006)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5306;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 892bd4aa-01ac-45eb-a7ae-08d726da958f
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(4709080)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:DM6PR02MB5306;
-X-MS-TrafficTypeDiagnostic: DM6PR02MB5306:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB5306FD9FE69878257591ADE0C6A50@DM6PR02MB5306.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
-X-Forefront-PRVS: 01371B902F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: KZv3ZO6cRYb5v6R0UaKOHA4bR5pzEY11Hv/kEQEfyzTekXGI6/jAeVb+UjopNi8WuGeSX1aHD1zZDL0MsYcHD3giU7d+9A5HcoCaL99bPICuKzeQDEbEktQEb9PAU1Heite/g4yBSz25pyYJ5kspF9JyMe9t0dxCO0ccqT4E7Ej5HHZ7Fr1vDPFp3bBEhdfRJYQQnoniELVO55SQJD8QP0dUhM56xCvI/m2XMO/v45j5zrBL45/jUQ/fIlizcBqlpyVhUkgkWtdDPQKaUK+ciYwdw3dC+xeKGcFD3dUXM+MVhXF5U+M2B9JOWKfnFsFZbpsWJb008qkTXNM4zKMIwuoliZiN7ci9q7qYGM/SP/HuV7pcI8ujFj7uLqhJlzdMAT2hhlN3SzRLXkIwlPpVmlR+J/7TK8aTx42zkXyYCdI=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Aug 2019 08:27:34.8411
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 892bd4aa-01ac-45eb-a7ae-08d726da958f
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5306
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <58e9a151-3d92-c730-eea6-5cfde90934a4@xilinx.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=854
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908220093
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9355 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=913 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908220093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21. 08. 19 9:11, Dan Carpenter wrote:
-> The checking here needs to handle integer overflows because "offset" and
-> "len" come from the user.
+On Thu, Aug 22, 2019 at 10:14:12AM +0200, Michal Simek wrote:
+> Hi Dan,
 > 
-> Fixes: 20ec628e8007 ("misc: xilinx_sdfec: Add ability to configure LDPC")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/misc/xilinx_sdfec.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> On 21. 08. 19 9:06, Dan Carpenter wrote:
+> > These structs have holes in them so we end up disclosing a few bytes of
+> > uninitialized stack data.
+> > 
+> > drivers/misc/xilinx_sdfec.c:305 xsdfec_get_status() warn: check that 'status' doesn't leak information (struct has a hole after 'activity')
+> > drivers/misc/xilinx_sdfec.c:449 xsdfec_get_turbo() warn: check that 'turbo_params' doesn't leak information (struct has a hole after 'scale')
 > 
-> diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-> index 3fc53d20abf3..0bf3bcc8e1ef 100644
-> --- a/drivers/misc/xilinx_sdfec.c
-> +++ b/drivers/misc/xilinx_sdfec.c
-> @@ -611,7 +611,9 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec, u32 offset,
->  	 * Writes that go beyond the length of
->  	 * Shared Scale(SC) table should fail
->  	 */
-> -	if ((XSDFEC_REG_WIDTH_JUMP * (offset + len)) > depth) {
-> +	if (offset > depth / XSDFEC_REG_WIDTH_JUMP ||
-> +	    len > depth / XSDFEC_REG_WIDTH_JUMP ||
-> +	    offset + len > depth / XSDFEC_REG_WIDTH_JUMP) {
->  		dev_dbg(xsdfec->dev, "Write exceeds SC table length");
->  		return -EINVAL;
->  	}
-> 
+> Who is generating these warnings? Is this any new GCC or different tool?
+> I see that 3byte padding but never seen these warnings.
 
-Reviewed-by: Michal Simek <michal.simek@xilinx.com>
+This is a Smatch check.
 
-Thanks,
-Michal
+regards,
+dan carpenter
+
