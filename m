@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AA3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1443C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79EDC233FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF6E233FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494261;
-	bh=CETeUUeoIoMR3nJaKjG7GDl4sZShMkNBO24VzL7gwts=;
+	s=default; t=1566494270;
+	bh=rK1OBrGuvm+R9TGIP4jYa7M0vAZtn4Rbs1nc+qSXYII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sW0bWbezdHp51+CJ6F2BppO0Rp/c4+3YGAH1MC0fGkv9BFXtp6uoc6FfUOil9lOYT
-	 qIQf2hI5yqYDBleiUGCFE/PPFsvUpP6nRhgrVcENRq7hNi1gvUCfHdoEC/3zvoKtMq
-	 gH1skEJZBy0VsU9YDYvZuZ4tLHldEOVbu9ylzeog=
+	b=a2EM+jaftr7yK6BPKJL5HxMMgzHCnOA0Dqm5GqSxT1vOWTeYjBrWF9wMwy/+mLU9A
+	 YZmz/nOz6zvH2n8pwdB3CjydJ2/ZWpjolJ/VEFqFbyRRYKZgKDuPtEKZ3Jj6Ho3idR
+	 jy1K/R3MGKupN9Ek9GMJpUiabdTkqRbZwYt8Z13w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390321AbfHVRI0 (ORCPT
+        id S2390310AbfHVRIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57774 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390272AbfHVRIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:21 -0400
+        id S1725857AbfHVRIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:18 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D73A23427;
-        Thu, 22 Aug 2019 17:08:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F266023407;
+        Thu, 22 Aug 2019 17:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493700;
-        bh=CETeUUeoIoMR3nJaKjG7GDl4sZShMkNBO24VzL7gwts=;
+        s=default; t=1566493697;
+        bh=rK1OBrGuvm+R9TGIP4jYa7M0vAZtn4Rbs1nc+qSXYII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0R4nCjbDkC+7ruEen8VolWi6ml8wCFhtGwOfsFmipal1ktok+Zz22SfKQcEApcU+Z
-         C6reAUi0+4fdW1YqHQashihv4QJluPldHSKQ4dFRt9WMHPFsDhznnROvwn6RChZbfz
-         tv0aZQnqTinGPgP+yvChIUihMLDWsQgFPKIoJ0sQ=
+        b=qpfH5gfC+GUz80zf2TqLhSEE0NgjbS7JtMwH/FNyDq7WNfpkMNFx3blxjA3AY+57i
+         Cn5ypQbrUWZEI0QSTfFgaCHogOTgdATQHp7D2WznxHAuwT4tAF7x+F/iKz5+Jx2oiT
+         qw0wrqWJF4c4yTomNLvcsFv3Lx5CrNMBD4fWkeZ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Dave Chinner <dchinner@redhat.com>,
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
         Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 011/135] mm, vmscan: do not special-case slab reclaim when watermarks are boosted
-Date:   Thu, 22 Aug 2019 13:06:07 -0400
-Message-Id: <20190822170811.13303-12-sashal@kernel.org>
+Subject: [PATCH 5.2 006/135] mm: mempolicy: handle vma with unmovable pages mapped correctly in mbind
+Date:   Thu, 22 Aug 2019 13:06:02 -0400
+Message-Id: <20190822170811.13303-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -69,287 +69,198 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mel Gorman <mgorman@techsingularity.net>
+From: Yang Shi <yang.shi@linux.alibaba.com>
 
-commit 28360f398778d7623a5ff8a8e90958c0d925e120 upstream.
+commit a53190a4aaa36494f4d7209fd1fcc6f2ee08e0e0 upstream.
 
-Dave Chinner reported a problem pointing a finger at commit 1c30844d2dfe
-("mm: reclaim small amounts of memory when an external fragmentation
-event occurs").
+When running syzkaller internally, we ran into the below bug on 4.9.x
+kernel:
 
-The report is extensive:
+  kernel BUG at mm/huge_memory.c:2124!
+  invalid opcode: 0000 [#1] SMP KASAN
+  CPU: 0 PID: 1518 Comm: syz-executor107 Not tainted 4.9.168+ #2
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.5.1 01/01/2011
+  task: ffff880067b34900 task.stack: ffff880068998000
+  RIP: split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
+  Call Trace:
+    split_huge_page include/linux/huge_mm.h:100 [inline]
+    queue_pages_pte_range+0x7e1/0x1480 mm/mempolicy.c:538
+    walk_pmd_range mm/pagewalk.c:50 [inline]
+    walk_pud_range mm/pagewalk.c:90 [inline]
+    walk_pgd_range mm/pagewalk.c:116 [inline]
+    __walk_page_range+0x44a/0xdb0 mm/pagewalk.c:208
+    walk_page_range+0x154/0x370 mm/pagewalk.c:285
+    queue_pages_range+0x115/0x150 mm/mempolicy.c:694
+    do_mbind mm/mempolicy.c:1241 [inline]
+    SYSC_mbind+0x3c3/0x1030 mm/mempolicy.c:1370
+    SyS_mbind+0x46/0x60 mm/mempolicy.c:1352
+    do_syscall_64+0x1d2/0x600 arch/x86/entry/common.c:282
+    entry_SYSCALL_64_after_swapgs+0x5d/0xdb
+  Code: c7 80 1c 02 00 e8 26 0a 76 01 <0f> 0b 48 c7 c7 40 46 45 84 e8 4c
+  RIP  [<ffffffff81895d6b>] split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
+   RSP <ffff88006899f980>
 
-  https://lore.kernel.org/linux-mm/20190807091858.2857-1-david@fromorbit.com/
+with the below test:
 
-and it's worth recording the most relevant parts (colorful language and
-typos included).
+  uint64_t r[1] = {0xffffffffffffffff};
 
-	When running a simple, steady state 4kB file creation test to
-	simulate extracting tarballs larger than memory full of small
-	files into the filesystem, I noticed that once memory fills up
-	the cache balance goes to hell.
+  int main(void)
+  {
+        syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
+                                intptr_t res = 0;
+        res = syscall(__NR_socket, 0x11, 3, 0x300);
+        if (res != -1)
+                r[0] = res;
+        *(uint32_t*)0x20000040 = 0x10000;
+        *(uint32_t*)0x20000044 = 1;
+        *(uint32_t*)0x20000048 = 0xc520;
+        *(uint32_t*)0x2000004c = 1;
+        syscall(__NR_setsockopt, r[0], 0x107, 0xd, 0x20000040, 0x10);
+        syscall(__NR_mmap, 0x20fed000, 0x10000, 0, 0x8811, r[0], 0);
+        *(uint64_t*)0x20000340 = 2;
+        syscall(__NR_mbind, 0x20ff9000, 0x4000, 0x4002, 0x20000340, 0x45d4, 3);
+        return 0;
+  }
 
-	The workload is creating one dirty cached inode for every dirty
-	page, both of which should require a single IO each to clean and
-	reclaim, and creation of inodes is throttled by the rate at which
-	dirty writeback runs at (via balance dirty pages). Hence the ingest
-	rate of new cached inodes and page cache pages is identical and
-	steady. As a result, memory reclaim should quickly find a steady
-	balance between page cache and inode caches.
+Actually the test does:
 
-	The moment memory fills, the page cache is reclaimed at a much
-	faster rate than the inode cache, and evidence suggests that
-	the inode cache shrinker is not being called when large batches
-	of pages are being reclaimed. In roughly the same time period
-	that it takes to fill memory with 50% pages and 50% slab caches,
-	memory reclaim reduces the page cache down to just dirty pages
-	and slab caches fill the entirety of memory.
+  mmap(0x20000000, 16777216, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x20000000
+  socket(AF_PACKET, SOCK_RAW, 768)        = 3
+  setsockopt(3, SOL_PACKET, PACKET_TX_RING, {block_size=65536, block_nr=1, frame_size=50464, frame_nr=1}, 16) = 0
+  mmap(0x20fed000, 65536, PROT_NONE, MAP_SHARED|MAP_FIXED|MAP_POPULATE|MAP_DENYWRITE, 3, 0) = 0x20fed000
+  mbind(..., MPOL_MF_STRICT|MPOL_MF_MOVE) = 0
 
-	The LRU is largely full of dirty pages, and we're getting spikes
-	of random writeback from memory reclaim so it's all going to shit.
-	Behaviour never recovers, the page cache remains pinned at just
-	dirty pages, and nothing I could tune would make any difference.
-	vfs_cache_pressure makes no difference - I would set it so high
-	it should trim the entire inode caches in a single pass, yet it
-	didn't do anything. It was clear from tracing and live telemetry
-	that the shrinkers were pretty much not running except when
-	there was absolutely no memory free at all, and then they did
-	the minimum necessary to free memory to make progress.
+The setsockopt() would allocate compound pages (16 pages in this test)
+for packet tx ring, then the mmap() would call packet_mmap() to map the
+pages into the user address space specified by the mmap() call.
 
-	So I went looking at the code, trying to find places where pages
-	got reclaimed and the shrinkers weren't called. There's only one
-	- kswapd doing boosted reclaim as per commit 1c30844d2dfe ("mm:
-	reclaim small amounts of memory when an external fragmentation
-	event occurs").
+When calling mbind(), it would scan the vma to queue the pages for
+migration to the new node.  It would split any huge page since 4.9
+doesn't support THP migration, however, the packet tx ring compound
+pages are not THP and even not movable.  So, the above bug is triggered.
 
-The watermark boosting introduced by the commit is triggered in response
-to an allocation "fragmentation event".  The boosting was not intended
-to target THP specifically and triggers even if THP is disabled.
-However, with Dave's perfectly reasonable workload, fragmentation events
-can be very common given the ratio of slab to page cache allocations so
-boosting remains active for long periods of time.
+However, the later kernel is not hit by this issue due to commit
+d44d363f6578 ("mm: don't assume anonymous pages have SwapBacked flag"),
+which just removes the PageSwapBacked check for a different reason.
 
-As high-order allocations might use compaction and compaction cannot
-move slab pages the decision was made in the commit to special-case
-kswapd when watermarks are boosted -- kswapd avoids reclaiming slab as
-reclaiming slab does not directly help compaction.
+But, there is a deeper issue.  According to the semantic of mbind(), it
+should return -EIO if MPOL_MF_MOVE or MPOL_MF_MOVE_ALL was specified and
+MPOL_MF_STRICT was also specified, but the kernel was unable to move all
+existing pages in the range.  The tx ring of the packet socket is
+definitely not movable, however, mbind() returns success for this case.
 
-As Dave notes, this decision means that slab can be artificially
-protected for long periods of time and messes up the balance with slab
-and page caches.
+Although the most socket file associates with non-movable pages, but XDP
+may have movable pages from gup.  So, it sounds not fine to just check
+the underlying file type of vma in vma_migratable().
 
-Removing the special casing can still indirectly help avoid
-fragmentation by avoiding fragmentation-causing events due to slab
-allocation as pages from a slab pageblock will have some slab objects
-freed.  Furthermore, with the special casing, reclaim behaviour is
-unpredictable as kswapd sometimes examines slab and sometimes does not
-in a manner that is tricky to tune or analyse.
+Change migrate_page_add() to check if the page is movable or not, if it
+is unmovable, just return -EIO.  But do not abort pte walk immediately,
+since there may be pages off LRU temporarily.  We should migrate other
+pages if MPOL_MF_MOVE* is specified.  Set has_unmovable flag if some
+paged could not be not moved, then return -EIO for mbind() eventually.
 
-This patch removes the special casing.  The downside is that this is not
-a universal performance win.  Some benchmarks that depend on the
-residency of data when rereading metadata may see a regression when slab
-reclaim is restored to its original behaviour.  Similarly, some
-benchmarks that only read-once or write-once may perform better when
-page reclaim is too aggressive.  The primary upside is that slab
-shrinker is less surprising (arguably more sane but that's a matter of
-opinion), behaves consistently regardless of the fragmentation state of
-the system and properly obeys VM sysctls.
+With this change the above test would return -EIO as expected.
 
-A fsmark benchmark configuration was constructed similar to what Dave
-reported and is codified by the mmtest configuration
-config-io-fsmark-small-file-stream.  It was evaluated on a 1-socket
-machine to avoid dealing with NUMA-related issues and the timing of
-reclaim.  The storage was an SSD Samsung Evo and a fresh trimmed XFS
-filesystem was used for the test data.
-
-This is not an exact replication of Dave's setup.  The configuration
-scales its parameters depending on the memory size of the SUT to behave
-similarly across machines.  The parameters mean the first sample
-reported by fs_mark is using 50% of RAM which will barely be throttled
-and look like a big outlier.  Dave used fake NUMA to have multiple
-kswapd instances which I didn't replicate.  Finally, the number of
-iterations differ from Dave's test as the target disk was not large
-enough.  While not identical, it should be representative.
-
-  fsmark
-                                     5.3.0-rc3              5.3.0-rc3
-                                       vanilla          shrinker-v1r1
-  Min       1-files/sec     4444.80 (   0.00%)     4765.60 (   7.22%)
-  1st-qrtle 1-files/sec     5005.10 (   0.00%)     5091.70 (   1.73%)
-  2nd-qrtle 1-files/sec     4917.80 (   0.00%)     4855.60 (  -1.26%)
-  3rd-qrtle 1-files/sec     4667.40 (   0.00%)     4831.20 (   3.51%)
-  Max-1     1-files/sec    11421.50 (   0.00%)     9999.30 ( -12.45%)
-  Max-5     1-files/sec    11421.50 (   0.00%)     9999.30 ( -12.45%)
-  Max-10    1-files/sec    11421.50 (   0.00%)     9999.30 ( -12.45%)
-  Max-90    1-files/sec     4649.60 (   0.00%)     4780.70 (   2.82%)
-  Max-95    1-files/sec     4491.00 (   0.00%)     4768.20 (   6.17%)
-  Max-99    1-files/sec     4491.00 (   0.00%)     4768.20 (   6.17%)
-  Max       1-files/sec    11421.50 (   0.00%)     9999.30 ( -12.45%)
-  Hmean     1-files/sec     5004.75 (   0.00%)     5075.96 (   1.42%)
-  Stddev    1-files/sec     1778.70 (   0.00%)     1369.66 (  23.00%)
-  CoeffVar  1-files/sec       33.70 (   0.00%)       26.05 (  22.71%)
-  BHmean-99 1-files/sec     5053.72 (   0.00%)     5101.52 (   0.95%)
-  BHmean-95 1-files/sec     5053.72 (   0.00%)     5101.52 (   0.95%)
-  BHmean-90 1-files/sec     5107.05 (   0.00%)     5131.41 (   0.48%)
-  BHmean-75 1-files/sec     5208.45 (   0.00%)     5206.68 (  -0.03%)
-  BHmean-50 1-files/sec     5405.53 (   0.00%)     5381.62 (  -0.44%)
-  BHmean-25 1-files/sec     6179.75 (   0.00%)     6095.14 (  -1.37%)
-
-                     5.3.0-rc3   5.3.0-rc3
-                       vanillashrinker-v1r1
-  Duration User         501.82      497.29
-  Duration System      4401.44     4424.08
-  Duration Elapsed     8124.76     8358.05
-
-This is showing a slight skew for the max result representing a large
-outlier for the 1st, 2nd and 3rd quartile are similar indicating that
-the bulk of the results show little difference.  Note that an earlier
-version of the fsmark configuration showed a regression but that
-included more samples taken while memory was still filling.
-
-Note that the elapsed time is higher.  Part of this is that the
-configuration included time to delete all the test files when the test
-completes -- the test automation handles the possibility of testing
-fsmark with multiple thread counts.  Without the patch, many of these
-objects would be memory resident which is part of what the patch is
-addressing.
-
-There are other important observations that justify the patch.
-
-1. With the vanilla kernel, the number of dirty pages in the system is
-   very low for much of the test. With this patch, dirty pages is
-   generally kept at 10% which matches vm.dirty_background_ratio which
-   is normal expected historical behaviour.
-
-2. With the vanilla kernel, the ratio of Slab/Pagecache is close to
-   0.95 for much of the test i.e. Slab is being left alone and
-   dominating memory consumption. With the patch applied, the ratio
-   varies between 0.35 and 0.45 with the bulk of the measured ratios
-   roughly half way between those values. This is a different balance to
-   what Dave reported but it was at least consistent.
-
-3. Slabs are scanned throughout the entire test with the patch applied.
-   The vanille kernel has periods with no scan activity and then
-   relatively massive spikes.
-
-4. Without the patch, kswapd scan rates are very variable. With the
-   patch, the scan rates remain quite steady.
-
-4. Overall vmstats are closer to normal expectations
-
-	                                5.3.0-rc3      5.3.0-rc3
-	                                  vanilla  shrinker-v1r1
-    Ops Direct pages scanned             99388.00      328410.00
-    Ops Kswapd pages scanned          45382917.00    33451026.00
-    Ops Kswapd pages reclaimed        30869570.00    25239655.00
-    Ops Direct pages reclaimed           74131.00        5830.00
-    Ops Kswapd efficiency %                 68.02          75.45
-    Ops Kswapd velocity                   5585.75        4002.25
-    Ops Page reclaim immediate         1179721.00      430927.00
-    Ops Slabs scanned                 62367361.00    73581394.00
-    Ops Direct inode steals               2103.00        1002.00
-    Ops Kswapd inode steals             570180.00     5183206.00
-
-	o Vanilla kernel is hitting direct reclaim more frequently,
-	  not very much in absolute terms but the fact the patch
-	  reduces it is interesting
-	o "Page reclaim immediate" in the vanilla kernel indicates
-	  dirty pages are being encountered at the tail of the LRU.
-	  This is generally bad and means in this case that the LRU
-	  is not long enough for dirty pages to be cleaned by the
-	  background flush in time. This is much reduced by the
-	  patch.
-	o With the patch, kswapd is reclaiming 10 times more slab
-	  pages than with the vanilla kernel. This is indicative
-	  of the watermark boosting over-protecting slab
-
-A more complete set of tests were run that were part of the basis for
-introducing boosting and while there are some differences, they are well
-within tolerances.
-
-Bottom line, the special casing kswapd to avoid slab behaviour is
-unpredictable and can lead to abnormal results for normal workloads.
-
-This patch restores the expected behaviour that slab and page cache is
-balanced consistently for a workload with a steady allocation ratio of
-slab/pagecache pages.  It also means that if there are workloads that
-favour the preservation of slab over pagecache that it can be tuned via
-vm.vfs_cache_pressure where as the vanilla kernel effectively ignores
-the parameter when boosting is active.
-
-Link: http://lkml.kernel.org/r/20190808182946.GM2739@techsingularity.net
-Fixes: 1c30844d2dfe ("mm: reclaim small amounts of memory when an external fragmentation event occurs")
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: <stable@vger.kernel.org>	[5.0+]
+[yang.shi@linux.alibaba.com: fix review comments from Vlastimil]
+  Link: http://lkml.kernel.org/r/1563556862-54056-3-git-send-email-yang.shi@linux.alibaba.com
+Link: http://lkml.kernel.org/r/1561162809-59140-3-git-send-email-yang.shi@linux.alibaba.com
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/vmscan.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+ mm/mempolicy.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 4ebf201523289..c8f58f5695a97 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -88,9 +88,6 @@ struct scan_control {
- 	/* Can pages be swapped as part of reclaim? */
- 	unsigned int may_swap:1;
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index a1a8f5630245d..ca3f443c8fc15 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -403,7 +403,7 @@ static const struct mempolicy_operations mpol_ops[MPOL_MAX] = {
+ 	},
+ };
  
--	/* e.g. boosted watermark reclaim leaves slabs alone */
--	unsigned int may_shrinkslab:1;
+-static void migrate_page_add(struct page *page, struct list_head *pagelist,
++static int migrate_page_add(struct page *page, struct list_head *pagelist,
+ 				unsigned long flags);
+ 
+ struct queue_pages {
+@@ -463,12 +463,11 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
+ 	flags = qp->flags;
+ 	/* go to thp migration */
+ 	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
+-		if (!vma_migratable(walk->vma)) {
++		if (!vma_migratable(walk->vma) ||
++		    migrate_page_add(page, qp->pagelist, flags)) {
+ 			ret = 1;
+ 			goto unlock;
+ 		}
 -
- 	/*
- 	 * Cgroups are not reclaimed below their configured memory.low,
- 	 * unless we threaten to OOM. If any cgroups are skipped due to
-@@ -2669,10 +2666,8 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
- 			shrink_node_memcg(pgdat, memcg, sc, &lru_pages);
- 			node_lru_pages += lru_pages;
+-		migrate_page_add(page, qp->pagelist, flags);
+ 	} else
+ 		ret = -EIO;
+ unlock:
+@@ -532,7 +531,14 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+ 				has_unmovable = true;
+ 				break;
+ 			}
+-			migrate_page_add(page, qp->pagelist, flags);
++
++			/*
++			 * Do not abort immediately since there may be
++			 * temporary off LRU pages in the range.  Still
++			 * need migrate other LRU pages.
++			 */
++			if (migrate_page_add(page, qp->pagelist, flags))
++				has_unmovable = true;
+ 		} else
+ 			break;
+ 	}
+@@ -961,7 +967,7 @@ static long do_get_mempolicy(int *policy, nodemask_t *nmask,
+ /*
+  * page migration, thp tail pages can be passed.
+  */
+-static void migrate_page_add(struct page *page, struct list_head *pagelist,
++static int migrate_page_add(struct page *page, struct list_head *pagelist,
+ 				unsigned long flags)
+ {
+ 	struct page *head = compound_head(page);
+@@ -974,8 +980,19 @@ static void migrate_page_add(struct page *page, struct list_head *pagelist,
+ 			mod_node_page_state(page_pgdat(head),
+ 				NR_ISOLATED_ANON + page_is_file_cache(head),
+ 				hpage_nr_pages(head));
++		} else if (flags & MPOL_MF_STRICT) {
++			/*
++			 * Non-movable page may reach here.  And, there may be
++			 * temporary off LRU pages or non-LRU movable pages.
++			 * Treat them as unmovable pages since they can't be
++			 * isolated, so they can't be moved at the moment.  It
++			 * should return -EIO for this case too.
++			 */
++			return -EIO;
+ 		}
+ 	}
++
++	return 0;
+ }
  
--			if (sc->may_shrinkslab) {
--				shrink_slab(sc->gfp_mask, pgdat->node_id,
--				    memcg, sc->priority);
--			}
-+			shrink_slab(sc->gfp_mask, pgdat->node_id, memcg,
-+					sc->priority);
+ /* page allocation callback for NUMA node migration */
+@@ -1178,9 +1195,10 @@ static struct page *new_page(struct page *page, unsigned long start)
+ }
+ #else
  
- 			/* Record the group's reclaim efficiency */
- 			vmpressure(sc->gfp_mask, memcg, false,
-@@ -3149,7 +3144,6 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
- 		.may_writepage = !laptop_mode,
- 		.may_unmap = 1,
- 		.may_swap = 1,
--		.may_shrinkslab = 1,
- 	};
+-static void migrate_page_add(struct page *page, struct list_head *pagelist,
++static int migrate_page_add(struct page *page, struct list_head *pagelist,
+ 				unsigned long flags)
+ {
++	return -EIO;
+ }
  
- 	/*
-@@ -3191,7 +3185,6 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
- 		.may_unmap = 1,
- 		.reclaim_idx = MAX_NR_ZONES - 1,
- 		.may_swap = !noswap,
--		.may_shrinkslab = 1,
- 	};
- 	unsigned long lru_pages;
- 
-@@ -3236,7 +3229,6 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
- 		.may_writepage = !laptop_mode,
- 		.may_unmap = 1,
- 		.may_swap = may_swap,
--		.may_shrinkslab = 1,
- 	};
- 
- 	/*
-@@ -3545,7 +3537,6 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int classzone_idx)
- 		 */
- 		sc.may_writepage = !laptop_mode && !nr_boost_reclaim;
- 		sc.may_swap = !nr_boost_reclaim;
--		sc.may_shrinkslab = !nr_boost_reclaim;
- 
- 		/*
- 		 * Do some background aging of the anon list, to give
+ int do_migrate_pages(struct mm_struct *mm, const nodemask_t *from,
 -- 
 2.20.1
 
