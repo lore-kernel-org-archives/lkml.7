@@ -2,160 +2,112 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD23EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2D8C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4A02133F
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F12F23402
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 18:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1566498926;
+	bh=Vneswu6QGlnPMygTZfhEVf9r79CCbYyqXUQwTNVLbKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RMO2FvdjxKAWyN5yAIfMtSm8zzCILDC4V4tJ6dmGZl9l2ugKjAeG27Um3U3pP7A4+
+	 shPYXHlmuJE0/s3bdkFaoFp48ura9mHo6OnKkPNRjisz9OmmADFGhna5m3vRYHMmJd
+	 IJ4Y/6/m2OwEUt0yPq4MAaoYdf504Bp0hOtzWUmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390935AbfHVSdi (ORCPT
+        id S2390833AbfHVSfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 14:33:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51450 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730867AbfHVSdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 14:33:38 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C6C87C0546FE;
-        Thu, 22 Aug 2019 18:33:37 +0000 (UTC)
-Received: from malachite.bss.redhat.com (dhcp-10-20-1-11.bss.redhat.com [10.20.1.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5718A18517;
-        Thu, 22 Aug 2019 18:33:34 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Sasha Neftin <sasha.neftin@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] igb/igc: Don't warn on fatal read failures when the device is removed
-Date:   Thu, 22 Aug 2019 14:33:18 -0400
-Message-Id: <20190822183318.27634-1-lyude@redhat.com>
+        Thu, 22 Aug 2019 14:35:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54699 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731282AbfHVSfZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 14:35:25 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so6586835wme.4;
+        Thu, 22 Aug 2019 11:35:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/tUddt47UVuCta3mgJSc1hmEBY8bqXM8P4CnUZuuCDU=;
+        b=o5A2DoorUdMImwz2bgpGjaWYLpE/f0OiAeAvkRt2lokqDVI7YmdKBFGChmlAeE4Hq3
+         PuHxeidqdR3Hss5y3ruX1AnOfrNAJB+tu5zmuVg9jbqiAqCOQ+LV8emCoSZps0Rrycv6
+         gr0tvfiTnf30EdmwpROMrkLfZnOOvhUaM6an6QgyjimRd3GmBrvh5/+Pub3k9fcFJE6r
+         hAolXadODHwlNO5XbC4jSkNCTLEPFlvojt21+E+Djb7kWx5FojHGX5JWV30XXHtKh5zy
+         URLCF4VB6p2mKGVd5Ktt3YVzFiPGCbB8ZZF4dbrAc9rN+4gyTELGe60pLAYFEj19WLfp
+         E8GA==
+X-Gm-Message-State: APjAAAWhWhw9w64SZmcuG07YvTeUr34LHLo/se9GrwxPKE2Qza4ANj2H
+        IL+aJjuMqmGev1gaePgfqgU=
+X-Google-Smtp-Source: APXvYqzKy1puvqnfw8PmDe+xf37FAc+l4js3Rg5NT3wefojKXtpdPyZtRzBlLGggVQtM3iApxVZLJw==
+X-Received: by 2002:a1c:9ec5:: with SMTP id h188mr501768wme.176.1566498922468;
+        Thu, 22 Aug 2019 11:35:22 -0700 (PDT)
+Received: from kozik-lap ([194.230.147.11])
+        by smtp.googlemail.com with ESMTPSA id f197sm819174wme.22.2019.08.22.11.35.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 22 Aug 2019 11:35:21 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 20:35:19 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        arm@kernel.org, soc@kernel.org
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL 1/3] soc: samsung: Exynos for v5.4
+Message-ID: <20190822183519.GA23735@kozik-lap>
+References: <20190816163042.6604-1-krzk@kernel.org>
+ <CAJKOXPcgZ2_ofZyAeTSxALkALaP-SFNfvNmNPYSPyLzuhpGZ0w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 22 Aug 2019 18:33:37 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAJKOXPcgZ2_ofZyAeTSxALkALaP-SFNfvNmNPYSPyLzuhpGZ0w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fatal read errors are worth warning about, unless of course the device
-was just unplugged from the machine - something that's a rather normal
-occurence when the igb/igc adapter is located on a Thunderbolt dock. So,
-let's only WARN() if there's a fatal read error while the device is
-still present.
+On Wed, Aug 21, 2019 at 09:51:09AM +0200, Krzysztof Kozlowski wrote:
+> On Fri, 16 Aug 2019 at 18:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
+> >
+> >   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
+> >
+> > are available in the Git repository at:
+> >
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-5.4
+> >
+> > for you to fetch changes up to 40d8aff614f71ab3cab20785b4f213e3802d4e87:
+> >
+> >   soc: samsung: chipid: Convert exynos-chipid driver to use the regmap API (2019-08-15 20:25:25 +0200)
+> >
+> > ----------------------------------------------------------------
+> > Samsung soc drivers changes for v5.4
+> >
+> > Add Exynos Chipid driver for identification of product IDs and SoC
+> > revisions.  The driver also exposes chipid regmap, later to be used by
+> > Exynos Adaptive Supply Voltage driver (adjusting voltages to different
+> > revisions of same SoC).
+> 
+> It turns out that it brings troubles (code is executed on every
+> platform polluting logs because it is an initcall, not a driver) so
+> Sylwester (submitter) asked to skip the submission.
+> 
+> Please ignore the pull request.
 
-This fixes the following WARN splat that's been appearing whenever I
-unplug my Caldigit TS3 Thunderbolt dock from my laptop:
+I talked with Sylwester and Bartlomiej who contributed the chipid driver
+and they provided small incremental fixes. The driver is still useful
+and in the future it will be expanded towards AVS. Therefore please pull
+it or optionally wait a week and I will send incremental pull request
+with fixes.
 
-  igb 0000:09:00.0 enp9s0: PCIe link lost
-  ------------[ cut here ]------------
-  igb: Failed to read reg 0x18!
-  WARNING: CPU: 7 PID: 516 at
-  drivers/net/ethernet/intel/igb/igb_main.c:756 igb_rd32+0x57/0x6a [igb]
-  Modules linked in: igb dca thunderbolt fuse vfat fat elan_i2c mei_wdt
-  mei_hdcp i915 wmi_bmof intel_wmi_thunderbolt iTCO_wdt
-  iTCO_vendor_support x86_pkg_temp_thermal intel_powerclamp joydev
-  coretemp crct10dif_pclmul crc32_pclmul i2c_algo_bit ghash_clmulni_intel
-  intel_cstate drm_kms_helper intel_uncore syscopyarea sysfillrect
-  sysimgblt fb_sys_fops intel_rapl_perf intel_xhci_usb_role_switch mei_me
-  drm roles idma64 i2c_i801 ucsi_acpi typec_ucsi mei intel_lpss_pci
-  processor_thermal_device typec intel_pch_thermal intel_soc_dts_iosf
-  intel_lpss int3403_thermal thinkpad_acpi wmi int340x_thermal_zone
-  ledtrig_audio int3400_thermal acpi_thermal_rel acpi_pad video
-  pcc_cpufreq ip_tables serio_raw nvme nvme_core crc32c_intel uas
-  usb_storage e1000e i2c_dev
-  CPU: 7 PID: 516 Comm: kworker/u16:3 Not tainted 5.2.0-rc1Lyude-Test+ #14
-  Hardware name: LENOVO 20L8S2N800/20L8S2N800, BIOS N22ET35W (1.12 ) 04/09/2018
-  Workqueue: kacpi_hotplug acpi_hotplug_work_fn
-  RIP: 0010:igb_rd32+0x57/0x6a [igb]
-  Code: 87 b8 fc ff ff 48 c7 47 08 00 00 00 00 48 c7 c6 33 42 9b c0 4c 89
-  c7 e8 47 45 cd dc 89 ee 48 c7 c7 43 42 9b c0 e8 c1 94 71 dc <0f> 0b eb
-  08 8b 00 ff c0 75 b0 eb c8 44 89 e0 5d 41 5c c3 0f 1f 44
-  RSP: 0018:ffffba5801cf7c48 EFLAGS: 00010286
-  RAX: 0000000000000000 RBX: ffff9e7956608840 RCX: 0000000000000007
-  RDX: 0000000000000000 RSI: ffffba5801cf7b24 RDI: ffff9e795e3d6a00
-  RBP: 0000000000000018 R08: 000000009dec4a01 R09: ffffffff9e61018f
-  R10: 0000000000000000 R11: ffffba5801cf7ae5 R12: 00000000ffffffff
-  R13: ffff9e7956608840 R14: ffff9e795a6f10b0 R15: 0000000000000000
-  FS:  0000000000000000(0000) GS:ffff9e795e3c0000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000564317bc4088 CR3: 000000010e00a006 CR4: 00000000003606e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   igb_release_hw_control+0x1a/0x30 [igb]
-   igb_remove+0xc5/0x14b [igb]
-   pci_device_remove+0x3b/0x93
-   device_release_driver_internal+0xd7/0x17e
-   pci_stop_bus_device+0x36/0x75
-   pci_stop_bus_device+0x66/0x75
-   pci_stop_bus_device+0x66/0x75
-   pci_stop_and_remove_bus_device+0xf/0x19
-   trim_stale_devices+0xc5/0x13a
-   ? __pm_runtime_resume+0x6e/0x7b
-   trim_stale_devices+0x103/0x13a
-   ? __pm_runtime_resume+0x6e/0x7b
-   trim_stale_devices+0x103/0x13a
-   acpiphp_check_bridge+0xd8/0xf5
-   acpiphp_hotplug_notify+0xf7/0x14b
-   ? acpiphp_check_bridge+0xf5/0xf5
-   acpi_device_hotplug+0x357/0x3b5
-   acpi_hotplug_work_fn+0x1a/0x23
-   process_one_work+0x1a7/0x296
-   worker_thread+0x1a8/0x24c
-   ? process_scheduled_works+0x2c/0x2c
-   kthread+0xe9/0xee
-   ? kthread_destroy_worker+0x41/0x41
-   ret_from_fork+0x35/0x40
-  ---[ end trace 252bf10352c63d22 ]---
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: 47e16692b26b ("igb/igc: warn when fatal read failure happens")
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Sasha Neftin <sasha.neftin@intel.com>
-Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org
----
- drivers/net/ethernet/intel/igb/igb_main.c | 3 ++-
- drivers/net/ethernet/intel/igc/igc_main.c | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index e5b7e638df28..1a7f7cd28df9 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -753,7 +753,8 @@ u32 igb_rd32(struct e1000_hw *hw, u32 reg)
- 		struct net_device *netdev = igb->netdev;
- 		hw->hw_addr = NULL;
- 		netdev_err(netdev, "PCIe link lost\n");
--		WARN(1, "igb: Failed to read reg 0x%x!\n", reg);
-+		WARN(pci_device_is_present(igb->pdev),
-+		     "igb: Failed to read reg 0x%x!\n", reg);
- 	}
- 
- 	return value;
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 28072b9aa932..f873a4b35eaf 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -3934,7 +3934,8 @@ u32 igc_rd32(struct igc_hw *hw, u32 reg)
- 		hw->hw_addr = NULL;
- 		netif_device_detach(netdev);
- 		netdev_err(netdev, "PCIe link lost, device now detached\n");
--		WARN(1, "igc: Failed to read reg 0x%x!\n", reg);
-+		WARN(pci_device_is_present(igc->pdev),
-+		     "igc: Failed to read reg 0x%x!\n", reg);
- 	}
- 
- 	return value;
--- 
-2.21.0
+Best regards,
+Krzysztof
 
