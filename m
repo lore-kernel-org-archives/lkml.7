@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5965C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F27C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC7820870
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA4720870
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566495601;
-	bh=X42x0xK8Yv7JFdRdm38qmeC5UC56ygSVuWr4FXYQzcs=;
+	s=default; t=1566495607;
+	bh=Zn66wKxlgl4PKInOyortwhBLQxo9D77ZuDpoSaETRPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IKFYl9KEOJ/l+sXERbKOpvMDca04y392d61GUk8zLem3UcuFM0JpYYU07vJfefj9d
-	 kLxU/Yki1aoq6OMgfVxXFq+cckS/hepOa+aWI/iAMvjUKmjfGnPHXljTR0MqmyEbHo
-	 l7H8fHgQGutsgJ50KuKXp7bTV+AVlkPvKVe9BPTw=
+	b=Y2h1s8NoUkDS/H9rpgQI5HdtuPUIMsgERXPFJYTDnkyenqYKSkMThPA5yfzJ5Wi8w
+	 dQBR2M+rcKPEbMbZNKCzxHal5xmWoljzMGO4bNUv+Arf9tfdrw291m91eQSbF1XUXa
+	 hBwaTZe0WFbnUALlQM5V6561DdnWreefsFUTzge8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392813AbfHVRkA (ORCPT
+        id S2392855AbfHVRkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:40:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45298 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:40:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404105AbfHVRYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:24:10 -0400
+        id S2404096AbfHVRYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:24:09 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F63E2341A;
-        Thu, 22 Aug 2019 17:24:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D952F23406;
+        Thu, 22 Aug 2019 17:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1566494649;
-        bh=X42x0xK8Yv7JFdRdm38qmeC5UC56ygSVuWr4FXYQzcs=;
+        bh=Zn66wKxlgl4PKInOyortwhBLQxo9D77ZuDpoSaETRPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kIlFx+m9ATshpKd+vVdLLFSpMmrOjgabTVLDrywnPVRbIDS/62hg0GpvXEIttAXRV
-         yC4q9YHd7IcVHwYf+87hbBypZUikzZahWSTHoXdKQg0s3H6uzaPWQ7dlxCvuM8qg7x
-         G6rO5wEJG+jTmkyZ/SiOJ+OtltI5b/z6G2xa2YyI=
+        b=vk44Ph0u+uwua+bXqdrg/2RRgYrKN6kLR7ep4dCpWqD0Rvd6QW62ZAiMkqaDdrsI/
+         HxgZUr/E8c2wWiR7xK8U7F7yfcvmw90tChRPVYJA7Dcvh1mHpOvAubX4TSRwfI/dyJ
+         egeAKDdKV+clZIKrcUlp5DeFxTziK7XUbUzPZjqA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 034/103] ALSA: firewire: fix a memory leak bug
-Date:   Thu, 22 Aug 2019 10:18:22 -0700
-Message-Id: <20190822171730.198941613@linuxfoundation.org>
+        stable@vger.kernel.org, Prasad Sodagudi <psodagud@codeaurora.org>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Trilok Soni <tsoni@codeaurora.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 043/103] mm/usercopy: use memory range to be accessed for wraparound check
+Date:   Thu, 22 Aug 2019 10:18:31 -0700
+Message-Id: <20190822171730.551985628@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -60,39 +64,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Isaac J. Manjarres <isaacm@codeaurora.org>
 
-commit 1be3c1fae6c1e1f5bb982b255d2034034454527a upstream.
+commit 951531691c4bcaa59f56a316e018bc2ff1ddf855 upstream.
 
-In iso_packets_buffer_init(), 'b->packets' is allocated through
-kmalloc_array(). Then, the aligned packet size is checked. If it is
-larger than PAGE_SIZE, -EINVAL will be returned to indicate the error.
-However, the allocated 'b->packets' is not deallocated on this path,
-leading to a memory leak.
+Currently, when checking to see if accessing n bytes starting at address
+"ptr" will cause a wraparound in the memory addresses, the check in
+check_bogus_address() adds an extra byte, which is incorrect, as the
+range of addresses that will be accessed is [ptr, ptr + (n - 1)].
 
-To fix the above issue, free 'b->packets' before returning the error code.
+This can lead to incorrectly detecting a wraparound in the memory
+address, when trying to read 4 KB from memory that is mapped to the the
+last possible page in the virtual address space, when in fact, accessing
+that range of memory would not cause a wraparound to occur.
 
-Fixes: 31ef9134eb52 ("ALSA: add LaCie FireWire Speakers/Griffin FireWave Surround driver")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Cc: <stable@vger.kernel.org> # v2.6.39+
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Use the memory range that will actually be accessed when considering if
+accessing a certain amount of bytes will cause the memory address to
+wrap around.
+
+Link: http://lkml.kernel.org/r/1564509253-23287-1-git-send-email-isaacm@codeaurora.org
+Fixes: f5509cc18daa ("mm: Hardened usercopy")
+Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+Co-developed-by: Prasad Sodagudi <psodagud@codeaurora.org>
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Trilok Soni <tsoni@codeaurora.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[kees: backport to v4.9]
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/packets-buffer.c |    2 +-
+ mm/usercopy.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/firewire/packets-buffer.c
-+++ b/sound/firewire/packets-buffer.c
-@@ -37,7 +37,7 @@ int iso_packets_buffer_init(struct iso_p
- 	packets_per_page = PAGE_SIZE / packet_size;
- 	if (WARN_ON(!packets_per_page)) {
- 		err = -EINVAL;
--		goto error;
-+		goto err_packets;
- 	}
- 	pages = DIV_ROUND_UP(count, packets_per_page);
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -124,7 +124,7 @@ static inline const char *check_kernel_t
+ static inline const char *check_bogus_address(const void *ptr, unsigned long n)
+ {
+ 	/* Reject if object wraps past end of memory. */
+-	if ((unsigned long)ptr + n < (unsigned long)ptr)
++	if ((unsigned long)ptr + (n - 1) < (unsigned long)ptr)
+ 		return "<wrapped address>";
  
+ 	/* Reject if NULL or ZERO-allocation. */
 
 
