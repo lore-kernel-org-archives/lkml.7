@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F56C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEBEC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1292089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5489C2089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494105;
-	bh=9osRuY4T+wfFbKLgaPIwnyCnSR6hoLP/X3xvDr7EnVk=;
+	s=default; t=1566494110;
+	bh=dNPZPJ3Jtl5Cjdvu6wfyyglwVeq6xsuNkub0mlifDUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PVO/fXjs4T2OlbXxzzr5TKHsQBbQZp7OnyMpL/Ff5CVF6MFVQ1M6nbhZUEt17fpm3
-	 LQNyr1bPCKZzKiT6zwQsQEHqIPtk7l4qt5TLGTrTLfCpvIcGMSffQRSwCq/jnMYVFb
-	 062DLEpS8GzCWj1E8pg4bid83RAyNvxtJz9RjKds=
+	b=qFAD9DcD0HasRf4+2VZxu0p4egZibN+bcKWcQ21pnLpAPezWMD23pWMRQTNbZ1tbP
+	 elVD2wZnt2zVR8ESpTYklRYJWzMdfvXsPJI09Jj5UDVoZmpMCRTKRCW9xVaxZYKO3V
+	 98WaNXA6q3JCjbKQr0kt62mBVzOqW8eWSLJMAbyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390513AbfHVRIs (ORCPT
+        id S2391156AbfHVRPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:08:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58618 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:15:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390435AbfHVRIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:46 -0400
+        id S2388960AbfHVRIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:47 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A42E9233FE;
-        Thu, 22 Aug 2019 17:08:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CB452342D;
+        Thu, 22 Aug 2019 17:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493724;
-        bh=9osRuY4T+wfFbKLgaPIwnyCnSR6hoLP/X3xvDr7EnVk=;
+        s=default; t=1566493726;
+        bh=dNPZPJ3Jtl5Cjdvu6wfyyglwVeq6xsuNkub0mlifDUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZTBBp17lFQG8CIl3SWnAmRHa9sJL4WYPUMNaHpzbrrCq0QgNLuZs05wjuW7uuCJjm
-         lZfe9bv0AVqCDM7OFGGN5twsJiGYNKceTQojJTf38JyT3FIwWdtenNHI5NnRu8PK1l
-         skniChCWcd8F73vosL4oRR8LDQPsHdHX4VPRN09g=
+        b=ZSj/4bK3WtBqRBGVSNt/nwghkNYrhqxqS7Gap5PwutHsPN3eDaEc86QIY4pIRUNTk
+         lqZWakpOr898FaGLynCDMc351xZdeVGYep4p+pbUDteSPxyrq3DyZFACido9dIJetW
+         rvAGQhm4MZek25SJH+x7/dUbC6/pErFnNtYD87uY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 056/135] powerpc/nvdimm: Pick nearby online node if the device node is not online
-Date:   Thu, 22 Aug 2019 13:06:52 -0400
-Message-Id: <20190822170811.13303-57-sashal@kernel.org>
+Subject: [PATCH 5.2 059/135] Btrfs: fix deadlock between fiemap and transaction commits
+Date:   Thu, 22 Aug 2019 13:06:55 -0400
+Message-Id: <20190822170811.13303-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.10-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.2.y
@@ -66,141 +64,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit da1115fdbd6e86c62185cdd2b4bf7add39f2f82b ]
+[ Upstream commit a6d155d2e363f26290ffd50591169cb96c2a609e ]
 
-Currently, nvdimm subsystem expects the device numa node for SCM device to be
-an online node. It also doesn't try to bring the device numa node online. Hence
-if we use a non-online numa node as device node we hit crashes like below. This
-is because we try to access uninitialized NODE_DATA in different code paths.
+The fiemap handler locks a file range that can have unflushed delalloc,
+and after locking the range, it tries to attach to a running transaction.
+If the running transaction started its commit, that is, it is in state
+TRANS_STATE_COMMIT_START, and either the filesystem was mounted with the
+flushoncommit option or the transaction is creating a snapshot for the
+subvolume that contains the file that fiemap is operating on, we end up
+deadlocking. This happens because fiemap is blocked on the transaction,
+waiting for it to complete, and the transaction is waiting for the flushed
+dealloc to complete, which requires locking the file range that the fiemap
+task already locked. The following stack traces serve as an example of
+when this deadlock happens:
 
-cpu 0x0: Vector: 300 (Data Access) at [c0000000fac53170]
-    pc: c0000000004bbc50: ___slab_alloc+0x120/0xca0
-    lr: c0000000004bc834: __slab_alloc+0x64/0xc0
-    sp: c0000000fac53400
-   msr: 8000000002009033
-   dar: 73e8
- dsisr: 80000
-  current = 0xc0000000fabb6d80
-  paca    = 0xc000000003870000   irqmask: 0x03   irq_happened: 0x01
-    pid   = 7, comm = kworker/u16:0
-Linux version 5.2.0-06234-g76bd729b2644 (kvaneesh@ltc-boston123) (gcc version 7.4.0 (Ubuntu 7.4.0-1ubuntu1~18.04.1)) #135 SMP Thu Jul 11 05:36:30 CDT 2019
-enter ? for help
-[link register   ] c0000000004bc834 __slab_alloc+0x64/0xc0
-[c0000000fac53400] c0000000fac53480 (unreliable)
-[c0000000fac53500] c0000000004bc818 __slab_alloc+0x48/0xc0
-[c0000000fac53560] c0000000004c30a0 __kmalloc_node_track_caller+0x3c0/0x6b0
-[c0000000fac535d0] c000000000cfafe4 devm_kmalloc+0x74/0xc0
-[c0000000fac53600] c000000000d69434 nd_region_activate+0x144/0x560
-[c0000000fac536d0] c000000000d6b19c nd_region_probe+0x17c/0x370
-[c0000000fac537b0] c000000000d6349c nvdimm_bus_probe+0x10c/0x230
-[c0000000fac53840] c000000000cf3cc4 really_probe+0x254/0x4e0
-[c0000000fac538d0] c000000000cf429c driver_probe_device+0x16c/0x1e0
-[c0000000fac53950] c000000000cf0b44 bus_for_each_drv+0x94/0x130
-[c0000000fac539b0] c000000000cf392c __device_attach+0xdc/0x200
-[c0000000fac53a50] c000000000cf231c bus_probe_device+0x4c/0xf0
-[c0000000fac53a90] c000000000ced268 device_add+0x528/0x810
-[c0000000fac53b60] c000000000d62a58 nd_async_device_register+0x28/0xa0
-[c0000000fac53bd0] c0000000001ccb8c async_run_entry_fn+0xcc/0x1f0
-[c0000000fac53c50] c0000000001bcd9c process_one_work+0x46c/0x860
-[c0000000fac53d20] c0000000001bd4f4 worker_thread+0x364/0x5f0
-[c0000000fac53db0] c0000000001c7260 kthread+0x1b0/0x1c0
-[c0000000fac53e20] c00000000000b954 ret_from_kernel_thread+0x5c/0x68
+  (...)
+  [404571.515510] Workqueue: btrfs-endio-write btrfs_endio_write_helper [btrfs]
+  [404571.515956] Call Trace:
+  [404571.516360]  ? __schedule+0x3ae/0x7b0
+  [404571.516730]  schedule+0x3a/0xb0
+  [404571.517104]  lock_extent_bits+0x1ec/0x2a0 [btrfs]
+  [404571.517465]  ? remove_wait_queue+0x60/0x60
+  [404571.517832]  btrfs_finish_ordered_io+0x292/0x800 [btrfs]
+  [404571.518202]  normal_work_helper+0xea/0x530 [btrfs]
+  [404571.518566]  process_one_work+0x21e/0x5c0
+  [404571.518990]  worker_thread+0x4f/0x3b0
+  [404571.519413]  ? process_one_work+0x5c0/0x5c0
+  [404571.519829]  kthread+0x103/0x140
+  [404571.520191]  ? kthread_create_worker_on_cpu+0x70/0x70
+  [404571.520565]  ret_from_fork+0x3a/0x50
+  [404571.520915] kworker/u8:6    D    0 31651      2 0x80004000
+  [404571.521290] Workqueue: btrfs-flush_delalloc btrfs_flush_delalloc_helper [btrfs]
+  (...)
+  [404571.537000] fsstress        D    0 13117  13115 0x00004000
+  [404571.537263] Call Trace:
+  [404571.537524]  ? __schedule+0x3ae/0x7b0
+  [404571.537788]  schedule+0x3a/0xb0
+  [404571.538066]  wait_current_trans+0xc8/0x100 [btrfs]
+  [404571.538349]  ? remove_wait_queue+0x60/0x60
+  [404571.538680]  start_transaction+0x33c/0x500 [btrfs]
+  [404571.539076]  btrfs_check_shared+0xa3/0x1f0 [btrfs]
+  [404571.539513]  ? extent_fiemap+0x2ce/0x650 [btrfs]
+  [404571.539866]  extent_fiemap+0x2ce/0x650 [btrfs]
+  [404571.540170]  do_vfs_ioctl+0x526/0x6f0
+  [404571.540436]  ksys_ioctl+0x70/0x80
+  [404571.540734]  __x64_sys_ioctl+0x16/0x20
+  [404571.540997]  do_syscall_64+0x60/0x1d0
+  [404571.541279]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  (...)
+  [404571.543729] btrfs           D    0 14210  14208 0x00004000
+  [404571.544023] Call Trace:
+  [404571.544275]  ? __schedule+0x3ae/0x7b0
+  [404571.544526]  ? wait_for_completion+0x112/0x1a0
+  [404571.544795]  schedule+0x3a/0xb0
+  [404571.545064]  schedule_timeout+0x1ff/0x390
+  [404571.545351]  ? lock_acquire+0xa6/0x190
+  [404571.545638]  ? wait_for_completion+0x49/0x1a0
+  [404571.545890]  ? wait_for_completion+0x112/0x1a0
+  [404571.546228]  wait_for_completion+0x131/0x1a0
+  [404571.546503]  ? wake_up_q+0x70/0x70
+  [404571.546775]  btrfs_wait_ordered_extents+0x27c/0x400 [btrfs]
+  [404571.547159]  btrfs_commit_transaction+0x3b0/0xae0 [btrfs]
+  [404571.547449]  ? btrfs_mksubvol+0x4a4/0x640 [btrfs]
+  [404571.547703]  ? remove_wait_queue+0x60/0x60
+  [404571.547969]  btrfs_mksubvol+0x605/0x640 [btrfs]
+  [404571.548226]  ? __sb_start_write+0xd4/0x1c0
+  [404571.548512]  ? mnt_want_write_file+0x24/0x50
+  [404571.548789]  btrfs_ioctl_snap_create_transid+0x169/0x1a0 [btrfs]
+  [404571.549048]  btrfs_ioctl_snap_create_v2+0x11d/0x170 [btrfs]
+  [404571.549307]  btrfs_ioctl+0x133f/0x3150 [btrfs]
+  [404571.549549]  ? mem_cgroup_charge_statistics+0x4c/0xd0
+  [404571.549792]  ? mem_cgroup_commit_charge+0x84/0x4b0
+  [404571.550064]  ? __handle_mm_fault+0xe3e/0x11f0
+  [404571.550306]  ? do_raw_spin_unlock+0x49/0xc0
+  [404571.550608]  ? _raw_spin_unlock+0x24/0x30
+  [404571.550976]  ? __handle_mm_fault+0xedf/0x11f0
+  [404571.551319]  ? do_vfs_ioctl+0xa2/0x6f0
+  [404571.551659]  ? btrfs_ioctl_get_supported_features+0x30/0x30 [btrfs]
+  [404571.552087]  do_vfs_ioctl+0xa2/0x6f0
+  [404571.552355]  ksys_ioctl+0x70/0x80
+  [404571.552621]  __x64_sys_ioctl+0x16/0x20
+  [404571.552864]  do_syscall_64+0x60/0x1d0
+  [404571.553104]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  (...)
 
-The patch tries to fix this by picking the nearest online node as the SCM node.
-This does have a problem of us losing the information that SCM node is
-equidistant from two other online nodes. If applications need to understand these
-fine-grained details we should express then like x86 does via
-/sys/devices/system/node/nodeX/accessY/initiators/
+If we were joining the transaction instead of attaching to it, we would
+not risk a deadlock because a join only blocks if the transaction is in a
+state greater then or equals to TRANS_STATE_COMMIT_DOING, and the delalloc
+flush performed by a transaction is done before it reaches that state,
+when it is in the state TRANS_STATE_COMMIT_START. However a transaction
+join is intended for use cases where we do modify the filesystem, and
+fiemap only needs to peek at delayed references from the current
+transaction in order to determine if extents are shared, and, besides
+that, when there is no current transaction or when it blocks to wait for
+a current committing transaction to complete, it creates a new transaction
+without reserving any space. Such unnecessary transactions, besides doing
+unnecessary IO, can cause transaction aborts (-ENOSPC) and unnecessary
+rotation of the precious backup roots.
 
-With the patch we get
+So fix this by adding a new transaction join variant, named join_nostart,
+which behaves like the regular join, but it does not create a transaction
+when none currently exists or after waiting for a committing transaction
+to complete.
 
- # numactl -H
-available: 2 nodes (0-1)
-node 0 cpus:
-node 0 size: 0 MB
-node 0 free: 0 MB
-node 1 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
-node 1 size: 130865 MB
-node 1 free: 129130 MB
-node distances:
-node   0   1
-  0:  10  20
-  1:  20  10
- # cat /sys/bus/nd/devices/region0/numa_node
-0
- # dmesg | grep papr_scm
-[   91.332305] papr_scm ibm,persistent-memory:ibm,pmemory@44104001: Region registered with target node 2 and online node 0
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190729095128.23707-1-aneesh.kumar@linux.ibm.com
+Fixes: 03628cdbc64db6 ("Btrfs: do not start a transaction during fiemap")
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/papr_scm.c | 29 +++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ fs/btrfs/backref.c     |  2 +-
+ fs/btrfs/transaction.c | 22 ++++++++++++++++++----
+ fs/btrfs/transaction.h |  3 +++
+ 3 files changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-index dad9825e40874..3c17fc7c2b936 100644
---- a/arch/powerpc/platforms/pseries/papr_scm.c
-+++ b/arch/powerpc/platforms/pseries/papr_scm.c
-@@ -199,12 +199,32 @@ static const struct attribute_group *papr_scm_dimm_groups[] = {
- 	NULL,
+diff --git a/fs/btrfs/backref.c b/fs/btrfs/backref.c
+index 982152d3f9200..69f8ab4d91f2b 100644
+--- a/fs/btrfs/backref.c
++++ b/fs/btrfs/backref.c
+@@ -1488,7 +1488,7 @@ int btrfs_check_shared(struct btrfs_root *root, u64 inum, u64 bytenr)
+ 		goto out;
+ 	}
+ 
+-	trans = btrfs_attach_transaction(root);
++	trans = btrfs_join_transaction_nostart(root);
+ 	if (IS_ERR(trans)) {
+ 		if (PTR_ERR(trans) != -ENOENT && PTR_ERR(trans) != -EROFS) {
+ 			ret = PTR_ERR(trans);
+diff --git a/fs/btrfs/transaction.c b/fs/btrfs/transaction.c
+index 1aa3f6d6d7759..2db14fdd6bff3 100644
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -28,15 +28,18 @@ static const unsigned int btrfs_blocked_trans_types[TRANS_STATE_MAX] = {
+ 	[TRANS_STATE_COMMIT_START]	= (__TRANS_START | __TRANS_ATTACH),
+ 	[TRANS_STATE_COMMIT_DOING]	= (__TRANS_START |
+ 					   __TRANS_ATTACH |
+-					   __TRANS_JOIN),
++					   __TRANS_JOIN |
++					   __TRANS_JOIN_NOSTART),
+ 	[TRANS_STATE_UNBLOCKED]		= (__TRANS_START |
+ 					   __TRANS_ATTACH |
+ 					   __TRANS_JOIN |
+-					   __TRANS_JOIN_NOLOCK),
++					   __TRANS_JOIN_NOLOCK |
++					   __TRANS_JOIN_NOSTART),
+ 	[TRANS_STATE_COMPLETED]		= (__TRANS_START |
+ 					   __TRANS_ATTACH |
+ 					   __TRANS_JOIN |
+-					   __TRANS_JOIN_NOLOCK),
++					   __TRANS_JOIN_NOLOCK |
++					   __TRANS_JOIN_NOSTART),
  };
  
-+static inline int papr_scm_node(int node)
+ void btrfs_put_transaction(struct btrfs_transaction *transaction)
+@@ -525,7 +528,8 @@ start_transaction(struct btrfs_root *root, unsigned int num_items,
+ 		ret = join_transaction(fs_info, type);
+ 		if (ret == -EBUSY) {
+ 			wait_current_trans(fs_info);
+-			if (unlikely(type == TRANS_ATTACH))
++			if (unlikely(type == TRANS_ATTACH ||
++				     type == TRANS_JOIN_NOSTART))
+ 				ret = -ENOENT;
+ 		}
+ 	} while (ret == -EBUSY);
+@@ -641,6 +645,16 @@ struct btrfs_trans_handle *btrfs_join_transaction_nolock(struct btrfs_root *root
+ 				 BTRFS_RESERVE_NO_FLUSH, true);
+ }
+ 
++/*
++ * Similar to regular join but it never starts a transaction when none is
++ * running or after waiting for the current one to finish.
++ */
++struct btrfs_trans_handle *btrfs_join_transaction_nostart(struct btrfs_root *root)
 +{
-+	int min_dist = INT_MAX, dist;
-+	int nid, min_node;
-+
-+	if ((node == NUMA_NO_NODE) || node_online(node))
-+		return node;
-+
-+	min_node = first_online_node;
-+	for_each_online_node(nid) {
-+		dist = node_distance(node, nid);
-+		if (dist < min_dist) {
-+			min_dist = dist;
-+			min_node = nid;
-+		}
-+	}
-+	return min_node;
++	return start_transaction(root, 0, TRANS_JOIN_NOSTART,
++				 BTRFS_RESERVE_NO_FLUSH, true);
 +}
 +
- static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
- {
- 	struct device *dev = &p->pdev->dev;
- 	struct nd_mapping_desc mapping;
- 	struct nd_region_desc ndr_desc;
- 	unsigned long dimm_flags;
-+	int target_nid, online_nid;
+ /*
+  * btrfs_attach_transaction() - catch the running transaction
+  *
+diff --git a/fs/btrfs/transaction.h b/fs/btrfs/transaction.h
+index 78c446c222b7d..2f695587f828e 100644
+--- a/fs/btrfs/transaction.h
++++ b/fs/btrfs/transaction.h
+@@ -94,11 +94,13 @@ struct btrfs_transaction {
+ #define __TRANS_JOIN		(1U << 11)
+ #define __TRANS_JOIN_NOLOCK	(1U << 12)
+ #define __TRANS_DUMMY		(1U << 13)
++#define __TRANS_JOIN_NOSTART	(1U << 14)
  
- 	p->bus_desc.ndctl = papr_scm_ndctl;
- 	p->bus_desc.module = THIS_MODULE;
-@@ -243,8 +263,10 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+ #define TRANS_START		(__TRANS_START | __TRANS_FREEZABLE)
+ #define TRANS_ATTACH		(__TRANS_ATTACH)
+ #define TRANS_JOIN		(__TRANS_JOIN | __TRANS_FREEZABLE)
+ #define TRANS_JOIN_NOLOCK	(__TRANS_JOIN_NOLOCK)
++#define TRANS_JOIN_NOSTART	(__TRANS_JOIN_NOSTART)
  
- 	memset(&ndr_desc, 0, sizeof(ndr_desc));
- 	ndr_desc.attr_groups = region_attr_groups;
--	ndr_desc.numa_node = dev_to_node(&p->pdev->dev);
--	ndr_desc.target_node = ndr_desc.numa_node;
-+	target_nid = dev_to_node(&p->pdev->dev);
-+	online_nid = papr_scm_node(target_nid);
-+	ndr_desc.numa_node = online_nid;
-+	ndr_desc.target_node = target_nid;
- 	ndr_desc.res = &p->res;
- 	ndr_desc.of_node = p->dn;
- 	ndr_desc.provider_data = p;
-@@ -259,6 +281,9 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
- 				ndr_desc.res, p->dn);
- 		goto err;
- 	}
-+	if (target_nid != online_nid)
-+		dev_info(dev, "Region registered with target node %d and online node %d",
-+			 target_nid, online_nid);
+ #define TRANS_EXTWRITERS	(__TRANS_START | __TRANS_ATTACH)
  
- 	return 0;
- 
+@@ -183,6 +185,7 @@ struct btrfs_trans_handle *btrfs_start_transaction_fallback_global_rsv(
+ 					int min_factor);
+ struct btrfs_trans_handle *btrfs_join_transaction(struct btrfs_root *root);
+ struct btrfs_trans_handle *btrfs_join_transaction_nolock(struct btrfs_root *root);
++struct btrfs_trans_handle *btrfs_join_transaction_nostart(struct btrfs_root *root);
+ struct btrfs_trans_handle *btrfs_attach_transaction(struct btrfs_root *root);
+ struct btrfs_trans_handle *btrfs_attach_transaction_barrier(
+ 					struct btrfs_root *root);
 -- 
 2.20.1
 
