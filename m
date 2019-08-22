@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 679CAC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF6FC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9F02341A
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE09A206DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494778;
-	bh=Z+6IQqQgpTKw/nHyv+lddek3G1zKMCMCfyPHgGYOXGI=;
+	s=default; t=1566494782;
+	bh=M0ON+wcSMXQ4IP2Gj/v1u/IHC14XFEaaHkW20mRRtX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t/YEuUQNTW+NyMeGCxmAc+y0g1CvlCELflW4+qjT0AH9bRa3qsCOWM7QXdJ2d148n
-	 AqrRnwzZeXmKyZ/Fk0ap5AsBYob9bKXRmoJ0pA0DEWyhH+3Ligtw2oFAjFRUfR8YnE
-	 7nsbFijJlDzHk7PJzDl+SBaeDJqSwRioFOVJx6mc=
+	b=z1AKOCfmk1j0vaUCPwWpmE9uN9x12me+bEb6MJhpqU5FpwFSsEd/RJoIM7oSRw1HR
+	 W4M10cBzKhpiTIEnHzX3FTJRY5QRperrq4rxZcp/vic0Vrxm+BoVAvBa1SvkWYE/nq
+	 7+wDrOrLx2d4Os5GP1d4j0VUdiT6dafWUcveVtNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404687AbfHVR0R (ORCPT
+        id S2404702AbfHVR0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:26:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48278 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:26:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404347AbfHVRZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:12 -0400
+        id S2390620AbfHVRZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:15 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 646742064A;
-        Thu, 22 Aug 2019 17:25:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A234723405;
+        Thu, 22 Aug 2019 17:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494711;
-        bh=Z+6IQqQgpTKw/nHyv+lddek3G1zKMCMCfyPHgGYOXGI=;
+        s=default; t=1566494713;
+        bh=M0ON+wcSMXQ4IP2Gj/v1u/IHC14XFEaaHkW20mRRtX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=svdFGuiNpBj7BtTv5xuv7ZIS/l0qk/yDxWAXt3ocSmaCrVHtNrowzBEhfpqZnHS3c
-         XTZIFNbrkYDje8zrJu2Bz22917jlcDlCaUKPC3YyXFK6D8nlKfW9nGd8ByvJUzk7iy
-         uYOfSkogV3+qcjJ2qWbGNKLsF5K4eR5X2yRnZHpA=
+        b=wMADRxGykcSjZgyN8S9Txg+Bg9nZAVzaMDfU+nRn+j39nUyA6Q37UdYGoV9qYb6Da
+         Z8Fvus/QHRMNQr89w70jpIpW7I7CWl9K5nC5z82TnR8HohRw2i8/LM0r+tzVUJ32Z2
+         1ULmjtnFdVRuF1/rmTXzxtpQ/8tLB62LRdcYOCNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.14 67/71] net/mlx5e: Use flow keys dissector to parse packets for ARFS
-Date:   Thu, 22 Aug 2019 10:19:42 -0700
-Message-Id: <20190822171730.629258436@linuxfoundation.org>
+        stable@vger.kernel.org, David Binderman <dcb314@hotmail.com>,
+        Ian Abbott <abbotti@mev.co.uk>
+Subject: [PATCH 4.14 43/71] staging: comedi: dt3000: Fix signed integer overflow divider * base
+Date:   Thu, 22 Aug 2019 10:19:18 -0700
+Message-Id: <20190822171729.751002755@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
 References: <20190822171726.131957995@linuxfoundation.org>
@@ -60,194 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Mikityanskiy <maximmi@mellanox.com>
+From: Ian Abbott <abbotti@mev.co.uk>
 
-[ Upstream commit 405b93eb764367a670e729da18e54dc42db32620 ]
+commit b4d98bc3fc93ec3a58459948a2c0e0c9b501cd88 upstream.
 
-The current ARFS code relies on certain fields to be set in the SKB
-(e.g. transport_header) and extracts IP addresses and ports by custom
-code that parses the packet. The necessary SKB fields, however, are not
-always set at that point, which leads to an out-of-bounds access. Use
-skb_flow_dissect_flow_keys() to get the necessary information reliably,
-fix the out-of-bounds access and reuse the code.
+In `dt3k_ns_to_timer()` the following lines near the end of the function
+result in a signed integer overflow:
 
-Fixes: 18c908e477dc ("net/mlx5e: Add accelerated RFS support")
-Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+	prescale = 15;
+	base = timer_base * (1 << prescale);
+	divider = 65535;
+	*nanosec = divider * base;
+
+(`divider`, `base` and `prescale` are type `int`, `timer_base` and
+`*nanosec` are type `unsigned int`.  The value of `timer_base` will be
+either 50 or 100.)
+
+The main reason for the overflow is that the calculation for `base` is
+completely wrong.  It should be:
+
+	base = timer_base * (prescale + 1);
+
+which matches an earlier instance of this calculation in the same
+function.
+
+Reported-by: David Binderman <dcb314@hotmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
+Link: https://lore.kernel.org/r/20190812111517.26803-1-abbotti@mev.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c |   97 +++++++---------------
- 1 file changed, 34 insertions(+), 63 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_arfs.c
-@@ -439,12 +439,6 @@ arfs_hash_bucket(struct arfs_table *arfs
- 	return &arfs_t->rules_hash[bucket_idx];
- }
- 
--static u8 arfs_get_ip_proto(const struct sk_buff *skb)
--{
--	return (skb->protocol == htons(ETH_P_IP)) ?
--		ip_hdr(skb)->protocol : ipv6_hdr(skb)->nexthdr;
--}
--
- static struct arfs_table *arfs_get_table(struct mlx5e_arfs_tables *arfs,
- 					 u8 ip_proto, __be16 etype)
- {
-@@ -601,31 +595,9 @@ out:
- 	arfs_may_expire_flow(priv);
- }
- 
--/* return L4 destination port from ip4/6 packets */
--static __be16 arfs_get_dst_port(const struct sk_buff *skb)
--{
--	char *transport_header;
--
--	transport_header = skb_transport_header(skb);
--	if (arfs_get_ip_proto(skb) == IPPROTO_TCP)
--		return ((struct tcphdr *)transport_header)->dest;
--	return ((struct udphdr *)transport_header)->dest;
--}
--
--/* return L4 source port from ip4/6 packets */
--static __be16 arfs_get_src_port(const struct sk_buff *skb)
--{
--	char *transport_header;
--
--	transport_header = skb_transport_header(skb);
--	if (arfs_get_ip_proto(skb) == IPPROTO_TCP)
--		return ((struct tcphdr *)transport_header)->source;
--	return ((struct udphdr *)transport_header)->source;
--}
--
- static struct arfs_rule *arfs_alloc_rule(struct mlx5e_priv *priv,
- 					 struct arfs_table *arfs_t,
--					 const struct sk_buff *skb,
-+					 const struct flow_keys *fk,
- 					 u16 rxq, u32 flow_id)
- {
- 	struct arfs_rule *rule;
-@@ -640,19 +612,19 @@ static struct arfs_rule *arfs_alloc_rule
- 	INIT_WORK(&rule->arfs_work, arfs_handle_work);
- 
- 	tuple = &rule->tuple;
--	tuple->etype = skb->protocol;
-+	tuple->etype = fk->basic.n_proto;
-+	tuple->ip_proto = fk->basic.ip_proto;
- 	if (tuple->etype == htons(ETH_P_IP)) {
--		tuple->src_ipv4 = ip_hdr(skb)->saddr;
--		tuple->dst_ipv4 = ip_hdr(skb)->daddr;
-+		tuple->src_ipv4 = fk->addrs.v4addrs.src;
-+		tuple->dst_ipv4 = fk->addrs.v4addrs.dst;
- 	} else {
--		memcpy(&tuple->src_ipv6, &ipv6_hdr(skb)->saddr,
-+		memcpy(&tuple->src_ipv6, &fk->addrs.v6addrs.src,
- 		       sizeof(struct in6_addr));
--		memcpy(&tuple->dst_ipv6, &ipv6_hdr(skb)->daddr,
-+		memcpy(&tuple->dst_ipv6, &fk->addrs.v6addrs.dst,
- 		       sizeof(struct in6_addr));
- 	}
--	tuple->ip_proto = arfs_get_ip_proto(skb);
--	tuple->src_port = arfs_get_src_port(skb);
--	tuple->dst_port = arfs_get_dst_port(skb);
-+	tuple->src_port = fk->ports.src;
-+	tuple->dst_port = fk->ports.dst;
- 
- 	rule->flow_id = flow_id;
- 	rule->filter_id = priv->fs.arfs.last_filter_id++ % RPS_NO_FILTER;
-@@ -663,37 +635,33 @@ static struct arfs_rule *arfs_alloc_rule
- 	return rule;
- }
- 
--static bool arfs_cmp_ips(struct arfs_tuple *tuple,
--			 const struct sk_buff *skb)
-+static bool arfs_cmp(const struct arfs_tuple *tuple, const struct flow_keys *fk)
- {
--	if (tuple->etype == htons(ETH_P_IP) &&
--	    tuple->src_ipv4 == ip_hdr(skb)->saddr &&
--	    tuple->dst_ipv4 == ip_hdr(skb)->daddr)
--		return true;
--	if (tuple->etype == htons(ETH_P_IPV6) &&
--	    (!memcmp(&tuple->src_ipv6, &ipv6_hdr(skb)->saddr,
--		     sizeof(struct in6_addr))) &&
--	    (!memcmp(&tuple->dst_ipv6, &ipv6_hdr(skb)->daddr,
--		     sizeof(struct in6_addr))))
--		return true;
-+	if (tuple->src_port != fk->ports.src || tuple->dst_port != fk->ports.dst)
-+		return false;
-+	if (tuple->etype != fk->basic.n_proto)
-+		return false;
-+	if (tuple->etype == htons(ETH_P_IP))
-+		return tuple->src_ipv4 == fk->addrs.v4addrs.src &&
-+		       tuple->dst_ipv4 == fk->addrs.v4addrs.dst;
-+	if (tuple->etype == htons(ETH_P_IPV6))
-+		return !memcmp(&tuple->src_ipv6, &fk->addrs.v6addrs.src,
-+			       sizeof(struct in6_addr)) &&
-+		       !memcmp(&tuple->dst_ipv6, &fk->addrs.v6addrs.dst,
-+			       sizeof(struct in6_addr));
- 	return false;
- }
- 
- static struct arfs_rule *arfs_find_rule(struct arfs_table *arfs_t,
--					const struct sk_buff *skb)
-+					const struct flow_keys *fk)
- {
- 	struct arfs_rule *arfs_rule;
- 	struct hlist_head *head;
--	__be16 src_port = arfs_get_src_port(skb);
--	__be16 dst_port = arfs_get_dst_port(skb);
- 
--	head = arfs_hash_bucket(arfs_t, src_port, dst_port);
-+	head = arfs_hash_bucket(arfs_t, fk->ports.src, fk->ports.dst);
- 	hlist_for_each_entry(arfs_rule, head, hlist) {
--		if (arfs_rule->tuple.src_port == src_port &&
--		    arfs_rule->tuple.dst_port == dst_port &&
--		    arfs_cmp_ips(&arfs_rule->tuple, skb)) {
-+		if (arfs_cmp(&arfs_rule->tuple, fk))
- 			return arfs_rule;
--		}
+---
+ drivers/staging/comedi/drivers/dt3000.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/staging/comedi/drivers/dt3000.c
++++ b/drivers/staging/comedi/drivers/dt3000.c
+@@ -377,7 +377,7 @@ static int dt3k_ns_to_timer(unsigned int
  	}
  
- 	return NULL;
-@@ -706,20 +674,24 @@ int mlx5e_rx_flow_steer(struct net_devic
- 	struct mlx5e_arfs_tables *arfs = &priv->fs.arfs;
- 	struct arfs_table *arfs_t;
- 	struct arfs_rule *arfs_rule;
-+	struct flow_keys fk;
-+
-+	if (!skb_flow_dissect_flow_keys(skb, &fk, 0))
-+		return -EPROTONOSUPPORT;
- 
--	if (skb->protocol != htons(ETH_P_IP) &&
--	    skb->protocol != htons(ETH_P_IPV6))
-+	if (fk.basic.n_proto != htons(ETH_P_IP) &&
-+	    fk.basic.n_proto != htons(ETH_P_IPV6))
- 		return -EPROTONOSUPPORT;
- 
- 	if (skb->encapsulation)
- 		return -EPROTONOSUPPORT;
- 
--	arfs_t = arfs_get_table(arfs, arfs_get_ip_proto(skb), skb->protocol);
-+	arfs_t = arfs_get_table(arfs, fk.basic.ip_proto, fk.basic.n_proto);
- 	if (!arfs_t)
- 		return -EPROTONOSUPPORT;
- 
- 	spin_lock_bh(&arfs->arfs_lock);
--	arfs_rule = arfs_find_rule(arfs_t, skb);
-+	arfs_rule = arfs_find_rule(arfs_t, &fk);
- 	if (arfs_rule) {
- 		if (arfs_rule->rxq == rxq_index) {
- 			spin_unlock_bh(&arfs->arfs_lock);
-@@ -727,8 +699,7 @@ int mlx5e_rx_flow_steer(struct net_devic
- 		}
- 		arfs_rule->rxq = rxq_index;
- 	} else {
--		arfs_rule = arfs_alloc_rule(priv, arfs_t, skb,
--					    rxq_index, flow_id);
-+		arfs_rule = arfs_alloc_rule(priv, arfs_t, &fk, rxq_index, flow_id);
- 		if (!arfs_rule) {
- 			spin_unlock_bh(&arfs->arfs_lock);
- 			return -ENOMEM;
+ 	prescale = 15;
+-	base = timer_base * (1 << prescale);
++	base = timer_base * (prescale + 1);
+ 	divider = 65535;
+ 	*nanosec = divider * base;
+ 	return (prescale << 16) | (divider);
 
 
