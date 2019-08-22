@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE40AC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6D7C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD2A233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91BCC233FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:18:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494295;
-	bh=b1/t26O85rjHlSJA0HsLZnMWEKkCzAJI54U9eFTqj7Q=;
+	s=default; t=1566494299;
+	bh=E+G7d0QVYHqcRsB9iKm+JSwup6AH9Ae3hpxG49tVs2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2QWdASP3kWQn+35f2iOvZf3iQFbWJOOuw5lJaxn0hWMgX2zfRKtmbTBt3ApVlhee4
-	 Vbh+E18G/eW/wX8Byoe7kiRwKVMv2E00slB6YepjhZ4sbK4eAu6t9wddt26w9ayElp
-	 4XhkyPlR//ozl7cHnSCec/m3AKFlPf/RA36I3Es8=
+	b=vwuAG6WdW1wzaHveqw06UO2j6D1BFSxt0S1yjQAGW/MYXLVHnv4UiNQYURP6k1hx+
+	 yJh8a9uRlp+cf4yughaUc78BhRBV5qZzRHScpI1i1Gnr5x5hrgS8lrYk2zRLiNr3aY
+	 aa8tz2rosNU+46F1gugwnZE19pjdPExHhsfR4qCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391298AbfHVRSP (ORCPT
+        id S2390236AbfHVRIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:18:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57672 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390248AbfHVRIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:17 -0400
+        id S2388772AbfHVRIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:14 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D6F523406;
-        Thu, 22 Aug 2019 17:08:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 292C523404;
+        Thu, 22 Aug 2019 17:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493696;
-        bh=b1/t26O85rjHlSJA0HsLZnMWEKkCzAJI54U9eFTqj7Q=;
+        s=default; t=1566493693;
+        bh=E+G7d0QVYHqcRsB9iKm+JSwup6AH9Ae3hpxG49tVs2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ziv8TYzTlZrWrwqAinPCSoNoqQXQFpsKNBC+1N33i8pMI+4v28QKHf5eiu4cITC5b
-         vJChPWgplw9T18vpeW6VaRwLC5Vi/G8aKERRtl8/ZhBs5Yc75SxZgk1/kCfO8kbFZd
-         O2bUWOEXrjvfUYp3MUonXEjpootIFHiAO+q3Ieaw=
+        b=0Yh9ezz6MFE5yJpTHcynLxIx/DRNLub6zrBY1tdzaKK5J2A0tsF3WVjk6w2BkB6oX
+         R9lEkmWeh+ywyqqrSCoZh8JL2E1dAA/aUT/js25uOr/mLsVSv6soDr7ZcGUcm8wRo5
+         KeM+CVB6cfQSnRZw5qZW84Rst+EBvO/hYQCH6tYw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Roberto Sassu <roberto.sassu@huawei.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.2 005/135] mm: mempolicy: make the behavior consistent when MPOL_MF_MOVE* and MPOL_MF_STRICT were specified
-Date:   Thu, 22 Aug 2019 13:06:01 -0400
-Message-Id: <20190822170811.13303-6-sashal@kernel.org>
+Subject: [PATCH 5.2 001/135] KEYS: trusted: allow module init if TPM is inactive or deactivated
+Date:   Thu, 22 Aug 2019 13:05:57 -0400
+Message-Id: <20190822170811.13303-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -69,221 +67,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-commit d883544515aae54842c21730b880172e7894fde9 upstream.
+commit 2d6c25215ab26bb009de3575faab7b685f138e92 upstream.
 
-When both MPOL_MF_MOVE* and MPOL_MF_STRICT was specified, mbind() should
-try best to migrate misplaced pages, if some of the pages could not be
-migrated, then return -EIO.
+Commit c78719203fc6 ("KEYS: trusted: allow trusted.ko to initialize w/o a
+TPM") allows the trusted module to be loaded even if a TPM is not found, to
+avoid module dependency problems.
 
-There are three different sub-cases:
- 1. vma is not migratable
- 2. vma is migratable, but there are unmovable pages
- 3. vma is migratable, pages are movable, but migrate_pages() fails
+However, trusted module initialization can still fail if the TPM is
+inactive or deactivated. tpm_get_random() returns an error.
 
-If #1 happens, kernel would just abort immediately, then return -EIO,
-after a7f40cfe3b7a ("mm: mempolicy: make mbind() return -EIO when
-MPOL_MF_STRICT is specified").
+This patch removes the call to tpm_get_random() and instead extends the PCR
+specified by the user with zeros. The security of this alternative is
+equivalent to the previous one, as either option prevents with a PCR update
+unsealing and misuse of sealed data by a user space process.
 
-If #3 happens, kernel would set policy and migrate pages with
-best-effort, but won't rollback the migrated pages and reset the policy
-back.
+Even if a PCR is extended with zeros, instead of random data, it is still
+computationally infeasible to find a value as input for a new PCR extend
+operation, to obtain again the PCR value that would allow unsealing.
 
-Before that commit, they behaves in the same way.  It'd better to keep
-their behavior consistent.  But, rolling back the migrated pages and
-resetting the policy back sounds not feasible, so just make #1 behave as
-same as #3.
-
-Userspace will know that not everything was successfully migrated (via
--EIO), and can take whatever steps it deems necessary - attempt
-rollback, determine which exact page(s) are violating the policy, etc.
-
-Make queue_pages_range() return 1 to indicate there are unmovable pages
-or vma is not migratable.
-
-The #2 is not handled correctly in the current kernel, the following
-patch will fix it.
-
-[yang.shi@linux.alibaba.com: fix review comments from Vlastimil]
-  Link: http://lkml.kernel.org/r/1563556862-54056-2-git-send-email-yang.shi@linux.alibaba.com
-Link: http://lkml.kernel.org/r/1561162809-59140-2-git-send-email-yang.shi@linux.alibaba.com
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Fixes: 240730437deb ("KEYS: trusted: explicitly use tpm_chip structure...")
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/mempolicy.c | 68 +++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 48 insertions(+), 20 deletions(-)
+ security/keys/trusted.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index fdcb735363198..a1a8f5630245d 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -429,11 +429,14 @@ static inline bool queue_pages_required(struct page *page,
+diff --git a/security/keys/trusted.c b/security/keys/trusted.c
+index 9a94672e7adcc..ade6991310654 100644
+--- a/security/keys/trusted.c
++++ b/security/keys/trusted.c
+@@ -1228,24 +1228,11 @@ static int __init trusted_shash_alloc(void)
+ 
+ static int __init init_digests(void)
+ {
+-	u8 digest[TPM_MAX_DIGEST_SIZE];
+-	int ret;
+-	int i;
+-
+-	ret = tpm_get_random(chip, digest, TPM_MAX_DIGEST_SIZE);
+-	if (ret < 0)
+-		return ret;
+-	if (ret < TPM_MAX_DIGEST_SIZE)
+-		return -EFAULT;
+-
+ 	digests = kcalloc(chip->nr_allocated_banks, sizeof(*digests),
+ 			  GFP_KERNEL);
+ 	if (!digests)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < chip->nr_allocated_banks; i++)
+-		memcpy(digests[i].digest, digest, TPM_MAX_DIGEST_SIZE);
+-
+ 	return 0;
  }
  
- /*
-- * queue_pages_pmd() has three possible return values:
-- * 1 - pages are placed on the right node or queued successfully.
-- * 0 - THP was split.
-- * -EIO - is migration entry or MPOL_MF_STRICT was specified and an existing
-- *        page was already on a node that does not follow the policy.
-+ * queue_pages_pmd() has four possible return values:
-+ * 0 - pages are placed on the right node or queued successfully.
-+ * 1 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
-+ *     specified.
-+ * 2 - THP was split.
-+ * -EIO - is migration entry or only MPOL_MF_STRICT was specified and an
-+ *        existing page was already on a node that does not follow the
-+ *        policy.
-  */
- static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
- 				unsigned long end, struct mm_walk *walk)
-@@ -451,19 +454,17 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
- 	if (is_huge_zero_page(page)) {
- 		spin_unlock(ptl);
- 		__split_huge_pmd(walk->vma, pmd, addr, false, NULL);
-+		ret = 2;
- 		goto out;
- 	}
--	if (!queue_pages_required(page, qp)) {
--		ret = 1;
-+	if (!queue_pages_required(page, qp))
- 		goto unlock;
--	}
- 
--	ret = 1;
- 	flags = qp->flags;
- 	/* go to thp migration */
- 	if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
- 		if (!vma_migratable(walk->vma)) {
--			ret = -EIO;
-+			ret = 1;
- 			goto unlock;
- 		}
- 
-@@ -479,6 +480,13 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
- /*
-  * Scan through pages checking if pages follow certain conditions,
-  * and move them to the pagelist if they do.
-+ *
-+ * queue_pages_pte_range() has three possible return values:
-+ * 0 - pages are placed on the right node or queued successfully.
-+ * 1 - there is unmovable page, and MPOL_MF_MOVE* & MPOL_MF_STRICT were
-+ *     specified.
-+ * -EIO - only MPOL_MF_STRICT was specified and an existing page was already
-+ *        on a node that does not follow the policy.
-  */
- static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
- 			unsigned long end, struct mm_walk *walk)
-@@ -488,17 +496,17 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
- 	struct queue_pages *qp = walk->private;
- 	unsigned long flags = qp->flags;
- 	int ret;
-+	bool has_unmovable = false;
- 	pte_t *pte;
- 	spinlock_t *ptl;
- 
- 	ptl = pmd_trans_huge_lock(pmd, vma);
- 	if (ptl) {
- 		ret = queue_pages_pmd(pmd, ptl, addr, end, walk);
--		if (ret > 0)
--			return 0;
--		else if (ret < 0)
-+		if (ret != 2)
- 			return ret;
- 	}
-+	/* THP was split, fall through to pte walk */
- 
- 	if (pmd_trans_unstable(pmd))
- 		return 0;
-@@ -519,14 +527,21 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
- 		if (!queue_pages_required(page, qp))
- 			continue;
- 		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
--			if (!vma_migratable(vma))
-+			/* MPOL_MF_STRICT must be specified if we get here */
-+			if (!vma_migratable(vma)) {
-+				has_unmovable = true;
- 				break;
-+			}
- 			migrate_page_add(page, qp->pagelist, flags);
- 		} else
- 			break;
- 	}
- 	pte_unmap_unlock(pte - 1, ptl);
- 	cond_resched();
-+
-+	if (has_unmovable)
-+		return 1;
-+
- 	return addr != end ? -EIO : 0;
- }
- 
-@@ -639,7 +654,13 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
-  *
-  * If pages found in a given range are on a set of nodes (determined by
-  * @nodes and @flags,) it's isolated and queued to the pagelist which is
-- * passed via @private.)
-+ * passed via @private.
-+ *
-+ * queue_pages_range() has three possible return values:
-+ * 1 - there is unmovable page, but MPOL_MF_MOVE* & MPOL_MF_STRICT were
-+ *     specified.
-+ * 0 - queue pages successfully or no misplaced page.
-+ * -EIO - there is misplaced page and only MPOL_MF_STRICT was specified.
-  */
- static int
- queue_pages_range(struct mm_struct *mm, unsigned long start, unsigned long end,
-@@ -1182,6 +1203,7 @@ static long do_mbind(unsigned long start, unsigned long len,
- 	struct mempolicy *new;
- 	unsigned long end;
- 	int err;
-+	int ret;
- 	LIST_HEAD(pagelist);
- 
- 	if (flags & ~(unsigned long)MPOL_MF_VALID)
-@@ -1243,10 +1265,15 @@ static long do_mbind(unsigned long start, unsigned long len,
- 	if (err)
- 		goto mpol_out;
- 
--	err = queue_pages_range(mm, start, end, nmask,
-+	ret = queue_pages_range(mm, start, end, nmask,
- 			  flags | MPOL_MF_INVERT, &pagelist);
--	if (!err)
--		err = mbind_range(mm, start, end, new);
-+
-+	if (ret < 0) {
-+		err = -EIO;
-+		goto up_out;
-+	}
-+
-+	err = mbind_range(mm, start, end, new);
- 
- 	if (!err) {
- 		int nr_failed = 0;
-@@ -1259,13 +1286,14 @@ static long do_mbind(unsigned long start, unsigned long len,
- 				putback_movable_pages(&pagelist);
- 		}
- 
--		if (nr_failed && (flags & MPOL_MF_STRICT))
-+		if ((ret > 0) || (nr_failed && (flags & MPOL_MF_STRICT)))
- 			err = -EIO;
- 	} else
- 		putback_movable_pages(&pagelist);
- 
-+up_out:
- 	up_write(&mm->mmap_sem);
-- mpol_out:
-+mpol_out:
- 	mpol_put(new);
- 	return err;
- }
 -- 
 2.20.1
 
