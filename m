@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CA6C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A13C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F832341D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F56823429
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494584;
-	bh=FsUGeY9eo7GuzAGPtRzW+Q3Jf1iFUrTPuybXbGlQpu0=;
+	s=default; t=1566494587;
+	bh=lAGBnw63tEB2nUUD852MKzE+i4vbkiq+jwyHBSgvvp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QC7siurZMRKt9vEDP2gZw+kDNSzOgn9eNYHLYCWTV/w3ZRMnjpQWHEaHbjn6rYLUS
-	 aX/hio0uiz+c65oIIIfnf/lx70DZBiEJsk0MBeD0YsDv38rN8AT4g13R6tvBsksB9u
-	 rV5DTWqwXIeLiVAvrgI0czrtlzhksPOed6yCQdeQ=
+	b=ti9Kc/A0F0rpnzG1JM1WVOTRXAOwMkq8gmrQYn9/V23YI+o+ntZaJ4n2Kx96dEy4u
+	 G+vLoASeh0RaPd9Eu+Ozzgo6MLXuH9GiOLt41YIm+J+FWKHiMUoldAjg62XeC+axbn
+	 5InCQ2x38xI/HABveXy9e1zWz0FqsYa21tb4Im+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403794AbfHVRXC (ORCPT
+        id S2403819AbfHVRXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42136 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:23:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391703AbfHVRXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:01 -0400
+        id S2403785AbfHVRXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:02 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4954233FC;
-        Thu, 22 Aug 2019 17:22:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D999C21743;
+        Thu, 22 Aug 2019 17:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494579;
-        bh=FsUGeY9eo7GuzAGPtRzW+Q3Jf1iFUrTPuybXbGlQpu0=;
+        s=default; t=1566494582;
+        bh=lAGBnw63tEB2nUUD852MKzE+i4vbkiq+jwyHBSgvvp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wjt79HECjR5fZVfoN9TiuRsEqJrqsOiddDNvxWfAEBh7rgDl+B1QXNVef5ThqTtD1
-         BNcAwq9fod9uPdn8dHIZ0DSjrq8W3wJq6Vv5G/sysP4RTCeP6lVJvyMM3YH4Fiqkik
-         65nyeu+1m2q7K+cFuDlteSX3LKkOivqvxp+3+5GU=
+        b=I9zE7qa0Y3mtS70J3bjvsonf62W/ScfjQ7X3vzXeVVneqpWoRtPxA1/e0un4VGucL
+         /h7hRUfmg6FOqTmTl6iqrOP0BDzxDfFKnR59p6hfvTzAvbZFHM4SkHU9pGiEMAzaMz
+         JTB1bAIPumzuKPi8MAj70L0vazl7tbiGgmm5fMrg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Waiman Long <Waiman.Long@hpe.com>,
-        Waiman Long <waiman.long@hpe.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.4 71/78] x86/vdso: Remove direct HPET access through the vDSO
-Date:   Thu, 22 Aug 2019 10:19:15 -0700
-Message-Id: <20190822171834.084939719@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 74/78] net/packet: fix race in tpacket_snd()
+Date:   Thu, 22 Aug 2019 10:19:18 -0700
+Message-Id: <20190822171834.175405184@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171832.012773482@linuxfoundation.org>
 References: <20190822171832.012773482@linuxfoundation.org>
@@ -67,147 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 1ed95e52d902035e39a715ff3a314a893a96e5b7 upstream.
+[ Upstream commit 32d3182cd2cd29b2e7e04df7b0db350fbe11289f ]
 
-Allowing user code to map the HPET is problematic.  HPET
-implementations are notoriously buggy, and there are probably many
-machines on which even MMIO reads from bogus HPET addresses are
-problematic.
+packet_sendmsg() checks tx_ring.pg_vec to decide
+if it must call tpacket_snd().
 
-We have a report that the Dell Precision M2800 with:
+Problem is that the check is lockless, meaning another thread
+can issue a concurrent setsockopt(PACKET_TX_RING ) to flip
+tx_ring.pg_vec back to NULL.
 
-  ACPI: HPET 0x00000000C8FE6238 000038 (v01 DELL   CBX3  01072009 AMI. 00000005)
+Given that tpacket_snd() grabs pg_vec_lock mutex, we can
+perform the check again to solve the race.
 
-is either so slow when accessing the HPET or actually hangs in some
-regard, causing soft lockups to be reported if users do unexpected
-things to the HPET.
+syzbot reported :
 
-The vclock HPET code has also always been a questionable speedup.
-Accessing an HPET is exceedingly slow (on the order of several
-microseconds), so the added overhead in requiring a syscall to read
-the HPET is a small fraction of the total code of accessing it.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 11429 Comm: syz-executor394 Not tainted 5.3.0-rc4+ #101
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:packet_lookup_frame+0x8d/0x270 net/packet/af_packet.c:474
+Code: c1 ee 03 f7 73 0c 80 3c 0e 00 0f 85 cb 01 00 00 48 8b 0b 89 c0 4c 8d 24 c1 48 b8 00 00 00 00 00 fc ff df 4c 89 e1 48 c1 e9 03 <80> 3c 01 00 0f 85 94 01 00 00 48 8d 7b 10 4d 8b 3c 24 48 b8 00 00
+RSP: 0018:ffff88809f82f7b8 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff8880a45c7030 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 1ffff110148b8e06 RDI: ffff8880a45c703c
+RBP: ffff88809f82f7e8 R08: ffff888087aea200 R09: fffffbfff134ae50
+R10: fffffbfff134ae4f R11: ffffffff89a5727f R12: 0000000000000000
+R13: 0000000000000001 R14: ffff8880a45c6ac0 R15: 0000000000000000
+FS:  00007fa04716f700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fa04716edb8 CR3: 0000000091eb4000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ packet_current_frame net/packet/af_packet.c:487 [inline]
+ tpacket_snd net/packet/af_packet.c:2667 [inline]
+ packet_sendmsg+0x590/0x6250 net/packet/af_packet.c:2975
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:657
+ ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
+ __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
+ __do_sys_sendmmsg net/socket.c:2442 [inline]
+ __se_sys_sendmmsg net/socket.c:2439 [inline]
+ __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
+ do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-To avoid future problems, let's just delete the code entirely.
-
-In the long run, this could actually be a speedup.  Waiman Long as a
-patch to optimize the case where multiple CPUs contend for the HPET,
-but that won't help unless all the accesses are mediated by the
-kernel.
-
-Reported-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Waiman Long <Waiman.Long@hpe.com>
-Cc: Waiman Long <waiman.long@hpe.com>
-Link: http://lkml.kernel.org/r/d2f90bba98db9905041cff294646d290d378f67a.1460074438.git.luto@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 69e3c75f4d54 ("net: TX_RING and packet mmap")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/entry/vdso/vclock_gettime.c  |   15 ---------------
- arch/x86/entry/vdso/vdso-layout.lds.S |    5 ++---
- arch/x86/include/asm/clocksource.h    |    3 +--
- arch/x86/kernel/hpet.c                |    1 -
- arch/x86/kvm/trace.h                  |    3 +--
- 5 files changed, 4 insertions(+), 23 deletions(-)
+ net/packet/af_packet.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/arch/x86/entry/vdso/vclock_gettime.c
-+++ b/arch/x86/entry/vdso/vclock_gettime.c
-@@ -13,7 +13,6 @@
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -2498,6 +2498,13 @@ static int tpacket_snd(struct packet_soc
  
- #include <uapi/linux/time.h>
- #include <asm/vgtod.h>
--#include <asm/hpet.h>
- #include <asm/vvar.h>
- #include <asm/unistd.h>
- #include <asm/msr.h>
-@@ -26,16 +25,6 @@ extern int __vdso_clock_gettime(clockid_
- extern int __vdso_gettimeofday(struct timeval *tv, struct timezone *tz);
- extern time_t __vdso_time(time_t *t);
+ 	mutex_lock(&po->pg_vec_lock);
  
--#ifdef CONFIG_HPET_TIMER
--extern u8 hpet_page
--	__attribute__((visibility("hidden")));
--
--static notrace cycle_t vread_hpet(void)
--{
--	return *(const volatile u32 *)(&hpet_page + HPET_COUNTER);
--}
--#endif
--
- #ifdef CONFIG_PARAVIRT_CLOCK
- extern u8 pvclock_page
- 	__attribute__((visibility("hidden")));
-@@ -209,10 +198,6 @@ notrace static inline u64 vgetsns(int *m
- 
- 	if (gtod->vclock_mode == VCLOCK_TSC)
- 		cycles = vread_tsc();
--#ifdef CONFIG_HPET_TIMER
--	else if (gtod->vclock_mode == VCLOCK_HPET)
--		cycles = vread_hpet();
--#endif
- #ifdef CONFIG_PARAVIRT_CLOCK
- 	else if (gtod->vclock_mode == VCLOCK_PVCLOCK)
- 		cycles = vread_pvclock(mode);
---- a/arch/x86/entry/vdso/vdso-layout.lds.S
-+++ b/arch/x86/entry/vdso/vdso-layout.lds.S
-@@ -25,7 +25,7 @@ SECTIONS
- 	 * segment.
- 	 */
- 
--	vvar_start = . - 3 * PAGE_SIZE;
-+	vvar_start = . - 2 * PAGE_SIZE;
- 	vvar_page = vvar_start;
- 
- 	/* Place all vvars at the offsets in asm/vvar.h. */
-@@ -35,8 +35,7 @@ SECTIONS
- #undef __VVAR_KERNEL_LDS
- #undef EMIT_VVAR
- 
--	hpet_page = vvar_start + PAGE_SIZE;
--	pvclock_page = vvar_start + 2 * PAGE_SIZE;
-+	pvclock_page = vvar_start + PAGE_SIZE;
- 
- 	. = SIZEOF_HEADERS;
- 
---- a/arch/x86/include/asm/clocksource.h
-+++ b/arch/x86/include/asm/clocksource.h
-@@ -5,8 +5,7 @@
- 
- #define VCLOCK_NONE 0  /* No vDSO clock available.	*/
- #define VCLOCK_TSC  1  /* vDSO should use vread_tsc.	*/
--#define VCLOCK_HPET 2  /* vDSO should use vread_hpet.	*/
--#define VCLOCK_PVCLOCK 3 /* vDSO should use vread_pvclock. */
-+#define VCLOCK_PVCLOCK 2 /* vDSO should use vread_pvclock. */
- 
- struct arch_clocksource_data {
- 	int vclock_mode;
---- a/arch/x86/kernel/hpet.c
-+++ b/arch/x86/kernel/hpet.c
-@@ -774,7 +774,6 @@ static struct clocksource clocksource_hp
- 	.mask		= HPET_MASK,
- 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
- 	.resume		= hpet_resume_counter,
--	.archdata	= { .vclock_mode = VCLOCK_HPET },
- };
- 
- static int hpet_clocksource_register(void)
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -809,8 +809,7 @@ TRACE_EVENT(kvm_write_tsc_offset,
- 
- #define host_clocks					\
- 	{VCLOCK_NONE, "none"},				\
--	{VCLOCK_TSC,  "tsc"},				\
--	{VCLOCK_HPET, "hpet"}				\
-+	{VCLOCK_TSC,  "tsc"}				\
- 
- TRACE_EVENT(kvm_update_master_clock,
- 	TP_PROTO(bool use_master_clock, unsigned int host_clock, bool offset_matched),
++	/* packet_sendmsg() check on tx_ring.pg_vec was lockless,
++	 * we need to confirm it under protection of pg_vec_lock.
++	 */
++	if (unlikely(!po->tx_ring.pg_vec)) {
++		err = -EBUSY;
++		goto out;
++	}
+ 	if (likely(saddr == NULL)) {
+ 		dev	= packet_cached_dev_get(po);
+ 		proto	= po->num;
 
 
