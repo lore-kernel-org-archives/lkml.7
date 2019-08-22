@@ -2,139 +2,122 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F04B7C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCFAC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85FF233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D277D233FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:26:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTKmvoyD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TUTU2NnU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731394AbfHVPYj (ORCPT
+        id S1731552AbfHVP0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:24:39 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35739 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730842AbfHVPYj (ORCPT
+        Thu, 22 Aug 2019 11:26:06 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56738 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729880AbfHVP0F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:24:39 -0400
-Received: by mail-qk1-f196.google.com with SMTP id r21so5503284qke.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:24:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=odvCOXj3UumVA2n+f7aef7KNjmkmoOgl5FgEwfn9Tf8=;
-        b=LTKmvoyDOtI8+cnmX5WagSmAPXowvfTqeoMk0yP1L1AXljbfsoeh7qtEV60ohWvajT
-         Wf7oZWKKgaHellGhB/may3c3uBlyfQSF1WsvmyUe6pSGV/4iuUVrKMmEb7ZMZJhqWZes
-         le8KG1nwaojukDQxYUIXbbG/s1D3tk6zWQy6OFuvFH1878Z3gVKob/ESeHL6tNXFaCp9
-         mR0pvKn+G3QXmfQOrzXrMnITu/4PO1LUBH2sAezrIWn07g/3EbX+ATp9uYW5tPavG/OA
-         IBcOBDYX5WluiIF1V669MinYYojV3Fj7bBKwKpuN0EAH7+ge8KNE2nAckv7hpYLWZXxU
-         bzlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=odvCOXj3UumVA2n+f7aef7KNjmkmoOgl5FgEwfn9Tf8=;
-        b=rC1IEdnaYXl1JEI8U44EALe258vcIFFkxWuAEDkKJ26hFs2dnGqz2TVrinmx1wvILQ
-         VPqBiebrgMYp2kSU2tlAkoTvhgv3FxMbc0WErRZ7EPYs2xyIH5bD093ybGMUi9Apjo3o
-         gglvSz50HuPAB3YGVYAu82UpvuhhbMGy9LLO9snUIfj2PxSb/z8a7P7nCsHrfuaIn0WH
-         KMG2E8eTM6ICnOZQKQOY4QaHMTDJYUDk4vncNJh5KdlwNd/MqQDAsYQTJk3xxsDKFh/O
-         4RbTNUBJPJGWSb5vhd1rkf5vuB/GgCn722DAm2PshudTh0l2l30jW+tGAiIg/zVhVnyp
-         zg6Q==
-X-Gm-Message-State: APjAAAXI43xRT7UYua7veISczlZfYnVEYMXWhz0LKQOeymzwDXljqstS
-        v6FpnJ4MJIx955vL9PbM4t8=
-X-Google-Smtp-Source: APXvYqxrfZYf1LQJpL83KkMXacTD6/xp3AlHaGqxOc940hRUvJRm3oo4e05QdGjNT2UQqBmyd6cQTA==
-X-Received: by 2002:ae9:eb4e:: with SMTP id b75mr36365876qkg.478.1566487478538;
-        Thu, 22 Aug 2019 08:24:38 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id r4sm13878895qta.93.2019.08.22.08.24.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 08:24:37 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A955A40340; Thu, 22 Aug 2019 12:24:35 -0300 (-03)
-Date:   Thu, 22 Aug 2019 12:24:35 -0300
-To:     Gerald BAEZA <gerald.baeza@st.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH] libperf: fix alignment trap in perf stat
-Message-ID: <20190822152435.GD29569@kernel.org>
-References: <1566464769-16374-1-git-send-email-gerald.baeza@st.com>
+        Thu, 22 Aug 2019 11:26:05 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7MF4Mx0087310;
+        Thu, 22 Aug 2019 15:20:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=1L5ER/qHk23OYtUxN07nDgRdnfnZxx2DF63Rw066TEU=;
+ b=TUTU2NnUGOh4xD4o+ekU6weirf9jpHf+pLiY1Q/982QWFCZeo0muWZqUzEIst9mmeX2G
+ tvc1KCLIMJv2FqopEsyv9HxiinVifeIFZCOgOXpieTlIyE8BeQT5DXBbUeH9BA0GC9f6
+ SkWbP7KPLFpzj68lv1OfKaMVHRSLAvsoHzQarkWQyeeglWf6MzaDzBMcVo8CHqrA0PWn
+ gC9SiP1VTgkabkM2NZBe6va8+EacRo3aq8PzjlZ90Q57mH9CIy9gYUV1DMDBTWHFVliT
+ W7QWqT+hSJMIQ8GpYi/X7nlE+ViJU+0yCyasx6cEh9hTVifRdlge73HeEEwcgwfEymcU sA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2ue90txm3f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 15:20:56 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x7MF3xeU179464;
+        Thu, 22 Aug 2019 15:20:56 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2uhusembk0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 15:20:55 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x7MFKrjU013736;
+        Thu, 22 Aug 2019 15:20:54 GMT
+Received: from [192.168.1.219] (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 22 Aug 2019 15:20:53 +0000
+Subject: Re: [PATCH 00/14] per memcg lru_lock
+To:     Alex Shi <alex.shi@linux.alibaba.com>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>
+References: <1566294517-86418-1-git-send-email-alex.shi@linux.alibaba.com>
+ <6ba1ffb0-fce0-c590-c373-7cbc516dbebd@oracle.com>
+ <348495d2-b558-fdfd-a411-89c75d4a9c78@linux.alibaba.com>
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+Message-ID: <b776032e-eabb-64ff-8aee-acc2b3711717@oracle.com>
+Date:   Thu, 22 Aug 2019 11:20:52 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1566464769-16374-1-git-send-email-gerald.baeza@st.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <348495d2-b558-fdfd-a411-89c75d4a9c78@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9356 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1908220150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9356 signatures=668684
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1908220150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Aug 22, 2019 at 09:07:01AM +0000, Gerald BAEZA escreveu:
-> Following the patch 'perf stat: Fix --no-scale', an
-> alignment trap happens in process_counter_values()
-> on ARMv7 platforms due to the attempt to copy non
-> 64 bits aligned double words (pointed by 'count')
-> via a NEON vectored instruction ('vld1' with 64
-> bits alignment constraint).
+On 8/22/19 7:56 AM, Alex Shi wrote:
+> 在 2019/8/22 上午2:00, Daniel Jordan 写道:
+>>    https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice>
+>> It's also synthetic but it stresses lru_lock more than just anon alloc/free.  It hits the page activate path, which is where we see this lock in our database, and if enough memory is configured lru_lock also gets stressed during reclaim, similar to [1].
 > 
-> This patch sets a 64 bits alignment constraint on
-> 'contents[]' field in 'struct xyarray' since the
-> 'count' pointer used above points to such a
-> structure.
+> Thanks for the sharing, this patchset can not help the [1] case, since it's just relief the per container lock contention now.
 
-You forgot to add Mathieu and Andi, which I just did.
+I should've been clearer.  [1] is meant as an example of someone suffering from lru_lock during reclaim.  Wouldn't your series help per-memcg reclaim?
 
-I think this is ok and I'm applying, please holler anyone if think this
-isn't the case,
-
-- Arnaldo
- 
-> Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
-> ---
->  tools/perf/lib/include/internal/xyarray.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Yes, readtwice case could be more sensitive for this lru_lock changes in containers. I may try to use it in container with some tuning. But anyway, aim9 is also pretty good to show the problem and solutions. :)
+>>
+>> It'd be better though, as Michal suggests, to use the real workload that's causing problems.  Where are you seeing contention?
 > 
-> diff --git a/tools/perf/lib/include/internal/xyarray.h b/tools/perf/lib/include/internal/xyarray.h
-> index 3bf70e4..51e35d6 100644
-> --- a/tools/perf/lib/include/internal/xyarray.h
-> +++ b/tools/perf/lib/include/internal/xyarray.h
-> @@ -2,6 +2,7 @@
->  #ifndef __LIBPERF_INTERNAL_XYARRAY_H
->  #define __LIBPERF_INTERNAL_XYARRAY_H
->  
-> +#include <linux/compiler.h>
->  #include <sys/types.h>
->  
->  struct xyarray {
-> @@ -10,7 +11,7 @@ struct xyarray {
->  	size_t entries;
->  	size_t max_x;
->  	size_t max_y;
-> -	char contents[];
-> +	char contents[] __aligned(8);
->  };
->  
->  struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size);
-> -- 
-> 2.7.4
+> We repeatly create or delete a lot of different containers according to servers load/usage, so normal workload could cause lots of pages alloc/remove. 
 
--- 
+I think numbers from that scenario would help your case.
 
-- Arnaldo
+> aim9 could reflect part of scenarios. I don't know the DB scenario yet.
+
+We see it during DB shutdown when each DB process frees its memory (zap_pte_range -> mark_page_accessed).  But that's a different thing, clearly Not This Series.
+
+>>> With this patch series, lruvec->lru_lock show no contentions
+>>>           &(&lruvec->lru_l...          8          0               0       0               0               0
+>>>
+>>> and aim9 page_test/brk_test performance increased 5%~50%.
+>>
+>> Where does the 50% number come in?  The numbers below seem to only show ~4% boost.
+> 
+> the Setddev/CoeffVar case has about 50% performance increase. one of container's mmtests result as following:
+> 
+> Stddev    page_test      245.15 (   0.00%)      189.29 (  22.79%)
+> Stddev    brk_test      1258.60 (   0.00%)      629.16 (  50.01%)
+> CoeffVar  page_test        0.71 (   0.00%)        0.53 (  26.05%)
+> CoeffVar  brk_test         1.32 (   0.00%)        0.64 (  51.14%)
+
+Aha.  50% decrease in stdev.
