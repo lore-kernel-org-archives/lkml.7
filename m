@@ -2,53 +2,52 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA8EC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83106C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5125D23405
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B3723406
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494601;
-	bh=u55SxykGv3rcc/GjSWOuEpullZcd3P4SvDouGvXtU48=;
+	s=default; t=1566494604;
+	bh=0C0CntLjrth/EChT8V7C04HBrtlfZujJ18utphkB0Vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g5uh0rnp+Gah2bMra6wzMW/PX6RyLKdQeRYryrM4QnJS3hFcOlx+DlLhdL50JzuJ1
-	 5sVCM82sI+59aCYqgRy2SoMsrf3Q2DhhdYB0sOxTUM6bLxWswxd0KPknOcm+ASSg+x
-	 zgQsS9OBR4czfBsWEiB7nhiCuhzxR8kqu2uHvw1I=
+	b=rrzvnnZ3gJSPNmuWiKQWbCmiLlZdvFSrqNYpucS5c+fBItQEjWR4C0wMIFHExNxx6
+	 NKK5Rl6Tguu9ge8kj9j+apMdq6LE/SGwn7KFqwXjT5rrM0HxHG/pAjaXo5tfVyuFgy
+	 WKY4LbsobhqBQNuq/vICgykbBtoPB9OVRdnkJxe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390131AbfHVRXU (ORCPT
+        id S2403934AbfHVRXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:23:20 -0400
+        Thu, 22 Aug 2019 13:23:23 -0400
 Received: from mail.kernel.org ([198.145.29.99]:42878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403891AbfHVRXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:23:17 -0400
+        id S2403898AbfHVRXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:23:19 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D324023407;
-        Thu, 22 Aug 2019 17:23:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67284233FC;
+        Thu, 22 Aug 2019 17:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494597;
-        bh=u55SxykGv3rcc/GjSWOuEpullZcd3P4SvDouGvXtU48=;
+        s=default; t=1566494598;
+        bh=0C0CntLjrth/EChT8V7C04HBrtlfZujJ18utphkB0Vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TnAXsp7oji5C5mA3CNj4MKxyjX0SCqw5mDoOYkXkt5T2pr1a/5DvhRRyMP5aYLYYZ
-         MJyqrxZYVOncNxMcGLSkU8XG/yp58Tt5CvzX40/oDXLvrqxJmnhDAqvdwtpTXzc3T8
-         7ZQJe9XV5KtuqsWnsqJ3mKu1r7L6gaev2pgUpFtI=
+        b=YA/3I4eG7J5m2qb1Z8tQyN7Wa60cyX9XbgYZWAtPRaSqF+5heeMqJ7Z1OzDo/T2Um
+         UfabuxnSm2i2ZB0h/Npf8CSH2PR+S2Gcgurw0KhmRXqRF4j5cfNaX7Js6xNnb0U40g
+         16vDJPFbF+KBcqfMHdhfanUPKlrfCI+4FQR5d4fc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Vinod Koul <vkoul@kernel.org>, Takashi Iwai <tiwai@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 018/103] ALSA: compress: Fix regression on compressed capture streams
-Date:   Thu, 22 Aug 2019 10:18:06 -0700
-Message-Id: <20190822171729.588693318@linuxfoundation.org>
+        syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.9 002/103] usb: iowarrior: fix deadlock on disconnect
+Date:   Thu, 22 Aug 2019 10:17:50 -0700
+Message-Id: <20190822171728.557363694@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171728.445189830@linuxfoundation.org>
 References: <20190822171728.445189830@linuxfoundation.org>
@@ -61,82 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4475f8c4ab7b248991a60d9c02808dbb813d6be8 ]
+From: Oliver Neukum <oneukum@suse.com>
 
-A previous fix to the stop handling on compressed capture streams causes
-some knock on issues. The previous fix updated snd_compr_drain_notify to
-set the state back to PREPARED for capture streams. This causes some
-issues however as the handling for snd_compr_poll differs between the
-two states and some user-space applications were relying on the poll
-failing after the stream had been stopped.
+commit c468a8aa790e0dfe0a7f8a39db282d39c2c00b46 upstream.
 
-To correct this regression whilst still fixing the original problem the
-patch was addressing, update the capture handling to skip the PREPARED
-state rather than skipping the SETUP state as it has done until now.
+We have to drop the mutex before we close() upon disconnect()
+as close() needs the lock. This is safe to do by dropping the
+mutex as intfdata is already set to NULL, so open() will fail.
 
-Fixes: 4f2ab5e1d13d ("ALSA: compress: Fix stop handling on compressed capture streams")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 03f36e885fc26 ("USB: open disconnect race in iowarrior")
+Reported-by: syzbot+a64a382964bf6c71a9c0@syzkaller.appspotmail.com
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20190808092728.23417-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/sound/compress_driver.h |  5 +----
- sound/core/compress_offload.c   | 16 +++++++++++-----
- 2 files changed, 12 insertions(+), 9 deletions(-)
+ drivers/usb/misc/iowarrior.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
-index 96bc5acdade38..49482080311a1 100644
---- a/include/sound/compress_driver.h
-+++ b/include/sound/compress_driver.h
-@@ -185,10 +185,7 @@ static inline void snd_compr_drain_notify(struct snd_compr_stream *stream)
- 	if (snd_BUG_ON(!stream))
- 		return;
+--- a/drivers/usb/misc/iowarrior.c
++++ b/drivers/usb/misc/iowarrior.c
+@@ -886,19 +886,20 @@ static void iowarrior_disconnect(struct
+ 	dev = usb_get_intfdata(interface);
+ 	mutex_lock(&iowarrior_open_disc_lock);
+ 	usb_set_intfdata(interface, NULL);
++	/* prevent device read, write and ioctl */
++	dev->present = 0;
  
--	if (stream->direction == SND_COMPRESS_PLAYBACK)
--		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
--	else
--		stream->runtime->state = SNDRV_PCM_STATE_PREPARED;
-+	stream->runtime->state = SNDRV_PCM_STATE_SETUP;
+ 	minor = dev->minor;
++	mutex_unlock(&iowarrior_open_disc_lock);
++	/* give back our minor - this will call close() locks need to be dropped at this point*/
  
- 	wake_up(&stream->runtime->sleep);
- }
-diff --git a/sound/core/compress_offload.c b/sound/core/compress_offload.c
-index 555df64d46ffc..cf1317546b0ff 100644
---- a/sound/core/compress_offload.c
-+++ b/sound/core/compress_offload.c
-@@ -575,10 +575,7 @@ snd_compr_set_params(struct snd_compr_stream *stream, unsigned long arg)
- 		stream->metadata_set = false;
- 		stream->next_track = false;
+-	/* give back our minor */
+ 	usb_deregister_dev(interface, &iowarrior_class);
  
--		if (stream->direction == SND_COMPRESS_PLAYBACK)
--			stream->runtime->state = SNDRV_PCM_STATE_SETUP;
--		else
--			stream->runtime->state = SNDRV_PCM_STATE_PREPARED;
-+		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
- 	} else {
- 		return -EPERM;
- 	}
-@@ -694,8 +691,17 @@ static int snd_compr_start(struct snd_compr_stream *stream)
- {
- 	int retval;
+ 	mutex_lock(&dev->mutex);
  
--	if (stream->runtime->state != SNDRV_PCM_STATE_PREPARED)
-+	switch (stream->runtime->state) {
-+	case SNDRV_PCM_STATE_SETUP:
-+		if (stream->direction != SND_COMPRESS_CAPTURE)
-+			return -EPERM;
-+		break;
-+	case SNDRV_PCM_STATE_PREPARED:
-+		break;
-+	default:
- 		return -EPERM;
-+	}
-+
- 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_START);
- 	if (!retval)
- 		stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
--- 
-2.20.1
-
+ 	/* prevent device read, write and ioctl */
+-	dev->present = 0;
+ 
+ 	mutex_unlock(&dev->mutex);
+-	mutex_unlock(&iowarrior_open_disc_lock);
+ 
+ 	if (dev->opened) {
+ 		/* There is a process that holds a filedescriptor to the device ,
 
 
