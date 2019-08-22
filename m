@@ -2,94 +2,129 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8BCC3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAADFC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207F22145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FFB42145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 03:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4ozXsYl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRigY60/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730459AbfHVDcC (ORCPT
+        id S1730536AbfHVDf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 21 Aug 2019 23:32:02 -0400
-Received: from mail-qk1-f171.google.com ([209.85.222.171]:35898 "EHLO
-        mail-qk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729135AbfHVDcB (ORCPT
+        Wed, 21 Aug 2019 23:35:27 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38823 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728332AbfHVDf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 21 Aug 2019 23:32:01 -0400
-Received: by mail-qk1-f171.google.com with SMTP id d23so3912181qko.3;
-        Wed, 21 Aug 2019 20:32:00 -0700 (PDT)
+        Wed, 21 Aug 2019 23:35:27 -0400
+Received: by mail-wm1-f66.google.com with SMTP id m125so4187240wmm.3;
+        Wed, 21 Aug 2019 20:35:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=UIoftVC7LBAw37MnDnt/TcuIgjHWo/AAuAOTs4kPi64=;
-        b=T4ozXsYlsqg+FqmlDhDACxtha3DXnmhopkQrh8TtP2IQHmxukmzjU2IorUOb6WnKpc
-         AqCdfYwKkpD+qm7ZT5mG/IcCzh3rw09DiBscZf3aadk7wdzswevNs7cHhUZwTHaW9FTi
-         5n1wkxRH8gCp4PbiAtJx8VUnS3kukeW64Tp7TzZMsQaSdakAUUDAORBBQ5mqmKaR4vLC
-         uQXG1yCQ25WTRnNxusVgFx+CYfhFd85TsFq2DhYc7Ugc8wn/a/rJGZDhCRHtTBh1/K1v
-         bfcxNhkbJIVovZtYY/2GBhkKgac28H5DFBINg1OC2BysRXQ8etTtD6A6JvoyMSfXlhTu
-         85bQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=WsaYFeAkte2NretrOo8yB7eLtn2MeRH7ZtBbeHqK9ss=;
+        b=mRigY60/acd7r9AbKb68l4BZVAfI6iTkq9tIoOCP/NzynKBOPNFtBnMgl88G3vKpv9
+         4nbLjfEHxDEUn+KlYQfPXsu/23xyYA8DfzDkwoT0ssJWXao7V6c1pvw7hol3oKDUdNEQ
+         lJLMOh2e7VXr5Tvep4FUu9ywmFnwGShlGQ7RybJqG+Ey6Ff1b7AqseT0+MqEtDudQHTo
+         HediKQtaQUxtLainWjPbEz7dUfZPht5bp8BB3FRsUN6cgUer1mD35+igZNtL+iZLlbAC
+         DEGVfj5bYxoghKLBjDbg0HMmJKas/B+ZMu+cPtjgLzWgZaQVrqVHIycJstWAUJT4Vd9z
+         6V8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UIoftVC7LBAw37MnDnt/TcuIgjHWo/AAuAOTs4kPi64=;
-        b=o4oaetGs3g/rAakKSLXa48Tvvnmmw0OBiBzzN9856KaSlnMgBgQ6hZe5bfMttsI6kg
-         qEleUTw/WLF0m8akt+9zbUx4thDhMfDGkPTHLZsHWaxcB04M28Czn1roe4EjqmMxIgtH
-         fup5G6H9pxCIA53dDB1gM2b187OttRGM1NUMPnIIsAYDab6ZrmTomQo3Va9ZlwkROWQk
-         11gTm6yfM6uTzIMuy74eh4t4vhrYa5zh1cbJdC4g7+lpijJYkPmnKQ6gooHkFJ4wciCh
-         Y02auNoEzHDJp/WIbWduAgEJZ647boVPFStVZF2hKWCcDyNoJrvZL06h1wzuVrbtM3+K
-         HdCw==
-X-Gm-Message-State: APjAAAWpmjW7S2K7WthHQaqU94bkhSdGHN6eVESEwcLzcqpiIvsMS4q2
-        nBbeNA1cEjDpRVGPFbpe3LU=
-X-Google-Smtp-Source: APXvYqweYGEq09uXOhH+BQCSSJUCYM+eYQ8nwj9/pPcLK7kpk9M0Gz+m8Q1CkjOzDgP+tLuEX2kNqw==
-X-Received: by 2002:a37:a10:: with SMTP id 16mr33425377qkk.335.1566444720358;
-        Wed, 21 Aug 2019 20:32:00 -0700 (PDT)
-Received: from Davids-MacBook-Pro.local ([2604:2000:e8c5:d400:18a2:a8d5:6394:8e1f])
-        by smtp.googlemail.com with ESMTPSA id h66sm11118817qke.61.2019.08.21.20.31.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WsaYFeAkte2NretrOo8yB7eLtn2MeRH7ZtBbeHqK9ss=;
+        b=KXW9d8SJejRgTsTIrJZGHVIdm5bed49HCRmXeJwYn8D2rkgAZMlR+wkdGNWx2E8Y57
+         sHDirt0El6N+kJPSsZj+vq+laPt9mMJYfYGQL0e5UH974p5jTn1jdysxb5V49ky1UpU/
+         bHNR2vMMV4ORr0Zxdb436a9GX3e32miYs+nTpALv/B0u6u1/wdExRXvEwjNaL+X5HQZV
+         IhhAACheuMLsbiMf9rSGvsKqKNSmVar5kgXESzoPsUGCiWCsrUMR5VsUNrP1ovjSXgSh
+         Yn8rS5ysRUJ9JxYrgwF12lT6j9tjjASgl0WzWHLPP3B02gU64486erDM8ocsXcO9kFD9
+         f3Sw==
+X-Gm-Message-State: APjAAAUtgtQL3gcgK7Bo6iDiq+BJeZPq6FmRGMroQHAOlj90bmH2TgFb
+        zCvC7YDYjkehtIh/aecwUlw=
+X-Google-Smtp-Source: APXvYqxpplXAscH90uc7IVjMnTI5K8IsuLoHO6ctq9wYYw2C2y4eh3XV0YiP0nw2niEWn1ZjB0odjw==
+X-Received: by 2002:a1c:d108:: with SMTP id i8mr3609222wmg.28.1566444924948;
+        Wed, 21 Aug 2019 20:35:24 -0700 (PDT)
+Received: from localhost ([165.22.121.176])
+        by smtp.gmail.com with ESMTPSA id o11sm17971037wrw.19.2019.08.21.20.35.24
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 21 Aug 2019 20:31:59 -0700 (PDT)
-Subject: Re: KMSAN: uninit-value in rtm_new_nexthop
-To:     syzbot <syzbot+4f3abbb335d1bed2287c@syzkaller.appspotmail.com>,
-        davem@davemloft.net, dsahern@kernel.org, glider@google.com,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        yoshfuji@linux-ipv6.org
-References: <000000000000276f580590a83ac2@google.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <b6b5081d-0abe-2c39-27ee-c957996d4fc4@gmail.com>
-Date:   Wed, 21 Aug 2019 23:31:57 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <000000000000276f580590a83ac2@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 21 Aug 2019 20:35:24 -0700 (PDT)
+From:   hexin <hexin.op@gmail.com>
+X-Google-Original-From: hexin <hexin15@baidu.com>
+To:     Alex Williamson <alex.williamson@redhat.com>, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     hexin <hexin15@baidu.com>, Liu Qi <liuqi16@baidu.com>,
+        Zhang Yu <zhangyu31@baidu.com>
+Subject: [PATCH v3] vfio_pci: Restore original state on release
+Date:   Thu, 22 Aug 2019 11:35:19 +0800
+Message-Id: <1566444919-3331-1-git-send-email-hexin15@baidu.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/19 6:38 PM, syzbot wrote:
-> ==================================================================
-> BUG: KMSAN: uninit-value in rtm_to_nh_config net/ipv4/nexthop.c:1317
-> [inline]
-> BUG: KMSAN: uninit-value in rtm_new_nexthop+0x447/0x98e0
-> net/ipv4/nexthop.c:1474
+vfio_pci_enable() saves the device's initial configuration information
+with the intent that it is restored in vfio_pci_disable().  However,
+the commit referenced in Fixes: below replaced the call to
+__pci_reset_function_locked(), which is not wrapped in a state save
+and restore, with pci_try_reset_function(), which overwrites the
+restored device state with the current state before applying it to the
+device.  Reinstate use of __pci_reset_function_locked() to return to
+the desired behavior.
 
-I believed this is fixed in net by commit:
+Fixes: 890ed578df82 ("vfio-pci: Use pci "try" reset interface")
+Signed-off-by: hexin <hexin15@baidu.com>
+Signed-off-by: Liu Qi <liuqi16@baidu.com>
+Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
+---
+v2->v3:
+- change commit log 
+v1->v2:
+- add fixes tag
+- add comment to warn 
 
-Author: David Ahern <dsahern@gmail.com>
-Date:   Mon Aug 12 13:07:07 2019 -0700
+[1] https://lore.kernel.org/linux-pci/1565926427-21675-1-git-send-email-hexin15@baidu.com
+[2] https://lore.kernel.org/linux-pci/1566042663-16694-1-git-send-email-hexin15@baidu.com
 
-    netlink: Fix nlmsg_parse as a wrapper for strict message parsing
+ drivers/vfio/pci/vfio_pci.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 703948c..0220616 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -438,11 +438,20 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+ 	pci_write_config_word(pdev, PCI_COMMAND, PCI_COMMAND_INTX_DISABLE);
+ 
+ 	/*
+-	 * Try to reset the device.  The success of this is dependent on
+-	 * being able to lock the device, which is not always possible.
++	 * Try to get the locks ourselves to prevent a deadlock. The
++	 * success of this is dependent on being able to lock the device,
++	 * which is not always possible.
++	 * We can not use the "try" reset interface here, which will
++	 * overwrite the previously restored configuration information.
+ 	 */
+-	if (vdev->reset_works && !pci_try_reset_function(pdev))
+-		vdev->needs_reset = false;
++	if (vdev->reset_works && pci_cfg_access_trylock(pdev)) {
++		if (device_trylock(&pdev->dev)) {
++			if (!__pci_reset_function_locked(pdev))
++				vdev->needs_reset = false;
++			device_unlock(&pdev->dev);
++		}
++		pci_cfg_access_unlock(pdev);
++	}
+ 
+ 	pci_restore_state(pdev);
+ out:
+-- 
+1.8.3.1
 
