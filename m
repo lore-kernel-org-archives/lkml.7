@@ -2,79 +2,171 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDA5C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA608C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEF24233FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877E620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389165AbfHVPfC (ORCPT
+        id S2389465AbfHVPfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 11:35:02 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:41160 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731907AbfHVPfC (ORCPT
+        Thu, 22 Aug 2019 11:35:11 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:53671 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731907AbfHVPfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:35:02 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Ta8nBUi_1566488079;
-Received: from localhost(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0Ta8nBUi_1566488079)
+        Thu, 22 Aug 2019 11:35:11 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=luoben@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Ta8p3Z9_1566488099;
+Received: from localhost(mailfrom:luoben@linux.alibaba.com fp:SMTPD_---0Ta8p3Z9_1566488099)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 22 Aug 2019 23:34:53 +0800
+          Thu, 22 Aug 2019 23:35:05 +0800
 From:   Ben Luo <luoben@linux.alibaba.com>
 To:     tglx@linutronix.de, alex.williamson@redhat.com
 Cc:     linux-kernel@vger.kernel.org, tao.ma@linux.alibaba.com,
         gerry@linux.alibaba.com, nanhai.zou@linux.alibaba.com,
         linyunsheng@huawei.com
-Subject: [PATCH v4 0/3] genirq/vfio: Introduce irq_update_devid() and optimize VFIO irq ops
-Date:   Thu, 22 Aug 2019 23:34:40 +0800
-Message-Id: <cover.1566486156.git.luoben@linux.alibaba.com>
+Subject: [PATCH v4 2/3] genirq: introduce irq_update_devid()
+Date:   Thu, 22 Aug 2019 23:34:42 +0800
+Message-Id: <dccc49c34393c9c6114b3695feaab489d680d62d.1566486156.git.luoben@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1566486156.git.luoben@linux.alibaba.com>
+References: <cover.1566486156.git.luoben@linux.alibaba.com>
+In-Reply-To: <cover.1566486156.git.luoben@linux.alibaba.com>
+References: <cover.1566486156.git.luoben@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, VFIO takes uses a free-then-request-irq way to do interrupt
-affinity setting and masking/unmasking for a VM (with device passthru
-via VFIO). Sometimes only change the cookie data of irqaction or even
-change nothing. The free-then-request-irq not only adds more latency,
-but also increases the risk of losing interrupt, which may lead to a
-VM hung forever in waiting for IO completion
+Sometimes, only the dev_id field of irqaction needs to be changed.
 
-This patchset solved the issue by:
-Patch 2 introduces irq_update_devid() to only update dev_id of irqaction
-Patch 3 make use of this function and optimize irq operations in VFIO
+E.g. KVM VM with device passthru via VFIO may switch the interrupt
+injection path between KVM irqfd and userspace eventfd. These two
+paths share the same interrupt number and handler for the same msi
+vector of a device, only with different 'dev_id's referencing to
+different fds' contexts. Set interrupt affinity in this VM is a way
+to trigger the path switching.
 
-changes from v3:
- - rename the new function to irq_update_devid()
- - amend commit messages and code comments
- - use disbale_irq()/enable_irq() to avoid a twist for threaded interrupt
- - add more comments to vfio-pci code
+Currently, VFIO uses a free-then-request-irq way for the path switching.
+There is a time window between free_irq() and request_irq() where the
+target IRTE is invalid. So, in-flight interrupts (buffering in hardware
+layer and unfortunately cannot be synchronized in software) can cause
+DMAR faults and even worse, this VM may hang in waiting IO completion.
 
-changes from v2:
- - reformat to avoid quoted string split across lines and etc.
+By using irq_update_devid(), this issue can be avoided since IRTE will
+not be invalidated during the whole process.
 
-changes from v1:
- - add Patch 1 to enhance error recovery etc. in free irq per tglx's comments
- - enhance error recovery code and debugging info in irq_update_devid
- - use __must_check in external referencing of this function
- - use EXPORT_SYMBOL_GPL for irq_update_devid
- - reformat code of patch 3 for better readability
+Signed-off-by: Ben Luo <luoben@linux.alibaba.com>
+---
+ include/linux/interrupt.h |  3 ++
+ kernel/irq/manage.c       | 75 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 78 insertions(+)
 
-Ben Luo (3):
-  genirq: enhance error recovery code in free irq
-  genirq: introduce irq_update_devid()
-  vfio/pci: make use of irq_update_devid and optimize irq ops
-
- drivers/vfio/pci/vfio_pci_intrs.c | 112 +++++++++++++++++++++++++-------------
- include/linux/interrupt.h         |   3 +
- kernel/irq/manage.c               | 105 +++++++++++++++++++++++++++++++----
- 3 files changed, 170 insertions(+), 50 deletions(-)
-
+diff --git a/include/linux/interrupt.h b/include/linux/interrupt.h
+index 5b8328a..09b6a0f 100644
+--- a/include/linux/interrupt.h
++++ b/include/linux/interrupt.h
+@@ -172,6 +172,9 @@ struct irqaction {
+ request_percpu_nmi(unsigned int irq, irq_handler_t handler,
+ 		   const char *devname, void __percpu *dev);
+ 
++extern int __must_check
++irq_update_devid(unsigned int irq, void *dev_id, void *new_dev_id);
++
+ extern const void *free_irq(unsigned int, void *);
+ extern void free_percpu_irq(unsigned int, void __percpu *);
+ 
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 10ec3e9..adb1980 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -2063,6 +2063,81 @@ int request_threaded_irq(unsigned int irq, irq_handler_t handler,
+ EXPORT_SYMBOL(request_threaded_irq);
+ 
+ /**
++ *	irq_update_devid - update irq dev_id to a new one
++ *
++ *	@irq:		Interrupt line to update
++ *	@dev_id:	A cookie to find the irqaction to update
++ *	@new_dev_id:	New cookie passed to the handler function
++ *
++ *	Sometimes, only the cookie data need to be changed. Instead of
++ *	free-then-request interrupt, only update dev_id of irqaction can
++ *	not only gain some performance benefit, but also reduce the risk
++ *	of losing interrupt.
++ *
++ *	This function won't update dev_id until any executing interrupts
++ *	for this IRQ have completed. This function must not be called
++ *	from interrupt context.
++ *
++ *	On failure, it returns a negative value. On success,
++ *	it returns 0
++ */
++int irq_update_devid(unsigned int irq, void *dev_id, void *new_dev_id)
++{
++	struct irq_desc *desc = irq_to_desc(irq);
++	struct irqaction *action, **action_ptr;
++	unsigned long flags;
++
++	if (WARN(in_interrupt(),
++		 "Trying to update IRQ %d (dev_id %p to %p) from IRQ context!\n",
++		 irq, dev_id, new_dev_id))
++		return -EPERM;
++
++	if (!desc)
++		return -EINVAL;
++
++	/*
++	 * Ensure that an interrupt in flight on another CPU which uses the
++	 * old 'dev_id' has completed because the caller can free the memory
++	 * to which it points after this function returns. And also avoid to
++	 * update 'dev_id' in the middle of a threaded interrupt process, it
++	 * can lead to a twist that primary handler uses old 'dev_id' but new
++	 * 'dev_id' is used by secondary handler.
++	 */
++	disable_irq(irq);
++	raw_spin_lock_irqsave(&desc->lock, flags);
++
++	/*
++	 * There can be multiple actions per IRQ descriptor, find the right
++	 * one based on the dev_id:
++	 */
++	action_ptr = &desc->action;
++	for (;;) {
++		action = *action_ptr;
++
++		if (!action) {
++			raw_spin_unlock_irqrestore(&desc->lock, flags);
++			enable_irq(irq);
++			WARN(1,
++			     "Trying to update already-free IRQ %d (dev_id %p to %p)\n",
++			     irq, dev_id, new_dev_id);
++			return -ENXIO;
++		}
++
++		if (action->dev_id == dev_id) {
++			action->dev_id = new_dev_id;
++			break;
++		}
++		action_ptr = &action->next;
++	}
++
++	raw_spin_unlock_irqrestore(&desc->lock, flags);
++	enable_irq(irq);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(irq_update_devid);
++
++/**
+  *	request_any_context_irq - allocate an interrupt line
+  *	@irq: Interrupt line to allocate
+  *	@handler: Function to be called when the IRQ occurs.
 -- 
 1.8.3.1
 
