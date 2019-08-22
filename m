@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5724DC3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C0AC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA732089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11D42089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494139;
-	bh=sz3DWKeYsysDBtyRq4WhvVf/U3OY+yB8ZuYeKLkRamM=;
+	s=default; t=1566494145;
+	bh=TN/yZ7FjGl5BN0jJpt8bZnFuEvxtK5gvDFA4qWawSi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wQFc7v7bAkonGv6aUJs2DwcQ3vAdH2v6OQWVGm92wutCqmKvYWYNfw6M5Y/XhW+TL
-	 QEIwGgyp96Lkkhgd1y8pqVo8t5CppqZ3elvtaW8CwTcImMf8ZD5Lf45bD2qod8uFi5
-	 DLOpsfcXd/j7+beeAYt8y2YaZZV9hWxgdmLTSIds=
+	b=C2Sw+nBtYxDUOGiyjyPLsaMe5arZ/8aBnxMAn3s2ox9gSbTEQYZjAXjCdJPIGp5Wr
+	 qHkCBO4hD7Ut3vV/jDCJ6eIOqXDw46EaNrJ98ZoOLonjB2hCi0eCEQNmzFHd+tB3fb
+	 0F4PyVS6D1QAER7FbG+MF9doV8oYgiQEOiPb11JY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391185AbfHVRPi (ORCPT
+        id S2390447AbfHVRIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:15:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:08:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390459AbfHVRIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:08:42 -0400
+        id S2390392AbfHVRIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:08:39 -0400
 Received: from sasha-vm.mshome.net (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EBED233FC;
-        Thu, 22 Aug 2019 17:08:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EA93233FC;
+        Thu, 22 Aug 2019 17:08:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566493721;
-        bh=sz3DWKeYsysDBtyRq4WhvVf/U3OY+yB8ZuYeKLkRamM=;
+        s=default; t=1566493718;
+        bh=TN/yZ7FjGl5BN0jJpt8bZnFuEvxtK5gvDFA4qWawSi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mZ+m2DiVsCJD46FRxkSs8wBjHr4IzoOH7QgvLcE9N89YgfHL8/StCbvBnTGsGO42D
-         08FKA0k1/DTqU6UJAczH+c7tn77luJ1jNK8gC1Uz7cUI+Cc+XDXrKUcBbzZnvgSPn0
-         RoVFt7k9VMgUEUYlHwykVvu0x5HSbrIs8GyIg8co=
+        b=BEsnQIa0AAkpNFGTEJE3KmfPSm2xpadpaigdeukAyXv4qp/V2nzrG9VaiWtIrsqYE
+         +PVEFQYItfD88k2FNnXEAgbeMUMoML/OtEnkR6UGpgSrDvKafc/vUdngSZa5bE07WT
+         F6vhOc7a7PWQtXf1KHdKeU4i3h6YAO0/Zb8hSQI0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vince Weaver <vincent.weaver@maine.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 051/135] perf header: Fix divide by zero error if f_header.attr_size==0
-Date:   Thu, 22 Aug 2019 13:06:47 -0400
-Message-Id: <20190822170811.13303-52-sashal@kernel.org>
+Subject: [PATCH 5.2 045/135] mm/hmm: always return EBUSY for invalid ranges in hmm_range_{fault,snapshot}
+Date:   Thu, 22 Aug 2019 13:06:41 -0400
+Message-Id: <20190822170811.13303-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190822170811.13303-1-sashal@kernel.org>
 References: <20190822170811.13303-1-sashal@kernel.org>
@@ -69,52 +67,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vince Weaver <vincent.weaver@maine.edu>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 7622236ceb167aa3857395f9bdaf871442aa467e ]
+[ Upstream commit 2bcbeaefde2f0384d6ad351c151b1a9fe7791a0a ]
 
-So I have been having lots of trouble with hand-crafted perf.data files
-causing segfaults and the like, so I have started fuzzing the perf tool.
+We should not have two different error codes for the same
+condition. EAGAIN must be reserved for the FAULT_FLAG_ALLOW_RETRY retry
+case and signals to the caller that the mmap_sem has been unlocked.
 
-First issue found:
+Use EBUSY for the !valid case so that callers can get the locking right.
 
-If f_header.attr_size is 0 in the perf.data file, then perf will crash
-with a divide-by-zero error.
-
-Committer note:
-
-Added a pr_err() to tell the user why the command failed.
-
-Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1907231100440.14532@macbook-air
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: https://lore.kernel.org/r/20190724065258.16603-2-hch@lst.de
+Tested-by: Ralph Campbell <rcampbell@nvidia.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+[jgg: elaborated commit message]
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/header.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/vm/hmm.rst |  2 +-
+ mm/hmm.c                 | 10 ++++------
+ 2 files changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index e84b70be3fc11..cab9ed6acf35a 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3478,6 +3478,13 @@ int perf_session__read_header(struct perf_session *session)
- 			   data->file.path);
- 	}
+diff --git a/Documentation/vm/hmm.rst b/Documentation/vm/hmm.rst
+index 7cdf7282e0229..65b6c1109cc81 100644
+--- a/Documentation/vm/hmm.rst
++++ b/Documentation/vm/hmm.rst
+@@ -231,7 +231,7 @@ respect in order to keep things properly synchronized. The usage pattern is::
+       ret = hmm_range_snapshot(&range);
+       if (ret) {
+           up_read(&mm->mmap_sem);
+-          if (ret == -EAGAIN) {
++          if (ret == -EBUSY) {
+             /*
+              * No need to check hmm_range_wait_until_valid() return value
+              * on retry we will get proper error with hmm_range_snapshot()
+diff --git a/mm/hmm.c b/mm/hmm.c
+index 4c405dfbd2b3d..27dd9a8816272 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -995,7 +995,7 @@ EXPORT_SYMBOL(hmm_range_unregister);
+  * @range: range
+  * Returns: -EINVAL if invalid argument, -ENOMEM out of memory, -EPERM invalid
+  *          permission (for instance asking for write and range is read only),
+- *          -EAGAIN if you need to retry, -EFAULT invalid (ie either no valid
++ *          -EBUSY if you need to retry, -EFAULT invalid (ie either no valid
+  *          vma or it is illegal to access that range), number of valid pages
+  *          in range->pfns[] (from range start address).
+  *
+@@ -1019,7 +1019,7 @@ long hmm_range_snapshot(struct hmm_range *range)
+ 	do {
+ 		/* If range is no longer valid force retry. */
+ 		if (!range->valid)
+-			return -EAGAIN;
++			return -EBUSY;
  
-+	if (f_header.attr_size == 0) {
-+		pr_err("ERROR: The %s file's attr size field is 0 which is unexpected.\n"
-+		       "Was the 'perf record' command properly terminated?\n",
-+		       data->file.path);
-+		return -EINVAL;
-+	}
-+
- 	nr_attrs = f_header.attrs.size / f_header.attr_size;
- 	lseek(fd, f_header.attrs.offset, SEEK_SET);
+ 		vma = find_vma(hmm->mm, start);
+ 		if (vma == NULL || (vma->vm_flags & device_vma))
+@@ -1117,10 +1117,8 @@ long hmm_range_fault(struct hmm_range *range, bool block)
  
+ 	do {
+ 		/* If range is no longer valid force retry. */
+-		if (!range->valid) {
+-			up_read(&hmm->mm->mmap_sem);
+-			return -EAGAIN;
+-		}
++		if (!range->valid)
++			return -EBUSY;
+ 
+ 		vma = find_vma(hmm->mm, start);
+ 		if (vma == NULL || (vma->vm_flags & device_vma))
 -- 
 2.20.1
 
