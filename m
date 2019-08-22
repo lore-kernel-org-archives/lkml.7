@@ -2,52 +2,59 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54D3C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C5CC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B218E206DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285FA206DD
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 17:26:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566494794;
-	bh=sihiTipHc8/WKfVhvkAVkcyT3aK0UieUNF3eUbU5xMc=;
+	s=default; t=1566494797;
+	bh=MuTRzXQVssnmsgs7TU8p4pJGF5vKfdve0MkBk76vhb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u42j+KbBwpij+YNp39jLASb89oBNeYcOJ2QpWz8cJKkhwM/WgfUFvBIoOvjxwKxp0
-	 1mcyecI57hAEYk0gpPTfuY33e177jLqJ9mYbPJPxfa1/jeelqn86508mFtHjw5D3nS
-	 QHCEFKfnAliPuzlx4EPG4lxqYL2LSqw/YuMSnUro=
+	b=KN4kbufBaO4O2uWSrh72jUY/9Vo9Me4eL8ZQ5mH6WCP5T/D6iNrX12E3AoMuS8j7c
+	 rCyDC179ayEQVxBaiuoBJwDCjwCzhtvrB3X9VnzVzsH+THRKFSNUBBzb2RDBrRcFrP
+	 if7x+mtKPXan8vR7YvSZKEwjXmN0L3jRwZZil+p8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733056AbfHVR0b (ORCPT
+        id S2404737AbfHVR0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 13:26:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
+        Thu, 22 Aug 2019 13:26:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404376AbfHVRZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 13:25:20 -0400
+        id S2404384AbfHVRZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 13:25:21 -0400
 Received: from localhost (wsip-184-188-36-2.sd.sd.cox.net [184.188.36.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC64F2064A;
-        Thu, 22 Aug 2019 17:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64B9D23400;
+        Thu, 22 Aug 2019 17:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566494719;
-        bh=sihiTipHc8/WKfVhvkAVkcyT3aK0UieUNF3eUbU5xMc=;
+        s=default; t=1566494720;
+        bh=MuTRzXQVssnmsgs7TU8p4pJGF5vKfdve0MkBk76vhb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=miEsIWqVoUi+zmG7J2ZDcXJgQE47voPLiLAsHUlq2pj3Pf4MqduXicF5GPxESOeGa
-         DdTU7InFy3GiYZ+ujvFZo62gp5rbSZd0dSBF+mwGNvHhQ+81ixxqCN9zPjZFenVvIo
-         nhhPUeeBPX2wBtHlBrsmMyyxfDPUTUbyBs3qeB2Y=
+        b=Hvdg+UFUza5JAWoIF4t2E7W9SEO1CYi3BPQjiDRDdX+qrodNFOIooVFOw8Y/V3kVs
+         agG9qlhHz4hl3DKb6XE4k/kYuu8Wn7emsD7ZMoThOsgq7K/pX7ZMl/V2h6EK4q1mDl
+         sx3LfjvEPbywvc5DdjCCAXwYjk2CKvdL4JClVz1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+45a53506b65321c1fe91@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.14 49/71] USB: CDC: fix sanity checks in CDC union parser
-Date:   Thu, 22 Aug 2019 10:19:24 -0700
-Message-Id: <20190822171729.971517249@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 40/71] ocfs2: remove set but not used variable last_hash
+Date:   Thu, 22 Aug 2019 10:19:15 -0700
+Message-Id: <20190822171729.630623272@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190822171726.131957995@linuxfoundation.org>
 References: <20190822171726.131957995@linuxfoundation.org>
@@ -60,42 +67,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+[ Upstream commit 7bc36e3ce91471b6377c8eadc0a2f220a2280083 ]
 
-commit 54364278fb3cabdea51d6398b07c87415065b3fc upstream.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-A few checks checked for the size of the pointer to a structure
-instead of the structure itself. Copy & paste issue presumably.
+  fs/ocfs2/xattr.c: In function ocfs2_xattr_bucket_find:
+  fs/ocfs2/xattr.c:3828:6: warning: variable last_hash set but not used [-Wunused-but-set-variable]
 
-Fixes: e4c6fb7794982 ("usbnet: move the CDC parser into USB core")
-Cc: stable <stable@vger.kernel.org>
-Reported-by: syzbot+45a53506b65321c1fe91@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20190813093541.18889-1-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It's never used and can be removed.
 
+Link: http://lkml.kernel.org/r/20190716132110.34836-1-yuehaibing@huawei.com
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/message.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ocfs2/xattr.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/drivers/usb/core/message.c
-+++ b/drivers/usb/core/message.c
-@@ -2143,14 +2143,14 @@ int cdc_parse_cdc_header(struct usb_cdc_
- 				(struct usb_cdc_dmm_desc *)buffer;
- 			break;
- 		case USB_CDC_MDLM_TYPE:
--			if (elength < sizeof(struct usb_cdc_mdlm_desc *))
-+			if (elength < sizeof(struct usb_cdc_mdlm_desc))
- 				goto next_desc;
- 			if (desc)
- 				return -EINVAL;
- 			desc = (struct usb_cdc_mdlm_desc *)buffer;
- 			break;
- 		case USB_CDC_MDLM_DETAIL_TYPE:
--			if (elength < sizeof(struct usb_cdc_mdlm_detail_desc *))
-+			if (elength < sizeof(struct usb_cdc_mdlm_detail_desc))
- 				goto next_desc;
- 			if (detail)
- 				return -EINVAL;
+diff --git a/fs/ocfs2/xattr.c b/fs/ocfs2/xattr.c
+index fb0a4eec310ce..77740ef5a8e85 100644
+--- a/fs/ocfs2/xattr.c
++++ b/fs/ocfs2/xattr.c
+@@ -3832,7 +3832,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
+ 	u16 blk_per_bucket = ocfs2_blocks_per_xattr_bucket(inode->i_sb);
+ 	int low_bucket = 0, bucket, high_bucket;
+ 	struct ocfs2_xattr_bucket *search;
+-	u32 last_hash;
+ 	u64 blkno, lower_blkno = 0;
+ 
+ 	search = ocfs2_xattr_bucket_new(inode);
+@@ -3876,8 +3875,6 @@ static int ocfs2_xattr_bucket_find(struct inode *inode,
+ 		if (xh->xh_count)
+ 			xe = &xh->xh_entries[le16_to_cpu(xh->xh_count) - 1];
+ 
+-		last_hash = le32_to_cpu(xe->xe_name_hash);
+-
+ 		/* record lower_blkno which may be the insert place. */
+ 		lower_blkno = blkno;
+ 
+-- 
+2.20.1
+
 
 
