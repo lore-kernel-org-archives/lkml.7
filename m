@@ -2,514 +2,328 @@ Return-Path: <SRS0=/WLL=WS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F29C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D983DC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1F552089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:18:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffZrK4ft"
+	by mail.kernel.org (Postfix) with ESMTP id A79BE233A2
+	for <linux-kernel@archiver.kernel.org>; Thu, 22 Aug 2019 15:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389510AbfHVPS3 (ORCPT
+        id S2389500AbfHVPS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 22 Aug 2019 11:18:29 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:37961 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732532AbfHVPS3 (ORCPT
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28090 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730621AbfHVPS2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 11:18:29 -0400
-Received: by mail-qk1-f193.google.com with SMTP id u190so5484962qkh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 08:18:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wIlK7/RNqH3LYFmTDy23WpoBQgwd5jDpaVZ42O+soU8=;
-        b=ffZrK4ftakQO04vrzb2XXebXB3Fnm02e+zoEpv/z3mw+vmVhVmuz4rX6T9S1M114FK
-         XOrOYBg1l1Kns2FNaS6TfFWcDZQndHRnLXZz2y73X7vjy4ATajGl3Kxq14ag8lA/LIh+
-         ZwvNC2WXYllpzKDu2US/byTBXhpBnMoigWU9tvQP6QQjSK0xCPaDmooQRtltwUyE2Dq5
-         xjkxl9/MMCfOrlHGenOdYLfxqrKIfEfrMsx6kSYP7ALV0rGS42wrOfXJhKdreFpcO8W7
-         0PlqJr+Qx8aVv0dSCF8BtfVYoNTcO3Xyq+2UZglJEjn0xdSu3pzWkEtzyK/qkmy1GyIy
-         GsUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wIlK7/RNqH3LYFmTDy23WpoBQgwd5jDpaVZ42O+soU8=;
-        b=J4e8E44E5FXRuPnBXebtdCz6t2ZJtMHHVt1+Fp1BkQhmgxfr2J/pvp8nnBskDVGMvI
-         futTXHSSTXzdePXHkcw5EU3XeyLRIvfve5rgTNFjdb0Ich1DFMPZySw0DM3YlOhEjpp4
-         7ZKxwXyE4jLA/gf6FKkMbCrFKU2UKR6mBWhi6mj1W+HwH1Hh6WoQL3C0McmM+hNQTfml
-         A7ECI+eCHeatRvE8drf0YBG4AjeNQf8pPZxkPkygqSvN/UyviAY0kcDIfo7RkE7BHdPZ
-         39wgWzdINcic2Eo9Vp2hb7H7lzHIpRzc0fhy26/W+r8+rzXOLxqI+VWbNaCWAcHJP+Ky
-         JTCw==
-X-Gm-Message-State: APjAAAWW8KCSGH06u53TcLzuyjCgvdtuwQioYwaqoJSedvAccN6SkjDQ
-        1i6coTo3YV/xVYdvAIazltU=
-X-Google-Smtp-Source: APXvYqw7PYSijQqFpQYpI7o2uqGrR2q5e+Mnr1ozhdeDh2J4d4JVWai0QbF4iLDgVTfDNeixa8e7Yw==
-X-Received: by 2002:ae9:f101:: with SMTP id k1mr28796957qkg.193.1566487107507;
-        Thu, 22 Aug 2019 08:18:27 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id q9sm12194915qtj.48.2019.08.22.08.18.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Aug 2019 08:18:26 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6122440340; Thu, 22 Aug 2019 12:18:24 -0300 (-03)
-Date:   Thu, 22 Aug 2019 12:18:24 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>
-Subject: Re: [PATCH 5/5] libperf: Add
- perf_thread_map__nr/perf_thread_map__pid functions
-Message-ID: <20190822151824.GB29569@kernel.org>
-References: <20190822111141.25823-1-jolsa@kernel.org>
- <20190822111141.25823-6-jolsa@kernel.org>
+        Thu, 22 Aug 2019 11:18:28 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7MF1sdA116448;
+        Thu, 22 Aug 2019 11:18:13 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhw55hbm7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 11:18:12 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7MF1rgD116329;
+        Thu, 22 Aug 2019 11:18:12 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uhw55hbkq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 11:18:12 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7MFEDka008229;
+        Thu, 22 Aug 2019 15:18:11 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03wdc.us.ibm.com with ESMTP id 2ug0ckha8t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Aug 2019 15:18:11 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7MFIBuS19005732
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Aug 2019 15:18:11 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 252E2B2064;
+        Thu, 22 Aug 2019 15:18:11 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E82C5B2066;
+        Thu, 22 Aug 2019 15:18:10 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 22 Aug 2019 15:18:10 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id D36C416C0F61; Thu, 22 Aug 2019 08:18:11 -0700 (PDT)
+Date:   Thu, 22 Aug 2019 08:18:11 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     mingo@kernel.org
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, parri.andrea@gmail.com,
+        byungchul.park@lge.com, peterz@infradead.org, mojha@codeaurora.org,
+        ice_yangxiao@163.com, efremov@linux.com, edumazet@google.com
+Subject: [GIT PULL rcu/next + tools/memory-model] RCU and LKMM commits for 5.4
+Message-ID: <20190822151811.GA8894@linux.ibm.com>
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190822111141.25823-6-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.0 (2019-05-25)
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-22_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908220150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Aug 22, 2019 at 01:11:41PM +0200, Jiri Olsa escreveu:
-> So it's part of libperf library as basic functions
-> over struct perf_thread_map object.
+Hello, Ingo,
 
-Thanks, applied and the other ones as well. I thought this one wasn't
-applying but it was just a thinko on my part,
+This pull request contain the following changes:
 
-- Arnaldo
- 
-> Link: http://lkml.kernel.org/n/tip-mjksprk4yct9ouez3j9mq2az@git.kernel.org
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/builtin-ftrace.c                          |  2 +-
->  tools/perf/builtin-script.c                          |  4 ++--
->  tools/perf/builtin-stat.c                            |  4 ++--
->  tools/perf/builtin-trace.c                           |  4 ++--
->  tools/perf/lib/include/perf/threadmap.h              |  2 ++
->  tools/perf/lib/libperf.map                           |  2 ++
->  tools/perf/lib/threadmap.c                           | 10 ++++++++++
->  tools/perf/tests/thread-map.c                        |  6 +++---
->  tools/perf/util/auxtrace.c                           |  4 ++--
->  tools/perf/util/event.c                              |  8 ++++----
->  tools/perf/util/evlist.c                             | 12 ++++++------
->  tools/perf/util/evsel.c                              |  4 ++--
->  .../perf/util/scripting-engines/trace-event-python.c |  2 +-
->  tools/perf/util/stat-display.c                       |  4 ++--
->  tools/perf/util/stat.c                               |  4 ++--
->  tools/perf/util/thread_map.c                         |  4 ++--
->  tools/perf/util/thread_map.h                         | 10 ----------
->  17 files changed, 45 insertions(+), 41 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 1367bb5046a7..565db782c1b9 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -158,7 +158,7 @@ static int set_tracing_pid(struct perf_ftrace *ftrace)
->  	if (target__has_cpu(&ftrace->target))
->  		return 0;
->  
-> -	for (i = 0; i < thread_map__nr(ftrace->evlist->core.threads); i++) {
-> +	for (i = 0; i < perf_thread_map__nr(ftrace->evlist->core.threads); i++) {
->  		scnprintf(buf, sizeof(buf), "%d",
->  			  ftrace->evlist->core.threads->map[i]);
->  		if (append_tracing_file("set_ftrace_pid", buf) < 0)
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 1764efd16cd4..5d45be1d3885 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -1905,7 +1905,7 @@ static struct scripting_ops	*scripting_ops;
->  
->  static void __process_stat(struct evsel *counter, u64 tstamp)
->  {
-> -	int nthreads = thread_map__nr(counter->core.threads);
-> +	int nthreads = perf_thread_map__nr(counter->core.threads);
->  	int ncpus = perf_evsel__nr_cpus(counter);
->  	int cpu, thread;
->  	static int header_printed;
-> @@ -1927,7 +1927,7 @@ static void __process_stat(struct evsel *counter, u64 tstamp)
->  
->  			printf("%3d %8d %15" PRIu64 " %15" PRIu64 " %15" PRIu64 " %15" PRIu64 " %s\n",
->  				counter->core.cpus->map[cpu],
-> -				thread_map__pid(counter->core.threads, thread),
-> +				perf_thread_map__pid(counter->core.threads, thread),
->  				counts->val,
->  				counts->ena,
->  				counts->run,
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 90636a811b36..8a4f1a7d0cba 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -264,7 +264,7 @@ static int read_single_counter(struct evsel *counter, int cpu,
->   */
->  static int read_counter(struct evsel *counter, struct timespec *rs)
->  {
-> -	int nthreads = thread_map__nr(evsel_list->core.threads);
-> +	int nthreads = perf_thread_map__nr(evsel_list->core.threads);
->  	int ncpus, cpu, thread;
->  
->  	if (target__has_cpu(&target) && !target__has_per_thread(&target))
-> @@ -1893,7 +1893,7 @@ int cmd_stat(int argc, const char **argv)
->  		thread_map__read_comms(evsel_list->core.threads);
->  		if (target.system_wide) {
->  			if (runtime_stat_new(&stat_config,
-> -				thread_map__nr(evsel_list->core.threads))) {
-> +				perf_thread_map__nr(evsel_list->core.threads))) {
->  				goto out;
->  			}
->  		}
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index bc44ed29e05a..de126258ca10 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -3188,7 +3188,7 @@ static int trace__set_filter_pids(struct trace *trace)
->  			err = bpf_map__set_filter_pids(trace->filter_pids.map, trace->filter_pids.nr,
->  						       trace->filter_pids.entries);
->  		}
-> -	} else if (thread_map__pid(trace->evlist->core.threads, 0) == -1) {
-> +	} else if (perf_thread_map__pid(trace->evlist->core.threads, 0) == -1) {
->  		err = trace__set_filter_loop_pids(trace);
->  	}
->  
-> @@ -3417,7 +3417,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
->  		evlist__enable(evlist);
->  	}
->  
-> -	trace->multiple_threads = thread_map__pid(evlist->core.threads, 0) == -1 ||
-> +	trace->multiple_threads = perf_thread_map__pid(evlist->core.threads, 0) == -1 ||
->  				  evlist->core.threads->nr > 1 ||
->  				  perf_evlist__first(evlist)->core.attr.inherit;
->  
-> diff --git a/tools/perf/lib/include/perf/threadmap.h b/tools/perf/lib/include/perf/threadmap.h
-> index 456295273daa..a7c50de8d010 100644
-> --- a/tools/perf/lib/include/perf/threadmap.h
-> +++ b/tools/perf/lib/include/perf/threadmap.h
-> @@ -11,6 +11,8 @@ LIBPERF_API struct perf_thread_map *perf_thread_map__new_dummy(void);
->  
->  LIBPERF_API void perf_thread_map__set_pid(struct perf_thread_map *map, int thread, pid_t pid);
->  LIBPERF_API char *perf_thread_map__comm(struct perf_thread_map *map, int thread);
-> +LIBPERF_API int perf_thread_map__nr(struct perf_thread_map *threads);
-> +LIBPERF_API pid_t perf_thread_map__pid(struct perf_thread_map *map, int thread);
->  
->  LIBPERF_API struct perf_thread_map *perf_thread_map__get(struct perf_thread_map *map);
->  LIBPERF_API void perf_thread_map__put(struct perf_thread_map *map);
-> diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-> index 3373dd51fcda..dc4d66363bc4 100644
-> --- a/tools/perf/lib/libperf.map
-> +++ b/tools/perf/lib/libperf.map
-> @@ -12,6 +12,8 @@ LIBPERF_0.0.1 {
->  		perf_thread_map__new_dummy;
->  		perf_thread_map__set_pid;
->  		perf_thread_map__comm;
-> +		perf_thread_map__nr;
-> +		perf_thread_map__pid;
->  		perf_thread_map__get;
->  		perf_thread_map__put;
->  		perf_evsel__new;
-> diff --git a/tools/perf/lib/threadmap.c b/tools/perf/lib/threadmap.c
-> index 4865b73e2586..e92c368b0a6c 100644
-> --- a/tools/perf/lib/threadmap.c
-> +++ b/tools/perf/lib/threadmap.c
-> @@ -79,3 +79,13 @@ void perf_thread_map__put(struct perf_thread_map *map)
->  	if (map && refcount_dec_and_test(&map->refcnt))
->  		perf_thread_map__delete(map);
->  }
-> +
-> +int perf_thread_map__nr(struct perf_thread_map *threads)
-> +{
-> +	return threads ? threads->nr : 1;
-> +}
-> +
-> +pid_t perf_thread_map__pid(struct perf_thread_map *map, int thread)
-> +{
-> +	return map->map[thread].pid;
-> +}
-> diff --git a/tools/perf/tests/thread-map.c b/tools/perf/tests/thread-map.c
-> index d61773cacf0b..d803eafedc60 100644
-> --- a/tools/perf/tests/thread-map.c
-> +++ b/tools/perf/tests/thread-map.c
-> @@ -26,7 +26,7 @@ int test__thread_map(struct test *test __maybe_unused, int subtest __maybe_unuse
->  
->  	TEST_ASSERT_VAL("wrong nr", map->nr == 1);
->  	TEST_ASSERT_VAL("wrong pid",
-> -			thread_map__pid(map, 0) == getpid());
-> +			perf_thread_map__pid(map, 0) == getpid());
->  	TEST_ASSERT_VAL("wrong comm",
->  			perf_thread_map__comm(map, 0) &&
->  			!strcmp(perf_thread_map__comm(map, 0), NAME));
-> @@ -41,7 +41,7 @@ int test__thread_map(struct test *test __maybe_unused, int subtest __maybe_unuse
->  	thread_map__read_comms(map);
->  
->  	TEST_ASSERT_VAL("wrong nr", map->nr == 1);
-> -	TEST_ASSERT_VAL("wrong pid", thread_map__pid(map, 0) == -1);
-> +	TEST_ASSERT_VAL("wrong pid", perf_thread_map__pid(map, 0) == -1);
->  	TEST_ASSERT_VAL("wrong comm",
->  			perf_thread_map__comm(map, 0) &&
->  			!strcmp(perf_thread_map__comm(map, 0), "dummy"));
-> @@ -68,7 +68,7 @@ static int process_event(struct perf_tool *tool __maybe_unused,
->  
->  	TEST_ASSERT_VAL("wrong nr", threads->nr == 1);
->  	TEST_ASSERT_VAL("wrong pid",
-> -			thread_map__pid(threads, 0) == getpid());
-> +			perf_thread_map__pid(threads, 0) == getpid());
->  	TEST_ASSERT_VAL("wrong comm",
->  			perf_thread_map__comm(threads, 0) &&
->  			!strcmp(perf_thread_map__comm(threads, 0), NAME));
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index 60428576426e..094e6ceb3cf2 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -132,12 +132,12 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
->  	if (per_cpu) {
->  		mp->cpu = evlist->core.cpus->map[idx];
->  		if (evlist->core.threads)
-> -			mp->tid = thread_map__pid(evlist->core.threads, 0);
-> +			mp->tid = perf_thread_map__pid(evlist->core.threads, 0);
->  		else
->  			mp->tid = -1;
->  	} else {
->  		mp->cpu = -1;
-> -		mp->tid = thread_map__pid(evlist->core.threads, idx);
-> +		mp->tid = perf_thread_map__pid(evlist->core.threads, idx);
->  	}
->  }
->  
-> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> index f433da85c45e..332edef8d394 100644
-> --- a/tools/perf/util/event.c
-> +++ b/tools/perf/util/event.c
-> @@ -647,7 +647,7 @@ int perf_event__synthesize_thread_map(struct perf_tool *tool,
->  	for (thread = 0; thread < threads->nr; ++thread) {
->  		if (__event__synthesize_thread(comm_event, mmap_event,
->  					       fork_event, namespaces_event,
-> -					       thread_map__pid(threads, thread), 0,
-> +					       perf_thread_map__pid(threads, thread), 0,
->  					       process, tool, machine,
->  					       mmap_data)) {
->  			err = -1;
-> @@ -658,12 +658,12 @@ int perf_event__synthesize_thread_map(struct perf_tool *tool,
->  		 * comm.pid is set to thread group id by
->  		 * perf_event__synthesize_comm
->  		 */
-> -		if ((int) comm_event->comm.pid != thread_map__pid(threads, thread)) {
-> +		if ((int) comm_event->comm.pid != perf_thread_map__pid(threads, thread)) {
->  			bool need_leader = true;
->  
->  			/* is thread group leader in thread_map? */
->  			for (j = 0; j < threads->nr; ++j) {
-> -				if ((int) comm_event->comm.pid == thread_map__pid(threads, j)) {
-> +				if ((int) comm_event->comm.pid == perf_thread_map__pid(threads, j)) {
->  					need_leader = false;
->  					break;
->  				}
-> @@ -997,7 +997,7 @@ int perf_event__synthesize_thread_map2(struct perf_tool *tool,
->  		if (!comm)
->  			comm = (char *) "";
->  
-> -		entry->pid = thread_map__pid(threads, i);
-> +		entry->pid = perf_thread_map__pid(threads, i);
->  		strncpy((char *) &entry->comm, comm, sizeof(entry->comm));
->  	}
->  
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 8582560b59af..23b56717d260 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -314,7 +314,7 @@ static int perf_evlist__nr_threads(struct evlist *evlist,
->  	if (evsel->system_wide)
->  		return 1;
->  	else
-> -		return thread_map__nr(evlist->core.threads);
-> +		return perf_thread_map__nr(evlist->core.threads);
->  }
->  
->  void evlist__disable(struct evlist *evlist)
-> @@ -397,7 +397,7 @@ int perf_evlist__enable_event_idx(struct evlist *evlist,
->  int perf_evlist__alloc_pollfd(struct evlist *evlist)
->  {
->  	int nr_cpus = perf_cpu_map__nr(evlist->core.cpus);
-> -	int nr_threads = thread_map__nr(evlist->core.threads);
-> +	int nr_threads = perf_thread_map__nr(evlist->core.threads);
->  	int nfds = 0;
->  	struct evsel *evsel;
->  
-> @@ -529,7 +529,7 @@ static void perf_evlist__set_sid_idx(struct evlist *evlist,
->  	else
->  		sid->cpu = -1;
->  	if (!evsel->system_wide && evlist->core.threads && thread >= 0)
-> -		sid->tid = thread_map__pid(evlist->core.threads, thread);
-> +		sid->tid = perf_thread_map__pid(evlist->core.threads, thread);
->  	else
->  		sid->tid = -1;
->  }
-> @@ -694,7 +694,7 @@ static struct perf_mmap *perf_evlist__alloc_mmap(struct evlist *evlist,
->  
->  	evlist->nr_mmaps = perf_cpu_map__nr(evlist->core.cpus);
->  	if (perf_cpu_map__empty(evlist->core.cpus))
-> -		evlist->nr_mmaps = thread_map__nr(evlist->core.threads);
-> +		evlist->nr_mmaps = perf_thread_map__nr(evlist->core.threads);
->  	map = zalloc(evlist->nr_mmaps * sizeof(struct perf_mmap));
->  	if (!map)
->  		return NULL;
-> @@ -808,7 +808,7 @@ static int perf_evlist__mmap_per_cpu(struct evlist *evlist,
->  {
->  	int cpu, thread;
->  	int nr_cpus = perf_cpu_map__nr(evlist->core.cpus);
-> -	int nr_threads = thread_map__nr(evlist->core.threads);
-> +	int nr_threads = perf_thread_map__nr(evlist->core.threads);
->  
->  	pr_debug2("perf event ring buffer mmapped per cpu\n");
->  	for (cpu = 0; cpu < nr_cpus; cpu++) {
-> @@ -836,7 +836,7 @@ static int perf_evlist__mmap_per_thread(struct evlist *evlist,
->  					struct mmap_params *mp)
->  {
->  	int thread;
-> -	int nr_threads = thread_map__nr(evlist->core.threads);
-> +	int nr_threads = perf_thread_map__nr(evlist->core.threads);
->  
->  	pr_debug2("perf event ring buffer mmapped per thread\n");
->  	for (thread = 0; thread < nr_threads; thread++) {
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 0a33f7322ecc..45328a788e9f 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1651,7 +1651,7 @@ static bool ignore_missing_thread(struct evsel *evsel,
->  				  struct perf_thread_map *threads,
->  				  int thread, int err)
->  {
-> -	pid_t ignore_pid = thread_map__pid(threads, thread);
-> +	pid_t ignore_pid = perf_thread_map__pid(threads, thread);
->  
->  	if (!evsel->ignore_missing_thread)
->  		return false;
-> @@ -1814,7 +1814,7 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
->  			int fd, group_fd;
->  
->  			if (!evsel->cgrp && !evsel->system_wide)
-> -				pid = thread_map__pid(threads, thread);
-> +				pid = perf_thread_map__pid(threads, thread);
->  
->  			group_fd = get_group_fd(evsel, cpu, thread);
->  retry_open:
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index 32c17a727450..6801afaa84c4 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -1405,7 +1405,7 @@ static void python_process_stat(struct perf_stat_config *config,
->  	for (thread = 0; thread < threads->nr; thread++) {
->  		for (cpu = 0; cpu < cpus->nr; cpu++) {
->  			process_stat(counter, cpus->map[cpu],
-> -				     thread_map__pid(threads, thread), tstamp,
-> +				     perf_thread_map__pid(threads, thread), tstamp,
->  				     perf_counts(counter->counts, cpu, thread));
->  		}
->  	}
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 3df0e39ccd52..74e0f5ad1456 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -118,7 +118,7 @@ static void aggr_printout(struct perf_stat_config *config,
->  			config->csv_output ? 0 : 16,
->  			perf_thread_map__comm(evsel->core.threads, id),
->  			config->csv_output ? 0 : -8,
-> -			thread_map__pid(evsel->core.threads, id),
-> +			perf_thread_map__pid(evsel->core.threads, id),
->  			config->csv_sep);
->  		break;
->  	case AGGR_GLOBAL:
-> @@ -744,7 +744,7 @@ static void print_aggr_thread(struct perf_stat_config *config,
->  			      struct evsel *counter, char *prefix)
->  {
->  	FILE *output = config->output;
-> -	int nthreads = thread_map__nr(counter->core.threads);
-> +	int nthreads = perf_thread_map__nr(counter->core.threads);
->  	int ncpus = perf_cpu_map__nr(counter->core.cpus);
->  	int thread, sorted_threads, id;
->  	struct perf_aggr_thread_value *buf;
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index 2715112290cf..7342389bc8e1 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -158,7 +158,7 @@ static void perf_evsel__free_prev_raw_counts(struct evsel *evsel)
->  static int perf_evsel__alloc_stats(struct evsel *evsel, bool alloc_raw)
->  {
->  	int ncpus = perf_evsel__nr_cpus(evsel);
-> -	int nthreads = thread_map__nr(evsel->core.threads);
-> +	int nthreads = perf_thread_map__nr(evsel->core.threads);
->  
->  	if (perf_evsel__alloc_stat_priv(evsel) < 0 ||
->  	    perf_evsel__alloc_counts(evsel, ncpus, nthreads) < 0 ||
-> @@ -308,7 +308,7 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
->  static int process_counter_maps(struct perf_stat_config *config,
->  				struct evsel *counter)
->  {
-> -	int nthreads = thread_map__nr(counter->core.threads);
-> +	int nthreads = perf_thread_map__nr(counter->core.threads);
->  	int ncpus = perf_evsel__nr_cpus(counter);
->  	int cpu, thread;
->  
-> diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
-> index c58385ea05be..3e64525bf604 100644
-> --- a/tools/perf/util/thread_map.c
-> +++ b/tools/perf/util/thread_map.c
-> @@ -310,7 +310,7 @@ size_t thread_map__fprintf(struct perf_thread_map *threads, FILE *fp)
->  	size_t printed = fprintf(fp, "%d thread%s: ",
->  				 threads->nr, threads->nr > 1 ? "s" : "");
->  	for (i = 0; i < threads->nr; ++i)
-> -		printed += fprintf(fp, "%s%d", i ? ", " : "", thread_map__pid(threads, i));
-> +		printed += fprintf(fp, "%s%d", i ? ", " : "", perf_thread_map__pid(threads, i));
->  
->  	return printed + fprintf(fp, "\n");
->  }
-> @@ -341,7 +341,7 @@ static int get_comm(char **comm, pid_t pid)
->  
->  static void comm_init(struct perf_thread_map *map, int i)
->  {
-> -	pid_t pid = thread_map__pid(map, i);
-> +	pid_t pid = perf_thread_map__pid(map, i);
->  	char *comm = NULL;
->  
->  	/* dummy pid comm initialization */
-> diff --git a/tools/perf/util/thread_map.h b/tools/perf/util/thread_map.h
-> index ba45c760be72..ca165fdf6cb0 100644
-> --- a/tools/perf/util/thread_map.h
-> +++ b/tools/perf/util/thread_map.h
-> @@ -25,16 +25,6 @@ struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str);
->  
->  size_t thread_map__fprintf(struct perf_thread_map *threads, FILE *fp);
->  
-> -static inline int thread_map__nr(struct perf_thread_map *threads)
-> -{
-> -	return threads ? threads->nr : 1;
-> -}
-> -
-> -static inline pid_t thread_map__pid(struct perf_thread_map *map, int thread)
-> -{
-> -	return map->map[thread].pid;
-> -}
-> -
->  void thread_map__read_comms(struct perf_thread_map *threads);
->  bool thread_map__has(struct perf_thread_map *threads, pid_t pid);
->  int thread_map__remove(struct perf_thread_map *threads, int idx);
-> -- 
-> 2.21.0
+1.	A few more RCU flavor consolidation cleanups.
 
--- 
+	https://lore.kernel.org/lkml/20190801223132.GA14044@linux.ibm.com
 
-- Arnaldo
+2.	Miscellaneous fixes.
+
+	https://lore.kernel.org/lkml/20190801223708.GA14862@linux.ibm.com
+
+	In addition, this includes a spelling fix in a comment and
+	an email-address change in MAINTAINERS:
+
+	https://lore.kernel.org/lkml/1564386957-22833-1-git-send-email-mojha@codeaurora.org
+	https://lore.kernel.org/lkml/20190805121517.4734-1-parri.andrea@gmail.com/
+
+3.	Updates to RCU's list-traversal macros improving lockdep usability.
+
+	https://lore.kernel.org/lkml/20190801224240.GA16092@linux.ibm.com/
+
+4.	Torture-test updates.
+
+	Fat fingered.  :-/  Please let me know if you would prefer that
+	I resend, then redo this full pull request next week.
+
+5.	Forward-progress improvements for no-CBs CPUs: Avoid ignoring
+	incoming callbacks during grace-period waits.
+
+	https://lore.kernel.org/lkml/20190801225009.GA17155@linux.ibm.com/
+
+6.	Forward-progress improvements for no-CBs CPUs: Use ->cblist
+	structure to take advantage of others' grace periods.
+
+	https://lore.kernel.org/lkml/20190801230744.GA19115@linux.ibm.com/
+
+	Also added a small commit that avoids needlessly inflicting
+	scheduler-clock ticks on callback-offloaded CPUs.
+
+7.	Forward-progress improvements for no-CBs CPUs: Reduce contention
+	on ->nocb_lock guarding ->cblist.
+
+	https://lore.kernel.org/lkml/20190801231619.GA22610@linux.ibm.com/
+
+8.	Forward-progress improvements for no-CBs CPUs: Add ->nocb_bypass
+	list to further reduce contention on ->nocb_lock guarding ->cblist.
+
+	https://lore.kernel.org/lkml/20190802151435.GA1081@linux.ibm.com/
+
+	(But only patches 1-10, as patch 10 proved to be quite valuable,
+	but patches 11-14 need more work and testing time.)
+
+9.	LKMM updates.
+
+	https://lore.kernel.org/lkml/20190801222026.GA11315@linux.ibm.com/
+
+	(But only patches 1-3, as the remainder are either new or are
+	related to ongoing work to verify LKMM against hardware memory
+	models.)
+
+Please note that this series encountered a merge conflict in -next:
+
+	https://lore.kernel.org/lkml/20190813155048.59dd9bdf@canb.auug.org.au/
+
+Stephen's resolution looks good to me.
+
+All of these changes have been subjected to 0day Test Robot and -next
+testing, and are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git for-mingo
+
+for you to fetch changes up to 07f038a408fb215fd656de78304b6ff4c7e4e490:
+
+  Merge LKMM and RCU commits (2019-08-13 14:41:48 -0700)
+
+These changes do increase the size of the kernel by about 700 lines,
+mostly due to the no-CBs CPU forward-progress improvements.  Given that
+RCU forward progress has started to become an issue over the past year
+or so, these changes do not appear to me to be in any way optional.
+
+----------------------------------------------------------------
+Andrea Parri (2):
+      tools/memory-model: Update the informal documentation
+      MAINTAINERS: Update e-mail address for Andrea Parri
+
+Byungchul Park (1):
+      rcu: Change return type of rcu_spawn_one_boost_kthread()
+
+Denis Efremov (1):
+      torture: Remove exporting of internal functions
+
+Eric Dumazet (1):
+      rcu: Allow rcu_do_batch() to dynamically adjust batch sizes
+
+Joel Fernandes (Google) (11):
+      rcu: Simplify rcu_note_context_switch exit from critical section
+      treewide: Rename rcu_dereference_raw_notrace() to _check()
+      rcu: Remove redundant debug_locks check in rcu_read_lock_sched_held()
+      rcuperf: Make rcuperf kernel test more robust for !expedited mode
+      tools/memory-model: Use cumul-fence instead of fence in ->prop example
+      rcu: Add support for consolidated-RCU reader checking
+      rcu/sync: Remove custom check for RCU readers
+      ipv4: Add lockdep condition to fix for_each_entry()
+      driver/core: Convert to use built-in RCU list checking
+      x86/pci: Pass lockdep condition to pcm_mmcfg_list iterator
+      acpi: Use built-in RCU list checking for acpi_ioremaps list
+
+Mukesh Ojha (1):
+      rcu: Fix spelling mistake "greate"->"great"
+
+Paul E. McKenney (67):
+      tools/memory-model: Make scripts be executable
+      rcu: Simplify rcu_read_unlock_special() deferred wakeups
+      rcu: Make rcu_read_unlock_special() checks match raise_softirq_irqoff()
+      lockdep: Make print_lock() address visible
+      time/tick-broadcast: Fix tick_broadcast_offline() lockdep complaint
+      rcu: Restore barrier() to rcu_read_lock() and rcu_read_unlock()
+      rcu: Add kernel parameter to dump trace after RCU CPU stall warning
+      rcu: Add destroy_work_on_stack() to match INIT_WORK_ONSTACK()
+      srcu: Avoid srcutorture security-based pointer obfuscation
+      doc: Add rcutree.kthread_prio pointer to stallwarn.txt
+      torture: Expand last_ts variable in kvm-test-1-run.sh
+      rcutorture: Test TREE03 with the threadirqs kernel boot parameter
+      rcutorture: Emulate userspace sojourn during call_rcu() floods
+      rcutorture: Aggressive forward-progress tests shouldn't block shutdown
+      rcu: Remove redundant "if" condition from rcu_gp_is_expedited()
+      arm: Use common outgoing-CPU-notification code
+      Merge branches 'consolidate.2019.08.01b', 'fixes.2019.08.12a', 'lists.2019.08.13a' and 'torture.2019.08.01b' into HEAD
+      rcu/nocb: Rename rcu_data fields to prepare for forward-progress work
+      rcu/nocb: Update comments to prepare for forward-progress work
+      rcu/nocb: Provide separate no-CBs grace-period kthreads
+      rcu/nocb: Rename nocb_follower_wait() to nocb_cb_wait()
+      rcu/nocb: Rename wake_nocb_leader() to wake_nocb_gp()
+      rcu/nocb: Rename __wake_nocb_leader() to __wake_nocb_gp()
+      rcu/nocb: Rename wake_nocb_leader_defer() to wake_nocb_gp_defer()
+      rcu/nocb: Rename rcu_organize_nocb_kthreads() local variable
+      rcu/nocb: Rename and document no-CB CB kthread sleep trace event
+      rcu/nocb: Rename rcu_nocb_leader_stride kernel boot parameter
+      rcu/nocb: Print gp/cb kthread hierarchy if dump_tree
+      rcu/nocb: Use separate flag to indicate disabled ->cblist
+      rcu/nocb: Use separate flag to indicate offloaded ->cblist
+      rcu/nocb: Add checks for offloaded callback processing
+      rcu/nocb: Make rcutree_migrate_callbacks() start at leaf rcu_node structure
+      rcu/nocb: Check for deferred nocb wakeups before nohz_full early exit
+      rcu/nocb: Remove deferred wakeup checks for extended quiescent states
+      rcu/nocb: Allow lockless use of rcu_segcblist_restempty()
+      rcu/nocb: Allow lockless use of rcu_segcblist_empty()
+      rcu/nocb: Leave ->cblist enabled for no-CBs CPUs
+      rcu/nocb: Use rcu_segcblist for no-CBs CPUs
+      rcu/nocb: Remove obsolete nocb_head and nocb_tail fields
+      rcu/nocb: Remove obsolete nocb_q_count and nocb_q_count_lazy fields
+      rcu/nocb: Remove obsolete nocb_cb_tail and nocb_cb_head fields
+      rcu/nocb: Remove obsolete nocb_gp_head and nocb_gp_tail fields
+      rcu/nocb: Use build-time no-CBs check in rcu_do_batch()
+      rcu/nocb: Use build-time no-CBs check in rcu_core()
+      rcu/nocb: Use build-time no-CBs check in rcu_pending()
+      rcu/nocb: Suppress uninitialized false-positive in nocb_gp_wait()
+      rcu/nohz: Turn off tick for offloaded CPUs
+      rcu/nocb: Enable re-awakening under high callback load
+      rcu/nocb: Never downgrade ->nocb_defer_wakeup in wake_nocb_gp_defer()
+      rcu/nocb: Make __call_rcu_nocb_wake() safe for many callbacks
+      rcu/nocb: Avoid needless wakeups of no-CBs grace-period kthread
+      rcu/nocb: Avoid ->nocb_lock capture by corresponding CPU
+      rcu/nocb: Round down for number of no-CBs grace-period kthreads
+      rcu/nocb: Reduce contention at no-CBs registry-time CB advancement
+      rcu/nocb: Reduce contention at no-CBs invocation-done time
+      rcu/nocb: Reduce ->nocb_lock contention with separate ->nocb_gp_lock
+      rcu/nocb: Unconditionally advance and wake for excessive CBs
+      rcu/nocb: Atomic ->len field in rcu_segcblist structure
+      rcu/nocb: Add bypass callback queueing
+      rcu/nocb: EXP Check use and usefulness of ->nocb_lock_contended
+      rcu/nocb: Print no-CBs diagnostics when rcutorture writer unduly delayed
+      rcu/nocb: Avoid synchronous wakeup in __call_rcu_nocb_wake()
+      rcu/nocb: Advance CBs after merge in rcutree_migrate_callbacks()
+      rcu/nocb: Reduce nocb_cb_wait() leaf rcu_node ->lock contention
+      rcu/nocb: Reduce __call_rcu_nocb_wake() leaf rcu_node ->lock contention
+      rcu/nocb: Don't wake no-CBs GP kthread if timer posted under overload
+      Merge LKMM and RCU commits
+
+Peter Zijlstra (1):
+      idle: Prevent late-arriving interrupts from disrupting offline
+
+Xiao Yang (1):
+      rcuperf: Fix perf_type module-parameter description
+
+ .../RCU/Design/Requirements/Requirements.html      |   73 +-
+ Documentation/RCU/stallwarn.txt                    |    6 +
+ Documentation/admin-guide/kernel-parameters.txt    |   17 +-
+ MAINTAINERS                                        |    2 +-
+ arch/arm/kernel/smp.c                              |    6 +-
+ arch/powerpc/include/asm/kvm_book3s_64.h           |    2 +-
+ arch/x86/pci/mmconfig-shared.c                     |    5 +-
+ drivers/acpi/osl.c                                 |    6 +-
+ drivers/base/base.h                                |    1 +
+ drivers/base/core.c                                |   12 +
+ drivers/base/power/runtime.c                       |   15 +-
+ include/linux/rcu_segcblist.h                      |    9 +
+ include/linux/rcu_sync.h                           |    4 +-
+ include/linux/rculist.h                            |   36 +-
+ include/linux/rcupdate.h                           |    9 +-
+ include/trace/events/rcu.h                         |    4 +-
+ kernel/locking/lockdep.c                           |    2 +-
+ kernel/rcu/Kconfig.debug                           |   11 +
+ kernel/rcu/rcu.h                                   |    1 +
+ kernel/rcu/rcu_segcblist.c                         |  174 ++-
+ kernel/rcu/rcu_segcblist.h                         |   54 +-
+ kernel/rcu/rcuperf.c                               |   10 +-
+ kernel/rcu/rcutorture.c                            |   30 +-
+ kernel/rcu/srcutree.c                              |    5 +-
+ kernel/rcu/tree.c                                  |  205 ++--
+ kernel/rcu/tree.h                                  |   81 +-
+ kernel/rcu/tree_exp.h                              |    8 +-
+ kernel/rcu/tree_plugin.h                           | 1195 ++++++++++++--------
+ kernel/rcu/tree_stall.h                            |    9 +
+ kernel/rcu/update.c                                |  105 +-
+ kernel/sched/core.c                                |   57 +-
+ kernel/sched/idle.c                                |    5 +-
+ kernel/torture.c                                   |    2 -
+ kernel/trace/ftrace_internal.h                     |    8 +-
+ kernel/trace/trace.c                               |    4 +-
+ net/ipv4/fib_frontend.c                            |    3 +-
+ tools/memory-model/Documentation/explanation.txt   |   53 +-
+ tools/memory-model/README                          |   18 +-
+ tools/memory-model/scripts/checkghlitmus.sh        |    0
+ tools/memory-model/scripts/checklitmushist.sh      |    0
+ tools/memory-model/scripts/cmplitmushist.sh        |    0
+ tools/memory-model/scripts/initlitmushist.sh       |    0
+ tools/memory-model/scripts/judgelitmus.sh          |    0
+ tools/memory-model/scripts/newlitmushist.sh        |    0
+ tools/memory-model/scripts/parseargs.sh            |    0
+ tools/memory-model/scripts/runlitmushist.sh        |    0
+ .../selftests/rcutorture/bin/kvm-test-1-run.sh     |    2 +-
+ .../selftests/rcutorture/configs/rcu/TREE03.boot   |    1 +
+ 48 files changed, 1472 insertions(+), 778 deletions(-)
+ mode change 100644 => 100755 tools/memory-model/scripts/checkghlitmus.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/checklitmushist.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/cmplitmushist.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/initlitmushist.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/judgelitmus.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/newlitmushist.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/parseargs.sh
+ mode change 100644 => 100755 tools/memory-model/scripts/runlitmushist.sh
