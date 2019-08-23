@@ -2,143 +2,118 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B811C3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BF6C3A5A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5224A2341C
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:20:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TLy6mKfG"
+	by mail.kernel.org (Postfix) with ESMTP id 828062341A
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 03:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391417AbfHWDUK (ORCPT
+        id S2391460AbfHWDVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 23:20:10 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33087 "EHLO ozlabs.org"
+        Thu, 22 Aug 2019 23:21:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48172 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391211AbfHWDUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 23:20:10 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S2391211AbfHWDVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 23:21:45 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46F68j3yVYz9s7T;
-        Fri, 23 Aug 2019 13:20:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566530407;
-        bh=h/4saC/U531BHqjeM7yUCrFYXQzNfCVKnprjPF4WinQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=TLy6mKfGKjPPZYhQsmBb61QoRXw3F0xnYJ1VgLVeDBqvJCS3Hf1LUhdvlARNyFwhi
-         dk5TH1YesFyx84ya+pBNMs6txYFV30qdCVb7JCno3On/ue4NeGrCXK7gqdjfxbwkxT
-         TR8Em+Iq3awfJBuDb+AWW7Yzbkm1EEw0yckIUDdw99NIN0ALru9/utvrQK8+q8opsr
-         6AKw0vW16EALhpfPjlB6GZONnUo9x66PND43P9RPmHWf4HMfEGD4/I+vdcD/GfqO6m
-         nrih8gz/jLJgTZGFcXNWm+rGF/LMBY5FsnP/tdPmIyktQpeAm0hn389jjOXYsCDWWN
-         R7aaOyWug4QGw==
-Date:   Fri, 23 Aug 2019 13:20:04 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        CK Hu <ck.hu@mediatek.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: linux-next: manual merge of the drm tree with the drm-fixes tree
-Message-ID: <20190823132004.578e99a0@canb.auug.org.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id 6174D18C4264;
+        Fri, 23 Aug 2019 03:21:44 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7E51360605;
+        Fri, 23 Aug 2019 03:21:35 +0000 (UTC)
+Date:   Fri, 23 Aug 2019 11:21:30 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     longli@linuxonhyperv.com, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>,
+        Hannes Reinecke <hare@suse.com>, linux-scsi@vger.kernel.org,
+        linux-block@vger.kernel.org
+Subject: Re: [PATCH 3/3] nvme: complete request in work queue on CPU with
+ flooded interrupts
+Message-ID: <20190823032129.GA18680@ming.t460p>
+References: <1566281669-48212-1-git-send-email-longli@linuxonhyperv.com>
+ <1566281669-48212-4-git-send-email-longli@linuxonhyperv.com>
+ <2a30a07f-982c-c291-e263-0cf72ec61235@grimberg.me>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/X2kcl2/LOpWwGE.fwJfoAWF";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a30a07f-982c-c291-e263-0cf72ec61235@grimberg.me>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Fri, 23 Aug 2019 03:21:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/X2kcl2/LOpWwGE.fwJfoAWF
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 20, 2019 at 10:33:38AM -0700, Sagi Grimberg wrote:
+> 
+> > From: Long Li <longli@microsoft.com>
+> > 
+> > When a NVMe hardware queue is mapped to several CPU queues, it is possible
+> > that the CPU this hardware queue is bound to is flooded by returning I/O for
+> > other CPUs.
+> > 
+> > For example, consider the following scenario:
+> > 1. CPU 0, 1, 2 and 3 share the same hardware queue
+> > 2. the hardware queue interrupts CPU 0 for I/O response
+> > 3. processes from CPU 1, 2 and 3 keep sending I/Os
+> > 
+> > CPU 0 may be flooded with interrupts from NVMe device that are I/O responses
+> > for CPU 1, 2 and 3. Under heavy I/O load, it is possible that CPU 0 spends
+> > all the time serving NVMe and other system interrupts, but doesn't have a
+> > chance to run in process context.
+> > 
+> > To fix this, CPU 0 can schedule a work to complete the I/O request when it
+> > detects the scheduler is not making progress. This serves multiple purposes:
+> > 
+> > 1. This CPU has to be scheduled to complete the request. The other CPUs can't
+> > issue more I/Os until some previous I/Os are completed. This helps this CPU
+> > get out of NVMe interrupts.
+> > 
+> > 2. This acts a throttling mechanisum for NVMe devices, in that it can not
+> > starve a CPU while servicing I/Os from other CPUs.
+> > 
+> > 3. This CPU can make progress on RCU and other work items on its queue.
+> 
+> The problem is indeed real, but this is the wrong approach in my mind.
+> 
+> We already have irqpoll which takes care proper budgeting polling
+> cycles and not hogging the cpu.
 
-Hi all,
+The issue isn't unique to NVMe, and can be any fast devices which
+interrupts CPU too frequently, meantime the interrupt/softirq handler may
+take a bit much time, then CPU is easy to be lockup by the interrupt/sofirq
+handler, especially in case that multiple submission CPUs vs. single
+completion CPU.
 
-Today's linux-next merge of the drm tree got a conflict in:
+Some SCSI devices has the same problem too.
 
-  drivers/gpu/drm/mediatek/mtk_drm_drv.c
+Could we consider to add one generic mechanism to cover this kind of
+problem?
 
-between commit:
+One approach I thought of is to allocate one backup thread for handling
+such interrupt, which can be marked as IRQF_BACKUP_THREAD by drivers. 
 
-  4c6f3196e6ea ("drm/mediatek: use correct device to import PRIME buffers")
+Inside do_IRQ(), irqtime is accounted, before calling action->handler(),
+check if this CPU has taken too long time for handling IRQ(interrupt or
+softirq) and see if this CPU could be lock up. If yes, wakeup the backup
+thread to handle the interrupt for avoiding lockup this CPU.
 
-from the drm-fixes tree and commit:
+The threaded interrupt framework is there, and this way could be easier
+to implement. Meantime most time the handler is run in interrupt context
+and we may avoid the performance loss when CPU isn't busy enough.
 
-  3baeeb21983a ("drm/mtk: Drop drm_gem_prime_export/import")
+Any comment on this approach?
 
-from the drm tree.
-
-I fixed it up (I think - see below) and can carry the fix as necessary.
-This is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/mediatek/mtk_drm_drv.c
-index 7f5408cb2377,2ee809a6f3dc..000000000000
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@@ -351,21 -314,8 +345,20 @@@ static const struct file_operations mtk
-  	.compat_ioctl =3D drm_compat_ioctl,
-  };
- =20
- +/*
- + * We need to override this because the device used to import the memory =
-is
- + * not dev->dev, as drm_gem_prime_import() expects.
- + */
- +struct drm_gem_object *mtk_drm_gem_prime_import(struct drm_device *dev,
- +						struct dma_buf *dma_buf)
- +{
- +	struct mtk_drm_private *private =3D dev->dev_private;
- +
- +	return drm_gem_prime_import_dev(dev, dma_buf, private->dma_dev);
- +}
- +
-  static struct drm_driver mtk_drm_driver =3D {
-- 	.driver_features =3D DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME |
-- 			   DRIVER_ATOMIC,
-+ 	.driver_features =3D DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
- =20
-  	.gem_free_object_unlocked =3D mtk_drm_gem_free_object,
-  	.gem_vm_ops =3D &drm_gem_cma_vm_ops,
-@@@ -373,8 -323,6 +366,7 @@@
- =20
-  	.prime_handle_to_fd =3D drm_gem_prime_handle_to_fd,
-  	.prime_fd_to_handle =3D drm_gem_prime_fd_to_handle,
-- 	.gem_prime_export =3D drm_gem_prime_export,
- +	.gem_prime_import =3D mtk_drm_gem_prime_import,
-  	.gem_prime_get_sg_table =3D mtk_gem_prime_get_sg_table,
-  	.gem_prime_import_sg_table =3D mtk_gem_prime_import_sg_table,
-  	.gem_prime_mmap =3D mtk_drm_gem_mmap_buf,
-
---Sig_/X2kcl2/LOpWwGE.fwJfoAWF
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1fW2QACgkQAVBC80lX
-0GwCPQgAilBWVPzBxZcJWB2bXRi3iz4BWC/GmgqEAOU75yaTwQqqHz335TAGT3aL
-4CWN7cVVYNBGV9CxE5rPdpelVGORo6+BlGevvskN6Uhr3j0WkHqL+ZeVc7Rx35Wy
-FU2H/nybicSZqNDg07XmfI6BSRJf+L190fqiogRvIXpFzzRB5/zWGLpWQga4Mg8v
-3hpk2mLYd42twe0pCLAcnGHxwsNnb7csUB7VGmt3EmsU32CfZEMuZxir45E3JMvq
-hwwHQAOZKWypD8C1oVcQuAhGz06NSILe4LVu1JVyziYNCKUabQgOA0R9ErxRUKbo
-jkQtvYuxsg/rAZG8oYujsEkpKLmCJA==
-=Rt4Z
------END PGP SIGNATURE-----
-
---Sig_/X2kcl2/LOpWwGE.fwJfoAWF--
+Thanks,
+Ming
