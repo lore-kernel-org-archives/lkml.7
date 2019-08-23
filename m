@@ -6,162 +6,99 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5965DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC22C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22CC221726
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37CF21019
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 15:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1566574975;
-	bh=Ti+JFOxtfY4aFLAmYLp1w1FeV/K8JqmsfuLfsVrrcss=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=rIsZVJSShHA0JloUnY9yHQ+mDvfSFX4F0PgKJZkiQi4ZJ2KhkkT9HXc5vHW8L9I0x
-	 V2+hBbl5CNCQQAF/XOfnKx4/v/P5nB90D/DXgiZDu7WkPPWnI9DyjAdg1n5RX5b32L
-	 wtQhkDT/Tr6KDQOvLF+UPNCe969VQavetrOnaOuA=
+	s=default; t=1566574985;
+	bh=mtXHb5bKOG08tenYcImsF9MNxioNgJMHEZbm89iBi0c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Aq7D6Rh9ahhnDnEfL7KF+rZQyKkyzqZadeIMbK39cQUKciweOddnhZD8hYFO0Yugg
+	 nhdqw8kTVjFAxEV01ZRxgmA3I6x/VuZIrT0NEAysjhDXHfPYTOspe8Ogs8bKW+4UMS
+	 6GLTIUntaWF5tt3pFJqtswAZ2VSmQnbc1iVZ0/Pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfHWPmy (ORCPT
+        id S2405913AbfHWPnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 11:42:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbfHWPmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 11:42:53 -0400
-Received: from [192.168.1.17] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7F0921019;
-        Fri, 23 Aug 2019 15:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566574971;
-        bh=Ti+JFOxtfY4aFLAmYLp1w1FeV/K8JqmsfuLfsVrrcss=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=TLbaSaipgAn8VLEbJtX7oJgIeHcwllCXA+Aap2GSIb10sj07/Yu3uTutSS/9CLi56
-         IWLR2hMxTw2xV/g87fog6WNu+s6qz2+rAKWTFpx/VLjrhC9efE3sk+u6CnLqmZnASq
-         JGV3uGaxUVVZYq1x9LRjb3+8InFDDxuK4T0r180s=
-Subject: Re: [RESEND PATCHv4 1/1] drivers/amba: add reset control to amba bus
- probe
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Frank Rowand <frowand.list@gmail.com>,
+        Fri, 23 Aug 2019 11:43:04 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34683 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbfHWPnE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 11:43:04 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n9so5997922pgc.1;
+        Fri, 23 Aug 2019 08:43:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e6gbuFk04+ij6vjmtC7dZeomrE2Z6PDlZ2TY3DqrgL8=;
+        b=QLHgDm6HNsuMn1HGjbjWhkhHiVW/zxBjbUayNy5D+dcbxqiz9I+U1mH0tmY54MQv2q
+         fU2IdPInVpjANNuMtJVE0F3wF8ZdZy/PR5tdM9aS+PEeifYpl9kceNglF7KQpCwcrUyX
+         7cwhbazJ9p1AIkyjlzQxmj18Lfvf+9eUoBEskXjaXiVyKrX7/Kj5hNbW77M0x7tH8gWN
+         MSGRQhsYKO1ajzBVm9V3MRtbLc+sL18N1F8MZuXIe0emHEfe3zmd9hnNtvzyeFqt3UNY
+         7hbyD6pPzhri8EhIsEmC2gX6ZIyCdqDMGh7tik86ZilVPKXDmn34BE0XoUNIg1JTfmOW
+         cntg==
+X-Gm-Message-State: APjAAAV9uZY2P/abchMRjCbAk7jsSUIvV1C8mclOqR4ptSjV9zXik8Za
+        MOiHA+KP6+pCJJaFJfaXRWg=
+X-Google-Smtp-Source: APXvYqyGepRg8opgN4YZqwET+ErU3AX2HBuZhRJljwXDyVt43xrYXNA7jgKoM0AGGKBYpjHvI4ZwPg==
+X-Received: by 2002:a62:2c93:: with SMTP id s141mr6060133pfs.114.1566574983158;
+        Fri, 23 Aug 2019 08:43:03 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id j10sm3060768pfn.188.2019.08.23.08.43.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 08:43:02 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 50B72404D5; Fri, 23 Aug 2019 15:43:01 +0000 (UTC)
+Date:   Fri, 23 Aug 2019 15:43:01 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Scott Branden <scott.branden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
         Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20190820145834.7301-1-dinguyen@kernel.org>
- <20190820145834.7301-2-dinguyen@kernel.org>
- <CACRpkdasbXuqUkO3NjMGBU_ePEBT23BS1eP-bigB0_g494LgvQ@mail.gmail.com>
-From:   Dinh Nguyen <dinguyen@kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e7e986a2-762e-674b-608b-5ee5b013935b@kernel.org>
-Date:   Fri, 23 Aug 2019 10:42:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 3/3] firmware: add mutex fw_lock_fallback for race
+ condition
+Message-ID: <20190823154301.GT16384@42.do-not-panic.com>
+References: <20190816000945.29810-1-scott.branden@broadcom.com>
+ <20190816000945.29810-4-scott.branden@broadcom.com>
+ <20190819053937.GR16384@42.do-not-panic.com>
+ <16823ee6-c52a-b3b5-caed-79c00772fa68@broadcom.com>
+ <20190820012655.GU16384@42.do-not-panic.com>
+ <s5hd0gwrx4j.wl-tiwai@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdasbXuqUkO3NjMGBU_ePEBT23BS1eP-bigB0_g494LgvQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5hd0gwrx4j.wl-tiwai@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 23, 2019 at 12:31:40PM +0200, Takashi Iwai wrote:
+> So, if any, we'd need put a mutex around the fallback loader code.
+> And, the mutex should be rather per device, not a global one.
+> 
+> Or we may trick it by appending the second parallel caller into the
+> same wait queue, but the code will be more complex, so I don't think
+> worth for it.
 
+For now I'm thinking of a new API with a devname prefix to the driver.
+I'll have to test if that works, but not sure if I'll get to it today
+before my vacation starts (today).
 
-On 8/23/19 4:19 AM, Linus Walleij wrote:
-> On Tue, Aug 20, 2019 at 4:58 PM Dinh Nguyen <dinguyen@kernel.org> wrote:
-> 
->> @@ -401,6 +402,26 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
->>         ret = amba_get_enable_pclk(dev);
->>         if (ret == 0) {
->>                 u32 pid, cid;
->> +               int count;
->> +               struct reset_control *rstc;
->> +
->> +               /*
->> +                * Find reset control(s) of the amba bus and de-assert them.
->> +                */
->> +               count = reset_control_get_count(&dev->dev);
->> +               while (count > 0) {
->> +                       rstc = of_reset_control_get_shared_by_index(dev->dev.of_node, count - 1);
->> +                       if (IS_ERR(rstc)) {
->> +                               if (PTR_ERR(rstc) == -EPROBE_DEFER)
->> +                                       ret = -EPROBE_DEFER;
->> +                               else
->> +                                       dev_err(&dev->dev, "Can't get amba reset!\n");
->> +                               break;
->> +                       }
->> +                       reset_control_deassert(rstc);
->> +                       reset_control_put(rstc);
->> +                       count--;
->> +               }
-> 
-> I'm not normally a footprint person, but the looks of the stubs in
-> <linux/reset.h> makes me suspicious whether this will have zero impact
-> in size on platforms without reset controllers.
-> 
-> Can you just ls -al on the kernel without CONFIG_RESET_CONTROLLER
-> before and after this patch and ascertain that it has zero footprint effect?
-
-Thanks for the review. I checked it, and indeed, it does have a zero
-footprint effect.
-
-> 
-> If it doesn't I'd sure like to break this into its own function and
-> stick a if (!IS_ENABLED(CONFIG_RESET_CONTROLLER)) return 0;
-> in there to make sure the compiler drops it.
-> 
-> Also it'd be nice to get Philipp's ACK on the semantics, though they
-> look correct to me.
-> 
-
-Dinh
+  Luis
