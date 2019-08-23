@@ -2,238 +2,211 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 661BDC3A5A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C876C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5A520850
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D61D21897
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 19:14:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8S8yGC7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732880AbfHWTOW (ORCPT
+        id S2389676AbfHWTOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 15:14:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42236 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728512AbfHWTOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 15:14:21 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 43A383086262;
-        Fri, 23 Aug 2019 19:14:21 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-63.rdu2.redhat.com [10.10.112.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6590A5D9E5;
-        Fri, 23 Aug 2019 19:14:20 +0000 (UTC)
-Message-ID: <324f57e86a1e9240657dd0c3beede10d6c89baea.camel@redhat.com>
-Subject: Re: [PULL REQUEST] Please pull rdma.git
-From:   Doug Ledford <dledford@redhat.com>
-To:     "Torvalds, Linus" <torvalds@linux-foundation.org>
-Cc:     "Gunthorpe, Jason" <jgg@ziepe.ca>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 23 Aug 2019 15:14:17 -0400
-In-Reply-To: <5b0aa103f6007e1887f9b2cacaec8015834589b8.camel@xsintricity.com>
-References: <5b0aa103f6007e1887f9b2cacaec8015834589b8.camel@xsintricity.com>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-d9vBLQc5DZJC2HMDiJ6l"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 23 Aug 2019 19:14:21 +0000 (UTC)
+        Fri, 23 Aug 2019 15:14:39 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36102 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728512AbfHWTOi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 23 Aug 2019 15:14:38 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f19so6078588plr.3;
+        Fri, 23 Aug 2019 12:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=KfyCvX/wLd+xBmfJHt9z6f1mRRr5A8kveHSdf9q4hGs=;
+        b=M8S8yGC7LZgC1vErDOoHct/w8T0Ps0GwHoxdt7XCW/IfGlv+EVwtweMFpwIQFAE4SD
+         zVFIw0jNxfwQSqcSdGv7cN+S4s+iFP4Sb2vQbcC1TyP4fYa+0yaGs3YTCeHH2M4If8yW
+         gXSxWTSeyXU54BisNezLnafFi1zDnev2HfUu8PAP4YLu7GkleyOEeaG0SRglUWQEmTzC
+         D4FtgMwDXQ+8RKtyx04LwGz0XZ2VE+ntrggi+3qGwweHUQr8tH+knrFCt78IrSZoRr2J
+         AUOt/k3rAB0FB/3geWDUNDkkJrIFYxMs5WUIvJycEFu/O68BpG3BwnkPYGPAa/gn/NN9
+         fJ5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=KfyCvX/wLd+xBmfJHt9z6f1mRRr5A8kveHSdf9q4hGs=;
+        b=tZ/0+WAYW65FTNE35YmJj+3V5MI0tlOt41yLb4pavPaCVH+nUwqLgEmD3dyMrqkjzK
+         dBf1CGEZF38Ho9hVsYT+PbyvyP2Dam7nTE/3z7q1Ojecr9GYCyX9GvzWxjzeseuttbTW
+         W6Pw8uT0+gXZx/dVW8Jm1IodMIcJYHBNihEvpKprLvZC5zSnS0Dl4FaX1lgfGkvIiAC+
+         e9R3DxMdfGcjYNW8jH4TcKIvEMGYshaUXvwnc/8w0TVTNNjwDBxqYV2yHs2QyQ/yPt2C
+         +6urDN+PdHbfX9dcYT5MjLdJ96OjYgNfa4yS3OV09ztLVC8wEVc3ia8nj1t9uTc70pI3
+         tPsg==
+X-Gm-Message-State: APjAAAVV7FwlgOoLn2kkc8vwlUoV7STOLs5iB0qzfkxqEC8Ff78ysp9j
+        ZXPKad+4y4m2GjZSbX+3m9GG6dl6
+X-Google-Smtp-Source: APXvYqy+0eDy7inwc30A38gZ65ippwvVtu3pIyFRgieb00b8trbyEm9Bnp8DP8TU36jggEXda6+rkA==
+X-Received: by 2002:a17:902:3:: with SMTP id 3mr6767876pla.41.1566587677471;
+        Fri, 23 Aug 2019 12:14:37 -0700 (PDT)
+Received: from vm ([104.133.9.111])
+        by smtp.gmail.com with ESMTPSA id h17sm4685829pfo.24.2019.08.23.12.14.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2019 12:14:37 -0700 (PDT)
+From:   Forrest Fleming <ffleming@gmail.com>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Cc:     Forrest Fleming <ffleming@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: intel: Cleanup e1000 - add space between }}
+Date:   Fri, 23 Aug 2019 19:14:21 +0000
+Message-Id: <20190823191421.3318-1-ffleming@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+suggested by checkpatch
 
---=-d9vBLQc5DZJC2HMDiJ6l
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Forrest Fleming <ffleming@gmail.com>
+---
+ .../net/ethernet/intel/e1000/e1000_param.c    | 28 +++++++++----------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-Hi Linus,
-
-I didn't notice I was on my personal email identity when I sent the pull
-request.  Sorry about that.  It's really me ;-)
-
-On Fri, 2019-08-23 at 14:48 -0400, Doug Ledford wrote:
-> Hi Linus,
->=20
-> No beating around the bush: this is a monster pull request for an -rc5
-> kernel.  Intel hit me with a series of fixes for TID processing.=20
-> Mellanox hit me with a series for their UMR memory support.
->=20
-> And we had one fix for siw that fixes the 32bit build warnings and
-> because of the number of casts that had to be changed to properly
-> silence the warnings, that one patch alone is a full 40% of the LOC of
-> this entire pull request.  Given that this is the initial release
-> kernel
-> for siw, I'm trying to fix anything in it that we can, so that adds to
-> the impetus to take fixes for it like this one.
->=20
-> I had to do a rebase early in the week.  Jason had thought he put a
-> patch on the rc queue that he needed to be there so he could base some
-> work off of it, and it had actually not been placed there.  So he
-> asked
-> me (on Tuesday) to fix that up before pushing my wip branch to the
-> official rc branch.  I did, and that's why the early patches look like
-> they were all committed at the same time on Tuesday.  That bunch had
-> been in my queue prior.
->=20
-> The various patches all pass my test for being legitimate fixes and
-> not
-> attempts to slide new features or development into a late rc.  Well,
-> they were all fixes with the exception of a couple clean up patches
-> people wrote for making the fixes they also wrote better (like a
-> cleanup
-> patch to move UMR checking into a function so that the remaining UMR
-> fix
-> patches can reference that function), so I left those in place too.
->=20
-> My apologies for the LOC count and the number of patches here, it's
-> just
-> how the cards fell this cycle.  I hope you agree with me that they're
-> justified fixes.
->=20
-> Here's the boilerplate:
->=20
-> The following changes since commit
-> d1abaeb3be7b5fa6d7a1fbbd2e14e3310005c4c1:
->=20
->   Linux 5.3-rc5 (2019-08-18 14:31:08 -0700)
->=20
-> are available in the Git repository at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git
-> tags/for-linus
->=20
-> for you to fetch changes up to
-> c536277e0db1ad2e9fbb9dfd940c3565a14d9c52:
->=20
->   RDMA/siw: Fix 64/32bit pointer inconsistency (2019-08-23 12:08:27
-> -0400)
->=20
-> ----------------------------------------------------------------
-> Pull request for 5.3-rc5
->=20
-> - Fix siw buffer mapping issue
-> - Fix siw 32/64 casting issues
-> - Fix a KASAN access issue in bnxt_re
-> - Fix several memory leaks (hfi1, mlx4)
-> - Fix a NULL deref in cma_cleanup
-> - Fixes for UMR memory support in mlx5 (4 patch series)
-> - Fix namespace check for restrack
-> - Fixes for counter support
-> - Fixes for hfi1 TID processing (5 patch series)
-> - Fix potential NULL deref in siw
-> - Fix memory page calculations in mlx5
->=20
-> Signed-off-by: Doug Ledford <dledford@redhat.com>
->=20
-> ----------------------------------------------------------------
-> Bernard Metzler (3):
->       RDMA/siw: Fix potential NULL de-ref
->       RDMA/siw: Fix SGL mapping issues
->       RDMA/siw: Fix 64/32bit pointer inconsistency
->=20
-> Ido Kalir (1):
->       IB/core: Fix NULL pointer dereference when bind QP to counter
->=20
-> Jason Gunthorpe (1):
->       RDMA/mlx5: Fix MR npages calculation for IB_ACCESS_HUGETLB
->=20
-> Kaike Wan (5):
->       IB/hfi1: Drop stale TID RDMA packets
->       IB/hfi1: Unsafe PSN checking for TID RDMA READ Resp packet
->       IB/hfi1: Add additional checks when handling TID RDMA READ RESP
-> packet
->       IB/hfi1: Add additional checks when handling TID RDMA WRITE DATA
-> packet
->       IB/hfi1: Drop stale TID RDMA packets that cause TIDErr
->=20
-> Leon Romanovsky (2):
->       RDMA/counters: Properly implement PID checks
->       RDMA/restrack: Rewrite PID namespace check to be reliable
->=20
-> Moni Shoua (4):
->       IB/mlx5: Consolidate use_umr checks into single function
->       IB/mlx5: Report and handle ODP support properly
->       IB/mlx5: Fix MR re-registration flow to use UMR properly
->       IB/mlx5: Block MR WR if UMR is not possible
->=20
-> Selvin Xavier (1):
->       RDMA/bnxt_re: Fix stack-out-of-bounds in
-> bnxt_qplib_rcfw_send_message
->=20
-> Wenwen Wang (3):
->       IB/mlx4: Fix memory leaks
->       infiniband: hfi1: fix a memory leak bug
->       infiniband: hfi1: fix memory leaks
->=20
-> zhengbin (1):
->       RDMA/cma: fix null-ptr-deref Read in cma_cleanup
->=20
->  drivers/infiniband/core/cma.c              |  6 ++-
->  drivers/infiniband/core/counters.c         | 10 ++--
->  drivers/infiniband/core/nldev.c            |  3 +-
->  drivers/infiniband/core/restrack.c         | 15 +++---
->  drivers/infiniband/core/umem.c             |  7 +--
->  drivers/infiniband/hw/bnxt_re/qplib_rcfw.c |  8 ++-
->  drivers/infiniband/hw/bnxt_re/qplib_rcfw.h | 11 ++--
->  drivers/infiniband/hw/hfi1/fault.c         | 12 +++--
->  drivers/infiniband/hw/hfi1/tid_rdma.c      | 76 ++++++++++-----------
-> ------
->  drivers/infiniband/hw/mlx4/mad.c           |  4 +-
->  drivers/infiniband/hw/mlx5/main.c          |  6 +--
->  drivers/infiniband/hw/mlx5/mem.c           |  5 +-
->  drivers/infiniband/hw/mlx5/mlx5_ib.h       | 14 +++++
->  drivers/infiniband/hw/mlx5/mr.c            |  7 ++-
->  drivers/infiniband/hw/mlx5/odp.c           | 17 ++++---
->  drivers/infiniband/hw/mlx5/qp.c            | 24 +++++++--
->  drivers/infiniband/sw/siw/siw.h            |  8 +--
->  drivers/infiniband/sw/siw/siw_cm.c         | 82 ++++++++++++++-------
-> ---------
->  drivers/infiniband/sw/siw/siw_cq.c         |  5 +-
->  drivers/infiniband/sw/siw/siw_mem.c        | 14 ++---
->  drivers/infiniband/sw/siw/siw_mem.h        |  2 +-
->  drivers/infiniband/sw/siw/siw_qp.c         |  2 +-
->  drivers/infiniband/sw/siw/siw_qp_rx.c      | 26 +++++-----
->  drivers/infiniband/sw/siw/siw_qp_tx.c      | 80 ++++++++++++++-------
-> --------
->  drivers/infiniband/sw/siw/siw_verbs.c      | 40 +++++++--------
->  include/rdma/restrack.h                    |  3 +-
->  26 files changed, 248 insertions(+), 239 deletions(-)
->=20
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
-
---=-d9vBLQc5DZJC2HMDiJ6l
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl1gOwkACgkQuCajMw5X
-L90DKQ//fSAE4ev1OxxfyQzo9HhweIbuZNeY1Iq66mBhDQl6BJUfDq1nZyLxV/Ab
-vxhCookz3SVn1ItQ4JUrW1LJF9qvuHdRQvWm9KnVhDqRyRvUxkgz8Mxjvr8G8/8h
-cWwI9PYdcR/yOKNPA4rQ4OGBdVGJePgKdfkFuLojR28KAh4i0XWnJEnsKXEADbGO
-qqh86Jv2x+wIkaunEOBjMfYdvDz7VhXWuy4Jelqc2WxjbBYPsEXcSWgHB342XTbK
-j+eBUMv0O+ns4er5ckIefNKWEp/1HK3JI+x2gvRNdy9oBdsYrwnB+5Zkhnohoj8y
-cZYT3jOwEFKvy0Tt6txcy3KZOzA3gRm3edmg4Ld3FpN5bQ6EGQ0CzGdu7CADCvCg
-/EmYmVashRxp71QLmP/jKdK3bBHs5NC/he3lkUnzSfNdNlX/JVi//XtztFb8gmRD
-GIWdEvIBiy5wVoXJ1NKDySbc7SVxhKSUyuPPqxBMp0utxvXOBo3IGu3BHj1UKqUe
-bTFyaZWnjsrfW8EvYnanuLqCkateNPqs3xUbEmC/kwx5mipcTz9KsJG8+CSUJM+7
-drape5hCjo/NESn8VPPc8RHZngIILH/9OpHmRfXApLTwTEaGGW8AiMNqKIXnUhch
-Fnj5U717adEC3sVsWLbpYk8Tl4pXL1EE72RhEzHjSHr3s4eMPBY=
-=kyjY
------END PGP SIGNATURE-----
-
---=-d9vBLQc5DZJC2HMDiJ6l--
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_param.c b/drivers/net/ethernet/intel/e1000/e1000_param.c
+index d3f29ffe1e47..1a1f2f0237f9 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_param.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_param.c
+@@ -266,7 +266,7 @@ void e1000_check_options(struct e1000_adapter *adapter)
+ 			.arg  = { .r = {
+ 				.min = E1000_MIN_TXD,
+ 				.max = mac_type < e1000_82544 ? E1000_MAX_TXD : E1000_MAX_82544_TXD
+-				}}
++				} }
+ 		};
+ 
+ 		if (num_TxDescriptors > bd) {
+@@ -295,7 +295,7 @@ void e1000_check_options(struct e1000_adapter *adapter)
+ 				.min = E1000_MIN_RXD,
+ 				.max = mac_type < e1000_82544 ? E1000_MAX_RXD :
+ 				       E1000_MAX_82544_RXD
+-			}}
++			} }
+ 		};
+ 
+ 		if (num_RxDescriptors > bd) {
+@@ -341,7 +341,7 @@ void e1000_check_options(struct e1000_adapter *adapter)
+ 			.err  = "reading default settings from EEPROM",
+ 			.def  = E1000_FC_DEFAULT,
+ 			.arg  = { .l = { .nr = ARRAY_SIZE(fc_list),
+-					 .p = fc_list }}
++					 .p = fc_list } }
+ 		};
+ 
+ 		if (num_FlowControl > bd) {
+@@ -359,7 +359,7 @@ void e1000_check_options(struct e1000_adapter *adapter)
+ 			.err  = "using default of " __MODULE_STRING(DEFAULT_TIDV),
+ 			.def  = DEFAULT_TIDV,
+ 			.arg  = { .r = { .min = MIN_TXDELAY,
+-					 .max = MAX_TXDELAY }}
++					 .max = MAX_TXDELAY } }
+ 		};
+ 
+ 		if (num_TxIntDelay > bd) {
+@@ -377,7 +377,7 @@ void e1000_check_options(struct e1000_adapter *adapter)
+ 			.err  = "using default of " __MODULE_STRING(DEFAULT_TADV),
+ 			.def  = DEFAULT_TADV,
+ 			.arg  = { .r = { .min = MIN_TXABSDELAY,
+-					 .max = MAX_TXABSDELAY }}
++					 .max = MAX_TXABSDELAY } }
+ 		};
+ 
+ 		if (num_TxAbsIntDelay > bd) {
+@@ -395,7 +395,7 @@ void e1000_check_options(struct e1000_adapter *adapter)
+ 			.err  = "using default of " __MODULE_STRING(DEFAULT_RDTR),
+ 			.def  = DEFAULT_RDTR,
+ 			.arg  = { .r = { .min = MIN_RXDELAY,
+-					 .max = MAX_RXDELAY }}
++					 .max = MAX_RXDELAY } }
+ 		};
+ 
+ 		if (num_RxIntDelay > bd) {
+@@ -413,7 +413,7 @@ void e1000_check_options(struct e1000_adapter *adapter)
+ 			.err  = "using default of " __MODULE_STRING(DEFAULT_RADV),
+ 			.def  = DEFAULT_RADV,
+ 			.arg  = { .r = { .min = MIN_RXABSDELAY,
+-					 .max = MAX_RXABSDELAY }}
++					 .max = MAX_RXABSDELAY } }
+ 		};
+ 
+ 		if (num_RxAbsIntDelay > bd) {
+@@ -431,7 +431,7 @@ void e1000_check_options(struct e1000_adapter *adapter)
+ 			.err  = "using default of " __MODULE_STRING(DEFAULT_ITR),
+ 			.def  = DEFAULT_ITR,
+ 			.arg  = { .r = { .min = MIN_ITR,
+-					 .max = MAX_ITR }}
++					 .max = MAX_ITR } }
+ 		};
+ 
+ 		if (num_InterruptThrottleRate > bd) {
+@@ -545,7 +545,7 @@ static void e1000_check_copper_options(struct e1000_adapter *adapter)
+ 			{          0, "" },
+ 			{   SPEED_10, "" },
+ 			{  SPEED_100, "" },
+-			{ SPEED_1000, "" }};
++			{ SPEED_1000, "" } };
+ 
+ 		opt = (struct e1000_option) {
+ 			.type = list_option,
+@@ -553,7 +553,7 @@ static void e1000_check_copper_options(struct e1000_adapter *adapter)
+ 			.err  = "parameter ignored",
+ 			.def  = 0,
+ 			.arg  = { .l = { .nr = ARRAY_SIZE(speed_list),
+-					 .p = speed_list }}
++					 .p = speed_list } }
+ 		};
+ 
+ 		if (num_Speed > bd) {
+@@ -567,7 +567,7 @@ static void e1000_check_copper_options(struct e1000_adapter *adapter)
+ 		static const struct e1000_opt_list dplx_list[] = {
+ 			{           0, "" },
+ 			{ HALF_DUPLEX, "" },
+-			{ FULL_DUPLEX, "" }};
++			{ FULL_DUPLEX, "" } };
+ 
+ 		opt = (struct e1000_option) {
+ 			.type = list_option,
+@@ -575,7 +575,7 @@ static void e1000_check_copper_options(struct e1000_adapter *adapter)
+ 			.err  = "parameter ignored",
+ 			.def  = 0,
+ 			.arg  = { .l = { .nr = ARRAY_SIZE(dplx_list),
+-					 .p = dplx_list }}
++					 .p = dplx_list } }
+ 		};
+ 
+ 		if (num_Duplex > bd) {
+@@ -623,7 +623,7 @@ static void e1000_check_copper_options(struct e1000_adapter *adapter)
+ 			 { 0x2c, AA "1000/FD, 100/FD, 100/HD" },
+ 			 { 0x2d, AA "1000/FD, 100/FD, 100/HD, 10/HD" },
+ 			 { 0x2e, AA "1000/FD, 100/FD, 100/HD, 10/FD" },
+-			 { 0x2f, AA "1000/FD, 100/FD, 100/HD, 10/FD, 10/HD" }};
++			 { 0x2f, AA "1000/FD, 100/FD, 100/HD, 10/FD, 10/HD" } };
+ 
+ 		opt = (struct e1000_option) {
+ 			.type = list_option,
+@@ -631,7 +631,7 @@ static void e1000_check_copper_options(struct e1000_adapter *adapter)
+ 			.err  = "parameter ignored",
+ 			.def  = AUTONEG_ADV_DEFAULT,
+ 			.arg  = { .l = { .nr = ARRAY_SIZE(an_list),
+-					 .p = an_list }}
++					 .p = an_list } }
+ 		};
+ 
+ 		if (num_AutoNeg > bd) {
+-- 
+2.17.1
 
