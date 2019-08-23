@@ -2,96 +2,125 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B5CC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65792C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA98922CE3
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:29:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HQJ1Cr4P"
+	by mail.kernel.org (Postfix) with ESMTP id 40F812339D
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 14:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2395298AbfHWO3B (ORCPT
+        id S2395307AbfHWO31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 23 Aug 2019 10:29:01 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32960 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390586AbfHWO3A (ORCPT
+        Fri, 23 Aug 2019 10:29:27 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:33726 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390586AbfHWO31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:29:00 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n190so5897908pgn.0;
-        Fri, 23 Aug 2019 07:29:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wOEo7GpB66pr1gOpedbJlaqSXnJAzhriTnRt2Kpk940=;
-        b=HQJ1Cr4P5FHyQFc+I3XTFXEF8WF0n4W3S/hPoKkAFyY7dPn9wGhoUbE0V4IKfyWsq5
-         G3rsE7VgHtn/MdvoKvPpah0uc+/56A2K9FBXtb9kNIcjvNe8BYxu8N9YFUnxDRXi+R6S
-         x+fKRZHYVx8WBgntpvUH8LiA9PCi66NzZ6qM1gweCFAv23Nxto7TS8eprwn9zc7x+bnS
-         AboX8b+IGtnP47YhBxsi2Zqewdk/orcAVgx7ZqoEFpFX6sc8cc0F0hbj7pt0pAToLAVz
-         4aQwq+xEwDxfZSojEO8VmKQWnUJqtCFsedNcXooh9wOG4Mkid8Cu62bRCYJPtM8hAEEw
-         6ZLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wOEo7GpB66pr1gOpedbJlaqSXnJAzhriTnRt2Kpk940=;
-        b=tdtCk9HezNJX8RuQTTa4YC7u2xf1sQT2IVRJWY7hyUlucLIof48OHqvfTZWmBQt9At
-         Vkn3zojp1f1cpeP6GFkQUEEPxvcqQFMrKt5cIQm+ssdNcFDDHBAcf2Mjqn29bVphWi2B
-         4UyvaK9cZN98AMVinqrq28it2/flE4HvAbLVceb4x+58jBB+/G0/52hhVZGI6yRSqFdH
-         YYTjPgPucoL9YirmgJ1GFZQsGUCj9cICX9pFziDESbr3FOk+nNBhDSyHISStCOE0z/Pd
-         uHPAyP4lr4lH4CkXpPTH9mTQZsK7II0EVtrRbgaupFUvGBY0CKbQWMK1Y+eTXcNvfOUf
-         p27Q==
-X-Gm-Message-State: APjAAAWB7ul7Dc9O8sCRLfATlWcD+GNqvFmdT/NNNhvGuBVq+AYw1Wzz
-        1aIT+SpmbEhNQdrcX2Hl1eGN2DIk
-X-Google-Smtp-Source: APXvYqwilXYcUdF+1XluUgSBN88DYZBZ+lGmQCurA3WoV2mbz3mu88hS7DqeQekqGXajxMRJdgLfJg==
-X-Received: by 2002:a63:b102:: with SMTP id r2mr4181299pgf.370.1566570539614;
-        Fri, 23 Aug 2019 07:28:59 -0700 (PDT)
-Received: from server.roeck-us.net (108-223-40-66.lightspeed.sntcca.sbcglobal.net. [108.223.40.66])
-        by smtp.gmail.com with ESMTPSA id a189sm2999147pfa.60.2019.08.23.07.28.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 23 Aug 2019 07:28:59 -0700 (PDT)
-Subject: Re: [PATCH 4.19 00/85] 4.19.68-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190822171731.012687054@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <52746cb4-5e63-05a4-5329-f39bfaa0e38b@roeck-us.net>
-Date:   Fri, 23 Aug 2019 07:28:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Fri, 23 Aug 2019 10:29:27 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id 6C95114C6B3B17;
+        Fri, 23 Aug 2019 14:29:24 +0000 (UTC)
+Received: from saetre (unknown [154.53.1.40])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Fri, 23 Aug 2019 14:29:24 +0000 (UTC)
+Message-ID: <c9acf405f4e10e587809fe88a07ffa882a6ed7de.camel@archlinux.org>
+Subject: Re: [Resubmit] Read battery voltage from Logitech Gaming mice
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Pedro Vanzella <pedro@pedrovanzella.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+In-Reply-To: <e6014a01-1094-9ec7-9b37-2abdf70e305f@pedrovanzella.com>
+References: <20190822201849.28924-1-pedro@pedrovanzella.com>
+         <CAO-hwJKQcTpmk8cVf-YmKu2awXv_53=qfpy2yfmy2rgMu_DEug@mail.gmail.com>
+         <e6014a01-1094-9ec7-9b37-2abdf70e305f@pedrovanzella.com>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-xuWjDQq/RSZ7ZoquJLBK"
+Date:   Fri, 23 Aug 2019 15:29:23 +0100
 MIME-Version: 1.0
-In-Reply-To: <20190822171731.012687054@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+User-Agent: Evolution 3.32.4 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/22/19 10:18 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.68 release.
-> There are 85 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 24 Aug 2019 05:15:49 PM UTC.
-> Anything received after that time might be too late.
-> 
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 390 pass: 390 fail: 0
+--=-xuWjDQq/RSZ7ZoquJLBK
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Guenter
+On Fri, 2019-08-23 at 10:22 -0400, Pedro Vanzella wrote:
+> I actually resubmitted by Filipe's request, since the patches weren't=20
+> applying cleanly anymore. The idea was to apply these patches and in the=
+=20
+> future refactor the code to use the feature discovery routines.
+
+Yes, I want to refactor everything so I though there was no point in us
+changing the patch set again. I did not review the first revision of
+the patch set so if that works for you (Benjamin) we can just merge
+that.
+
+> So we (you, me and Filipe) should probably come up with an action plan=
+=20
+> here. The way I see it there are two issues here: one is adding this=20
+> feature, and the other is refactoring to use feature discovery for all=
+=20
+> features. There are advantages and disadvantages to doing one or another=
+=20
+> first and we might want to discuss that.
+>=20
+> By merging this first (probably after I resubmit it as a single squashed=
+=20
+> patch) we get to test it a bit better and have a usable feature sooner.=
+=20
+> Plenty of people have been requesting this and there is plenty of stuff=
+=20
+> that can be built on top of it, but only once this is actually merged I=
+=20
+> think.
+>=20
+> On the other hand, by first refactoring the rest of the code to use=20
+> 0x0001 we avoid some rework on this patch. It should be minor, as most=
+=20
+> functions here do all the heavy lifting after the initial feature=20
+> discovery, and are thus mostly independent from how that is done.
+>=20
+> I'm happy either way, so just let me know what you guys decide.
+
+I am also fine either way so I think we should just re-send the first
+revision of your patch set as Benjamin requested.
+
+Thank you,
+Filipe La=C3=ADns
+
+--=-xuWjDQq/RSZ7ZoquJLBK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl1f+D4ACgkQ+JPGdIFq
+qV2ezw/8CXhS7XgzWsqZOz7/x3H2JtpFxmu1CUKSz4RQde8zc0lygZKJumdkJqU0
+8f6FeqBwLdAM+XHZg8qM+RHeg7zoXK9cKLVxiZphxo+bA0sDvAkjvczZ7juTyVQm
+oQUxrvSPUU69iUvVE7crB1IYDq49rWZAtXDMrrajXojciXmeipbqfiJZn+EclPrF
+rqZ2WFzlzpeM62pWCJ2vv9fxpBHWw8lGtdYPiehvE14Ot03ph3nVhzNSH8aHLptU
+bb+54QaEgDVXqyIdjvle0PUk2kRTbg+THb6anjXtaQQHcZj2Hibphnz36Pc7p1aU
+bWhGtyLgX3u5wEXS9jvXxCsnqt1yZ0QHt7ri03WVVBQQqFiq2f083c3y6uoqTQRi
+ya5EqpHHN1mtjLAKGodbO74n793kj5V2eLXY0TdjmrtDqluG8sPY7jm8zcU5RvBK
+V3ybuLGvkd9JHlpcgH4QKJ6VtVwhWPtz1DThjF8z69bhkWsijdtrzxFg8WXJnB+G
+IsnTwuZaa0ytvUa94X0160588+qK0AoMQ048EfS2M0NF9d7u41jEJoG7qK+gNzc9
+3JN63STo9eFGkp6Bowzj6U/KtjqCOMKknr/pqZihyk1fSja9R6dhoWzb1BEK+gyA
+KXMU7Q48jGa26os47hA4m9Th6/D1aLIx5gxFVo3JpG1Q6A6cc5o=
+=G32C
+-----END PGP SIGNATURE-----
+
+--=-xuWjDQq/RSZ7ZoquJLBK--
