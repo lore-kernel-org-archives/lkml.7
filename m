@@ -2,148 +2,143 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69750C3A5A1
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 470D5C3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D26F23402
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ABA523402
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 02:35:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XfZZy0yZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="flcLM5FZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390593AbfHWCfO (ORCPT
+        id S2391174AbfHWCf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 22:35:14 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48211 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfHWCfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 22:35:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46F58r1Kg0z9s7T;
-        Fri, 23 Aug 2019 12:35:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1566527710;
-        bh=2w1O39fqBqmJqk2tKtjRcxFlQifasUHv32rpJh2IRwA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XfZZy0yZXUgWfHiKlwnCmKvR2luZQAumTBvqYfNTThPqJ3pV1r/DjeUFfknOrE8SG
-         orHdQ/oOKYB0i8B7w6yOqtHKGp+Org4V/Wgi/HMts0TNPYnCMt8kBae0hBH+RBEQoZ
-         plO0+Z/xIR4DBlSOJpU8THCCaabT1XCOXQsezEOLZLUYwW76fiGTyW9Pv7bYocLRBr
-         LQixqqy7NSaBqcSAIMS0RswWq1s54XXkps9/dlC89LqPk/ca49BWBueXfOh6uK1hIo
-         yXZr6vRJ8ezuWAfIoUiFGoicUa5i0NQao22H3fnwgEgyUJWBC+Do1fz17xPhig+8GM
-         XXjB0sXTPLILQ==
-Date:   Fri, 23 Aug 2019 12:35:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: linux-next: manual merge of the net-next tree with the pci tree
-Message-ID: <20190823123507.197cac03@canb.auug.org.au>
+        Thu, 22 Aug 2019 22:35:29 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33719 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390609AbfHWCf2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 22:35:28 -0400
+Received: by mail-io1-f65.google.com with SMTP id z3so16662193iog.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 Aug 2019 19:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2Ob+A4xxX2bRSxLGz92/UzTEvC1yWM8JcjhiXKDPfB8=;
+        b=flcLM5FZxA1UdTl+5MfostzBYwQfyv1yb87DaSzrnDrUwd/ZNj4K4T/rHszC/sFQMH
+         ADUFV/N/N6vulg+PsFB9LiJOba7WYzMsXqe7TkwmxiwQw++HUI5Q9lwxgsadqj5kp36o
+         7ir9Ftxz3Frpzbh7dbD9IWl/fAPy+uyEwFD9Qu0xwImVT/66UuNo3m+3vDu9rqcZdHGP
+         dJuOAFAhp3e0iD0AWnqz3VAQtqcjnUDCLFkZZiPVDrJq83kU9d3bg+KlteAnZK+XFKE6
+         M2BK3WAwQy2tydaBr0xJ2dcLV8QJVxM3CxkgnlBsNXoibdFYaWIIutqUzeXdd2gExoTy
+         FEcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2Ob+A4xxX2bRSxLGz92/UzTEvC1yWM8JcjhiXKDPfB8=;
+        b=Kjpy0NNaPJGkVXwjcSb+7Fu8wqbQq0ihKIx01gmgbvrracecLGRFLHycMrsMIb4vjZ
+         DICARbi1yls82b1NMno+lwerTAUAYN5ZbMn4mPtcbQAE9MjVYGDZlhkzQSGBN5VfGzoE
+         KJ0jpb36t7kiSW7UDJ90hWDGE7IPvwsElyL5+pjgztnBlwQpqxUixZNR00pSegTJc0E0
+         ZrYlN6rMsImER82Wx+M7/hd9xBzUv3gT1nNIHO/2ekfjEBwjo7aU92wW6QrIA51Vvo2g
+         XXSXulEGKu5B7l/3WRyV8mCLYr31XEeklBYjwdswUbBj5to6bZOYuE6wc+q0rEvTT3b6
+         WCMA==
+X-Gm-Message-State: APjAAAWMGEDbSayhHsxhhjm4qK4Tj0cPpbZAhrjA4vxs+OGSTBrSuaSY
+        vnm2JF8B9yG+VKr2myWAxozAfE0vmJvBMykVa/be3A==
+X-Google-Smtp-Source: APXvYqxk0KBtXTDXCH7sq1BDWGn2tzcj3BOrK9VJXXJYjin28Niwi8IhH6bIWJT+jY7Hn20R6XsnRrLk/vFE/AUzyqo=
+X-Received: by 2002:a6b:c581:: with SMTP id v123mr3719443iof.158.1566527727590;
+ Thu, 22 Aug 2019 19:35:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/tzrOwkngRKoyGZRQEgxv1R=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <CGME20190821064226epcas2p2835b8a9084988b79107e54abfc5e7dab@epcas2p2.samsung.com>
+ <004101d557eb$98b00060$ca100120$@samsung.com> <6ea5e5db-4dd4-719f-3b3e-b89099636ea6@kernel.dk>
+In-Reply-To: <6ea5e5db-4dd4-719f-3b3e-b89099636ea6@kernel.dk>
+From:   Satya Tangirala <satyat@google.com>
+Date:   Thu, 22 Aug 2019 19:35:16 -0700
+Message-ID: <CAA+FYZc6G0xk7Dhx0b9xNRoK+b+DpfuS+OK4wn4bpKpFPiiGUQ@mail.gmail.com>
+Subject: Re: [PATCH 5/9] block: support diskcipher
+To:     Jens Axboe <axboe@kernel.dk>, boojin.kim@samsung.com
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>, dm-devel@redhat.com,
+        Mike Snitzer <snitzer@redhat.com>,
+        Alasdair Kergon <agk@redhat.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-crypto@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tzrOwkngRKoyGZRQEgxv1R=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Aug 21, 2019 at 5:10 AM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 8/21/19 12:42 AM, boojin.kim wrote:
+> > This patch supports crypto information to be maintained via BIO
+> > and passed to the storage driver.
+> >
+> > To do this, 'bi_aux_private', 'REQ_CYPTE' and 'bi_dun' are added
+> > to the block layer.
+> >
+> > 'bi_aux_private' is added for loading additional private information into
+> > BIO.
+> > 'REQ_CRYPT' is added to distinguish that bi_aux_private is being used
+> > for diskcipher.
+> > F2FS among encryption users uses DUN(device unit number) as
+> > the IV(initial vector) for cryptographic operations.
+> > DUN is stored in 'bi_dun' of bi_iter as a specific value for each BIO.
+> >
+> > Before attempting to merge the two BIOs, the operation is also added to
+> > verify that the crypto information contained in two BIOs is consistent.
+>
+> This isn't going to happen. With this, and the inline encryption
+> proposed by Google, we'll bloat the bio even more. At least the Google
+> approach didn't include bio iter changes as well.
+>
+> Please work it out between yourselves so we can have a single, clean
+> abstraction that works for both.
+>
+> --
+> Jens Axboe
+>
 
-Hi all,
+Hi Boojin,
 
-Today's linux-next merge of the net-next tree got conflicts in:
+We're very keen to make sure that our approach to inline encryption can
+work with diverse hardware, including Samsung's FMP hardware; if you
+can see any issues with using our approach with your hardware please
+let us know.
 
-  drivers/pci/Kconfig
-  drivers/pci/controller/pci-hyperv.c
+We understand that a possible concern for getting FMP working with our
+patch series for Inline Encryption Support at
 
-between commit:
+https://lore.kernel.org/linux-block/20190821075714.65140-1-satyat@google.com/
 
-  f58ba5e3f686 ("PCI: pci-hyperv: Fix build errors on non-SYSFS config")
-  44b1ece783ff ("PCI: hv: Detect and fix Hyper-V PCI domain number collisio=
-n")
+is that unlike some inline encryption hardware (and also unlike the JEDEC
+UFS v2.1 spec), FMP doesn't have the concept of a limited number of
+keyslots - to address that difference we have a "passthrough keyslot
+manager", which we put up on top of our patch series for inline encryption
+support at
 
-from the pci tree and commit:
+https://android-review.googlesource.com/c/kernel/common/+/980137/2
 
-  348dd93e40c1 ("PCI: hv: Add a Hyper-V PCI interface driver for software b=
-ackchannel interface")
+Setting up a passthrough keyslot manager in the request queue of a
+device allows the device to receive a bio's encryption context as-is with
+the bio, which is what FMP would prefer. Are there any issues with
+using the passthrough keyslot manager for FMP?
 
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/pci/Kconfig
-index 232042722261,c313de96a357..000000000000
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@@ -181,7 -181,8 +181,8 @@@ config PCI_LABE
- =20
-  config PCI_HYPERV
-          tristate "Hyper-V PCI Frontend"
- -        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_=
-64
- +        depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && S=
-YSFS
-+ 	select PCI_HYPERV_INTERFACE
-          help
-            The PCI device frontend driver allows the kernel to import arbi=
-trary
-            PCI devices from a PCI backend to support PCI driver domains.
-diff --cc drivers/pci/controller/pci-hyperv.c
-index 3a56de6b2ec2,9c93ac2215b7..000000000000
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@@ -2810,9 -3050,11 +3113,14 @@@ static void __exit exit_hv_pci_drv(void
- =20
-  static int __init init_hv_pci_drv(void)
-  {
- +	/* Set the invalid domain number's bit, so it will not be used */
- +	set_bit(HVPCI_DOM_INVALID, hvpci_dom_map);
- +
-+ 	/* Initialize PCI block r/w interface */
-+ 	hvpci_block_ops.read_block =3D hv_read_config_block;
-+ 	hvpci_block_ops.write_block =3D hv_write_config_block;
-+ 	hvpci_block_ops.reg_blk_invalidate =3D hv_register_block_invalidate;
-+=20
-  	return vmbus_driver_register(&hv_pci_drv);
-  }
- =20
-
---Sig_/tzrOwkngRKoyGZRQEgxv1R=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1fUNsACgkQAVBC80lX
-0Gw0Sgf+LjUNk01+W+n9S8sWmfNWLqaKRFDu0zPU655BKTUdkNzw0VUPddKCO0UP
-/aZwvRZpDp81htm41iBqe5NNi+jEO2CcLfgYoRgY8wNgYArIUKzbwqLfxNbAoO7X
-4djAHjLFqqcVlfC72cqO++OERpZDDHDxn0qvqmXch7jKEMX9WMiW01hny3aXa1UN
-pFkP7HEDwI4m1WR360dUWzI5tceuvreC8oeKjH05U7Nvs/Y3B6k664bnH5jHl6o+
-VU1q56ZOrK2jBHRPohahnZCNzvByLciT+EaTndk/4c9YJnLzrvQZTdeOo6cxJ8uD
-wYTRMY5NOkCr3/+BpHGojkgUBKXG7Q==
-=V7ms
------END PGP SIGNATURE-----
-
---Sig_/tzrOwkngRKoyGZRQEgxv1R=--
+Thanks!
+Satya
