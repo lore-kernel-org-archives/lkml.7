@@ -2,117 +2,59 @@ Return-Path: <SRS0=31nU=WT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 219A0C41514
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 695ADC3A5A1
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D1D23402
-	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46AE9233FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 23 Aug 2019 01:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733139AbfHWBgW (ORCPT
+        id S2388227AbfHWBpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 22 Aug 2019 21:36:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33631 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfHWBgW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 22 Aug 2019 21:36:22 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i0yUw-0000aO-4J; Fri, 23 Aug 2019 03:36:14 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B30F01C07E4;
-        Fri, 23 Aug 2019 03:36:13 +0200 (CEST)
-Date:   Fri, 23 Aug 2019 01:36:09 -0000
-From:   tip-bot2 for Krzysztof Wilczynski <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/PCI: Remove superfluous returns from void
- functions
-Cc:     linux-kernel@vger.kernel.org, x86-ml <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-pci@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Krzysztof Wilczynski <kw@linux.com>
-In-Reply-To: <20190820065121.16594-1-kw@linux.com>
-References: <20190820065121.16594-1-kw@linux.com>
+        Thu, 22 Aug 2019 21:45:44 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37916 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1733086AbfHWBpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 22 Aug 2019 21:45:44 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0225F98E76DC5A62B45A;
+        Fri, 23 Aug 2019 09:45:42 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 23 Aug
+ 2019 09:45:37 +0800
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix to writeout dirty inode during
+ node flush
+References: <20190822121756.107187-1-yuchao0@huawei.com>
+ <20190822214955.GA1349@sol.localdomain>
+CC:     <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+To:     Eric Biggers <ebiggers@kernel.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <735bd992-a668-f3f2-0ff2-8071e235f4e8@huawei.com>
+Date:   Fri, 23 Aug 2019 09:45:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Message-ID: <156652416971.10313.4179486361278391653.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from
- these emails
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20190822214955.GA1349@sol.localdomain>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cleanups branch of tip:
+On 2019/8/23 5:49, Eric Biggers wrote:
+> Thanks, the test passes for me with this patch applied.
+> 
+> Tested-by: Eric Biggers <ebiggers@kernel.org>
+> .
 
-Commit-ID:     f25896ebfe0cf818ebd1adb5e6a05dc40b820e45
-Gitweb:        https://git.kernel.org/tip/f25896ebfe0cf818ebd1adb5e6a05dc40b820e45
-Author:        Krzysztof Wilczynski <kw@linux.com>
-AuthorDate:    Tue, 20 Aug 2019 08:51:21 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 20 Aug 2019 09:54:36 +02:00
+Thanks for the test.
 
-x86/PCI: Remove superfluous returns from void functions
-
-Remove unnecessary empty return statements at the end of void functions
-in arch/x86/kernel/quirks.c.
-
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-pci@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190820065121.16594-1-kw@linux.com
----
- arch/x86/kernel/quirks.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/arch/x86/kernel/quirks.c b/arch/x86/kernel/quirks.c
-index 8451f38..1daf8f2 100644
---- a/arch/x86/kernel/quirks.c
-+++ b/arch/x86/kernel/quirks.c
-@@ -90,8 +90,6 @@ static void ich_force_hpet_resume(void)
- 		BUG();
- 	else
- 		printk(KERN_DEBUG "Force enabled HPET at resume\n");
--
--	return;
- }
- 
- static void ich_force_enable_hpet(struct pci_dev *dev)
-@@ -448,7 +446,6 @@ static void nvidia_force_enable_hpet(struct pci_dev *dev)
- 	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at 0x%lx\n",
- 		force_hpet_address);
- 	cached_dev = dev;
--	return;
- }
- 
- /* ISA Bridges */
-@@ -513,7 +510,6 @@ static void e6xx_force_enable_hpet(struct pci_dev *dev)
- 	force_hpet_resume_type = NONE_FORCE_HPET_RESUME;
- 	dev_printk(KERN_DEBUG, &dev->dev, "Force enabled HPET at "
- 		"0x%lx\n", force_hpet_address);
--	return;
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_E6XX_CU,
- 			 e6xx_force_enable_hpet);
+Thanks,
